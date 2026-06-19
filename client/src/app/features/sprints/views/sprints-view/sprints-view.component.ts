@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CardListComponent } from '@app/static/components/card/card-list.component';
 import { netptunePermissions } from '@core/auth/permissions';
-import { SprintStatus, sprintStatusLabels } from '@core/enums/sprint-status';
+import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -29,6 +29,8 @@ import {
 import { CreateSprintDialogComponent } from '../../dialogs/create-sprint-dialog.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
 import { CardHeaderComponent } from '@app/static/components/card/card-header.component';
+import { SprintStatusClassesPipe } from '../../pipes/sprint-status-classes.pipe';
+import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
 
 type StatusFilter = SprintStatus | null;
 
@@ -48,6 +50,8 @@ type StatusFilter = SprintStatus | null;
     LucideTrash2,
     CardListComponent,
     CardHeaderComponent,
+    SprintStatusClassesPipe,
+    SprintStatusLabelPipe,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -83,8 +87,8 @@ type StatusFilter = SprintStatus | null;
                     <h2 class="text-xl font-semibold">{{ sprint.name }}</h2>
                     <span
                       class="rounded px-2 py-0.5 text-xs font-semibold"
-                      [class]="statusClasses(sprint.status)">
-                      {{ statusLabel(sprint.status) }}
+                      [class]="sprint.status | sprintStatusClasses">
+                      {{ sprint.status | sprintStatusLabel }}
                     </span>
                     @if (daysChip(sprint); as chip) {
                       <span
@@ -136,7 +140,8 @@ type StatusFilter = SprintStatus | null;
             } @empty {
               <app-card class="text-center">
                 @if (selectedStatus() !== null) {
-                  No {{ statusLabel(selectedStatus()!) | lowercase }} sprints.
+                  No {{ selectedStatus()! | sprintStatusLabel | lowercase }}
+                  sprints.
                 } @else {
                   No sprints yet.
                 }
@@ -205,23 +210,6 @@ export class SprintsViewComponent {
 
   onStatusChanged(value: string | number | null) {
     this.selectedStatus.set(value as StatusFilter);
-  }
-
-  statusLabel(status: SprintStatus) {
-    return sprintStatusLabels[status];
-  }
-
-  statusClasses(status: SprintStatus): string {
-    switch (status) {
-      case SprintStatus.active:
-        return 'bg-green-100 text-green-800';
-      case SprintStatus.planning:
-        return 'bg-blue-100 text-blue-800';
-      case SprintStatus.completed:
-        return 'bg-neutral-100 text-neutral-700';
-      case SprintStatus.cancelled:
-        return 'bg-red-100 text-red-700';
-    }
   }
 
   daysChip(sprint: SprintViewModel): { label: string; classes: string } | null {

@@ -1,7 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
-import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { removeTaskFromSprint } from '@core/store/sprints/sprints.actions';
@@ -17,6 +15,10 @@ import {
   TableRowDirective,
 } from '@static/components/table/table.component';
 import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
+import { SprintBacklogPriorityClassPipe } from '../pipes/sprint-backlog-priority-class.pipe';
+import { SprintBacklogPriorityLabelPipe } from '../pipes/sprint-backlog-priority-label.pipe';
+import { SprintBacklogStatusBadgeClassPipe } from '../pipes/sprint-backlog-status-badge-class.pipe';
+import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-label.pipe';
 
 @Component({
   selector: 'app-sprint-task-list',
@@ -30,6 +32,10 @@ import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
     TableHeadDirective,
     TableRowDirective,
     SprintAddTaskFormComponent,
+    SprintBacklogStatusBadgeClassPipe,
+    SprintBacklogStatusLabelPipe,
+    SprintBacklogPriorityClassPipe,
+    SprintBacklogPriorityLabelPipe,
   ],
   template: `
     @if (canEditSprintTasks()) {
@@ -68,16 +74,16 @@ import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
             <td class="px-4 py-2.5 align-middle">
               <span
                 class="inline-flex items-center rounded px-2 py-0.5 text-center text-xs font-medium"
-                [class]="statusBadgeClass(task.status)">
-                {{ statusLabel(task.status) }}
+                [class]="task.status | sprintBacklogStatusBadgeClass">
+                {{ task.status | sprintBacklogStatusLabel }}
               </span>
             </td>
             <td class="px-4 py-2.5 align-middle">
               @if (task.priority !== null && task.priority !== undefined) {
                 <span
                   class="text-sm font-medium"
-                  [class]="priorityClass(task.priority)">
-                  {{ priorityLabel(task.priority) }}
+                  [class]="task.priority | sprintBacklogPriorityClass">
+                  {{ task.priority | sprintBacklogPriorityLabel }}
                 </span>
               } @else {
                 <span class="text-muted text-sm">None</span>
@@ -131,43 +137,5 @@ export class SprintTaskListComponent {
     const sprintId = this.sprint().id;
     if (!sprintId || !taskId) return;
     this.store.dispatch(removeTaskFromSprint({ sprintId, taskId }));
-  }
-
-  statusLabel(status: TaskStatus) {
-    return taskStatusLabels[status];
-  }
-
-  statusBadgeClass(status: TaskStatus): string {
-    switch (status) {
-      case TaskStatus.new:
-        return 'bg-blue-100 text-blue-700';
-      case TaskStatus.inProgress:
-        return 'bg-yellow-100 text-yellow-700';
-      case TaskStatus.complete:
-        return 'bg-green-100 text-green-700';
-      case TaskStatus.onHold:
-        return 'bg-purple-100 text-purple-700';
-      default:
-        return 'bg-neutral-100 text-neutral-600';
-    }
-  }
-
-  priorityLabel(priority: TaskPriority) {
-    return taskPriorityLabels[priority];
-  }
-
-  priorityClass(priority: TaskPriority): string {
-    switch (priority) {
-      case TaskPriority.critical:
-        return 'text-red-500';
-      case TaskPriority.high:
-        return 'text-orange-400';
-      case TaskPriority.medium:
-        return 'text-yellow-500';
-      case TaskPriority.low:
-        return 'text-blue-400';
-      default:
-        return 'text-zinc-400';
-    }
   }
 }

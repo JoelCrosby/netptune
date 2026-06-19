@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
-import { SprintStatus, sprintStatusLabels } from '@core/enums/sprint-status';
+import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -30,6 +30,8 @@ import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.comp
 import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
+import { SprintStatusClassesPipe } from '../../pipes/sprint-status-classes.pipe';
+import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
 
 @Component({
   imports: [
@@ -43,6 +45,8 @@ import { SprintTaskListComponent } from '../../components/sprint-task-list.compo
     LucideTrash2,
     SprintStatsComponent,
     SprintTaskListComponent,
+    SprintStatusClassesPipe,
+    SprintStatusLabelPipe,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -60,8 +64,8 @@ import { SprintTaskListComponent } from '../../components/sprint-task-list.compo
                 <h1 class="text-2xl font-semibold">{{ sprint.name }}</h1>
                 <span
                   class="rounded-sm px-2.5 py-0.5 text-xs font-semibold"
-                  [class]="statusClasses(sprint.status)">
-                  {{ statusLabel(sprint.status) }}
+                  [class]="sprint.status | sprintStatusClasses">
+                  {{ sprint.status | sprintStatusLabel }}
                 </span>
                 @if (daysChip(sprint); as chip) {
                   <span
@@ -167,23 +171,6 @@ export class SprintDetailViewComponent {
           this.store.dispatch(loadSprintDetail({ sprintId }));
         }
       });
-  }
-
-  statusLabel(status: SprintStatus) {
-    return sprintStatusLabels[status];
-  }
-
-  statusClasses(status: SprintStatus): string {
-    switch (status) {
-      case SprintStatus.active:
-        return 'bg-green-100 text-green-800';
-      case SprintStatus.planning:
-        return 'bg-blue-100 text-blue-800';
-      case SprintStatus.completed:
-        return 'bg-neutral-100 text-neutral-700';
-      case SprintStatus.cancelled:
-        return 'bg-red-100 text-red-700';
-    }
   }
 
   daysChip(

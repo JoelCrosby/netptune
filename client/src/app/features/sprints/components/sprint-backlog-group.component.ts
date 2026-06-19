@@ -1,8 +1,7 @@
 import { LowerCasePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
-import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
+import { TaskStatus } from '@core/enums/project-task-status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
@@ -18,6 +17,10 @@ import {
   TableRowDirective,
 } from '@static/components/table/table.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
+import { SprintBacklogPriorityClassPipe } from '../pipes/sprint-backlog-priority-class.pipe';
+import { SprintBacklogPriorityLabelPipe } from '../pipes/sprint-backlog-priority-label.pipe';
+import { SprintBacklogStatusBadgeClassPipe } from '../pipes/sprint-backlog-status-badge-class.pipe';
+import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-label.pipe';
 
 export interface BacklogGroup {
   label: string;
@@ -29,6 +32,10 @@ export interface BacklogGroup {
   selector: 'app-sprint-backlog-group',
   imports: [
     LowerCasePipe,
+    SprintBacklogStatusLabelPipe,
+    SprintBacklogStatusBadgeClassPipe,
+    SprintBacklogPriorityLabelPipe,
+    SprintBacklogPriorityClassPipe,
     RouterLink,
     DropdownButtonComponent,
     MenuItemComponent,
@@ -79,16 +86,16 @@ export interface BacklogGroup {
                 <td class="px-4 py-2.5 align-middle">
                   <span
                     class="rounded px-1.5 py-0.5 text-xs font-medium"
-                    [class]="statusBadgeClass(task.status)">
-                    {{ statusLabel(task.status) }}
+                    [class]="task.status | sprintBacklogStatusBadgeClass">
+                    {{ task.status | sprintBacklogStatusLabel }}
                   </span>
                 </td>
                 <td class="px-4 py-2.5 align-middle">
                   @if (task.priority !== null && task.priority !== undefined) {
                     <span
                       class="text-xs font-medium"
-                      [class]="priorityClass(task.priority)">
-                      {{ priorityLabel(task.priority) }}
+                      [class]="task.priority | sprintBacklogPriorityClass">
+                      {{ task.priority | sprintBacklogPriorityLabel }}
                     </span>
                   } @else {
                     <span class="text-muted text-xs">None</span>
@@ -99,12 +106,12 @@ export interface BacklogGroup {
                     {{ task.projectName }}
                   </span>
                 </td>
-                <td class="px-4 py-2.5 align-middle">
+                <td class="px-4 py-1 align-middle">
                   @if (sprints().length > 0) {
                     <app-dropdown-button
                       #assignMenu
                       label="Assign to sprint"
-                      buttonClass="w-52 justify-between"
+                      buttonClass="w-52 h-7 text-xs justify-between"
                       color="neutral"
                       xPosition="before"
                       [disabled]="loading()">
@@ -156,43 +163,5 @@ export class SprintBacklogGroupComponent {
     if (!task.id || !sprintId) return;
 
     this.store.dispatch(assignBacklogTask({ taskId: task.id, sprintId }));
-  }
-
-  statusLabel(status: TaskStatus) {
-    return taskStatusLabels[status];
-  }
-
-  statusBadgeClass(status: TaskStatus): string {
-    switch (status) {
-      case TaskStatus.new:
-        return 'bg-blue-100 text-blue-700';
-      case TaskStatus.inProgress:
-        return 'bg-yellow-100 text-yellow-700';
-      case TaskStatus.complete:
-        return 'bg-green-100 text-green-700';
-      case TaskStatus.onHold:
-        return 'bg-purple-100 text-purple-700';
-      default:
-        return 'bg-neutral-100 text-neutral-600';
-    }
-  }
-
-  priorityLabel(priority: TaskPriority) {
-    return taskPriorityLabels[priority];
-  }
-
-  priorityClass(priority: TaskPriority): string {
-    switch (priority) {
-      case TaskPriority.critical:
-        return 'text-red-500';
-      case TaskPriority.high:
-        return 'text-orange-400';
-      case TaskPriority.medium:
-        return 'text-yellow-500';
-      case TaskPriority.low:
-        return 'text-blue-400';
-      default:
-        return 'text-zinc-400';
-    }
   }
 }
