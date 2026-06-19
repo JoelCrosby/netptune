@@ -36,13 +36,6 @@ export class AuthEffects implements OnInitEffects {
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
 
-  init$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.initAuth),
-      map(() => actions.currentUser())
-    );
-  });
-
   currentUser$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
