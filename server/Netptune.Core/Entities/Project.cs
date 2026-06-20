@@ -21,6 +21,8 @@ public record Project : WorkspaceEntity<int>
 
     public ProjectMeta? MetaInfo { get; set; }
 
+    public int? DefaultStatusId { get; set; }
+
     #region NavigationProperties
 
     [JsonIgnore]
@@ -28,6 +30,9 @@ public record Project : WorkspaceEntity<int>
 
     [JsonIgnore]
     public ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
+
+    [JsonIgnore]
+    public Status? DefaultStatus { get; set; }
 
     [JsonIgnore]
     public ICollection<Sprint> Sprints { get; set; } = new HashSet<Sprint>();
@@ -60,6 +65,8 @@ public record Project : WorkspaceEntity<int>
             CreatedAt = CreatedAt,
             DefaultBoardIdentifier = identifier,
             Color = MetaInfo?.Color,
+            DefaultStatusId = DefaultStatusId,
+            DefaultStatusName = DefaultStatus?.Name,
         };
     }
 
@@ -74,6 +81,7 @@ public record Project : WorkspaceEntity<int>
             RepositoryUrl = options.RepositoryUrl,
             Key = options.Key,
             MetaInfo = options.MetaInfo,
+            DefaultStatusId = options.DefaultStatusId,
         };
 
         project.ProjectUsers.Add(new ProjectUser
@@ -150,4 +158,6 @@ public class CreateProjectOptions
     public int WorkspaceId { get; init; }
 
     public ProjectMeta? MetaInfo { get; init; }
+
+    public int? DefaultStatusId { get; init; }
 }

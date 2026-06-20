@@ -37,6 +37,12 @@ public class ProjectEntityMap : WorkspaceEntityMap<Project, int>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
+            .HasOne(project => project.DefaultStatus)
+            .WithMany()
+            .HasForeignKey(project => project.DefaultStatusId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
             .HasIndex(project => new { project.WorkspaceId, project.Key })
             .IsUnique();
 

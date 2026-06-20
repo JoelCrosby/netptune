@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
@@ -28,9 +27,14 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .HasMaxLength(32768);
 
         builder
-            .Property(task => task.Status)
-            .HasDefaultValue(ProjectTaskStatus.New)
+            .Property(task => task.StatusId)
             .IsRequired();
+
+        builder
+            .HasOne(task => task.Status)
+            .WithMany(status => status.ProjectTasks)
+            .HasForeignKey(task => task.StatusId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .Property(task => task.Priority)
@@ -80,7 +84,7 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .HasDatabaseName("ix_project_tasks_workspace_sprint_deleted_updated_id");
 
         builder
-            .HasIndex(task => new { task.WorkspaceId, task.Status, task.IsDeleted, task.UpdatedAt, task.Id })
+            .HasIndex(task => new { task.WorkspaceId, task.StatusId, task.IsDeleted, task.UpdatedAt, task.Id })
             .HasDatabaseName("ix_project_tasks_workspace_status_deleted_updated_id");
 
         builder

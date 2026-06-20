@@ -13,7 +13,7 @@ public record ProjectTask : WorkspaceEntity<int>
 
     public string? Description { get; set; }
 
-    public ProjectTaskStatus Status { get; set; }
+    public int StatusId { get; set; }
 
     public int ProjectScopeId { get; set; }
 
@@ -32,6 +32,9 @@ public record ProjectTask : WorkspaceEntity<int>
     #endregion
 
     #region NavigationProperties
+
+    [JsonIgnore]
+    public Status Status { get; set; } = null!;
 
     [JsonIgnore]
     public ICollection<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = new HashSet<ProjectTaskAppUser>();
@@ -65,7 +68,11 @@ public record ProjectTask : WorkspaceEntity<int>
             OwnerId = OwnerId!,
             Name = Name,
             Description = Description,
-            Status = Status,
+            StatusId = StatusId,
+            StatusName = Status.Name,
+            StatusKey = Status.Key,
+            StatusColor = Status.Color,
+            StatusCategory = Status.Category,
             ProjectScopeId = ProjectScopeId,
             SystemId = Project is null ? $"{ProjectScopeId}" : $"{Project.Key}-{ProjectScopeId}",
             ProjectId = ProjectId,
