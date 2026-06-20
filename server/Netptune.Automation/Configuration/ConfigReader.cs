@@ -29,6 +29,7 @@ internal static class ConfigReader
     {
         return document is not null
                && document.RootElement.TryGetProperty(property, out var element)
+               && element.ValueKind == JsonValueKind.Number
                && element.TryGetInt32(out var value)
             ? value
             : null;

@@ -28,7 +28,7 @@ public sealed class ImportEndpointTests
 
         var import = $"""
             Name,assignees,owner,group
-            task name,"{userEmail}","{userEmail}",done
+            task name,"{userEmail}","{userEmail}",complete
             """;
 
         var request = new HttpRequestMessage

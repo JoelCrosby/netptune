@@ -144,6 +144,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
         return client;
     }
+
+    public IServiceScope CreateScope() => WebApplicationFactory.Services.CreateScope();
 }
 
 internal class TestExceptionHttpHandler : DelegatingHandler

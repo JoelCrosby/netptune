@@ -9,9 +9,9 @@ public sealed class TagSeeder : ISeeder
 
     private static readonly string[] Names =
     [
-        "backend", "frontend", "mobile", "infrastructure", "security",
-        "performance", "accessibility", "testing", "documentation", "bug",
-        "feature", "tech-debt", "breaking-change", "urgent",
+        "Backend", "Frontend", "Mobile", "Infrastructure", "Security",
+        "Performance", "Accessibility", "Testing", "Documentation", "Bug",
+        "Feature", "Tech-Debt", "Breaking-Change", "Urgent",
     ];
 
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
