@@ -33,10 +33,19 @@ public class MoveTaskInBoardGroupCommandHandlerTests
 
     private void SetupTransfer(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup)
     {
+        var status = AutoFixtures.TaskStatus with
+        {
+            Id = 5,
+            WorkspaceId = 1,
+            Category = AutoFixtures.BoardGroup.Type.GetStatusCategoryFromGroupType(),
+        };
+
         UnitOfWork.InvokeTransaction<BoardGroupTaskTarget>();
         UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.NewGroupId, AutoFixtures.BoardGroup.Name, AutoFixtures.BoardGroup.Type, 7));
-        UnitOfWork.Tasks.UpdateTaskStatus(request.TaskId, Arg.Any<ProjectTaskStatus>(), TestContext.Current.CancellationToken).Returns(1);
+            .Returns(new BoardGroupTaskTarget(request.NewGroupId, AutoFixtures.BoardGroup.Name, AutoFixtures.BoardGroup.Type, 7, 1));
+        UnitOfWork.Statuses.GetFirstTaskStatusByCategory(1, Arg.Any<StatusCategory>(), TestContext.Current.CancellationToken)
+            .Returns(status);
+        UnitOfWork.Tasks.UpdateTaskStatus(request.TaskId, Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroup);
         UnitOfWork.ProjectTasksInGroups.GetNeighborSortOrdersForInsert(
                 request.NewGroupId,

@@ -101,10 +101,19 @@ internal sealed class RunPersistenceService
 
             var taskUpdated = false;
 
-            if (plan.Status.HasValue && task.Status != plan.Status.Value)
+            var status = plan.StatusId.HasValue
+                ? await UnitOfWork.Statuses.GetInWorkspace(
+                    plan.StatusId.Value,
+                    plan.Execution.Rule.WorkspaceId,
+                    cancellationToken: cancellationToken)
+                : null;
+
+            if (status is not null && task.StatusId != status.Id)
             {
-                await PutTaskInBoardGroup(plan.Status.Value, task, cancellationToken);
-                task.Status = plan.Status.Value;
+                await PutTaskInBoardGroup(status, task, cancellationToken);
+                await UnitOfWork.Tasks.UpdateTaskStatus(taskId, status.Id, cancellationToken);
+                task.StatusId = status.Id;
+                task.Status = status;
                 taskUpdated = true;
             }
 
@@ -130,13 +139,13 @@ internal sealed class RunPersistenceService
     }
 
     private async Task PutTaskInBoardGroup(
-        ProjectTaskStatus status,
+        Status status,
         ProjectTask task,
         CancellationToken cancellationToken)
     {
         if (task.ProjectId is null) return;
 
-        var groupType = status.GetGroupTypeFromTaskStatus();
+        var groupType = status.Category.GetGroupTypeFromStatusCategory();
         var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(
             task.ProjectId.Value,
             groupType,

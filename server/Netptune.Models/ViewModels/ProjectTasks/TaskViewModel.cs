@@ -1,21 +1,18 @@
-﻿using System;
-using Netptune.Models.Enums;
-
-namespace Netptune.Models.ViewModels.ProjectTasks
+﻿namespace Netptune.Models.ViewModels.ProjectTasks
 {
     public class TaskViewModel
     {
         public int Id { get; set; }
 
-        public string AssigneeId { get; set; }
+        public string? AssigneeId { get; set; }
 
-        public string OwnerId { get; set; }
+        public string? OwnerId { get; set; }
 
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public ProjectTaskStatus Status { get; set; }
+        public int StatusId { get; set; }
 
         public double SortOrder { get; set; }
 
@@ -27,12 +24,12 @@ namespace Netptune.Models.ViewModels.ProjectTasks
 
         public DateTimeOffset? UpdatedAt { get; set; }
 
-        public string AssigneeUsername { get; set; }
+        public string? AssigneeUsername { get; set; }
 
-        public string AssigneePictureUrl { get; set; }
+        public string? AssigneePictureUrl { get; set; }
 
-        public string OwnerUsername { get; set; }
+        public string? OwnerUsername { get; set; }
 
-        public string ProjectName { get; set; }
+        public required string ProjectName { get; set; }
     }
 }

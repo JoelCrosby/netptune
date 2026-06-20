@@ -37,6 +37,8 @@ public class UpdateProjectCommandHandlerTests
 
         Identity.GetCurrentUser().Returns(user);
         UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(project);
+        UnitOfWork.Statuses.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(AutoFixtures.TaskStatus with { Id = request.DefaultStatusId ?? 5 });
 
         var result = await Handler.Handle(new UpdateProjectCommand(request), TestContext.Current.CancellationToken);
 
@@ -55,6 +57,8 @@ public class UpdateProjectCommandHandlerTests
 
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
         UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
+        UnitOfWork.Statuses.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(AutoFixtures.TaskStatus with { Id = request.DefaultStatusId ?? 5 });
 
         await Handler.Handle(new UpdateProjectCommand(request), TestContext.Current.CancellationToken);
 

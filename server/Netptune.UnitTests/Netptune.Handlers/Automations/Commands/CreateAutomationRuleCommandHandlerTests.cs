@@ -156,7 +156,7 @@ public class CreateAutomationRuleCommandHandlerTests
             {
                 Type = AutomationTriggerType.TaskChanged,
                 Fields = [TaskChangeField.Status],
-                Status = ProjectTaskStatus.Complete,
+                StatusId = 12,
             },
             Actions =
             [

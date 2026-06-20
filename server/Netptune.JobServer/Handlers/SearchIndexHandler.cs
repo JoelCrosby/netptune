@@ -67,7 +67,7 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
             Description = task.Description,
             SystemId = $"{task.ProjectScopeId}",
             WorkspaceSlug = workspaceSlug,
-            Status = task.Status.ToString(),
+            Status = task.Status.Name,
             Priority = task.Priority?.ToString(),
             ProjectId = task.ProjectId,
             UpdatedAt = task.UpdatedAt ?? task.CreatedAt,

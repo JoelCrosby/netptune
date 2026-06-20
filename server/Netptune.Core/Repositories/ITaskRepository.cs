@@ -1,5 +1,4 @@
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -36,9 +35,9 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<List<int>> GetTaskIdsInBoard(string boardIdentifier, CancellationToken cancellationToken = default);
 
-    Task<int> UpdateTaskStatus(int id, ProjectTaskStatus status, CancellationToken cancellationToken = default);
+    Task<int> UpdateTaskStatus(int id, int statusId, CancellationToken cancellationToken = default);
 
-    Task<int> UpdateTaskStatuses(IEnumerable<int> ids, ProjectTaskStatus status, CancellationToken cancellationToken = default);
+    Task<int> UpdateTaskStatuses(IEnumerable<int> ids, int statusId, CancellationToken cancellationToken = default);
 
     Task<List<int>> GetValidTaskIdsInWorkspace(IEnumerable<int> taskIds, int workspaceId, CancellationToken cancellationToken = default);
 

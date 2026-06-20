@@ -14,4 +14,6 @@ public record UpdateProjectRequest
     public string? RepositoryUrl { get; set; }
 
     public string? Key { get; set; }
+
+    public int? DefaultStatusId { get; set; }
 }

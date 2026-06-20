@@ -27,7 +27,7 @@ public record AutomationTriggerViewModel
 
     public List<TaskChangeField>? Fields { get; init; }
 
-    public ProjectTaskStatus? Status { get; init; }
+    public int? StatusId { get; init; }
 
     public AssigneeChangeMode? AssigneeChangeMode { get; init; }
 
@@ -48,7 +48,7 @@ public record AutomationActionViewModel
 
     public string? FlagDescription { get; init; }
 
-    public ProjectTaskStatus? Status { get; init; }
+    public int? StatusId { get; init; }
 
     public TaskPriority? Priority { get; init; }
 }

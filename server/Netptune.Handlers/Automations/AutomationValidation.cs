@@ -16,13 +16,13 @@ internal static class AutomationValidation
         {
             AutomationTriggerType.TaskChanged when request.Trigger.Fields is null || request.Trigger.Fields.Count == 0 =>
                 "Task changed automations require at least one field.",
-            AutomationTriggerType.TaskChanged when request.Trigger.Status is not null &&
+            AutomationTriggerType.TaskChanged when request.Trigger.StatusId is not null &&
                                                     !request.Trigger.Fields.Contains(TaskChangeField.Status) =>
                 "Task changed automations can only set status when watching the status field.",
             AutomationTriggerType.TaskChanged when request.Trigger.AssigneeChangeMode is not null &&
                                                     !request.Trigger.Fields.Contains(TaskChangeField.Assignees) =>
                 "Task changed automations can only set assigneeChangeMode when watching the assignees field.",
-            AutomationTriggerType.TaskStatusChanged when request.Trigger.Status is null =>
+            AutomationTriggerType.TaskStatusChanged when request.Trigger.StatusId is null =>
                 "Task status changed automations require a status.",
             AutomationTriggerType.TaskUnassignedFor when request.Trigger.DurationDays is null or < 1 or > 365 =>
                 "Task unassigned automations require durationDays between 1 and 365.",
@@ -47,7 +47,7 @@ internal static class AutomationValidation
             {
                 AutomationActionType.FlagTask when string.IsNullOrWhiteSpace(action.FlagName) =>
                     "Flag task actions require flagName.",
-                AutomationActionType.UpdateTask when action.Status is null && action.Priority is null =>
+                AutomationActionType.UpdateTask when action.StatusId is null && action.Priority is null =>
                     "Update task actions require status or priority.",
                 _ => null,
             };

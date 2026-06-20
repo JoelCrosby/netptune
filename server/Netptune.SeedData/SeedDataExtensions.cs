@@ -9,6 +9,7 @@ public static class SeedDataExtensions
         services.AddSingleton<ISeeder, UserSeeder>();
         services.AddSingleton<ISeeder, WorkspaceSeeder>();
         services.AddSingleton<ISeeder, WorkspaceUserSeeder>();
+        services.AddSingleton<ISeeder, StatusSeeder>();
         services.AddSingleton<ISeeder, ProjectSeeder>();
         services.AddSingleton<ISeeder, ProjectUserSeeder>();
         services.AddSingleton<ISeeder, SprintSeeder>();

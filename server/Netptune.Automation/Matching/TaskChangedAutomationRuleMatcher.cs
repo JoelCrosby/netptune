@@ -41,11 +41,11 @@ internal sealed class TaskChangedAutomationRuleMatcher
             AutomationTriggerType.TaskChanged,
             message.WorkspaceId,
             cancellationToken);
-        var legacyStatusRules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
+        var statusRules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
             AutomationTriggerType.TaskStatusChanged,
             message.WorkspaceId,
             cancellationToken);
-        var rules = taskChangedRules.Concat(legacyStatusRules).ToList();
+        var rules = taskChangedRules.Concat(statusRules).ToList();
 
         Telemetry.RecordRulesEvaluated(AutomationTriggerType.TaskChanged, rules.Count);
         activity?.SetTag("automation.rules.evaluated", rules.Count);
@@ -71,16 +71,23 @@ internal sealed class TaskChangedAutomationRuleMatcher
             return [];
         }
 
-        var executions = rules
-            .Where(rule => Matches(rule, message))
-            .Select(rule => new PendingAutomationExecution
+        var executions = new List<PendingAutomationExecution>();
+
+        foreach (var rule in rules)
+        {
+            if (!Matches(rule, message))
+            {
+                continue;
+            }
+
+            executions.Add(new PendingAutomationExecution
             {
                 Rule = rule,
                 Task = task,
                 ActorUserId = message.ActorUserId,
                 IdempotencyKey = $"rule:{rule.Id}:task:{message.TaskId}:event:{message.EventId}",
-            })
-            .ToList();
+            });
+        }
 
         Telemetry.RecordRulesMatched(AutomationTriggerType.TaskChanged, executions.Count);
         activity?.SetTag("automation.rules.matched", executions.Count);
@@ -94,56 +101,77 @@ internal sealed class TaskChangedAutomationRuleMatcher
         return executions;
     }
 
-    private static bool Matches(AutomationRule rule, TaskChangedMessage message)
+    private bool Matches(
+        AutomationRule rule,
+        TaskChangedMessage message)
     {
         return rule.TriggerType switch
         {
             AutomationTriggerType.TaskChanged => MatchesTaskChangedRule(rule, message),
-            AutomationTriggerType.TaskStatusChanged => MatchesLegacyStatusChangedRule(rule, message),
+            AutomationTriggerType.TaskStatusChanged => MatchesStatusChangedRule(rule, message),
             _ => false,
         };
     }
 
-    private static bool MatchesTaskChangedRule(AutomationRule rule, TaskChangedMessage message)
+    private bool MatchesTaskChangedRule(
+        AutomationRule rule,
+        TaskChangedMessage message)
     {
         var configuredFields = ConfigReader.ReadEnumList<TaskChangeField>(rule.TriggerConfig, "fields");
         var watchedFields = configuredFields.Count == 0
             ? Enum.GetValues<TaskChangeField>().ToHashSet()
             : configuredFields.ToHashSet();
 
-        return message.Changes.Any(change =>
-            watchedFields.Contains(change.Field) &&
-            MatchesFieldCondition(rule, change));
+        foreach (var change in message.Changes)
+        {
+            if (!watchedFields.Contains(change.Field))
+            {
+                continue;
+            }
+
+            if (MatchesFieldCondition(rule,  change))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    private static bool MatchesLegacyStatusChangedRule(AutomationRule rule, TaskChangedMessage message)
+    private static bool MatchesStatusChangedRule(AutomationRule rule, TaskChangedMessage message)
     {
         var statusChange = message.Changes.FirstOrDefault(change => change.Field == TaskChangeField.Status);
 
         return statusChange is not null && MatchesStatusCondition(rule, statusChange);
     }
 
-    private static bool MatchesFieldCondition(AutomationRule rule, TaskFieldChange change)
+    private static bool MatchesFieldCondition(
+        AutomationRule rule,
+        TaskFieldChange change)
     {
-        return change.Field switch
+        var matches = change.Field switch
         {
             TaskChangeField.Status => MatchesStatusCondition(rule, change),
             TaskChangeField.Assignees => MatchesAssigneeCondition(rule, change),
             _ => true,
         };
+
+        return matches;
     }
 
-    private static bool MatchesStatusCondition(AutomationRule rule, TaskFieldChange change)
+    private static bool MatchesStatusCondition(
+        AutomationRule rule,
+        TaskFieldChange change)
     {
-        var configuredStatus = ConfigReader.ReadEnum<ProjectTaskStatus>(rule.TriggerConfig, "status");
+        var configuredStatusId = ConfigReader.ReadInt(rule.TriggerConfig, "statusId");
 
-        if (configuredStatus is null)
+        if (configuredStatusId.HasValue)
         {
-            return true;
+            return int.TryParse(change.NewValue, out var newStatusId) &&
+                   newStatusId == configuredStatusId.Value;
         }
 
-        return Enum.TryParse<ProjectTaskStatus>(change.NewValue, out var newStatus) &&
-               newStatus == configuredStatus.Value;
+        return true;
     }
 
     private static bool MatchesAssigneeCondition(AutomationRule rule, TaskFieldChange change)

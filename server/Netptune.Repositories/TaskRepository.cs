@@ -33,6 +33,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 .ThenInclude(x => x.User)
             .Include(x => x.Project)
             .Include(x => x.Sprint)
+            .Include(x => x.Status)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
             .AsSplitQuery()
@@ -44,6 +45,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return Entities
             .Include(x => x.ProjectTaskAppUsers)
+            .Include(x => x.Status)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
@@ -53,6 +55,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(task => task.ProjectTaskAppUsers)
             .Include(task => task.Project)
             .Include(task => task.Workspace)
+            .Include(task => task.Status)
             .AsNoTracking()
             .FirstOrDefaultAsync(task => task.Id == id && !task.IsDeleted, cancellationToken);
     }
@@ -66,6 +69,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(task => task.ProjectTaskAppUsers)
             .Include(task => task.Project)
             .Include(task => task.Workspace)
+            .Include(task => task.Status)
             .Where(task =>
                 workspaceIds.Contains(task.WorkspaceId) &&
                 !task.IsDeleted &&
@@ -133,6 +137,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(x => x.Project)
             .Include(x => x.Owner)
             .Include(x => x.Workspace)
+            .Include(x => x.Status)
             .Include(x => x.Tags)
             .AsSplitQuery();
 
@@ -145,7 +150,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var search = filter.Search?.Trim().ToLower() ?? string.Empty;
         var searchPattern = $"%{search}%";
         var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
-        var statuses = filter.Statuses.Select(status => (int)status).ToArray();
+        var statusIds = filter.StatusIds;
         var assignees = filter.Assignees.Where(assignee => !string.IsNullOrWhiteSpace(assignee)).ToArray();
         var page = Math.Max(filter.Page ?? PaginationDefaults.DefaultPage, 1);
         var pageSize = Math.Clamp(filter.PageSize ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
@@ -159,7 +164,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , pt.owner_id
                      , pt.name
                      , pt.description
-                     , pt.status
+                     , pt.status_id
+                     , st.name AS status_name
+                     , st.key AS status_key
+                     , st.color AS status_color
+                     , st.category AS status_category
                      , pt.project_scope_id
                      , pt.priority
                      , pt.estimate_type
@@ -183,6 +192,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , COUNT(*) OVER() AS total_count
                 FROM project_tasks pt
                          INNER JOIN workspaces w ON pt.workspace_id = w.id
+                         INNER JOIN statuses st ON pt.status_id = st.id
                          LEFT JOIN projects p ON pt.project_id = p.id
                          LEFT JOIN sprints s ON pt.sprint_id = s.id AND NOT s.is_deleted
                          INNER JOIN users o ON pt.owner_id = o.id
@@ -192,7 +202,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                   AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
                   AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
                   AND (@noSprint = FALSE OR pt.sprint_id IS NULL)
-                  AND (CARDINALITY(@statuses) = 0 OR pt.status = ANY(@statuses))
+                  AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
                   AND (CARDINALITY(@assignees) = 0 OR EXISTS (
                       SELECT 1
                       FROM project_task_app_users ptau_filter
@@ -227,7 +237,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                  , ft.owner_id
                  , ft.name AS task_name
                  , ft.description AS task_description
-                 , ft.status AS task_status
+                 , ft.status_id AS task_status_id
+                 , ft.status_name AS task_status_name
+                 , ft.status_key AS task_status_key
+                 , ft.status_color AS task_status_color
+                 , ft.status_category AS task_status_category
                  , ft.project_scope_id
                  , ft.priority AS task_priority
                  , ft.estimate_type AS task_estimate_type
@@ -262,7 +276,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             sprintId = filter.SprintId,
             excludeSprintId = filter.ExcludeSprintId,
             noSprint = filter.NoSprint ?? false,
-            statuses,
+            statusIds,
             tags,
             assignees,
             search,
@@ -297,7 +311,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 OwnerId = row.Owner_Id,
                 Name = row.Task_Name,
                 Description = row.Task_Description,
-                Status = row.Task_Status,
+                StatusId = row.Task_Status_Id,
+                StatusName = row.Task_Status_Name,
+                StatusKey = row.Task_Status_Key,
+                StatusColor = row.Task_Status_Color,
+                StatusCategory = row.Task_Status_Category,
                 ProjectScopeId = row.Project_Scope_Id,
                 SystemId = row.Project_Key is null
                     ? row.Project_Scope_Id.ToString()
@@ -360,7 +378,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             OwnerId = x.OwnerId!,
             Name = x.Name,
             Description = x.Description,
-            Status = x.Status,
+            StatusId = x.StatusId,
+            StatusName = x.Status.Name,
+            StatusKey = x.Status.Key,
+            StatusColor = x.Status.Color,
+            StatusCategory = x.Status.Category,
             ProjectScopeId = x.ProjectScopeId,
             SystemId = x.Project == null
                 ? x.ProjectScopeId.ToString()
@@ -405,7 +427,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , pt.name             AS task_name
                      , pt.description      AS task_description
                      , pt.project_scope_id AS project_scope_id
-                     , pt.status           AS task_status
+                     , st.name             AS task_status
                      , pt.created_at       AS task_created_at
                      , pt.updated_at       AS task_updated_at
                      , ptibg.sort_order    AS task_sort_order
@@ -440,6 +462,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                                 LIMIT @take
                             )
                          INNER JOIN users o on pt.owner_id = o.id
+                         INNER JOIN statuses st on pt.status_id = st.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
                          LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
@@ -472,7 +495,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , pt.name             AS task_name
                      , pt.description      AS task_description
                      , pt.project_scope_id AS project_scope_id
-                     , pt.status           AS task_status
+                     , st.name             AS task_status
                      , pt.created_at       AS task_created_at
                      , pt.updated_at       AS task_updated_at
                      , ptibg.sort_order    AS task_sort_order
@@ -509,6 +532,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                                 LIMIT @take
                             )
                          INNER JOIN users o on pt.owner_id = o.id
+                         INNER JOIN statuses st on pt.status_id = st.id
                          LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
                          LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
                          LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
@@ -563,7 +587,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 Name = row.Task_Name,
                 Description = row.Task_Description,
                 SystemId = systemId,
-                Status = row.Task_Status.ToString(),
+                Status = row.Task_Status,
                 SortOrder = row.Task_Sort_Order,
                 Board = row.Board_Identifier,
                 CreatedAt = row.Task_Created_At,
@@ -612,16 +636,16 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return taskCount + 1 + increment;
     }
 
-    public Task<int> UpdateTaskStatus(int id, ProjectTaskStatus status, CancellationToken cancellationToken = default)
+    public Task<int> UpdateTaskStatus(int id, int statusId, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(task => task.Id == id && !task.IsDeleted)
             .ExecuteUpdateAsync(setters => setters
-                .SetProperty(task => task.Status, status)
+                .SetProperty(task => task.StatusId, statusId)
                 .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
     }
 
-    public Task<int> UpdateTaskStatuses(IEnumerable<int> ids, ProjectTaskStatus status, CancellationToken cancellationToken = default)
+    public Task<int> UpdateTaskStatuses(IEnumerable<int> ids, int statusId, CancellationToken cancellationToken = default)
     {
         var idList = ids.ToList();
 
@@ -630,7 +654,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return Entities
             .Where(task => idList.Contains(task.Id) && !task.IsDeleted)
             .ExecuteUpdateAsync(setters => setters
-                .SetProperty(task => task.Status, status)
+                .SetProperty(task => task.StatusId, statusId)
                 .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
     }
 
@@ -716,7 +740,15 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
         public string? Task_Description { get; init; }
 
-        public ProjectTaskStatus Task_Status { get; init; }
+        public int Task_Status_Id { get; init; }
+
+        public string Task_Status_Name { get; init; } = null!;
+
+        public string Task_Status_Key { get; init; } = null!;
+
+        public string? Task_Status_Color { get; init; }
+
+        public StatusCategory Task_Status_Category { get; init; }
 
         public int Project_Scope_Id { get; init; }
 

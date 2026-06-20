@@ -36,12 +36,12 @@ internal static class AutomationMapping
             AutomationTriggerType.TaskChanged => JsonSerializer.SerializeToDocument(new
             {
                 fields = trigger.Fields,
-                status = trigger.Status,
+                statusId = trigger.StatusId,
                 assigneeChangeMode = trigger.AssigneeChangeMode,
             }, JsonOptions.Default),
             AutomationTriggerType.TaskStatusChanged => JsonSerializer.SerializeToDocument(new
             {
-                status = trigger.Status,
+                statusId = trigger.StatusId,
             }, JsonOptions.Default),
             AutomationTriggerType.TaskUnassignedFor => JsonSerializer.SerializeToDocument(new
             {
@@ -66,7 +66,7 @@ internal static class AutomationMapping
             }, JsonOptions.Default),
             AutomationActionType.UpdateTask => JsonSerializer.SerializeToDocument(new
             {
-                status = action.Status,
+                statusId = action.StatusId,
                 priority = action.Priority,
             }, JsonOptions.Default),
             _ => null,
@@ -81,14 +81,14 @@ internal static class AutomationMapping
             {
                 Type = type,
                 Fields = ReadEnumList<TaskChangeField>(config, "fields"),
-                Status = ReadEnum<ProjectTaskStatus>(config, "status"),
+                StatusId = ReadInt(config, "statusId"),
                 AssigneeChangeMode = ReadEnum<AssigneeChangeMode>(config, "assigneeChangeMode"),
             },
             AutomationTriggerType.TaskStatusChanged => new AutomationTriggerViewModel
             {
                 Type = type,
                 Fields = [TaskChangeField.Status],
-                Status = ReadEnum<ProjectTaskStatus>(config, "status"),
+                StatusId = ReadInt(config, "statusId"),
             },
             AutomationTriggerType.TaskUnassignedFor => new AutomationTriggerViewModel
             {
@@ -123,7 +123,7 @@ internal static class AutomationMapping
                 Id = action.Id,
                 Type = action.Type,
                 SortOrder = action.SortOrder,
-                Status = ReadEnum<ProjectTaskStatus>(action.Config, "status"),
+                StatusId = ReadInt(action.Config, "statusId"),
                 Priority = ReadEnum<TaskPriority>(action.Config, "priority"),
             },
             _ => new AutomationActionViewModel
@@ -133,11 +133,6 @@ internal static class AutomationMapping
                 SortOrder = action.SortOrder,
             },
         };
-    }
-
-    public static ProjectTaskStatus? ReadStatus(JsonDocument? config)
-    {
-        return ReadEnum<ProjectTaskStatus>(config, "status");
     }
 
     public static int? ReadDurationDays(JsonDocument? config)
@@ -217,6 +212,7 @@ internal static class AutomationMapping
     {
         return document is not null
                && document.RootElement.TryGetProperty(property, out var element)
+               && element.ValueKind == JsonValueKind.Number
                && element.TryGetInt32(out var value)
             ? value
             : null;

@@ -3,6 +3,7 @@ using AutoFixture;
 using FluentAssertions;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
@@ -32,6 +33,25 @@ public class CreateTaskCommandHandlerTests
         Handler = new(UnitOfWork, Identity, Activity);
     }
 
+    private void SetupStatusDependencies()
+    {
+        var status = AutoFixtures.TaskStatus with
+        {
+            Id = 5,
+            WorkspaceId = 1,
+            Category = StatusCategory.Todo,
+        };
+
+        UnitOfWork.Statuses.GetInWorkspace(Arg.Any<int>(), 1, Arg.Any<bool>(), TestContext.Current.CancellationToken)
+            .Returns(status);
+        UnitOfWork.Statuses.GetTaskStatusByKey(1, "new", TestContext.Current.CancellationToken)
+            .Returns(status);
+        UnitOfWork.Statuses.GetFirstTaskStatus(1, TestContext.Current.CancellationToken)
+            .Returns(status);
+        UnitOfWork.Statuses.GetFirstTaskStatusByCategory(1, Arg.Any<StatusCategory>(), TestContext.Current.CancellationToken)
+            .Returns(status);
+    }
+
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
@@ -48,9 +68,10 @@ public class CreateTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+        SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1));
+            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
@@ -78,9 +99,10 @@ public class CreateTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+        SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1));
+            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
@@ -89,7 +111,7 @@ public class CreateTaskCommandHandlerTests
 
         await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+        await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -102,6 +124,7 @@ public class CreateTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+        SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
             .ReturnsNull();
@@ -137,9 +160,10 @@ public class CreateTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+        SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1));
+            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
@@ -162,9 +186,10 @@ public class CreateTaskCommandHandlerTests
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+        SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1));
+            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);

@@ -50,7 +50,7 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
             Description = t.Description,
             SystemId = t.SystemId,
             WorkspaceSlug = workspaceSlug,
-            Status = t.Status.ToString(),
+            Status = t.StatusName,
             Priority = t.Priority?.ToString(),
             AssigneeIds = t.Assignees.Select(a => a.Id).ToList(),
             ProjectId = t.ProjectId,

@@ -1,5 +1,6 @@
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 
 namespace Netptune.TestData.Seeders;
 
@@ -15,7 +16,7 @@ internal static class ProjectSeeder
         "Streamline modal editing experience",
     ];
 
-    internal static List<Project> Generate(List<AppUser> users, List<Workspace> workspaces) =>
+    internal static List<Project> Generate(List<AppUser> users, List<Workspace> workspaces, List<Status>? statuses = null) =>
         Names.Select((name, i) => new Project
         {
             Name = name,
@@ -24,5 +25,9 @@ internal static class ProjectSeeder
             MetaInfo = new(),
             Owner = users[i % users.Count],
             Workspace = workspaces[i % workspaces.Count],
+            DefaultStatus = statuses?.First(status =>
+                status.Workspace == workspaces[i % workspaces.Count] &&
+                status.EntityType == EntityType.Task &&
+                status.Key == "new"),
         }).ToList();
 }

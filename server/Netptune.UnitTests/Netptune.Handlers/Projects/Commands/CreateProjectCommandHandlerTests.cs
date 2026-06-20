@@ -45,6 +45,10 @@ public class CreateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
+        UnitOfWork.Statuses.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(AutoFixtures.TaskStatus with { Id = request.DefaultStatusId ?? 5 });
+        UnitOfWork.Statuses.GetTaskStatusByKey(Arg.Any<int>(), "new", TestContext.Current.CancellationToken)
+            .Returns(AutoFixtures.TaskStatus with { Id = 5 });
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
         UnitOfWork.Projects.AddAsync(Arg.Any<Project>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Project>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
@@ -73,6 +77,10 @@ public class CreateProjectCommandHandlerTests
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
 
         UnitOfWork.InvokeTransaction<ClientResponse<ProjectViewModel>>();
+        UnitOfWork.Statuses.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(AutoFixtures.TaskStatus with { Id = request.DefaultStatusId ?? 5 });
+        UnitOfWork.Statuses.GetTaskStatusByKey(Arg.Any<int>(), "new", TestContext.Current.CancellationToken)
+            .Returns(AutoFixtures.TaskStatus with { Id = 5 });
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
         UnitOfWork.Projects.AddAsync(Arg.Any<Project>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Project>());
         UnitOfWork.Projects.GenerateProjectKey(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns("key");
@@ -80,7 +88,7 @@ public class CreateProjectCommandHandlerTests
 
         await Handler.Handle(new CreateProjectCommand(request), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+        await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]

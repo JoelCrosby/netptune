@@ -125,8 +125,14 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         var allTags = newTags.Concat(existingTags).ToDictionary(tag => tag.Name, tag => tag);
 
+        await UnitOfWork.Statuses.EnsureDefaultTaskStatuses(workspaceId, userId, CancellationToken.None);
+        await UnitOfWork.CompleteAsync();
+
+        var statuses = await UnitOfWork.Statuses.GetAllInWorkspace(workspaceId, isReadonly: true);
+        var defaultStatus = ResolveDefaultStatus(project, statuses);
+
         var tasks = rows
-            .Select(CreateImportTask(project, workspaceId, users, initialScopeId.Value))
+            .Select(CreateImportTask(project, workspaceId, users, statuses, defaultStatus, initialScopeId.Value))
             .ToList();
 
         var boardGroups = newGroups.Select((group, index) => new BoardGroup
@@ -231,30 +237,69 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     }
 
     private static Func<TaskImportRow, int, ProjectTask> CreateImportTask(
-        Project project, int workspaceId, IEnumerable<AppUser> users, int initialScopeId)
+        Project project,
+        int workspaceId,
+        IEnumerable<AppUser> users,
+        IReadOnlyCollection<Status> statuses,
+        Status defaultStatus,
+        int initialScopeId)
     {
         var userList = users.ToList();
+        var statusMap = statuses
+            .Where(status => status.EntityType == EntityType.Task)
+            .SelectMany(status => new[]
+            {
+                new { Key = status.Key, Status = status },
+                new { Key = status.Name.Trim().ToLowerInvariant(), Status = status },
+            })
+            .GroupBy(item => item.Key)
+            .ToDictionary(group => group.Key, group => group.First().Status);
 
-        static ProjectTaskStatus ParseStatus(string? input)
+        return (row, i) =>
         {
-            var isValid = Enum.TryParse(typeof(ProjectTaskStatus), input, true, out var status);
+            var status = ResolveStatus(row.Status);
 
-            return isValid && status is not null ? (ProjectTaskStatus)status : ProjectTaskStatus.New;
+            return new ProjectTask
+            {
+                Name = row.Name,
+                Description = row.Description,
+                WorkspaceId = workspaceId,
+                ProjectId = project.Id,
+                CreatedAt = row.CreatedAt,
+                UpdatedAt = row.UpdatedAt,
+                StatusId = status.Id,
+                OwnerId = FindUserId(userList, row.Owner),
+                ProjectScopeId = initialScopeId + i,
+                ProjectTaskAppUsers = GetUsersFromArrayCell(userList, row.Assignees),
+            };
+        };
+
+        Status ResolveStatus(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return defaultStatus;
+
+            var key = input.Trim().ToLowerInvariant();
+            return statusMap.GetValueOrDefault(key) ?? defaultStatus;
+        }
+    }
+
+    private static Status ResolveDefaultStatus(Project project, IEnumerable<Status> statuses)
+    {
+        var taskStatuses = statuses
+            .Where(status => status.EntityType == EntityType.Task)
+            .ToList();
+
+        if (project.DefaultStatusId.HasValue)
+        {
+            var projectDefault = taskStatuses.FirstOrDefault(status => status.Id == project.DefaultStatusId.Value);
+            if (projectDefault is not null) return projectDefault;
         }
 
-        return (row, i) => new ProjectTask
-        {
-            Name = row.Name,
-            Description = row.Description,
-            WorkspaceId = workspaceId,
-            ProjectId = project.Id,
-            CreatedAt = row.CreatedAt,
-            UpdatedAt = row.UpdatedAt,
-            Status = ParseStatus(row.Status),
-            OwnerId = FindUserId(userList, row.Owner),
-            ProjectScopeId = initialScopeId + i,
-            ProjectTaskAppUsers = GetUsersFromArrayCell(userList, row.Assignees),
-        };
+        return taskStatuses
+            .OrderByDescending(status => status.Key == "new")
+            .ThenBy(status => status.SortOrder)
+            .ThenBy(status => status.Id)
+            .First();
     }
 
     private static string? FindUserId(List<AppUser> users, string? email)

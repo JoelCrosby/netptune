@@ -6,4 +6,5 @@ public sealed record BoardGroupTaskTarget(
     int Id,
     string Name,
     BoardGroupType Type,
-    double MaxSortOrder);
+    double MaxSortOrder,
+    int WorkspaceId = 0);

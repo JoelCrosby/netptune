@@ -10,7 +10,7 @@ public record UpdateProjectTaskRequest
 
     public string? Description { get; set; }
 
-    public ProjectTaskStatus? Status { get; set; }
+    public int? StatusId { get; set; }
 
     public double? SortOrder { get; set; }
 

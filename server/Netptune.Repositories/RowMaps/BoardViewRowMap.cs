@@ -12,7 +12,15 @@ public class BoardViewRowMap
 
     public string Task_Name { get; set; } = null!;
 
-    public ProjectTaskStatus Task_Status { get; set; }
+    public int Task_Status_Id { get; set; }
+
+    public string Task_Status_Name { get; set; } = null!;
+
+    public string Task_Status_Key { get; set; } = null!;
+
+    public string? Task_Status_Color { get; set; }
+
+    public StatusCategory Task_Status_Category { get; set; }
 
     public TaskPriority? Task_Priority { get; set; }
 

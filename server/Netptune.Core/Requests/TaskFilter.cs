@@ -1,5 +1,3 @@
-using Netptune.Core.Enums;
-
 namespace Netptune.Core.Requests;
 
 public sealed class TaskFilter
@@ -14,7 +12,7 @@ public sealed class TaskFilter
 
     public string[] Tags { get; init; } = [];
 
-    public ProjectTaskStatus[] Statuses { get; init; } = [];
+    public int[] StatusIds { get; init; } = [];
 
     public string[] Assignees { get; init; } = [];
 

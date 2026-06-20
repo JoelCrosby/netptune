@@ -37,6 +37,22 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
         project.Key = request.Request.Key ?? project.Key;
         project.ModifiedByUserId = user.Id;
 
+        if (request.Request.DefaultStatusId.HasValue)
+        {
+            var status = await UnitOfWork.Statuses.GetInWorkspace(
+                request.Request.DefaultStatusId.Value,
+                project.WorkspaceId,
+                cancellationToken: cancellationToken);
+
+            if (status is null || status.EntityType != EntityType.Task)
+            {
+                return ClientResponse<ProjectViewModel>.Failed("Default task status not found");
+            }
+
+            project.DefaultStatusId = status.Id;
+            project.DefaultStatus = status;
+        }
+
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>

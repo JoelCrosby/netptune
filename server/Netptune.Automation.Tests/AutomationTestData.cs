@@ -1,9 +1,12 @@
 using System.Text.Json;
 
+using Microsoft.EntityFrameworkCore;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
+using Netptune.Core.Statuses;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.Automation.Tests;
@@ -15,7 +18,7 @@ internal static class AutomationTestData
 
     public static async Task<AutomationScenario> CreateScenario(
         DataContext db,
-        ProjectTaskStatus taskStatus = ProjectTaskStatus.New,
+        string taskStatusKey = "new",
         bool assignTask = true,
         DateTime? taskUpdatedAt = null)
     {
@@ -30,6 +33,16 @@ internal static class AutomationTestData
             CreatedByUserId = owner.Id,
         };
 
+        var statuses = DefaultTaskStatuses.All
+            .Select(definition =>
+            {
+                var status = DefaultTaskStatuses.Create(definition, 0, owner.Id);
+                status.Workspace = workspace;
+                return status;
+            })
+            .ToList();
+        var taskStatusEntity = statuses.Single(status => status.Key == taskStatusKey);
+
         var project = new Project
         {
             Name = "Automation Project",
@@ -43,7 +56,7 @@ internal static class AutomationTestData
         var task = new ProjectTask
         {
             Name = "Automation Task",
-            Status = taskStatus,
+            Status = taskStatusEntity,
             ProjectScopeId = 1,
             Project = project,
             Workspace = workspace,
@@ -62,6 +75,7 @@ internal static class AutomationTestData
 
         db.AppUsers.AddRange(owner, assignee);
         db.Workspaces.Add(workspace);
+        db.Statuses.AddRange(statuses);
         db.Projects.Add(project);
         db.ProjectTasks.Add(task);
 
@@ -73,12 +87,14 @@ internal static class AutomationTestData
     public static async Task<AutomationRule> CreateStatusChangedRule(
         DataContext db,
         AutomationScenario scenario,
-        ProjectTaskStatus status,
+        string statusKey,
         AutomationActionType actionType = AutomationActionType.FlagTask)
     {
+        var statusId = await GetStatusId(db, scenario, statusKey);
+
         return await CreateRule(db, scenario, AutomationTriggerType.TaskStatusChanged, new
         {
-            status = status.ToString(),
+            statusId,
         }, actionType);
     }
 
@@ -86,14 +102,16 @@ internal static class AutomationTestData
         DataContext db,
         AutomationScenario scenario,
         IReadOnlyCollection<TaskChangeField> fields,
-        ProjectTaskStatus? status = null,
+        string? statusKey = null,
         AssigneeChangeMode? assigneeChangeMode = null,
         AutomationActionType actionType = AutomationActionType.FlagTask)
     {
+        var statusId = statusKey is null ? (int?)null : await GetStatusId(db, scenario, statusKey);
+
         return await CreateRule(db, scenario, AutomationTriggerType.TaskChanged, new
         {
             fields,
-            status,
+            statusId,
             assigneeChangeMode,
         }, actionType);
     }
@@ -117,6 +135,10 @@ internal static class AutomationTestData
         object triggerConfig,
         AutomationActionType actionType)
     {
+        var statusId = actionType == AutomationActionType.UpdateTask
+            ? await GetStatusId(db, scenario, "complete")
+            : (int?)null;
+
         var rule = new AutomationRule
         {
             Name = "Automation Rule",
@@ -132,7 +154,7 @@ internal static class AutomationTestData
                 {
                     Type = actionType,
                     SortOrder = 1,
-                    Config = CreateActionConfig(actionType),
+                    Config = CreateActionConfig(actionType, statusId),
                     OwnerId = scenario.Owner.Id,
                     CreatedByUserId = scenario.Owner.Id,
                 },
@@ -145,7 +167,7 @@ internal static class AutomationTestData
         return rule;
     }
 
-    private static JsonDocument CreateActionConfig(AutomationActionType actionType)
+    private static JsonDocument CreateActionConfig(AutomationActionType actionType, int? statusId)
     {
         return actionType switch
         {
@@ -160,11 +182,22 @@ internal static class AutomationTestData
             }),
             AutomationActionType.UpdateTask => JsonSerializer.SerializeToDocument(new
             {
-                status = ProjectTaskStatus.Complete,
+                statusId,
                 priority = TaskPriority.High,
             }),
             _ => JsonSerializer.SerializeToDocument(new { }),
         };
+    }
+
+    public static Task<int> GetStatusId(DataContext db, AutomationScenario scenario, string key)
+    {
+        return db.Statuses
+            .Where(status =>
+                status.WorkspaceId == scenario.Workspace.Id &&
+                status.EntityType == EntityType.Task &&
+                status.Key == key)
+            .Select(status => status.Id)
+            .SingleAsync();
     }
 
     private static AppUser CreateUser(string id, string email)

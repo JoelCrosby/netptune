@@ -2,6 +2,7 @@
 using AutoFixture.Dsl;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Boards;
@@ -50,6 +51,8 @@ public static class AutoFixtures
         .Without(p => p.ProjectTasks)
         .Without(p => p.ProjectPosts)
         .Without(p => p.Sprints)
+        .With(p => p.DefaultStatusId, 5)
+        .Without(p => p.DefaultStatus)
         .With(p => p.ProjectBoards, new List<Board> { Board })
         .WithoutWorkspace()
         .With(p => p.Owner, AppUser)
@@ -57,6 +60,12 @@ public static class AutoFixtures
 
     public static ProjectViewModel ProjectViewModel => Fixture
         .Build<ProjectViewModel>()
+        .Create();
+
+    public static Status TaskStatus => Fixture
+        .Build<Status>()
+        .With(p => p.EntityType, EntityType.Task)
+        .WithoutWorkspace()
         .Create();
 
     public static ProjectTask ProjectTask => Fixture
@@ -67,6 +76,7 @@ public static class AutoFixtures
         .Without(p => p.ProjectTaskTags)
         .Without(p => p.Tags)
         .Without(p => p.Sprint)
+        .With(p => p.Status, TaskStatus)
         .With(p => p.Workspace, Workspace)
         .WithoutAuditable()
         .Create();

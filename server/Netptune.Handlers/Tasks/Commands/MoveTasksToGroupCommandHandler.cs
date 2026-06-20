@@ -41,11 +41,16 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
         var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(req.BoardId, cancellationToken);
         var taskIds = req.TaskIds.Where(id => taskIdsInBoard.Contains(id)).ToList();
         var oldTasks = await UnitOfWork.Tasks.GetAllByIdAsync(taskIds, true, cancellationToken);
-        var newStatus = boardGroup.Type.GetTaskStatusFromGroupType();
+        var newStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(
+            boardGroup.WorkspaceId,
+            boardGroup.Type.GetStatusCategoryFromGroupType(),
+            cancellationToken);
+
+        if (newStatus is null) return ClientResponse.Failed("Default status for board group not found.");
 
         await UnitOfWork.Transaction(async () =>
         {
-            await UnitOfWork.Tasks.UpdateTaskStatuses(taskIds, newStatus, cancellationToken);
+            await UnitOfWork.Tasks.UpdateTaskStatuses(taskIds, newStatus.Id, cancellationToken);
 
             await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds, cancellationToken);
 
@@ -70,13 +75,13 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
             options.Meta = new MoveTaskActivityMeta { Group = boardGroup.Name, GroupId = boardGroup.Id };
         });
 
-        foreach (var oldTask in oldTasks.Where(task => task.Status != newStatus))
+        foreach (var oldTask in oldTasks.Where(task => task.StatusId != newStatus.Id))
         {
             await PublishTaskChanged(
                 oldTask.Id,
                 oldTask.WorkspaceId,
-                oldTask.Status,
-                newStatus);
+                oldTask.StatusId,
+                newStatus.Id);
         }
 
         return ClientResponse.Success;
@@ -85,8 +90,8 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
     private Task PublishTaskChanged(
         int taskId,
         int workspaceId,
-        ProjectTaskStatus oldStatus,
-        ProjectTaskStatus newStatus)
+        int oldStatusId,
+        int newStatusId)
     {
         return EventPublisher.Dispatch(new TaskChangedMessage
         {
@@ -95,7 +100,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
             ActorUserId = Identity.GetCurrentUserId(),
             Changes =
             [
-                TaskFieldChange.Create(TaskChangeField.Status, oldStatus, newStatus),
+                TaskFieldChange.Create(TaskChangeField.Status, oldStatusId, newStatusId),
             ],
         });
     }

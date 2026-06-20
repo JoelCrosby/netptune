@@ -73,7 +73,11 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                          , s.name              AS sprint_name
                          , s.status            AS sprint_status
                          , pt.project_scope_id AS project_scope_id
-                         , pt.status           AS task_status
+                         , pt.status_id        AS task_status_id
+                         , st.name             AS task_status_name
+                         , st.key              AS task_status_key
+                         , st.color            AS task_status_color
+                         , st.category         AS task_status_category
                          , ptibg.sort_order    AS task_sort_order
                          , bg.id               AS board_group_id
                          , pt.workspace_id     AS workspace_id
@@ -82,6 +86,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                              INNER JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
                              INNER JOIN project_tasks pt on pt.id = ptibg.project_task_id
                                 AND NOT pt.is_deleted
+                             INNER JOIN statuses st on pt.status_id = st.id
                              LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
                     WHERE (@sprintId IS NULL OR pt.sprint_id = @sprintId)
                       {searchQuery}
@@ -99,7 +104,11 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                      , lt.sprint_name
                      , lt.sprint_status
                      , lt.project_scope_id
-                     , lt.task_status
+                     , lt.task_status_id
+                     , lt.task_status_name
+                     , lt.task_status_key
+                     , lt.task_status_color
+                     , lt.task_status_category
                      , lt.task_sort_order
                      , bg.id               AS board_group_id
                      , bg.name             AS board_group_name
@@ -174,7 +183,11 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 {
                     Id = row.Task_Id.Value,
                     Name = row.Task_Name,
-                    Status = row.Task_Status,
+                    StatusId = row.Task_Status_Id,
+                    StatusName = row.Task_Status_Name,
+                    StatusKey = row.Task_Status_Key,
+                    StatusColor = row.Task_Status_Color,
+                    StatusCategory = row.Task_Status_Category,
                     SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
                     Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
                     Priority = row.Task_Priority,
@@ -218,7 +231,11 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                     {
                         Id = row.Task_Id.Value,
                         Name = row.Task_Name,
-                        Status = row.Task_Status,
+                        StatusId = row.Task_Status_Id,
+                        StatusName = row.Task_Status_Name,
+                        StatusKey = row.Task_Status_Key,
+                        StatusColor = row.Task_Status_Color,
+                        StatusCategory = row.Task_Status_Category,
                         SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
                         Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
                         SprintId = row.Sprint_Id,
@@ -280,7 +297,8 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 group.Type,
                 Context.ProjectTaskInBoardGroups
                     .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
-                    .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D))
+                    .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D,
+                group.WorkspaceId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -301,7 +319,8 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 group.Type,
                 Context.ProjectTaskInBoardGroups
                     .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
-                    .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D))
+                    .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D,
+                group.WorkspaceId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

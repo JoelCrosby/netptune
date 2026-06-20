@@ -1,5 +1,6 @@
 using Mediator;
 using Microsoft.Extensions.Logging;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.ProjectTasks;
@@ -50,14 +51,16 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
         await UnitOfWork.Transaction(async () =>
         {
-            if (req.Status.HasValue && result.Status != req.Status.Value)
+            var status = await ResolveStatus(req, result.WorkspaceId, cancellationToken);
+
+            if (status is not null && result.StatusId != status.Id)
             {
-                await PutTaskInBoardGroup(req.Status.Value, result, cancellationToken);
+                await PutTaskInBoardGroup(status, result, cancellationToken);
+                result.StatusId = status.Id;
             }
 
             result.Name = req.Name ?? result.Name;
             result.Description = req.Description ?? result.Description;
-            result.Status = req.Status ?? result.Status;
             result.OwnerId = req.OwnerId ?? result.OwnerId;
             result.Priority = req.Priority ?? result.Priority;
             result.EstimateType = req.EstimateType ?? result.EstimateType;
@@ -101,11 +104,11 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         });
     }
 
-    private async Task PutTaskInBoardGroup(ProjectTaskStatus status, Core.Entities.ProjectTask result, CancellationToken cancellationToken)
+    private async Task PutTaskInBoardGroup(Status status, ProjectTask result, CancellationToken cancellationToken)
     {
         if (result.ProjectId is null) return;
 
-        var groupType = status.GetGroupTypeFromTaskStatus();
+        var groupType = status.Category.GetGroupTypeFromStatusCategory();
         var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(result.ProjectId.Value, groupType, cancellationToken);
 
         if (group is null)
@@ -122,5 +125,15 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             ProjectTaskId = result.Id,
             SortOrder = group.MaxSortOrder + 1,
         }, cancellationToken);
+    }
+
+    private async Task<Status?> ResolveStatus(UpdateProjectTaskRequest request, int workspaceId, CancellationToken cancellationToken)
+    {
+        if (request.StatusId.HasValue)
+        {
+            return await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
+        }
+
+        return null;
     }
 }

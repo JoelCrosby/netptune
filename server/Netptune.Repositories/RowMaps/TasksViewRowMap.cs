@@ -16,7 +16,7 @@ public class TasksViewRowMap
 
     public string Task_Name { get; set; } = null!;
 
-    public ProjectTaskStatus Task_Status { get; set; }
+    public string Task_Status { get; set; } = null!;
 
     public double Task_Sort_Order { get; set; }
 

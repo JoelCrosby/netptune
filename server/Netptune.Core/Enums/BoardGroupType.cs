@@ -13,13 +13,13 @@ public enum BoardGroupType
 
 public static class BoardGroupTypeExtensions
 {
-    public static ProjectTaskStatus GetTaskStatusFromGroupType(this BoardGroupType type)
+    public static StatusCategory GetStatusCategoryFromGroupType(this BoardGroupType type)
     {
         return type switch
         {
-            BoardGroupType.Todo => ProjectTaskStatus.InProgress,
-            BoardGroupType.Done => ProjectTaskStatus.Complete,
-            _ => ProjectTaskStatus.InActive,
+            BoardGroupType.Todo => StatusCategory.Active,
+            BoardGroupType.Done => StatusCategory.Done,
+            _ => StatusCategory.Backlog,
         };
     }
 }

@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Meta;
 using Netptune.Entities.Contexts;
 
@@ -30,6 +31,10 @@ public sealed class ProjectSeeder : ISeeder
             MetaInfo = new ProjectMeta { Color = p.Color },
             Owner = context.Users[i % context.Users.Count],
             Workspace = context.Workspaces.First(w => w.Slug == p.WorkspaceSlug),
+            DefaultStatus = context.Statuses.First(status =>
+                status.Workspace.Slug == p.WorkspaceSlug &&
+                status.EntityType == EntityType.Task &&
+                status.Key == "new"),
         }));
 
         await dbContext.Projects.AddRangeAsync(context.Projects, ct);

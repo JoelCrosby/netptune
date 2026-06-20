@@ -15,4 +15,6 @@ public record AddProjectRequest
 
     [Required]
     public ProjectMeta MetaInfo { get; set; } = null!;
+
+    public int? DefaultStatusId { get; set; }
 }

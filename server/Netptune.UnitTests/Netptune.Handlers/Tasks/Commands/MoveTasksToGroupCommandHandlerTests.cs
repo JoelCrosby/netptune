@@ -36,9 +36,18 @@ public class MoveTasksToGroupCommandHandlerTests
 
     private void SetupHandlerDependencies(MoveTasksToGroupRequest request)
     {
+        var status = AutoFixtures.TaskStatus with
+        {
+            Id = 5,
+            WorkspaceId = 1,
+            Category = AutoFixtures.BoardGroup.Type.GetStatusCategoryFromGroupType(),
+        };
+
         UnitOfWork.InvokeTransaction();
         UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.NewGroupId.Value, AutoFixtures.BoardGroup.Name, AutoFixtures.BoardGroup.Type, 7));
+            .Returns(new BoardGroupTaskTarget(request.NewGroupId.Value, AutoFixtures.BoardGroup.Name, AutoFixtures.BoardGroup.Type, 7, 1));
+        UnitOfWork.Statuses.GetFirstTaskStatusByCategory(1, Arg.Any<StatusCategory>(), TestContext.Current.CancellationToken)
+            .Returns(status);
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(request.TaskIds);
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), true, TestContext.Current.CancellationToken)
             .Returns(request.TaskIds.Select(id => new ProjectTask
@@ -46,7 +55,8 @@ public class MoveTasksToGroupCommandHandlerTests
                 Id = id,
                 WorkspaceId = 1,
                 OwnerId = "user-1",
-                Status = ProjectTaskStatus.New,
+                StatusId = 1,
+                Status = AutoFixtures.TaskStatus with { Id = 1 },
             }).ToList());
         UnitOfWork.BoardGroups.GetMaxTaskSortOrder(request.NewGroupId.Value, TestContext.Current.CancellationToken).Returns(7D);
     }
@@ -83,11 +93,11 @@ public class MoveTasksToGroupCommandHandlerTests
 
         await UnitOfWork.Tasks.Received(1).UpdateTaskStatuses(
             Arg.Any<IEnumerable<int>>(),
-            Arg.Any<ProjectTaskStatus>(),
+            Arg.Any<int>(),
             TestContext.Current.CancellationToken);
         await UnitOfWork.Tasks.DidNotReceive().UpdateTaskStatus(
             Arg.Any<int>(),
-            Arg.Any<ProjectTaskStatus>(),
+            Arg.Any<int>(),
             Arg.Any<CancellationToken>());
     }
 

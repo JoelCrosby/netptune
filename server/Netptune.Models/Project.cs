@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Netptune.Models.BaseEntities;
@@ -8,11 +7,13 @@ namespace Netptune.Models
 {
     public class Project : AuditableEntity<int>
     {
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string RepositoryUrl { get; set; }
+        public string? RepositoryUrl { get; set; }
+
+        public int? DefaultStatusId { get; set; }
 
         #region ForeignKeys
 
@@ -23,7 +24,7 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public Workspace Workspace { get; set; }
+        public Workspace? Workspace { get; set; }
 
         [JsonIgnore]
         public ICollection<WorkspaceProject> WorkspaceProjects { get; set; } = new HashSet<WorkspaceProject>();

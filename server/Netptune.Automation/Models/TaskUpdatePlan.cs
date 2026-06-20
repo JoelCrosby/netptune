@@ -9,7 +9,7 @@ internal sealed record TaskUpdatePlan
 
     public required AutomationAction Action { get; init; }
 
-    public ProjectTaskStatus? Status { get; init; }
+    public int? StatusId { get; init; }
 
     public TaskPriority? Priority { get; init; }
 }

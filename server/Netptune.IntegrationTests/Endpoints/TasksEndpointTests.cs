@@ -3,12 +3,17 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Activity;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Statuses;
+using Netptune.Entities.Contexts;
 using Netptune.TestData;
 
 using Xunit;
@@ -18,9 +23,11 @@ namespace Netptune.IntegrationTests.Endpoints;
 public sealed class TasksEndpointTests
 {
     private readonly HttpClient Client;
+    private readonly NetptuneFixture Fixture;
 
     public TasksEndpointTests(NetptuneFixture fixture)
     {
+        Fixture = fixture;
         Client = fixture.CreateNetptuneClient();
     }
 
@@ -104,7 +111,10 @@ public sealed class TasksEndpointTests
         tagResult.Payload!.Items.Should().NotBeEmpty();
         tagResult.Payload.Items.Should().OnlyContain(task => task.Tags.Contains("Typescript"));
 
-        var statusResponse = await Client.GetAsync($"api/tasks?statuses={(int)ProjectTaskStatus.Complete}");
+        var completeStatus = await GetStatus("complete");
+        var inProgressStatus = await GetStatus("in-progress");
+
+        var statusResponse = await Client.GetAsync($"api/tasks?statusIds={completeStatus.Id}");
 
         statusResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -112,14 +122,14 @@ public sealed class TasksEndpointTests
 
         statusResult.IsSuccess.Should().BeTrue();
         statusResult.Payload!.Items.Should().NotBeEmpty();
-        statusResult.Payload.Items.Should().OnlyContain(task => task.Status == ProjectTaskStatus.Complete);
+        statusResult.Payload.Items.Should().OnlyContain(task => task.StatusId == completeStatus.Id);
 
         var user = SeedData.Users.ElementAt(0);
         var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
         {
             Name = "Assignee filter test",
             Description = "Task used to verify assignee filtering",
-            Status = ProjectTaskStatus.InProgress,
+            StatusId = inProgressStatus.Id,
             ProjectId = 1,
             AssigneeId = user.Id,
         });
@@ -189,12 +199,13 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
+        var completeStatus = await GetStatus("complete");
         var request = new UpdateProjectTaskRequest
         {
             Id = 1,
             Name = "updated name",
             Description = "updated description",
-            Status = ProjectTaskStatus.Complete,
+            StatusId = completeStatus.Id,
         };
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
@@ -206,7 +217,8 @@ public sealed class TasksEndpointTests
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
-        result.Payload.Status.Should().Be(request.Status);
+        result.Payload.StatusId.Should().Be(completeStatus.Id);
+        result.Payload.StatusKey.Should().Be(completeStatus.Key);
     }
 
     [Fact]
@@ -217,7 +229,6 @@ public sealed class TasksEndpointTests
             Id = -1,
             Name = "updated name",
             Description = "updated description",
-            Status = ProjectTaskStatus.Complete,
         };
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
@@ -232,7 +243,6 @@ public sealed class TasksEndpointTests
         {
             Name = "updated name",
             Description = "updated description",
-            Status = ProjectTaskStatus.Complete,
         };
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
@@ -243,11 +253,12 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
+        var inProgressStatus = await GetStatus("in-progress");
         var request = new AddProjectTaskRequest
         {
             Name = "new name",
             Description = "new description",
-            Status = ProjectTaskStatus.InProgress,
+            StatusId = inProgressStatus.Id,
             ProjectId = 1,
         };
 
@@ -260,7 +271,8 @@ public sealed class TasksEndpointTests
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
-        result.Payload.Status.Should().Be(request.Status);
+        result.Payload.StatusId.Should().Be(inProgressStatus.Id);
+        result.Payload.StatusKey.Should().Be(inProgressStatus.Key);
     }
 
     [Fact]
@@ -269,7 +281,6 @@ public sealed class TasksEndpointTests
         var request = new AddProjectTaskRequest
         {
             Description = "new description",
-            Status = ProjectTaskStatus.InProgress,
             ProjectId = 1,
         };
 
@@ -426,5 +437,28 @@ public sealed class TasksEndpointTests
         }
 
         return null;
+    }
+
+    private async Task<StatusViewModel> GetStatus(string key)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Statuses
+            .Where(status => status.Workspace.Slug == "netptune" && status.EntityType == EntityType.Task && status.Key == key)
+            .Select(status => new StatusViewModel
+            {
+                Id = status.Id,
+                WorkspaceId = status.WorkspaceId,
+                EntityType = status.EntityType,
+                Name = status.Name,
+                Key = status.Key,
+                Description = status.Description,
+                Color = status.Color,
+                SortOrder = status.SortOrder,
+                Category = status.Category,
+                IsSystem = status.IsSystem,
+            })
+            .SingleAsync();
     }
 }

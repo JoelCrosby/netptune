@@ -1,26 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 using Netptune.Models.BaseEntities;
-using Netptune.Models.Enums;
 using Netptune.Models.Relationships;
 using Netptune.Models.ViewModels.ProjectTasks;
 
 namespace Netptune.Models
 {
-    public class ProjectTask : AuditableEntity<int>, ISortable
+    public class ProjectTask : AuditableEntity<int>
     {
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public ProjectTaskStatus Status { get; set; }
+        public int StatusId { get; set; }
 
         public double SortOrder { get; set; }
 
         #region ForeignKeys
 
-        public string AssigneeId { get; set; }
+        public string? AssigneeId { get; set; }
 
         public int? ProjectId { get; set; }
 
@@ -31,13 +29,13 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public AppUser Assignee { get; set; }
+        public AppUser? Assignee { get; set; }
 
         [JsonIgnore]
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
 
         [JsonIgnore]
-        public Workspace Workspace { get; set; }
+        public Workspace? Workspace { get; set; }
 
         [JsonIgnore]
         public ICollection<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();
@@ -55,7 +53,7 @@ namespace Netptune.Models
                 OwnerId = OwnerId,
                 Name = Name,
                 Description = Description,
-                Status = Status,
+                StatusId = StatusId,
                 SortOrder = SortOrder,
                 ProjectId = ProjectId,
                 WorkspaceId = WorkspaceId,

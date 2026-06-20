@@ -22,12 +22,14 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_creates_run_and_flag_for_matching_status_rule()
     {
         await using var scope = await Fixture.CreateScope();
-        var scenario = await AutomationTestData.CreateScenario(scope.Db, ProjectTaskStatus.InProgress);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
         var rule = await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            ProjectTaskStatus.InProgress);
+            "in-progress");
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -37,7 +39,7 @@ public sealed class AutomationExecutionServiceTests
             EventId = Guid.NewGuid(),
             Changes =
             [
-                TaskFieldChange.Create(TaskChangeField.Status, ProjectTaskStatus.New, ProjectTaskStatus.InProgress),
+                TaskFieldChange.Create(TaskChangeField.Status, newStatusId, inProgressStatusId),
             ],
         }, TestContext.Current.CancellationToken);
 
@@ -59,12 +61,14 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_is_idempotent_for_same_event()
     {
         await using var scope = await Fixture.CreateScope();
-        var scenario = await AutomationTestData.CreateScenario(scope.Db, ProjectTaskStatus.Complete);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            ProjectTaskStatus.Complete);
+            "complete");
         var eventId = Guid.NewGuid();
         var message = new TaskChangedMessage
         {
@@ -74,7 +78,7 @@ public sealed class AutomationExecutionServiceTests
             EventId = eventId,
             Changes =
             [
-                TaskFieldChange.Create(TaskChangeField.Status, ProjectTaskStatus.InProgress, ProjectTaskStatus.Complete),
+                TaskFieldChange.Create(TaskChangeField.Status, inProgressStatusId, completeStatusId),
             ],
         };
 
@@ -117,12 +121,24 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_updates_task_for_matching_rule()
     {
         await using var scope = await Fixture.CreateScope();
-        var scenario = await AutomationTestData.CreateScenario(scope.Db, ProjectTaskStatus.New);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Name],
             actionType: AutomationActionType.UpdateTask);
+
+        var configuredStatusId = await scope.Db.AutomationActions
+            .Where(action => action.Type == AutomationActionType.UpdateTask)
+            .Select(action => action.Config!.RootElement.GetProperty("statusId").GetInt32())
+            .SingleAsync(TestContext.Current.CancellationToken);
+        var expectedStatusId = await scope.Db.Statuses
+            .Where(status => status.WorkspaceId == scenario.Workspace.Id && status.Key == "complete")
+            .Select(status => status.Id)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        configuredStatusId.Should().Be(expectedStatusId);
+        scope.Db.ChangeTracker.Clear();
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -135,21 +151,28 @@ public sealed class AutomationExecutionServiceTests
             ],
         }, TestContext.Current.CancellationToken);
 
-        var task = await scope.Db.ProjectTasks.SingleAsync(TestContext.Current.CancellationToken);
+        scope.Db.ChangeTracker.Clear();
         var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+        run.Status.Should().Be(AutomationRunStatus.Succeeded, run.Message);
 
-        task.Status.Should().Be(ProjectTaskStatus.Complete);
+        var task = await scope.Db.ProjectTasks
+            .Include(task => task.Status)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
         task.Priority.Should().Be(TaskPriority.High);
+        task.StatusId.Should().Be(expectedStatusId);
+        task.Status.Key.Should().Be("complete");
         task.ModifiedByUserId.Should().Be(scenario.Owner.Id);
-        run.Status.Should().Be(AutomationRunStatus.Succeeded);
     }
 
     [Fact]
-    public async Task ExecuteTaskChangedRules_supports_legacy_status_changed_rules()
+    public async Task ExecuteTaskChangedRules_supports_status_changed_rules()
     {
         await using var scope = await Fixture.CreateScope();
-        var scenario = await AutomationTestData.CreateScenario(scope.Db, ProjectTaskStatus.Complete);
-        var rule = await AutomationTestData.CreateStatusChangedRule(scope.Db, scenario, ProjectTaskStatus.Complete);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var rule = await AutomationTestData.CreateStatusChangedRule(scope.Db, scenario, "complete");
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -158,7 +181,7 @@ public sealed class AutomationExecutionServiceTests
             ActorUserId = scenario.Owner.Id,
             Changes =
             [
-                TaskFieldChange.Create(TaskChangeField.Status, ProjectTaskStatus.InProgress, ProjectTaskStatus.Complete),
+                TaskFieldChange.Create(TaskChangeField.Status, inProgressStatusId, completeStatusId),
             ],
         }, TestContext.Current.CancellationToken);
 

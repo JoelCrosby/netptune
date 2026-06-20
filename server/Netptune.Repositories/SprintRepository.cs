@@ -68,9 +68,9 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
                 CreatedAt = sprint.CreatedAt,
                 UpdatedAt = sprint.UpdatedAt,
                 TaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted),
-                NewTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status == ProjectTaskStatus.New),
-                ActiveTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status == ProjectTaskStatus.InProgress),
-                DoneTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status == ProjectTaskStatus.Complete),
+                NewTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Todo),
+                ActiveTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Active),
+                DoneTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Done),
                 EstimateType = sprint.ProjectTasks
                     .Where(task => !task.IsDeleted && task.EstimateType.HasValue)
                     .Select(task => task.EstimateType)
@@ -163,7 +163,11 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             OwnerId = task.OwnerId!,
             Name = task.Name,
             Description = task.Description,
-            Status = task.Status,
+            StatusId = task.StatusId,
+            StatusName = task.Status.Name,
+            StatusKey = task.Status.Key,
+            StatusColor = task.Status.Color,
+            StatusCategory = task.Status.Category,
             ProjectScopeId = task.ProjectScopeId,
             SystemId = task.Project == null
                 ? task.ProjectScopeId.ToString()

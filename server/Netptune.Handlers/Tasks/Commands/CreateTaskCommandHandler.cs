@@ -46,11 +46,19 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (project is null) return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
 
+        await UnitOfWork.Statuses.EnsureDefaultTaskStatuses(workspaceId.Value, user.Id, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        var status = await ResolveStatus(req, project, workspaceId.Value, cancellationToken);
+
+        if (status is null) return ClientResponse<TaskViewModel>.Failed("Task status not found");
+
         var task = new ProjectTask
         {
             Name = req.Name,
             Description = req.Description,
-            Status = req.Status ?? ProjectTaskStatus.New,
+            StatusId = status.Id,
+            Status = status,
             ProjectId = req.ProjectId,
             OwnerId = user.Id,
             WorkspaceId = workspaceId.Value,
@@ -105,7 +113,16 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (boardGroup is null) throw new Exception($"BoardGroup with id of {groupId} does not exist.");
 
-        task.Status = boardGroup.Type.GetTaskStatusFromGroupType();
+        var status = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(
+            task.WorkspaceId,
+            boardGroup.Type.GetStatusCategoryFromGroupType(),
+            cancellationToken);
+
+        if (status is not null)
+        {
+            task.StatusId = status.Id;
+            task.Status = status;
+        }
 
         task.ProjectTaskInBoardGroups.Add(new ProjectTaskInBoardGroup
         {
@@ -117,7 +134,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
     private async Task AddTaskToBoardGroup(TaskCreationProject project, ProjectTask task, CancellationToken cancellationToken)
     {
-        var boardGroupType = task.Status.GetGroupTypeFromTaskStatus();
+        var boardGroupType = task.Status.Category.GetGroupTypeFromStatusCategory();
         var boardGroup = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(project.Id, boardGroupType, cancellationToken);
 
         if (boardGroup is null) throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board group of type {boardGroupType}.");
@@ -128,5 +145,22 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             BoardGroupId = boardGroup.Id,
             ProjectTask = task,
         });
+    }
+
+    private async Task<Status?> ResolveStatus(AddProjectTaskRequest request, TaskCreationProject project, int workspaceId, CancellationToken cancellationToken)
+    {
+        if (request.StatusId.HasValue)
+        {
+            return await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
+        }
+
+        if (project.DefaultStatusId.HasValue)
+        {
+            var status = await UnitOfWork.Statuses.GetInWorkspace(project.DefaultStatusId.Value, workspaceId, cancellationToken: cancellationToken);
+            if (status is not null) return status;
+        }
+
+        return await UnitOfWork.Statuses.GetTaskStatusByKey(workspaceId, "new", cancellationToken)
+               ?? await UnitOfWork.Statuses.GetFirstTaskStatus(workspaceId, cancellationToken);
     }
 }

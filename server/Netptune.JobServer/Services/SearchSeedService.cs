@@ -191,7 +191,7 @@ public sealed class SearchSeedService : BackgroundService
                 Description = t.Description,
                 SystemId = t.SystemId,
                 WorkspaceSlug = slug,
-                Status = t.Status.ToString(),
+                Status = t.StatusName,
                 Priority = t.Priority?.ToString(),
                 AssigneeIds = t.Assignees.Select(a => a.Id).ToList(),
                 ProjectId = t.ProjectId,

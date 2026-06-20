@@ -28,6 +28,13 @@ internal static class WorkspaceFactory
             var workspace = await unitOfWork.Workspaces.AddAsync(entity, cancellationToken);
 
             await unitOfWork.CompleteAsync(cancellationToken);
+            await unitOfWork.Statuses.EnsureDefaultTaskStatuses(workspace.Id, user.Id, cancellationToken);
+            await unitOfWork.CompleteAsync(cancellationToken);
+
+            var defaultStatus = await unitOfWork.Statuses.GetTaskStatusByKey(workspace.Id, "new", cancellationToken)
+                                ?? await unitOfWork.Statuses.GetFirstTaskStatus(workspace.Id, cancellationToken);
+
+            if (defaultStatus is null) return ClientResponse<WorkspaceViewModel>.Failed("Default task status not found");
 
             var permissions = WorkspaceRolePermissions
                 .GetDefaultPermissions(WorkspaceRole.Owner)
@@ -50,6 +57,7 @@ internal static class WorkspaceFactory
                 Key = projectKey,
                 UserId = user.Id,
                 WorkspaceId = workspace.Id,
+                DefaultStatusId = defaultStatus.Id,
                 MetaInfo = new()
                 {
                     Color = request.MetaInfo.Color,

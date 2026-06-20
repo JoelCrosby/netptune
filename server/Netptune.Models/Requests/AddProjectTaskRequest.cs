@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Netptune.Models.Enums;
 
 namespace Netptune.Models.Requests
 {
@@ -10,7 +9,7 @@ namespace Netptune.Models.Requests
 
         public string Description { get; set; }
 
-        public ProjectTaskStatus? Status { get; set; }
+        public int? StatusId { get; set; }
 
         public int ProjectId { get; set; }
 

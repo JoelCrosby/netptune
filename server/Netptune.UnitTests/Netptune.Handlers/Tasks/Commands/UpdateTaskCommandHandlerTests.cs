@@ -48,6 +48,7 @@ public class UpdateTaskCommandHandlerTests
             .Without(p => p.ProjectTaskTags)
             .Without(p => p.Tags)
             .Without(p => p.Sprint)
+            .With(p => p.Status, AutoFixtures.TaskStatus)
             .With(p => p.Workspace, AutoFixtures.Workspace)
             .With(p => p.Priority, priority)
             .With(p => p.EstimateType, estimateType)
@@ -76,7 +77,7 @@ public class UpdateTaskCommandHandlerTests
             Id = task.Id,
             Name = task.Name,
             Description = task.Description,
-            Status = task.Status,
+            StatusId = task.StatusId,
             ProjectId = task.ProjectId,
             Priority = task.Priority,
             EstimateType = task.EstimateType,
@@ -253,7 +254,7 @@ public class UpdateTaskCommandHandlerTests
             Id = task.Id,
             Name = "Updated name",
             Description = task.Description,
-            Status = task.Status,
+            StatusId = task.StatusId,
             WorkspaceId = 123,
         };
 

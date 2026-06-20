@@ -1,5 +1,3 @@
-using Netptune.Core.Enums;
-
 namespace Netptune.Core.Events.Tasks;
 
 public record TaskStatusChangedMessage : IEventMessage
@@ -12,9 +10,9 @@ public record TaskStatusChangedMessage : IEventMessage
 
     public string ActorUserId { get; init; } = null!;
 
-    public ProjectTaskStatus OldStatus { get; init; }
+    public int OldStatusId { get; init; }
 
-    public ProjectTaskStatus NewStatus { get; init; }
+    public int NewStatusId { get; init; }
 
     public DateTime OccurredAt { get; init; } = DateTime.UtcNow;
 }

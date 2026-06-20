@@ -26,6 +26,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         return Entities
             .Include(item => item.Owner)
             .Include(item => item.ProjectBoards)
+            .Include(item => item.DefaultStatus)
             .AsSplitQuery()
             .FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
     }
@@ -70,7 +71,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         return Entities
             .Where(project => project.Id == projectId && project.WorkspaceId == workspaceId && !project.IsDeleted)
             .AsNoTracking()
-            .Select(project => new TaskCreationProject(project.Id, project.Name, project.WorkspaceId))
+            .Select(project => new TaskCreationProject(project.Id, project.Name, project.WorkspaceId, project.DefaultStatusId))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -99,6 +100,8 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             UpdatedAt = x.UpdatedAt,
             CreatedAt = x.CreatedAt,
             Color = x.MetaInfo != null ? x.MetaInfo.Color : null,
+            DefaultStatusId = x.DefaultStatusId,
+            DefaultStatusName = x.DefaultStatus == null ? null : x.DefaultStatus.Name,
             DefaultBoardIdentifier = x.ProjectBoards
                 .Where(b => b.BoardType == BoardType.Default)
                 .Select(b => b.Identifier)

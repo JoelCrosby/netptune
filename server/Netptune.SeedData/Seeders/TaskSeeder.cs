@@ -1188,8 +1188,6 @@ public sealed class TaskSeeder : ISeeder
         ],
     };
 
-    private static readonly ProjectTaskStatus[] Statuses = Enum.GetValues<ProjectTaskStatus>();
-
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
     {
         context.Tasks.AddRange(context.Projects.SelectMany((project, pi) =>
@@ -1197,7 +1195,11 @@ public sealed class TaskSeeder : ISeeder
             {
                 Name = task.Name,
                 Description = task.Description,
-                Status = Statuses[(pi * 8 + i) % Statuses.Length],
+                Status = context.Statuses
+                    .Where(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)
+                    .OrderBy(status => status.SortOrder)
+                    .ThenBy(status => status.Id)
+                    .ElementAt((pi * 8 + i) % context.Statuses.Count(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)),
                 Owner = context.Users[(pi + i) % context.Users.Count],
                 Project = project,
                 ProjectScopeId = i,

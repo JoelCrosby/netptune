@@ -32,10 +32,11 @@ public sealed class DataSeedService : IHostedService
         var users = UserSeeder.Generate();
         var workspaces = WorkspaceSeeder.Generate(users);
         var workspaceUsers = WorkspaceUserSeeder.Generate(workspaces, users);
-        var projects = ProjectSeeder.Generate(users, workspaces);
+        var statuses = StatusSeeder.Generate(workspaces);
+        var projects = ProjectSeeder.Generate(users, workspaces, statuses);
         var boards = BoardSeeder.Generate(users, projects);
         var boardGroups = BoardGroupSeeder.Generate(users, boards);
-        var tasks = TaskSeeder.Generate(users, projects);
+        var tasks = TaskSeeder.Generate(users, projects, statuses);
 
         try
         {
@@ -45,6 +46,7 @@ public sealed class DataSeedService : IHostedService
             await context.Users.AddRangeAsync(users, ct);
             await context.Workspaces.AddRangeAsync(workspaces, ct);
             await context.WorkspaceAppUsers.AddRangeAsync(workspaceUsers, ct);
+            await context.Statuses.AddRangeAsync(statuses, ct);
             await context.Boards.AddRangeAsync(boards, ct);
             await context.BoardGroups.AddRangeAsync(boardGroups, ct);
             await context.Projects.AddRangeAsync(projects, ct);

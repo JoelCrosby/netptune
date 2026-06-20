@@ -29,15 +29,17 @@ internal static class TaskSeeder
         "EF Core 9 introduces breaking changes to the query pipeline and owned entity mapping. Resolve migration conflicts and update affected raw SQL queries.",
     ];
 
-    private static readonly ProjectTaskStatus[] Statuses = Enum.GetValues<ProjectTaskStatus>();
-
-    internal static List<ProjectTask> Generate(List<AppUser> users, List<Project> projects) =>
+    internal static List<ProjectTask> Generate(List<AppUser> users, List<Project> projects, List<Status> statuses) =>
         projects
             .SelectMany((project, pi) => Enumerable.Range(0, 8).Select(i => new ProjectTask
             {
+                Status = statuses
+                    .Where(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)
+                    .OrderBy(status => status.SortOrder)
+                    .ThenBy(status => status.Id)
+                    .ElementAt((pi * 8 + i) % statuses.Count(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)),
                 Name = Names[i],
                 Description = Descriptions[i],
-                Status = Statuses[(pi * 8 + i) % Statuses.Length],
                 Owner = users[(pi + i) % users.Count],
                 Project = project,
                 ProjectScopeId = i,

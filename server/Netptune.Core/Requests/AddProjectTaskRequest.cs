@@ -13,7 +13,7 @@ public record AddProjectTaskRequest
     [MaxLength(4096)]
     public string Description { get; set; } = null!;
 
-    public ProjectTaskStatus? Status { get; set; }
+    public int? StatusId { get; set; }
 
     [Required]
     public int? ProjectId { get; set; }

@@ -26,7 +26,7 @@ public sealed class AutomationTaskStatusChangedHandler : IRequestHandler<TaskSta
             OccurredAt = request.OccurredAt,
             Changes =
             [
-                TaskFieldChange.Create(TaskChangeField.Status, request.OldStatus, request.NewStatus),
+                TaskFieldChange.Create(TaskChangeField.Status, request.OldStatusId, request.NewStatusId),
             ],
         }, cancellationToken);
 

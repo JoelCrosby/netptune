@@ -98,10 +98,10 @@ internal sealed class ActionPlanner
         PendingAutomationExecution execution,
         AutomationAction action)
     {
-        var status = ConfigReader.ReadEnum<ProjectTaskStatus>(action.Config, "status");
+        var statusId = ConfigReader.ReadInt(action.Config, "statusId");
         var priority = ConfigReader.ReadEnum<TaskPriority>(action.Config, "priority");
 
-        if (status is null && priority is null)
+        if (statusId is null && priority is null)
         {
             Logger.LogDebug(
                 "Automation rule {RuleId} skipped task update action for task {TaskId}: no task fields configured",
@@ -114,7 +114,7 @@ internal sealed class ActionPlanner
         {
             Execution = execution,
             Action = action,
-            Status = status,
+            StatusId = statusId,
             Priority = priority,
         });
     }
