@@ -20,7 +20,7 @@ public record ProjectTaskDiff
 
     public ValueDiff<string> Description { get; init; } = null!;
 
-    public ValueDiff<ProjectTaskStatus> Status { get; init; } = null!;
+    public ValueDiff<int> Status { get; init; } = null!;
 
     public ValueDiff<TaskPriority> Priority { get; init; } = null!;
 
@@ -60,8 +60,8 @@ public record ProjectTaskDiff
         var descriptionChanged = updated.Description != old.Description;
         var descriptionValue = updated.Description;
 
-        var statusChanged = updated.Status != old.Status;
-        var statusValue = updated.Status;
+        var statusChanged = updated.StatusId != old.StatusId;
+        var statusValue = updated.StatusId;
 
         var priorityChanged = updated.Priority != old.Priority;
         var priorityValue = updated.Priority ?? TaskPriority.None;
@@ -88,10 +88,10 @@ public record ProjectTaskDiff
                 OldValue = old.Description,
                 NewValue = descriptionValue,
             },
-            Status = new ValueDiff<ProjectTaskStatus>
+            Status = new ValueDiff<int>
             {
                 Modified = statusChanged,
-                OldValue = old.Status,
+                OldValue = old.StatusId,
                 NewValue = statusValue,
             },
             Priority = new ValueDiff<TaskPriority>
