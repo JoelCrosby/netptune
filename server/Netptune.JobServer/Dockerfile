@@ -19,6 +19,7 @@ RUN for file in $(ls *.csproj); do \
       mkdir -p ${file%.*}/ && mv $file ${file%.*}/; \
     done
 COPY server/*.slnx .
+COPY server/Directory.Packages.props .
 RUN dotnet restore
 
 # copy everything else

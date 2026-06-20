@@ -29,9 +29,7 @@
   <Project Path="Netptune.Identity\Netptune.Identity.csproj" />
   <Project Path="Netptune.JobServer/Netptune.JobServer.csproj" />
   <Project Path="Netptune.Messaging/Netptune.Messaging.csproj" />
-  <Project Path="Netptune.Repositories/Netptune.Repositories.csproj">
-    <BuildDependency Project="Netptune.Services/Netptune.Services.csproj" />
-  </Project>
+  <Project Path="Netptune.Repositories/Netptune.Repositories.csproj" />
   <Project Path="Netptune.Search/Netptune.Search.csproj" />
   <Project Path="Netptune.ServiceDefaults/Netptune.ServiceDefaults.csproj" />
   <Project Path="Netptune.Services/Netptune.Services.csproj" />
