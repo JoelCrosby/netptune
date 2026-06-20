@@ -340,6 +340,11 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         return rows
             .Aggregate(new HashSet<string>(), (result, current) =>
             {
+                if (!string.IsNullOrWhiteSpace(current.Owner))
+                {
+                    result.Add(current.Owner.Trim().IdentityNormalize());
+                }
+
                 foreach (var email in ParseCellArray(current.Assignees))
                 {
                     result.Add(email.Trim().IdentityNormalize());

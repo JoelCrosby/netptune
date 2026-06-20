@@ -9,11 +9,9 @@ import {
   Component,
   computed,
   effect,
-  ElementRef,
   inject,
   linkedSignal,
   OnDestroy,
-  viewChild,
 } from '@angular/core';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import {
@@ -38,9 +36,10 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
+import { ImportTasksDialogComponent } from '@boards/components/import-tasks-dialog/import-tasks-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
-import { importTasks } from '@core/store/tasks/tasks.actions';
+import { DialogService } from '@core/services/dialog.service';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
@@ -104,9 +103,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
 export class BoardGroupsViewComponent implements OnDestroy {
   private store = inject(Store);
   private hubService = inject(ProjectTasksHubService);
-
-  readonly importTasksInput =
-    viewChild.required<ElementRef>('importTasksInput');
+  private dialog = inject(DialogService);
 
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 
@@ -238,11 +235,16 @@ export class BoardGroupsViewComponent implements OnDestroy {
   }
 
   onImportTasksClicked() {
-    const importTasksInput = this.importTasksInput();
-    if (!importTasksInput) return;
+    const boardIdentifier = this.board()?.identifier;
 
-    importTasksInput.nativeElement.value = null;
-    importTasksInput.nativeElement.click();
+    if (boardIdentifier === undefined || boardIdentifier === null) return;
+
+    this.dialog.open(ImportTasksDialogComponent, {
+      panelClass: 'app-modal-class',
+      data: {
+        boardIdentifier,
+      },
+    });
   }
 
   onExportTasksClicked() {
@@ -265,19 +267,5 @@ export class BoardGroupsViewComponent implements OnDestroy {
         sprintId: Number.isFinite(sprintId) ? sprintId : undefined,
       })
     );
-  }
-
-  handleFileInput(event: Event) {
-    const files = (event?.target as EventTarget & { files: File[] })?.files;
-
-    if (!files || !files.length) return;
-
-    const file = files[0];
-
-    const boardIdentifier = this.board()?.identifier;
-
-    if (boardIdentifier === undefined || boardIdentifier === null) return;
-
-    this.store.dispatch(importTasks({ boardIdentifier, file }));
   }
 }

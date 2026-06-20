@@ -24,11 +24,12 @@ public sealed class ImportEndpointTests
     [Fact]
     public async Task ImportWorkspaceTasks_ShouldReturnCorrectly_WhenInputValid()
     {
-        var userEmail = SeedData.Users.ElementAt(0).Email;
+        var assigneeEmail = SeedData.Users.ElementAt(0).Email;
+        var ownerEmail = SeedData.Users.ElementAt(1).Email;
 
         var import = $"""
             Name,assignees,owner,group
-            task name,"{userEmail}","{userEmail}",complete
+            task name,"{assigneeEmail}","{ownerEmail}",complete
             """;
 
         var request = new HttpRequestMessage
