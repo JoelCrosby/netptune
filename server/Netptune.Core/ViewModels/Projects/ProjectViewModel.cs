@@ -23,4 +23,8 @@ public class ProjectViewModel
     public string? DefaultBoardIdentifier { get; set; }
 
     public string? Color { get; set; }
+
+    public int? DefaultStatusId { get; set; }
+
+    public string? DefaultStatusName { get; set; }
 }

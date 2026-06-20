@@ -19,7 +19,15 @@ public record TaskViewModel
 
     public string SystemId { get; set; } = null!;
 
-    public ProjectTaskStatus Status { get; set; }
+    public int StatusId { get; set; }
+
+    public string StatusName { get; set; } = null!;
+
+    public string StatusKey { get; set; } = null!;
+
+    public string? StatusColor { get; set; }
+
+    public StatusCategory StatusCategory { get; set; }
 
     public List<string> Tags { get; set; } = new();
 
