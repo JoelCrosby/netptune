@@ -12,6 +12,8 @@ export const entityTypeToString = (value: EntityType): string => {
       return 'Project';
     case EntityType.sprint:
       return 'Sprint';
+    case EntityType.status:
+      return 'Status';
     case EntityType.task:
       return 'Task';
     case EntityType.user:

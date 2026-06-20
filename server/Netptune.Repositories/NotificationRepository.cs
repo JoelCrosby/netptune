@@ -32,11 +32,12 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
                  , al.user_id        AS actoruserid
                  , TRIM(u.firstname || ' ' || u.lastname) AS actorusername
                  , u.picture_url     AS actoruserurl
-                 , COALESCE(pt.name, p.name, b.name, bg.name) AS entityname
+                 , COALESCE(pt.name, p.name, b.name, bg.name, s.name) AS entityname
                  , CASE
                      WHEN n.entity_type = @taskType    AND al.project_slug IS NOT NULL THEN al.project_slug || '-' || pt.project_scope_id::text
                      WHEN n.entity_type = @boardType   THEN al.board_slug
                      WHEN n.entity_type = @projectType THEN al.project_slug
+                     WHEN n.entity_type = @statusType  THEN s.key
                    END AS entityidentifier
              FROM notifications n
              INNER JOIN activity_logs al ON al.id = n.activity_log_id
@@ -45,6 +46,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
              LEFT JOIN projects p        ON p.id   = al.project_id      AND n.entity_type = @projectType
              LEFT JOIN boards b          ON b.id   = al.board_id        AND n.entity_type = @boardType
              LEFT JOIN board_groups bg   ON bg.id  = al.board_group_id  AND n.entity_type = @boardGroupType
+             LEFT JOIN statuses s        ON s.id   = al.entity_id       AND n.entity_type = @statusType
              WHERE n.is_deleted = FALSE
                AND n.user_id = @userId
                AND n.workspace_id = @workspaceId
@@ -57,6 +59,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
             projectType = EntityType.Project,
             boardType = EntityType.Board,
             boardGroupType = EntityType.BoardGroup,
+            statusType = EntityType.Status,
         }, cancellationToken: cancellationToken));
 
         return results.AsList();

@@ -166,6 +166,7 @@ public class ActivityHandlerTests
     [InlineData(EntityType.Board, "/test-workspace/boards/board-1")]
     [InlineData(EntityType.Project, "/test-workspace/projects/99")]
     [InlineData(EntityType.Sprint, "/test-workspace/sprints/99")]
+    [InlineData(EntityType.Status, "/test-workspace/settings")]
     [InlineData(EntityType.Workspace, "/test-workspace")]
     public async Task Handle_ShouldBuildCorrectLink_ForEntityType(EntityType entityType, string expectedLink)
     {

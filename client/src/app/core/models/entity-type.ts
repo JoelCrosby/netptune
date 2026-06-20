@@ -8,4 +8,5 @@ export enum EntityType {
   comment = 6,
   tag = 7,
   sprint = 8,
+  status = 9,
 }

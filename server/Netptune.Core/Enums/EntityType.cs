@@ -11,4 +11,5 @@ public enum EntityType
     Comment,
     Tag,
     Sprint,
+    Status,
 }

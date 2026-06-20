@@ -154,6 +154,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
             EntityType.Board => $"/{workspaceSlug}/boards/{ancestors.BoardKey}",
             EntityType.Project => $"/{workspaceSlug}/projects/{log.EntityId}",
             EntityType.Sprint => $"/{workspaceSlug}/sprints/{log.EntityId}",
+            EntityType.Status => $"/{workspaceSlug}/settings",
             _ => $"/{workspaceSlug}",
         };
     }

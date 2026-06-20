@@ -37,6 +37,7 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
             EntityType.Workspace => x => (x.EntityId == entityId || x.WorkspaceId == entityId),
             EntityType.BoardGroup => x => (x.EntityId == entityId || x.BoardGroupId == entityId),
             EntityType.Sprint => x => x.EntityId == entityId,
+            EntityType.Status => x => x.EntityId == entityId,
             _ => _ => true,
         };
 
