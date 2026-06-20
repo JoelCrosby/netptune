@@ -74,8 +74,8 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
             <td class="px-4 py-2.5 align-middle">
               <span
                 class="inline-flex items-center rounded px-2 py-0.5 text-center text-xs font-medium"
-                [class]="task.status | sprintBacklogStatusBadgeClass">
-                {{ task.status | sprintBacklogStatusLabel }}
+                [class]="task.statusCategory | sprintBacklogStatusBadgeClass">
+                {{ task.statusName | sprintBacklogStatusLabel }}
               </span>
             </td>
             <td class="px-4 py-2.5 align-middle">

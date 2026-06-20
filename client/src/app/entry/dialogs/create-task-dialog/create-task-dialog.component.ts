@@ -3,7 +3,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { TaskStatus } from '@core/enums/project-task-status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import {
@@ -104,7 +103,6 @@ export class CreateTaskDialogComponent {
       name: name().value().trim(),
       description: description().value().trim(),
       projectId,
-      status: TaskStatus.new,
     };
 
     if (!workspace?.slug) {

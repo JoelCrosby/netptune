@@ -354,7 +354,7 @@ export class SprintsEffects {
             search: searchTerm?.trim() || undefined,
             tags: tags.length ? tags : undefined,
             assignees: assignees.length ? assignees : undefined,
-            statuses: statuses.length ? statuses : undefined,
+            statusIds: statuses.length ? statuses : undefined,
           })
           .pipe(
             unwrapClientPageReposne(),

@@ -1,10 +1,6 @@
 import { Component, input, output } from '@angular/core';
-import {
-  TaskStatus,
-  taskStatusLabels,
-  taskStatusOptions,
-} from '@core/enums/project-task-status';
 import { TaskPriority, taskPriorityOptions } from '@core/enums/task-priority';
+import { Status } from '@core/models/status';
 import { LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
@@ -140,7 +136,7 @@ export interface AutomationActionUpdate {
                             actionUpdated.emit({
                               clientId: action.clientId,
                               patch: {
-                                status: $event ? defaultTaskStatus : null,
+                                statusId: $event ? defaultStatusId() : null,
                               },
                             })
                           ">
@@ -149,16 +145,16 @@ export interface AutomationActionUpdate {
                         @if (hasStatusUpdate(action)) {
                           <app-form-select
                             label="Status"
-                            [value]="action.status ?? null"
+                            [value]="action.statusId ?? null"
                             (changed)="
                               actionUpdated.emit({
                                 clientId: action.clientId,
-                                patch: { status: $event },
+                                patch: { statusId: $event },
                               })
                             ">
-                            @for (status of taskStatuses; track status) {
-                              <app-form-select-option [value]="status">
-                                {{ taskStatusLabel(status) }}
+                            @for (status of statuses(); track status.id) {
+                              <app-form-select-option [value]="status.id">
+                                {{ status.name }}
                               </app-form-select-option>
                             }
                           </app-form-select>
@@ -226,12 +222,12 @@ export class AutomationActionsEditorComponent {
     AutomationActionType.flagTask,
     AutomationActionType.updateTask,
   ];
-  readonly taskStatuses = taskStatusOptions;
   readonly taskPriorities = taskPriorityOptions;
-  readonly defaultTaskStatus = TaskStatus.inProgress;
   readonly defaultTaskPriority = TaskPriority.none;
 
   readonly actions = input.required<EditableAutomationAction[]>();
+  readonly statuses = input.required<Status[]>();
+  readonly defaultStatusId = input<number | null>(null);
 
   readonly addAction = output();
   readonly removeAction = output<number>();
@@ -242,12 +238,8 @@ export class AutomationActionsEditorComponent {
     return actionTypeLabels[type];
   }
 
-  taskStatusLabel(status: (typeof taskStatusOptions)[number]): string {
-    return taskStatusLabels[status];
-  }
-
   hasStatusUpdate(action: AutomationAction): boolean {
-    return action.status !== null && action.status !== undefined;
+    return action.statusId !== null && action.statusId !== undefined;
   }
 
   hasPriorityUpdate(action: AutomationAction): boolean {

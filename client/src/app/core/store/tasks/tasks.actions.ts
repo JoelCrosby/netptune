@@ -9,7 +9,6 @@ import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
-import { TaskStatus } from '@core/enums/project-task-status';
 import { Params } from '@angular/router';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
@@ -51,7 +50,7 @@ export const hydrateProjectTaskFiltersFromRoute = createAction(
   props<{
     term?: string | null;
     assigneeIds: string[];
-    statuses: TaskStatus[];
+    statuses: number[];
     tags: string[];
     sprintId?: number;
   }>()
@@ -293,7 +292,7 @@ export const setSearchTerm = createAction(
 
 export const toggleSelectedStatus = createAction(
   '[ProjectTasks] Toggle Selected Status',
-  props<{ status: TaskStatus }>()
+  props<{ status: number }>()
 );
 
 export const toggleSelectedAssignee = createAction(

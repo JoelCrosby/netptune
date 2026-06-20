@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
-import { TaskStatus } from '@core/enums/project-task-status';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { Selected } from '@core/models/selected';
+import { StatusCategory } from '@core/models/status';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { initBacklogView } from '@core/store/sprints/sprints.actions';
@@ -114,26 +114,26 @@ export class SprintBacklogViewComponent {
   readonly groups = computed((): BacklogGroup[] => {
     const tasks = this.backlogTasks();
     const statusOrder = [
-      TaskStatus.new,
-      TaskStatus.inProgress,
-      TaskStatus.onHold,
+      StatusCategory.todo,
+      StatusCategory.active,
+      StatusCategory.backlog,
     ];
     const labelMap: Record<number, string> = {
-      [TaskStatus.new]: 'New',
-      [TaskStatus.inProgress]: 'In Progress',
-      [TaskStatus.onHold]: 'Other',
+      [StatusCategory.todo]: 'New',
+      [StatusCategory.active]: 'In Progress',
+      [StatusCategory.backlog]: 'Other',
     };
 
-    const grouped = new Map<TaskStatus, TaskViewModel[]>([
-      [TaskStatus.new, []],
-      [TaskStatus.inProgress, []],
-      [TaskStatus.onHold, []],
+    const grouped = new Map<StatusCategory, TaskViewModel[]>([
+      [StatusCategory.todo, []],
+      [StatusCategory.active, []],
+      [StatusCategory.backlog, []],
     ]);
 
     for (const task of tasks) {
-      const key = statusOrder.includes(task.status)
-        ? task.status
-        : TaskStatus.onHold;
+      const key = statusOrder.includes(task.statusCategory)
+        ? task.statusCategory
+        : StatusCategory.backlog;
       grouped.get(key)?.push(task);
     }
 

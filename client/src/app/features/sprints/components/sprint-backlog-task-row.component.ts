@@ -44,8 +44,8 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
       <div class="mt-1.5 flex flex-wrap items-center gap-2">
         <span
           class="rounded px-1.5 py-0.5 text-xs font-medium"
-          [class]="task().status | sprintBacklogStatusBadgeClass">
-          {{ task().status | sprintBacklogStatusLabel }}
+          [class]="task().statusCategory | sprintBacklogStatusBadgeClass">
+          {{ task().statusName | sprintBacklogStatusLabel }}
         </span>
         @if (task().priority !== null && task().priority !== undefined) {
           <span

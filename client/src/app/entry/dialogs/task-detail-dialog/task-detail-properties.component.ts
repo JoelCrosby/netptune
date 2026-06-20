@@ -12,7 +12,6 @@ import { DropdownMenuComponent } from '@app/static/components/dropdown-menu/drop
 import { MenuItemComponent } from '@app/static/components/dropdown-menu/menu-item.component';
 import { UserSelectComponent } from '@app/static/components/user-select/user-select.component';
 import { Store } from '@ngrx/store';
-import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
 import { TaskDetailEstimateComponent } from './task-detail-estimate.component';
 import { TaskDetailService } from './task-detail.service';
 
@@ -24,7 +23,6 @@ import { TaskDetailService } from './task-detail.service';
     ChipListboxComponent,
     DropdownMenuComponent,
     MenuItemComponent,
-    TaskStatusPipe,
     ChipOptionComponent,
     TaskPrioritySelectComponent,
     TaskDetailEstimateComponent,
@@ -54,7 +52,7 @@ import { TaskDetailService } from './task-detail.service';
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Status</h4>
         <app-chip-listbox>
-          <app-chip-option>{{ task().status | taskStatus }}</app-chip-option>
+          <app-chip-option>{{ task().statusName }}</app-chip-option>
         </app-chip-listbox>
       </div>
       <div>

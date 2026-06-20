@@ -3,7 +3,7 @@ import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
-import { TaskStatus } from '@core/enums/project-task-status';
+import { StatusCategory } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import * as actions from '@core/store/tasks/tasks.actions';
@@ -39,7 +39,6 @@ import {
   TableRowDirective,
 } from '@static/components/table/table.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
-import { TaskStatusPipe } from '@static/pipes/task-status.pipe';
 import { TaskListFiltersComponent } from './task-list-filters.component';
 
 @Component({
@@ -65,7 +64,6 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
     TablePaginationComponent,
     TableRowDirective,
     TaskListFiltersComponent,
-    TaskStatusPipe,
   ],
   template: `
     <app-task-list-filters />
@@ -157,11 +155,11 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
             <td class="px-4 py-2.5 align-middle">
               <span
                 class="inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-center text-xs font-medium"
-                [class]="statusBadgeClass(task.status)">
-                @if (task.status === taskStatus.complete) {
+                [class]="statusBadgeClass(task.statusCategory)">
+                @if (task.statusCategory === statusCategory.done) {
                   <svg lucideCheck class="h-3.5 w-3.5"></svg>
                 }
-                {{ task.status | taskStatus }}
+                {{ task.statusName }}
               </span>
             </td>
             <td class="px-4 py-2.5 align-middle">
@@ -238,7 +236,7 @@ export class TaskListComponent {
   readonly pageSize = this.store.selectSignal(selectTasksPageSize);
   readonly totalCount = this.store.selectSignal(selectTasksTotalCount);
   readonly totalPages = this.store.selectSignal(selectTasksTotalPages);
-  readonly taskStatus = TaskStatus;
+  readonly statusCategory = StatusCategory;
 
   readonly canCreate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.create)
@@ -284,41 +282,51 @@ export class TaskListComponent {
   }
 
   markCompleteClicked(task: TaskViewModel) {
+    const completeStatusId = this.findStatusId('complete');
+    if (!completeStatusId) return;
+
     this.store.dispatch(
       actions.editProjectTask({
         identifier: `[workspace] ${task.workspaceKey}`,
         task: {
           ...task,
-          status: TaskStatus.complete,
+          statusId: completeStatusId,
         },
       })
     );
   }
 
   moveToBacklogClicked(task: TaskViewModel) {
+    const inactiveStatusId = this.findStatusId('inactive');
+    if (!inactiveStatusId) return;
+
     this.store.dispatch(
       actions.editProjectTask({
         identifier: `[workspace] ${task.workspaceKey}`,
         task: {
           ...task,
-          status: TaskStatus.inActive,
+          statusId: inactiveStatusId,
         },
       })
     );
   }
 
-  statusBadgeClass(status: TaskStatus): string {
+  statusBadgeClass(status: StatusCategory): string {
     switch (status) {
-      case TaskStatus.new:
+      case StatusCategory.todo:
         return 'bg-blue-100 text-blue-700';
-      case TaskStatus.inProgress:
+      case StatusCategory.active:
         return 'bg-yellow-100 text-yellow-700';
-      case TaskStatus.complete:
+      case StatusCategory.done:
         return 'bg-green-100 text-green-700';
-      case TaskStatus.onHold:
+      case StatusCategory.backlog:
         return 'bg-purple-100 text-purple-700';
       default:
         return 'bg-neutral-100 text-neutral-600';
     }
+  }
+
+  private findStatusId(key: string): number | undefined {
+    return this.tasks().find((task) => task.statusKey === key)?.statusId;
   }
 }

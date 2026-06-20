@@ -31,7 +31,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       <input
         type="text"
         placeholder="Search"
-        class="w-45 appearance-none border-0 bg-transparent px-[0.8rem] py-0 [font-family:inherit] text-[15px] leading-[33px] font-medium text-inherit transition-[width] duration-[140ms] ease-out outline-none placeholder:opacity-60 [&:placeholder-shown:not(:focus)]:w-[80px]"
+        class="w-45 appearance-none border-0 bg-transparent px-[0.8rem] py-0 font-[inherit] text-[15px] leading-8.25 font-medium text-inherit transition-[width] duration-[140ms] ease-out outline-none placeholder:opacity-60 [&:placeholder-shown:not(:focus)]:w-[80px]"
         [formField]="termForm.term"
         (keydown.enter)="onSubmit()" />
 

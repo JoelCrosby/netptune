@@ -1,9 +1,5 @@
-import { Component, model } from '@angular/core';
-import {
-  TaskStatus,
-  taskStatusLabels,
-  taskStatusOptions,
-} from '@core/enums/project-task-status';
+import { Component, input, model } from '@angular/core';
+import { Status } from '@core/models/status';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
@@ -71,9 +67,9 @@ import {
             <div class="flex flex-col gap-3">
               <div class="min-w-64 flex-1">
                 <app-form-select label="Status changes to" [(value)]="status">
-                  @for (option of statusOptions; track option) {
-                    <app-form-select-option [value]="option">
-                      {{ statusLabel(option) }}
+                  @for (option of statuses(); track option.id) {
+                    <app-form-select-option [value]="option.id">
+                      {{ option.name }}
                     </app-form-select-option>
                   }
                 </app-form-select>
@@ -130,7 +126,7 @@ export class AutomationTriggerEditorComponent {
     TaskChangeField.priority,
     TaskChangeField.estimate,
   ];
-  readonly statusOptions = taskStatusOptions;
+  readonly statuses = input.required<Status[]>();
   readonly assigneeChangeModeOptions = [
     AssigneeChangeMode.addedOrRemoved,
     AssigneeChangeMode.added,
@@ -141,7 +137,7 @@ export class AutomationTriggerEditorComponent {
     AutomationTriggerType.taskChanged
   );
   readonly taskFields = model<TaskChangeField[]>([TaskChangeField.status]);
-  readonly status = model<TaskStatus>(TaskStatus.complete);
+  readonly status = model<number | null>(null);
   readonly assigneeChangeMode = model<AssigneeChangeMode>(
     AssigneeChangeMode.addedOrRemoved
   );
@@ -149,10 +145,6 @@ export class AutomationTriggerEditorComponent {
 
   triggerTypeLabel(type: AutomationTriggerType): string {
     return triggerTypeLabels[type];
-  }
-
-  statusLabel(status: TaskStatus): string {
-    return taskStatusLabels[status];
   }
 
   taskFieldLabel(field: TaskChangeField): string {

@@ -10,18 +10,13 @@ import {
   selectSelectedTagCount,
   selectSelectedTags,
 } from '../tags/tags.selectors';
-import {
-  TaskStatus,
-  taskStatusLabels,
-  taskStatusOptions,
-} from '@core/enums/project-task-status';
 
 const { selectAll } = adapter.getSelectors();
 
 export const selectAllTasks = createSelector(selectTasksFeature, selectAll);
 
 export interface SelectedTaskStatus {
-  status: TaskStatus;
+  status: number;
   label: string;
   selected: boolean;
 }
@@ -38,7 +33,7 @@ export const selectSelectedTaskStatuses = createSelector(
 
 export const selectSelectedTaskStatusCount = createSelector(
   selectSelectedTaskStatuses,
-  (state: TaskStatus[]) => state.length
+  (state: number[]) => state.length
 );
 
 export const selectSelectedAssignees = createSelector(
@@ -52,15 +47,24 @@ export const selectSelectedAssigneeCount = createSelector(
 );
 
 export const selectTaskStatusOptions = createSelector(
+  selectAllTasks,
   selectSelectedTaskStatuses,
-  (selectedStatuses): SelectedTaskStatus[] => {
+  (tasks, selectedStatuses): SelectedTaskStatus[] => {
     const selectedSet = new Set(selectedStatuses);
+    const statusMap = new Map(
+      tasks.map((task) => [
+        task.statusId,
+        {
+          status: task.statusId,
+          label: task.statusName,
+          selected: selectedSet.has(task.statusId),
+        },
+      ])
+    );
 
-    return taskStatusOptions.map((status) => ({
-      status,
-      label: taskStatusLabels[status],
-      selected: selectedSet.has(status),
-    }));
+    return Array.from(statusMap.values()).sort((a, b) =>
+      a.label.localeCompare(b.label)
+    );
   }
 );
 
@@ -88,7 +92,7 @@ export const selectProjectTasksFilter = createSelector(
     sprintId,
     search: search?.trim() || undefined,
     tags: tags.length ? tags : undefined,
-    statuses: statuses.length ? statuses : undefined,
+    statusIds: statuses.length ? statuses : undefined,
     assignees: assignees.length ? assignees : undefined,
   })
 );

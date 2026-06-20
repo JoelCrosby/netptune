@@ -17,6 +17,7 @@ export interface AddProjectRequest {
   description?: string;
   repositoryUrl?: string;
   metaInfo?: ProjectMetaInfo;
+  defaultStatusId?: number | null;
 }
 
 export interface ProjectMetaInfo {

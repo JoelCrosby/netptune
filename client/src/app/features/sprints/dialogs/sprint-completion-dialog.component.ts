@@ -1,8 +1,8 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TaskStatus, taskStatusLabels } from '@core/enums/project-task-status';
 import { SprintStatus } from '@core/enums/sprint-status';
+import { StatusCategory } from '@core/models/status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { SprintsService } from '@core/store/sprints/sprints.service';
@@ -53,8 +53,8 @@ type MoveMode = 'backlog' | 'sprint';
               <span class="flex-1 truncate text-sm">{{ task.name }}</span>
               <span
                 class="shrink-0 rounded px-1.5 py-0.5 text-xs font-medium"
-                [class]="statusBadgeClass(task.status)">
-                {{ statusLabel(task.status) }}
+                [class]="statusBadgeClass(task.statusCategory)">
+                {{ task.statusName }}
               </span>
             </div>
           }
@@ -170,7 +170,7 @@ export class SprintCompletionDialogComponent {
   );
 
   readonly incompleteTasks = computed(() =>
-    this.sprint.tasks.filter((t) => t.status !== TaskStatus.complete)
+    this.sprint.tasks.filter((t) => t.statusCategory !== StatusCategory.done)
   );
 
   readonly confirmDisabled = computed(
@@ -181,18 +181,16 @@ export class SprintCompletionDialogComponent {
         (this.planningSprints().length === 0 || !this.targetSprintId()))
   );
 
-  statusLabel(status: TaskStatus): string {
-    return taskStatusLabels[status];
-  }
-
-  statusBadgeClass(status: TaskStatus): string {
+  statusBadgeClass(status: StatusCategory): string {
     switch (status) {
-      case TaskStatus.new:
+      case StatusCategory.todo:
         return 'bg-blue-100 text-blue-700';
-      case TaskStatus.inProgress:
+      case StatusCategory.active:
         return 'bg-yellow-100 text-yellow-700';
-      case TaskStatus.onHold:
+      case StatusCategory.backlog:
         return 'bg-purple-100 text-purple-700';
+      case StatusCategory.done:
+        return 'bg-green-100 text-green-700';
       default:
         return 'bg-neutral-100 text-neutral-600';
     }

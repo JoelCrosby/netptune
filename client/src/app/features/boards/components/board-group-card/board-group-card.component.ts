@@ -9,6 +9,7 @@ import {
   taskPriorityLabels,
 } from '@core/enums/task-priority';
 import { Selected } from '@core/models/selected';
+import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { LucideCheck, LucideFlag } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -52,7 +53,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
       <div class="flex items-center gap-2">
         <app-task-scope-id [id]="task().systemId" />
 
-        @if (task().status === 1) {
+        @if (task().statusCategory === statusCategory.done) {
           <svg lucideCheck class="text-green-500">done</svg>
         }
       </div>
@@ -92,6 +93,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 export class BoardGroupCardComponent {
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
+  readonly statusCategory = StatusCategory;
   readonly priority = computed(() => this.task().priority);
 
   priorityVisible = computed(() => {

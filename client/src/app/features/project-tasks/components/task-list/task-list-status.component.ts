@@ -1,5 +1,4 @@
 import { Component, ElementRef, inject } from '@angular/core';
-import { TaskStatus } from '@core/enums/project-task-status';
 import { toggleSelectedStatus } from '@core/store/tasks/tasks.actions';
 import {
   SelectedTaskStatus,
@@ -53,7 +52,7 @@ export class TaskListStatusComponent {
     return status.status;
   }
 
-  onOptionClicked(status: TaskStatus) {
+  onOptionClicked(status: number) {
     this.store.dispatch(toggleSelectedStatus({ status }));
   }
 }

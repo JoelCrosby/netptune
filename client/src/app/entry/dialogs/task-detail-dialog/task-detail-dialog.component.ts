@@ -7,6 +7,7 @@ import {
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
+import { StatusCategory } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
@@ -39,7 +40,7 @@ import { TaskDetailService } from './task-detail.service';
                 [name]="task.sprintName"
                 [status]="task.sprintStatus" />
             }
-            @if (task.status === 1) {
+            @if (task.statusCategory === statusCategory.done) {
               <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
             }
             <app-task-scope-id [id]="task.systemId" />
@@ -93,6 +94,7 @@ export class TaskDetailDialogComponent implements OnDestroy {
   public static width = '972px';
 
   entityType = EntityType.task;
+  statusCategory = StatusCategory;
 
   task = this.store.selectSignal(selectDetailTask);
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);

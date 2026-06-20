@@ -6,6 +6,7 @@ import {
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
+import { StatusCategory } from '@core/models/status';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { LucideCheck } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -33,7 +34,7 @@ import { ActivatedRoute } from '@angular/router';
               [name]="task.sprintName"
               [status]="task.sprintStatus" />
           }
-          @if (task.status === 1) {
+          @if (task.statusCategory === statusCategory.done) {
             <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
           }
           <app-task-scope-id [id]="task.systemId" />
@@ -78,6 +79,7 @@ export class TaskDetailPageComponent implements OnDestroy {
   route = inject(ActivatedRoute);
 
   entityType = EntityType.task;
+  statusCategory = StatusCategory;
   task = this.store.selectSignal(selectDetailTask);
 
   constructor() {

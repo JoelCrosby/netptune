@@ -4,4 +4,5 @@ export interface UpdateProjectRequest {
   description: string;
   repositoryUrl: string;
   key: string;
+  defaultStatusId?: number | null;
 }

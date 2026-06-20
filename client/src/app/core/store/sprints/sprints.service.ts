@@ -61,8 +61,8 @@ export class SprintsService {
       params = params.append('tags', tag);
     }
 
-    for (const status of filter?.statuses ?? []) {
-      params = params.append('statuses', status);
+    for (const statusId of filter?.statusIds ?? []) {
+      params = params.append('statusIds', statusId);
     }
 
     for (const assignee of filter?.assignees ?? []) {

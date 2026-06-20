@@ -1,5 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { TaskStatus } from '@core/enums/project-task-status';
 import { CommentViewModel } from '@core/models/comment';
 import { ProjectTask as TaskModel } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -39,7 +38,7 @@ export interface TasksState extends AsyncEntityState<TaskViewModel> {
   detailTask?: TaskViewModel;
   comments: CommentViewModel[];
   searchTerm?: string | null;
-  selectedStatuses: TaskStatus[];
+  selectedStatuses: number[];
   selectedAssignees: string[];
   page: number;
   pageSize: number;
@@ -51,7 +50,7 @@ export interface TaskListGroup {
   groupName: string;
   tasks: TaskViewModel[];
   header: string;
-  status: TaskStatus;
+  statusId: number;
   emptyMessage: string;
 }
 
@@ -60,7 +59,7 @@ export interface ProjectTasksFilter {
   sprintId?: number;
   noSprint?: boolean;
   tags?: string[];
-  statuses?: TaskStatus[];
+  statusIds?: number[];
   assignees?: string[];
   page?: number;
   pageSize?: number;

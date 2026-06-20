@@ -9,4 +9,6 @@ export interface ProjectViewModel {
   updatedAt: Date;
   createdAt: Date;
   defaultBoardIdentifier: string;
+  defaultStatusId?: number | null;
+  defaultStatusName?: string | null;
 }

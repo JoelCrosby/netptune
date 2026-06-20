@@ -1,7 +1,7 @@
 import { LowerCasePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TaskStatus } from '@core/enums/project-task-status';
+import { StatusCategory } from '@core/models/status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
@@ -25,7 +25,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
 
 export interface BacklogGroup {
   label: string;
-  status: TaskStatus;
+  status: StatusCategory;
   tasks: TaskViewModel[];
 }
 
@@ -91,8 +91,10 @@ export interface BacklogGroup {
                 <td class="block truncate px-4 py-2.5 align-middle">
                   <span
                     class="truncate rounded px-1.5 py-0.5 text-xs font-medium"
-                    [class]="task.status | sprintBacklogStatusBadgeClass">
-                    {{ task.status | sprintBacklogStatusLabel }}
+                    [class]="
+                      task.statusCategory | sprintBacklogStatusBadgeClass
+                    ">
+                    {{ task.statusName | sprintBacklogStatusLabel }}
                   </span>
                 </td>
                 <td class="px-4 py-2.5 align-middle">

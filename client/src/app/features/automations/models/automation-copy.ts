@@ -1,4 +1,3 @@
-import { taskStatusLabels, TaskStatus } from '@core/enums/project-task-status';
 import { taskPriorityLabels } from '@core/enums/task-priority';
 import { EntityType } from '@core/models/entity-type';
 import { entityTypeToString } from '@core/transforms/entity-type';
@@ -53,7 +52,7 @@ export function describeAutomationTrigger(trigger: AutomationTrigger): string {
     case AutomationTriggerType.taskChanged:
       return describeTaskChangedTrigger(trigger);
     case AutomationTriggerType.taskStatusChanged:
-      return `When a task changes to ${statusLabel(trigger.status)}`;
+      return `When a task changes to ${statusLabel(trigger.statusId)}`;
     case AutomationTriggerType.taskUnassignedFor:
       return `When a task is unassigned for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
   }
@@ -67,9 +66,9 @@ function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
 
   if (
     trigger.fields?.includes(TaskChangeField.status) &&
-    isNotNullOrUndefined(trigger.status)
+    isNotNullOrUndefined(trigger.statusId)
   ) {
-    return `When a task's ${fieldText} changes, with status becoming ${statusLabel(trigger.status)}`;
+    return `When a task's ${fieldText} changes, with status becoming ${statusLabel(trigger.statusId)}`;
   }
 
   if (
@@ -100,8 +99,8 @@ export function describeAutomationAction(action: AutomationAction): string {
 function describeUpdateTaskAction(action: AutomationAction): string {
   const updates: string[] = [];
 
-  if (isNotNullOrUndefined(action.status)) {
-    updates.push(`status to ${statusLabel(action.status)}`);
+  if (isNotNullOrUndefined(action.statusId)) {
+    updates.push(`status to ${statusLabel(action.statusId)}`);
   }
 
   if (isNotNullOrUndefined(action.priority)) {
@@ -126,9 +125,9 @@ export function describeAutomationRule(
   return `${describeAutomationTrigger(trigger)}, ${describeAutomationActions(actions)}.`;
 }
 
-export function statusLabel(status: TaskStatus | null | undefined): string {
-  return isNotNullOrUndefined(status)
-    ? taskStatusLabels[status]
+export function statusLabel(statusId: number | null | undefined): string {
+  return isNotNullOrUndefined(statusId)
+    ? `status #${statusId}`
     : 'a selected status';
 }
 

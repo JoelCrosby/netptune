@@ -1,7 +1,7 @@
 import { EstimateType } from '../enums/estimate-type';
 import { TaskPriority } from '../enums/task-priority';
-import { TaskStatus } from '../enums/project-task-status';
 import { SprintStatus } from '../enums/sprint-status';
+import { StatusCategory } from './status';
 import { AppUser } from './appuser';
 import { Basemodel } from './basemodel';
 import { Project } from './project';
@@ -10,7 +10,11 @@ import { Workspace } from './workspace';
 export interface ProjectTask extends Basemodel {
   name: string;
   description: string;
-  status: TaskStatus;
+  statusId: number;
+  statusName: string;
+  statusKey: string;
+  statusColor?: string | null;
+  statusCategory: StatusCategory;
   priority: TaskPriority | null;
   estimateType: EstimateType | null;
   estimateValue: number | null;
@@ -35,7 +39,7 @@ export interface ProjectTask extends Basemodel {
 export interface AddProjectTaskRequest {
   name: string;
   description?: string;
-  status?: TaskStatus;
+  statusId?: number;
 
   projectId: number;
   boardGroupId?: number;

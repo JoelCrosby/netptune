@@ -1,4 +1,5 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   disabled,
   form,
@@ -7,7 +8,9 @@ import {
   required,
 } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
+import { EntityType } from '@core/models/entity-type';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
+import { StatusesService } from '@core/services/statuses.service';
 import {
   clearProjectDetail,
   updateProject,
@@ -18,12 +21,16 @@ import {
 } from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 
 @Component({
   selector: 'app-project-detail',
   imports: [
     FormInputComponent,
+    FormSelectComponent,
+    FormSelectOptionComponent,
     FormTextAreaComponent,
     FlatButtonComponent,
     FormField,
@@ -63,6 +70,15 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
           label="Repository URL"
           maxLength="1024">
         </app-form-input>
+        <app-form-select
+          [formField]="projectForm.defaultStatusId"
+          label="Default task status">
+          @for (status of statuses(); track status.id) {
+            <app-form-select-option [value]="status.id">
+              {{ status.name }}
+            </app-form-select-option>
+          }
+        </app-form-select>
         <button
           app-flat-button
           color="primary"
@@ -75,9 +91,13 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 })
 export class ProjectDetailComponent implements OnDestroy {
   private store = inject(Store);
+  private statusesService = inject(StatusesService);
 
   project = this.store.selectSignal(selectProjectDetail);
   loading = this.store.selectSignal(selectUpdateProjectLoading);
+  statuses = toSignal(this.statusesService.get(EntityType.task), {
+    initialValue: [],
+  });
 
   projectFormModel = signal({
     id: this.project()?.id ?? (null as number | null),
@@ -85,6 +105,7 @@ export class ProjectDetailComponent implements OnDestroy {
     name: this.project()?.name ?? '',
     description: this.project()?.description ?? '',
     repositoryUrl: this.project()?.repositoryUrl ?? '',
+    defaultStatusId: this.project()?.defaultStatusId ?? 0,
   });
 
   projectForm = form(this.projectFormModel, (schema) => {
@@ -111,7 +132,8 @@ export class ProjectDetailComponent implements OnDestroy {
 
     this.projectForm().reset();
 
-    const { name, description, repositoryUrl, key } = this.projectForm;
+    const { name, description, repositoryUrl, key, defaultStatusId } =
+      this.projectForm;
     const id = this.projectForm.id().value();
 
     if (id === null || id === undefined) return;
@@ -122,6 +144,7 @@ export class ProjectDetailComponent implements OnDestroy {
       description: description().value(),
       repositoryUrl: repositoryUrl().value(),
       key: key().value(),
+      defaultStatusId: defaultStatusId().value() || null,
     };
 
     this.store.dispatch(updateProject({ project }));

@@ -1,7 +1,7 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TaskStatus } from '@core/enums/project-task-status';
+import { StatusesService } from '@core/services/statuses.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -71,6 +71,7 @@ import { AutomationsService } from '../../services/automations.service';
               [(isEnabled)]="isEnabled" />
 
             <app-automation-trigger-editor
+              [statuses]="taskStatuses()"
               [(triggerType)]="triggerType"
               [(taskFields)]="taskFields"
               [(status)]="status"
@@ -79,6 +80,8 @@ import { AutomationsService } from '../../services/automations.service';
 
             <app-automation-actions-editor
               [actions]="actions()"
+              [statuses]="taskStatuses()"
+              [defaultStatusId]="defaultActiveStatusId()"
               (addAction)="addAction()"
               (removeAction)="removeAction($event)"
               (actionTypeChanged)="
@@ -102,6 +105,7 @@ import { AutomationsService } from '../../services/automations.service';
 })
 export class AutomationFormViewComponent {
   private service = inject(AutomationsService);
+  private statusesService = inject(StatusesService);
   private snackbar = inject(SnackbarService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -110,6 +114,19 @@ export class AutomationFormViewComponent {
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly validationError = signal<string | null>(null);
+  readonly taskStatuses = toSignal(this.statusesService.get(), {
+    initialValue: [],
+  });
+  readonly defaultCompleteStatusId = computed(
+    () => this.statusIdByKey('complete') ?? this.taskStatuses()[0]?.id ?? null
+  );
+  readonly defaultActiveStatusId = computed(
+    () =>
+      this.statusIdByKey('in-progress') ??
+      this.statusIdByKey('active') ??
+      this.taskStatuses()[0]?.id ??
+      null
+  );
 
   private nextActionId = 1;
 
@@ -121,11 +138,17 @@ export class AutomationFormViewComponent {
   isEnabled = true;
   triggerType = AutomationTriggerType.taskChanged;
   taskFields: TaskChangeField[] = [TaskChangeField.status];
-  status = TaskStatus.complete;
+  status: number | null = null;
   assigneeChangeMode = AssigneeChangeMode.addedOrRemoved;
   durationDays = '3';
 
   constructor() {
+    effect(() => {
+      if (this.status === null) {
+        this.status = this.defaultCompleteStatusId();
+      }
+    });
+
     if (this.isEdit()) {
       this.loadRule();
     }
@@ -157,8 +180,10 @@ export class AutomationFormViewComponent {
       message: type === AutomationActionType.notifyTaskAssignees ? '' : null,
       flagName: type === AutomationActionType.flagTask ? '' : null,
       flagDescription: type === AutomationActionType.flagTask ? '' : null,
-      status:
-        type === AutomationActionType.updateTask ? TaskStatus.inProgress : null,
+      statusId:
+        type === AutomationActionType.updateTask
+          ? this.defaultActiveStatusId()
+          : null,
       priority: null,
     });
   }
@@ -233,7 +258,7 @@ export class AutomationFormViewComponent {
     this.taskFields = rule.trigger.fields?.length
       ? rule.trigger.fields
       : [TaskChangeField.status];
-    this.status = rule.trigger.status ?? TaskStatus.complete;
+    this.status = rule.trigger.statusId ?? this.defaultCompleteStatusId();
     this.assigneeChangeMode =
       rule.trigger.assigneeChangeMode ?? AssigneeChangeMode.addedOrRemoved;
     this.durationDays = String(rule.trigger.durationDays ?? 3);
@@ -275,7 +300,7 @@ export class AutomationFormViewComponent {
     const invalidUpdate = actions.some(
       (action) =>
         action.type === AutomationActionType.updateTask &&
-        action.status === null &&
+        action.statusId === null &&
         action.priority === null
     );
 
@@ -292,6 +317,15 @@ export class AutomationFormViewComponent {
       !trigger.fields?.length
     ) {
       this.validationError.set('Choose at least one task field to watch.');
+      return null;
+    }
+
+    if (
+      trigger.type === AutomationTriggerType.taskChanged &&
+      trigger.fields?.includes(TaskChangeField.status) &&
+      trigger.statusId === null
+    ) {
+      this.validationError.set('Choose a status to watch.');
       return null;
     }
 
@@ -320,7 +354,7 @@ export class AutomationFormViewComponent {
       return {
         type: AutomationTriggerType.taskChanged,
         fields,
-        status: fields.includes(TaskChangeField.status) ? this.status : null,
+        statusId: fields.includes(TaskChangeField.status) ? this.status : null,
         assigneeChangeMode: fields.includes(TaskChangeField.assignees)
           ? this.assigneeChangeMode
           : null,
@@ -332,7 +366,7 @@ export class AutomationFormViewComponent {
       type: AutomationTriggerType.taskUnassignedFor,
       fields: null,
       durationDays: Number(this.durationDays),
-      status: null,
+      statusId: null,
       assigneeChangeMode: null,
     };
   }
@@ -352,9 +386,9 @@ export class AutomationFormViewComponent {
         action.type === AutomationActionType.flagTask
           ? action.flagDescription?.trim() || null
           : null,
-      status:
+      statusId:
         action.type === AutomationActionType.updateTask
-          ? (action.status ?? null)
+          ? (action.statusId ?? null)
           : null,
       priority:
         action.type === AutomationActionType.updateTask
@@ -370,9 +404,13 @@ export class AutomationFormViewComponent {
       message: '',
       flagName: null,
       flagDescription: null,
-      status: null,
+      statusId: null,
       priority: null,
     };
+  }
+
+  private statusIdByKey(key: string): number | null {
+    return this.taskStatuses().find((status) => status.key === key)?.id ?? null;
   }
 
   private ruleId(): number | null {

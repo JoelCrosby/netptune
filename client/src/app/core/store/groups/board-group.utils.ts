@@ -6,7 +6,6 @@ import {
   BoardViewTask,
 } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { getTaskStatusFromGroupType } from '@core/util/project-tasks/status-utils';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { Update } from '@ngrx/entity';
 import { adapter, BoardGroupsState } from './board-groups.model';
@@ -57,7 +56,6 @@ export const moveTaskInBoardGroup = (
       return {
         ...task,
         sortOrder,
-        status: getTaskStatusFromGroupType(newGroup.type),
       };
     });
 

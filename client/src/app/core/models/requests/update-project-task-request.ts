@@ -1,12 +1,11 @@
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
-import { TaskStatus } from '@core/enums/project-task-status';
 
 export interface UpdateProjectTaskRequest {
   id?: number;
   name: string;
   description: string;
-  status?: TaskStatus;
+  statusId?: number;
   sortOrder?: number;
   ownerId: string;
   assigneeIds?: string[];

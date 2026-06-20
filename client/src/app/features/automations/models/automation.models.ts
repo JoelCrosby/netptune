@@ -1,4 +1,3 @@
-import { TaskStatus } from '@core/enums/project-task-status';
 import { TaskPriority } from '@core/enums/task-priority';
 import { EntityType } from '@core/models/entity-type';
 
@@ -39,7 +38,7 @@ export enum AutomationRunStatus {
 export interface AutomationTrigger {
   type: AutomationTriggerType;
   fields?: TaskChangeField[] | null;
-  status?: TaskStatus | null;
+  statusId?: number | null;
   assigneeChangeMode?: AssigneeChangeMode | null;
   durationDays?: number | null;
 }
@@ -51,7 +50,7 @@ export interface AutomationAction {
   message?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;
-  status?: TaskStatus | null;
+  statusId?: number | null;
   priority?: TaskPriority | null;
 }
 
@@ -90,7 +89,7 @@ export interface AutomationActionRequest {
   message?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;
-  status?: TaskStatus | null;
+  statusId?: number | null;
   priority?: TaskPriority | null;
 }
 

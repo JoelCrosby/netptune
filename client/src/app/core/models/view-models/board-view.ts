@@ -1,7 +1,7 @@
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
-import { TaskStatus } from '@core/enums/project-task-status';
 import { SprintStatus } from '@core/enums/sprint-status';
+import { StatusCategory } from '../status';
 import { AppUser } from '../appuser';
 import { BoardGroupType } from './board-group-view-model';
 import { BoardViewModel } from './board-view-model';
@@ -34,7 +34,11 @@ export interface BoardViewTask {
   sprintName?: string | null;
   sprintStatus?: SprintStatus | null;
   sortOrder: number;
-  status: TaskStatus;
+  statusId: number;
+  statusName: string;
+  statusKey: string;
+  statusColor?: string | null;
+  statusCategory: StatusCategory;
   projectId: number;
   workspaceId: number;
   workspaceKey: string;

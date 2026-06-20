@@ -1,16 +1,11 @@
 import { ParamMap, Params } from '@angular/router';
-import {
-  TaskStatus,
-  taskStatusLabels,
-  taskStatusOptions,
-} from '@core/enums/project-task-status';
 
 export interface TaskFilterRouteParams {
   term?: string | null;
   tags?: string[];
   users?: string[];
   sprintId?: number;
-  statuses?: TaskStatus[];
+  statuses?: number[];
 }
 
 export interface TaskFilterRouteQueryParams extends Params {
@@ -18,19 +13,12 @@ export interface TaskFilterRouteQueryParams extends Params {
   tags?: string[];
   users?: string[];
   sprintId?: number;
-  statuses?: string[];
+  statusIds?: string[];
 }
 
 export interface BuildTaskFilterRouteParamsOptions {
   includeStatuses?: boolean;
 }
-
-const statusByLabel = new Map(
-  taskStatusOptions.map((status) => [
-    normalizeStatusLabel(taskStatusLabels[status]),
-    status,
-  ])
-);
 
 export function parseTaskFilterRouteParams(
   paramMap: ParamMap
@@ -40,7 +28,7 @@ export function parseTaskFilterRouteParams(
     tags: uniqueNonEmptyValues(paramMap.getAll('tags')),
     users: uniqueNonEmptyValues(paramMap.getAll('users')),
     sprintId: getSprintId(paramMap.get('sprintId')),
-    statuses: parseStatuses(paramMap.getAll('statuses')),
+    statuses: parseStatusIds(paramMap.getAll('statusIds')),
   };
 }
 
@@ -71,23 +59,21 @@ export function buildTaskFilterRouteParams(
   }
 
   if (options.includeStatuses && statuses.length) {
-    queryParams['statuses'] = statuses.map(
-      (status) => taskStatusLabels[status]
-    );
+    queryParams['statusIds'] = statuses.map((status) => status.toString());
   }
 
   return queryParams;
 }
 
-function parseStatuses(values: string[]): TaskStatus[] {
+function parseStatusIds(values: string[]): number[] {
   const statuses = values
-    .map((value) => statusByLabel.get(normalizeStatusLabel(value)))
-    .filter((status): status is TaskStatus => status !== undefined);
+    .map((value) => Number(value))
+    .filter((status) => Number.isInteger(status));
 
   return uniqueStatuses(statuses);
 }
 
-function uniqueStatuses(statuses: TaskStatus[]): TaskStatus[] {
+function uniqueStatuses(statuses: number[]): number[] {
   return Array.from(new Set(statuses));
 }
 
@@ -109,8 +95,4 @@ function getSprintId(value: string | null): number | undefined {
   const sprintId = Number(value);
 
   return Number.isFinite(sprintId) ? sprintId : undefined;
-}
-
-function normalizeStatusLabel(value: string): string {
-  return value.trim().toLowerCase();
 }
