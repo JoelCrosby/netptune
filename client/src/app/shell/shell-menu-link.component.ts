@@ -72,7 +72,7 @@ export interface ShellMenuLink {
           <svg [lucideIcon]="link.icon!" class="h-5 w-5"></svg>
         }
 
-        <ng-content />
+        <ng-content select="app-avatar" />
 
         @if (shell.sideNavExpanded()) {
           <span class="transition-all transition-discrete">
