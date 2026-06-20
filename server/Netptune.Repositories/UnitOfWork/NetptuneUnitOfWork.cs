@@ -21,6 +21,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public ICommentRepository Comments { get; }
     public IReactionRepository Reactions { get; }
     public ITagRepository Tags { get; }
+    public IStatusRepository Statuses { get; }
     public IActivityLogRepository ActivityLogs { get; }
     public IAutomationRepository Automations { get; }
     public IFlagRepository Flags { get; }
@@ -46,6 +47,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Comments = new CommentRepository(context, connectionFactory);
         Reactions = new ReactionRepository(context, connectionFactory);
         Tags = new TagRepository(context, connectionFactory);
+        Statuses = new StatusRepository(context, connectionFactory);
         ActivityLogs = new ActivityLogRepository(context, connectionFactory);
         Automations = new AutomationRepository(context, connectionFactory);
         Flags = new FlagRepository(context, connectionFactory);

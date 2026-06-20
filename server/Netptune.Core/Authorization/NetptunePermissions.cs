@@ -83,6 +83,12 @@ public static class NetptunePermissions
         public const string Assign = "tags.assign";
     }
 
+    public static class Statuses
+    {
+        public const string Read = "statuses.read";
+        public const string Manage = "statuses.manage";
+    }
+
     public static class Activity
     {
         public const string Read = "activity.read";

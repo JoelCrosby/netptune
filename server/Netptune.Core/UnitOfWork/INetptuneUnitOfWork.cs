@@ -31,6 +31,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     ITagRepository Tags { get; }
 
+    IStatusRepository Statuses { get; }
+
     IActivityLogRepository ActivityLogs { get; }
 
     IAutomationRepository Automations { get; }

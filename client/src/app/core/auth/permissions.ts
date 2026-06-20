@@ -62,6 +62,10 @@ export const netptunePermissions = {
     delete: 'tags.delete',
     assign: 'tags.assign',
   },
+  statuses: {
+    read: 'statuses.read',
+    manage: 'statuses.manage',
+  },
   activity: {
     read: 'activity.read',
   },

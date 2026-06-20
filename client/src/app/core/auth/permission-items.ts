@@ -241,6 +241,14 @@ export const netptunePermissionLabels: PermissionLabels = {
     delete: { key: 'tags.delete', label: 'Delete Tags', icon: LucideTrash2 },
     assign: { key: 'tags.assign', label: 'Assign Tags', icon: LucideTags },
   },
+  statuses: {
+    read: { key: 'statuses.read', label: 'View Statuses', icon: LucideEye },
+    manage: {
+      key: 'statuses.manage',
+      label: 'Manage Statuses',
+      icon: LucidePencil,
+    },
+  },
   activity: {
     read: {
       key: 'activity.read',

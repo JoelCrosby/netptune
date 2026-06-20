@@ -202,6 +202,7 @@ apiGroup.MapMetaEndpoints();
 apiGroup.MapProjectsEndpoints();
 apiGroup.MapStorageEndpoints();
 apiGroup.MapSprintsEndpoints();
+apiGroup.MapStatusesEndpoints();
 apiGroup.MapTagsEndpoints();
 apiGroup.MapTasksEndpoints();
 apiGroup.MapUsersEndpoints();
