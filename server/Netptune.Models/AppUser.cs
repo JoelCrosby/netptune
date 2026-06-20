@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Identity;
@@ -10,16 +8,16 @@ namespace Netptune.Models
 {
     public class AppUser : IdentityUser
     {
-        public string Firstname { get; set; }
+        public required string Firstname { get; set; }
 
-        public string Lastname { get; set; }
+        public required string Lastname { get; set; }
 
-        public string PictureUrl { get; set; }
+        public required string PictureUrl { get; set; }
 
         public string GetDisplayName()
         {
             if (string.IsNullOrWhiteSpace(Firstname) && string.IsNullOrWhiteSpace(Lastname))
-                return UserName;
+                return UserName ?? Email ?? throw new Exception("name not found");
 
             return $"{Firstname} {Lastname}";
         }

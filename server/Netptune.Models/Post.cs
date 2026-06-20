@@ -7,9 +7,9 @@ namespace Netptune.Models
 {
     public class Post : AuditableEntity<int>
     {
-        public string Title { get; set; }
+        public required string Title { get; set; }
 
-        public string Body { get; set; }
+        public required string Body { get; set; }
 
         public PostType Type { get; set; }
 
@@ -22,7 +22,7 @@ namespace Netptune.Models
         #region NavigationProperties
 
         [JsonIgnore]
-        public virtual Project Project { get; set; }
+        public virtual Project? Project { get; set; }
 
         #endregion
 

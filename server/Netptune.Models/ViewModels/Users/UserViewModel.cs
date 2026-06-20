@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Netptune.Models.ViewModels.Users
+﻿namespace Netptune.Models.ViewModels.Users
 {
     public class UserViewModel
     {
