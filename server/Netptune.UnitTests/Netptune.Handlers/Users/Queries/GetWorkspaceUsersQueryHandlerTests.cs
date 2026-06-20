@@ -29,6 +29,14 @@ public class GetWorkspaceUsersQueryHandlerTests
     private void SetupWorkspace(string workspaceKey, Workspace? workspace,
         List<WorkspaceAppUser> members, List<WorkspaceInvite> pendingInvites)
     {
+        var memberEmails = members
+            .Select(member => member.User.Email)
+            .Where(email => !string.IsNullOrWhiteSpace(email))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var pendingInvitesExcludingMembers = pendingInvites
+            .Where(invite => !memberEmails.Contains(invite.Email))
+            .ToList();
+
         Identity.GetWorkspaceKey().Returns(workspaceKey);
         UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>(), Arg.Any<PageRequest?>())
             .Returns(call =>
@@ -52,7 +60,7 @@ public class GetWorkspaceUsersQueryHandlerTests
         if (workspace is not null)
         {
             UnitOfWork.WorkspaceInvites.CountPendingByWorkspaceExcludingMembers(workspace.Id, Arg.Any<CancellationToken>())
-                .Returns(pendingInvites.Count);
+                .Returns(pendingInvitesExcludingMembers.Count);
             UnitOfWork.WorkspaceInvites.GetPendingByWorkspaceExcludingMembers(
                     workspace.Id,
                     Arg.Any<int>(),
@@ -63,7 +71,7 @@ public class GetWorkspaceUsersQueryHandlerTests
                     var skip = call.ArgAt<int>(1);
                     var take = call.ArgAt<int>(2);
 
-                    return pendingInvites.Skip(skip).Take(take).ToList();
+                    return pendingInvitesExcludingMembers.Skip(skip).Take(take).ToList();
                 });
         }
     }
@@ -128,7 +136,7 @@ public class GetWorkspaceUsersQueryHandlerTests
         var member = AutoFixtures.WorkspaceAppUser;
         var duplicateInvite = new WorkspaceInvite { Email = member.User.Email!, WorkspaceId = workspace.Id, Code = "code" };
 
-        SetupWorkspace(workspaceKey, workspace, [member], []);
+        SetupWorkspace(workspaceKey, workspace, [member], [duplicateInvite]);
 
         var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
 
