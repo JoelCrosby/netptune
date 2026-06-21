@@ -8,7 +8,6 @@ import {
   signal,
 } from '@angular/core';
 import {
-  disabled,
   form,
   FormField,
   required,
@@ -16,14 +15,17 @@ import {
 } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import { createBoard } from '@app/core/store/boards/boards.actions';
+import {
+  createBoard,
+  updateBoard,
+} from '@app/core/store/boards/boards.actions';
 import { BoardsService } from '@app/core/store/boards/boards.service';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
+import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { colorDictionary } from '@core/util/colors/colors';
-import { Logger } from '@core/util/logger';
 import { toUrlSlug } from '@core/util/strings';
 import { LucideCheck } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -59,13 +61,15 @@ import { map } from 'rxjs/operators';
         [loading]="boardForm.identifier().pending()">
       </app-form-input>
 
-      <app-form-select [formField]="boardForm.projectId" label="Project">
-        @for (project of projects(); track project.id) {
-          <app-form-select-option [value]="project.id">
-            {{ project.name }}
-          </app-form-select-option>
-        }
-      </app-form-select>
+      @if (!isEditMode) {
+        <app-form-select [formField]="boardForm.projectId" label="Project">
+          @for (project of projects(); track project.id) {
+            <app-form-select-option [value]="project.id">
+              {{ project.name }}
+            </app-form-select-option>
+          }
+        </app-form-select>
+      }
 
       <app-color-select
         [formField]="boardForm.color"
@@ -111,11 +115,13 @@ export class CreateBoardComponent {
     required(schema.name);
     required(schema.identifier);
     required(schema.color);
-    required(schema.projectId);
-    disabled(schema.identifier, () => this.isEditMode);
+    required(schema.projectId, { when: () => !this.isEditMode });
     validateAsync(schema.identifier, {
       params: ({ value }) => {
         const identifier = value();
+        if (this.isEditMode && identifier === this.data?.identifier) {
+          return undefined;
+        }
         if (!identifier || identifier.length < 4) return undefined;
         return identifier;
       },
@@ -195,23 +201,34 @@ export class CreateBoardComponent {
     }
 
     const { name, identifier, color } = this.boardForm;
-    const projectId = this.boardForm.projectId().value();
-
-    if (!projectId) return;
-
-    const request: AddBoardRequest = {
-      ...this.data,
-      name: name().value(),
-      identifier: identifier().value(),
-      projectId,
-      meta: {
-        color: color().value(),
-      },
-    };
 
     if (this.isEditMode) {
-      Logger.warn('Edit is not implemented');
+      if (!this.data?.id) return;
+
+      const request: UpdateBoardRequest = {
+        id: this.data.id,
+        name: name().value(),
+        identifier: identifier().value(),
+        meta: {
+          color: color().value(),
+        },
+      };
+
+      this.store.dispatch(updateBoard({ request }));
     } else {
+      const projectId = this.boardForm.projectId().value();
+
+      if (!projectId) return;
+
+      const request: AddBoardRequest = {
+        name: name().value(),
+        identifier: identifier().value(),
+        projectId,
+        meta: {
+          color: color().value(),
+        },
+      };
+
       this.store.dispatch(createBoard({ request }));
     }
 

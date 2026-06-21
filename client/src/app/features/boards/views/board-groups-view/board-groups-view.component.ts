@@ -35,6 +35,7 @@ import {
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
+import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
 import { ImportTasksDialogComponent } from '@boards/components/import-tasks-dialog/import-tasks-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
@@ -48,6 +49,7 @@ import {
   LucideDelete,
   LucideFileDown,
   LucideFileUp,
+  LucidePencil,
   LucideX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -125,6 +127,11 @@ export class BoardGroupsViewComponent implements OnDestroy {
   });
 
   secondaryActions: HeaderAction[] = [
+    {
+      label: 'Edit Board',
+      click: () => this.onEditBoardClicked(),
+      icon: LucidePencil,
+    },
     {
       label: 'Import Tasks',
       click: () => this.onImportTasksClicked(),
@@ -244,6 +251,17 @@ export class BoardGroupsViewComponent implements OnDestroy {
       data: {
         boardIdentifier,
       },
+    });
+  }
+
+  onEditBoardClicked() {
+    const board = this.board();
+
+    if (!board) return;
+
+    this.dialog.open(CreateBoardComponent, {
+      width: '600px',
+      data: board,
     });
   }
 

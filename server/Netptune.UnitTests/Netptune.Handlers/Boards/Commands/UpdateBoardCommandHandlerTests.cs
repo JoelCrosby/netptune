@@ -3,6 +3,7 @@ using AutoFixture;
 using FluentAssertions;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Meta;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
@@ -30,7 +31,9 @@ public class UpdateBoardCommandHandlerTests
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<UpdateBoardRequest>().Create();
+        var request = Fixture.Build<UpdateBoardRequest>()
+            .With(x => x.Meta, new BoardMeta { Color = "#123456" })
+            .Create();
         var board = AutoFixtures.Board;
 
         UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
@@ -42,6 +45,7 @@ public class UpdateBoardCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Identifier.Should().Be(request.Identifier!.ToUrlSlug());
+        result.Payload.MetaInfo.Should().BeEquivalentTo(request.Meta);
     }
 
     [Fact]

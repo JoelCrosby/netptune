@@ -45,6 +45,10 @@ public sealed class BoardsEndpointTests
         {
             Id = 1,
             Name = "Updated name",
+            Meta = new()
+            {
+                Color = "#123456",
+            },
         };
 
         var response = await Client.PutAsJsonAsync("api/boards", request);
@@ -57,6 +61,7 @@ public sealed class BoardsEndpointTests
 
         result.Payload.Should().NotBeNull();
         result.Payload!.Name.Should().Be(request.Name);
+        result.Payload.MetaInfo.Should().BeEquivalentTo(request.Meta);
     }
 
     [Fact]

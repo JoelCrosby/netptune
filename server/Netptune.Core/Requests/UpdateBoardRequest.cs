@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Netptune.Core.Meta;
 
 namespace Netptune.Core.Requests;
 
@@ -10,4 +11,6 @@ public record UpdateBoardRequest
     public string? Name { get; set; }
 
     public string? Identifier { get; set; }
+
+    public BoardMeta? Meta { get; set; }
 }
