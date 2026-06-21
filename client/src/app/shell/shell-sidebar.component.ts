@@ -32,12 +32,12 @@ import { WorkspaceSelectComponent } from './workspace-select/workspace-select.co
   template: `
     <div
       class="border-side-bar-border bg-side-bar z-10 flex h-full flex-col justify-between border-r [transition:width_.2s_ease-in-out]">
+      <app-workspace-select
+        idKey="id"
+        labelKey="name"
+        (selectChange)="onWorkspaceChange($event)" />
+
       <app-shell-menu-link-list>
-        <app-workspace-select
-          idKey="id"
-          labelKey="name"
-          (selectChange)="onWorkspaceChange($event)">
-        </app-workspace-select>
         @for (link of links(); track link.value) {
           <app-shell-menu-link [link]="link" />
         }

@@ -26,28 +26,35 @@ export interface ShellMenuLink {
   ],
   host: { class: 'block w-full' },
   template: ` @if (link(); as link) {
-    @if (shell.sideNavExpanded() && link.children?.length) {
-      <div
-        class="border-side-bar-border hover:bg-side-bar-active/60 flex w-full items-center overflow-hidden text-sm font-medium text-white/70 transition-colors select-none"
-        [class.border-t]="subMenuExpanded()"
-        routerLinkActive="bg-side-bar-active text-white!">
-        <a
-          class="flex min-w-0 flex-1 cursor-pointer items-center gap-4 overflow-hidden py-4 pl-6"
-          [routerLink]="link.value">
-          @if (link.icon) {
-            <svg [lucideIcon]="link.icon!" class="h-5 w-5 flex-none"></svg>
-          }
+    <div
+      class="hover:bg-side-bar-active/60 my-px flex w-full items-center overflow-hidden rounded text-sm font-medium text-white/70 transition-colors select-none"
+      routerLinkActive="bg-side-bar-active text-white!">
+      <a
+        class="flex min-w-0 flex-1 cursor-pointer items-center gap-4 overflow-hidden py-2"
+        [class.justify-center]="!shell.sideNavExpanded()"
+        [class.pl-4]="shell.sideNavExpanded()"
+        [routerLink]="link.value"
+        [appTooltip]="shell.sideNavExpanded() ? '' : link.label"
+        appTooltipPosition="right">
+        @if (link.icon) {
+          <svg
+            [lucideIcon]="link.icon!"
+            class="h-4 w-4 flex-none opacity-70"></svg>
+        }
 
-          <ng-content />
+        <ng-content />
 
+        @if (shell.sideNavExpanded()) {
           <span class="truncate transition-all transition-discrete">
             {{ link.label }}
           </span>
-        </a>
+        }
+      </a>
 
+      @if (shell.sideNavExpanded() && link.children?.length) {
         <button
           type="button"
-          class="mr-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-sm text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+          class="mr-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm text-white/60 transition-colors hover:bg-white/10 hover:text-white"
           [attr.aria-expanded]="subMenuExpanded()"
           [attr.aria-label]="
             (subMenuExpanded() ? 'Collapse ' : 'Expand ') + link.label + ' menu'
@@ -58,58 +65,24 @@ export interface ShellMenuLink {
             class="h-4 w-4 transition-transform"
             [class.rotate-90]="subMenuExpanded()"></svg>
         </button>
-      </div>
-    } @else {
-      <a
-        class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden py-4 text-sm font-medium text-white/70 select-none"
-        [routerLink]="link.value"
-        [class.px-6]="shell.sideNavExpanded()"
-        [class.justify-start]="shell.sideNavExpanded()"
-        [appTooltip]="shell.sideNavExpanded() ? '' : link.label"
-        appTooltipPosition="right"
-        routerLinkActive="bg-side-bar-active text-white!">
-        @if (link.icon) {
-          <svg [lucideIcon]="link.icon!" class="h-5 w-5"></svg>
-        }
-
-        <ng-content select="app-avatar" />
-
-        @if (shell.sideNavExpanded()) {
-          <span class="transition-all transition-discrete">
-            {{ link.label }}
-          </span>
-        }
-      </a>
-    }
+      }
+    </div>
 
     @if (
       shell.sideNavExpanded() && link.children?.length && subMenuExpanded()
     ) {
-      <div class="border-side-bar-border flex flex-col border-b">
+      <div class="flex flex-col">
         @for (child of link.children; track child.value) {
-          <a
-            class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-start gap-4 overflow-hidden px-6 py-4 text-sm font-medium text-white/70 select-none"
-            [routerLink]="child.value"
-            appTooltipPosition="right"
-            routerLinkActive="bg-side-bar-active text-white!">
-            @if (child.icon) {
-              <svg [lucideIcon]="child.icon" class="h-5 w-5"></svg>
-            }
-
-            <ng-content />
-
-            <span class="transition-all transition-discrete">
-              {{ child.label }}
-            </span>
-          </a>
+          <app-shell-menu-link [link]="child" />
         }
       </div>
     }
   }`,
 })
 export class ShellMenuLinkComponent {
-  link = input.required<ShellMenuLink>();
   shell = inject(ShellService);
+
+  link = input.required<ShellMenuLink>();
   readonly subMenuExpanded = signal(false);
 
   toggleSubMenu(event: MouseEvent) {

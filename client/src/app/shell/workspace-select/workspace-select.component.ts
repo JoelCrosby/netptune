@@ -29,14 +29,16 @@ import { Store } from '@ngrx/store';
 import { KeyboardService } from '@static/services/keyboard.service';
 import { WorkspaceBadgeComponent } from './workspace-badge.component';
 import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component';
+import { LucideChevronsUpDown } from '@lucide/angular';
 
 @Component({
   selector: 'app-workspace-select',
-  host: { class: 'block w-full border-side-bar-border border-b h-15' },
+  host: {
+    class: 'block w-full border-side-bar-border border-b h-15 py-2 px-2',
+  },
   template: `
     <button
-      class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden py-4 text-sm font-medium text-white/70"
-      [class.px-6]="shell.sideNavExpanded()"
+      class="hover:bg-side-bar-active/60 transition:background-color flex h-full w-full cursor-pointer items-center justify-center gap-4 overflow-hidden rounded px-2 text-sm font-medium text-white/70"
       [class.justify-start]="shell.sideNavExpanded()"
       [class.w-full]="shell.sideNavExpanded()"
       [class.text-left]="shell.sideNavExpanded()"
@@ -53,6 +55,8 @@ import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component'
             class="w-full overflow-hidden text-base font-medium tracking-[.225px] text-ellipsis whitespace-nowrap text-white select-none">
             {{ workspace.name }}
           </div>
+
+          <svg lucideChevronsUpDown class="h-5 w-5 flex-none opacity-70"></svg>
         }
       }
     </button>
@@ -68,7 +72,11 @@ import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component'
         (logout)="onlogOutClicked()" />
     </ng-template>
   `,
-  imports: [WorkspaceBadgeComponent, WorkspaceSelectMenuComponent],
+  imports: [
+    WorkspaceBadgeComponent,
+    WorkspaceSelectMenuComponent,
+    LucideChevronsUpDown,
+  ],
 })
 export class WorkspaceSelectComponent implements OnDestroy {
   private store = inject(Store);
