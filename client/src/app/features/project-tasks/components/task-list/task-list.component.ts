@@ -176,10 +176,7 @@ export class TaskListComponent {
     selectHasPermission(netptunePermissions.tasks.delete)
   );
 
-  readonly taskData: DatatableDataSource<
-    TaskViewModel,
-    ClientResponse<Page<TaskViewModel>>
-  > = {
+  readonly taskData: DatatableDataSource<TaskViewModel> = {
     columns: [
       {
         id: 'systemId',

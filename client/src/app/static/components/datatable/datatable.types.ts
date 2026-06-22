@@ -1,5 +1,7 @@
 import { HttpResourceRef } from '@angular/common/http';
 import { Injector, Signal, Type } from '@angular/core';
+import { ClientResponse } from '@app/core/models/client-response';
+import { Page } from '@app/core/models/pagination';
 
 export type DatatableSortDirection = 'asc' | 'desc';
 
@@ -45,13 +47,13 @@ export interface DatatableLoadParams {
   sort: DatatableLoadSort | null;
 }
 
-export interface DatatableDataSource<T = unknown, TResponse = readonly T[]> {
+export interface DatatableDataSource<T = unknown> {
   columns: readonly DatatableColumn<T>[];
   resource: (
     params: Signal<DatatableLoadParams>,
     injector: Injector
-  ) => HttpResourceRef<TResponse>;
-  rows?: (response: TResponse | undefined) => readonly T[];
+  ) => HttpResourceRef<ClientResponse<Page<T>>>;
+  rows?: (response: ClientResponse<Page<T>> | undefined) => readonly T[];
   trackBy: (index: number, row: T) => string | number;
   menu?: readonly DatatableMenuItem<T>[];
 }

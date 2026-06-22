@@ -40,6 +40,8 @@ import {
   DatatableSortDirection,
 } from './datatable.types';
 import { classes } from './datatable-classes';
+import { ClientResponse } from '@app/core/models/client-response';
+import { Page } from '@app/core/models/pagination';
 
 @Component({
   selector: 'app-datatable',
@@ -182,53 +184,54 @@ import { classes } from './datatable-classes';
     <ng-content select="app-table-pagination" />
   `,
 })
-export class DatatableComponent<T = unknown, R = unknown>
-  implements OnInit, OnDestroy
-{
-  private readonly injector = inject(Injector);
+export class DatatableComponent<T = unknown> implements OnInit, OnDestroy {
+  injector = inject(Injector);
 
-  readonly data = input.required<DatatableDataSource<T, R>>();
-  readonly selection = input(false, { transform: booleanAttribute });
-  readonly containerClass = input('');
-  readonly tableClass = input('');
-  readonly headerClass = input('');
-  readonly rowClass = input<DatatableRowClass<T> | ''>('');
-  readonly emptyCellClass = input('');
-  readonly emptyMessage = input('No rows to display.');
-  readonly stickyHeader = input(false);
-  readonly sort = model<DatatableSort | null>(null);
+  data = input.required<DatatableDataSource<T>>();
+  selection = input(false, { transform: booleanAttribute });
+  containerClass = input('');
+  tableClass = input('');
+  headerClass = input('');
+  rowClass = input<DatatableRowClass<T> | ''>('');
+  emptyCellClass = input('');
+  emptyMessage = input('No rows to display.');
+  stickyHeader = input(false);
+  sort = model<DatatableSort | null>(null);
 
-  protected readonly iconInputs = { size: 16 };
-  private readonly resourceRef = signal<HttpResourceRef<R> | null>(null);
-  private readonly lastResolvedRows = signal<readonly T[]>([]);
-  private readonly cellTemplates = contentChildren<
-    DatatableCellTemplateDirective<T>
-  >(DatatableCellTemplateDirective);
-  protected readonly emptyState = contentChild<DatatableEmptyDirective>(
-    DatatableEmptyDirective
+  iconInputs = { size: 16 };
+  resourceRef = signal<HttpResourceRef<ClientResponse<Page<T>>> | null>(null);
+  lastResolvedRows = signal<readonly T[]>([]);
+  cellTemplates = contentChildren<DatatableCellTemplateDirective<T>>(
+    DatatableCellTemplateDirective
   );
 
-  protected readonly mergedContainerClass = computed(() =>
-    twMerge(classes.defaultContainerClass, this.containerClass())
-  );
-  protected readonly mergedTableClass = computed(() =>
-    twMerge(classes.defaultTableClass, this.tableClass())
-  );
-  protected readonly mergedHeaderClass = computed(() =>
-    twMerge(classes.defaultHeaderClass, this.headerClass())
-  );
-  protected readonly mergedEmptyCellClass = computed(() =>
-    twMerge(classes.defaultEmptyCellClass, this.emptyCellClass())
-  );
-  protected readonly cellTemplateMap = computed(
-    () =>
-      new Map(
-        this.cellTemplates().map((template) => [template.columnId(), template])
-      )
-  );
-  protected readonly showMenuColumn = computed(() => this.data().menu?.length);
-  protected readonly columns = computed(() => this.data().columns);
-  private readonly loadParams = computed<DatatableLoadParams>(() => {
+  emptyState = contentChild<DatatableEmptyDirective>(DatatableEmptyDirective);
+
+  mergedContainerClass = computed(() => {
+    return twMerge(classes.container, this.containerClass());
+  });
+
+  mergedTableClass = computed(() => {
+    return twMerge(classes.table, this.tableClass());
+  });
+
+  mergedHeaderClass = computed(() => {
+    return twMerge(classes.header, this.headerClass());
+  });
+
+  mergedEmptyCellClass = computed(() => {
+    return twMerge(classes.emptyCell, this.emptyCellClass());
+  });
+
+  cellTemplateMap = computed(() => {
+    return new Map(
+      this.cellTemplates().map((template) => [template.columnId(), template])
+    );
+  });
+
+  showMenuColumn = computed(() => this.data().menu?.length);
+  columns = computed(() => this.data().columns);
+  loadParams = computed<DatatableLoadParams>(() => {
     const sort = this.sort();
 
     if (!sort) return { sort: null };
@@ -245,11 +248,9 @@ export class DatatableComponent<T = unknown, R = unknown>
     };
   });
 
-  private readonly resourceLoading = computed(
-    () => this.resourceRef()?.isLoading() ?? false
-  );
+  resourceLoading = computed(() => this.resourceRef()?.isLoading() ?? false);
 
-  private readonly currentRows = computed(() => {
+  currentRows = computed(() => {
     const resource = this.resourceRef();
     const dataSource = this.data();
     const response = resource?.hasValue() ? resource.value() : undefined;
@@ -261,7 +262,7 @@ export class DatatableComponent<T = unknown, R = unknown>
     return Array.isArray(response) ? (response as readonly T[]) : [];
   });
 
-  protected readonly visibleRows = computed(() => {
+  visibleRows = computed(() => {
     const lastResolvedRows = this.lastResolvedRows();
 
     if (this.resourceLoading() && lastResolvedRows.length > 0) {
@@ -287,7 +288,7 @@ export class DatatableComponent<T = unknown, R = unknown>
     this.resourceRef()?.destroy();
   }
 
-  protected toggleSort(column: DatatableColumn<T>) {
+  toggleSort(column: DatatableColumn<T>) {
     if (!this.isSortable(column)) return;
 
     const sort = this.sort();
@@ -305,19 +306,17 @@ export class DatatableComponent<T = unknown, R = unknown>
     this.sort.set(null);
   }
 
-  protected isSortable(column: DatatableColumn<T>): boolean {
+  isSortable(column: DatatableColumn<T>): boolean {
     return Boolean(column.sortable || column.sortKey);
   }
 
-  protected sortDirection(
-    column: DatatableColumn<T>
-  ): DatatableSortDirection | null {
+  sortDirection(column: DatatableColumn<T>): DatatableSortDirection | null {
     const sort = this.sort();
 
     return sort?.columnId === column.id ? sort.direction : null;
   }
 
-  protected ariaSort(column: DatatableColumn<T>) {
+  ariaSort(column: DatatableColumn<T>) {
     const direction = this.sortDirection(column);
 
     if (!direction) return null;
@@ -325,7 +324,7 @@ export class DatatableComponent<T = unknown, R = unknown>
     return direction === 'asc' ? 'ascending' : 'descending';
   }
 
-  protected sortLabel(column: DatatableColumn<T>): string {
+  sortLabel(column: DatatableColumn<T>): string {
     const label = column.ariaLabel ?? column.header;
     const direction = this.sortDirection(column);
 
@@ -340,11 +339,11 @@ export class DatatableComponent<T = unknown, R = unknown>
     return `Sort ${label} ascending`;
   }
 
-  protected cellTemplate(columnId: string) {
+  cellTemplate(columnId: string) {
     return this.cellTemplateMap().get(columnId) ?? null;
   }
 
-  protected selectMenuItem(
+  selectMenuItem(
     menuItem: DatatableMenuItem<T>,
     row: T,
     menu: DropdownMenuComponent
@@ -353,7 +352,7 @@ export class DatatableComponent<T = unknown, R = unknown>
     menuItem.onClick(row);
   }
 
-  protected cellContext(
+  cellContext(
     row: T,
     column: DatatableColumn<T>,
     rowIndex: number
@@ -367,21 +366,21 @@ export class DatatableComponent<T = unknown, R = unknown>
     };
   }
 
-  protected cellValue(row: T, column: DatatableColumn<T>): unknown {
+  cellValue(row: T, column: DatatableColumn<T>): unknown {
     return readValue(row, column.accessor ?? column.id);
   }
 
-  protected formattedCellValue(row: T, column: DatatableColumn<T>): unknown {
+  formattedCellValue(row: T, column: DatatableColumn<T>): unknown {
     const value = this.cellValue(row, column);
 
     return column.format ? column.format(value, row, column) : value;
   }
 
-  protected trackRow(index: number, row: T) {
+  trackRow(index: number, row: T) {
     return this.data().trackBy(index, row);
   }
 
-  protected emptyColumnSpan(): number {
+  emptyColumnSpan(): number {
     return Math.max(
       1,
       this.columns().length +
@@ -390,25 +389,25 @@ export class DatatableComponent<T = unknown, R = unknown>
     );
   }
 
-  protected resolvedHeaderCellClass(column: DatatableColumn<T>): string {
+  resolvedHeaderCellClass(column: DatatableColumn<T>): string {
     return twMerge(
-      classes.defaultHeaderCellClass,
+      classes.headerCell,
       alignmentClass(column.align),
       column.widthClass,
       column.headerClass
     );
   }
 
-  protected resolvedRowClass(row: T, rowIndex: number): string {
+  resolvedRowClass(row: T, rowIndex: number): string {
     const rowClass = this.rowClass();
 
     return twMerge(
-      classes.defaultRowClass,
+      classes.row,
       typeof rowClass === 'function' ? rowClass(row, rowIndex) : rowClass
     );
   }
 
-  protected resolvedCellClass(
+  resolvedCellClass(
     row: T,
     column: DatatableColumn<T>,
     rowIndex: number
@@ -419,7 +418,7 @@ export class DatatableComponent<T = unknown, R = unknown>
         : column.cellClass;
 
     return twMerge(
-      classes.defaultCellClass,
+      classes.cell,
       alignmentClass(column.align),
       column.widthClass,
       cellClass
