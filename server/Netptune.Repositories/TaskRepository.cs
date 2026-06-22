@@ -155,6 +155,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var page = Math.Max(filter.Page ?? PaginationDefaults.DefaultPage, 1);
         var pageSize = Math.Clamp(filter.PageSize ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
         var skip = (page - 1) * pageSize;
+        var taskOrder = GetTaskOrderBy(filter);
+        var rowOrder = GetTaskRowOrderBy(filter);
 
         using var connection = ConnectionFactory.StartConnection();
 
@@ -183,6 +185,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      , p.name AS project_name
                      , s.name AS sprint_name
                      , s.status AS sprint_status
+                     , (
+                           SELECT COUNT(*)
+                           FROM project_task_app_users ptau_sort
+                           WHERE ptau_sort.project_task_id = pt.id
+                       ) AS assignee_count
                      , CASE
                            WHEN NULLIF(CONCAT_WS(' ', o.firstname, o.lastname), '') IS NULL
                                THEN o.user_name
@@ -228,7 +235,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                             AND LOWER(t_search.name) LIKE @searchPattern
                       )
                   ))
-                ORDER BY COALESCE(pt.updated_at, pt.created_at) DESC, pt.id DESC
+                ORDER BY {taskOrder}
                 LIMIT @pageSize
                 OFFSET @skip
             )
@@ -268,7 +275,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                      LEFT JOIN tags t ON ptt.tag_id = t.id AND NOT t.is_deleted
                      LEFT JOIN project_task_app_users ptau ON ft.id = ptau.project_task_id
                      LEFT JOIN users u ON ptau.user_id = u.id
-            ORDER BY COALESCE(ft.updated_at, ft.created_at) DESC, ft.id DESC, t.name, u.id;
+            ORDER BY {rowOrder}, t.name, u.id;
         ", new
         {
             workspaceKey,
@@ -289,6 +296,69 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var totalCount = rowList.FirstOrDefault()?.Total_Count ?? 0;
 
         return new PagedResponse<TaskViewModel>(RowsToTaskViewModels(rowList), page, pageSize, totalCount);
+    }
+
+    private static string GetTaskOrderBy(TaskFilter filter)
+    {
+        var direction = GetSortDirection(filter);
+
+        return GetTaskSortExpression(filter.SortBy) switch
+        {
+            null => "COALESCE(pt.updated_at, pt.created_at) DESC, pt.id DESC",
+            var expression => $"{expression} {direction} NULLS LAST, pt.id {direction}",
+        };
+    }
+
+    private static string GetTaskRowOrderBy(TaskFilter filter)
+    {
+        var direction = GetSortDirection(filter);
+
+        return GetTaskRowSortExpression(filter.SortBy) switch
+        {
+            null => "COALESCE(ft.updated_at, ft.created_at) DESC, ft.id DESC",
+            var expression => $"{expression} {direction} NULLS LAST, ft.id {direction}",
+        };
+    }
+
+    private static string GetSortDirection(TaskFilter filter)
+    {
+        return string.Equals(filter.SortDirection, "asc", StringComparison.OrdinalIgnoreCase)
+            ? "ASC"
+            : "DESC";
+    }
+
+    private static string? GetTaskSortExpression(string? sortBy)
+    {
+        return sortBy?.Trim() switch
+        {
+            "id" => "pt.id",
+            "name" => "pt.name",
+            "systemId" => "CONCAT_WS('-', p.key, pt.project_scope_id::text)",
+            "projectScopeId" => "pt.project_scope_id",
+            "sprintName" => "s.name",
+            "statusName" => "st.name",
+            "createdAt" => "pt.created_at",
+            "updatedAt" => "pt.updated_at",
+            "assignees" => "assignee_count",
+            _ => null,
+        };
+    }
+
+    private static string? GetTaskRowSortExpression(string? sortBy)
+    {
+        return sortBy?.Trim() switch
+        {
+            "id" => "ft.id",
+            "name" => "ft.name",
+            "systemId" => "CONCAT_WS('-', ft.project_key, ft.project_scope_id::text)",
+            "projectScopeId" => "ft.project_scope_id",
+            "sprintName" => "ft.sprint_name",
+            "statusName" => "ft.status_name",
+            "createdAt" => "ft.created_at",
+            "updatedAt" => "ft.updated_at",
+            "assignees" => "ft.assignee_count",
+            _ => null,
+        };
     }
 
     private static List<TaskViewModel> RowsToTaskViewModels(IEnumerable<TaskViewRowMap> rows)
