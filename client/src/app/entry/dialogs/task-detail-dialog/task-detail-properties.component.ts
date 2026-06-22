@@ -1,18 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { AppUser } from '@app/core/models/appuser';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
-import { selectAllProjects } from '@app/core/store/projects/projects.selectors';
 import { selectRequiredDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { selectAllUsers } from '@app/core/store/users/users.selectors';
 import { TaskPrioritySelectComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-priority.component';
 import { AvatarComponent } from '@app/static/components/avatar/avatar.component';
-import { ChipListboxComponent } from '@app/static/components/chip/chip-listbox.component';
-import { ChipOptionComponent } from '@app/static/components/chip/chip-option.component';
-import { DropdownMenuComponent } from '@app/static/components/dropdown-menu/dropdown-menu.component';
-import { MenuItemComponent } from '@app/static/components/dropdown-menu/menu-item.component';
 import { UserSelectComponent } from '@app/static/components/user-select/user-select.component';
 import { Store } from '@ngrx/store';
 import { TaskDetailEstimateComponent } from './task-detail-estimate.component';
+import { TaskDetailProjectSelectComponent } from './task-detail-project-select.component';
+import { TaskDetailSprintSelectComponent } from './task-detail-sprint-select.component';
+import { TaskDetailStatusSelectComponent } from './task-detail-status-select.component';
 import { TaskDetailService } from './task-detail.service';
 
 @Component({
@@ -20,12 +18,11 @@ import { TaskDetailService } from './task-detail.service';
   imports: [
     UserSelectComponent,
     AvatarComponent,
-    ChipListboxComponent,
-    DropdownMenuComponent,
-    MenuItemComponent,
-    ChipOptionComponent,
     TaskPrioritySelectComponent,
     TaskDetailEstimateComponent,
+    TaskDetailProjectSelectComponent,
+    TaskDetailSprintSelectComponent,
+    TaskDetailStatusSelectComponent,
   ],
   template: `
     <div class="flex flex-col">
@@ -51,9 +48,7 @@ import { TaskDetailService } from './task-detail.service';
       </div>
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Status</h4>
-        <app-chip-listbox>
-          <app-chip-option>{{ task().statusName }}</app-chip-option>
-        </app-chip-listbox>
+        <app-task-detail-status-select />
       </div>
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Priority</h4>
@@ -65,25 +60,11 @@ import { TaskDetailService } from './task-detail.service';
       </div>
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Project</h4>
-        <app-chip-listbox>
-          <button
-            app-chip-option
-            (click)="projectsMenu.toggle($any($event.currentTarget))">
-            {{ task().projectName }}
-          </button>
-        </app-chip-listbox>
-        <app-dropdown-menu #projectsMenu>
-          <small class="block px-3 py-1 text-xs text-neutral-500">
-            Change Project
-          </small>
-          @for (project of projects(); track project.id) {
-            <button
-              app-menu-item
-              (click)="selectProject(project.id); projectsMenu.close()">
-              {{ project.name }}
-            </button>
-          }
-        </app-dropdown-menu>
+        <app-task-detail-project-select />
+      </div>
+      <div>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">Sprint</h4>
+        <app-task-detail-sprint-select />
       </div>
     </div>
   `,
@@ -92,14 +73,7 @@ export class TaskDetailPropertiesComponent {
   readonly store = inject(Store);
   readonly taskDetailService = inject(TaskDetailService);
   readonly task = this.store.selectSignal(selectRequiredDetailTask);
-  readonly projects = this.store.selectSignal(selectAllProjects);
   readonly users = this.store.selectSignal(selectAllUsers);
-
-  selectProject(projectId: number) {
-    const task = this.task();
-    if (!task) return;
-    this.taskDetailService.updateTask({ ...task, projectId });
-  }
 
   selectAssignee(user: AppUser) {
     const task = this.task();

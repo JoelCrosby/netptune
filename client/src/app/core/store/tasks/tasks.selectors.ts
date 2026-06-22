@@ -153,6 +153,11 @@ export const selectTasksLoaded = createSelector(
   (state: TasksState) => state.loaded
 );
 
+export const selectTaskEditLoading = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.editState.loading
+);
+
 export const selectSelectedTask = createSelector(
   selectTasksFeature,
   (state: TasksState) => state.selectedTask

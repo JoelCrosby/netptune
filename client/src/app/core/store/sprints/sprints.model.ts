@@ -32,6 +32,7 @@ export const initialState: SprintsState = adapter.getInitialState({
 export interface SprintFilter {
   projectId?: number;
   status?: SprintStatus;
+  statuses?: SprintStatus[];
   take?: number;
 }
 

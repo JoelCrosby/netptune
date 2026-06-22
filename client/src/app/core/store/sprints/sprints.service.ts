@@ -26,6 +26,10 @@ export class SprintsService {
       params = params.set('status', filter.status);
     }
 
+    for (const status of filter?.statuses ?? []) {
+      params = params.append('statuses', status);
+    }
+
     if (filter?.take !== undefined) {
       params = params.set('take', filter.take);
     }

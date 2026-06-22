@@ -8,5 +8,7 @@ public record SprintFilter
 
     public SprintStatus? Status { get; init; }
 
+    public SprintStatus[] Statuses { get; init; } = [];
+
     public int? Take { get; init; }
 }

@@ -1,6 +1,8 @@
+import { httpResource } from '@angular/common/http';
 import { Component, computed, inject } from '@angular/core';
+import { MAX_PAGE_SIZE } from '@app/core/models/pagination';
+import { Tag } from '@app/core/models/tag';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
-import { selectTagNames } from '@app/core/store/tags/tags.selectors';
 import {
   addTagToTask,
   deleteTagFromTask,
@@ -21,7 +23,7 @@ import { Store } from '@ngrx/store';
       [value]="selectedTags()"
       (changed)="onTagsSelectionChanged($event)"
       [isReadonly]="!canUpdate()">
-      @for (tag of tags(); track tag) {
+      @for (tag of tagNames(); track tag) {
         <app-form-select-tags-option [value]="tag">
           {{ tag }}
         </app-form-select-tags-option>
@@ -33,11 +35,21 @@ import { Store } from '@ngrx/store';
 export class TaskDetailTagsComponent {
   readonly store = inject(Store);
 
-  tags = this.store.selectSignal(selectTagNames);
+  readonly tags = httpResource<Tag[]>(
+    () => ({
+      url: 'api/tags/workspace',
+      params: {
+        page: 1,
+        pageSize: MAX_PAGE_SIZE,
+      },
+    }),
+    { defaultValue: [] }
+  );
 
   task = this.store.selectSignal(selectDetailTask);
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
   selectedTags = computed(() => this.task()?.tags ?? []);
+  tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 
   canUpdate = selectCanUpdateTask(this.store);
 

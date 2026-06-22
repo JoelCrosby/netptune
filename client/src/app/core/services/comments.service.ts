@@ -1,0 +1,23 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { ClientResponse } from '@core/models/client-response';
+import { CommentViewModel } from '@core/models/comment';
+import { AddCommentRequest } from '@core/models/requests/add-comment-request';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CommentsService {
+  private http = inject(HttpClient);
+
+  postToTask(request: AddCommentRequest) {
+    return this.http.post<ClientResponse<CommentViewModel>>(
+      'api/comments/task',
+      request
+    );
+  }
+
+  delete(commentId: number) {
+    return this.http.delete<ClientResponse>(`api/comments/${commentId}`);
+  }
+}

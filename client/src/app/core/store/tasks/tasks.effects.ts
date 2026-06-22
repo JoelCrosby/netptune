@@ -1,9 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { ConfirmationService } from '@core/services/confirmation.service';
 import * as RouteSelectors from '@core/core.route.selectors';
+import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -12,6 +11,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { Action, Store } from '@ngrx/store';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, of } from 'rxjs';
 import {
   catchError,
@@ -21,29 +21,27 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { loadProjects } from '../projects/projects.actions';
-import * as SprintActions from '../sprints/sprints.actions';
-import * as TagActions from '../tags/tags.actions';
-import { loadTags } from '../tags/tags.actions';
-import { loadUsers } from '../users/users.actions';
-import * as actions from './tasks.actions';
-import { ProjectTasksHubService } from './tasks.hub.service';
-import { ProjectTasksService } from './tasks.service';
 import { clearState } from '../activity/activity.actions';
-import {
-  selectSelectedAssignees,
-  selectSelectedTaskStatuses,
-  selectProjectTasksFilter,
-  selectTaskSearchTerm,
-  selectTasksPage,
-  selectTasksPageSize,
-} from './tasks.selectors';
-import { selectSelectedTags } from '../tags/tags.selectors';
+import * as SprintActions from '../sprints/sprints.actions';
 import { selectSelectedSprintFilterId } from '../sprints/sprints.selectors';
+import * as TagActions from '../tags/tags.actions';
+import { selectSelectedTags } from '../tags/tags.selectors';
+import { loadUsers } from '../users/users.actions';
 import {
   buildTaskFilterRouteParams,
   parseTaskFilterRouteParams,
 } from './task-filter-route-params';
+import * as actions from './tasks.actions';
+import { ProjectTasksHubService } from './tasks.hub.service';
+import {
+  selectProjectTasksFilter,
+  selectSelectedAssignees,
+  selectSelectedTaskStatuses,
+  selectTaskSearchTerm,
+  selectTasksPage,
+  selectTasksPageSize,
+} from './tasks.selectors';
+import { ProjectTasksService } from './tasks.service';
 
 @Injectable()
 export class ProjectTasksEffects {
@@ -243,34 +241,6 @@ export class ProjectTasksEffects {
     );
   });
 
-  deleteComment$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.deleteComment),
-      switchMap((action) =>
-        this.confirmation.open(DELETE_COMMENT_CONFIRMATION).pipe(
-          switchMap((result) => {
-            if (!result) return EMPTY;
-
-            return this.projectTasksService
-              .deleteComment(action.commentId)
-              .pipe(
-                unwrapClientReposne(),
-                tap(() => this.snackbar.open('Comment deleted')),
-                map(() =>
-                  actions.deleteCommentSuccess({
-                    commentId: action.commentId,
-                  })
-                ),
-                catchError((error: HttpErrorResponse) =>
-                  of(actions.deleteCommentFail({ error }))
-                )
-              );
-          })
-        )
-      )
-    );
-  });
-
   loadTaskDetail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadTaskDetails),
@@ -285,20 +255,6 @@ export class ProjectTasksEffects {
     );
   });
 
-  loadTaskDetailComments$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadTaskDetails),
-      map(({ systemId }) => actions.loadComments({ systemId }))
-    );
-  });
-
-  loadTaskDetailProjects$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadTaskDetails),
-      map(() => loadProjects())
-    );
-  });
-
   loadTaskDetailUsers$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadTaskDetails),
@@ -306,46 +262,10 @@ export class ProjectTasksEffects {
     );
   });
 
-  loadTaskDetailTags$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadTaskDetails),
-      map(() => loadTags())
-    );
-  });
-
   clearTaskDetail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.clearTaskDetail),
       map(() => clearState())
-    );
-  });
-
-  loadComments$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadComments),
-      switchMap((action) =>
-        this.projectTasksService.getComments(action.systemId).pipe(
-          map((comments) => actions.loadCommentsSuccess({ comments })),
-          catchError((error: HttpErrorResponse) =>
-            of(actions.loadCommentsFail({ error }))
-          )
-        )
-      )
-    );
-  });
-
-  addComment$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.addComment),
-      switchMap((action) =>
-        this.projectTasksService.postComment(action.request).pipe(
-          unwrapClientReposne(),
-          map((comment) => actions.addCommentSuccess({ comment })),
-          catchError((error: HttpErrorResponse) =>
-            of(actions.addCommentFail({ error }))
-          )
-        )
-      )
     );
   });
 
@@ -425,13 +345,5 @@ const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: 'Cancel',
   message: 'Are you sure you want to delete this task?',
   title: 'Delete Task',
-  color: 'warn',
-};
-
-const DELETE_COMMENT_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to delete this comment?',
-  title: 'Delete Comment',
   color: 'warn',
 };

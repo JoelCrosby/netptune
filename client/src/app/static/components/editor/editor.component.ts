@@ -34,7 +34,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
   selector: 'app-editor',
   template: `<div class="editor mb-4 rounded" #editorJs></div>`,
   host: {
-    class: 'bg-secondary-background',
+    class: 'bg-background dark:bg-secondary-background',
   },
   encapsulation: ViewEncapsulation.None,
   providers: [

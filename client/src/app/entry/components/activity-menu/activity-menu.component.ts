@@ -1,5 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { DatePipe } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -20,7 +21,7 @@ import {
   selectActivitiesLoaded,
   selectActivityCanLoadMore,
 } from '@core/store/activity/activity.selectors';
-import { LucideLogs } from '@lucide/angular';
+import { LucideHistory } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
@@ -30,25 +31,46 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
   imports: [
     FlatButtonComponent,
     TooltipDirective,
-    LucideLogs,
+    LucideHistory,
     AvatarComponent,
     SpinnerComponent,
     ActivityPipe,
+    DatePipe,
+  ],
+  styles: [
+    `
+      @keyframes dropdown-in {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      .dropdown-menu {
+        animation: dropdown-in 120ms ease-out;
+        transform-origin: top;
+      }
+    `,
   ],
   template: `<button
       app-flat-button
       appTooltip="Show activity"
+      color="ghost"
       (click)="toggleMenu()">
-      <svg lucideLogs aria-hidden="false" aria-label="Show activity"></svg>
+      <svg lucideHistory aria-hidden="false" aria-label="Show activity"></svg>
     </button>
 
     <ng-template #menuTemplate>
       <div
-        class="custom-scroll border-border bg-background mt-[0.4rem] max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded-[0.4rem] border p-1 py-3 shadow-lg">
+        class="dropdown-menu custom-scroll bg-background border-border mt-1 max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded border py-2 shadow-lg dark:bg-neutral-900">
         @if (loaded()) {
           @for (activity of activities(); track $index; let last = $last) {
             <div
-              class="flex min-w-80 flex-row items-center px-[1.2rem] py-[0.6rem] text-sm">
+              class="flex min-w-80 flex-row items-center gap-1 px-4 py-1 text-sm">
               <app-avatar
                 class="shrink-0 grow-0 basis-8"
                 [imageUrl]="activity.userPictureUrl"
@@ -58,7 +80,9 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
               <span class="font-medium tracking-[0.225px] whitespace-nowrap">
                 {{ activity.userUsername }}
               </span>
-              <span class="text-foreground/90 ml-[0.3rem] whitespace-nowrap">
+              <span
+                class="text-foreground/90 ml-[0.3rem] text-xs whitespace-nowrap"
+                [appTooltip]="activity.time | date">
                 {{ activity | activity }}
               </span>
             </div>

@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Sprints;
@@ -24,14 +26,16 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
     public Task<List<SprintViewModel>> GetSprintsAsync(
         string workspaceKey,
         int? projectId = null,
-        SprintStatus? status = null,
+        IReadOnlyCollection<SprintStatus>? statuses = null,
         int? take = null,
         CancellationToken cancellationToken = default)
     {
+        var statusList = statuses?.ToArray() ?? [];
+
         var query = Entities
             .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
             .Where(sprint => !projectId.HasValue || sprint.ProjectId == projectId.Value)
-            .Where(sprint => !status.HasValue || sprint.Status == status.Value)
+            .Where(sprint => statusList.Length == 0 || statusList.Contains(sprint.Status))
             .OrderByDescending(sprint => sprint.Status == SprintStatus.Active)
             .ThenByDescending(sprint => sprint.StartDate)
             .AsNoTracking();

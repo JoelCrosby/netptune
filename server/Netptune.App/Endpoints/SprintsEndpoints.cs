@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
@@ -31,7 +32,13 @@ public static class SprintsEndpoints
         [AsParameters] SprintFilter filter,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetSprintsQuery(filter.ProjectId, filter.Status, filter.Take), cancellationToken);
+        var statuses = filter.Statuses.Length > 0
+            ? filter.Statuses
+            : filter.Status.HasValue
+                ? [filter.Status.Value]
+                : [];
+
+        var result = await mediator.Send(new GetSprintsQuery(filter.ProjectId, statuses, filter.Take), cancellationToken);
 
         return Results.Ok(result);
     }

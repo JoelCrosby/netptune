@@ -173,40 +173,6 @@ const reducer = createReducer(
     })
   ),
 
-  // Load Comments
-
-  on(
-    actions.loadCommentsSuccess,
-    (state, { comments }): TasksState => ({
-      ...state,
-      comments,
-    })
-  ),
-
-  // Delete Comment
-
-  on(
-    actions.deleteCommentSuccess,
-    (state, { commentId }): TasksState => ({
-      ...state,
-      comments: state.comments.filter((c) => c.id !== commentId),
-    })
-  ),
-
-  // Add Comment
-
-  on(
-    actions.addCommentSuccess,
-    (state, { comment }): TasksState => ({
-      ...state,
-      comments: [...state.comments, comment].sort((a, b) => {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      }),
-    })
-  ),
-
   // Clear Task Detail
 
   on(

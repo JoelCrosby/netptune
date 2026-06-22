@@ -1,15 +1,13 @@
-import { AddProjectTaskRequest } from '@core/models/project-task';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AddCommentRequest } from '@core/models/requests/add-comment-request';
-import { CommentViewModel } from '@core/models/comment';
-import { FileResponse } from '@core/types/file-response';
+import { Params } from '@angular/router';
+import { AddProjectTaskRequest } from '@core/models/project-task';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
+import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
-import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
-import { Params } from '@angular/router';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { FileResponse } from '@core/types/file-response';
+import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
 
@@ -153,57 +151,6 @@ export const clearTaskDetail = createAction('[ProjectTasks] Clear Task detail');
 export const setInlineEditActive = createAction(
   '[ProjectTasks] Set Inline Edit Active',
   props<{ active: boolean }>()
-);
-
-// Comments
-
-export const loadComments = createAction(
-  '[ProjectTasks] Load Comments',
-  props<{ systemId: string }>()
-);
-
-export const loadCommentsSuccess = createAction(
-  '[ProjectTasks] Load Comments Success ',
-  props<{ comments: CommentViewModel[] }>()
-);
-
-export const loadCommentsFail = createAction(
-  '[ProjectTasks] Load Comments Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-// Add Comment
-
-export const addComment = createAction(
-  '[ProjectTasks] Add Comment',
-  props<{ request: AddCommentRequest }>()
-);
-
-export const addCommentSuccess = createAction(
-  '[ProjectTasks] Add Comment Success',
-  props<{ comment: CommentViewModel }>()
-);
-
-export const addCommentFail = createAction(
-  '[ProjectTasks] Add Comment Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-// Delete Comment
-
-export const deleteComment = createAction(
-  '[ProjectTasks] Delete Comment',
-  props<{ commentId: number }>()
-);
-
-export const deleteCommentSuccess = createAction(
-  '[ProjectTasks] Delete Comment Success',
-  props<{ commentId: number }>()
-);
-
-export const deleteCommentFail = createAction(
-  '[ProjectTasks] Delete Comment Fail',
-  props<{ error: HttpErrorResponse }>()
 );
 
 // Export Tasks
