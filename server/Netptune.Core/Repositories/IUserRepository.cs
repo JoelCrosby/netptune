@@ -4,6 +4,7 @@ using Netptune.Core.Models;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.Repositories;
 
@@ -17,9 +18,7 @@ public interface IUserRepository : IRepository<AppUser, string>
 
     Task<List<AppUser>> GetWorkspaceUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
-
-    Task<int> CountWorkspaceAppUsers(string workspaceKey, CancellationToken cancellationToken = default);
+    Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, PageRequest pageRequest, CancellationToken cancellationToken = default);
 
     Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 

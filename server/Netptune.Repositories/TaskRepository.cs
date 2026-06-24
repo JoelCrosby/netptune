@@ -5,7 +5,6 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -16,6 +15,7 @@ using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
+using Netptune.Repositories.Sql;
 
 namespace Netptune.Repositories;
 
@@ -158,125 +158,13 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var taskOrder = GetTaskOrderBy(filter);
         var rowOrder = GetTaskRowOrderBy(filter);
 
+        var sql = SqlScripts.GetTasks
+            .Replace("{taskOrder}", taskOrder)
+            .Replace("{rowOrder}", rowOrder);
+
         using var connection = ConnectionFactory.StartConnection();
 
-        var rows = await connection.QueryAsync<TaskViewRowMap>(new CommandDefinition($@"
-            WITH filtered_tasks AS (
-                SELECT pt.id
-                     , pt.owner_id
-                     , pt.name
-                     , pt.description
-                     , pt.status_id
-                     , st.name AS status_name
-                     , st.key AS status_key
-                     , st.color AS status_color
-                     , st.category AS status_category
-                     , pt.project_scope_id
-                     , pt.priority
-                     , pt.estimate_type
-                     , pt.estimate_value
-                     , pt.project_id
-                     , pt.sprint_id
-                     , pt.workspace_id
-                     , pt.created_at
-                     , pt.updated_at
-                     , w.slug AS workspace_key
-                     , p.key AS project_key
-                     , p.name AS project_name
-                     , s.name AS sprint_name
-                     , s.status AS sprint_status
-                     , (
-                           SELECT COUNT(*)
-                           FROM project_task_app_users ptau_sort
-                           WHERE ptau_sort.project_task_id = pt.id
-                       ) AS assignee_count
-                     , CASE
-                           WHEN NULLIF(CONCAT_WS(' ', o.firstname, o.lastname), '') IS NULL
-                               THEN o.user_name
-                           ELSE CONCAT_WS(' ', o.firstname, o.lastname)
-                       END AS owner_username
-                     , o.picture_url AS owner_picture_url
-                     , COUNT(*) OVER() AS total_count
-                FROM project_tasks pt
-                         INNER JOIN workspaces w ON pt.workspace_id = w.id
-                         INNER JOIN statuses st ON pt.status_id = st.id
-                         LEFT JOIN projects p ON pt.project_id = p.id
-                         LEFT JOIN sprints s ON pt.sprint_id = s.id AND NOT s.is_deleted
-                         INNER JOIN users o ON pt.owner_id = o.id
-                WHERE w.slug = @workspaceKey
-                  AND NOT pt.is_deleted
-                  AND (@projectId IS NULL OR pt.project_id = @projectId)
-                  AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
-                  AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
-                  AND (@noSprint = FALSE OR pt.sprint_id IS NULL)
-                  AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
-                  AND (CARDINALITY(@assignees) = 0 OR EXISTS (
-                      SELECT 1
-                      FROM project_task_app_users ptau_filter
-                      WHERE ptau_filter.project_task_id = pt.id
-                        AND ptau_filter.user_id = ANY(@assignees)
-                  ))
-                  AND (CARDINALITY(@tags) = 0 OR EXISTS (
-                      SELECT 1
-                      FROM project_task_tags ptt_filter
-                               INNER JOIN tags t_filter ON ptt_filter.tag_id = t_filter.id AND NOT t_filter.is_deleted
-                      WHERE ptt_filter.project_task_id = pt.id
-                        AND t_filter.name = ANY(@tags)
-                  ))
-                  AND (@search = '' OR (
-                      LOWER(pt.name) LIKE @searchPattern
-                      OR LOWER(p.key) LIKE @searchPattern
-                      OR LOWER(p.name) LIKE @searchPattern
-                      OR EXISTS (
-                          SELECT 1
-                          FROM project_task_tags ptt_search
-                                   INNER JOIN tags t_search ON ptt_search.tag_id = t_search.id AND NOT t_search.is_deleted
-                          WHERE ptt_search.project_task_id = pt.id
-                            AND LOWER(t_search.name) LIKE @searchPattern
-                      )
-                  ))
-                ORDER BY {taskOrder}
-                LIMIT @pageSize
-                OFFSET @skip
-            )
-            SELECT ft.total_count
-                 , ft.id AS task_id
-                 , ft.owner_id
-                 , ft.name AS task_name
-                 , ft.description AS task_description
-                 , ft.status_id AS task_status_id
-                 , ft.status_name AS task_status_name
-                 , ft.status_key AS task_status_key
-                 , ft.status_color AS task_status_color
-                 , ft.status_category AS task_status_category
-                 , ft.project_scope_id
-                 , ft.priority AS task_priority
-                 , ft.estimate_type AS task_estimate_type
-                 , ft.estimate_value AS task_estimate_value
-                 , ft.project_id
-                 , ft.sprint_id
-                 , ft.sprint_name
-                 , ft.sprint_status
-                 , ft.workspace_id
-                 , ft.workspace_key
-                 , ft.created_at AS task_created_at
-                 , ft.updated_at AS task_updated_at
-                 , ft.owner_username
-                 , ft.owner_picture_url
-                 , ft.project_key
-                 , ft.project_name
-                 , t.name AS tag
-                 , u.id AS assignee_id
-                 , u.firstname AS assignee_firstname
-                 , u.lastname AS assignee_lastname
-                 , u.picture_url AS assignee_picture_url
-            FROM filtered_tasks ft
-                     LEFT JOIN project_task_tags ptt ON ft.id = ptt.project_task_id
-                     LEFT JOIN tags t ON ptt.tag_id = t.id AND NOT t.is_deleted
-                     LEFT JOIN project_task_app_users ptau ON ft.id = ptau.project_task_id
-                     LEFT JOIN users u ON ptau.user_id = u.id
-            ORDER BY {rowOrder}, t.name, u.id;
-        ", new
+        var rows = await connection.QueryAsync<TaskViewRowMap>(new CommandDefinition(sql, new
         {
             workspaceKey,
             projectId = filter.ProjectId,
@@ -352,8 +240,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             "name" => "ft.name",
             "systemId" => "CONCAT_WS('-', ft.project_key, ft.project_scope_id::text)",
             "projectScopeId" => "ft.project_scope_id",
-            "sprintName" => "ft.sprint_name",
-            "statusName" => "ft.status_name",
+            "sprint" => "ft.sprint_name",
+            "status" => "ft.status_name",
             "createdAt" => "ft.created_at",
             "updatedAt" => "ft.updated_at",
             "assignees" => "ft.assignee_count",
@@ -487,62 +375,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(@"
-                SELECT w.slug              AS workspace_key
-                     , p.name              AS project_name
-                     , p.key               AS project_key
-                     , b.name              AS board_name
-                     , b.identifier        AS board_identifier
-                     , pt.id               AS task_id
-                     , pt.name             AS task_name
-                     , pt.description      AS task_description
-                     , pt.project_scope_id AS project_scope_id
-                     , st.name             AS task_status
-                     , pt.created_at       AS task_created_at
-                     , pt.updated_at       AS task_updated_at
-                     , ptibg.sort_order    AS task_sort_order
-                     , bg.name             AS board_group_name
-                     , bg.type             AS board_group_type
-                     , bg.sort_order       AS board_group_sort_order
-                     , u.firstname         AS assignee_firstname
-                     , u.lastname          AS assignee_lastname
-                     , u.email             AS assignee_email
-                     , o.firstname         AS owner_firstname
-                     , o.lastname          AS owner_lastname
-                     , o.email             AS owner_email
-                     , t.name              AS tag
-                     , s.name              AS sprint_name
-                     , s.status            AS sprint_status
-                     , s.start_date        AS sprint_start_date
-                     , s.end_date          AS sprint_end_date
-
-                FROM workspaces w
-                         LEFT JOIN projects p on p.workspace_id = w.id
-                         LEFT JOIN boards b on b.project_id = p.id
-                         LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
-                         LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
-                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id
-                            AND NOT pt.is_deleted
-                            AND pt.id IN (
-                                SELECT pt_limit.id
-                                FROM project_tasks pt_limit
-                                WHERE pt_limit.workspace_id = w.id
-                                  AND NOT pt_limit.is_deleted
-                                ORDER BY COALESCE(pt_limit.updated_at, pt_limit.created_at) DESC, pt_limit.id DESC
-                                LIMIT @take
-                            )
-                         INNER JOIN users o on pt.owner_id = o.id
-                         INNER JOIN statuses st on pt.status_id = st.id
-                         LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
-                         LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
-                         LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
-                         LEFT JOIN users u on ptau.user_id = u.id
-                         LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
-
-                WHERE w.slug = @workspaceKey
-
-                ORDER BY p.id, b.identifier, bg.sort_order, ptibg.sort_order;
-            ", new
+        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(SqlScripts.GetExportTasks, new
         {
             workspaceKey,
             take = PaginationDefaults.MaxExportRows,
@@ -555,64 +388,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(@"
-                SELECT w.slug              AS workspace_key
-                     , p.name              AS project_name
-                     , p.key               AS project_key
-                     , b.name              AS board_name
-                     , b.identifier        AS board_identifier
-                     , pt.id               AS task_id
-                     , pt.name             AS task_name
-                     , pt.description      AS task_description
-                     , pt.project_scope_id AS project_scope_id
-                     , st.name             AS task_status
-                     , pt.created_at       AS task_created_at
-                     , pt.updated_at       AS task_updated_at
-                     , ptibg.sort_order    AS task_sort_order
-                     , bg.name             AS board_group_name
-                     , bg.type             AS board_group_type
-                     , bg.sort_order       AS board_group_sort_order
-                     , u.firstname         AS assignee_firstname
-                     , u.lastname          AS assignee_lastname
-                     , u.email             AS assignee_email
-                     , o.firstname         AS owner_firstname
-                     , o.lastname          AS owner_lastname
-                     , o.email             AS owner_email
-                     , t.name              AS tag
-                     , s.name              AS sprint_name
-                     , s.status            AS sprint_status
-                     , s.start_date        AS sprint_start_date
-                     , s.end_date          AS sprint_end_date
-
-                FROM workspaces w
-                         LEFT JOIN projects p on p.workspace_id = w.id
-                         LEFT JOIN boards b on b.project_id = p.id AND b.identifier = @boardIdentifier
-                         LEFT JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
-                         LEFT JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
-                         LEFT JOIN project_tasks pt on pt.id = ptibg.project_task_id
-                            AND NOT pt.is_deleted
-                            AND pt.id IN (
-                                SELECT pt_limit.id
-                                FROM boards b_limit
-                                         INNER JOIN board_groups bg_limit ON b_limit.id = bg_limit.board_id AND NOT bg_limit.is_deleted
-                                         INNER JOIN project_task_in_board_groups ptibg_limit ON bg_limit.id = ptibg_limit.board_group_id
-                                         INNER JOIN project_tasks pt_limit ON pt_limit.id = ptibg_limit.project_task_id AND NOT pt_limit.is_deleted
-                                WHERE b_limit.identifier = @boardIdentifier
-                                ORDER BY bg_limit.sort_order, ptibg_limit.sort_order, pt_limit.id
-                                LIMIT @take
-                            )
-                         INNER JOIN users o on pt.owner_id = o.id
-                         INNER JOIN statuses st on pt.status_id = st.id
-                         LEFT JOIN project_task_tags ptt on pt.id = ptt.project_task_id
-                         LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
-                         LEFT JOIN project_task_app_users ptau on pt.id = ptau.project_task_id
-                         LEFT JOIN users u on ptau.user_id = u.id
-                         LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
-
-                WHERE w.slug = @workspaceKey
-
-                ORDER BY bg.sort_order, ptibg.sort_order, t.name, u.id;;
-            ", new
+        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(SqlScripts.GetBoardExportTasks, new
         {
             workspaceKey,
             boardIdentifier,
@@ -681,16 +457,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var results = await connection.QueryAsync<int>(new CommandDefinition(@"
-                SELECT pt.id
-                FROM boards b
-
-                INNER JOIN board_groups bg ON b.id = bg.board_id AND NOT bg.is_deleted
-                INNER JOIN project_task_in_board_groups ptibg on bg.id = ptibg.board_group_id
-                INNER JOIN project_tasks pt on pt.id = ptibg.project_task_id AND NOT pt.is_deleted
-
-                WHERE b.identifier = @boardIdentifier
-            ", new { boardIdentifier }, cancellationToken: cancellationToken));
+        var results = await connection.QueryAsync<int>(new CommandDefinition(
+            SqlScripts.GetTaskIdsInBoard, new { boardIdentifier }, cancellationToken: cancellationToken));
 
         return results.ToList();
     }
@@ -796,70 +564,5 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             });
 
         await Context.ProjectTaskAppUsers.AddRangeAsync(missingAssignments, cancellationToken);
-    }
-
-    private sealed class TaskViewRowMap
-    {
-        public int Total_Count { get; init; }
-
-        public int Task_Id { get; init; }
-
-        public string Owner_Id { get; init; } = null!;
-
-        public string Task_Name { get; init; } = null!;
-
-        public string? Task_Description { get; init; }
-
-        public int Task_Status_Id { get; init; }
-
-        public string Task_Status_Name { get; init; } = null!;
-
-        public string Task_Status_Key { get; init; } = null!;
-
-        public string? Task_Status_Color { get; init; }
-
-        public StatusCategory Task_Status_Category { get; init; }
-
-        public int Project_Scope_Id { get; init; }
-
-        public TaskPriority? Task_Priority { get; init; }
-
-        public EstimateType? Task_Estimate_Type { get; init; }
-
-        public decimal? Task_Estimate_Value { get; init; }
-
-        public int? Project_Id { get; init; }
-
-        public int? Sprint_Id { get; init; }
-
-        public string? Sprint_Name { get; init; }
-
-        public SprintStatus? Sprint_Status { get; init; }
-
-        public int Workspace_Id { get; init; }
-
-        public string Workspace_Key { get; init; } = null!;
-
-        public DateTime Task_Created_At { get; init; }
-
-        public DateTime? Task_Updated_At { get; init; }
-
-        public string Owner_Username { get; init; } = null!;
-
-        public string? Owner_Picture_Url { get; init; }
-
-        public string? Project_Key { get; init; }
-
-        public string? Project_Name { get; init; }
-
-        public string? Tag { get; init; }
-
-        public string? Assignee_Id { get; init; }
-
-        public string? Assignee_Firstname { get; init; }
-
-        public string? Assignee_Lastname { get; init; }
-
-        public string? Assignee_Picture_Url { get; init; }
     }
 }

@@ -1,5 +1,4 @@
 using Mediator;
-using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -25,48 +24,21 @@ public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspace
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var pageRequest = request.Page ?? new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
-        var skip = (page - 1) * pageSize;
 
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
         if (workspace is null)
         {
-            return new PagedResponse<WorkspaceUserViewModel>([], page, pageSize, 0);
+            return new PagedResponse<WorkspaceUserViewModel>([], pageRequest.GetPage(), pageRequest.GetPageSize(), 0);
         }
 
-        var memberCount = await UnitOfWork.Users.CountWorkspaceAppUsers(workspaceKey, cancellationToken);
-        var pendingCount = await UnitOfWork.WorkspaceInvites.CountPendingByWorkspaceExcludingMembers(workspace.Id, cancellationToken);
-        var totalCount = memberCount + pendingCount;
-        var items = new List<WorkspaceUserViewModel>(pageSize);
+        // Members and pending invites are merged, sorted and paginated in the database.
+        var result = await UnitOfWork.Users.GetWorkspaceUsersPaged(workspace.Id, pageRequest, cancellationToken);
 
-        if (skip < memberCount)
-        {
-            var workspaceAppUsers = await UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, true, cancellationToken, pageRequest);
-            items.AddRange(workspaceAppUsers.ConvertAll(user => user.ToWorkspaceViewModel()));
-        }
-
-        var remaining = pageSize - items.Count;
-
-        if (remaining > 0)
-        {
-            var pendingSkip = Math.Max(0, skip - memberCount);
-            var pendingInvites = await UnitOfWork.WorkspaceInvites.GetPendingByWorkspaceExcludingMembers(
-                workspace.Id,
-                pendingSkip,
-                remaining,
-                cancellationToken);
-
-            items.AddRange(pendingInvites.Select(invite => new WorkspaceUserViewModel
-            {
-                Email = invite.Email,
-                DisplayName = invite.Email,
-                Role = WorkspaceRole.Member,
-                IsPending = true,
-            }));
-        }
-
-        return new PagedResponse<WorkspaceUserViewModel>(items, page, pageSize, totalCount);
+        return new PagedResponse<WorkspaceUserViewModel>(
+            [.. result.Results],
+            result.CurrentPage,
+            result.PageSize,
+            result.RowCount);
     }
 }

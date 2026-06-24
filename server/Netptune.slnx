@@ -33,5 +33,6 @@
   <Project Path="Netptune.Search/Netptune.Search.csproj" />
   <Project Path="Netptune.ServiceDefaults/Netptune.ServiceDefaults.csproj" />
   <Project Path="Netptune.Services/Netptune.Services.csproj" />
+  <Project Path="Netptune.SqlSourceGenerator/Netptune.SqlSourceGenerator.csproj" />
   <Project Path="Netptune.Storage/Netptune.Storage.csproj" />
 </Solution>

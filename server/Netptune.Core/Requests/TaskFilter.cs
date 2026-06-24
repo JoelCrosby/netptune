@@ -1,6 +1,6 @@
 namespace Netptune.Core.Requests;
 
-public sealed class TaskFilter
+public sealed class TaskFilter : PageRequest
 {
     public int? ProjectId { get; init; }
 
@@ -17,12 +17,4 @@ public sealed class TaskFilter
     public string[] Assignees { get; init; } = [];
 
     public bool? NoSprint { get; init; }
-
-    public int? Page { get; init; }
-
-    public int? PageSize { get; init; }
-
-    public string? SortBy { get; init; }
-
-    public string? SortDirection { get; init; }
 }

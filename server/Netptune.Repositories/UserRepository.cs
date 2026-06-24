@@ -1,15 +1,21 @@
+using Dapper;
+
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Extensions;
 using Netptune.Core.Models;
+using Netptune.Core.Models.Repository;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.RowMaps;
+using Netptune.Repositories.Sql;
 
 
 namespace Netptune.Repositories;
@@ -30,35 +36,50 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<WorkspaceAppUser>> GetWorkspaceAppUsers(string workspaceKey, bool isReadonly = false, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
+    public async Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, PageRequest pageRequest, CancellationToken cancellationToken = default)
     {
-        var query = Context.WorkspaceAppUsers
-            .Include(x => x.User)
-            .Where(x => x.Workspace.Slug == workspaceKey)
-            .OrderBy(x => x.User.Firstname)
-            .ThenBy(x => x.User.Lastname)
-            .ThenBy(x => x.UserId)
-            .IsReadonly(isReadonly);
-
-        if (pageRequest is null)
-        {
-            return query.ToListAsync(cancellationToken);
-        }
-
         var page = pageRequest.GetPage();
         var pageSize = pageRequest.GetPageSize();
 
-        return query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync(cancellationToken);
-    }
+        using var connection = StartConnection();
 
-    public Task<int> CountWorkspaceAppUsers(string workspaceKey, CancellationToken cancellationToken = default)
-    {
-        return Context.WorkspaceAppUsers
-            .Where(x => x.Workspace.Slug == workspaceKey)
-            .CountAsync(cancellationToken);
+        var rows = (await connection.QueryAsync<WorkspaceUserRowMap>(new CommandDefinition(
+            SqlScripts.GetWorkspaceUsersPaged,
+            new
+            {
+                workspace_id = workspaceId,
+                limit = pageSize,
+                offset = pageRequest.GetSkip(),
+                sort_by = pageRequest.SortBy ?? string.Empty,
+                sort_direction = pageRequest.SortDirection ?? string.Empty,
+            },
+            cancellationToken: cancellationToken))).AsList();
+
+        var results = rows.ConvertAll(row => new WorkspaceUserViewModel
+        {
+            Id = row.Id!,
+            Firstname = row.Firstname!,
+            Lastname = row.Lastname!,
+            PictureUrl = row.PictureUrl,
+            DisplayName = row.DisplayName,
+            Email = row.Email,
+            UserName = row.UserName,
+            LastLoginTime = row.LastLoginTime,
+            RegistrationDate = row.RegistrationDate,
+            Role = row.Role,
+            IsPending = row.IsPending,
+        });
+
+        var rowCount = rows.Count > 0 ? rows[0].TotalCount : 0;
+
+        return new PagedResult<WorkspaceUserViewModel>
+        {
+            Results = results,
+            CurrentPage = page,
+            PageSize = pageSize,
+            RowCount = rowCount,
+            PageCount = (rowCount + pageSize - 1) / pageSize,
+        };
     }
 
     public Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)

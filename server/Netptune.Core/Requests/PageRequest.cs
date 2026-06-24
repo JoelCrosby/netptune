@@ -1,10 +1,14 @@
 namespace Netptune.Core.Requests;
 
-public sealed class PageRequest
+public class PageRequest
 {
     public int? Page { get; init; }
 
     public int? PageSize { get; init; }
+
+    public string? SortBy { get; init; }
+
+    public string? SortDirection { get; init; }
 
     public int GetPage()
     {

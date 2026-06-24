@@ -1,11 +1,12 @@
 using FluentAssertions;
 
 using Netptune.Core.Authorization;
-using Netptune.Core.Entities;
-using Netptune.Core.Relationships;
+using Netptune.Core.Models.Repository;
+using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Handlers.Users.Queries;
 
 using NSubstitute;
@@ -15,6 +16,9 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Handlers.Users.Queries;
 
+// Merging members with pending invites, de-duplication, sorting and pagination now all
+// happen inside get_workspace_users_paged.sql (covered by integration tests). These unit
+// tests verify the handler resolves the workspace and faithfully maps the paged result.
 public class GetWorkspaceUsersQueryHandlerTests
 {
     private readonly GetWorkspaceUsersQueryHandler Handler;
@@ -26,137 +30,66 @@ public class GetWorkspaceUsersQueryHandlerTests
         Handler = new(UnitOfWork, Identity);
     }
 
-    private void SetupWorkspace(string workspaceKey, Workspace? workspace,
-        List<WorkspaceAppUser> members, List<WorkspaceInvite> pendingInvites)
+    private static IPagedResult<WorkspaceUserViewModel> PagedResult(
+        IList<WorkspaceUserViewModel> results,
+        int currentPage,
+        int pageSize,
+        int rowCount)
     {
-        var memberEmails = members
-            .Select(member => member.User.Email)
-            .Where(email => !string.IsNullOrWhiteSpace(email))
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var pendingInvitesExcludingMembers = pendingInvites
-            .Where(invite => !memberEmails.Contains(invite.Email))
-            .ToList();
+        return new PagedResult<WorkspaceUserViewModel>
+        {
+            Results = results,
+            CurrentPage = currentPage,
+            PageSize = pageSize,
+            RowCount = rowCount,
+            PageCount = pageSize == 0 ? 0 : (rowCount + pageSize - 1) / pageSize,
+        };
+    }
+
+    [Fact]
+    public async Task GetWorkspaceUsers_ShouldMapPagedResult()
+    {
+        const string workspaceKey = "workspaceKey";
+        var workspace = AutoFixtures.Workspace;
+
+        var member = new WorkspaceUserViewModel { Id = "user-1", Email = "user-1@email.com", DisplayName = "User One", Role = WorkspaceRole.Admin };
+        var pending = new WorkspaceUserViewModel { Email = "pending@email.com", DisplayName = "pending@email.com", Role = WorkspaceRole.Member, IsPending = true };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
-        UnitOfWork.Users.GetWorkspaceAppUsers(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>(), Arg.Any<PageRequest?>())
-            .Returns(call =>
-            {
-                var pageRequest = call.ArgAt<PageRequest?>(3);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
+        UnitOfWork.Users
+            .GetWorkspaceUsersPaged(workspace.Id, Arg.Any<PageRequest>(), Arg.Any<CancellationToken>())
+            .Returns(PagedResult([member, pending], currentPage: 2, pageSize: 2, rowCount: 5));
 
-                if (pageRequest is null)
-                {
-                    return members;
-                }
-
-                var skip = (pageRequest.GetPage() - 1) * pageRequest.GetPageSize();
-
-                return members
-                    .Skip(skip)
-                    .Take(pageRequest.GetPageSize())
-                    .ToList();
-            });
-        UnitOfWork.Users.CountWorkspaceAppUsers(workspaceKey, Arg.Any<CancellationToken>()).Returns(members.Count);
-        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace!);
-        if (workspace is not null)
-        {
-            UnitOfWork.WorkspaceInvites.CountPendingByWorkspaceExcludingMembers(workspace.Id, Arg.Any<CancellationToken>())
-                .Returns(pendingInvitesExcludingMembers.Count);
-            UnitOfWork.WorkspaceInvites.GetPendingByWorkspaceExcludingMembers(
-                    workspace.Id,
-                    Arg.Any<int>(),
-                    Arg.Any<int>(),
-                    Arg.Any<CancellationToken>())
-                .Returns(call =>
-                {
-                    var skip = call.ArgAt<int>(1);
-                    var take = call.ArgAt<int>(2);
-
-                    return pendingInvitesExcludingMembers.Skip(skip).Take(take).ToList();
-                });
-        }
-    }
-
-    [Fact]
-    public async Task GetWorkspaceUsers_ShouldReturnMembers()
-    {
-        const string workspaceKey = "workspaceKey";
-        var workspace = AutoFixtures.Workspace;
-        var member = AutoFixtures.WorkspaceAppUser;
-
-        SetupWorkspace(workspaceKey, workspace, [member], []);
-
-        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
-
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Items.Should().ContainSingle();
-        result.Payload.Items[0].IsPending.Should().BeFalse();
-    }
-
-    [Fact]
-    public async Task GetWorkspaceUsers_ShouldIncludePendingInvites()
-    {
-        const string workspaceKey = "workspaceKey";
-        var workspace = AutoFixtures.Workspace;
-        var pendingInvite = new WorkspaceInvite { Email = "pending@email.com", WorkspaceId = workspace.Id, Code = "code" };
-
-        SetupWorkspace(workspaceKey, workspace, [], [pendingInvite]);
-
-        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
-
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Items.Should().ContainSingle();
-        result.Payload.Items[0].Email.Should().Be("pending@email.com");
-        result.Payload.Items[0].IsPending.Should().BeTrue();
-        result.Payload.Items[0].Role.Should().Be(WorkspaceRole.Member);
-    }
-
-    [Fact]
-    public async Task GetWorkspaceUsers_ShouldReturnBothMembersAndPendingInvites()
-    {
-        const string workspaceKey = "workspaceKey";
-        var workspace = AutoFixtures.Workspace;
-        var member = AutoFixtures.WorkspaceAppUser;
-        var pendingInvite = new WorkspaceInvite { Email = "pending@email.com", WorkspaceId = workspace.Id, Code = "code" };
-
-        SetupWorkspace(workspaceKey, workspace, [member], [pendingInvite]);
-
-        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
+        var result = await Handler.Handle(
+            new GetWorkspaceUsersQuery(new PageRequest { Page = 2, PageSize = 2 }),
+            TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Items.Should().HaveCount(2);
-        result.Payload.Items.Where(u => u.IsPending).Should().ContainSingle();
-        result.Payload.Items.Where(u => !u.IsPending).Should().ContainSingle();
+        result.Payload.Items.Should().ContainSingle(item => item.IsPending);
+        result.Payload.Page.Should().Be(2);
+        result.Payload.PageSize.Should().Be(2);
+        result.Payload.TotalCount.Should().Be(5);
+        result.Payload.TotalPages.Should().Be(3);
     }
 
     [Fact]
-    public async Task GetWorkspaceUsers_ShouldNotDuplicatePendingInvite_WhenUserAlreadyMember()
+    public async Task GetWorkspaceUsers_ShouldQueryByWorkspaceIdAndPageRequest()
     {
         const string workspaceKey = "workspaceKey";
         var workspace = AutoFixtures.Workspace;
-        var member = AutoFixtures.WorkspaceAppUser;
-        var duplicateInvite = new WorkspaceInvite { Email = member.User.Email!, WorkspaceId = workspace.Id, Code = "code" };
+        var pageRequest = new PageRequest { Page = 3, PageSize = 10, SortBy = "email", SortDirection = "desc" };
 
-        SetupWorkspace(workspaceKey, workspace, [member], [duplicateInvite]);
+        Identity.GetWorkspaceKey().Returns(workspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(workspaceKey, Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(workspace);
+        UnitOfWork.Users
+            .GetWorkspaceUsersPaged(Arg.Any<int>(), Arg.Any<PageRequest>(), Arg.Any<CancellationToken>())
+            .Returns(PagedResult([], currentPage: 3, pageSize: 10, rowCount: 0));
 
-        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
+        await Handler.Handle(new GetWorkspaceUsersQuery(pageRequest), TestContext.Current.CancellationToken);
 
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Items.Should().ContainSingle();
-        result.Payload.Items[0].IsPending.Should().BeFalse();
-    }
-
-    [Fact]
-    public async Task GetWorkspaceUsers_ShouldReturnEmpty_WhenNoMembersAndNoInvites()
-    {
-        const string workspaceKey = "workspaceKey";
-        var workspace = AutoFixtures.Workspace;
-
-        SetupWorkspace(workspaceKey, workspace, [], []);
-
-        var result = await Handler.Handle(new GetWorkspaceUsersQuery(), TestContext.Current.CancellationToken);
-
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Items.Should().BeEmpty();
+        await UnitOfWork.Users.Received(1).GetWorkspaceUsersPaged(workspace.Id, pageRequest, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -171,41 +104,6 @@ public class GetWorkspaceUsersQueryHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Items.Should().BeEmpty();
-    }
-
-    [Fact]
-    public async Task GetWorkspaceUsers_ShouldReturnRequestedPage()
-    {
-        const string workspaceKey = "workspaceKey";
-        var workspace = AutoFixtures.Workspace;
-        var members = Enumerable
-            .Range(1, 3)
-            .Select(i =>
-            {
-                var user = AutoFixtures.AppUser;
-                user.Id = $"user-{i}";
-                user.Email = $"user-{i}@email.com";
-                user.Firstname = $"User {i}";
-
-                return AutoFixtures.WorkspaceAppUser with
-                {
-                    UserId = $"user-{i}",
-                    User = user,
-                };
-            })
-            .ToList();
-
-        SetupWorkspace(workspaceKey, workspace, members, []);
-
-        var result = await Handler.Handle(
-            new GetWorkspaceUsersQuery(new PageRequest { Page = 2, PageSize = 2 }),
-            TestContext.Current.CancellationToken);
-
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Items.Should().ContainSingle();
-        result.Payload.Page.Should().Be(2);
-        result.Payload.PageSize.Should().Be(2);
-        result.Payload.TotalCount.Should().Be(3);
-        result.Payload.TotalPages.Should().Be(2);
+        await UnitOfWork.Users.DidNotReceive().GetWorkspaceUsersPaged(Arg.Any<int>(), Arg.Any<PageRequest>(), Arg.Any<CancellationToken>());
     }
 }

@@ -11,5 +11,14 @@
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
+
+    <!-- Generates SqlScripts constants from the .sql files below; not referenced as an assembly. -->
+    <ProjectReference Include="..\Netptune.SqlSourceGenerator\Netptune.SqlSourceGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Sql\**\*.sql" />
   </ItemGroup>
 </Project>
