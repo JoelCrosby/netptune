@@ -3,3 +3,5 @@ allowBuilds:
   esbuild: true
   msgpackr-extract: false
   '@parcel/watcher': false
+minimumReleaseAgeExclude:
+  - vite@8.1.0
