@@ -54,7 +54,8 @@ export interface BacklogGroup {
         <h2 class="text-sm font-semibold tracking-wide uppercase">
           {{ group().label }}
         </h2>
-        <span class="bg-muted rounded-full px-2 py-0.5 text-xs font-medium">
+        <span
+          class="bg-primary rounded-full px-2 py-0.5 text-xs font-medium text-white dark:text-black">
           {{ group().tasks.length }}
         </span>
       </div>
