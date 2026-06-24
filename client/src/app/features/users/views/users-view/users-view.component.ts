@@ -1,12 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
-import {
-  inviteUsersToWorkspace,
-  loadUsers,
-} from '@core/store/users/users.actions';
-import { selectUsersLoading } from '@core/store/users/users.selectors';
-import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
+import { inviteUsersToWorkspace } from '@core/store/users/users.actions';
 import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialog.component';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -19,19 +13,12 @@ import { first } from 'rxjs/operators';
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
     UserListComponent,
   ],
 })
 export class UsersViewComponent {
   private dialog = inject(DialogService);
   private store = inject(Store);
-
-  loading = this.store.selectSignal(selectUsersLoading);
-
-  constructor() {
-    dispatchForWorkspace(() => loadUsers());
-  }
 
   onInviteUsers() {
     const dialogRef = this.dialog.open<string[]>(InviteDialogComponent, {

@@ -5,11 +5,5 @@
     (actionClick)="onInviteUsers()"
     />
 
-  @if (loading()) {
-    <div class="flex flex-col h-full items-center justify-center">
-      <app-spinner diameter="32px" />
-    </div>
-  } @else {
-    <app-user-list />
-  }
+  <app-user-list />
 </app-page-container>

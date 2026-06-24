@@ -1,209 +1,128 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import {
   removeUsersFromWorkspace,
   resendInvite,
-  setUsersPage,
-  setUsersPageSize,
 } from '@core/store/users/users.actions';
-import {
-  selectAllUsers,
-  selectUsersPage,
-  selectUsersPageSize,
-  selectUsersTotalCount,
-  selectUsersTotalPages,
-} from '@core/store/users/users.selectors';
-import {
-  LucideEllipsisVertical,
-  LucideTrash2,
-  LucideSend,
-} from '@lucide/angular';
+import { LucideTrash2, LucideSend } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
-import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
-import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
-import {
-  TableComponent,
-  TableEmptyCellDirective,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TablePaginationComponent,
-  TableRowDirective,
-} from '@static/components/table/table.component';
+import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
+import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 
 @Component({
   selector: 'app-user-list',
   imports: [
     RouterLink,
     AvatarComponent,
-    CheckboxComponent,
-    IconButtonComponent,
-    TooltipDirective,
-    LucideEllipsisVertical,
-    LucideTrash2,
-    LucideSend,
-    DropdownMenuComponent,
-    MenuItemComponent,
-    TableComponent,
-    TableEmptyCellDirective,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TablePaginationComponent,
-    TableRowDirective,
+    DatatableComponent,
+    DatatableCellTemplateDirective,
   ],
   template: `
-    <app-table
+    <app-datatable
       containerClass="h-[calc(100vh-253px)] min-h-16 overflow-auto"
-      tableClass="min-w-[720px] table-fixed">
-      <thead appTableHead [sticky]="true">
-        <tr appTableHeaderRow>
-          <th class="w-12 px-4 py-3"></th>
-          <th class="w-64 px-4 py-3">User</th>
-          <th class="px-4 py-3">Email</th>
-          <th class="w-32 px-4 py-3">Status</th>
-          <th class="w-14 px-2 py-3"></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (user of users(); track user.email) {
-          <tr appTableRow class="bg-card">
-            <td class="px-4 py-2 align-middle">
-              <app-checkbox />
-            </td>
-            <td class="px-4 py-2 align-middle">
-              <div class="flex min-w-0 items-center gap-3">
-                <app-avatar
-                  class="flex-none"
-                  [imageUrl]="user.pictureUrl"
-                  [name]="user.displayName"
-                  size="sm" />
-                <a
-                  [routerLink]="routerLink(user)"
-                  class="min-w-0 truncate text-sm font-medium"
-                  [class.pointer-events-none]="!routerLink(user)">
-                  {{ user.displayName }}
-                </a>
-              </div>
-            </td>
-            <td class="px-4 py-2 align-middle">
-              <a
-                [routerLink]="routerLink(user)"
-                class="text-foreground/60 block truncate text-sm"
-                [class.pointer-events-none]="!routerLink(user)">
-                {{ user.email }}
-              </a>
-            </td>
-            <td class="px-4 py-2 align-middle">
-              @if (user.isPending) {
-                <span
-                  class="bg-muted text-muted-foreground rounded-full px-1.5 py-0.5 text-sm">
-                  Pending
-                </span>
-              } @else if (user.isWorkspaceOwner) {
-                <span
-                  class="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-sm">
-                  Owner
-                </span>
-              } @else {
-                <span class="text-muted text-sm">Member</span>
-              }
-            </td>
-            <td class="px-2 align-middle">
-              <button
-                class="w-10 flex-none"
-                app-icon-button
-                type="button"
-                aria-label="User actions"
-                appTooltip="click for more options"
-                (click)="menu.toggle($any($event.currentTarget))">
-                <svg
-                  lucideEllipsisVertical
-                  class="text-foreground/30 h-4 w-4"></svg>
-              </button>
+      tableClass="min-w-[720px] table-fixed"
+      rowClass="bg-card"
+      [data]="userData"
+      [stickyHeader]="true">
+      <ng-template appDatatableCell="user" let-user>
+        <div class="flex min-w-0 items-center gap-3">
+          <app-avatar
+            class="flex-none"
+            [imageUrl]="user.pictureUrl"
+            [name]="user.displayName"
+            size="sm" />
+          <a
+            [routerLink]="routerLink(user)"
+            class="min-w-0 truncate text-sm font-medium"
+            [class.pointer-events-none]="!routerLink(user)">
+            {{ user.displayName }}
+          </a>
+        </div>
+      </ng-template>
 
-              <app-dropdown-menu #menu xPosition="before">
-                @if (user.isPending) {
-                  <button
-                    app-menu-item
-                    (click)="onResendClicked(user); menu.close()">
-                    <svg lucideSend class="h-4 w-4"></svg>
-                    <span>Resend invite</span>
-                  </button>
-                }
-                @if (!user.isWorkspaceOwner) {
-                  <button
-                    app-menu-item
-                    (click)="onRemoveClicked(user); menu.close()">
-                    <svg lucideTrash2 class="h-4 w-4"></svg>
-                    <span>Remove user from workspace</span>
-                  </button>
-                }
-              </app-dropdown-menu>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td appTableEmptyCell colspan="5">No users to display.</td>
-          </tr>
+      <ng-template appDatatableCell="email" let-user>
+        <a
+          [routerLink]="routerLink(user)"
+          class="text-foreground/60 block truncate text-sm"
+          [class.pointer-events-none]="!routerLink(user)">
+          {{ user.email }}
+        </a>
+      </ng-template>
+
+      <ng-template appDatatableCell="status" let-user>
+        @if (user.isPending) {
+          <span
+            class="inline-flex items-center rounded bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700">
+            Pending
+          </span>
+        } @else if (user.isWorkspaceOwner) {
+          <span
+            class="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+            Owner
+          </span>
+        } @else {
+          <span
+            class="inline-flex items-center rounded bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+            Member
+          </span>
         }
-      </tbody>
-
-      <app-table-pagination
-        itemLabel="users"
-        [page]="currentPage()"
-        [pageSize]="pageSize()"
-        [pageSizeOptions]="[25, 50, 100]"
-        [totalItems]="totalCount()"
-        [totalPages]="totalPages()"
-        (pageChange)="goToPage($event)"
-        (pageSizeChange)="setPageSize($event)" />
-    </app-table>
+      </ng-template>
+    </app-datatable>
   `,
 })
 export class UserListComponent {
   private store = inject(Store);
 
-  users = this.store.selectSignal(selectAllUsers);
-  currentPage = this.store.selectSignal(selectUsersPage);
-  pageSize = this.store.selectSignal(selectUsersPageSize);
-  totalCount = this.store.selectSignal(selectUsersTotalCount);
-  totalPages = this.store.selectSignal(selectUsersTotalPages);
   canReadUsers = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.read)
   );
 
-  routerLink(user: WorkspaceAppUser) {
-    if (user.isPending) {
-      return null;
-    }
+  readonly userData: DatatableDataSource<WorkspaceAppUser> = {
+    key: 'user-list',
+    columns: [
+      { id: 'user', header: 'User', sortable: true, widthClass: 'w-64' },
+      { id: 'email', header: 'Email', sortable: true },
+      { id: 'status', header: 'Status', sortable: true, widthClass: 'w-32' },
+    ],
+    resource: {
+      url: 'api/users',
+      params: signal({}),
+    },
+    rows: (response) => response?.payload?.items ?? [],
+    trackBy: (_: number, user: WorkspaceAppUser) => user.id,
+    menu: [
+      {
+        label: 'Resend invite',
+        icon: LucideSend,
+        onClick: (user) => this.onResendClicked(user),
+      },
+      {
+        label: 'Remove user from workspace',
+        icon: LucideTrash2,
+        onClick: (user) => this.onRemoveClicked(user),
+      },
+    ],
+  };
 
+  routerLink(user: WorkspaceAppUser) {
+    if (user.isPending) return null;
     return this.canReadUsers() ? ['.', user.id] : null;
   }
 
   onRemoveClicked(user: WorkspaceAppUser) {
-    if (!user) return;
-
-    const emailAddresses = [user.email];
-    this.store.dispatch(removeUsersFromWorkspace({ emailAddresses }));
+    if (!user || user.isWorkspaceOwner) return;
+    this.store.dispatch(
+      removeUsersFromWorkspace({ emailAddresses: [user.email] })
+    );
   }
 
   onResendClicked(user: WorkspaceAppUser) {
-    if (!user?.email) return;
-
+    if (!user?.email || !user.isPending) return;
     this.store.dispatch(resendInvite({ email: user.email }));
-  }
-
-  goToPage(page: number) {
-    this.store.dispatch(setUsersPage({ page }));
-  }
-
-  setPageSize(pageSize: number) {
-    this.store.dispatch(setUsersPageSize({ pageSize }));
   }
 }
