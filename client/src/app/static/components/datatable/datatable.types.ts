@@ -1,13 +1,13 @@
-import { HttpResourceRef } from '@angular/common/http';
-import { Injector, Signal, Type } from '@angular/core';
+import { Signal, Type } from '@angular/core';
+import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 
 export type DatatableSortDirection = 'asc' | 'desc';
 
 export interface DatatableSort {
-  columnId: string;
-  direction: DatatableSortDirection;
+  sortBy: string;
+  sortDirection: DatatableSortDirection;
 }
 
 export type DatatableAccessor<T> = keyof T | ((row: T) => unknown);
@@ -45,17 +45,21 @@ export interface DatatableLoadSort extends DatatableSort {
 
 export interface DatatableLoadParams {
   sort: DatatableLoadSort | null;
+  pageSize: number;
+  page: number;
 }
 
 export interface DatatableDataSource<T = unknown> {
+  key: string;
   columns: readonly DatatableColumn<T>[];
-  resource: (
-    params: Signal<DatatableLoadParams>,
-    injector: Injector
-  ) => HttpResourceRef<ClientResponse<Page<T>>>;
+  resource: {
+    url: string;
+    params: Signal<Params>;
+  };
   rows?: (response: ClientResponse<Page<T>> | undefined) => readonly T[];
   trackBy: (index: number, row: T) => string | number;
   menu?: readonly DatatableMenuItem<T>[];
+  updateSignal?: Signal<unknown>;
 }
 
 export interface DatatableCellContext<T = unknown> {

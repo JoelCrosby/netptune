@@ -1,10 +1,9 @@
 import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
-import { HttpResourceRef } from '@angular/common/http';
+import { httpResource } from '@angular/common/http';
 import {
   Component,
   Injector,
   OnDestroy,
-  OnInit,
   booleanAttribute,
   computed,
   contentChild,
@@ -15,6 +14,9 @@ import {
   model,
   signal,
 } from '@angular/core';
+import { Params } from '@angular/router';
+import { ClientResponse } from '@app/core/models/client-response';
+import { Page } from '@app/core/models/pagination';
 import {
   LucideArrowDown,
   LucideArrowUp,
@@ -26,22 +28,20 @@ import { IconButtonComponent } from '../button/icon-button.component';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
+import { TablePaginationComponent } from '../table/table.component';
 import { DatatableCellTemplateDirective } from './datatable-cell-template.directive';
+import { classes } from './datatable-classes';
 import { DatatableEmptyDirective } from './datatable-empty.directive';
 import {
   DatatableAccessor,
   DatatableCellContext,
   DatatableColumn,
   DatatableDataSource,
-  DatatableLoadParams,
   DatatableMenuItem,
   DatatableRowClass,
   DatatableSort,
   DatatableSortDirection,
 } from './datatable.types';
-import { classes } from './datatable-classes';
-import { ClientResponse } from '@app/core/models/client-response';
-import { Page } from '@app/core/models/pagination';
 
 @Component({
   selector: 'app-datatable',
@@ -56,6 +56,7 @@ import { Page } from '@app/core/models/pagination';
     LucideArrowUpDown,
     LucideEllipsisVertical,
     MenuItemComponent,
+    TablePaginationComponent,
   ],
   template: `
     <div [class]="mergedContainerClass()">
@@ -181,12 +182,19 @@ import { Page } from '@app/core/models/pagination';
       </table>
     </div>
 
-    <ng-content select="app-table-pagination" />
+    <app-table-pagination
+      itemLabel="tasks"
+      [page]="currentPage()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[25, 50, 100]"
+      [totalItems]="totalCount()"
+      [totalPages]="totalPages()"
+      (pageChange)="goToPage($event)"
+      (pageSizeChange)="setPageSize($event)" />
   `,
 })
-export class DatatableComponent<T = unknown> implements OnInit, OnDestroy {
+export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
-
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
   containerClass = input('');
@@ -198,8 +206,16 @@ export class DatatableComponent<T = unknown> implements OnInit, OnDestroy {
   stickyHeader = input(false);
   sort = model<DatatableSort | null>(null);
 
+  currentPage = signal(1);
+  pageSize = signal(50);
+  totalCount = computed(
+    () => this.resourceRef.value()?.payload?.totalCount ?? 0
+  );
+  totalPages = computed(
+    () => this.resourceRef.value()?.payload?.totalPages ?? 0
+  );
+
   iconInputs = { size: 16 };
-  resourceRef = signal<HttpResourceRef<ClientResponse<Page<T>>> | null>(null);
   lastResolvedRows = signal<readonly T[]>([]);
   cellTemplates = contentChildren<DatatableCellTemplateDirective<T>>(
     DatatableCellTemplateDirective
@@ -229,29 +245,39 @@ export class DatatableComponent<T = unknown> implements OnInit, OnDestroy {
     );
   });
 
+  resourceRef = httpResource<ClientResponse<Page<T>>>(() => ({
+    url: this.data().resource.url,
+    params: this.buildParams(),
+  }));
+
   showMenuColumn = computed(() => this.data().menu?.length);
   columns = computed(() => this.data().columns);
-  loadParams = computed<DatatableLoadParams>(() => {
+
+  buildParams = computed<Params>(() => {
     const sort = this.sort();
+    const params = this.data().resource.params();
 
-    if (!sort) return { sort: null };
-
-    const column = this.columns().find(({ id }) => id === sort.columnId);
-
-    if (!column || !this.isSortable(column)) return { sort: null };
-
-    return {
-      sort: {
-        ...sort,
-        field: column.sortKey ?? column.id,
-      },
+    const result: Record<string, string | number> = {
+      pageSize: this.pageSize(),
+      page: this.currentPage(),
+      ...sort,
+      ...params,
     };
+
+    for (const key in result) {
+      if (result[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete result[key];
+      }
+    }
+
+    return result;
   });
 
-  resourceLoading = computed(() => this.resourceRef()?.isLoading() ?? false);
+  resourceLoading = computed(() => this.resourceRef?.isLoading() ?? false);
 
   currentRows = computed(() => {
-    const resource = this.resourceRef();
+    const resource = this.resourceRef;
     const dataSource = this.data();
     const response = resource?.hasValue() ? resource.value() : undefined;
 
@@ -280,12 +306,17 @@ export class DatatableComponent<T = unknown> implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.resourceRef.set(this.data().resource(this.loadParams, this.injector));
+  ngOnDestroy() {
+    this.resourceRef?.destroy();
   }
 
-  ngOnDestroy() {
-    this.resourceRef()?.destroy();
+  goToPage(page: number) {
+    this.currentPage.set(page);
+  }
+
+  setPageSize(pageSize: number) {
+    this.pageSize.set(pageSize);
+    this.currentPage.set(1);
   }
 
   toggleSort(column: DatatableColumn<T>) {
@@ -293,13 +324,13 @@ export class DatatableComponent<T = unknown> implements OnInit, OnDestroy {
 
     const sort = this.sort();
 
-    if (sort?.columnId !== column.id) {
-      this.sort.set({ columnId: column.id, direction: 'asc' });
+    if (sort?.sortBy !== column.id) {
+      this.sort.set({ sortBy: column.id, sortDirection: 'asc' });
       return;
     }
 
-    if (sort.direction === 'asc') {
-      this.sort.set({ columnId: column.id, direction: 'desc' });
+    if (sort.sortDirection === 'asc') {
+      this.sort.set({ sortBy: column.id, sortDirection: 'desc' });
       return;
     }
 
@@ -313,7 +344,7 @@ export class DatatableComponent<T = unknown> implements OnInit, OnDestroy {
   sortDirection(column: DatatableColumn<T>): DatatableSortDirection | null {
     const sort = this.sort();
 
-    return sort?.columnId === column.id ? sort.direction : null;
+    return sort?.sortBy === column.id ? sort.sortDirection : null;
   }
 
   ariaSort(column: DatatableColumn<T>) {
