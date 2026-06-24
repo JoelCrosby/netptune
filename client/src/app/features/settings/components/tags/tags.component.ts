@@ -20,10 +20,10 @@ import {
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
-import { selectTags } from '@core/store/tags/tags.selectors';
 import { LucidePencil, LucidePlus, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
+import { tagResource } from '@app/core/resources/tag.resource';
 
 @Component({
   selector: 'app-tags',
@@ -58,7 +58,7 @@ import { first } from 'rxjs';
         </tr>
       </thead>
       <tbody>
-        @for (tag of tags(); track tag.id) {
+        @for (tag of tags.value(); track tag.id) {
           <tr appTableRow class="group bg-card">
             <td class="px-4 py-2 align-middle">
               <button
@@ -101,7 +101,7 @@ export class TagsComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
 
-  tags = this.store.selectSignal(selectTags);
+  tags = tagResource();
 
   constructor() {
     this.store.dispatch(actions.loadTags());
