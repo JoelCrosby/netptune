@@ -1,5 +1,4 @@
-import { httpResource } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Params } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -7,12 +6,7 @@ import { FlatButtonComponent } from '@app/static/components/button/flat-button.c
 import { DatatableCellTemplateDirective } from '@app/static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@app/static/components/datatable/datatable.component';
-import {
-  DatatableDataSource,
-  DatatableLoadParams,
-} from '@app/static/components/datatable/datatable.types';
-import { ClientResponse } from '@core/models/client-response';
-import { Page } from '@core/models/pagination';
+import { DatatableDataSource } from '@app/static/components/datatable/datatable.types';
 import { StatusCategory } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
@@ -20,16 +14,10 @@ import * as actions from '@core/store/tasks/tasks.actions';
 import {
   selectProjectTasksFilter,
   selectTaskFiltersActive,
-  selectTasks,
-  selectTasksPage,
-  selectTasksPageSize,
-  selectTasksTotalCount,
-  selectTasksTotalPages,
 } from '@core/store/tasks/tasks.selectors';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import {
-  LucideArchiveRestore,
   LucideCheck,
   LucideListChecks,
   LucidePlus,
@@ -38,8 +26,10 @@ import {
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
-import { TablePaginationComponent } from '@static/components/table/table.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
+import { injectParams } from '@app/core/router/signals';
+import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
+import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service';
 
 @Component({
   selector: 'app-task-list',
@@ -53,7 +43,6 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
     DatatableCellTemplateDirective,
     DatatableComponent,
     DatatableEmptyDirective,
-    TablePaginationComponent,
     TaskListFiltersComponent,
   ],
   template: `
@@ -143,40 +132,62 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
           }
         </div>
       </div>
-
-      <app-table-pagination
-        itemLabel="tasks"
-        [page]="currentPage()"
-        [pageSize]="pageSize()"
-        [pageSizeOptions]="[25, 50, 100]"
-        [totalItems]="totalCount()"
-        [totalPages]="totalPages()"
-        (pageChange)="goToPage($event)"
-        (pageSizeChange)="setPageSize($event)" />
     </app-datatable>
   `,
 })
 export class TaskListComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
+  private projectTasksHubService = inject(ProjectTasksHubService);
+  private params = injectParams();
 
-  readonly tasks = this.store.selectSignal(selectTasks);
-  readonly taskFilter = this.store.selectSignal(selectProjectTasksFilter);
-  readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
-  readonly currentPage = this.store.selectSignal(selectTasksPage);
-  readonly pageSize = this.store.selectSignal(selectTasksPageSize);
-  readonly totalCount = this.store.selectSignal(selectTasksTotalCount);
-  readonly totalPages = this.store.selectSignal(selectTasksTotalPages);
-  readonly statusCategory = StatusCategory;
+  taskFilter = this.store.selectSignal(selectProjectTasksFilter);
+  filtersActive = this.store.selectSignal(selectTaskFiltersActive);
 
-  readonly canCreate = this.store.selectSignal(
+  statusCategory = StatusCategory;
+
+  canCreate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.create)
   );
-  readonly canDelete = this.store.selectSignal(
+  canDelete = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.delete)
   );
 
-  readonly taskData: DatatableDataSource<TaskViewModel> = {
+  taskRequestParams = computed(() => {
+    const params = this.params();
+    const filter = this.taskFilter();
+    const filters = parseTaskFilterRouteParams(params);
+    const queryParams: Params = { ...filters };
+
+    if (filter.search) {
+      queryParams['search'] = filter.search;
+    }
+
+    if (filter.sprintId !== undefined) {
+      queryParams['sprintId'] = filter.sprintId;
+    }
+
+    if (filter.noSprint !== undefined) {
+      queryParams['noSprint'] = filter.noSprint;
+    }
+
+    if (filter.tags?.length) {
+      queryParams['tags'] = filter.tags;
+    }
+
+    if (filter.statusIds?.length) {
+      queryParams['statusIds'] = filter.statusIds;
+    }
+
+    if (filter.assignees?.length) {
+      queryParams['assignees'] = filter.assignees;
+    }
+
+    return queryParams;
+  });
+
+  taskData: DatatableDataSource<TaskViewModel> = {
+    key: 'task-list',
     columns: [
       {
         id: 'systemId',
@@ -211,45 +222,21 @@ export class TaskListComponent {
         widthClass: 'w-40',
       },
     ],
-    resource: (params, injector) =>
-      httpResource<ClientResponse<Page<TaskViewModel>>>(
-        () => ({
-          url: 'api/tasks',
-          params: this.taskRequestParams(params()),
-        }),
-        {
-          injector,
-          defaultValue: emptyTaskPageResponse,
-        }
-      ),
+    resource: {
+      url: 'api/tasks',
+      params: this.taskRequestParams,
+    },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, task: TaskViewModel) => task.id,
     menu: [
-      {
-        label: 'Mark Complete',
-        icon: LucideCheck,
-        onClick: (task) => this.markCompleteClicked(task),
-      },
-      {
-        label: 'Move to Backlog',
-        icon: LucideArchiveRestore,
-        onClick: (task) => this.moveToBacklogClicked(task),
-      },
       {
         label: 'Delete',
         icon: LucideTrash2,
         onClick: (task) => this.deleteClicked(task),
       },
     ],
+    updateSignal: this.projectTasksHubService.updateVersion,
   };
-
-  goToPage(page: number) {
-    this.store.dispatch(actions.setProjectTasksPage({ page }));
-  }
-
-  setPageSize(pageSize: number) {
-    this.store.dispatch(actions.setProjectTasksPageSize({ pageSize }));
-  }
 
   titleClicked(task: TaskViewModel) {
     this.dialog.open(TaskDetailDialogComponent, {
@@ -275,36 +262,6 @@ export class TaskListComponent {
     );
   }
 
-  markCompleteClicked(task: TaskViewModel) {
-    const completeStatusId = this.findStatusId('complete');
-    if (!completeStatusId) return;
-
-    this.store.dispatch(
-      actions.editProjectTask({
-        identifier: `[workspace] ${task.workspaceKey}`,
-        task: {
-          ...task,
-          statusId: completeStatusId,
-        },
-      })
-    );
-  }
-
-  moveToBacklogClicked(task: TaskViewModel) {
-    const inactiveStatusId = this.findStatusId('inactive');
-    if (!inactiveStatusId) return;
-
-    this.store.dispatch(
-      actions.editProjectTask({
-        identifier: `[workspace] ${task.workspaceKey}`,
-        task: {
-          ...task,
-          statusId: inactiveStatusId,
-        },
-      })
-    );
-  }
-
   statusBadgeClass(status: StatusCategory): string {
     switch (status) {
       case StatusCategory.todo:
@@ -319,58 +276,4 @@ export class TaskListComponent {
         return 'bg-neutral-100 text-neutral-600';
     }
   }
-
-  private findStatusId(key: string): number | undefined {
-    return this.tasks().find((task) => task.statusKey === key)?.statusId;
-  }
-
-  private taskRequestParams(loadParams: DatatableLoadParams) {
-    const filter = this.taskFilter();
-    const params: Params = {
-      page: this.currentPage(),
-      pageSize: this.pageSize(),
-    };
-
-    if (filter.search) {
-      params['search'] = filter.search;
-    }
-
-    if (filter.sprintId !== undefined) {
-      params['sprintId'] = filter.sprintId;
-    }
-
-    if (filter.noSprint !== undefined) {
-      params['noSprint'] = filter.noSprint;
-    }
-
-    if (filter.tags?.length) {
-      params['tags'] = filter.tags;
-    }
-
-    if (filter.statusIds?.length) {
-      params['statusIds'] = filter.statusIds;
-    }
-
-    if (filter.assignees?.length) {
-      params['assignees'] = filter.assignees;
-    }
-
-    if (loadParams.sort) {
-      params['sortBy'] = loadParams.sort.field;
-      params['sortDirection'] = loadParams.sort.direction;
-    }
-
-    return params;
-  }
 }
-
-const emptyTaskPageResponse: ClientResponse<Page<TaskViewModel>> = {
-  isSuccess: true,
-  payload: {
-    items: [],
-    page: 1,
-    pageSize: 50,
-    totalCount: 0,
-    totalPages: 1,
-  },
-};

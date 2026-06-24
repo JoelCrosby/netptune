@@ -47,24 +47,9 @@ export const selectSelectedAssigneeCount = createSelector(
 );
 
 export const selectTaskStatusOptions = createSelector(
-  selectAllTasks,
   selectSelectedTaskStatuses,
-  (tasks, selectedStatuses): SelectedTaskStatus[] => {
-    const selectedSet = new Set(selectedStatuses);
-    const statusMap = new Map(
-      tasks.map((task) => [
-        task.statusId,
-        {
-          status: task.statusId,
-          label: task.statusName,
-          selected: selectedSet.has(task.statusId),
-        },
-      ])
-    );
-
-    return Array.from(statusMap.values()).sort((a, b) =>
-      a.label.localeCompare(b.label)
-    );
+  (selectedStatuses): Set<number> => {
+    return new Set(selectedStatuses);
   }
 );
 

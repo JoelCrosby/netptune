@@ -1,7 +1,6 @@
 import { Component, ElementRef, inject } from '@angular/core';
 import { toggleSelectedStatus } from '@core/store/tasks/tasks.actions';
 import {
-  SelectedTaskStatus,
   selectSelectedTaskStatusCount,
   selectTaskStatusOptions,
 } from '@core/store/tasks/tasks.selectors';
@@ -10,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
 import { TaskListFilterActionComponent } from './task-list-filter-action.component';
+import { statusResource } from '@app/core/resources/status.resources';
 
 @Component({
   selector: 'app-task-list-status',
@@ -19,6 +19,8 @@ import { TaskListFilterActionComponent } from './task-list-filter-action.compone
     MenuCheckboxItemComponent,
   ],
   template: `
+    @let set = selected();
+
     <app-task-list-filter-action
       label="Filter by Status"
       [icon]="lucideCircleDashed"
@@ -26,12 +28,12 @@ import { TaskListFilterActionComponent } from './task-list-filter-action.compone
       (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu>
-      @for (status of statuses(); track trackByStatus($index, status)) {
+      @for (status of statuses.value(); track status.id) {
         <button
           app-menu-checkbox-item
-          [checked]="status.selected"
-          (checkedChange)="onOptionClicked(status.status)">
-          {{ status.label }}
+          [checked]="set.has(status.id)"
+          (checkedChange)="onOptionClicked(status.id)">
+          {{ status.name }}
         </button>
       }
     </app-dropdown-menu>
@@ -43,14 +45,11 @@ export class TaskListStatusComponent {
 
   readonly lucideCircleDashed = LucideCircleDashed;
 
-  readonly statuses = this.store.selectSignal(selectTaskStatusOptions);
+  readonly selected = this.store.selectSignal(selectTaskStatusOptions);
+  readonly statuses = statusResource();
   readonly selectedCount = this.store.selectSignal(
     selectSelectedTaskStatusCount
   );
-
-  trackByStatus(_: number, status: SelectedTaskStatus) {
-    return status.status;
-  }
 
   onOptionClicked(status: number) {
     this.store.dispatch(toggleSelectedStatus({ status }));

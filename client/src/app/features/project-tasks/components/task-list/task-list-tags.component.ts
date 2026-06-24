@@ -29,7 +29,7 @@ import { TaskListFilterActionComponent } from './task-list-filter-action.compone
     <app-dropdown-menu #menu>
       @if (loaded()) {
         @if (tags().length) {
-          @for (tag of tags(); track trackByTag($index, tag)) {
+          @for (tag of tags(); track tag.id) {
             <button
               app-menu-checkbox-item
               [checked]="tag.selected ?? false"
@@ -66,10 +66,6 @@ export class TaskListTagsComponent {
   readonly selectedCount = this.store.selectSignal(
     TagSelectors.selectSelectedTagCount
   );
-
-  trackByTag(_: number, tag: Selected<Tag>) {
-    return tag.id;
-  }
 
   onClicked() {
     this.store.dispatch(TagActions.loadTags());

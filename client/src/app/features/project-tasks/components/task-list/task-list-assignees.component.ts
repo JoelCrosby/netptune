@@ -12,10 +12,7 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
   template: `
     @if (assignees().length) {
       <div class="inline-flex flex-row-reverse items-center">
-        @for (
-          assignee of assignees();
-          track trackByAssignee($index, assignee)
-        ) {
+        @for (assignee of assignees(); track assignee.id) {
           <div
             class="bg-background inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4 not-last:-ml-3 hover:z-100"
             [class.border-transparent]="!assignee.selected"
@@ -47,10 +44,6 @@ export class TaskListAssigneesComponent {
   readonly assignees = computed(
     () => this.assigneeOptions() ?? this.storeAssignees()
   );
-
-  trackByAssignee(_: number, assignee: Selected<AssigneeViewModel>) {
-    return assignee.id;
-  }
 
   onAssigneeClicked(selected: Selected<AssigneeViewModel>) {
     this.store.dispatch(toggleSelectedAssignee({ assigneeId: selected.id }));

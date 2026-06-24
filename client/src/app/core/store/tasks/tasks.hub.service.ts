@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import * as groupsActions from '@app/core/store/groups/board-groups.actions';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { ClientResponse } from '@core/models/client-response';
@@ -19,7 +19,6 @@ import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
 import { selectIsWorkspaceGroup } from '@core/store/hub-context/hub-context.selectors';
 import { SseService } from '@core/sse/sse.service';
 import { Store } from '@ngrx/store';
-import * as actions from './tasks.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +27,8 @@ export class ProjectTasksHubService {
   private http = inject(HttpClient);
   private store = inject(Store);
   private sse = inject(SseService);
+
+  updateVersion = signal(0);
 
   addToGroup(groupId: string) {
     this.store.dispatch(setCurrentGroupId({ groupId }));
@@ -47,7 +48,7 @@ export class ProjectTasksHubService {
     const isWorkspaceGroup = this.store.selectSignal(selectIsWorkspaceGroup);
 
     if (isWorkspaceGroup()) {
-      this.store.dispatch(actions.loadProjectTasks());
+      this.updateVersion.set(this.updateVersion() + 1);
     } else {
       this.store.dispatch(groupsActions.loadBoardGroups());
     }
