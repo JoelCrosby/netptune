@@ -9,6 +9,7 @@ import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { MoveTasksToGroupRequest } from '@core/models/requests/move-tasks-to-group-request';
 import { ReassignTasksRequest } from '@core/models/requests/re-assign-tasks-request';
+import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { Tag } from '@core/models/tag';
@@ -44,6 +45,10 @@ export class ProjectTasksHubService {
     this.sse.disconnect();
   }
 
+  reloadTaskList() {
+    this.updateVersion.update((version) => version + 1);
+  }
+
   reloadRequiredViews() {
     const isWorkspaceGroup = this.store.selectSignal(selectIsWorkspaceGroup);
 
@@ -76,6 +81,12 @@ export class ProjectTasksHubService {
     task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>
   ) {
     return this.http.put<ClientResponse<TaskViewModel>>('api/tasks', task, {
+      headers: { 'X-Group': groupId },
+    });
+  }
+
+  bulkUpdate(groupId: string, request: BulkUpdateTasksRequest) {
+    return this.http.post<ClientResponse>('api/tasks/bulk-update', request, {
       headers: { 'X-Group': groupId },
     });
   }

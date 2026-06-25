@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
+import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
@@ -94,6 +95,22 @@ export const editProjectTasksSuccess = createAction(
 
 export const editProjectTasksFail = createAction(
   '[ProjectTasks] Edit Project Task Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Bulk Edit Tasks
+
+export const bulkUpdateTasks = createAction(
+  '[ProjectTasks] Bulk Update Tasks',
+  props<{ identifier: string; request: BulkUpdateTasksRequest }>()
+);
+
+export const bulkUpdateTasksSuccess = createAction(
+  '[ProjectTasks] Bulk Update Tasks Success'
+);
+
+export const bulkUpdateTasksFail = createAction(
+  '[ProjectTasks] Bulk Update Tasks Fail',
   props<{ error: HttpErrorResponse }>()
 );
 

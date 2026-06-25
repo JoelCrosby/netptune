@@ -4,6 +4,7 @@ import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { TaskListAssigneesComponent } from './task-list-assignees.component';
 import { TaskListFilterSeparatorComponent } from './task-list-filter-separator.component';
 import { TaskListSearchComponent } from './task-list-search.component';
+import { TaskListSelectionActionsComponent } from './task-list-selection-actions.component';
 import { TaskListStatusComponent } from './task-list-status.component';
 import { TaskListTagsComponent } from './task-list-tags.component';
 
@@ -13,6 +14,7 @@ import { TaskListTagsComponent } from './task-list-tags.component';
     TaskListFilterSeparatorComponent,
     TaskListAssigneesComponent,
     TaskListSearchComponent,
+    TaskListSelectionActionsComponent,
     TaskListStatusComponent,
     TaskListTagsComponent,
   ],
@@ -25,6 +27,7 @@ import { TaskListTagsComponent } from './task-list-tags.component';
       <app-task-list-tags />
       <app-task-list-filter-separator />
       <app-task-list-status />
+      <app-task-list-selection-actions class="ml-auto" />
     </div>
   `,
 })

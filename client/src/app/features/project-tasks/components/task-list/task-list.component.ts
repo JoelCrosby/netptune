@@ -27,6 +27,7 @@ import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
+import { TaskListSelectionService } from './task-list-selection.service';
 import { injectParams } from '@app/core/router/signals';
 import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
 import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service';
@@ -45,6 +46,7 @@ import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service'
     DatatableEmptyDirective,
     TaskListFiltersComponent,
   ],
+  providers: [TaskListSelectionService],
   template: `
     <app-task-list-filters />
 
@@ -54,7 +56,8 @@ import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service'
       rowClass="bg-card"
       [data]="taskData"
       [selection]="canDelete()"
-      [stickyHeader]="true">
+      [stickyHeader]="true"
+      (selectionChanged)="onSelectionChanged($event)">
       <ng-template appDatatableCell="systemId" let-task>
         <span class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
           {{ task.systemId }}
@@ -139,6 +142,7 @@ export class TaskListComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
   private projectTasksHubService = inject(ProjectTasksHubService);
+  private selection = inject(TaskListSelectionService);
   private params = injectParams();
 
   taskFilter = this.store.selectSignal(selectProjectTasksFilter);
@@ -235,8 +239,12 @@ export class TaskListComponent {
         onClick: (task) => this.deleteClicked(task),
       },
     ],
-    updateSignal: this.projectTasksHubService.updateVersion,
+    reloadSignal: this.projectTasksHubService.updateVersion,
   };
+
+  onSelectionChanged(tasks: TaskViewModel[]) {
+    this.selection.setSelected(tasks);
+  }
 
   titleClicked(task: TaskViewModel) {
     this.dialog.open(TaskDetailDialogComponent, {

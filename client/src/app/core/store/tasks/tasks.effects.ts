@@ -207,6 +207,27 @@ export class ProjectTasksEffects {
     );
   });
 
+  bulkUpdateTasks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.bulkUpdateTasks),
+      concatMap((action) =>
+        this.projectTasksHubService
+          .bulkUpdate(action.identifier, action.request)
+          .pipe(
+            unwrapClientReposne(),
+            tap(() => {
+              this.snackbar.open('Tasks updated');
+              this.projectTasksHubService.reloadTaskList();
+            }),
+            map(() => actions.bulkUpdateTasksSuccess()),
+            catchError((error: HttpErrorResponse) =>
+              of(actions.bulkUpdateTasksFail({ error }))
+            )
+          )
+      )
+    );
+  });
+
   deleteProjectTask$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.deleteProjectTask),
