@@ -11,7 +11,7 @@ import { ShellService } from './shell.service';
 
 export interface ShellMenuLink {
   label: string;
-  value: string[];
+  value?: string[];
   icon?: LucideIconInput;
   children?: ShellMenuLink[];
 }
@@ -113,14 +113,17 @@ export class ShellMenuLinkComponent {
       return [];
     }
 
-    return [
-      {
-        label: 'Overview',
-        value: link.value,
-        icon: this.lucideLayoutGrid,
-      },
-      ...children,
-    ];
+    const overview = link.value
+      ? [
+          {
+            label: 'Overview',
+            value: link.value,
+            icon: this.lucideLayoutGrid,
+          },
+        ]
+      : [];
+
+    return [...overview, ...children];
   });
 
   readonly expandable = computed(

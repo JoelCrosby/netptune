@@ -9,9 +9,11 @@ import {
   LucideChartNoAxesColumn,
   LucideLogs,
   LucideSettings,
+  LucideSettings2,
   LucideShield,
   LucideSquareCheckBig,
   LucideTable2,
+  LucideUser,
   LucideUsers,
   LucideWorkflow,
 } from '@lucide/angular';
@@ -160,8 +162,19 @@ export class ShellSidebarComponent {
     if (this.canReadWorkspace()) {
       links.push({
         label: 'Settings',
-        value: ['./settings'],
         icon: LucideSettings,
+        children: [
+          {
+            label: 'Personal',
+            value: ['./settings/personal'],
+            icon: LucideUser,
+          },
+          {
+            label: 'Workspace',
+            value: ['./settings/workspace'],
+            icon: LucideSettings2,
+          },
+        ],
       });
     }
 
