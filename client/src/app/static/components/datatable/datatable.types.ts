@@ -59,7 +59,7 @@ export interface DatatableDataSource<T = unknown> {
   rows?: (response: ClientResponse<Page<T>> | undefined) => readonly T[];
   trackBy: (index: number, row: T) => string | number;
   menu?: readonly DatatableMenuItem<T>[];
-  updateSignal?: Signal<unknown>;
+  reloadSignal?: Signal<unknown>;
 }
 
 export interface DatatableCellContext<T = unknown> {

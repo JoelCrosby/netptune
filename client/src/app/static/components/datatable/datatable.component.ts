@@ -12,7 +12,9 @@ import {
   inject,
   input,
   model,
+  output,
   signal,
+  untracked,
 } from '@angular/core';
 import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
@@ -77,7 +79,11 @@ import {
             }
             @if (selection()) {
               <th scope="col" class="w-10 px-2 py-3">
-                <span class="sr-only">Select row</span>
+                <app-checkbox
+                  [checked]="allSelected()"
+                  (changed)="toggleAll($event)">
+                  <span class="sr-only">Select all rows</span>
+                </app-checkbox>
               </th>
             }
             @for (column of columns(); track column.id) {
@@ -147,7 +153,11 @@ import {
               }
               @if (selection()) {
                 <td class="px-2 py-2 align-middle">
-                  <app-checkbox />
+                  <app-checkbox
+                    [checked]="isSelected(row)"
+                    (changed)="toggleRow(row, $event)">
+                    <span class="sr-only">Select row</span>
+                  </app-checkbox>
                 </td>
               }
               @for (column of columns(); track column.id) {
@@ -205,6 +215,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   emptyMessage = input('No rows to display.');
   stickyHeader = input(false);
   sort = model<DatatableSort | null>(null);
+  selectionChanged = output<T[]>();
 
   currentPage = signal(1);
   pageSize = signal(50);
@@ -298,11 +309,35 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     return this.currentRows();
   });
 
+  selectionModel = signal(new Map<string | number, T>());
+  selectedRows = computed(() => Array.from(this.selectionModel().values()));
+
+  allSelected = computed(() => {
+    const rows = this.visibleRows();
+
+    if (rows.length === 0) return false;
+
+    const model = this.selectionModel();
+
+    return rows.every((row) => model.has(this.rowKey(row)));
+  });
+
   constructor() {
     effect(() => {
       if (this.resourceLoading()) return;
 
       this.lastResolvedRows.set(this.currentRows());
+    });
+
+    effect(() => {
+      const reload = this.data().reloadSignal;
+
+      if (!reload) {
+        return;
+      }
+
+      reload();
+      untracked(() => this.resourceRef.reload());
     });
   }
 
@@ -335,6 +370,48 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     }
 
     this.sort.set(null);
+  }
+
+  isSelected(row: T): boolean {
+    return this.selectionModel().has(this.rowKey(row));
+  }
+
+  toggleRow(row: T, selected: boolean) {
+    const next = new Map(this.selectionModel());
+    const key = this.rowKey(row);
+
+    if (selected) {
+      next.set(key, row);
+    } else {
+      next.delete(key);
+    }
+
+    this.commitSelection(next);
+  }
+
+  toggleAll(selected: boolean) {
+    const next = new Map(this.selectionModel());
+
+    for (const row of this.visibleRows()) {
+      const key = this.rowKey(row);
+
+      if (selected) {
+        next.set(key, row);
+      } else {
+        next.delete(key);
+      }
+    }
+
+    this.commitSelection(next);
+  }
+
+  rowKey(row: T): string | number {
+    return this.data().trackBy(0, row);
+  }
+
+  commitSelection(next: Map<string | number, T>) {
+    this.selectionModel.set(next);
+    this.selectionChanged.emit(Array.from(next.values()));
   }
 
   isSortable(column: DatatableColumn<T>): boolean {
