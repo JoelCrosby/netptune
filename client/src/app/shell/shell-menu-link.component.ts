@@ -82,11 +82,17 @@ export interface ShellMenuLink {
       }
     </div>
 
-    @if (expandable() && subMenuExpanded()) {
-      <div class="mb-2 ml-6 flex flex-col border-l border-white/10 pl-2">
-        @for (child of childLinks(); track child.value) {
-          <app-shell-menu-link [link]="child" />
-        }
+    @if (expandable()) {
+      <div
+        class="grid transition-[grid-template-rows] duration-200 ease-out"
+        [style.grid-template-rows]="subMenuExpanded() ? '1fr' : '0fr'">
+        <div class="overflow-hidden">
+          <div class="mb-2 ml-6 flex flex-col border-l border-white/10 pl-2">
+            @for (child of childLinks(); track child.value) {
+              <app-shell-menu-link [link]="child" />
+            }
+          </div>
+        </div>
       </div>
     }
   }`,
