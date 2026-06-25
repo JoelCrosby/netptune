@@ -49,6 +49,17 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
+    public Task<List<ProjectTask>> GetTasksForUpdate(IEnumerable<int> ids, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+
+        return Entities
+            .Include(x => x.ProjectTaskAppUsers)
+            .Include(x => x.Status)
+            .Where(x => idList.Contains(x.Id) && !x.IsDeleted)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<ProjectTask?> GetAutomationTask(int id, CancellationToken cancellationToken = default)
     {
         return Entities

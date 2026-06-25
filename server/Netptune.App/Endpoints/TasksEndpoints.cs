@@ -24,6 +24,7 @@ public static class TasksEndpoints
         group.MapPost("/move-task-in-group", HandleMoveTaskInGroup).RequireAuthorization(NetptunePermissions.Tasks.Move);
         group.MapPost("/move-tasks-to-group", HandleMoveTasksToGroup).RequireAuthorization(NetptunePermissions.Tasks.Move);
         group.MapPost("/reassign-tasks", HandleReassignTasks).RequireAuthorization(NetptunePermissions.Tasks.Reassign);
+        group.MapPost("/bulk-update", HandleBulkUpdate).RequireAuthorization(NetptunePermissions.Tasks.Update);
 
         return group;
     }
@@ -160,6 +161,20 @@ public static class TasksEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new ReassignTasksCommand(request), cancellationToken);
+
+        await BroadcastAsync(boardEventService, context);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleBulkUpdate(
+        IMediator mediator,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        BulkUpdateTasksRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new BulkUpdateTasksCommand(request), cancellationToken);
 
         await BroadcastAsync(boardEventService, context);
 

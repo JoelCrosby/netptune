@@ -12,6 +12,8 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<ProjectTask?> GetTaskForUpdate(int id, CancellationToken cancellationToken = default);
 
+    Task<List<ProjectTask>> GetTasksForUpdate(IEnumerable<int> ids, CancellationToken cancellationToken = default);
+
     Task<ProjectTask?> GetAutomationTask(int id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectTask>> GetUnassignedAutomationCandidates(
