@@ -10,7 +10,6 @@ import { ClientResponse } from '@core/models/client-response';
 import { MAX_PAGE_SIZE, Page } from '@core/models/pagination';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { estimateTypeOptions } from '@core/enums/estimate-type';
 import { taskPriorityOptions } from '@core/enums/task-priority';
@@ -24,6 +23,7 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
 import { FormSelectTagsOptionComponent } from '@static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@static/components/form-select-tags/form-select-tags.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
 
 const NO_SPRINT = -1;
 
@@ -128,7 +128,9 @@ interface BulkEditTasksForm {
           label="Story points" />
       </div>
 
-      <app-form-select-tags [formField]="editForm.assigneeIds" label="Assignees">
+      <app-form-select-tags
+        [formField]="editForm.assigneeIds"
+        label="Assignees">
         @for (user of assignableUsers(); track user.id) {
           <app-form-select-tags-option [value]="user.id">
             {{ user.displayName }}
@@ -151,18 +153,24 @@ export class BulkEditTasksDialogComponent {
   private readonly dialogRef =
     inject<DialogRef<void, BulkEditTasksDialogComponent>>(DialogRef);
   private readonly store = inject(Store);
-  readonly tasks = inject<TaskViewModel[]>(DIALOG_DATA);
+  readonly tasks = inject<number[]>(DIALOG_DATA);
 
   readonly noSprint = NO_SPRINT;
   readonly priorityOptions = taskPriorityOptions;
   readonly estimateOptions = estimateTypeOptions;
+  readonly workspaceId = this.store.selectSignal(
+    selectCurrentWorkspaceIdentifier
+  );
 
   readonly taskCount = computed(() => this.tasks.length);
 
   readonly statuses = statusResource();
 
   readonly projects = httpResource<ProjectViewModel[]>(
-    () => ({ url: 'api/projects', params: { page: 1, pageSize: MAX_PAGE_SIZE } }),
+    () => ({
+      url: 'api/projects',
+      params: { page: 1, pageSize: MAX_PAGE_SIZE },
+    }),
     { defaultValue: [] }
   );
 
@@ -202,16 +210,13 @@ export class BulkEditTasksDialogComponent {
   }
 
   apply() {
-    const workspaceKey = this.tasks[0]?.workspaceKey;
+    const workspaceId = this.workspaceId();
 
-    if (!workspaceKey) {
-      this.dialogRef.close();
-      return;
-    }
+    if (!workspaceId) return;
 
     this.store.dispatch(
       bulkUpdateTasks({
-        identifier: `[workspace] ${workspaceKey}`,
+        identifier: `[workspace] ${workspaceId}`,
         request: this.buildRequest(),
       })
     );
@@ -223,7 +228,7 @@ export class BulkEditTasksDialogComponent {
     const value = this.editFormModel();
 
     const request: BulkUpdateTasksRequest = {
-      taskIds: this.tasks.map((task) => task.id),
+      taskIds: this.tasks,
     };
 
     if (value.statusId !== null) request.statusId = value.statusId;

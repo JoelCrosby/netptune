@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Params } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -27,7 +27,6 @@ import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
-import { TaskListSelectionService } from './task-list-selection.service';
 import { injectParams } from '@app/core/router/signals';
 import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
 import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service';
@@ -46,9 +45,9 @@ import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service'
     DatatableEmptyDirective,
     TaskListFiltersComponent,
   ],
-  providers: [TaskListSelectionService],
+  providers: [],
   template: `
-    <app-task-list-filters />
+    <app-task-list-filters [selection]="selection()" />
 
     <app-datatable
       containerClass="h-[calc(100vh-312px)] min-h-16 overflow-auto"
@@ -142,8 +141,9 @@ export class TaskListComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
   private projectTasksHubService = inject(ProjectTasksHubService);
-  private selection = inject(TaskListSelectionService);
   private params = injectParams();
+
+  selection = signal<number[]>([]);
 
   taskFilter = this.store.selectSignal(selectProjectTasksFilter);
   filtersActive = this.store.selectSignal(selectTaskFiltersActive);
@@ -243,7 +243,7 @@ export class TaskListComponent {
   };
 
   onSelectionChanged(tasks: TaskViewModel[]) {
-    this.selection.setSelected(tasks);
+    this.selection.set(tasks.map((e) => e.id));
   }
 
   titleClicked(task: TaskViewModel) {
