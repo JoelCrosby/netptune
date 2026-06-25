@@ -9,7 +9,7 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { routerNavigatedAction } from '@ngrx/router-store';
 import { Action, Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { asyncScheduler, EMPTY, of } from 'rxjs';
+import { asyncScheduler, combineLatest, EMPTY, of } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -20,6 +20,8 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
+import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
+import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 import * as actions from './workspaces.actions';
 import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
@@ -65,6 +67,35 @@ export class WorkspacesEffects implements OnInitEffects {
       return this.actions$.pipe(
         ofType(actions.selectWorkspace),
         tap(() => void this.sse.disconnect())
+      );
+    },
+    { dispatch: false }
+  );
+
+  updatePrimaryColor$ = createEffect(
+    () => {
+      return combineLatest([
+        this.store
+          .select(selectCurrentWorkspace)
+          .pipe(map((workspace) => workspace?.metaInfo?.color)),
+        this.store.select(selectEffectiveTheme),
+      ]).pipe(
+        distinctUntilChanged(
+          ([colorA, themeA], [colorB, themeB]) =>
+            colorA === colorB && themeA === themeB
+        ),
+        tap(([color, theme]) => {
+          const root = document.documentElement.style;
+          const variables = workspaceBrandVariables(color, theme === 'dark');
+
+          for (const [property, value] of Object.entries(variables)) {
+            if (value) {
+              root.setProperty(property, value);
+            } else {
+              root.removeProperty(property);
+            }
+          }
+        })
       );
     },
     { dispatch: false }
