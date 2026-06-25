@@ -25,4 +25,8 @@ public class BoardViewModelRowMap
     public string Lastname { get; set; } = null!;
 
     public string Project_Name { get; set; } = null!;
+
+    public int Task_Count { get; set; }
+
+    public DateTime? Last_Updated { get; set; }
 }

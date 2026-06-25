@@ -94,11 +94,21 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                        (u.id IS NULL),
                        u.firstname,
                        u.lastname,
-                       p.name AS project_name
+                       p.name AS project_name,
+                       task_stats.task_count,
+                       task_stats.last_updated
                 FROM boards AS b
                          INNER JOIN projects AS p ON b.project_id = p.id AND NOT p.is_deleted
                          INNER JOIN workspaces AS w ON p.workspace_id = w.id AND NOT w.is_deleted
                          LEFT JOIN users AS u ON b.owner_id = u.id
+                         LEFT JOIN LATERAL (
+                             SELECT COUNT(pt.id)      AS task_count,
+                                    MAX(pt.updated_at) AS last_updated
+                             FROM board_groups AS bg
+                                      INNER JOIN project_task_in_board_groups AS ptbg ON ptbg.board_group_id = bg.id
+                                      INNER JOIN project_tasks AS pt ON pt.id = ptbg.project_task_id AND NOT pt.is_deleted
+                             WHERE bg.board_id = b.id AND NOT bg.is_deleted
+                         ) AS task_stats ON TRUE
                 WHERE w.slug = @slug AND NOT b.is_deleted
                 ORDER BY COALESCE(p.updated_at, p.created_at) DESC, p.id DESC, COALESCE(b.updated_at, b.created_at) DESC, b.id DESC
                 OFFSET @skip
@@ -126,6 +136,8 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                 UpdatedAt = board.Updated_At,
                 MetaInfo = GetMetaInfo(board),
                 OwnerUsername = $"{board.Firstname} {board.Lastname}",
+                TaskCount = board.Task_Count,
+                LastUpdated = board.Last_Updated ?? board.Created_At,
             })
             .Aggregate(new List<BoardsViewModel>(), (prev, board) =>
             {

@@ -11,4 +11,6 @@ export interface BoardViewModel {
   updatedAt?: Date;
   ownerUsername: string;
   metaInfo: BoardMeta;
+  taskCount: number;
+  lastUpdated: Date;
 }

@@ -24,6 +24,10 @@ public class BoardViewModel
     public string OwnerUsername { get; set; } = null!;
 
     public BoardMeta? MetaInfo { get; set; }
+
+    public int TaskCount { get; set; }
+
+    public DateTime LastUpdated { get; set; }
 }
 
 public class BoardsViewModel
