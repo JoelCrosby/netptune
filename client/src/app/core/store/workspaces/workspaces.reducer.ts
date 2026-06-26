@@ -8,11 +8,11 @@ const reducer = createReducer(
   // Load Workspaces
 
   on(
-    actions.loadWorkspaces,
+    actions.loadWorkspaces.init,
     (state): WorkspacesState => ({ ...state, loading: true })
   ),
   on(
-    actions.loadWorkspacesFail,
+    actions.loadWorkspaces.fail,
     (state, { error }): WorkspacesState => ({
       ...state,
       loadingError: error,
@@ -20,7 +20,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadWorkspacesSuccess,
+    actions.loadWorkspaces.success,
     (state, { workspaces }): WorkspacesState =>
       adapter.setAll(workspaces, { ...state, loading: false, loaded: true })
   ),
@@ -28,18 +28,18 @@ const reducer = createReducer(
   // Create Workspaces
 
   on(
-    actions.createWorkspace,
+    actions.createWorkspace.init,
     (state): WorkspacesState => ({ ...state, loadingCreate: true })
   ),
   on(
-    actions.createWorkspaceFail,
+    actions.createWorkspace.fail,
     (state, { error }): WorkspacesState => ({
       ...state,
       loadingError: error,
     })
   ),
   on(
-    actions.createWorkspaceSuccess,
+    actions.createWorkspace.success,
     (state, { workspace }): WorkspacesState =>
       adapter.addOne(workspace, {
         ...state,
@@ -50,18 +50,18 @@ const reducer = createReducer(
   // Edit Workspaces
 
   on(
-    actions.editWorkspace,
+    actions.editWorkspace.init,
     (state): WorkspacesState => ({ ...state, loadingEdit: true })
   ),
   on(
-    actions.editWorkspaceFail,
+    actions.editWorkspace.fail,
     (state, { error }): WorkspacesState => ({
       ...state,
       loadingEditError: error,
     })
   ),
   on(
-    actions.editWorkspaceSuccess,
+    actions.editWorkspace.success,
     (state, { workspace }): WorkspacesState =>
       adapter.upsertOne(workspace, {
         ...state,
@@ -96,7 +96,7 @@ const reducer = createReducer(
   // Delete Workspace
 
   on(
-    actions.deleteWorkspaceSuccess,
+    actions.deleteWorkspace.success,
     (state, { workspace }): WorkspacesState => {
       if (workspace.id === undefined || workspace.id === null) {
         return state;
@@ -109,11 +109,11 @@ const reducer = createReducer(
   // Is Slug Unique
 
   on(
-    actions.isSlugUniue,
+    actions.isSlugUniue.init,
     (state): WorkspacesState => ({ ...state, isSlugUniqueLoading: true })
   ),
   on(
-    actions.isSlugUniueFail,
+    actions.isSlugUniue.fail,
     (state, { error }): WorkspacesState => ({
       ...state,
       isSlugUniqueError: error,
@@ -121,7 +121,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.isSlugUniueSuccess,
+    actions.isSlugUniue.success,
     (state, { response }): WorkspacesState => ({
       ...state,
       isSlugUnique: response,

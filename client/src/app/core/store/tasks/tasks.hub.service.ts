@@ -55,7 +55,7 @@ export class ProjectTasksHubService {
     if (isWorkspaceGroup()) {
       this.updateVersion.set(this.updateVersion() + 1);
     } else {
-      this.store.dispatch(groupsActions.loadBoardGroups());
+      this.store.dispatch(groupsActions.loadBoardGroups.init());
     }
   }
 

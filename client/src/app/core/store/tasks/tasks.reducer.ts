@@ -9,7 +9,7 @@ const reducer = createReducer(
   // Load Tasks
 
   on(
-    actions.loadProjectTasks,
+    actions.loadProjectTasks.init,
     (state): TasksState => ({ ...state, loading: true })
   ),
   on(
@@ -38,7 +38,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadProjectTasksFail,
+    actions.loadProjectTasks.fail,
     (state, { error }): TasksState => ({
       ...state,
       loading: false,
@@ -46,7 +46,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadProjectTasksSuccess,
+    actions.loadProjectTasks.success,
     (state, { tasks, page, pageSize, totalCount, totalPages }): TasksState =>
       adapter.setAll(tasks, {
         ...state,
@@ -61,14 +61,14 @@ const reducer = createReducer(
   // Create Task
 
   on(
-    actions.createProjectTask,
+    actions.createProjectTask.init,
     (state): TasksState => ({
       ...state,
       loadingNewTask: true,
     })
   ),
   on(
-    actions.createProjectTasksFail,
+    actions.createProjectTask.fail,
     (state, { error }): TasksState => ({
       ...state,
       loadingNewTask: false,
@@ -76,7 +76,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.createProjectTasksSuccess,
+    actions.createProjectTask.success,
     (state, { task }): TasksState =>
       adapter.addOne(task, {
         ...state,
@@ -88,21 +88,21 @@ const reducer = createReducer(
   // Edit Task
 
   on(
-    actions.editProjectTask,
+    actions.editProjectTask.init,
     (state): TasksState => ({
       ...state,
       editState: { loading: true },
     })
   ),
   on(
-    actions.editProjectTasksFail,
+    actions.editProjectTask.fail,
     (state, { error }): TasksState => ({
       ...state,
       editState: { loading: false, error },
     })
   ),
   on(
-    actions.editProjectTasksSuccess,
+    actions.editProjectTask.success,
     (state, { task }): TasksState =>
       adapter.upsertOne(task, {
         ...state,
@@ -114,21 +114,21 @@ const reducer = createReducer(
   // Delete Task
 
   on(
-    actions.deleteProjectTask,
+    actions.deleteProjectTask.init,
     (state): TasksState => ({
       ...state,
       deleteState: { loading: true },
     })
   ),
   on(
-    actions.deleteProjectTasksFail,
+    actions.deleteProjectTask.fail,
     (state, { error }): TasksState => ({
       ...state,
       deleteState: { loading: false, error },
     })
   ),
   on(
-    actions.deleteProjectTasksSuccess,
+    actions.deleteProjectTask.success,
     (state, { taskId }): TasksState =>
       adapter.removeOne(taskId, {
         ...state,
@@ -209,7 +209,7 @@ const reducer = createReducer(
   // Load Task Details
 
   on(
-    actions.loadTaskDetailsSuccess,
+    actions.loadTaskDetails.success,
     (state, { task }): TasksState => ({
       ...state,
       detailTask: task,

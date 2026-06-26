@@ -6,7 +6,10 @@ import { UsersState } from './users.model';
 const reducer = createReducer(
   initialState,
   on(actions.clearState, (): UsersState => initialState),
-  on(actions.loadUsers, (state): UsersState => ({ ...state, loading: true })),
+  on(
+    actions.loadUsers.init,
+    (state): UsersState => ({ ...state, loading: true })
+  ),
   on(
     actions.setUsersPageSize,
     (state, { pageSize }): UsersState => ({
@@ -23,7 +26,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadUsersFail,
+    actions.loadUsers.fail,
     (state, { error }): UsersState => ({
       ...state,
       loading: false,
@@ -31,7 +34,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadUsersSuccess,
+    actions.loadUsers.success,
     (state, { users, page, pageSize, totalCount, totalPages }): UsersState =>
       adapter.setAll(users, {
         ...state,
@@ -44,14 +47,14 @@ const reducer = createReducer(
       })
   ),
   on(
-    actions.loadUser,
+    actions.loadUser.init,
     (state): UsersState => ({
       ...state,
       userDetailLoading: true,
     })
   ),
   on(
-    actions.loadUserSuccess,
+    actions.loadUser.success,
     (state, { user }): UsersState => ({
       ...state,
       userDetail: user,
@@ -59,7 +62,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadUserFail,
+    actions.loadUser.fail,
     (state, { error }): UsersState => ({
       ...state,
       userDetail: undefined,
@@ -68,7 +71,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.removeUsersFromWorkspaceSuccess,
+    actions.removeUsersFromWorkspace.success,
     (state, { emailAddresses }): UsersState =>
       adapter.removeMany(emailAddresses, {
         ...state,
@@ -77,15 +80,15 @@ const reducer = createReducer(
       })
   ),
   on(
-    actions.toggleUserPermission,
+    actions.toggleUserPermission.init,
     (state): UsersState => ({ ...state, loading: true })
   ),
   on(
-    actions.toggleUserPermissionSuccess,
+    actions.toggleUserPermission.success,
     (state): UsersState => ({ ...state, loading: false })
   ),
   on(
-    actions.toggleUserPermissionFail,
+    actions.toggleUserPermission.fail,
     (state, { error }): UsersState => ({
       ...state,
       loading: false,

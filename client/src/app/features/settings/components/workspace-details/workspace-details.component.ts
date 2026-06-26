@@ -161,6 +161,6 @@ export class WorkspaceDetailsComponent {
       },
     };
 
-    this.store.dispatch(Actions.editWorkspace({ request }));
+    this.store.dispatch(Actions.editWorkspace.init({ request }));
   }
 }

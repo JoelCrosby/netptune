@@ -1,75 +1,46 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 
 export const initWorkspaces = createAction('[Workspaces] Init');
 
 // Load Workspaces
 
-export const loadWorkspaces = createAction('[Workspaces] Load Workspaces');
-
-export const loadWorkspacesSuccess = createAction(
-  '[Workspaces] Load Workspaces Success ',
-  props<{ workspaces: Workspace[] }>()
-);
-
-export const loadWorkspacesFail = createAction(
-  '[Workspaces] Load Workspaces Fail',
-  props<{ error: HttpErrorResponse }>()
+export const loadWorkspaces = createAsyncAction(
+  '[Workspaces] Load Workspaces',
+  {
+    success: props<{ workspaces: Workspace[] }>(),
+  }
 );
 
 // Create Workspace
 
-export const createWorkspace = createAction(
+export const createWorkspace = createAsyncAction(
   '[Workspaces] Create Workspace',
-  props<{ request: AddWorkspaceRequest }>()
-);
-
-export const createWorkspaceSuccess = createAction(
-  '[Workspaces] Create Workspace Success',
-  props<{ workspace: Workspace }>()
-);
-
-export const createWorkspaceFail = createAction(
-  '[Workspaces] Create Workspace Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ request: AddWorkspaceRequest }>(),
+    success: props<{ workspace: Workspace }>(),
+  }
 );
 
 // Edit Workspace
 
-export const editWorkspace = createAction(
-  '[Workspaces] Edit Workspace',
-  props<{ request: UpdateWorkspaceRequest }>()
-);
-
-export const editWorkspaceSuccess = createAction(
-  '[Workspaces] Edit Workspace Success',
-  props<{ workspace: Workspace }>()
-);
-
-export const editWorkspaceFail = createAction(
-  '[Workspaces] Edit Workspace Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const editWorkspace = createAsyncAction('[Workspaces] Edit Workspace', {
+  init: props<{ request: UpdateWorkspaceRequest }>(),
+  success: props<{ workspace: Workspace }>(),
+});
 
 // Delete Workspace
 
-export const deleteWorkspace = createAction(
+export const deleteWorkspace = createAsyncAction(
   '[Workspaces] Delete Workspace',
-  props<{ workspace: Workspace }>()
-);
-
-export const deleteWorkspaceSuccess = createAction(
-  '[Workspaces] Delete Workspace Success ',
-  props<{ workspace: Workspace }>()
-);
-
-export const deleteWorkspaceFail = createAction(
-  '[Workspaces] Delete Workspace Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ workspace: Workspace }>(),
+    success: props<{ workspace: Workspace }>(),
+  }
 );
 
 // Set Current Workspace
@@ -86,22 +57,12 @@ export const selectWorkspace = createAction(
   props<{ workspace: Workspace }>()
 );
 
-// Select Workspace
+// Is Slug Unique
 
-export const isSlugUniue = createAction(
-  '[Workspaces] Is Slug Unique',
-  props<{ slug: string }>()
-);
-
-export const isSlugUniueSuccess = createAction(
-  '[Workspaces] Is Slug Unique Success ',
-  props<{ response: IsSlugUniqueResponse }>()
-);
-
-export const isSlugUniueFail = createAction(
-  '[Workspaces] Is Slug Unique Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const isSlugUniue = createAsyncAction('[Workspaces] Is Slug Unique', {
+  init: props<{ slug: string }>(),
+  success: props<{ response: IsSlugUniqueResponse }>(),
+});
 
 // Toogle IsPublic
 

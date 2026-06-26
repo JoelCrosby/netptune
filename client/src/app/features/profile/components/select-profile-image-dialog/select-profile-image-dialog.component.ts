@@ -78,7 +78,7 @@ export class SelectProfileImageDialogComponent {
     const formData = new FormData();
     formData.append('image', file, file.name);
 
-    this.store.dispatch(uploadProfilePicture({ data: formData }));
+    this.store.dispatch(uploadProfilePicture.init({ data: formData }));
     this.dialogRef.close();
   }
 }

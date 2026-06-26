@@ -39,6 +39,6 @@ export class BuildNumberComponent implements OnInit {
   buildInfo = this.store.selectSignal(selectBuildInfo);
 
   ngOnInit() {
-    this.store.dispatch(loadBuildInfo());
+    this.store.dispatch(loadBuildInfo.init());
   }
 }

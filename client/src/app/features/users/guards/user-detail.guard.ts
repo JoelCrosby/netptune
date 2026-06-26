@@ -11,7 +11,7 @@ export const userDetailGuard: CanActivateFn = (
 
   if (!userId) return false;
 
-  store.dispatch(loadUser({ userId }));
+  store.dispatch(loadUser.init({ userId }));
 
   return true;
 };

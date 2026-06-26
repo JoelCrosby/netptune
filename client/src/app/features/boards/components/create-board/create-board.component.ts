@@ -187,7 +187,7 @@ export class CreateBoardComponent {
       });
     });
 
-    this.store.dispatch(loadProjects());
+    this.store.dispatch(loadProjects.init());
   }
 
   getResult() {
@@ -214,7 +214,7 @@ export class CreateBoardComponent {
         },
       };
 
-      this.store.dispatch(updateBoard({ request }));
+      this.store.dispatch(updateBoard.init({ request }));
     } else {
       const projectId = this.boardForm.projectId().value();
 
@@ -229,7 +229,7 @@ export class CreateBoardComponent {
         },
       };
 
-      this.store.dispatch(createBoard({ request }));
+      this.store.dispatch(createBoard.init({ request }));
     }
 
     this.dialogRef.close();

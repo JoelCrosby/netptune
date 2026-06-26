@@ -133,7 +133,7 @@ export class CreateSprintDialogComponent {
     this.dateError = undefined;
 
     this.store.dispatch(
-      createSprint({
+      createSprint.init({
         request: {
           projectId: this.projectId,
           name: this.name.trim(),

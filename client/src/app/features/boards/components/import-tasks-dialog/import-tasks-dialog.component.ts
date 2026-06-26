@@ -2,7 +2,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { TaskImportResult } from '@core/models/import/task-import-result';
-import { importTasksSuccess } from '@core/store/tasks/tasks.actions';
+import { importTasks } from '@core/store/tasks/tasks.actions';
 import { ProjectTasksService } from '@core/store/tasks/tasks.service';
 import { LucideCheckCircle, LucideTriangleAlert } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -176,7 +176,7 @@ export class ImportTasksDialogComponent {
       this.response.set(response);
 
       if (response.isSuccess) {
-        this.store.dispatch(importTasksSuccess());
+        this.store.dispatch(importTasks.success());
       }
     } catch {
       this.response.set({

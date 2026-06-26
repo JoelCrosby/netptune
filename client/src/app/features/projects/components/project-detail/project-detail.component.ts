@@ -147,6 +147,6 @@ export class ProjectDetailComponent implements OnDestroy {
       defaultStatusId: defaultStatusId().value() || null,
     };
 
-    this.store.dispatch(updateProject({ project }));
+    this.store.dispatch(updateProject.init({ project }));
   }
 }

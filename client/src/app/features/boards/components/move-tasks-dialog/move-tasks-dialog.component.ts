@@ -73,7 +73,7 @@ export class MoveTasksDialogComponent {
 
     if (newGroupId === null) return;
 
-    this.store.dispatch(moveSelectedTasks({ newGroupId }));
+    this.store.dispatch(moveSelectedTasks.init({ newGroupId }));
     this.dialogRef.close();
   }
 }

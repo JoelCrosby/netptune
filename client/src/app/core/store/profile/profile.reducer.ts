@@ -8,11 +8,11 @@ const reducer = createReducer(
   // Load Profile
 
   on(
-    actions.loadProfile,
+    actions.loadProfile.init,
     (state): ProfileState => ({ ...state, loadProfileloading: true })
   ),
   on(
-    actions.loadProfileFail,
+    actions.loadProfile.fail,
     (state, { error }): ProfileState => ({
       ...state,
       loadProfileloading: false,
@@ -20,7 +20,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadProfileSuccess,
+    actions.loadProfile.success,
     (state, { profile }): ProfileState => ({
       ...state,
       loadProfileloading: false,
@@ -32,14 +32,14 @@ const reducer = createReducer(
   // Update Profile
 
   on(
-    actions.updateProfile,
+    actions.updateProfile.init,
     (state): ProfileState => ({
       ...state,
       updateProfileLoading: true,
     })
   ),
   on(
-    actions.updateProfileFail,
+    actions.updateProfile.fail,
     (state, { error }): ProfileState => ({
       ...state,
       updateProfileLoading: false,
@@ -47,7 +47,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.updateProfileSuccess,
+    actions.updateProfile.success,
     (state, { profile }): ProfileState => ({
       ...state,
       updateProfileLoading: false,
@@ -58,14 +58,14 @@ const reducer = createReducer(
   // Change Password
 
   on(
-    actions.changePassword,
+    actions.changePassword.init,
     (state): ProfileState => ({
       ...state,
       changePasswordLoading: true,
     })
   ),
   on(
-    actions.changePasswordFail,
+    actions.changePassword.fail,
     (state, { error }): ProfileState => ({
       ...state,
       changePasswordLoading: false,
@@ -73,7 +73,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.changePasswordSuccess,
+    actions.changePassword.success,
     (state): ProfileState => ({
       ...state,
       changePasswordLoading: false,
@@ -83,7 +83,7 @@ const reducer = createReducer(
   // Load Login Providers
 
   on(
-    actions.loadLoginProvidersSuccess,
+    actions.loadLoginProviders.success,
     (state, { providers }): ProfileState => ({
       ...state,
       loginProviders: providers,
@@ -93,7 +93,7 @@ const reducer = createReducer(
   // Upload Profile Picture
 
   on(
-    actions.uploadProfilePictureSuccess,
+    actions.uploadProfilePicture.success,
     (state, { response }): ProfileState => {
       if (!response?.uri || !state.profile) {
         return state;

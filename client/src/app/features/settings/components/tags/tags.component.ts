@@ -104,7 +104,7 @@ export class TagsComponent {
   tags = tagResource();
 
   constructor() {
-    this.store.dispatch(actions.loadTags());
+    this.store.dispatch(actions.loadTags.init());
   }
 
   openCreateDialog() {
@@ -120,7 +120,7 @@ export class TagsComponent {
         const name = result?.name.trim();
         if (!name) return;
 
-        this.store.dispatch(actions.addTag({ name }));
+        this.store.dispatch(actions.addTag.init({ name }));
       },
     });
   }
@@ -140,7 +140,7 @@ export class TagsComponent {
         if (!newValue || newValue === tag.name) return;
 
         this.store.dispatch(
-          actions.editTag({ currentValue: tag.name, newValue })
+          actions.editTag.init({ currentValue: tag.name, newValue })
         );
       },
     });
@@ -150,6 +150,6 @@ export class TagsComponent {
     if (!tag) return;
 
     const tags = [tag.name];
-    this.store.dispatch(actions.deleteTags({ tags }));
+    this.store.dispatch(actions.deleteTags.init({ tags }));
   }
 }

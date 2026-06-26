@@ -73,7 +73,7 @@ export class NotificationItemComponent {
     const notification = this.notification();
 
     if (!notification.isRead) {
-      this.store.dispatch(markAsRead({ id: notification.id }));
+      this.store.dispatch(markAsRead.init({ id: notification.id }));
     }
 
     if (notification.link) {

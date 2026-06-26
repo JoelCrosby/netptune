@@ -170,7 +170,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
     if (!title || !board?.id) return;
 
     this.store.dispatch(
-      updateBoard({
+      updateBoard.init({
         request: {
           id: board.id,
           name: title,
@@ -213,7 +213,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   moveBoardGroup(boardGroup: BoardViewGroup, sortOrder: number) {
     this.store.dispatch(
-      editBoardGroup({
+      editBoardGroup.init({
         request: {
           boardGroupId: boardGroup.id,
           sortOrder,
@@ -227,7 +227,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   }
 
   onDeleteGroupClicked(boardGroup: BoardViewGroup) {
-    this.store.dispatch(deleteBoardGroup({ boardGroup }));
+    this.store.dispatch(deleteBoardGroup.init({ boardGroup }));
   }
 
   onGroupNameSubmitted(value: Event | string, group: BoardViewGroup) {
@@ -238,7 +238,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
       name: value,
     };
 
-    this.store.dispatch(editBoardGroup({ request }));
+    this.store.dispatch(editBoardGroup.init({ request }));
   }
 
   onImportTasksClicked() {
@@ -266,7 +266,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   }
 
   onExportTasksClicked() {
-    this.store.dispatch(exportBoardTasks());
+    this.store.dispatch(exportBoardTasks.init());
   }
 
   onDeleteBoardClicked() {
@@ -274,7 +274,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
     if (boardId === undefined || boardId === null) return;
 
-    this.store.dispatch(deleteBoard({ boardId }));
+    this.store.dispatch(deleteBoard.init({ boardId }));
   }
 
   onSprintFilterChanged(value: number) {

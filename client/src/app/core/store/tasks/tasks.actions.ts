@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
@@ -15,8 +14,17 @@ export const clearState = createAction('[ProjectTasks] Clear State');
 
 // Load Tasks
 
-export const loadProjectTasks = createAction(
-  '[ProjectTasks] Load ProjectTasks'
+export const loadProjectTasks = createAsyncAction(
+  '[ProjectTasks] Load ProjectTasks',
+  {
+    success: props<{
+      tasks: TaskViewModel[];
+      page: number;
+      pageSize: number;
+      totalCount: number;
+      totalPages: number;
+    }>(),
+  }
 );
 
 export const setProjectTasksPageSize = createAction(
@@ -27,22 +35,6 @@ export const setProjectTasksPageSize = createAction(
 export const setProjectTasksPage = createAction(
   '[ProjectTasks] Set ProjectTasks Page',
   props<{ page: number }>()
-);
-
-export const loadProjectTasksSuccess = createAction(
-  '[ProjectTasks] Load ProjectTasks Success',
-  props<{
-    tasks: TaskViewModel[];
-    page: number;
-    pageSize: number;
-    totalCount: number;
-    totalPages: number;
-  }>()
-);
-
-export const loadProjectTasksFail = createAction(
-  '[ProjectTasks] Load ProjectTasks Fail',
-  props<{ error: HttpErrorResponse }>()
 );
 
 export const hydrateProjectTaskFiltersFromRoute = createAction(
@@ -63,73 +55,45 @@ export const updateProjectTasksFilter = createAction(
 
 // Create Task
 
-export const createProjectTask = createAction(
+export const createProjectTask = createAsyncAction(
   '[ProjectTasks] Create Project Task',
-  props<{ identifier: string; task: AddProjectTaskRequest }>()
-);
-
-export const createProjectTasksSuccess = createAction(
-  '[ProjectTasks] Create Project Task Success',
-  props<{ task: TaskViewModel }>()
-);
-
-export const createProjectTasksFail = createAction(
-  '[ProjectTasks] Create Project Task Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ identifier: string; task: AddProjectTaskRequest }>(),
+    success: props<{ task: TaskViewModel }>(),
+  }
 );
 
 // Edit Task
 
-export const editProjectTask = createAction(
+export const editProjectTask = createAsyncAction(
   '[ProjectTasks] Edit Project Task',
-  props<{
-    identifier: string;
-    task: BoardViewTask | TaskViewModel | Partial<UpdateProjectTaskRequest>;
-    silent?: boolean;
-  }>()
-);
-
-export const editProjectTasksSuccess = createAction(
-  '[ProjectTasks] Edit Project Task Success',
-  props<{ task: TaskViewModel }>()
-);
-
-export const editProjectTasksFail = createAction(
-  '[ProjectTasks] Edit Project Task Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{
+      identifier: string;
+      task: BoardViewTask | TaskViewModel | Partial<UpdateProjectTaskRequest>;
+      silent?: boolean;
+    }>(),
+    success: props<{ task: TaskViewModel }>(),
+  }
 );
 
 // Bulk Edit Tasks
 
-export const bulkUpdateTasks = createAction(
+export const bulkUpdateTasks = createAsyncAction(
   '[ProjectTasks] Bulk Update Tasks',
-  props<{ identifier: string; request: BulkUpdateTasksRequest }>()
-);
-
-export const bulkUpdateTasksSuccess = createAction(
-  '[ProjectTasks] Bulk Update Tasks Success'
-);
-
-export const bulkUpdateTasksFail = createAction(
-  '[ProjectTasks] Bulk Update Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ identifier: string; request: BulkUpdateTasksRequest }>(),
+  }
 );
 
 // Delete Task
 
-export const deleteProjectTask = createAction(
+export const deleteProjectTask = createAsyncAction(
   '[ProjectTasks] Delete Project Task',
-  props<{ identifier: string; task: TaskViewModel }>()
-);
-
-export const deleteProjectTasksSuccess = createAction(
-  '[ProjectTasks] Delete Project Task Success',
-  props<{ taskId: number }>()
-);
-
-export const deleteProjectTasksFail = createAction(
-  '[ProjectTasks] Delete Project Task Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ identifier: string; task: TaskViewModel }>(),
+    success: props<{ taskId: number }>(),
+  }
 );
 
 // Bulk Delete Tasks
@@ -166,19 +130,12 @@ export const clearSelectedTask = createAction(
 
 // Load Task Detail
 
-export const loadTaskDetails = createAction(
+export const loadTaskDetails = createAsyncAction(
   '[ProjectTasks] Load Task Detail',
-  props<{ systemId: string }>()
-);
-
-export const loadTaskDetailsFail = createAction(
-  '[ProjectTasks] Load Task Detail Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-export const loadTaskDetailsSuccess = createAction(
-  '[ProjectTasks] Load Task Detail Success',
-  props<{ task: TaskViewModel }>()
+  {
+    init: props<{ systemId: string }>(),
+    success: props<{ task: TaskViewModel }>(),
+  }
 );
 
 // Clear Task detail
@@ -194,80 +151,40 @@ export const setInlineEditActive = createAction(
 
 // Export Tasks
 
-export const exportTasks = createAction('[ProjectTasks] Export Tasks');
-
-export const exportTasksSuccess = createAction(
-  '[ProjectTasks] Export Tasks Success',
-  props<{ reponse: FileResponse }>()
-);
-
-export const exportTasksFail = createAction(
-  '[ProjectTasks] Export Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const exportTasks = createAsyncAction('[ProjectTasks] Export Tasks', {
+  success: props<{ reponse: FileResponse }>(),
+});
 
 // Import Tasks
 
-export const importTasks = createAction(
-  '[ProjectTasks] Import Tasks',
-  props<{ boardIdentifier: string; file: File }>()
-);
-
-export const importTasksSuccess = createAction(
-  '[ProjectTasks] Import Tasks Success'
-);
-
-export const importTasksFail = createAction(
-  '[ProjectTasks] Import Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const importTasks = createAsyncAction('[ProjectTasks] Import Tasks', {
+  init: props<{ boardIdentifier: string; file: File }>(),
+});
 
 // Delete Tag From Task
 
-export const deleteTagFromTask = createAction(
+export const deleteTagFromTask = createAsyncAction(
   '[ProjectTasks] Delete Tag From Task',
-  props<{ identifier: string; systemId: string; tag: string }>()
-);
-
-export const deleteTagFromTaskSuccess = createAction(
-  '[ProjectTasks] Delete Tag From Task Success'
-);
-
-export const deleteTagFromTaskFail = createAction(
-  '[ProjectTasks] Delete Tag From Task Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ identifier: string; systemId: string; tag: string }>(),
+  }
 );
 
 // Add Tag To Task
 
-export const addTagToTask = createAction(
+export const addTagToTask = createAsyncAction(
   '[ProjectTasks] Add Tag To Task',
-  props<{ identifier: string; request: AddTagToTaskRequest }>()
-);
-
-export const addTagToTaskSuccess = createAction(
-  '[ProjectTasks] Add Tag To Task Success',
-  props<{ tag: Tag }>()
-);
-
-export const addTagToTaskFail = createAction(
-  '[ProjectTasks] Add Tag To Task Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ identifier: string; request: AddTagToTaskRequest }>(),
+    success: props<{ tag: Tag }>(),
+  }
 );
 
 // Load Activity
 
-export const loadActivity = createAction('[ProjectTasks] Load Activity');
-
-export const loadActivitySuccess = createAction(
-  '[ProjectTasks] Load Activity Success',
-  props<{ tags: Tag[] }>()
-);
-
-export const loadActivityFail = createAction(
-  '[ProjectTasks] Load Activity Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const loadActivity = createAsyncAction('[ProjectTasks] Load Activity', {
+  success: props<{ tags: Tag[] }>(),
+});
 
 // Filters
 

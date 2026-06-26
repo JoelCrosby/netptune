@@ -90,6 +90,6 @@ export class ChangePasswordComponent {
       newPassword: this.passwordForm.newPassword().value(),
     };
 
-    this.store.dispatch(changePassword({ request }));
+    this.store.dispatch(changePassword.init({ request }));
   }
 }

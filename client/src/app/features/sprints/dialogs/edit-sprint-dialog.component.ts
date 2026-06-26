@@ -93,7 +93,7 @@ export class EditSprintDialogComponent {
     this.dateError = undefined;
 
     this.store.dispatch(
-      updateSprint({
+      updateSprint.init({
         request: {
           id: this.sprint.id,
           name: this.name.trim(),

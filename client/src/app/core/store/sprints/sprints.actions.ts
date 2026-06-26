@@ -1,124 +1,81 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { AddSprintRequest } from '@core/models/requests/add-sprint-request';
 import { AddTasksToSprintRequest } from '@core/models/requests/add-tasks-to-sprint-request';
 import { UpdateSprintRequest } from '@core/models/requests/update-sprint-request';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 import { Params } from '@angular/router';
 import { SprintFilter } from './sprints.model';
 
 export const clearState = createAction('[Sprints] Clear State');
 
-export const loadSprints = createAction(
-  '[Sprints] Load Sprints',
-  props<{ filter?: SprintFilter }>()
+// Load Sprints
+
+export const loadSprints = createAsyncAction('[Sprints] Load Sprints', {
+  init: props<{ filter?: SprintFilter }>(),
+  success: props<{ sprints: SprintViewModel[]; filter?: SprintFilter }>(),
+});
+
+// Load Current Sprints
+
+export const loadCurrentSprints = createAsyncAction(
+  '[Sprints] Load Current Sprints',
+  {
+    success: props<{ sprints: SprintViewModel[] }>(),
+  }
 );
 
-export const loadSprintsSuccess = createAction(
-  '[Sprints] Load Sprints Success',
-  props<{ sprints: SprintViewModel[]; filter?: SprintFilter }>()
-);
-
-export const loadSprintsFail = createAction(
-  '[Sprints] Load Sprints Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-export const loadCurrentSprints = createAction(
-  '[Sprints] Load Current Sprints'
-);
-
-export const loadCurrentSprintsSuccess = createAction(
-  '[Sprints] Load Current Sprints Success',
-  props<{ sprints: SprintViewModel[] }>()
-);
-
-export const loadCurrentSprintsFail = createAction(
-  '[Sprints] Load Current Sprints Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+// Sync filter setter
 
 export const setSprintTaskFilter = createAction(
   '[Sprints] Set Sprint Task Filter',
   props<{ sprintId?: number }>()
 );
 
-export const loadSprintDetail = createAction(
+// Load Sprint Detail
+
+export const loadSprintDetail = createAsyncAction(
   '[Sprints] Load Sprint Detail',
-  props<{ sprintId: number }>()
+  {
+    init: props<{ sprintId: number }>(),
+    success: props<{ sprint: SprintDetailViewModel }>(),
+  }
 );
 
-export const loadSprintDetailSuccess = createAction(
-  '[Sprints] Load Sprint Detail Success',
-  props<{ sprint: SprintDetailViewModel }>()
-);
+// Load Available Sprint Tasks
 
-export const loadSprintDetailFail = createAction(
-  '[Sprints] Load Sprint Detail Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-export const loadAvailableSprintTasks = createAction(
+export const loadAvailableSprintTasks = createAsyncAction(
   '[Sprints] Load Available Sprint Tasks',
-  props<{ sprintId: number; projectId: number }>()
+  {
+    init: props<{ sprintId: number; projectId: number }>(),
+    success: props<{ tasks: TaskViewModel[] }>(),
+  }
 );
 
-export const loadAvailableSprintTasksSuccess = createAction(
-  '[Sprints] Load Available Sprint Tasks Success',
-  props<{ tasks: TaskViewModel[] }>()
-);
+// Create Sprint
 
-export const loadAvailableSprintTasksFail = createAction(
-  '[Sprints] Load Available Sprint Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const createSprint = createAsyncAction('[Sprints] Create Sprint', {
+  init: props<{ request: AddSprintRequest }>(),
+  success: props<{ sprint: SprintViewModel }>(),
+});
 
-export const createSprint = createAction(
-  '[Sprints] Create Sprint',
-  props<{ request: AddSprintRequest }>()
-);
+// Update Sprint
 
-export const createSprintSuccess = createAction(
-  '[Sprints] Create Sprint Success',
-  props<{ sprint: SprintViewModel }>()
-);
+export const updateSprint = createAsyncAction('[Sprints] Update Sprint', {
+  init: props<{ request: UpdateSprintRequest }>(),
+  success: props<{ sprint: SprintViewModel }>(),
+});
 
-export const createSprintFail = createAction(
-  '[Sprints] Create Sprint Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+// Delete Sprint
 
-export const updateSprint = createAction(
-  '[Sprints] Update Sprint',
-  props<{ request: UpdateSprintRequest }>()
-);
+export const deleteSprint = createAsyncAction('[Sprints] Delete Sprint', {
+  init: props<{ sprintId: number }>(),
+  success: props<{ sprintId: number }>(),
+});
 
-export const updateSprintSuccess = createAction(
-  '[Sprints] Update Sprint Success',
-  props<{ sprint: SprintViewModel }>()
-);
-
-export const updateSprintFail = createAction(
-  '[Sprints] Update Sprint Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-export const deleteSprint = createAction(
-  '[Sprints] Delete Sprint',
-  props<{ sprintId: number }>()
-);
-
-export const deleteSprintSuccess = createAction(
-  '[Sprints] Delete Sprint Success',
-  props<{ sprintId: number }>()
-);
-
-export const deleteSprintFail = createAction(
-  '[Sprints] Delete Sprint Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+// Sprint lifecycle triggers
 
 export const startSprint = createAction(
   '[Sprints] Start Sprint',
@@ -161,16 +118,13 @@ export const assignBacklogTask = createAction(
   props<{ taskId: number; sprintId: number }>()
 );
 
-export const loadBacklogTasks = createAction('[Sprints] Load Backlog Tasks');
+// Load Backlog Tasks
 
-export const loadBacklogTasksSuccess = createAction(
-  '[Sprints] Load Backlog Tasks Success',
-  props<{ tasks: TaskViewModel[] }>()
-);
-
-export const loadBacklogTasksFail = createAction(
-  '[Sprints] Load Backlog Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
+export const loadBacklogTasks = createAsyncAction(
+  '[Sprints] Load Backlog Tasks',
+  {
+    success: props<{ tasks: TaskViewModel[] }>(),
+  }
 );
 
 export const removeTaskFromBacklog = createAction(

@@ -9,7 +9,7 @@ const reducer = createReducer(
   // Load Projects
 
   on(
-    actions.loadActivity,
+    actions.loadActivity.init,
     (state): ActivityState => ({
       ...state,
       loading: true,
@@ -17,11 +17,12 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadMoreActivity,
+    actions.loadMoreActivity.init,
     (state): ActivityState => ({ ...state, loadingMore: true })
   ),
   on(
-    actions.loadActivityFail,
+    actions.loadActivity.fail,
+    actions.loadMoreActivity.fail,
     (state, { error }): ActivityState => ({
       ...state,
       loading: false,
@@ -31,7 +32,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadActivitySuccess,
+    actions.loadActivity.success,
     (state, { activities, nextCursor, pageSize }): ActivityState => ({
       ...state,
       loading: false,
@@ -42,7 +43,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadMoreActivitySuccess,
+    actions.loadMoreActivity.success,
     (state, { activities, nextCursor, pageSize }): ActivityState => ({
       ...state,
       loadingMore: false,

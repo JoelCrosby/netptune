@@ -16,18 +16,18 @@ const reducer = createReducer(
   // Load Board Groups
 
   on(
-    actions.loadBoardGroups,
+    actions.loadBoardGroups.init,
     (state): BoardGroupsState => ({ ...state, loading: true })
   ),
   on(
-    actions.loadBoardGroupsFail,
+    actions.loadBoardGroups.fail,
     (state, { error }): BoardGroupsState => ({
       ...state,
       loadingError: error,
     })
   ),
   on(
-    actions.loadBoardGroupsSuccess,
+    actions.loadBoardGroups.success,
     (
       state,
       { boardGroups, selectedIds, searchTerm, sprintId }
@@ -53,11 +53,11 @@ const reducer = createReducer(
   // Create Board Group
 
   on(
-    actions.createBoardGroup,
+    actions.createBoardGroup.init,
     (state): BoardGroupsState => ({ ...state, loading: true })
   ),
   on(
-    actions.createBoardGroupFail,
+    actions.createBoardGroup.fail,
     (state, { error }): BoardGroupsState => ({
       ...state,
       loadingError: error,
@@ -77,21 +77,21 @@ const reducer = createReducer(
   // Delete Board Group
 
   on(
-    actions.deleteBoardGroup,
+    actions.deleteBoardGroup.init,
     (state): BoardGroupsState => ({
       ...state,
       deleteState: { loading: true },
     })
   ),
   on(
-    actions.deleteBoardGroupFail,
+    actions.deleteBoardGroup.fail,
     (state, { error }): BoardGroupsState => ({
       ...state,
       deleteState: { loading: false, error },
     })
   ),
   on(
-    actions.deleteBoardGroupSuccess,
+    actions.deleteBoardGroup.success,
     (state, { boardGroupId }): BoardGroupsState =>
       adapter.removeOne(boardGroupId, {
         ...state,
@@ -102,7 +102,7 @@ const reducer = createReducer(
   // Move Board Group
 
   on(
-    actions.moveTaskInBoardGroup,
+    actions.moveTaskInBoardGroup.init,
     (state, { request }): BoardGroupsState =>
       moveTaskInBoardGroup(state, request)
   ),
@@ -231,14 +231,14 @@ const reducer = createReducer(
   // ProjectTaskActions
 
   on(
-    TaskActions.editProjectTask,
+    TaskActions.editProjectTask.init,
     (state, { task }): BoardGroupsState => updateTask(state, task)
   ),
 
   // Board Actions
 
   on(
-    BoardActions.updateBoardSuccess,
+    BoardActions.updateBoard.success,
     (state, { response }): BoardGroupsState => ({
       ...state,
       board: state.board?.id === response.id ? response : state.board,

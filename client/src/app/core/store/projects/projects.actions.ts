@@ -1,7 +1,7 @@
 import { AddProjectRequest } from '@core/models/project';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
-import { HttpErrorResponse } from '@angular/common/http';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 
@@ -9,36 +9,21 @@ export const clearState = createAction('[Projects] Clear State');
 
 // Load Projects
 
-export const loadProjects = createAction('[Projects] Load Projects');
-
-export const loadProjectsSuccess = createAction(
-  '[Projects] Load Projects Success ',
-  props<{ projects: ProjectViewModel[] }>()
-);
-
-export const loadProjectsFail = createAction(
-  '[Projects] Load Projects Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const loadProjects = createAsyncAction('[Projects] Load Projects', {
+  success: props<{ projects: ProjectViewModel[] }>(),
+});
 
 // Load Project Detail
 
-export const loadProjectDetail = createAction(
+export const loadProjectDetail = createAsyncAction(
   '[Projects] Load Project Detail',
-  props<{ projectKey: string }>()
+  {
+    init: props<{ projectKey: string }>(),
+    success: props<{ project: ProjectViewModel }>(),
+  }
 );
 
-export const loadProjectDetailSuccess = createAction(
-  '[Projects] Load Project Detail Success ',
-  props<{ project: ProjectViewModel }>()
-);
-
-export const loadProjectDetailFail = createAction(
-  '[Projects] Load Project Detail Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-// Clear Project Detail
+// Clear Project Detail — sync action, remains plain.
 
 export const clearProjectDetail = createAction(
   '[Projects] Clear Project Detail'
@@ -46,39 +31,19 @@ export const clearProjectDetail = createAction(
 
 // Create Project
 
-export const createProject = createAction(
-  '[Projects] Create Project',
-  props<{ project: AddProjectRequest }>()
-);
-
-export const createProjectSuccess = createAction(
-  '[Projects] Create Project Success',
-  props<{ project: ProjectViewModel }>()
-);
-
-export const createProjectFail = createAction(
-  '[Projects] Create Project Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const createProject = createAsyncAction('[Projects] Create Project', {
+  init: props<{ project: AddProjectRequest }>(),
+  success: props<{ project: ProjectViewModel }>(),
+});
 
 // Update Project
 
-export const updateProject = createAction(
-  '[Projects] Update Project',
-  props<{ project: UpdateProjectRequest }>()
-);
+export const updateProject = createAsyncAction('[Projects] Update Project', {
+  init: props<{ project: UpdateProjectRequest }>(),
+  success: props<{ project: ProjectViewModel }>(),
+});
 
-export const updateProjectSuccess = createAction(
-  '[Projects] Update Project Success',
-  props<{ project: ProjectViewModel }>()
-);
-
-export const updateProjectFail = createAction(
-  '[Projects] Update Project Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-// Select Project
+// Select Project — sync action, remains plain.
 
 export const selectProject = createAction(
   '[Projects] Select Project',
@@ -87,34 +52,17 @@ export const selectProject = createAction(
 
 // Delete Project
 
-export const deleteProject = createAction(
-  '[Projects] Delete Project',
-  props<{ project: ProjectViewModel }>()
-);
-
-export const deleteProjectSuccess = createAction(
-  '[Projects] Delete Project Success',
-  props<{ projectId: number }>()
-);
-
-export const deleteProjectFail = createAction(
-  '[Projects] Delete Project Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const deleteProject = createAsyncAction('[Projects] Delete Project', {
+  init: props<{ project: ProjectViewModel }>(),
+  success: props<{ projectId: number }>(),
+});
 
 // Get Project Boards
 
-export const getProjectBoards = createAction(
+export const getProjectBoards = createAsyncAction(
   '[Projects] Get Project Boards',
-  props<{ projectId: number }>()
-);
-
-export const getProjectBoardsSuccess = createAction(
-  '[Projects] Get Project Boards Success',
-  props<{ boards: BoardViewModel[] }>()
-);
-
-export const getProjectBoardsFail = createAction(
-  '[Projects] Get Project Boards Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ projectId: number }>(),
+    success: props<{ boards: BoardViewModel[] }>(),
+  }
 );

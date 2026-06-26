@@ -15,13 +15,13 @@ export class MetaEffects {
   loadBuildInfo$ = createEffect(
     ({ debounce = 0, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loadBuildInfo),
+        ofType(actions.loadBuildInfo.init),
         debounceTime(debounce, scheduler),
         switchMap(() =>
           this.metaService.getBuildInfo().pipe(
-            map((buildInfo) => actions.loadBuildInfoSuccess({ buildInfo })),
+            map((buildInfo) => actions.loadBuildInfo.success({ buildInfo })),
             catchError((error: HttpErrorResponse) =>
-              of(actions.loadBuildInfoFail({ error }))
+              of(actions.loadBuildInfo.fail({ error }))
             )
           )
         )

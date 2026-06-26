@@ -1,23 +1,17 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { Tag } from '@core/models/tag';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Tags] Clear State');
 
 // Load Tags
 
-export const loadTags = createAction('[Tags] Load Tags');
+export const loadTags = createAsyncAction('[Tags] Load Tags', {
+  success: props<{ tags: Tag[] }>(),
+});
 
-export const loadTagsSuccess = createAction(
-  '[Tags] Load Tags Success',
-  props<{ tags: Tag[] }>()
-);
-
-export const loadTagsFail = createAction(
-  '[Tags] Load Tags Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+// Sync selection action
 
 export const toggleSelectedTag = createAction(
   '[Tags] Toggle Selected Tag',
@@ -26,81 +20,39 @@ export const toggleSelectedTag = createAction(
 
 // Add Tag
 
-export const addTag = createAction('[Tags] Add Tag', props<{ name: string }>());
-
-export const addTagSuccess = createAction(
-  '[Tags] Add Tag Success',
-  props<{ tag: Tag }>()
-);
-
-export const addTagFail = createAction(
-  '[Tags] Add Tag Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const addTag = createAsyncAction('[Tags] Add Tag', {
+  init: props<{ name: string }>(),
+  success: props<{ tag: Tag }>(),
+});
 
 // Add Tag To Task
 
-export const addTagToTask = createAction(
-  '[Tags] Add Tag To Task',
-  props<{ request: AddTagToTaskRequest }>()
-);
-
-export const addTagToTaskSuccess = createAction(
-  '[Tags] Add Tag To Task Success',
-  props<{ tag: Tag }>()
-);
-
-export const addTagToTaskFail = createAction(
-  '[Tags] Add Tag To Task Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const addTagToTask = createAsyncAction('[Tags] Add Tag To Task', {
+  init: props<{ request: AddTagToTaskRequest }>(),
+  success: props<{ tag: Tag }>(),
+});
 
 // Delete Tag
 
-export const deleteTags = createAction(
-  '[Tags] Delete Tags',
-  props<{ tags: string[] }>()
-);
-
-export const deleteTagsSuccess = createAction('[Tags] Delete Tags Success');
-
-export const deleteTagsFail = createAction(
-  '[Tags] Delete Tags Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const deleteTags = createAsyncAction('[Tags] Delete Tags', {
+  init: props<{ tags: string[] }>(),
+});
 
 // Delete Tag From Task
 
-export const deleteTagFromTask = createAction(
+export const deleteTagFromTask = createAsyncAction(
   '[Tags] Delete Tag From Task',
-  props<{ systemId: string; tag: string }>()
-);
-
-export const deleteTagFromTaskSuccess = createAction(
-  '[Tags] Delete Tag From Task Success'
-);
-
-export const deleteTagFromTaskFail = createAction(
-  '[Tags] Delete Tag From Task Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ systemId: string; tag: string }>(),
+  }
 );
 
 // Edit Tag
 
-export const editTag = createAction(
-  '[Tags] Edit Tag',
-  props<{ currentValue: string; newValue: string }>()
-);
-
-export const editTagSuccess = createAction(
-  '[Tags] Edit Tag Success',
-  props<{ tag: Tag }>()
-);
-
-export const editTagFail = createAction(
-  '[Tags] Edit Tag Fail',
-  props<{ error: HttpErrorResponse }>()
-);
+export const editTag = createAsyncAction('[Tags] Edit Tag', {
+  init: props<{ currentValue: string; newValue: string }>(),
+  success: props<{ tag: Tag }>(),
+});
 
 // Set Selected Tags
 

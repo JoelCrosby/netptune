@@ -26,12 +26,12 @@ export class BoardsEffects {
 
   loadBoards$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadBoards),
+      ofType(actions.loadBoards.init),
       switchMap(() =>
         this.boardsService.getByWorkspace().pipe(
-          map((boards) => actions.loadBoardsSuccess({ boards })),
+          map((boards) => actions.loadBoards.success({ boards })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadBoardsFail({ error }))
+            of(actions.loadBoards.fail({ error }))
           )
         )
       )
@@ -40,13 +40,13 @@ export class BoardsEffects {
 
   createBoard$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createBoard),
+      ofType(actions.createBoard.init),
       switchMap((action) =>
         this.boardsService.post(action.request).pipe(
           unwrapClientReposne(),
-          map((response) => actions.createBoardSuccess({ response })),
+          map((response) => actions.createBoard.success({ response })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.createBoardFail({ error }))
+            of(actions.createBoard.fail({ error }))
           )
         )
       )
@@ -55,13 +55,13 @@ export class BoardsEffects {
 
   updateBoard$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.updateBoard),
+      ofType(actions.updateBoard.init),
       switchMap((action) =>
         this.boardsService.put(action.request).pipe(
           unwrapClientReposne(),
-          map((response) => actions.updateBoardSuccess({ response })),
+          map((response) => actions.updateBoard.success({ response })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateBoardFail({ error }))
+            of(actions.updateBoard.fail({ error }))
           )
         )
       )
@@ -70,7 +70,7 @@ export class BoardsEffects {
 
   deleteBoard$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteBoard),
+      ofType(actions.deleteBoard.init),
       switchMap((action) =>
         this.confirmation.open(DELETE_BOARD_CONFIRMATION).pipe(
           switchMap((result) => {
@@ -80,12 +80,12 @@ export class BoardsEffects {
               unwrapClientReposne(),
               tap(() => this.snackbar.open('Board Deleted')),
               map(() =>
-                actions.deleteBoardSuccess({
+                actions.deleteBoard.success({
                   boardId: action.boardId,
                 })
               ),
               catchError((error: HttpErrorResponse) =>
-                of(actions.deleteBoardFail({ error }))
+                of(actions.deleteBoard.fail({ error }))
               )
             );
           })
@@ -97,7 +97,7 @@ export class BoardsEffects {
   deleteBoardSuccess$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(actions.deleteBoardSuccess),
+        ofType(actions.deleteBoard.success),
         concatLatestFrom(() =>
           this.store.select(selectCurrentWorkspaceIdentifier)
         ),
@@ -112,8 +112,8 @@ export class BoardsEffects {
 
   createBoardSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createBoardSuccess),
-      map(() => actions.loadBoards())
+      ofType(actions.createBoard.success),
+      map(() => actions.loadBoards.init())
     );
   });
 

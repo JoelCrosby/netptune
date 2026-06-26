@@ -82,7 +82,7 @@ export class CreateTaskDialogComponent {
   });
 
   constructor() {
-    this.store.dispatch(loadProjects());
+    this.store.dispatch(loadProjects.init());
   }
 
   close() {
@@ -110,7 +110,7 @@ export class CreateTaskDialogComponent {
     }
 
     this.store.dispatch(
-      createProjectTask({
+      createProjectTask.init({
         identifier: `[workspace] ${workspace.slug}`,
         task,
       })

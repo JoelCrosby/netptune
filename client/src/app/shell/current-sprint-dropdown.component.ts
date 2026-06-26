@@ -156,7 +156,7 @@ export class CurrentSprintDropdownComponent {
   constructor() {
     effect(() => {
       if (this.canReadSprints()) {
-        this.store.dispatch(loadCurrentSprints());
+        this.store.dispatch(loadCurrentSprints.init());
       }
     });
   }

@@ -8,7 +8,7 @@ const reducer = createReducer(
   initialState,
   on(actions.clearState, (): SprintsState => initialState),
   on(
-    actions.loadSprints,
+    actions.loadSprints.init,
     (state, { filter }): SprintsState => ({
       ...state,
       loading: true,
@@ -16,7 +16,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadSprintsSuccess,
+    actions.loadSprints.success,
     (state, { sprints, filter }): SprintsState =>
       adapter.setAll(sprints, {
         ...state,
@@ -26,7 +26,7 @@ const reducer = createReducer(
       })
   ),
   on(
-    actions.loadSprintsFail,
+    actions.loadSprints.fail,
     (state, { error }): SprintsState => ({
       ...state,
       loading: false,
@@ -34,14 +34,14 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadCurrentSprints,
+    actions.loadCurrentSprints.init,
     (state): SprintsState => ({
       ...state,
       currentSprintsLoading: true,
     })
   ),
   on(
-    actions.loadCurrentSprintsSuccess,
+    actions.loadCurrentSprints.success,
     (state, { sprints }): SprintsState => ({
       ...state,
       currentSprints: sprints,
@@ -50,7 +50,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadCurrentSprintsFail,
+    actions.loadCurrentSprints.fail,
     (state, { error }): SprintsState => ({
       ...state,
       loadingError: error,
@@ -66,7 +66,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadSprintDetail,
+    actions.loadSprintDetail.init,
     (state): SprintsState => ({
       ...state,
       detailLoading: true,
@@ -75,7 +75,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadSprintDetailSuccess,
+    actions.loadSprintDetail.success,
     (state, { sprint }): SprintsState =>
       adapter.upsertOne(sprint, {
         ...state,
@@ -85,7 +85,7 @@ const reducer = createReducer(
       })
   ),
   on(
-    actions.loadSprintDetailFail,
+    actions.loadSprintDetail.fail,
     (state, { error }): SprintsState => ({
       ...state,
       loadingError: error,
@@ -93,11 +93,11 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadAvailableSprintTasks,
+    actions.loadAvailableSprintTasks.init,
     (state): SprintsState => ({ ...state, availableTasksLoading: true })
   ),
   on(
-    actions.loadAvailableSprintTasksSuccess,
+    actions.loadAvailableSprintTasks.success,
     (state, { tasks }): SprintsState => ({
       ...state,
       availableTasks: tasks,
@@ -105,7 +105,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadAvailableSprintTasksFail,
+    actions.loadAvailableSprintTasks.fail,
     (state, { error }): SprintsState => ({
       ...state,
       loadingError: error,
@@ -113,11 +113,11 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadBacklogTasks,
+    actions.loadBacklogTasks.init,
     (state): SprintsState => ({ ...state, backlogTasksLoading: true })
   ),
   on(
-    actions.loadBacklogTasksSuccess,
+    actions.loadBacklogTasks.success,
     (state, { tasks }): SprintsState => ({
       ...state,
       backlogTasks: tasks,
@@ -125,7 +125,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadBacklogTasksFail,
+    actions.loadBacklogTasks.fail,
     (state, { error }): SprintsState => ({
       ...state,
       loadingError: error,
@@ -140,14 +140,14 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.createSprint,
+    actions.createSprint.init,
     (state): SprintsState => ({
       ...state,
       createState: { loading: true },
     })
   ),
   on(
-    actions.createSprintSuccess,
+    actions.createSprint.success,
     (state, { sprint }): SprintsState =>
       adapter.addOne(sprint, {
         ...state,
@@ -156,14 +156,14 @@ const reducer = createReducer(
       })
   ),
   on(
-    actions.createSprintFail,
+    actions.createSprint.fail,
     (state, { error }): SprintsState => ({
       ...state,
       createState: { loading: false, error },
     })
   ),
   on(
-    actions.updateSprint,
+    actions.updateSprint.init,
     actions.startSprint,
     actions.completeSprint,
     actions.addTasksToSprint,
@@ -173,7 +173,7 @@ const reducer = createReducer(
       updateState: { loading: true },
     })
   ),
-  on(actions.updateSprintSuccess, (state, { sprint }): SprintsState => {
+  on(actions.updateSprint.success, (state, { sprint }): SprintsState => {
     const detail =
       state.detail?.id === sprint.id
         ? { ...state.detail, ...sprint }
@@ -192,21 +192,21 @@ const reducer = createReducer(
     });
   }),
   on(
-    actions.updateSprintFail,
+    actions.updateSprint.fail,
     (state, { error }): SprintsState => ({
       ...state,
       updateState: { loading: false, error },
     })
   ),
   on(
-    actions.deleteSprint,
+    actions.deleteSprint.init,
     (state): SprintsState => ({
       ...state,
       deleteState: { loading: true },
     })
   ),
   on(
-    actions.deleteSprintSuccess,
+    actions.deleteSprint.success,
     (state, { sprintId }): SprintsState =>
       adapter.removeOne(sprintId, {
         ...state,
@@ -222,7 +222,7 @@ const reducer = createReducer(
       })
   ),
   on(
-    actions.deleteSprintFail,
+    actions.deleteSprint.fail,
     (state, { error }): SprintsState => ({
       ...state,
       deleteState: { loading: false, error },

@@ -39,7 +39,7 @@ export class AuthEffects implements OnInitEffects {
   currentUser$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.currentUser),
+        ofType(actions.currentUser.init),
         debounceTime(debounce, scheduler),
         concatLatestFrom(() => [
           this.store.select(selectIsAuthenticated),
@@ -48,9 +48,9 @@ export class AuthEffects implements OnInitEffects {
         filter(([_, auth, worksapce]) => !!auth && !!worksapce),
         switchMap(() =>
           this.authService.currentUser().pipe(
-            map((user) => actions.currentUserSuccess({ user })),
+            map((user) => actions.currentUser.success({ user })),
             catchError((error: HttpErrorResponse) =>
-              of(actions.currentUserFail({ error }))
+              of(actions.currentUser.fail({ error }))
             )
           )
         )
@@ -61,12 +61,14 @@ export class AuthEffects implements OnInitEffects {
   login$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.login),
+        ofType(actions.login.init),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.login(action.request).pipe(
-            map((user) => actions.loginSuccess({ user })),
-            catchError(() => of(actions.loginFail()))
+            map((user) => actions.login.success({ user })),
+            catchError((error: HttpErrorResponse) =>
+              of(actions.login.fail({ error }))
+            )
           )
         )
       );
@@ -76,7 +78,7 @@ export class AuthEffects implements OnInitEffects {
   openSideNav$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loginSuccess),
+        ofType(actions.login.success),
         debounceTime(debounce, scheduler),
         map(() => openSideNav())
       );
@@ -86,11 +88,11 @@ export class AuthEffects implements OnInitEffects {
   loadWorkspaces$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loginSuccess),
+        ofType(actions.login.success),
         debounceTime(debounce, scheduler),
         filter(() => !hasPendingProviderLink()),
         switchMap(() => this.router.navigate(['/workspaces'])),
-        map(() => loadWorkspaces())
+        map(() => loadWorkspaces.init())
       );
     }
   );
@@ -98,7 +100,7 @@ export class AuthEffects implements OnInitEffects {
   returnToProviderLink$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loginSuccess),
+        ofType(actions.login.success),
         debounceTime(debounce, scheduler),
         filter(() => hasPendingProviderLink()),
         tap(() => void this.router.navigate(['/auth/link-provider']))
@@ -112,7 +114,7 @@ export class AuthEffects implements OnInitEffects {
       return this.actions$.pipe(
         ofType(actions.refreshTokenSuccess),
         debounceTime(debounce, scheduler),
-        map(() => loadWorkspaces())
+        map(() => loadWorkspaces.init())
       );
     }
   );
@@ -120,14 +122,14 @@ export class AuthEffects implements OnInitEffects {
   register$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.register),
+        ofType(actions.register.init),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.register(action.request).pipe(
-            map((user) => actions.registerSuccess({ user })),
+            map((user) => actions.register.success({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
             catchError((error: HttpErrorResponse) =>
-              of(actions.registerFail({ error }))
+              of(actions.register.fail({ error }))
             )
           )
         )
@@ -137,23 +139,23 @@ export class AuthEffects implements OnInitEffects {
 
   registerSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.registerSuccess),
-      map(() => loadWorkspaces())
+      ofType(actions.register.success),
+      map(() => loadWorkspaces.init())
     );
   });
 
   confirmEmail$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.confirmEmail),
+        ofType(actions.confirmEmail.init),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.confirmEmail(action.request).pipe(
-            map((user) => actions.confirmEmailSuccess({ user })),
+            map((user) => actions.confirmEmail.success({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Email confirmed successfully')),
             catchError((error: HttpErrorResponse) =>
-              of(actions.confirmEmailFail({ error }))
+              of(actions.confirmEmail.fail({ error }))
             )
           )
         )
@@ -164,7 +166,7 @@ export class AuthEffects implements OnInitEffects {
   confirmEmailFail$ = createEffect(
     ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.confirmEmailFail),
+        ofType(actions.confirmEmail.fail),
         debounceTime(debounce, scheduler),
         tap(() => void this.router.navigate(['/auth/login'])),
         tap(() =>
@@ -178,16 +180,16 @@ export class AuthEffects implements OnInitEffects {
   requestPasswordReset$ = createEffect(
     ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.requestPasswordReset),
+        ofType(actions.requestPasswordReset.init),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.requestPasswordReset(action.email).pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Password reset email has been sent')),
             tap(() => void this.router.navigate(['/auth/login'])),
-            map(() => actions.requestPasswordResetSuccess()),
+            map(() => actions.requestPasswordReset.success()),
             catchError((error) =>
-              of(actions.requestPasswordResetFail({ error }))
+              of(actions.requestPasswordReset.fail({ error }))
             )
           )
         )
@@ -198,15 +200,15 @@ export class AuthEffects implements OnInitEffects {
   resetPassword$ = createEffect(
     ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.resetPassword),
+        ofType(actions.resetPassword.init),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.authService.resetPassword(action.request).pipe(
-            map((user) => actions.resetPasswordSuccess({ user })),
+            map((user) => actions.resetPassword.success({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
             tap(() => this.snackbar.open('Password has been reset')),
             catchError((error: HttpErrorResponse) =>
-              of(actions.resetPasswordFail({ error }))
+              of(actions.resetPassword.fail({ error }))
             )
           )
         )
@@ -217,7 +219,7 @@ export class AuthEffects implements OnInitEffects {
   resetPasswordFail$ = createEffect(
     ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.resetPasswordFail),
+        ofType(actions.resetPassword.fail),
         debounceTime(debounce, scheduler),
         tap(() => void this.router.navigate(['/auth/login'])),
         tap(() =>

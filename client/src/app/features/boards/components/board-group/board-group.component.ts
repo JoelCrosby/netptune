@@ -173,7 +173,7 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
     const { data: task } = event.item;
 
     this.store.dispatch(
-      BoardGroupActions.moveTaskInBoardGroup({
+      BoardGroupActions.moveTaskInBoardGroup.init({
         request: {
           newGroupId: +event.container.id,
           oldGroupId: +event.previousContainer.id,

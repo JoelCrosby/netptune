@@ -9,18 +9,18 @@ const reducer = createReducer(
   // Load Projects
 
   on(
-    actions.loadProjects,
+    actions.loadProjects.init,
     (state): ProjectsState => ({ ...state, loading: true })
   ),
   on(
-    actions.loadProjectsFail,
+    actions.loadProjects.fail,
     (state, { error }): ProjectsState => ({
       ...state,
       loadingError: error,
     })
   ),
   on(
-    actions.loadProjectsSuccess,
+    actions.loadProjects.success,
     (state, { projects }): ProjectsState =>
       adapter.setAll(projects, {
         ...state,
@@ -33,14 +33,14 @@ const reducer = createReducer(
   // Load Project Detail
 
   on(
-    actions.loadProjectDetail,
+    actions.loadProjectDetail.init,
     (state): ProjectsState => ({
       ...state,
       projectDetailLoading: true,
     })
   ),
   on(
-    actions.loadProjectDetailFail,
+    actions.loadProjectDetail.fail,
     (state, { error }): ProjectsState => ({
       ...state,
       loadingError: error,
@@ -48,7 +48,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadProjectDetailSuccess,
+    actions.loadProjectDetail.success,
     (state, { project }): ProjectsState => ({
       ...state,
       projectDetail: project,
@@ -70,18 +70,18 @@ const reducer = createReducer(
   // Create Project
 
   on(
-    actions.createProject,
+    actions.createProject.init,
     (state): ProjectsState => ({ ...state, loading: true })
   ),
   on(
-    actions.createProjectFail,
+    actions.createProject.fail,
     (state, { error }): ProjectsState => ({
       ...state,
       loadingError: error,
     })
   ),
   on(
-    actions.createProjectSuccess,
+    actions.createProject.success,
     (state, { project }): ProjectsState =>
       adapter.addOne(project, {
         ...state,
@@ -93,14 +93,14 @@ const reducer = createReducer(
   // Update Project
 
   on(
-    actions.updateProject,
+    actions.updateProject.init,
     (state): ProjectsState => ({
       ...state,
       projectUpdateLoading: true,
     })
   ),
   on(
-    actions.updateProjectFail,
+    actions.updateProject.fail,
     (state, { error }): ProjectsState => ({
       ...state,
       loadingError: error,
@@ -108,7 +108,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.updateProjectSuccess,
+    actions.updateProject.success,
     (state): ProjectsState => ({
       ...state,
       projectUpdateLoading: false,
@@ -128,21 +128,21 @@ const reducer = createReducer(
   // Delete Project
 
   on(
-    actions.deleteProject,
+    actions.deleteProject.init,
     (state): ProjectsState => ({
       ...state,
       deleteState: { loading: true },
     })
   ),
   on(
-    actions.deleteProjectFail,
+    actions.deleteProject.fail,
     (state, { error }): ProjectsState => ({
       ...state,
       deleteState: { loading: false, error },
     })
   ),
   on(
-    actions.deleteProjectSuccess,
+    actions.deleteProject.success,
     (state, { projectId }): ProjectsState =>
       adapter.removeOne(projectId, {
         ...state,
@@ -152,21 +152,21 @@ const reducer = createReducer(
 
   // Get Project Boards
   on(
-    actions.getProjectBoards,
+    actions.getProjectBoards.init,
     (state): ProjectsState => ({
       ...state,
       projectBoardsLoading: true,
     })
   ),
   on(
-    actions.getProjectBoardsFail,
+    actions.getProjectBoards.fail,
     (state): ProjectsState => ({
       ...state,
       projectBoardsLoading: false,
     })
   ),
   on(
-    actions.getProjectBoardsSuccess,
+    actions.getProjectBoards.success,
     (state, { boards }): ProjectsState => ({
       ...state,
       projectBoards: boards,

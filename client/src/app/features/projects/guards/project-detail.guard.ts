@@ -11,7 +11,7 @@ export const projectDetailGuard: CanActivateFn = (
 
   if (!projectKey) return false;
 
-  store.dispatch(loadProjectDetail({ projectKey }));
+  store.dispatch(loadProjectDetail.init({ projectKey }));
 
   return true;
 };

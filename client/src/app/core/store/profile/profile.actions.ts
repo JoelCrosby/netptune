@@ -1,85 +1,49 @@
 import { AppUser } from '@core/models/appuser';
-import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { UploadResponse } from '@core/models/upload-result';
+import { createAsyncAction } from '@core/util/create-async-action';
+import { props } from '@ngrx/store';
 
 // Load Profile
 
-export const loadProfile = createAction('[Profile] Load Profile');
-
-export const loadProfileSuccess = createAction(
-  '[Profile] Load Profile Success',
-  props<{ profile: AppUser }>()
-);
-
-export const loadProfileFail = createAction(
-  '[Profile] Load Profile Fail',
-  props<{ error: HttpErrorResponse | Error }>()
-);
+export const loadProfile = createAsyncAction('[Profile] Load Profile', {
+  success: props<{ profile: AppUser }>(),
+  fail: props<{ error: HttpErrorResponse | Error }>(),
+});
 
 // Update Profile
 
-export const updateProfile = createAction(
-  '[Profile] Update Profile',
-  props<{ profile: AppUser; image?: FormData }>()
-);
-
-export const updateProfileSuccess = createAction(
-  '[Profile] Update Profile Success',
-  props<{ profile: AppUser }>()
-);
-
-export const updateProfileFail = createAction(
-  '[Profile] Update Profile Fail',
-  props<{ error: HttpErrorResponse | Error }>()
-);
+export const updateProfile = createAsyncAction('[Profile] Update Profile', {
+  init: props<{ profile: AppUser; image?: FormData }>(),
+  success: props<{ profile: AppUser }>(),
+  fail: props<{ error: HttpErrorResponse | Error }>(),
+});
 
 // Change Password
 
-export const changePassword = createAction(
-  '[Profile] Change Password',
-  props<{ request: ChangePasswordRequest }>()
-);
-
-export const changePasswordSuccess = createAction(
-  '[Profile] Change Password Success'
-);
-
-export const changePasswordFail = createAction(
-  '[Profile] Change Password Fail',
-  props<{ error: HttpErrorResponse | Error }>()
-);
+export const changePassword = createAsyncAction('[Profile] Change Password', {
+  init: props<{ request: ChangePasswordRequest }>(),
+  fail: props<{ error: HttpErrorResponse | Error }>(),
+});
 
 // Load Login Providers
 
-export const loadLoginProviders = createAction(
-  '[Profile] Load Login Providers'
-);
-
-export const loadLoginProvidersSuccess = createAction(
-  '[Profile] Load Login Providers Success',
-  props<{ providers: string[] }>()
-);
-
-export const loadLoginProvidersFail = createAction(
-  '[Profile] Load Login Providers Fail',
-  props<{ error: HttpErrorResponse | Error }>()
+export const loadLoginProviders = createAsyncAction(
+  '[Profile] Load Login Providers',
+  {
+    success: props<{ providers: string[] }>(),
+    fail: props<{ error: HttpErrorResponse | Error }>(),
+  }
 );
 
 // Upload Profile Image
 
-export const uploadProfilePicture = createAction(
+export const uploadProfilePicture = createAsyncAction(
   '[Profile] Upload Profile Picture',
-  props<{ data: FormData }>()
-);
-
-export const uploadProfilePictureSuccess = createAction(
-  '[Profile] Upload Profile Picture Success',
-  props<{ response: UploadResponse }>()
-);
-
-export const uploadProfilePictureFail = createAction(
-  '[Profile] Upload Profile Picture Fail',
-  props<{ error: HttpErrorResponse | Error }>()
+  {
+    init: props<{ data: FormData }>(),
+    success: props<{ response: UploadResponse }>(),
+    fail: props<{ error: HttpErrorResponse | Error }>(),
+  }
 );

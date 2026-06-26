@@ -23,6 +23,6 @@ export class ProjectListComponent {
   projects = this.store.selectSignal(selectAllProjects);
 
   deleteClicked(project: ProjectViewModel) {
-    this.store.dispatch(deleteProject({ project }));
+    this.store.dispatch(deleteProject.init({ project }));
   }
 }

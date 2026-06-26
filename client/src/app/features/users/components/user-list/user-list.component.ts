@@ -117,12 +117,12 @@ export class UserListComponent {
   onRemoveClicked(user: WorkspaceAppUser) {
     if (!user || user.isWorkspaceOwner) return;
     this.store.dispatch(
-      removeUsersFromWorkspace({ emailAddresses: [user.email] })
+      removeUsersFromWorkspace.init({ emailAddresses: [user.email] })
     );
   }
 
   onResendClicked(user: WorkspaceAppUser) {
     if (!user?.email || !user.isPending) return;
-    this.store.dispatch(resendInvite({ email: user.email }));
+    this.store.dispatch(resendInvite.init({ email: user.email }));
   }
 }

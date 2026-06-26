@@ -28,15 +28,15 @@ export class ProfileEffects {
 
   loadProfile$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadProfile),
+      ofType(actions.loadProfile.init),
       concatLatestFrom(() => this.store.select(selectCurrentUser)),
       switchMap(([_, user]) => {
         if (!user) return EMPTY;
 
         return this.profileService.get(user.userId).pipe(
-          map((profile) => actions.loadProfileSuccess({ profile })),
+          map((profile) => actions.loadProfile.success({ profile })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadProfileFail({ error }))
+            of(actions.loadProfile.fail({ error }))
           )
         );
       })
@@ -45,7 +45,7 @@ export class ProfileEffects {
 
   updateProfile$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.updateProfile),
+      ofType(actions.updateProfile.init),
       switchMap(({ profile }) => {
         if (!profile) return EMPTY;
 
@@ -53,10 +53,10 @@ export class ProfileEffects {
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Profile Updated')),
           map((response) =>
-            actions.updateProfileSuccess({ profile: response })
+            actions.updateProfile.success({ profile: response })
           ),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateProfileFail({ error }))
+            of(actions.updateProfile.fail({ error }))
           )
         );
       })
@@ -65,21 +65,24 @@ export class ProfileEffects {
 
   updateProfileSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.updateProfileSuccess, actions.uploadProfilePictureSuccess),
+      ofType(
+        actions.updateProfile.success,
+        actions.uploadProfilePicture.success
+      ),
       debounceTime(280),
-      map(() => currentUser())
+      map(() => currentUser.init())
     );
   });
 
   changePassword$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.changePassword),
+      ofType(actions.changePassword.init),
       switchMap((action) =>
         this.profileService.changePassword(action.request).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Password Changed')),
-          map(() => actions.changePasswordSuccess()),
-          catchError((error) => of(actions.changePasswordFail({ error })))
+          map(() => actions.changePassword.success()),
+          catchError((error) => of(actions.changePassword.fail({ error })))
         )
       )
     );
@@ -87,23 +90,23 @@ export class ProfileEffects {
 
   updateProfileWithImage$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.updateProfile),
+      ofType(actions.updateProfile.init),
       filter((action) => !!action.image),
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      map((action) => actions.uploadProfilePicture({ data: action.image! }))
+      map((action) => actions.uploadProfilePicture.init({ data: action.image! }))
     );
   });
 
   uploadProfilePicture$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.uploadProfilePicture),
+      ofType(actions.uploadProfilePicture.init),
       filter((action) => !!action.data),
       switchMap((action) =>
         this.profileService.uploadProfilePicture(action.data).pipe(
           unwrapClientReposne(),
-          map((response) => actions.uploadProfilePictureSuccess({ response })),
+          map((response) => actions.uploadProfilePicture.success({ response })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.uploadProfilePictureFail({ error }))
+            of(actions.uploadProfilePicture.fail({ error }))
           )
         )
       )
@@ -112,12 +115,12 @@ export class ProfileEffects {
 
   loadLoginProviders$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadProfile),
+      ofType(actions.loadProfile.init),
       switchMap(() =>
         this.profileService.getLoginProviders().pipe(
-          map((providers) => actions.loadLoginProvidersSuccess({ providers })),
+          map((providers) => actions.loadLoginProviders.success({ providers })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadLoginProvidersFail({ error }))
+            of(actions.loadLoginProviders.fail({ error }))
           )
         )
       )

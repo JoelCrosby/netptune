@@ -5,7 +5,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { AuthService } from '@app/core/auth/auth.service';
 import { Store } from '@ngrx/store';
-import { loginSuccess } from '@app/core/store/auth/auth.actions';
+import { login } from '@app/core/store/auth/auth.actions';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { firstValueFrom } from 'rxjs';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
@@ -109,7 +109,7 @@ export class LinkProviderComponent {
       );
 
       clearPendingProviderLink();
-      this.store.dispatch(loginSuccess({ user }));
+      this.store.dispatch(login.success({ user }));
       this.snackbar.open(`${pending.provider} connected`);
       await this.router.navigate(['/workspaces']);
     } catch {

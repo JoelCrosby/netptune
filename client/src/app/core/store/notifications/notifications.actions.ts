@@ -1,28 +1,19 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 
-export const loadNotifications = createAction(
-  '[Notifications] Load Notifications'
+export const loadNotifications = createAsyncAction(
+  '[Notifications] Load Notifications',
+  {
+    success: props<{ notifications: NotificationViewModel[] }>(),
+  }
 );
 
-export const loadNotificationsSuccess = createAction(
-  '[Notifications] Load Notifications Success',
-  props<{ notifications: NotificationViewModel[] }>()
-);
-
-export const loadNotificationsFail = createAction(
-  '[Notifications] Load Notifications Fail',
-  props<{ error: HttpErrorResponse }>()
-);
-
-export const loadUnreadCount = createAction(
-  '[Notifications] Load Unread Count'
-);
-
-export const loadUnreadCountSuccess = createAction(
-  '[Notifications] Load Unread Count Success',
-  props<{ count: number }>()
+export const loadUnreadCount = createAsyncAction(
+  '[Notifications] Load Unread Count',
+  {
+    success: props<{ count: number }>(),
+  }
 );
 
 export const notificationReceived = createAction(
@@ -30,18 +21,11 @@ export const notificationReceived = createAction(
   props<{ notificationId: number }>()
 );
 
-export const markAsRead = createAction(
-  '[Notifications] Mark As Read',
-  props<{ id: number }>()
-);
+export const markAsRead = createAsyncAction('[Notifications] Mark As Read', {
+  init: props<{ id: number }>(),
+  success: props<{ id: number }>(),
+});
 
-export const markAsReadSuccess = createAction(
-  '[Notifications] Mark As Read Success',
-  props<{ id: number }>()
-);
-
-export const markAllAsRead = createAction('[Notifications] Mark All As Read');
-
-export const markAllAsReadSuccess = createAction(
-  '[Notifications] Mark All As Read Success'
+export const markAllAsRead = createAsyncAction(
+  '[Notifications] Mark All As Read'
 );

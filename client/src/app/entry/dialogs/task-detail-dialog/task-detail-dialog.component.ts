@@ -101,7 +101,7 @@ export class TaskDetailDialogComponent implements OnDestroy {
 
   constructor() {
     const systemId: string = this.data.systemId;
-    this.store.dispatch(loadTaskDetails({ systemId }));
+    this.store.dispatch(loadTaskDetails.init({ systemId }));
   }
 
   ngOnDestroy() {

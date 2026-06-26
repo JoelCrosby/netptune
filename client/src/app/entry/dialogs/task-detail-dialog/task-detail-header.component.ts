@@ -44,7 +44,7 @@ export class TaskDetailHeaderComponent {
     }
 
     this.store.dispatch(
-      editProjectTask({
+      editProjectTask.init({
         identifier,
         task: {
           ...task,

@@ -24,7 +24,7 @@ export class UsersEffects {
 
   loadUsers$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadUsers),
+      ofType(actions.loadUsers.init),
       concatLatestFrom(() => [
         this.store.select(selectUsersPage),
         this.store.select(selectUsersPageSize),
@@ -33,7 +33,7 @@ export class UsersEffects {
         this.usersService.getUsersInWorkspace({ page, pageSize }).pipe(
           unwrapClientReposne(),
           map((usersPage) =>
-            actions.loadUsersSuccess({
+            actions.loadUsers.success({
               users: usersPage.items,
               page: usersPage.page,
               pageSize: usersPage.pageSize,
@@ -42,7 +42,7 @@ export class UsersEffects {
             })
           ),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadUsersFail({ error }))
+            of(actions.loadUsers.fail({ error }))
           )
         )
       )
@@ -52,18 +52,18 @@ export class UsersEffects {
   reloadUsersOnPaginationChange$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.setUsersPage, actions.setUsersPageSize),
-      map(() => actions.loadUsers())
+      map(() => actions.loadUsers.init())
     );
   });
 
   loadUser$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadUser),
+      ofType(actions.loadUser.init),
       switchMap(({ userId }) =>
         this.usersService.getUser(userId).pipe(
-          map((user) => actions.loadUserSuccess({ user })),
+          map((user) => actions.loadUser.success({ user })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadUserFail({ error }))
+            of(actions.loadUser.fail({ error }))
           )
         )
       )
@@ -76,16 +76,16 @@ export class UsersEffects {
 
   inviteUsers$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.inviteUsersToWorkspace),
+      ofType(actions.inviteUsersToWorkspace.init),
       switchMap(({ emailAddresses }) =>
         this.usersService.inviteUsersToWorkspace(emailAddresses).pipe(
           tap(() => this.snackbar.open('Invite(s) Sent')),
           mergeMap(() => [
-            actions.inviteUsersToWorkspaceSuccess({ emailAddresses }),
-            actions.loadUsers(),
+            actions.inviteUsersToWorkspace.success({ emailAddresses }),
+            actions.loadUsers.init(),
           ]),
           catchError((error) =>
-            of(actions.inviteUsersToWorkspaceFail({ error }))
+            of(actions.inviteUsersToWorkspace.fail({ error }))
           )
         )
       )
@@ -94,14 +94,16 @@ export class UsersEffects {
 
   toggleUserPermission$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.toggleUserPermission),
+      ofType(actions.toggleUserPermission.init),
       switchMap(({ userId, permission }) =>
         this.usersService.toggleUserPermission(userId, permission).pipe(
           tap(() => this.snackbar.open('Permission updated')),
           map(() =>
-            actions.toggleUserPermissionSuccess({ userId, permission })
+            actions.toggleUserPermission.success({ userId, permission })
           ),
-          catchError((error) => of(actions.toggleUserPermissionFail({ error })))
+          catchError((error) =>
+            of(actions.toggleUserPermission.fail({ error }))
+          )
         )
       )
     );
@@ -109,12 +111,12 @@ export class UsersEffects {
 
   resendInvite$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.resendInvite),
+      ofType(actions.resendInvite.init),
       switchMap(({ email }) =>
         this.usersService.resendInvite(email).pipe(
           tap(() => this.snackbar.open('Invite resent')),
-          map(() => actions.resendInviteSuccess()),
-          catchError((error) => of(actions.resendInviteFail({ error })))
+          map(() => actions.resendInvite.success()),
+          catchError((error) => of(actions.resendInvite.fail({ error })))
         )
       )
     );
@@ -122,7 +124,7 @@ export class UsersEffects {
 
   removeUsers$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.removeUsersFromWorkspace),
+      ofType(actions.removeUsersFromWorkspace.init),
       switchMap(({ emailAddresses }) =>
         this.confirmation.open(REMOVE_USERS_CONFIRMATION).pipe(
           switchMap((result) => {
@@ -132,10 +134,10 @@ export class UsersEffects {
               .pipe(
                 tap(() => this.snackbar.open('User(s) removed')),
                 map(() =>
-                  actions.removeUsersFromWorkspaceSuccess({ emailAddresses })
+                  actions.removeUsersFromWorkspace.success({ emailAddresses })
                 ),
                 catchError((error) =>
-                  of(actions.removeUsersFromWorkspaceFail({ error }))
+                  of(actions.removeUsersFromWorkspace.fail({ error }))
                 )
               );
           })

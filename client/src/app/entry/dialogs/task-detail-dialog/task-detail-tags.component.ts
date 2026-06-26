@@ -67,7 +67,7 @@ export class TaskDetailTagsComponent {
 
     if (removed) {
       this.store.dispatch(
-        deleteTagFromTask({
+        deleteTagFromTask.init({
           identifier,
           systemId: task.systemId,
           tag: removed,
@@ -75,7 +75,7 @@ export class TaskDetailTagsComponent {
       );
     } else if (added) {
       this.store.dispatch(
-        addTagToTask({
+        addTagToTask.init({
           identifier,
           request: {
             systemId: task.systemId,

@@ -51,14 +51,14 @@ export class BoardGroupsEffects {
   loadBoardGroups$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
-        actions.loadBoardGroups,
-        actions.createBoardGroupSuccess,
-        actions.moveSelectedTasksSuccess,
-        actions.reassignTasksSuccess,
-        actions.editBoardGroupSuccess,
-        TaskActions.importTasksSuccess,
-        TaskActions.deleteTagFromTaskSuccess,
-        TaskActions.addTagToTaskSuccess
+        actions.loadBoardGroups.init,
+        actions.createBoardGroup.success,
+        actions.moveSelectedTasks.success,
+        actions.reassignTasks.success,
+        actions.editBoardGroup.success,
+        TaskActions.importTasks.success,
+        TaskActions.deleteTagFromTask.success,
+        TaskActions.addTagToTask.success
       ),
       concatLatestFrom(() => [
         this.store.select(RouteSelectors.selectRouterParam('id')),
@@ -81,7 +81,7 @@ export class BoardGroupsEffects {
         return this.boardGroupsService.get(id as string, requestParams).pipe(
           unwrapClientReposne(),
           map((boardGroups) =>
-            actions.loadBoardGroupsSuccess({
+            actions.loadBoardGroups.success({
               boardGroups,
               selectedIds: routeFilters.users ?? [],
               searchTerm: routeFilters.term ?? null,
@@ -89,7 +89,7 @@ export class BoardGroupsEffects {
             })
           ),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadBoardGroupsFail({ error }))
+            of(actions.loadBoardGroups.fail({ error }))
           )
         );
       })
@@ -99,7 +99,7 @@ export class BoardGroupsEffects {
   loadBoardGroupsFail$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(actions.loadBoardGroupsFail),
+        ofType(actions.loadBoardGroups.fail),
         tap(() => {
           const url = this.router.routerState.snapshot.url;
           const parts = url.split('/');
@@ -115,17 +115,17 @@ export class BoardGroupsEffects {
 
   createBoardGroup$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createBoardGroup),
+      ofType(actions.createBoardGroup.init),
       switchMap((action) =>
         this.tasksHubService
           .addBoardGroup(action.identifier, action.request)
           .pipe(
             unwrapClientReposne(),
             map((boardGroup) =>
-              actions.createBoardGroupSuccess({ boardGroup })
+              actions.createBoardGroup.success({ boardGroup })
             ),
             catchError((error: HttpErrorResponse) =>
-              of(actions.createBoardGroupFail({ error }))
+              of(actions.createBoardGroup.fail({ error }))
             )
           )
       )
@@ -134,7 +134,7 @@ export class BoardGroupsEffects {
 
   createProjectTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createProjectTask),
+      ofType(actions.createProjectTask.init),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectBoardGroupTaskAssignee),
@@ -149,9 +149,9 @@ export class BoardGroupsEffects {
           .pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Task created')),
-            map((task) => actions.createProjectTasksSuccess({ task })),
+            map((task) => actions.createProjectTask.success({ task })),
             catchError((error: HttpErrorResponse) =>
-              of(actions.createProjectTasksFail({ error }))
+              of(actions.createProjectTask.fail({ error }))
             )
           );
       })
@@ -160,7 +160,7 @@ export class BoardGroupsEffects {
 
   createProjectTaskSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createProjectTasksSuccess),
+      ofType(actions.createProjectTask.success),
       concatLatestFrom(() => [
         this.store.select(selectors.selectInlineTaskContent),
       ]),
@@ -170,25 +170,25 @@ export class BoardGroupsEffects {
 
   createProjectTasksSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createProjectTasksSuccess),
-      map(() => actions.loadBoardGroups())
+      ofType(actions.createProjectTask.success),
+      map(() => actions.loadBoardGroups.init())
     );
   });
 
   taskDeleted$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(TaskActions.deleteProjectTasksSuccess),
+      ofType(TaskActions.deleteProjectTask.success),
       concatLatestFrom(() =>
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute)
       ),
       filter(([_, isCorrectRoute]) => isCorrectRoute),
-      map(() => actions.loadBoardGroups())
+      map(() => actions.loadBoardGroups.init())
     );
   });
 
   deleteBoardGroups$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteBoardGroup),
+      ofType(actions.deleteBoardGroup.init),
       switchMap((action) => {
         if (action.boardGroup.type === BoardGroupType.done) {
           return this.confirmation
@@ -215,12 +215,12 @@ export class BoardGroupsEffects {
               .pipe(
                 tap(() => this.snackbar.open('Board Group Deleted')),
                 map(() =>
-                  actions.deleteBoardGroupSuccess({
+                  actions.deleteBoardGroup.success({
                     boardGroupId: action.boardGroup.id,
                   })
                 ),
                 catchError((error) =>
-                  of(actions.deleteBoardGroupFail({ error }))
+                  of(actions.deleteBoardGroup.fail({ error }))
                 )
               );
           })
@@ -231,7 +231,7 @@ export class BoardGroupsEffects {
 
   editBoardGroups$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.editBoardGroup),
+      ofType(actions.editBoardGroup.init),
       concatLatestFrom(() =>
         this.store.select(selectors.selectBoardIdentifier)
       ),
@@ -242,9 +242,9 @@ export class BoardGroupsEffects {
 
         return this.tasksHubService.putGroup(identifier, action.request).pipe(
           unwrapClientReposne(),
-          map((boardGroup) => actions.editBoardGroupSuccess({ boardGroup })),
+          map((boardGroup) => actions.editBoardGroup.success({ boardGroup })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.editBoardGroupFail({ error }))
+            of(actions.editBoardGroup.fail({ error }))
           )
         );
       })
@@ -253,7 +253,7 @@ export class BoardGroupsEffects {
 
   moveTaskInBoardGroup$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.moveTaskInBoardGroup),
+      ofType(actions.moveTaskInBoardGroup.init),
       concatLatestFrom(() =>
         this.store.select(selectors.selectBoardIdentifier)
       ),
@@ -265,9 +265,9 @@ export class BoardGroupsEffects {
         return this.tasksHubService
           .moveTaskInBoardGroup(identifier, action.request)
           .pipe(
-            map(actions.moveTaskInBoardGroupSuccess),
+            map(actions.moveTaskInBoardGroup.success),
             catchError((error) =>
-              of(actions.moveTaskInBoardGroupFail({ error }))
+              of(actions.moveTaskInBoardGroup.fail({ error }))
             )
           );
       })
@@ -284,7 +284,7 @@ export class BoardGroupsEffects {
 
             return this.store.select(selectors.selectSelectedTasks).pipe(
               first(),
-              map((ids) => actions.deleteTaskMultiple({ ids }))
+              map((ids) => actions.deleteTaskMultiple.init({ ids }))
             );
           })
         )
@@ -294,7 +294,7 @@ export class BoardGroupsEffects {
 
   deleteTaskMultiple$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteTaskMultiple),
+      ofType(actions.deleteTaskMultiple.init),
       concatLatestFrom(() =>
         this.store.select(selectors.selectBoardIdentifier)
       ),
@@ -306,9 +306,9 @@ export class BoardGroupsEffects {
         return this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Tasks Deleted')),
-          map(() => actions.deleteTasksMultipleSuccess()),
+          map(() => actions.deleteTaskMultiple.success()),
           catchError((error: HttpErrorResponse) =>
-            of(actions.deleteTasksMultipleFail({ error }))
+            of(actions.deleteTaskMultiple.fail({ error }))
           )
         );
       })
@@ -317,14 +317,14 @@ export class BoardGroupsEffects {
 
   deleteTaskMultipleSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteTasksMultipleSuccess),
-      map(() => actions.loadBoardGroups())
+      ofType(actions.deleteTaskMultiple.success),
+      map(() => actions.loadBoardGroups.init())
     );
   });
 
   moveSelectedTasksToGroup$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.moveSelectedTasks),
+      ofType(actions.moveSelectedTasks.init),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectSelectedTasks),
@@ -343,9 +343,9 @@ export class BoardGroupsEffects {
           .pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Tasks Moved')),
-            map(() => actions.moveSelectedTasksSuccess()),
+            map(() => actions.moveSelectedTasks.success()),
             catchError((error: HttpErrorResponse) =>
-              of(actions.moveSelectedTasksFail({ error }))
+              of(actions.moveSelectedTasks.fail({ error }))
             )
           );
       })
@@ -419,13 +419,13 @@ export class BoardGroupsEffects {
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
       ]),
       filter(([, isBoardGroupsRoute]) => isBoardGroupsRoute),
-      map(() => actions.loadBoardGroups())
+      map(() => actions.loadBoardGroups.init())
     );
   });
 
   reassignTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.reassignTasks),
+      ofType(actions.reassignTasks.init),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectSelectedTasks),
@@ -444,9 +444,9 @@ export class BoardGroupsEffects {
           .pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Tasks Re-assigned')),
-            map(() => actions.reassignTasksSuccess()),
+            map(() => actions.reassignTasks.success()),
             catchError((error: HttpErrorResponse) =>
-              of(actions.reassignTasksFail({ error }))
+              of(actions.reassignTasks.fail({ error }))
             )
           );
       })
@@ -455,7 +455,7 @@ export class BoardGroupsEffects {
 
   exportTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.exportBoardTasks),
+      ofType(actions.exportBoardTasks.init),
       concatLatestFrom(() =>
         this.store.select(selectors.selectBoardIdentifier)
       ),
@@ -466,9 +466,9 @@ export class BoardGroupsEffects {
 
         return this.boardGroupsService.export(boardId).pipe(
           tap((res) => void downloadFile(res.file, res.filename)),
-          map((reponse) => actions.exportBoardTasksSuccess({ reponse })),
+          map((reponse) => actions.exportBoardTasks.success({ reponse })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.exportBoardTasksFail({ error }))
+            of(actions.exportBoardTasks.fail({ error }))
           )
         );
       })

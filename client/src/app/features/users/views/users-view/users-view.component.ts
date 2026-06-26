@@ -29,7 +29,9 @@ export class UsersViewComponent {
       next: (result) => {
         if (!result?.length) return;
 
-        this.store.dispatch(inviteUsersToWorkspace({ emailAddresses: result }));
+        this.store.dispatch(
+          inviteUsersToWorkspace.init({ emailAddresses: result })
+        );
       },
     });
   }

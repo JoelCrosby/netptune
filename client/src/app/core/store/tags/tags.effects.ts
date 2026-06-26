@@ -33,12 +33,12 @@ export class TagsEffects {
 
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadTags, actions.deleteTagsSuccess),
+      ofType(actions.loadTags.init, actions.deleteTags.success),
       switchMap(() =>
         this.tagsService.get().pipe(
-          map((tags) => actions.loadTagsSuccess({ tags })),
+          map((tags) => actions.loadTags.success({ tags })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadTagsFail(error))
+            of(actions.loadTags.fail({ error }))
           )
         )
       )
@@ -47,13 +47,13 @@ export class TagsEffects {
 
   addTag$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.addTag),
+      ofType(actions.addTag.init),
       switchMap((action) =>
         this.tagsService.post({ tag: action.name }).pipe(
           unwrapClientReposne(),
-          map((tag) => actions.addTagSuccess({ tag })),
+          map((tag) => actions.addTag.success({ tag })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.addTagFail(error))
+            of(actions.addTag.fail({ error }))
           )
         )
       )
@@ -62,13 +62,13 @@ export class TagsEffects {
 
   addTagToTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.addTagToTask),
+      ofType(actions.addTagToTask.init),
       switchMap((action) =>
         this.tagsService.postToTask(action.request).pipe(
           unwrapClientReposne(),
-          map((tag) => actions.addTagToTaskSuccess({ tag })),
+          map((tag) => actions.addTagToTask.success({ tag })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.addTagToTaskFail(error))
+            of(actions.addTagToTask.fail({ error }))
           )
         )
       )
@@ -77,7 +77,7 @@ export class TagsEffects {
 
   deleteTag$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteTags),
+      ofType(actions.deleteTags.init),
       switchMap((action) =>
         this.confirmation.open(DELETE_TAG_CONFIRMATION).pipe(
           switchMap((result) => {
@@ -85,9 +85,9 @@ export class TagsEffects {
 
             return this.tagsService.delete({ tags: action.tags }).pipe(
               unwrapClientReposne(),
-              map(() => actions.deleteTagsSuccess()),
+              map(() => actions.deleteTags.success()),
               catchError((error: HttpErrorResponse) =>
-                of(actions.deleteTagsFail(error))
+                of(actions.deleteTags.fail({ error }))
               )
             );
           })
@@ -98,13 +98,13 @@ export class TagsEffects {
 
   deleteTagFromTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteTagFromTask),
+      ofType(actions.deleteTagFromTask.init),
       switchMap(({ systemId, tag }) =>
         this.tagsService.deleteFromTask({ systemId, tag }).pipe(
           unwrapClientReposne(),
-          map(() => actions.deleteTagFromTaskSuccess()),
+          map(() => actions.deleteTagFromTask.success()),
           catchError((error: HttpErrorResponse) =>
-            of(actions.deleteTagFromTaskFail(error))
+            of(actions.deleteTagFromTask.fail({ error }))
           )
         )
       )
@@ -113,13 +113,13 @@ export class TagsEffects {
 
   editTag$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.editTag),
+      ofType(actions.editTag.init),
       switchMap(({ currentValue, newValue }) =>
         this.tagsService.patch({ currentValue, newValue }).pipe(
           unwrapClientReposne(),
-          map((tag) => actions.editTagSuccess({ tag })),
+          map((tag) => actions.editTag.success({ tag })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.editTagFail(error))
+            of(actions.editTag.fail({ error }))
           )
         )
       )

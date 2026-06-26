@@ -166,7 +166,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
       boardGroupId: this.boardGroupId(),
     };
 
-    this.store.dispatch(createProjectTask({ task }));
+    this.store.dispatch(createProjectTask.init({ task }));
 
     this.loading.set(true);
   }

@@ -98,7 +98,7 @@ export class PermissionListComponent {
     if (!userId) return;
 
     this.store.dispatch(
-      toggleUserPermission({
+      toggleUserPermission.init({
         permission: permission.key,
         userId,
       })

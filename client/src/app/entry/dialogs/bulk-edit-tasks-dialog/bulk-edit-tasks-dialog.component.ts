@@ -215,7 +215,7 @@ export class BulkEditTasksDialogComponent {
     if (!workspaceId) return;
 
     this.store.dispatch(
-      bulkUpdateTasks({
+      bulkUpdateTasks.init({
         identifier: `[workspace] ${workspaceId}`,
         request: this.buildRequest(),
       })

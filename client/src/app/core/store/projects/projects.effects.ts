@@ -35,13 +35,13 @@ export class ProjectsEffects {
   loadProjectDetail$ = createEffect(
     ({ throttle = 200, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loadProjectDetail),
+        ofType(actions.loadProjectDetail.init),
         throttleTime(throttle, scheduler),
         switchMap((action) =>
           this.projectsService.getProjectDetail(action.projectKey).pipe(
-            map((project) => actions.loadProjectDetailSuccess({ project })),
+            map((project) => actions.loadProjectDetail.success({ project })),
             catchError((error: HttpErrorResponse) =>
-              of(actions.loadProjectDetailFail({ error }))
+              of(actions.loadProjectDetail.fail({ error }))
             )
           )
         )
@@ -52,7 +52,7 @@ export class ProjectsEffects {
   loadProjectDetailfail$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(actions.loadProjectDetailFail),
+        ofType(actions.loadProjectDetail.fail),
         concatLatestFrom(() =>
           this.store.select(selectCurrentWorkspaceIdentifier)
         ),
@@ -68,13 +68,13 @@ export class ProjectsEffects {
   loadProjects$ = createEffect(
     ({ throttle = 200, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loadProjects, selectWorkspace),
+        ofType(actions.loadProjects.init, selectWorkspace),
         throttleTime(throttle, scheduler),
         switchMap(() =>
           this.projectsService.get().pipe(
-            map((projects) => actions.loadProjectsSuccess({ projects })),
+            map((projects) => actions.loadProjects.success({ projects })),
             catchError((error: HttpErrorResponse) =>
-              of(actions.loadProjectsFail({ error }))
+              of(actions.loadProjects.fail({ error }))
             )
           )
         )
@@ -84,7 +84,7 @@ export class ProjectsEffects {
 
   loadProjectsSuccess$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadProjectsSuccess),
+      ofType(actions.loadProjects.success),
       concatLatestFrom(() => this.store.select(selectCurrentProject)),
       map(([action, project]) => {
         if (project) return { type: '[N/A]' };
@@ -97,13 +97,13 @@ export class ProjectsEffects {
 
   createProject$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createProject),
+      ofType(actions.createProject.init),
       switchMap((action) =>
         this.projectsService.post(action.project).pipe(
           unwrapClientReposne(),
-          map((project) => actions.createProjectSuccess({ project })),
+          map((project) => actions.createProject.success({ project })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.createProjectFail({ error }))
+            of(actions.createProject.fail({ error }))
           )
         )
       )
@@ -113,7 +113,7 @@ export class ProjectsEffects {
   deleteProject$ = createEffect(
     ({ debounce = 200, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.deleteProject),
+        ofType(actions.deleteProject.init),
         switchMap(({ project }) =>
           this.confirmation.open(DELETE_PROJECT_CONFIRMATION).pipe(
             switchMap((result) => {
@@ -124,12 +124,12 @@ export class ProjectsEffects {
                 unwrapClientReposne(),
                 tap(() => this.snackbar.open('Project deleted')),
                 map(() =>
-                  actions.deleteProjectSuccess({
+                  actions.deleteProject.success({
                     projectId: project.id,
                   })
                 ),
                 catchError((error: HttpErrorResponse) =>
-                  of(actions.deleteProjectFail({ error }))
+                  of(actions.deleteProject.fail({ error }))
                 )
               );
             })
@@ -142,15 +142,15 @@ export class ProjectsEffects {
   updateProject$ = createEffect(
     ({ debounce = 400, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.updateProject),
+        ofType(actions.updateProject.init),
         debounceTime(debounce, scheduler),
         switchMap((action) =>
           this.projectsService.put(action.project).pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Project updated')),
-            map((project) => actions.updateProjectSuccess({ project })),
+            map((project) => actions.updateProject.success({ project })),
             catchError((error: HttpErrorResponse) =>
-              of(actions.updateProjectFail({ error }))
+              of(actions.updateProject.fail({ error }))
             )
           )
         )
@@ -160,12 +160,12 @@ export class ProjectsEffects {
 
   getProjectBoards$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.getProjectBoards),
+      ofType(actions.getProjectBoards.init),
       switchMap((action) =>
         this.projectsService.getProjectBoards(action.projectId).pipe(
-          map((boards) => actions.getProjectBoardsSuccess({ boards })),
+          map((boards) => actions.getProjectBoards.success({ boards })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.getProjectBoardsFail({ error }))
+            of(actions.getProjectBoards.fail({ error }))
           )
         )
       )

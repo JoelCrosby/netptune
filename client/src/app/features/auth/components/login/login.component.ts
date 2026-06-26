@@ -162,7 +162,7 @@ export class LoginComponent {
     const turnstile = this.loginForm.turnstile().value();
 
     this.store.dispatch(
-      login({
+      login.init({
         request: {
           email,
           password,

@@ -50,7 +50,7 @@ export class TaskDetailDescriptionComponent {
     }
 
     this.store.dispatch(
-      editProjectTask({
+      editProjectTask.init({
         identifier,
         task: {
           ...task,

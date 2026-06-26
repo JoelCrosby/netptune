@@ -70,7 +70,7 @@ export class NotificationBellComponent implements OnDestroy {
   private overlayRef?: OverlayRef;
 
   constructor() {
-    this.store.dispatch(loadNotifications());
+    this.store.dispatch(loadNotifications.init());
   }
 
   toggleMenu() {
@@ -111,7 +111,7 @@ export class NotificationBellComponent implements OnDestroy {
     this.overlayRef.attach(new TemplatePortal(this.menuTemplate(), this.vcr));
     this.overlayRef.backdropClick().subscribe(() => this.closeMenu());
 
-    this.store.dispatch(notificationActions.loadNotifications());
+    this.store.dispatch(notificationActions.loadNotifications.init());
   }
 
   private closeMenu() {
@@ -119,7 +119,7 @@ export class NotificationBellComponent implements OnDestroy {
   }
 
   markAllAsRead() {
-    this.store.dispatch(notificationActions.markAllAsRead());
+    this.store.dispatch(notificationActions.markAllAsRead.init());
   }
 
   ngOnDestroy() {

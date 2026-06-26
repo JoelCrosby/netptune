@@ -27,19 +27,19 @@ export class ActivityEffects {
   loadActivities$ = createEffect(
     ({ debounce = 0, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loadActivity),
+        ofType(actions.loadActivity.init),
         debounceTime(debounce, scheduler),
         switchMap(({ entityType, entityId }) =>
           this.activityService.get(entityType, entityId).pipe(
             map((page) =>
-              actions.loadActivitySuccess({
+              actions.loadActivity.success({
                 activities: page.items,
                 nextCursor: page.nextCursor,
                 pageSize: page.pageLimit,
               })
             ),
             catchError((error: HttpErrorResponse) =>
-              of(actions.loadActivityFail({ error }))
+              of(actions.loadActivity.fail({ error }))
             )
           )
         )
@@ -49,7 +49,7 @@ export class ActivityEffects {
 
   loadMoreActivities$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadMoreActivity),
+      ofType(actions.loadMoreActivity.init),
       concatLatestFrom(() => [
         this.store.select(selectActivityNextCursor),
         this.store.select(selectActivityPageSize),
@@ -60,14 +60,14 @@ export class ActivityEffects {
           .get(entityType, entityId, { cursor, take: pageSize })
           .pipe(
             map((page) =>
-              actions.loadMoreActivitySuccess({
+              actions.loadMoreActivity.success({
                 activities: page.items,
                 nextCursor: page.nextCursor,
                 pageSize: page.pageLimit,
               })
             ),
             catchError((error: HttpErrorResponse) =>
-              of(actions.loadActivityFail({ error }))
+              of(actions.loadMoreActivity.fail({ error }))
             )
           )
       )

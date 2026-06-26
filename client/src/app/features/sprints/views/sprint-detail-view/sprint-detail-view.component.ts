@@ -168,7 +168,7 @@ export class SprintDetailViewComponent {
       )
       .subscribe((sprintId) => {
         if (Number.isFinite(sprintId) && sprintId > 0) {
-          this.store.dispatch(loadSprintDetail({ sprintId }));
+          this.store.dispatch(loadSprintDetail.init({ sprintId }));
         }
       });
   }
@@ -238,7 +238,7 @@ export class SprintDetailViewComponent {
       })
       .subscribe((confirmed) => {
         if (confirmed && sprint.id) {
-          this.store.dispatch(deleteSprint({ sprintId: sprint.id }));
+          this.store.dispatch(deleteSprint.init({ sprintId: sprint.id }));
           this.router.navigate(['../'], { relativeTo: this.route });
         }
       });

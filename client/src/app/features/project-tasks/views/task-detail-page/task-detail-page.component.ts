@@ -84,7 +84,7 @@ export class TaskDetailPageComponent implements OnDestroy {
 
   constructor() {
     const systemId: string = this.route.snapshot.params['systemId'];
-    this.store.dispatch(loadTaskDetails({ systemId }));
+    this.store.dispatch(loadTaskDetails.init({ systemId }));
   }
 
   ngOnDestroy() {

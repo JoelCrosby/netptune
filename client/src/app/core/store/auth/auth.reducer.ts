@@ -12,11 +12,11 @@ const reducer = createReducer(
   // Current User
 
   on(
-    actions.currentUser,
+    actions.currentUser.init,
     (state): AuthState => ({ ...state, currentUserLoading: true })
   ),
   on(
-    actions.currentUserSuccess,
+    actions.currentUser.success,
     (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
@@ -25,7 +25,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.currentUserFail,
+    actions.currentUser.fail,
     (state, { error }): AuthState => ({
       ...state,
       currentUserError: error,
@@ -35,9 +35,9 @@ const reducer = createReducer(
 
   // Login
 
-  on(actions.login, (state): AuthState => ({ ...state, loginLoading: true })),
+  on(actions.login.init, (state): AuthState => ({ ...state, loginLoading: true })),
   on(
-    actions.loginSuccess,
+    actions.login.success,
     (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
@@ -47,7 +47,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loginFail,
+    actions.login.fail,
     (state): AuthState => ({
       ...state,
       isAuthenticated: false,
@@ -75,11 +75,11 @@ const reducer = createReducer(
   // Register
 
   on(
-    actions.register,
+    actions.register.init,
     (state): AuthState => ({ ...state, registerLoading: true })
   ),
   on(
-    actions.registerSuccess,
+    actions.register.success,
     (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
@@ -89,7 +89,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.registerFail,
+    actions.register.fail,
     (state, { error }): AuthState => ({
       ...state,
       isAuthenticated: false,
@@ -101,14 +101,14 @@ const reducer = createReducer(
   // Confirm Email
 
   on(
-    actions.confirmEmail,
+    actions.confirmEmail.init,
     (state): AuthState => ({
       ...state,
       confirmEmailLoading: true,
     })
   ),
   on(
-    actions.confirmEmailSuccess,
+    actions.confirmEmail.success,
     (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
@@ -118,7 +118,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.confirmEmailFail,
+    actions.confirmEmail.fail,
     (state, { error }): AuthState => ({
       ...state,
       isAuthenticated: false,
@@ -130,21 +130,21 @@ const reducer = createReducer(
   // Request Password Reset
 
   on(
-    actions.requestPasswordReset,
+    actions.requestPasswordReset.init,
     (state): AuthState => ({
       ...state,
       requestPasswordResetLoading: true,
     })
   ),
   on(
-    actions.requestPasswordResetSuccess,
+    actions.requestPasswordReset.success,
     (state): AuthState => ({
       ...state,
       requestPasswordResetLoading: false,
     })
   ),
   on(
-    actions.requestPasswordResetFail,
+    actions.requestPasswordReset.fail,
     (state, { error }): AuthState => ({
       ...state,
       isAuthenticated: false,
@@ -156,14 +156,14 @@ const reducer = createReducer(
   // Reset Password
 
   on(
-    actions.resetPassword,
+    actions.resetPassword.init,
     (state): AuthState => ({
       ...state,
       resetPasswordLoading: true,
     })
   ),
   on(
-    actions.resetPasswordSuccess,
+    actions.resetPassword.success,
     (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
@@ -173,7 +173,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.resetPasswordFail,
+    actions.resetPassword.fail,
     (state, { error }): AuthState => ({
       ...state,
       isAuthenticated: false,

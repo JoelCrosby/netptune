@@ -50,7 +50,7 @@ export class ProjectsViewComponent {
   );
 
   constructor() {
-    dispatchForWorkspace(() => loadProjects());
+    dispatchForWorkspace(() => loadProjects.init());
   }
 
   showAddModal() {

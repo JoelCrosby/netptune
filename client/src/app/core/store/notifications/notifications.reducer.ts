@@ -6,12 +6,12 @@ const reducer = createReducer(
   initialState,
 
   on(
-    actions.loadNotifications,
+    actions.loadNotifications.init,
     (state): NotificationsState => ({ ...state, loading: true })
   ),
 
   on(
-    actions.loadNotificationsSuccess,
+    actions.loadNotifications.success,
     (state, { notifications }): NotificationsState => ({
       ...state,
       loading: false,
@@ -22,7 +22,7 @@ const reducer = createReducer(
   ),
 
   on(
-    actions.loadNotificationsFail,
+    actions.loadNotifications.fail,
     (state, { error }): NotificationsState => ({
       ...state,
       loading: false,
@@ -32,12 +32,12 @@ const reducer = createReducer(
   ),
 
   on(
-    actions.loadUnreadCountSuccess,
+    actions.loadUnreadCount.success,
     (state, { count }): NotificationsState => ({ ...state, unreadCount: count })
   ),
 
   on(
-    actions.markAsReadSuccess,
+    actions.markAsRead.success,
     (state, { id }): NotificationsState => ({
       ...state,
       notifications: state.notifications.map((n) =>
@@ -48,7 +48,7 @@ const reducer = createReducer(
   ),
 
   on(
-    actions.markAllAsReadSuccess,
+    actions.markAllAsRead.success,
     (state): NotificationsState => ({
       ...state,
       notifications: state.notifications.map((n) => ({ ...n, isRead: true })),

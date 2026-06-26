@@ -42,12 +42,12 @@ export class SprintsEffects {
 
   loadSprints$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadSprints),
+      ofType(actions.loadSprints.init),
       switchMap(({ filter }) =>
         this.sprintsService.get(filter).pipe(
-          map((sprints) => actions.loadSprintsSuccess({ sprints, filter })),
+          map((sprints) => actions.loadSprints.success({ sprints, filter })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadSprintsFail({ error }))
+            of(actions.loadSprints.fail({ error }))
           )
         )
       )
@@ -56,8 +56,8 @@ export class SprintsEffects {
 
   loadProjectsForSprints$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadSprints),
-      map(() => loadProjects())
+      ofType(actions.loadSprints.init),
+      map(() => loadProjects.init())
     );
   });
 
@@ -67,12 +67,12 @@ export class SprintsEffects {
 
   loadCurrentSprints$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadCurrentSprints),
+      ofType(actions.loadCurrentSprints.init),
       switchMap(() =>
         this.sprintsService.get({ status: SprintStatus.active, take: 10 }).pipe(
-          map((sprints) => actions.loadCurrentSprintsSuccess({ sprints })),
+          map((sprints) => actions.loadCurrentSprints.success({ sprints })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadCurrentSprintsFail({ error }))
+            of(actions.loadCurrentSprints.fail({ error }))
           )
         )
       )
@@ -81,13 +81,13 @@ export class SprintsEffects {
 
   loadSprintDetail$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadSprintDetail),
+      ofType(actions.loadSprintDetail.init),
       switchMap(({ sprintId }) =>
         this.sprintsService.detail(sprintId).pipe(
           unwrapClientReposne(),
-          map((sprint) => actions.loadSprintDetailSuccess({ sprint })),
+          map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadSprintDetailFail({ error }))
+            of(actions.loadSprintDetail.fail({ error }))
           )
         )
       )
@@ -96,13 +96,13 @@ export class SprintsEffects {
 
   loadAvailableTasksForSprint$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadSprintDetailSuccess),
+      ofType(actions.loadSprintDetail.success),
       switchMap(({ sprint }) => {
         if (sprint.status === SprintStatus.completed || !sprint.id)
           return EMPTY;
 
         return of(
-          actions.loadAvailableSprintTasks({
+          actions.loadAvailableSprintTasks.init({
             sprintId: sprint.id,
             projectId: sprint.projectId,
           })
@@ -113,13 +113,13 @@ export class SprintsEffects {
 
   loadAvailableSprintTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadAvailableSprintTasks),
+      ofType(actions.loadAvailableSprintTasks.init),
       switchMap(({ sprintId, projectId }) =>
         this.sprintsService.availableTasks(sprintId, projectId).pipe(
           unwrapClientPageReposne(),
-          map((tasks) => actions.loadAvailableSprintTasksSuccess({ tasks })),
+          map((tasks) => actions.loadAvailableSprintTasks.success({ tasks })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadAvailableSprintTasksFail({ error }))
+            of(actions.loadAvailableSprintTasks.fail({ error }))
           )
         )
       )
@@ -128,14 +128,14 @@ export class SprintsEffects {
 
   createSprint$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createSprint),
+      ofType(actions.createSprint.init),
       switchMap(({ request }) =>
         this.sprintsService.post(request).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Sprint created')),
-          map((sprint) => actions.createSprintSuccess({ sprint })),
+          map((sprint) => actions.createSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.createSprintFail({ error }))
+            of(actions.createSprint.fail({ error }))
           )
         )
       )
@@ -144,14 +144,14 @@ export class SprintsEffects {
 
   updateSprint$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.updateSprint),
+      ofType(actions.updateSprint.init),
       switchMap(({ request }) =>
         this.sprintsService.put(request).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Sprint updated')),
-          map((sprint) => actions.updateSprintSuccess({ sprint })),
+          map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprintFail({ error }))
+            of(actions.updateSprint.fail({ error }))
           )
         )
       )
@@ -160,14 +160,14 @@ export class SprintsEffects {
 
   deleteSprint$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteSprint),
+      ofType(actions.deleteSprint.init),
       switchMap(({ sprintId }) =>
         this.sprintsService.delete(sprintId).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Sprint deleted')),
-          map(() => actions.deleteSprintSuccess({ sprintId })),
+          map(() => actions.deleteSprint.success({ sprintId })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.deleteSprintFail({ error }))
+            of(actions.deleteSprint.fail({ error }))
           )
         )
       )
@@ -181,9 +181,9 @@ export class SprintsEffects {
         this.sprintsService.start(sprintId).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Sprint started')),
-          map((sprint) => actions.updateSprintSuccess({ sprint })),
+          map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprintFail({ error }))
+            of(actions.updateSprint.fail({ error }))
           )
         )
       )
@@ -197,9 +197,9 @@ export class SprintsEffects {
         this.sprintsService.complete(sprintId).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Sprint completed')),
-          map((sprint) => actions.updateSprintSuccess({ sprint })),
+          map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprintFail({ error }))
+            of(actions.updateSprint.fail({ error }))
           )
         )
       )
@@ -219,9 +219,9 @@ export class SprintsEffects {
             this.sprintsService.complete(sprintId).pipe(unwrapClientReposne())
           ),
           tap(() => this.snackbar.open('Sprint completed')),
-          map((sprint) => actions.updateSprintSuccess({ sprint })),
+          map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprintFail({ error }))
+            of(actions.updateSprint.fail({ error }))
           )
         )
       )
@@ -256,7 +256,7 @@ export class SprintsEffects {
       concatLatestFrom(() => this.route.queryParamMap),
       switchMap(([, paramMap]) => [
         ...this.backlogFilterHydrationActions(paramMap),
-        actions.loadSprints({ filter: { take: 100 } }),
+        actions.loadSprints.init({ filter: { take: 100 } }),
       ])
     );
   });
@@ -328,11 +328,11 @@ export class SprintsEffects {
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Task added to sprint')),
           switchMap((sprint) => [
-            actions.loadSprintDetailSuccess({ sprint }),
+            actions.loadSprintDetail.success({ sprint }),
             actions.removeTaskFromBacklog({ taskId }),
           ]),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprintFail({ error }))
+            of(actions.updateSprint.fail({ error }))
           )
         )
       )
@@ -341,7 +341,7 @@ export class SprintsEffects {
 
   loadBacklogTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadBacklogTasks),
+      ofType(actions.loadBacklogTasks.init),
       concatLatestFrom(() => [
         this.store.select(selectTaskSearchTerm),
         this.store.select(selectSelectedTags),
@@ -358,9 +358,9 @@ export class SprintsEffects {
           })
           .pipe(
             unwrapClientPageReposne(),
-            map((tasks) => actions.loadBacklogTasksSuccess({ tasks })),
+            map((tasks) => actions.loadBacklogTasks.success({ tasks })),
             catchError((error: HttpErrorResponse) =>
-              of(actions.loadBacklogTasksFail({ error }))
+              of(actions.loadBacklogTasks.fail({ error }))
             )
           )
       )
@@ -380,7 +380,7 @@ export class SprintsEffects {
         sprintId: undefined,
       }),
       actions.setSprintTaskFilter({ sprintId: undefined }),
-      actions.loadBacklogTasks(),
+      actions.loadBacklogTasks.init(),
     ];
   }
 
@@ -391,9 +391,9 @@ export class SprintsEffects {
         this.sprintsService.addTasks(sprintId, request).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Tasks added to sprint')),
-          map((sprint) => actions.loadSprintDetailSuccess({ sprint })),
+          map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprintFail({ error }))
+            of(actions.updateSprint.fail({ error }))
           )
         )
       )
@@ -407,9 +407,9 @@ export class SprintsEffects {
         this.sprintsService.removeTask(sprintId, taskId).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Task removed from sprint')),
-          map((sprint) => actions.loadSprintDetailSuccess({ sprint })),
+          map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprintFail({ error }))
+            of(actions.updateSprint.fail({ error }))
           )
         )
       )

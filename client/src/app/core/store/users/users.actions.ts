@@ -1,26 +1,22 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { WorkspaceAppUser } from '@core/models/appuser';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Users] Clear State');
 
-export const loadUsers = createAction('[Users] Load Users');
+// Load Users
 
-export const loadUsersSuccess = createAction(
-  '[Users] Load Users Success ',
-  props<{
+export const loadUsers = createAsyncAction('[Users] Load Users', {
+  success: props<{
     users: WorkspaceAppUser[];
     page: number;
     pageSize: number;
     totalCount: number;
     totalPages: number;
-  }>()
-);
-
-export const loadUsersFail = createAction(
-  '[Users] Load Users Fail',
-  props<{ error: HttpErrorResponse | Error }>()
-);
+  }>(),
+  fail: props<{ error: HttpErrorResponse | Error }>(),
+});
 
 export const setUsersPageSize = createAction(
   '[Users] Set Users Page Size',
@@ -32,84 +28,50 @@ export const setUsersPage = createAction(
   props<{ page: number }>()
 );
 
-export const loadUser = createAction(
-  '[Users] Load User',
-  props<{ userId: string }>()
-);
+// Load User
 
-export const loadUserSuccess = createAction(
-  '[Users] Load User Success ',
-  props<{ user: WorkspaceAppUser }>()
-);
-
-export const loadUserFail = createAction(
-  '[Users] Load User Fail',
-  props<{ error: HttpErrorResponse | Error }>()
-);
+export const loadUser = createAsyncAction('[Users] Load User', {
+  init: props<{ userId: string }>(),
+  success: props<{ user: WorkspaceAppUser }>(),
+  fail: props<{ error: HttpErrorResponse | Error }>(),
+});
 
 // Invite users to workspace
 
-export const inviteUsersToWorkspace = createAction(
+export const inviteUsersToWorkspace = createAsyncAction(
   '[Users] Invite users to workspace',
-  props<{ emailAddresses: string[] }>()
-);
-
-export const inviteUsersToWorkspaceSuccess = createAction(
-  '[Users] Invite users to workspace Success ',
-  props<{ emailAddresses: string[] }>()
-);
-
-export const inviteUsersToWorkspaceFail = createAction(
-  '[Users] Invite users to workspace Fail',
-  props<{ error: HttpErrorResponse | Error }>()
+  {
+    init: props<{ emailAddresses: string[] }>(),
+    success: props<{ emailAddresses: string[] }>(),
+    fail: props<{ error: HttpErrorResponse | Error }>(),
+  }
 );
 
 // Remove users from workspace
 
-export const removeUsersFromWorkspace = createAction(
+export const removeUsersFromWorkspace = createAsyncAction(
   '[Users] Remove users from workspace',
-  props<{ emailAddresses: string[] }>()
-);
-
-export const removeUsersFromWorkspaceSuccess = createAction(
-  '[Users] Remove users from workspace Success ',
-  props<{ emailAddresses: string[] }>()
-);
-
-export const removeUsersFromWorkspaceFail = createAction(
-  '[Users] Remove users from workspace Fail',
-  props<{ error: HttpErrorResponse | Error }>()
+  {
+    init: props<{ emailAddresses: string[] }>(),
+    success: props<{ emailAddresses: string[] }>(),
+    fail: props<{ error: HttpErrorResponse | Error }>(),
+  }
 );
 
 // Resend invite
 
-export const resendInvite = createAction(
-  '[Users] Resend Invite',
-  props<{ email: string }>()
-);
-
-export const resendInviteSuccess = createAction(
-  '[Users] Resend Invite Success'
-);
-
-export const resendInviteFail = createAction(
-  '[Users] Resend Invite Fail',
-  props<{ error: HttpErrorResponse | Error }>()
-);
+export const resendInvite = createAsyncAction('[Users] Resend Invite', {
+  init: props<{ email: string }>(),
+  fail: props<{ error: HttpErrorResponse | Error }>(),
+});
 
 // Toggle user permission
 
-export const toggleUserPermission = createAction(
+export const toggleUserPermission = createAsyncAction(
   '[Users] Toggle User Permission',
-  props<{ userId: string; permission: string }>()
-);
-
-export const toggleUserPermissionSuccess = createAction(
-  '[Users] Toggle User Permission Success',
-  props<{ userId: string; permission: string }>()
-);
-
-export const toggleUserPermissionFail = createAction(
-  '[Users] Toggle User Permission Fail',
-  props<{ error: HttpErrorResponse | Error }>()
+  {
+    init: props<{ userId: string; permission: string }>(),
+    success: props<{ userId: string; permission: string }>(),
+    fail: props<{ error: HttpErrorResponse | Error }>(),
+  }
 );

@@ -210,7 +210,7 @@ export class RegisterComponent implements OnDestroy {
     }
 
     this.store.dispatch(
-      AuthActions.register({
+      AuthActions.register.init({
         request: {
           firstname,
           lastname,

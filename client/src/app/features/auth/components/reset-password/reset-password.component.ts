@@ -134,6 +134,6 @@ export class ResetPasswordComponent {
       password,
     };
 
-    this.store.dispatch(resetPassword({ request }));
+    this.store.dispatch(resetPassword.init({ request }));
   }
 }

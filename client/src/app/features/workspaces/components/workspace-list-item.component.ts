@@ -66,6 +66,6 @@ export class WorkspaceListItemComponent implements OnInit {
   }
 
   deleteClicked(workspace: Workspace) {
-    this.store.dispatch(WorkspaceActions.deleteWorkspace({ workspace }));
+    this.store.dispatch(WorkspaceActions.deleteWorkspace.init({ workspace }));
   }
 }

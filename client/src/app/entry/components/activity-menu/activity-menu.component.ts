@@ -178,7 +178,7 @@ export class ActivityMenuComponent implements OnDestroy {
 
     if (entityId !== undefined) {
       this.store.dispatch(
-        ActivityActions.loadActivity({ entityType, entityId })
+        ActivityActions.loadActivity.init({ entityType, entityId })
       );
     }
   }
@@ -194,7 +194,7 @@ export class ActivityMenuComponent implements OnDestroy {
 
     if (entityId !== undefined) {
       this.store.dispatch(
-        ActivityActions.loadMoreActivity({ entityType, entityId })
+        ActivityActions.loadMoreActivity.init({ entityType, entityId })
       );
     }
   }

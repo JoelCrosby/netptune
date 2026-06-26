@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { AppUser } from '@core/models/appuser';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
@@ -8,6 +7,7 @@ import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-m
 import { BoardView, BoardViewGroup } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FileResponse } from '@core/types/file-response';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 import { BorderFilterParams } from './board-groups.model';
 
@@ -15,38 +15,26 @@ export const clearState = createAction('[BoardGroups] Clear State');
 
 // Load Board Groups
 
-export const loadBoardGroups = createAction('[BoardGroups] Load Board Groups');
-
-export const loadBoardGroupsSuccess = createAction(
-  '[BoardGroups] Load Board Groups Success ',
-  props<{
-    boardGroups: BoardView;
-    selectedIds: string[];
-    searchTerm?: string | null;
-    sprintId?: number;
-  }>()
-);
-
-export const loadBoardGroupsFail = createAction(
-  '[BoardGroups] Load Board Groups Fail',
-  props<{ error: HttpErrorResponse }>()
+export const loadBoardGroups = createAsyncAction(
+  '[BoardGroups] Load Board Groups',
+  {
+    success: props<{
+      boardGroups: BoardView;
+      selectedIds: string[];
+      searchTerm?: string | null;
+      sprintId?: number;
+    }>(),
+  }
 );
 
 // Create Board Group
 
-export const createBoardGroup = createAction(
+export const createBoardGroup = createAsyncAction(
   '[BoardGroups] Create Board Group',
-  props<{ identifier: string; request: AddBoardGroupRequest }>()
-);
-
-export const createBoardGroupSuccess = createAction(
-  '[BoardGroups] Create Board Group Success',
-  props<{ boardGroup: BoardGroupViewModel }>()
-);
-
-export const createBoardGroupFail = createAction(
-  '[BoardGroups] Create Board Group Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ identifier: string; request: AddBoardGroupRequest }>(),
+    success: props<{ boardGroup: BoardGroupViewModel }>(),
+  }
 );
 
 // Select Board Group
@@ -58,52 +46,31 @@ export const selectBoardGroup = createAction(
 
 // Delete Board Group
 
-export const deleteBoardGroup = createAction(
+export const deleteBoardGroup = createAsyncAction(
   '[BoardGroups] Delete Board Group',
-  props<{ boardGroup: BoardViewGroup }>()
-);
-
-export const deleteBoardGroupSuccess = createAction(
-  '[BoardGroups] Delete Board Group Success',
-  props<{ boardGroupId: number }>()
-);
-
-export const deleteBoardGroupFail = createAction(
-  '[BoardGroups] Delete Board Group Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ boardGroup: BoardViewGroup }>(),
+    success: props<{ boardGroupId: number }>(),
+  }
 );
 
 // Edit Board Group
 
-export const editBoardGroup = createAction(
+export const editBoardGroup = createAsyncAction(
   '[BoardGroups] Edit Board Group',
-  props<{ request: UpdateBoardGroupRequest }>()
-);
-
-export const editBoardGroupSuccess = createAction(
-  '[BoardGroups] Edit Board Group Success',
-  props<{ boardGroup: BoardGroupViewModel }>()
-);
-
-export const editBoardGroupFail = createAction(
-  '[BoardGroups] Edit Board Group Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ request: UpdateBoardGroupRequest }>(),
+    success: props<{ boardGroup: BoardGroupViewModel }>(),
+  }
 );
 
 // Move Task In BoardGroup
 
-export const moveTaskInBoardGroup = createAction(
+export const moveTaskInBoardGroup = createAsyncAction(
   '[BoardGroups] Move Task In BoardGroup',
-  props<{ request: MoveTaskInGroupRequest }>()
-);
-
-export const moveTaskInBoardGroupSuccess = createAction(
-  '[BoardGroups] Move Task In BoardGroup Success'
-);
-
-export const moveTaskInBoardGroupFail = createAction(
-  '[BoardGroups] Move Task In BoardGroup Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ request: MoveTaskInGroupRequest }>(),
+  }
 );
 
 export const setIsDragging = createAction(
@@ -122,19 +89,12 @@ export const clearInlineActive = createAction(
 
 // Create Task
 
-export const createProjectTask = createAction(
+export const createProjectTask = createAsyncAction(
   '[BoardGroups] Create Project Task',
-  props<{ task: AddProjectTaskRequest }>()
-);
-
-export const createProjectTasksSuccess = createAction(
-  '[BoardGroups] Create Project Task Success',
-  props<{ task: TaskViewModel }>()
-);
-
-export const createProjectTasksFail = createAction(
-  '[BoardGroups] Create Project Task Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ task: AddProjectTaskRequest }>(),
+    success: props<{ task: TaskViewModel }>(),
+  }
 );
 
 // Selected Users
@@ -200,50 +160,29 @@ export const deleteSelectedTasks = createAction(
 
 // Delete Task Multiple
 
-export const deleteTaskMultiple = createAction(
+export const deleteTaskMultiple = createAsyncAction(
   '[BoardGroups] Delete Task Multiple',
-  props<{ ids: number[] }>()
-);
-
-export const deleteTasksMultipleSuccess = createAction(
-  '[BoardGroups] Delete Task Multiple Success'
-);
-
-export const deleteTasksMultipleFail = createAction(
-  '[BoardGroups] Delete Task Multiple Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ ids: number[] }>(),
+  }
 );
 
 // Move Selected Tasks
 
-export const moveSelectedTasks = createAction(
+export const moveSelectedTasks = createAsyncAction(
   '[BoardGroups] Move Selected Tasks',
-  props<{ newGroupId: number }>()
-);
-
-export const moveSelectedTasksSuccess = createAction(
-  '[BoardGroups] Move Selected Tasks Success'
-);
-
-export const moveSelectedTasksFail = createAction(
-  '[BoardGroups] Move Selected Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ newGroupId: number }>(),
+  }
 );
 
 // Re-assign Tasks
 
-export const reassignTasks = createAction(
+export const reassignTasks = createAsyncAction(
   '[BoardGroups] Re-assigned Tasks',
-  props<{ assigneeId: string }>()
-);
-
-export const reassignTasksSuccess = createAction(
-  '[BoardGroups] Re-assigned Tasks Success'
-);
-
-export const reassignTasksFail = createAction(
-  '[BoardGroups] Re-assigned Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ assigneeId: string }>(),
+  }
 );
 
 // Inline Task Content
@@ -262,18 +201,11 @@ export const setIsInlineDirty = createAction(
 
 // Export Board Tasks
 
-export const exportBoardTasks = createAction(
-  '[BoardGroups] Export Board Tasks'
-);
-
-export const exportBoardTasksSuccess = createAction(
-  '[BoardGroups] Export Board Tasks Success ',
-  props<{ reponse: FileResponse }>()
-);
-
-export const exportBoardTasksFail = createAction(
-  '[BoardGroups] Export Board Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
+export const exportBoardTasks = createAsyncAction(
+  '[BoardGroups] Export Board Tasks',
+  {
+    success: props<{ reponse: FileResponse }>(),
+  }
 );
 
 // Update Board Filter

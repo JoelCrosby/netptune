@@ -4,7 +4,7 @@ import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, first, map, switchMap } from 'rxjs/operators';
-import { currentUserSuccess } from '../store/auth/auth.actions';
+import { currentUser } from '../store/auth/auth.actions';
 import { setCurrentWorkspace } from '../store/workspaces/workspaces.actions';
 import { WorkspacesService } from '../store/workspaces/workspaces.service';
 import { AuthService } from './auth.service';
@@ -34,7 +34,7 @@ export const workspaceGuard: CanActivateFn = (
 
             return auth.currentUser().pipe(
               map((user) => {
-                store.dispatch(currentUserSuccess({ user }));
+                store.dispatch(currentUser.success({ user }));
                 return true;
               })
             );

@@ -70,6 +70,6 @@ export class ProjectListItemComponent {
   });
 
   onDeleteClicked() {
-    this.store.dispatch(deleteProject({ project: this.project() }));
+    this.store.dispatch(deleteProject.init({ project: this.project() }));
   }
 }

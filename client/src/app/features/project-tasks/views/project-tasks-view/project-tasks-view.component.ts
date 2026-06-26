@@ -66,6 +66,6 @@ export class ProjectTasksViewComponent implements OnDestroy {
   }
 
   onExportTasksClicked() {
-    this.store.dispatch(exportTasks());
+    this.store.dispatch(exportTasks.init());
   }
 }

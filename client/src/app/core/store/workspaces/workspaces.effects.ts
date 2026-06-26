@@ -42,7 +42,7 @@ export class WorkspacesEffects implements OnInitEffects {
       ofType(actions.initWorkspaces),
       concatLatestFrom(() => this.store.select(selectIsAuthenticated)),
       filter(([_, isAuth]) => isAuth),
-      map(() => actions.loadWorkspaces())
+      map(() => actions.loadWorkspaces.init())
     );
   });
 
@@ -104,13 +104,15 @@ export class WorkspacesEffects implements OnInitEffects {
   loadWorkspaces$ = createEffect(
     ({ throttle = 800, scheduler = asyncScheduler } = {}) => {
       return this.actions$.pipe(
-        ofType(actions.loadWorkspaces),
+        ofType(actions.loadWorkspaces.init),
         throttleTime(throttle, scheduler),
         switchMap(() =>
           this.workspacesService.get().pipe(
-            map((workspaces) => actions.loadWorkspacesSuccess({ workspaces })),
+            map((workspaces) =>
+              actions.loadWorkspaces.success({ workspaces })
+            ),
             catchError((error: HttpErrorResponse) =>
-              of(actions.loadWorkspacesFail({ error }))
+              of(actions.loadWorkspaces.fail({ error }))
             )
           )
         )
@@ -120,13 +122,13 @@ export class WorkspacesEffects implements OnInitEffects {
 
   createWorkspace$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createWorkspace),
+      ofType(actions.createWorkspace.init),
       switchMap((action) =>
         this.workspacesService.post(action.request).pipe(
           unwrapClientReposne(),
-          map((workspace) => actions.createWorkspaceSuccess({ workspace })),
+          map((workspace) => actions.createWorkspace.success({ workspace })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.createWorkspaceFail({ error }))
+            of(actions.createWorkspace.fail({ error }))
           )
         )
       )
@@ -135,7 +137,7 @@ export class WorkspacesEffects implements OnInitEffects {
 
   deleteWorkspace$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteWorkspace),
+      ofType(actions.deleteWorkspace.init),
       switchMap(({ workspace }) =>
         this.confirmation.open(DELETE_WORKSPACE_CONFIRMATION).pipe(
           switchMap((result) => {
@@ -143,9 +145,9 @@ export class WorkspacesEffects implements OnInitEffects {
 
             return this.workspacesService.delete(workspace).pipe(
               tap(() => this.snackbar.open('Workspace deleted')),
-              map(() => actions.deleteWorkspaceSuccess({ workspace })),
+              map(() => actions.deleteWorkspace.success({ workspace })),
               catchError((error: HttpErrorResponse) =>
-                of(actions.deleteWorkspaceFail({ error }))
+                of(actions.deleteWorkspace.fail({ error }))
               )
             );
           })
@@ -156,13 +158,13 @@ export class WorkspacesEffects implements OnInitEffects {
 
   editWorkspace$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.editWorkspace),
+      ofType(actions.editWorkspace.init),
       switchMap((action) =>
         this.workspacesService.put(action.request).pipe(
           unwrapClientReposne(),
-          map((workspace) => actions.editWorkspaceSuccess({ workspace })),
+          map((workspace) => actions.editWorkspace.success({ workspace })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.editWorkspaceFail({ error }))
+            of(actions.editWorkspace.fail({ error }))
           )
         )
       )
@@ -192,9 +194,9 @@ export class WorkspacesEffects implements OnInitEffects {
 
             return this.workspacesService.put(request).pipe(
               unwrapClientReposne(),
-              map((workspace) => actions.editWorkspaceSuccess({ workspace })),
+              map((workspace) => actions.editWorkspace.success({ workspace })),
               catchError((error: HttpErrorResponse) =>
-                of(actions.editWorkspaceFail({ error }))
+                of(actions.editWorkspace.fail({ error }))
               )
             );
           })
@@ -205,13 +207,13 @@ export class WorkspacesEffects implements OnInitEffects {
 
   isSlugUnique$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.isSlugUniue),
+      ofType(actions.isSlugUniue.init),
       switchMap((action) =>
         this.workspacesService.isSlugUnique(action.slug).pipe(
           unwrapClientReposne(),
-          map((response) => actions.isSlugUniueSuccess({ response })),
+          map((response) => actions.isSlugUniue.success({ response })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.isSlugUniueFail({ error }))
+            of(actions.isSlugUniue.fail({ error }))
           )
         )
       )

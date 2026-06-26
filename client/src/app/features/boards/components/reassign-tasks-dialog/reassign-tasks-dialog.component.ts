@@ -81,6 +81,6 @@ export class ReassignTasksDialogComponent {
     }
 
     const assigneeId = this.selected;
-    this.store.dispatch(actions.reassignTasks({ assigneeId }));
+    this.store.dispatch(actions.reassignTasks.init({ assigneeId }));
   }
 }

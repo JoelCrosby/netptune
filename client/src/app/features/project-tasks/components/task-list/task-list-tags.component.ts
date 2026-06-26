@@ -68,7 +68,7 @@ export class TaskListTagsComponent {
   );
 
   onClicked() {
-    this.store.dispatch(TagActions.loadTags());
+    this.store.dispatch(TagActions.loadTags.init());
   }
 
   onOptionClicked(selected: Selected<Tag>) {

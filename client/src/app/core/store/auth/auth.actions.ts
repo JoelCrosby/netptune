@@ -1,6 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { LoginRequest } from '@app/core/models/login-request';
 import { RegisterRequest } from '@app/core/models/register-request';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 import {
   AuthCodeRequest,
@@ -10,37 +10,25 @@ import {
   UserResponse,
 } from './auth.models';
 
-// Current User
+// Init
 
 export const initAuth = createAction('[Auth] Init');
 
-export const currentUser = createAction('[Auth] Current User');
+// Current User
 
-export const currentUserSuccess = createAction(
-  '[Auth] Current User Succeeded',
-  props<{ user: UserResponse }>()
-);
-
-export const currentUserFail = createAction(
-  '[Auth] Current User Failed',
-  props<{ error: HttpErrorResponse }>()
-);
+export const currentUser = createAsyncAction('[Auth] Current User', {
+  success: props<{ user: UserResponse }>(),
+});
 
 // Login
 
-export const login = createAction(
-  '[Auth] Login',
-  props<{ request: LoginRequest }>()
-);
+export const login = createAsyncAction('[Auth] Login', {
+  init: props<{ request: LoginRequest }>(),
+  success: props<{ user: LoginResponse }>(),
+});
 
-export const loginSuccess = createAction(
-  '[Auth] Login Succeeded',
-  props<{ user: LoginResponse }>()
-);
-
-export const loginFail = createAction('[Auth] Login Failed');
-
-// Logout
+// Logout — no Fail flow, and the trigger uses a custom no-arg creator, so it is
+// not a clean trio and stays as plain actions.
 
 export const logout = createAction(
   '[Auth] Logout',
@@ -51,70 +39,33 @@ export const logoutSuccess = createAction('[Auth] Logout Success');
 
 // Register
 
-export const register = createAction(
-  '[Auth] Register',
-  props<{ request: RegisterRequest }>()
-);
-
-export const registerSuccess = createAction(
-  '[Auth] Register Succeeded',
-  props<{ user: LoginResponse }>()
-);
-
-export const registerFail = createAction(
-  '[Auth] Register Failed',
-  props<{ error: HttpErrorResponse }>()
-);
+export const register = createAsyncAction('[Auth] Register', {
+  init: props<{ request: RegisterRequest }>(),
+  success: props<{ user: LoginResponse }>(),
+});
 
 // Confirm email
 
-export const confirmEmail = createAction(
-  '[Auth] Confirm Email',
-  props<{ request: AuthCodeRequest }>()
-);
-
-export const confirmEmailSuccess = createAction(
-  '[Auth] Confirm Email Succeeded',
-  props<{ user: LoginResponse }>()
-);
-
-export const confirmEmailFail = createAction(
-  '[Auth] Confirm Email Failed',
-  props<{ error: HttpErrorResponse }>()
-);
+export const confirmEmail = createAsyncAction('[Auth] Confirm Email', {
+  init: props<{ request: AuthCodeRequest }>(),
+  success: props<{ user: LoginResponse }>(),
+});
 
 // Request Password Reset
 
-export const requestPasswordReset = createAction(
+export const requestPasswordReset = createAsyncAction(
   '[Auth] Request Password Reset',
-  props<{ email: string }>()
-);
-
-export const requestPasswordResetSuccess = createAction(
-  '[Auth] Request Password Reset Succeeded'
-);
-
-export const requestPasswordResetFail = createAction(
-  '[Auth] Request Password Reset Failed',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ email: string }>(),
+  }
 );
 
 // Reset Password
 
-export const resetPassword = createAction(
-  '[Auth] Reset Password',
-  props<{ request: ResetPasswordRequest }>()
-);
-
-export const resetPasswordSuccess = createAction(
-  '[Auth] Reset Password Succeeded',
-  props<{ user: LoginResponse }>()
-);
-
-export const resetPasswordFail = createAction(
-  '[Auth] Reset Password Failed',
-  props<{ error: HttpErrorResponse }>()
-);
+export const resetPassword = createAsyncAction('[Auth] Reset Password', {
+  init: props<{ request: ResetPasswordRequest }>(),
+  success: props<{ user: LoginResponse }>(),
+});
 
 // Clear Error
 
@@ -123,7 +74,8 @@ export const clearError = createAction(
   props<{ error: AuthErrorKey }>()
 );
 
-// Refresh Token
+// Refresh Token — standalone success dispatched by the token refresh flow, not
+// part of a trio.
 
 export const refreshTokenSuccess = createAction(
   '[Auth] Refresh Token Succeeded',

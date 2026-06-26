@@ -9,11 +9,11 @@ const reducer = createReducer(
   // Load Tags
 
   on(
-    actions.loadTags,
+    actions.loadTags.init,
     (state): TagsState => ({ ...state, loaded: false, loading: true })
   ),
   on(
-    actions.loadTagsFail,
+    actions.loadTags.fail,
     (state, { error }): TagsState => ({
       ...state,
       loading: false,
@@ -22,7 +22,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadTagsSuccess,
+    actions.loadTags.success,
     (state, { tags }): TagsState =>
       adapter.setAll(tags, {
         ...state,
@@ -42,13 +42,13 @@ const reducer = createReducer(
   ),
 
   on(
-    actions.editTagSuccess,
+    actions.editTag.success,
     (state, { tag }): TagsState =>
       adapter.updateOne({ id: tag.id, changes: tag }, state)
   ),
 
   on(
-    actions.addTagSuccess,
+    actions.addTag.success,
     (state, { tag }): TagsState => adapter.addOne(tag, state)
   ),
 

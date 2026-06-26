@@ -8,9 +8,9 @@ const reducer = createReducer(
 
   // Load Boards
 
-  on(actions.loadBoards, (state): BoardsState => ({ ...state, loading: true })),
+  on(actions.loadBoards.init, (state): BoardsState => ({ ...state, loading: true })),
   on(
-    actions.loadBoardsFail,
+    actions.loadBoards.fail,
     (state, { error }): BoardsState => ({
       ...state,
       loadingError: error,
@@ -18,7 +18,7 @@ const reducer = createReducer(
     })
   ),
   on(
-    actions.loadBoardsSuccess,
+    actions.loadBoards.success,
     (state, { boards }): BoardsState => ({
       ...state,
       boards,
@@ -29,18 +29,18 @@ const reducer = createReducer(
   // Create Board
 
   on(
-    actions.createBoard,
+    actions.createBoard.init,
     (state): BoardsState => ({ ...state, loadingCreate: true })
   ),
   on(
-    actions.createBoardFail,
+    actions.createBoard.fail,
     (state, { error }): BoardsState => ({
       ...state,
       loadingError: error,
     })
   ),
   on(
-    actions.createBoardSuccess,
+    actions.createBoard.success,
     (state): BoardsState => ({
       ...state,
       loadingCreate: false,
@@ -50,21 +50,21 @@ const reducer = createReducer(
   // Delete Board
 
   on(
-    actions.deleteBoard,
+    actions.deleteBoard.init,
     (state): BoardsState => ({
       ...state,
       deleteState: { loading: true },
     })
   ),
   on(
-    actions.deleteBoardFail,
+    actions.deleteBoard.fail,
     (state, { error }): BoardsState => ({
       ...state,
       deleteState: { loading: false, error },
     })
   ),
   on(
-    actions.deleteBoardSuccess,
+    actions.deleteBoard.success,
     (state): BoardsState => ({
       ...state,
       deleteState: { loading: false },

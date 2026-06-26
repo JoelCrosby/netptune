@@ -283,7 +283,7 @@ export class TaskListComponent {
 
   deleteClicked(task: TaskViewModel) {
     this.store.dispatch(
-      actions.deleteProjectTask({
+      actions.deleteProjectTask.init({
         identifier: `[workspace] ${task.workspaceKey}`,
         task,
       })

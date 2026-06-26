@@ -9,18 +9,18 @@ const reducer = createReducer(
   // Load Projects
 
   on(
-    actions.loadBuildInfo,
+    actions.loadBuildInfo.init,
     (state): MetaState => ({ ...state, loading: true })
   ),
   on(
-    actions.loadBuildInfoFail,
+    actions.loadBuildInfo.fail,
     (state, { error }): MetaState => ({
       ...state,
       loadingError: error,
     })
   ),
   on(
-    actions.loadBuildInfoSuccess,
+    actions.loadBuildInfo.success,
     (state, { buildInfo }): MetaState => ({
       ...state,
       buildInfo,

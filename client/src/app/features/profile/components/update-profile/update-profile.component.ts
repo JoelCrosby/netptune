@@ -72,7 +72,7 @@ export class UpdateProfileComponent {
     if (!profile) return;
 
     this.store.dispatch(
-      updateProfile({
+      updateProfile.init({
         profile: {
           ...profile,
           firstname: this.profileForm.firstname().value(),

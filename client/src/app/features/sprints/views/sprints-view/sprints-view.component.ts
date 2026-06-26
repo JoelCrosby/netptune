@@ -209,7 +209,7 @@ export class SprintsViewComponent {
   });
 
   constructor() {
-    dispatchForWorkspace(() => loadSprints({ filter: { take: 100 } }));
+    dispatchForWorkspace(() => loadSprints.init({ filter: { take: 100 } }));
   }
 
   onStatusChanged(value: string | number | null) {
@@ -270,7 +270,7 @@ export class SprintsViewComponent {
       })
       .subscribe((confirmed) => {
         if (confirmed && sprint.id) {
-          this.store.dispatch(deleteSprint({ sprintId: sprint.id }));
+          this.store.dispatch(deleteSprint.init({ sprintId: sprint.id }));
         }
       });
   }

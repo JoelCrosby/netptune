@@ -18,15 +18,15 @@ export class NotificationsEffects {
 
   loadNotifications$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadNotifications, actions.notificationReceived),
+      ofType(actions.loadNotifications.init, actions.notificationReceived),
       switchMap(() =>
         this.notificationsService.getAll().pipe(
           unwrapClientReposne(),
           map((notifications) =>
-            actions.loadNotificationsSuccess({ notifications })
+            actions.loadNotifications.success({ notifications })
           ),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadNotificationsFail({ error }))
+            of(actions.loadNotifications.fail({ error }))
           )
         )
       )
@@ -35,12 +35,12 @@ export class NotificationsEffects {
 
   loadUnreadCount$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadUnreadCount),
+      ofType(actions.loadUnreadCount.init),
       switchMap(() =>
         this.notificationsService.getUnreadCount().pipe(
           unwrapClientReposne(),
-          map((count) => actions.loadUnreadCountSuccess({ count })),
-          catchError(() => of(actions.loadUnreadCountSuccess({ count: 0 })))
+          map((count) => actions.loadUnreadCount.success({ count })),
+          catchError(() => of(actions.loadUnreadCount.success({ count: 0 })))
         )
       )
     );
@@ -48,11 +48,11 @@ export class NotificationsEffects {
 
   markAsRead$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.markAsRead),
+      ofType(actions.markAsRead.init),
       switchMap(({ id }) =>
         this.notificationsService.markAsRead(id).pipe(
-          map(() => actions.markAsReadSuccess({ id })),
-          catchError(() => of(actions.markAsReadSuccess({ id })))
+          map(() => actions.markAsRead.success({ id })),
+          catchError(() => of(actions.markAsRead.success({ id })))
         )
       )
     );
@@ -60,11 +60,11 @@ export class NotificationsEffects {
 
   markAllAsRead$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.markAllAsRead),
+      ofType(actions.markAllAsRead.init),
       switchMap(() =>
         this.notificationsService.markAllAsRead().pipe(
-          map(() => actions.markAllAsReadSuccess()),
-          catchError(() => of(actions.markAllAsReadSuccess()))
+          map(() => actions.markAllAsRead.success()),
+          catchError(() => of(actions.markAllAsRead.success()))
         )
       )
     );
@@ -86,8 +86,8 @@ export class NotificationsEffects {
       switchMap(() =>
         this.notificationsService.getUnreadCount().pipe(
           unwrapClientReposne(),
-          map((count) => actions.loadUnreadCountSuccess({ count })),
-          catchError(() => of(actions.loadUnreadCountSuccess({ count: 0 })))
+          map((count) => actions.loadUnreadCount.success({ count })),
+          catchError(() => of(actions.loadUnreadCount.success({ count: 0 })))
         )
       )
     );

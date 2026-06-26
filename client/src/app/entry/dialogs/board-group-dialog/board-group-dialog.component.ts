@@ -65,7 +65,7 @@ export class BoardGroupDialogComponent {
     const identifier = this.data.identifier;
 
     this.store.dispatch(
-      BoardGroupActions.createBoardGroup({
+      BoardGroupActions.createBoardGroup.init({
         identifier,
         request: {
           name,

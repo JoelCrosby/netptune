@@ -24,6 +24,6 @@ export class ConfirmViewComponent {
 
     if (!request) return;
 
-    this.store.dispatch(confirmEmail({ request }));
+    this.store.dispatch(confirmEmail.init({ request }));
   }
 }

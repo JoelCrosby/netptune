@@ -95,7 +95,7 @@ export class ProjectDialogComponent {
       },
     };
 
-    this.store.dispatch(createProject({ project }));
+    this.store.dispatch(createProject.init({ project }));
 
     this.dialogRef.close();
   }

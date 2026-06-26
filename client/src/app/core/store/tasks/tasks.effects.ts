@@ -56,7 +56,7 @@ export class ProjectTasksEffects {
 
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadProjectTasks),
+      ofType(actions.loadProjectTasks.init),
       concatLatestFrom(() => [
         this.store.select(selectProjectTasksFilter),
         this.store.select(selectTasksPage),
@@ -66,7 +66,7 @@ export class ProjectTasksEffects {
         this.projectTasksService.get({ ...taskFilter, page, pageSize }).pipe(
           unwrapClientReposne(),
           map((page) =>
-            actions.loadProjectTasksSuccess({
+            actions.loadProjectTasks.success({
               tasks: page.items,
               page: page.page,
               pageSize: page.pageSize,
@@ -75,7 +75,7 @@ export class ProjectTasksEffects {
             })
           ),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadProjectTasksFail({ error }))
+            of(actions.loadProjectTasks.fail({ error }))
           )
         )
       )
@@ -85,7 +85,7 @@ export class ProjectTasksEffects {
   reloadProjectTasksOnPaginationChange$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.setProjectTasksPage, actions.setProjectTasksPageSize),
-      map(() => actions.loadProjectTasks())
+      map(() => actions.loadProjectTasks.init())
     );
   });
 
@@ -169,7 +169,7 @@ export class ProjectTasksEffects {
             sprintId: filters.sprintId,
           }),
           SprintActions.setSprintTaskFilter({ sprintId: filters.sprintId }),
-          actions.loadProjectTasks()
+          actions.loadProjectTasks.init()
         );
       })
     );
@@ -177,14 +177,14 @@ export class ProjectTasksEffects {
 
   createProjectTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.createProjectTask),
+      ofType(actions.createProjectTask.init),
       switchMap((action) =>
         this.projectTasksHubService.post(action.identifier, action.task).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Task created')),
-          map((task) => actions.createProjectTasksSuccess({ task })),
+          map((task) => actions.createProjectTask.success({ task })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.createProjectTasksFail({ error }))
+            of(actions.createProjectTask.fail({ error }))
           )
         )
       )
@@ -193,14 +193,14 @@ export class ProjectTasksEffects {
 
   editProjectTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.editProjectTask),
+      ofType(actions.editProjectTask.init),
       concatMap((action) =>
         this.projectTasksHubService.put(action.identifier, action.task).pipe(
           unwrapClientReposne(),
           tap(() => !!action.silent && this.snackbar.open('Task updated')),
-          map((task) => actions.editProjectTasksSuccess({ task })),
+          map((task) => actions.editProjectTask.success({ task })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.editProjectTasksFail({ error }))
+            of(actions.editProjectTask.fail({ error }))
           )
         )
       )
@@ -209,7 +209,7 @@ export class ProjectTasksEffects {
 
   bulkUpdateTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.bulkUpdateTasks),
+      ofType(actions.bulkUpdateTasks.init),
       concatMap((action) =>
         this.projectTasksHubService
           .bulkUpdate(action.identifier, action.request)
@@ -219,9 +219,9 @@ export class ProjectTasksEffects {
               this.snackbar.open('Tasks updated');
               this.projectTasksHubService.reloadTaskList();
             }),
-            map(() => actions.bulkUpdateTasksSuccess()),
+            map(() => actions.bulkUpdateTasks.success()),
             catchError((error: HttpErrorResponse) =>
-              of(actions.bulkUpdateTasksFail({ error }))
+              of(actions.bulkUpdateTasks.fail({ error }))
             )
           )
       )
@@ -230,7 +230,7 @@ export class ProjectTasksEffects {
 
   deleteProjectTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteProjectTask),
+      ofType(actions.deleteProjectTask.init),
       switchMap((action) =>
         this.confirmation.open(DELETE_TASK_CONFIRMATION).pipe(
           switchMap((result) => {
@@ -248,12 +248,12 @@ export class ProjectTasksEffects {
                     throw new Error('taskid was null or undefined');
                   }
 
-                  return actions.deleteProjectTasksSuccess({
+                  return actions.deleteProjectTask.success({
                     taskId,
                   });
                 }),
                 catchError((error) =>
-                  of(actions.deleteProjectTasksFail({ error }))
+                  of(actions.deleteProjectTask.fail({ error }))
                 )
               );
           })
@@ -301,12 +301,12 @@ export class ProjectTasksEffects {
 
   loadTaskDetail$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadTaskDetails),
+      ofType(actions.loadTaskDetails.init),
       switchMap((action) =>
         this.projectTasksService.detail(action.systemId).pipe(
-          map((task) => actions.loadTaskDetailsSuccess({ task })),
+          map((task) => actions.loadTaskDetails.success({ task })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadTaskDetailsFail({ error }))
+            of(actions.loadTaskDetails.fail({ error }))
           )
         )
       )
@@ -315,8 +315,8 @@ export class ProjectTasksEffects {
 
   loadTaskDetailUsers$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.loadTaskDetails),
-      map(() => loadUsers())
+      ofType(actions.loadTaskDetails.init),
+      map(() => loadUsers.init())
     );
   });
 
@@ -329,13 +329,13 @@ export class ProjectTasksEffects {
 
   exportTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.exportTasks),
+      ofType(actions.exportTasks.init),
       switchMap(() =>
         this.projectTasksService.export().pipe(
           tap((res) => void downloadFile(res.file, res.filename)),
-          map((reponse) => actions.exportTasksSuccess({ reponse })),
+          map((reponse) => actions.exportTasks.success({ reponse })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.exportTasksFail({ error }))
+            of(actions.exportTasks.fail({ error }))
           )
         )
       )
@@ -344,17 +344,17 @@ export class ProjectTasksEffects {
 
   importTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.importTasks),
+      ofType(actions.importTasks.init),
       switchMap((action) =>
         this.projectTasksService
           .import(action.boardIdentifier, action.file)
           .pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Import Successful')),
-            map(() => actions.importTasksSuccess()),
+            map(() => actions.importTasks.success()),
             catchError((error) => {
               this.snackbar.open('Import Failed');
-              return of(actions.importTasksFail({ error }));
+              return of(actions.importTasks.fail({ error }));
             })
           )
       )
@@ -363,13 +363,13 @@ export class ProjectTasksEffects {
 
   addTagToTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.addTagToTask),
+      ofType(actions.addTagToTask.init),
       switchMap(({ identifier, request }) =>
         this.projectTasksHubService.addTagToTask(identifier, request).pipe(
           unwrapClientReposne(),
-          map((tag) => actions.addTagToTaskSuccess({ tag })),
+          map((tag) => actions.addTagToTask.success({ tag })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.addTagToTaskFail(error))
+            of(actions.addTagToTask.fail({ error }))
           )
         )
       )
@@ -378,15 +378,15 @@ export class ProjectTasksEffects {
 
   deleteTagFromTask$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.deleteTagFromTask),
+      ofType(actions.deleteTagFromTask.init),
       switchMap(({ identifier, systemId, tag }) =>
         this.projectTasksHubService
           .deleteTagFromTask(identifier, { systemId, tag })
           .pipe(
             unwrapClientReposne(),
-            map(() => actions.deleteTagFromTaskSuccess()),
+            map(() => actions.deleteTagFromTask.success()),
             catchError((error: HttpErrorResponse) =>
-              of(actions.deleteTagFromTaskFail(error))
+              of(actions.deleteTagFromTask.fail({ error }))
             )
           )
       )

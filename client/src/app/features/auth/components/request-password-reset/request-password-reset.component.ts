@@ -93,6 +93,6 @@ export class RequestPasswordResetComponent {
     }
 
     const email = this.requestForm.email().value();
-    this.store.dispatch(requestPasswordReset({ email }));
+    this.store.dispatch(requestPasswordReset.init({ email }));
   }
 }

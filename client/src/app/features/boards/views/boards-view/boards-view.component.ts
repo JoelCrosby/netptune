@@ -53,7 +53,7 @@ export class BoardsViewComponent {
   );
 
   constructor() {
-    dispatchForWorkspace(() => loadBoards());
+    dispatchForWorkspace(() => loadBoards.init());
   }
 
   onCreateBoardClicked() {

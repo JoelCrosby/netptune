@@ -208,7 +208,7 @@ export class WorkspaceDialogComponent {
       },
     };
 
-    this.store.dispatch(Actions.editWorkspace({ request }));
+    this.store.dispatch(Actions.editWorkspace.init({ request }));
   }
 
   createWorkspace() {
@@ -223,7 +223,7 @@ export class WorkspaceDialogComponent {
       },
     };
 
-    this.store.dispatch(Actions.createWorkspace({ request }));
+    this.store.dispatch(Actions.createWorkspace.init({ request }));
   }
 
   getColorLabel(value: string) {

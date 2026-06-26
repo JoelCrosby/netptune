@@ -52,7 +52,7 @@ export class ProfileViewComponent {
   loadingUpdate = this.store.selectSignal(selectUpdateProfileLoading);
 
   constructor() {
-    this.store.dispatch(loadProfile());
+    this.store.dispatch(loadProfile.init());
   }
 
   onLogoutClicked() {

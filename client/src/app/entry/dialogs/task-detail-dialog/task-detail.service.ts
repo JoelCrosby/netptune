@@ -28,7 +28,7 @@ export class TaskDetailService {
     if (!identifier || !task) return;
 
     this.store.dispatch(
-      editProjectTask({
+      editProjectTask.init({
         identifier,
         task: {
           ...task,
@@ -44,7 +44,7 @@ export class TaskDetailService {
 
     if (!task || !identifier) return;
 
-    this.store.dispatch(deleteProjectTask({ identifier, task }));
+    this.store.dispatch(deleteProjectTask.init({ identifier, task }));
   }
 
   assignSprint(sprintId: number) {
@@ -88,6 +88,6 @@ export class TaskDetailService {
 
     if (!task?.systemId) return;
 
-    this.store.dispatch(loadTaskDetails({ systemId: task.systemId }));
+    this.store.dispatch(loadTaskDetails.init({ systemId: task.systemId }));
   }
 }
