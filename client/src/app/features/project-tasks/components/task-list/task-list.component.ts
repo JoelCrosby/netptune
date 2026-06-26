@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, viewChild } from '@angular/core';
 import { Params } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -13,6 +13,7 @@ import { DialogService } from '@core/services/dialog.service';
 import * as actions from '@core/store/tasks/tasks.actions';
 import {
   selectProjectTasksFilter,
+  selectSelectedTaskIds,
   selectTaskFiltersActive,
 } from '@core/store/tasks/tasks.selectors';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
@@ -47,9 +48,10 @@ import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service'
   ],
   providers: [],
   template: `
-    <app-task-list-filters [selection]="selection()" />
+    <app-task-list-filters />
 
     <app-datatable
+      #datatable
       containerClass="h-[calc(100vh-312px)] min-h-16 overflow-auto"
       tableClass="min-w-[760px] table-fixed"
       rowClass="bg-card"
@@ -143,7 +145,9 @@ export class TaskListComponent {
   private projectTasksHubService = inject(ProjectTasksHubService);
   private params = injectParams();
 
-  selection = signal<number[]>([]);
+  private datatable = viewChild(DatatableComponent<TaskViewModel>);
+
+  selection = this.store.selectSignal(selectSelectedTaskIds);
 
   taskFilter = this.store.selectSignal(selectProjectTasksFilter);
   filtersActive = this.store.selectSignal(selectTaskFiltersActive);
@@ -242,8 +246,24 @@ export class TaskListComponent {
     reloadSignal: this.projectTasksHubService.updateVersion,
   };
 
+  constructor() {
+    // Start each visit to the list with a clean selection; the datatable's
+    // internal selection is recreated fresh on every mount.
+    this.store.dispatch(actions.clearSelectedTaskIds());
+
+    // Keep the datatable's internal selection in sync when the store
+    // selection is cleared elsewhere (e.g. after a bulk delete).
+    effect(() => {
+      if (this.selection().length === 0) {
+        this.datatable()?.clearSelection();
+      }
+    });
+  }
+
   onSelectionChanged(tasks: TaskViewModel[]) {
-    this.selection.set(tasks.map((e) => e.id));
+    this.store.dispatch(
+      actions.setSelectedTaskIds({ ids: tasks.map((e) => e.id) })
+    );
   }
 
   titleClicked(task: TaskViewModel) {

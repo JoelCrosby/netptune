@@ -131,6 +131,34 @@ export const deleteProjectTasksFail = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
+// Bulk Delete Tasks
+
+export const bulkDeleteTasks = createAction(
+  '[ProjectTasks] Bulk Delete Tasks',
+  props<{ identifier: string; ids: number[] }>()
+);
+
+export const bulkDeleteTasksSuccess = createAction(
+  '[ProjectTasks] Bulk Delete Tasks Success',
+  props<{ taskIds: number[] }>()
+);
+
+export const bulkDeleteTasksFail = createAction(
+  '[ProjectTasks] Bulk Delete Tasks Fail',
+  props<{ error: HttpErrorResponse }>()
+);
+
+// Task Selection
+
+export const setSelectedTaskIds = createAction(
+  '[ProjectTasks] Set Selected Task Ids',
+  props<{ ids: number[] }>()
+);
+
+export const clearSelectedTaskIds = createAction(
+  '[ProjectTasks] Clear Selected Task Ids'
+);
+
 // Select Task
 
 export const selectTask = createAction(

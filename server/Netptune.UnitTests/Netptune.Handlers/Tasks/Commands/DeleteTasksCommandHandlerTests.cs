@@ -1,7 +1,7 @@
 using FluentAssertions;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
@@ -16,23 +16,21 @@ public class DeleteTasksCommandHandlerTests
 {
     private readonly DeleteTasksCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public DeleteTasksCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
-    public async Task DeleteMany_ShouldReturnSuccess_WhenValidId()
+    public async Task DeleteMany_ShouldReturnSuccess_WhenValidIds()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
-        {
-            new () { Id = 1 },
-            new () { Id = 2 },
-            new () { Id = 3 },
-        });
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(Arg.Any<IEnumerable<int>>(), "userId", TestContext.Current.CancellationToken)
+            .Returns(ids.ToList());
 
         var result = await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
@@ -40,47 +38,40 @@ public class DeleteTasksCommandHandlerTests
     }
 
     [Fact]
-    public async Task DeleteMany_ShouldCallDeletePermanent_WhenValidId()
+    public async Task DeleteMany_ShouldSoftDeleteWithCurrentUser_WhenValidIds()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
-        {
-            new () { Id = 1 },
-            new () { Id = 2 },
-            new () { Id = 3 },
-        });
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(Arg.Any<IEnumerable<int>>(), "userId", TestContext.Current.CancellationToken)
+            .Returns(ids.ToList());
 
         await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Tasks.Received(1).DeletePermanent(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.Tasks.Received(1).SoftDelete(ids, "userId", TestContext.Current.CancellationToken);
     }
 
     [Fact]
-    public async Task DeleteMany_ShouldCallCompleteAsync_WhenValidId()
+    public async Task DeleteMany_ShouldNotLoadOrHardDeleteEntities_WhenValidIds()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
-        {
-            new () { Id = 1 },
-            new () { Id = 2 },
-            new () { Id = 3 },
-        });
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(Arg.Any<IEnumerable<int>>(), "userId", TestContext.Current.CancellationToken)
+            .Returns(ids.ToList());
 
         await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+        await UnitOfWork.Tasks.Received(0).GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
-    public async Task DeleteMany_ShouldLogActivity_WhenValidId()
+    public async Task DeleteMany_ShouldLogActivityForDeletedIds_WhenValidIds()
     {
         var ids = new[] { 1, 2, 3 };
-        UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<int[]>(), cancellationToken: TestContext.Current.CancellationToken).Returns(new List<ProjectTask>
-        {
-            new () { Id = 1 },
-            new () { Id = 2 },
-            new () { Id = 3 },
-        });
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(Arg.Any<IEnumerable<int>>(), "userId", TestContext.Current.CancellationToken)
+            .Returns(ids.ToList());
 
         await Handler.Handle(new DeleteTasksCommand(ids), TestContext.Current.CancellationToken);
 

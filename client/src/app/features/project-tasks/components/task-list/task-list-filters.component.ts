@@ -27,13 +27,10 @@ import { TaskListTagsComponent } from './task-list-tags.component';
       <app-task-list-tags />
       <app-task-list-filter-separator />
       <app-task-list-status />
-      <app-task-list-selection-actions
-        [selection]="selection()"
-        class="ml-auto" />
+      <app-task-list-selection-actions class="ml-auto" />
     </div>
   `,
 })
 export class TaskListFiltersComponent {
   readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
-  readonly selection = input<number[]>([]);
 }

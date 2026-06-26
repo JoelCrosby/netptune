@@ -19,6 +19,7 @@ export const initialState: TasksState = adapter.getInitialState({
   searchTerm: null,
   selectedStatuses: [],
   selectedAssignees: [],
+  selectedTaskIds: [],
   page: 1,
   pageSize: 50,
   totalCount: 0,
@@ -40,6 +41,7 @@ export interface TasksState extends AsyncEntityState<TaskViewModel> {
   searchTerm?: string | null;
   selectedStatuses: number[];
   selectedAssignees: string[];
+  selectedTaskIds: number[];
   page: number;
   pageSize: number;
   totalCount: number;

@@ -136,6 +136,49 @@ const reducer = createReducer(
       })
   ),
 
+  // Bulk Delete Tasks
+
+  on(
+    actions.bulkDeleteTasks,
+    (state): TasksState => ({
+      ...state,
+      deleteState: { loading: true },
+    })
+  ),
+  on(
+    actions.bulkDeleteTasksFail,
+    (state, { error }): TasksState => ({
+      ...state,
+      deleteState: { loading: false, error },
+    })
+  ),
+  on(
+    actions.bulkDeleteTasksSuccess,
+    (state, { taskIds }): TasksState =>
+      adapter.removeMany(taskIds, {
+        ...state,
+        deleteState: { loading: false },
+        selectedTaskIds: [],
+      })
+  ),
+
+  // Task Selection
+
+  on(
+    actions.setSelectedTaskIds,
+    (state, { ids }): TasksState => ({
+      ...state,
+      selectedTaskIds: ids,
+    })
+  ),
+  on(
+    actions.clearSelectedTaskIds,
+    (state): TasksState => ({
+      ...state,
+      selectedTaskIds: [],
+    })
+  ),
+
   // Select Task
 
   on(

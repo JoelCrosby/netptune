@@ -26,6 +26,41 @@ public abstract class AuditableRepository<TContext, TEntity, TId> : Repository<T
         return entity;
     }
 
+    public Task<int> SoftDelete(TId id, string userId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(EqualsPredicate(id))
+            .Where(entity => !entity.IsDeleted)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(entity => entity.IsDeleted, true)
+                .SetProperty(entity => entity.DeletedByUserId, userId)
+                .SetProperty(entity => entity.UpdatedAt, DateTime.UtcNow), cancellationToken);
+    }
+
+    public async Task<List<TId>> SoftDelete(IEnumerable<TId> ids, string userId, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+
+        if (idList.Count == 0) return [];
+
+        var affectedIds = await Entities
+            .AsNoTracking()
+            .Where(entity => idList.Contains(entity.Id) && !entity.IsDeleted)
+            .Select(entity => entity.Id)
+            .ToListAsync(cancellationToken);
+
+        if (affectedIds.Count == 0) return affectedIds;
+
+        await Entities
+            .Where(entity => affectedIds.Contains(entity.Id))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(entity => entity.IsDeleted, true)
+                .SetProperty(entity => entity.DeletedByUserId, userId)
+                .SetProperty(entity => entity.UpdatedAt, DateTime.UtcNow), cancellationToken);
+
+        return affectedIds;
+    }
+
     public override Task<List<TEntity>> GetAllAsync(bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities

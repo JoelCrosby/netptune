@@ -46,6 +46,11 @@ export const selectSelectedAssigneeCount = createSelector(
   (state: string[]) => state.length
 );
 
+export const selectSelectedTaskIds = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.selectedTaskIds
+);
+
 export const selectTaskStatusOptions = createSelector(
   selectSelectedTaskStatuses,
   (selectedStatuses): Set<number> => {

@@ -1,12 +1,12 @@
 using FluentAssertions;
 
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
 
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 
 using Xunit;
 
@@ -16,17 +16,19 @@ public class DeleteTaskCommandHandlerTests
 {
     private readonly DeleteTaskCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public DeleteTaskCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        UnitOfWork.Tasks.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(1, "userId", TestContext.Current.CancellationToken).Returns(1);
 
         var result = await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
@@ -34,31 +36,45 @@ public class DeleteTaskCommandHandlerTests
     }
 
     [Fact]
-    public async Task Delete_ShouldCallDeletePermanent_WhenValidId()
+    public async Task Delete_ShouldSoftDeleteWithCurrentUser_WhenValidId()
     {
-        var taskToDelete = AutoFixtures.ProjectTask;
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(taskToDelete);
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(1, "userId", TestContext.Current.CancellationToken).Returns(1);
 
-        await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), TestContext.Current.CancellationToken);
+        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Tasks.Received(1).DeletePermanent(taskToDelete.Id, TestContext.Current.CancellationToken);
+        await UnitOfWork.Tasks.Received(1).SoftDelete(1, "userId", TestContext.Current.CancellationToken);
     }
 
     [Fact]
-    public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
+    public async Task Delete_ShouldNotLoadOrHardDeleteEntity_WhenValidId()
     {
-        var taskToDelete = AutoFixtures.ProjectTask;
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(taskToDelete);
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(1, "userId", TestContext.Current.CancellationToken).Returns(1);
 
-        await Handler.Handle(new DeleteTaskCommand(taskToDelete.Id), TestContext.Current.CancellationToken);
+        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+        await UnitOfWork.Tasks.Received(0).GetAsync(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldLogActivity_WhenValidId()
+    {
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(1, "userId", TestContext.Current.CancellationToken).Returns(1);
+
+        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
+
+        Activity.Received(1).Log(Arg.Any<Action<ActivityOptions>>());
     }
 
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(Arg.Any<int>(), "userId", TestContext.Current.CancellationToken).Returns(0);
 
         var result = await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
@@ -66,32 +82,13 @@ public class DeleteTaskCommandHandlerTests
     }
 
     [Fact]
-    public async Task Delete_ShouldNotCallDeletePermanent_WhenInvalidId()
+    public async Task Delete_ShouldNotLogActivity_WhenInvalidId()
     {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.Tasks.SoftDelete(Arg.Any<int>(), "userId", TestContext.Current.CancellationToken).Returns(0);
 
         await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
-    }
-
-    [Fact]
-    public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
-    {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
-
-        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
-
-        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
-    }
-
-    [Fact]
-    public async Task Delete_ShouldLogActivity_WhenValidId()
-    {
-        UnitOfWork.Tasks.GetAsync(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
-
-        await Handler.Handle(new DeleteTaskCommand(1), TestContext.Current.CancellationToken);
-
-        Activity.Received(1).Log(Arg.Any<Action<ActivityOptions>>());
+        Activity.Received(0).Log(Arg.Any<Action<ActivityOptions>>());
     }
 }

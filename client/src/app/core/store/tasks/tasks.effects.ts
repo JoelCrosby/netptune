@@ -262,6 +262,41 @@ export class ProjectTasksEffects {
     );
   });
 
+  bulkDeleteTasks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.bulkDeleteTasks),
+      switchMap((action) =>
+        this.confirmation
+          .open(buildDeleteTasksConfirmation(action.ids.length))
+          .pipe(
+            switchMap((result) => {
+              if (!result) return EMPTY;
+
+              return this.projectTasksHubService
+                .deleteMultiple(action.identifier, action.ids)
+                .pipe(
+                  unwrapClientReposne(),
+                  tap(() => {
+                    this.snackbar.open(
+                      action.ids.length === 1
+                        ? 'Task deleted'
+                        : `${action.ids.length} tasks deleted`
+                    );
+                    this.projectTasksHubService.reloadTaskList();
+                  }),
+                  map(() =>
+                    actions.bulkDeleteTasksSuccess({ taskIds: action.ids })
+                  ),
+                  catchError((error: HttpErrorResponse) =>
+                    of(actions.bulkDeleteTasksFail({ error }))
+                  )
+                );
+            })
+          )
+      )
+    );
+  });
+
   loadTaskDetail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadTaskDetails),
@@ -368,3 +403,18 @@ const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {
   title: 'Delete Task',
   color: 'warn',
 };
+
+const buildDeleteTasksConfirmation = (count: number): ConfirmDialogOptions => ({
+  acceptLabel: 'Delete',
+  cancelLabel: 'Cancel',
+  message:
+    count === 1
+      ? 'Are you sure you want to delete this task?'
+      : `Are you sure you want to delete these ${count} tasks?`,
+  title: count === 1 ? 'Delete Task' : 'Delete Tasks',
+  confirmationCheckboxLabel:
+    count === 1
+      ? 'I understand this task will be permanently deleted.'
+      : `I understand these ${count} tasks will be permanently deleted.`,
+  color: 'warn',
+});

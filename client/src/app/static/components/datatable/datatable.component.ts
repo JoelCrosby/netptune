@@ -414,6 +414,12 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     this.selectionChanged.emit(Array.from(next.values()));
   }
 
+  clearSelection() {
+    if (this.selectionModel().size === 0) return;
+
+    this.commitSelection(new Map());
+  }
+
   isSortable(column: DatatableColumn<T>): boolean {
     return Boolean(column.sortable || column.sortKey);
   }

@@ -1,5 +1,7 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Mvc;
+
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
@@ -93,7 +95,7 @@ public static class TasksEndpoints
         IMediator mediator,
         IBoardEventService boardEventService,
         HttpContext context,
-        IEnumerable<int> ids,
+        [FromBody] IEnumerable<int> ids,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteTasksCommand(ids), cancellationToken);
