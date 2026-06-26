@@ -28,6 +28,7 @@ import { DatatableDataSource } from '@static/components/datatable/datatable.type
       tableClass="min-w-[720px] table-fixed"
       rowClass="bg-card"
       [data]="userData"
+      [customizableColumns]="true"
       [stickyHeader]="true">
       <ng-template appDatatableCell="user" let-user>
         <div class="flex min-w-0 items-center gap-3">

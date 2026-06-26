@@ -19,6 +19,7 @@ import {
 import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
+import { DialogService } from '@app/core/services/dialog.service';
 import {
   LucideArrowDown,
   LucideArrowUp,
@@ -33,11 +34,18 @@ import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 import { TablePaginationComponent } from '../table/table.component';
 import { DatatableCellTemplateDirective } from './datatable-cell-template.directive';
 import { classes } from './datatable-classes';
+import { DatatableColumnsDialogComponent } from './datatable-columns-dialog.component';
+import {
+  loadColumnPreferences,
+  reconcileColumnPreferences,
+  saveColumnPreferences,
+} from './datatable-columns.util';
 import { DatatableEmptyDirective } from './datatable-empty.directive';
 import {
   DatatableAccessor,
   DatatableCellContext,
   DatatableColumn,
+  DatatableColumnPreference,
   DatatableDataSource,
   DatatableMenuItem,
   DatatableRowClass,
@@ -72,9 +80,22 @@ import {
           [class.top-0]="stickyHeader()"
           [class.z-10]="stickyHeader()">
           <tr>
-            @if (showMenuColumn()) {
-              <th scope="col" class="w-10 px-2 py-3">
-                <span class="sr-only">Actions</span>
+            @if (showUtilityColumn()) {
+              <th scope="col" class="w-10 p-1">
+                @if (customizableColumns()) {
+                  <button
+                    class="h-5 rounded"
+                    app-icon-button
+                    type="button"
+                    aria-label="Customize columns"
+                    (click)="openColumnsDialog()">
+                    <svg
+                      lucideEllipsisVertical
+                      class="text-foreground/50 h-4 w-4"></svg>
+                  </button>
+                } @else {
+                  <span class="sr-only">Actions</span>
+                }
               </th>
             }
             @if (selection()) {
@@ -86,7 +107,7 @@ import {
                 </app-checkbox>
               </th>
             }
-            @for (column of columns(); track column.id) {
+            @for (column of visibleColumns(); track column.id) {
               <th
                 scope="col"
                 [class]="resolvedHeaderCellClass(column)"
@@ -123,32 +144,34 @@ import {
         <tbody>
           @for (row of visibleRows(); track trackRow($index, row)) {
             <tr [class]="resolvedRowClass(row, $index)">
-              @if (showMenuColumn()) {
+              @if (showUtilityColumn()) {
                 <td class="px-2 align-middle">
-                  <button
-                    class="w-8"
-                    app-icon-button
-                    type="button"
-                    aria-label="Row actions"
-                    (click)="dropdownmenu.toggle($any($event.currentTarget))">
-                    <svg
-                      lucideEllipsisVertical
-                      class="text-foreground/30 h-4 w-4"></svg>
-                  </button>
+                  @if (showMenuColumn()) {
+                    <button
+                      class="w-8"
+                      app-icon-button
+                      type="button"
+                      aria-label="Row actions"
+                      (click)="dropdownmenu.toggle($any($event.currentTarget))">
+                      <svg
+                        lucideEllipsisVertical
+                        class="text-foreground/30 h-4 w-4"></svg>
+                    </button>
 
-                  <app-dropdown-menu #dropdownmenu xPosition="after">
-                    @for (menuItem of data().menu; track menuItem.label) {
-                      <button
-                        app-menu-item
-                        type="button"
-                        (click)="selectMenuItem(menuItem, row, dropdownmenu)">
-                        <ng-container
-                          [ngComponentOutlet]="menuItem.icon"
-                          [ngComponentOutletInputs]="iconInputs" />
-                        <span>{{ menuItem.label }}</span>
-                      </button>
-                    }
-                  </app-dropdown-menu>
+                    <app-dropdown-menu #dropdownmenu xPosition="after">
+                      @for (menuItem of data().menu; track menuItem.label) {
+                        <button
+                          app-menu-item
+                          type="button"
+                          (click)="selectMenuItem(menuItem, row, dropdownmenu)">
+                          <ng-container
+                            [ngComponentOutlet]="menuItem.icon"
+                            [ngComponentOutletInputs]="iconInputs" />
+                          <span>{{ menuItem.label }}</span>
+                        </button>
+                      }
+                    </app-dropdown-menu>
+                  }
                 </td>
               }
               @if (selection()) {
@@ -162,7 +185,7 @@ import {
                   </app-checkbox>
                 </td>
               }
-              @for (column of columns(); track column.id) {
+              @for (column of visibleColumns(); track column.id) {
                 <td [class]="resolvedCellClass(row, column, $index)">
                   @if (cellTemplate(column.id); as template) {
                     <ng-container
@@ -207,8 +230,10 @@ import {
 })
 export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
+  private dialog = inject(DialogService);
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
+  customizableColumns = input(false, { transform: booleanAttribute });
   containerClass = input('');
   tableClass = input('');
   headerClass = input('');
@@ -263,8 +288,26 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     params: this.buildParams(),
   }));
 
-  showMenuColumn = computed(() => this.data().menu?.length);
+  showMenuColumn = computed(() => Boolean(this.data().menu?.length));
+  showUtilityColumn = computed(
+    () => this.showMenuColumn() || this.customizableColumns()
+  );
   columns = computed(() => this.data().columns);
+
+  columnPreferences = signal<DatatableColumnPreference[] | null>(null);
+
+  effectivePreferences = computed(() =>
+    reconcileColumnPreferences(this.columns(), this.columnPreferences())
+  );
+
+  visibleColumns = computed(() => {
+    const byId = new Map(this.columns().map((column) => [column.id, column]));
+
+    return this.effectivePreferences()
+      .filter((preference) => preference.visible)
+      .map((preference) => byId.get(preference.id))
+      .filter((column): column is DatatableColumn<T> => column != null);
+  });
 
   buildParams = computed<Params>(() => {
     const sort = this.sort();
@@ -332,6 +375,13 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   });
 
   constructor() {
+    effect(() => {
+      if (!this.customizableColumns()) return;
+
+      const loaded = loadColumnPreferences(this.data().key);
+      untracked(() => this.columnPreferences.set(loaded));
+    });
+
     effect(() => {
       if (this.resourceLoading()) return;
 
@@ -455,6 +505,27 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     this.commitSelection(new Map());
   }
 
+  openColumnsDialog() {
+    const byId = new Map(this.columns().map((column) => [column.id, column]));
+    const items = this.effectivePreferences().map((preference) => ({
+      id: preference.id,
+      header: byId.get(preference.id)?.header ?? preference.id,
+      visible: preference.visible,
+    }));
+
+    const ref = this.dialog.open<DatatableColumnPreference[]>(
+      DatatableColumnsDialogComponent,
+      { data: { items } }
+    );
+
+    ref.closed.subscribe((result) => {
+      if (!result) return;
+
+      this.columnPreferences.set(result);
+      saveColumnPreferences(this.data().key, result);
+    });
+  }
+
   isSortable(column: DatatableColumn<T>): boolean {
     return Boolean(column.sortable || column.sortKey);
   }
@@ -532,8 +603,8 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   emptyColumnSpan(): number {
     return Math.max(
       1,
-      this.columns().length +
-        (this.showMenuColumn() ? 1 : 0) +
+      this.visibleColumns().length +
+        (this.showUtilityColumn() ? 1 : 0) +
         (this.selection() ? 1 : 0)
     );
   }

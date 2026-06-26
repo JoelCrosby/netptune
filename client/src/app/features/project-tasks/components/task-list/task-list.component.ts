@@ -57,6 +57,7 @@ import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service'
       rowClass="bg-card"
       [data]="taskData"
       [selection]="canDelete()"
+      [customizableColumns]="true"
       [stickyHeader]="true"
       (selectionChanged)="onSelectionChanged($event)">
       <ng-template appDatatableCell="systemId" let-task>

@@ -33,6 +33,11 @@ export interface DatatableColumn<T = unknown> {
   ariaLabel?: string;
 }
 
+export interface DatatableColumnPreference {
+  id: string;
+  visible: boolean;
+}
+
 export interface DatatableMenuItem<T = unknown> {
   label: string;
   icon: Type<unknown>;
