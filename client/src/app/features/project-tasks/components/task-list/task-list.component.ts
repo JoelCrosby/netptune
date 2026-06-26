@@ -31,6 +31,8 @@ import { TaskListFiltersComponent } from './task-list-filters.component';
 import { injectParams } from '@app/core/router/signals';
 import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
 import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service';
+import { DatePipe } from '@angular/common';
+import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-task-list',
@@ -45,6 +47,8 @@ import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service'
     DatatableComponent,
     DatatableEmptyDirective,
     TaskListFiltersComponent,
+    DatePipe,
+    TooltipDirective,
   ],
   providers: [],
   template: `
@@ -111,6 +115,14 @@ import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service'
         } @else {
           <span class="text-muted text-sm">Unassigned</span>
         }
+      </ng-template>
+
+      <ng-template appDatatableCell="updatedAt" let-task>
+        <span
+          class="text-muted text-sm"
+          [appTooltip]="task.updatedAt | date: 'medium'"
+          >{{ task.updatedAt | date }}</span
+        >
       </ng-template>
 
       <div appDatatableEmpty class="flex justify-center">
@@ -228,6 +240,12 @@ export class TaskListComponent {
         id: 'assignees',
         header: 'Assignees',
         sortKey: 'assignees',
+        widthClass: 'w-40',
+      },
+      {
+        id: 'updatedAt',
+        header: 'Updated',
+        sortKey: 'updatedAt',
         widthClass: 'w-40',
       },
     ],
