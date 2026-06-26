@@ -4,7 +4,7 @@ import { LucidePencil, LucideTrash } from '@lucide/angular';
 import { DialogService } from '@core/services/dialog.service';
 import { BulkEditTasksDialogComponent } from '@entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component';
 import { Store } from '@ngrx/store';
-import { bulkDeleteTasks } from '@core/store/tasks/tasks.actions';
+import { bulkDeleteTasksAction } from '@core/store/tasks/tasks.actions';
 import { selectSelectedTaskIds } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 
@@ -59,7 +59,7 @@ export class TaskListSelectionActionsComponent {
     if (!workspaceId || ids.length === 0) return;
 
     this.store.dispatch(
-      bulkDeleteTasks({
+      bulkDeleteTasksAction.init({
         identifier: `[workspace] ${workspaceId}`,
         ids: [...ids],
       })

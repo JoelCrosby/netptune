@@ -8,6 +8,7 @@ import { Tag } from '@core/models/tag';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FileResponse } from '@core/types/file-response';
+import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[ProjectTasks] Clear State');
@@ -133,19 +134,12 @@ export const deleteProjectTasksFail = createAction(
 
 // Bulk Delete Tasks
 
-export const bulkDeleteTasks = createAction(
+export const bulkDeleteTasksAction = createAsyncAction(
   '[ProjectTasks] Bulk Delete Tasks',
-  props<{ identifier: string; ids: number[] }>()
-);
-
-export const bulkDeleteTasksSuccess = createAction(
-  '[ProjectTasks] Bulk Delete Tasks Success',
-  props<{ taskIds: number[] }>()
-);
-
-export const bulkDeleteTasksFail = createAction(
-  '[ProjectTasks] Bulk Delete Tasks Fail',
-  props<{ error: HttpErrorResponse }>()
+  {
+    init: props<{ identifier: string; ids: number[] }>(),
+    success: props<{ taskIds: number[] }>(),
+  }
 );
 
 // Task Selection

@@ -139,21 +139,21 @@ const reducer = createReducer(
   // Bulk Delete Tasks
 
   on(
-    actions.bulkDeleteTasks,
+    actions.bulkDeleteTasksAction.init,
     (state): TasksState => ({
       ...state,
       deleteState: { loading: true },
     })
   ),
   on(
-    actions.bulkDeleteTasksFail,
+    actions.bulkDeleteTasksAction.fail,
     (state, { error }): TasksState => ({
       ...state,
       deleteState: { loading: false, error },
     })
   ),
   on(
-    actions.bulkDeleteTasksSuccess,
+    actions.bulkDeleteTasksAction.success,
     (state, { taskIds }): TasksState =>
       adapter.removeMany(taskIds, {
         ...state,

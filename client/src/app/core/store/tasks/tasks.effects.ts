@@ -264,7 +264,7 @@ export class ProjectTasksEffects {
 
   bulkDeleteTasks$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(actions.bulkDeleteTasks),
+      ofType(actions.bulkDeleteTasksAction.init),
       switchMap((action) =>
         this.confirmation
           .open(buildDeleteTasksConfirmation(action.ids.length))
@@ -285,10 +285,12 @@ export class ProjectTasksEffects {
                     this.projectTasksHubService.reloadTaskList();
                   }),
                   map(() =>
-                    actions.bulkDeleteTasksSuccess({ taskIds: action.ids })
+                    actions.bulkDeleteTasksAction.success({
+                      taskIds: action.ids,
+                    })
                   ),
                   catchError((error: HttpErrorResponse) =>
-                    of(actions.bulkDeleteTasksFail({ error }))
+                    of(actions.bulkDeleteTasksAction.fail({ error }))
                   )
                 );
             })
