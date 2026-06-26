@@ -152,10 +152,12 @@ import {
                 </td>
               }
               @if (selection()) {
-                <td class="px-2 py-2 align-middle">
+                <td
+                  class="px-2 py-2 align-middle"
+                  (mousedown)="rangeSelectActive = $event.shiftKey">
                   <app-checkbox
                     [checked]="isSelected(row)"
-                    (changed)="toggleRow(row, $event)">
+                    (changed)="toggleRow(row, $event, $index)">
                     <span class="sr-only">Select row</span>
                   </app-checkbox>
                 </td>
@@ -312,6 +314,13 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   selectionModel = signal(new Map<string | number, T>());
   selectedRows = computed(() => Array.from(this.selectionModel().values()));
 
+  // Tracks whether the shift key was held at the start of the current click so
+  // toggleRow can extend the selection as a range. Set on mousedown, which
+  // always fires before the checkbox change event.
+  rangeSelectActive = false;
+  // Index of the last row toggled without shift; used as the range anchor.
+  rangeAnchor: number | null = null;
+
   allSelected = computed(() => {
     const rows = this.visibleRows();
 
@@ -376,8 +385,31 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     return this.selectionModel().has(this.rowKey(row));
   }
 
-  toggleRow(row: T, selected: boolean) {
+  toggleRow(row: T, selected: boolean, index: number) {
     const next = new Map(this.selectionModel());
+    const rangeSelect = this.rangeSelectActive;
+    this.rangeSelectActive = false;
+
+    if (rangeSelect && this.rangeAnchor !== null) {
+      const rows = this.visibleRows();
+      const start = Math.min(this.rangeAnchor, index);
+      const end = Math.max(this.rangeAnchor, index);
+
+      for (let i = start; i <= end; i++) {
+        const rangeRow = rows[i];
+        const key = this.rowKey(rangeRow);
+
+        if (selected) {
+          next.set(key, rangeRow);
+        } else {
+          next.delete(key);
+        }
+      }
+
+      this.commitSelection(next);
+      return;
+    }
+
     const key = this.rowKey(row);
 
     if (selected) {
@@ -386,6 +418,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
       next.delete(key);
     }
 
+    this.rangeAnchor = index;
     this.commitSelection(next);
   }
 
@@ -415,6 +448,8 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   }
 
   clearSelection() {
+    this.rangeAnchor = null;
+
     if (this.selectionModel().size === 0) return;
 
     this.commitSelection(new Map());
