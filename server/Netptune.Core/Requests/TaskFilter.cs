@@ -14,6 +14,8 @@ public sealed class TaskFilter : PageRequest
 
     public int[] StatusIds { get; init; } = [];
 
+    public int[] StatusCategories { get; init; } = [];
+
     public string[] Assignees { get; init; } = [];
 
     public bool? NoSprint { get; init; }

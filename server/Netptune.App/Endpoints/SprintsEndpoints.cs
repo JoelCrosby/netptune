@@ -15,6 +15,7 @@ public static class SprintsEndpoints
         var group = builder.MapGroup("sprints");
 
         group.MapGet("/", HandleGetSprints).RequireAuthorization(NetptunePermissions.Sprints.Read);
+        group.MapGet("/backlog", HandleGetBacklog).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapGet("/{id:int}", HandleGetSprint).RequireAuthorization(NetptunePermissions.Sprints.Read);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Sprints.Create);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Sprints.Update);
@@ -39,6 +40,16 @@ public static class SprintsEndpoints
                 : [];
 
         var result = await mediator.Send(new GetSprintsQuery(filter.ProjectId, statuses, filter.Take), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleGetBacklog(
+        IMediator mediator,
+        [AsParameters] TaskFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetBacklogTasksQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }

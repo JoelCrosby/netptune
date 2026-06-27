@@ -21,8 +21,6 @@ export const initialState: SprintsState = adapter.getInitialState({
   detailLoading: false,
   availableTasks: [],
   availableTasksLoading: false,
-  backlogTasks: [],
-  backlogTasksLoading: false,
   filter: {},
   createState: DEFAULT_ACTION_STATE,
   updateState: DEFAULT_ACTION_STATE,
@@ -48,8 +46,6 @@ export interface SprintsState extends AsyncEntityState<SprintViewModel> {
   detailLoading: boolean;
   availableTasks: TaskViewModel[];
   availableTasksLoading: boolean;
-  backlogTasks: TaskViewModel[];
-  backlogTasksLoading: boolean;
   filter: SprintFilter;
   createState: ActionState;
   updateState: ActionState;

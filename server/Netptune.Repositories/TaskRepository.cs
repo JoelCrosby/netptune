@@ -183,6 +183,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             excludeSprintId = filter.ExcludeSprintId,
             noSprint = filter.NoSprint ?? false,
             statusIds,
+            statusCategories = filter.StatusCategories,
             tags,
             assignees,
             search,

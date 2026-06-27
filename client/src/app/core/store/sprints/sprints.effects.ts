@@ -28,6 +28,7 @@ import {
   buildTaskFilterRouteParams,
   parseTaskFilterRouteParams,
 } from '../tasks/task-filter-route-params';
+import { ProjectTasksHubService } from '../tasks/tasks.hub.service';
 import * as actions from './sprints.actions';
 import { SprintsService } from './sprints.service';
 
@@ -39,6 +40,7 @@ export class SprintsEffects {
   private store = inject(Store);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private tasksHub = inject(ProjectTasksHubService);
 
   loadSprints$ = createEffect(() => {
     return this.actions$.pipe(
@@ -327,42 +329,13 @@ export class SprintsEffects {
         this.sprintsService.addTasks(sprintId, { taskIds: [taskId] }).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Task added to sprint')),
-          switchMap((sprint) => [
-            actions.loadSprintDetail.success({ sprint }),
-            actions.removeTaskFromBacklog({ taskId }),
-          ]),
+          // The task has left the backlog, so refresh the backlog datatables.
+          tap(() => this.tasksHub.reloadTaskList()),
+          map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.updateSprint.fail({ error }))
           )
         )
-      )
-    );
-  });
-
-  loadBacklogTasks$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadBacklogTasks.init),
-      concatLatestFrom(() => [
-        this.store.select(selectTaskSearchTerm),
-        this.store.select(selectSelectedTags),
-        this.store.select(selectSelectedAssignees),
-        this.store.select(selectSelectedTaskStatuses),
-      ]),
-      switchMap(([, searchTerm, tags, assignees, statuses]) =>
-        this.sprintsService
-          .backlogTasks({
-            search: searchTerm?.trim() || undefined,
-            tags: tags.length ? tags : undefined,
-            assignees: assignees.length ? assignees : undefined,
-            statusIds: statuses.length ? statuses : undefined,
-          })
-          .pipe(
-            unwrapClientPageReposne(),
-            map((tasks) => actions.loadBacklogTasks.success({ tasks })),
-            catchError((error: HttpErrorResponse) =>
-              of(actions.loadBacklogTasks.fail({ error }))
-            )
-          )
       )
     );
   });
@@ -380,7 +353,6 @@ export class SprintsEffects {
         sprintId: undefined,
       }),
       actions.setSprintTaskFilter({ sprintId: undefined }),
-      actions.loadBacklogTasks.init(),
     ];
   }
 

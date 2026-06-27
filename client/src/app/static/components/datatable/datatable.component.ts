@@ -243,6 +243,10 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   stickyHeader = input(false);
   sort = model<DatatableSort | null>(null);
   selectionChanged = output<T[]>();
+  // Emitted whenever the resource settles (initial load and every reload) so
+  // hosts can react to row totals without reaching into the resource directly,
+  // which would force it to evaluate before this component's inputs are bound.
+  loaded = output<{ totalCount: number; hasValue: boolean }>();
 
   currentPage = signal(1);
   pageSize = signal(50);
@@ -386,6 +390,17 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
       if (this.resourceLoading()) return;
 
       this.lastResolvedRows.set(this.currentRows());
+    });
+
+    effect(() => {
+      if (this.resourceLoading()) return;
+
+      const hasValue = this.resourceRef.hasValue();
+
+      this.loaded.emit({
+        totalCount: hasValue ? this.totalCount() : 0,
+        hasValue,
+      });
     });
 
     effect(() => {

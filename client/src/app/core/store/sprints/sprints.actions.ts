@@ -117,17 +117,3 @@ export const assignBacklogTask = createAction(
   '[Sprints] Assign Backlog Task',
   props<{ taskId: number; sprintId: number }>()
 );
-
-// Load Backlog Tasks
-
-export const loadBacklogTasks = createAsyncAction(
-  '[Sprints] Load Backlog Tasks',
-  {
-    success: props<{ tasks: TaskViewModel[] }>(),
-  }
-);
-
-export const removeTaskFromBacklog = createAction(
-  '[Sprints] Remove Task From Backlog',
-  props<{ taskId: number }>()
-);

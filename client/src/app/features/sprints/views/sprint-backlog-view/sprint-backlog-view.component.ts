@@ -1,36 +1,37 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, viewChildren } from '@angular/core';
+import { Params } from '@angular/router';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { initBacklogView } from '@core/store/sprints/sprints.actions';
-import {
-  selectAllSprints,
-  selectBacklogTasks,
-  selectBacklogTasksLoading,
-} from '@core/store/sprints/sprints.selectors';
+import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import {
   selectSelectedAssignees,
+  selectSelectedTaskStatuses,
   selectTaskFiltersActive,
+  selectTaskSearchTerm,
 } from '@core/store/tasks/tasks.selectors';
+import { selectSelectedTags } from '@core/store/tags/tags.selectors';
+import { loadUsers } from '@core/store/users/users.actions';
+import { selectAllUsers } from '@core/store/users/users.selectors';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { TaskListFiltersComponent } from '@project-tasks/components/task-list/task-list-filters.component';
 import { CardComponent } from '@static/components/card/card.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import {
-  BacklogGroup,
-  SprintBacklogGroupComponent,
-} from '../../components/sprint-backlog-group.component';
+import { SprintBacklogGroupComponent } from '../../components/sprint-backlog-group.component';
+
+interface BacklogGroupConfig {
+  label: string;
+  categories: StatusCategory[];
+}
 
 @Component({
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
     CardComponent,
     TaskListFiltersComponent,
     SprintBacklogGroupComponent,
@@ -39,48 +40,63 @@ import {
     <app-page-container [centerPage]="true" [marginBottom]="true">
       <app-page-header title="Backlog" />
 
-      @if (loading()) {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="32px" />
-        </div>
-      } @else {
-        <div class="flex flex-col gap-6">
-          <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
+      <div class="flex flex-col gap-6">
+        <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
 
-          @if (assignableSprints().length === 0) {
-            <div
-              class="text-muted border-border rounded border-2 border-dashed p-4 text-sm">
-              No planning or active sprints found. Create a sprint first to
-              assign tasks to it.
-            </div>
-          }
+        @if (assignableSprints().length === 0) {
+          <div
+            class="text-muted border-border rounded border-2 border-dashed p-4 text-sm">
+            No planning or active sprints found. Create a sprint first to assign
+            tasks to it.
+          </div>
+        }
 
-          @for (group of groups(); track group.status) {
-            <app-sprint-backlog-group
-              [group]="group"
-              [sprints]="assignableSprints()" />
-          } @empty {
-            <app-card class="text-muted min-h-0 text-center">
-              {{
-                filtersActive()
-                  ? 'No backlog tasks match these filters.'
-                  : 'The backlog is empty — all tasks are assigned to sprints.'
-              }}
-            </app-card>
-          }
-        </div>
-      }
+        @for (group of groups; track group.label) {
+          <app-sprint-backlog-group
+            [label]="group.label"
+            [categories]="group.categories"
+            [filterParams]="filterParams()"
+            [sprints]="assignableSprints()" />
+        }
+
+        @if (allEmpty()) {
+          <app-card class="text-muted min-h-0 text-center">
+            {{
+              filtersActive()
+                ? 'No backlog tasks match these filters.'
+                : 'The backlog is empty — all tasks are assigned to sprints.'
+            }}
+          </app-card>
+        }
+      </div>
     </app-page-container>
   `,
 })
 export class SprintBacklogViewComponent {
   private store = inject(Store);
 
-  readonly loading = this.store.selectSignal(selectBacklogTasksLoading);
-  readonly backlogTasks = this.store.selectSignal(selectBacklogTasks);
   readonly allSprints = this.store.selectSignal(selectAllSprints);
+  readonly users = this.store.selectSignal(selectAllUsers);
+  readonly searchTerm = this.store.selectSignal(selectTaskSearchTerm);
+  readonly selectedTags = this.store.selectSignal(selectSelectedTags);
+  readonly selectedStatuses = this.store.selectSignal(selectSelectedTaskStatuses);
   readonly selectedAssignees = this.store.selectSignal(selectSelectedAssignees);
   readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
+
+  private backlogGroups = viewChildren(SprintBacklogGroupComponent);
+
+  readonly groups: BacklogGroupConfig[] = [
+    { label: 'New', categories: [StatusCategory.todo] },
+    { label: 'In Progress', categories: [StatusCategory.active] },
+    {
+      label: 'Other',
+      categories: [
+        StatusCategory.backlog,
+        StatusCategory.done,
+        StatusCategory.inactive,
+      ],
+    },
+  ];
 
   readonly assignableSprints = computed(() =>
     this.allSprints().filter(
@@ -89,64 +105,61 @@ export class SprintBacklogViewComponent {
     )
   );
 
-  readonly assigneeOptions = computed(
-    (): Selected<AssigneeViewModel>[] => {
-      const selectedSet = new Set(this.selectedAssignees());
-      const assigneeMap = this.backlogTasks()
-        .flatMap((task) => task.assignees)
-        .reduce((map, assignee) => {
-          if (!map.has(assignee.id)) {
-            map.set(assignee.id, assignee);
-          }
+  // Assignee filter options come from the workspace member list rather than the
+  // tasks currently paged into view, so the filter is complete and stable.
+  readonly assigneeOptions = computed((): Selected<AssigneeViewModel>[] => {
+    const selectedSet = new Set(this.selectedAssignees());
 
-          return map;
-        }, new Map<string, AssigneeViewModel>());
+    return this.users()
+      .map((user) => ({
+        id: user.id,
+        displayName: user.displayName,
+        pictureUrl: user.pictureUrl ?? '',
+        selected: selectedSet.has(user.id),
+      }))
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+  });
 
-      return Array.from(assigneeMap.values())
-        .sort((a, b) => a.displayName.localeCompare(b.displayName))
-        .map((assignee) => ({
-          ...assignee,
-          selected: selectedSet.has(assignee.id),
-        }));
-    }
-  );
+  // Shared query params (search/tags/status/assignees) applied to every group's
+  // datatable fetch; each group adds its own status categories on top.
+  readonly filterParams = computed((): Params => {
+    const params: Params = {};
+    const search = this.searchTerm()?.trim();
 
-  readonly groups = computed((): BacklogGroup[] => {
-    const tasks = this.backlogTasks();
-    const statusOrder = [
-      StatusCategory.todo,
-      StatusCategory.active,
-      StatusCategory.backlog,
-    ];
-    const labelMap: Record<number, string> = {
-      [StatusCategory.todo]: 'New',
-      [StatusCategory.active]: 'In Progress',
-      [StatusCategory.backlog]: 'Other',
-    };
-
-    const grouped = new Map<StatusCategory, TaskViewModel[]>([
-      [StatusCategory.todo, []],
-      [StatusCategory.active, []],
-      [StatusCategory.backlog, []],
-    ]);
-
-    for (const task of tasks) {
-      const key = statusOrder.includes(task.statusCategory)
-        ? task.statusCategory
-        : StatusCategory.backlog;
-      grouped.get(key)?.push(task);
+    if (search) {
+      params['search'] = search;
     }
 
-    return statusOrder
-      .filter((s) => (grouped.get(s)?.length ?? 0) > 0)
-      .map((s) => ({
-        label: labelMap[s],
-        status: s,
-        tasks: grouped.get(s) ?? [],
-      }));
+    const tags = this.selectedTags();
+    if (tags.length) {
+      params['tags'] = tags;
+    }
+
+    const statuses = this.selectedStatuses();
+    if (statuses.length) {
+      params['statusIds'] = statuses;
+    }
+
+    const assignees = this.selectedAssignees();
+    if (assignees.length) {
+      params['assignees'] = assignees;
+    }
+
+    return params;
+  });
+
+  // Only show the global empty message once every group has resolved its fetch
+  // and all came back empty.
+  readonly allEmpty = computed(() => {
+    const groups = this.backlogGroups();
+
+    if (groups.length === 0) return false;
+
+    return groups.every((group) => group.hasLoaded() && group.count() === 0);
   });
 
   constructor() {
     dispatchForWorkspace(() => initBacklogView());
+    dispatchForWorkspace(() => loadUsers.init());
   }
 }
