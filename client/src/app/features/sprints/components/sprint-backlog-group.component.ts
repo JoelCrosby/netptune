@@ -36,7 +36,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
   template: `
     <div class="flex flex-col gap-2" [class.hidden]="isEmpty()">
       <div class="flex items-center gap-2">
-        <h2 class="text-sm font-semibold tracking-wide uppercase">
+        <h2 class="pl-2 font-semibold tracking-wide uppercase">
           {{ label() }}
         </h2>
         <span
@@ -47,7 +47,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
 
       <div class="p-2">
         <app-datatable
-          containerClass="overflow-auto"
+          containerClass="h-[calc(100vh-912px)] min-h-16 overflow-auto"
           tableClass="min-w-[1040px] table-fixed"
           rowClass="bg-card"
           [data]="data"

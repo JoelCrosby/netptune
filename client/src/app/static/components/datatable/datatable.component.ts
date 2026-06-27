@@ -20,6 +20,8 @@ import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 import { DialogService } from '@app/core/services/dialog.service';
+import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
+import { Store } from '@ngrx/store';
 import {
   LucideArrowDown,
   LucideArrowUp,
@@ -231,6 +233,16 @@ import {
 export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
   private dialog = inject(DialogService);
+  private store = inject(Store);
+  // The active workspace travels as a request header (set by the auth
+  // interceptor), not in the URL or query params, so the resource's request is
+  // identical across workspaces. Track the identifier so we can force a refetch
+  // when it changes — otherwise the table keeps showing the previous
+  // workspace's rows after a switch.
+  private readonly workspaceIdentifier = this.store.selectSignal(
+    selectCurrentWorkspaceIdentifier
+  );
+  private workspaceTracked = false;
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });
@@ -412,6 +424,22 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
       reload();
       untracked(() => this.resourceRef.reload());
+    });
+
+    effect(() => {
+      // Refetch when the active workspace changes. Skip the first observation
+      // so we don't double-fetch the initial load (the resource fetches itself
+      // on creation).
+      this.workspaceIdentifier();
+
+      untracked(() => {
+        if (!this.workspaceTracked) {
+          this.workspaceTracked = true;
+          return;
+        }
+
+        this.resourceRef.reload();
+      });
     });
   }
 

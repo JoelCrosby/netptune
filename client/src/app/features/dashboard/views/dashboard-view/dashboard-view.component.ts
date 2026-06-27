@@ -75,13 +75,16 @@ const fallbackPalette = [
         </div>
 
         <section class="flex flex-col gap-3">
-          <h2 class="text-foreground flex items-center gap-2 text-lg font-semibold">
+          <h2
+            class="text-foreground flex items-center gap-2 text-lg font-semibold">
             Assigned to me
-            <span class="text-muted text-sm font-normal">{{ totalCount() }}</span>
+            <span class="text-muted text-sm font-normal">{{
+              totalCount()
+            }}</span>
           </h2>
 
           <app-datatable
-            containerClass="overflow-auto"
+            containerClass="h-[calc(100vh-612px)] min-h-16 overflow-auto"
             tableClass="min-w-[820px] table-fixed"
             rowClass="bg-card"
             emptyMessage="You have no tasks assigned to you."
@@ -151,15 +154,16 @@ export class DashboardViewComponent {
 
   readonly currentUserId = this.store.selectSignal(selectCurrentUserId);
 
-  private readonly breakdown = httpResource<ClientResponse<TaskStatusBreakdown>>(
-    () => 'api/tasks/status-breakdown'
-  );
+  private readonly breakdown = httpResource<
+    ClientResponse<TaskStatusBreakdown>
+  >(() => 'api/tasks/status-breakdown');
 
   readonly statusItems = computed<DonutStatItem[]>(() =>
     (this.breakdown.value()?.payload?.statuses ?? []).map((status, index) => ({
       label: status.name,
       value: status.count,
-      color: status.color?.trim() || fallbackPalette[index % fallbackPalette.length],
+      color:
+        status.color?.trim() || fallbackPalette[index % fallbackPalette.length],
     }))
   );
 
@@ -175,9 +179,24 @@ export class DashboardViewComponent {
   private readonly columns: DatatableColumn<TaskViewModel>[] = [
     { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
     { id: 'name', header: 'Task', accessor: 'name', sortable: true },
-    { id: 'projectName', header: 'Project', sortKey: 'projectName', widthClass: 'w-48' },
-    { id: 'sprint', header: 'Sprint', sortKey: 'sprintName', widthClass: 'w-38' },
-    { id: 'status', header: 'Status', sortKey: 'statusName', widthClass: 'w-40' },
+    {
+      id: 'projectName',
+      header: 'Project',
+      sortKey: 'projectName',
+      widthClass: 'w-48',
+    },
+    {
+      id: 'sprint',
+      header: 'Sprint',
+      sortKey: 'sprintName',
+      widthClass: 'w-38',
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      sortKey: 'statusName',
+      widthClass: 'w-40',
+    },
     { id: 'priority', header: 'Priority', sortable: true, widthClass: 'w-32' },
   ];
 
