@@ -36,9 +36,9 @@ public static class NotificationsEndpoints
         return builder;
     }
 
-    private static async Task<IResult> HandleGet(IMediator mediator, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleGet(IMediator mediator, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserNotificationsQuery(), cancellationToken);
+        var result = await mediator.Send(new GetUserNotificationsQuery(skip ?? 0, take ?? 50), cancellationToken);
         return Results.Ok(result);
     }
 

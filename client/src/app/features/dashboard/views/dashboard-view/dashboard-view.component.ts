@@ -23,6 +23,7 @@ import {
   DonutStatCardComponent,
   DonutStatItem,
 } from '@static/components/donut-stat-card/donut-stat-card.component';
+import { DashboardNotificationsCardComponent } from '../../components/dashboard-notifications-card.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
@@ -53,6 +54,7 @@ const fallbackPalette = [
     DatatableComponent,
     DatatableCellTemplateDirective,
     DonutStatCardComponent,
+    DashboardNotificationsCardComponent,
     TaskScopeIdComponent,
     SprintBadgeComponent,
   ],
@@ -68,6 +70,8 @@ const fallbackPalette = [
             emptyMessage="No tasks to display."
             [items]="statusItems()"
             [total]="statusTotal()" />
+
+          <app-dashboard-notifications-card class="lg:relative" />
         </div>
 
         <section class="flex flex-col gap-3">

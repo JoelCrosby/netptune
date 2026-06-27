@@ -12,7 +12,7 @@ export interface DonutStatItem {
   imports: [NgApexchartsModule],
   template: `
     <div
-      class="border-border bg-card flex min-h-24 flex-col rounded border p-6 shadow-sm">
+      class="border-border bg-card flex h-full min-h-24 flex-col rounded border p-6 shadow-sm">
       <div class="mb-2 flex items-center justify-between">
         <h3 class="text-foreground text-base font-semibold">{{ title() }}</h3>
         <ng-content select="[card-actions]" />

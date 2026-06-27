@@ -34,7 +34,7 @@ public class GetUserNotificationsQueryHandlerTests
         var notifications = new List<NotificationViewModel> { new(), new() };
 
         UnitOfWork.Notifications
-            .GetUserNotifications(UserId, WorkspaceId, TestContext.Current.CancellationToken).Returns(notifications);
+            .GetUserNotifications(UserId, WorkspaceId, 0, 50, TestContext.Current.CancellationToken).Returns(notifications);
 
         var result = await Handler.Handle(new GetUserNotificationsQuery(), TestContext.Current.CancellationToken);
 
@@ -46,10 +46,10 @@ public class GetUserNotificationsQueryHandlerTests
     public async Task GetUserNotifications_ShouldQueryWithCorrectUserAndWorkspace()
     {
         UnitOfWork.Notifications
-            .GetUserNotifications(Arg.Any<string>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<NotificationViewModel>());
+            .GetUserNotifications(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<NotificationViewModel>());
 
         await Handler.Handle(new GetUserNotificationsQuery(), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Notifications.Received(1).GetUserNotifications(UserId, WorkspaceId, TestContext.Current.CancellationToken);
+        await UnitOfWork.Notifications.Received(1).GetUserNotifications(UserId, WorkspaceId, 0, 50, TestContext.Current.CancellationToken);
     }
 }

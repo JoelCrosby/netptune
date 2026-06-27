@@ -6,7 +6,7 @@ using Netptune.Core.ViewModels.Notifications;
 
 namespace Netptune.Handlers.Notifications.Queries;
 
-public sealed record GetUserNotificationsQuery : IRequest<ClientResponse<List<NotificationViewModel>>>;
+public sealed record GetUserNotificationsQuery(int Skip = 0, int Take = 50) : IRequest<ClientResponse<List<NotificationViewModel>>>;
 
 public sealed class GetUserNotificationsQueryHandler : IRequestHandler<GetUserNotificationsQuery, ClientResponse<List<NotificationViewModel>>>
 {
@@ -23,7 +23,11 @@ public sealed class GetUserNotificationsQueryHandler : IRequestHandler<GetUserNo
     {
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
-        var notifications = await UnitOfWork.Notifications.GetUserNotifications(userId, workspaceId, cancellationToken);
+
+        var skip = Math.Max(request.Skip, 0);
+        var take = Math.Clamp(request.Take, 1, 100);
+
+        var notifications = await UnitOfWork.Notifications.GetUserNotifications(userId, workspaceId, skip, take, cancellationToken);
 
         return ClientResponse<List<NotificationViewModel>>.Success(notifications);
     }
