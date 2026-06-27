@@ -25,7 +25,6 @@ public sealed class AuditRetentionJob : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // Stagger start to avoid hammering the DB at startup
         await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)

@@ -63,7 +63,7 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
         }
         catch (Exception e)
         {
-            Logger.LogError("{Exception}", e.Message);
+            Logger.LogError(e, "Storage Service upload failed");
 
             return Failed();
         }
