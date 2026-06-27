@@ -11,6 +11,13 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
           {{ title() }}
         </h1>
       }
+      @if (count() !== null && count() !== undefined) {
+        <span
+          class="bg-foreground/10 text-foreground/70 ml-3 rounded-full px-2.5 py-0.5 text-lg font-medium tabular-nums"
+          aria-label="Total count">
+          {{ count() }}
+        </span>
+      }
       @if (titleEditable()) {
         <app-inline-edit-input
           class="page-header-title font-overpass m-0 cursor-pointer text-[2rem] font-normal"
@@ -31,6 +38,7 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
 export class PageHeaderTitleComponent {
   readonly title = input<string | null>();
   readonly titleEditable = input(false);
+  readonly count = input<number | null>();
 
   readonly titleSubmitted = output<string>();
 }

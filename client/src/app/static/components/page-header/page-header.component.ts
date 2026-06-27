@@ -32,6 +32,7 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
         <app-page-header-title
           [title]="title()"
           [titleEditable]="titleEditable()"
+          [count]="count()"
           (titleSubmitted)="titleSubmitted.emit($event)">
           <ng-content />
         </app-page-header-title>
@@ -50,6 +51,7 @@ export class PageHeaderComponent {
 
   readonly title = input<string | null>();
   readonly titleEditable = input(false);
+  readonly count = input<number | null>();
   readonly actionTitle = input<string | null>();
   readonly secondaryActions = input<HeaderAction[]>([]);
   readonly overflowActions = input<HeaderAction[]>([]);
