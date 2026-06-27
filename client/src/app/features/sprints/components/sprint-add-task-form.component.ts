@@ -14,7 +14,7 @@ import { FormSelectSearchComponent } from '@static/components/form-select-search
   imports: [FlatButtonComponent, FormSelectSearchComponent],
   template: `
     <form
-      class="border-border flex flex-wrap items-center gap-3 border-b py-4"
+      class="flex flex-wrap items-center gap-3 py-4"
       (submit)="onSubmit($event)">
       <app-form-select-search
         class="min-w-64 flex-1"

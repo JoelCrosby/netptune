@@ -363,6 +363,7 @@ export class SprintsEffects {
         this.sprintsService.addTasks(sprintId, request).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Tasks added to sprint')),
+          tap(() => this.tasksHub.reloadTaskList()),
           map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.updateSprint.fail({ error }))
@@ -379,6 +380,7 @@ export class SprintsEffects {
         this.sprintsService.removeTask(sprintId, taskId).pipe(
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Task removed from sprint')),
+          tap(() => this.tasksHub.reloadTaskList()),
           map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.updateSprint.fail({ error }))
