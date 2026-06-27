@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  output,
+  viewChild,
+} from '@angular/core';
 import { Params } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -63,7 +70,8 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
       [selection]="canDelete()"
       [customizableColumns]="true"
       [stickyHeader]="true"
-      (selectionChanged)="onSelectionChanged($event)">
+      (selectionChanged)="onSelectionChanged($event)"
+      (loaded)="onLoaded($event)">
       <ng-template appDatatableCell="systemId" let-task>
         <span class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
           {{ task.systemId }}
@@ -159,6 +167,8 @@ export class TaskListComponent {
   private params = injectParams();
 
   private datatable = viewChild(DatatableComponent<TaskViewModel>);
+
+  readonly countChange = output<number>();
 
   selection = this.store.selectSignal(selectSelectedTaskIds);
 
@@ -277,6 +287,12 @@ export class TaskListComponent {
         this.datatable()?.clearSelection();
       }
     });
+  }
+
+  onLoaded(event: { totalCount: number; hasValue: boolean }) {
+    if (event.hasValue) {
+      this.countChange.emit(event.totalCount);
+    }
   }
 
   onSelectionChanged(tasks: TaskViewModel[]) {

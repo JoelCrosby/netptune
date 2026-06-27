@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -29,7 +29,8 @@ import { DatatableDataSource } from '@static/components/datatable/datatable.type
       rowClass="bg-card"
       [data]="userData"
       [customizableColumns]="true"
-      [stickyHeader]="true">
+      [stickyHeader]="true"
+      (loaded)="onLoaded($event)">
       <ng-template appDatatableCell="user" let-user>
         <div class="flex min-w-0 items-center gap-3">
           <app-avatar
@@ -79,6 +80,8 @@ import { DatatableDataSource } from '@static/components/datatable/datatable.type
 export class UserListComponent {
   private store = inject(Store);
 
+  readonly countChange = output<number>();
+
   canReadUsers = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.read)
   );
@@ -109,6 +112,12 @@ export class UserListComponent {
       },
     ],
   };
+
+  onLoaded(event: { totalCount: number; hasValue: boolean }) {
+    if (event.hasValue) {
+      this.countChange.emit(event.totalCount);
+    }
+  }
 
   routerLink(user: WorkspaceAppUser) {
     if (user.isPending) return null;
