@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, signal } from '@angular/core';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
@@ -21,18 +21,24 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
         title="Tasks"
         actionTitle="Create Task"
         (actionClick)="showAddModal()"
+        [count]="count()"
         [overflowActions]="secondaryActions" />
     } @else {
-      <app-page-header title="Tasks" [overflowActions]="secondaryActions" />
+      <app-page-header
+        title="Tasks"
+        [count]="count()"
+        [overflowActions]="secondaryActions" />
     }
 
-    <app-task-list />
+    <app-task-list (countChange)="count.set($event)" />
   </app-page-container> `,
 })
 export class ProjectTasksViewComponent implements OnDestroy {
   dialog = inject(DialogService);
   private store = inject(Store);
   private hubService = inject(ProjectTasksHubService);
+
+  readonly count = signal<number | null>(null);
 
   workspaceId = this.store.selectSignal(selectCurrentWorkspaceIdentifier);
   canCreateTasks = this.store.selectSignal(

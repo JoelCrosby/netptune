@@ -2,8 +2,9 @@
   <app-page-header
     title="Users"
     actionTitle="Invite Users"
+    [count]="count()"
     (actionClick)="onInviteUsers()"
     />
 
-  <app-user-list />
+  <app-user-list (countChange)="count.set($event)" />
 </app-page-container>

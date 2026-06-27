@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
 import { inviteUsersToWorkspace } from '@core/store/users/users.actions';
 import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialog.component';
@@ -19,6 +19,8 @@ import { first } from 'rxjs/operators';
 export class UsersViewComponent {
   private dialog = inject(DialogService);
   private store = inject(Store);
+
+  readonly count = signal<number | null>(null);
 
   onInviteUsers() {
     const dialogRef = this.dialog.open<string[]>(InviteDialogComponent, {

@@ -1,8 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
-import { selectProjectsLoading } from '@core/store/projects/projects.selectors';
+import {
+  selectAllProjects,
+  selectProjectsLoading,
+} from '@core/store/projects/projects.selectors';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { ProjectDialogComponent } from '@entry/dialogs/project-dialog/project-dialog.component';
 import { Store } from '@ngrx/store';
@@ -25,9 +28,10 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
         <app-page-header
           title="Projects"
           actionTitle="Create Project"
+          [count]="count()"
           (actionClick)="showAddModal()" />
       } @else {
-        <app-page-header title="Projects" />
+        <app-page-header title="Projects" [count]="count()" />
       }
 
       @if (loading()) {
@@ -45,6 +49,8 @@ export class ProjectsViewComponent {
   store = inject(Store);
 
   loading = this.store.selectSignal(selectProjectsLoading);
+  projects = this.store.selectSignal(selectAllProjects);
+  count = computed(() => (this.loading() ? null : this.projects().length));
   canCreateProjects = this.store.selectSignal(
     selectHasPermission(netptunePermissions.projects.create)
   );

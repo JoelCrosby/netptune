@@ -1,9 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { loadBoards } from '@app/core/store/boards/boards.actions';
-import { selectBoardsLoading } from '@app/core/store/boards/boards.selectors';
+import {
+  selectAllBoards,
+  selectBoardsLoading,
+} from '@app/core/store/boards/boards.selectors';
 import { DialogService } from '@core/services/dialog.service';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
@@ -28,9 +31,10 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
       <app-page-header
         title="Boards"
         actionTitle="Create Board"
+        [count]="count()"
         (actionClick)="onCreateBoardClicked()" />
     } @else {
-      <app-page-header title="Boards" />
+      <app-page-header title="Boards" [count]="count()" />
     }
 
     @if (loading()) {
@@ -47,6 +51,8 @@ export class BoardsViewComponent {
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectBoardsLoading);
+  boards = this.store.selectSignal(selectAllBoards);
+  count = computed(() => (this.loading() ? null : this.boards().length));
 
   canCreateBoards = this.store.selectSignal(
     selectHasPermission(netptunePermissions.boards.create)

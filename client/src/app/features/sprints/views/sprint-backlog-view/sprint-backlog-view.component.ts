@@ -38,7 +38,7 @@ interface BacklogGroupConfig {
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
-      <app-page-header title="Backlog" />
+      <app-page-header title="Backlog" [count]="totalCount()" />
 
       <div class="flex flex-col gap-6">
         <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
@@ -156,6 +156,18 @@ export class SprintBacklogViewComponent {
     if (groups.length === 0) return false;
 
     return groups.every((group) => group.hasLoaded() && group.count() === 0);
+  });
+
+  // Combined backlog total for the page header, available once every group has
+  // resolved its fetch.
+  readonly totalCount = computed((): number | null => {
+    const groups = this.backlogGroups();
+
+    if (groups.length === 0 || !groups.every((group) => group.hasLoaded())) {
+      return null;
+    }
+
+    return groups.reduce((total, group) => total + group.count(), 0);
   });
 
   constructor() {
