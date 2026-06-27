@@ -24,6 +24,7 @@ export class GlobalCommandsService implements OnDestroy {
   private automationCommandRegistered = false;
 
   private readonly commandIds = [
+    'nav.dashboard',
     'nav.projects',
     'nav.tasks',
     'nav.boards',
@@ -35,6 +36,15 @@ export class GlobalCommandsService implements OnDestroy {
 
   constructor() {
     this.registry.register([
+      {
+        id: 'nav.dashboard',
+        label: 'Go to Dashboard',
+        group: 'navigation',
+        icon: 'layout-dashboard',
+        shortcut: 'G D',
+        keywords: ['dashboard', 'home', 'assigned to me', 'navigate'],
+        execute: () => this.navigate('dashboard'),
+      },
       {
         id: 'nav.projects',
         label: 'Go to Projects',

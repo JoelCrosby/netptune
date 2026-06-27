@@ -17,6 +17,7 @@ public static class TasksEndpoints
         var group = builder.MapGroup("tasks");
 
         group.MapGet("/", HandleGetTasks).RequireAuthorization(NetptunePermissions.Tasks.Read);
+        group.MapGet("/status-breakdown", HandleGetStatusBreakdown).RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapGet("/{id}", HandleGetTask).RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapGet("/detail", HandleGetTaskDetail).RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Tasks.Update);
@@ -37,6 +38,15 @@ public static class TasksEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetTasksQuery(filter), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleGetStatusBreakdown(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetTaskStatusBreakdownQuery(), cancellationToken);
 
         return Results.Ok(result);
     }

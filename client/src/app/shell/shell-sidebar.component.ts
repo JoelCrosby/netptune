@@ -7,6 +7,7 @@ import { Workspace } from '@core/models/workspace';
 import {
   LucideCalendarDays,
   LucideChartNoAxesColumn,
+  LucideLayoutDashboard,
   LucideLogs,
   LucideSettings,
   LucideSettings2,
@@ -109,6 +110,11 @@ export class ShellSidebarComponent {
     }
 
     const primaryLinks: ShellMenuLink[] = [
+      {
+        label: 'Dashboard',
+        value: ['./dashboard'],
+        icon: LucideLayoutDashboard,
+      },
       {
         label: 'Projects',
         value: ['./projects'],

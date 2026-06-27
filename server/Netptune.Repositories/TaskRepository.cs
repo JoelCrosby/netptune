@@ -198,6 +198,18 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return new PagedResponse<TaskViewModel>(RowsToTaskViewModels(rowList), page, pageSize, totalCount);
     }
 
+    public async Task<List<TaskStatusBreakdownItem>> GetTaskStatusBreakdownAsync(string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var rows = await connection.QueryAsync<TaskStatusBreakdownItem>(new CommandDefinition(
+            SqlScripts.GetTaskStatusBreakdown,
+            new { workspaceKey },
+            cancellationToken: cancellationToken));
+
+        return rows.ToList();
+    }
+
     private static string GetTaskOrderBy(TaskFilter filter)
     {
         var direction = GetSortDirection(filter);
