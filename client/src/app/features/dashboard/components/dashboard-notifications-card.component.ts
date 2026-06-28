@@ -1,5 +1,6 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, signal } from '@angular/core';
+import { Page } from '@app/core/models/pagination';
 import { NotificationItemComponent } from '@app/entry/components/notification-bell/notification-item.component';
 import { ClientResponse } from '@core/models/client-response';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
@@ -61,23 +62,20 @@ const PAGE_SIZE = 20;
   `,
 })
 export class DashboardNotificationsCardComponent {
-  // Number of notifications currently requested for display. Grows by a page
-  // each time the user loads more.
   private readonly take = signal(PAGE_SIZE);
 
-  // Request one extra row so we can tell whether a further page exists without
-  // needing a separate total-count round trip.
-  readonly resource = httpResource<ClientResponse<NotificationViewModel[]>>(
+  readonly resource = httpResource<ClientResponse<Page<NotificationViewModel>>>(
     () => ({
       url: 'api/notifications',
       params: { take: this.take() + 1 },
     })
   );
 
-  private readonly items = computed(() => this.resource.value()?.payload ?? []);
+  private readonly items = computed(
+    () => this.resource.value()?.payload?.items ?? []
+  );
 
   readonly visible = computed(() => this.items().slice(0, this.take()));
-
   readonly hasMore = computed(() => this.items().length > this.take());
 
   readonly isInitialLoad = computed(
