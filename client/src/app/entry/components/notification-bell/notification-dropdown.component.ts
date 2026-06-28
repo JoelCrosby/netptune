@@ -43,24 +43,26 @@ const DROPDOWN_LIMIT = 10;
       <div class="border-border/50 border-t"></div>
 
       @if (loaded()) {
-        @for (
-          notification of visibleNotifications();
-          track notification.id;
-          let last = $last
-        ) {
-          <app-notification-item [notification]="notification" />
+        <div class="flex max-h-64 flex-col overflow-auto">
+          @for (
+            notification of visibleNotifications();
+            track notification.id;
+            let last = $last
+          ) {
+            <app-notification-item [notification]="notification" />
 
-          @if (!last) {
-            <div class="border-border/50 w-full border-t"></div>
+            @if (!last) {
+              <div class="border-border/50 w-full border-t"></div>
+            }
+          } @empty {
+            <div
+              class="flex min-w-80 flex-col items-center gap-4 px-[0.8rem] py-6 text-sm">
+              <svg lucideBell></svg>
+              <span>No notifications</span>
+              <p class="text-foreground/60">You're all caught up!</p>
+            </div>
           }
-        } @empty {
-          <div
-            class="flex min-w-80 flex-col items-center gap-4 px-[0.8rem] py-6 text-sm">
-            <svg lucideBell></svg>
-            <span>No notifications</span>
-            <p class="text-foreground/60">You're all caught up!</p>
-          </div>
-        }
+        </div>
 
         @if (notifications().length) {
           <div class="border-border/50 sticky bottom-0 border-t bg-inherit">
