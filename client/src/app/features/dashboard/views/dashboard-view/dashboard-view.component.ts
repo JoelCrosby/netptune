@@ -84,7 +84,7 @@ const fallbackPalette = [
           </h2>
 
           <app-datatable
-            containerClass="h-[calc(100vh-612px)] min-h-16 overflow-auto"
+            containerClass="h-[calc(100vh-612px)] min-h-80 overflow-auto"
             tableClass="min-w-[820px] table-fixed"
             rowClass="bg-card"
             emptyMessage="You have no tasks assigned to you."

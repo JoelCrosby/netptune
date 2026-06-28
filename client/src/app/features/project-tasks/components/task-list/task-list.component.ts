@@ -63,7 +63,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 
     <app-datatable
       #datatable
-      containerClass="h-[calc(100vh-312px)] min-h-16 overflow-auto"
+      containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
       tableClass="min-w-[760px] table-fixed"
       rowClass="bg-card"
       [data]="taskData"

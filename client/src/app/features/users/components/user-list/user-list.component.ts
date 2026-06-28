@@ -24,7 +24,7 @@ import { DatatableDataSource } from '@static/components/datatable/datatable.type
   ],
   template: `
     <app-datatable
-      containerClass="h-[calc(100vh-253px)] min-h-16 overflow-auto"
+      containerClass="h-[calc(100vh-253px)] min-h-80 overflow-auto"
       tableClass="min-w-[720px] table-fixed"
       rowClass="bg-card"
       [data]="userData"

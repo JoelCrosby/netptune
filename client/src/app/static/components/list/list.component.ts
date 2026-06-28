@@ -72,7 +72,7 @@ export class ListComponent {
   readonly itemSize = input(40);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly trackBy = input<TrackByFunction<any>>();
-  readonly viewportClass = input('h-[calc(100vh-200px)] min-h-16');
+  readonly viewportClass = input('h-[calc(100vh-200px)] min-h-80');
   readonly emptyMessage = input<string>();
 
   @ContentChild('item') itemTemplate?: TemplateRef<unknown>;
