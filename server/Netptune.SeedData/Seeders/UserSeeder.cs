@@ -58,7 +58,7 @@ public sealed class UserSeeder : ISeeder
             SecurityStamp = "00000000-0000-0000-0000-000000000001",
         };
 
-        user.PasswordHash = new PasswordHasher<AppUser>().HashPassword(user, "password");
+        user.PasswordHash = new PasswordHasher<AppUser>().HashPassword(user, "Netptune_p4ssword-5432");
 
         return user;
     }

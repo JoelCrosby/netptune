@@ -29,6 +29,25 @@ public sealed class NotificationSeeder : ISeeder
             })
         );
 
+        // Login user (prepended at index 0) is a member of every workspace, so give
+        // them a populated notifications view with ~30 notifications of their own.
+        var loginUser = context.Users[0];
+
+        context.Notifications.AddRange(
+            context.ActivityLogs.Take(30).Select((log, i) => new Notification
+            {
+                ActivityLog = log,
+                User = loginUser,
+                Workspace = log.Workspace,
+                IsRead = i % 4 == 0,
+                Link = $"/{log.Workspace.Slug}/tasks",
+                EntityType = log.EntityType,
+                ActivityType = log.Type,
+                CreatedByUserId = log.User.Id,
+                OwnerId = log.User.Id,
+            })
+        );
+
         await dbContext.Notifications.AddRangeAsync(context.Notifications, ct);
     }
 }
