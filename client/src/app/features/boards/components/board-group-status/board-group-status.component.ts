@@ -1,15 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { statusResource } from '@app/core/resources/status.resources';
-import { toggleSelectedStatus } from '@core/store/tasks/tasks.actions';
+import { toggleStatusSelection } from '@app/core/store/groups/board-groups.actions';
 import {
-  selectSelectedTaskStatusCount,
-  selectTaskStatusOptions,
-} from '@core/store/tasks/tasks.selectors';
+  selectBoardGroupStatusOptions,
+  selectBoardGroupsSelectedStatusCount,
+} from '@app/core/store/groups/board-groups.selectors';
 import { Store } from '@ngrx/store';
 import { StatusFilterComponent } from '@static/components/status-filter/status-filter.component';
 
 @Component({
-  selector: 'app-task-list-status',
+  selector: 'app-board-group-status',
   imports: [StatusFilterComponent],
   template: `
     <app-status-filter
@@ -19,16 +19,16 @@ import { StatusFilterComponent } from '@static/components/status-filter/status-f
       (toggled)="onToggled($event)" />
   `,
 })
-export class TaskListStatusComponent {
+export class BoardGroupStatusComponent {
   private readonly store = inject(Store);
 
-  readonly selected = this.store.selectSignal(selectTaskStatusOptions);
+  readonly selected = this.store.selectSignal(selectBoardGroupStatusOptions);
   readonly statuses = statusResource();
   readonly selectedCount = this.store.selectSignal(
-    selectSelectedTaskStatusCount
+    selectBoardGroupsSelectedStatusCount
   );
 
   onToggled(status: number) {
-    this.store.dispatch(toggleSelectedStatus({ status }));
+    this.store.dispatch(toggleStatusSelection({ status }));
   }
 }

@@ -40,6 +40,7 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
 
         var includeUserFilter = request.Filter?.Users.Any() ?? false;
         var includeTagFilter = request.Filter?.Tags.Any() ?? false;
+        var includeStatusFilter = request.Filter?.StatusIds.Any() ?? false;
 
         var userIds = groups
             .SelectMany(group => group.Tasks)
@@ -55,7 +56,10 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
                 if (!matchUser) return false;
 
                 var matchTag = !includeTagFilter || (request.Filter?.Tags.Intersect(task.Tags).Any() ?? true);
-                return matchTag;
+                if (!matchTag) return false;
+
+                var matchStatus = !includeStatusFilter || (request.Filter?.StatusIds.Contains(task.StatusId) ?? true);
+                return matchStatus;
             }).ToList();
         }
 

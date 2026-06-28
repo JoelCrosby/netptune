@@ -21,6 +21,7 @@ export const loadBoardGroups = createAsyncAction(
     success: props<{
       boardGroups: BoardView;
       selectedIds: string[];
+      selectedStatusIds?: number[];
       searchTerm?: string | null;
       sprintId?: number;
     }>(),
@@ -109,6 +110,13 @@ export const toggleUserSelection = createAction(
 export const setOnlineUsers = createAction(
   '[BoardGroups] Set Online Users',
   props<{ userIds: string[] }>()
+);
+
+// Toggle Status Selection
+
+export const toggleStatusSelection = createAction(
+  '[BoardGroups] Toggle Status Selection',
+  props<{ status: number }>()
 );
 
 // Set Search Term

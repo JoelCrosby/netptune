@@ -30,7 +30,7 @@ const reducer = createReducer(
     actions.loadBoardGroups.success,
     (
       state,
-      { boardGroups, selectedIds, searchTerm, sprintId }
+      { boardGroups, selectedIds, selectedStatusIds, searchTerm, sprintId }
     ): BoardGroupsState => {
       const selectedIdMap = new Set(selectedIds);
 
@@ -42,6 +42,7 @@ const reducer = createReducer(
         users: boardGroups.users,
         searchTerm,
         selectedSprintId: sprintId,
+        selectedStatusIds: selectedStatusIds ?? [],
         selectedTasks: [],
         selectedUsers: boardGroups.users.filter((user) =>
           selectedIdMap.has(user.id)
@@ -155,6 +156,21 @@ const reducer = createReducer(
       onlineUserIds: userIds,
     })
   ),
+
+  // Toggle Status Selection
+
+  on(actions.toggleStatusSelection, (state, { status }): BoardGroupsState => {
+    const exists = state.selectedStatusIds.includes(status);
+
+    const selectedStatusIds = exists
+      ? state.selectedStatusIds.filter((id) => id !== status)
+      : [...state.selectedStatusIds, status];
+
+    return {
+      ...state,
+      selectedStatusIds,
+    };
+  }),
 
   // Set Search Term
 

@@ -4,36 +4,19 @@ import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { toggleSelectedAssignee } from '@core/store/tasks/tasks.actions';
 import { selectTaskAssigneeOptions } from '@core/store/tasks/tasks.selectors';
 import { Store } from '@ngrx/store';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import {
+  AvatarFilterComponent,
+  AvatarFilterOption,
+} from '@static/components/avatar-filter/avatar-filter.component';
 
 @Component({
   selector: 'app-task-list-assignees',
-  imports: [AvatarComponent],
+  imports: [AvatarFilterComponent],
   template: `
-    @if (assignees().length) {
-      <div class="inline-flex flex-row-reverse items-center">
-        @for (assignee of assignees(); track assignee.id) {
-          <div
-            class="bg-background inline-flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4 not-last:-ml-3 hover:z-100"
-            [class.border-transparent]="!assignee.selected"
-            [class.border-primary]="assignee.selected"
-            [style.z-index]="assignee.selected ? 99 : null">
-            <app-avatar
-              size="lg"
-              [name]="assignee.displayName"
-              [imageUrl]="assignee.pictureUrl"
-              (click)="onAssigneeClicked(assignee)" />
-          </div>
-        }
-      </div>
-    } @else {
-      <div class="flex h-10 items-center">
-        <div
-          class="text-foreground/50 px-2 text-sm font-medium whitespace-nowrap select-none">
-          No assignees
-        </div>
-      </div>
-    }
+    <app-avatar-filter
+      [options]="assignees()"
+      emptyLabel="No assignees"
+      (optionClicked)="onAssigneeClicked($event)" />
   `,
 })
 export class TaskListAssigneesComponent {
@@ -45,7 +28,7 @@ export class TaskListAssigneesComponent {
     () => this.assigneeOptions() ?? this.storeAssignees()
   );
 
-  onAssigneeClicked(selected: Selected<AssigneeViewModel>) {
-    this.store.dispatch(toggleSelectedAssignee({ assigneeId: selected.id }));
+  onAssigneeClicked(option: AvatarFilterOption) {
+    this.store.dispatch(toggleSelectedAssignee({ assigneeId: option.id }));
   }
 }

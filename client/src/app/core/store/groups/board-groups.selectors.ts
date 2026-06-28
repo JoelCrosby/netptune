@@ -124,6 +124,21 @@ export const selectBoardGroupOnlineUserIds = createSelector(
   (state: BoardGroupsState) => state.onlineUserIds
 );
 
+export const selectBoardGroupsSelectedStatusIds = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.selectedStatusIds
+);
+
+export const selectBoardGroupsSelectedStatusCount = createSelector(
+  selectBoardGroupsSelectedStatusIds,
+  (statusIds: number[]) => statusIds.length
+);
+
+export const selectBoardGroupStatusOptions = createSelector(
+  selectBoardGroupsSelectedStatusIds,
+  (statusIds: number[]): Set<number> => new Set(statusIds)
+);
+
 export type BoardGroupUserModel = Selected<AppUser> & { online: boolean };
 
 export const selectBoardGroupsUsersModel = createSelector(

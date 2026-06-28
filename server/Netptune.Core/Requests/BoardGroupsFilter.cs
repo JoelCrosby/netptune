@@ -6,6 +6,8 @@ public record BoardGroupsFilter
 
     public required string[] Tags { get; init; }
 
+    public int[] StatusIds { get; init; } = [];
+
     public string? Term { get; init; }
 
     public int? SprintId { get; init; }

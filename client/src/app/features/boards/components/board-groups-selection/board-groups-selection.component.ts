@@ -17,8 +17,8 @@ import {
   LucideUsers,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
+import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
-import { BoardGroupHeaderActionComponent } from '../board-group-header/board-group-header-action.component';
 import { BoardGroupHeaderSeperatorComponent } from '../board-group-header/board-group-header-seperator.component';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
@@ -29,7 +29,7 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
     TooltipDirective,
     LucideListX,
     BoardGroupHeaderSeperatorComponent,
-    BoardGroupHeaderActionComponent,
+    FilterActionButtonComponent,
   ],
   template: `
     @if (count(); as count) {
@@ -45,7 +45,7 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
         </button>
 
         @for (action of actions(); track action.label) {
-          <app-board-group-header-action
+          <app-filter-action-button
             [label]="action.label"
             [icon]="action.icon"
             (action)="action.action()" />

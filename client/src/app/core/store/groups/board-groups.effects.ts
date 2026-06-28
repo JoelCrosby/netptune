@@ -75,7 +75,7 @@ export class BoardGroupsEffects {
             ...routeFilters,
             sprintId,
           },
-          { includeStatuses: false }
+          { includeStatuses: true }
         );
 
         return this.boardGroupsService.get(id as string, requestParams).pipe(
@@ -84,6 +84,7 @@ export class BoardGroupsEffects {
             actions.loadBoardGroups.success({
               boardGroups,
               selectedIds: routeFilters.users ?? [],
+              selectedStatusIds: routeFilters.statuses ?? [],
               searchTerm: routeFilters.term ?? null,
               sprintId,
             })
@@ -372,26 +373,29 @@ export class BoardGroupsEffects {
       ofType(
         actions.toggleUserSelection,
         toggleSelectedTag,
+        actions.toggleStatusSelection,
         actions.setSearchTerm,
         actions.setSprintFilter
       ),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardGroupsSelectedUserIds),
         this.store.select(selectSelectedTags),
+        this.store.select(selectors.selectBoardGroupsSelectedStatusIds),
         this.store.select(selectors.selectSearchTerm),
         this.store.select(selectors.selectSelectedSprintId),
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
       ]),
-      filter(([, , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      map(([_, users, tags, term, sprintId]) =>
+      filter(([, , , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
+      map(([_, users, tags, statuses, term, sprintId]) =>
         buildTaskFilterRouteParams(
           {
             users,
             tags,
+            statuses,
             term,
             sprintId,
           },
-          { includeStatuses: false }
+          { includeStatuses: true }
         )
       ),
       map((params) => actions.updateBoardFilter({ params }))

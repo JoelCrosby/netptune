@@ -1,30 +1,28 @@
-import { Component, ElementRef, inject } from '@angular/core';
+import { Component, ElementRef, inject, input, output } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
-import * as TagActions from '@core/store/tags/tags.actions';
-import * as TagSelectors from '@core/store/tags/tags.selectors';
 import { LucideTag } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
+import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { TaskListFilterActionComponent } from './task-list-filter-action.component';
 
 @Component({
-  selector: 'app-task-list-tags',
+  selector: 'app-tag-filter',
   imports: [
-    TaskListFilterActionComponent,
+    FilterActionButtonComponent,
     DropdownMenuComponent,
     MenuCheckboxItemComponent,
     SpinnerComponent,
     LucideTag,
   ],
   template: `
-    <app-task-list-filter-action
+    <app-filter-action-button
       label="Filter by Tag"
       [icon]="lucideTag"
       [color]="selectedCount() ? 'primary' : undefined"
-      (action)="onClicked(); menu.toggle(el.nativeElement)" />
+      [count]="selectedCount()"
+      (action)="opened.emit(); menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu>
       @if (loaded()) {
@@ -33,7 +31,7 @@ import { TaskListFilterActionComponent } from './task-list-filter-action.compone
             <button
               app-menu-checkbox-item
               [checked]="tag.selected ?? false"
-              (checkedChange)="onOptionClicked(tag)">
+              (checkedChange)="toggled.emit(tag)">
               {{ tag.name }}
             </button>
           }
@@ -55,23 +53,15 @@ import { TaskListFilterActionComponent } from './task-list-filter-action.compone
     </app-dropdown-menu>
   `,
 })
-export class TaskListTagsComponent {
-  private readonly store = inject(Store);
+export class TagFilterComponent {
   readonly el = inject(ElementRef);
 
   readonly lucideTag = LucideTag;
 
-  readonly tags = this.store.selectSignal(TagSelectors.selectTasksWithSelect);
-  readonly loaded = this.store.selectSignal(TagSelectors.selectTagsLoaded);
-  readonly selectedCount = this.store.selectSignal(
-    TagSelectors.selectSelectedTagCount
-  );
+  readonly tags = input<Selected<Tag>[]>([]);
+  readonly loaded = input(false);
+  readonly selectedCount = input(0);
 
-  onClicked() {
-    this.store.dispatch(TagActions.loadTags.init());
-  }
-
-  onOptionClicked(selected: Selected<Tag>) {
-    this.store.dispatch(TagActions.toggleSelectedTag({ tag: selected.name }));
-  }
+  readonly opened = output();
+  readonly toggled = output<Selected<Tag>>();
 }
