@@ -5,6 +5,7 @@ import {
   BoardViewGroup,
   BoardViewTask,
 } from '@core/models/view-models/board-view';
+import { getStatusCategoryFromGroupType } from '@core/models/view-models/board-group-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { Update } from '@ngrx/entity';
@@ -44,6 +45,7 @@ export const moveTaskInBoardGroup = (
   const nextOrder = nextTask?.sortOrder;
 
   const sortOrder = getNewSortOrder(preOrder, nextOrder);
+  const statusCategory = getStatusCategoryFromGroupType(newGroup.type);
 
   (stateClone.entities[request.newGroupId] as unknown as BoardViewGroup).tasks =
     (
@@ -56,6 +58,7 @@ export const moveTaskInBoardGroup = (
       return {
         ...task,
         sortOrder,
+        statusCategory,
       };
     });
 
