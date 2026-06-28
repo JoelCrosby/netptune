@@ -1,7 +1,10 @@
-import { DIALOG_DATA } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnDestroy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Actions, ofType } from '@ngrx/effects';
 import {
   clearTaskDetail,
+  deleteProjectTask,
   loadTaskDetails,
 } from '@app/core/store/tasks/tasks.actions';
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
@@ -90,6 +93,8 @@ import { TaskDetailService } from './task-detail.service';
 export class TaskDetailDialogComponent implements OnDestroy {
   data = inject<TaskViewModel>(DIALOG_DATA, { optional: false });
   store = inject(Store);
+  private dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
+  private actions$ = inject(Actions);
 
   public static width = '972px';
 
@@ -102,6 +107,14 @@ export class TaskDetailDialogComponent implements OnDestroy {
   constructor() {
     const systemId: string = this.data.systemId;
     this.store.dispatch(loadTaskDetails.init({ systemId }));
+
+    this.actions$
+      .pipe(ofType(deleteProjectTask.success), takeUntilDestroyed())
+      .subscribe(({ taskId }) => {
+        if (taskId === this.task()?.id) {
+          this.dialogRef.close();
+        }
+      });
   }
 
   ngOnDestroy() {
