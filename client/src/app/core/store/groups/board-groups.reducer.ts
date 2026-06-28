@@ -146,6 +146,16 @@ const reducer = createReducer(
     };
   }),
 
+  // Set Online Users
+
+  on(
+    actions.setOnlineUsers,
+    (state, { userIds }): BoardGroupsState => ({
+      ...state,
+      onlineUserIds: userIds,
+    })
+  ),
+
   // Set Search Term
 
   on(

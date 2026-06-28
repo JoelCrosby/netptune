@@ -119,15 +119,29 @@ export const selectBoardGroupsSelectedUserIds = createSelector(
   (state: BoardGroupsState) => state.selectedUsers.map((user) => user.id)
 );
 
+export const selectBoardGroupOnlineUserIds = createSelector(
+  selectBoardGroupsFeature,
+  (state: BoardGroupsState) => state.onlineUserIds
+);
+
+export type BoardGroupUserModel = Selected<AppUser> & { online: boolean };
+
 export const selectBoardGroupsUsersModel = createSelector(
   selectBoardGroupUsers,
   selectBoardGroupsSelectedUsers,
-  (users: AppUser[], selectedUsers: AppUser[]): Selected<AppUser>[] => {
+  selectBoardGroupOnlineUserIds,
+  (
+    users: AppUser[],
+    selectedUsers: AppUser[],
+    onlineUserIds: string[]
+  ): BoardGroupUserModel[] => {
     const selectedUserIds = new Set(selectedUsers.map((user) => user.id));
+    const onlineUserIdSet = new Set(onlineUserIds);
 
     return users.map((user) => ({
       ...user,
       selected: selectedUserIds.has(user.id),
+      online: onlineUserIdSet.has(user.id),
     }));
   }
 );

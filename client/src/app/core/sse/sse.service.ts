@@ -19,7 +19,11 @@ export class SseService {
     selectCurrentWorkspaceIdentifier
   );
 
-  connect(group: string, onEvent: () => void): void {
+  connect(
+    group: string,
+    onEvent: () => void,
+    onPresence?: (userIds: string[]) => void
+  ): void {
     if (!this.isAuthenticated()) return;
 
     this.disconnect();
@@ -38,6 +42,19 @@ export class SseService {
     this.eventSource.addEventListener('message', () => {
       Logger.log('%c[SSE][EVENT] board-update received', 'color: lime');
       onEvent();
+    });
+
+    this.eventSource.addEventListener('presence', (event) => {
+      Logger.log('%c[SSE][EVENT] presence received', 'color: cyan');
+
+      if (!onPresence) return;
+
+      try {
+        const userIds = JSON.parse(event.data) as string[];
+        onPresence(userIds);
+      } catch {
+        Logger.warn('[SSE] Failed to parse presence event.');
+      }
     });
 
     this.eventSource.onerror = () => {

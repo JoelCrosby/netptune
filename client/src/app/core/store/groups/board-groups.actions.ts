@@ -104,6 +104,13 @@ export const toggleUserSelection = createAction(
   props<{ user: AppUser }>()
 );
 
+// Set Online Users
+
+export const setOnlineUsers = createAction(
+  '[BoardGroups] Set Online Users',
+  props<{ userIds: string[] }>()
+);
+
 // Set Search Term
 
 export const setSearchTerm = createAction(

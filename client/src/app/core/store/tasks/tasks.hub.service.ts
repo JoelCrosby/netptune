@@ -33,7 +33,12 @@ export class ProjectTasksHubService {
 
   addToGroup(groupId: string) {
     this.store.dispatch(setCurrentGroupId({ groupId }));
-    this.sse.connect(groupId, () => this.reloadRequiredViews());
+    this.sse.connect(
+      groupId,
+      () => this.reloadRequiredViews(),
+      (userIds) =>
+        this.store.dispatch(groupsActions.setOnlineUsers({ userIds }))
+    );
   }
 
   removeFromGroup(_groupId: string) {
