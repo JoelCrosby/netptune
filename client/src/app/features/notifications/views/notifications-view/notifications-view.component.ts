@@ -125,7 +125,7 @@ export class NotificationsViewComponent {
     key: 'notifications-list',
     columns: [
       { id: 'actor', header: 'From', widthClass: 'w-48' },
-      { id: 'notification', header: 'Notification' },
+      { id: 'notification', header: 'Notification', widthClass: 'truncate' },
       { id: 'createdAt', header: 'When', widthClass: 'w-40' },
       { id: 'status', header: 'Status', widthClass: 'w-28' },
     ],
