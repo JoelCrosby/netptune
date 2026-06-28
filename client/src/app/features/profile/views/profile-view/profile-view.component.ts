@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { logout } from '@app/core/store/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
@@ -26,10 +25,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     [showProgress]="loadingUpdate()"
     [centerPage]="true"
     [marginBottom]="true">
-    <app-page-header
-      title="Profile"
-      actionTitle="Logout"
-      (actionClick)="onLogoutClicked()" />
+    <app-page-header title="Profile" />
 
     @if (loading()) {
       <div class="flex h-full flex-col items-center justify-center">
@@ -53,9 +49,5 @@ export class ProfileViewComponent {
 
   constructor() {
     this.store.dispatch(loadProfile.init());
-  }
-
-  onLogoutClicked() {
-    this.store.dispatch(logout());
   }
 }
