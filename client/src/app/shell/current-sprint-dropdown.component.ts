@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { selectIsSprintFilterableRoute } from '@core/core.route.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
 import {
   loadCurrentSprints,
@@ -39,7 +40,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     LucideCalendarFold,
   ],
   template: `
-    @if (canReadSprints() && currentSprintsLoaded()) {
+    @if (
+      isSprintFilterableRoute() && canReadSprints() && currentSprintsLoaded()
+    ) {
       @if (currentSprints().length > 0) {
         <button
           #sprintTrigger
@@ -122,6 +125,9 @@ export class CurrentSprintDropdownComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
+  readonly isSprintFilterableRoute = this.store.selectSignal(
+    selectIsSprintFilterableRoute
+  );
   readonly canReadSprints = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.read)
   );

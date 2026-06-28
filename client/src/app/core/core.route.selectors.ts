@@ -47,6 +47,13 @@ export const selectIsTaskListRoute = createSelector(
   (state: string) => /^\/[^/?#]+\/tasks(?:[?#].*)?$/.test(state ?? '')
 );
 
+export const selectIsSprintFilterableRoute = createSelector(
+  selectIsBoardGroupsRoute,
+  selectIsTaskListRoute,
+  (isBoardGroupsRoute, isTaskListRoute) =>
+    isBoardGroupsRoute || isTaskListRoute
+);
+
 export const selectIsSprintBacklogRoute = createSelector(
   selectRouterStateUrl,
   (state: string) =>

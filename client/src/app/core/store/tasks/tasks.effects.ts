@@ -168,7 +168,14 @@ export class ProjectTasksEffects {
             tags: filters.tags ?? [],
             sprintId: filters.sprintId,
           }),
-          SprintActions.setSprintTaskFilter({ sprintId: filters.sprintId }),
+          // The sprint filter is global (sprints store) and shared across views,
+          // so it must persist when navigating between views. Query params are not
+          // preserved across navigation, so only hydrate it from the route when a
+          // sprintId is actually present (e.g. a deep link); otherwise leave the
+          // existing global filter intact instead of clearing it.
+          ...(paramMap.has('sprintId')
+            ? [SprintActions.setSprintTaskFilter({ sprintId: filters.sprintId })]
+            : []),
           actions.loadProjectTasks.init()
         );
       })
