@@ -9,6 +9,7 @@ import {
   inject,
   viewChild,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import * as notificationActions from '@core/store/notifications/notifications.actions';
@@ -51,7 +52,8 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
         [notifications]="notifications()"
         [unreadCount]="unreadCount()"
         [loaded]="loaded()"
-        (markAllAsRead)="markAllAsRead()" />
+        (markAllAsRead)="markAllAsRead()"
+        (viewAll)="onViewAll()" />
     </ng-template>
   `,
 })
@@ -60,6 +62,8 @@ export class NotificationBellComponent implements OnDestroy {
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
   private el = inject(ElementRef<HTMLElement>);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   readonly notifications = this.store.selectSignal(selectNotifications);
   readonly unreadCount = this.store.selectSignal(selectUnreadCount);
@@ -120,6 +124,11 @@ export class NotificationBellComponent implements OnDestroy {
 
   markAllAsRead() {
     this.store.dispatch(notificationActions.markAllAsRead.init());
+  }
+
+  onViewAll() {
+    this.closeMenu();
+    void this.router.navigate(['notifications'], { relativeTo: this.route });
   }
 
   ngOnDestroy() {

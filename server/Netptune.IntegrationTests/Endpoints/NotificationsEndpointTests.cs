@@ -19,10 +19,11 @@ public sealed class NotificationsEndpointTests(NetptuneFixture fixture)
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<NotificationViewModel>>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<NotificationViewModel>>>();
 
         result.IsSuccess.Should().BeTrue();
-        result.Payload.Should().NotBeNullOrEmpty();
+        result.Payload!.Items.Should().NotBeNullOrEmpty();
+        result.Payload.TotalCount.Should().BeGreaterThan(0);
     }
 
     [Fact]
@@ -153,11 +154,11 @@ public sealed class NotificationsEndpointTests(NetptuneFixture fixture)
         result.IsSuccess.Should().BeTrue();
     }
 
-    private async Task<List<NotificationViewModel>> GetNotificationsAsync()
+    private async Task<IReadOnlyList<NotificationViewModel>> GetNotificationsAsync()
     {
-        var response = await fixture.Client.GetAsync("api/notifications");
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<NotificationViewModel>>>();
-        return result.Payload!;
+        var response = await fixture.Client.GetAsync("api/notifications?pageSize=100");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<NotificationViewModel>>>();
+        return result.Payload!.Items;
     }
 
     private async Task<int> GetUnreadCountAsync()

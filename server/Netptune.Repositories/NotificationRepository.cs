@@ -37,6 +37,12 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
         return results.AsList();
     }
 
+    public Task<int> GetUserNotificationsCount(string userId, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .CountAsync(n => !n.IsDeleted && n.UserId == userId && n.WorkspaceId == workspaceId, cancellationToken);
+    }
+
     public Task<int> GetUnreadCount(string userId, int workspaceId, CancellationToken cancellationToken = default)
     {
         return Entities

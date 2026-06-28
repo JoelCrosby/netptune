@@ -20,10 +20,10 @@ export class NotificationsEffects {
     return this.actions$.pipe(
       ofType(actions.loadNotifications.init, actions.notificationReceived),
       switchMap(() =>
-        this.notificationsService.getAll().pipe(
+        this.notificationsService.getRecent().pipe(
           unwrapClientReposne(),
-          map((notifications) =>
-            actions.loadNotifications.success({ notifications })
+          map((page) =>
+            actions.loadNotifications.success({ notifications: page.items })
           ),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadNotifications.fail({ error }))

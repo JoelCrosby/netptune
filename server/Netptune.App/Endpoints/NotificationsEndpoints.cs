@@ -1,6 +1,7 @@
 using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Handlers.Notifications.Commands;
 using Netptune.Handlers.Notifications.Queries;
@@ -36,9 +37,9 @@ public static class NotificationsEndpoints
         return builder;
     }
 
-    private static async Task<IResult> HandleGet(IMediator mediator, int? skip, int? take, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleGet(IMediator mediator, [AsParameters] PageRequest page, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserNotificationsQuery(skip ?? 0, take ?? 50), cancellationToken);
+        var result = await mediator.Send(new GetUserNotificationsPagedQuery(page), cancellationToken);
         return Results.Ok(result);
     }
 

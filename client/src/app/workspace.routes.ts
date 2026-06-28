@@ -101,6 +101,12 @@ export const routes: Routes = [
         data: { title: 'Sprints' },
       },
       {
+        path: 'notifications',
+        loadChildren: () => import('./features/notifications/notifications.routes').then((m) => m.routes),
+        canActivate: [authGuard],
+        data: { title: 'Notifications' },
+      },
+      {
         path: 'users',
         loadChildren: () => import('./features/users/users.routes').then((m) => m.routes),
         canActivate: [authGuard],

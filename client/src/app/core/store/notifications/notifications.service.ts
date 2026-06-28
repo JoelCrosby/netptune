@@ -1,15 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
+import { Page } from '@core/models/pagination';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
+
+const RECENT_NOTIFICATIONS_PAGE_SIZE = 10;
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
   private http = inject(HttpClient);
 
-  getAll() {
-    return this.http.get<ClientResponse<NotificationViewModel[]>>(
-      'api/notifications'
+  getRecent() {
+    return this.http.get<ClientResponse<Page<NotificationViewModel>>>(
+      'api/notifications',
+      { params: { page: 1, pageSize: RECENT_NOTIFICATIONS_PAGE_SIZE } }
     );
   }
 

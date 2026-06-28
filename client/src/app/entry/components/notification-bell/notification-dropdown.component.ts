@@ -1,8 +1,10 @@
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import { LucideBell } from '@lucide/angular';
 import { NotificationItemComponent } from './notification-item.component';
+
+const DROPDOWN_LIMIT = 10;
 
 @Component({
   selector: 'app-notification-dropdown',
@@ -42,7 +44,7 @@ import { NotificationItemComponent } from './notification-item.component';
 
       @if (loaded()) {
         @for (
-          notification of notifications();
+          notification of visibleNotifications();
           track notification.id;
           let last = $last
         ) {
@@ -59,6 +61,16 @@ import { NotificationItemComponent } from './notification-item.component';
             <p class="text-foreground/60">You're all caught up!</p>
           </div>
         }
+
+        @if (notifications().length) {
+          <div class="border-border/50 sticky bottom-0 border-t bg-inherit">
+            <button
+              class="hover:text-primary text-muted-foreground w-full cursor-pointer px-[1.2rem] py-3 text-center text-sm font-medium transition-colors"
+              (click)="viewAll.emit()">
+              View all notifications
+            </button>
+          </div>
+        }
       } @else {
         <div class="flex justify-center p-4">
           <app-spinner diameter="24" />
@@ -72,4 +84,9 @@ export class NotificationDropdownComponent {
   readonly unreadCount = input.required<number>();
   readonly loaded = input.required<boolean>();
   readonly markAllAsRead = output();
+  readonly viewAll = output();
+
+  readonly visibleNotifications = computed(() =>
+    this.notifications().slice(0, DROPDOWN_LIMIT)
+  );
 }

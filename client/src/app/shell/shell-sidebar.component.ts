@@ -5,6 +5,7 @@ import {
 } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import {
+  LucideBell,
   LucideCalendarDays,
   LucideChartNoAxesColumn,
   LucideLayoutDashboard,
@@ -155,7 +156,7 @@ export class ShellSidebarComponent {
   });
 
   bottomLinks = computed(() => {
-    const links = [];
+    const links: ShellMenuLink[] = [];
 
     if (this.canReadAudit()) {
       links.push({
@@ -183,6 +184,12 @@ export class ShellSidebarComponent {
         ],
       });
     }
+
+    links.push({
+      label: 'Notifications',
+      value: ['./notifications'],
+      icon: LucideBell,
+    });
 
     return links;
   });
