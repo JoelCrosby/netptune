@@ -42,6 +42,17 @@ export class WorkspacesService {
     return this.http.delete<ClientResponse>('api/workspaces/' + workspace.slug);
   }
 
+  leave(workspace: Workspace) {
+    if (!workspace?.slug) {
+      return throwError(() => new Error('workspace slug empty'));
+    }
+
+    return this.http.post<ClientResponse>(
+      `api/workspaces/${workspace.slug}/leave`,
+      null
+    );
+  }
+
   isSlugUnique(key: string) {
     return this.http.get<ClientResponse<IsSlugUniqueResponse>>(
       `api/workspaces/is-unique/${key}`

@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -36,6 +37,7 @@ export class WorkspacesEffects implements OnInitEffects {
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
   private sse = inject(SseService);
+  private router = inject(Router);
 
   init$ = createEffect(() => {
     return this.actions$.pipe(
@@ -108,9 +110,7 @@ export class WorkspacesEffects implements OnInitEffects {
         throttleTime(throttle, scheduler),
         switchMap(() =>
           this.workspacesService.get().pipe(
-            map((workspaces) =>
-              actions.loadWorkspaces.success({ workspaces })
-            ),
+            map((workspaces) => actions.loadWorkspaces.success({ workspaces })),
             catchError((error: HttpErrorResponse) =>
               of(actions.loadWorkspaces.fail({ error }))
             )
@@ -148,6 +148,30 @@ export class WorkspacesEffects implements OnInitEffects {
               map(() => actions.deleteWorkspace.success({ workspace })),
               catchError((error: HttpErrorResponse) =>
                 of(actions.deleteWorkspace.fail({ error }))
+              )
+            );
+          })
+        )
+      )
+    );
+  });
+
+  leaveWorkspace$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.leaveWorkspace.init),
+      switchMap(({ workspace }) =>
+        this.confirmation.open(LEAVE_WORKSPACE_CONFIRMATION).pipe(
+          switchMap((result) => {
+            if (!result) return EMPTY;
+
+            return this.workspacesService.leave(workspace).pipe(
+              tap(() => {
+                this.snackbar.open(`You left ${workspace.name}`);
+                void this.router.navigate(['/workspaces']);
+              }),
+              map(() => actions.leaveWorkspace.success({ workspace })),
+              catchError((error: HttpErrorResponse) =>
+                of(actions.leaveWorkspace.fail({ error }))
               )
             );
           })
@@ -243,6 +267,16 @@ const DELETE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
   message: 'Are you sure you want to delete this Workspace?',
   title: 'Delete Workspace',
   color: 'warn',
+};
+
+const LEAVE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: 'Leave',
+  cancelLabel: 'Cancel',
+  message: 'Are you sure you want to leave this Workspace?',
+  title: 'Leave Workspace',
+  color: 'warn',
+  confirmationCheckboxLabel:
+    'I understand that I will lose access to this Workspace and will need to be re-invited to rejoin.',
 };
 
 const MARK_WORKSPACE_AS_PUBLIC_CONFIRMATION: ConfirmDialogOptions = {

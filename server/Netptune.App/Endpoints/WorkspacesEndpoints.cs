@@ -19,6 +19,7 @@ public static class WorkspacesEndpoints
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Workspace.Update);
         group.MapPost("/", HandlePost);
         group.MapDelete("/{key}", HandleDelete).RequireAuthorization(NetptunePermissions.Workspace.Delete);
+        group.MapPost("/{key}/leave", HandleLeave).RequireAuthorization(NetptunePermissions.Workspace.Read);
         group.MapDelete("/permanent/{key}", HandleDeletePermanent).RequireAuthorization(NetptunePermissions.Workspace.DeletePermanent);
         group.MapGet("/all", HandleGetAllWorkspaces);
         group.MapGet("/is-unique/{slug}", HandleIsSlugUnique);
@@ -95,6 +96,25 @@ public static class WorkspacesEndpoints
         var result = await mediator.Send(new DeleteWorkspaceCommand(key), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound();
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleLeave(
+        IMediator mediator,
+        IAuthorizationService authorizationService,
+        HttpContext context,
+        string key,
+        CancellationToken cancellationToken)
+    {
+        var authorizationResult = await authorizationService.AuthorizeAsync(
+            context.User, key, NetptunePermissions.Workspace.Read);
+
+        if (!authorizationResult.Succeeded) return Results.Forbid();
+
+        var result = await mediator.Send(new LeaveWorkspaceCommand(key), cancellationToken);
+
+        if (result.IsNotFound) return Results.NotFound(result);
 
         return Results.Ok(result);
     }

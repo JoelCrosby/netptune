@@ -106,6 +106,25 @@ const reducer = createReducer(
     }
   ),
 
+  // Leave Workspace
+
+  on(
+    actions.leaveWorkspace.success,
+    (state, { workspace }): WorkspacesState => {
+      if (workspace.id === undefined || workspace.id === null) {
+        return state;
+      }
+
+      return adapter.removeOne(workspace.id, {
+        ...state,
+        currentWorkspace:
+          state.currentWorkspace?.id === workspace.id
+            ? undefined
+            : state.currentWorkspace,
+      });
+    }
+  ),
+
   // Is Slug Unique
 
   on(

@@ -1,12 +1,17 @@
 import { Component, computed, inject } from '@angular/core';
-import { toggleWorkspaceIsPublic } from '@core/store/workspaces/workspaces.actions';
+import { selectCurrentUserId } from '@core/store/auth/auth.selectors';
+import {
+  leaveWorkspace,
+  toggleWorkspaceIsPublic,
+} from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 
 @Component({
   selector: 'app-workspace-settings',
-  imports: [FlatButtonComponent],
+  imports: [FlatButtonComponent, StrokedButtonComponent],
   template: `<h3 class="font-overpass text-[1.4rem] font-normal">Workspace</h3>
 
     <div class="mt-4 flex flex-col items-start gap-4">
@@ -26,6 +31,17 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
           isPublic() ? 'Mark Workspace as Private' : 'Mark Workspace as Public'
         }}
       </button>
+
+      @if (canLeave()) {
+        <p class="text-foreground/80 mt-4 mb-2 text-sm">
+          Leaving this workspace removes your access to its content. You'll need
+          to be re-invited to rejoin.
+        </p>
+
+        <button app-stroked-button color="warn" (click)="leave()">
+          Leave Workspace
+        </button>
+      }
     </div>`,
 })
 export class WorkspaceSettings {
@@ -33,6 +49,13 @@ export class WorkspaceSettings {
 
   isPublic = computed(() => this.workspace()?.isPublic ?? false);
   workspace = this.store.selectSignal(selectCurrentWorkspace);
+  private currentUserId = this.store.selectSignal(selectCurrentUserId);
+
+  canLeave = computed(() => {
+    const workspace = this.workspace();
+
+    return !!workspace && workspace.ownerId !== this.currentUserId();
+  });
 
   togglePublic() {
     const workspace = this.workspace();
@@ -42,5 +65,13 @@ export class WorkspaceSettings {
     const isPublic = !workspace.isPublic;
 
     this.store.dispatch(toggleWorkspaceIsPublic({ isPublic }));
+  }
+
+  leave() {
+    const workspace = this.workspace();
+
+    if (!workspace?.slug) return;
+
+    this.store.dispatch(leaveWorkspace.init({ workspace }));
   }
 }

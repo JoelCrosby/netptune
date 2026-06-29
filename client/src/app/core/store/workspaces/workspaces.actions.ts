@@ -43,6 +43,16 @@ export const deleteWorkspace = createAsyncAction(
   }
 );
 
+// Leave Workspace
+
+export const leaveWorkspace = createAsyncAction(
+  '[Workspaces] Leave Workspace',
+  {
+    init: props<{ workspace: Workspace }>(),
+    success: props<{ workspace: Workspace }>(),
+  }
+);
+
 // Set Current Workspace
 
 export const setCurrentWorkspace = createAction(
