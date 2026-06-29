@@ -54,7 +54,7 @@ import { PageContainerComponent } from '@app/static/components/page-container/pa
           </div>
 
           <div
-            class="bg-card/40 mt-4 flex w-full flex-col gap-6 rounded px-6 pb-6 lg:w-232">
+            class="bg-card/40 mt-4 flex flex-col gap-6 rounded px-6 pb-6 lg:w-192">
             <app-task-detail-properties />
             <app-task-detail-actions />
           </div>
