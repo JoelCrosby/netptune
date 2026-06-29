@@ -5,7 +5,6 @@
 @import "./styles/scroll";
 @import "./styles/menu";
 @import "./styles/editor";
-@import "./styles/form-select";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

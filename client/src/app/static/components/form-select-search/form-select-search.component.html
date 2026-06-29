@@ -7,7 +7,7 @@
 
   <app-form-control-field
     #dropreference
-    class="netp-form-select-search w-full"
+    class="w-full"
     [invalid]="touched() && invalid()"
     [active]="!!value() && pending()"
     (click)="onTriggerClick($event)">
@@ -47,17 +47,18 @@
       lucideChevronDown
       size="32"
       aria-hidden="true"
-      class="arrow text-foreground/70 mr-4"
-    />
+      class="mr-4 flex items-center justify-center text-foreground/70"
+    ></svg>
 
     <app-form-select-dropdown [reference]="dropreference.el">
       <div
-        class="form-select-dropdown form-select-search-dropdown menu-scale-in"
+        appFormSelectDropdown
+        class="menu-scale-in pr-0"
         [id]="listboxId"
         role="listbox">
         @if (filteredOptions().length) {
           <cdk-virtual-scroll-viewport
-            class="form-select-search-viewport custom-scroll"
+            class="custom-scroll min-h-10 w-full"
             [style.height.px]="dropdownHeight()"
             [itemSize]="itemSize()"
             minBufferPx="256"
@@ -68,7 +69,8 @@
                 let index = index;
                 trackBy: trackByOption
               "
-              class="nept-form-select-option form-select-search-option"
+              appFormSelectOption
+              class="flex items-center"
               role="option"
               [id]="optionId(index)"
               [class.active]="isActive(index)"
@@ -93,7 +95,7 @@
             </div>
           </cdk-virtual-scroll-viewport>
         } @else {
-          <div class="form-select-search-empty">
+          <div class="px-[.4rem] py-[.6rem] opacity-60 select-none">
             {{ emptyMessage() }}
           </div>
         }

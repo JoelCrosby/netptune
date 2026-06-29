@@ -8,13 +8,12 @@ import {
   input,
 } from '@angular/core';
 import { FormSelectComponent } from './form-select.component';
+import { FormSelectOptionDirective } from './form-select.directives';
 import { FormSelectService } from './form-select.service';
 
 @Component({
   selector: 'app-form-select-option',
-  host: {
-    class: 'nept-form-select-option',
-  },
+  hostDirectives: [FormSelectOptionDirective],
   template: `<ng-content />`,
 })
 export class FormSelectOptionComponent<TValue> implements Highlightable {

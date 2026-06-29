@@ -25,6 +25,7 @@ import {
   FormControlLabelDirective,
 } from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
+import { FormSelectDropdownStyleDirective } from '../form-select/form-select.directives';
 import { FormSelectTagsOptionComponent } from './form-select-tags-option.component';
 import { FormSelectTagsService } from './form-select-tags.service';
 
@@ -35,6 +36,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
     LucideDynamicIcon,
     LucideChevronDown,
     FormSelectDropdownComponent,
+    FormSelectDropdownStyleDirective,
     FormControlFieldComponent,
     FormControlInputDirective,
     FormControlLabelDirective,
@@ -100,7 +102,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
       }
 
       <app-form-select-dropdown [reference]="dropreference.el">
-        <div class="form-select-dropdown menu-scale-in">
+        <div appFormSelectDropdown class="menu-scale-in">
           <ng-content select="app-form-select-tags-option" />
         </div>
       </app-form-select-dropdown>

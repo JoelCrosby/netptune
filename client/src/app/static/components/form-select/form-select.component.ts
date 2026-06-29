@@ -28,6 +28,7 @@ import {
 } from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
+import { FormSelectDropdownStyleDirective } from './form-select.directives';
 import { FormSelectService } from './form-select.service';
 
 @Component({
@@ -38,6 +39,7 @@ import { FormSelectService } from './form-select.service';
     LucideDynamicIcon,
     LucideChevronDown,
     FormSelectDropdownComponent,
+    FormSelectDropdownStyleDirective,
     FormControlFieldComponent,
     FormControlInputDirective,
     FormControlLabelDirective,

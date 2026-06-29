@@ -32,6 +32,10 @@ import {
   FormControlPrefixDirective,
 } from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
+import {
+  FormSelectDropdownStyleDirective,
+  FormSelectOptionDirective,
+} from '../form-select/form-select.directives';
 
 interface OptionTemplateContext<TOption> {
   $implicit: TOption;
@@ -50,6 +54,8 @@ interface OptionTemplateContext<TOption> {
     LucideDynamicIcon,
     LucideChevronDown,
     FormSelectDropdownComponent,
+    FormSelectDropdownStyleDirective,
+    FormSelectOptionDirective,
     FormControlFieldComponent,
     FormControlInputDirective,
     FormControlLabelDirective,

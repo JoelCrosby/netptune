@@ -7,14 +7,13 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { FormSelectOptionDirective } from '../form-select/form-select.directives';
 import { FormSelectTagsComponent } from './form-select-tags.component';
 import { FormSelectTagsService } from './form-select-tags.service';
 
 @Component({
   selector: 'app-form-select-tags-option',
-  host: {
-    class: 'nept-form-select-option',
-  },
+  hostDirectives: [FormSelectOptionDirective],
   template: `<ng-content />`,
 })
 export class FormSelectTagsOptionComponent<TValue> implements Highlightable {
