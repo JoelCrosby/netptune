@@ -1,22 +1,23 @@
-<div class="nept-form-control">
+<div class="nept-form-control w-[inherit] mb-[1.4rem]">
   @if (label()) {
-    <label [for]="name()" class="form-control-label">
+    <label [for]="name()" appFormLabel>
       {{ label() }}
     </label>
   }
 
-  <div
+  <app-form-control-field
     #dropreference
-    class="form-control-input netp-form-select-search w-full"
-    [class.invalid]="touched() && invalid()"
-    [class.active]="value() && pending()"
+    class="netp-form-select-search w-full"
+    [invalid]="touched() && invalid()"
+    [active]="!!value() && pending()"
     (click)="onTriggerClick($event)">
     @if (prefix()) {
-      <div class="form-control-prefix">{{ prefix() }}</div>
+      <div appFormPrefix>{{ prefix() }}</div>
     }
 
     <input
       #input
+      appFormInput
       role="combobox"
       [attr.aria-expanded]="isOpen()"
       [attr.aria-controls]="listboxId"
@@ -49,7 +50,7 @@
       class="arrow text-foreground/70 mr-4"
     />
 
-    <app-form-select-dropdown [reference]="dropreference">
+    <app-form-select-dropdown [reference]="dropreference.el">
       <div
         class="form-select-dropdown form-select-search-dropdown menu-scale-in"
         [id]="listboxId"
@@ -98,9 +99,9 @@
         }
       </div>
     </app-form-select-dropdown>
-  </div>
+  </app-form-control-field>
 
   @if (hint()) {
-    <small class="form-control-hint">{{ hint() }}</small>
+    <small appFormHint>{{ hint() }}</small>
   }
 </div>

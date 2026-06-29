@@ -24,6 +24,13 @@ import {
   LucideDynamicIcon,
   LucideIconInput,
 } from '@lucide/angular';
+import { FormControlFieldComponent } from '../form-control/form-control-field.component';
+import {
+  FormControlHintDirective,
+  FormControlInputDirective,
+  FormControlLabelDirective,
+  FormControlPrefixDirective,
+} from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
 
 interface OptionTemplateContext<TOption> {
@@ -43,6 +50,11 @@ interface OptionTemplateContext<TOption> {
     LucideDynamicIcon,
     LucideChevronDown,
     FormSelectDropdownComponent,
+    FormControlFieldComponent,
+    FormControlInputDirective,
+    FormControlLabelDirective,
+    FormControlHintDirective,
+    FormControlPrefixDirective,
   ],
 })
 export class FormSelectSearchComponent<TOption, TValue = TOption>

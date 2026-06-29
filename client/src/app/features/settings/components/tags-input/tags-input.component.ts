@@ -6,19 +6,21 @@ import {
   output,
   viewChild,
 } from '@angular/core';
+import { FormControlFieldComponent } from '@app/static/components/form-control/form-control-field.component';
+import { FormControlInputDirective } from '@app/static/components/form-control/form-control.directives';
 
 @Component({
   selector: 'app-tags-input',
-  imports: [],
-  template: `<div class="nept-form-control">
-    <div class="form-control-input">
+  imports: [FormControlFieldComponent, FormControlInputDirective],
+  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
+    <app-form-control-field>
       <input
         #input
+        appFormInput
         type="text"
-        class="form-control"
         [(value)]="value"
         (keydown.enter)="onSubmit($event)" />
-    </div>
+    </app-form-control-field>
   </div> `,
 })
 export class TagsInputComponent implements AfterViewInit {

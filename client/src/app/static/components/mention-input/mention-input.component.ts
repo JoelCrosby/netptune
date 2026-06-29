@@ -14,6 +14,13 @@ import { AppUser } from '@core/models/appuser';
 import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { FormControlFieldComponent } from '../form-control/form-control-field.component';
+import {
+  FormControlHintDirective,
+  FormControlInputDirective,
+  FormControlLabelDirective,
+  FormControlPrefixDirective,
+} from '../form-control/form-control.directives';
 import { FormErrorComponent } from '../form-error/form-error.component';
 
 export interface MentionSubmitEvent {
@@ -23,29 +30,38 @@ export interface MentionSubmitEvent {
 
 @Component({
   selector: 'app-mention-input',
-  imports: [AvatarComponent, CdkPortal, LucideDynamicIcon, FormErrorComponent],
+  imports: [
+    AvatarComponent,
+    CdkPortal,
+    LucideDynamicIcon,
+    FormErrorComponent,
+    FormControlFieldComponent,
+    FormControlInputDirective,
+    FormControlLabelDirective,
+    FormControlHintDirective,
+    FormControlPrefixDirective,
+  ],
   template: `
-    <div class="nept-form-control mb-0!">
+    <div class="nept-form-control mb-0 w-[inherit]">
       @if (label()) {
-        <label [for]="name()" class="form-control-label">
+        <label [for]="name()" appFormLabel>
           {{ label() }}
         </label>
       }
 
-      <div
-        class="form-control-input"
-        [class.invalid]="touched() && invalid()"
-        [class.active]="pending()">
+      <app-form-control-field
+        [invalid]="touched() && invalid()"
+        [active]="pending()">
         @if (prefix()) {
-          <div class="form-control-prefix">{{ prefix() }}</div>
+          <div appFormPrefix>{{ prefix() }}</div>
         }
 
         <input
           #inputEl
+          appFormInput
           [id]="name()"
           [value]="value()"
           [disabled]="disabled()"
-          [class.form-control-disabled]="disabled()"
           [attr.autocomplete]="autocomplete()"
           [attr.placeholder]="placeholder()"
           [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
@@ -60,10 +76,10 @@ export interface MentionSubmitEvent {
             size="20"
             aria-hidden="true"></svg>
         }
-      </div>
+      </app-form-control-field>
 
       @if (hint()) {
-        <small class="form-control-hint"> {{ hint() }} </small>
+        <small appFormHint> {{ hint() }} </small>
       }
 
       @if (errors()) {
@@ -74,7 +90,7 @@ export interface MentionSubmitEvent {
         }
       }
 
-      <div class="form-control-content">
+      <div class="mt-[.4rem]">
         <ng-content />
       </div>
     </div>

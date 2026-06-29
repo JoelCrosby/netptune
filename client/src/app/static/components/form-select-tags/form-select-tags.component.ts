@@ -18,6 +18,12 @@ import {
   LucideDynamicIcon,
   LucideIconInput,
 } from '@lucide/angular';
+import { FormControlFieldComponent } from '../form-control/form-control-field.component';
+import {
+  FormControlHintDirective,
+  FormControlInputDirective,
+  FormControlLabelDirective,
+} from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
 import { FormSelectTagsOptionComponent } from './form-select-tags-option.component';
 import { FormSelectTagsService } from './form-select-tags.service';
@@ -25,18 +31,26 @@ import { FormSelectTagsService } from './form-select-tags.service';
 @Component({
   selector: 'app-form-select-tags',
   providers: [FormSelectTagsService],
-  imports: [LucideDynamicIcon, LucideChevronDown, FormSelectDropdownComponent],
-  template: `<div class="nept-form-control">
+  imports: [
+    LucideDynamicIcon,
+    LucideChevronDown,
+    FormSelectDropdownComponent,
+    FormControlFieldComponent,
+    FormControlInputDirective,
+    FormControlLabelDirective,
+    FormControlHintDirective,
+  ],
+  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
     @if (label()) {
       <!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
-      <label class="form-control-label">{{ label() }}</label>
+      <label appFormLabel>{{ label() }}</label>
     }
 
-    <div
+    <app-form-control-field
       #dropreference
-      class="form-control-input cursor-text! flex-wrap!"
-      [class.invalid]="touched() && invalid()"
-      [class.active]="value().length > 0 && pending()"
+      class="cursor-text! flex-wrap!"
+      [invalid]="touched() && invalid()"
+      [active]="value().length > 0 && pending()"
       (click)="!isReadonly() && onTriggerClick($event)">
       <div class="flex min-w-0 flex-1 flex-wrap items-center gap-1 px-3 py-1">
         @for (option of selectedOptions(); track option.value()) {
@@ -58,6 +72,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
 
         <input
           #searchInput
+          appFormInput
           class="w-auto! min-w-15 flex-1"
           [placeholder]="selectedOptions().length === 0 ? placeholder() : ''"
           [disabled]="disabled()"
@@ -84,15 +99,15 @@ import { FormSelectTagsService } from './form-select-tags.service';
           class="mr-3 flex! items-center justify-center"></svg>
       }
 
-      <app-form-select-dropdown [reference]="dropreference">
+      <app-form-select-dropdown [reference]="dropreference.el">
         <div class="form-select-dropdown menu-scale-in">
           <ng-content select="app-form-select-tags-option" />
         </div>
       </app-form-select-dropdown>
-    </div>
+    </app-form-control-field>
 
     @if (hint()) {
-      <small class="form-control-hint">{{ hint() }}</small>
+      <small appFormHint>{{ hint() }}</small>
     }
   </div> `,
 })
@@ -110,7 +125,9 @@ export class FormSelectTagsComponent<TValue>
 
   readonly changed = output<TValue[]>();
   readonly searchInput = viewChild.required<ElementRef>('searchInput');
-  readonly options = contentChildren(FormSelectTagsOptionComponent);
+  readonly options = contentChildren<FormSelectTagsOptionComponent<TValue>>(
+    FormSelectTagsOptionComponent
+  );
   readonly dropdown = viewChild.required(FormSelectDropdownComponent);
 
   readonly value = model<TValue[]>([]);

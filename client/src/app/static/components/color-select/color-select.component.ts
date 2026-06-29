@@ -3,13 +3,22 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { colorDictionary, NamedColor } from '@core/util/colors/colors';
 import { LucideCheck } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
+import {
+  FormControlHintDirective,
+  FormControlLabelDirective,
+} from '../form-control/form-control.directives';
 
 @Component({
   selector: 'app-color-select',
-  imports: [TooltipDirective, LucideCheck],
-  template: `<div class="nept-form-control">
+  imports: [
+    TooltipDirective,
+    LucideCheck,
+    FormControlLabelDirective,
+    FormControlHintDirective,
+  ],
+  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
     @if (label()) {
-      <label [for]="name()" class="form-control-label">
+      <label [for]="name()" appFormLabel>
         {{ label() }}
       </label>
     }
@@ -42,7 +51,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
     </div>
 
     @if (hint()) {
-      <small class="form-control-hint"> {{ hint() }} </small>
+      <small appFormHint> {{ hint() }} </small>
     }
   </div> `,
 })

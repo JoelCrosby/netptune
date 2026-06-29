@@ -1,23 +1,24 @@
-<div class="nept-form-control">
+<div class="nept-form-control w-[inherit] mb-[1.4rem]">
   @if (label()) {
-  <label [for]="name()" class="form-control-label">
+  <label [for]="name()" appFormLabel>
     {{ label() }}
   </label>
   }
 
-  <div
+  <app-form-control-field
     #dropreference
-    class="form-control-input netp-form-select w-full"
-    [class.invalid]="touched() && invalid()"
-    [class.active]="value() && pending()"
+    class="netp-form-select w-full"
+    [invalid]="touched() && invalid()"
+    [active]="!!value() && pending()"
     (click)="onDropMenuIconClick($event)"
   >
     @if (prefix()) {
-    <div class="form-control-prefix">{{ prefix() }}</div>
+    <div appFormPrefix>{{ prefix() }}</div>
     }
 
     <input
       #input
+      appFormInput
       [placeholder]="placeholder()"
       [id]="name()"
       [value]="displayValue()"
@@ -32,7 +33,7 @@
     />
 
     <div
-      class="input-template"
+      class="hidden"
       [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
     ></div>
 
@@ -44,14 +45,14 @@
 
     <svg lucideChevronDown size="42" aria-hidden="true" class="arrow mr-4 text-foreground/70"></svg>
 
-    <app-form-select-dropdown [reference]="dropreference">
+    <app-form-select-dropdown [reference]="dropreference.el">
       <div class="form-select-dropdown menu-scale-in">
         <ng-content select="app-form-select-option" />
       </div>
     </app-form-select-dropdown>
-  </div>
+  </app-form-control-field>
 
   @if (hint()) {
-  <small class="form-control-hint"> {{ hint() }} </small>
+  <small appFormHint> {{ hint() }} </small>
   }
 </div>

@@ -2,11 +2,25 @@ import { Component, ElementRef, input, output, viewChild } from '@angular/core';
 
 import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
+import { FormControlFieldComponent } from '../form-control/form-control-field.component';
+import {
+  FormControlHintDirective,
+  FormControlInputDirective,
+  FormControlLabelDirective,
+  FormControlPrefixDirective,
+} from '../form-control/form-control.directives';
 
 @Component({
   selector: 'app-form-textarea',
   templateUrl: './form-textarea.component.html',
-  imports: [LucideDynamicIcon],
+  imports: [
+    LucideDynamicIcon,
+    FormControlFieldComponent,
+    FormControlInputDirective,
+    FormControlLabelDirective,
+    FormControlHintDirective,
+    FormControlPrefixDirective,
+  ],
 })
 export class FormTextAreaComponent extends AbstractFormValueControl {
   readonly label = input<string>();

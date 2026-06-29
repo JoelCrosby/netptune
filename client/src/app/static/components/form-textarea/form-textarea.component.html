@@ -1,25 +1,25 @@
-<div class="nept-form-control">
+<div class="nept-form-control w-[inherit] mb-[1.4rem]">
   @if (label()) {
-  <label [for]="name()" class="form-control-label">
+  <label [for]="name()" appFormLabel>
     {{ label() }}
   </label>
   }
 
-  <div
-    class="form-control-input"
-    [class.invalid]="touched() && invalid()"
-    [class.active]="value() && touched()"
+  <app-form-control-field
+    [invalid]="touched() && invalid()"
+    [active]="!!value() && touched()"
   >
     @if (prefix()) {
-    <div class="form-control-prefix">{{ prefix() }}</div>
+    <div appFormPrefix>{{ prefix() }}</div>
     }
 
     <textarea
       #input
+      appFormInput
+      class="leading-[1.6rem]!"
       [id]="name()"
       [value]="value()"
       [disabled]="disabled()"
-      [class.form-control-disabled]="disabled()"
       [attr.maxLength]="maxLength()"
       [attr.minLength]="minLength()"
       [attr.placeholder]="placeholder()"
@@ -32,9 +32,9 @@
     @if (icon()) {
     <svg [lucideIcon]="icon()!" size="20" aria-hidden="true"></svg>
     }
-  </div>
+  </app-form-control-field>
 
   @if (hint()) {
-  <small class="form-control-hint"> {{ hint() }} </small>
+  <small appFormHint> {{ hint() }} </small>
   }
 </div>

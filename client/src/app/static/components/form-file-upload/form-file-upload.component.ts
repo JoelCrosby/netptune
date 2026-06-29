@@ -1,13 +1,14 @@
 import { Component, ElementRef, input, output, viewChild } from '@angular/core';
 import { LucideFileUp } from '@lucide/angular';
+import { FormControlLabelDirective } from '../form-control/form-control.directives';
 
 @Component({
   selector: 'app-form-file-upload',
-  imports: [LucideFileUp],
+  imports: [LucideFileUp, FormControlLabelDirective],
   template: `
-    <div class="nept-form-control">
+    <div class="nept-form-control mb-[1.4rem] w-[inherit]">
       @if (label()) {
-        <label [for]="name()" class="form-control-label">
+        <label [for]="name()" appFormLabel>
           {{ label() }}
         </label>
       }
