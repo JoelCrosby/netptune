@@ -1,19 +1,10 @@
--- Paginated notification feed for a user within a workspace, used by
--- NotificationRepository.GetUserNotifications. Entity-type discriminators and
--- the @skip/@take window are supplied as Dapper parameters. The optional
--- @search (pre-wrapped with wildcards) and @actorId parameters filter the feed
--- by text and by the acting user respectively.
+-- Total count for the paginated notification feed, used by
+-- NotificationRepository.GetUserNotificationsCount. Mirrors the filtering of
+-- get_user_notifications.sql (search + actor) so pagination totals stay in sync.
 WITH notification_feed AS (
     SELECT
           n.id
-        , n.is_read         AS isread
-        , n.link
-        , n.entity_type     AS entitytype
-        , n.activity_type   AS activitytype
-        , n.created_at      AS createdat
-        , al.user_id        AS actoruserid
         , TRIM(u.firstname || ' ' || u.lastname) AS actorusername
-        , u.picture_url     AS actoruserurl
         , COALESCE(pt.name, p.name, b.name, bg.name, s.name) AS entityname
         , CASE
             WHEN n.entity_type = @taskType    AND al.project_slug IS NOT NULL THEN al.project_slug || '-' || pt.project_scope_id::text
@@ -34,11 +25,9 @@ WITH notification_feed AS (
       AND n.workspace_id = @workspaceId
       AND (@actorId::text IS NULL OR al.user_id = @actorId)
 )
-SELECT *
+SELECT COUNT(*)
 FROM notification_feed
 WHERE @search::text IS NULL
    OR actorusername ILIKE @search
    OR entityname ILIKE @search
-   OR entityidentifier ILIKE @search
-ORDER BY createdat DESC
-OFFSET @skip LIMIT @take;
+   OR entityidentifier ILIKE @search;

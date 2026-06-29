@@ -1,4 +1,5 @@
 using Mediator;
+using Microsoft.AspNetCore.Mvc;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
@@ -30,6 +31,14 @@ public static class NotificationsEndpoints
             .MapPut("/read-all", HandleMarkAllRead)
             .RequireAuthorization(NetptunePermissions.Notifications.Update);
 
+        group
+            .MapPut("/read", HandleMarkReadMany)
+            .RequireAuthorization(NetptunePermissions.Notifications.Update);
+
+        group
+            .MapDelete("/", HandleDelete)
+            .RequireAuthorization(NetptunePermissions.Notifications.Update);
+
         builder
             .MapGet("/hubs/notifications", HandleSse)
             .RequireAuthorization();
@@ -37,9 +46,9 @@ public static class NotificationsEndpoints
         return builder;
     }
 
-    private static async Task<IResult> HandleGet(IMediator mediator, [AsParameters] PageRequest page, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleGet(IMediator mediator, [AsParameters] PageRequest page, [AsParameters] NotificationFilter filter, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserNotificationsPagedQuery(page), cancellationToken);
+        var result = await mediator.Send(new GetUserNotificationsPagedQuery(page, filter), cancellationToken);
         return Results.Ok(result);
     }
 
@@ -58,6 +67,18 @@ public static class NotificationsEndpoints
     private static async Task<IResult> HandleMarkAllRead(IMediator mediator, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new MarkAllAsReadCommand(), cancellationToken);
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleMarkReadMany(IMediator mediator, [FromBody] IEnumerable<int> ids, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new MarkNotificationsAsReadCommand(ids), cancellationToken);
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleDelete(IMediator mediator, [FromBody] IEnumerable<int> ids, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteNotificationsCommand(ids), cancellationToken);
         return Results.Ok(result);
     }
 

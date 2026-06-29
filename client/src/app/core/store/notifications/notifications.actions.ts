@@ -29,3 +29,19 @@ export const markAsRead = createAsyncAction('[Notifications] Mark As Read', {
 export const markAllAsRead = createAsyncAction(
   '[Notifications] Mark All As Read'
 );
+
+export const markAsReadMany = createAsyncAction(
+  '[Notifications] Mark As Read Many',
+  {
+    init: props<{ ids: number[] }>(),
+    success: props<{ ids: number[] }>(),
+  }
+);
+
+export const deleteNotifications = createAsyncAction(
+  '[Notifications] Delete Notifications',
+  {
+    init: props<{ ids: number[] }>(),
+    success: props<{ ids: number[] }>(),
+  }
+);

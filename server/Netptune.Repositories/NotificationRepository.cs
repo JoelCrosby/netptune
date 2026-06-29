@@ -17,7 +17,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
     : Repository<DataContext, Notification, int>(context, connectionFactory), INotificationRepository
 {
 
-    public async Task<List<NotificationViewModel>> GetUserNotifications(string userId, int workspaceId, int skip = 0, int take = 50, CancellationToken cancellationToken = default)
+    public async Task<List<NotificationViewModel>> GetUserNotifications(string userId, int workspaceId, string? search = null, string? actorId = null, int skip = 0, int take = 50, CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -25,6 +25,8 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
             SqlScripts.GetUserNotifications, new {
             userId,
             workspaceId,
+            search = ToSearchParam(search),
+            actorId = ToActorParam(actorId),
             skip,
             take,
             taskType = EntityType.Task,
@@ -37,11 +39,29 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
         return results.AsList();
     }
 
-    public Task<int> GetUserNotificationsCount(string userId, int workspaceId, CancellationToken cancellationToken = default)
+    public async Task<int> GetUserNotificationsCount(string userId, int workspaceId, string? search = null, string? actorId = null, CancellationToken cancellationToken = default)
     {
-        return Entities
-            .CountAsync(n => !n.IsDeleted && n.UserId == userId && n.WorkspaceId == workspaceId, cancellationToken);
+        using var connection = ConnectionFactory.StartConnection();
+
+        return await connection.ExecuteScalarAsync<int>(new CommandDefinition(
+            SqlScripts.GetUserNotificationsCount, new {
+            userId,
+            workspaceId,
+            search = ToSearchParam(search),
+            actorId = ToActorParam(actorId),
+            taskType = EntityType.Task,
+            projectType = EntityType.Project,
+            boardType = EntityType.Board,
+            boardGroupType = EntityType.BoardGroup,
+            statusType = EntityType.Status,
+        }, cancellationToken: cancellationToken));
     }
+
+    private static string? ToSearchParam(string? search)
+        => string.IsNullOrWhiteSpace(search) ? null : $"%{search.Trim()}%";
+
+    private static string? ToActorParam(string? actorId)
+        => string.IsNullOrWhiteSpace(actorId) ? null : actorId;
 
     public Task<int> GetUnreadCount(string userId, int workspaceId, CancellationToken cancellationToken = default)
     {
@@ -54,5 +74,50 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
         await Entities
             .Where(n => n.UserId == userId && n.WorkspaceId == workspaceId && !n.IsRead)
             .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true), cancellationToken);
+    }
+
+    public async Task<List<int>> MarkAsRead(IEnumerable<int> ids, string userId, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+
+        if (idList.Count == 0) return [];
+
+        var affectedIds = await Entities
+            .AsNoTracking()
+            .Where(n => n.UserId == userId && !n.IsDeleted && !n.IsRead && idList.Contains(n.Id))
+            .Select(n => n.Id)
+            .ToListAsync(cancellationToken);
+
+        if (affectedIds.Count == 0) return affectedIds;
+
+        await Entities
+            .Where(n => affectedIds.Contains(n.Id))
+            .ExecuteUpdateAsync(s => s.SetProperty(n => n.IsRead, true), cancellationToken);
+
+        return affectedIds;
+    }
+
+    public async Task<List<int>> SoftDelete(IEnumerable<int> ids, string userId, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+
+        if (idList.Count == 0) return [];
+
+        var affectedIds = await Entities
+            .AsNoTracking()
+            .Where(n => n.UserId == userId && !n.IsDeleted && idList.Contains(n.Id))
+            .Select(n => n.Id)
+            .ToListAsync(cancellationToken);
+
+        if (affectedIds.Count == 0) return affectedIds;
+
+        await Entities
+            .Where(n => affectedIds.Contains(n.Id))
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(n => n.IsDeleted, true)
+                .SetProperty(n => n.DeletedByUserId, userId)
+                .SetProperty(n => n.UpdatedAt, DateTime.UtcNow), cancellationToken);
+
+        return affectedIds;
     }
 }

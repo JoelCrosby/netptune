@@ -30,4 +30,12 @@ export class NotificationsService {
   markAllAsRead() {
     return this.http.put<ClientResponse>('api/notifications/read-all', null);
   }
+
+  markAsReadMany(ids: number[]) {
+    return this.http.put<ClientResponse>('api/notifications/read', ids);
+  }
+
+  deleteNotifications(ids: number[]) {
+    return this.http.delete<ClientResponse>('api/notifications', { body: ids });
+  }
 }

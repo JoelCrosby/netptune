@@ -35,9 +35,9 @@ public class GetUserNotificationsPagedQueryHandlerTests
         var notifications = new List<NotificationViewModel> { new(), new() };
 
         UnitOfWork.Notifications
-            .GetUserNotifications(UserId, WorkspaceId, 0, 25, TestContext.Current.CancellationToken).Returns(notifications);
+            .GetUserNotifications(UserId, WorkspaceId, null, null, 0, 25, TestContext.Current.CancellationToken).Returns(notifications);
         UnitOfWork.Notifications
-            .GetUserNotificationsCount(UserId, WorkspaceId, TestContext.Current.CancellationToken).Returns(40);
+            .GetUserNotificationsCount(UserId, WorkspaceId, null, null, TestContext.Current.CancellationToken).Returns(40);
 
         var query = new GetUserNotificationsPagedQuery(new PageRequest { Page = 1, PageSize = 25 });
 
@@ -55,7 +55,7 @@ public class GetUserNotificationsPagedQueryHandlerTests
     public async Task GetUserNotificationsPaged_ShouldQueryWithCorrectSkipAndTake()
     {
         UnitOfWork.Notifications
-            .GetUserNotifications(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken)
+            .GetUserNotifications(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken)
             .Returns(new List<NotificationViewModel>());
 
         var query = new GetUserNotificationsPagedQuery(new PageRequest { Page = 3, PageSize = 10 });
@@ -64,8 +64,8 @@ public class GetUserNotificationsPagedQueryHandlerTests
 
         // Page 3 at a page size of 10 => skip 20, take 10.
         await UnitOfWork.Notifications.Received(1)
-            .GetUserNotifications(UserId, WorkspaceId, 20, 10, TestContext.Current.CancellationToken);
+            .GetUserNotifications(UserId, WorkspaceId, null, null, 20, 10, TestContext.Current.CancellationToken);
         await UnitOfWork.Notifications.Received(1)
-            .GetUserNotificationsCount(UserId, WorkspaceId, TestContext.Current.CancellationToken);
+            .GetUserNotificationsCount(UserId, WorkspaceId, null, null, TestContext.Current.CancellationToken);
     }
 }
