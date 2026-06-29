@@ -7,7 +7,10 @@ export const routes: Routes = [
       import('./views/task-detail-page/task-detail-page.component').then(
         (m) => m.TaskDetailPageComponent
       ),
-    data: { title: 'Task Detail' },
+    data: {
+      title: 'Task Detail',
+      back: 'Back to Tasks',
+    },
   },
   {
     path: '**',

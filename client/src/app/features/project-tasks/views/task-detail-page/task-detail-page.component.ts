@@ -21,42 +21,54 @@ import { TaskDetailTagsComponent } from '@entry/dialogs/task-detail-dialog/task-
 import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-actions.component';
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
 import { ActivatedRoute } from '@angular/router';
+import { PageContainerComponent } from '@app/static/components/page-container/page-container.component';
 
 @Component({
   selector: 'app-task-detail-page',
   template: `
-    @if (task(); as task) {
-      <div class="mx-auto max-w-4xl px-4 py-8">
-        <div
-          class="mb-1 flex flex-row items-center justify-end gap-4 pr-6 pl-2">
-          @if (task.sprintName) {
-            <app-sprint-badge
-              [name]="task.sprintName"
-              [status]="task.sprintStatus" />
-          }
-          @if (task.statusCategory === statusCategory.done) {
-            <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
-          }
-          <app-task-scope-id [id]="task.systemId" />
-          <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
-        </div>
-        <div class="flex flex-col gap-6 px-12">
+    <app-page-container>
+      @if (task(); as task) {
+        <div class="flex items-center justify-between">
           <app-task-detail-header />
-          <app-task-detail-properties />
-          <app-task-detail-actions />
-          <app-task-detail-tags />
-          <app-task-detail-comments />
-          <app-task-detail-description />
+
+          <div
+            class="mb-1 flex flex-row items-center justify-end gap-4 pr-6 pl-2">
+            @if (task.sprintName) {
+              <app-sprint-badge
+                [name]="task.sprintName"
+                [status]="task.sprintStatus" />
+            }
+            @if (task.statusCategory === statusCategory.done) {
+              <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
+            }
+            <app-task-scope-id [id]="task.systemId" />
+            <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
+          </div>
         </div>
+
+        <div class="flex flex-col gap-12 px-6 lg:flex-row">
+          <div class="flex grow flex-col">
+            <app-task-detail-tags />
+            <app-task-detail-description />
+            <app-task-detail-comments />
+          </div>
+
+          <div
+            class="bg-card/40 mt-4 flex w-full flex-col gap-6 rounded px-6 pb-6 lg:w-232">
+            <app-task-detail-properties />
+            <app-task-detail-actions />
+          </div>
+        </div>
+
         <div class="mt-7 flex justify-end">
           <app-task-dates [task]="task" />
         </div>
-      </div>
-    } @else {
-      <div class="flex h-full flex-col items-center justify-center">
-        <app-spinner diameter="64" />
-      </div>
-    }
+      } @else {
+        <div class="flex h-full flex-col items-center justify-center">
+          <app-spinner diameter="64" />
+        </div>
+      }
+    </app-page-container>
   `,
   imports: [
     LucideCheck,
@@ -71,6 +83,7 @@ import { ActivatedRoute } from '@angular/router';
     TaskDetailCommentsComponent,
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,
+    PageContainerComponent,
   ],
   providers: [TaskDetailService],
 })
