@@ -258,3 +258,14 @@
 .codex-editor-overlay__rectangle {
   background-color: rgba(var(--primary-rgb), 0.2);
 }
+
+
+.cdx-list__checkbox .cdx-list__checkbox-check {
+  background: var(--secondary-background) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.cdx-list__checkbox--checked .cdx-list__checkbox-check {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}

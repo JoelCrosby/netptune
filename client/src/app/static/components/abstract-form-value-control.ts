@@ -1,4 +1,4 @@
-import { Component, input, model } from '@angular/core';
+import { Directive, input, model } from '@angular/core';
 import {
   DisabledReason,
   FormValueControl,
@@ -6,9 +6,7 @@ import {
   WithOptionalFieldTree,
 } from '@angular/forms/signals';
 
-@Component({
-  template: '',
-})
+@Directive()
 export class AbstractFormValueControl implements FormValueControl<string> {
   readonly name = input<string>('');
   readonly value = model('');

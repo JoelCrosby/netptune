@@ -1,16 +1,13 @@
 import {
+  afterNextRender,
   Component,
-  effect,
   ElementRef,
-  forwardRef,
   inject,
   input,
   OnDestroy,
   output,
   viewChild,
-  ViewEncapsulation,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { StorageService } from '@core/services/storage.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import Attaches from '@editorjs/attaches';
@@ -32,18 +29,11 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-editor',
-  template: `<div class="editor mb-4 rounded" #editorJs></div>`,
+  template: `<div class="editor w-full rounded" #editorJs></div>`,
   host: {
-    class: 'bg-background dark:bg-secondary-background',
+    class:
+      'bg-background mb-4 dark:bg-secondary-background border-foreground/30 mt-2 flex rounded-sm border-2 px-4 py-1 overflow-y-auto max-h-[600px]',
   },
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => EditorComponent),
-      multi: true,
-    },
-  ],
 })
 export class EditorComponent
   extends AbstractFormValueControl
@@ -60,15 +50,25 @@ export class EditorComponent
 
   editor!: EditorJS;
 
-  onChange!: (value: string) => void;
-  onTouch!: () => void;
-
   constructor() {
     super();
 
-    effect(() => {
-      const val = this.value();
-      this.writeValue(val);
+    afterNextRender(() => {
+      const value = this.value();
+
+      console.log({ value });
+
+      try {
+        const parsed = value ? JSON.parse(value) : null;
+
+        if (!parsed) throw Error('value not valid');
+
+        const intialValue = parsed as OutputData;
+
+        this.createEditor(intialValue);
+      } catch {
+        this.createEmptyEditor(value);
+      }
     });
   }
 
@@ -76,27 +76,18 @@ export class EditorComponent
     this.editor?.destroy?.();
   }
 
-  writeValue(value: string) {
-    try {
-      const parsed = value ? JSON.parse(value) : null;
-      const intialValue = parsed as OutputData;
-
-      this.createEditor(intialValue);
-    } catch {
-      console.log('writeValue catch', value);
-
-      this.createEditor({
-        time: Date.now(),
-        blocks: [
-          {
-            data: {
-              text: value,
-            },
-            type: 'paragraph',
+  createEmptyEditor(value?: string) {
+    this.createEditor({
+      time: Date.now(),
+      blocks: [
+        {
+          data: {
+            text: value ?? '',
           },
-        ],
-      });
-    }
+          type: 'paragraph',
+        },
+      ],
+    });
   }
 
   createEditor(initialValue: OutputData | null = null) {

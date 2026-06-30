@@ -15,7 +15,6 @@ import { EditorComponent } from '@static/components/editor/editor.component';
     </label>
 
     <app-editor
-      class="border-foreground/30 mt-2 flex overflow-y-auto rounded-sm border-2 px-4 py-1"
       aria-labelledby="description"
       placeholder="Add a Description..."
       (saved)="updateTask($event)"

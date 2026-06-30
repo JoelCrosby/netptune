@@ -15,36 +15,35 @@ import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { EditorComponent } from '@app/static/components/editor/editor.component';
 
 @Component({
   imports: [
     DialogTitleComponent,
     FormField,
     FormInputComponent,
-    FormTextAreaComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
     DialogActionsDirective,
     FlatButtonComponent,
     StrokedButtonComponent,
+    EditorComponent,
   ],
   template: `<app-dialog-title>Add new Task</app-dialog-title>
 
-    <form app-dialog-content>
+    <form app-dialog-content novalidate>
       <app-form-input
         [formField]="taskForm.name"
         label="Summary"
-        maxLength="1024">
-      </app-form-input>
+        maxLength="1024" />
 
-      <app-form-textarea
+      <app-editor
         [formField]="taskForm.description"
         label="Description"
-        maxLength="4096">
-      </app-form-textarea>
+        maxLength="4096"
+        [isReadonly]="false" />
 
       <app-form-select [formField]="taskForm.project" label="Project">
         @for (project of projects(); track project.id) {
