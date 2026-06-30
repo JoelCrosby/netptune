@@ -56,8 +56,6 @@ export class EditorComponent
     afterNextRender(() => {
       const value = this.value();
 
-      console.log({ value });
-
       try {
         const parsed = value ? JSON.parse(value) : null;
 
