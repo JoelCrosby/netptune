@@ -11,6 +11,8 @@
 :root {
   --border-radius: 8px;
   --border-radius-small: 3px;
+
+  --editor-code-color: var(--primary);
 }
 
 
@@ -106,7 +108,6 @@
 
   --dialog: #fff;
 
-  --editor-code-color: #6e0099;
   --editor-code-background: #fbfbfb;
   --editor-link-border: #c9c9cc7a;
   --editor-link-background-color: #fff;
@@ -165,8 +166,7 @@
   --card-selected: var(--primary);
   --card-shadow: rgba(0, 0, 0, .2);
 
-  --editor-code-color: #cfbed5;
-  --editor-code-background: #262626;
+  --editor-code-background: #060606;
   --editor-link-border: #3e3e3e;
   --editor-link-background-color: #2f2f2f;
 

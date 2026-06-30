@@ -215,3 +215,46 @@
 .ct {
   z-index: 9999;
 }
+
+.ce-popover__container {
+  background: var(--background);
+  color: var(--foreground);
+  border-color: var(--border) !important;
+}
+
+.ce-popover-item {
+  color: var(--foreground);
+}
+
+.ce-popover-item:hover:not(.ce-popover-item--no-hover) {
+  background: var(--secondary-background);
+}
+
+.ce-toolbar__settings-btn {
+  border: 1px solid var(--border);
+  background: var(--background) !important;
+}
+
+.ce-toolbar__settings-btn:hover {
+  background: var(--secondary-background-hover) !important;
+}
+
+.ce-popover-item-separator__line {
+  background: var(--border) !important;
+}
+
+.cdx-list-start-with-field {
+  background: var(--form-field-background) !important;
+}
+
+.codex-editor ::selection {
+  background-color: rgba(var(--primary-rgb), 0.2)
+}
+
+.codex-editor [data-placeholder-active]:empty:before, .codex-editor [data-placeholder-active][data-empty=true]:before {
+  color: rgba(var(--foreground-rgb), 0.3)
+}
+
+.codex-editor-overlay__rectangle {
+  background-color: rgba(var(--primary-rgb), 0.2);
+}
