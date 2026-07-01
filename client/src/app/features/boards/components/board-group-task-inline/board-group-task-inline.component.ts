@@ -37,6 +37,7 @@ import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.select
 import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DocumentService } from '@static/services/document.service';
+import { selectSelectedSprintFilter } from '@app/core/store/sprints/sprints.selectors';
 
 @Component({
   selector: 'app-board-group-task-inline',
@@ -56,12 +57,20 @@ import { DocumentService } from '@static/services/document.service';
       [cdkTrapFocus]="true"
       placeholder="What do you need to get done?">
     </textarea>
-    <div class="h-[1.6rem] p-[0.4rem]">
+
+    <div>
       @if (message(); as message) {
         <div
           class="bg-primary h-6 w-6 rounded-full text-center leading-6 text-white"
           [appTooltip]="message">
           !
+        </div>
+      }
+
+      @if (selectedSprint()) {
+        <div
+          class="bg-primary/12 inline-flex h-6 rounded-sm px-2 text-center text-xs leading-6 text-white">
+          {{ selectedSprint()?.name }}
         </div>
       }
 
@@ -86,6 +95,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   message = this.store.selectSignal(selectCreateBoardGroupTaskMessage);
   content = this.store.selectSignal(selectInlineTaskContent);
   isInlineDirty = this.store.selectSignal(selectIsInlineDirty);
+  selectedSprint = this.store.selectSignal(selectSelectedSprintFilter);
 
   taskFormModel = signal({
     name: this.content() ?? '',
@@ -94,7 +104,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   taskForm = form(this.taskFormModel, (schema) => {
     required(schema.name);
     maxLength(schema.name, 256);
-    disabled(schema.name, () => !this.isEditActive());
+    disabled(schema.name, { when: () => !this.isEditActive() });
     debounce(schema.name, 240);
   });
 

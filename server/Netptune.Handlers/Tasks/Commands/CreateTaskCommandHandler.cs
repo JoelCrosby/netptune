@@ -60,6 +60,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             StatusId = status.Id,
             Status = status,
             ProjectId = req.ProjectId,
+            SprintId = req.SprintId,
             OwnerId = user.Id,
             WorkspaceId = workspaceId.Value,
             Priority = req.Priority,

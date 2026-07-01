@@ -20,6 +20,8 @@ public record AddProjectTaskRequest
 
     public int? BoardGroupId { get; set; }
 
+    public int? SprintId { get; set; }
+
     public double? SortOrder { get; set; }
 
     public string? AssigneeId { get; set; }

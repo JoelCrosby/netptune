@@ -8,7 +8,6 @@ import {
   setSprintTaskFilter,
 } from '@core/store/sprints/sprints.actions';
 import {
-  selectCurrentSprint,
   selectCurrentSprints,
   selectCurrentSprintsLoaded,
   selectSelectedSprintFilter,
@@ -125,25 +124,20 @@ export class CurrentSprintDropdownComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  readonly isSprintFilterableRoute = this.store.selectSignal(
+  isSprintFilterableRoute = this.store.selectSignal(
     selectIsSprintFilterableRoute
   );
-  readonly canReadSprints = this.store.selectSignal(
+  canReadSprints = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.read)
   );
-  readonly currentSprints = this.store.selectSignal(selectCurrentSprints);
-  readonly currentSprint = this.store.selectSignal(selectCurrentSprint);
-  readonly currentSprintsLoaded = this.store.selectSignal(
-    selectCurrentSprintsLoaded
-  );
-  readonly selectedSprintFilterId = this.store.selectSignal(
+  currentSprints = this.store.selectSignal(selectCurrentSprints);
+  currentSprintsLoaded = this.store.selectSignal(selectCurrentSprintsLoaded);
+  selectedSprintFilterId = this.store.selectSignal(
     selectSelectedSprintFilterId
   );
-  readonly selectedSprintFilter = this.store.selectSignal(
-    selectSelectedSprintFilter
-  );
+  selectedSprintFilter = this.store.selectSignal(selectSelectedSprintFilter);
 
-  readonly triggerLabel = computed(() => {
+  triggerLabel = computed(() => {
     const selectedSprint = this.selectedSprintFilter();
 
     if (selectedSprint) {
@@ -151,11 +145,6 @@ export class CurrentSprintDropdownComponent {
     }
 
     const sprints = this.currentSprints();
-
-    if (sprints.length === 1) {
-      return this.currentSprint()?.name ?? 'Current sprint';
-    }
-
     return `${sprints.length} active sprints`;
   });
 

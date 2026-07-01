@@ -50,8 +50,9 @@ export const selectIsTaskListRoute = createSelector(
 export const selectIsSprintFilterableRoute = createSelector(
   selectIsBoardGroupsRoute,
   selectIsTaskListRoute,
-  (isBoardGroupsRoute, isTaskListRoute) =>
-    isBoardGroupsRoute || isTaskListRoute
+  (isBoardGroupsRoute, isTaskListRoute) => {
+    return isBoardGroupsRoute || isTaskListRoute;
+  }
 );
 
 export const selectIsSprintBacklogRoute = createSelector(

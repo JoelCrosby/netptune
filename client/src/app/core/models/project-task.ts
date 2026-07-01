@@ -43,6 +43,7 @@ export interface AddProjectTaskRequest {
 
   projectId: number;
   boardGroupId?: number;
+  sprintId?: number | null;
 
   sortOrder?: number;
 

@@ -139,14 +139,19 @@ export class BoardGroupsEffects {
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectBoardGroupTaskAssignee),
+        this.store.select(selectSelectedSprintFilterId),
       ]),
-      switchMap(([action, identifier, userId]) => {
+      switchMap(([action, identifier, userId, sprintId]) => {
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
         return this.tasksHubService
-          .post(identifier, { ...action.task, assigneeId: userId })
+          .post(identifier, {
+            ...action.task,
+            assigneeId: userId,
+            sprintId: action.task.sprintId ?? sprintId,
+          })
           .pipe(
             unwrapClientReposne(),
             tap(() => this.snackbar.open('Task created')),

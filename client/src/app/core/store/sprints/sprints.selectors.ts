@@ -21,11 +21,6 @@ export const selectCurrentSprints = createSelector(
   (state: SprintsState) => state.currentSprints
 );
 
-export const selectCurrentSprint = createSelector(
-  selectCurrentSprints,
-  (sprints) => sprints[0]
-);
-
 export const selectCurrentSprintsLoading = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.currentSprintsLoading
@@ -46,7 +41,9 @@ export const selectSelectedSprintFilter = createSelector(
   selectCurrentSprints,
   selectSprintEntities,
   (sprintId, currentSprints, sprintEntities) => {
-    if (!sprintId) return undefined;
+    if (sprintId === undefined || sprintId === null) {
+      return undefined;
+    }
 
     return (
       currentSprints.find((sprint) => sprint.id === sprintId) ??
@@ -74,7 +71,6 @@ export const selectAvailableSprintTasksLoading = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.availableTasksLoading
 );
-
 
 export const selectSprintCreateLoading = createSelector(
   selectSprintsFeature,
