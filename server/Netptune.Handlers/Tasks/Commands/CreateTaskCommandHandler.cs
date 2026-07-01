@@ -71,6 +71,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             Name = req.Name,
             Description = req.Description,
             StatusId = status.Id,
+            Status = status,
             ProjectId = req.ProjectId,
             SprintId = req.SprintId,
             OwnerId = user.Id,
@@ -134,15 +135,23 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (boardGroup is null) throw new Exception($"BoardGroup with id of {groupId} does not exist.");
 
-        var status = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(
-            task.WorkspaceId,
-            boardGroup.Type.GetStatusCategoryFromGroupType(),
-            cancellationToken);
+        var category = boardGroup.Type.GetStatusCategoryFromGroupType();
 
-        if (status is not null)
+        // Keep the resolved status (explicitly requested or project default) when it
+        // already belongs to the target group's category. Only fall back to the first
+        // status of the category when the resolved status doesn't fit the group.
+        if (task.Status is null || task.Status.Category != category)
         {
-            task.StatusId = status.Id;
-            task.Status = status;
+            var status = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(
+                task.WorkspaceId,
+                category,
+                cancellationToken);
+
+            if (status is not null)
+            {
+                task.StatusId = status.Id;
+                task.Status = status;
+            }
         }
 
         task.ProjectTaskInBoardGroups.Add(new ProjectTaskInBoardGroup
