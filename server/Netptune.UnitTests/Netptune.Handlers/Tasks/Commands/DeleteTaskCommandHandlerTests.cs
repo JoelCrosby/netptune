@@ -18,10 +18,11 @@ public class DeleteTaskCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
 
     public DeleteTaskCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
