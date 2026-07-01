@@ -4,11 +4,8 @@ import { MAX_PAGE_SIZE } from '../models/pagination';
 import { EntityType } from '../models/entity-type';
 
 export const statusResource = () => {
-  return httpResource<Status[]>(
-    () => ({
-      url: 'api/statuses',
-      params: { page: 1, pageSize: MAX_PAGE_SIZE, entityType: EntityType.task },
-    }),
-    { defaultValue: [] }
-  );
+  return httpResource<Status[]>(() => ({
+    url: 'api/statuses',
+    params: { page: 1, pageSize: MAX_PAGE_SIZE, entityType: EntityType.task },
+  }));
 };

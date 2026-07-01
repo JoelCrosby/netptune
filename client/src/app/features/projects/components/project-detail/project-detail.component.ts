@@ -1,5 +1,4 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import {
   disabled,
   form,
@@ -8,9 +7,8 @@ import {
   required,
 } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
-import { EntityType } from '@core/models/entity-type';
+import { statusResource } from '@core/resources/status.resources';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
-import { StatusesService } from '@core/services/statuses.service';
 import {
   clearProjectDetail,
   updateProject,
@@ -37,7 +35,7 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
   ],
   template: `@if (project(); as project) {
     <div>
-      <form class="w-full max-w-[512px]" (submit)="updateClicked($event)">
+      <form class="w-full max-w-lg" (submit)="updateClicked($event)">
         <app-form-input
           [formField]="projectForm.name"
           label="Name"
@@ -53,7 +51,7 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
           <app-form-input
             [formField]="projectForm.key"
             label="Project ID"
-            class="w-[120px]"
+            class="w-30"
             maxLength="6">
           </app-form-input>
           <div>
@@ -70,15 +68,19 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
           label="Repository URL"
           maxLength="1024">
         </app-form-input>
-        <app-form-select
-          [formField]="projectForm.defaultStatusId"
-          label="Default task status">
-          @for (status of statuses(); track status.id) {
-            <app-form-select-option [value]="status.id">
-              {{ status.name }}
-            </app-form-select-option>
-          }
-        </app-form-select>
+
+        @if (statuses.hasValue()) {
+          <app-form-select
+            [formField]="projectForm.defaultStatusId"
+            label="Default task status">
+            @for (status of statuses.value(); track status.id) {
+              <app-form-select-option [value]="status.id">
+                {{ status.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
+
         <button
           app-flat-button
           color="primary"
@@ -91,13 +93,10 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 })
 export class ProjectDetailComponent implements OnDestroy {
   private store = inject(Store);
-  private statusesService = inject(StatusesService);
 
   project = this.store.selectSignal(selectProjectDetail);
   loading = this.store.selectSignal(selectUpdateProjectLoading);
-  statuses = toSignal(this.statusesService.get(EntityType.task), {
-    initialValue: [],
-  });
+  statuses = statusResource();
 
   projectFormModel = signal({
     id: this.project()?.id ?? (null as number | null),
@@ -112,11 +111,12 @@ export class ProjectDetailComponent implements OnDestroy {
     required(schema.id);
     required(schema.key);
     required(schema.name);
+    required(schema.defaultStatusId);
     maxLength(schema.key, 6);
     maxLength(schema.name, 128);
     maxLength(schema.description, 4096);
     maxLength(schema.repositoryUrl, 1024);
-    disabled(schema, () => this.loading());
+    disabled(schema, { when: () => this.loading() });
   });
 
   ngOnDestroy() {

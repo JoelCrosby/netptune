@@ -33,7 +33,6 @@ import { FormSelectService } from './form-select.service';
 
 @Component({
   selector: 'app-form-select',
-  templateUrl: './form-select.component.html',
   providers: [FormSelectService],
   imports: [
     LucideDynamicIcon,
@@ -46,6 +45,69 @@ import { FormSelectService } from './form-select.service';
     FormControlHintDirective,
     FormControlPrefixDirective,
   ],
+  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
+    @if (label()) {
+      <label [for]="name()" appFormLabel>
+        {{ label() }}
+      </label>
+    }
+
+    <app-form-control-field
+      #dropreference
+      class="w-full cursor-pointer"
+      [invalid]="touched() && invalid()"
+      [active]="!!value() && pending()"
+      (click)="onDropMenuIconClick($event)">
+      @if (prefix()) {
+        <div appFormPrefix>{{ prefix() }}</div>
+      }
+
+      <input
+        #input
+        appFormInput
+        [placeholder]="placeholder()"
+        [id]="name()"
+        [value]="displayValue()"
+        [disabled]="disabled()"
+        class="grow cursor-pointer selection:bg-transparent"
+        [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
+        readonly
+        (click)="$event.stopPropagation(); showDropdown()"
+        (keydown)="onKeyDown($event)"
+        (blur)="touched.set(true)"
+        autocomplete="off" />
+
+      <div
+        class="hidden"
+        [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"></div>
+
+      <ng-content />
+
+      @if (icon()) {
+        <svg
+          class="mr-3"
+          [lucideIcon]="icon()!"
+          size="20"
+          aria-hidden="true"></svg>
+      }
+
+      <svg
+        lucideChevronDown
+        size="28"
+        aria-hidden="true"
+        class="text-foreground/70 mr-4 flex items-center justify-center"></svg>
+
+      <app-form-select-dropdown [reference]="dropreference.el">
+        <div appFormSelectDropdown class="menu-scale-in">
+          <ng-content select="app-form-select-option" />
+        </div>
+      </app-form-select-dropdown>
+    </app-form-control-field>
+
+    @if (hint()) {
+      <small appFormHint> {{ hint() }} </small>
+    }
+  </div> `,
 })
 export class FormSelectComponent<TValue>
   implements AfterViewInit, FormValueControl<TValue | null>
