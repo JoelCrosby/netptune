@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.ProjectTasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -21,15 +22,18 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
     public CreateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IActivityLogger activity)
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
@@ -38,20 +42,29 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
-        if (!workspaceId.HasValue) return ClientResponse<TaskViewModel>.Failed($"workspace with key {workspaceKey} not found");
+        if (!workspaceId.HasValue)
+        {
+            return ClientResponse<TaskViewModel>.Failed($"workspace with key {workspaceKey} not found");
+        }
 
         var user = await Identity.GetCurrentUser();
         var userId = req.AssigneeId ?? user.Id;
         var project = await UnitOfWork.Projects.GetTaskCreationProject(req.ProjectId!.Value, workspaceId.Value, cancellationToken);
 
-        if (project is null) return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
+        if (project is null)
+        {
+            return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
+        }
 
         await UnitOfWork.Statuses.EnsureDefaultTaskStatuses(workspaceId.Value, user.Id, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         var status = await ResolveStatus(req, project, workspaceId.Value, cancellationToken);
 
-        if (status is null) return ClientResponse<TaskViewModel>.Failed("Task status not found");
+        if (status is null)
+        {
+            return ClientResponse<TaskViewModel>.Failed("Task status not found");
+        }
 
         var task = new ProjectTask
         {
@@ -66,7 +79,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             Priority = req.Priority,
             EstimateType = req.EstimateType,
             EstimateValue = req.EstimateValue,
-            ProjectTaskAppUsers = new List<ProjectTaskAppUser> { new() { UserId = userId } },
+            ProjectTaskAppUsers = [new() { UserId = userId }],
         };
 
         if (req.BoardGroupId.HasValue)
@@ -103,6 +116,14 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             options.EntityId = result.Id;
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.Create;
+        });
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Index,
+            EntityType = "task",
+            EntityId = result.Id,
+            WorkspaceSlug = workspaceKey,
         });
 
         return ClientResponse<TaskViewModel>.Success(response!);
