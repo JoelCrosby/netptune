@@ -29,7 +29,6 @@ export class TaskDetailDescriptionComponent {
   task = this.store.selectSignal(selectDetailTask);
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
   isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
-
   description = model(this.task()?.description ?? '');
 
   constructor() {

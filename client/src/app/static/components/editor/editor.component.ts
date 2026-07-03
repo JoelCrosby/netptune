@@ -1,8 +1,10 @@
 import {
   afterNextRender,
   Component,
+  effect,
   ElementRef,
   inject,
+  Injector,
   input,
   OnDestroy,
   output,
@@ -47,6 +49,7 @@ export class EditorComponent
   readonly isReadOnly = input(false);
   readonly loaded = output();
   readonly saved = output<string>();
+  readonly injector = inject(Injector);
 
   editor!: EditorJS;
 
@@ -54,24 +57,32 @@ export class EditorComponent
     super();
 
     afterNextRender(() => {
-      const value = this.value();
-
-      try {
-        const parsed = value ? JSON.parse(value) : null;
-
-        if (!parsed) throw Error('value not valid');
-
-        const intialValue = parsed as OutputData;
-
-        this.createEditor(intialValue);
-      } catch {
-        this.createEmptyEditor(value);
-      }
+      effect(
+        () => {
+          const value = this.value();
+          this.setValue(value);
+        },
+        { injector: this.injector }
+      );
     });
   }
 
   ngOnDestroy() {
     this.editor?.destroy?.();
+  }
+
+  setValue(value?: string) {
+    try {
+      const parsed = value ? JSON.parse(value) : null;
+
+      if (!parsed) throw Error('value not valid');
+
+      const intialValue = parsed as OutputData;
+
+      this.createEditor(intialValue);
+    } catch {
+      this.createEmptyEditor(value);
+    }
   }
 
   createEmptyEditor(value?: string) {
@@ -90,7 +101,7 @@ export class EditorComponent
 
   createEditor(initialValue: OutputData | null = null) {
     if (this.editor) {
-      return;
+      this.editor.destroy();
     }
 
     const logLevel = environment.production
