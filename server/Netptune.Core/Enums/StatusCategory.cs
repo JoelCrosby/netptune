@@ -2,11 +2,12 @@ namespace Netptune.Core.Enums;
 
 public enum StatusCategory
 {
-    Backlog = 0,
-    Todo = 1,
-    Active = 2,
-    Done = 3,
-    Inactive = 4,
+    New = 0,
+    Backlog = 1,
+    Todo = 2,
+    Active = 3,
+    Done = 4,
+    Inactive = 5,
 }
 
 public static class StatusCategoryExtensions
@@ -15,6 +16,8 @@ public static class StatusCategoryExtensions
     {
         return category switch
         {
+            StatusCategory.New => BoardGroupType.Basic,
+            StatusCategory.Backlog => BoardGroupType.Backlog,
             StatusCategory.Todo => BoardGroupType.Todo,
             StatusCategory.Done => BoardGroupType.Done,
             _ => BoardGroupType.Backlog,

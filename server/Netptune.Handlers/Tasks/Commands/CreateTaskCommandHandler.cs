@@ -137,10 +137,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         var category = boardGroup.Type.GetStatusCategoryFromGroupType();
 
-        // Keep the resolved status (explicitly requested or project default) when it
-        // already belongs to the target group's category. Only fall back to the first
-        // status of the category when the resolved status doesn't fit the group.
-        if (task.Status is null || task.Status.Category != category)
+        if (task.Status.Category != StatusCategory.Backlog)
         {
             var status = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(
                 task.WorkspaceId,
