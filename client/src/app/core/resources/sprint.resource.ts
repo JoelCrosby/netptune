@@ -1,9 +1,11 @@
-import { httpResource } from '@angular/common/http';
 import { SprintViewModel } from '../models/view-models/sprint-view-model';
 import { SprintStatus } from '../enums/sprint-status';
+import { netptunePermissions } from '../auth/permissions';
+import { permissionResource } from './permission-resource';
 
 export const sprintResource = () => {
-  return httpResource<SprintViewModel[]>(
+  return permissionResource<SprintViewModel[]>(
+    netptunePermissions.sprints.read,
     () => ({
       url: 'api/sprints',
       params: {

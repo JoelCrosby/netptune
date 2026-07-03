@@ -58,16 +58,18 @@ interface BulkEditTasksForm {
       </p>
 
       <div class="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
-        <app-form-select [formField]="editForm.statusId" label="Status">
-          <app-form-select-option [value]="null">
-            Keep current
-          </app-form-select-option>
-          @for (status of statuses.value(); track status.id) {
-            <app-form-select-option [value]="status.id">
-              {{ status.name }}
+        @if (statuses.canRead()) {
+          <app-form-select [formField]="editForm.statusId" label="Status">
+            <app-form-select-option [value]="null">
+              Keep current
             </app-form-select-option>
-          }
-        </app-form-select>
+            @for (status of statuses.value(); track status.id) {
+              <app-form-select-option [value]="status.id">
+                {{ status.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
 
         <app-form-select [formField]="editForm.priority" label="Priority">
           <app-form-select-option [value]="null">
@@ -80,30 +82,34 @@ interface BulkEditTasksForm {
           }
         </app-form-select>
 
-        <app-form-select [formField]="editForm.projectId" label="Project">
-          <app-form-select-option [value]="null">
-            Keep current
-          </app-form-select-option>
-          @for (project of projects.value(); track project.id) {
-            <app-form-select-option [value]="project.id">
-              {{ project.name }}
+        @if (projects.canRead()) {
+          <app-form-select [formField]="editForm.projectId" label="Project">
+            <app-form-select-option [value]="null">
+              Keep current
             </app-form-select-option>
-          }
-        </app-form-select>
+            @for (project of projects.value(); track project.id) {
+              <app-form-select-option [value]="project.id">
+                {{ project.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
 
-        <app-form-select [formField]="editForm.sprintId" label="Sprint">
-          <app-form-select-option [value]="null">
-            Keep current
-          </app-form-select-option>
-          <app-form-select-option [value]="noSprint">
-            No sprint
-          </app-form-select-option>
-          @for (sprint of sprints.value(); track sprint.id) {
-            <app-form-select-option [value]="sprint.id">
-              {{ sprint.name }}
+        @if (sprints.canRead()) {
+          <app-form-select [formField]="editForm.sprintId" label="Sprint">
+            <app-form-select-option [value]="null">
+              Keep current
             </app-form-select-option>
-          }
-        </app-form-select>
+            <app-form-select-option [value]="noSprint">
+              No sprint
+            </app-form-select-option>
+            @for (sprint of sprints.value(); track sprint.id) {
+              <app-form-select-option [value]="sprint.id">
+                {{ sprint.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
 
         <app-form-select
           [formField]="editForm.estimateType"
@@ -124,15 +130,17 @@ interface BulkEditTasksForm {
           label="Story points" />
       </div>
 
-      <app-form-select-tags
-        [formField]="editForm.assigneeIds"
-        label="Assignees">
-        @for (user of assignableUsers(); track user.id) {
-          <app-form-select-tags-option [value]="user.id">
-            {{ user.displayName }}
-          </app-form-select-tags-option>
-        }
-      </app-form-select-tags>
+      @if (users.canRead()) {
+        <app-form-select-tags
+          [formField]="editForm.assigneeIds"
+          label="Assignees">
+          @for (user of assignableUsers(); track user.id) {
+            <app-form-select-tags-option [value]="user.id">
+              {{ user.displayName }}
+            </app-form-select-tags-option>
+          }
+        </app-form-select-tags>
+      }
     </form>
 
     <div app-dialog-actions align="end">
