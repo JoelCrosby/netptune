@@ -1,5 +1,11 @@
 .editor {
-  --monospace: Cascadia Code, SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  --monospace:
+    Cascadia Code,
+    SFMono-Regular,
+    Consolas,
+    Liberation Mono,
+    Menlo,
+    monospace;
   border-radius: 4px;
   margin-bottom: 1rem;
   --fill-background: transparent;
@@ -7,8 +13,24 @@
   color: var(--foreground);
 }
 
-.editor h1, .editor h2, .editor h3, .editor h4, .editor h5, .editor .link-tool__title {
-  font-family: 'Overpass', 'Roboto', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans, Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+.editor h1,
+.editor h2,
+.editor h3,
+.editor h4,
+.editor h5,
+.editor .link-tool__title {
+  font-family:
+    'Overpass',
+    'Roboto',
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Noto Sans,
+    Ubuntu,
+    Droid Sans,
+    Helvetica Neue,
+    sans-serif;
 }
 
 .editor h1 {
@@ -251,14 +273,14 @@
   background-color: rgba(var(--primary-rgb), 0.2)
 }
 
-.codex-editor [data-placeholder-active]:empty:before, .codex-editor [data-placeholder-active][data-empty=true]:before {
+.codex-editor [data-placeholder-active]:empty:before,
+.codex-editor [data-placeholder-active][data-empty=true]:before {
   color: rgba(var(--foreground-rgb), 0.3)
 }
 
 .codex-editor-overlay__rectangle {
   background-color: rgba(var(--primary-rgb), 0.2);
 }
-
 
 .cdx-list__checkbox .cdx-list__checkbox-check {
   background: var(--secondary-background) !important;
