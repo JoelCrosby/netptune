@@ -79,7 +79,9 @@ export class SprintBacklogViewComponent {
   readonly users = this.store.selectSignal(selectAllUsers);
   readonly searchTerm = this.store.selectSignal(selectTaskSearchTerm);
   readonly selectedTags = this.store.selectSignal(selectSelectedTags);
-  readonly selectedStatuses = this.store.selectSignal(selectSelectedTaskStatuses);
+  readonly selectedStatuses = this.store.selectSignal(
+    selectSelectedTaskStatuses
+  );
   readonly selectedAssignees = this.store.selectSignal(selectSelectedAssignees);
   readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
 

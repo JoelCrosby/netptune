@@ -53,7 +53,6 @@ export class SprintsService {
     });
   }
 
-
   post(request: AddSprintRequest) {
     return this.http.post<ClientResponse<SprintViewModel>>(
       'api/sprints',

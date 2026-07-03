@@ -51,9 +51,7 @@ export const hexToRgbTriplet = (
     return null;
   }
 
-  const { r, g, b } = pastel
-    ? toPastel(rgb.r, rgb.g, rgb.b, pastel)
-    : rgb;
+  const { r, g, b } = pastel ? toPastel(rgb.r, rgb.g, rgb.b, pastel) : rgb;
 
   return `${r}, ${g}, ${b}`;
 };

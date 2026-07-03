@@ -8,7 +8,10 @@ const reducer = createReducer(
 
   // Load Boards
 
-  on(actions.loadBoards.init, (state): BoardsState => ({ ...state, loading: true })),
+  on(
+    actions.loadBoards.init,
+    (state): BoardsState => ({ ...state, loading: true })
+  ),
   on(
     actions.loadBoards.fail,
     (state, { error }): BoardsState => ({

@@ -46,7 +46,10 @@ export interface DatatableColumnsDialogData {
       Toggle which columns are shown and drag to reorder them.
     </p>
 
-    <div class="flex flex-col gap-1" cdkDropList (cdkDropListDropped)="drop($event)">
+    <div
+      class="flex flex-col gap-1"
+      cdkDropList
+      (cdkDropListDropped)="drop($event)">
       @for (item of items(); track item.id) {
         <div
           class="border-border bg-card flex items-center gap-3 rounded border px-2 py-2"
@@ -80,8 +83,7 @@ export interface DatatableColumnsDialogData {
 })
 export class DatatableColumnsDialogComponent {
   private data = inject<DatatableColumnsDialogData>(DIALOG_DATA);
-  private dialogRef =
-    inject<DialogRef<DatatableColumnPreference[]>>(DialogRef);
+  private dialogRef = inject<DialogRef<DatatableColumnPreference[]>>(DialogRef);
 
   items = signal<DatatableColumnsDialogItem[]>(
     this.data.items.map((item) => ({ ...item }))

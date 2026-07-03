@@ -174,7 +174,11 @@ export class ProjectTasksEffects {
           // sprintId is actually present (e.g. a deep link); otherwise leave the
           // existing global filter intact instead of clearing it.
           ...(paramMap.has('sprintId')
-            ? [SprintActions.setSprintTaskFilter({ sprintId: filters.sprintId })]
+            ? [
+                SprintActions.setSprintTaskFilter({
+                  sprintId: filters.sprintId,
+                }),
+              ]
             : []),
           actions.loadProjectTasks.init()
         );

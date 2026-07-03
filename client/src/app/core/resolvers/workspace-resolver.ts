@@ -31,18 +31,22 @@ export const workspaceResovler: ResolveFn<Workspace> = (
           switchMap((workspace) => {
             if (workspace?.slug === workspaceKey) return of(workspace);
 
-            return workspaces.getBySlug(workspaceKey).pipe(
-              tap((workspace) =>
-                store.dispatch(setCurrentWorkspace({ workspace }))
-              )
-            );
+            return workspaces
+              .getBySlug(workspaceKey)
+              .pipe(
+                tap((workspace) =>
+                  store.dispatch(setCurrentWorkspace({ workspace }))
+                )
+              );
           })
         );
       }
 
-      return workspaces.getPublicBySlug(workspaceKey).pipe(
-        tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace })))
-      );
+      return workspaces
+        .getPublicBySlug(workspaceKey)
+        .pipe(
+          tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace })))
+        );
     })
   );
 };

@@ -92,8 +92,10 @@ export class ProfileEffects {
     return this.actions$.pipe(
       ofType(actions.updateProfile.init),
       filter((action) => !!action.image),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      map((action) => actions.uploadProfilePicture.init({ data: action.image! }))
+      map((action) =>
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        actions.uploadProfilePicture.init({ data: action.image! })
+      )
     );
   });
 

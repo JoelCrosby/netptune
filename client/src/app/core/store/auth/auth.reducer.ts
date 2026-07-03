@@ -35,7 +35,10 @@ const reducer = createReducer(
 
   // Login
 
-  on(actions.login.init, (state): AuthState => ({ ...state, loginLoading: true })),
+  on(
+    actions.login.init,
+    (state): AuthState => ({ ...state, loginLoading: true })
+  ),
   on(
     actions.login.success,
     (state, { user }): AuthState => ({

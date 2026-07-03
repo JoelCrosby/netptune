@@ -10,11 +10,7 @@ import { first } from 'rxjs/operators';
 
 @Component({
   templateUrl: './users-view.component.html',
-  imports: [
-    PageContainerComponent,
-    PageHeaderComponent,
-    UserListComponent,
-  ],
+  imports: [PageContainerComponent, PageHeaderComponent, UserListComponent],
 })
 export class UsersViewComponent {
   private dialog = inject(DialogService);
