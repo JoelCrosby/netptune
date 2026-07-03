@@ -1,19 +1,15 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { httpResource } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
 import { Store } from '@ngrx/store';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { bulkUpdateTasks } from '@core/store/tasks/tasks.actions';
-import { WorkspaceAppUser } from '@core/models/appuser';
-import { ClientResponse } from '@core/models/client-response';
-import { MAX_PAGE_SIZE, Page } from '@core/models/pagination';
-import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
-import { SprintStatus } from '@core/enums/sprint-status';
 import { estimateTypeOptions } from '@core/enums/estimate-type';
 import { taskPriorityOptions } from '@core/enums/task-priority';
 import { statusResource } from '@core/resources/status.resources';
+import { projectResource } from '@core/resources/project.resource';
+import { sprintResource } from '@core/resources/sprint.resource';
+import { userResource } from '@core/resources/user.resource';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -165,29 +161,9 @@ export class BulkEditTasksDialogComponent {
   readonly taskCount = computed(() => this.tasks.length);
 
   readonly statuses = statusResource();
-
-  readonly projects = httpResource<ProjectViewModel[]>(
-    () => ({
-      url: 'api/projects',
-      params: { page: 1, pageSize: MAX_PAGE_SIZE },
-    }),
-    { defaultValue: [] }
-  );
-
-  readonly sprints = httpResource<SprintViewModel[]>(
-    () => ({
-      url: 'api/sprints',
-      params: {
-        statuses: [SprintStatus.planning, SprintStatus.active],
-        take: 100,
-      },
-    }),
-    { defaultValue: [] }
-  );
-
-  private readonly users = httpResource<ClientResponse<Page<WorkspaceAppUser>>>(
-    () => ({ url: 'api/users', params: { page: 1, pageSize: MAX_PAGE_SIZE } })
-  );
+  readonly projects = projectResource();
+  readonly sprints = sprintResource();
+  readonly users = userResource();
 
   readonly assignableUsers = computed(() =>
     (this.users.value()?.payload?.items ?? []).filter((user) => !user.isPending)
