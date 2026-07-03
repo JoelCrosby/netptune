@@ -291,3 +291,13 @@
   background: var(--primary) !important;
   border-color: var(--primary) !important;
 }
+
+.ct:before, .ct:after {
+  background-color: var(--foreground);
+  opacity: 1;
+}
+
+.ct__content {
+  color: var(--background);
+  font-family: var(--font-sans);
+}

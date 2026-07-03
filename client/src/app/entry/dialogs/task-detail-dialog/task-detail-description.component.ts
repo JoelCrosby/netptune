@@ -19,8 +19,10 @@ import { EditorComponent } from '@static/components/editor/editor.component';
       placeholder="Add a Description..."
       (saved)="updateTask($event)"
       [(value)]="description"
-      [isReadOnly]="isReadOnly()">
+      [isReadOnly]="isReadOnly()"
+      class="@xl:px-16">
     </app-editor>`,
+  host: { class: '@container' },
   imports: [EditorComponent],
 })
 export class TaskDetailDescriptionComponent {
