@@ -1,4 +1,4 @@
-import { Component, inject, model } from '@angular/core';
+import { Component, effect, inject, model } from '@angular/core';
 import { editProjectTask } from '@app/core/store/tasks/tasks.actions';
 import {
   selectDetailTask,
@@ -31,6 +31,12 @@ export class TaskDetailDescriptionComponent {
   isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
 
   description = model(this.task()?.description ?? '');
+
+  constructor() {
+    effect(() => {
+      this.description.set(this.task()?.description ?? '');
+    });
+  }
 
   updateTask(value?: string) {
     if (typeof value === 'undefined' || value === null) {

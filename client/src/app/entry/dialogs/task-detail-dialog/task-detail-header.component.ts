@@ -1,4 +1,4 @@
-import { Component, inject, model } from '@angular/core';
+import { Component, effect, inject, model } from '@angular/core';
 import { selectCurrentHubGroupId } from '@app/core/store/hub-context/hub-context.selectors';
 import { editProjectTask } from '@app/core/store/tasks/tasks.actions';
 import {
@@ -26,6 +26,12 @@ export class TaskDetailHeaderComponent {
   isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
 
   name = model(this.task()?.name ?? '');
+
+  constructor() {
+    effect(() => {
+      this.name.set(this.task()?.name ?? '');
+    });
+  }
 
   updateTask(value?: string) {
     if (typeof value === 'undefined' || value === null) {

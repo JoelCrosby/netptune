@@ -5,7 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, UrlSegment } from '@angular/router';
 import { map } from 'rxjs';
 
 export function injectParams(): Signal<ParamMap> {
@@ -15,10 +15,17 @@ export function injectParams(): Signal<ParamMap> {
   return toSignal(route.queryParamMap, { requireSync: true });
 }
 
+export function injectRoute(): Signal<UrlSegment[]> {
+  assertInInjectionContext(injectRoute);
+  const route = inject(ActivatedRoute);
+
+  return toSignal(route.url, { requireSync: true });
+}
+
 export function injectParam<T>(
   keyOrTransform: string | ((queryParamMap: ParamMap) => T)
 ): Signal<T | null> {
-  assertInInjectionContext(injectParams);
+  assertInInjectionContext(injectParam);
   const route = inject(ActivatedRoute);
 
   if (typeof keyOrTransform === 'function') {

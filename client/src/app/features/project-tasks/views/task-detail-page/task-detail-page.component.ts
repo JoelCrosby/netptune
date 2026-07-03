@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, effect, inject, input, OnDestroy } from '@angular/core';
 import {
   clearTaskDetail,
   loadTaskDetails,
@@ -20,7 +20,6 @@ import { TaskDetailPropertiesComponent } from '@entry/dialogs/task-detail-dialog
 import { TaskDetailTagsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-tags.component';
 import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-actions.component';
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
-import { ActivatedRoute } from '@angular/router';
 import { PageContainerComponent } from '@app/static/components/page-container/page-container.component';
 
 @Component({
@@ -89,15 +88,23 @@ import { PageContainerComponent } from '@app/static/components/page-container/pa
 })
 export class TaskDetailPageComponent implements OnDestroy {
   store = inject(Store);
-  route = inject(ActivatedRoute);
 
   entityType = EntityType.task;
   statusCategory = StatusCategory;
   task = this.store.selectSignal(selectDetailTask);
 
+  systemId = input.required<string>();
+
   constructor() {
-    const systemId: string = this.route.snapshot.params['systemId'];
-    this.store.dispatch(loadTaskDetails.init({ systemId }));
+    effect(() => {
+      const systemId = this.systemId();
+
+      console.log({ systemId });
+
+      if (systemId) {
+        this.store.dispatch(loadTaskDetails.init({ systemId }));
+      }
+    });
   }
 
   ngOnDestroy() {
