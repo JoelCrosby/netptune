@@ -107,7 +107,7 @@ public sealed class MeilisearchService : IMeilisearchService
             Id = hit.TaskId,
             Title = hit.Title,
             Subtitle = $"{hit.ProjectKey} · {hit.Status}",
-            Url = $"/{hit.WorkspaceSlug}/tasks/{hit.SystemId ?? hit.TaskId.ToString()}",
+            Url = $"/{hit.WorkspaceSlug}/tasks/{hit.SystemId}",
             Metadata = new Dictionary<string, object?>
             {
                 ["status"] = hit.Status,

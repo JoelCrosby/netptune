@@ -17,7 +17,7 @@ internal static class BoardSeeder
             MetaInfo = new()
             {
                 Color = projects[i].MetaInfo?.Color
-                    ?? projects[i].Workspace?.MetaInfo?.Color
+                    ?? projects[i].Workspace.MetaInfo?.Color
                     ?? DefaultColor,
             },
             Owner = users[i % users.Count],

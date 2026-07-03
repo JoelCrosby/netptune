@@ -22,12 +22,12 @@ public sealed class BoardSeeder : ISeeder
             MetaInfo = new BoardMeta
             {
                 Color = project.MetaInfo?.Color
-                    ?? project.Workspace?.MetaInfo?.Color
+                    ?? project.Workspace.MetaInfo?.Color
                     ?? DefaultColor,
             },
             Owner = context.Users[i % context.Users.Count],
             Project = project,
-            Workspace = project.Workspace!,
+            Workspace = project.Workspace,
         }));
 
         await dbContext.Boards.AddRangeAsync(context.Boards, ct);

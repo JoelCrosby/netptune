@@ -295,11 +295,6 @@ export class SprintsEffects {
           this.store.select(selectSelectedSprintFilterId),
         ]),
         filter(([, paramMap, isSprintFilterableRoute, sprintId]) => {
-          console.log({
-            isSprintFilterableRoute,
-            sprintId,
-          });
-
           return (
             isSprintFilterableRoute &&
             sprintId !== undefined &&

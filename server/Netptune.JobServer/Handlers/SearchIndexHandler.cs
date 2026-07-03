@@ -24,15 +24,19 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
         if (request.Operation == SearchIndexOperation.Delete)
         {
             var (indexName, docId) = GetIndexAndId(request.EntityType, request.EntityId);
+
             await SearchService.DeleteDocumentAsync(indexName, docId, cancellationToken);
             Logger.LogInformation("[Search] deleted {Type} {Id}", request.EntityType, request.EntityId);
+
             return default;
         }
+        else
+        {
+            await IndexEntityAsync(request, cancellationToken);
+            Logger.LogInformation("[Search] indexed {Type} {Id}", request.EntityType, request.EntityId);
 
-        await IndexEntityAsync(request, cancellationToken);
-        Logger.LogInformation("[Search] indexed {Type} {Id}", request.EntityType, request.EntityId);
-
-        return default;
+            return default;
+        }
     }
 
     private async Task IndexEntityAsync(SearchIndexEvent request, CancellationToken ct)
@@ -57,6 +61,7 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
     private async Task IndexTaskAsync(int taskId, string workspaceSlug, CancellationToken ct)
     {
         var task = await UnitOfWork.Tasks.GetAsync(taskId, cancellationToken: ct);
+
         if (task is null) return;
 
         var doc = new TaskSearchDocument
@@ -65,7 +70,7 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
             TaskId = task.Id,
             Title = task.Name,
             Description = task.Description,
-            SystemId = $"{task.ProjectScopeId}",
+            SystemId = $"{task.Project?.Key}-{task.ProjectScopeId}",
             WorkspaceSlug = workspaceSlug,
             Status = task.Status.Name,
             Priority = task.Priority?.ToString(),

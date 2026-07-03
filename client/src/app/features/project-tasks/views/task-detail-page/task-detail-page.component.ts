@@ -99,8 +99,6 @@ export class TaskDetailPageComponent implements OnDestroy {
     effect(() => {
       const systemId = this.systemId();
 
-      console.log({ systemId });
-
       if (systemId) {
         this.store.dispatch(loadTaskDetails.init({ systemId }));
       }
