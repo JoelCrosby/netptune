@@ -1,6 +1,7 @@
 import { Component, effect, inject, input, OnDestroy } from '@angular/core';
 import {
   clearTaskDetail,
+  deleteProjectTask,
   loadTaskDetails,
 } from '@app/core/store/tasks/tasks.actions';
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
@@ -21,6 +22,13 @@ import { TaskDetailTagsComponent } from '@entry/dialogs/task-detail-dialog/task-
 import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-actions.component';
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
 import { PageContainerComponent } from '@app/static/components/page-container/page-container.component';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { netptunePermissions } from '@app/core/auth/permissions';
+import { Actions, ofType } from '@ngrx/effects';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, withLatestFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
 
 @Component({
   selector: 'app-task-detail-page',
@@ -47,7 +55,10 @@ import { PageContainerComponent } from '@app/static/components/page-container/pa
 
         <div class="flex flex-col gap-12 px-6 lg:flex-row">
           <div class="flex grow flex-col">
-            <app-task-detail-tags />
+            @if (readTags()) {
+              <app-task-detail-tags />
+            }
+
             <app-task-detail-description />
             <app-task-detail-comments />
           </div>
@@ -88,12 +99,18 @@ import { PageContainerComponent } from '@app/static/components/page-container/pa
 })
 export class TaskDetailPageComponent implements OnDestroy {
   store = inject(Store);
+  actions = inject(Actions);
+  router = inject(Router);
 
   entityType = EntityType.task;
   statusCategory = StatusCategory;
   task = this.store.selectSignal(selectDetailTask);
 
   systemId = input.required<string>();
+
+  readTags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tags.read)
+  );
 
   constructor() {
     effect(() => {
@@ -103,6 +120,19 @@ export class TaskDetailPageComponent implements OnDestroy {
         this.store.dispatch(loadTaskDetails.init({ systemId }));
       }
     });
+
+    this.actions
+      .pipe(
+        takeUntilDestroyed(),
+        ofType(deleteProjectTask.success),
+        filter((action) => action.identifier === this.systemId()),
+        withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier))
+      )
+      .subscribe({
+        next: ([, workspaceId]) => {
+          void this.router.navigate(['/', workspaceId, 'tasks']);
+        },
+      });
   }
 
   ngOnDestroy() {

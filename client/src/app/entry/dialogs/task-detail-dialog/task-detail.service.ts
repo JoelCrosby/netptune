@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
-import { selectCurrentHubGroupId } from '@app/core/store/hub-context/hub-context.selectors';
 import {
   deleteProjectTask,
   editProjectTask,
@@ -19,17 +18,15 @@ export class TaskDetailService {
   readonly sprintsService = inject(SprintsService);
   readonly snackbar = inject(SnackbarService);
   readonly task = this.store.selectSignal(selectDetailTask);
-  readonly hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
 
   updateTask(update: Partial<UpdateProjectTaskRequest>) {
-    const identifier = this.hubGroupId();
     const task = this.task();
 
-    if (!identifier || !task) return;
+    if (!task) return;
 
     this.store.dispatch(
       editProjectTask.init({
-        identifier,
+        identifier: task.systemId,
         task: {
           ...task,
           ...update,
@@ -40,11 +37,12 @@ export class TaskDetailService {
 
   deleteTask() {
     const task = this.task();
-    const identifier = this.hubGroupId();
 
-    if (!task || !identifier) return;
+    if (!task) return;
 
-    this.store.dispatch(deleteProjectTask.init({ identifier, task }));
+    this.store.dispatch(
+      deleteProjectTask.init({ identifier: task.systemId, task })
+    );
   }
 
   assignSprint(sprintId: number) {

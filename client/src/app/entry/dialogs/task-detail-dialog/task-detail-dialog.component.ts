@@ -1,7 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, OnDestroy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Actions, ofType } from '@ngrx/effects';
 import {
   clearTaskDetail,
   deleteProjectTask,
@@ -15,18 +14,21 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { LucideCheck } from '@lucide/angular';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
+import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { TaskDetailActionsComponent } from './task-detail-actions.component';
 import { TaskDetailCommentsComponent } from './task-detail-comments.component';
 import { TaskDetailDescriptionComponent } from './task-detail-description.component';
 import { TaskDetailHeaderComponent } from './task-detail-header.component';
 import { TaskDetailPropertiesComponent } from './task-detail-properties.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
-import { TaskDetailActionsComponent } from './task-detail-actions.component';
 import { TaskDetailService } from './task-detail.service';
+import { netptunePermissions } from '@app/core/auth/permissions';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -53,7 +55,10 @@ import { TaskDetailService } from './task-detail.service';
 
         <div class="flex flex-row gap-12 px-6">
           <div class="flex w-64 grow flex-col">
-            <app-task-detail-tags />
+            @if (readTags()) {
+              <app-task-detail-tags />
+            }
+
             <app-task-detail-description />
             <app-task-detail-comments />
           </div>
@@ -103,6 +108,10 @@ export class TaskDetailDialogComponent implements OnDestroy {
 
   task = this.store.selectSignal(selectDetailTask);
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
+
+  readTags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tags.read)
+  );
 
   constructor() {
     const systemId: string = this.data.systemId;

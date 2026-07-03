@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
+import { netptunePermissions } from '@app/core/auth/permissions';
 import { AppUser } from '@app/core/models/appuser';
 import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { selectRequiredDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { selectAllUsers } from '@app/core/store/users/users.selectors';
 import { TaskPrioritySelectComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-priority.component';
@@ -46,10 +48,14 @@ import { TaskDetailService } from './task-detail.service';
           }}</small>
         </div>
       </div>
-      <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Status</h4>
-        <app-task-detail-status-select />
-      </div>
+
+      @if (readStatus()) {
+        <div>
+          <h4 class="font-sm mt-4 mb-2 font-semibold">Status</h4>
+          <app-task-detail-status-select />
+        </div>
+      }
+
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Priority</h4>
         <app-task-priority-select />
@@ -74,6 +80,10 @@ export class TaskDetailPropertiesComponent {
   readonly taskDetailService = inject(TaskDetailService);
   readonly task = this.store.selectSignal(selectRequiredDetailTask);
   readonly users = this.store.selectSignal(selectAllUsers);
+
+  readStatus = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.statuses.read)
+  );
 
   selectAssignee(user: AppUser) {
     const task = this.task();

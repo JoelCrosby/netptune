@@ -127,6 +127,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         if (entity is null) return null;
 
         return await entity
+            .Where(e => !e.IsDeleted)
             .Select(TaskToViewModel())
             .FirstOrDefaultAsync(cancellationToken);
     }

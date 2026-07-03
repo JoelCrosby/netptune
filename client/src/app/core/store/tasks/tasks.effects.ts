@@ -254,6 +254,7 @@ export class ProjectTasksEffects {
                 tap(() => this.snackbar.open('Task deleted')),
                 map(() => {
                   const taskId = action.task.id;
+                  const identifier = action.identifier;
 
                   if (taskId === undefined || taskId === null) {
                     throw new Error('taskid was null or undefined');
@@ -261,6 +262,7 @@ export class ProjectTasksEffects {
 
                   return actions.deleteProjectTask.success({
                     taskId,
+                    identifier,
                   });
                 }),
                 catchError((error) =>

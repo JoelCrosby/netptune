@@ -92,7 +92,7 @@ export const deleteProjectTask = createAsyncAction(
   '[ProjectTasks] Delete Project Task',
   {
     init: props<{ identifier: string; task: TaskViewModel }>(),
-    success: props<{ taskId: number }>(),
+    success: props<{ taskId: number; identifier: string }>(),
   }
 );
 

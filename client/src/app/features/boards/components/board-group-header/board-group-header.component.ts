@@ -24,12 +24,14 @@ import { Store } from '@ngrx/store';
     <app-board-groups-search />
     <app-board-group-header-seperator />
     <app-board-group-users />
-    <app-board-group-header-seperator />
+
     @if (readTags()) {
+      <app-board-group-header-seperator />
       <app-tag-filter-container />
     }
-    <app-board-group-header-seperator />
+
     @if (readStatus()) {
+      <app-board-group-header-seperator />
       <app-board-group-status />
     }
     <app-board-groups-selection />

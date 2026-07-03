@@ -26,15 +26,14 @@ import { netptunePermissions } from '@app/core/auth/permissions';
       <app-task-list-search />
       <app-task-list-filter-separator />
       <app-task-list-assignees [assigneeOptions]="assigneeOptions()" />
-      <app-task-list-filter-separator />
 
       @if (readTags()) {
+        <app-task-list-filter-separator />
         <app-tag-filter-container />
       }
 
-      <app-task-list-filter-separator />
-
       @if (readStatus()) {
+        <app-task-list-filter-separator />
         <app-task-list-status />
       }
 
