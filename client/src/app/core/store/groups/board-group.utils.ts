@@ -5,7 +5,7 @@ import {
   BoardViewGroup,
   BoardViewTask,
 } from '@core/models/view-models/board-view';
-import { getStatusCategoryFromGroupType } from '@core/models/view-models/board-group-view-model';
+import { Status } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import { Update } from '@ngrx/entity';
@@ -13,7 +13,8 @@ import { adapter, BoardGroupsState } from './board-groups.model';
 
 export const moveTaskInBoardGroup = (
   state: BoardGroupsState,
-  request: MoveTaskInGroupRequest
+  request: MoveTaskInGroupRequest,
+  status?: Status | null
 ): BoardGroupsState => {
   const stateClone = structuredClone(state);
   const newGroup = stateClone.entities[request.newGroupId];
@@ -45,7 +46,6 @@ export const moveTaskInBoardGroup = (
   const nextOrder = nextTask?.sortOrder;
 
   const sortOrder = getNewSortOrder(preOrder, nextOrder);
-  const statusCategory = getStatusCategoryFromGroupType(newGroup.type);
 
   (stateClone.entities[request.newGroupId] as unknown as BoardViewGroup).tasks =
     (
@@ -55,10 +55,23 @@ export const moveTaskInBoardGroup = (
         return task;
       }
 
+      // When the target group assigns a status, apply it to the moved task so the
+      // card reflects the new status before the board reloads.
+      if (status) {
+        return {
+          ...task,
+          sortOrder,
+          statusId: status.id,
+          statusName: status.name,
+          statusKey: status.key,
+          statusColor: status.color,
+          statusCategory: status.category,
+        };
+      }
+
       return {
         ...task,
         sortOrder,
-        statusCategory,
       };
     });
 

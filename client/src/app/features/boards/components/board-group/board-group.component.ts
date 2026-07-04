@@ -18,6 +18,7 @@ import { selectInlineActiveGroupId } from '@app/core/store/groups/board-groups.s
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
 import { Selected } from '@core/models/selected';
+import { Status } from '@core/models/status';
 import {
   BoardViewGroup,
   BoardViewTask,
@@ -120,6 +121,7 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
 
   readonly dragListId = input.required<string>();
   readonly group = input.required<BoardViewGroup>();
+  readonly assignedStatus = input<Status | null>(null);
   readonly siblingIds = input.required<string[]>();
 
   readonly container = viewChild.required<ElementRef>('container');
@@ -172,6 +174,8 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   drop(event: CdkDragDrop<BoardViewTask[]>) {
     const { data: task } = event.item;
 
+    const isTransfer = event.container.id !== event.previousContainer.id;
+
     this.store.dispatch(
       BoardGroupActions.moveTaskInBoardGroup.init({
         request: {
@@ -181,6 +185,8 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
           currentIndex: event.currentIndex,
           previousIndex: event.previousIndex,
         },
+        // Only a transfer between groups applies the target group's status.
+        status: isTransfer ? this.assignedStatus() : null,
       })
     );
   }

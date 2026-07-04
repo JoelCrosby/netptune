@@ -94,6 +94,7 @@ public static class AutoFixtures
     public static BoardGroup BoardGroup => Fixture
         .Build<BoardGroup>()
         .Without(p => p.Board)
+        .Without(p => p.Status)
         .Without(p => p.Tasks)
         .Without(p => p.TasksInGroups)
         .WithoutWorkspace()

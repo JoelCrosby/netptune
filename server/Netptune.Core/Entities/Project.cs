@@ -90,13 +90,15 @@ public record Project : WorkspaceEntity<int>
             UserId = options.UserId,
         });
 
-        project.ProjectBoards.Add(GenerateDefaultBoard(project, options.WorkspaceId));
+        project.ProjectBoards.Add(GenerateDefaultBoard(project, options));
 
         return project;
     }
 
-    private static Board GenerateDefaultBoard(Project project, int workspaceId)
+    private static Board GenerateDefaultBoard(Project project, CreateProjectOptions options)
     {
+        var workspaceId = options.WorkspaceId;
+
         return new()
         {
             Identifier = GenerateDefaultBoardId(project.Key),
@@ -115,18 +117,21 @@ public record Project : WorkspaceEntity<int>
                     Name = "Backlog",
                     SortOrder = 1D,
                     WorkspaceId = workspaceId,
+                    StatusId = options.BacklogStatusId,
                 },
                 new BoardGroup
                 {
                     Name = "Todo",
                     SortOrder = 1.1D,
                     WorkspaceId = workspaceId,
+                    StatusId = options.ActiveStatusId,
                 },
                 new BoardGroup
                 {
                     Name = "Done",
                     SortOrder = 1.3D,
                     WorkspaceId = workspaceId,
+                    StatusId = options.DoneStatusId,
                 },
             },
         };
@@ -157,4 +162,11 @@ public class CreateProjectOptions
     public ProjectMeta? MetaInfo { get; init; }
 
     public int? DefaultStatusId { get; init; }
+
+    // Optional pre-assigned statuses for the auto-created Backlog/Todo/Done groups.
+    public int? BacklogStatusId { get; init; }
+
+    public int? ActiveStatusId { get; init; }
+
+    public int? DoneStatusId { get; init; }
 }

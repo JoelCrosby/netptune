@@ -23,12 +23,29 @@ public sealed class UpdateBoardGroupCommandHandler : IRequestHandler<UpdateBoard
 
     public async ValueTask<ClientResponse<BoardGroupViewModel>> Handle(UpdateBoardGroupCommand request, CancellationToken cancellationToken)
     {
-        var result = await UnitOfWork.BoardGroups.GetAsync(request.Request.BoardGroupId!.Value, cancellationToken: cancellationToken);
+        var req = request.Request;
+        var result = await UnitOfWork.BoardGroups.GetAsync(req.BoardGroupId!.Value, cancellationToken: cancellationToken);
 
         if (result is null) return ClientResponse<BoardGroupViewModel>.NotFound;
 
-        result.Name = request.Request.Name ?? result.Name;
-        result.SortOrder = request.Request.SortOrder ?? result.SortOrder;
+        result.Name = req.Name ?? result.Name;
+        result.SortOrder = req.SortOrder ?? result.SortOrder;
+
+        if (req.ClearStatus)
+        {
+            result.StatusId = null;
+        }
+        else if (req.StatusId.HasValue)
+        {
+            var status = await UnitOfWork.Statuses.GetInWorkspace(req.StatusId.Value, result.WorkspaceId, cancellationToken: cancellationToken);
+
+            if (status is not { EntityType: EntityType.Task })
+            {
+                return ClientResponse<BoardGroupViewModel>.Failed("Assigned status was not found or is not a task status.");
+            }
+
+            result.StatusId = req.StatusId;
+        }
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

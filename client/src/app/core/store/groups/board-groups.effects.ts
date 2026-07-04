@@ -3,7 +3,6 @@ import { Injectable, inject } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
-import { BoardGroupType } from '@core/models/view-models/board-group-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
 import { selectSelectedTags } from '@core/store/tags/tags.selectors';
@@ -196,15 +195,6 @@ export class BoardGroupsEffects {
     return this.actions$.pipe(
       ofType(actions.deleteBoardGroup.init),
       switchMap((action) => {
-        if (action.boardGroup.type === BoardGroupType.done) {
-          return this.confirmation
-            .open({
-              isInfoMessage: true,
-              message: 'You cannot delete the done column',
-            })
-            .pipe(switchMap(() => EMPTY));
-        }
-
         return this.confirmation.open(DELETE_CONFIRMATION).pipe(
           withLatestFrom(this.store.select(selectors.selectBoardIdentifier)),
           switchMap(([result, identifier]) => {

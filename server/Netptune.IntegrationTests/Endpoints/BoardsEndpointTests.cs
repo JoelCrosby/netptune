@@ -173,6 +173,19 @@ public sealed class BoardsEndpointTests
         result.Payload.Should().NotBeNull();
     }
 
+    [Fact]
+    public async Task GetBoardView_ShouldReturnCorrectly_WhenSearchTermProvided()
+    {
+        var response = await Client.GetAsync("api/boards/view/neovim?term=task");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardView>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().NotBeNull();
+    }
+
 
     [Fact]
     public async Task IsSlugUnique_ShouldReturnFalse_WhenSlugUnique()

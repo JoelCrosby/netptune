@@ -43,6 +43,10 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
             var defaultStatus = await ResolveDefaultStatus(request.Request.DefaultStatusId, workspace.Id, cancellationToken);
             if (defaultStatus is null) return ClientResponse<ProjectViewModel>.Failed("Default task status not found");
 
+            var backlogStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Backlog, cancellationToken);
+            var activeStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Active, cancellationToken);
+            var doneStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Done, cancellationToken);
+
             var project = Project.Create(new()
             {
                 Name = request.Request.Name,
@@ -53,6 +57,9 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
                 RepositoryUrl = request.Request.RepositoryUrl,
                 MetaInfo = request.Request.MetaInfo,
                 DefaultStatusId = defaultStatus.Id,
+                BacklogStatusId = backlogStatus?.Id,
+                ActiveStatusId = activeStatus?.Id,
+                DoneStatusId = doneStatus?.Id,
             });
 
             workspace.Projects.Add(project);

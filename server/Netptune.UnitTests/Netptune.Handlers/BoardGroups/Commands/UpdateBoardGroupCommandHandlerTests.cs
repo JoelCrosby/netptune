@@ -29,7 +29,7 @@ public class UpdateBoardGroupCommandHandlerTests
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
+        var request = Fixture.Build<UpdateBoardGroupRequest>().Without(p => p.StatusId).With(p => p.ClearStatus, false).Create();
         var boardGroup = AutoFixtures.BoardGroup;
 
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
@@ -46,12 +46,55 @@ public class UpdateBoardGroupCommandHandlerTests
     [Fact]
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture.Build<UpdateBoardGroupRequest>().Create();
+        var request = Fixture.Build<UpdateBoardGroupRequest>().Without(p => p.StatusId).With(p => p.ClearStatus, false).Create();
         UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
         await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldAssignStatus_WhenStatusValid()
+    {
+        var request = Fixture.Build<UpdateBoardGroupRequest>().With(p => p.StatusId, 5).With(p => p.ClearStatus, false).Create();
+
+        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Statuses.GetInWorkspace(5, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken)
+            .Returns(AutoFixtures.TaskStatus with { Id = 5 });
+
+        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.StatusId.Should().Be(5);
+    }
+
+    [Fact]
+    public async Task Update_ShouldClearStatus_WhenClearStatusSet()
+    {
+        var request = Fixture.Build<UpdateBoardGroupRequest>().Without(p => p.StatusId).With(p => p.ClearStatus, true).Create();
+        var boardGroup = AutoFixtures.BoardGroup;
+        boardGroup.StatusId = 9;
+
+        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
+
+        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.StatusId.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnFailure_WhenStatusInvalid()
+    {
+        var request = Fixture.Build<UpdateBoardGroupRequest>().With(p => p.StatusId, 5).With(p => p.ClearStatus, false).Create();
+
+        UnitOfWork.BoardGroups.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.Statuses.GetInWorkspace(5, Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+
+        var result = await Handler.Handle(new UpdateBoardGroupCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]

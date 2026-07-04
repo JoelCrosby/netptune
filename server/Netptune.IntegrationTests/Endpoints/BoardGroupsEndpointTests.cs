@@ -100,6 +100,47 @@ public sealed class BoardGroupsEndpointTests
     }
 
     [Fact]
+    public async Task Create_ShouldAssignStatus_WhenStatusValid()
+    {
+        // Status id 1 is a seeded task status in the "netptune" workspace that owns board 1.
+        var request = new AddBoardGroupRequest
+        {
+            Name = "group with status",
+            SortOrder = 3,
+            BoardId = 1,
+            StatusId = 1,
+        };
+
+        var response = await Client.PostAsJsonAsync("api/boardgroups", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.StatusId.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Update_ShouldAssignStatus_WhenStatusValid()
+    {
+        var request = new UpdateBoardGroupRequest
+        {
+            BoardGroupId = 1,
+            StatusId = 1,
+        };
+
+        var response = await Client.PutAsJsonAsync("api/boardgroups", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.StatusId.Should().Be(1);
+    }
+
+    [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenInputNotValid()
     {
         var request = new AddBoardGroupRequest

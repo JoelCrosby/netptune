@@ -1,6 +1,7 @@
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { AppUser } from '@core/models/appuser';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
+import { Status } from '@core/models/status';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
@@ -70,7 +71,9 @@ export const editBoardGroup = createAsyncAction(
 export const moveTaskInBoardGroup = createAsyncAction(
   '[BoardGroups] Move Task In BoardGroup',
   {
-    init: props<{ request: MoveTaskInGroupRequest }>(),
+    // `status` is the target group's assigned status (if any), resolved at dispatch
+    // time so the optimistic update can reflect the task's new status immediately.
+    init: props<{ request: MoveTaskInGroupRequest; status?: Status | null }>(),
   }
 );
 

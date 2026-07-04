@@ -135,6 +135,17 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         if (boardGroup is null) throw new Exception($"BoardGroup with id of {groupId} does not exist.");
 
+        if (boardGroup.StatusId.HasValue)
+        {
+            var status = await UnitOfWork.Statuses.GetInWorkspace(boardGroup.StatusId.Value, task.WorkspaceId, cancellationToken: cancellationToken);
+
+            if (status is not null)
+            {
+                task.StatusId = status.Id;
+                task.Status = status;
+            }
+        }
+
         task.ProjectTaskInBoardGroups.Add(new ProjectTaskInBoardGroup
         {
             SortOrder = boardGroup.MaxSortOrder + 1,

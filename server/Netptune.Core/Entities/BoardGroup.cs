@@ -17,10 +17,15 @@ public record BoardGroup : WorkspaceEntity<int>
 
     public double SortOrder { get; set; }
 
+    public int? StatusId { get; set; }
+
     #region NavigationProperties
 
     [JsonIgnore]
     public Board? Board { get; set; }
+
+    [JsonIgnore]
+    public Status? Status { get; set; }
 
     [JsonIgnore]
     public ICollection<ProjectTaskInBoardGroup> TasksInGroups { get; set; } = new HashSet<ProjectTaskInBoardGroup>();
@@ -44,6 +49,7 @@ public record BoardGroup : WorkspaceEntity<int>
             Name = Name,
             BoardId = BoardId,
             SortOrder = SortOrder,
+            StatusId = StatusId,
         };
     }
 

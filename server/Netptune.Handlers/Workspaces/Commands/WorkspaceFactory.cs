@@ -1,6 +1,7 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -36,6 +37,10 @@ internal static class WorkspaceFactory
 
             if (defaultStatus is null) return ClientResponse<WorkspaceViewModel>.Failed("Default task status not found");
 
+            var backlogStatus = await unitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Backlog, cancellationToken);
+            var activeStatus = await unitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Active, cancellationToken);
+            var doneStatus = await unitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Done, cancellationToken);
+
             var permissions = WorkspaceRolePermissions
                 .GetDefaultPermissions(WorkspaceRole.Owner)
                 .ToList();
@@ -58,6 +63,9 @@ internal static class WorkspaceFactory
                 UserId = user.Id,
                 WorkspaceId = workspace.Id,
                 DefaultStatusId = defaultStatus.Id,
+                BacklogStatusId = backlogStatus?.Id,
+                ActiveStatusId = activeStatus?.Id,
+                DoneStatusId = doneStatus?.Id,
                 MetaInfo = new()
                 {
                     Color = request.MetaInfo.Color,

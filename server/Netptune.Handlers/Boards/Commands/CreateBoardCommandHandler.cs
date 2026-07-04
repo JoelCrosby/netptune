@@ -48,9 +48,13 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
             WorkspaceId = workspaceId,
         };
 
-        board.BoardGroups.Add(new() { Name = "Backlog", SortOrder = 1D, WorkspaceId = workspaceId });
-        board.BoardGroups.Add(new() { Name = "Todo", SortOrder = 1.1D, WorkspaceId = workspaceId });
-        board.BoardGroups.Add(new() { Name = "Done", SortOrder = 1.2D, WorkspaceId = workspaceId });
+        var backlogStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspaceId, StatusCategory.Backlog, cancellationToken);
+        var activeStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspaceId, StatusCategory.Active, cancellationToken);
+        var doneStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspaceId, StatusCategory.Done, cancellationToken);
+
+        board.BoardGroups.Add(new() { Name = "Backlog", SortOrder = 1D, WorkspaceId = workspaceId, StatusId = backlogStatus?.Id });
+        board.BoardGroups.Add(new() { Name = "Todo", SortOrder = 1.1D, WorkspaceId = workspaceId, StatusId = activeStatus?.Id });
+        board.BoardGroups.Add(new() { Name = "Done", SortOrder = 1.2D, WorkspaceId = workspaceId, StatusId = doneStatus?.Id });
 
         var result = await UnitOfWork.Boards.AddAsync(board, cancellationToken);
 

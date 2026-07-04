@@ -31,12 +31,18 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
 
         if (board is null) return ClientResponse<BoardGroupViewModel>.NotFound;
 
+        if (req.StatusId.HasValue && !await IsValidTaskStatus(req.StatusId.Value, board.WorkspaceId, cancellationToken))
+        {
+            return ClientResponse<BoardGroupViewModel>.Failed("Assigned status was not found or is not a task status.");
+        }
+
         var sortOrder = req.SortOrder ?? await UnitOfWork.BoardGroups.GetBoardGroupDefaultSortOrder(boardId, cancellationToken);
 
         var boardGroup = new BoardGroup
         {
             Name = req.Name,
             SortOrder = sortOrder,
+            StatusId = req.StatusId,
             WorkspaceId = board.WorkspaceId,
             BoardId = board.Id,
         };
@@ -53,5 +59,11 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
         });
 
         return ClientResponse<BoardGroupViewModel>.Success(result.ToViewModel());
+    }
+
+    private async Task<bool> IsValidTaskStatus(int statusId, int workspaceId, CancellationToken cancellationToken)
+    {
+        var status = await UnitOfWork.Statuses.GetInWorkspace(statusId, workspaceId, cancellationToken: cancellationToken);
+        return status is { EntityType: EntityType.Task };
     }
 }

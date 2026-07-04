@@ -4,4 +4,5 @@ public sealed record BoardGroupTaskTarget(
     int Id,
     string Name,
     double MaxSortOrder,
-    int WorkspaceId = 0);
+    int WorkspaceId = 0,
+    int? StatusId = null);

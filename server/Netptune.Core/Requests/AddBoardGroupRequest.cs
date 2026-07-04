@@ -11,4 +11,6 @@ public record AddBoardGroupRequest
     public int? BoardId { get; set; }
 
     public double? SortOrder { get; set; }
+
+    public int? StatusId { get; set; }
 }

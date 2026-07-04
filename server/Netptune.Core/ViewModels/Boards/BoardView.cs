@@ -22,6 +22,8 @@ public class BoardViewGroup
 
     public double SortOrder { get; set; }
 
+    public int? StatusId { get; set; }
+
     public IList<BoardViewTask> Tasks { get; set; } = null!;
 }
 

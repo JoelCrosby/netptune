@@ -6,13 +6,20 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import * as BoardGroupActions from '@app/core/store/groups/board-groups.actions';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { statusResource } from '@core/resources/status.resources';
 
 export interface BoardGroupDialogData {
   boardId: number;
   identifier: string;
+  // Present when editing an existing group.
+  boardGroupId?: number;
+  name?: string;
+  statusId?: number | null;
 }
 
 @Component({
@@ -21,12 +28,16 @@ export interface BoardGroupDialogData {
     DialogTitleComponent,
     FormField,
     FormInputComponent,
+    FormSelectComponent,
+    FormSelectOptionComponent,
     DialogActionsDirective,
     FlatButtonComponent,
     StrokedButtonComponent,
     DialogCloseDirective,
   ],
-  template: `<app-dialog-title>Add Group</app-dialog-title>
+  template: `<app-dialog-title>{{
+      isEdit ? 'Edit Group' : 'Add Group'
+    }}</app-dialog-title>
 
     <div app-dialog-content>
       <form (submit)="onSubmit($event)">
@@ -35,12 +46,27 @@ export interface BoardGroupDialogData {
           label="Group Name"
           maxLength="128">
         </app-form-input>
+
+        @if (statuses.canRead()) {
+          <app-form-select [formField]="groupForm.statusId" label="Status">
+            <app-form-select-option [value]="null">
+              No status
+            </app-form-select-option>
+            @for (status of statuses.value(); track status.id) {
+              <app-form-select-option [value]="status.id">
+                {{ status.name }}
+              </app-form-select-option>
+            }
+          </app-form-select>
+        }
       </form>
     </div>
 
     <div app-dialog-actions align="end">
       <button app-stroked-button app-dialog-close>Close</button>
-      <button app-flat-button (click)="onSubmit($event)">Add Group</button>
+      <button app-flat-button (click)="onSubmit($event)">
+        {{ isEdit ? 'Save' : 'Add Group' }}
+      </button>
     </div> `,
 })
 export class BoardGroupDialogComponent {
@@ -48,8 +74,13 @@ export class BoardGroupDialogComponent {
   dialogRef = inject<DialogRef<BoardGroupDialogComponent>>(DialogRef);
   data = inject<BoardGroupDialogData>(DIALOG_DATA);
 
+  statuses = statusResource();
+
+  isEdit = this.data.boardGroupId !== undefined;
+
   groupFormModel = signal({
-    group: '',
+    group: this.data.name ?? '',
+    statusId: this.data.statusId ?? null,
   });
 
   groupForm = form(this.groupFormModel, (schema) => {
@@ -62,17 +93,32 @@ export class BoardGroupDialogComponent {
     if (this.groupForm().invalid()) return;
 
     const name = this.groupForm.group().value();
-    const identifier = this.data.identifier;
+    const statusId = this.groupForm.statusId().value();
+    const boardGroupId = this.data.boardGroupId;
 
-    this.store.dispatch(
-      BoardGroupActions.createBoardGroup.init({
-        identifier,
-        request: {
-          name,
-          boardId: this.data.boardId,
-        },
-      })
-    );
+    if (boardGroupId !== undefined) {
+      this.store.dispatch(
+        BoardGroupActions.editBoardGroup.init({
+          request: {
+            boardGroupId,
+            name,
+            statusId: statusId ?? undefined,
+            clearStatus: statusId === null,
+          },
+        })
+      );
+    } else {
+      this.store.dispatch(
+        BoardGroupActions.createBoardGroup.init({
+          identifier: this.data.identifier,
+          request: {
+            name,
+            boardId: this.data.boardId,
+            statusId,
+          },
+        })
+      );
+    }
 
     this.dialogRef.close();
   }

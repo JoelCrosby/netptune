@@ -37,14 +37,15 @@ import { BoardGroupComponent } from '@boards/components/board-group/board-group.
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
 import { ImportTasksDialogComponent } from '@boards/components/import-tasks-dialog/import-tasks-dialog.component';
+import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { DialogService } from '@core/services/dialog.service';
+import { statusResource } from '@core/resources/status.resources';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
-  LucideCheck,
   LucideDelete,
   LucideFileDown,
   LucideFileUp,
@@ -92,7 +93,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     BoardGroupComponent,
     CdkDrag,
     CdkDragHandle,
-    LucideCheck,
+    LucidePencil,
     LucideX,
     TooltipDirective,
     InlineEditInputComponent,
@@ -136,6 +137,9 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
               class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]"
               [cdkDragData]="group"
               [group]="group"
+              [assignedStatus]="
+                group.statusId ? (statusMap().get(group.statusId) ?? null) : null
+              "
               [siblingIds]="siblingIdMap().get(group.id) ?? []"
               [dragListId]="group.id.toString()">
               <span
@@ -143,11 +147,17 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                 class="group/header flex cursor-pointer flex-row items-center justify-between uppercase">
                 <div
                   class="text-foreground/60 flex h-12.5 w-full flex-row-reverse items-center justify-end pl-4 text-sm font-medium tracking-[.1px]">
-                  @if (group.type === 2) {
-                    <svg
-                      lucideCheck
-                      class="ml-[.4rem] h-4 w-4 text-green-500"
-                      appTooltip="Tasks moved into this group will be marked as Done"></svg>
+                  @if (
+                    group.statusId && statusMap().get(group.statusId);
+                    as status
+                  ) {
+                    <span
+                      class="ml-[.4rem] h-2.5 w-2.5 flex-none rounded-full"
+                      [style.background-color]="status.color || 'var(--primary)'"
+                      [appTooltip]="
+                        'Tasks moved into this group will be set to ' +
+                        status.name
+                      "></span>
                   }
                   <app-inline-edit-input
                     class="hover:bg-primary/6 ml-2 w-full rounded px-1.5 py-1 transition-colors duration-200"
@@ -161,6 +171,12 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                   }}</span>
                 </div>
                 @if (isAuthenticated()) {
+                  <button
+                    app-icon-button
+                    class="invisible mx-[.2rem] group-hover/header:visible"
+                    (click)="onEditGroupClicked(group)">
+                    <svg lucidePencil class="text-foreground/40 h-4 w-4"></svg>
+                  </button>
                   <button
                     app-icon-button
                     class="invisible mx-[.2rem] group-hover/header:visible"
@@ -188,6 +204,10 @@ export class BoardGroupsViewComponent implements OnDestroy {
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 
   groups = this.store.selectSignal(selectAllBoardGroupsWithSelection);
+  statuses = statusResource();
+  statusMap = computed(
+    () => new Map(this.statuses.value().map((status) => [status.id, status]))
+  );
   board = this.store.selectSignal(selectSelectedBoard);
   boardName = linkedSignal(() => this.board()?.name);
   loading = this.store.selectSignal(selectBoardGroupsLoading);
@@ -306,6 +326,19 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   onDeleteGroupClicked(boardGroup: BoardViewGroup) {
     this.store.dispatch(deleteBoardGroup.init({ boardGroup }));
+  }
+
+  onEditGroupClicked(group: BoardViewGroup) {
+    this.dialog.open(BoardGroupDialogComponent, {
+      width: '600px',
+      data: {
+        boardId: group.boardId,
+        identifier: this.boardIdentifier(),
+        boardGroupId: group.id,
+        name: group.name,
+        statusId: group.statusId,
+      },
+    });
   }
 
   onGroupNameSubmitted(value: Event | string, group: BoardViewGroup) {

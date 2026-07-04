@@ -104,8 +104,8 @@ const reducer = createReducer(
 
   on(
     actions.moveTaskInBoardGroup.init,
-    (state, { request }): BoardGroupsState =>
-      moveTaskInBoardGroup(state, request)
+    (state, { request, status }): BoardGroupsState =>
+      moveTaskInBoardGroup(state, request, status)
   ),
   on(
     actions.setIsDragging,

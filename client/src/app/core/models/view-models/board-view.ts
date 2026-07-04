@@ -3,7 +3,6 @@ import { TaskPriority } from '@core/enums/task-priority';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { StatusCategory } from '../status';
 import { AppUser } from '../appuser';
-import { BoardGroupType } from './board-group-view-model';
 import { BoardViewModel } from './board-view-model';
 
 export interface BoardView {
@@ -16,7 +15,7 @@ export interface BoardViewGroup {
   id: number;
   name: string;
   boardId: number;
-  type: BoardGroupType;
+  statusId: number | null;
   sortOrder: number;
   tasks: BoardViewTask[];
 }
