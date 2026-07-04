@@ -159,6 +159,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     public async Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         filter ??= new TaskFilter();
+
         var search = filter.Search?.Trim().ToLower() ?? string.Empty;
         var searchPattern = $"%{search}%";
         var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
@@ -248,8 +249,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             "name" => "pt.name",
             "systemId" => "CONCAT_WS('-', p.key, pt.project_scope_id::text)",
             "projectScopeId" => "pt.project_scope_id",
-            "sprintName" => "s.name",
-            "statusName" => "st.name",
+            "sprint" => "s.name",
+            "status" => "st.name",
             "createdAt" => "pt.created_at",
             "updatedAt" => "pt.updated_at",
             "assignees" => "assignee_count",
