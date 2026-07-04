@@ -31,8 +31,8 @@ import {
   selectBoardIdentifier,
   selectSelectedBoard,
 } from '@app/core/store/groups/board-groups.selectors';
-import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
+import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
@@ -47,6 +47,7 @@ import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
   LucideDelete,
+  LucideEllipsisVertical,
   LucideFileDown,
   LucideFileUp,
   LucidePencil,
@@ -93,9 +94,9 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     BoardGroupComponent,
     CdkDrag,
     CdkDragHandle,
-    LucidePencil,
+    LucideEllipsisVertical,
     LucideX,
-    TooltipDirective,
+    BoardGroupStatusDotComponent,
     InlineEditInputComponent,
     IconButtonComponent,
     CreateBoardGroupComponent,
@@ -138,7 +139,9 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
               [cdkDragData]="group"
               [group]="group"
               [assignedStatus]="
-                group.statusId ? (statusMap().get(group.statusId) ?? null) : null
+                group.statusId
+                  ? (statusMap().get(group.statusId) ?? null)
+                  : null
               "
               [siblingIds]="siblingIdMap().get(group.id) ?? []"
               [dragListId]="group.id.toString()">
@@ -151,13 +154,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                     group.statusId && statusMap().get(group.statusId);
                     as status
                   ) {
-                    <span
-                      class="ml-[.4rem] h-2.5 w-2.5 flex-none rounded-full"
-                      [style.background-color]="status.color || 'var(--primary)'"
-                      [appTooltip]="
-                        'Tasks moved into this group will be set to ' +
-                        status.name
-                      "></span>
+                    <app-board-group-status-dot [status]="status" />
                   }
                   <app-inline-edit-input
                     class="hover:bg-primary/6 ml-2 w-full rounded px-1.5 py-1 transition-colors duration-200"
@@ -175,7 +172,9 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                     app-icon-button
                     class="invisible mx-[.2rem] group-hover/header:visible"
                     (click)="onEditGroupClicked(group)">
-                    <svg lucidePencil class="text-foreground/40 h-4 w-4"></svg>
+                    <svg
+                      lucideEllipsisVertical
+                      class="text-foreground/40 h-4 w-4"></svg>
                   </button>
                   <button
                     app-icon-button
