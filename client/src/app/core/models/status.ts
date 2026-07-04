@@ -1,14 +1,16 @@
 import { EntityType } from './entity-type';
 
 export enum StatusCategory {
-  backlog = 0,
-  todo = 1,
-  active = 2,
-  done = 3,
-  inactive = 4,
+  new = 0,
+  backlog = 1,
+  todo = 2,
+  active = 3,
+  done = 4,
+  inactive = 5,
 }
 
 export const statusCategoryLabels: Record<StatusCategory, string> = {
+  [StatusCategory.new]: 'new',
   [StatusCategory.backlog]: 'Backlog',
   [StatusCategory.todo]: 'Todo',
   [StatusCategory.active]: 'Active',
@@ -17,6 +19,7 @@ export const statusCategoryLabels: Record<StatusCategory, string> = {
 };
 
 export const statusCategoryOptions = [
+  StatusCategory.new,
   StatusCategory.backlog,
   StatusCategory.todo,
   StatusCategory.active,
