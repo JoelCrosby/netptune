@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.SeedData.Seeders;
@@ -36,15 +37,22 @@ public sealed class BoardGroupSeeder : ISeeder
             var board = context.Boards[bi];
             var layout = BoardGroupLayouts[bi % BoardGroupLayouts.Length];
 
+            var doneStatus = context.Statuses.FirstOrDefault(status =>
+                status.Workspace == board.Workspace && status.Category == StatusCategory.Done);
+
             for (var gi = 0; gi < layout.Length; gi++)
             {
+                var name = layout[gi];
+
                 context.BoardGroups.Add(new BoardGroup
                 {
-                    Name = layout[gi],
+                    Name = name,
                     SortOrder = gi,
                     Board = board,
                     Owner = context.Users[bi % context.Users.Count],
                     Workspace = board.Workspace,
+                    // Moving a task into a "Done" column marks it complete.
+                    Status = name == "Done" ? doneStatus : null,
                 });
             }
         }
