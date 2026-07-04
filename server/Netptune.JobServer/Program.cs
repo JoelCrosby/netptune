@@ -45,7 +45,12 @@ builder.AddNetptuneSearch();
 
 builder.Services.AddHostedService<QueueConsumerService>();
 builder.Services.AddNetptuneAutomation(builder.Configuration);
-builder.Services.AddHostedService<AuditRetentionJob>();
+
+if (builder.Environment.IsProduction())
+{
+    builder.Services.AddHostedService<AuditRetentionJob>();
+}
+
 builder.Services.AddHostedService<SearchSeedService>();
 
 builder.Services.AddNetptuneMessageQueue(builder.Configuration.GetNetptuneNatsConnectionString());

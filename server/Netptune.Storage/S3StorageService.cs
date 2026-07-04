@@ -50,6 +50,8 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
         {
             await fileTransferUtility.UploadAsync(request);
 
+            var metadata = await S3Client.GetObjectMetadataAsync(Options.BucketName, key);
+
             var uri = $"https://{Options.BucketName}.s3.{Region.SystemName}.{Region.PartitionDnsSuffix}/{key}";
 
             return Success(new UploadResponse
@@ -58,7 +60,7 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
                 Key = key,
                 Path = key,
                 Uri = uri,
-                Size = stream.Length,
+                Size = metadata.ContentLength,
             });
         }
         catch (Exception e)
