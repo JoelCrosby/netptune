@@ -28,17 +28,19 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         int? projectId = null,
         IReadOnlyCollection<SprintStatus>? statuses = null,
         int? take = null,
+        string? sortBy = null,
+        string? sortDirection = null,
         CancellationToken cancellationToken = default)
     {
         var statusList = statuses?.ToArray() ?? [];
 
-        var query = Entities
+        var filtered = Entities
             .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
             .Where(sprint => !projectId.HasValue || sprint.ProjectId == projectId.Value)
             .Where(sprint => statusList.Length == 0 || statusList.Contains(sprint.Status))
-            .OrderByDescending(sprint => sprint.Status == SprintStatus.Active)
-            .ThenByDescending(sprint => sprint.StartDate)
             .AsNoTracking();
+
+        var query = ApplySprintOrder(filtered, sortBy, sortDirection);
 
         var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
         query = query.Take(limit);
@@ -46,6 +48,35 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         return query
             .Select(SprintToViewModel())
             .ToListAsync(cancellationToken);
+    }
+
+    private static IQueryable<Sprint> ApplySprintOrder(IQueryable<Sprint> query, string? sortBy, string? sortDirection)
+    {
+        var descending = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        IOrderedQueryable<Sprint> ordered = sortBy?.Trim() switch
+        {
+            "name" => descending
+                ? query.OrderByDescending(sprint => sprint.Name)
+                : query.OrderBy(sprint => sprint.Name),
+            "status" => descending
+                ? query.OrderByDescending(sprint => sprint.Status)
+                : query.OrderBy(sprint => sprint.Status),
+            "dates" => descending
+                ? query.OrderByDescending(sprint => sprint.StartDate)
+                : query.OrderBy(sprint => sprint.StartDate),
+            "goal" => descending
+                ? query.OrderByDescending(sprint => sprint.Goal)
+                : query.OrderBy(sprint => sprint.Goal),
+            "taskCount" => descending
+                ? query.OrderByDescending(sprint => sprint.ProjectTasks.Count(task => !task.IsDeleted))
+                : query.OrderBy(sprint => sprint.ProjectTasks.Count(task => !task.IsDeleted)),
+            _ => query
+                .OrderByDescending(sprint => sprint.Status == SprintStatus.Active)
+                .ThenByDescending(sprint => sprint.StartDate),
+        };
+
+        return ordered.ThenBy(sprint => sprint.Id);
     }
 
     public Task<SprintDetailViewModel?> GetSprintDetailAsync(

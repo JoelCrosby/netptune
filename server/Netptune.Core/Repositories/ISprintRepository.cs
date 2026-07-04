@@ -13,6 +13,8 @@ public interface ISprintRepository : IWorkspaceEntityRepository<Sprint, int>
         int? projectId = null,
         IReadOnlyCollection<SprintStatus>? statuses = null,
         int? take = null,
+        string? sortBy = null,
+        string? sortDirection = null,
         CancellationToken cancellationToken = default);
 
     Task<SprintDetailViewModel?> GetSprintDetailAsync(

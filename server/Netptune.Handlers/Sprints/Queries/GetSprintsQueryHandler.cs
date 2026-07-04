@@ -7,7 +7,7 @@ using Netptune.Core.ViewModels.Sprints;
 
 namespace Netptune.Handlers.Sprints.Queries;
 
-public sealed record GetSprintsQuery(int? ProjectId, IReadOnlyCollection<SprintStatus> Statuses, int? Take) : IRequest<List<SprintViewModel>>;
+public sealed record GetSprintsQuery(int? ProjectId, IReadOnlyCollection<SprintStatus> Statuses, int? Take, string? SortBy = null, string? SortDirection = null) : IRequest<List<SprintViewModel>>;
 
 public sealed class GetSprintsQueryHandler : IRequestHandler<GetSprintsQuery, List<SprintViewModel>>
 {
@@ -24,6 +24,6 @@ public sealed class GetSprintsQueryHandler : IRequestHandler<GetSprintsQuery, Li
     {
         var workspaceKey = Identity.GetWorkspaceKey();
 
-        return new(UnitOfWork.Sprints.GetSprintsAsync(workspaceKey, request.ProjectId, request.Statuses, request.Take, cancellationToken));
+        return new(UnitOfWork.Sprints.GetSprintsAsync(workspaceKey, request.ProjectId, request.Statuses, request.Take, request.SortBy, request.SortDirection, cancellationToken));
     }
 }

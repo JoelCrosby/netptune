@@ -39,7 +39,7 @@ public static class SprintsEndpoints
                 ? [filter.Status.Value]
                 : [];
 
-        var result = await mediator.Send(new GetSprintsQuery(filter.ProjectId, statuses, filter.Take), cancellationToken);
+        var result = await mediator.Send(new GetSprintsQuery(filter.ProjectId, statuses, filter.Take, filter.SortBy, filter.SortDirection), cancellationToken);
 
         return Results.Ok(result);
     }

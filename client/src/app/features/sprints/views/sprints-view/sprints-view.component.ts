@@ -1,9 +1,8 @@
-import { DatePipe, LowerCasePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { CardListComponent } from '@app/static/components/card/card-list.component';
+import { Params, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
-import { SprintStatus } from '@core/enums/sprint-status';
+import { SprintStatus, sprintStatusLabels } from '@core/enums/sprint-status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -17,8 +16,13 @@ import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { LucidePencil, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { CardComponent } from '@static/components/card/card.component';
+import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
+import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import {
+  DatatableColumn,
+  DatatableDataSource,
+  DatatableMenuItem,
+} from '@static/components/datatable/datatable.types';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
@@ -28,7 +32,6 @@ import {
 } from '@static/components/tab-group/tab-group.component';
 import { CreateSprintDialogComponent } from '../../dialogs/create-sprint-dialog.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
-import { CardHeaderComponent } from '@app/static/components/card/card-header.component';
 import { SprintStatusClassesPipe } from '../../pipes/sprint-status-classes.pipe';
 import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
 
@@ -36,26 +39,21 @@ type StatusFilter = SprintStatus | null;
 
 @Component({
   imports: [
-    LowerCasePipe,
     RouterLink,
     PageContainerComponent,
     PageHeaderComponent,
     SpinnerComponent,
     DatePipe,
     FlatButtonComponent,
-    IconButtonComponent,
-    CardComponent,
     TabGroupComponent,
     LucidePlus,
-    LucidePencil,
-    LucideTrash2,
-    CardListComponent,
-    CardHeaderComponent,
+    DatatableComponent,
+    DatatableCellTemplateDirective,
     SprintStatusClassesPipe,
     SprintStatusLabelPipe,
   ],
   template: `
-    <app-page-container [centerPage]="true" [marginBottom]="true">
+    <app-page-container [centerPage]="true">
       <app-page-header title="Sprints">
         <a app-flat-button [routerLink]="['backlog']">Backlog</a>
         @if (canCreate()) {
@@ -80,78 +78,52 @@ type StatusFilter = SprintStatus | null;
             [value]="selectedStatus()"
             (changed)="onStatusChanged($event)" />
 
-          <app-card-list>
-            @for (sprint of filteredSprints(); track sprint.id) {
-              <app-card>
-                <app-card-header>
-                  <div class="flex flex-wrap items-center gap-2">
-                    <h2 class="text-xl font-semibold">{{ sprint.name }}</h2>
-                    <span
-                      class="rounded px-2 py-0.5 text-xs font-semibold"
-                      [class]="sprint.status | sprintStatusClasses">
-                      {{ sprint.status | sprintStatusLabel }}
-                    </span>
-                    @if (daysChip(sprint); as chip) {
-                      <span
-                        class="rounded px-2 py-0.5 text-xs font-medium"
-                        [class]="chip.classes">
-                        {{ chip.label }}
-                      </span>
-                    }
-                  </div>
+          <app-datatable
+            containerClass="h-[calc(100vh-314px)] min-h-160 overflow-auto"
+            tableClass="min-w-[720px]"
+            rowClass="bg-card"
+            [data]="data()"
+            [emptyMessage]="emptyMessage()">
+            <ng-template appDatatableCell="name" let-sprint>
+              <a class="font-medium hover:underline" [routerLink]="[sprint.id]">
+                {{ sprint.name }}
+              </a>
+            </ng-template>
 
-                  <div class="flex shrink-0 items-center gap-1">
-                    @if (canUpdate()) {
-                      <button
-                        app-icon-button
-                        type="button"
-                        title="Edit sprint"
-                        (click)="onOpenEditDialog(sprint)">
-                        <svg lucidePencil class="h-4 w-4"></svg>
-                      </button>
-                    }
-                    @if (canUpdate()) {
-                      <button
-                        app-icon-button
-                        type="button"
-                        title="Delete sprint"
-                        (click)="onDelete(sprint)">
-                        <svg lucideTrash2 class="h-4 w-4"></svg>
-                      </button>
-                    }
-                  </div>
-                </app-card-header>
-
-                <p class="text-muted text-sm">
-                  {{ sprint.startDate | date: 'mediumDate' }} &ndash;
-                  {{ sprint.endDate | date: 'mediumDate' }}
-                </p>
-
-                @if (sprint.goal) {
-                  <p class="text-sm">{{ sprint.goal }}</p>
-                }
-
-                <div class="flex items-center justify-between gap-4">
-                  <span class="text-muted text-xs">
-                    {{ sprint.taskCount }}
-                    {{ sprint.taskCount === 1 ? 'task' : 'tasks' }}
+            <ng-template appDatatableCell="status" let-sprint>
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="rounded px-2 py-0.5 text-xs font-semibold"
+                  [class]="sprint.status | sprintStatusClasses">
+                  {{ sprint.status | sprintStatusLabel }}
+                </span>
+                @if (daysChip(sprint); as chip) {
+                  <span
+                    class="rounded px-2 py-0.5 text-xs font-medium"
+                    [class]="chip.classes">
+                    {{ chip.label }}
                   </span>
-                  <a app-flat-button color="primary" [routerLink]="[sprint.id]">
-                    Open
-                  </a>
-                </div>
-              </app-card>
-            } @empty {
-              <app-card class="text-center">
-                @if (selectedStatus() !== null) {
-                  No {{ selectedStatus()! | sprintStatusLabel | lowercase }}
-                  sprints.
-                } @else {
-                  No sprints yet.
                 }
-              </app-card>
-            }
-          </app-card-list>
+              </div>
+            </ng-template>
+
+            <ng-template appDatatableCell="dates" let-sprint>
+              <span class="text-muted text-sm whitespace-nowrap">
+                {{ sprint.startDate | date: 'mediumDate' }} &ndash;
+                {{ sprint.endDate | date: 'mediumDate' }}
+              </span>
+            </ng-template>
+
+            <ng-template appDatatableCell="goal" let-sprint>
+              @if (sprint.goal) {
+                <span class="block max-w-xs truncate text-sm">
+                  {{ sprint.goal }}
+                </span>
+              } @else {
+                <span class="text-muted text-sm">&mdash;</span>
+              }
+            </ng-template>
+          </app-datatable>
         </div>
       }
     </app-page-container>
@@ -173,12 +145,11 @@ export class SprintsViewComponent {
 
   readonly selectedStatus = signal<StatusFilter>(SprintStatus.active);
 
-  readonly filteredSprints = computed(() => {
+  readonly emptyMessage = computed(() => {
     const status = this.selectedStatus();
-    const sprints = this.sprints();
     return status === null
-      ? sprints
-      : sprints.filter((s) => s.status === status);
+      ? 'No sprints yet.'
+      : `No ${sprintStatusLabels[status].toLowerCase()} sprints.`;
   });
 
   readonly statusTabs = computed((): TabItem[] => {
@@ -207,6 +178,50 @@ export class SprintsViewComponent {
       },
     ];
   });
+
+  private readonly params = computed<Params>(() => {
+    const status = this.selectedStatus();
+    return status === null ? { take: 100 } : { statuses: [status], take: 100 };
+  });
+
+  private readonly columns: DatatableColumn<SprintViewModel>[] = [
+    { id: 'name', header: 'Name', accessor: 'name', sortable: true },
+    { id: 'status', header: 'Status', sortable: true, widthClass: 'w-52' },
+    { id: 'dates', header: 'Dates', sortable: true, widthClass: 'w-56' },
+    { id: 'goal', header: 'Goal' },
+    {
+      id: 'taskCount',
+      header: 'Tasks',
+      accessor: 'taskCount',
+      sortable: true,
+      align: 'end',
+      widthClass: 'w-20',
+    },
+  ];
+
+  private readonly menuItems: DatatableMenuItem<SprintViewModel>[] = [
+    {
+      label: 'Edit',
+      icon: LucidePencil,
+      onClick: (sprint) => this.onOpenEditDialog(sprint),
+    },
+    {
+      label: 'Delete',
+      icon: LucideTrash2,
+      onClick: (sprint) => this.onDelete(sprint),
+    },
+  ];
+
+  readonly data = computed<DatatableDataSource<SprintViewModel>>(() => ({
+    key: 'sprints',
+    columns: this.columns,
+    resource: { url: 'api/sprints', params: this.params },
+    rows: (response) =>
+      Array.isArray(response) ? (response as SprintViewModel[]) : [],
+    trackBy: (_: number, sprint: SprintViewModel) => sprint.id,
+    menu: this.canUpdate() ? this.menuItems : undefined,
+    reloadSignal: this.sprints,
+  }));
 
   constructor() {
     dispatchForWorkspace(() => loadSprints.init({ filter: { take: 100 } }));

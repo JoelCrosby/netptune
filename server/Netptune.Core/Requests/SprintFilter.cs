@@ -11,4 +11,8 @@ public record SprintFilter
     public SprintStatus[] Statuses { get; init; } = [];
 
     public int? Take { get; init; }
+
+    public string? SortBy { get; init; }
+
+    public string? SortDirection { get; init; }
 }
