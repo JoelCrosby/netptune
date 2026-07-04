@@ -5,7 +5,6 @@ using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
@@ -17,19 +16,13 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
-    private readonly IEventPublisher EventPublisher;
-    private readonly IIdentityService Identity;
 
     public MoveTaskInBoardGroupCommandHandler(
         INetptuneUnitOfWork unitOfWork,
-        IActivityLogger activity,
-        IEventPublisher eventPublisher,
-        IIdentityService identity)
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
-        EventPublisher = eventPublisher;
-        Identity = identity;
     }
 
     public async ValueTask<ClientResponse> Handle(MoveTaskInBoardGroupCommand request, CancellationToken cancellationToken)
@@ -43,27 +36,11 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
     private async Task<ClientResponse> TransferTaskInGroups(MoveTaskInGroupRequest request, CancellationToken cancellationToken)
     {
-        var oldTask = await UnitOfWork.Tasks.GetTaskViewModel(request.TaskId, cancellationToken);
-
         var boardGroup = await UnitOfWork.Transaction(async () =>
         {
             var newGroup = await UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, cancellationToken);
 
             if (newGroup is null) return null;
-
-            var newStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(
-                newGroup.WorkspaceId,
-                newGroup.Type.GetStatusCategoryFromGroupType(),
-                cancellationToken);
-
-            if (newStatus is null) return null;
-
-            var updated = await UnitOfWork.Tasks.UpdateTaskStatus(
-                request.TaskId,
-                newStatus.Id,
-                cancellationToken);
-
-            if (updated == 0) return null;
 
             await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(new[] { request.TaskId }, cancellationToken);
 
@@ -97,20 +74,6 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
             options.Type = ActivityType.Move;
             options.Meta = new MoveTaskActivityMeta { Group = boardGroup.Name, GroupId = boardGroup.Id };
         });
-
-        var newStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(
-            boardGroup.WorkspaceId,
-            boardGroup.Type.GetStatusCategoryFromGroupType(),
-            cancellationToken);
-
-        if (oldTask is not null && newStatus is not null && oldTask.StatusId != newStatus.Id && oldTask.WorkspaceId is not null)
-        {
-            await PublishTaskChanged(
-                oldTask.Id,
-                oldTask.WorkspaceId.Value,
-                oldTask.StatusId,
-                newStatus.Id);
-        }
 
         return ClientResponse.Success;
     }
@@ -151,23 +114,5 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
             cancellationToken);
 
         return OrderingUtils.GetNewSortOrder(preOrder, nextOrder);
-    }
-
-    private Task PublishTaskChanged(
-        int taskId,
-        int workspaceId,
-        int oldStatusId,
-        int newStatusId)
-    {
-        return EventPublisher.Dispatch(new TaskChangedMessage
-        {
-            WorkspaceId = workspaceId,
-            TaskId = taskId,
-            ActorUserId = Identity.GetCurrentUserId(),
-            Changes =
-            [
-                TaskFieldChange.Create(TaskChangeField.Status, oldStatusId, newStatusId),
-            ],
-        });
     }
 }

@@ -1,5 +1,3 @@
-using Netptune.Core.Enums;
-
 namespace Netptune.Core.ViewModels.Boards;
 
 public class BoardGroupViewModel
@@ -9,8 +7,6 @@ public class BoardGroupViewModel
     public string Name { get; set; } = null!;
 
     public int BoardId { get; set; }
-
-    public BoardGroupType Type { get; set; }
 
     public double SortOrder { get; set; }
 }

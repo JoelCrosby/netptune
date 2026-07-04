@@ -20,8 +20,6 @@ public class BoardViewGroup
 
     public int BoardId { get; set; }
 
-    public BoardGroupType Type { get; set; }
-
     public double SortOrder { get; set; }
 
     public IList<BoardViewTask> Tasks { get; set; } = null!;

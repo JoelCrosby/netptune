@@ -9,18 +9,3 @@ public enum StatusCategory
     Done = 4,
     Inactive = 5,
 }
-
-public static class StatusCategoryExtensions
-{
-    public static BoardGroupType GetGroupTypeFromStatusCategory(this StatusCategory category)
-    {
-        return category switch
-        {
-            StatusCategory.New => BoardGroupType.Basic,
-            StatusCategory.Backlog => BoardGroupType.Backlog,
-            StatusCategory.Todo => BoardGroupType.Todo,
-            StatusCategory.Done => BoardGroupType.Done,
-            _ => BoardGroupType.Backlog,
-        };
-    }
-}

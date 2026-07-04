@@ -46,8 +46,6 @@ public class BoardViewRowMap
 
     public string Board_Group_Name { get; set; } = null!;
 
-    public BoardGroupType Board_Group_Type { get; set; }
-
     public double Board_Group_Sort_Order { get; set; }
 
     public string Assignee_Firstname { get; set; } = null!;

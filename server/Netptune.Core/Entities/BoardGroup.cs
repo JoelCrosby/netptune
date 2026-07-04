@@ -15,8 +15,6 @@ public record BoardGroup : WorkspaceEntity<int>
 
     public int BoardId { get; set; }
 
-    public BoardGroupType Type { get; set; }
-
     public double SortOrder { get; set; }
 
     #region NavigationProperties
@@ -45,7 +43,6 @@ public record BoardGroup : WorkspaceEntity<int>
             Id = Id,
             Name = Name,
             BoardId = BoardId,
-            Type = Type,
             SortOrder = SortOrder,
         };
     }

@@ -54,7 +54,6 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         {
             foreach (var task in tasks)
             {
-                var statusChanged = status is not null && task.StatusId != status.Id;
                 var projectChanged = req.ProjectId.HasValue && task.ProjectId != req.ProjectId.Value;
 
                 if (status is not null)
@@ -88,10 +87,11 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                         req.AssigneeIds).ToList();
                 }
 
-                // A new status or project means the task belongs in a different board group.
-                if (statusChanged || projectChanged)
+                // Moving a task to a different project invalidates its board-group
+                // membership, which belongs to the old project's board.
+                if (projectChanged)
                 {
-                    await RepositionInBoardGroup(task, status ?? task.Status, cancellationToken);
+                    await RepositionInBoardGroup(task, cancellationToken);
                 }
             }
 
@@ -115,19 +115,17 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         task.ProjectId = projectId;
     }
 
-    private async Task RepositionInBoardGroup(ProjectTask task, Status status, CancellationToken cancellationToken)
+    private async Task RepositionInBoardGroup(ProjectTask task, CancellationToken cancellationToken)
     {
         if (task.ProjectId is null) return;
 
-        var groupType = status.Category.GetGroupTypeFromStatusCategory();
-        var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(task.ProjectId.Value, groupType, cancellationToken);
+        var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(task.ProjectId.Value, cancellationToken);
 
         if (group is null)
         {
             Logger.LogInformation(
-                "Project with id {ProjectId} does not have a default board group of type {GroupType}",
-                task.ProjectId.Value,
-                groupType);
+                "Project with id {ProjectId} does not have a default board group",
+                task.ProjectId.Value);
             return;
         }
 

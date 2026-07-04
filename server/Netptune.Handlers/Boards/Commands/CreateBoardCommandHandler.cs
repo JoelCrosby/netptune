@@ -48,9 +48,9 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
             WorkspaceId = workspaceId,
         };
 
-        board.BoardGroups.Add(new() { Name = "Backlog", Type = BoardGroupType.Backlog, SortOrder = 1D, WorkspaceId = workspaceId });
-        board.BoardGroups.Add(new() { Name = "Todo", Type = BoardGroupType.Todo, SortOrder = 1.1D, WorkspaceId = workspaceId });
-        board.BoardGroups.Add(new() { Name = "Done", Type = BoardGroupType.Done, SortOrder = 1.2D, WorkspaceId = workspaceId });
+        board.BoardGroups.Add(new() { Name = "Backlog", SortOrder = 1D, WorkspaceId = workspaceId });
+        board.BoardGroups.Add(new() { Name = "Todo", SortOrder = 1.1D, WorkspaceId = workspaceId });
+        board.BoardGroups.Add(new() { Name = "Done", SortOrder = 1.2D, WorkspaceId = workspaceId });
 
         var result = await UnitOfWork.Boards.AddAsync(board, cancellationToken);
 

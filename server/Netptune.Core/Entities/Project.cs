@@ -113,21 +113,18 @@ public record Project : WorkspaceEntity<int>
                 new BoardGroup
                 {
                     Name = "Backlog",
-                    Type = BoardGroupType.Backlog,
                     SortOrder = 1D,
                     WorkspaceId = workspaceId,
                 },
                 new BoardGroup
                 {
                     Name = "Todo",
-                    Type = BoardGroupType.Todo,
                     SortOrder = 1.1D,
                     WorkspaceId = workspaceId,
                 },
                 new BoardGroup
                 {
                     Name = "Done",
-                    Type = BoardGroupType.Done,
                     SortOrder = 1.3D,
                     WorkspaceId = workspaceId,
                 },

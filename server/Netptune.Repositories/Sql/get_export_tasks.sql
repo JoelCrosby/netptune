@@ -14,7 +14,6 @@ SELECT w.slug              AS workspace_key
      , pt.updated_at       AS task_updated_at
      , ptibg.sort_order    AS task_sort_order
      , bg.name             AS board_group_name
-     , bg.type             AS board_group_type
      , bg.sort_order       AS board_group_sort_order
      , u.firstname         AS assignee_firstname
      , u.lastname          AS assignee_lastname

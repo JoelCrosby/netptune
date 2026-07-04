@@ -112,7 +112,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                      , lt.task_sort_order
                      , bg.id               AS board_group_id
                      , bg.name             AS board_group_name
-                     , bg.type             AS board_group_type
                      , bg.sort_order       AS board_group_sort_order
                      , u.id                AS assignee_id
                      , u.firstname         AS assignee_firstname
@@ -224,7 +223,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 Id = row.Board_Group_Id,
                 Name = row.Board_Group_Name,
                 SortOrder = row.Board_Group_Sort_Order,
-                Type = row.Board_Group_Type,
                 Tasks = row.Task_Id is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
                 {
                     new()
@@ -294,7 +292,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .Select(group => new BoardGroupTaskTarget(
                 group.Id,
                 group.Name,
-                group.Type,
                 Context.ProjectTaskInBoardGroups
                     .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
                     .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D,
@@ -302,11 +299,10 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<BoardGroupTaskTarget?> GetDefaultTaskTarget(int projectId, BoardGroupType groupType, CancellationToken cancellationToken = default)
+    public Task<BoardGroupTaskTarget?> GetDefaultTaskTarget(int projectId, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(group => !group.IsDeleted)
-            .Where(group => group.Type == groupType)
             .Where(group => group.Board != null
                 && group.Board.ProjectId == projectId
                 && group.Board.BoardType == BoardType.Default
@@ -316,7 +312,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             .Select(group => new BoardGroupTaskTarget(
                 group.Id,
                 group.Name,
-                group.Type,
                 Context.ProjectTaskInBoardGroups
                     .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
                     .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D,

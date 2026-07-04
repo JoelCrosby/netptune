@@ -84,7 +84,6 @@ public sealed class BoardGroupsEndpointTests
         {
             Name = "new name",
             SortOrder = 2,
-            Type = BoardGroupType.Basic,
             BoardId = 1,
         };
 
@@ -97,7 +96,6 @@ public sealed class BoardGroupsEndpointTests
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.SortOrder.Should().Be(request.SortOrder);
-        result.Payload.Type.Should().Be(request.Type);
         result.Payload.BoardId.Should().Be(request.BoardId);
     }
 
@@ -107,7 +105,6 @@ public sealed class BoardGroupsEndpointTests
         var request = new AddBoardGroupRequest
         {
             SortOrder = 2,
-            Type = BoardGroupType.Basic,
             BoardId = 1,
         };
 

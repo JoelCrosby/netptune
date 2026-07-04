@@ -110,7 +110,6 @@ internal sealed class RunPersistenceService
 
             if (status is not null && task.StatusId != status.Id)
             {
-                await PutTaskInBoardGroup(status, task, cancellationToken);
                 await UnitOfWork.Tasks.UpdateTaskStatus(taskId, status.Id, cancellationToken);
                 task.StatusId = status.Id;
                 task.Status = status;
@@ -136,38 +135,6 @@ internal sealed class RunPersistenceService
         Logger.LogInformation(
             "Applied automation task updates to {UpdatedTaskCount} tasks",
             updatedTaskIds.Count);
-    }
-
-    private async Task PutTaskInBoardGroup(
-        Status status,
-        ProjectTask task,
-        CancellationToken cancellationToken)
-    {
-        if (task.ProjectId is null) return;
-
-        var groupType = status.Category.GetGroupTypeFromStatusCategory();
-        var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(
-            task.ProjectId.Value,
-            groupType,
-            cancellationToken);
-
-        if (group is null)
-        {
-            Logger.LogInformation(
-                "Project with id {ProjectId} does not have a default board group of type {GroupType}",
-                task.ProjectId.Value,
-                groupType);
-            return;
-        }
-
-        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId([task.Id], cancellationToken);
-
-        await UnitOfWork.ProjectTasksInGroups.AddAsync(new ProjectTaskInBoardGroup
-        {
-            BoardGroupId = group.Id,
-            ProjectTaskId = task.Id,
-            SortOrder = group.MaxSortOrder + 1,
-        }, cancellationToken);
     }
 
     private static List<Notification> BuildNotifications(List<NotificationActivityPlan> activityPlans)

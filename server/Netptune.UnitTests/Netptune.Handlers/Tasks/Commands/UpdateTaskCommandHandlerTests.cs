@@ -2,8 +2,6 @@ using AutoFixture;
 
 using FluentAssertions;
 
-using Microsoft.Extensions.Logging;
-
 using Netptune.Core.Enums;
 using Netptune.Core.Entities;
 using Netptune.Core.Events.Tasks;
@@ -31,12 +29,11 @@ public class UpdateTaskCommandHandlerTests
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
-    private readonly ILogger<UpdateTaskCommandHandler> Logger = Substitute.For<ILogger<UpdateTaskCommandHandler>>();
 
     public UpdateTaskCommandHandlerTests()
     {
         Identity.GetCurrentUserId().Returns("user-1");
-        Handler = new(UnitOfWork, Activity, Logger, EventPublisher, Identity);
+        Handler = new(UnitOfWork, Activity, EventPublisher, Identity);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)
@@ -86,8 +83,6 @@ public class UpdateTaskCommandHandlerTests
 
         UnitOfWork.Tasks.GetTaskForUpdate(request.Id, Arg.Any<CancellationToken>()).Returns(task);
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(oldViewModel, viewModel);
-        UnitOfWork.BoardGroups.GetDefaultTaskTarget(Arg.Any<int>(), Arg.Any<BoardGroupType>(), Arg.Any<CancellationToken>())
-            .Returns(new BoardGroupTaskTarget(1, "Group", BoardGroupType.Todo, 7));
         UnitOfWork.InvokeTransaction();
     }
 

@@ -1,5 +1,4 @@
 using Mediator;
-using Microsoft.Extensions.Logging;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
@@ -20,20 +19,17 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
-    private readonly ILogger<UpdateTaskCommandHandler> Logger;
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
 
     public UpdateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IActivityLogger activity,
-        ILogger<UpdateTaskCommandHandler> logger,
         IEventPublisher eventPublisher,
         IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
-        Logger = logger;
         EventPublisher = eventPublisher;
         Identity = identity;
     }
@@ -55,7 +51,6 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
             if (status is not null && result.StatusId != status.Id)
             {
-                await PutTaskInBoardGroup(status, result, cancellationToken);
                 result.StatusId = status.Id;
             }
 
@@ -102,29 +97,6 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             ActorUserId = Identity.GetCurrentUserId(),
             Changes = diff.ToTaskFieldChanges(),
         });
-    }
-
-    private async Task PutTaskInBoardGroup(Status status, ProjectTask result, CancellationToken cancellationToken)
-    {
-        if (result.ProjectId is null) return;
-
-        var groupType = status.Category.GetGroupTypeFromStatusCategory();
-        var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(result.ProjectId.Value, groupType, cancellationToken);
-
-        if (group is null)
-        {
-            Logger.LogInformation("Project With Id {ProjectId} does not have a default board group of type {GroupType}", result.ProjectId.Value, groupType);
-            return;
-        }
-
-        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(new[] { result.Id }, cancellationToken);
-
-        await UnitOfWork.ProjectTasksInGroups.AddAsync(new ProjectTaskInBoardGroup
-        {
-            BoardGroupId = group.Id,
-            ProjectTaskId = result.Id,
-            SortOrder = group.MaxSortOrder + 1,
-        }, cancellationToken);
     }
 
     private async Task<Status?> ResolveStatus(UpdateProjectTaskRequest request, int workspaceId, CancellationToken cancellationToken)

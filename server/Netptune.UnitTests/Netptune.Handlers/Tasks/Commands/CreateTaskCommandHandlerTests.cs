@@ -77,7 +77,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", AutoFixtures.BoardGroup.Type, 7));
+            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
 
         var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
@@ -108,7 +108,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", AutoFixtures.BoardGroup.Type, 7));
+            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
 
         await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
@@ -169,7 +169,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", AutoFixtures.BoardGroup.Type, 7));
+            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
 
         var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
@@ -195,7 +195,7 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", AutoFixtures.BoardGroup.Type, 7));
+            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
 
         await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 

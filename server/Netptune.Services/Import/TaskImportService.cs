@@ -141,7 +141,6 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             OwnerId = userId,
             BoardId = board.Id,
             Name = group!,
-            Type = BoardGroupType.Basic,
             WorkspaceId = workspaceId,
         }).ToList();
 

@@ -1,12 +1,10 @@
 using FluentAssertions;
 
-using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
-using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
@@ -22,30 +20,17 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     private readonly MoveTaskInBoardGroupCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
-    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
-    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public MoveTaskInBoardGroupCommandHandlerTests()
     {
-        Identity.GetCurrentUserId().Returns("user-1");
-        Handler = new(UnitOfWork, Activity, EventPublisher, Identity);
+        Handler = new(UnitOfWork, Activity);
     }
 
     private void SetupTransfer(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup)
     {
-        var status = AutoFixtures.TaskStatus with
-        {
-            Id = 5,
-            WorkspaceId = 1,
-            Category = AutoFixtures.BoardGroup.Type.GetStatusCategoryFromGroupType(),
-        };
-
         UnitOfWork.InvokeTransaction<BoardGroupTaskTarget>();
         UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.NewGroupId, AutoFixtures.BoardGroup.Name, AutoFixtures.BoardGroup.Type, 7, 1));
-        UnitOfWork.Statuses.GetFirstTaskStatusByCategory(1, Arg.Any<StatusCategory>(), TestContext.Current.CancellationToken)
-            .Returns(status);
-        UnitOfWork.Tasks.UpdateTaskStatus(request.TaskId, Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(1);
+            .Returns(new BoardGroupTaskTarget(request.NewGroupId, AutoFixtures.BoardGroup.Name, 7, 1));
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroup);
         UnitOfWork.ProjectTasksInGroups.GetNeighborSortOrdersForInsert(
                 request.NewGroupId,
@@ -84,6 +69,29 @@ public class MoveTaskInBoardGroupCommandHandlerTests
         var result = await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task MoveTaskInBoardGroup_ShouldNotChangeStatus_WhenTransferringGroups()
+    {
+        var request = new MoveTaskInGroupRequest
+        {
+            CurrentIndex = 1,
+            PreviousIndex = 0,
+            TaskId = 1,
+            NewGroupId = 1,
+            OldGroupId = 2,
+        };
+
+        var taskInGroupA = AutoFixtures.ProjectTaskInBoardGroup with { ProjectTaskId = request.TaskId };
+        SetupTransfer(request, taskInGroupA);
+
+        await Handler.Handle(new MoveTaskInBoardGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await UnitOfWork.Tasks.DidNotReceive().UpdateTaskStatus(
+            Arg.Any<int>(),
+            Arg.Any<int>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]

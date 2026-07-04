@@ -36,7 +36,6 @@ public sealed class CreateBoardGroupCommandHandler : IRequestHandler<CreateBoard
         var boardGroup = new BoardGroup
         {
             Name = req.Name,
-            Type = req.Type ?? BoardGroupType.Basic,
             SortOrder = sortOrder,
             WorkspaceId = board.WorkspaceId,
             BoardId = board.Id,

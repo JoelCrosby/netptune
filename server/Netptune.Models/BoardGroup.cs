@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 
 using Netptune.Models.BaseEntities;
-using Netptune.Models.Enums;
 using Netptune.Models.Relationships;
 using Netptune.Models.ViewModels.ProjectTasks;
 
@@ -13,8 +12,6 @@ namespace Netptune.Models
         public required string Name { get; set; }
 
         public int BoardId { get; set; }
-
-        public BoardGroupType Type { get; set; }
 
         public double SortOrder { get; set; }
 
