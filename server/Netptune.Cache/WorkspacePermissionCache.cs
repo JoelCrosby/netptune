@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 using Netptune.Cache.Common;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
@@ -14,9 +12,8 @@ public class WorkspacePermissionCache : EntityCache<UserPermissions?, WorkspaceU
 
     public WorkspacePermissionCache(
         ICacheProvider cache,
-        INetptuneUnitOfWork unitOfWork,
-        ILogger<WorkspacePermissionCache> logger)
-        : base(cache, TimeSpan.FromMinutes(5), logger)
+        INetptuneUnitOfWork unitOfWork)
+        : base(cache, TimeSpan.FromMinutes(5))
     {
         UnitOfWork = unitOfWork;
     }

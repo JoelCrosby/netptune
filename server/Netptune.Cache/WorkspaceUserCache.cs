@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 using Netptune.Cache.Common;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
@@ -13,9 +11,8 @@ public class WorkspaceUserCache : EntityCache<bool, WorkspaceUserKey>, IWorkspac
 
     public WorkspaceUserCache(
         ICacheProvider cache,
-        INetptuneUnitOfWork unitOfWork,
-        ILogger<WorkspaceUserCache> logger)
-        : base(cache, TimeSpan.FromHours(1), logger)
+        INetptuneUnitOfWork unitOfWork)
+        : base(cache, TimeSpan.FromHours(1))
     {
         UnitOfWork = unitOfWork;
     }
