@@ -32,6 +32,25 @@ dbgate:
   image: "dbgate/dbgate:latest"
   host: "dbgate.netptune.co.uk"
 
+aspire:
+  enabled: true
+  image: "mcr.microsoft.com/dotnet/aspire-dashboard:13.4.2"
+  host: "aspire.netptune.co.uk"
+  oauth2:
+    allowed_email_domain: "live.co.uk"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      memory: "1Gi"
+  # Telemetry is held in memory only and is lost when the pod restarts.
+  # These caps bound how much memory the dashboard can consume.
+  telemetryLimits:
+    maxLogCount: 10000
+    maxTraceCount: 10000
+    maxMetricsCount: 50000
+
 website:
   enabled: true
   replicas: 1
@@ -93,6 +112,11 @@ secrets:
     github_client_id: ""
     github_client_secret: ""
     cookie_secret: ""
+  aspire:
+    github_client_id: ""
+    github_client_secret: ""
+    cookie_secret: ""
+    otlp_api_key: ""
   postgres:
     postgres_password: ""
   meilisearch:

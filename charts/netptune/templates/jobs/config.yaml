@@ -18,3 +18,9 @@ data:
   POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.jobs.POSTGRESDB_JDBCCONNECTIONSTRING }}"
   POSTGRESDB_DATABASENAME: "{{ .Values.config.jobs.POSTGRESDB_DATABASENAME }}"
   ConnectionStrings__nats: "{{ .Values.config.jobs.ConnectionStrings__nats }}"
+{{- if .Values.aspire.enabled }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard-service:18889"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "{{ .Values.config.jobs.OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY }}"
+  OTEL_SERVICE_NAME: "netptune-jobs"
+{{- end }}

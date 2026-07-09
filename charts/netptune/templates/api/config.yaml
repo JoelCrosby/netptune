@@ -23,3 +23,9 @@ data:
   POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.api.POSTGRESDB_JDBCCONNECTIONSTRING }}"
   POSTGRESDB_DATABASENAME: "{{ .Values.config.api.POSTGRESDB_DATABASENAME }}"
   ConnectionStrings__nats: "{{ .Values.config.api.ConnectionStrings__nats }}"
+{{- if .Values.aspire.enabled }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard-service:18889"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "{{ .Values.config.api.OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY }}"
+  OTEL_SERVICE_NAME: "netptune-api"
+{{- end }}

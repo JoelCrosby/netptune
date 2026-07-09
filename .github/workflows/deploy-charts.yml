@@ -403,7 +403,11 @@ jobs:
             --set "secrets.grafana.admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}" \
             --set "secrets.dbgate.github_client_id=${{ secrets.DBGATE_GITHUB_CLIENT_ID }}" \
             --set "secrets.dbgate.github_client_secret=${{ secrets.DBGATE_GITHUB_CLIENT_SECRET }}" \
-            --set "secrets.dbgate.cookie_secret=${{ secrets.DBGATE_COOKIE_SECRET }}"
+            --set "secrets.dbgate.cookie_secret=${{ secrets.DBGATE_COOKIE_SECRET }}" \
+            --set "secrets.aspire.github_client_id=${{ secrets.ASPIRE_GITHUB_CLIENT_ID }}" \
+            --set "secrets.aspire.github_client_secret=${{ secrets.ASPIRE_GITHUB_CLIENT_SECRET }}" \
+            --set "secrets.aspire.cookie_secret=${{ secrets.ASPIRE_COOKIE_SECRET }}" \
+            --set "secrets.aspire.otlp_api_key=${{ secrets.ASPIRE_OTLP_API_KEY }}"
 
       - name: Restart deployments
         env:

@@ -96,6 +96,26 @@ spec:
   dnsNames:
     - "{{ .Values.dbgate.host }}"
 {{- end }}
+{{- if and .Values.aspire.enabled .Values.ingress.tls.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: aspire-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "aspire-dashboard"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: aspire-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.aspire.host }}"
+{{- end }}
 {{- if and .Values.website.enabled .Values.ingress.tls.enabled }}
 ---
 apiVersion: cert-manager.io/v1

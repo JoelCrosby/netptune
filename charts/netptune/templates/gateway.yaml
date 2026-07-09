@@ -78,6 +78,19 @@ spec:
         namespaces:
           from: Same
     {{- end }}
+    {{- if .Values.aspire.enabled }}
+    - name: https-aspire
+      port: 8443
+      protocol: HTTPS
+      hostname: "{{ .Values.aspire.host }}"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: "aspire-tls"
+      allowedRoutes:
+        namespaces:
+          from: Same
+    {{- end }}
     {{- if .Values.website.enabled }}
     - name: https-website
       port: 8443

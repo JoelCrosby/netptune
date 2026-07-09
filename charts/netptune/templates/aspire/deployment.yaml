@@ -1,0 +1,82 @@
+{{- if .Values.aspire.enabled }}
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "aspire-dashboard-deployment"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "aspire-dashboard"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "aspire-dashboard"
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+  strategy:
+    type: "Recreate"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "netptune-app"
+        app.kubernetes.io/component: "aspire-dashboard"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+    spec:
+      containers:
+        - name: "aspire-dashboard"
+          image: "{{ .Values.aspire.image }}"
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: "ASPNETCORE_URLS"
+              value: "http://0.0.0.0:18888"
+            - name: "ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL"
+              value: "http://0.0.0.0:18889"
+            - name: "ASPIRE_DASHBOARD_OTLP_HTTP_ENDPOINT_URL"
+              value: "http://0.0.0.0:18890"
+            # The frontend is unauthenticated because oauth2-proxy is the only
+            # route to it; the gateway never points at port 18888 directly.
+            - name: "Dashboard__Frontend__AuthMode"
+              value: "Unsecured"
+            - name: "Dashboard__ApplicationName"
+              value: "Netptune"
+            - name: "Dashboard__Otlp__AuthMode"
+              value: "ApiKey"
+            - name: "Dashboard__TelemetryLimits__MaxLogCount"
+              value: "{{ .Values.aspire.telemetryLimits.maxLogCount }}"
+            - name: "Dashboard__TelemetryLimits__MaxTraceCount"
+              value: "{{ .Values.aspire.telemetryLimits.maxTraceCount }}"
+            - name: "Dashboard__TelemetryLimits__MaxMetricsCount"
+              value: "{{ .Values.aspire.telemetryLimits.maxMetricsCount }}"
+          envFrom:
+            - secretRef:
+                name: "aspire-dashboard-secrets"
+          ports:
+            - name: "http"
+              protocol: "TCP"
+              containerPort: 18888
+            - name: "otlp-grpc"
+              protocol: "TCP"
+              containerPort: 18889
+            - name: "otlp-http"
+              protocol: "TCP"
+              containerPort: 18890
+          livenessProbe:
+            httpGet:
+              path: "/health"
+              port: "http"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/health"
+              port: "http"
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+{{- toYaml .Values.aspire.resources | nindent 12 }}
+{{- end }}
