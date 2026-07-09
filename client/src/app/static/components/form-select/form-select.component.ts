@@ -1,16 +1,15 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
-  AfterViewInit,
   Component,
   computed,
   contentChildren,
   ElementRef,
   inject,
+  Injector,
   input,
   model,
   output,
-  signal,
   viewChild,
 } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
@@ -110,9 +109,10 @@ import { FormSelectService } from './form-select.service';
   </div> `,
 })
 export class FormSelectComponent<TValue>
-  implements AfterViewInit, FormValueControl<TValue | null>
+  implements FormValueControl<TValue | null>
 {
   private service = inject<FormSelectService<TValue>>(FormSelectService);
+  private injector = inject(Injector);
 
   readonly label = input.required<string>();
   readonly icon = input<LucideIconInput | null>();
@@ -139,22 +139,26 @@ export class FormSelectComponent<TValue>
   readonly invalid = input<boolean>(false);
   readonly pending = input<boolean>(false);
 
-  displayValue = signal<string | null>('');
-
   selectedPortal?: CdkPortal;
-  selectedOption = signal<FormSelectOptionComponent<TValue> | null>(null);
   keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;
 
   isOpen = computed(() => this.dropdown().showing());
 
+  readonly selectedOption = computed(() => {
+    const value = this.value();
+
+    return this.options().find((option) => option.value() === value) ?? null;
+  });
+
+  readonly displayValue = computed(() => this.selectedOption()?.viewValue ?? '');
+
   constructor() {
     this.service.register(this);
-  }
 
-  ngAfterViewInit() {
-    this.updateTrigger();
-
-    this.keyManager = new ActiveDescendantKeyManager(this.options())
+    this.keyManager = new ActiveDescendantKeyManager(
+      this.options,
+      this.injector
+    )
       .withHorizontalOrientation('ltr')
       .withVerticalOrientation()
       .withWrap();
@@ -191,39 +195,21 @@ export class FormSelectComponent<TValue>
   selectOption(option: FormSelectOptionComponent<TValue> | undefined | null) {
     if (!option) {
       this.value.set(null);
-      this.selectedOption.set(null);
 
       return;
     }
 
-    this.value.set(option.value());
-    this.selectedOption.set(option);
+    const value = option.value();
 
+    this.value.set(value);
     this.keyManager?.setActiveItem(option);
 
-    this.updateTrigger();
     this.hideDropdown();
-
-    const value = this.selectedOption()?.value();
 
     if (value === undefined || value === null) return;
 
     this.changed.emit(value);
     this.input().nativeElement.focus();
-  }
-
-  updateTrigger() {
-    const options = this.options();
-
-    if (!options.length) {
-      return;
-    }
-
-    const selected = options.find((option) => option.value() === this.value());
-    const display = selected ? selected.viewValue : null;
-    this.displayValue.set(display);
-
-    this.input().nativeElement.value = this.displayValue();
   }
 
   onKeyDown(event: KeyboardEvent) {
