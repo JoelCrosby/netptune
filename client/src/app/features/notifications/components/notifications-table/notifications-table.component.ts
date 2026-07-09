@@ -63,7 +63,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       <ng-template appDatatableCell="notification" let-notification>
         <button
           type="button"
-          class="block min-w-0 truncate text-left text-sm"
+          class="flex min-w-0 items-center truncate text-left text-sm"
           [class.cursor-pointer]="notification.link"
           [class.opacity-60]="notification.isRead"
           (click)="onOpen(notification)">
@@ -73,7 +73,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
             <span class="font-medium">{{ notification.entityIdentifier }}</span>
           }
           @if (notification.entityName) {
-            <span class="text-foreground/60">{{
+            <span class="text-foreground/60 ml-2">{{
               notification.entityName
             }}</span>
           }

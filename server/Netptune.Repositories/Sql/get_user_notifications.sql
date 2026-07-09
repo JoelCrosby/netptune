@@ -13,7 +13,7 @@ WITH notification_feed AS (
         , n.created_at      AS createdat
         , al.user_id        AS actoruserid
         , TRIM(u.firstname || ' ' || u.lastname) AS actorusername
-        , u.picture_url     AS actoruserurl
+        , u.picture_url     AS actorPictureUrl
         , COALESCE(pt.name, p.name, b.name, bg.name, s.name) AS entityname
         , CASE
             WHEN n.entity_type = @taskType    AND al.project_slug IS NOT NULL THEN al.project_slug || '-' || pt.project_scope_id::text
