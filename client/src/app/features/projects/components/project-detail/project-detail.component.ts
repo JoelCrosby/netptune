@@ -1,4 +1,10 @@
-import { Component, inject, OnDestroy, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  linkedSignal,
+  OnDestroy,
+} from '@angular/core';
 import {
   disabled,
   form,
@@ -6,17 +12,15 @@ import {
   maxLength,
   required,
 } from '@angular/forms/signals';
+import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
-import { statusResource } from '@core/resources/status.resources';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
+import { statusResource } from '@core/resources/status.resources';
 import {
   clearProjectDetail,
   updateProject,
 } from '@core/store/projects/projects.actions';
-import {
-  selectProjectDetail,
-  selectUpdateProjectLoading,
-} from '@core/store/projects/projects.selectors';
+import { selectUpdateProjectLoading } from '@core/store/projects/projects.selectors';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -33,7 +37,7 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
     FlatButtonComponent,
     FormField,
   ],
-  template: `@if (project(); as project) {
+  template: `
     <div>
       <form class="w-full max-w-lg" (submit)="updateClicked($event)">
         <app-form-input
@@ -69,7 +73,7 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
           maxLength="1024">
         </app-form-input>
 
-        @if (statuses.hasValue()) {
+        @if (statuses.value()) {
           <app-form-select
             [formField]="projectForm.defaultStatusId"
             label="Default task status">
@@ -89,23 +93,23 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
         </button>
       </form>
     </div>
-  } `,
+  `,
 })
 export class ProjectDetailComponent implements OnDestroy {
   private store = inject(Store);
 
-  project = this.store.selectSignal(selectProjectDetail);
+  project = input<ProjectViewModel>();
   loading = this.store.selectSignal(selectUpdateProjectLoading);
   statuses = statusResource();
 
-  projectFormModel = signal({
+  projectFormModel = linkedSignal(() => ({
     id: this.project()?.id ?? (null as number | null),
     key: this.project()?.key ?? '',
     name: this.project()?.name ?? '',
     description: this.project()?.description ?? '',
     repositoryUrl: this.project()?.repositoryUrl ?? '',
     defaultStatusId: this.project()?.defaultStatusId ?? 0,
-  });
+  }));
 
   projectForm = form(this.projectFormModel, (schema) => {
     required(schema.id);

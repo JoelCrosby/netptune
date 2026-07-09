@@ -30,43 +30,6 @@ const reducer = createReducer(
       })
   ),
 
-  // Load Project Detail
-
-  on(
-    actions.loadProjectDetail.init,
-    (state): ProjectsState => ({
-      ...state,
-      projectDetailLoading: true,
-    })
-  ),
-  on(
-    actions.loadProjectDetail.fail,
-    (state, { error }): ProjectsState => ({
-      ...state,
-      loadingError: error,
-      projectDetailLoading: false,
-    })
-  ),
-  on(
-    actions.loadProjectDetail.success,
-    (state, { project }): ProjectsState => ({
-      ...state,
-      projectDetail: project,
-      projectDetailLoading: false,
-    })
-  ),
-
-  // Clear Project Detail
-
-  on(
-    actions.clearProjectDetail,
-    (state): ProjectsState => ({
-      ...state,
-      projectDetail: null,
-      projectDetailLoading: true,
-    })
-  ),
-
   // Create Project
 
   on(

@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { Router } from '@angular/router';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -19,7 +18,6 @@ import {
   throttleTime,
 } from 'rxjs/operators';
 import { selectWorkspace } from '../workspaces/workspaces.actions';
-import { selectCurrentWorkspaceIdentifier } from '../workspaces/workspaces.selectors';
 import * as actions from './projects.actions';
 import { ProjectsService } from './projects.service';
 
@@ -29,41 +27,7 @@ export class ProjectsEffects {
   private projectsService = inject(ProjectsService);
   private confirmation = inject(ConfirmationService);
   private store = inject(Store);
-  private router = inject(Router);
   private snackbar = inject(SnackbarService);
-
-  loadProjectDetail$ = createEffect(
-    ({ throttle = 200, scheduler = asyncScheduler } = {}) => {
-      return this.actions$.pipe(
-        ofType(actions.loadProjectDetail.init),
-        throttleTime(throttle, scheduler),
-        switchMap((action) =>
-          this.projectsService.getProjectDetail(action.projectKey).pipe(
-            map((project) => actions.loadProjectDetail.success({ project })),
-            catchError((error: HttpErrorResponse) =>
-              of(actions.loadProjectDetail.fail({ error }))
-            )
-          )
-        )
-      );
-    }
-  );
-
-  loadProjectDetailfail$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(actions.loadProjectDetail.fail),
-        concatLatestFrom(() =>
-          this.store.select(selectCurrentWorkspaceIdentifier)
-        ),
-        tap(
-          ([_, workspaceId]) =>
-            void this.router.navigate(['/', workspaceId, 'projects'])
-        )
-      );
-    },
-    { dispatch: false }
-  );
 
   loadProjects$ = createEffect(
     ({ throttle = 200, scheduler = asyncScheduler } = {}) => {
