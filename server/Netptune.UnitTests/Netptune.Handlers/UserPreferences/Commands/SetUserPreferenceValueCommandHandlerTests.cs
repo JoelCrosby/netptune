@@ -56,10 +56,12 @@ public class SetUserPreferenceValueCommandHandlerTests
             ]);
 
         var result = await Handler.Handle(
-            new SetUserPreferenceValueCommand(
-                PreferenceKeys.CommandPaletteRecentItemsScope,
-                PreferenceScopes.Workspace,
-                JsonSerializer.SerializeToElement("global")),
+            new SetUserPreferenceValueCommand
+            {
+                Key = PreferenceKeys.CommandPaletteRecentItemsScope,
+                Scope = PreferenceScopes.Workspace,
+                Value = JsonSerializer.SerializeToElement("global"),
+            },
             TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
@@ -79,10 +81,12 @@ public class SetUserPreferenceValueCommandHandlerTests
     public async Task SetUserPreferenceValue_ReturnsFailure_WhenValueIsNotAllowed()
     {
         var result = await Handler.Handle(
-            new SetUserPreferenceValueCommand(
-                PreferenceKeys.CommandPaletteRecentItemsScope,
-                PreferenceScopes.Workspace,
-                JsonSerializer.SerializeToElement("invalid")),
+            new SetUserPreferenceValueCommand
+            {
+                Key = PreferenceKeys.CommandPaletteRecentItemsScope,
+                Scope = PreferenceScopes.Workspace,
+                Value = JsonSerializer.SerializeToElement("invalid"),
+            },
             TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();

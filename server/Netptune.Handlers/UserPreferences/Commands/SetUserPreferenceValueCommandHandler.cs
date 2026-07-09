@@ -10,10 +10,14 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.UserPreferences.Commands;
 
-public sealed record SetUserPreferenceValueCommand(
-    string Key,
-    string Scope,
-    JsonElement Value) : IRequest<ClientResponse<ResolvedPreferenceValue>>;
+public sealed record SetUserPreferenceValueCommand : IRequest<ClientResponse<ResolvedPreferenceValue>>
+{
+    public required string Key { get; init; }
+
+    public required string Scope { get; init; }
+
+    public required JsonElement Value { get; init; }
+}
 
 public sealed class SetUserPreferenceValueCommandHandler
     : IRequestHandler<SetUserPreferenceValueCommand, ClientResponse<ResolvedPreferenceValue>>
@@ -121,6 +125,17 @@ public sealed class SetUserPreferenceValueCommandHandler
         if (!definition.AllowedScopes.Contains(scope)) return false;
         if (scope == PreferenceScopes.Workspace && workspaceId is null) return false;
 
+        if (definition.ValueType == "number-array")
+        {
+            return IsNumberArray(value);
+        }
+
+        if (definition.ValueType == "number-array-map")
+        {
+            return value.ValueKind == JsonValueKind.Object
+                   && value.EnumerateObject().All(property => IsNumberArray(property.Value));
+        }
+
         if (definition.ValueType == "string" && value.ValueKind != JsonValueKind.String) return false;
 
         if (definition.Options.Count == 0) return true;
@@ -129,5 +144,11 @@ public sealed class SetUserPreferenceValueCommandHandler
 
         return definition.Options.Any(option =>
             string.Equals(option.Value, stringValue, StringComparison.Ordinal));
+    }
+
+    private static bool IsNumberArray(JsonElement value)
+    {
+        return value.ValueKind == JsonValueKind.Array
+               && value.EnumerateArray().All(element => element.ValueKind == JsonValueKind.Number);
     }
 }

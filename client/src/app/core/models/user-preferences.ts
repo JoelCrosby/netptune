@@ -3,6 +3,7 @@ import { ClientResponse } from './client-response';
 export const COMMAND_PALETTE_RECENT_ITEMS_SCOPE =
   'commandPalette.recentItems.scope';
 export const APPEARANCE_THEME = 'appearance.theme';
+export const BOARDS_HIDDEN_GROUP_IDS = 'boards.hiddenGroupIds';
 
 export type PreferenceScope = 'global' | 'workspace';
 
@@ -15,12 +16,13 @@ export interface PreferenceDefinition {
   key: string;
   groupKey: string;
   label: string;
-  controlType: 'select';
-  valueType: 'string';
+  controlType: 'select' | 'hidden';
+  valueType: 'string' | 'number-array' | 'number-array-map';
   defaultValue: unknown;
   allowedScopes: PreferenceScope[];
   options: PreferenceOption[];
   order: number;
+  internal?: boolean;
 }
 
 export interface PreferenceDefinitionGroup {

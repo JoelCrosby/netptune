@@ -60,10 +60,12 @@ public static class UserPreferencesEndpoints
         }
 
         var result = await mediator.Send(
-            new SetUserPreferenceValueCommand(
-            key,
-            request.Scope,
-            request.Value),
+            new SetUserPreferenceValueCommand
+            {
+                Key = key,
+                Scope = request.Scope,
+                Value = request.Value,
+            },
             cancellationToken);
 
         if (!result.IsSuccess)

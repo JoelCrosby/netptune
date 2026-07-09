@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import {
   COMMAND_PALETTE_RECENT_ITEMS_SCOPE,
@@ -17,7 +17,7 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
       User Preferences
     </h3>
 
-    @for (group of preferences.groups(); track group.key) {
+    @for (group of visibleGroups(); track group.key) {
       <section class="mt-6">
         <h4 class="font-overpass mb-3 text-[1.1rem] font-normal">
           {{ group.label }}
@@ -90,6 +90,19 @@ export class SettingsComponent {
   private recentItems = inject(RecentItemsService);
 
   private selectedScopes = signal<Record<string, PreferenceScope>>({});
+
+  // Internal preferences are managed by dedicated UI, not the settings screen.
+  protected visibleGroups = computed(() =>
+    this.preferences
+      .groups()
+      .map((group) => ({
+        ...group,
+        preferences: group.preferences.filter(
+          (preference) => !preference.definition.internal
+        ),
+      }))
+      .filter((group) => group.preferences.length > 0)
+  );
 
   constructor() {
     this.preferences.load();

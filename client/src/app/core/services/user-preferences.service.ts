@@ -24,6 +24,13 @@ export class UserPreferencesService {
 
   readonly groups = computed(() => this.values()?.groups ?? []);
 
+  /** Effective value for a preference key from the currently-loaded values. */
+  effectiveValueFor(key: string): unknown {
+    return this.values()
+      ?.groups.flatMap((group) => group.preferences)
+      .find((preference) => preference.definition.key === key)?.effectiveValue;
+  }
+
   load() {
     if (this.loading()) return;
 

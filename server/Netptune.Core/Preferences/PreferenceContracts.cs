@@ -6,6 +6,7 @@ public static class PreferenceKeys
 {
     public const string AppearanceTheme = "appearance.theme";
     public const string CommandPaletteRecentItemsScope = "commandPalette.recentItems.scope";
+    public const string BoardHiddenGroupIds = "boards.hiddenGroupIds";
 }
 
 public static class PreferenceScopes
@@ -49,6 +50,10 @@ public sealed record PreferenceDefinition
     public IReadOnlyList<PreferenceOption> Options { get; init; } = [];
 
     public int Order { get; init; }
+
+    // Internal preferences are persisted and resolved like any other, but are
+    // driven by a dedicated UI (not the generic settings screen).
+    public bool Internal { get; init; }
 }
 
 public sealed record PreferenceDefinitionsResponse

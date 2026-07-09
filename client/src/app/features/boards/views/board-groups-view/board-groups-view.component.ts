@@ -40,14 +40,19 @@ import { ImportTasksDialogComponent } from '@boards/components/import-tasks-dial
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
+import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
+import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { statusResource } from '@core/resources/status.resources';
+import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component';
+import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
   LucideDelete,
   LucideEllipsisVertical,
+  LucideEyeOff,
   LucideFileDown,
   LucideFileUp,
   LucidePencil,
@@ -123,7 +128,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
         <app-spinner diameter="32px" />
       </div>
     } @else {
-      @if (groups(); as groups) {
+      @if (visibleGroups(); as groups) {
         <div
           cdkDropList
           appScrollShadow
@@ -199,10 +204,26 @@ export class BoardGroupsViewComponent implements OnDestroy {
   private store = inject(Store);
   private hubService = inject(ProjectTasksHubService);
   private dialog = inject(DialogService);
+  private preferences = inject(UserPreferencesService);
 
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 
   groups = this.store.selectSignal(selectAllBoardGroupsWithSelection);
+
+  hiddenGroupIds = computed(() => {
+    const boardId = this.board()?.id;
+
+    if (boardId === undefined) return new Set<number>();
+
+    const value = this.preferences.effectiveValueFor(BOARDS_HIDDEN_GROUP_IDS);
+
+    return new Set(hiddenGroupIdsForBoard(value, boardId));
+  });
+
+  visibleGroups = computed(() => {
+    const hidden = this.hiddenGroupIds();
+    return this.groups().filter((group) => !hidden.has(group.id));
+  });
   statuses = statusResource();
   statusMap = computed(
     () => new Map(this.statuses.value().map((status) => [status.id, status]))
@@ -230,6 +251,11 @@ export class BoardGroupsViewComponent implements OnDestroy {
       icon: LucidePencil,
     },
     {
+      label: 'Manage Groups',
+      click: () => this.onManageGroupsClicked(),
+      icon: LucideEyeOff,
+    },
+    {
       label: 'Import Tasks',
       click: () => this.onImportTasksClicked(),
       icon: LucideFileUp,
@@ -247,6 +273,10 @@ export class BoardGroupsViewComponent implements OnDestroy {
   ];
 
   constructor() {
+    effect(() => {
+      console.log('hiddenGroupIds(): ', this.hiddenGroupIds());
+    });
+
     effect(() => {
       const identifier = this.boardIdentifier();
 
@@ -372,6 +402,12 @@ export class BoardGroupsViewComponent implements OnDestroy {
     this.dialog.open(CreateBoardComponent, {
       width: '600px',
       data: board,
+    });
+  }
+
+  onManageGroupsClicked() {
+    this.dialog.open(ManageBoardGroupsDialogComponent, {
+      width: '600px',
     });
   }
 

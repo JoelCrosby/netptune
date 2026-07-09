@@ -25,6 +25,12 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             Label = "Command Palette",
             Order = 10,
         },
+        new()
+        {
+            Key = "boards",
+            Label = "Boards",
+            Order = 15,
+        },
     ];
 
     private readonly IReadOnlyList<PreferenceDefinition> Definitions =
@@ -59,6 +65,20 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
                 new() { Value = "workspace", Label = "Current workspace" },
                 new() { Value = "global", Label = "All workspaces" },
             ],
+            Order = 10,
+        },
+        new()
+        {
+            Key = PreferenceKeys.BoardHiddenGroupIds,
+            GroupKey = "boards",
+            Label = "Hidden board groups",
+            ControlType = "hidden",
+            // Map of board id -> hidden board-group ids, so each board keeps its
+            // own hidden set within a single workspace-scoped preference.
+            ValueType = "number-array-map",
+            DefaultValue = JsonSerializer.SerializeToElement(new Dictionary<string, int[]>()),
+            AllowedScopes = [PreferenceScopes.Workspace],
+            Internal = true,
             Order = 10,
         },
     ];
