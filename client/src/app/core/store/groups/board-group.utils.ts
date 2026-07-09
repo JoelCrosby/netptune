@@ -84,7 +84,7 @@ export const updateTask = (
 ) => {
   const getGroupWithTask = (): BoardViewGroup | undefined => {
     for (const g of Object.values(state.entities)) {
-      if (g?.tasks.findIndex((x) => x.id === task.id) !== -1) {
+      if (g?.tasks.some((x) => x.id === task.id)) {
         return g;
       }
     }
@@ -102,6 +102,7 @@ export const updateTask = (
     }
 
     return {
+      ...item,
       ...(task as BoardViewTask),
     };
   });

@@ -261,6 +261,11 @@ const reducer = createReducer(
     (state, { task }): BoardGroupsState => updateTask(state, task)
   ),
 
+  on(
+    TaskActions.editProjectTask.success,
+    (state, { task }): BoardGroupsState => updateTask(state, task)
+  ),
+
   // Board Actions
 
   on(
