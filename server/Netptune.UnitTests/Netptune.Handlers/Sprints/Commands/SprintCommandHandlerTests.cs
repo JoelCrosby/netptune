@@ -3,6 +3,7 @@ using FluentAssertions;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Models.Sprints;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -24,6 +25,7 @@ public class SprintCommandHandlerTests
     private const string WorkspaceKey = "workspace";
 
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
 
@@ -36,7 +38,7 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Create_ShouldAddPlanningSprint_WhenInputValid()
     {
-        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var workspace = CreateWorkspace();
         var project = CreateProject(workspace.Id);
         var request = new AddSprintRequest
@@ -74,12 +76,17 @@ public class SprintCommandHandlerTests
         addedSprint.OwnerId.Should().Be("user-1");
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
         CaptureLoggedActivityType().Should().Be(ActivityType.Create);
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
+            message.Operation == SearchIndexOperation.Index
+            && message.EntityType == "sprint"
+            && message.EntityId == sprintViewModel.Id
+            && message.WorkspaceSlug == WorkspaceKey));
     }
 
     [Fact]
     public async Task Create_ShouldFail_WhenNameIsBlank()
     {
-        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var request = new AddSprintRequest
         {
             Name = " ",
@@ -97,12 +104,13 @@ public class SprintCommandHandlerTests
         result.Message.Should().Be("Sprint name is required");
         await UnitOfWork.Sprints.DidNotReceive().AddAsync(Arg.Any<Sprint>(), Arg.Any<CancellationToken>());
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
+        await EventPublisher.DidNotReceive().Dispatch(Arg.Any<SearchIndexEvent>());
     }
 
     [Fact]
     public async Task Create_ShouldFail_WhenProjectIsOutsideWorkspace()
     {
-        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var request = new AddSprintRequest
         {
             Name = "Sprint 1",
@@ -126,7 +134,7 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Start_ShouldActivatePlanningSprint_WhenNoOtherActiveSprintExists()
     {
-        var handler = new StartSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new StartSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Planning);
         var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, sprint.Name, sprint.ProjectId, sprint.WorkspaceId, SprintStatus.Active);
 
@@ -144,12 +152,17 @@ public class SprintCommandHandlerTests
         sprint.ModifiedByUserId.Should().Be("user-1");
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
         CaptureLoggedActivityType().Should().Be(ActivityType.ModifyStatus);
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
+            message.Operation == SearchIndexOperation.Index
+            && message.EntityType == "sprint"
+            && message.EntityId == sprint.Id
+            && message.WorkspaceSlug == WorkspaceKey));
     }
 
     [Fact]
     public async Task Start_ShouldFail_WhenProjectAlreadyHasActiveSprint()
     {
-        var handler = new StartSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new StartSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Planning);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
@@ -168,7 +181,7 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Complete_ShouldCompleteActiveSprint()
     {
-        var handler = new CompleteSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new CompleteSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Active);
         var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, sprint.Name, sprint.ProjectId, sprint.WorkspaceId, SprintStatus.Completed);
 
@@ -185,6 +198,11 @@ public class SprintCommandHandlerTests
         sprint.ModifiedByUserId.Should().Be("user-1");
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
         CaptureLoggedActivityType().Should().Be(ActivityType.ModifyStatus);
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
+            message.Operation == SearchIndexOperation.Index
+            && message.EntityType == "sprint"
+            && message.EntityId == sprint.Id
+            && message.WorkspaceSlug == WorkspaceKey));
     }
 
     [Fact]
@@ -266,7 +284,7 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldSoftDeletePlanningSprint_AndClearTasks()
     {
-        var handler = new DeleteSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new DeleteSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Planning);
         var task = CreateTask(id: 10, workspaceId: sprint.WorkspaceId, projectId: sprint.ProjectId, sprintId: sprint.Id);
         sprint.ProjectTasks = [task];
@@ -282,12 +300,17 @@ public class SprintCommandHandlerTests
         task.SprintId.Should().BeNull();
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
         CaptureLoggedActivityType().Should().Be(ActivityType.Delete);
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
+            message.Operation == SearchIndexOperation.Delete
+            && message.EntityType == "sprint"
+            && message.EntityId == sprint.Id
+            && message.WorkspaceSlug == WorkspaceKey));
     }
 
     [Fact]
     public async Task Delete_ShouldFail_WhenSprintIsActive()
     {
-        var handler = new DeleteSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new DeleteSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Active);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
@@ -297,6 +320,7 @@ public class SprintCommandHandlerTests
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Only planning or cancelled sprints can be deleted");
+        await EventPublisher.DidNotReceive().Dispatch(Arg.Any<SearchIndexEvent>());
         sprint.IsDeleted.Should().BeFalse();
         await UnitOfWork.DidNotReceive().CompleteAsync(Arg.Any<CancellationToken>());
     }
@@ -304,7 +328,7 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Update_ShouldApplyEditableFields_WhenInputValid()
     {
-        var handler = new UpdateSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new UpdateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Planning);
         var request = new UpdateSprintRequest
         {
@@ -338,7 +362,7 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Update_ShouldFail_WhenCompletedSprintIsEditedWithoutCancelling()
     {
-        var handler = new UpdateSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new UpdateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Completed);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)

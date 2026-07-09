@@ -1,5 +1,6 @@
 using Mediator;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -14,12 +15,14 @@ public sealed class DeleteSprintCommandHandler : IRequestHandler<DeleteSprintCom
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public DeleteSprintCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public DeleteSprintCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity, IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse> Handle(DeleteSprintCommand request, CancellationToken cancellationToken)
@@ -49,6 +52,14 @@ public sealed class DeleteSprintCommandHandler : IRequestHandler<DeleteSprintCom
             options.EntityId = sprint.Id;
             options.EntityType = EntityType.Sprint;
             options.Type = ActivityType.Delete;
+        });
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Delete,
+            EntityType = "sprint",
+            EntityId = sprint.Id,
+            WorkspaceSlug = workspaceKey,
         });
 
         return ClientResponse.Success;

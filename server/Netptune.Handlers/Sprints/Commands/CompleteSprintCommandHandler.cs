@@ -1,5 +1,6 @@
 using Mediator;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -15,12 +16,14 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public CompleteSprintCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public CompleteSprintCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity, IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<SprintViewModel>> Handle(CompleteSprintCommand request, CancellationToken cancellationToken)
@@ -45,6 +48,14 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
             options.EntityId = sprint.Id;
             options.EntityType = EntityType.Sprint;
             options.Type = ActivityType.ModifyStatus;
+        });
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Index,
+            EntityType = "sprint",
+            EntityId = sprint.Id,
+            WorkspaceSlug = workspaceKey,
         });
 
         return result is null
