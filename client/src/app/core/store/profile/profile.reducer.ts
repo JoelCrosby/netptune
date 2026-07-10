@@ -7,78 +7,54 @@ const reducer = createReducer(
 
   // Load Profile
 
-  on(
-    actions.loadProfile.init,
-    (state): ProfileState => ({ ...state, loadProfileloading: true })
-  ),
-  on(
-    actions.loadProfile.fail,
-    (state, { error }): ProfileState => ({
-      ...state,
-      loadProfileloading: false,
-      loadProfileError: error,
-    })
-  ),
-  on(
-    actions.loadProfile.success,
-    (state, { profile }): ProfileState => ({
-      ...state,
-      loadProfileloading: false,
-      profileloaded: true,
-      profile,
-    })
-  ),
+  on(actions.loadProfile.init, (state): ProfileState => ({
+    ...state,
+    loadProfileloading: true,
+  })),
+  on(actions.loadProfile.fail, (state, { error }): ProfileState => ({
+    ...state,
+    loadProfileloading: false,
+    loadProfileError: error,
+  })),
+  on(actions.loadProfile.success, (state, { profile }): ProfileState => ({
+    ...state,
+    loadProfileloading: false,
+    profileloaded: true,
+    profile,
+  })),
 
   // Update Profile
 
-  on(
-    actions.updateProfile.init,
-    (state): ProfileState => ({
-      ...state,
-      updateProfileLoading: true,
-    })
-  ),
-  on(
-    actions.updateProfile.fail,
-    (state, { error }): ProfileState => ({
-      ...state,
-      updateProfileLoading: false,
-      updateProfileError: error,
-    })
-  ),
-  on(
-    actions.updateProfile.success,
-    (state, { profile }): ProfileState => ({
-      ...state,
-      updateProfileLoading: false,
-      profile,
-    })
-  ),
+  on(actions.updateProfile.init, (state): ProfileState => ({
+    ...state,
+    updateProfileLoading: true,
+  })),
+  on(actions.updateProfile.fail, (state, { error }): ProfileState => ({
+    ...state,
+    updateProfileLoading: false,
+    updateProfileError: error,
+  })),
+  on(actions.updateProfile.success, (state, { profile }): ProfileState => ({
+    ...state,
+    updateProfileLoading: false,
+    profile,
+  })),
 
   // Change Password
 
-  on(
-    actions.changePassword.init,
-    (state): ProfileState => ({
-      ...state,
-      changePasswordLoading: true,
-    })
-  ),
-  on(
-    actions.changePassword.fail,
-    (state, { error }): ProfileState => ({
-      ...state,
-      changePasswordLoading: false,
-      changePasswordError: error,
-    })
-  ),
-  on(
-    actions.changePassword.success,
-    (state): ProfileState => ({
-      ...state,
-      changePasswordLoading: false,
-    })
-  ),
+  on(actions.changePassword.init, (state): ProfileState => ({
+    ...state,
+    changePasswordLoading: true,
+  })),
+  on(actions.changePassword.fail, (state, { error }): ProfileState => ({
+    ...state,
+    changePasswordLoading: false,
+    changePasswordError: error,
+  })),
+  on(actions.changePassword.success, (state): ProfileState => ({
+    ...state,
+    changePasswordLoading: false,
+  })),
 
   // Load Login Providers
 

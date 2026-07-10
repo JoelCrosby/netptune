@@ -16,7 +16,7 @@ import { Component, input, signal } from '@angular/core';
 
       <div class="min-w-0 flex-1" [class.pb-14]="!last()">
         <div class="flex min-h-8 flex-col justify-center">
-          <h3 class="text-foreground text-sm font-semibold leading-none">
+          <h3 class="text-foreground text-sm leading-none font-semibold">
             {{ title() }}
           </h3>
           @if (description()) {

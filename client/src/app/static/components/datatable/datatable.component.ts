@@ -170,73 +170,77 @@ import {
             }
           } @else {
             @for (row of visibleRows(); track trackRow($index, row)) {
-            <tr [class]="resolvedRowClass(row, $index)">
-              @if (showUtilityColumn()) {
-                <td class="px-2 align-middle">
-                  @if (showMenuColumn()) {
-                    <button
-                      class="w-8"
-                      app-icon-button
-                      type="button"
-                      aria-label="Row actions"
-                      (click)="dropdownmenu.toggle($any($event.currentTarget))">
-                      <svg
-                        lucideEllipsisVertical
-                        class="text-foreground/30 h-4 w-4"></svg>
-                    </button>
+              <tr [class]="resolvedRowClass(row, $index)">
+                @if (showUtilityColumn()) {
+                  <td class="px-2 align-middle">
+                    @if (showMenuColumn()) {
+                      <button
+                        class="w-8"
+                        app-icon-button
+                        type="button"
+                        aria-label="Row actions"
+                        (click)="
+                          dropdownmenu.toggle($any($event.currentTarget))
+                        ">
+                        <svg
+                          lucideEllipsisVertical
+                          class="text-foreground/30 h-4 w-4"></svg>
+                      </button>
 
-                    <app-dropdown-menu #dropdownmenu xPosition="after">
-                      @for (menuItem of data().menu; track menuItem.label) {
-                        <button
-                          app-menu-item
-                          type="button"
-                          (click)="selectMenuItem(menuItem, row, dropdownmenu)">
-                          <ng-container
-                            [ngComponentOutlet]="menuItem.icon"
-                            [ngComponentOutletInputs]="iconInputs" />
-                          <span>{{ menuItem.label }}</span>
-                        </button>
-                      }
-                    </app-dropdown-menu>
-                  }
-                </td>
-              }
-              @if (selection()) {
-                <td
-                  class="px-2 py-2 align-middle"
-                  (mousedown)="rangeSelectActive = $event.shiftKey">
-                  <app-checkbox
-                    [checked]="isSelected(row)"
-                    (changed)="toggleRow(row, $event, $index)">
-                    <span class="sr-only">Select row</span>
-                  </app-checkbox>
-                </td>
-              }
-              @for (column of visibleColumns(); track column.id) {
-                <td [class]="resolvedCellClass(row, column, $index)">
-                  @if (cellTemplate(column.id); as template) {
-                    <ng-container
-                      [ngTemplateOutlet]="template.templateRef"
-                      [ngTemplateOutletContext]="
-                        cellContext(row, column, $index)
-                      " />
-                  } @else {
-                    {{ formattedCellValue(row, column) }}
-                  }
-                </td>
-              }
-            </tr>
-          } @empty {
-            <tr>
-              <td
-                [class]="mergedEmptyCellClass()"
-                [attr.colspan]="emptyColumnSpan()">
-                <ng-content select="[appDatatableEmpty]" />
-                @if (!emptyState()) {
-                  {{ emptyMessage() }}
+                      <app-dropdown-menu #dropdownmenu xPosition="after">
+                        @for (menuItem of data().menu; track menuItem.label) {
+                          <button
+                            app-menu-item
+                            type="button"
+                            (click)="
+                              selectMenuItem(menuItem, row, dropdownmenu)
+                            ">
+                            <ng-container
+                              [ngComponentOutlet]="menuItem.icon"
+                              [ngComponentOutletInputs]="iconInputs" />
+                            <span>{{ menuItem.label }}</span>
+                          </button>
+                        }
+                      </app-dropdown-menu>
+                    }
+                  </td>
                 }
-              </td>
-            </tr>
+                @if (selection()) {
+                  <td
+                    class="px-2 py-2 align-middle"
+                    (mousedown)="rangeSelectActive = $event.shiftKey">
+                    <app-checkbox
+                      [checked]="isSelected(row)"
+                      (changed)="toggleRow(row, $event, $index)">
+                      <span class="sr-only">Select row</span>
+                    </app-checkbox>
+                  </td>
+                }
+                @for (column of visibleColumns(); track column.id) {
+                  <td [class]="resolvedCellClass(row, column, $index)">
+                    @if (cellTemplate(column.id); as template) {
+                      <ng-container
+                        [ngTemplateOutlet]="template.templateRef"
+                        [ngTemplateOutletContext]="
+                          cellContext(row, column, $index)
+                        " />
+                    } @else {
+                      {{ formattedCellValue(row, column) }}
+                    }
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td
+                  [class]="mergedEmptyCellClass()"
+                  [attr.colspan]="emptyColumnSpan()">
+                  <ng-content select="[appDatatableEmpty]" />
+                  @if (!emptyState()) {
+                    {{ emptyMessage() }}
+                  }
+                </td>
+              </tr>
             }
           }
         </tbody>
@@ -692,7 +696,11 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   }
 
   skeletonCellClass(column: DatatableColumn<T>): string {
-    return twMerge(classes.cell, alignmentClass(column.align), column.widthClass);
+    return twMerge(
+      classes.cell,
+      alignmentClass(column.align),
+      column.widthClass
+    );
   }
 
   // Vary the placeholder bar widths so the skeleton reads as content rather

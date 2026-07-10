@@ -23,18 +23,17 @@ export class ActivityService {
     });
 
     return this.http
-      .get<
-        ClientResponse<ActivityViewModel[]>
-      >(`api/activity/${entityType}/${entityId}`, { params, observe: 'response' })
+      .get<ClientResponse<ActivityViewModel[]>>(
+        `api/activity/${entityType}/${entityId}`,
+        { params, observe: 'response' }
+      )
       .pipe(
-        map(
-          (response): CursorPage<ActivityViewModel> => ({
-            ...cursorPageFromHeaders(
-              response.body?.payload ?? [],
-              response.headers
-            ),
-          })
-        )
+        map((response): CursorPage<ActivityViewModel> => ({
+          ...cursorPageFromHeaders(
+            response.body?.payload ?? [],
+            response.headers
+          ),
+        }))
       );
   }
 }

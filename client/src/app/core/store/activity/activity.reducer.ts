@@ -8,18 +8,15 @@ const reducer = createReducer(
 
   // Load Projects
 
-  on(
-    actions.loadActivity.init,
-    (state): ActivityState => ({
-      ...state,
-      loading: true,
-      nextCursor: undefined,
-    })
-  ),
-  on(
-    actions.loadMoreActivity.init,
-    (state): ActivityState => ({ ...state, loadingMore: true })
-  ),
+  on(actions.loadActivity.init, (state): ActivityState => ({
+    ...state,
+    loading: true,
+    nextCursor: undefined,
+  })),
+  on(actions.loadMoreActivity.init, (state): ActivityState => ({
+    ...state,
+    loadingMore: true,
+  })),
   on(
     actions.loadActivity.fail,
     actions.loadMoreActivity.fail,

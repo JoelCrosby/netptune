@@ -108,9 +108,9 @@ import { FormSelectService } from './form-select.service';
     }
   </div> `,
 })
-export class FormSelectComponent<TValue>
-  implements FormValueControl<TValue | null>
-{
+export class FormSelectComponent<
+  TValue,
+> implements FormValueControl<TValue | null> {
   private service = inject<FormSelectService<TValue>>(FormSelectService);
   private injector = inject(Injector);
 
@@ -150,7 +150,9 @@ export class FormSelectComponent<TValue>
     return this.options().find((option) => option.value() === value) ?? null;
   });
 
-  readonly displayValue = computed(() => this.selectedOption()?.viewValue ?? '');
+  readonly displayValue = computed(
+    () => this.selectedOption()?.viewValue ?? ''
+  );
 
   constructor() {
     this.service.register(this);

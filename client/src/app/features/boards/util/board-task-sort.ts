@@ -1,11 +1,7 @@
 import { BoardViewTask } from '@core/models/view-models/board-view';
 
 export type BoardTaskSortField =
-  | 'custom'
-  | 'status'
-  | 'priority'
-  | 'createdAt'
-  | 'updatedAt';
+  'custom' | 'status' | 'priority' | 'createdAt' | 'updatedAt';
 
 export type BoardTaskSortDirection = 'asc' | 'desc';
 

@@ -13,11 +13,9 @@ export interface DatatableSort {
 export type DatatableAccessor<T> = keyof T | ((row: T) => unknown);
 export type DatatableTrackBy<T> = (index: number, row: T) => unknown;
 export type DatatableCellClass<T> =
-  | string
-  | ((row: T, column: DatatableColumn<T>, rowIndex: number) => string);
+  string | ((row: T, column: DatatableColumn<T>, rowIndex: number) => string);
 export type DatatableRowClass<T> =
-  | string
-  | ((row: T, rowIndex: number) => string);
+  string | ((row: T, rowIndex: number) => string);
 
 export interface DatatableColumn<T = unknown> {
   id: string;

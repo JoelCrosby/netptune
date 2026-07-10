@@ -8,57 +8,44 @@ const reducer = createReducer(
 
   // Load Tags
 
-  on(
-    actions.loadTags.init,
-    (state): TagsState => ({ ...state, loaded: false, loading: true })
-  ),
-  on(
-    actions.loadTags.fail,
-    (state, { error }): TagsState => ({
+  on(actions.loadTags.init, (state): TagsState => ({
+    ...state,
+    loaded: false,
+    loading: true,
+  })),
+  on(actions.loadTags.fail, (state, { error }): TagsState => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    loadingError: error,
+  })),
+  on(actions.loadTags.success, (state, { tags }): TagsState =>
+    adapter.setAll(tags, {
       ...state,
       loading: false,
-      loaded: false,
-      loadingError: error,
-    })
-  ),
-  on(
-    actions.loadTags.success,
-    (state, { tags }): TagsState =>
-      adapter.setAll(tags, {
-        ...state,
-        loading: false,
-        loaded: true,
-      })
-  ),
-
-  on(
-    actions.toggleSelectedTag,
-    (state, { tag }): TagsState => ({
-      ...state,
-      selectedTags: state.selectedTags.includes(tag)
-        ? state.selectedTags.filter((t) => t !== tag)
-        : Array.from(new Set([...state.selectedTags, tag])),
+      loaded: true,
     })
   ),
 
-  on(
-    actions.editTag.success,
-    (state, { tag }): TagsState =>
-      adapter.updateOne({ id: tag.id, changes: tag }, state)
+  on(actions.toggleSelectedTag, (state, { tag }): TagsState => ({
+    ...state,
+    selectedTags: state.selectedTags.includes(tag)
+      ? state.selectedTags.filter((t) => t !== tag)
+      : Array.from(new Set([...state.selectedTags, tag])),
+  })),
+
+  on(actions.editTag.success, (state, { tag }): TagsState =>
+    adapter.updateOne({ id: tag.id, changes: tag }, state)
   ),
 
-  on(
-    actions.addTag.success,
-    (state, { tag }): TagsState => adapter.addOne(tag, state)
+  on(actions.addTag.success, (state, { tag }): TagsState =>
+    adapter.addOne(tag, state)
   ),
 
-  on(
-    actions.setSelectedTags,
-    (state, { selectedTags }): TagsState => ({
-      ...state,
-      selectedTags,
-    })
-  )
+  on(actions.setSelectedTags, (state, { selectedTags }): TagsState => ({
+    ...state,
+    selectedTags,
+  }))
 );
 
 export const tagsReducer = (
