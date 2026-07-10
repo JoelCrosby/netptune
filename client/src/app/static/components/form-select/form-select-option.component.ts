@@ -20,7 +20,7 @@ export class FormSelectOptionComponent<TValue> implements Highlightable {
   private service = inject<FormSelectService<TValue>>(FormSelectService);
   private element = inject(ElementRef);
 
-  readonly value = input.required<TValue>();
+  readonly value = input<TValue>();
 
   @HostBinding('class.selected')
   get selected(): boolean {

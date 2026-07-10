@@ -201,7 +201,7 @@ export class FormSelectComponent<TValue>
 
     const value = option.value();
 
-    this.value.set(value);
+    this.value.set(value ?? null);
     this.keyManager?.setActiveItem(option);
 
     this.hideDropdown();
