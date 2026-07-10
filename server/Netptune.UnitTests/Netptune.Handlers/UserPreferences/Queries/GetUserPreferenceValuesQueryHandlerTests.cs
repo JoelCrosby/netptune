@@ -46,6 +46,9 @@ public class GetUserPreferenceValuesQueryHandlerTests
                 CreatePreference(PreferenceKeys.CommandPaletteRecentItemsScope, null, "global"),
                 CreatePreference(PreferenceKeys.CommandPaletteRecentItemsScope, WorkspaceId, "workspace"),
             ]);
+        UnitOfWork.UserPreferences
+            .GetValues(UserId, PreferenceKeys.BoardHiddenGroupIds, WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns([]);
 
         var result = await Handler.Handle(new GetUserPreferenceValuesQuery(), TestContext.Current.CancellationToken);
 

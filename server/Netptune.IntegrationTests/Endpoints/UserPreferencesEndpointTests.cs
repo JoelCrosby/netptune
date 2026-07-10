@@ -81,10 +81,13 @@ public sealed class UserPreferencesEndpointTests
         var result = await response.Content.ReadFromJsonAsync<PreferenceValuesResponse>();
         var preferences = result!.Groups.SelectMany(group => group.Preferences).ToList();
 
-        result.Groups.Select(group => group.Key).Should().Equal("appearance", "commandPalette");
+        result.Groups.Select(group => group.Key).Should().Equal("appearance", "commandPalette", "boards");
         preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.AppearanceTheme);
         preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.CommandPaletteRecentItemsScope);
-        preferences.Should().OnlyContain(preference => preference.Definition.Options.Count > 0);
+        preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.BoardHiddenGroupIds);
+        preferences
+            .Where(preference => !preference.Definition.Internal)
+            .Should().OnlyContain(preference => preference.Definition.Options.Count > 0);
     }
 
     [Fact]
