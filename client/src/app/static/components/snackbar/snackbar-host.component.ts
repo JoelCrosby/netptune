@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { SnackbarComponent } from './snackbar.component';
+import { SnackbarItem } from './snackbar.models';
 import { SnackbarService } from './snackbar.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { SnackbarService } from './snackbar.service';
         aria-live="polite"
         aria-atomic="false">
         @for (item of service.items(); track item.id) {
-          <app-snackbar [item]="item" />
+          <app-snackbar [item]="item" (actionClicked)="onAction($event)" />
         }
       </div>
     }
@@ -20,4 +21,9 @@ import { SnackbarService } from './snackbar.service';
 })
 export class SnackbarHostComponent {
   readonly service = inject(SnackbarService);
+
+  onAction(item: SnackbarItem): void {
+    item.onAction?.();
+    this.service.dismiss(item.id);
+  }
 }

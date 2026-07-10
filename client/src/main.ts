@@ -1,20 +1,18 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { inject, provideAppInitializer } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore } from '@ngrx/router-store';
-import { provideStore, Store } from '@ngrx/store';
-import { catchError, firstValueFrom, of, tap } from 'rxjs';
+import { provideStore } from '@ngrx/store';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
-import { AuthService } from './app/core/auth/auth.service';
-import { refreshTokenSuccess } from './app/core/store/auth/auth.actions';
-import { AuthEffects } from './app/core/store/auth/auth.effects';
+import { provideAuthRefresh } from './app/core/auth/auth.service';
 import { metaReducers, reducers } from './app/core/core.state';
 import { authInterceptor } from './app/core/http-interceptors/auth.interceptor';
 import { CustomSerializer } from './app/core/router/custom-serializer';
-import { NavigationService } from './app/core/services/navigation.service';
+import { provideNavigationService } from './app/core/services/navigation.service';
+import { provideVersionCheck } from './app/core/services/version-check.service';
+import { AuthEffects } from './app/core/store/auth/auth.effects';
 import { LayoutEffects } from './app/core/store/layout/layout.effects';
 import { MetaEffects } from './app/core/store/meta/meta.effects';
 import { SettingsEffects } from './app/core/store/settings/settings.effects';
@@ -44,23 +42,8 @@ bootstrapApplication(AppComponent, {
       WorkspacesEffects,
     ]),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideAppInitializer(() => {
-      const authService = inject(AuthService);
-      const store = inject(Store);
-
-      if (window.location.pathname === '/auth/auth-provider-login') {
-        return firstValueFrom(of(null));
-      }
-
-      return firstValueFrom(
-        authService.refresh().pipe(
-          tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
-          catchError(() => of(null))
-        )
-      );
-    }),
-    provideAppInitializer(() => {
-      inject(NavigationService).listen();
-    }),
+    provideAuthRefresh(),
+    provideNavigationService(),
+    provideVersionCheck(),
   ],
 });

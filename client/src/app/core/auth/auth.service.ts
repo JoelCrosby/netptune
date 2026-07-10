@@ -1,7 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import {
+  EnvironmentProviders,
+  Injectable,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 import { RegisterRequest } from '@app/core/models/register-request';
+import { Store } from '@ngrx/store';
+import { catchError, firstValueFrom, of, tap } from 'rxjs';
 import { ClientResponse } from '../models/client-response';
+import { LoginRequest } from '../models/login-request';
+import { refreshTokenSuccess } from '../store/auth/auth.actions';
 import {
   AuthCodeRequest,
   LinkProviderRequest,
@@ -9,7 +18,24 @@ import {
   ResetPasswordRequest,
   UserResponse,
 } from '../store/auth/auth.models';
-import { LoginRequest } from '../models/login-request';
+
+export function provideAuthRefresh(): EnvironmentProviders {
+  return provideAppInitializer(() => {
+    const authService = inject(AuthService);
+    const store = inject(Store);
+
+    if (window.location.pathname === '/auth/auth-provider-login') {
+      return firstValueFrom(of(null));
+    }
+
+    return firstValueFrom(
+      authService.refresh().pipe(
+        tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
+        catchError(() => of(null))
+      )
+    );
+  });
+}
 
 @Injectable({
   providedIn: 'root',

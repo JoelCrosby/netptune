@@ -1,7 +1,19 @@
-import { inject, Injectable, signal } from '@angular/core';
+import {
+  EnvironmentProviders,
+  inject,
+  Injectable,
+  provideAppInitializer,
+  signal,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
+
+export function provideNavigationService(): EnvironmentProviders {
+  return provideAppInitializer(() => {
+    inject(NavigationService).listen();
+  });
+}
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {

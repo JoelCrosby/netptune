@@ -20,6 +20,7 @@ export class SnackbarService {
       action,
       type: config?.type ?? 'default',
       duration: config?.duration ?? 3000,
+      onAction: config?.onAction,
     };
 
     this.items.update((current) => [...current, item]);
