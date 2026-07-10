@@ -144,7 +144,32 @@ import {
         </thead>
 
         <tbody>
-          @for (row of visibleRows(); track trackRow($index, row)) {
+          @if (showSkeleton()) {
+            @for (skeleton of skeletonRowRange(); track $index) {
+              <tr [class]="classes.row">
+                @if (showUtilityColumn()) {
+                  <td class="px-2 align-middle">
+                    <div
+                      class="bg-foreground/10 h-4 w-4 animate-pulse rounded"></div>
+                  </td>
+                }
+                @if (selection()) {
+                  <td class="px-2 py-2 align-middle">
+                    <div
+                      class="bg-foreground/10 h-4 w-4 animate-pulse rounded"></div>
+                  </td>
+                }
+                @for (column of visibleColumns(); track column.id) {
+                  <td [class]="skeletonCellClass(column)">
+                    <div
+                      class="bg-foreground/10 h-4 animate-pulse rounded"
+                      [style.width.%]="skeletonWidth($index)"></div>
+                  </td>
+                }
+              </tr>
+            }
+          } @else {
+            @for (row of visibleRows(); track trackRow($index, row)) {
             <tr [class]="resolvedRowClass(row, $index)">
               @if (showUtilityColumn()) {
                 <td class="px-2 align-middle">
@@ -212,6 +237,7 @@ import {
                 }
               </td>
             </tr>
+            }
           }
         </tbody>
 
@@ -252,6 +278,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   rowClass = input<DatatableRowClass<T> | ''>('');
   emptyCellClass = input('');
   emptyMessage = input('No rows to display.');
+  skeletonRows = input(8);
   stickyHeader = input(false);
   sort = model<DatatableSort | null>(null);
   selectionChanged = output<T[]>();
@@ -270,6 +297,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   );
 
   iconInputs = { size: 16 };
+  classes = classes;
   lastResolvedRows = signal<readonly T[]>([]);
   cellTemplates = contentChildren<DatatableCellTemplateDirective<T>>(
     DatatableCellTemplateDirective
@@ -347,6 +375,17 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   });
 
   resourceLoading = computed(() => this.resourceRef?.isLoading() ?? false);
+
+  // Show skeleton rows only when the resource is loading and there are no
+  // previously resolved rows to keep on screen (i.e. the initial load).
+  // During a reload we keep the stale rows visible via visibleRows() instead.
+  showSkeleton = computed(
+    () => this.resourceLoading() && this.lastResolvedRows().length === 0
+  );
+
+  skeletonRowRange = computed(() =>
+    Array.from({ length: this.skeletonRows() })
+  );
 
   currentRows = computed(() => {
     const resource = this.resourceRef;
@@ -650,6 +689,18 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
         (this.showUtilityColumn() ? 1 : 0) +
         (this.selection() ? 1 : 0)
     );
+  }
+
+  skeletonCellClass(column: DatatableColumn<T>): string {
+    return twMerge(classes.cell, alignmentClass(column.align), column.widthClass);
+  }
+
+  // Vary the placeholder bar widths so the skeleton reads as content rather
+  // than a uniform grid. Deterministic so it stays stable across renders.
+  skeletonWidth(index: number): number {
+    const widths = [80, 55, 70, 45, 90, 60];
+
+    return widths[index % widths.length];
   }
 
   resolvedHeaderCellClass(column: DatatableColumn<T>): string {
