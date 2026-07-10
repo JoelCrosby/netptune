@@ -35,25 +35,23 @@ import { Store } from '@ngrx/store';
     <app-board-group-header-seperator />
     <app-board-group-users />
 
+    <app-board-group-header-seperator />
+
     @if (readTags()) {
-      <app-board-group-header-seperator />
       <app-tag-filter-container />
     }
 
     @if (readStatus()) {
-      <app-board-group-header-seperator />
       <app-board-group-status />
     }
 
-    <app-board-group-header-seperator />
     <app-board-group-sort />
 
-    <app-board-groups-selection />
-
-    <app-board-group-header-seperator />
     <app-board-group-hidden-notice
       [count]="hiddenCount()"
       (manage)="onManageGroupsClicked()" />
+
+    <app-board-groups-selection />
   </div> `,
 })
 export class BoardGroupHeaderComponent {
