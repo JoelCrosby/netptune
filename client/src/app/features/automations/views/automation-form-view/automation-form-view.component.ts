@@ -16,6 +16,8 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { StepComponent } from '@static/components/stepper/step.component';
+import { StepperComponent } from '@static/components/stepper/stepper.component';
 import { finalize } from 'rxjs';
 import {
   AutomationActionsEditorComponent,
@@ -45,6 +47,8 @@ import { AutomationsService } from '../../services/automations.service';
     SpinnerComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
+    StepperComponent,
+    StepComponent,
     AutomationSettingsEditorComponent,
     AutomationTriggerEditorComponent,
     AutomationActionsEditorComponent,
@@ -74,28 +78,44 @@ import { AutomationsService } from '../../services/automations.service';
           class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]"
           (ngSubmit)="onSubmit()">
           <div class="flex w-full max-w-lg flex-col gap-5">
-            <app-automation-settings-editor
-              [(name)]="name"
-              [(isEnabled)]="isEnabled" />
+            <app-stepper>
+              <app-step
+                title="Settings"
+                description="Name your automation and set whether it is active.">
+                <app-automation-settings-editor
+                  [(name)]="name"
+                  [(isEnabled)]="isEnabled" />
+              </app-step>
 
-            <app-automation-trigger-editor
-              [statuses]="taskStatuses()"
-              [(triggerType)]="triggerType"
-              [(taskFields)]="taskFields"
-              [(status)]="status"
-              [(assigneeChangeMode)]="assigneeChangeMode"
-              [(durationDays)]="durationDays" />
+              <app-step
+                title="Trigger"
+                description="Choose the event that starts this automation.">
+                <app-automation-trigger-editor
+                  [statuses]="taskStatuses()"
+                  [(triggerType)]="triggerType"
+                  [(taskFields)]="taskFields"
+                  [(status)]="status"
+                  [(assigneeChangeMode)]="assigneeChangeMode"
+                  [(durationDays)]="durationDays" />
+              </app-step>
 
-            <app-automation-actions-editor
-              [actions]="actions()"
-              [statuses]="taskStatuses()"
-              [defaultStatusId]="defaultActiveStatusId()"
-              (addAction)="addAction()"
-              (removeAction)="removeAction($event)"
-              (actionTypeChanged)="
-                onActionTypeChanged($event.clientId, $event.type)
-              "
-              (actionUpdated)="updateAction($event.clientId, $event.patch)" />
+              <app-step
+                title="Actions"
+                description="Define what happens when the automation runs.">
+                <app-automation-actions-editor
+                  [actions]="actions()"
+                  [statuses]="taskStatuses()"
+                  [defaultStatusId]="defaultActiveStatusId()"
+                  (addAction)="addAction()"
+                  (removeAction)="removeAction($event)"
+                  (actionTypeChanged)="
+                    onActionTypeChanged($event.clientId, $event.type)
+                  "
+                  (actionUpdated)="
+                    updateAction($event.clientId, $event.patch)
+                  " />
+              </app-step>
+            </app-stepper>
 
             @if (validationError()) {
               <p class="text-sm text-red-500">{{ validationError() }}</p>

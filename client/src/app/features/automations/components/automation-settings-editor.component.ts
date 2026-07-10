@@ -13,7 +13,16 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
         [required]="true"
         [(value)]="name" />
 
-      <app-checkbox [(checked)]="isEnabled"> Enabled </app-checkbox>
+      <div class="border-border bg-foreground/5 rounded-lg border p-4">
+        <app-checkbox [(checked)]="isEnabled">
+          <span class="flex flex-col">
+            <span class="text-foreground text-sm font-medium">Enabled</span>
+            <span class="text-muted text-sm">
+              Turn this automation on so it runs automatically.
+            </span>
+          </span>
+        </app-checkbox>
+      </div>
     </div>
   `,
 })
