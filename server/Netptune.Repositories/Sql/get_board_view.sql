@@ -1,6 +1,6 @@
 -- Board view for BoardGroupRepository.GetBoardViewGroups. Returns two result sets:
--- one row per (group, task, tag, assignee) for the board, then the board's
--- workspace/project identifiers. @searchPhrase is null when no search is applied.
+-- one row per (group, task) with tags/assignees pre-aggregated as arrays, then the
+-- board's workspace/project identifiers. @searchPhrase is null when no search is applied.
 WITH board_groups_for_board AS (
     SELECT bg.id
          , bg.name
@@ -37,13 +37,9 @@ limited_tasks AS (
              LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
     WHERE (@sprintId IS NULL OR pt.sprint_id = @sprintId)
       AND (@searchPhrase IS NULL
-           OR to_tsvector('english', pt.name) @@ to_tsquery('english', @searchPhrase))
-    ORDER BY bg.sort_order, ptibg.sort_order, pt.id
+           OR to_tsvector('english', pt.name) @@ websearch_to_tsquery('english', @searchPhrase))
 )
-SELECT b.id
-     , b.name              AS board_name
-     , b.identifier        AS board_identifier
-     , lt.task_id
+SELECT lt.task_id
      , lt.task_name
      , lt.task_priority
      , lt.task_estimate_type
@@ -62,26 +58,30 @@ SELECT b.id
      , bg.name             AS board_group_name
      , bg.status_id        AS board_group_status_id
      , bg.sort_order       AS board_group_sort_order
-     , u.id                AS assignee_id
-     , u.firstname         AS assignee_firstname
-     , u.lastname          AS assignee_lastname
-     , u.picture_url       AS assignee_picture_url
-     , t.name              AS tag
      , lt.workspace_id
      , lt.project_id
+     , COALESCE((
+           SELECT array_agg(t.name ORDER BY t.name)
+           FROM project_task_tags ptt
+                    INNER JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
+           WHERE ptt.project_task_id = lt.task_id
+       ), '{}')           AS tags
+     , COALESCE((
+           SELECT json_agg(json_build_object(
+                       'id', u.id,
+                       'firstname', u.firstname,
+                       'lastname', u.lastname,
+                       'picture_url', u.picture_url) ORDER BY u.id)
+           FROM project_task_app_users ptau
+                    INNER JOIN users u on ptau.user_id = u.id
+           WHERE ptau.project_task_id = lt.task_id
+       ), '[]')           AS assignees
 
-FROM boards b
+FROM board_groups_for_board bg
 
-         LEFT JOIN board_groups_for_board bg ON TRUE
          LEFT JOIN limited_tasks lt on bg.id = lt.board_group_id
-         LEFT JOIN project_task_tags ptt on lt.task_id = ptt.project_task_id
-         LEFT JOIN tags t on ptt.tag_id = t.id AND NOT t.is_deleted
-         LEFT JOIN project_task_app_users ptau on lt.task_id = ptau.project_task_id
-         LEFT JOIN users u on ptau.user_id = u.id
 
-WHERE b.id = @boardId
-
-ORDER BY bg.sort_order, lt.task_sort_order, t.name, u.id;
+ORDER BY bg.sort_order, bg.id, lt.task_sort_order, lt.task_id;
 
 -- Select board
 

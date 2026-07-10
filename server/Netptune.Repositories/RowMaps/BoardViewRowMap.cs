@@ -4,10 +4,6 @@ namespace Netptune.Repositories.RowMaps;
 
 public class BoardViewRowMap
 {
-    public string Board_Name { get; set; } = null!;
-
-    public string Board_Identifier { get; set; } = null!;
-
     public int? Task_Id { get; set; }
 
     public string Task_Name { get; set; } = null!;
@@ -50,15 +46,20 @@ public class BoardViewRowMap
 
     public double Board_Group_Sort_Order { get; set; }
 
-    public string Assignee_Firstname { get; set; } = null!;
+    public string[] Tags { get; set; } = [];
 
-    public string Assignee_Lastname { get; set; } = null!;
+    public string Assignees { get; set; } = "[]";
+}
 
-    public string Assignee_Picture_Url { get; set; } = null!;
+public class BoardViewAssigneeRowMap
+{
+    public string Id { get; set; } = null!;
 
-    public string Assignee_Id { get; set; } = null!;
+    public string Firstname { get; set; } = null!;
 
-    public string? Tag { get; set; }
+    public string Lastname { get; set; } = null!;
+
+    public string? Picture_Url { get; set; }
 }
 
 public class BoardViewMetaRowMap

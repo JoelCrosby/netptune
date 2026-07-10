@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Dapper;
 
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +50,11 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
     {
         using var connection = ConnectionFactory.StartConnection();
 
-        var searchPhrase = searchTerm?.Trim().Replace(" ", " | ");
+        // websearch_to_tsquery treats spaces as AND; join words with "or" to preserve
+        // the original match-any-word behaviour while staying injection-safe.
+        var searchPhrase = string.IsNullOrWhiteSpace(searchTerm)
+            ? null
+            : string.Join(" or ", searchTerm.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
 
         var results = await connection.QueryMultipleAsync(new CommandDefinition(
             SqlScripts.GetBoardView,
@@ -60,115 +66,73 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
         if (meta is null) return null;
 
-        return rows.Aggregate(new List<BoardViewGroup>(200), (result, row) =>
+        // Rows arrive ordered by board group then task, with tags/assignees already
+        // aggregated per task in SQL, so a single linear pass rebuilds the tree.
+        var groups = new List<BoardViewGroup>(200);
+        BoardViewGroup? currentGroup = null;
+
+        foreach (var row in rows)
         {
-            var lastGroup = result.LastOrDefault();
-            var lastTask = lastGroup?.Tasks.LastOrDefault();
-            var lastTag = lastTask?.Tags.LastOrDefault();
-            var lastAssignee = lastTask?.Assignees.LastOrDefault();
-
-            if (lastTask?.Id is not null && row.Task_Id.HasValue && row.Task_Id.Value == lastTask.Id)
+            if (currentGroup is null || currentGroup.Id != row.Board_Group_Id)
             {
-                if (lastTag != row.Tag && row.Tag is not null)
+                currentGroup = new BoardViewGroup
                 {
-                    lastTask.Tags.Add(row.Tag);
-                }
-                else if (lastAssignee?.Id != row.Assignee_Id)
-                {
-                    lastTask.Assignees.Add(new()
-                    {
-                        Id = row.Assignee_Id,
-                        DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
-                        PictureUrl = row.Assignee_Picture_Url,
-                    });
-                }
+                    Id = row.Board_Group_Id,
+                    Name = row.Board_Group_Name,
+                    SortOrder = row.Board_Group_Sort_Order,
+                    StatusId = row.Board_Group_Status_Id,
+                    Tasks = new List<BoardViewTask>(),
+                };
 
-                return result;
+                groups.Add(currentGroup);
             }
 
-            if (row.Board_Group_Id == lastGroup?.Id && row.Task_Id.HasValue)
-            {
-                lastGroup.Tasks.Add(new BoardViewTask
-                {
-                    Id = row.Task_Id.Value,
-                    Name = row.Task_Name,
-                    StatusId = row.Task_Status_Id,
-                    StatusName = row.Task_Status_Name,
-                    StatusKey = row.Task_Status_Key,
-                    StatusColor = row.Task_Status_Color,
-                    StatusCategory = row.Task_Status_Category,
-                    SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                    Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
-                    Priority = row.Task_Priority,
-                    EstimateType = row.Task_Estimate_Type,
-                    EstimateValue = row.Task_Estimate_Value,
-                    SprintId = row.Sprint_Id,
-                    SprintName = row.Sprint_Name,
-                    SprintStatus = row.Sprint_Status,
-                    SortOrder = row.Task_Sort_Order,
-                    ProjectId = row.Project_Id,
-                    WorkspaceId = row.Workspace_Id,
-                    WorkspaceKey = meta.Workspace_Identifier,
-                    Assignees = new List<AssigneeViewModel>
-                    {
-                        new ()
-                        {
-                            Id = row.Assignee_Id,
-                            DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
-                            PictureUrl = row.Assignee_Picture_Url,
-                        },
-                    },
-                });
+            if (!row.Task_Id.HasValue) continue;
 
-                return result;
-            }
-
-            if (row.Board_Group_Id == lastGroup?.Id && !row.Task_Id.HasValue)
+            currentGroup.Tasks.Add(new BoardViewTask
             {
-                return result;
-            }
-
-            result.Add(new BoardViewGroup
-            {
-                Id = row.Board_Group_Id,
-                Name = row.Board_Group_Name,
-                SortOrder = row.Board_Group_Sort_Order,
-                StatusId = row.Board_Group_Status_Id,
-                Tasks = row.Task_Id is null ? new List<BoardViewTask>() : new List<BoardViewTask>(100)
-                {
-                    new()
-                    {
-                        Id = row.Task_Id.Value,
-                        Name = row.Task_Name,
-                        StatusId = row.Task_Status_Id,
-                        StatusName = row.Task_Status_Name,
-                        StatusKey = row.Task_Status_Key,
-                        StatusColor = row.Task_Status_Color,
-                        StatusCategory = row.Task_Status_Category,
-                        SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
-                        Tags = row.Tag is not null ? new List<string> { row.Tag } : new List<string>(),
-                        SprintId = row.Sprint_Id,
-                        SprintName = row.Sprint_Name,
-                        SprintStatus = row.Sprint_Status,
-                        SortOrder = row.Task_Sort_Order,
-                        ProjectId = row.Project_Id,
-                        WorkspaceId = row.Workspace_Id,
-                        WorkspaceKey = meta.Workspace_Identifier,
-                        Priority = row.Task_Priority,
-                        Assignees = new List<AssigneeViewModel>
-                        {
-                            new ()
-                            {
-                                Id = row.Assignee_Id,
-                                DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
-                                PictureUrl = row.Assignee_Picture_Url,
-                            },
-                        },
-                    },
-                },
+                Id = row.Task_Id.Value,
+                Name = row.Task_Name,
+                StatusId = row.Task_Status_Id,
+                StatusName = row.Task_Status_Name,
+                StatusKey = row.Task_Status_Key,
+                StatusColor = row.Task_Status_Color,
+                StatusCategory = row.Task_Status_Category,
+                SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
+                Tags = row.Tags.ToList(),
+                Priority = row.Task_Priority,
+                EstimateType = row.Task_Estimate_Type,
+                EstimateValue = row.Task_Estimate_Value,
+                SprintId = row.Sprint_Id,
+                SprintName = row.Sprint_Name,
+                SprintStatus = row.Sprint_Status,
+                SortOrder = row.Task_Sort_Order,
+                ProjectId = row.Project_Id,
+                WorkspaceId = row.Workspace_Id,
+                WorkspaceKey = meta.Workspace_Identifier,
+                Assignees = ParseAssignees(row.Assignees),
             });
+        }
 
-            return result;
+        return groups;
+    }
+
+    private static readonly JsonSerializerOptions AssigneeJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
+    private static List<AssigneeViewModel> ParseAssignees(string assigneesJson)
+    {
+        var assignees = JsonSerializer.Deserialize<List<BoardViewAssigneeRowMap>>(assigneesJson, AssigneeJsonOptions);
+
+        if (assignees is null) return new List<AssigneeViewModel>();
+
+        return assignees.ConvertAll(assignee => new AssigneeViewModel
+        {
+            Id = assignee.Id,
+            DisplayName = $"{assignee.Firstname} {assignee.Lastname}",
+            PictureUrl = assignee.Picture_Url,
         });
     }
 
