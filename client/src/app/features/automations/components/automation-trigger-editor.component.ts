@@ -1,9 +1,5 @@
 import { Component, input, model } from '@angular/core';
 import { Status } from '@core/models/status';
-import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
-import { CardComponent } from '@static/components/card/card.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -22,92 +18,79 @@ import {
 @Component({
   selector: 'app-automation-trigger-editor',
   imports: [
-    CardComponent,
-    CardHeaderComponent,
-    CardSubtitleComponent,
-    CardTitleComponent,
     CheckboxComponent,
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
   ],
   template: `
-    <app-card>
-      <app-card-header>
-        <app-card-title>When</app-card-title>
-        <app-card-subtitle>
-          Choose the task event this automation watches.
-        </app-card-subtitle>
-      </app-card-header>
+    <div class="flex flex-col gap-4">
+      <app-form-select label="Trigger" [(value)]="triggerType">
+        @for (type of triggerTypes; track type) {
+          <app-form-select-option [value]="type">
+            {{ triggerTypeLabel(type) }}
+          </app-form-select-option>
+        }
+      </app-form-select>
 
-      <div class="flex flex-col gap-4">
-        <app-form-select label="Trigger" [(value)]="triggerType">
-          @for (type of triggerTypes; track type) {
-            <app-form-select-option [value]="type">
-              {{ triggerTypeLabel(type) }}
-            </app-form-select-option>
-          }
-        </app-form-select>
-
-        @if (triggerType() === automationTriggerType.taskChanged) {
-          <div class="flex flex-col gap-3">
-            <span class="text-sm font-medium">Fields</span>
-            <div class="grid gap-3 sm:grid-cols-2">
-              @for (field of taskFieldOptions; track field) {
-                <app-checkbox
-                  [checked]="hasTaskField(field)"
-                  (changed)="toggleTaskField(field, $event)">
-                  {{ taskFieldLabel(field) }}
-                </app-checkbox>
-              }
-            </div>
+      @if (triggerType() === automationTriggerType.taskChanged) {
+        <div class="flex flex-col gap-3">
+          <span class="text-sm font-medium">Fields</span>
+          <div class="grid gap-3 sm:grid-cols-2">
+            @for (field of taskFieldOptions; track field) {
+              <app-checkbox
+                [checked]="hasTaskField(field)"
+                (changed)="toggleTaskField(field, $event)">
+                {{ taskFieldLabel(field) }}
+              </app-checkbox>
+            }
           </div>
+        </div>
 
-          @if (hasTaskField(taskChangeField.status)) {
-            <div class="flex flex-col gap-3">
-              <div class="min-w-64 flex-1">
-                <app-form-select label="Status changes to" [(value)]="status">
-                  @for (option of statuses(); track option.id) {
-                    <app-form-select-option [value]="option.id">
-                      {{ option.name }}
-                    </app-form-select-option>
-                  }
-                </app-form-select>
-              </div>
+        @if (hasTaskField(taskChangeField.status)) {
+          <div class="flex flex-col gap-3">
+            <div class="min-w-64 flex-1">
+              <app-form-select label="Status changes to" [(value)]="status">
+                @for (option of statuses(); track option.id) {
+                  <app-form-select-option [value]="option.id">
+                    {{ option.name }}
+                  </app-form-select-option>
+                }
+              </app-form-select>
             </div>
-          }
-
-          @if (hasTaskField(taskChangeField.assignees)) {
-            <div class="flex flex-wrap items-end gap-3">
-              <span class="pb-7 text-sm">Assignees are</span>
-              <div class="min-w-64 flex-1">
-                <app-form-select
-                  label="Assignee change"
-                  [(value)]="assigneeChangeMode">
-                  @for (option of assigneeChangeModeOptions; track option) {
-                    <app-form-select-option [value]="option">
-                      {{ assigneeChangeModeLabel(option) }}
-                    </app-form-select-option>
-                  }
-                </app-form-select>
-              </div>
-            </div>
-          }
-        } @else {
-          <div class="flex flex-wrap items-end gap-3">
-            <div class="w-48">
-              <app-form-input
-                label="Task is unassigned for "
-                name="durationDays"
-                type="number"
-                [required]="true"
-                [(value)]="durationDays" />
-            </div>
-            <span class="pb-7 text-sm">days</span>
           </div>
         }
-      </div>
-    </app-card>
+
+        @if (hasTaskField(taskChangeField.assignees)) {
+          <div class="flex flex-wrap items-end gap-3">
+            <span class="pb-7 text-sm">Assignees are</span>
+            <div class="min-w-64 flex-1">
+              <app-form-select
+                label="Assignee change"
+                [(value)]="assigneeChangeMode">
+                @for (option of assigneeChangeModeOptions; track option) {
+                  <app-form-select-option [value]="option">
+                    {{ assigneeChangeModeLabel(option) }}
+                  </app-form-select-option>
+                }
+              </app-form-select>
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="flex flex-wrap items-end gap-3">
+          <div class="w-48">
+            <app-form-input
+              label="Task is unassigned for "
+              name="durationDays"
+              type="number"
+              [required]="true"
+              [(value)]="durationDays" />
+          </div>
+          <span class="pb-7 text-sm">days</span>
+        </div>
+      }
+    </div>
   `,
 })
 export class AutomationTriggerEditorComponent {

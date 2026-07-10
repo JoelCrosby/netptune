@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -72,7 +73,7 @@ import { AutomationsService } from '../../services/automations.service';
         <form
           class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]"
           (ngSubmit)="onSubmit()">
-          <div class="flex flex-col gap-5">
+          <div class="flex w-full max-w-lg flex-col gap-5">
             <app-automation-settings-editor
               [(name)]="name"
               [(isEnabled)]="isEnabled" />
@@ -141,18 +142,25 @@ export class AutomationFormViewComponent {
     this.newNotifyAction(),
   ]);
 
-  name = '';
-  isEnabled = true;
-  triggerType = AutomationTriggerType.taskChanged;
-  taskFields: TaskChangeField[] = [TaskChangeField.status];
-  status: number | null = null;
-  assigneeChangeMode = AssigneeChangeMode.addedOrRemoved;
-  durationDays = '3';
+  readonly name = signal('');
+  readonly isEnabled = signal(true);
+  readonly triggerType = signal(AutomationTriggerType.taskChanged);
+  readonly taskFields = signal<TaskChangeField[]>([TaskChangeField.status]);
+
+  readonly assigneeChangeMode = signal(AssigneeChangeMode.addedOrRemoved);
+  readonly durationDays = signal('3');
+
+  readonly status = signal<number | null>(null);
 
   constructor() {
+    // Apply the default status once statuses load. Runs after change
+    // detection so the status <app-form-select> options are already
+    // initialised — writing the value eagerly during CD races the
+    // required `value` input on the options (NG0950).
     effect(() => {
-      if (this.status === null) {
-        this.status = this.defaultCompleteStatusId();
+      const defaultId = this.defaultCompleteStatusId();
+      if (defaultId !== null && untracked(this.status) === null) {
+        this.status.set(defaultId);
       }
     });
 
@@ -203,13 +211,35 @@ export class AutomationFormViewComponent {
     );
   }
 
-  triggerPreview(): AutomationTrigger {
-    return this.buildTrigger();
-  }
+  readonly triggerPreview = computed<AutomationTrigger>(() => {
+    if (this.triggerType() === AutomationTriggerType.taskChanged) {
+      const fields = [...new Set(this.taskFields())];
 
-  savePreview(): string {
-    return describeAutomationRule(this.buildTrigger(), this.actions());
-  }
+      return {
+        type: AutomationTriggerType.taskChanged,
+        fields,
+        statusId: fields.includes(TaskChangeField.status)
+          ? this.status()
+          : null,
+        assigneeChangeMode: fields.includes(TaskChangeField.assignees)
+          ? this.assigneeChangeMode()
+          : null,
+        durationDays: null,
+      };
+    }
+
+    return {
+      type: AutomationTriggerType.taskUnassignedFor,
+      fields: null,
+      durationDays: Number(this.durationDays()),
+      statusId: null,
+      assigneeChangeMode: null,
+    };
+  });
+
+  readonly savePreview = computed(() =>
+    describeAutomationRule(this.triggerPreview(), this.actions())
+  );
 
   onSubmit() {
     const request = this.buildRequest();
@@ -256,19 +286,23 @@ export class AutomationFormViewComponent {
   }
 
   private populate(rule: AutomationRule) {
-    this.name = rule.name;
-    this.isEnabled = rule.isEnabled;
-    this.triggerType =
+    this.name.set(rule.name);
+    this.isEnabled.set(rule.isEnabled);
+    this.triggerType.set(
       rule.trigger.type === AutomationTriggerType.taskStatusChanged
         ? AutomationTriggerType.taskChanged
-        : rule.trigger.type;
-    this.taskFields = rule.trigger.fields?.length
-      ? rule.trigger.fields
-      : [TaskChangeField.status];
-    this.status = rule.trigger.statusId ?? this.defaultCompleteStatusId();
-    this.assigneeChangeMode =
-      rule.trigger.assigneeChangeMode ?? AssigneeChangeMode.addedOrRemoved;
-    this.durationDays = String(rule.trigger.durationDays ?? 3);
+        : rule.trigger.type
+    );
+    this.taskFields.set(
+      rule.trigger.fields?.length
+        ? rule.trigger.fields
+        : [TaskChangeField.status]
+    );
+    this.status.set(rule.trigger.statusId ?? this.defaultCompleteStatusId());
+    this.assigneeChangeMode.set(
+      rule.trigger.assigneeChangeMode ?? AssigneeChangeMode.addedOrRemoved
+    );
+    this.durationDays.set(String(rule.trigger.durationDays ?? 3));
     this.actions.set(
       rule.actions.length
         ? rule.actions.map((action) => ({
@@ -282,7 +316,7 @@ export class AutomationFormViewComponent {
   private buildRequest(): AutomationRuleRequest | null {
     this.validationError.set(null);
 
-    if (!this.name.trim()) {
+    if (!this.name().trim()) {
       this.validationError.set('Automation name is required.');
       return null;
     }
@@ -318,7 +352,7 @@ export class AutomationFormViewComponent {
       return null;
     }
 
-    const trigger = this.buildTrigger();
+    const trigger = this.triggerPreview();
     if (
       trigger.type === AutomationTriggerType.taskChanged &&
       !trigger.fields?.length
@@ -347,34 +381,10 @@ export class AutomationFormViewComponent {
     }
 
     return {
-      name: this.name.trim(),
-      isEnabled: this.isEnabled,
+      name: this.name().trim(),
+      isEnabled: this.isEnabled(),
       trigger,
       actions,
-    };
-  }
-
-  private buildTrigger(): AutomationTrigger {
-    if (this.triggerType === AutomationTriggerType.taskChanged) {
-      const fields = [...new Set(this.taskFields)];
-
-      return {
-        type: AutomationTriggerType.taskChanged,
-        fields,
-        statusId: fields.includes(TaskChangeField.status) ? this.status : null,
-        assigneeChangeMode: fields.includes(TaskChangeField.assignees)
-          ? this.assigneeChangeMode
-          : null,
-        durationDays: null,
-      };
-    }
-
-    return {
-      type: AutomationTriggerType.taskUnassignedFor,
-      fields: null,
-      durationDays: Number(this.durationDays),
-      statusId: null,
-      assigneeChangeMode: null,
     };
   }
 

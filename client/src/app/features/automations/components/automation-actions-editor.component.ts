@@ -5,8 +5,6 @@ import { LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { CardComponent } from '@static/components/card/card.component';
-import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -36,8 +34,6 @@ export interface AutomationActionUpdate {
 @Component({
   selector: 'app-automation-actions-editor',
   imports: [
-    CardComponent,
-    CardHeaderComponent,
     CardSubtitleComponent,
     CardTitleComponent,
     CheckboxComponent,
@@ -51,168 +47,162 @@ export interface AutomationActionUpdate {
     LucideTrash2,
   ],
   template: `
-    <app-card>
-      <app-card-header>
-        <app-card-title>Then</app-card-title>
-        <app-card-subtitle>
-          Add the follow-up actions in the order they should run.
-        </app-card-subtitle>
-      </app-card-header>
+    <app-card-title>Then</app-card-title>
+    <app-card-subtitle>
+      Add the follow-up actions in the order they should run.
+    </app-card-subtitle>
 
-      <div class="flex flex-col gap-4">
-        <div class="flex items-start justify-between gap-3">
-          <button
-            app-stroked-button
-            type="button"
-            [disabled]="actions().length >= 10"
-            (click)="addAction.emit()">
-            <svg lucidePlus class="h-4 w-4"></svg>
-            Add Action
-          </button>
-        </div>
+    <div class="mt-2 flex flex-col gap-4">
+      <div class="flex items-start justify-between gap-3">
+        <button
+          app-stroked-button
+          type="button"
+          [disabled]="actions().length >= 10"
+          (click)="addAction.emit()">
+          <svg lucidePlus class="h-4 w-4"></svg>
+          Add Action
+        </button>
+      </div>
 
-        <div class="flex flex-col gap-3">
-          @for (action of actions(); track action.clientId) {
-            <div class="border-border rounded border p-4">
-              <div class="flex flex-col-reverse gap-3">
-                <div class="flex flex-col gap-3">
-                  <app-form-select
-                    label="Action"
-                    [value]="action.type"
-                    (changed)="
-                      actionTypeChanged.emit({
+      <div class="flex flex-col gap-3">
+        @for (action of actions(); track action.clientId) {
+          <div class="border-border rounded border p-4">
+            <div class="flex flex-col-reverse gap-3">
+              <div class="flex flex-col gap-3">
+                <app-form-select
+                  label="Action"
+                  [value]="action.type"
+                  (changed)="
+                    actionTypeChanged.emit({
+                      clientId: action.clientId,
+                      type: $event,
+                    })
+                  ">
+                  @for (type of actionTypes; track type) {
+                    <app-form-select-option [value]="type">
+                      {{ actionTypeLabel(type) }}
+                    </app-form-select-option>
+                  }
+                </app-form-select>
+
+                @if (action.type === automationActionType.notifyTaskAssignees) {
+                  <app-form-textarea
+                    label="Message"
+                    rows="3"
+                    [value]="action.message ?? ''"
+                    (valueChange)="
+                      actionUpdated.emit({
                         clientId: action.clientId,
-                        type: $event,
+                        patch: { message: $event },
                       })
-                    ">
-                    @for (type of actionTypes; track type) {
-                      <app-form-select-option [value]="type">
-                        {{ actionTypeLabel(type) }}
-                      </app-form-select-option>
-                    }
-                  </app-form-select>
-
-                  @if (
-                    action.type === automationActionType.notifyTaskAssignees
-                  ) {
-                    <app-form-textarea
-                      label="Message"
-                      rows="3"
-                      [value]="action.message ?? ''"
+                    " />
+                } @else if (action.type === automationActionType.flagTask) {
+                  <div class="grid gap-3 md:grid-cols-2">
+                    <app-form-input
+                      label="Flag name"
+                      [required]="true"
+                      [value]="action.flagName ?? ''"
                       (valueChange)="
                         actionUpdated.emit({
                           clientId: action.clientId,
-                          patch: { message: $event },
+                          patch: { flagName: $event },
                         })
                       " />
-                  } @else if (action.type === automationActionType.flagTask) {
-                    <div class="grid gap-3 md:grid-cols-2">
-                      <app-form-input
-                        label="Flag name"
-                        [required]="true"
-                        [value]="action.flagName ?? ''"
-                        (valueChange)="
+                    <app-form-input
+                      label="Flag description"
+                      [value]="action.flagDescription ?? ''"
+                      (valueChange)="
+                        actionUpdated.emit({
+                          clientId: action.clientId,
+                          patch: { flagDescription: $event },
+                        })
+                      " />
+                  </div>
+                } @else {
+                  <div class="grid gap-4 md:grid-cols-2">
+                    <div class="flex flex-col gap-3">
+                      <app-checkbox
+                        [checked]="hasStatusUpdate(action)"
+                        (changed)="
                           actionUpdated.emit({
                             clientId: action.clientId,
-                            patch: { flagName: $event },
+                            patch: {
+                              statusId: $event ? defaultStatusId() : null,
+                            },
                           })
-                        " />
-                      <app-form-input
-                        label="Flag description"
-                        [value]="action.flagDescription ?? ''"
-                        (valueChange)="
-                          actionUpdated.emit({
-                            clientId: action.clientId,
-                            patch: { flagDescription: $event },
-                          })
-                        " />
-                    </div>
-                  } @else {
-                    <div class="grid gap-4 md:grid-cols-2">
-                      <div class="flex flex-col gap-3">
-                        <app-checkbox
-                          [checked]="hasStatusUpdate(action)"
+                        ">
+                        Set status
+                      </app-checkbox>
+                      @if (hasStatusUpdate(action)) {
+                        <app-form-select
+                          label="Status"
+                          [value]="action.statusId ?? null"
                           (changed)="
                             actionUpdated.emit({
                               clientId: action.clientId,
-                              patch: {
-                                statusId: $event ? defaultStatusId() : null,
-                              },
+                              patch: { statusId: $event },
                             })
                           ">
-                          Set status
-                        </app-checkbox>
-                        @if (hasStatusUpdate(action)) {
-                          <app-form-select
-                            label="Status"
-                            [value]="action.statusId ?? null"
-                            (changed)="
-                              actionUpdated.emit({
-                                clientId: action.clientId,
-                                patch: { statusId: $event },
-                              })
-                            ">
-                            @for (status of statuses(); track status.id) {
-                              <app-form-select-option [value]="status.id">
-                                {{ status.name }}
-                              </app-form-select-option>
-                            }
-                          </app-form-select>
-                        }
-                      </div>
-                      <div class="flex flex-col gap-3">
-                        <app-checkbox
-                          [checked]="hasPriorityUpdate(action)"
+                          @for (status of statuses(); track status.id) {
+                            <app-form-select-option [value]="status.id">
+                              {{ status.name }}
+                            </app-form-select-option>
+                          }
+                        </app-form-select>
+                      }
+                    </div>
+                    <div class="flex flex-col gap-3">
+                      <app-checkbox
+                        [checked]="hasPriorityUpdate(action)"
+                        (changed)="
+                          actionUpdated.emit({
+                            clientId: action.clientId,
+                            patch: {
+                              priority: $event ? defaultTaskPriority : null,
+                            },
+                          })
+                        ">
+                        Set priority
+                      </app-checkbox>
+                      @if (hasPriorityUpdate(action)) {
+                        <app-form-select
+                          label="Priority"
+                          [value]="action.priority ?? null"
                           (changed)="
                             actionUpdated.emit({
                               clientId: action.clientId,
-                              patch: {
-                                priority: $event ? defaultTaskPriority : null,
-                              },
+                              patch: { priority: $event },
                             })
                           ">
-                          Set priority
-                        </app-checkbox>
-                        @if (hasPriorityUpdate(action)) {
-                          <app-form-select
-                            label="Priority"
-                            [value]="action.priority ?? null"
-                            (changed)="
-                              actionUpdated.emit({
-                                clientId: action.clientId,
-                                patch: { priority: $event },
-                              })
-                            ">
-                            @for (
-                              priority of taskPriorities;
-                              track priority.value
-                            ) {
-                              <app-form-select-option [value]="priority.value">
-                                {{ priority.label }}
-                              </app-form-select-option>
-                            }
-                          </app-form-select>
-                        }
-                      </div>
+                          @for (
+                            priority of taskPriorities;
+                            track priority.value
+                          ) {
+                            <app-form-select-option [value]="priority.value">
+                              {{ priority.label }}
+                            </app-form-select-option>
+                          }
+                        </app-form-select>
+                      }
                     </div>
-                  }
-                </div>
-
-                <button
-                  app-icon-button
-                  type="button"
-                  title="Remove action"
-                  class="ml-auto"
-                  [disabled]="actions().length === 1"
-                  (click)="removeAction.emit(action.clientId)">
-                  <svg lucideTrash2 class="h-4 w-4"></svg>
-                </button>
+                  </div>
+                }
               </div>
+
+              <button
+                app-icon-button
+                type="button"
+                title="Remove action"
+                class="ml-auto"
+                [disabled]="actions().length === 1"
+                (click)="removeAction.emit(action.clientId)">
+                <svg lucideTrash2 class="h-4 w-4"></svg>
+              </button>
             </div>
-          }
-        </div>
+          </div>
+        }
       </div>
-    </app-card>
+    </div>
   `,
 })
 export class AutomationActionsEditorComponent {
