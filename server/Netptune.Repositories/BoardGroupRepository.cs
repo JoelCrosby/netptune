@@ -103,6 +103,8 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 Priority = row.Task_Priority,
                 EstimateType = row.Task_Estimate_Type,
                 EstimateValue = row.Task_Estimate_Value,
+                CreatedAt = row.Task_Created_At,
+                UpdatedAt = row.Task_Updated_At,
                 SprintId = row.Sprint_Id,
                 SprintName = row.Sprint_Name,
                 SprintStatus = row.Sprint_Status,

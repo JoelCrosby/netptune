@@ -7,6 +7,7 @@ public static class PreferenceKeys
     public const string AppearanceTheme = "appearance.theme";
     public const string CommandPaletteRecentItemsScope = "commandPalette.recentItems.scope";
     public const string BoardHiddenGroupIds = "boards.hiddenGroupIds";
+    public const string BoardTaskSort = "boards.taskSort";
 }
 
 public static class PreferenceScopes

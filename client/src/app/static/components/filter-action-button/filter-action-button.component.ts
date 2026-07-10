@@ -13,6 +13,10 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         <span appBadge color="primary" class="absolute -top-1.5 -right-1.5">
           {{ count() }}
         </span>
+      } @else if (dot()) {
+        <span
+          class="bg-primary absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full">
+        </span>
       }
     </button>
   `,
@@ -22,6 +26,7 @@ export class FilterActionButtonComponent {
   readonly icon = input.required<LucideIconInput>();
   readonly color = input<'primary' | 'warn'>();
   readonly count = input<number>(0);
+  readonly dot = input<boolean>(false);
 
   readonly action = output();
 

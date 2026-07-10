@@ -55,6 +55,10 @@ public class BoardViewTask
 
     public decimal? EstimateValue { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
+
     public double SortOrder { get; set; }
 
     public int ProjectId { get; set; }

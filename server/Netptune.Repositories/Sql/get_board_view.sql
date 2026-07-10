@@ -16,6 +16,8 @@ limited_tasks AS (
          , pt.priority         AS task_priority
          , pt.estimate_type    AS task_estimate_type
          , pt.estimate_value   AS task_estimate_value
+         , pt.created_at       AS task_created_at
+         , pt.updated_at       AS task_updated_at
          , s.id                AS sprint_id
          , s.name              AS sprint_name
          , s.status            AS sprint_status
@@ -44,6 +46,8 @@ SELECT lt.task_id
      , lt.task_priority
      , lt.task_estimate_type
      , lt.task_estimate_value
+     , lt.task_created_at
+     , lt.task_updated_at
      , lt.sprint_id
      , lt.sprint_name
      , lt.sprint_status

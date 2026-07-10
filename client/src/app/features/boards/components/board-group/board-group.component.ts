@@ -79,8 +79,9 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
         @for (task of group().tasks; track trackGroupTask($index, task)) {
           <app-board-group-card
             cdkDrag
-            [cdkDragDisabled]="!isAuthenticated()"
-            class="board-group-task-card"
+            [cdkDragDisabled]="dragDisabled()"
+            class="board-group-task-card cursor-pointer"
+            [class.cursor-default!]="dragDisabled()"
             [cdkDragData]="task"
             [task]="task"
             [groupId]="group().id"
@@ -123,8 +124,13 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   readonly group = input.required<BoardViewGroup>();
   readonly assignedStatus = input<Status | null>(null);
   readonly siblingIds = input.required<string[]>();
+  readonly reorderDisabled = input(false);
 
   readonly container = viewChild.required<ElementRef>('container');
+
+  readonly dragDisabled = computed(() => {
+    return !this.isAuthenticated() || this.reorderDisabled();
+  });
 
   focused = signal(false);
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);

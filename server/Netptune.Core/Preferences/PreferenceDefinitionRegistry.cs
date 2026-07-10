@@ -81,6 +81,20 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             Internal = true,
             Order = 10,
         },
+        new()
+        {
+            Key = PreferenceKeys.BoardTaskSort,
+            GroupKey = "boards",
+            Label = "Board task sort",
+            ControlType = "hidden",
+            // Map of board id -> "field:direction" (e.g. "priority:desc"), so each
+            // board keeps its own task sort within a single workspace-scoped preference.
+            ValueType = "string-map",
+            DefaultValue = JsonSerializer.SerializeToElement(new Dictionary<string, string>()),
+            AllowedScopes = [PreferenceScopes.Workspace],
+            Internal = true,
+            Order = 20,
+        },
     ];
 
     public IReadOnlyList<PreferenceDefinitionGroup> GetGroups()

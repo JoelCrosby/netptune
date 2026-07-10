@@ -136,6 +136,12 @@ public sealed class SetUserPreferenceValueCommandHandler
                    && value.EnumerateObject().All(property => IsNumberArray(property.Value));
         }
 
+        if (definition.ValueType == "string-map")
+        {
+            return value.ValueKind == JsonValueKind.Object
+                   && value.EnumerateObject().All(property => property.Value.ValueKind == JsonValueKind.String);
+        }
+
         if (definition.ValueType == "string" && value.ValueKind != JsonValueKind.String) return false;
 
         if (definition.Options.Count == 0) return true;

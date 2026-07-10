@@ -24,6 +24,10 @@ public class BoardViewRowMap
 
     public decimal? Task_Estimate_Value { get; set; }
 
+    public DateTime Task_Created_At { get; set; }
+
+    public DateTime Task_Updated_At { get; set; }
+
     public int? Sprint_Id { get; set; }
 
     public string? Sprint_Name { get; set; }

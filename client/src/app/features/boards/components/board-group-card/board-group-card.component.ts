@@ -28,10 +28,11 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
     SprintBadgeComponent,
   ],
   template: `<div
-    class="border-border bg-board-group-card mb-[.3rem] flex min-h-24 cursor-pointer flex-col items-start overflow-hidden rounded-sm border p-2! text-[14px] tracking-[.1px] shadow-sm"
-    [class.selected]="task().selected"
+    class="border-border bg-board-group-card mb-[.3rem] flex min-h-24 flex-col items-start overflow-hidden rounded-sm border p-2! text-[14px] tracking-[.1px] shadow-sm"
+    [class.bg-primary/25]="task().selected"
+    [class.border-bg-primary]="task().selected"
     [ngClass]="priorityClasses()">
-    <div class="mb-0 leading-[1.4rem]">{{ task().name }}</div>
+    <div class="mb-0 leading-[1.4rem] select-none">{{ task().name }}</div>
 
     <div class="mt-4 flex flex-row flex-wrap">
       @if (task().sprintName) {
@@ -43,7 +44,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 
       @for (tag of task().tags; track tag) {
         <div
-          class="bg-primary/10 my-[.2rem] mr-[.2rem] ml-0 rounded-[4px] px-[.4rem] py-[.2rem]">
+          class="bg-primary/10 my-[.2rem] mr-[.2rem] ml-0 rounded-[4px] px-[.4rem] py-[.2rem] select-none">
           {{ tag }}
         </div>
       }

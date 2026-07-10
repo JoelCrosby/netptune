@@ -40,12 +40,19 @@ import { ImportTasksDialogComponent } from '@boards/components/import-tasks-dial
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
-import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
+import {
+  BOARDS_HIDDEN_GROUP_IDS,
+  BOARDS_TASK_SORT,
+} from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { statusResource } from '@core/resources/status.resources';
 import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component';
 import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
+import {
+  boardTaskSortForBoard,
+  sortBoardViewTasks,
+} from '@boards/util/board-task-sort';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
@@ -149,6 +156,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                   : null
               "
               [siblingIds]="siblingIdMap().get(group.id) ?? []"
+              [reorderDisabled]="reorderDisabled()"
               [dragListId]="group.id.toString()">
               <span
                 cdkDragHandle
@@ -220,9 +228,29 @@ export class BoardGroupsViewComponent implements OnDestroy {
     return new Set(hiddenGroupIdsForBoard(value, boardId));
   });
 
+  taskSort = computed(() => {
+    const boardId = this.board()?.id;
+
+    if (boardId === undefined) return boardTaskSortForBoard(undefined, 0);
+
+    return boardTaskSortForBoard(
+      this.preferences.effectiveValueFor(BOARDS_TASK_SORT),
+      boardId
+    );
+  });
+
+  reorderDisabled = computed(() => this.taskSort().field !== 'custom');
+
   visibleGroups = computed(() => {
     const hidden = this.hiddenGroupIds();
-    return this.groups().filter((group) => !hidden.has(group.id));
+    const sort = this.taskSort();
+
+    return this.groups()
+      .filter((group) => !hidden.has(group.id))
+      .map((group) => ({
+        ...group,
+        tasks: sortBoardViewTasks(group.tasks, sort),
+      }));
   });
   statuses = statusResource();
   statusMap = computed(

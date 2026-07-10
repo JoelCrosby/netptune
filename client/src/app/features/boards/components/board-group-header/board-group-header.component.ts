@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
 import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
 import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
+import { BoardGroupSortComponent } from '@boards/components/board-group-sort/board-group-sort.component';
 import { BoardGroupStatusComponent } from '@boards/components/board-group-status/board-group-status.component';
 import { BoardGroupHiddenNoticeComponent } from '@boards/components/board-group-hidden-notice/board-group-hidden-notice.component';
 import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component';
@@ -23,6 +24,7 @@ import { Store } from '@ngrx/store';
     BoardGroupUsersComponent,
     TagFilterContainerComponent,
     BoardGroupStatusComponent,
+    BoardGroupSortComponent,
     BoardGroupsSelectionComponent,
     BoardGroupHeaderSeperatorComponent,
     BoardGroupHiddenNoticeComponent,
@@ -42,6 +44,10 @@ import { Store } from '@ngrx/store';
       <app-board-group-header-seperator />
       <app-board-group-status />
     }
+
+    <app-board-group-header-seperator />
+    <app-board-group-sort />
+
     <app-board-groups-selection />
 
     <app-board-group-header-seperator />
