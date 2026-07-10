@@ -10,6 +10,7 @@ import {
   withBoardHiddenGroups,
 } from '@boards/util/hidden-board-groups';
 import { Store } from '@ngrx/store';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
@@ -25,6 +26,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     DialogActionsDirective,
     DialogCloseDirective,
     CheckboxComponent,
+    FlatButtonComponent,
     StrokedButtonComponent,
   ],
   template: `
@@ -36,13 +38,72 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
       </p>
 
       @if (groups().length) {
-        <div class="flex flex-col gap-4">
+        <div
+          class="border-border mb-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b pb-3">
+          <span class="text-foreground/50 text-xs font-medium tracking-wide">
+            {{ visibleCount() }} of {{ groups().length }} visible
+          </span>
+
+          <div class="flex items-center gap-1">
+            <button
+              class="h-8 min-w-0 px-2.5 text-xs"
+              app-flat-button
+              color="ghost"
+              type="button"
+              [disabled]="!canShowAll()"
+              (click)="showAll()">
+              Show all
+            </button>
+            <button
+              class="h-8 min-w-0 px-2.5 text-xs"
+              app-flat-button
+              color="ghost"
+              type="button"
+              [disabled]="!canHideAll()"
+              (click)="hideAll()">
+              Hide all
+            </button>
+            <button
+              class="h-8 min-w-0 px-2.5 text-xs"
+              app-flat-button
+              color="ghost"
+              type="button"
+              [disabled]="!canHideEmpty()"
+              (click)="hideEmpty()">
+              Hide empty
+            </button>
+          </div>
+        </div>
+
+        <div class="-mx-2 flex max-h-[50vh] flex-col overflow-y-auto py-1">
           @for (group of groups(); track group.id) {
-            <app-checkbox
-              [checked]="isVisible(group.id)"
-              (changed)="onToggle(group.id, $event)">
-              {{ group.name }}
-            </app-checkbox>
+            <div
+              class="hover:bg-foreground/5 flex items-center gap-3 rounded px-2 py-2.5 transition-colors">
+              <app-checkbox
+                class="min-w-0 flex-1"
+                [checked]="isVisible(group.id)"
+                (changed)="onToggle(group.id, $event)">
+                <span
+                  [class]="
+                    isVisible(group.id)
+                      ? 'truncate'
+                      : 'text-foreground/40 truncate'
+                  ">
+                  {{ group.name }}
+                </span>
+              </app-checkbox>
+
+              <span
+                [class]="
+                  group.tasks.length
+                    ? 'bg-foreground/8 text-foreground/60 shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium tabular-nums'
+                    : 'text-foreground/40 border-border shrink-0 rounded-full border border-dashed px-2 py-0.5 text-[11px] font-medium tabular-nums'
+                "
+                [attr.aria-label]="taskCountLabel(group.tasks.length)"
+                [title]="taskCountLabel(group.tasks.length)">
+                {{ group.tasks.length }}
+              </span>
+            </div>
           }
         </div>
       } @else {
@@ -72,15 +133,40 @@ export class ManageBoardGroupsDialogComponent {
     return new Set(hiddenGroupIdsForBoard(value, boardId));
   });
 
+  private emptyGroupIds = computed(
+    () =>
+      new Set(
+        this.groups()
+          .filter((group) => !group.tasks.length)
+          .map((group) => group.id)
+      )
+  );
+
+  protected visibleCount = computed(
+    () => this.groups().filter((group) => this.isVisible(group.id)).length
+  );
+
+  protected canShowAll = computed(() => this.hiddenIds().size > 0);
+
+  protected canHideAll = computed(() =>
+    this.groups().some((group) => this.isVisible(group.id))
+  );
+
+  protected canHideEmpty = computed(() =>
+    this.groups().some(
+      (group) => !group.tasks.length && this.isVisible(group.id)
+    )
+  );
+
   isVisible(groupId: number): boolean {
     return !this.hiddenIds().has(groupId);
   }
 
+  taskCountLabel(count: number): string {
+    return count === 1 ? '1 task' : `${count} tasks`;
+  }
+
   onToggle(groupId: number, visible: boolean) {
-    const boardId = this.board()?.id;
-
-    if (boardId === undefined) return;
-
     const hidden = new Set(this.hiddenIds());
 
     if (visible) {
@@ -88,6 +174,26 @@ export class ManageBoardGroupsDialogComponent {
     } else {
       hidden.add(groupId);
     }
+
+    this.setHidden(hidden);
+  }
+
+  showAll() {
+    this.setHidden(new Set());
+  }
+
+  hideAll() {
+    this.setHidden(new Set(this.groups().map((group) => group.id)));
+  }
+
+  hideEmpty() {
+    this.setHidden(new Set([...this.hiddenIds(), ...this.emptyGroupIds()]));
+  }
+
+  private setHidden(hidden: ReadonlySet<number>) {
+    const boardId = this.board()?.id;
+
+    if (boardId === undefined) return;
 
     // Prune ids for groups that no longer exist so the preference stays
     // resilient against deleted or modified groups.
