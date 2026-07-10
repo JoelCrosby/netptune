@@ -274,10 +274,6 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      console.log('hiddenGroupIds(): ', this.hiddenGroupIds());
-    });
-
-    effect(() => {
       const identifier = this.boardIdentifier();
 
       if (!identifier) return;
