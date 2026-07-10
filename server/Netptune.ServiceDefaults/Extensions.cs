@@ -5,6 +5,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using Npgsql;
+
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -52,6 +54,7 @@ public static class Extensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
+                    .AddNpgsqlInstrumentation()
                     .AddMeter("Netptune.Automation");
             })
             .WithTracing(tracing =>
@@ -59,15 +62,15 @@ public static class Extensions
                 tracing
                     .AddSource(builder.Environment.ApplicationName)
                     .AddSource("Netptune.Automation")
+                    .AddSource("NATS.Net")
                     .AddAspNetCoreInstrumentation(t =>
-                        // Exclude health check requests from tracing
                         t.Filter = context =>
                             !context.Request.Path.StartsWithSegments(LivenessEndpointPath)
                             && !context.Request.Path.StartsWithSegments(ReadinessEndpointPath)
                     )
-                    // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
-                    //.AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddNpgsql()
+                    .AddRedisInstrumentation();
             });
 
         builder.AddOpenTelemetryExporters();
@@ -90,7 +93,6 @@ public static class Extensions
     private static TBuilder AddDefaultHealthChecks<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         builder.Services.AddHealthChecks()
-            // Add a default liveness check to ensure app is responsive
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
         return builder;

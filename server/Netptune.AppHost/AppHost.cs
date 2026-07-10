@@ -20,12 +20,10 @@ var nats = builder
     .AddNats("nats")
     .WithJetStream()
     .WithDataVolume()
-    .WithOtlpExporter()
     .WithLifetime(ContainerLifetime.Persistent);
 
 var cache = builder
     .AddValkey("cache")
-    .WithOtlpExporter()
     .WithLifetime(ContainerLifetime.Persistent);
 
 var meilisearch = builder
