@@ -4,6 +4,7 @@ import { Component, HostBinding } from '@angular/core';
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[app-menu-item]',
   template: '<ng-content />',
+  host: { type: 'button' },
 })
 export class MenuItemComponent {
   @HostBinding('class') readonly className =

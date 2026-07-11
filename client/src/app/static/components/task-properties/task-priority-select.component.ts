@@ -1,27 +1,25 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject, viewChild } from '@angular/core';
+import { Component, model } from '@angular/core';
 import {
   TaskPriority,
   taskPriorityColors,
   taskPriorityLabels,
   taskPriorityOptions,
 } from '@core/enums/task-priority';
-import { selectRequiredDetailTask } from '@core/store/tasks/tasks.selectors';
 import { LucideFlag } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
-import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-priority-select',
   imports: [DropdownMenuComponent, MenuItemComponent, NgClass, LucideFlag],
   template: `
     <button
+      type="button"
       class="flex cursor-pointer items-center gap-2 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
       (click)="menu.toggle($any($event.currentTarget))">
-      <svg lucideFlag class="h-4 w-4" [ngClass]="iconColor()"></svg>
-      <span [ngClass]="labelColor()">{{ label() }}</span>
+      <svg lucideFlag class="h-4 w-4" [ngClass]="colorFor(priority())"></svg>
+      <span [ngClass]="colorFor(priority())">{{ label() }}</span>
     </button>
 
     <app-dropdown-menu #menu>
@@ -29,9 +27,7 @@ import { TaskDetailService } from './task-detail.service';
         Set Priority
       </small>
       @for (option of options; track option.value) {
-        <button
-          app-menu-item
-          (click)="selectPriority(option.value); menu.close()">
+        <button app-menu-item (click)="value.set(option.value); menu.close()">
           <svg
             lucideFlag
             class="h-4 w-4"
@@ -43,38 +39,19 @@ import { TaskDetailService } from './task-detail.service';
   `,
 })
 export class TaskPrioritySelectComponent {
-  readonly store = inject(Store);
-  readonly taskDetailService = inject(TaskDetailService);
-  readonly task = this.store.selectSignal(selectRequiredDetailTask);
-
-  readonly priority = computed(() => this.task().priority);
+  readonly value = model<TaskPriority | null>(null);
 
   readonly options = taskPriorityOptions;
 
-  readonly menu = viewChild.required(DropdownMenuComponent);
+  priority() {
+    return this.value() ?? TaskPriority.none;
+  }
 
   label() {
-    const p = this.priority() ?? TaskPriority.none;
-    return taskPriorityLabels[p];
-  }
-
-  labelColor() {
-    const p = this.priority() ?? TaskPriority.none;
-    return taskPriorityColors[p];
-  }
-
-  iconColor() {
-    const p = this.priority() ?? TaskPriority.none;
-    return taskPriorityColors[p];
+    return taskPriorityLabels[this.priority()];
   }
 
   colorFor(priority: TaskPriority) {
     return taskPriorityColors[priority];
-  }
-
-  selectPriority(priority: TaskPriority) {
-    const task = this.task();
-    if (!task) return;
-    this.taskDetailService.updateTask({ ...task, priority });
   }
 }

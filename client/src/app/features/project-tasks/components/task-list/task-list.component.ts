@@ -312,7 +312,7 @@ export class TaskListComponent {
 
   createTaskClicked() {
     this.dialog.open(CreateTaskDialogComponent, {
-      width: '600px',
+      width: CreateTaskDialogComponent.width,
     });
   }
 

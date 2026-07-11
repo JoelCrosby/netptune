@@ -1,29 +1,32 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { EditorComponent } from '@app/static/components/editor/editor.component';
+import { EstimateType } from '@core/enums/estimate-type';
+import { TaskPriority } from '@core/enums/task-priority';
+import { AppUser } from '@core/models/appuser';
 import { AddProjectTaskRequest } from '@core/models/project-task';
-import { loadProjects } from '@core/store/projects/projects.actions';
-import {
-  selectAllProjects,
-  selectCurrentProjectId,
-} from '@core/store/projects/projects.selectors';
+import { AssigneeViewModel } from '@core/models/view-models/board-view';
+import { selectCurrentProjectId } from '@core/store/projects/projects.selectors';
 import { createProjectTask } from '@core/store/tasks/tasks.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { TaskEstimate } from '@static/components/task-properties/task-estimate-select.component';
+import { TaskPropertiesComponent } from '@static/components/task-properties/task-properties.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { EditorComponent } from '@app/static/components/editor/editor.component';
 
-// When opened from a sprint, the project is fixed to the sprint's project and
-// the created task is attached to the sprint, so the project selector is hidden.
 export interface CreateTaskDialogData {
   projectId?: number;
   sprintId?: number;
+}
+
+interface CreateTaskForm {
+  name: string;
+  description: string;
 }
 
 @Component({
@@ -31,36 +34,49 @@ export interface CreateTaskDialogData {
     DialogTitleComponent,
     FormField,
     FormInputComponent,
-    FormSelectComponent,
-    FormSelectOptionComponent,
     DialogActionsDirective,
     FlatButtonComponent,
     StrokedButtonComponent,
     EditorComponent,
+    TaskPropertiesComponent,
   ],
   template: `<app-dialog-title>Add new Task</app-dialog-title>
 
-    <form app-dialog-content novalidate>
-      <app-form-input
-        [formField]="taskForm.name"
-        label="Summary"
-        maxLength="1024" />
+    <form app-dialog-content novalidate (submit)="$event.preventDefault()">
+      <div class="flex flex-col gap-8 md:flex-row md:gap-12">
+        <div class="flex w-64 grow flex-col">
+          <app-form-input
+            [formField]="taskForm.name"
+            label="Summary"
+            maxLength="1024" />
 
-      <app-editor
-        [formField]="taskForm.description"
-        label="Description"
-        maxLength="4096"
-        [isReadonly]="false" />
+          <label class="font-sm mb-2 font-semibold" for="description">
+            Description
+          </label>
+          <app-editor
+            aria-labelledby="description"
+            placeholder="Add a Description..."
+            [formField]="taskForm.description"
+            maxLength="4096"
+            [isReadonly]="false" />
+        </div>
 
-      @if (!data?.projectId) {
-        <app-form-select [formField]="taskForm.project" label="Project">
-          @for (project of projects(); track project.id) {
-            <app-form-select-option [value]="project.id">
-              {{ project.name }}
-            </app-form-select-option>
-          }
-        </app-form-select>
-      }
+        <div
+          class="bg-card/40 flex w-full shrink-0 flex-col rounded px-6 pb-6 md:w-72">
+          <app-task-properties
+            [(statusId)]="statusId"
+            [(priority)]="priority"
+            [(projectId)]="projectId"
+            [(sprintId)]="sprintId"
+            [(assignees)]="assignees"
+            [estimateType]="estimateType()"
+            [estimateValue]="estimateValue()"
+            [showProject]="!data?.projectId"
+            [showSprint]="!data?.sprintId"
+            [multiple]="false"
+            (estimateChange)="setEstimate($event)" />
+        </div>
+      </div>
     </form>
 
     <div app-dialog-actions align="end">
@@ -69,21 +85,29 @@ export interface CreateTaskDialogData {
     </div> `,
 })
 export class CreateTaskDialogComponent {
+  static readonly width = '820px';
+
   private store = inject(Store);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
   readonly data = inject<CreateTaskDialogData | null>(DIALOG_DATA, {
     optional: true,
   });
 
-  projects = this.store.selectSignal(selectAllProjects);
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
-  projectId = this.store.selectSignal(selectCurrentProjectId);
+  currentProjectId = this.store.selectSignal(selectCurrentProjectId);
 
-  selectedTypeValue!: number;
+  readonly statusId = signal<number | null>(null);
+  readonly priority = signal<TaskPriority | null>(null);
+  readonly estimateType = signal<EstimateType | null>(null);
+  readonly estimateValue = signal<number | null>(null);
+  readonly sprintId = signal<number | null>(this.data?.sprintId ?? null);
+  readonly projectId = signal<number | null>(
+    this.data?.projectId ?? this.currentProjectId() ?? null
+  );
+  readonly assignees = signal<(AppUser | AssigneeViewModel)[]>([]);
 
-  taskFormModel = signal({
+  taskFormModel = signal<CreateTaskForm>({
     name: '',
-    project: this.data?.projectId ?? this.projectId() ?? '',
     description: '',
   });
 
@@ -92,8 +116,9 @@ export class CreateTaskDialogComponent {
     minLength(schema.name, 4);
   });
 
-  constructor() {
-    this.store.dispatch(loadProjects.init());
+  setEstimate({ estimateType, estimateValue }: TaskEstimate) {
+    this.estimateType.set(estimateType);
+    this.estimateValue.set(estimateValue);
   }
 
   close() {
@@ -102,20 +127,11 @@ export class CreateTaskDialogComponent {
 
   saveClicked() {
     const workspace = this.currentWorkspace();
-    const projectId = this.data?.projectId ?? this.projectId();
+    const projectId = this.projectId();
 
-    if (projectId === undefined || projectId === null) {
+    if (projectId === null) {
       throw new Error('project id is undefined');
     }
-
-    const { name, description } = this.taskForm;
-
-    const task: AddProjectTaskRequest = {
-      name: name().value().trim(),
-      description: description().value().trim(),
-      projectId,
-      sprintId: this.data?.sprintId ?? null,
-    };
 
     if (!workspace?.slug) {
       throw new Error('workspace slug is undefined');
@@ -124,10 +140,37 @@ export class CreateTaskDialogComponent {
     this.store.dispatch(
       createProjectTask.init({
         identifier: `[workspace] ${workspace.slug}`,
-        task,
+        task: this.buildRequest(projectId),
       })
     );
 
     this.dialogRef.close();
+  }
+
+  private buildRequest(projectId: number): AddProjectTaskRequest {
+    const { name, description } = this.taskFormModel();
+    const assigneeId = this.assignees().at(0)?.id;
+    const estimateType = this.estimateType();
+    const estimateValue = this.estimateValue();
+    const priority = this.priority();
+    const statusId = this.statusId();
+
+    const task: AddProjectTaskRequest = {
+      name: name.trim(),
+      description: description.trim(),
+      projectId,
+      sprintId: this.sprintId(),
+    };
+
+    if (statusId !== null) task.statusId = statusId;
+    if (priority !== null) task.priority = priority;
+    if (assigneeId) task.assigneeId = assigneeId;
+
+    if (estimateType !== null) {
+      task.estimateType = estimateType;
+      if (estimateValue !== null) task.estimateValue = estimateValue;
+    }
+
+    return task;
   }
 }

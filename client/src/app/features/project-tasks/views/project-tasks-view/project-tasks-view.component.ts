@@ -67,7 +67,7 @@ export class ProjectTasksViewComponent implements OnDestroy {
 
   showAddModal() {
     this.dialog.open(CreateTaskDialogComponent, {
-      width: '600px',
+      width: CreateTaskDialogComponent.width,
     });
   }
 

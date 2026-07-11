@@ -53,6 +53,7 @@ type User = AssigneeViewModel | AppUser;
   ],
   template: `
     <button
+      type="button"
       class="text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none"
       [class.flex-col]="compact()"
       #origin

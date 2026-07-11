@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   EstimateType,
@@ -7,14 +7,16 @@ import {
   tShirtSizes,
 } from '@core/enums/estimate-type';
 import { LucideChevronDown } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
-import { selectRequiredDetailTask } from '@core/store/tasks/tasks.selectors';
-import { TaskDetailService } from './task-detail.service';
+
+export interface TaskEstimate {
+  estimateType: EstimateType | null;
+  estimateValue: number | null;
+}
 
 @Component({
-  selector: 'app-task-detail-estimate',
+  selector: 'app-task-estimate-select',
   imports: [
     DropdownMenuComponent,
     MenuItemComponent,
@@ -24,6 +26,7 @@ import { TaskDetailService } from './task-detail.service';
   template: `
     <div class="flex items-center gap-2">
       <button
+        type="button"
         class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
         (click)="typeMenu.toggle($any($event.currentTarget))">
         {{ estimateTypeLabels[estimateType() ?? EstimateType.storyPoints] }}
@@ -36,7 +39,7 @@ import { TaskDetailService } from './task-detail.service';
         @for (opt of estimateTypeOptions; track opt.value) {
           <button
             app-menu-item
-            (click)="onEstimateTypeChange(opt.value); typeMenu.close()">
+            (click)="selectEstimateType(opt.value); typeMenu.close()">
             {{ opt.label }}
           </button>
         }
@@ -44,6 +47,7 @@ import { TaskDetailService } from './task-detail.service';
 
       @if (estimateType() === EstimateType.tShirt) {
         <button
+          type="button"
           class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
           (click)="sizeMenu.toggle($any($event.currentTarget))">
           {{ tShirtLabel() }}
@@ -54,7 +58,7 @@ import { TaskDetailService } from './task-detail.service';
           @for (size of tShirtSizes; track size.value) {
             <button
               app-menu-item
-              (click)="onEstimateValueChange(size.value); sizeMenu.close()">
+              (click)="selectEstimateValue(size.value); sizeMenu.close()">
               {{ size.label }}
             </button>
           }
@@ -66,18 +70,16 @@ import { TaskDetailService } from './task-detail.service';
           class="w-20 rounded-sm border border-neutral-200 bg-transparent px-4 py-2 text-sm dark:border-neutral-700"
           placeholder="—"
           [ngModel]="estimateValue()"
-          (ngModelChange)="onEstimateValueChange($event)" />
+          (ngModelChange)="selectEstimateValue($event)" />
       }
     </div>
   `,
 })
-export class TaskDetailEstimateComponent {
-  readonly store = inject(Store);
-  readonly task = this.store.selectSignal(selectRequiredDetailTask);
-  readonly taskDetailService = inject(TaskDetailService);
+export class TaskEstimateSelectComponent {
+  readonly estimateType = input<EstimateType | null>(null);
+  readonly estimateValue = input<number | null>(null);
 
-  readonly estimateType = computed(() => this.task().estimateType);
-  readonly estimateValue = computed(() => this.task().estimateValue);
+  readonly estimateChange = output<TaskEstimate>();
 
   readonly EstimateType = EstimateType;
   readonly estimateTypeLabels = estimateTypeLabels;
@@ -90,29 +92,16 @@ export class TaskDetailEstimateComponent {
     );
   }
 
-  onEstimateTypeChange(value: EstimateType) {
-    const task = this.task();
+  selectEstimateType(value: EstimateType) {
     const estimateType = value == null || isNaN(value) ? null : value;
 
-    if (!task) {
-      return;
-    }
-
-    this.taskDetailService.updateTask({
-      ...task,
-      estimateType,
-      estimateValue: null,
-    });
+    this.estimateChange.emit({ estimateType, estimateValue: null });
   }
 
-  onEstimateValueChange(value: number | null) {
-    const estimateValue = value;
-    const task = this.task();
-
-    if (!task) {
-      return;
-    }
-
-    this.taskDetailService.updateTask({ ...task, estimateValue });
+  selectEstimateValue(estimateValue: number | null) {
+    this.estimateChange.emit({
+      estimateType: this.estimateType(),
+      estimateValue,
+    });
   }
 }

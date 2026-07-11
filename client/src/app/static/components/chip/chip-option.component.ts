@@ -17,6 +17,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
   `,
   imports: [LucideChevronDown, SpinnerComponent],
   host: {
+    type: 'button',
     class:
       'inline-flex items-center px-3 h-7 rounded-full text-xs font-medium bg-card-selected/40 text-foreground select-none transition-colors hover:bg-card-selected/80 cursor-default',
   },

@@ -1,107 +1,84 @@
-import { Component, inject } from '@angular/core';
-import { netptunePermissions } from '@app/core/auth/permissions';
+import { Component, computed, inject } from '@angular/core';
+import { TaskPriority } from '@app/core/enums/task-priority';
 import { AppUser } from '@app/core/models/appuser';
-import { UpdateProjectTaskRequest } from '@app/core/models/requests/update-project-task-request';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { selectRequiredDetailTask } from '@app/core/store/tasks/tasks.selectors';
-import { selectAllUsers } from '@app/core/store/users/users.selectors';
-import { TaskPrioritySelectComponent } from '@app/entry/dialogs/task-detail-dialog/task-detail-priority.component';
-import { AvatarComponent } from '@app/static/components/avatar/avatar.component';
-import { UserSelectComponent } from '@app/static/components/user-select/user-select.component';
+import { AssigneeViewModel } from '@app/core/models/view-models/board-view';
+import {
+  selectRequiredDetailTask,
+  selectTaskEditLoading,
+} from '@app/core/store/tasks/tasks.selectors';
+import { TaskEstimate } from '@app/static/components/task-properties/task-estimate-select.component';
+import {
+  TaskPropertiesComponent,
+  TaskReporter,
+} from '@app/static/components/task-properties/task-properties.component';
 import { Store } from '@ngrx/store';
-import { TaskDetailEstimateComponent } from './task-detail-estimate.component';
-import { TaskDetailProjectSelectComponent } from './task-detail-project-select.component';
-import { TaskDetailSprintSelectComponent } from './task-detail-sprint-select.component';
-import { TaskDetailStatusSelectComponent } from './task-detail-status-select.component';
 import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-properties',
-  imports: [
-    UserSelectComponent,
-    AvatarComponent,
-    TaskPrioritySelectComponent,
-    TaskDetailEstimateComponent,
-    TaskDetailProjectSelectComponent,
-    TaskDetailSprintSelectComponent,
-    TaskDetailStatusSelectComponent,
-  ],
+  imports: [TaskPropertiesComponent],
   template: `
-    <div class="flex flex-col">
-      <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Assignees</h4>
-        <app-user-select
-          [value]="task().assignees"
-          [options]="users()"
-          (selectChange)="selectAssignee($event)" />
-      </div>
-      <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Reporter</h4>
-        <div class="flex flex-row items-center rounded pl-2">
-          <app-avatar
-            size="sm"
-            [name]="task().ownerUsername"
-            [imageUrl]="task().ownerPictureUrl">
-          </app-avatar>
-          <small class="ml-2 text-sm font-medium">{{
-            task().ownerUsername
-          }}</small>
-        </div>
-      </div>
-
-      @if (readStatus()) {
-        <div>
-          <h4 class="font-sm mt-4 mb-2 font-semibold">Status</h4>
-          <app-task-detail-status-select />
-        </div>
-      }
-
-      <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Priority</h4>
-        <app-task-priority-select />
-      </div>
-      <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Estimate</h4>
-        <app-task-detail-estimate />
-      </div>
-      <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Project</h4>
-        <app-task-detail-project-select />
-      </div>
-      <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Sprint</h4>
-        <app-task-detail-sprint-select />
-      </div>
-    </div>
+    <app-task-properties
+      [statusId]="task().statusId"
+      [statusLabel]="task().statusName"
+      [priority]="task().priority"
+      [estimateType]="task().estimateType"
+      [estimateValue]="task().estimateValue"
+      [projectId]="task().projectId"
+      [sprintId]="task().sprintId ?? null"
+      [sprintLabel]="task().sprintName ?? 'No Sprint'"
+      [assignees]="task().assignees"
+      [reporter]="reporter()"
+      [loading]="updateLoading()"
+      (statusIdChange)="selectStatus($event)"
+      (priorityChange)="selectPriority($event)"
+      (estimateChange)="selectEstimate($event)"
+      (projectIdChange)="selectProject($event)"
+      (sprintIdChange)="selectSprint($event)"
+      (assigneesChange)="selectAssignees($event)" />
   `,
 })
 export class TaskDetailPropertiesComponent {
   readonly store = inject(Store);
   readonly taskDetailService = inject(TaskDetailService);
   readonly task = this.store.selectSignal(selectRequiredDetailTask);
-  readonly users = this.store.selectSignal(selectAllUsers);
+  readonly updateLoading = this.store.selectSignal(selectTaskEditLoading);
 
-  readStatus = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.statuses.read)
-  );
+  readonly reporter = computed<TaskReporter>(() => ({
+    displayName: this.task().ownerUsername,
+    pictureUrl: this.task().ownerPictureUrl,
+  }));
 
-  selectAssignee(user: AppUser) {
-    const task = this.task();
-    if (!task) return;
+  selectStatus(statusId: number | null) {
+    if (statusId === null) return;
+    this.taskDetailService.updateTask({ statusId });
+  }
 
-    const assigneeSet = new Set(task.assignees.map((u) => u.id));
+  selectPriority(priority: TaskPriority | null) {
+    this.taskDetailService.updateTask({ priority });
+  }
 
-    if (assigneeSet.has(user.id)) {
-      assigneeSet.delete(user.id);
-    } else {
-      assigneeSet.add(user.id);
+  selectEstimate({ estimateType, estimateValue }: TaskEstimate) {
+    this.taskDetailService.updateTask({ estimateType, estimateValue });
+  }
+
+  selectProject(projectId: number | null) {
+    if (projectId === null) return;
+    this.taskDetailService.updateTask({ projectId });
+  }
+
+  selectSprint(sprintId: number | null) {
+    if (sprintId === null) {
+      this.taskDetailService.clearSprint();
+      return;
     }
 
-    const updated: UpdateProjectTaskRequest = {
-      ...task,
-      assigneeIds: Array.from(assigneeSet),
-    };
+    this.taskDetailService.assignSprint(sprintId);
+  }
 
-    this.taskDetailService.updateTask(updated);
+  selectAssignees(assignees: (AppUser | AssigneeViewModel)[]) {
+    this.taskDetailService.updateTask({
+      assigneeIds: assignees.map((assignee) => assignee.id),
+    });
   }
 }

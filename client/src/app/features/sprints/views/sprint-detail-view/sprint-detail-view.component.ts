@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { netptunePermissions } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
@@ -18,8 +19,14 @@ import {
   selectSprintDetailLoading,
   selectSprintUpdateLoading,
 } from '@core/store/sprints/sprints.selectors';
+import {
+  LucideCheck,
+  LucideListPlus,
+  LucidePencil,
+  LucidePlus,
+  LucideTrash2,
+} from '@lucide/angular';
 import { Store } from '@ngrx/store';
-import { LucidePencil, LucideTrash2 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -27,12 +34,11 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
+import { SprintStatsComponent } from '../../components/sprint-stats.component';
+import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
 import { SprintAddTaskDialogComponent } from '../../dialogs/sprint-add-task-dialog.component';
 import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
-import { SprintStatsComponent } from '../../components/sprint-stats.component';
-import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 import { SprintStatusClassesPipe } from '../../pipes/sprint-status-classes.pipe';
 import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
 import { sprintDaysChip } from '../../utils/sprint-days-chip';
@@ -46,8 +52,11 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
     FlatButtonComponent,
     IconButtonComponent,
     StrokedButtonComponent,
+    LucideListPlus,
     LucidePencil,
+    LucidePlus,
     LucideTrash2,
+    LucideCheck,
     SprintStatsComponent,
     SprintTaskListComponent,
     SprintStatusClassesPipe,
@@ -88,24 +97,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
               </p>
             </div>
 
-            <div class="flex shrink-0 items-center gap-1">
-              @if (canManageTasks() && sprint.status !== sprintStatus.completed) {
-                <button
-                  app-stroked-button
-                  type="button"
-                  (click)="onAddTasks(sprint)">
-                  Add Task
-                </button>
-                <button
-                  app-stroked-button
-                  color="primary"
-                  type="button"
-                  class="mr-1"
-                  (click)="onCreateTask(sprint)">
-                  New Task
-                </button>
-              }
-
+            <div class="flex shrink-0 items-center gap-2">
               @if (canUpdate()) {
                 <button
                   app-icon-button
@@ -123,12 +115,34 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                 </button>
               }
 
+              @if (
+                canManageTasks() && sprint.status !== sprintStatus.completed
+              ) {
+                <button
+                  app-flat-button
+                  color="neutral"
+                  type="button"
+                  title="Add existing tasks to this sprint"
+                  (click)="onAddTasks(sprint)">
+                  <svg lucideListPlus class="h-4 w-4"></svg>
+                  Assign Existing Tasks
+                </button>
+                <button
+                  app-flat-button
+                  color="neutral"
+                  type="button"
+                  title="Create a new task in this sprint"
+                  (click)="onCreateTask(sprint)">
+                  <svg lucidePlus class="h-4 w-4"></svg>
+                  Create Sprint Task
+                </button>
+              }
+
               @if (canUpdate() && sprint.status === sprintStatus.planning) {
                 <button
                   app-flat-button
                   color="primary"
                   type="button"
-                  class="ml-2"
                   [disabled]="updateLoading()"
                   (click)="onStart(sprint.id)">
                   Start Sprint
@@ -140,9 +154,9 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                   app-flat-button
                   color="primary"
                   type="button"
-                  class="ml-2"
                   [disabled]="updateLoading()"
                   (click)="onComplete(sprint)">
+                  <svg lucideCheck class="h-4 w-4"></svg>
                   Complete Sprint
                 </button>
               }
@@ -208,7 +222,7 @@ export class SprintDetailViewComponent {
 
   onCreateTask(sprint: SprintDetailViewModel) {
     this.dialog.open(CreateTaskDialogComponent, {
-      width: '600px',
+      width: CreateTaskDialogComponent.width,
       data: { projectId: sprint.projectId, sprintId: sprint.id },
     });
   }
