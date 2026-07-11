@@ -29,7 +29,6 @@ import {
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
@@ -51,7 +50,6 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
     SpinnerComponent,
     FlatButtonComponent,
     IconButtonComponent,
-    StrokedButtonComponent,
     LucideListPlus,
     LucidePencil,
     LucidePlus,

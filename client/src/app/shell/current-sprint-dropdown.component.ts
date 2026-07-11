@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { sprintDaysChip } from '@app/features/sprints/utils/sprint-days-chip';
 import { selectIsSprintFilterableRoute } from '@core/core.route.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
 import {
@@ -48,12 +49,21 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
         <button
           #sprintTrigger
           type="button"
-          class="border-border text-foreground hover:bg-foreground/5 focus-visible:ring-primary inline-flex h-10 max-w-72 cursor-pointer items-center gap-2 rounded border bg-transparent px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          class="border-border text-foreground hover:bg-foreground/5 focus-visible:ring-primary inline-flex h-10 max-w-96 cursor-pointer items-center gap-2 rounded border bg-transparent px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
           aria-haspopup="menu"
           [attr.aria-label]="triggerLabel()"
           (click)="sprintMenu.toggle(sprintTrigger)">
           <svg lucideCalendarDays class="h-4 w-4 shrink-0"></svg>
           <span class="truncate">{{ triggerLabel() }}</span>
+
+          @if (daysChip(); as chip) {
+            <span
+              class="shrink-0 rounded-sm px-2 py-0.5 text-xs font-medium"
+              [class]="chip.classes">
+              {{ chip.label }}
+            </span>
+          }
+
           <svg lucideChevronDown class="h-4 w-4 shrink-0 opacity-70"></svg>
         </button>
 
@@ -148,6 +158,14 @@ export class CurrentSprintDropdownComponent {
     selectSelectedSprintFilterId
   );
   selectedSprintFilter = this.store.selectSignal(selectSelectedSprintFilter);
+
+  daysChip = computed(() => {
+    const sprint = this.selectedSprintFilter();
+
+    if (!sprint) return null;
+
+    return sprintDaysChip(sprint.status, sprint.endDate);
+  });
 
   triggerLabel = computed(() => {
     const selectedSprint = this.selectedSprintFilter();
