@@ -7,14 +7,18 @@ import {
   inject,
 } from '@angular/core';
 import { environment } from '@env/environment';
-import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { BannerService } from '@static/components/banner/banner.service';
 
 const POLL_INTERVAL = 5 * 60 * 1000;
 
 export function provideVersionCheck(): EnvironmentProviders {
   return provideAppInitializer(() => {
+    const service = inject(VersionCheckService);
+
     if (environment.production) {
-      inject(VersionCheckService).listen();
+      service.listen();
+    } else {
+      service.exposeDevTrigger();
     }
   });
 }
@@ -23,11 +27,27 @@ export function provideVersionCheck(): EnvironmentProviders {
 export class VersionCheckService {
   private readonly document = inject(DOCUMENT);
   private readonly zone = inject(NgZone);
-  private readonly snackbar = inject(SnackbarService);
+  private readonly banner = inject(BannerService);
 
   private baseline: string | null = null;
   private prompted = false;
   private checking = false;
+
+  exposeDevTrigger(): void {
+    const view = this.document.defaultView as
+      | (Window & { triggerVersionBanner?: () => void })
+      | null;
+
+    if (view == null) {
+      return;
+    }
+
+    view.triggerVersionBanner = () => this.zone.run(() => this.promptRefresh());
+
+    console.info(
+      '[version-check] call triggerVersionBanner() to preview the update banner.'
+    );
+  }
 
   async listen(): Promise<void> {
     this.baseline = await this.fetchSignature();
@@ -64,11 +84,33 @@ export class VersionCheckService {
   private promptRefresh(): void {
     this.prompted = true;
 
-    this.snackbar.open('A new version is available.', 'Refresh', {
-      type: 'info',
-      duration: 0,
-      onAction: () => this.document.defaultView?.location.reload(),
+    this.banner.show('A new version of Netptune is available.', {
+      action: 'Reload',
+      dismissible: false,
+      onAction: () => void this.hardReload(),
     });
+  }
+
+  private async hardReload(): Promise<void> {
+    const view = this.document.defaultView;
+
+    if (view == null) {
+      return;
+    }
+
+    // Drop any cached assets (e.g. from a service worker / the Cache API) so
+    // the freshly deployed document and hashed bundles are fetched from the
+    // network rather than served from cache.
+    if ('caches' in view) {
+      try {
+        const keys = await view.caches.keys();
+        await Promise.all(keys.map((key) => view.caches.delete(key)));
+      } catch {
+        // Ignore cache eviction failures and fall through to the reload.
+      }
+    }
+
+    view.location.reload();
   }
 
   private async fetchSignature(): Promise<string | null> {
