@@ -54,6 +54,10 @@ public sealed class TaskViewRowMap
 
     public string? Owner_Picture_Url { get; init; }
 
+    public string? Deleted_By_Username { get; init; }
+
+    public string? Deleted_By_Picture_Url { get; init; }
+
     public string? Project_Key { get; init; }
 
     public string? Project_Name { get; init; }

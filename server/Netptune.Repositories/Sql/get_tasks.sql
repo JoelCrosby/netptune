@@ -37,6 +37,13 @@ WITH filtered_tasks AS (
                ELSE CONCAT_WS(' ', o.firstname, o.lastname)
            END AS owner_username
          , o.picture_url AS owner_picture_url
+         , CASE
+               WHEN d.id IS NULL THEN NULL
+               WHEN NULLIF(CONCAT_WS(' ', d.firstname, d.lastname), '') IS NULL
+                   THEN d.user_name
+               ELSE CONCAT_WS(' ', d.firstname, d.lastname)
+           END AS deleted_by_username
+         , d.picture_url AS deleted_by_picture_url
          , COUNT(*) OVER() AS total_count
     FROM project_tasks pt
              INNER JOIN workspaces w ON pt.workspace_id = w.id
@@ -44,8 +51,9 @@ WITH filtered_tasks AS (
              LEFT JOIN projects p ON pt.project_id = p.id
              LEFT JOIN sprints s ON pt.sprint_id = s.id AND NOT s.is_deleted
              INNER JOIN users o ON pt.owner_id = o.id
+             LEFT JOIN users d ON pt.deleted_by_user_id = d.id
     WHERE w.slug = @workspaceKey
-      AND NOT pt.is_deleted
+      AND pt.is_deleted = @deleted
       AND (@projectId IS NULL OR pt.project_id = @projectId)
       AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
       AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
@@ -105,6 +113,8 @@ SELECT ft.total_count
      , ft.updated_at AS task_updated_at
      , ft.owner_username
      , ft.owner_picture_url
+     , ft.deleted_by_username
+     , ft.deleted_by_picture_url
      , ft.project_key
      , ft.project_name
      , t.name AS tag

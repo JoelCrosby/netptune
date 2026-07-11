@@ -51,6 +51,7 @@ public static class NetptunePermissions
         public const string Update = "tasks.update";
         public const string Delete = "tasks.delete";
         public const string DeleteAny = "tasks.delete_any";
+        public const string Restore = "tasks.restore";
         public const string Move = "tasks.move";
         public const string Reassign = "tasks.reassign";
         public const string Export = "tasks.export";

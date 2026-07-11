@@ -43,6 +43,6 @@ public sealed class GetBacklogTasksQueryHandler : IRequestHandler<GetBacklogTask
             NoSprint = true,
         };
 
-        return await UnitOfWork.Tasks.GetTasksAsync(workspaceKey, filter, true, cancellationToken);
+        return await UnitOfWork.Tasks.GetTasksAsync(workspaceKey, filter, true, cancellationToken: cancellationToken);
     }
 }

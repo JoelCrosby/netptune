@@ -23,7 +23,7 @@ public sealed class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, Client
     public async ValueTask<ClientResponse<PagedResponse<TaskViewModel>>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var page = await UnitOfWork.Tasks.GetTasksAsync(workspaceKey, request.Filter, true, cancellationToken);
+        var page = await UnitOfWork.Tasks.GetTasksAsync(workspaceKey, request.Filter, true, cancellationToken: cancellationToken);
 
         return page;
     }

@@ -48,6 +48,8 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Changed priority';
     case ActivityType.modifyEstimate:
       return 'Changed estimate';
+    case ActivityType.restore:
+      return 'Restored';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }

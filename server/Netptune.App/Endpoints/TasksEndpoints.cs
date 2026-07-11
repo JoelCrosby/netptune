@@ -18,6 +18,7 @@ public static class TasksEndpoints
 
         group.MapGet("/", HandleGetTasks).RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapGet("/status-breakdown", HandleGetStatusBreakdown).RequireAuthorization(NetptunePermissions.Tasks.Read);
+        group.MapGet("/archive", HandleGetArchivedTasks).RequireAuthorization(NetptunePermissions.Tasks.Restore);
         group.MapGet("/{id}", HandleGetTask).RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapGet("/detail", HandleGetTaskDetail).RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Tasks.Update);
@@ -28,8 +29,33 @@ public static class TasksEndpoints
         group.MapPost("/move-tasks-to-group", HandleMoveTasksToGroup).RequireAuthorization(NetptunePermissions.Tasks.Move);
         group.MapPost("/reassign-tasks", HandleReassignTasks).RequireAuthorization(NetptunePermissions.Tasks.Reassign);
         group.MapPost("/bulk-update", HandleBulkUpdate).RequireAuthorization(NetptunePermissions.Tasks.Update);
+        group.MapPost("/restore", HandleRestoreTasks).RequireAuthorization(NetptunePermissions.Tasks.Restore);
 
         return group;
+    }
+
+    public static async Task<IResult> HandleGetArchivedTasks(
+        IMediator mediator,
+        [AsParameters] TaskFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetArchivedTasksQuery(filter), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleRestoreTasks(
+        IMediator mediator,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        [FromBody] IEnumerable<int> ids,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RestoreTasksCommand(ids), cancellationToken);
+
+        await BroadcastAsync(boardEventService, context);
+
+        return Results.Ok(result);
     }
 
     public static async Task<IResult> HandleGetTasks(

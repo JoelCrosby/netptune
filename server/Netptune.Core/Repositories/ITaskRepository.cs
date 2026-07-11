@@ -16,10 +16,7 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<ProjectTask?> GetAutomationTask(int id, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectTask>> GetUnassignedAutomationCandidates(
-        IReadOnlyCollection<int> workspaceIds,
-        DateTime cutoff,
-        CancellationToken cancellationToken = default);
+    Task<List<ProjectTask>> GetUnassignedAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateTime cutoff,CancellationToken cancellationToken = default);
 
     Task<ProjectTask?> GetTask(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 
@@ -27,7 +24,7 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 
-    Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default);
+    Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, bool deleted = false, CancellationToken cancellationToken = default);
 
     Task<List<TaskStatusBreakdownItem>> GetTaskStatusBreakdownAsync(string workspaceKey, CancellationToken cancellationToken = default);
 
@@ -44,6 +41,8 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
     Task<int> UpdateTaskStatuses(IEnumerable<int> ids, int statusId, CancellationToken cancellationToken = default);
 
     Task<List<int>> GetValidTaskIdsInWorkspace(IEnumerable<int> taskIds, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetDeletedTaskIdsInWorkspace(IEnumerable<int> taskIds, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<int>> GetValidTaskIdsInProject(IEnumerable<int> taskIds, int workspaceId, int projectId, CancellationToken cancellationToken = default);
 

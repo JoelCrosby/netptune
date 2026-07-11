@@ -38,4 +38,5 @@ export enum ActivityType {
   mention = 23,
   modifyPriority = 24,
   modifyEstimate = 25,
+  restore = 26,
 }

@@ -1,5 +1,6 @@
 import {
   LucideActivity,
+  LucideArchiveRestore,
   LucideArrowRightLeft,
   LucideBell,
   LucideBellDot,
@@ -163,6 +164,11 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'tasks.delete_any',
       label: 'Delete Any Task',
       icon: LucideSquareX,
+    },
+    restore: {
+      key: 'tasks.restore',
+      label: 'Restore Tasks',
+      icon: LucideArchiveRestore,
     },
     move: { key: 'tasks.move', label: 'Move Tasks', icon: LucideMoveRight },
     reassign: {

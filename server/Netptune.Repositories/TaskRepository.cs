@@ -156,7 +156,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return isReadonly ? queryable.AsNoTracking() : queryable;
     }
 
-    public async Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, bool deleted = false, CancellationToken cancellationToken = default)
     {
         filter ??= new TaskFilter();
 
@@ -190,6 +190,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             assignees,
             search,
             searchPattern,
+            deleted,
             pageSize,
             skip,
         }, cancellationToken: cancellationToken));
@@ -321,6 +322,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 UpdatedAt = row.Task_Updated_At,
                 OwnerUsername = row.Owner_Username,
                 OwnerPictureUrl = row.Owner_Picture_Url,
+                DeletedByUsername = row.Deleted_By_Username,
+                DeletedByPictureUrl = row.Deleted_By_Picture_Url,
                 ProjectName = row.Project_Name ?? string.Empty,
                 Tags = [],
                 Assignees = [],
@@ -534,6 +537,18 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .AsNoTracking()
             .Where(task => taskIdList.Contains(task.Id))
             .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
+            .Select(task => task.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<int>> GetDeletedTaskIdsInWorkspace(IEnumerable<int> taskIds, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        var taskIdList = taskIds.ToList();
+
+        return Entities
+            .AsNoTracking()
+            .Where(task => taskIdList.Contains(task.Id))
+            .Where(task => task.WorkspaceId == workspaceId && task.IsDeleted)
             .Select(task => task.Id)
             .ToListAsync(cancellationToken);
     }

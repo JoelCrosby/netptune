@@ -55,6 +55,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Projects.Delete,
         NetptunePermissions.Boards.Delete,
         NetptunePermissions.Tasks.DeleteAny,
+        NetptunePermissions.Tasks.Restore,
         NetptunePermissions.Sprints.Delete,
         NetptunePermissions.Comments.DeleteAny,
         NetptunePermissions.Tags.Delete,

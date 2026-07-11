@@ -61,6 +61,30 @@ public abstract class AuditableRepository<TContext, TEntity, TId> : Repository<T
         return affectedIds;
     }
 
+    public async Task<List<TId>> Restore(IEnumerable<TId> ids, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+
+        if (idList.Count == 0) return [];
+
+        var affectedIds = await Entities
+            .AsNoTracking()
+            .Where(entity => idList.Contains(entity.Id) && entity.IsDeleted)
+            .Select(entity => entity.Id)
+            .ToListAsync(cancellationToken);
+
+        if (affectedIds.Count == 0) return affectedIds;
+
+        await Entities
+            .Where(entity => affectedIds.Contains(entity.Id))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(entity => entity.IsDeleted, false)
+                .SetProperty(entity => entity.DeletedByUserId, (string?)null)
+                .SetProperty(entity => entity.UpdatedAt, DateTime.UtcNow), cancellationToken);
+
+        return affectedIds;
+    }
+
     public override Task<List<TEntity>> GetAllAsync(bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities

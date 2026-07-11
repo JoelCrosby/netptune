@@ -10,6 +10,7 @@ import {
   selectCurrentSprintsLoaded,
 } from '@core/store/sprints/sprints.selectors';
 import {
+  LucideArchive,
   LucideBell,
   LucideCalendarDays,
   LucideCalendarRange,
@@ -115,6 +116,10 @@ export class ShellSidebarComponent {
     selectHasPermission(netptunePermissions.automations.read)
   );
 
+  canRestoreTasks = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tasks.restore)
+  );
+
   links = computed(() => {
     const links = [];
 
@@ -138,6 +143,15 @@ export class ShellSidebarComponent {
         label: 'Tasks',
         value: ['./tasks'],
         icon: LucideSquareCheckBig,
+        children: this.canRestoreTasks()
+          ? [
+              {
+                label: 'Archive',
+                value: ['./tasks/archive'],
+                icon: LucideArchive,
+              },
+            ]
+          : undefined,
       },
     ];
 

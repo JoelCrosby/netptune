@@ -37,6 +37,7 @@ export const netptunePermissions = {
     update: 'tasks.update',
     delete: 'tasks.delete',
     deleteAny: 'tasks.delete_any',
+    restore: 'tasks.restore',
     move: 'tasks.move',
     reassign: 'tasks.reassign',
     export: 'tasks.export',

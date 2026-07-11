@@ -335,6 +335,48 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Archive_ShouldListDeletedTasksAndRestoreThem_WhenInputValid()
+    {
+        var inProgressStatus = await GetStatus("in-progress");
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Archive restore test",
+            Description = "Task used to verify the archive and restore flow",
+            StatusId = inProgressStatus.Id,
+            ProjectId = 1,
+        });
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+        var taskId = created.Payload!.Id;
+
+        (await GetArchivedTasks()).Should().NotContain(task => task.Id == taskId);
+
+        var deleteResponse = await Client.DeleteAsync($"api/tasks/{taskId}");
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var archived = await GetArchivedTasks();
+
+        archived.Should().Contain(task => task.Id == taskId);
+        archived.Single(task => task.Id == taskId).DeletedByUsername.Should().NotBeNullOrEmpty();
+
+        (await GetTasks()).Should().NotContain(task => task.Id == taskId);
+
+        var restoreResponse = await Client.PostAsJsonAsync("api/tasks/restore", new[] { taskId });
+
+        restoreResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var restoreResult = await restoreResponse.Content.ReadFromJsonAsync<ClientResponse>();
+
+        restoreResult.IsSuccess.Should().BeTrue();
+
+        (await GetTasks()).Should().Contain(task => task.Id == taskId);
+        (await GetArchivedTasks()).Should().NotContain(task => task.Id == taskId);
+    }
+
+    [Fact]
     public async Task MoveTaskInBoardGroup_ShouldReturnSuccess_WhenInputValid()
     {
         var request = new MoveTaskInGroupRequest
@@ -402,6 +444,29 @@ public sealed class TasksEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    private Task<IReadOnlyList<TaskViewModel>> GetTasks()
+    {
+        return GetTaskPage("api/tasks?pageSize=100");
+    }
+
+    private Task<IReadOnlyList<TaskViewModel>> GetArchivedTasks()
+    {
+        return GetTaskPage("api/tasks/archive?pageSize=100");
+    }
+
+    private async Task<IReadOnlyList<TaskViewModel>> GetTaskPage(string url)
+    {
+        var response = await Client.GetAsync(url);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        return result.Payload!.Items;
     }
 
     private async Task<BoardView> GetBoardView(string boardIdentifier)

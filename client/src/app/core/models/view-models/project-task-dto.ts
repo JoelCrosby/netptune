@@ -5,6 +5,8 @@ export interface TaskViewModel extends ProjectTask {
   assignees: AssigneeViewModel[];
   ownerUsername: string;
   ownerPictureUrl?: string | null;
+  deletedByUsername?: string | null;
+  deletedByPictureUrl?: string | null;
   projectName: string;
   systemId: string;
   workspaceKey: string;

@@ -25,4 +25,5 @@ public enum ActivityType
     Mention = 23,
     ModifyPriority = 24,
     ModifyEstimate = 25,
+    Restore = 26,
 }

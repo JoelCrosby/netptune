@@ -1,6 +1,18 @@
 import { Routes } from '@angular/router';
+import { tasksRestoreGuard } from './guards/tasks-restore.guard';
 
 export const routes: Routes = [
+  {
+    path: 'archive',
+    canActivate: [tasksRestoreGuard],
+    loadComponent: () =>
+      import('./views/archive-view/archive-view.component').then(
+        (m) => m.ArchiveViewComponent
+      ),
+    data: {
+      title: 'Archive',
+    },
+  },
   {
     path: ':systemId',
     loadComponent: () =>

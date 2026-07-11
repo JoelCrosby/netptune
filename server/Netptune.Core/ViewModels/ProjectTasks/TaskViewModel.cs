@@ -59,5 +59,9 @@ public record TaskViewModel
 
     public string? OwnerPictureUrl { get; set; }
 
+    public string? DeletedByUsername { get; set; }
+
+    public string? DeletedByPictureUrl { get; set; }
+
     public string? ProjectName { get; set; }
 }
