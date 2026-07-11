@@ -81,7 +81,7 @@ public sealed class UserPreferencesEndpointTests
         var result = await response.Content.ReadFromJsonAsync<PreferenceValuesResponse>();
         var preferences = result!.Groups.SelectMany(group => group.Preferences).ToList();
 
-        result.Groups.Select(group => group.Key).Should().Equal("appearance", "commandPalette", "boards");
+        result.Groups.Select(group => group.Key).Should().Equal("appearance", "commandPalette", "boards", "workspace");
         preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.AppearanceTheme);
         preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.CommandPaletteRecentItemsScope);
         preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.BoardHiddenGroupIds);

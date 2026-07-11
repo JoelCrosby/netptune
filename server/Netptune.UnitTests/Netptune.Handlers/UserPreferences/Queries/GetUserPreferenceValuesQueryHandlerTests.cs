@@ -52,6 +52,9 @@ public class GetUserPreferenceValuesQueryHandlerTests
         UnitOfWork.UserPreferences
             .GetValues(UserId, PreferenceKeys.BoardTaskSort, WorkspaceId, TestContext.Current.CancellationToken)
             .Returns([]);
+        UnitOfWork.UserPreferences
+            .GetValues(UserId, PreferenceKeys.WorkspaceLastVisited, WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns([]);
 
         var result = await Handler.Handle(new GetUserPreferenceValuesQuery(), TestContext.Current.CancellationToken);
 
