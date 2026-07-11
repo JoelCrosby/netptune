@@ -87,39 +87,24 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         return Entities
             .Where(sprint => sprint.Id == sprintId && sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
             .AsNoTracking()
-            .Select(sprint => new SprintDetailViewModel
-            {
-                Id = sprint.Id,
-                Name = sprint.Name,
-                Goal = sprint.Goal,
-                Status = sprint.Status,
-                StartDate = sprint.StartDate,
-                EndDate = sprint.EndDate,
-                CompletedAt = sprint.CompletedAt,
-                ProjectId = sprint.ProjectId,
-                ProjectName = sprint.Project.Name,
-                ProjectKey = sprint.Project.Key,
-                WorkspaceId = sprint.WorkspaceId,
-                CreatedAt = sprint.CreatedAt,
-                UpdatedAt = sprint.UpdatedAt,
-                TaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted),
-                NewTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Todo),
-                ActiveTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Active),
-                DoneTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Done),
-                EstimateType = sprint.ProjectTasks
-                    .Where(task => !task.IsDeleted && task.EstimateType.HasValue)
-                    .Select(task => task.EstimateType)
-                    .FirstOrDefault(),
-                TotalEstimateValue = sprint.ProjectTasks
-                    .Where(task => !task.IsDeleted)
-                    .Sum(task => task.EstimateValue),
-                Tasks = sprint.ProjectTasks
-                    .Where(task => !task.IsDeleted)
-                    .OrderByDescending(task => task.UpdatedAt)
-                    .AsQueryable()
-                    .Select(TaskToViewModel())
-                    .ToList(),
-            })
+            .Select(SprintToDetailViewModel())
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<SprintDetailViewModel?> GetCurrentSprintForUserAsync(
+        string workspaceKey,
+        string userId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => sprint.Status == SprintStatus.Active)
+            .Where(sprint => sprint.ProjectTasks.Any(task =>
+                !task.IsDeleted && task.ProjectTaskAppUsers.Any(assignee => assignee.UserId == userId)))
+            .OrderByDescending(sprint => sprint.StartDate)
+            .ThenByDescending(sprint => sprint.Id)
+            .AsNoTracking()
+            .Select(SprintToDetailViewModel())
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -167,6 +152,43 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
                 sprint.Status == SprintStatus.Active &&
                 !sprint.IsDeleted &&
                 (!excludingSprintId.HasValue || sprint.Id != excludingSprintId.Value), cancellationToken);
+    }
+
+    private static Expression<Func<Sprint, SprintDetailViewModel>> SprintToDetailViewModel()
+    {
+        return sprint => new SprintDetailViewModel
+        {
+            Id = sprint.Id,
+            Name = sprint.Name,
+            Goal = sprint.Goal,
+            Status = sprint.Status,
+            StartDate = sprint.StartDate,
+            EndDate = sprint.EndDate,
+            CompletedAt = sprint.CompletedAt,
+            ProjectId = sprint.ProjectId,
+            ProjectName = sprint.Project.Name,
+            ProjectKey = sprint.Project.Key,
+            WorkspaceId = sprint.WorkspaceId,
+            CreatedAt = sprint.CreatedAt,
+            UpdatedAt = sprint.UpdatedAt,
+            TaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted),
+            NewTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Todo),
+            ActiveTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Active),
+            DoneTaskCount = sprint.ProjectTasks.Count(task => !task.IsDeleted && task.Status.Category == StatusCategory.Done),
+            EstimateType = sprint.ProjectTasks
+                .Where(task => !task.IsDeleted && task.EstimateType.HasValue)
+                .Select(task => task.EstimateType)
+                .FirstOrDefault(),
+            TotalEstimateValue = sprint.ProjectTasks
+                .Where(task => !task.IsDeleted)
+                .Sum(task => task.EstimateValue),
+            Tasks = sprint.ProjectTasks
+                .Where(task => !task.IsDeleted)
+                .OrderByDescending(task => task.UpdatedAt)
+                .AsQueryable()
+                .Select(TaskToViewModel())
+                .ToList(),
+        };
     }
 
     private static Expression<Func<Sprint, SprintViewModel>> SprintToViewModel()

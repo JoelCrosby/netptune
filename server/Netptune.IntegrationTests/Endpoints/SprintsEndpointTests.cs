@@ -95,6 +95,47 @@ public sealed class SprintsEndpointTests
         result.Payload.CompletedAt.Should().NotBeNull();
     }
 
+    [Fact]
+    public async Task GetCurrent_ShouldReturnMostRecentActiveSprintWithMyTasks()
+    {
+        var project = await CreateProject();
+
+        // A far-future start date guarantees this sprint sorts ahead of any
+        // other active sprint in the shared workspace, so the assertion stays
+        // deterministic regardless of what other tests create.
+        var request = new AddSprintRequest
+        {
+            Name = $"Current Sprint {Guid.NewGuid():N}",
+            Goal = "Sprint overview",
+            StartDate = DateTime.UtcNow.Date.AddYears(5),
+            EndDate = DateTime.UtcNow.Date.AddYears(5).AddDays(14),
+            ProjectId = project.Id,
+        };
+
+        var createResponse = await Client.PostAsJsonAsync("api/sprints", request);
+        var sprint = (await createResponse.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>()).Payload!;
+
+        var task = await CreateTask(project.Id);
+
+        await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/tasks",
+            new AddTasksToSprintRequest { TaskIds = [task.Id] });
+
+        await Client.PostAsync($"api/sprints/{sprint.Id}/start", null);
+
+        var response = await Client.GetAsync("api/sprints/current");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintDetailViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload.Should().NotBeNull();
+        result.Payload!.Id.Should().Be(sprint.Id);
+        result.Payload.Status.Should().Be(SprintStatus.Active);
+        result.Payload.Tasks.Should().Contain(item => item.Id == task.Id);
+    }
+
     private async Task<ProjectViewModel> CreateProject()
     {
         var request = new AddProjectRequest
