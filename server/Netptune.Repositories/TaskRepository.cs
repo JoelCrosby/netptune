@@ -113,6 +113,27 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<TaskViewModel>> GetAllTaskViewModels(string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        var tasks = new List<TaskViewModel>();
+        var page = 1;
+
+        while (true)
+        {
+            var result = await GetTasksAsync(
+                workspaceKey,
+                new TaskFilter { Page = page, PageSize = PaginationDefaults.MaxPageSize },
+                isReadonly: true,
+                cancellationToken: cancellationToken);
+
+            tasks.AddRange(result.Items);
+
+            if (tasks.Count >= result.TotalCount || result.Items.Count == 0) return tasks;
+
+            page++;
+        }
+    }
+
     public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         var entity = GetTaskFromSystemId(systemId, workspaceKey, true);

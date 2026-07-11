@@ -181,9 +181,9 @@ public sealed class SearchSeedService : BackgroundService
         foreach (var slug in slugs)
         {
             Logger.LogInformation("[Search] loading task documents for workspace {WorkspaceSlug}", slug);
-            var tasks = await unitOfWork.Tasks.GetTasksAsync(slug, cancellationToken: ct);
+            var tasks = await unitOfWork.Tasks.GetAllTaskViewModels(slug, ct);
 
-            docs.AddRange(tasks.Items.Select(task => task.ToSearchDocument(slug)));
+            docs.AddRange(tasks.Select(task => task.ToSearchDocument(slug)));
         }
 
         Logger.LogInformation("[Search] loaded {DocumentCount} task documents", docs.Count);
@@ -199,7 +199,7 @@ public sealed class SearchSeedService : BackgroundService
         foreach (var slug in slugs)
         {
             Logger.LogInformation("[Search] loading project documents for workspace {WorkspaceSlug}", slug);
-            var projects = await unitOfWork.Projects.GetProjects(slug, ct);
+            var projects = await unitOfWork.Projects.GetAllProjectViewModels(slug, ct);
 
             docs.AddRange(projects.Select(p => new ProjectSearchDocument
             {
@@ -253,7 +253,7 @@ public sealed class SearchSeedService : BackgroundService
         foreach (var slug in slugs)
         {
             Logger.LogInformation("[Search] loading sprint documents for workspace {WorkspaceSlug}", slug);
-            var sprints = await unitOfWork.Sprints.GetSprintsAsync(slug, cancellationToken: ct);
+            var sprints = await unitOfWork.Sprints.GetAllSprintViewModels(slug, ct);
 
             docs.AddRange(sprints.Select(s => new SprintSearchDocument
             {

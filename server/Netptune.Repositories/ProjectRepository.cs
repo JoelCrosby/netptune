@@ -48,6 +48,28 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<ProjectViewModel>> GetProjectViewModels(IEnumerable<int> projectIds, CancellationToken cancellationToken = default)
+    {
+        var idList = projectIds.ToList();
+
+        if (idList.Count == 0) return Task.FromResult(new List<ProjectViewModel>());
+
+        return Entities
+            .Where(project => idList.Contains(project.Id) && !project.IsDeleted)
+            .AsNoTracking()
+            .Select(ProjectToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectViewModel>> GetAllProjectViewModels(string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(project => project.Workspace.Slug == workspaceKey && !project.IsDeleted)
+            .AsNoTracking()
+            .Select(ProjectToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<ProjectViewModel?> GetProjectViewModel(int id, CancellationToken cancellationToken = default)
     {
         return Entities

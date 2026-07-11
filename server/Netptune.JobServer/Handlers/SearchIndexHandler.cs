@@ -72,10 +72,9 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
 
     private async Task IndexProjectsAsync(IReadOnlyList<int> projectIds, string workspaceSlug, CancellationToken ct)
     {
-        var projects = await UnitOfWork.Projects.GetProjects(workspaceSlug, ct);
+        var projects = await UnitOfWork.Projects.GetProjectViewModels(projectIds, ct);
 
         var documents = projects
-            .Where(project => projectIds.Contains(project.Id))
             .Select(project => new ProjectSearchDocument
             {
                 Id = $"project_{project.Id}",
@@ -95,10 +94,9 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
 
     private async Task IndexBoardsAsync(IReadOnlyList<int> boardIds, string workspaceSlug, CancellationToken ct)
     {
-        var boards = await UnitOfWork.Boards.GetBoards(workspaceSlug, isReadonly: true, ct);
+        var boards = await UnitOfWork.Boards.GetBoardsById(boardIds, ct);
 
         var documents = boards
-            .Where(board => boardIds.Contains(board.Id))
             .Select(board => new BoardSearchDocument
             {
                 Id = $"board_{board.Id}",
@@ -118,10 +116,9 @@ public sealed class SearchIndexHandler : IRequestHandler<SearchIndexEvent>
 
     private async Task IndexSprintsAsync(IReadOnlyList<int> sprintIds, string workspaceSlug, CancellationToken ct)
     {
-        var sprints = await UnitOfWork.Sprints.GetSprintsAsync(workspaceSlug, cancellationToken: ct);
+        var sprints = await UnitOfWork.Sprints.GetSprintViewModels(sprintIds, ct);
 
         var documents = sprints
-            .Where(sprint => sprintIds.Contains(sprint.Id))
             .Select(sprint => new SprintSearchDocument
             {
                 Id = $"sprint_{sprint.Id}",

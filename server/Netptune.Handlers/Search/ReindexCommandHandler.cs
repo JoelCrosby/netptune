@@ -40,9 +40,9 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
 
     private async Task IndexTasksAsync(string workspaceSlug, CancellationToken ct)
     {
-        var tasks = await UnitOfWork.Tasks.GetTasksAsync(workspaceSlug, cancellationToken: ct);
+        var tasks = await UnitOfWork.Tasks.GetAllTaskViewModels(workspaceSlug, ct);
 
-        var documents = tasks.Items.Select(task => task.ToSearchDocument(workspaceSlug));
+        var documents = tasks.Select(task => task.ToSearchDocument(workspaceSlug));
 
         foreach (var batch in documents.Chunk(BatchSize))
         {
@@ -52,7 +52,7 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
 
     private async Task IndexProjectsAsync(string workspaceSlug, CancellationToken ct)
     {
-        var projects = await UnitOfWork.Projects.GetProjects(workspaceSlug, ct);
+        var projects = await UnitOfWork.Projects.GetAllProjectViewModels(workspaceSlug, ct);
 
         var documents = projects.Select(p => new ProjectSearchDocument
         {
@@ -94,7 +94,7 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
 
     private async Task IndexSprintsAsync(string workspaceSlug, CancellationToken ct)
     {
-        var sprints = await UnitOfWork.Sprints.GetSprintsAsync(workspaceSlug, cancellationToken: ct);
+        var sprints = await UnitOfWork.Sprints.GetAllSprintViewModels(workspaceSlug, ct);
 
         var documents = sprints.Select(s => new SprintSearchDocument
         {

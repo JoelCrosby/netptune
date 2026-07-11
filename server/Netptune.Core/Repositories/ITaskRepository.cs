@@ -12,6 +12,8 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<List<TaskViewModel>> GetTaskViewModels(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
 
+    Task<List<TaskViewModel>> GetAllTaskViewModels(string workspaceKey, CancellationToken cancellationToken = default);
+
     Task<ProjectTask?> GetTaskForUpdate(int id, CancellationToken cancellationToken = default);
 
     Task<List<ProjectTask>> GetTasksForUpdate(IEnumerable<int> ids, CancellationToken cancellationToken = default);

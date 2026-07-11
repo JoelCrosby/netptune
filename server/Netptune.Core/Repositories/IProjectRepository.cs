@@ -14,6 +14,10 @@ public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
 
     Task<ProjectViewModel?> GetProjectViewModel(int id, CancellationToken cancellationToken = default);
 
+    Task<List<ProjectViewModel>> GetProjectViewModels(IEnumerable<int> projectIds, CancellationToken cancellationToken = default);
+
+    Task<List<ProjectViewModel>> GetAllProjectViewModels(string workspaceKey, CancellationToken cancellationToken = default);
+
     Task<ProjectViewModel?> GetProjectViewModel(string key, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<TaskCreationProject?> GetTaskCreationProject(int projectId, int workspaceId, CancellationToken cancellationToken = default);

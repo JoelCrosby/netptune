@@ -73,6 +73,19 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
             .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
+    public Task<List<Board>> GetBoardsById(IEnumerable<int> boardIds, CancellationToken cancellationToken = default)
+    {
+        var idList = boardIds.ToList();
+
+        if (idList.Count == 0) return Task.FromResult(new List<Board>());
+
+        return Entities
+            .Where(board => idList.Contains(board.Id) && !board.IsDeleted)
+            .Include(board => board.Project)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<List<BoardsViewModel>> GetBoardViewModels(string slug, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();

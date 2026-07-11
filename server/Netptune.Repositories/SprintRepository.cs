@@ -50,6 +50,28 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<SprintViewModel>> GetSprintViewModels(IEnumerable<int> sprintIds, CancellationToken cancellationToken = default)
+    {
+        var idList = sprintIds.ToList();
+
+        if (idList.Count == 0) return Task.FromResult(new List<SprintViewModel>());
+
+        return Entities
+            .Where(sprint => idList.Contains(sprint.Id) && !sprint.IsDeleted)
+            .AsNoTracking()
+            .Select(SprintToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<SprintViewModel>> GetAllSprintViewModels(string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .AsNoTracking()
+            .Select(SprintToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
     private static IQueryable<Sprint> ApplySprintOrder(IQueryable<Sprint> query, string? sortBy, string? sortDirection)
     {
         var descending = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);

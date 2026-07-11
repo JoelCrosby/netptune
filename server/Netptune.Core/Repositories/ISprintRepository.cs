@@ -17,6 +17,10 @@ public interface ISprintRepository : IWorkspaceEntityRepository<Sprint, int>
         string? sortDirection = null,
         CancellationToken cancellationToken = default);
 
+    Task<List<SprintViewModel>> GetSprintViewModels(IEnumerable<int> sprintIds, CancellationToken cancellationToken = default);
+
+    Task<List<SprintViewModel>> GetAllSprintViewModels(string workspaceKey, CancellationToken cancellationToken = default);
+
     Task<SprintDetailViewModel?> GetSprintDetailAsync(
         string workspaceKey,
         int sprintId,
