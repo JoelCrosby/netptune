@@ -117,9 +117,9 @@ public class BoardEventService(ILogger<BoardEventService> logger, IConnectionMul
                 await response.Body.FlushAsync(cancellationToken);
             }
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
-            logger.LogDebug(ex, "Client disconnected");
+            logger.LogDebug("Client disconnected");
         }
         finally
         {

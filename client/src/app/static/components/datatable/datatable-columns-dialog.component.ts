@@ -47,12 +47,12 @@ export interface DatatableColumnsDialogData {
     </p>
 
     <div
-      class="flex flex-col gap-1"
+      class="column-list flex flex-col gap-1"
       cdkDropList
       (cdkDropListDropped)="drop($event)">
       @for (item of items(); track item.id) {
         <div
-          class="border-border bg-card flex items-center gap-3 rounded border px-2 py-2"
+          class="column-item border-border bg-card flex items-center gap-3 rounded border px-2 py-2"
           cdkDrag>
           <button
             type="button"
@@ -80,6 +80,26 @@ export interface DatatableColumnsDialogData {
       </button>
     </div>
   `,
+  styles: [
+    `
+      .cdk-drag-animating {
+        transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+      }
+      .cdk-drag-preview {
+        border: 1px solid var(--border);
+        background: var(--card);
+        box-shadow:
+          0 5px 5px -3px rgba(0, 0, 0, 0.2),
+          0 8px 10px 1px rgba(0, 0, 0, 0.14),
+          0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        transition: box-shadow 0.3s cubic-bezier(0, 0, 0.2, 1);
+      }
+      .column-list.cdk-drop-list-dragging
+        .column-item:not(.cdk-drag-placeholder) {
+        transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+      }
+    `,
+  ],
 })
 export class DatatableColumnsDialogComponent {
   private data = inject<DatatableColumnsDialogData>(DIALOG_DATA);
