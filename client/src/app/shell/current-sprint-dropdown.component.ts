@@ -18,6 +18,7 @@ import {
   LucideCalendarFold,
   LucideCheck,
   LucideChevronDown,
+  LucideExternalLink,
   LucideFilterX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -35,6 +36,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     LucideCalendarDays,
     LucideCheck,
     LucideChevronDown,
+    LucideExternalLink,
     LucideFilterX,
     LucideCalendarFold,
   ],
@@ -84,8 +86,18 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
             </button>
           }
 
-          @if (selectedSprintFilterId()) {
+          @if (selectedSprintFilter(); as selectedSprint) {
             <div class="border-border/50 my-1 border-t"></div>
+
+            <button
+              app-menu-item
+              type="button"
+              (click)="onSprintOpened(selectedSprint.id, sprintMenu)">
+              <svg lucideExternalLink class="h-4 w-4 shrink-0"></svg>
+              <span class="max-w-64 truncate">
+                Open {{ selectedSprint.name }}
+              </span>
+            </button>
 
             <button
               app-menu-item
@@ -159,6 +171,13 @@ export class CurrentSprintDropdownComponent {
   onSprintSelected(sprintId: number, menu: DropdownMenuComponent) {
     menu.close();
     this.store.dispatch(setSprintTaskFilter({ sprintId }));
+  }
+
+  onSprintOpened(sprintId: number, menu: DropdownMenuComponent) {
+    menu.close();
+    void this.router.navigate(['./sprints', sprintId], {
+      relativeTo: this.route,
+    });
   }
 
   onSprintFilterRemoved(menu: DropdownMenuComponent) {

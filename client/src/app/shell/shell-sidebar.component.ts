@@ -1,12 +1,18 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { Component, computed, effect, inject, output } from '@angular/core';
 import {
   selectCurrentUser,
   selectHasPermission,
 } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
+import { loadCurrentSprints } from '@core/store/sprints/sprints.actions';
+import {
+  selectCurrentSprints,
+  selectCurrentSprintsLoaded,
+} from '@core/store/sprints/sprints.selectors';
 import {
   LucideBell,
   LucideCalendarDays,
+  LucideCalendarRange,
   LucideChartNoAxesColumn,
   LucideLayoutDashboard,
   LucideLogs,
@@ -30,6 +36,9 @@ import {
 import { ShellSidebarCollapseComponent } from './shell-sidebar-collapse.component';
 import { ShellService } from './shell.service';
 import { WorkspaceSelectComponent } from './workspace-select/workspace-select.component';
+
+/** Active sprints listed under the Sprints menu. Overview links to the full list. */
+const maxSprintLinks = 2;
 
 @Component({
   selector: 'app-shell-sidebar',
@@ -82,6 +91,9 @@ export class ShellSidebarComponent {
   private store = inject(Store);
 
   shell = inject(ShellService);
+
+  currentSprints = this.store.selectSignal(selectCurrentSprints);
+  currentSprintsLoaded = this.store.selectSignal(selectCurrentSprintsLoaded);
 
   canReadMembers = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.read)
@@ -138,6 +150,14 @@ export class ShellSidebarComponent {
     }
 
     if (this.canReadSprints()) {
+      const activeSprints = this.currentSprints()
+        .slice(0, maxSprintLinks)
+        .map((sprint) => ({
+          label: sprint.name,
+          value: ['./sprints', String(sprint.id)],
+          icon: LucideCalendarRange,
+        }));
+
       primaryLinks.splice(2, 0, {
         label: 'Sprints',
         value: ['./sprints'],
@@ -148,6 +168,7 @@ export class ShellSidebarComponent {
             value: ['./sprints/backlog'],
             icon: LucideLogs,
           },
+          ...activeSprints,
         ],
       });
     }
@@ -196,6 +217,14 @@ export class ShellSidebarComponent {
 
   user = this.store.selectSignal(selectCurrentUser);
   workspaceChange = output<Workspace>();
+
+  constructor() {
+    effect(() => {
+      if (this.canReadSprints() && !this.currentSprintsLoaded()) {
+        this.store.dispatch(loadCurrentSprints.init());
+      }
+    });
+  }
 
   onWorkspaceChange(workspace: Workspace) {
     this.workspaceChange.emit(workspace);
