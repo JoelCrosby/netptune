@@ -50,6 +50,17 @@
 
   --font-overpass: 'Overpass', sans-serif;
   --font-avatar: 'Roboto Mono', 'Roboto', sans-serif;
+
+  --animate-loading-bar: loading-bar 2s ease-in-out infinite;
+}
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
 }
 
 .light {

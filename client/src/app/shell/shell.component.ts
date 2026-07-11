@@ -1,5 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  NavigationCancel,
+  NavigationError,
+  RouteConfigLoadEnd,
+  RouteConfigLoadStart,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
+import { filter } from 'rxjs';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { toggleSideMenu } from '@core/store/layout/layout.actions';
@@ -29,6 +38,11 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
     }
   `,
   template: `
+    @if (chunkLoading()) {
+      <div class="bg-primary/20 fixed inset-x-0 top-0 z-50 h-0.5 overflow-hidden">
+        <div class="bg-primary animate-loading-bar h-full w-1/3"></div>
+      </div>
+    }
     <div
       class="bg-background fixed grid h-screen w-screen grid-rows-[60px_auto] transition-all"
       [class.expanded]="shell.sideNavExpanded()"
@@ -58,8 +72,23 @@ export class ShellComponent {
   authenticated = this.store.selectSignal(selectIsAuthenticated);
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
 
+  readonly chunkLoading = signal(false);
+
   constructor() {
     this.preferences.load();
+
+    this.router.events
+      .pipe(
+        filter(
+          (e) =>
+            e instanceof RouteConfigLoadStart ||
+            e instanceof RouteConfigLoadEnd ||
+            e instanceof NavigationCancel ||
+            e instanceof NavigationError,
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe((e) => this.chunkLoading.set(e instanceof RouteConfigLoadStart));
   }
 
   onSidenavClosedStart() {

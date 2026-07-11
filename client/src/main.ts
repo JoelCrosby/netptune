@@ -1,6 +1,11 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import {
+  PreloadAllModules,
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+} from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore } from '@ngrx/router-store';
 import { provideStore } from '@ngrx/store';
@@ -20,7 +25,11 @@ import { WorkspacesEffects } from './app/core/store/workspaces/workspaces.effect
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter(routes, withComponentInputBinding()),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withPreloading(PreloadAllModules),
+    ),
     provideStore(reducers, {
       metaReducers,
       runtimeChecks: {
