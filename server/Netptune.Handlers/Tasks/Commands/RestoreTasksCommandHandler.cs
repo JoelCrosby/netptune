@@ -47,16 +47,13 @@ public sealed class RestoreTasksCommandHandler : IRequestHandler<RestoreTasksCom
             options.Type = ActivityType.Restore;
         });
 
-        foreach (var id in restoredIds)
+        await EventPublisher.Dispatch(new SearchIndexEvent
         {
-            await EventPublisher.Dispatch(new SearchIndexEvent
-            {
-                Operation = SearchIndexOperation.Index,
-                EntityType = "task",
-                EntityId = id,
-                WorkspaceSlug = workspaceSlug,
-            });
-        }
+            Operation = SearchIndexOperation.Index,
+            EntityType = "task",
+            EntityIds = restoredIds,
+            WorkspaceSlug = workspaceSlug,
+        });
 
         return ClientResponse.Success;
     }

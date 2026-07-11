@@ -7,7 +7,12 @@ public record GlobalSearchQuery(string Q, string WorkspaceSlug, string[]? Types 
 public interface IMeilisearchService
 {
     Task IndexDocumentsAsync<T>(string indexName, IEnumerable<T> docs, CancellationToken cancellationToken = default);
+
     Task DeleteDocumentAsync(string indexName, string id, CancellationToken cancellationToken = default);
+
+    Task DeleteDocumentsAsync(string indexName, IEnumerable<string> ids, CancellationToken cancellationToken = default);
+
     Task EnsureIndexSettingsAsync(CancellationToken cancellationToken = default);
+
     Task<SearchResponse> SearchAsync(GlobalSearchQuery query, CancellationToken cancellationToken = default);
 }

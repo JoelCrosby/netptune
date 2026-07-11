@@ -100,6 +100,19 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public Task<List<TaskViewModel>> GetTaskViewModels(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
+    {
+        var idList = taskIds.ToList();
+
+        if (idList.Count == 0) return Task.FromResult(new List<TaskViewModel>());
+
+        return Entities
+            .Where(x => idList.Contains(x.Id))
+            .AsNoTracking()
+            .Select(TaskToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<int?> GetTaskInternalId(string systemId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         var entity = GetTaskFromSystemId(systemId, workspaceKey, true);

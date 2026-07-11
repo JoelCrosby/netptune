@@ -54,7 +54,7 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
         {
             Operation = SearchIndexOperation.Index,
             EntityType = "sprint",
-            EntityId = sprint.Id,
+            EntityIds = [sprint.Id],
             WorkspaceSlug = workspaceKey,
         });
 

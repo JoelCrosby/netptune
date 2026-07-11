@@ -42,20 +42,7 @@ public sealed class ReindexCommandHandler : IRequestHandler<ReindexCommand>
     {
         var tasks = await UnitOfWork.Tasks.GetTasksAsync(workspaceSlug, cancellationToken: ct);
 
-        var documents = tasks.Items.Select(t => new TaskSearchDocument
-        {
-            Id = $"task_{t.Id}",
-            TaskId = t.Id,
-            Title = t.Name,
-            Description = t.Description,
-            SystemId = t.SystemId,
-            WorkspaceSlug = workspaceSlug,
-            Status = t.StatusName,
-            Priority = t.Priority?.ToString(),
-            AssigneeIds = t.Assignees.Select(a => a.Id).ToList(),
-            ProjectId = t.ProjectId,
-            UpdatedAt = DateTime.UtcNow,
-        });
+        var documents = tasks.Items.Select(task => task.ToSearchDocument(workspaceSlug));
 
         foreach (var batch in documents.Chunk(BatchSize))
         {

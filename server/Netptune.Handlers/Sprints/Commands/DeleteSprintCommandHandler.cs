@@ -58,7 +58,7 @@ public sealed class DeleteSprintCommandHandler : IRequestHandler<DeleteSprintCom
         {
             Operation = SearchIndexOperation.Delete,
             EntityType = "sprint",
-            EntityId = sprint.Id,
+            EntityIds = [sprint.Id],
             WorkspaceSlug = workspaceKey,
         });
 

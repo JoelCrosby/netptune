@@ -10,7 +10,7 @@ public record SearchIndexEvent : IEventMessage
 
     public required string EntityType { get; init; }
 
-    public required int EntityId { get; init; }
+    public required IReadOnlyList<int> EntityIds { get; init; }
 
     public required string WorkspaceSlug { get; init; }
 }

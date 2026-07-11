@@ -75,7 +75,7 @@ public sealed class CreateSprintCommandHandler : IRequestHandler<CreateSprintCom
         {
             Operation = SearchIndexOperation.Index,
             EntityType = "sprint",
-            EntityId = sprint.Id,
+            EntityIds = [sprint.Id],
             WorkspaceSlug = workspaceKey,
         });
 

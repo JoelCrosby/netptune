@@ -79,7 +79,7 @@ public class SprintCommandHandlerTests
         await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
             message.Operation == SearchIndexOperation.Index
             && message.EntityType == "sprint"
-            && message.EntityId == sprintViewModel.Id
+            && message.EntityIds.Contains(sprintViewModel.Id)
             && message.WorkspaceSlug == WorkspaceKey));
     }
 
@@ -155,7 +155,7 @@ public class SprintCommandHandlerTests
         await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
             message.Operation == SearchIndexOperation.Index
             && message.EntityType == "sprint"
-            && message.EntityId == sprint.Id
+            && message.EntityIds.Contains(sprint.Id)
             && message.WorkspaceSlug == WorkspaceKey));
     }
 
@@ -201,7 +201,7 @@ public class SprintCommandHandlerTests
         await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
             message.Operation == SearchIndexOperation.Index
             && message.EntityType == "sprint"
-            && message.EntityId == sprint.Id
+            && message.EntityIds.Contains(sprint.Id)
             && message.WorkspaceSlug == WorkspaceKey));
     }
 
@@ -303,7 +303,7 @@ public class SprintCommandHandlerTests
         await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
             message.Operation == SearchIndexOperation.Delete
             && message.EntityType == "sprint"
-            && message.EntityId == sprint.Id
+            && message.EntityIds.Contains(sprint.Id)
             && message.WorkspaceSlug == WorkspaceKey));
     }
 

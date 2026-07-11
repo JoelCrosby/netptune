@@ -122,7 +122,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         {
             Operation = SearchIndexOperation.Index,
             EntityType = "task",
-            EntityId = result.Id,
+            EntityIds = [result.Id],
             WorkspaceSlug = workspaceKey,
         });
 

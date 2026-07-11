@@ -40,13 +40,13 @@ public sealed class DeleteTasksCommandHandler : IRequestHandler<DeleteTasksComma
 
         var workspaceSlug = Identity.GetWorkspaceKey();
 
-        foreach (var id in deletedIds)
+        if (deletedIds.Count > 0)
         {
             await EventPublisher.Dispatch(new SearchIndexEvent
             {
                 Operation = SearchIndexOperation.Delete,
                 EntityType = "task",
-                EntityId = id,
+                EntityIds = deletedIds,
                 WorkspaceSlug = workspaceSlug,
             });
         }

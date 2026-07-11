@@ -57,7 +57,7 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
         {
             Operation = SearchIndexOperation.Index,
             EntityType = "sprint",
-            EntityId = sprint.Id,
+            EntityIds = [sprint.Id],
             WorkspaceSlug = workspaceKey,
         });
 

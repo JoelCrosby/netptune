@@ -183,20 +183,7 @@ public sealed class SearchSeedService : BackgroundService
             Logger.LogInformation("[Search] loading task documents for workspace {WorkspaceSlug}", slug);
             var tasks = await unitOfWork.Tasks.GetTasksAsync(slug, cancellationToken: ct);
 
-            docs.AddRange(tasks.Items.Select(t => new TaskSearchDocument
-            {
-                Id = $"task_{t.Id}",
-                TaskId = t.Id,
-                Title = t.Name,
-                Description = t.Description,
-                SystemId = t.SystemId,
-                WorkspaceSlug = slug,
-                Status = t.StatusName,
-                Priority = t.Priority?.ToString(),
-                AssigneeIds = t.Assignees.Select(a => a.Id).ToList(),
-                ProjectId = t.ProjectId,
-                UpdatedAt = (t.UpdatedAt ?? t.CreatedAt).UtcDateTime,
-            }));
+            docs.AddRange(tasks.Items.Select(task => task.ToSearchDocument(slug)));
         }
 
         Logger.LogInformation("[Search] loaded {DocumentCount} task documents", docs.Count);

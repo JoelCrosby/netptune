@@ -63,7 +63,7 @@ public class RestoreTasksCommandHandlerTests
     }
 
     [Fact]
-    public async Task Restore_ShouldDispatchSearchIndexEventPerTask_WhenTasksRestored()
+    public async Task Restore_ShouldDispatchSingleBatchedSearchIndexEvent_WhenTasksRestored()
     {
         var ids = new[] { 1, 2 };
 
@@ -72,10 +72,11 @@ public class RestoreTasksCommandHandlerTests
 
         await Handler.Handle(new RestoreTasksCommand(ids), TestContext.Current.CancellationToken);
 
-        await EventPublisher.Received(2).Dispatch(Arg.Is<SearchIndexEvent>(searchEvent =>
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(searchEvent =>
             searchEvent.Operation == SearchIndexOperation.Index &&
             searchEvent.EntityType == "task" &&
-            searchEvent.WorkspaceSlug == WorkspaceSlug));
+            searchEvent.WorkspaceSlug == WorkspaceSlug &&
+            searchEvent.EntityIds.SequenceEqual(ids)));
     }
 
     [Fact]

@@ -44,7 +44,7 @@ public sealed class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand
         {
             Operation = SearchIndexOperation.Delete,
             EntityType = "task",
-            EntityId = request.Id,
+            EntityIds = [request.Id],
             WorkspaceSlug = Identity.GetWorkspaceKey(),
         });
 
