@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { SprintStatus } from '@core/enums/sprint-status';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { ActionState, DEFAULT_ACTION_STATE } from '@core/types/action-state';
@@ -19,8 +18,6 @@ export const initialState: SprintsState = adapter.getInitialState({
   selectedSprintFilterId: undefined,
   detail: undefined,
   detailLoading: false,
-  availableTasks: [],
-  availableTasksLoading: false,
   filter: {},
   createState: DEFAULT_ACTION_STATE,
   updateState: DEFAULT_ACTION_STATE,
@@ -44,8 +41,6 @@ export interface SprintsState extends AsyncEntityState<SprintViewModel> {
   selectedSprintFilterId?: number;
   detail?: SprintDetailViewModel;
   detailLoading: boolean;
-  availableTasks: TaskViewModel[];
-  availableTasksLoading: boolean;
   filter: SprintFilter;
   createState: ActionState;
   updateState: ActionState;

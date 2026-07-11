@@ -62,16 +62,6 @@ export const selectSprintDetailLoading = createSelector(
   (state: SprintsState) => state.detailLoading
 );
 
-export const selectAvailableSprintTasks = createSelector(
-  selectSprintsFeature,
-  (state: SprintsState) => state.availableTasks
-);
-
-export const selectAvailableSprintTasksLoading = createSelector(
-  selectSprintsFeature,
-  (state: SprintsState) => state.availableTasksLoading
-);
-
 export const selectSprintCreateLoading = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.createState.loading

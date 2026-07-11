@@ -4,11 +4,9 @@ import { ClientResponse } from '@core/models/client-response';
 import { AddSprintRequest } from '@core/models/requests/add-sprint-request';
 import { AddTasksToSprintRequest } from '@core/models/requests/add-tasks-to-sprint-request';
 import { UpdateSprintRequest } from '@core/models/requests/update-sprint-request';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { SprintFilter } from './sprints.model';
-import { Page } from '@app/core/models/pagination';
 
 @Injectable({ providedIn: 'root' })
 export class SprintsService {
@@ -40,17 +38,6 @@ export class SprintsService {
     return this.http.get<ClientResponse<SprintDetailViewModel>>(
       `api/sprints/${sprintId}`
     );
-  }
-
-  availableTasks(sprintId: number, projectId: number) {
-    const params = new HttpParams()
-      .set('projectId', projectId)
-      .set('excludeSprintId', sprintId)
-      .set('take', 100);
-
-    return this.http.get<ClientResponse<Page<TaskViewModel>>>('api/tasks', {
-      params,
-    });
   }
 
   post(request: AddSprintRequest) {

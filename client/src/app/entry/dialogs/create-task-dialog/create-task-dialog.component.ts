@@ -1,4 +1,4 @@
-import { DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -18,6 +18,13 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { EditorComponent } from '@app/static/components/editor/editor.component';
+
+// When opened from a sprint, the project is fixed to the sprint's project and
+// the created task is attached to the sprint, so the project selector is hidden.
+export interface CreateTaskDialogData {
+  projectId?: number;
+  sprintId?: number;
+}
 
 @Component({
   imports: [
@@ -45,13 +52,15 @@ import { EditorComponent } from '@app/static/components/editor/editor.component'
         maxLength="4096"
         [isReadonly]="false" />
 
-      <app-form-select [formField]="taskForm.project" label="Project">
-        @for (project of projects(); track project.id) {
-          <app-form-select-option [value]="project.id">
-            {{ project.name }}
-          </app-form-select-option>
-        }
-      </app-form-select>
+      @if (!data?.projectId) {
+        <app-form-select [formField]="taskForm.project" label="Project">
+          @for (project of projects(); track project.id) {
+            <app-form-select-option [value]="project.id">
+              {{ project.name }}
+            </app-form-select-option>
+          }
+        </app-form-select>
+      }
     </form>
 
     <div app-dialog-actions align="end">
@@ -62,6 +71,9 @@ import { EditorComponent } from '@app/static/components/editor/editor.component'
 export class CreateTaskDialogComponent {
   private store = inject(Store);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
+  readonly data = inject<CreateTaskDialogData | null>(DIALOG_DATA, {
+    optional: true,
+  });
 
   projects = this.store.selectSignal(selectAllProjects);
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
@@ -71,7 +83,7 @@ export class CreateTaskDialogComponent {
 
   taskFormModel = signal({
     name: '',
-    project: this.projectId() ?? '',
+    project: this.data?.projectId ?? this.projectId() ?? '',
     description: '',
   });
 
@@ -90,7 +102,7 @@ export class CreateTaskDialogComponent {
 
   saveClicked() {
     const workspace = this.currentWorkspace();
-    const projectId = this.projectId();
+    const projectId = this.data?.projectId ?? this.projectId();
 
     if (projectId === undefined || projectId === null) {
       throw new Error('project id is undefined');
@@ -102,6 +114,7 @@ export class CreateTaskDialogComponent {
       name: name().value().trim(),
       description: description().value().trim(),
       projectId,
+      sprintId: this.data?.sprintId ?? null,
     };
 
     if (!workspace?.slug) {

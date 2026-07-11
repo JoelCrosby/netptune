@@ -51,8 +51,6 @@ const reducer = createReducer(
   on(actions.loadSprintDetail.init, (state): SprintsState => ({
     ...state,
     detailLoading: true,
-    availableTasks: [],
-    availableTasksLoading: false,
   })),
   on(actions.loadSprintDetail.success, (state, { sprint }): SprintsState =>
     adapter.upsertOne(sprint, {
@@ -67,26 +65,6 @@ const reducer = createReducer(
     loadingError: error,
     detailLoading: false,
   })),
-  on(actions.loadAvailableSprintTasks.init, (state): SprintsState => ({
-    ...state,
-    availableTasksLoading: true,
-  })),
-  on(
-    actions.loadAvailableSprintTasks.success,
-    (state, { tasks }): SprintsState => ({
-      ...state,
-      availableTasks: tasks,
-      availableTasksLoading: false,
-    })
-  ),
-  on(
-    actions.loadAvailableSprintTasks.fail,
-    (state, { error }): SprintsState => ({
-      ...state,
-      loadingError: error,
-      availableTasksLoading: false,
-    })
-  ),
   on(actions.createSprint.init, (state): SprintsState => ({
     ...state,
     createState: { loading: true },

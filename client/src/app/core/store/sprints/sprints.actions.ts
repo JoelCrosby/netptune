@@ -1,7 +1,6 @@
 import { AddSprintRequest } from '@core/models/requests/add-sprint-request';
 import { AddTasksToSprintRequest } from '@core/models/requests/add-tasks-to-sprint-request';
 import { UpdateSprintRequest } from '@core/models/requests/update-sprint-request';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { createAsyncAction } from '@core/util/create-async-action';
@@ -41,16 +40,6 @@ export const loadSprintDetail = createAsyncAction(
   {
     init: props<{ sprintId: number }>(),
     success: props<{ sprint: SprintDetailViewModel }>(),
-  }
-);
-
-// Load Available Sprint Tasks
-
-export const loadAvailableSprintTasks = createAsyncAction(
-  '[Sprints] Load Available Sprint Tasks',
-  {
-    init: props<{ sprintId: number; projectId: number }>(),
-    success: props<{ tasks: TaskViewModel[] }>(),
   }
 );
 

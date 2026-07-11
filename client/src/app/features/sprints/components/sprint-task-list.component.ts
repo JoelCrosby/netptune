@@ -19,7 +19,6 @@ import { SprintBacklogPriorityClassPipe } from '../pipes/sprint-backlog-priority
 import { SprintBacklogPriorityLabelPipe } from '../pipes/sprint-backlog-priority-label.pipe';
 import { SprintBacklogStatusBadgeClassPipe } from '../pipes/sprint-backlog-status-badge-class.pipe';
 import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-label.pipe';
-import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
 
 @Component({
   selector: 'app-sprint-task-list',
@@ -29,17 +28,12 @@ import { SprintAddTaskFormComponent } from './sprint-add-task-form.component';
     TaskScopeIdComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
-    SprintAddTaskFormComponent,
     SprintBacklogStatusBadgeClassPipe,
     SprintBacklogStatusLabelPipe,
     SprintBacklogPriorityClassPipe,
     SprintBacklogPriorityLabelPipe,
   ],
   template: `
-    @if (canEditSprintTasks()) {
-      <app-sprint-add-task-form [sprintId]="sprint().id!" />
-    }
-
     <app-datatable
       containerClass="overflow-auto"
       tableClass="min-w-[820px] table-fixed"

@@ -22,11 +22,14 @@ import { Store } from '@ngrx/store';
 import { LucidePencil, LucideTrash2 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
+import { SprintAddTaskDialogComponent } from '../../dialogs/sprint-add-task-dialog.component';
 import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
@@ -42,6 +45,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
     SpinnerComponent,
     FlatButtonComponent,
     IconButtonComponent,
+    StrokedButtonComponent,
     LucidePencil,
     LucideTrash2,
     SprintStatsComponent,
@@ -85,6 +89,23 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
             </div>
 
             <div class="flex shrink-0 items-center gap-1">
+              @if (canManageTasks() && sprint.status !== sprintStatus.completed) {
+                <button
+                  app-stroked-button
+                  type="button"
+                  (click)="onAddTasks(sprint)">
+                  Add Task
+                </button>
+                <button
+                  app-stroked-button
+                  color="primary"
+                  type="button"
+                  class="mr-1"
+                  (click)="onCreateTask(sprint)">
+                  New Task
+                </button>
+              }
+
               @if (canUpdate()) {
                 <button
                   app-icon-button
@@ -182,6 +203,21 @@ export class SprintDetailViewComponent {
     this.dialog.open(EditSprintDialogComponent, {
       width: '520px',
       data: sprint,
+    });
+  }
+
+  onCreateTask(sprint: SprintDetailViewModel) {
+    this.dialog.open(CreateTaskDialogComponent, {
+      width: '600px',
+      data: { projectId: sprint.projectId, sprintId: sprint.id },
+    });
+  }
+
+  onAddTasks(sprint: SprintDetailViewModel) {
+    if (!sprint.id) return;
+
+    this.dialog.open(SprintAddTaskDialogComponent, {
+      data: { sprintId: sprint.id, projectId: sprint.projectId },
     });
   }
 

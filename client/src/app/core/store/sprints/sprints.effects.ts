@@ -6,15 +6,12 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import * as RouteSelectors from '@core/core.route.selectors';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
-import {
-  unwrapClientPageReposne,
-  unwrapClientReposne,
-} from '@core/util/rxjs-operators';
+import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { Action, Store } from '@ngrx/store';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
-import { EMPTY, Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import * as TagActions from '../tags/tags.actions';
 import { selectSelectedTags } from '../tags/tags.selectors';
@@ -91,38 +88,6 @@ export class SprintsEffects {
           map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadSprintDetail.fail({ error }))
-          )
-        )
-      )
-    );
-  });
-
-  loadAvailableTasksForSprint$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadSprintDetail.success),
-      switchMap(({ sprint }) => {
-        if (sprint.status === SprintStatus.completed || !sprint.id)
-          return EMPTY;
-
-        return of(
-          actions.loadAvailableSprintTasks.init({
-            sprintId: sprint.id,
-            projectId: sprint.projectId,
-          })
-        );
-      })
-    );
-  });
-
-  loadAvailableSprintTasks$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadAvailableSprintTasks.init),
-      switchMap(({ sprintId, projectId }) =>
-        this.sprintsService.availableTasks(sprintId, projectId).pipe(
-          unwrapClientPageReposne(),
-          map((tasks) => actions.loadAvailableSprintTasks.success({ tasks })),
-          catchError((error: HttpErrorResponse) =>
-            of(actions.loadAvailableSprintTasks.fail({ error }))
           )
         )
       )
@@ -435,6 +400,20 @@ export class SprintsEffects {
             of(actions.updateSprint.fail({ error }))
           )
         )
+      )
+    );
+  });
+
+  // A task created directly into a sprint (from the sprint detail view) isn't
+  // covered by the sprint's own add/remove flows, so reload the sprint task
+  // list and refresh the detail to keep the row list and stats in sync.
+  refreshSprintOnTaskCreated$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(TaskActions.createProjectTask.success),
+      filter(({ task }) => task.sprintId != null),
+      tap(() => this.tasksHub.reloadTaskList()),
+      map(({ task }) =>
+        actions.loadSprintDetail.init({ sprintId: task.sprintId! })
       )
     );
   });
