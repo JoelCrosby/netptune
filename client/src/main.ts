@@ -1,4 +1,6 @@
+import '@angular/common/locales/global/en-GB';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { LOCALE_ID } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import {
   PreloadAllModules,
@@ -25,10 +27,11 @@ import { WorkspacesEffects } from './app/core/store/workspaces/workspaces.effect
 
 bootstrapApplication(AppComponent, {
   providers: [
+    { provide: LOCALE_ID, useValue: 'en-GB' },
     provideRouter(
       routes,
       withComponentInputBinding(),
-      withPreloading(PreloadAllModules),
+      withPreloading(PreloadAllModules)
     ),
     provideStore(reducers, {
       metaReducers,
