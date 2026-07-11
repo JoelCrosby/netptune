@@ -117,9 +117,9 @@ export class SprintTaskListComponent {
   private readonly baseColumns: DatatableColumn<TaskViewModel>[] = [
     { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
     { id: 'name', header: 'Task', accessor: 'name', sortable: true },
-    { id: 'projectName', header: 'Project', widthClass: 'w-48' },
-    { id: 'status', header: 'Status', widthClass: 'w-40' },
-    { id: 'priority', header: 'Priority', widthClass: 'w-32' },
+    { id: 'projectName', header: 'Project', sortable: true, widthClass: 'w-48' },
+    { id: 'status', header: 'Status', sortable: true, widthClass: 'w-40' },
+    { id: 'priority', header: 'Priority', sortable: true, widthClass: 'w-32' },
   ];
 
   private readonly actionsColumn: DatatableColumn<TaskViewModel> = {
