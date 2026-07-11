@@ -14,6 +14,8 @@ import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { MoveMatchingTasksDialogComponent } from '@entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component';
+import { DialogService } from '@core/services/dialog.service';
 import {
   buildTaskFilterRouteParams,
   parseTaskFilterRouteParams,
@@ -25,6 +27,7 @@ import { Action, Store } from '@ngrx/store';
 import { EMPTY, of, throwError } from 'rxjs';
 import {
   catchError,
+  concatMap,
   filter,
   first,
   map,
@@ -43,6 +46,7 @@ export class BoardGroupsEffects {
   private tasksHubService = inject(ProjectTasksHubService);
   private store = inject(Store);
   private confirmation = inject(ConfirmationService);
+  private dialog = inject(DialogService);
   private snackbar = inject(SnackbarService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -53,6 +57,7 @@ export class BoardGroupsEffects {
         actions.loadBoardGroups.init,
         actions.createBoardGroup.success,
         actions.moveSelectedTasks.success,
+        actions.moveMatchingTasks.success,
         actions.reassignTasks.success,
         actions.editBoardGroup.success,
         TaskActions.importTasks.success,
@@ -228,6 +233,87 @@ export class BoardGroupsEffects {
   editBoardGroups$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.editBoardGroup.init),
+      concatLatestFrom(() => [
+        this.store.select(selectors.selectBoardIdentifier),
+        this.store.select(selectors.selectBoardGroupEntities),
+      ]),
+      switchMap(([action, identifier, entities]) => {
+        if (identifier === undefined) {
+          return throwError(() => new Error('board identifier is undefined'));
+        }
+
+        const previousStatusId =
+          entities[action.request.boardGroupId]?.statusId ?? null;
+
+        return this.tasksHubService.putGroup(identifier, action.request).pipe(
+          unwrapClientReposne(),
+          map((boardGroup) =>
+            actions.editBoardGroup.success({
+              boardGroup,
+              statusChanged: (boardGroup.statusId ?? null) !== previousStatusId,
+            })
+          ),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.editBoardGroup.fail({ error }))
+          )
+        );
+      })
+    );
+  });
+
+  // A group that gains a status offers to pull the board's tasks with that status
+  // into it. A rename, or clearing the status, prompts nothing.
+  promptMoveMatchingTasks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.createBoardGroup.success, actions.editBoardGroup.success),
+      filter(
+        (action) =>
+          action.boardGroup.statusId !== null &&
+          ('statusChanged' in action ? action.statusChanged : true)
+      ),
+      concatLatestFrom(() => this.store.select(selectors.selectAllBoardGroups)),
+      concatMap(([{ boardGroup }, groups]) => {
+        const tasks = groups.flatMap((group) =>
+          group.tasks
+            .filter((task) => task.statusId === boardGroup.statusId)
+            .map((task) => ({
+              id: task.id,
+              name: task.name,
+              systemId: task.systemId,
+              groupName: group.name,
+            }))
+        );
+
+        if (tasks.length === 0) return EMPTY;
+
+        const statusName =
+          groups
+            .flatMap((group) => group.tasks)
+            .find((task) => task.statusId === boardGroup.statusId)
+            ?.statusName ?? '';
+
+        return this.dialog
+          .open<number[] | undefined>(MoveMatchingTasksDialogComponent, {
+            width: MoveMatchingTasksDialogComponent.width,
+            data: { groupName: boardGroup.name, statusName, tasks },
+          })
+          .closed.pipe(
+            first(),
+            filter((taskIds): taskIds is number[] => !!taskIds?.length),
+            map((taskIds) =>
+              actions.moveMatchingTasks.init({
+                newGroupId: boardGroup.id,
+                taskIds,
+              })
+            )
+          );
+      })
+    );
+  });
+
+  moveMatchingTasks$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.moveMatchingTasks.init),
       concatLatestFrom(() =>
         this.store.select(selectors.selectBoardIdentifier)
       ),
@@ -236,13 +322,20 @@ export class BoardGroupsEffects {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
-        return this.tasksHubService.putGroup(identifier, action.request).pipe(
-          unwrapClientReposne(),
-          map((boardGroup) => actions.editBoardGroup.success({ boardGroup })),
-          catchError((error: HttpErrorResponse) =>
-            of(actions.editBoardGroup.fail({ error }))
-          )
-        );
+        return this.tasksHubService
+          .moveTasksToGroup(identifier, {
+            boardId: identifier,
+            newGroupId: action.newGroupId,
+            taskIds: action.taskIds,
+          })
+          .pipe(
+            unwrapClientReposne(),
+            tap(() => this.snackbar.open('Tasks Moved')),
+            map(() => actions.moveMatchingTasks.success()),
+            catchError((error: HttpErrorResponse) =>
+              of(actions.moveMatchingTasks.fail({ error }))
+            )
+          );
       })
     );
   });

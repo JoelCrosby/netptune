@@ -62,7 +62,12 @@ export const editBoardGroup = createAsyncAction(
   '[BoardGroups] Edit Board Group',
   {
     init: props<{ request: UpdateBoardGroupRequest }>(),
-    success: props<{ boardGroup: BoardGroupViewModel }>(),
+    // `statusChanged` drives the prompt offering to move tasks with the group's
+    // new status into it, so a rename alone doesn't ask.
+    success: props<{
+      boardGroup: BoardGroupViewModel;
+      statusChanged: boolean;
+    }>(),
   }
 );
 
@@ -191,6 +196,16 @@ export const moveSelectedTasks = createAsyncAction(
   '[BoardGroups] Move Selected Tasks',
   {
     init: props<{ newGroupId: number }>(),
+  }
+);
+
+// Move Matching Tasks
+// Tasks whose status matches a group's newly assigned status.
+
+export const moveMatchingTasks = createAsyncAction(
+  '[BoardGroups] Move Matching Tasks',
+  {
+    init: props<{ newGroupId: number; taskIds: number[] }>(),
   }
 );
 
