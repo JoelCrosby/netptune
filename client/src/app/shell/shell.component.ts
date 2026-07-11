@@ -19,6 +19,7 @@ import { ShellService } from './shell.service';
 import { ShellNavbarComponent } from './shell-navbar.component';
 import { CommandPaletteComponent } from './command-palette/command-palette.component';
 import { GlobalCommandsService } from './global-commands.service';
+import { LastWorkspaceService } from '@core/services/last-workspace.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 
 @Component({
@@ -39,7 +40,8 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
   `,
   template: `
     @if (chunkLoading()) {
-      <div class="bg-primary/20 fixed inset-x-0 top-0 z-50 h-0.5 overflow-hidden">
+      <div
+        class="bg-primary/20 fixed inset-x-0 top-0 z-50 h-0.5 overflow-hidden">
         <div class="bg-primary animate-loading-bar h-full w-1/3"></div>
       </div>
     }
@@ -69,6 +71,8 @@ export class ShellComponent {
   shell = inject(ShellService);
   readonly globalCommands = inject(GlobalCommandsService);
   readonly preferences = inject(UserPreferencesService);
+  // Injected for its effect, which records the workspace the user is in.
+  readonly lastWorkspace = inject(LastWorkspaceService);
   authenticated = this.store.selectSignal(selectIsAuthenticated);
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
 
@@ -84,11 +88,13 @@ export class ShellComponent {
             e instanceof RouteConfigLoadStart ||
             e instanceof RouteConfigLoadEnd ||
             e instanceof NavigationCancel ||
-            e instanceof NavigationError,
+            e instanceof NavigationError
         ),
-        takeUntilDestroyed(),
+        takeUntilDestroyed()
       )
-      .subscribe((e) => this.chunkLoading.set(e instanceof RouteConfigLoadStart));
+      .subscribe((e) =>
+        this.chunkLoading.set(e instanceof RouteConfigLoadStart)
+      );
   }
 
   onSidenavClosedStart() {

@@ -14,6 +14,8 @@ export interface Workspace extends Basemodel {
   slug: string;
 
   isPublic?: boolean;
+
+  isLastVisited?: boolean;
 }
 
 export interface WorkspaceMeta {

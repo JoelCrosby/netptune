@@ -20,7 +20,14 @@ import { WorkspaceService } from '../../../core/services/workspace.service';
       [description]="workspace().description"
       [subText]="'Last updated ' + (workspace().updatedAt | fromNow)"
       [actions]="actions"
-      (delete)="deleteClicked(workspace())" />
+      (delete)="deleteClicked(workspace())">
+      @if (workspace().isLastVisited) {
+        <span
+          class="bg-primary/10 text-primary mt-2 w-fit rounded-sm px-2 py-0.5 text-xs font-medium">
+          Last visited
+        </span>
+      }
+    </app-card-list-item>
   `,
 })
 export class WorkspaceListItemComponent implements OnInit {

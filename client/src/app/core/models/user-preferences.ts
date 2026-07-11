@@ -5,6 +5,7 @@ export const COMMAND_PALETTE_RECENT_ITEMS_SCOPE =
 export const APPEARANCE_THEME = 'appearance.theme';
 export const BOARDS_HIDDEN_GROUP_IDS = 'boards.hiddenGroupIds';
 export const BOARDS_TASK_SORT = 'boards.taskSort';
+export const WORKSPACE_LAST_VISITED = 'workspace.lastVisited';
 
 export type PreferenceScope = 'global' | 'workspace';
 

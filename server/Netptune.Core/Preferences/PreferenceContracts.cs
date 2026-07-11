@@ -8,6 +8,7 @@ public static class PreferenceKeys
     public const string CommandPaletteRecentItemsScope = "commandPalette.recentItems.scope";
     public const string BoardHiddenGroupIds = "boards.hiddenGroupIds";
     public const string BoardTaskSort = "boards.taskSort";
+    public const string WorkspaceLastVisited = "workspace.lastVisited";
 }
 
 public static class PreferenceScopes

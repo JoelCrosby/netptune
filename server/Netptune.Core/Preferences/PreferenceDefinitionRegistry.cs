@@ -31,6 +31,12 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             Label = "Boards",
             Order = 15,
         },
+        new()
+        {
+            Key = "workspace",
+            Label = "Workspace",
+            Order = 20,
+        },
     ];
 
     private readonly IReadOnlyList<PreferenceDefinition> Definitions =
@@ -94,6 +100,20 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             AllowedScopes = [PreferenceScopes.Workspace],
             Internal = true,
             Order = 20,
+        },
+        new()
+        {
+            Key = PreferenceKeys.WorkspaceLastVisited,
+            GroupKey = "workspace",
+            Label = "Last visited workspace",
+            ControlType = "hidden",
+            // Slug of the workspace the user was last in. Drives the redirect from a
+            // blank url, and the badge on the workspace picker. Empty means none.
+            ValueType = "string",
+            DefaultValue = JsonSerializer.SerializeToElement(string.Empty),
+            AllowedScopes = [PreferenceScopes.Global],
+            Internal = true,
+            Order = 10,
         },
     ];
 

@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/auth/auth.guard';
+import { lastWorkspaceGuard } from '@core/auth/last-workspace.guard';
 
 // prettier-ignore
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/workspaces',
-    pathMatch: 'full'
+    pathMatch: 'full',
+    canActivate: [lastWorkspaceGuard],
+    children: [],
   },
   {
     path: 'auth',
