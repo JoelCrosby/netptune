@@ -1,0 +1,83 @@
+---
+apiVersion: "apps/v1"
+kind: "StatefulSet"
+metadata:
+  name: "nats-statefulset"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "nats"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  serviceName: "nats-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "nats"
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "netptune-app"
+        app.kubernetes.io/component: "nats"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+    spec:
+      # The nats image runs as root and defines no nats user, so the uid is set here. fsGroup is
+      # what makes the claim group-writable, letting that uid create the jetstream store directory.
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      containers:
+        - name: "nats"
+          image: "nats:alpine"
+          args:
+            - "-js"
+            # Without an explicit store dir jetstream writes under the container filesystem, which
+            # would leave the stream ephemeral even with a claim attached.
+            - "-sd"
+            - "/data"
+            - "-m"
+            - "8222"
+          ports:
+            - name: "client"
+              protocol: "TCP"
+              containerPort: 4222
+            - name: "monitor"
+              protocol: "TCP"
+              containerPort: 8222
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - name: "nats-data"
+              mountPath: "/data"
+          livenessProbe:
+            httpGet:
+              path: "/healthz"
+              port: "monitor"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/healthz"
+              port: "monitor"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              memory: "512Mi"
+  volumeClaimTemplates:
+    - metadata:
+        name: "nats-data"
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.nats.size }}"
+  updateStrategy:
+    type: "RollingUpdate"
+    rollingUpdate:
+      maxUnavailable: 1
