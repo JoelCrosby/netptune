@@ -58,7 +58,7 @@ public sealed class EventPublisher : IEventPublisher
             {
                 Name = MessageKeys.Queue,
                 Subjects = [MessageKeys.RoutingKey],
-                Storage = StreamConfigStorage.Memory,
+                Storage = StreamConfigStorage.File,
             });
 
             StreamReady = true;

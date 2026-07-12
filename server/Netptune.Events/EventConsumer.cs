@@ -26,7 +26,7 @@ public sealed class EventConsumer : IEventConsumer
         {
             Name = MessageKeys.Queue,
             Subjects = [MessageKeys.RoutingKey],
-            Storage = StreamConfigStorage.Memory,
+            Storage = StreamConfigStorage.File,
         }, cancellationToken);
 
         var consumer = await JetStream.CreateOrUpdateConsumerAsync(MessageKeys.Queue, new ConsumerConfig

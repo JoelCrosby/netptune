@@ -25,7 +25,6 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<Status> Statuses { get; set; } = null!;
     public DbSet<Sprint> Sprints { get; set; } = null!;
     public DbSet<AppUser> AppUsers { get; set; } = null!;
-    public DbSet<Post> Posts { get; set; } = null!;
     public DbSet<Board> Boards { get; set; } = null!;
     public DbSet<BoardGroup> BoardGroups { get; set; } = null!;
     public DbSet<Comment> Comments { get; set; } = null!;

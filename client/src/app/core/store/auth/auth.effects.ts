@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { selectCurrentWorkspace } from '@app/core/store/workspaces/workspaces.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { openSideNav } from '@core/store/layout/layout.actions';
 import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
@@ -71,16 +70,6 @@ export class AuthEffects implements OnInitEffects {
             )
           )
         )
-      );
-    }
-  );
-
-  openSideNav$ = createEffect(
-    ({ debounce = 500, scheduler = asyncScheduler } = {}) => {
-      return this.actions$.pipe(
-        ofType(actions.login.success),
-        debounceTime(debounce, scheduler),
-        map(() => openSideNav())
       );
     }
   );

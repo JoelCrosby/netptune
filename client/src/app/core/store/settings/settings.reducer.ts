@@ -7,10 +7,6 @@ const reducer = createReducer(
   on(actions.changeTheme, (state, { theme }): SettingsState => ({
     ...state,
     theme,
-  })),
-  on(actions.clearSttings, (state): SettingsState => ({
-    ...state,
-    theme: 'light',
   }))
 );
 

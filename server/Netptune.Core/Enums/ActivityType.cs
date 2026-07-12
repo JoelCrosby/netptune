@@ -6,8 +6,14 @@ public enum ActivityType
     Modify = 1,
     Delete = 2,
     Assign = 3,
+
+    // 4 is an intentional gap — reserved, do not reuse.
+
     Move = 5,
     Reorder = 6,
+
+    // 7 and 8 are intentional gaps — reserved, do not reuse.
+
     ModifyName = 9,
     ModifyDescription = 10,
     ModifyStatus = 11,

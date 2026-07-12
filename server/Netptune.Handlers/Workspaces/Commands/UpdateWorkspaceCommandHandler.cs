@@ -45,7 +45,7 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
             options.EntityId = result.Id;
             options.WorkspaceId = result.Id;
             options.EntityType = EntityType.Workspace;
-            options.Type = ActivityType.Modify;
+            options.Type = ActivityType.WorkspaceSettingsChanged;
         });
 
         return ClientResponse<Workspace>.Success(result);

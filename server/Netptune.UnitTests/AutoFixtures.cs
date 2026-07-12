@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using AutoFixture.Dsl;
 
 using Netptune.Core.Entities;
@@ -49,7 +49,6 @@ public static class AutoFixtures
         .Build<Project>()
         .Without(p => p.ProjectUsers)
         .Without(p => p.ProjectTasks)
-        .Without(p => p.ProjectPosts)
         .Without(p => p.Sprints)
         .With(p => p.DefaultStatusId, 5)
         .Without(p => p.DefaultStatus)
@@ -178,7 +177,6 @@ public static class AutoFixtures
             .Build<Project>()
             .Without(p => p.ProjectUsers)
             .Without(p => p.ProjectTasks)
-            .Without(p => p.ProjectPosts)
             .Without(p => p.ProjectBoards)
             .Without(p => p.Sprints)
             .Without(p => p.Workspace)

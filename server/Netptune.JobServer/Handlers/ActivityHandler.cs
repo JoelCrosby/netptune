@@ -13,6 +13,13 @@ namespace Netptune.JobServer.Handlers;
 
 public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 {
+    private static readonly HashSet<ActivityType> AuditOnlyTypes =
+    [
+        ActivityType.ExportRequested,
+        ActivityType.LoginSuccess,
+        ActivityType.LoginFailed,
+    ];
+
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly INotificationEventPublisher NotificationEvents;
 
@@ -87,6 +94,10 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
         foreach (var (log, ancestors, recipientUserIds) in activityLogs)
         {
+            // Audit-only events are still written to the activity log above; they just never
+            // generate notifications.
+            if (AuditOnlyTypes.Contains(log.Type)) continue;
+
             if (!slugsByWorkspace.TryGetValue(log.WorkspaceId, out var slug)) continue;
             if (!usersByWorkspace.TryGetValue(log.WorkspaceId, out var allUserIds)) continue;
 

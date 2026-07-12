@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Audit;
+using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Handlers.Audit.Commands;
 using Netptune.Handlers.Audit.Queries;
 
@@ -81,6 +83,8 @@ public static class AuditEndpoints
 
     private static async Task<IResult> HandleExport(
         IMediator mediator,
+        IActivityLogger activity,
+        IIdentityService identity,
         [FromQuery] string? userId,
         [FromQuery] EntityType? entityType,
         [FromQuery] ActivityType? activityType,
@@ -98,6 +102,8 @@ public static class AuditEndpoints
         };
 
         var result = await mediator.Send(new ExportAuditLogQuery(filter), cancellationToken);
+
+        await ExportEndpoints.LogExportRequested(activity, identity, "audit-log");
 
         return Results.File(result.Stream, result.ContentType, result.Filename);
     }

@@ -38,9 +38,6 @@ public record Project : WorkspaceEntity<int>
     public ICollection<Sprint> Sprints { get; set; } = new HashSet<Sprint>();
 
     [JsonIgnore]
-    public ICollection<Post> ProjectPosts { get; set; } = new HashSet<Post>();
-
-    [JsonIgnore]
     public ICollection<Board> ProjectBoards { get; set; } = new HashSet<Board>();
 
     #endregion

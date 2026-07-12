@@ -56,12 +56,5 @@ public class ProjectEntityMap : WorkspaceEntityMap<Project, int>
         builder
             .HasMany(project => project.ProjectTasks)
             .WithOne(task => task.Project);
-
-        // (One-to-One) Project > Post
-
-        builder
-            .HasMany(project => project.ProjectPosts)
-            .WithOne(post => post.Project)
-            .HasForeignKey(post => post.ProjectId);
     }
 }
