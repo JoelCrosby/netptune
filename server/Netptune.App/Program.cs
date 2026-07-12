@@ -1,7 +1,4 @@
-using System.Threading.RateLimiting;
-
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.RateLimiting;
 
 using Netptune.App.Configuration;
 using Netptune.App.Endpoints;
@@ -121,52 +118,7 @@ builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 
 builder.Services.AddNetptuneHandlers();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
-    options.AddPolicy("auth", context =>
-        RateLimitPartition.GetSlidingWindowLimiter(
-            context.GetRemoteIpAddress() ?? "unknown",
-            _ => new SlidingWindowRateLimiterOptions
-            {
-                PermitLimit = 10,
-                Window = TimeSpan.FromMinutes(1),
-                SegmentsPerWindow = 6,
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0,
-            }));
-
-    options.AddPolicy("register", context =>
-        RateLimitPartition.GetSlidingWindowLimiter(
-            context.GetRemoteIpAddress() ?? "unknown",
-            _ => new SlidingWindowRateLimiterOptions
-            {
-                PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(10),
-                SegmentsPerWindow = 10,
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0,
-            }));
-
-    options.AddSlidingWindowLimiter("api", limiterOptions =>
-    {
-        limiterOptions.PermitLimit = 300;
-        limiterOptions.Window = TimeSpan.FromMinutes(1);
-        limiterOptions.SegmentsPerWindow = 6;
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit = 10;
-    });
-
-    options.AddSlidingWindowLimiter("import-export", limiterOptions =>
-    {
-        limiterOptions.PermitLimit = 10;
-        limiterOptions.Window = TimeSpan.FromMinutes(1);
-        limiterOptions.SegmentsPerWindow = 2;
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit = 2;
-    });
-});
+builder.Services.AddNetptuneRateLimiter();
 
 builder.Services.AddValidation();
 
@@ -179,9 +131,9 @@ app.UseServerErrorLogging();
 app.UseRouting();
 
 app.UseCors();
-app.UseRateLimiter();
 
 app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.UseWorkspaceValidation();
