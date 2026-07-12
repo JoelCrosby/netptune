@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Netptune.Core.Http;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -28,7 +29,12 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<ITaskImportService, TaskImportService>();
         services.AddTransient<ITaskExportService, TaskExportService>();
         services.AddTransient<IWebService, WebService>();
-        services.AddTransient<IHtmlDocumentService, HtmlDocumentService>();
+
+        services.AddSafeHttpClient<IHtmlDocumentService, HtmlDocumentService>(options =>
+        {
+            options.UserAgent = "Netptune/1.0 (+link-preview)";
+        });
+
         services.AddTransient<IActivityLogger, ActivityLogger>();
         services.AddTransient<ITurnstileService, TurnstileService>();
 

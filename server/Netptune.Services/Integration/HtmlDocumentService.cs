@@ -1,17 +1,25 @@
-﻿using AngleSharp;
 using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
 
+using Netptune.Core.Exceptions;
 using Netptune.Core.Services.Integration;
 
 namespace Netptune.Services.Integration;
 
-public class HtmlDocumentService : IHtmlDocumentService
+public class HtmlDocumentService(HttpClient client) : IHtmlDocumentService
 {
-    public Task<IDocument> OpenAsync(string url)
-    {
-        var config = AngleSharp.Configuration.Default.WithDefaultLoader();
-        var context = BrowsingContext.New(config);
+    private readonly HtmlParser Parser = new();
 
-        return context.OpenAsync(url);
+    public async Task<IDocument> OpenAsync(string url)
+    {
+        var uri = UrlEgressBlockedException.ThrowIfNotAbsoluteUrl(url);
+
+        using var response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+
+        UrlEgressBlockedException.ThrowIfNotSuccess(response);
+
+        await using var stream = await response.Content.ReadAsStreamAsync();
+
+        return await Parser.ParseDocumentAsync(stream);
     }
 }
