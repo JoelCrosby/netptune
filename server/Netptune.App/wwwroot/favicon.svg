@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="brand" x1="12" y1="16" x2="62" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#673AB7" />
+      <stop offset="0.5" stop-color="#8B5CF6" />
+      <stop offset="1" stop-color="#D946EF" />
+    </linearGradient>
+    <clipPath id="icon-frame">
+      <rect width="64" height="64" rx="14" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#icon-frame)">
+    <rect width="64" height="64" fill="#000" />
+    <ellipse
+      cx="45"
+      cy="40"
+      rx="42"
+      ry="13"
+      transform="rotate(-18 45 40)"
+      fill="none"
+      stroke="#E9D5FF"
+      stroke-width="5"
+    />
+    <circle cx="49" cy="48" r="33" fill="url(#brand)" />
+    <path
+      d="M3 40A42 13 0 0 0 87 40"
+      transform="rotate(-18 45 40)"
+      fill="none"
+      stroke="#E9D5FF"
+      stroke-width="5"
+    />
+  </g>
+</svg>
