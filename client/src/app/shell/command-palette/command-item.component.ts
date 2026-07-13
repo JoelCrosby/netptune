@@ -1,15 +1,15 @@
 import { Component, input, output } from '@angular/core';
 import { LucideZap } from '@lucide/angular';
 import { Command } from '@core/services/command-registry.service';
+import { CommandPaletteItemComponent } from './command-palette-item.component';
 
 @Component({
   selector: 'app-command-item',
-  imports: [LucideZap],
+  imports: [LucideZap, CommandPaletteItemComponent],
   template: `
     <button
-      type="button"
-      class="aria-selected:bg-accent/10 aria-selected:text-accent-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-2 outline-none select-none"
-      [attr.aria-selected]="selected() || null"
+      app-command-palette-item
+      [selected]="selected()"
       (click)="activate.emit(command())"
       (mouseenter)="hover.emit()">
       <svg lucideZap class="h-4 w-4 shrink-0 opacity-50"></svg>

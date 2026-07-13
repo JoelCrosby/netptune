@@ -1,15 +1,15 @@
 import { Component, input, output } from '@angular/core';
 import { LucideClock } from '@lucide/angular';
 import { RecentItem } from './recent-items.service';
+import { CommandPaletteItemComponent } from './command-palette-item.component';
 
 @Component({
   selector: 'app-recent-item',
-  imports: [LucideClock],
+  imports: [LucideClock, CommandPaletteItemComponent],
   template: `
     <button
-      type="button"
-      class="aria-selected:bg-accent/10 aria-selected:text-accent-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-2 outline-none select-none"
-      [attr.aria-selected]="selected() || null"
+      app-command-palette-item
+      [selected]="selected()"
       (click)="activate.emit(item())"
       (mouseenter)="hover.emit()">
       <svg lucideClock class="h-4 w-4 shrink-0 opacity-50"></svg>
