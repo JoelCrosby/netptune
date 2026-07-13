@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
+import { LoginProviderButtonComponent } from './login-provider-button.component';
 
 @Component({
   selector: 'app-login-google',
+  imports: [LoginProviderButtonComponent],
   template: `
     <button
-      class="mt-0 flex w-full cursor-pointer appearance-none items-center justify-center rounded-sm border border-[#dadce0] bg-white px-[1.6rem] py-[0.8rem] text-center font-[inherit] text-sm font-medium whitespace-nowrap text-[#3c4043] no-underline transition-colors duration-[140ms] ease-in outline-none hover:bg-[#f8f9fa]"
-      (click)="$event.preventDefault(); onGoogleSignInClicked()">
+      app-login-provider-button
+      provider="google"
+      (click)="onGoogleSignInClicked()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="18"

@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
+import { LoginProviderButtonComponent } from './login-provider-button.component';
 
 @Component({
   selector: 'app-login-microsoft',
+  imports: [LoginProviderButtonComponent],
   template: `
     <button
-      class="mt-0 flex w-full cursor-pointer appearance-none items-center justify-center rounded-sm border border-[#8c8c8c] bg-[#2f2f2f] px-[1.6rem] py-[0.8rem] text-center font-[inherit] text-sm font-medium whitespace-nowrap text-white no-underline transition-colors duration-[140ms] ease-in outline-none hover:bg-[#3a3a3a]"
-      (click)="$event.preventDefault(); onMicrosoftSignInClicked()">
+      app-login-provider-button
+      provider="microsoft"
+      (click)="onMicrosoftSignInClicked()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="20"

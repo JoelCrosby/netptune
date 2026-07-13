@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
+import { LoginProviderButtonComponent } from './login-provider-button.component';
 
 @Component({
   selector: 'app-login-github',
+  imports: [LoginProviderButtonComponent],
   template: `
     <button
-      class="mt-0 flex w-full cursor-pointer appearance-none items-center justify-center rounded-sm border-0 bg-[#161b22] px-[1.6rem] py-[0.8rem] text-center font-[inherit] text-sm font-medium whitespace-nowrap text-white no-underline transition-colors duration-[140ms] ease-in outline-none hover:bg-[#1d232c]"
-      (click)="$event.preventDefault(); onGithubSignInClicked()">
+      app-login-provider-button
+      provider="github"
+      (click)="onGithubSignInClicked()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
