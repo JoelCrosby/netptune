@@ -17,7 +17,7 @@ import { ProgressBarComponent } from '@static/components/progress-bar/progress-b
 
     @if (showLogo()) {
       <img
-        class="mx-auto my-2"
+        class="from-brand/40 mx-auto my-2 rounded-lg bg-linear-to-tl via-fuchsia-300/30 to-sky-300/30 p-2"
         src="assets/apple-touch-icon.png"
         alt="Netptune logo"
         width="72"

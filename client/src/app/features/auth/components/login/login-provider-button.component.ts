@@ -5,8 +5,7 @@ type LoginProvider = 'github' | 'google' | 'microsoft';
 const providerClasses: Record<LoginProvider, string> = {
   github: 'border-0 bg-[#161b22] text-white hover:bg-[#1d232c]',
   google: 'border border-[#dadce0] bg-white text-[#3c4043] hover:bg-[#f8f9fa]',
-  microsoft:
-    'border border-[#8c8c8c] bg-[#2f2f2f] text-white hover:bg-[#3a3a3a]',
+  microsoft: 'bg-[#2f2f2f] text-white hover:bg-[#3a3a3a]',
 };
 
 @Component({

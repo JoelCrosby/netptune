@@ -90,7 +90,7 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
           app-stroked-button
           color="primary"
           type="submit"
-          class="min-w-32">
+          class="border-linear-to-tl min-w-32 border-4 via-fuchsia-300/30 to-sky-300/30">
           Sign in
         </button>
       </div>
