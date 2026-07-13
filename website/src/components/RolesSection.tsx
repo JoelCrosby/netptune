@@ -7,13 +7,15 @@ export default function RolesSection() {
   return (
     <Section class="bg-white dark:bg-black">
       <div class="mb-14 text-center">
-        <p class="mb-3 text-sm font-semibold tracking-wider text-brand uppercase">Permissions</p>
+        <p class="mb-3 font-mono text-sm font-semibold tracking-wider text-brand uppercase">
+          Explicit permissions
+        </p>
         <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          The right access for every person on your team.
+          Access rules your team can reason about.
         </h2>
         <p class="mx-auto mt-4 max-w-xl text-slate-500 dark:text-white/55">
-          Four role levels give you precise control over who can see and do what — from full
-          workspace ownership down to read-only client access.
+          Four clear defaults cover workspace owners, maintainers, contributors, and read-only
+          stakeholders without hiding capabilities behind vague plan tiers.
         </p>
       </div>
 

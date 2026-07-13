@@ -3,25 +3,25 @@ import type { Comparison } from '~/types/comparison';
 export const comparisons: Comparison[] = [
   {
     competitor: 'Open source',
-    headline: 'Inspect it, change it, contribute to it.',
+    headline: 'Read the implementation, not a promise.',
     description:
       'The complete application is available under the MIT license, from the Angular client to the .NET services and Helm chart.',
   },
   {
-    competitor: 'Self-hosted',
-    headline: 'Keep the deployment under your control.',
+    competitor: 'Infrastructure owned',
+    headline: 'Deploy it where your team already operates.',
     description:
-      'Run Netptune in Kubernetes with the maintained Helm chart and choose where its database, object storage, and workloads live.',
+      'Use the maintained Kubernetes chart and choose where the workloads, PostgreSQL database, search index, and object storage live.',
   },
   {
-    competitor: 'Permissions',
-    headline: 'Four roles with granular capabilities.',
+    competitor: 'Defaults included',
+    headline: 'Useful immediately, adaptable when needed.',
     description:
-      'Owner, Admin, Member, and Viewer defaults are backed by explicit workspace permissions for projects, boards, tasks, members, and more.',
+      'Boards, sprints, automations, search, permissions, and audit history work together without requiring a plugin marketplace.',
   },
   {
-    competitor: 'Traceability',
-    headline: 'Understand how work changed.',
+    competitor: 'Observable behavior',
+    headline: 'Trace what changed and what ran.',
     description:
       'Activity records, audit views, and automation run history provide a clear account of changes and background actions.',
   },

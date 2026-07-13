@@ -18,8 +18,8 @@ export default function Footer() {
               <span class="text-[15px] font-semibold text-white">Netptune</span>
             </a>
             <p class="text-sm leading-relaxed text-slate-500 dark:text-white/35">
-              Open source project management for teams who need real control over their tools and
-              data.
+              Open source project management built for developers who want control over their
+              workflow, infrastructure, and data.
             </p>
           </div>
 

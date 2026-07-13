@@ -5,7 +5,7 @@ import ThemeToggle from './ThemeToggle';
 
 const navLinks = [
   { href: '/#features', label: 'Features' },
-  { href: '/#self-host', label: 'Self-host' },
+  { href: '/#architecture', label: 'Architecture' },
   { href: '/docs', label: 'Docs' },
   {
     href: 'https://github.com/JoelCrosby/netptune',
@@ -54,8 +54,8 @@ export default function Nav() {
               <span class="hidden sm:block">Star on GitHub</span>
             </Button>
           </div>
-          <Button variant="primary" size="sm" href="https://app.netptune.co.uk/auth/register">
-            Create account
+          <Button variant="primary" size="sm" href="https://app.netptune.co.uk/auth/login">
+            Open Netptune
           </Button>
         </div>
       </div>

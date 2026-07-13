@@ -6,12 +6,15 @@ export default function FeatureGrid() {
   return (
     <Section class="bg-slate-50 dark:bg-black">
       <div class="mb-14 text-center">
-        <p class="mb-3 text-sm font-semibold tracking-wider text-brand uppercase">
-          Core capabilities
+        <p class="mb-3 font-mono text-sm font-semibold tracking-wider text-brand uppercase">
+          Batteries included
         </p>
         <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Built into the product today.
+          The project primitives are already there.
         </h2>
+        <p class="mx-auto mt-5 max-w-2xl text-slate-500 dark:text-white/55">
+          Start with a complete workflow instead of assembling another collection of integrations.
+        </p>
       </div>
 
       <div class="grid gap-px overflow-hidden rounded-xl border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-3 dark:border-white/10 dark:bg-white/10">

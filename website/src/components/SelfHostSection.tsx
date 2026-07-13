@@ -1,33 +1,39 @@
-import { For } from 'solid-js';
-import { GitBranch } from 'lucide-solid';
+import { GitBranch, Server } from 'lucide-solid';
 import Button from './Button';
-import { selfHostStack } from '~/data/self-host-stack';
 
 export default function SelfHostSection() {
   return (
-    <section id="self-host" class="bg-dark px-6 py-20 dark:bg-black">
+    <section id="architecture" class="bg-dark px-6 py-14 dark:bg-black">
       <div class="mx-auto max-w-6xl">
-        <div class="flex flex-col items-start gap-14 lg:flex-row lg:gap-20">
-          {/* Text */}
-          <div class="flex-1">
-            <p class="mb-4 text-sm font-semibold tracking-wider text-brand uppercase">
-              Self-hosting
+        <div class="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
+          <div>
+            <p class="mb-3 font-mono text-sm font-semibold tracking-wider text-brand uppercase">
+              Open architecture
             </p>
-            <h2 class="mb-5 text-4xl leading-tight font-bold text-white">
-              Your data. Your servers.
-              <br />
-              Your rules.
+            <h2 class="mb-4 text-3xl leading-tight font-bold text-white">
+              A real application stack, in one repository.
             </h2>
-            <p class="mb-8 leading-relaxed text-slate-400 dark:text-white/55">
-              Netptune is open source and built to be self-hosted. The repository includes a Helm
-              chart for Kubernetes, so you control the application, database, and deployment. The
-              software is MIT licensed with no per-seat license fee for your own instance.
+            <p class="max-w-2xl leading-relaxed text-slate-400 dark:text-white/55">
+              The Angular client, .NET services, workers, and deployment definitions are public and
+              MIT licensed. Use the hosted application by default; a maintained Helm chart is there
+              when operating your own instance is the right choice.
             </p>
+          </div>
 
-            <div class="flex flex-col gap-4 sm:flex-row">
+          <div class="rounded-xl border border-slate-700/60 bg-dark-surface/60 p-5 dark:border-white/10 dark:bg-white/5">
+            <div class="mb-5 flex items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand/15 text-brand">
+                <Server size={18} />
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-white">Developer-owned by design</p>
+                <p class="text-xs text-slate-500">Inspect, contribute, or deploy</p>
+              </div>
+            </div>
+            <div class="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
               <Button variant="primary" size="md" href="https://github.com/JoelCrosby/netptune">
                 <GitBranch size={15} />
-                View on GitHub
+                Browse the source
               </Button>
               <Button
                 variant="outline"
@@ -35,38 +41,8 @@ export default function SelfHostSection() {
                 href="/docs"
                 class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-white dark:border-white/20 dark:text-white/70"
               >
-                Read the docs
+                Deployment docs
               </Button>
-            </div>
-          </div>
-
-          {/* Stack */}
-          <div class="w-full flex-1">
-            <p class="mb-4 text-xs font-semibold tracking-wider text-slate-500 uppercase dark:text-white/35">
-              Runs on your stack
-            </p>
-            <div class="space-y-3">
-              <For each={selfHostStack}>
-                {(item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div class="flex items-center gap-4 rounded-xl border border-slate-700/50 bg-dark-surface p-4 transition-colors hover:border-slate-600 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20">
-                      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-700 text-slate-300 dark:bg-white/10 dark:text-white/60">
-                        <Icon size={18} />
-                      </div>
-                      <div>
-                        <p class="text-sm font-medium text-slate-200 dark:text-white/80">
-                          {item.label}
-                        </p>
-                        <p class="text-xs text-slate-500 dark:text-white/35">{item.sublabel}</p>
-                      </div>
-                      <div class="ml-auto">
-                        <div class="h-2 w-2 rounded-full bg-brand" />
-                      </div>
-                    </div>
-                  );
-                }}
-              </For>
             </div>
           </div>
         </div>
