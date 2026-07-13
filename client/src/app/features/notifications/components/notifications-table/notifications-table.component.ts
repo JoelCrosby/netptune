@@ -23,6 +23,7 @@ import { LucideCheck, LucideExternalLink, LucideTrash2 } from '@lucide/angular';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
@@ -33,6 +34,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
   imports: [
     DatePipe,
     AvatarComponent,
+    BadgeComponent,
     TooltipDirective,
     DatatableComponent,
     DatatableCellTemplateDirective,
@@ -90,15 +92,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 
       <ng-template appDatatableCell="status" let-notification>
         @if (notification.isRead) {
-          <span
-            class="inline-flex items-center rounded bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
-            Read
-          </span>
+          <app-badge shape="rounded">Read</app-badge>
         } @else {
-          <span
-            class="bg-primary/10 text-primary inline-flex items-center rounded px-2 py-0.5 text-xs font-medium">
-            Unread
-          </span>
+          <app-badge color="primary" shape="rounded">Unread</app-badge>
         }
       </ng-template>
 

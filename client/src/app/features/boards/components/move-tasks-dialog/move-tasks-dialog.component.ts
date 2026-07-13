@@ -66,7 +66,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
               group.name
             }}</span>
 
-            <span appBadge color="neutral">{{ group.tasks.length }}</span>
+            <app-badge color="neutral">{{ group.tasks.length }}</app-badge>
           </button>
         } @empty {
           <p class="text-foreground/50 py-6 text-center text-sm">

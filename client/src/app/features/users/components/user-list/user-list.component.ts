@@ -10,6 +10,7 @@ import {
 import { LucideTrash2, LucideSend } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
@@ -19,6 +20,7 @@ import { DatatableDataSource } from '@static/components/datatable/datatable.type
   imports: [
     RouterLink,
     AvatarComponent,
+    BadgeComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
   ],
@@ -58,20 +60,11 @@ import { DatatableDataSource } from '@static/components/datatable/datatable.type
 
       <ng-template appDatatableCell="status" let-user>
         @if (user.isPending) {
-          <span
-            class="inline-flex items-center rounded bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700">
-            Pending
-          </span>
+          <app-badge color="pending" shape="rounded">Pending</app-badge>
         } @else if (user.isWorkspaceOwner) {
-          <span
-            class="inline-flex items-center rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
-            Owner
-          </span>
+          <app-badge color="info" shape="rounded">Owner</app-badge>
         } @else {
-          <span
-            class="inline-flex items-center rounded bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
-            Member
-          </span>
+          <app-badge shape="rounded">Member</app-badge>
         }
       </ng-template>
     </app-datatable>

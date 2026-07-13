@@ -1,19 +1,15 @@
 import { Component, input } from '@angular/core';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 
 @Component({
   selector: 'app-automation-enabled-badge',
+  imports: [BadgeComponent],
   template: `
-    <span [class]="'rounded px-2 py-0.5 text-xs font-medium ' + badgeClass()">
+    <app-badge shape="rounded" [color]="enabled() ? 'success' : 'neutral'">
       {{ enabled() ? 'Enabled' : 'Disabled' }}
-    </span>
+    </app-badge>
   `,
 })
 export class AutomationEnabledBadgeComponent {
   readonly enabled = input.required<boolean>();
-
-  badgeClass(): string {
-    return this.enabled()
-      ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-      : 'bg-foreground/10 text-foreground/70';
-  }
 }

@@ -10,9 +10,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
     <button [class]="class()" [appTooltip]="label()" (click)="action.emit()">
       <svg size="20" class="outline-none" [lucideIcon]="icon()"></svg>
       @if (count()) {
-        <span appBadge color="primary" class="absolute -top-1.5 -right-1.5">
+        <app-badge color="primary" class="absolute -top-1.5 -right-1.5">
           {{ count() }}
-        </span>
+        </app-badge>
       } @else if (dot()) {
         <span
           class="bg-primary absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full">

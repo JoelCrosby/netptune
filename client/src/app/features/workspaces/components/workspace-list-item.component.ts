@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
+import { BadgeComponent } from '@app/static/components/badge/badge.component';
 import { Workspace } from '@core/models/workspace';
 import { DialogService } from '@core/services/dialog.service';
 import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
@@ -22,7 +23,7 @@ import { WorkspaceService } from '../../../core/services/workspace.service';
 
 @Component({
   selector: 'app-workspace-list-item',
-  imports: [CardListItemComponent, FromNowPipe],
+  imports: [BadgeComponent, CardListItemComponent, FromNowPipe],
   // The derived variables are declared on :root, where they resolve against the
   // root --primary-rgb and inherit as finished colours. Re-declaring them here
   // makes them resolve against the --primary-rgb set on this card instead.
@@ -41,10 +42,9 @@ import { WorkspaceService } from '../../../core/services/workspace.service';
       [actions]="actions"
       (delete)="deleteClicked(workspace())">
       @if (workspace().isLastVisited) {
-        <span
-          class="bg-primary/10 text-primary mt-2 w-fit rounded-sm px-2 py-0.5 text-xs font-medium">
+        <app-badge color="primary" shape="rounded" class="mt-2 w-fit">
           Last visited
-        </span>
+        </app-badge>
       }
     </app-card-list-item>
   `,
