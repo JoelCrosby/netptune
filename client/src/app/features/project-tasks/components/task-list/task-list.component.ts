@@ -34,6 +34,7 @@ import {
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
@@ -51,6 +52,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     LucideListChecks,
     LucidePlus,
     AvatarComponent,
+    BadgeComponent,
     SprintBadgeComponent,
     TaskScopeIdComponent,
     DatatableCellTemplateDirective,
@@ -101,14 +103,14 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
       </ng-template>
 
       <ng-template appDatatableCell="status" let-task>
-        <span
-          class="inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-center text-xs font-medium"
-          [class]="statusBadgeClass(task.statusCategory)">
+        <app-badge
+          shape="rounded"
+          [class]="'gap-1.5 ' + statusBadgeClass(task.statusCategory)">
           @if (task.statusCategory === statusCategory.done) {
             <svg lucideCheck class="h-3.5 w-3.5"></svg>
           }
           {{ task.statusName }}
-        </span>
+        </app-badge>
       </ng-template>
 
       <ng-template appDatatableCell="assignees" let-task>

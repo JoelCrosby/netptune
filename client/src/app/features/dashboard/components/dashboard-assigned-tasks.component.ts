@@ -9,6 +9,7 @@ import {
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { Store } from '@ngrx/store';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
@@ -27,6 +28,7 @@ import { taskStatusBadgeClass } from '../utils/task-status-badge-class';
     DatatableCellTemplateDirective,
     TaskScopeIdComponent,
     SprintBadgeComponent,
+    BadgeComponent,
   ],
   template: `
     <section class="flex flex-col gap-3">
@@ -73,11 +75,11 @@ import { taskStatusBadgeClass } from '../utils/task-status-badge-class';
         </ng-template>
 
         <ng-template appDatatableCell="status" let-task>
-          <span
-            class="inline-flex items-center rounded px-2 py-0.5 text-center text-xs font-medium"
+          <app-badge
+            shape="rounded"
             [class]="statusBadgeClass(task.statusCategory)">
             {{ task.statusName }}
-          </span>
+          </app-badge>
         </ng-template>
 
         <ng-template appDatatableCell="priority" let-task>

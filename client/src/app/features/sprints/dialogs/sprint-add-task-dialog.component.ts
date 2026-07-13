@@ -6,6 +6,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { addTasksToSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -35,6 +36,7 @@ export interface SprintAddTaskDialogData {
     DatatableComponent,
     DatatableCellTemplateDirective,
     TaskScopeIdComponent,
+    BadgeComponent,
     SprintBacklogStatusBadgeClassPipe,
     SprintBacklogStatusLabelPipe,
   ],
@@ -67,11 +69,11 @@ export interface SprintAddTaskDialogData {
         </ng-template>
 
         <ng-template appDatatableCell="status" let-task>
-          <span
-            class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium"
+          <app-badge
+            shape="rounded"
             [class]="task.statusCategory | sprintBacklogStatusBadgeClass">
             {{ task.statusName | sprintBacklogStatusLabel }}
-          </span>
+          </app-badge>
         </ng-template>
       </app-datatable>
     </div>
@@ -93,7 +95,8 @@ export interface SprintAddTaskDialogData {
 })
 export class SprintAddTaskDialogComponent {
   private store = inject(Store);
-  private dialogRef = inject<DialogRef<SprintAddTaskDialogComponent>>(DialogRef);
+  private dialogRef =
+    inject<DialogRef<SprintAddTaskDialogComponent>>(DialogRef);
   private dialogData = inject<SprintAddTaskDialogData>(DIALOG_DATA);
 
   readonly loading = this.store.selectSignal(selectSprintUpdateLoading);

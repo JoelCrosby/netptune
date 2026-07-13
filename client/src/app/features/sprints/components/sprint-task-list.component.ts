@@ -7,6 +7,7 @@ import { removeTaskFromSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { Store } from '@ngrx/store';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -26,6 +27,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
     RouterLink,
     StrokedButtonComponent,
     TaskScopeIdComponent,
+    BadgeComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
     SprintBacklogStatusBadgeClassPipe,
@@ -60,11 +62,11 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
       </ng-template>
 
       <ng-template appDatatableCell="status" let-task>
-        <span
-          class="inline-flex items-center rounded px-2 py-0.5 text-center text-xs font-medium"
+        <app-badge
+          shape="rounded"
           [class]="task.statusCategory | sprintBacklogStatusBadgeClass">
           {{ task.statusName | sprintBacklogStatusLabel }}
-        </span>
+        </app-badge>
       </ng-template>
 
       <ng-template appDatatableCell="priority" let-task>
@@ -111,7 +113,12 @@ export class SprintTaskListComponent {
   private readonly baseColumns: DatatableColumn<TaskViewModel>[] = [
     { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
     { id: 'name', header: 'Task', accessor: 'name', sortable: true },
-    { id: 'projectName', header: 'Project', sortable: true, widthClass: 'w-48' },
+    {
+      id: 'projectName',
+      header: 'Project',
+      sortable: true,
+      widthClass: 'w-48',
+    },
     { id: 'status', header: 'Status', sortable: true, widthClass: 'w-40' },
     { id: 'priority', header: 'Priority', sortable: true, widthClass: 'w-32' },
   ];

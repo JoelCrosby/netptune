@@ -5,6 +5,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -26,6 +27,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
     FormSelectComponent,
     FormSelectOptionComponent,
     TaskScopeIdComponent,
+    BadgeComponent,
     SprintBacklogStatusBadgeClassPipe,
     SprintBacklogStatusLabelPipe,
     SprintBacklogPriorityClassPipe,
@@ -42,11 +44,13 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
         </a>
       </div>
       <div class="mt-1.5 flex flex-wrap items-center gap-2">
-        <span
-          class="rounded px-1.5 py-0.5 text-xs font-medium"
-          [class]="task().statusCategory | sprintBacklogStatusBadgeClass">
+        <app-badge
+          shape="rounded"
+          [class]="
+            'px-1.5 ' + (task().statusCategory | sprintBacklogStatusBadgeClass)
+          ">
           {{ task().statusName | sprintBacklogStatusLabel }}
-        </span>
+        </app-badge>
         @if (task().priority !== null && task().priority !== undefined) {
           <span
             class="text-xs font-medium"

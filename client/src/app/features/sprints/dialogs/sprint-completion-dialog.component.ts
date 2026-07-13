@@ -9,6 +9,7 @@ import { SprintsService } from '@core/store/sprints/sprints.service';
 import { completeSprintWithReassignment } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -31,6 +32,7 @@ type MoveMode = 'backlog' | 'sprint';
     FormSelectComponent,
     FormSelectOptionComponent,
     SelectableCardComponent,
+    BadgeComponent,
   ],
   template: `
     <app-dialog-title>Complete Sprint</app-dialog-title>
@@ -53,11 +55,13 @@ type MoveMode = 'backlog' | 'sprint';
                 {{ task.systemId }}
               </span>
               <span class="flex-1 truncate text-sm">{{ task.name }}</span>
-              <span
-                class="shrink-0 rounded px-1.5 py-0.5 text-xs font-medium"
-                [class]="statusBadgeClass(task.statusCategory)">
+              <app-badge
+                shape="rounded"
+                [class]="
+                  'shrink-0 px-1.5 ' + statusBadgeClass(task.statusCategory)
+                ">
                 {{ task.statusName }}
-              </span>
+              </app-badge>
             </div>
           }
         </div>

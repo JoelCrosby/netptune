@@ -66,11 +66,14 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
           </ng-template>
 
           <ng-template appDatatableCell="status" let-task>
-            <span
-              class="truncate rounded px-1.5 py-0.5 text-xs font-medium"
-              [class]="task.statusCategory | sprintBacklogStatusBadgeClass">
+            <app-badge
+              shape="rounded"
+              [class]="
+                'truncate px-1.5 ' +
+                (task.statusCategory | sprintBacklogStatusBadgeClass)
+              ">
               {{ task.statusName | sprintBacklogStatusLabel }}
-            </span>
+            </app-badge>
           </ng-template>
 
           <ng-template appDatatableCell="priority" let-task>

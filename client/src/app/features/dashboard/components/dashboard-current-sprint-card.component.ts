@@ -8,6 +8,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectCurrentUserId } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { LucideCalendarClock } from '@lucide/angular';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { SprintStatsComponent } from '@app/features/sprints/components/sprint-stats.component';
@@ -27,6 +28,7 @@ import { taskStatusBadgeClass } from '../utils/task-status-badge-class';
     SprintStatusClassesPipe,
     SprintStatusLabelPipe,
     LucideCalendarClock,
+    BadgeComponent,
   ],
   template: `
     @if (isInitialLoad()) {
@@ -103,11 +105,13 @@ import { taskStatusBadgeClass } from '../utils/task-status-badge-class';
                     [routerLink]="['../tasks', task.systemId]">
                     {{ task.name }}
                   </a>
-                  <span
-                    class="inline-flex shrink-0 items-center rounded px-2 py-0.5 text-xs font-medium"
-                    [class]="statusBadgeClass(task.statusCategory)">
+                  <app-badge
+                    shape="rounded"
+                    [class]="
+                      'shrink-0 ' + statusBadgeClass(task.statusCategory)
+                    ">
                     {{ task.statusName }}
-                  </span>
+                  </app-badge>
                 </li>
               }
             </ul>
