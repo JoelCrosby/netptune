@@ -15,6 +15,7 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
+import { SelectableCardComponent } from '@static/components/selectable-card/selectable-card.component';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -29,6 +30,7 @@ type MoveMode = 'backlog' | 'sprint';
     StrokedButtonComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    SelectableCardComponent,
   ],
   template: `
     <app-dialog-title>Complete Sprint</app-dialog-title>
@@ -63,53 +65,27 @@ type MoveMode = 'backlog' | 'sprint';
         <div class="flex flex-col gap-2">
           <p class="text-sm font-medium">What should happen to these tasks?</p>
 
-          <button
-            type="button"
-            class="flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors"
-            [class]="
-              moveMode() === 'backlog'
-                ? 'border-primary bg-primary/5'
-                : 'border-border hover:border-primary/40'
-            "
-            (click)="moveMode.set('backlog')">
-            <div
-              class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2"
-              [class]="
-                moveMode() === 'backlog' ? 'border-primary' : 'border-border'
-              ">
-              @if (moveMode() === 'backlog') {
-                <div class="bg-primary h-2 w-2 rounded-full"></div>
-              }
-            </div>
+          <app-selectable-card
+            groupName="sprint-completion-task-destination"
+            accessibleLabel="Move incomplete tasks to backlog"
+            [selected]="moveMode() === 'backlog'"
+            (selectionChange)="moveMode.set('backlog')">
             <div>
               <p class="text-sm font-medium">Move to backlog</p>
               <p class="text-muted text-xs">Unassign tasks from this sprint</p>
             </div>
-          </button>
+          </app-selectable-card>
 
-          <button
-            type="button"
-            class="flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors"
-            [class]="
-              moveMode() === 'sprint'
-                ? 'border-primary bg-primary/5'
-                : 'border-border hover:border-primary/40'
-            "
-            (click)="moveMode.set('sprint')">
-            <div
-              class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2"
-              [class]="
-                moveMode() === 'sprint' ? 'border-primary' : 'border-border'
-              ">
-              @if (moveMode() === 'sprint') {
-                <div class="bg-primary h-2 w-2 rounded-full"></div>
-              }
-            </div>
+          <app-selectable-card
+            groupName="sprint-completion-task-destination"
+            accessibleLabel="Move incomplete tasks to another sprint"
+            [selected]="moveMode() === 'sprint'"
+            (selectionChange)="moveMode.set('sprint')">
             <div>
               <p class="text-sm font-medium">Move to another sprint</p>
               <p class="text-muted text-xs">Add tasks to an upcoming sprint</p>
             </div>
-          </button>
+          </app-selectable-card>
 
           @if (moveMode() === 'sprint') {
             @if (planningSprints().length > 0) {

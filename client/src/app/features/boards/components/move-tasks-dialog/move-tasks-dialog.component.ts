@@ -10,12 +10,14 @@ import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
+import { SelectableCardComponent } from '@static/components/selectable-card/selectable-card.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 
 @Component({
   imports: [
     DialogTitleComponent,
+    SelectableCardComponent,
     DialogContentComponent,
     BoardGroupStatusDotComponent,
     BadgeComponent,
@@ -37,27 +39,11 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
       <div
         class="custom-scroll flex max-h-[50vh] flex-col gap-2 overflow-y-auto">
         @for (group of groups(); track group.id) {
-          <button
-            type="button"
-            class="flex w-full cursor-pointer items-center gap-3 rounded-md border px-3 py-2.5 text-left transition-colors"
-            [class]="
-              selected() === group.id
-                ? 'border-primary bg-primary/10 text-foreground'
-                : 'border-border text-foreground/80 hover:bg-foreground/5'
-            "
-            (click)="onGroupClicked(group.id)">
-            <span
-              class="flex h-4 w-4 flex-none items-center justify-center rounded-full border-2 transition-colors"
-              [class]="
-                selected() === group.id
-                  ? 'border-primary'
-                  : 'border-foreground/30'
-              ">
-              @if (selected() === group.id) {
-                <span class="bg-primary h-2 w-2 rounded-full"></span>
-              }
-            </span>
-
+          <app-selectable-card
+            groupName="task-destination-group"
+            [accessibleLabel]="'Move tasks to ' + group.name"
+            [selected]="selected() === group.id"
+            (selectionChange)="onGroupClicked(group.id)">
             @if (group.statusId && status.get(group.statusId); as status) {
               <app-board-group-status-dot [status]="status" />
             }
@@ -67,7 +53,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
             }}</span>
 
             <app-badge color="neutral">{{ group.tasks.length }}</app-badge>
-          </button>
+          </app-selectable-card>
         } @empty {
           <p class="text-foreground/50 py-6 text-center text-sm">
             No groups available.
