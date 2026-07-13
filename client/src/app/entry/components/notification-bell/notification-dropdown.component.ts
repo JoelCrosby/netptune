@@ -1,6 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { PopoverSurfaceComponent } from '@static/components/popover-surface/popover-surface.component';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import { LucideBell } from '@lucide/angular';
 import { NotificationItemComponent } from './notification-item.component';
@@ -12,29 +13,12 @@ const DROPDOWN_LIMIT = 10;
   imports: [
     SpinnerComponent,
     EmptyStateComponent,
+    PopoverSurfaceComponent,
     LucideBell,
     NotificationItemComponent,
   ],
-  styles: `
-    @keyframes dropdown-in {
-      from {
-        opacity: 0;
-        transform: scale(0.95) translateY(-4px);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
-
-    .animate-dropdown-in {
-      animation: dropdown-in 150ms ease-out forwards;
-      transform-origin: top right;
-    }
-  `,
   template: `
-    <div
-      class="animate-dropdown-in custom-scroll border-border mt-[0.4rem] mr-4 max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded-[0.4rem] border bg-white shadow-lg dark:bg-neutral-950">
+    <app-popover-surface class="mt-[0.4rem] mr-4 block" enterFrom="top-right">
       <div class="flex items-center justify-between px-[1.2rem] py-3">
         <span class="text-sm font-semibold">Notifications</span>
         @if (unreadCount() > 0) {
@@ -84,7 +68,7 @@ const DROPDOWN_LIMIT = 10;
           <app-spinner diameter="24" />
         </div>
       }
-    </div>
+    </app-popover-surface>
   `,
 })
 export class NotificationDropdownComponent {

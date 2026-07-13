@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { Field, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
+import { PopoverSurfaceComponent } from '@static/components/popover-surface/popover-surface.component';
 import { AutofocusDirective } from '@static/directives/autofocus.directive';
 import { WorkspaceBadgeComponent } from './workspace-badge.component';
 
@@ -9,8 +10,7 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
   selector: 'app-workspace-select-menu',
   template: `
     @if (isOpen()) {
-      <div
-        class="border-border menu-scale-in flex h-full w-61.5 origin-top flex-col overflow-x-hidden rounded-sm border bg-white text-left shadow-xl dark:bg-neutral-950 dark:shadow-black/60">
+      <app-popover-surface size="compact" enterFrom="top">
         @if (!workspaces().length) {
           <div class="flex h-9.5 items-center px-2 font-[inherit] text-sm">
             No results found...
@@ -26,7 +26,7 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
             autocomplete="off" />
         }
         <div
-          class="custom-scroll max-h-54 [scrollbar-gutter:stable] overflow-y-auto py-[.4rem] pl-[.4rem]">
+          class="custom-scroll max-h-54 scrollbar-gutter-stable overflow-y-auto py-[.4rem] pl-[.4rem]">
           @for (option of filteredOptions(); track option.id) {
             <div
               class="hover:bg-hover my-[.2rem] flex h-9.5 cursor-pointer items-center rounded-sm px-2 font-[inherit] text-sm"
@@ -53,10 +53,16 @@ import { WorkspaceBadgeComponent } from './workspace-badge.component';
             Logout
           </div>
         </div>
-      </div>
+      </app-popover-surface>
     }
   `,
-  imports: [FormField, AutofocusDirective, RouterLink, WorkspaceBadgeComponent],
+  imports: [
+    FormField,
+    AutofocusDirective,
+    RouterLink,
+    WorkspaceBadgeComponent,
+    PopoverSurfaceComponent,
+  ],
 })
 export class WorkspaceSelectMenuComponent {
   readonly isOpen = input.required<boolean>();

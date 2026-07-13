@@ -1,15 +1,19 @@
 @keyframes menu-scale-in {
   0% {
     opacity: 0;
-    transform: scale(0.88);
+    transform: translate(
+        var(--menu-enter-translate-x, 0),
+        var(--menu-enter-translate-y, 0)
+      )
+      scale(0.88);
   }
   94% {
     opacity: .8;
-    transform: scale(1.008);
+    transform: translate(0, 0) scale(1.008);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: translate(0, 0) scale(1);
   }
 }
 

@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { PopoverSurfaceComponent } from '@static/components/popover-surface/popover-surface.component';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EntityType } from '@core/models/entity-type';
@@ -32,6 +33,7 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
   imports: [
     FlatButtonComponent,
     EmptyStateComponent,
+    PopoverSurfaceComponent,
     TooltipDirective,
     LucideActivity,
     LucideHistory,
@@ -39,25 +41,6 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     SpinnerComponent,
     ActivityPipe,
     ActivityTimeRangePipe,
-  ],
-  styles: [
-    `
-      @keyframes dropdown-in {
-        from {
-          opacity: 0;
-          transform: scale(0.95) translateY(-4px);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-      }
-
-      .dropdown-menu {
-        animation: dropdown-in 120ms ease-out;
-        transform-origin: top;
-      }
-    `,
   ],
   template: `<button
       app-flat-button
@@ -68,53 +51,54 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     </button>
 
     <ng-template #menuTemplate>
-      <div
-        class="dropdown-menu custom-scroll bg-background border-border mt-1 max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded border py-2 shadow-lg dark:bg-neutral-900">
-        @if (loaded()) {
-          @for (activity of activities(); track $index; let last = $last) {
-            <div
-              class="flex min-w-80 flex-row items-center gap-1 px-4 py-1 text-sm">
-              <app-avatar
-                class="shrink-0 grow-0 basis-8"
-                [imageUrl]="activity.userPictureUrl"
-                [name]="activity.userUsername"
-                size="sm">
-              </app-avatar>
-              <span class="font-medium tracking-[0.225px] whitespace-nowrap">
-                {{ activity.userUsername }}
-              </span>
-              <span
-                class="text-foreground/90 ml-[0.3rem] text-xs whitespace-nowrap"
-                [appTooltip]="activity | activityTimeRange">
-                {{ activity | activity }}
-              </span>
-            </div>
+      <app-popover-surface class="mt-1 block" enterFrom="top">
+        <div class="py-2">
+          @if (loaded()) {
+            @for (activity of activities(); track $index; let last = $last) {
+              <div
+                class="flex min-w-80 flex-row items-center gap-1 px-4 py-1 text-sm">
+                <app-avatar
+                  class="shrink-0 grow-0 basis-8"
+                  [imageUrl]="activity.userPictureUrl"
+                  [name]="activity.userUsername"
+                  size="sm">
+                </app-avatar>
+                <span class="font-medium tracking-[0.225px] whitespace-nowrap">
+                  {{ activity.userUsername }}
+                </span>
+                <span
+                  class="text-foreground/90 ml-[0.3rem] text-xs whitespace-nowrap"
+                  [appTooltip]="activity | activityTimeRange">
+                  {{ activity | activity }}
+                </span>
+              </div>
 
-            @if (!last) {
-              <div class="border-border/50 my-1 w-full border-t"></div>
+              @if (!last) {
+                <div class="border-border/50 my-1 w-full border-t"></div>
+              }
+            } @empty {
+              <app-empty-state
+                compact
+                title="There is no activity"
+                description="Activity on the item will appear here">
+                <svg emptyStateIcon lucideActivity></svg>
+              </app-empty-state>
             }
-          } @empty {
-            <app-empty-state
-              compact
-              title="There is no activity"
-              description="Activity on the item will appear here">
-              <svg emptyStateIcon lucideActivity></svg>
-            </app-empty-state>
-          }
 
-          @if (canLoadMore()) {
-            <div class="flex justify-center px-3 pt-3">
-              <button app-ghost-button (click)="loadMore()">
-                <span>Load more</span>
-              </button>
+            @if (canLoadMore()) {
+              <div class="flex justify-center px-3 pt-3">
+                <button app-ghost-button (click)="loadMore()">
+                  <span>Load more</span>
+                </button>
+              </div>
+            }
+          } @else {
+            <div class="flex justify-center p-4">
+              <app-spinner diameter="24" />
             </div>
           }
-        } @else {
-          <div class="flex justify-center p-4">
-            <app-spinner diameter="24" />
-          </div>
-        }
-      </div>
+        </div>
+      </app-popover-surface>
     </ng-template> `,
 })
 export class ActivityMenuComponent implements OnDestroy {
