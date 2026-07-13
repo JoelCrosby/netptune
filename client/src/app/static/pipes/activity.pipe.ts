@@ -65,6 +65,19 @@ const getMeta = (value: ActivityViewModel) => {
       const meta = value.meta as { tagName: string };
       return meta?.tagName ?? '';
     }
+    case ActivityType.addRelation:
+    case ActivityType.removeRelation: {
+      // The label is already written from this task's point of view, so it reads correctly on
+      // whichever of the two tasks' feeds this entry appears in.
+      const meta = value.meta as {
+        label: string;
+        relatedTaskSystemId: string;
+      };
+
+      if (!meta?.label) return meta?.relatedTaskSystemId ?? '';
+
+      return `${meta.label} ${meta.relatedTaskSystemId ?? ''}`.trim();
+    }
     default:
       return '';
   }

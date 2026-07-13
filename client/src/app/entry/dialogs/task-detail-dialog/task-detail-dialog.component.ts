@@ -25,6 +25,7 @@ import { TaskDetailCommentsComponent } from './task-detail-comments.component';
 import { TaskDetailDescriptionComponent } from './task-detail-description.component';
 import { TaskDetailHeaderComponent } from './task-detail-header.component';
 import { TaskDetailPropertiesComponent } from './task-detail-properties.component';
+import { TaskDetailRelationsComponent } from './task-detail-relations.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
 import { TaskDetailService } from './task-detail.service';
 import { netptunePermissions } from '@app/core/auth/permissions';
@@ -60,6 +61,7 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
             }
 
             <app-task-detail-description />
+            <app-task-detail-relations />
             <app-task-detail-comments />
           </div>
 
@@ -89,6 +91,7 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
     TaskDetailPropertiesComponent,
     TaskDetailHeaderComponent,
     TaskDetailDescriptionComponent,
+    TaskDetailRelationsComponent,
     TaskDetailCommentsComponent,
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,

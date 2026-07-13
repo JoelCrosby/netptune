@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { RelationTypesComponent } from '@settings/components/relation-types/relation-types.component';
 import { StatusesComponent } from '@settings/components/statuses/statuses.component';
 import { TagsComponent } from '@settings/components/tags/tags.component';
 import { WorkspaceDetailsComponent } from '@settings/components/workspace-details/workspace-details.component';
@@ -13,6 +14,7 @@ import { netptunePermissions } from '@app/core/auth/permissions';
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
+    RelationTypesComponent,
     StatusesComponent,
     TagsComponent,
     WorkspaceDetailsComponent,
@@ -35,6 +37,11 @@ import { netptunePermissions } from '@app/core/auth/permissions';
       <app-statuses />
     }
 
+    @if (readRelationTypes()) {
+      <div class="border-border my-8 border-b-2"></div>
+      <app-relation-types />
+    }
+
     @if (readWorkspace()) {
       <div class="border-border my-8 border-b-2"></div>
       <app-workspace-settings />
@@ -50,6 +57,10 @@ export class WorkspaceSettingsViewComponent {
 
   readStatuses = this.store.selectSignal(
     selectHasPermission(netptunePermissions.statuses.read)
+  );
+
+  readRelationTypes = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.relationTypes.read)
   );
 
   readTags = this.store.selectSignal(

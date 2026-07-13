@@ -39,10 +39,15 @@ public sealed class DeleteWorkspacePermanentCommandHandler : IRequestHandler<Del
             var taskIds = await u.Tasks.GetAllIdsInWorkspace(workspaceId, true);
             await u.ProjectTasksInGroups.DeleteAllByTaskId(taskIds);
             await u.ProjectTaskTags.DeleteAllByTaskId(taskIds);
+            await u.ProjectTaskRelations.DeleteAllByTaskId(taskIds);
 
             await u.Tags.DeleteAllInWorkspace(workspaceId);
             await u.Comments.DeleteAllInWorkspace(workspaceId);
             await u.Tasks.DeleteAllInWorkspace(workspaceId);
+
+            // Relation types are only removable once the relations referencing them are gone.
+            await u.RelationTypes.DeleteAllInWorkspace(workspaceId);
+
             await u.BoardGroups.DeleteAllInWorkspace(workspaceId);
             await u.Boards.DeleteAllInWorkspace(workspaceId);
             await u.Projects.DeleteAllInWorkspace(workspaceId);

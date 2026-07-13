@@ -90,6 +90,12 @@ public static class NetptunePermissions
         public const string Manage = "statuses.manage";
     }
 
+    public static class RelationTypes
+    {
+        public const string Read = "relation_types.read";
+        public const string Manage = "relation_types.manage";
+    }
+
     public static class Activity
     {
         public const string Read = "activity.read";

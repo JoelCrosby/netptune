@@ -25,6 +25,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     IProjectTaskTagRepository ProjectTaskTags { get; }
 
+    IProjectTaskRelationRepository ProjectTaskRelations { get; }
+
     ICommentRepository Comments { get; }
 
     IReactionRepository Reactions { get; }
@@ -32,6 +34,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     ITagRepository Tags { get; }
 
     IStatusRepository Statuses { get; }
+
+    IRelationTypeRepository RelationTypes { get; }
 
     IActivityLogRepository ActivityLogs { get; }
 

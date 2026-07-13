@@ -42,4 +42,6 @@ export enum ActivityType {
   modifyPriority = 24,
   modifyEstimate = 25,
   restore = 26,
+  addRelation = 27,
+  removeRelation = 28,
 }

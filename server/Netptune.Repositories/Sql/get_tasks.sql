@@ -57,6 +57,7 @@ WITH filtered_tasks AS (
       AND (@projectId IS NULL OR pt.project_id = @projectId)
       AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
       AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
+      AND (@excludeTaskId IS NULL OR pt.id != @excludeTaskId)
       AND (@noSprint = FALSE OR pt.sprint_id IS NULL)
       AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
       AND (CARDINALITY(@statusCategories) = 0 OR st.category = ANY(@statusCategories))

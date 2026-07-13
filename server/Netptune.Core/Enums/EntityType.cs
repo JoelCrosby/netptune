@@ -12,4 +12,5 @@ public enum EntityType
     Tag,
     Sprint,
     Status,
+    RelationType,
 }

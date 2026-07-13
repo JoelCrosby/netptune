@@ -8,6 +8,8 @@ public sealed class TaskFilter : PageRequest
 
     public int? ExcludeSprintId { get; init; }
 
+    public int? ExcludeTaskId { get; init; }
+
     public string? Search { get; init; }
 
     public string[] Tags { get; init; } = [];

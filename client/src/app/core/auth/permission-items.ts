@@ -255,6 +255,18 @@ export const netptunePermissionLabels: PermissionLabels = {
       icon: LucidePencil,
     },
   },
+  relationTypes: {
+    read: {
+      key: 'relation_types.read',
+      label: 'View Relation Types',
+      icon: LucideEye,
+    },
+    manage: {
+      key: 'relation_types.manage',
+      label: 'Manage Relation Types',
+      icon: LucidePencil,
+    },
+  },
   activity: {
     read: {
       key: 'activity.read',

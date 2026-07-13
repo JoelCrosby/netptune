@@ -105,11 +105,13 @@ export class AuditTableComponent {
     switch (type) {
       case ActivityType.create:
       case ActivityType.addTag:
+      case ActivityType.addRelation:
       case ActivityType.loginSuccess:
         return 'bg-green-500/10 text-green-600 dark:text-green-400';
       case ActivityType.delete:
       case ActivityType.remove:
       case ActivityType.removeTag:
+      case ActivityType.removeRelation:
       case ActivityType.loginFailed:
         return 'bg-red-500/10 text-red-600 dark:text-red-400';
       case ActivityType.assign:

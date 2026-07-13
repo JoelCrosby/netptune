@@ -105,6 +105,10 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Added tag';
     case ActivityType.removeTag:
       return 'Removed tag';
+    case ActivityType.addRelation:
+      return 'Linked task';
+    case ActivityType.removeRelation:
+      return 'Unlinked task';
     case ActivityType.roleChanged:
       return 'Changed role';
     case ActivityType.workspaceSettingsChanged:

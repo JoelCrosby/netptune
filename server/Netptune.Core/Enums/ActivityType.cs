@@ -32,4 +32,6 @@ public enum ActivityType
     ModifyPriority = 24,
     ModifyEstimate = 25,
     Restore = 26,
+    AddRelation = 27,
+    RemoveRelation = 28,
 }

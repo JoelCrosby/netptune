@@ -67,6 +67,10 @@ export const netptunePermissions = {
     read: 'statuses.read',
     manage: 'statuses.manage',
   },
+  relationTypes: {
+    read: 'relation_types.read',
+    manage: 'relation_types.manage',
+  },
   activity: {
     read: 'activity.read',
   },

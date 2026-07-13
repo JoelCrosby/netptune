@@ -30,6 +30,7 @@ internal static class WorkspaceFactory
 
             await unitOfWork.CompleteAsync(cancellationToken);
             await unitOfWork.Statuses.EnsureDefaultTaskStatuses(workspace.Id, user.Id, cancellationToken);
+            await unitOfWork.RelationTypes.EnsureDefaultRelationTypes(workspace.Id, user.Id, cancellationToken);
             await unitOfWork.CompleteAsync(cancellationToken);
 
             var defaultStatus = await unitOfWork.Statuses.GetTaskStatusByKey(workspace.Id, "new", cancellationToken)

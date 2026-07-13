@@ -23,6 +23,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<Flag> Flags { get; set; } = null!;
     public DbSet<ProjectTask> ProjectTasks { get; set; } = null!;
     public DbSet<Status> Statuses { get; set; } = null!;
+    public DbSet<RelationType> RelationTypes { get; set; } = null!;
     public DbSet<Sprint> Sprints { get; set; } = null!;
     public DbSet<AppUser> AppUsers { get; set; } = null!;
     public DbSet<Board> Boards { get; set; } = null!;
@@ -46,6 +47,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<ProjectUser> ProjectUsers { get; set; } = null!;
     public DbSet<ProjectTaskInBoardGroup> ProjectTaskInBoardGroups { get; set; } = null!;
     public DbSet<ProjectTaskTag> ProjectTaskTags { get; set; } = null!;
+    public DbSet<ProjectTaskRelation> ProjectTaskRelations { get; set; } = null!;
     public DbSet<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = null!;
     public DbSet<WorkspaceInvite> WorkspaceInvites { get; set; } = null!;
 

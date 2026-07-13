@@ -18,6 +18,7 @@ import { TaskDetailCommentsComponent } from '@entry/dialogs/task-detail-dialog/t
 import { TaskDetailDescriptionComponent } from '@entry/dialogs/task-detail-dialog/task-detail-description.component';
 import { TaskDetailHeaderComponent } from '@entry/dialogs/task-detail-dialog/task-detail-header.component';
 import { TaskDetailPropertiesComponent } from '@entry/dialogs/task-detail-dialog/task-detail-properties.component';
+import { TaskDetailRelationsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-relations.component';
 import { TaskDetailTagsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-tags.component';
 import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-actions.component';
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
@@ -60,6 +61,7 @@ import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/wor
             }
 
             <app-task-detail-description />
+            <app-task-detail-relations />
             <app-task-detail-comments />
           </div>
 
@@ -90,6 +92,7 @@ import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/wor
     TaskDetailPropertiesComponent,
     TaskDetailHeaderComponent,
     TaskDetailDescriptionComponent,
+    TaskDetailRelationsComponent,
     TaskDetailCommentsComponent,
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,

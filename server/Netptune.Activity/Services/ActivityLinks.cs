@@ -37,6 +37,7 @@ internal static class ActivityLinks
             EntityType.Project => $"/{workspaceSlug}/projects/{entityId}",
             EntityType.Sprint => $"/{workspaceSlug}/sprints/{entityId}",
             EntityType.Status => $"/{workspaceSlug}/settings",
+            EntityType.RelationType => $"/{workspaceSlug}/settings",
             _ => $"/{workspaceSlug}",
         };
     }

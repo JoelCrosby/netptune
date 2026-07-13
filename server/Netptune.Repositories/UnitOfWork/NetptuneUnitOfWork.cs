@@ -18,10 +18,12 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IBoardGroupRepository BoardGroups { get; }
     public ITaskInGroupRepository ProjectTasksInGroups { get; }
     public IProjectTaskTagRepository ProjectTaskTags { get; }
+    public IProjectTaskRelationRepository ProjectTaskRelations { get; }
     public ICommentRepository Comments { get; }
     public IReactionRepository Reactions { get; }
     public ITagRepository Tags { get; }
     public IStatusRepository Statuses { get; }
+    public IRelationTypeRepository RelationTypes { get; }
     public IActivityLogRepository ActivityLogs { get; }
     public IActivityEntryRepository ActivityEntries { get; }
     public IAutomationRepository Automations { get; }
@@ -47,10 +49,12 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         BoardGroups = new BoardGroupRepository(context, connectionFactory);
         ProjectTasksInGroups = new TaskInGroupRepository(context, connectionFactory);
         ProjectTaskTags = new ProjectTaskTagRepository(context, connectionFactory);
+        ProjectTaskRelations = new ProjectTaskRelationRepository(context, connectionFactory);
         Comments = new CommentRepository(context, connectionFactory);
         Reactions = new ReactionRepository(context, connectionFactory);
         Tags = new TagRepository(context, connectionFactory);
         Statuses = new StatusRepository(context, connectionFactory);
+        RelationTypes = new RelationTypeRepository(context, connectionFactory);
         ActivityLogs = new ActivityLogRepository(context, connectionFactory);
         ActivityEntries = new ActivityEntryRepository(context, connectionFactory);
         Automations = new AutomationRepository(context, connectionFactory);

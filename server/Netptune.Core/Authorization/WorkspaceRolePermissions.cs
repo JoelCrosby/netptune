@@ -13,6 +13,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Tasks.Read,
         NetptunePermissions.Sprints.Read,
         NetptunePermissions.Statuses.Read,
+        NetptunePermissions.RelationTypes.Read,
         NetptunePermissions.Comments.Read,
         NetptunePermissions.Tags.Read,
         NetptunePermissions.Activity.Read,
@@ -64,6 +65,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Tasks.Import,
         NetptunePermissions.Automations.Read,
         NetptunePermissions.Automations.Manage,
+        NetptunePermissions.RelationTypes.Manage,
     };
 
     private static readonly IReadOnlySet<string> OwnerPermissions = new HashSet<string>(AdminPermissions)
