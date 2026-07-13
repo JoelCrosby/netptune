@@ -8,7 +8,6 @@ import {
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { ButtonLinkComponent } from '@app/static/components/button/button-link.component';
-import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
 import { login } from '@app/core/store/auth/auth.actions';
 import {
   selectLoginLoading,
@@ -24,12 +23,13 @@ import { LoginMicrosoftComponent } from './login-microsoft.component';
 import { selectBuildInfo } from '@app/core/store/meta/meta.selectors';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
+import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 
 @Component({
   selector: 'app-login',
   imports: [
     AuthPageContainerComponent,
-    ProgressBarComponent,
+    AuthFormPanelComponent,
     FormInputComponent,
     RouterLink,
     ButtonLinkComponent,
@@ -43,26 +43,11 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
     TurnstileComponent,
   ],
   template: `<app-auth-page-container>
-    <form
-      (submit)="login($event)"
-      class="bg-background border-border z-1 flex w-md flex-col gap-4 rounded border p-8 shadow-lg">
-      <div>
-        @if (loading()) {
-          <app-progress-bar mode="indeterminate" />
-        }
-      </div>
-
-      <img
-        src="assets/apple-touch-icon.png"
-        alt="Netptune Logo"
-        width="72"
-        height="72"
-        class="mx-auto my-2" />
-
-      <h3 class="w-full text-center font-normal tracking-normal">
-        Sign in to continue
-      </h3>
-
+    <app-auth-form-panel
+      showLogo
+      heading="Sign in to continue"
+      [loading]="loading()"
+      (submitted)="login()">
       <div class="mb-6 flex h-4 w-full flex-col items-center justify-center">
         @if (showLoginError()) {
           <div
@@ -124,7 +109,7 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
       <app-login-github />
       <app-login-google />
       <app-login-microsoft />
-    </form>
+    </app-auth-form-panel>
     <app-build-number />
   </app-auth-page-container> `,
 })
@@ -149,9 +134,7 @@ export class LoginComponent {
     disabled(schema, () => this.loading());
   });
 
-  login(event: Event) {
-    event.preventDefault();
-
+  login() {
     if (this.loginForm().invalid()) {
       this.loginForm().markAsDirty();
       return;

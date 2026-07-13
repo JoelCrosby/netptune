@@ -11,7 +11,6 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
 import { resetPassword } from '@app/core/store/auth/auth.actions';
 import { ResetPasswordRequest } from '@app/core/store/auth/auth.models';
 import { selectResetPasswordLoading } from '@app/core/store/auth/auth.selectors';
@@ -19,12 +18,13 @@ import { Store } from '@ngrx/store';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
+import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 
 @Component({
   selector: 'app-reset-password',
   imports: [
     AuthPageContainerComponent,
-    ProgressBarComponent,
+    AuthFormPanelComponent,
     FormInputComponent,
     FormErrorsComponent,
     RouterLink,
@@ -34,19 +34,10 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
   ],
   template: `
     <app-auth-page-container>
-      <form
-        (submit)="resetPassword($event)"
-        class="bg-background border-border z-1 flex w-md flex-col gap-4 rounded border p-8 shadow-lg">
-        <div class="auth-progress-bar">
-          @if (loading()) {
-            <app-progress-bar mode="indeterminate" />
-          }
-        </div>
-
-        <h3 class="mb-[2.8rem] w-full text-center font-normal tracking-normal">
-          Reset your password
-        </h3>
-
+      <app-auth-form-panel
+        heading="Reset your password"
+        [loading]="loading()"
+        (submitted)="resetPassword()">
         <app-form-input
           [formField]="resetForm.password0"
           label="New Password"
@@ -84,7 +75,7 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
             Reset Password
           </button>
         </div>
-      </form>
+      </app-auth-form-panel>
     </app-auth-page-container>
   `,
 })
@@ -122,9 +113,7 @@ export class ResetPasswordComponent {
     });
   });
 
-  resetPassword(event: Event) {
-    event.preventDefault();
-
+  resetPassword() {
     if (!this.request || this.resetForm().invalid()) return;
 
     const password = this.resetForm.password0().value();

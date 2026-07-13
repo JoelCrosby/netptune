@@ -13,15 +13,15 @@ import { Store } from '@ngrx/store';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
-import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
+import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 
 @Component({
   selector: 'app-request-password-reset',
   imports: [
     AuthPageContainerComponent,
-    ProgressBarComponent,
+    AuthFormPanelComponent,
     FormInputComponent,
     FormErrorsComponent,
     RouterLink,
@@ -30,19 +30,10 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
     FormField,
   ],
   template: `<app-auth-page-container>
-    <form
-      (submit)="requestPasswordReset($event)"
-      class="bg-background border-border z-1 flex w-md flex-col gap-4 rounded border p-8 shadow-lg">
-      <div class="auth-progress-bar">
-        @if (loading()) {
-          <app-progress-bar mode="indeterminate" />
-        }
-      </div>
-
-      <h3 class="mb-[2.8rem] w-full text-center font-normal tracking-normal">
-        Request Password Reset
-      </h3>
-
+    <app-auth-form-panel
+      heading="Request Password Reset"
+      [loading]="loading()"
+      (submitted)="requestPasswordReset()">
       <app-form-input
         [formField]="requestForm.email"
         label="Email"
@@ -66,7 +57,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
           Send Password Reset Email
         </button>
       </div>
-    </form>
+    </app-auth-form-panel>
   </app-auth-page-container> `,
 })
 export class RequestPasswordResetComponent {
@@ -84,9 +75,7 @@ export class RequestPasswordResetComponent {
     disabled(schema, () => this.loading());
   });
 
-  requestPasswordReset(event: Event) {
-    event.preventDefault();
-
+  requestPasswordReset() {
     if (this.requestForm().invalid()) {
       this.requestForm().markAsDirty();
       return;

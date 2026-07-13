@@ -20,7 +20,6 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import { ProgressBarComponent } from '@app/static/components/progress-bar/progress-bar.component';
 import * as AuthActions from '@app/core/store/auth/auth.actions';
 import { WorkspaceInvite } from '@app/core/store/auth/auth.models';
 import { selectRegisterLoading } from '@app/core/store/auth/auth.selectors';
@@ -29,12 +28,13 @@ import { FormErrorsComponent } from '@static/components/form-error/form-errors.c
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
+import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
 
 @Component({
   selector: 'app-register',
   imports: [
     AuthPageContainerComponent,
-    ProgressBarComponent,
+    AuthFormPanelComponent,
     FormInputComponent,
     FormErrorsComponent,
     RouterLink,
@@ -45,25 +45,11 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
     TurnstileComponent,
   ],
   template: `<app-auth-page-container>
-    <form
-      (submit)="register($event)"
-      class="bg-background border-border z-1 flex w-md flex-col gap-4 rounded border p-8 shadow-lg">
-      <div>
-        @if (loading()) {
-          <app-progress-bar mode="indeterminate" />
-        }
-      </div>
-
-      <img
-        src="assets/apple-touch-icon.png"
-        alt="Netptune Logo"
-        width="72"
-        height="72" />
-
-      <h3 class="mb-[2.8rem] w-full text-center font-normal tracking-normal">
-        Create new Account
-      </h3>
-
+    <app-auth-form-panel
+      showLogo
+      heading="Create new Account"
+      [loading]="loading()"
+      (submitted)="register()">
       <app-form-input
         [formField]="registerForm.firstname"
         label="Firstname"
@@ -123,7 +109,7 @@ import { TurnstileComponent } from '../turnstile/turnstile.component';
           Create Account
         </button>
       </div>
-    </form>
+    </app-auth-form-panel>
   </app-auth-page-container> `,
 })
 export class RegisterComponent implements OnDestroy {
@@ -193,9 +179,7 @@ export class RegisterComponent implements OnDestroy {
     this.store.dispatch(AuthActions.clearError({ error: 'registerError' }));
   }
 
-  register(event: Event) {
-    event.preventDefault();
-
+  register() {
     const firstname = this.registerForm.firstname().value();
     const lastname = this.registerForm.lastname().value();
     const email = this.registerForm.email().value();
