@@ -15,14 +15,17 @@ import {
   LucideCalendarDays,
   LucideCalendarRange,
   LucideChartNoAxesColumn,
+  LucideGitFork,
   LucideLayoutDashboard,
+  LucideLayoutGrid,
+  LucideListChecks,
   LucideLogs,
   LucideSettings,
   LucideSettings2,
   LucideShield,
   LucideSquareCheckBig,
   LucideTable2,
-  LucideUser,
+  LucideTag,
   LucideUsers,
   LucideWorkflow,
 } from '@lucide/angular';
@@ -102,6 +105,18 @@ export class ShellSidebarComponent {
 
   canReadWorkspace = this.store.selectSignal(
     selectHasPermission(netptunePermissions.workspace.read)
+  );
+
+  canReadTags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tags.read)
+  );
+
+  canReadStatuses = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.statuses.read)
+  );
+
+  canReadRelationTypes = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.relationTypes.read)
   );
 
   canReadAudit = this.store.selectSignal(
@@ -201,24 +216,59 @@ export class ShellSidebarComponent {
       });
     }
 
+    const workspaceSettingsLinks: ShellMenuLink[] = [];
+
     if (this.canReadWorkspace()) {
-      links.push({
-        label: 'Settings',
-        icon: LucideSettings,
-        children: [
-          {
-            label: 'Personal',
-            value: ['./settings/personal'],
-            icon: LucideUser,
-          },
-          {
-            label: 'Workspace',
-            value: ['./settings/workspace'],
-            icon: LucideSettings2,
-          },
-        ],
+      workspaceSettingsLinks.push({
+        label: 'General',
+        value: ['./settings/workspace/general'],
+        icon: LucideLayoutGrid,
       });
     }
+
+    if (this.canReadTags()) {
+      workspaceSettingsLinks.push({
+        label: 'Tags',
+        value: ['./settings/workspace/tags'],
+        icon: LucideTag,
+      });
+    }
+
+    if (this.canReadStatuses()) {
+      workspaceSettingsLinks.push({
+        label: 'Statuses',
+        value: ['./settings/workspace/statuses'],
+        icon: LucideListChecks,
+      });
+    }
+
+    if (this.canReadRelationTypes()) {
+      workspaceSettingsLinks.push({
+        label: 'Relations',
+        value: ['./settings/workspace/relations'],
+        icon: LucideGitFork,
+      });
+    }
+
+    const [defaultWorkspaceSettingsLink, ...workspaceSettingsChildren] =
+      workspaceSettingsLinks;
+
+    if (defaultWorkspaceSettingsLink) {
+      links.push({
+        label: 'Workspace',
+        value: defaultWorkspaceSettingsLink.value,
+        icon: LucideSettings2,
+        overviewLabel: defaultWorkspaceSettingsLink.label,
+        overviewIcon: defaultWorkspaceSettingsLink.icon,
+        children: workspaceSettingsChildren,
+      });
+    }
+
+    links.push({
+      label: 'Settings',
+      value: ['./settings/personal'],
+      icon: LucideSettings,
+    });
 
     links.push({
       label: 'Notifications',

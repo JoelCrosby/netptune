@@ -16,7 +16,9 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 @Component({
   selector: 'app-workspace-settings',
   imports: [FlatButtonComponent, StrokedButtonComponent],
-  template: `<h3 class="font-overpass text-[1.4rem] font-normal">Workspace</h3>
+  template: `<h3 class="font-overpass text-[1.4rem] font-normal">
+      Visibility and access
+    </h3>
 
     <div class="mt-4 flex flex-col items-start gap-4">
       @if (canUpdate()) {

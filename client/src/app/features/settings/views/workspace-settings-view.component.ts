@@ -1,69 +1,14 @@
-import { Component, inject } from '@angular/core';
-import { RelationTypesComponent } from '@settings/components/relation-types/relation-types.component';
-import { StatusesComponent } from '@settings/components/statuses/statuses.component';
-import { TagsComponent } from '@settings/components/tags/tags.component';
-import { WorkspaceDetailsComponent } from '@settings/components/workspace-details/workspace-details.component';
-import { WorkspaceSettings } from '@settings/components/workspace-settings/workspace-settings.component';
+import { Component } from '@angular/core';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { Store } from '@ngrx/store';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { netptunePermissions } from '@app/core/auth/permissions';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [
-    PageContainerComponent,
-    PageHeaderComponent,
-    RelationTypesComponent,
-    StatusesComponent,
-    TagsComponent,
-    WorkspaceDetailsComponent,
-    WorkspaceSettings,
-  ],
+  imports: [PageContainerComponent, PageHeaderComponent, RouterOutlet],
   template: `<app-page-container [centerPage]="true" [marginBottom]="true">
     <app-page-header title="Workspace" />
 
-    @if (readWorkspace()) {
-      <app-workspace-details />
-    }
-
-    @if (readTags()) {
-      <div class="border-border my-8 border-b-2"></div>
-      <app-tags />
-    }
-
-    @if (readStatuses()) {
-      <div class="border-border my-8 border-b-2"></div>
-      <app-statuses />
-    }
-
-    @if (readRelationTypes()) {
-      <div class="border-border my-8 border-b-2"></div>
-      <app-relation-types />
-    }
-
-    @if (readWorkspace()) {
-      <div class="border-border my-8 border-b-2"></div>
-      <app-workspace-settings />
-    }
+    <router-outlet />
   </app-page-container> `,
 })
-export class WorkspaceSettingsViewComponent {
-  readonly store = inject(Store);
-
-  readWorkspace = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.workspace.read)
-  );
-
-  readStatuses = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.statuses.read)
-  );
-
-  readRelationTypes = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.relationTypes.read)
-  );
-
-  readTags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tags.read)
-  );
-}
+export class WorkspaceSettingsViewComponent {}

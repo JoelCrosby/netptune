@@ -14,6 +14,8 @@ export interface ShellMenuLink {
   value?: string[];
   icon?: LucideIconInput;
   children?: ShellMenuLink[];
+  overviewLabel?: string;
+  overviewIcon?: LucideIconInput;
 }
 
 @Component({
@@ -116,9 +118,9 @@ export class ShellMenuLinkComponent {
     const overview = link.value
       ? [
           {
-            label: 'Overview',
+            label: link.overviewLabel ?? 'Overview',
             value: link.value,
-            icon: this.lucideLayoutGrid,
+            icon: link.overviewIcon ?? this.lucideLayoutGrid,
           },
         ]
       : [];
