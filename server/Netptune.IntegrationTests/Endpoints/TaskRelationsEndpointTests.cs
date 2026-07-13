@@ -211,7 +211,9 @@ public sealed class TaskRelationsEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
 
-        var tasks = result.Payload!.Items.ToList();
+        // Ordered by id so repeated calls pick the same tasks. The endpoint's default ordering is
+        // not something these tests should be leaning on.
+        var tasks = result.Payload!.Items.OrderBy(task => task.Id).ToList();
 
         tasks.Should().HaveCountGreaterThanOrEqualTo(count);
 

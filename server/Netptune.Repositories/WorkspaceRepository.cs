@@ -16,6 +16,66 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
     {
     }
 
+    public async Task DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        // ExecuteDeleteAsync runs on the context's own connection, so these all take part in the
+        // caller's transaction — either the whole workspace goes or none of it does.
+        var taskIds = Context.ProjectTasks
+            .Where(task => task.WorkspaceId == workspaceId)
+            .Select(task => task.Id);
+
+        var projectIds = Context.Projects
+            .Where(project => project.WorkspaceId == workspaceId)
+            .Select(project => project.Id);
+
+        var automationRuleIds = Context.AutomationRules
+            .Where(rule => rule.WorkspaceId == workspaceId)
+            .Select(rule => rule.Id);
+
+        // Notifications and activity entries both point at activity logs, so they go first.
+        await Context.Notifications.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ActivityEntries.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ActivityLogs.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        // Runs and actions belong to a rule; flags can reference one too.
+        await Context.AutomationRuns.Where(x => automationRuleIds.Contains(x.AutomationRuleId)).ExecuteDeleteAsync(cancellationToken);
+        await Context.AutomationActions.Where(x => automationRuleIds.Contains(x.AutomationRuleId)).ExecuteDeleteAsync(cancellationToken);
+        await Context.Flags.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.AutomationRules.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        // Reactions and mentions hang off comments.
+        await Context.Reactions.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.CommentMentions.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.Comments.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        // Everything joined to a task, then the tasks themselves.
+        await Context.ProjectTaskRelations.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ProjectTaskTags.Where(x => taskIds.Contains(x.ProjectTaskId)).ExecuteDeleteAsync(cancellationToken);
+        await Context.ProjectTaskInBoardGroups.Where(x => taskIds.Contains(x.ProjectTaskId)).ExecuteDeleteAsync(cancellationToken);
+        await Context.ProjectTaskAppUsers.Where(x => taskIds.Contains(x.ProjectTaskId)).ExecuteDeleteAsync(cancellationToken);
+        await Context.ProjectTasks.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        // Board groups reference a status; boards and sprints reference a project.
+        await Context.BoardGroups.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.Boards.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.Sprints.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.ProjectUsers.Where(x => projectIds.Contains(x.ProjectId)).ExecuteDeleteAsync(cancellationToken);
+
+        // Projects reference their default status, so they go before statuses.
+        await Context.Projects.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.Statuses.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.RelationTypes.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.Tags.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        // Per-user rows scoped to the workspace, then membership.
+        await Context.CommandPaletteRecentItems.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.UserPreferenceValues.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.WorkspaceInvites.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.WorkspaceAppUsers.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        await Context.Workspaces.Where(x => x.Id == workspaceId).ExecuteDeleteAsync(cancellationToken);
+    }
+
     public async Task<int?> GetIdBySlug(string slug, CancellationToken cancellationToken = default)
     {
         var result = await Entities

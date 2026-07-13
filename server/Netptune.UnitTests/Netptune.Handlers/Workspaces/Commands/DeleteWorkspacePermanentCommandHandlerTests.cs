@@ -27,33 +27,41 @@ public class DeleteWorkspacePermanentCommandHandlerTests
     [Fact]
     public async Task DeletePermanent_ShouldReturnSuccess_WhenValidId()
     {
+        var workspace = AutoFixtures.Workspace;
+
         UnitOfWork.InvokeTransaction();
-        UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Workspace);
+        UnitOfWork.Workspaces.GetBySlug("workspace", cancellationToken: TestContext.Current.CancellationToken).Returns(workspace);
 
         var result = await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
+
+        await UnitOfWork.Workspaces
+            .Received(1)
+            .DeleteWorkspacePermanent(workspace.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task DeletePermanent_ShouldNotCallDeletePermanent_WhenInvalidId()
+    public async Task DeletePermanent_ShouldNotDeleteAnything_WhenInvalidId()
     {
         UnitOfWork.InvokeTransaction();
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Tasks.Received(0).DeletePermanent(Arg.Any<int>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.Workspaces
+            .DidNotReceive()
+            .DeleteWorkspacePermanent(Arg.Any<int>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public async Task DeletePermanent_ShouldNotCallCompleteAsync_WhenInvalidId()
+    public async Task DeletePermanent_ShouldNotOpenATransaction_WhenInvalidId()
     {
         UnitOfWork.InvokeTransaction();
         UnitOfWork.Workspaces.GetBySlug(Arg.Any<string>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteWorkspacePermanentCommand("workspace"), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Received(0).CompleteAsync(TestContext.Current.CancellationToken);
+        await UnitOfWork.DidNotReceive().Transaction(Arg.Any<Func<Task>>(), Arg.Any<bool>());
     }
 }
