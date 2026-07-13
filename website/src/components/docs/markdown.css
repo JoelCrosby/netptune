@@ -1,0 +1,113 @@
+@reference '../../app.css';
+
+@layer components {
+  .docs-markdown {
+    @apply leading-7 text-slate-600 dark:text-white/65;
+  }
+
+  .docs-markdown h2 {
+    @apply mt-12 mb-4 text-xl font-semibold text-slate-900 dark:text-white;
+  }
+
+  .docs-markdown h3 {
+    @apply mt-8 mb-3 text-base font-semibold text-slate-900 dark:text-white;
+  }
+
+  .docs-markdown p {
+    @apply mb-4;
+  }
+
+  .docs-markdown a {
+    @apply text-brand underline underline-offset-2 hover:text-brand-dark;
+  }
+
+  .docs-markdown > ul,
+  .docs-markdown > ol,
+  .docs-markdown :not(.docs-cards) > ul,
+  .docs-markdown :not(.docs-cards) > ol {
+    @apply mb-6 space-y-1.5 pl-6;
+  }
+
+  .docs-markdown ul {
+    @apply list-disc;
+  }
+
+  .docs-markdown ol {
+    @apply list-decimal;
+  }
+
+  .docs-markdown code:not(pre code) {
+    @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[13px] text-slate-700 dark:bg-white/10 dark:text-white/75;
+  }
+
+  .docs-markdown pre {
+    @apply my-6 overflow-x-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-sm leading-relaxed text-slate-300 dark:border-white/10;
+  }
+
+  .docs-markdown table {
+    @apply my-6 w-full min-w-max overflow-hidden rounded-lg text-sm;
+  }
+
+  .docs-markdown table thead {
+    @apply border-b border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5;
+  }
+
+  .docs-markdown table th {
+    @apply px-4 py-3 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-white/40;
+  }
+
+  .docs-markdown table td {
+    @apply border-b border-slate-100 px-4 py-3 align-top text-slate-600 last:border-0 dark:border-white/5 dark:text-white/65;
+  }
+
+  .docs-markdown .docs-admonition {
+    @apply my-6 rounded-lg border p-4 text-sm;
+  }
+
+  .docs-markdown .docs-admonition::before {
+    @apply mb-1 block font-semibold capitalize;
+    content: attr(data-title);
+  }
+
+  .docs-markdown .docs-admonition:not([data-title])::before {
+    content: 'Note';
+  }
+
+  .docs-markdown .docs-admonition-tip:not([data-title])::before {
+    content: 'Tip';
+  }
+
+  .docs-markdown .docs-admonition-warning:not([data-title])::before {
+    content: 'Warning';
+  }
+
+  .docs-markdown .docs-admonition-tip {
+    @apply border-green-200 bg-green-50 dark:border-green-500/25 dark:bg-green-500/10;
+  }
+
+  .docs-markdown .docs-admonition-warning,
+  .docs-markdown .docs-admonition-danger {
+    @apply border-amber-200 bg-amber-50 dark:border-amber-500/25 dark:bg-amber-500/10;
+  }
+
+  .docs-markdown .docs-admonition-note,
+  .docs-markdown .docs-admonition-info {
+    @apply border-blue-200 bg-blue-50 dark:border-blue-500/25 dark:bg-blue-500/10;
+  }
+
+  .docs-markdown .docs-admonition > :last-child {
+    @apply mb-0;
+  }
+
+  .docs-markdown .docs-cards > ul {
+    @apply grid list-none gap-4 p-0 sm:grid-cols-2;
+  }
+
+  .docs-markdown .docs-cards li {
+    @apply rounded-xl border border-slate-200 p-6 dark:border-white/10;
+  }
+
+  .docs-markdown .docs-cards a {
+    @apply font-semibold no-underline;
+  }
+}

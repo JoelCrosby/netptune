@@ -16,7 +16,11 @@
     "@solidjs/start": "2.0.0-alpha.3",
     "@solidjs/vite-plugin-nitro-2": "^0.3.0",
     "lucide-solid": "^1.8.0",
+    "remark-directive": "^4.0.0",
+    "remark-gfm": "^4.0.1",
     "solid-js": "^1.9.12",
+    "solid-markdown": "^2.1.1",
+    "unist-util-visit": "^5.1.0",
     "vite": "^8.1.0"
   },
   "devDependencies": {
