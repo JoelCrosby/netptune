@@ -7,6 +7,7 @@ import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors
 import { Store } from '@ngrx/store';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
@@ -27,6 +28,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
     SprintBacklogPriorityClassPipe,
     RouterLink,
     AvatarComponent,
+    BadgeComponent,
     DropdownButtonComponent,
     MenuItemComponent,
     DatatableComponent,
@@ -39,10 +41,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
         <h2 class="pl-2 font-semibold tracking-wide uppercase">
           {{ label() }}
         </h2>
-        <span
-          class="bg-primary rounded-full px-2 py-0.5 text-xs font-medium text-white dark:text-black">
-          {{ count() }}
-        </span>
+        <app-badge color="primary">{{ count() }}</app-badge>
       </div>
 
       <div class="p-2">
@@ -186,9 +185,24 @@ export class SprintBacklogGroupComponent {
         cellClass: 'min-w-0',
       },
       { id: 'status', header: 'Status', sortable: true, widthClass: 'w-32' },
-      { id: 'priority', header: 'Priority', sortable: true, widthClass: 'w-20' },
-      { id: 'projectName', header: 'Project', sortable: true, widthClass: 'w-32' },
-      { id: 'assignees', header: 'Assignees', sortable: true, widthClass: 'w-28' },
+      {
+        id: 'priority',
+        header: 'Priority',
+        sortable: true,
+        widthClass: 'w-20',
+      },
+      {
+        id: 'projectName',
+        header: 'Project',
+        sortable: true,
+        widthClass: 'w-32',
+      },
+      {
+        id: 'assignees',
+        header: 'Assignees',
+        sortable: true,
+        widthClass: 'w-28',
+      },
       { id: 'assign', header: 'Assign', widthClass: 'w-58' },
     ],
     resource: {

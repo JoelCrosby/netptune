@@ -11,6 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EntityType } from '@core/models/entity-type';
@@ -20,7 +21,7 @@ import {
   selectActivitiesLoaded,
   selectActivityCanLoadMore,
 } from '@core/store/activity/activity.selectors';
-import { LucideHistory } from '@lucide/angular';
+import { LucideActivity, LucideHistory } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ActivityTimeRangePipe } from '@static/pipes/activity-time-range.pipe';
@@ -30,7 +31,9 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
   selector: 'app-activity-menu',
   imports: [
     FlatButtonComponent,
+    EmptyStateComponent,
     TooltipDirective,
+    LucideActivity,
     LucideHistory,
     AvatarComponent,
     SpinnerComponent,
@@ -91,14 +94,12 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
               <div class="border-border/50 my-1 w-full border-t"></div>
             }
           } @empty {
-            <div
-              class="flex min-w-80 flex-col items-center gap-4 px-[0.8rem] py-[0.4rem] text-sm">
-              <svg lucideActivity></svg>
-              <span> There is no activity </span>
-              <p class="text-foreground/60">
-                Activity on the item will appear here
-              </p>
-            </div>
+            <app-empty-state
+              compact
+              title="There is no activity"
+              description="Activity on the item will appear here">
+              <svg emptyStateIcon lucideActivity></svg>
+            </app-empty-state>
           }
 
           @if (canLoadMore()) {

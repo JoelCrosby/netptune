@@ -20,6 +20,7 @@ import { LucideArchiveRestore } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
 @Component({
   selector: 'app-archive-list',
@@ -32,6 +33,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     DatePipe,
     LucideArchiveRestore,
     StrokedButtonComponent,
+    TaskScopeIdComponent,
     TooltipDirective,
   ],
   template: `
@@ -61,9 +63,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
       (selectionChanged)="selection.set($event)"
       (loaded)="onLoaded($event)">
       <ng-template appDatatableCell="systemId" let-task>
-        <span class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
-          {{ task.systemId }}
-        </span>
+        <app-task-scope-id [id]="task.systemId" />
       </ng-template>
 
       <ng-template appDatatableCell="name" let-task>

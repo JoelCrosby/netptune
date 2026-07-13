@@ -13,6 +13,7 @@ import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { LucideCheck, LucideFlag } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
@@ -20,6 +21,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
   selector: 'app-board-group-card',
   imports: [
     AvatarComponent,
+    BadgeComponent,
     TaskScopeIdComponent,
     LucideFlag,
     LucideCheck,
@@ -61,10 +63,9 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 
       <div class="flex items-center gap-4">
         @if (estimateLabel()) {
-          <span
-            class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+          <app-badge shape="rounded">
             {{ estimateLabel() }}
-          </span>
+          </app-badge>
         }
 
         @if (priorityVisible()) {

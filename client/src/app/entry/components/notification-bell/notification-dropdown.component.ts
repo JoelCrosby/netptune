@@ -1,5 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import { LucideBell } from '@lucide/angular';
 import { NotificationItemComponent } from './notification-item.component';
@@ -8,7 +9,12 @@ const DROPDOWN_LIMIT = 10;
 
 @Component({
   selector: 'app-notification-dropdown',
-  imports: [SpinnerComponent, LucideBell, NotificationItemComponent],
+  imports: [
+    SpinnerComponent,
+    EmptyStateComponent,
+    LucideBell,
+    NotificationItemComponent,
+  ],
   styles: `
     @keyframes dropdown-in {
       from {
@@ -55,12 +61,12 @@ const DROPDOWN_LIMIT = 10;
               <div class="border-border/50 w-full border-t"></div>
             }
           } @empty {
-            <div
-              class="flex min-w-80 flex-col items-center gap-4 px-[0.8rem] py-6 text-sm">
-              <svg lucideBell></svg>
-              <span>No notifications</span>
-              <p class="text-foreground/60">You're all caught up!</p>
-            </div>
+            <app-empty-state
+              compact
+              title="No notifications"
+              description="You're all caught up!">
+              <svg emptyStateIcon lucideBell></svg>
+            </app-empty-state>
           }
         </div>
 

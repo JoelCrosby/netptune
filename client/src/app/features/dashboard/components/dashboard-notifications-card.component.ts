@@ -6,6 +6,7 @@ import { ClientResponse } from '@core/models/client-response';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import { LucideBell } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 
 const PAGE_SIZE = 20;
@@ -15,6 +16,7 @@ const PAGE_SIZE = 20;
   imports: [
     NotificationItemComponent,
     StrokedButtonComponent,
+    EmptyStateComponent,
     SpinnerComponent,
     LucideBell,
   ],
@@ -37,11 +39,11 @@ const PAGE_SIZE = 20;
                 <app-notification-item [notification]="notification" />
               </li>
             } @empty {
-              <div
-                class="text-muted flex min-h-40 flex-col items-center justify-center gap-2 text-sm">
-                <svg lucideBell></svg>
-                <span>You're all caught up!</span>
-              </div>
+              <li>
+                <app-empty-state compact title="You're all caught up!">
+                  <svg emptyStateIcon lucideBell></svg>
+                </app-empty-state>
+              </li>
             }
           </ul>
         </div>

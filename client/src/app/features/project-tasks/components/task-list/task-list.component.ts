@@ -35,6 +35,7 @@ import {
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
+import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
 import { injectParams } from '@app/core/router/signals';
 import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
@@ -51,6 +52,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     LucidePlus,
     AvatarComponent,
     SprintBadgeComponent,
+    TaskScopeIdComponent,
     DatatableCellTemplateDirective,
     DatatableComponent,
     DatatableEmptyDirective,
@@ -75,9 +77,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
       (selectionChanged)="onSelectionChanged($event)"
       (loaded)="onLoaded($event)">
       <ng-template appDatatableCell="systemId" let-task>
-        <span class="bg-foreground/10 inline rounded px-1.5 py-0.5 text-sm">
-          {{ task.systemId }}
-        </span>
+        <app-task-scope-id [id]="task.systemId" />
       </ng-template>
 
       <ng-template appDatatableCell="name" let-task>
