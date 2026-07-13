@@ -20,13 +20,9 @@ export default function Nav() {
     <header class="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-sm dark:border-white/10 dark:bg-black/90">
       <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-8 px-6">
         <a href="/" class="flex shrink-0 items-center gap-2">
-          <img
-            class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-white"
-            src="/netptune-logo.webp"
-            alt="Netptune Icon"
-          />
+          <img class="h-10 w-10 p-1 bg-linear-to-br from-brand/40 via-fuchsia-300/30 to-sky-300/30 rounded-lg" src="/favicon.svg" alt="Netptune logo" />
 
-          <span class="text-[15px] font-semibold tracking-tight text-slate-900 dark:text-white">
+          <span class="text-xl tracking-tight text-slate-900 dark:text-white">
             Netptune
           </span>
         </a>

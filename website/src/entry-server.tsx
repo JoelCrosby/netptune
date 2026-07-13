@@ -22,7 +22,7 @@ export default createHandler(() => (
           <meta property="og:url" content="https://netptune.co.uk" />
           <meta property="og:image" content="https://netptune.co.uk/screenshot-light.png" />
           <meta name="twitter:card" content="summary_large_image" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
           {/* eslint-disable-next-line solid/no-innerhtml -- inline theme-init script, runs before first paint */}
           <script innerHTML="try{var s=localStorage.getItem('theme');var d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d)}catch(e){}" />
