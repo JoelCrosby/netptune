@@ -41,6 +41,10 @@ public class NotificationEntityMap : AuditableEntityMap<Notification, int>
             .IsRequired(false);
 
         builder
+            .Property(n => n.ActivityEntryId)
+            .IsRequired(false);
+
+        builder
             .HasOne(n => n.User)
             .WithMany()
             .HasForeignKey(n => n.UserId)

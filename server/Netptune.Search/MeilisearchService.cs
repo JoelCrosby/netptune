@@ -43,6 +43,20 @@ public sealed class MeilisearchService : IMeilisearchService
         await index.DeleteDocumentsAsync(documentIds, cancellationToken);
     }
 
+    public async Task<bool> IsIndexEmptyAsync(string indexName, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var stats = await Client.Index(indexName).GetStatsAsync(cancellationToken);
+
+            return stats.NumberOfDocuments == 0;
+        }
+        catch (MeilisearchApiError error) when (error.Code == "index_not_found")
+        {
+            return true;
+        }
+    }
+
     public async Task EnsureIndexSettingsAsync(CancellationToken cancellationToken = default)
     {
         await EnsureIndexExistsAsync("tasks", cancellationToken);

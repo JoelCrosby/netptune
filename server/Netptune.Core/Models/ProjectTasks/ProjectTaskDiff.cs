@@ -154,86 +154,51 @@ public record ProjectTaskDiff
 
     public void LogDiff(IActivityLogger activity, int entityId)
     {
-        if (Name.Modified)
-        {
-            activity.Log(options =>
-            {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.ModifyName;
-            });
-        }
+        if (!HasChanges) return;
 
-        if (Description.Modified)
+        activity.LogChanges(options =>
         {
-            activity.Log(options =>
-            {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.ModifyDescription;
-            });
-        }
+            options.EntityId = entityId;
+            options.EntityType = EntityType.Task;
 
-        if (Status.Modified)
-        {
-            activity.Log(options =>
+            foreach (var change in ToTaskFieldChanges())
             {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.ModifyStatus;
-            });
-        }
+                switch (change.Field)
+                {
+                    case TaskChangeField.Name:
+                        options.Add(ActivityType.ModifyName, change.Field, change.OldValue, change.NewValue);
+                        break;
 
-        if (Priority.Modified)
-        {
-            activity.Log(options =>
-            {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.ModifyPriority;
-            });
-        }
+                    case TaskChangeField.Description:
+                        options.Add(ActivityType.ModifyDescription, change.Field, change.OldValue, change.NewValue);
+                        break;
 
-        if (Estimate.Modified)
-        {
-            activity.Log(options =>
-            {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.ModifyEstimate;
-            });
-        }
+                    case TaskChangeField.Status:
+                        options.Add(ActivityType.ModifyStatus, change.Field, change.OldValue, change.NewValue);
+                        break;
 
-        foreach (var assigneeId in Assignees.Added)
-        {
-            if (!Assignees.Modified)
-            {
-                continue;
+                    case TaskChangeField.Priority:
+                        options.Add(ActivityType.ModifyPriority, change.Field, change.OldValue, change.NewValue);
+                        break;
+
+                    case TaskChangeField.Estimate:
+                        options.Add(ActivityType.ModifyEstimate, change.Field, change.OldValue, change.NewValue);
+                        break;
+
+                    case TaskChangeField.Assignees:
+                        foreach (var assigneeId in change.AddedValues)
+                        {
+                            options.AddWith(ActivityType.Assign, new AssignActivityMeta { AssigneeId = assigneeId });
+                        }
+
+                        foreach (var assigneeId in change.RemovedValues)
+                        {
+                            options.AddWith(ActivityType.Unassign, new AssignActivityMeta { AssigneeId = assigneeId });
+                        }
+
+                        break;
+                }
             }
-
-            activity.LogWith<AssignActivityMeta>(options =>
-            {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.Assign;
-                options.Meta = new AssignActivityMeta { AssigneeId = assigneeId };
-            });
-        }
-
-        foreach (var assigneeId in Assignees.Removed)
-        {
-            if (!Assignees.Modified)
-            {
-                continue;
-            }
-
-            activity.LogWith<AssignActivityMeta>(options =>
-            {
-                options.EntityId = entityId;
-                options.EntityType = EntityType.Task;
-                options.Type = ActivityType.Unassign;
-                options.Meta = new AssignActivityMeta { AssigneeId = assigneeId };
-            });
-        }
+        });
     }
 }

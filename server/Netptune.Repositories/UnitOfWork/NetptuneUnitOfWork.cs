@@ -23,6 +23,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public ITagRepository Tags { get; }
     public IStatusRepository Statuses { get; }
     public IActivityLogRepository ActivityLogs { get; }
+    public IActivityEntryRepository ActivityEntries { get; }
     public IAutomationRepository Automations { get; }
     public IFlagRepository Flags { get; }
     public INotificationRepository Notifications { get; }
@@ -32,7 +33,9 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IAncestorRepository Ancestors { get; }
     public IWorkspaceInviteRepository WorkspaceInvites { get; }
 
-    public NetptuneUnitOfWork(DataContext context, IDbConnectionFactory connectionFactory) : base(context, connectionFactory)
+    public NetptuneUnitOfWork(
+        DataContext context,
+        IDbConnectionFactory connectionFactory) : base(context, connectionFactory)
     {
         Projects = new ProjectRepository(context, connectionFactory);
         Tasks = new TaskRepository(context, connectionFactory);
@@ -49,6 +52,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Tags = new TagRepository(context, connectionFactory);
         Statuses = new StatusRepository(context, connectionFactory);
         ActivityLogs = new ActivityLogRepository(context, connectionFactory);
+        ActivityEntries = new ActivityEntryRepository(context, connectionFactory);
         Automations = new AutomationRepository(context, connectionFactory);
         Flags = new FlagRepository(context, connectionFactory);
         Notifications = new NotificationRepository(context, connectionFactory);

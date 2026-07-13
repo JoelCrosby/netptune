@@ -4,11 +4,23 @@ public static class MessageKeys
 {
     public const string Queue = "netptune-events";
 
-    public const string Exchange = "netptune-exchange";
+    public static class Subjects
+    {
+        public const string Activity = "netptune.activity";
 
-    public const string RoutingKey = "netptune";
+        public const string Search = "netptune.search";
 
-    public const string Client = "netptune-client";
+        public const string Email = "netptune.email";
 
-    public const string Consumer = "netptune-consumer";
+        public const string Automation = "netptune.automation";
+
+        public const string Typed = "netptune.>";
+    }
+
+    public static class Consumers
+    {
+        public const string Activity = "netptune-activity-consumer";
+
+        public const string Jobs = "netptune-jobs-consumer";
+    }
 }

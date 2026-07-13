@@ -22,18 +22,20 @@ spec:
         app.kubernetes.io/component: "nats"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
-      # The nats image runs as root and defines no nats user, so the uid is set here. fsGroup is
-      # what makes the claim group-writable, letting that uid create the jetstream store directory.
+      # The nats image runs as root and defines no nats user. fsGroup is what makes the claim
+      # group-writable, so the uid below can create the jetstream store directory.
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
       containers:
         - name: "nats"
-          image: "nats:alpine"
+          # Pinned, not `nats:alpine`: in-place filter-subject updates to an existing durable consumer
+          # need nats-server >= 2.10, and a floating tag can silently move under that floor.
+          image: "nats:2.14.3-alpine"
           args:
             - "-js"
-            # Without an explicit store dir jetstream writes under the container filesystem, which
-            # would leave the stream ephemeral even with a claim attached.
+            # Without an explicit store dir jetstream writes to the container filesystem, leaving the
+            # stream ephemeral even with a claim attached.
             - "-sd"
             - "/data"
             - "-m"

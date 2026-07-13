@@ -67,8 +67,10 @@ public sealed class DataSeedService : IHostedService
             await context.SaveChangesAsync(ct);
 
             var notifications = NotificationSeeder.Generate(activityLogs, workspaces, workspaceUsers);
+            var activityEntries = ActivityEntrySeeder.Generate(activityLogs);
 
             await context.Notifications.AddRangeAsync(notifications, ct);
+            await context.ActivityEntries.AddRangeAsync(activityEntries, ct);
 
             await context.SaveChangesAsync(ct);
             await context.Database.CommitTransactionAsync(ct);

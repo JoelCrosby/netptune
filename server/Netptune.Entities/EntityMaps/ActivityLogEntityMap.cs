@@ -13,6 +13,15 @@ public class ActivityLogEntityMap : AuditableEntityMap<ActivityLog, int>
         base.Configure(builder);
 
         builder
+            .Property(log => log.EventId)
+            .IsRequired();
+
+        builder
+            .HasIndex(log => log.EventId)
+            .IsUnique()
+            .HasDatabaseName("ux_activity_logs_event_id");
+
+        builder
             .HasIndex(log => new { log.Type });
 
         builder

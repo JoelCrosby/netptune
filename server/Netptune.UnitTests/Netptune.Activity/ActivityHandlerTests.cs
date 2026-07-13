@@ -1,18 +1,20 @@
 using AutoFixture;
 
+using Microsoft.Extensions.Options;
+
+using Netptune.Activity.Handlers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
-using Netptune.JobServer.Handlers;
 
 using NSubstitute;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.JobServer;
+namespace Netptune.UnitTests.Netptune.Activity;
 
 public class ActivityHandlerTests
 {
@@ -22,6 +24,8 @@ public class ActivityHandlerTests
 
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly INotificationEventPublisher NotificationEvents = Substitute.For<INotificationEventPublisher>();
+
+    private readonly HashSet<Guid> PersistedEventIds = [];
 
     private const int WorkspaceId = 1;
     private const int EntityId = 99;
@@ -59,7 +63,18 @@ public class ActivityHandlerTests
 
         UnitOfWork.ActivityLogs
             .AddAsync(Arg.Any<ActivityLog>(), Arg.Any<CancellationToken>())
-            .Returns(x => x.Arg<ActivityLog>());
+            .Returns(x =>
+            {
+                var log = x.Arg<ActivityLog>();
+
+                if (log.EventId is { } eventId) PersistedEventIds.Add(eventId);
+
+                return log;
+            });
+
+        UnitOfWork.ActivityLogs
+            .GetExistingEventIds(Arg.Any<IEnumerable<Guid>>(), Arg.Any<CancellationToken>())
+            .Returns(x => x.Arg<IEnumerable<Guid>>().Where(PersistedEventIds.Contains).ToHashSet());
 
         UnitOfWork.Workspaces
             .GetSlugsByIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
@@ -80,11 +95,18 @@ public class ActivityHandlerTests
             .PublishManyAsync(Arg.Any<IEnumerable<UserNotificationEvent>>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
-        Handler = new(UnitOfWork, NotificationEvents);
+        UnitOfWork.ActivityEntries
+            .AddAsync(Arg.Any<ActivityEntry>(), Arg.Any<CancellationToken>())
+            .Returns(x => x.Arg<ActivityEntry>());
+
+        UnitOfWork.InvokeTransaction();
+
+        Handler = new(UnitOfWork, NotificationEvents, Options.Create(new ActivityMergeOptions()));
     }
 
     private ActivityEvent BuildEvent(string? userId = null, int? workspaceId = null) =>
         Fixture.Build<ActivityEvent>()
+            .With(e => e.Type, ActivityType.Mention)
             .With(e => e.UserId, userId ?? ActorUserId)
             .With(e => e.WorkspaceId, workspaceId ?? WorkspaceId)
             .With(e => e.EntityId, EntityId)
@@ -100,7 +122,45 @@ public class ActivityHandlerTests
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
         await UnitOfWork.ActivityLogs.Received(2).AddAsync(Arg.Any<ActivityLog>(), TestContext.Current.CancellationToken);
-        await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
+
+        await UnitOfWork.Received(3).CompleteAsync(TestContext.Current.CancellationToken);
+        await UnitOfWork.Received(1).Transaction(Arg.Any<Func<Task>>(), Arg.Any<bool>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldPersistEventId_OnActivityLog()
+    {
+        var @event = BuildEvent();
+        var message = new ActivityMessage(@event);
+
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
+
+        await UnitOfWork.ActivityLogs.Received(1).AddAsync(
+            Arg.Is<ActivityLog>(log => log.EventId == @event.EventId),
+            TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Handle_ShouldWriteOneLedgerRow_WhenMessageIsRedelivered()
+    {
+        var message = new ActivityMessage(BuildEvent());
+
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
+
+        await UnitOfWork.ActivityLogs.Received(1).AddAsync(Arg.Any<ActivityLog>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.Notifications.Received(1).AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Handle_ShouldWriteOneLedgerRow_WhenTheSameEventAppearsTwiceInOneMessage()
+    {
+        var @event = BuildEvent();
+        var message = new ActivityMessage([@event, @event]);
+
+        await Handler.Handle(message, TestContext.Current.CancellationToken);
+
+        await UnitOfWork.ActivityLogs.Received(1).AddAsync(Arg.Any<ActivityLog>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -139,6 +199,7 @@ public class ActivityHandlerTests
     public async Task Handle_ShouldSetCorrectNotificationFields()
     {
         var @event = Fixture.Build<ActivityEvent>()
+            .With(e => e.Type, ActivityType.Mention)
             .With(e => e.UserId, ActorUserId)
             .With(e => e.WorkspaceId, WorkspaceId)
             .With(e => e.EntityId, Fixture.Create<int>())
@@ -171,6 +232,7 @@ public class ActivityHandlerTests
     public async Task Handle_ShouldBuildCorrectLink_ForEntityType(EntityType entityType, string expectedLink)
     {
         var @event = Fixture.Build<ActivityEvent>()
+            .With(e => e.Type, ActivityType.Mention)
             .With(e => e.UserId, ActorUserId)
             .With(e => e.WorkspaceId, WorkspaceId)
             .With(e => e.EntityId, EntityId)

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Netptune.Automation.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Relationships;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence;

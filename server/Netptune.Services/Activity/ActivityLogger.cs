@@ -61,6 +61,7 @@ public class ActivityLogger : IActivityLogger
 
         var activity = new ActivityEvent
         {
+            EventId = Guid.NewGuid(),
             Type = activityOptions.Type,
             EntityType = activityOptions.EntityType,
             UserId = activityOptions.UserId,
@@ -73,6 +74,59 @@ public class ActivityLogger : IActivityLogger
         };
 
         EventPublisher.Dispatch(new ActivityMessage(activity));
+    }
+
+    public void LogChanges(Action<ActivityChangeSetOptions> options)
+    {
+        var userId = Identity.GetCurrentUserId();
+        var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
+
+        var changeSetOptions = new ActivityChangeSetOptions
+        {
+            UserId = userId,
+            WorkspaceId = workspaceId,
+        };
+
+        options.Invoke(changeSetOptions);
+
+        if (changeSetOptions.EntityId is null)
+        {
+            throw new Exception($"Cannot call log with null {nameof(changeSetOptions.EntityId)}.");
+        }
+
+        if (changeSetOptions.WorkspaceId is null)
+        {
+            throw new Exception($"Cannot call log with null {nameof(changeSetOptions.WorkspaceId)}.");
+        }
+
+        if (changeSetOptions.Changes.Count == 0) return;
+
+        var ipAddress = GetIpAddress();
+        var userAgent = GetUserAgent();
+        var occurredAt = DateTime.UtcNow;
+
+        var activities = changeSetOptions.Changes
+            .Select(change => new ActivityEvent
+            {
+                EventId = Guid.NewGuid(),
+                Type = change.Type,
+                EntityType = changeSetOptions.EntityType,
+                UserId = changeSetOptions.UserId,
+                EntityId = changeSetOptions.EntityId.Value,
+                WorkspaceId = changeSetOptions.WorkspaceId.Value,
+                OccurredAt = occurredAt,
+                Field = change.Field,
+                OldValue = ActivityValue.Truncate(change.OldValue),
+                NewValue = ActivityValue.Truncate(change.NewValue),
+                OldValueHash = ActivityValue.HashIfTruncated(change.OldValue),
+                NewValueHash = ActivityValue.HashIfTruncated(change.NewValue),
+                Meta = change.Meta,
+                IpAddress = ipAddress,
+                UserAgent = userAgent,
+                RecipientUserIds = changeSetOptions.RecipientUserIds,
+            });
+
+        EventPublisher.Dispatch(new ActivityMessage(activities));
     }
 
     public void LogMany(Action<ActivityMultipleOptions> options)
@@ -99,6 +153,7 @@ public class ActivityLogger : IActivityLogger
         var activities = activityOptions.EntityIds
             .Select(entityId => new ActivityEvent
             {
+                EventId = Guid.NewGuid(),
                 Type = activityOptions.Type,
                 EntityType = activityOptions.EntityType,
                 UserId = activityOptions.UserId,
@@ -137,6 +192,7 @@ public class ActivityLogger : IActivityLogger
 
         var activity = new ActivityEvent
         {
+            EventId = Guid.NewGuid(),
             Type = activityOptions.Type,
             EntityType = activityOptions.EntityType,
             UserId = activityOptions.UserId,
@@ -172,6 +228,7 @@ public class ActivityLogger : IActivityLogger
         var activities = activityOptions.EntityIds
             .Select(entityId => new ActivityEvent
             {
+                EventId = Guid.NewGuid(),
                 Type = activityOptions.Type,
                 EntityType = activityOptions.EntityType,
                 UserId = activityOptions.UserId,

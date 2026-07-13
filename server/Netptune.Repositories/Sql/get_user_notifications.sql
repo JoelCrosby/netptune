@@ -14,6 +14,9 @@ WITH notification_feed AS (
         , al.user_id        AS actoruserid
         , TRIM(u.firstname || ' ' || u.lastname) AS actorusername
         , u.picture_url     AS actorPictureUrl
+        , n.activity_entry_id AS activityentryid
+        , ae.changed_fields   AS changedfieldsarray
+        , ae.revision_count   AS revisioncount
         , COALESCE(pt.name, p.name, b.name, bg.name, s.name) AS entityname
         , CASE
             WHEN n.entity_type = @taskType    AND al.project_slug IS NOT NULL THEN al.project_slug || '-' || pt.project_scope_id::text
@@ -24,6 +27,8 @@ WITH notification_feed AS (
     FROM notifications n
     INNER JOIN activity_logs al ON al.id = n.activity_log_id
     INNER JOIN users u ON u.id = al.user_id
+    -- LEFT, because discrete events and everything predating merging announce no entry.
+    LEFT JOIN activity_entries ae ON ae.id = n.activity_entry_id
     LEFT JOIN project_tasks pt  ON pt.id  = al.task_id         AND n.entity_type = @taskType
     LEFT JOIN projects p        ON p.id   = al.project_id      AND n.entity_type = @projectType
     LEFT JOIN boards b          ON b.id   = al.board_id        AND n.entity_type = @boardType

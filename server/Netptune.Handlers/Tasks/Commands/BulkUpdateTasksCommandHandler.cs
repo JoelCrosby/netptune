@@ -3,7 +3,6 @@ using Mediator;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;

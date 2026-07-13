@@ -18,6 +18,8 @@
     <Project Path="Netptune.TestData/Netptune.TestData.csproj" />
     <Project Path="Netptune.UnitTests/Netptune.UnitTests.csproj" />
   </Folder>
+  <Project Path="Netptune.Activity/Netptune.Activity.csproj" />
+  <Project Path="Netptune.ActivityServer/Netptune.ActivityServer.csproj" />
   <Project Path="Netptune.App/Netptune.App.csproj" />
   <Project Path="Netptune.AppHost/Netptune.AppHost.csproj" />
   <Project Path="Netptune.Automation/Netptune.Automation.csproj" />

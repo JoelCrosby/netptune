@@ -22,14 +22,16 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
     {
     }
 
-    public Task<List<ActivityViewModel>> GetActivities(
+    public async Task<List<ActivityViewModel>> GetActivities(
         EntityType entityType,
         int entityId,
         CancellationToken cancellationToken = default,
         int? take = null,
         string? cursor = null)
     {
-        Expression<Func<ActivityLog, bool>> predicate = entityType switch
+        var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
+
+        Expression<Func<ActivityEntry, bool>> predicate = entityType switch
         {
             EntityType.Task => x => (x.EntityId == entityId || x.TaskId == entityId),
             EntityType.Board => x => (x.EntityId == entityId || x.BoardId == entityId),
@@ -43,25 +45,24 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
 
         var cursorRequest = new CursorRequest { Cursor = cursor };
         var hasCursor = cursorRequest.TryGetCursor(out var cursorOccurredAt, out var cursorId);
-        var limit = Math.Clamp(take ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
 
-        var query = Entities
+        var query = Context.Set<ActivityEntry>()
             .Where(x => !x.IsDeleted && x.EntityType == entityType)
             .Where(predicate);
 
         if (hasCursor)
         {
-            query = query.Where(x => x.OccurredAt < cursorOccurredAt || (x.OccurredAt == cursorOccurredAt && x.Id < cursorId));
+            query = query.Where(x => x.LastOccurredAt < cursorOccurredAt || (x.LastOccurredAt == cursorOccurredAt && x.Id < cursorId));
         }
 
-        return query
-            .OrderByDescending(x => x.OccurredAt)
+        return await query
+            .OrderByDescending(x => x.LastOccurredAt)
             .ThenByDescending(x => x.Id)
             .Take(limit)
             .Select(y => new ActivityViewModel
             {
                 Id = y.Id,
-                Type = y.Type,
+                Type = y.ActivityType,
                 EntityId = y.EntityId,
                 EntityType = entityType,
                 UserId = y.UserId,
@@ -69,10 +70,29 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
                     ? y.User.UserName!
                     : y.User.Firstname + " " + y.User.Lastname,
                 UserPictureUrl = y.User.PictureUrl,
-                Time = y.OccurredAt,
+                Time = y.LastOccurredAt,
+                FirstTime = y.FirstOccurredAt,
+                RevisionCount = y.RevisionCount,
+                ChangedFields = y.ChangedFields,
                 Meta = y.Meta,
             })
-            .ToReadonlyListAsync(true, cancellationToken);
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<HashSet<Guid>> GetExistingEventIds(IEnumerable<Guid> eventIds, CancellationToken cancellationToken = default)
+    {
+        var ids = eventIds.ToList();
+
+        if (ids.Count == 0) return [];
+
+        var existing = await Entities
+            .AsNoTracking()
+            .Where(x => ids.Contains(x.EventId))
+            .Select(x => x.EventId)
+            .ToListAsync(cancellationToken);
+
+        return existing.ToHashSet();
     }
 
     public async Task<AuditLogPage> GetAuditLog(AuditLogFilter filter, CancellationToken cancellationToken = default)
@@ -149,16 +169,6 @@ public class ActivityLogRepository : WorkspaceEntityRepository<DataContext, Acti
             .OrderBy(x => x.Date)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
-    }
-
-    public async Task AnonymiseUser(string userId, int workspaceId, CancellationToken cancellationToken = default)
-    {
-        // Replace identifying data on audit rows with a placeholder.
-        // The log row is preserved for audit trail integrity.
-        await Entities
-            .Where(x => x.UserId == userId && x.WorkspaceId == workspaceId)
-            .ExecuteUpdateAsync(s => s
-                .SetProperty(x => x.UserId, "[deleted]"), cancellationToken);
     }
 
     private IQueryable<ActivityLog> BuildAuditQuery(AuditLogFilter filter)

@@ -11,6 +11,8 @@ public record Notification : AuditableEntity<int>
 
     public int ActivityLogId { get; init; }
 
+    public int? ActivityEntryId { get; init; }
+
     public bool IsRead { get; set; }
 
     public string? Link { get; init; }

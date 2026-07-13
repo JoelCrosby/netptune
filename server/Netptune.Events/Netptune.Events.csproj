@@ -5,6 +5,8 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.NATS.Net" />
+    <PackageReference Include="Mediator.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options" />
   </ItemGroup>
 

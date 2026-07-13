@@ -6,6 +6,8 @@ public enum SearchIndexOperation { Index, Delete }
 
 public record SearchIndexEvent : IEventMessage
 {
+    public static string Subject => MessageKeys.Subjects.Search;
+
     public required SearchIndexOperation Operation { get; init; }
 
     public required string EntityType { get; init; }

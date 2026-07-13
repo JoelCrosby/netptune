@@ -5,7 +5,6 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
-using Netptune.Handlers.Audit.Commands;
 using Netptune.Handlers.Audit.Queries;
 
 namespace Netptune.App.Endpoints;
@@ -24,9 +23,6 @@ public static class AuditEndpoints
 
         group.MapGet("/export", HandleExport)
             .RequireAuthorization(NetptunePermissions.Audit.Export);
-
-        group.MapDelete("/user/{userId}", HandleAnonymiseUser)
-            .RequireAuthorization(NetptunePermissions.Audit.Anonymise);
 
         return group;
     }
@@ -106,15 +102,5 @@ public static class AuditEndpoints
         await ExportEndpoints.LogExportRequested(activity, identity, "audit-log");
 
         return Results.File(result.Stream, result.ContentType, result.Filename);
-    }
-
-    private static async Task<IResult> HandleAnonymiseUser(
-        IMediator mediator,
-        [FromRoute] string userId,
-        CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new AnonymiseUserCommand(userId), cancellationToken);
-
-        return result.IsSuccess ? Results.Ok() : Results.BadRequest(result.Message);
     }
 }

@@ -18,3 +18,9 @@ spec:
       protocol: "TCP"
       port: 4222
       targetPort: 4222
+    # The monitoring endpoint (nats-server -m 8222). The KEDA nats-jetstream scaler reads consumer lag
+    # from it, and it is the only place JetStream stream and consumer state is observable from.
+    - name: "monitor"
+      protocol: "TCP"
+      port: 8222
+      targetPort: "monitor"

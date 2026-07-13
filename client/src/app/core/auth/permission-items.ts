@@ -269,11 +269,6 @@ export const netptunePermissionLabels: PermissionLabels = {
       label: 'Export Audit Log',
       icon: LucideDownload,
     },
-    anonymise: {
-      key: 'audit.anonymise',
-      label: 'Anonymise Users',
-      icon: LucideShieldX,
-    },
   },
   notifications: {
     read: {

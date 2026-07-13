@@ -4,6 +4,8 @@ namespace Netptune.Core.Models.Messaging;
 
 public class SendEmailModel : IEventMessage
 {
+    static string IEventMessage.Subject => MessageKeys.Subjects.Email;
+
     public SendTo SendTo { get; init; } = null!;
 
     public string Name { get; init; } = null!;
@@ -32,6 +34,8 @@ public class SendTo
 
 public class SendMultipleEmailModel : IEventMessage
 {
+    static string IEventMessage.Subject => MessageKeys.Subjects.Email;
+
     public List<SendTo> SendTo { get; init; } = null!;
 
     public string Name { get; init; } = null!;

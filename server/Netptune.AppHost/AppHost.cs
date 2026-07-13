@@ -44,6 +44,13 @@ var jobs = builder
     .WaitFor(meilisearch)
     .WithReference(meilisearch);
 
+var activity = builder
+    .AddProject<Projects.Netptune_ActivityServer>("activity")
+    .WaitForCompletion(seedData)
+    .WithCache(cache)
+    .WithPostgres(postgresdb)
+    .WithNats(nats);
+
 var api = builder
     .AddProject<Projects.Netptune_App>("api")
     .WaitForCompletion(seedData)

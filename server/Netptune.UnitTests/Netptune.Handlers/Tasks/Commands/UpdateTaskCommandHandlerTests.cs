@@ -6,7 +6,6 @@ using Netptune.Core.Enums;
 using Netptune.Core.Entities;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
-using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -57,12 +56,12 @@ public class UpdateTaskCommandHandlerTests
     private List<ActivityType> CaptureLoggedActivityTypes()
     {
         var types = new List<ActivityType>();
-        Activity.When(a => a.Log(Arg.Any<Action<ActivityOptions>>()))
+        Activity.When(a => a.LogChanges(Arg.Any<Action<ActivityChangeSetOptions>>()))
             .Do(callInfo =>
             {
-                var opts = new ActivityOptions();
-                callInfo.Arg<Action<ActivityOptions>>().Invoke(opts);
-                types.Add(opts.Type);
+                var opts = new ActivityChangeSetOptions();
+                callInfo.Arg<Action<ActivityChangeSetOptions>>().Invoke(opts);
+                types.AddRange(opts.Changes.Select(change => change.Type));
             });
         return types;
     }
@@ -234,6 +233,31 @@ public class UpdateTaskCommandHandlerTests
         await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         loggedTypes.Should().NotContain(ActivityType.ModifyEstimate);
+    }
+
+    [Fact]
+    public async Task Update_ShouldLogOneChangeSet_WhenSeveralFieldsChange()
+    {
+        var request = Fixture.Build<UpdateProjectTaskRequest>().Create();
+        var task = BuildTask(priority: TaskPriority.Low, estimateType: EstimateType.Hours, estimateValue: 3);
+        task.Name = "Original name";
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = "Updated name",
+            Priority = TaskPriority.High,
+            EstimateType = EstimateType.Hours,
+            EstimateValue = 3,
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+        var loggedTypes = CaptureLoggedActivityTypes();
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        Activity.Received(1).LogChanges(Arg.Any<Action<ActivityChangeSetOptions>>());
+        Activity.DidNotReceive().Log(Arg.Any<Action<ActivityOptions>>());
+        loggedTypes.Should().Contain([ActivityType.ModifyName, ActivityType.ModifyPriority]);
     }
 
     [Fact]

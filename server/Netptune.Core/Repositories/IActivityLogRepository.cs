@@ -16,11 +16,11 @@ public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog
         int? take = null,
         string? cursor = null);
 
+    Task<HashSet<Guid>> GetExistingEventIds(IEnumerable<Guid> eventIds, CancellationToken cancellationToken = default);
+
     Task<AuditLogPage> GetAuditLog(AuditLogFilter filter, CancellationToken cancellationToken = default);
 
     Task<List<AuditLogViewModel>> GetAuditLogForExport(AuditLogFilter filter, CancellationToken cancellationToken = default);
 
     Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter, CancellationToken cancellationToken = default);
-
-    Task AnonymiseUser(string userId, int workspaceId, CancellationToken cancellationToken = default);
 }

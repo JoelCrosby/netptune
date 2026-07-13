@@ -8,6 +8,8 @@ namespace Netptune.Core.Entities;
 
 public record ActivityLog : WorkspaceEntity<int>
 {
+    public Guid EventId { get; init; }
+
     public string? WorkspaceSlug { get; init; }
 
     public EntityType EntityType { get; init; }

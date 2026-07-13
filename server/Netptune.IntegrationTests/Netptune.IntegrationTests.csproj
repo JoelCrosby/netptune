@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
     <PackageReference Include="Testcontainers" />
     <PackageReference Include="Testcontainers.Nats" />
     <PackageReference Include="Testcontainers.PostgreSql" />
@@ -24,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Netptune.Activity\Netptune.Activity.csproj" />
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
     <ProjectReference Include="..\Netptune.TestData\Netptune.TestData.csproj" />

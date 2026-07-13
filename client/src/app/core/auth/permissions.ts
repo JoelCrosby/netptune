@@ -73,7 +73,6 @@ export const netptunePermissions = {
   audit: {
     read: 'audit.read',
     export: 'audit.export',
-    anonymise: 'audit.anonymise',
   },
   notifications: {
     read: 'notifications.read',

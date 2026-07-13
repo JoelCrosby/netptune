@@ -2,6 +2,8 @@ namespace Netptune.Core.Events.Tasks;
 
 public record TaskStatusChangedMessage : IEventMessage
 {
+    public static string Subject => MessageKeys.Subjects.Automation;
+
     public Guid EventId { get; init; } = Guid.NewGuid();
 
     public int WorkspaceId { get; init; }

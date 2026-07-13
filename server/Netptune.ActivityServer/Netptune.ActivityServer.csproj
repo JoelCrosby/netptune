@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);MSG0005</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mediator.Abstractions" />
+    <PackageReference Include="Mediator.SourceGenerator">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Netptune.Activity\Netptune.Activity.csproj" />
+    <ProjectReference Include="..\Netptune.Cache\Netptune.Cache.csproj" />
+    <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+    <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.Events\Netptune.Events.csproj" />
+    <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
+    <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
+    <ProjectReference Include="..\Netptune.ServiceDefaults\Netptune.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -13,4 +13,7 @@ export interface NotificationViewModel {
   actorPictureUrl: string | null;
   entityName: string | null;
   entityIdentifier: string | null;
+  activityEntryId: number | null;
+  changedFields: string[];
+  revisionCount: number | null;
 }

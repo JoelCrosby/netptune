@@ -75,6 +75,30 @@ parameters:
     replicas: 1
     port_http: 8080
     jobs_image: "ghcr.io/joelcrosby/netptune-jobs:latest"
+  activity:
+    replicas: 1
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 5
+      lagThreshold: 100
+    retention:
+      enabled: true
+      schedule: "0 3 * * *"
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "128Mi"
+        limits:
+          memory: "512Mi"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "128Mi"
+      limits:
+        memory: "512Mi"
+    port_http: 8080
+    activity_image: "ghcr.io/joelcrosby/netptune-activity:latest"
   api:
     replicas: 1
     autoscaling:
@@ -136,6 +160,14 @@ secrets:
     s3_secret_access_key: ""
     cloudflare_email_token: ""
     cloudflare_account_id: ""
+  activity:
+    cache_password: ""
+    postgres_password: ""
+    signing_key: ""
+    s3_bucket_name: ""
+    s3_region: ""
+    s3_access_key_id: ""
+    s3_secret_access_key: ""
   api:
     cache_password: ""
     postgres_password: ""
@@ -163,6 +195,17 @@ config:
     POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
     POSTGRES_USER: "postgres"
   jobs:
+    OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+    ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+    CACHE_HOST: "cache-service"
+    CACHE_PORT: "6379"
+    POSTGRESDB_HOST: "postgres-service"
+    POSTGRESDB_PORT: "5432"
+    POSTGRESDB_USERNAME: "postgres"
+    POSTGRESDB_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres-service:5432/netptune"
+    POSTGRESDB_DATABASENAME: "netptune"
+    ConnectionStrings__nats: "nats://nats-service:4222"
+  activity:
     OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
     ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
     CACHE_HOST: "cache-service"

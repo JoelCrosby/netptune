@@ -10,6 +10,9 @@ export interface ActivityViewModel {
   type: ActivityType;
   entityId: number;
   time: Date;
+  firstTime: Date;
+  changedFields: string[];
+  revisionCount: number;
   meta: Record<string, unknown>;
   assignee?: UserAvatar;
 }

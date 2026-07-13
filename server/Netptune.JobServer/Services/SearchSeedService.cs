@@ -1,7 +1,5 @@
 using System.Diagnostics;
 
-using Meilisearch;
-
 using Netptune.Core.Models.Search;
 using Netptune.Core.Services.Search;
 using Netptune.Core.UnitOfWork;
@@ -13,61 +11,35 @@ public sealed class SearchSeedService : BackgroundService
     private const int BatchSize = 1000;
 
     private readonly IMeilisearchService SearchService;
-    private readonly MeilisearchClient Client;
     private readonly IServiceScopeFactory ScopeFactory;
     private readonly ILogger<SearchSeedService> Logger;
 
     public SearchSeedService(
         IMeilisearchService searchService,
-        MeilisearchClient client,
         IServiceScopeFactory scopeFactory,
         ILogger<SearchSeedService> logger)
     {
         SearchService = searchService;
-        Client = client;
         ScopeFactory = scopeFactory;
         Logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        return RunAsync(stoppingToken);
+    }
+
+    public async Task RunAsync(CancellationToken stoppingToken)
     {
         var timer = Stopwatch.StartNew();
 
         Logger.LogInformation("[Search] seed service starting");
 
+        using var scope = ScopeFactory.CreateScope();
+
         try
         {
-            Logger.LogInformation("[Search] ensuring index settings");
-            await SearchService.EnsureIndexSettingsAsync(stoppingToken);
-
-            if (!await NeedsSeedingAsync(stoppingToken))
-            {
-                Logger.LogInformation("[Search] indexes already contain documents, skipping seed");
-                return;
-            }
-
-            Logger.LogInformation("[Search] seeding indexes");
-
-            using var scope = ScopeFactory.CreateScope();
-            var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
-
-            var workspaces = await unitOfWork.Workspaces.GetWorkspaces(stoppingToken);
-            var slugs = workspaces.Select(w => w.Slug).ToList();
-
-            Logger.LogInformation("[Search] found {WorkspaceCount} workspaces for seeding", slugs.Count);
-
-            var taskCount = await SeedIndexAsync("tasks", () => IndexTasksAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
-            var projectCount = await SeedIndexAsync("projects", () => IndexProjectsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
-            var boardCount = await SeedIndexAsync("boards", () => IndexBoardsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
-            var sprintCount = await SeedIndexAsync("sprints", () => IndexSprintsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
-
-            Logger.LogInformation(
-                "[Search] seeding complete in {ElapsedMs}ms: {TaskCount} tasks, {ProjectCount} projects, {BoardCount} boards, {SprintCount} sprints",
-                timer.ElapsedMilliseconds,
-                taskCount,
-                projectCount,
-                boardCount,
-                sprintCount);
+            await SeedAsync(scope, timer, stoppingToken);
         }
         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
         {
@@ -80,19 +52,38 @@ public sealed class SearchSeedService : BackgroundService
         }
     }
 
-    private async Task<bool> NeedsSeedingAsync(CancellationToken ct)
+    private async Task SeedAsync(IServiceScope scope, Stopwatch timer, CancellationToken stoppingToken)
     {
-        try
+        Logger.LogInformation("[Search] ensuring index settings");
+        await SearchService.EnsureIndexSettingsAsync(stoppingToken);
+
+        if (!await SearchService.IsIndexEmptyAsync("tasks", stoppingToken))
         {
-            var stats = await Client.Index("tasks").GetStatsAsync(ct);
-            Logger.LogInformation("[Search] tasks index contains {DocumentCount} documents", stats.NumberOfDocuments);
-            return stats.NumberOfDocuments == 0;
+            Logger.LogInformation("[Search] indexes already contain documents, skipping seed");
+            return;
         }
-        catch (MeilisearchApiError ex) when (ex.Code == "index_not_found")
-        {
-            Logger.LogInformation("[Search] tasks index does not exist, seeding required");
-            return true;
-        }
+
+        Logger.LogInformation("[Search] seeding indexes");
+
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+
+        var workspaces = await unitOfWork.Workspaces.GetWorkspaces(stoppingToken);
+        var slugs = workspaces.Select(w => w.Slug).ToList();
+
+        Logger.LogInformation("[Search] found {WorkspaceCount} workspaces for seeding", slugs.Count);
+
+        var taskCount = await SeedIndexAsync("tasks", () => IndexTasksAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+        var projectCount = await SeedIndexAsync("projects", () => IndexProjectsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+        var boardCount = await SeedIndexAsync("boards", () => IndexBoardsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+        var sprintCount = await SeedIndexAsync("sprints", () => IndexSprintsAsync(unitOfWork, slugs, stoppingToken), stoppingToken);
+
+        Logger.LogInformation(
+            "[Search] seeding complete in {ElapsedMs}ms: {TaskCount} tasks, {ProjectCount} projects, {BoardCount} boards, {SprintCount} sprints",
+            timer.ElapsedMilliseconds,
+            taskCount,
+            projectCount,
+            boardCount,
+            sprintCount);
     }
 
     private async Task<int> SeedIndexAsync(string indexName, Func<Task<int>> seedIndex, CancellationToken ct)

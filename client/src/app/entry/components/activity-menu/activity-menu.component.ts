@@ -1,6 +1,5 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { DatePipe } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -24,6 +23,7 @@ import {
 import { LucideHistory } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { ActivityTimeRangePipe } from '@static/pipes/activity-time-range.pipe';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
 
 @Component({
@@ -35,7 +35,7 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     AvatarComponent,
     SpinnerComponent,
     ActivityPipe,
-    DatePipe,
+    ActivityTimeRangePipe,
   ],
   styles: [
     `
@@ -82,7 +82,7 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
               </span>
               <span
                 class="text-foreground/90 ml-[0.3rem] text-xs whitespace-nowrap"
-                [appTooltip]="activity.time | date">
+                [appTooltip]="activity | activityTimeRange">
                 {{ activity | activity }}
               </span>
             </div>

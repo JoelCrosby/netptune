@@ -29,7 +29,7 @@ public static class ActivityEndpoints
         var take = cursor.GetTake();
         var result = await mediator.Send(new GetActivitiesQuery(entityType, id, take, cursor.Cursor), cancellationToken);
 
-        if (result.Payload?.LastOrDefault() is { } last && result.Payload.Count == take)
+        if (result.Payload?.Count == take && result.Payload.LastOrDefault() is { } last)
         {
             context.Response.Headers["X-Next-Cursor"] = CursorRequest.Create(last.Time, last.Id);
         }

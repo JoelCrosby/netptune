@@ -5,6 +5,8 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Entities.Interceptors;
 
+// Guards ActivityLog only. ActivityEntry, the feed projection, is mutated in place on every merge and must
+// never be added here.
 public sealed class AuditLogImmutabilityInterceptor : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)

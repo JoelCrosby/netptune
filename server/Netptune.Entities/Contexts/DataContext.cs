@@ -32,6 +32,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<Reaction> Reactions { get; set; } = null!;
     public DbSet<Tag> Tags { get; set; } = null!;
     public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
+    public DbSet<ActivityEntry> ActivityEntries { get; set; } = null!;
     public DbSet<AutomationRule> AutomationRules { get; set; } = null!;
     public DbSet<AutomationAction> AutomationActions { get; set; } = null!;
     public DbSet<AutomationRun> AutomationRuns { get; set; } = null!;

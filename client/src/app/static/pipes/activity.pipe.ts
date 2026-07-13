@@ -3,7 +3,11 @@ import {
   ActivityType,
   ActivityViewModel,
 } from '@core/models/view-models/activity-view-model';
-import { activityTypeToString } from '@core/transforms/activity-type';
+import {
+  activityEditCount,
+  activityTypeToString,
+  mergedActivitySummary,
+} from '@core/transforms/activity-type';
 import { fromNow } from '@core/util/dates';
 
 @Pipe({
@@ -13,15 +17,25 @@ import { fromNow } from '@core/util/dates';
 })
 export class ActivityPipe implements PipeTransform {
   transform(value: ActivityViewModel): string {
-    const activityType = activityTypeToString(value.type);
-    const meta = getMeta(value);
-    const action = `${activityType} ${meta}`;
+    const action = getAction(value);
+    const edits = activityEditCount(value.revisionCount);
 
     const time = fromNow(value.time);
 
-    return `${action} ${time}`;
+    return `${action}${edits} ${time}`;
   }
 }
+
+const getAction = (value: ActivityViewModel) => {
+  const merged = mergedActivitySummary(value);
+
+  if (merged) return merged;
+
+  const activityType = activityTypeToString(value.type);
+  const meta = getMeta(value);
+
+  return `${activityType} ${meta}`;
+};
 
 const getMeta = (value: ActivityViewModel) => {
   switch (value.type) {

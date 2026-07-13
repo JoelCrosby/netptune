@@ -1,5 +1,6 @@
 using Netptune.Cache;
 using Netptune.Automation;
+using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Search;
 using Netptune.Entities.Configuration;
@@ -43,17 +44,13 @@ builder.Services.AddS3StorageService(options =>
 
 builder.AddNetptuneSearch();
 
-builder.Services.AddHostedService<QueueConsumerService>();
 builder.Services.AddNetptuneAutomation(builder.Configuration);
-
-if (builder.Environment.IsProduction())
-{
-    builder.Services.AddHostedService<AuditRetentionJob>();
-}
-
 builder.Services.AddHostedService<SearchSeedService>();
 
-builder.Services.AddNetptuneMessageQueue(builder.Configuration.GetNetptuneNatsConnectionString());
+builder.Services.AddNetptuneMessageQueue(
+    builder.Configuration.GetNetptuneNatsConnectionString(),
+    builder.Configuration,
+    MessageKeys.Consumers.Jobs);
 
 builder.Services.AddMediator(options =>
 {

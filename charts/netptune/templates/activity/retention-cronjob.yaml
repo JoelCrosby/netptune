@@ -1,0 +1,48 @@
+{{- if .Values.parameters.activity.retention.enabled }}
+---
+# A CronJob rather than a timer inside activity-deployment, because that deployment is KEDA-scaled: an
+# in-process 24h timer is reset by every deploy, restart and scale-down, so a pod that does not live a full
+# day never archives anything. `concurrencyPolicy: Forbid` is the only thing serialising the runs.
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "activity-retention-cronjob"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "activity-retention"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  schedule: "{{ .Values.parameters.activity.retention.schedule }}"
+  concurrencyPolicy: "Forbid"
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: "netptune-app"
+            app.kubernetes.io/component: "activity-retention"
+            app.kubernetes.io/instance: "{{ .Release.Name }}"
+        spec:
+          restartPolicy: "Never"
+          containers:
+            - image: "{{ .Values.parameters.activity.activity_image }}"
+              name: "activity-retention"
+              args:
+                - "--job"
+                - "retention"
+              env:
+                - name: "ASPNETCORE_ENVIRONMENT"
+                  value: "Production"
+              envFrom:
+                - configMapRef:
+                    name: "activity-config"
+                - secretRef:
+                    name: "activity-secrets"
+              imagePullPolicy: "Always"
+              resources:
+{{- toYaml .Values.parameters.activity.retention.resources | nindent 16 }}
+{{- end }}

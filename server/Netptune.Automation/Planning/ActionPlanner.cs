@@ -144,6 +144,7 @@ internal sealed class ActionPlanner
 
         var activity = new ActivityLog
         {
+            EventId = Guid.NewGuid(),
             OwnerId = execution.ActorUserId,
             Type = ActivityType.Modify,
             EntityType = EntityType.Task,

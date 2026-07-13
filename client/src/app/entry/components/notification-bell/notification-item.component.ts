@@ -3,7 +3,7 @@ import { Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationViewModel } from '@app/core/models/view-models/notification-view-model';
 import { markAsRead } from '@app/core/store/notifications/notifications.actions';
-import { activityTypeToString } from '@app/core/transforms/activity-type';
+import { notificationSummary } from '@app/core/transforms/activity-type';
 import { entityTypeToString } from '@app/core/transforms/entity-type';
 import { fromNow } from '@app/core/util/dates';
 import { AvatarComponent } from '@app/static/components/avatar/avatar.component';
@@ -42,7 +42,7 @@ import { Store } from '@ngrx/store';
             </span>
           </div>
           <span class="text-foreground/70 text-sm">
-            {{ activityTypeToString(notification.activityType) }}
+            {{ notificationSummary(notification) }}
             {{ entityTypeToString(notification.entityType) }}
             @if (notification.entityIdentifier) {
               <span class="text-foreground/85 font-medium">
@@ -65,7 +65,7 @@ export class NotificationItemComponent {
   private store = inject(Store);
   private router = inject(Router);
 
-  readonly activityTypeToString = activityTypeToString;
+  readonly notificationSummary = notificationSummary;
   readonly entityTypeToString = entityTypeToString;
   readonly fromNow = fromNow;
 

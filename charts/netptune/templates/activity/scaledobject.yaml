@@ -1,0 +1,31 @@
+{{- if .Values.parameters.activity.autoscaling.enabled }}
+---
+# Requires KEDA in the cluster (its own Helm release, own namespace). Renders nothing while
+# `autoscaling.enabled` is false, so the chart still installs where the keda.sh CRDs are absent.
+apiVersion: "keda.sh/v1alpha1"
+kind: "ScaledObject"
+metadata:
+  name: "activity-scaledobject"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "activity"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  scaleTargetRef:
+    apiVersion: "apps/v1"
+    kind: "Deployment"
+    name: "activity-deployment"
+  minReplicaCount: {{ .Values.parameters.activity.autoscaling.minReplicas | int }}
+  maxReplicaCount: {{ .Values.parameters.activity.autoscaling.maxReplicas | int }}
+  triggers:
+    - type: "nats-jetstream"
+      metadata:
+        # The monitoring endpoint (/jsz), not the client port. Without 8222 on `nats-service` the scaler
+        # cannot reach the broker and the deployment silently never scales.
+        natsServerMonitoringEndpoint: "nats-service:8222"
+        account: "$G"
+        stream: "netptune-events"
+        consumer: "netptune-activity-consumer"
+        # KEDA targets ceil(num_pending / lagThreshold) replicas, clamped to [min, max].
+        lagThreshold: "{{ .Values.parameters.activity.autoscaling.lagThreshold | int }}"
+{{- end }}

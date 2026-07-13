@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
-using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;

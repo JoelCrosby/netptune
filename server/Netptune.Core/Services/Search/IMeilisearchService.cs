@@ -14,5 +14,7 @@ public interface IMeilisearchService
 
     Task EnsureIndexSettingsAsync(CancellationToken cancellationToken = default);
 
+    Task<bool> IsIndexEmptyAsync(string indexName, CancellationToken cancellationToken = default);
+
     Task<SearchResponse> SearchAsync(GlobalSearchQuery query, CancellationToken cancellationToken = default);
 }

@@ -23,6 +23,12 @@ public class ActivityViewModel
 
     public DateTime Time { get; set; }
 
+    public DateTime FirstTime { get; set; }
+
+    public List<string> ChangedFields { get; set; } = [];
+
+    public int RevisionCount { get; set; } = 1;
+
     public JsonDocument? Meta { get; set; }
 
     public UserAvatar Assignee { get; set; } = null!;

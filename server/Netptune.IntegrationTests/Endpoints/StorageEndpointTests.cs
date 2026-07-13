@@ -10,6 +10,7 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
+[Collection(UserMutationCollection.Name)]
 public sealed class StorageEndpointTests
 {
     private readonly HttpClient Client;

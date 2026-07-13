@@ -24,6 +24,7 @@ public sealed class ActivityLogSeeder : ISeeder
 
                     return new ActivityLog
                     {
+                        EventId = Guid.NewGuid(),
                         EntityType = EntityType.Task,
                         TaskId = task.Id,
                         EntityId = task.Id,

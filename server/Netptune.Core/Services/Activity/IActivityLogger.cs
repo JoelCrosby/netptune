@@ -6,6 +6,8 @@ public interface IActivityLogger
 {
     void Log(Action<ActivityOptions> options);
 
+    void LogChanges(Action<ActivityChangeSetOptions> options);
+
     void LogMany(Action<ActivityMultipleOptions> options);
 
     void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class;

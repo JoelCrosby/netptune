@@ -99,7 +99,6 @@ public static class NetptunePermissions
     {
         public const string Read = "audit.read";
         public const string Export = "audit.export";
-        public const string Anonymise = "audit.anonymise";
     }
 
     public static class Notifications

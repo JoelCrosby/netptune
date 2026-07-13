@@ -15,6 +15,7 @@ internal static class ActivityLogSeeder
                 var idx = ti * 32 + i;
                 return new ActivityLog
                 {
+                    EventId = Guid.NewGuid(),
                     EntityType = EntityType.Task,
                     TaskId = task.Id,
                     EntityId = task.Id,

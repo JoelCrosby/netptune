@@ -16,7 +16,7 @@ import {
   markAsRead,
   markAsReadMany,
 } from '@core/store/notifications/notifications.actions';
-import { activityTypeToString } from '@core/transforms/activity-type';
+import { notificationSummary } from '@core/transforms/activity-type';
 import { entityTypeToString } from '@core/transforms/entity-type';
 import { fromNow } from '@core/util/dates';
 import { LucideCheck, LucideExternalLink, LucideTrash2 } from '@lucide/angular';
@@ -67,7 +67,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
           [class.cursor-pointer]="notification.link"
           [class.opacity-60]="notification.isRead"
           (click)="onOpen(notification)">
-          {{ activityTypeToString(notification.activityType) }}
+          {{ notificationSummary(notification) }}
           {{ entityTypeToString(notification.entityType) }}
           @if (notification.entityIdentifier) {
             <span class="font-medium">{{ notification.entityIdentifier }}</span>
@@ -111,7 +111,7 @@ export class NotificationsTableComponent {
   private readonly actions$ = inject(Actions);
   private readonly router = inject(Router);
 
-  readonly activityTypeToString = activityTypeToString;
+  readonly notificationSummary = notificationSummary;
   readonly entityTypeToString = entityTypeToString;
   readonly fromNow = fromNow;
 
@@ -163,9 +163,6 @@ export class NotificationsTableComponent {
   };
 
   constructor() {
-    // Reload the feed and drop the selection whenever a notification mutation
-    // settles, regardless of whether it was triggered from a row menu or the
-    // bulk actions in the filters toolbar.
     this.actions$
       .pipe(
         ofType(
