@@ -3,6 +3,7 @@ import { Status } from '@core/models/status';
 import { statusResource } from '@core/resources/status.resources';
 import { ChipListboxComponent } from '@static/components/chip/chip-listbox.component';
 import { ChipOptionComponent } from '@static/components/chip/chip-option.component';
+import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 
@@ -11,6 +12,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   imports: [
     ChipListboxComponent,
     ChipOptionComponent,
+    ColorSwatchComponent,
     DropdownMenuComponent,
     MenuItemComponent,
   ],
@@ -35,9 +37,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           [disabled]="status.id === value() || loading()"
           (click)="selectStatus(status); statusMenu.close()">
           @if (status.color) {
-            <span
-              class="h-2.5 w-2.5 rounded-full"
-              [style.background-color]="status.color"></span>
+            <app-color-swatch [color]="status.color" />
           }
           {{ status.name }}
         </button>

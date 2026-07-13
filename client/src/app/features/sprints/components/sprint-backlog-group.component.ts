@@ -6,7 +6,7 @@ import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -27,7 +27,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
     SprintBacklogPriorityLabelPipe,
     SprintBacklogPriorityClassPipe,
     RouterLink,
-    AvatarComponent,
+    AvatarStackComponent,
     BadgeComponent,
     DropdownButtonComponent,
     MenuItemComponent,
@@ -96,16 +96,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
 
           <ng-template appDatatableCell="assignees" let-task>
             @if (task.assignees.length) {
-              <div
-                class="flex max-w-32 items-center -space-x-2 overflow-hidden">
-                @for (assignee of task.assignees; track assignee.id) {
-                  <app-avatar
-                    class="ring-card rounded-full ring-2"
-                    size="sm"
-                    [name]="assignee.displayName"
-                    [imageUrl]="assignee.pictureUrl" />
-                }
-              </div>
+              <app-avatar-stack [avatars]="task.assignees" />
             } @else {
               <span class="text-muted text-sm">Unassigned</span>
             }

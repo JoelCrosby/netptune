@@ -24,6 +24,7 @@ import {
 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import {
   TableComponent,
@@ -39,6 +40,7 @@ import { finalize, first } from 'rxjs';
   selector: 'app-relation-types',
   imports: [
     StrokedButtonComponent,
+    ColorSwatchComponent,
     SectionHeaderComponent,
     IconButtonComponent,
     TableComponent,
@@ -91,10 +93,7 @@ import { finalize, first } from 'rxjs';
         ) {
           <tr appTableRow class="bg-card">
             <td class="px-4 py-2 align-middle">
-              <span
-                class="border-border block h-6 w-6 rounded-sm border"
-                [style.background-color]="relationType.color ?? '#64748b'">
-              </span>
+              <app-color-swatch variant="swatch" [color]="relationType.color" />
             </td>
             <td class="px-4 py-2 align-middle">
               <button

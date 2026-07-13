@@ -33,7 +33,7 @@ import {
   LucideTrash2,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
-import { AvatarComponent } from '@static/components/avatar/avatar.component';
+import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
@@ -51,7 +51,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     LucideCheck,
     LucideListChecks,
     LucidePlus,
-    AvatarComponent,
+    AvatarStackComponent,
     BadgeComponent,
     SprintBadgeComponent,
     TaskScopeIdComponent,
@@ -115,15 +115,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 
       <ng-template appDatatableCell="assignees" let-task>
         @if (task.assignees.length) {
-          <div class="flex max-w-32 items-center -space-x-2 overflow-hidden">
-            @for (assignee of task.assignees; track assignee.id) {
-              <app-avatar
-                class="ring-card rounded-full ring-2"
-                size="sm"
-                [name]="assignee.displayName"
-                [imageUrl]="assignee.pictureUrl" />
-            }
-          </div>
+          <app-avatar-stack [avatars]="task.assignees" />
         } @else {
           <span class="text-muted text-sm">Unassigned</span>
         }

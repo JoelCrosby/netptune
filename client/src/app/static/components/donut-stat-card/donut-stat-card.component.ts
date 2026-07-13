@@ -1,5 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
 export interface DonutStatItem {
   label: string;
@@ -9,7 +10,7 @@ export interface DonutStatItem {
 
 @Component({
   selector: 'app-donut-stat-card',
-  imports: [NgApexchartsModule],
+  imports: [NgApexchartsModule, ColorSwatchComponent],
   template: `
     <div
       class="border-border bg-card flex h-full min-h-24 flex-col rounded border p-6 shadow-sm">
@@ -36,9 +37,7 @@ export interface DonutStatItem {
           <ul class="flex flex-1 flex-col gap-3">
             @for (item of items(); track item.label) {
               <li class="flex items-center gap-3">
-                <span
-                  class="h-2.5 w-2.5 shrink-0 rounded-full"
-                  [style.background-color]="item.color"></span>
+                <app-color-swatch [color]="item.color" />
                 <span class="text-muted flex-1 truncate text-sm">
                   {{ item.label }}
                 </span>
