@@ -19,9 +19,9 @@ export default function SelfHostSection() {
               Your rules.
             </h2>
             <p class="mb-8 leading-relaxed text-slate-400 dark:text-white/55">
-              Netptune is open source and built to be self-hosted. Deploy it on your own
-              infrastructure in minutes with Docker or Kubernetes. No vendor lock-in, no per-seat
-              pricing surprises, no wondering where your data lives.
+              Netptune is open source and built to be self-hosted. The repository includes a Helm
+              chart for Kubernetes, so you control the application, database, and deployment. The
+              software is MIT licensed with no per-seat license fee for your own instance.
             </p>
 
             <div class="flex flex-col gap-4 sm:flex-row">

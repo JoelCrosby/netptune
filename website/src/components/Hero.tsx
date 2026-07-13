@@ -14,22 +14,22 @@ export default function Hero() {
         </h1>
 
         <p class="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-slate-500 dark:text-white/55">
-          Netptune brings your tasks, boards, and team together in one place — with real-time
-          collaboration, full audit trails, and the freedom to host it yourself.
+          Netptune brings tasks, boards, sprints, and team activity together in one place — with
+          live updates, workspace permissions, and the freedom to host it yourself.
         </p>
 
         <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" href="https://app.netptune.co.uk/get-started">
-            Get started for free
+          <Button variant="primary" size="lg" href="https://app.netptune.co.uk/auth/register">
+            Create an account
             <ArrowRight size={16} />
           </Button>
           <Button variant="outline" size="lg" href="#self-host">
-            Self-host on your own server
+            Explore self-hosting
           </Button>
         </div>
 
         <p class="mt-12 text-sm text-slate-400 dark:text-white/30">
-          Open source · MIT licensed · Free to self-host on your own infrastructure
+          Open source · MIT licensed · No license fee to self-host
         </p>
 
         <img

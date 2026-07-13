@@ -6,9 +6,9 @@ export default function ComparisonSection() {
   return (
     <Section class="bg-slate-50 dark:bg-black">
       <div class="mb-14 text-center">
-        <p class="mb-3 text-sm font-semibold tracking-wider text-brand uppercase">Comparison</p>
+        <p class="mb-3 text-sm font-semibold tracking-wider text-brand uppercase">Why Netptune</p>
         <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          A better fit than the tools you've outgrown.
+          Built for teams that want control.
         </h2>
       </div>
 

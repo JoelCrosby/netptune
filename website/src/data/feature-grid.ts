@@ -28,7 +28,7 @@ export const featureGridItems: Feature[] = [
   {
     icon: History,
     title: 'Activity logs',
-    description: 'Full audit trail on every task and board',
+    description: 'Tracked workspace changes with actor and timestamp',
   },
   {
     icon: ShieldCheck,
@@ -38,12 +38,12 @@ export const featureGridItems: Feature[] = [
   {
     icon: Paperclip,
     title: 'File attachments',
-    description: 'S3-compatible storage — bring your own bucket',
+    description: 'Store task attachments in your own AWS S3 bucket',
   },
   {
     icon: MessageSquare,
-    title: 'Comments & reactions',
-    description: 'Discussion threads on every task',
+    title: 'Task comments',
+    description: 'Keep discussion and context attached to each task',
   },
   {
     icon: Timer,
@@ -73,6 +73,6 @@ export const featureGridItems: Feature[] = [
   {
     icon: Server,
     title: 'Open source & self-hostable',
-    description: 'MIT licensed — deploy on Docker, Kubernetes, or bare metal',
+    description: 'MIT licensed with a maintained Kubernetes Helm chart',
   },
 ];

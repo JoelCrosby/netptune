@@ -7,10 +7,10 @@ export default function FeatureGrid() {
     <Section class="bg-slate-50 dark:bg-black">
       <div class="mb-14 text-center">
         <p class="mb-3 text-sm font-semibold tracking-wider text-brand uppercase">
-          Everything included
+          Core capabilities
         </p>
         <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-          No add-ons. No tiers. No gotchas.
+          Built into the product today.
         </h2>
       </div>
 

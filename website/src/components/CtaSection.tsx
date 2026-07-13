@@ -11,7 +11,7 @@ export default function CtaSection() {
           that actually ships.
         </h2>
         <p class="mb-10 text-lg text-slate-400 dark:text-white/55">
-          Get Netptune running in minutes. Self-host it, contribute to it, or just use it.
+          Use the hosted application, deploy the Helm chart, or contribute to the project.
         </p>
 
         <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -33,7 +33,7 @@ export default function CtaSection() {
             href="https://app.netptune.co.uk/auth/login"
             class="border-slate-600 bg-transparent text-slate-300 hover:border-brand hover:text-neutral-600 dark:border-white/20 dark:text-white/70 dark:hover:border-brand dark:hover:text-white"
           >
-            Get started free
+            Sign in
           </Button>
         </div>
       </div>

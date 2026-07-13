@@ -54,8 +54,8 @@ export default function Nav() {
               <span class="hidden sm:block">Star on GitHub</span>
             </Button>
           </div>
-          <Button variant="primary" size="sm" href="https://app.netptune.co.uk/get-started">
-            Get started free
+          <Button variant="primary" size="sm" href="https://app.netptune.co.uk/auth/register">
+            Create account
           </Button>
         </div>
       </div>

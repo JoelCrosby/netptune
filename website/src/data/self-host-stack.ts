@@ -1,4 +1,4 @@
-import { Database, Cpu, Workflow, Archive, Layers } from 'lucide-solid';
+import { Database, Cpu, Workflow, Archive, Layers, Search } from 'lucide-solid';
 import type { StackItem } from '~/types/stack-item';
 
 export const selfHostStack: StackItem[] = [
@@ -9,18 +9,23 @@ export const selfHostStack: StackItem[] = [
   },
   {
     icon: Cpu,
-    label: 'Redis',
+    label: 'Valkey',
     sublabel: 'Caching',
   },
   {
     icon: Workflow,
     label: 'NATS JetStream',
-    sublabel: 'Background jobs',
+    sublabel: 'Event messaging',
+  },
+  {
+    icon: Search,
+    label: 'Meilisearch',
+    sublabel: 'Workspace search',
   },
   {
     icon: Archive,
-    label: 'S3-compatible',
-    sublabel: 'File storage',
+    label: 'AWS S3',
+    sublabel: 'Attachments and audit archives',
   },
   {
     icon: Layers,

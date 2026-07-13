@@ -1,270 +1,210 @@
 ---
 title: 'Kubernetes / Helm'
-description: 'Deploy Netptune to a Kubernetes cluster using the official Helm chart.'
+description: 'Deploy the current Netptune stack using the chart in this repository.'
 ---
 
-The Helm chart is the recommended deployment method for production. It manages all Kubernetes resources, handles secret injection, and supports TLS via cert-manager with automatic Let's Encrypt certificate renewal.
+The repository's maintained deployment definition is `charts/netptune`. It deploys the application services, stateful dependencies, Gateway API routes, and TLS resources in one Helm release.
 
 ## Prerequisites
 
-- A running Kubernetes cluster (k3s, EKS, GKE, etc.)
-- `kubectl` configured with cluster access
-- `helm` 3.x installed
-- [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) installed in the cluster
-- [cert-manager](https://cert-manager.io/) installed for automatic TLS
-- A domain name pointed at your cluster's external IP or load balancer
-- Credentials for all [external services](/docs/external-services)
+- A Kubernetes cluster with a default `StorageClass`
+- `kubectl` configured for the cluster
+- Helm 3
+- Traefik with Gateway API support and the `traefik.io` Middleware CRDs
+- cert-manager with Gateway API HTTP-01 support when TLS is enabled
+- DNS records for every enabled public host
+- Credentials listed in [External Services](/docs/external-services)
+- KEDA only if `parameters.activity.autoscaling.enabled` is set to `true`
 
-## Installation
+The chart creates a `Gateway` with `gatewayClassName: traefik`; it does not install Traefik, cert-manager, or KEDA.
 
-1. **Clone the repository**
-
-The Helm chart lives in the `charts/` directory of the Netptune repository:
+## 1. Clone the repository
 
 ```bash
 git clone https://github.com/JoelCrosby/netptune.git
 cd netptune
 ```
 
-2. **Review default values**
+## 2. Create an override file
 
-Inspect `charts/netptune/values.yaml` and note the key sections you will need to override:
+Keep deployment-specific values outside `charts/netptune/values.yaml`. Start with a private file such as `values.production.yaml`:
 
 ```yaml
 ingress:
-  enabled: true
-  host: 'netptune.co.uk' # replace with your domain
+  host: netptune.example.com
+  appHost: app.netptune.example.com
   tls:
     enabled: true
-    email: 'your@email.com' # used for Let's Encrypt registration
+    email: admin@example.com
+
+website:
+  host: www.netptune.example.com
+
+# Disable administrative surfaces that you are not configuring.
+headlamp:
+  enabled: false
+
+dbgate:
+  enabled: false
+
+pgadmin:
+  enabled: false
+
+aspire:
+  enabled: false
 
 persistence:
   postgres:
-    size: '40Gi' # adjust to your storage needs
-
-parameters:
-  api:
-    api_image: 'ghcr.io/joelcrosby/netptune:latest'
-    port_http: 7400
-  jobs:
-    jobs_image: 'ghcr.io/joelcrosby/netptune-jobs:latest'
-    port_http: 8080
-  client:
-    client_image: 'ghcr.io/joelcrosby/netptune-client:latest'
-    api_url: 'http://api-service:7400'
+    size: 40Gi
+  meilisearch:
+    size: 40Gi
+  nats:
+    size: 40Gi
 ```
 
-3. **Create a secrets file**
+The current route for `ingress.host` sends `/api/` to the API and `/` to the website service. `ingress.appHost` serves the Angular client and proxies `/api/` to the API.
 
-Copy the example secrets file and fill in your credentials:
+:::warning
 
-```bash
-cp charts/netptune/values.secret.yaml.example charts/netptune/values.secret.yaml
-```
+The API image currently defaults `Origin` and `CorsOrigins` to the project's own domains, and the chart does not expose overrides for those settings. Changing `ingress.appHost` alone is not sufficient for a custom-domain deployment; add `Origin` and `CorsOrigins__0` to the API ConfigMap or extend the chart before installation.
 
-Edit `values.secret.yaml`:
+:::
+
+## 3. Add secrets
+
+Add the required secret values to the same private override file. The API currently reads all three OAuth provider configurations during startup, so every listed OAuth value must be non-empty.
 
 ```yaml
 secrets:
   postgres:
-    postgres_password: 'change_me_strong_password'
+    postgres_password: change-me
 
   cache:
-    cache_password: 'change_me_redis_password'
+    cache_password: change-me
+
+  meilisearch:
+    master_key: change-me-at-least-16-bytes
 
   api:
-    # Generate with: openssl rand -base64 64
-    signing_key: 'change_me_signing_key'
+    cache_password: change-me
+    postgres_password: change-me
+    signing_key: change-me-long-random-value
+    github_client_id: change-me
+    github_secret: change-me
+    github_callback: /signin-github
+    google_client_id: change-me
+    google_secret: change-me
+    google_callback: /signin-google
+    microsoft_client_id: change-me
+    microsoft_secret: change-me
+    microsoft_callback: /signin-microsoft
+    s3_bucket_name: netptune
+    s3_region: us-east-1
+    s3_access_key_id: change-me
+    s3_secret_access_key: change-me
+    turnstile_secret_key: change-me
+    cloudflare_email_token: change-me
+    cloudflare_account_id: change-me
 
-    # GitHub OAuth (leave blank to disable)
-    github_client_id: ''
-    github_secret: ''
+  jobs:
+    cache_password: change-me
+    postgres_password: change-me
+    s3_bucket_name: netptune
+    s3_region: us-east-1
+    s3_access_key_id: change-me
+    s3_secret_access_key: change-me
+    cloudflare_email_token: change-me
+    cloudflare_account_id: change-me
 
-    # SendGrid
-    sendgrid_api_key: 'SG.xxxxxx'
+  activity:
+    cache_password: change-me
+    postgres_password: change-me
+    s3_bucket_name: netptune
+    s3_region: us-east-1
+    s3_access_key_id: change-me
+    s3_secret_access_key: change-me
+```
 
-    # S3-compatible storage
-    s3_bucket_name: 'netptune'
-    s3_region: 'us-east-1'
-    s3_access_key_id: ''
-    s3_secret_access_key: ''
+Generate random values with tools such as:
+
+```bash
+openssl rand -base64 64
+openssl rand -hex 32
 ```
 
 :::warning
 
-Never commit `values.secret.yaml` to source control. Add it to your `.gitignore`.
+Do not commit the override file. The checked-in `values.secret.yaml.example` does not currently include the activity service block, so copying it without adding `secrets.activity` produces empty activity credentials.
 
 :::
 
-4. **Install the chart**
+If Aspire, Headlamp, or DbGate remain enabled, also populate their OAuth and cookie secrets from `charts/netptune/values.yaml`.
 
-Run `helm upgrade --install` to deploy or upgrade the release:
+## 4. Review images and optional components
+
+The chart defaults application images to `latest` with `imagePullPolicy: Always`. Override them with immutable SHA tags for production:
+
+```yaml
+parameters:
+  api:
+    api_image: ghcr.io/joelcrosby/netptune:sha-<full-commit-sha>
+  jobs:
+    jobs_image: ghcr.io/joelcrosby/netptune-jobs:sha-<full-commit-sha>
+  activity:
+    activity_image: ghcr.io/joelcrosby/netptune-activity:sha-<full-commit-sha>
+  client:
+    client_image: ghcr.io/joelcrosby/netptune-client:sha-<full-commit-sha>
+
+website:
+  image: ghcr.io/joelcrosby/netptune-website:sha-<full-commit-sha>
+```
+
+The production client image currently contains the Netptune-hosted Cloudflare Turnstile site key at build time. A self-hosted deployment needs a client image rebuilt with its own site key in `client/src/environments/environment.prod.ts`; the Helm chart only configures the server-side secret.
+
+## 5. Render and install
+
+Render the manifests first and inspect the result:
 
 ```bash
-helm upgrade --install netptune-app charts/netptune/ \
+helm template netptune charts/netptune \
+  --namespace netptune \
+  --values values.production.yaml > rendered.yaml
+```
+
+Install or upgrade the release:
+
+```bash
+helm upgrade --install netptune charts/netptune \
   --namespace netptune \
   --create-namespace \
-  --values charts/netptune/values.yaml \
-  --values charts/netptune/values.secret.yaml \
-  --set ingress.host=your-domain.com \
-  --set ingress.tls.email=your@email.com
+  --values values.production.yaml
 ```
 
-Alternatively, pass secrets directly on the command line (useful for CI/CD pipelines):
+## 6. Verify the deployment
 
 ```bash
-helm upgrade --install netptune-app charts/netptune/ \
-  --namespace netptune \
-  --create-namespace \
-  --set ingress.host=your-domain.com \
-  --set ingress.tls.email=your@email.com \
-  --set secrets.postgres.postgres_password="<password>" \
-  --set secrets.cache.cache_password="<password>" \
-  --set secrets.api.signing_key="<signing-key>" \
-  --set secrets.api.sendgrid_api_key="<sendgrid-key>" \
-  --set secrets.api.s3_bucket_name="<bucket>" \
-  --set secrets.api.s3_region="<region>" \
-  --set secrets.api.s3_access_key_id="<key-id>" \
-  --set secrets.api.s3_secret_access_key="<secret>"
-```
-
-5. **Verify the deployment**
-
-Check that all pods are running:
-
-```bash
-kubectl get pods -n netptune
-```
-
-Expected output — all pods should show `Running`:
-
-```
-NAME                       READY   STATUS    RESTARTS   AGE
-api-xxxxxxxxx-xxxxx        1/1     Running   0          2m
-jobs-xxxxxxxxx-xxxxx       1/1     Running   0          2m
-client-xxxxxxxxx-xxxxx     1/1     Running   0          2m
-postgres-0                 1/1     Running   0          2m
-cache-0                    1/1     Running   0          2m
-nats-xxxxxxxxx-xxxxx       1/1     Running   0          2m
-```
-
-Check the ingress for the assigned address:
-
-```bash
-kubectl get ingress -n netptune
-```
-
-Once the `ADDRESS` field is populated and DNS has propagated, Netptune will be accessible at `https://your-domain.com`.
-
-6. **Verify TLS**
-
-cert-manager will automatically request a Let's Encrypt certificate. Check the certificate status:
-
-```bash
+kubectl get deployments,statefulsets,pods -n netptune
+kubectl get gateway,httproute -n netptune
 kubectl get certificate -n netptune
 ```
 
-The `READY` column should show `True` within a few minutes.
+The core workload should include API, client, jobs, activity, website, PostgreSQL, Valkey, NATS, and Meilisearch. Check health and logs with:
 
-## Kubernetes resources
-
-The Helm chart deploys the following resources:
-
-| Resource           | Kind          | Description                                   |
-| ------------------ | ------------- | --------------------------------------------- |
-| `api`              | Deployment    | ASP.NET Core API server                       |
-| `jobs`             | Deployment    | Background job server                         |
-| `client`           | Deployment    | Angular frontend + Nginx                      |
-| `nats`             | Deployment    | NATS event messaging (JetStream enabled)      |
-| `postgres`         | StatefulSet   | PostgreSQL with persistent volume             |
-| `cache`            | StatefulSet   | Valkey / Redis with persistent volume         |
-| `*-service`        | Service       | ClusterIP services for internal communication |
-| `netptune-ingress` | Ingress       | NGINX Ingress with TLS termination            |
-| `letsencrypt`      | ClusterIssuer | cert-manager issuer for Let's Encrypt         |
-| `*-secret`         | Secret        | Passwords and API keys                        |
-| `*-config`         | ConfigMap     | Non-sensitive configuration                   |
-
-## Optional monitoring stack
-
-The chart includes optional monitoring components. Enable them in `values.yaml`:
-
-```yaml
-monitoring:
-  prometheus:
-    enabled: false # metrics collection
-  grafana:
-    enabled: false # dashboards
-  loki:
-    enabled: false # log aggregation
-  otelCollector:
-    enabled: false # distributed tracing
+```bash
+kubectl rollout status deployment/api-deployment -n netptune
+kubectl logs deployment/api-deployment -n netptune
+kubectl logs deployment/jobs-deployment -n netptune
+kubectl logs deployment/activity-deployment -n netptune
 ```
 
-A PgAdmin instance for database inspection can also be enabled:
+The API, jobs, and activity deployments expose `/health/live` and `/health/ready` probes.
 
-```yaml
-pgadmin:
-  enabled: false
-  email: 'admin@your-domain.com'
-  password: 'change_me'
-```
+## Activity retention and scaling
+
+The chart schedules `activity-retention-cronjob` at `03:00` daily by default. It archives eligible audit entries to S3 before deleting them.
+
+Activity autoscaling is disabled by default. Enabling it creates a KEDA `ScaledObject` driven by NATS JetStream consumer lag, so the KEDA CRDs and controller must already exist.
 
 ## Updating
 
-Re-run the `helm upgrade` command with your values files. Database migrations run automatically when the API pod starts.
-
-```bash
-helm upgrade netptune-app charts/netptune/ \
-  --namespace netptune \
-  --values charts/netptune/values.yaml \
-  --values charts/netptune/values.secret.yaml
-```
-
-## Uninstalling
-
-```bash
-helm uninstall netptune-app -n netptune
-```
-
-This removes all Kubernetes resources but preserves persistent volumes. To delete volumes as well:
-
-```bash
-kubectl delete pvc --all -n netptune
-```
-
-## Troubleshooting
-
-### Pods stuck in Pending
-
-Check events for the pod:
-
-```bash
-kubectl describe pod <pod-name> -n netptune
-```
-
-Common causes: insufficient cluster resources, or a PersistentVolumeClaim that cannot be satisfied because no StorageClass is available.
-
-### API pod crashes on startup
-
-```bash
-kubectl logs deployment/api -n netptune
-```
-
-Verify all required secrets are present and the PostgreSQL StatefulSet is healthy before the API deployment starts.
-
-### Certificate not issued
-
-```bash
-kubectl describe certificate -n netptune
-kubectl describe clusterissuer letsencrypt -n netptune
-```
-
-Ensure the ingress host DNS record resolves to your cluster's external IP before cert-manager can complete the ACME challenge.
-
-### Ingress has no address
-
-Confirm the NGINX Ingress Controller is installed and running:
-
-```bash
-kubectl get pods -n ingress-nginx
-```
+Update the pinned image tags and run the same `helm upgrade --install` command. API, client, activity, and website use rolling deployments; the stateful dependencies use StatefulSets.

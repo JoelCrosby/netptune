@@ -1,83 +1,131 @@
 ---
 title: 'External Services'
-description: 'Set up SendGrid, GitHub OAuth, and S3-compatible storage before deploying.'
+description: 'Configure the external services required by the current Netptune server.'
 ---
 
-Netptune depends on a few external services for email delivery, social authentication, and file storage. This page walks through setting each one up from scratch.
+The current API expects S3 storage, Cloudflare Email Sending, Cloudflare Turnstile, and credentials for GitHub, Google, and Microsoft authentication.
 
-## SendGrid
+## Cloudflare Email Sending
 
-Netptune uses SendGrid to send transactional emails such as workspace invitations and notifications. A free tier account supports up to 100 emails per day, which is sufficient for small teams.
+Netptune sends transactional email through Cloudflare's Email Sending API. Both the API and jobs service require the same Cloudflare account credentials.
 
-1. **Create a SendGrid account**
+1. Enable Email Sending for the Cloudflare account that owns your sender domain.
+2. Verify and configure the sender address used by `Email__DefaultFromAddress`.
+3. Create an API token authorized to send email.
+4. Copy the Cloudflare account ID.
 
-Sign up at [sendgrid.com](https://sendgrid.com).
+| Setting                           | Value                   |
+| --------------------------------- | ----------------------- |
+| `NETPTUNE_CLOUDFLARE_EMAIL_TOKEN` | Cloudflare API token    |
+| `NETPTUNE_CLOUDFLARE_ACCOUNT_ID`  | Cloudflare account ID   |
+| `Email__DefaultFromAddress`       | Verified sender address |
+| `Email__DefaultFromDisplayName`   | Sender display name     |
 
-2. **Verify a sender identity**
+The jobs service calls `POST /client/v4/accounts/{account_id}/email/sending/send`. See the [Cloudflare Email Sending API](https://developers.cloudflare.com/api/resources/email_sending/methods/send/).
 
-Before SendGrid will send emails on your behalf, you must verify either a single sender address or an entire domain.
+## Cloudflare Turnstile
 
-- Go to Settings → Sender Authentication
-- Choose Single Sender Verification for a quick setup
-- Or choose Domain Authentication for production use (recommended)
-- Follow the instructions to verify your address or add the required DNS records
+Turnstile is enforced on email/password login and registration.
 
-3. **Create an API key**
+1. In Cloudflare, create a Turnstile widget for the Angular application's hostname.
+2. Copy its site key and secret key.
+3. Set `NETPTUNE_TURNSTILE_SECRET_KEY` on the API.
+4. Rebuild the Angular client with the site key in `client/src/environments/environment.prod.ts`.
 
-- Go to Settings → API Keys → Create API Key
-- Select Restricted Access and enable Mail Send → Full Access
-- Copy the generated key — it is only shown once
+:::warning
 
-Set the following environment variables:
+Only the secret key is exposed through the Helm chart. The public site key is currently compiled into the client bundle and defaults to the Netptune-hosted widget, so using a different hostname requires a custom client build.
 
-| Variable                    | Value                             |
-| --------------------------- | --------------------------------- |
-| SEND_GRID_API_KEY           | The API key you just generated    |
-| Email\_\_DefaultFromAddress | The verified sender email address |
+:::
+
+Cloudflare documents widget creation and server-side verification in its [Turnstile getting-started guide](https://developers.cloudflare.com/turnstile/get-started/).
+
+## OAuth callback model
+
+Netptune uses a local ASP.NET Core callback path for each provider. The provider's registered redirect URI is the Angular application's public origin plus that path.
+
+For an application at `https://app.example.com`, a typical configuration is:
+
+| Provider  | Server callback setting                         | Provider redirect URI                      |
+| --------- | ----------------------------------------------- | ------------------------------------------ |
+| GitHub    | `NETPTUNE_GITHUB_CALLBACK=/signin-github`       | `https://app.example.com/signin-github`    |
+| Google    | `NETPTUNE_GOOGLE_CALLBACK=/signin-google`       | `https://app.example.com/signin-google`    |
+| Microsoft | `NETPTUNE_MICROSOFT_CALLBACK=/signin-microsoft` | `https://app.example.com/signin-microsoft` |
+
+Callback settings must be paths beginning with `/`, while the provider consoles require complete HTTPS URLs.
 
 ## GitHub OAuth App
 
-GitHub login is optional. If you skip this, users can still register with an email address and password.
+Create an OAuth App from GitHub's **Settings → Developer settings → OAuth Apps** page.
 
-1. **Create an OAuth App**
+| Field                      | Example                                 |
+| -------------------------- | --------------------------------------- |
+| Application name           | Netptune                                |
+| Homepage URL               | `https://app.example.com`               |
+| Authorization callback URL | `https://app.example.com/signin-github` |
 
-- Go to [github.com/settings/developers](https://github.com/settings/developers)
-- Click New OAuth App
+After registering it, generate a client secret and configure:
 
-| Field                      | Value                                              |
-| -------------------------- | -------------------------------------------------- |
-| Application name           | Netptune (or any name you prefer)                  |
-| Homepage URL               | `https://your-domain.com`                          |
-| Authorization callback URL | `https://your-domain.com/api/auth/github/callback` |
+```env
+NETPTUNE_GITHUB_CLIENT_ID=your-client-id
+NETPTUNE_GITHUB_SECRET=your-client-secret
+NETPTUNE_GITHUB_CALLBACK=/signin-github
+```
 
-Click Register application.
+See GitHub's [OAuth App creation guide](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
 
-2. **Generate a client secret**
+## Google OAuth client
 
-On the app detail page, click Generate a new client secret and copy it immediately.
+In Google Cloud:
 
-3. **Set the environment variables**
+1. Configure the OAuth consent screen.
+2. Create an OAuth client with application type **Web application**.
+3. Add `https://app.example.com/signin-google` as an authorized redirect URI.
+4. Copy the client ID and client secret.
 
-| Variable                  | Value                                  |
-| ------------------------- | -------------------------------------- |
-| NETPTUNE_GITHUB_CLIENT_ID | The Client ID from the app detail page |
-| NETPTUNE_GITHUB_SECRET    | The client secret you just generated   |
+```env
+NETPTUNE_GOOGLE_CLIENT_ID=your-client-id
+NETPTUNE_GOOGLE_SECRET=your-client-secret
+NETPTUNE_GOOGLE_CALLBACK=/signin-google
+```
 
-## S3-compatible storage
+Google requires the redirect URI to match exactly. See its [web-server OAuth guide](https://developers.google.com/identity/protocols/oauth2/web-server).
 
-Netptune stores file attachments in an S3-compatible bucket. You can use AWS S3 or a self-hosted alternative such as MinIO.
+## Microsoft identity application
 
-### Option A — AWS S3
+In the Microsoft Entra admin center:
 
-1. **Create a bucket**
+1. Register an application.
+2. Add a **Web** redirect URI of `https://app.example.com/signin-microsoft`.
+3. Create a client secret.
+4. Copy the application (client) ID and secret value.
 
-- Go to the S3 console and click Create bucket
-- Choose a region (e.g. `us-east-1`)
-- Keep Block all public access enabled — Netptune uses signed URLs for access
+```env
+NETPTUNE_MICROSOFT_CLIENT_ID=your-client-id
+NETPTUNE_MICROSOFT_SECRET=your-client-secret
+NETPTUNE_MICROSOFT_CALLBACK=/signin-microsoft
+```
 
-2. **Create an IAM user**
+:::note
 
-Create an IAM user with programmatic access and attach a policy scoped to your bucket:
+The current API reads all three provider configurations with a required-value helper during startup. Supply non-empty values for GitHub, Google, and Microsoft even if you only intend to advertise one provider.
+
+:::
+
+## S3 storage
+
+Netptune uses S3 for task attachments. The activity-retention job also writes audit archives to the same configured bucket before deleting archived database rows.
+
+Create a private bucket and an access key with permission to list the bucket and read, write, and delete its objects. Configure the same values on the API, jobs, and activity services:
+
+```env
+NETPTUNE_S3_BUCKET_NAME=netptune
+NETPTUNE_S3_REGION=us-east-1
+NETPTUNE_S3_ACCESS_KEY_ID=your-access-key
+NETPTUNE_S3_SECRET_ACCESS_KEY=your-secret-key
+```
+
+A minimal AWS IAM policy scoped to one bucket is:
 
 ```json
 {
@@ -85,81 +133,30 @@ Create an IAM user with programmatic access and attach a policy scoped to your b
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"],
-      "Resource": ["arn:aws:s3:::your-bucket-name", "arn:aws:s3:::your-bucket-name/*"]
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::netptune"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+      "Resource": ["arn:aws:s3:::netptune/*"]
     }
   ]
 }
 ```
 
-Save the Access Key ID and Secret Access Key.
+:::warning
 
-3. **Set the environment variables**
-
-| Variable                      | Value                 |
-| ----------------------------- | --------------------- |
-| NETPTUNE_S3_BUCKET_NAME       | Your bucket name      |
-| NETPTUNE_S3_REGION            | e.g. us-east-1        |
-| NETPTUNE_S3_ACCESS_KEY_ID     | IAM access key ID     |
-| NETPTUNE_S3_SECRET_ACCESS_KEY | IAM secret access key |
-
-### Option B — MinIO (self-hosted)
-
-MinIO is a self-hosted, S3-compatible object store that can run as a Docker container alongside Netptune.
-
-1. **Add MinIO to your Compose file**
-
-```yaml
-minio:
-  image: quay.io/minio/minio:latest
-  restart: unless-stopped
-  command: server /data --console-address ":9001"
-  environment:
-    MINIO_ROOT_USER: '${MINIO_ACCESS_KEY}'
-    MINIO_ROOT_PASSWORD: '${MINIO_SECRET_KEY}'
-  volumes:
-    - minio_data:/data
-  ports:
-    - '9000:9000' # S3 API
-    - '9001:9001' # MinIO web console
-
-volumes:
-  minio_data:
-```
-
-Add your MinIO credentials to your `.env`:
-
-```env
-MINIO_ACCESS_KEY=change_me_minio_user
-MINIO_SECRET_KEY=change_me_minio_password
-```
-
-2. **Create the bucket**
-
-Access the MinIO web console at `http://your-server:9001`, log in, and create a bucket named `netptune`.
-
-3. **Set the environment variables**
-
-| Variable                      | Value                                 |
-| ----------------------------- | ------------------------------------- |
-| NETPTUNE_S3_BUCKET_NAME       | netptune                              |
-| NETPTUNE_S3_REGION            | us-east-1 (any value works for MinIO) |
-| NETPTUNE_S3_ACCESS_KEY_ID     | Value of MINIO_ACCESS_KEY             |
-| NETPTUNE_S3_SECRET_ACCESS_KEY | Value of MINIO_SECRET_KEY             |
-
-:::note
-
-If MinIO runs on a custom hostname or port, you may also need to set `NETPTUNE_S3_SERVICE_URL` to point at `http://minio:9000`. Check the API server logs if uploads fail.
+The current service wiring does not read a custom S3 endpoint or service URL. Although the storage library uses the S3 API, a self-hosted MinIO endpoint cannot currently be selected through an environment variable.
 
 :::
 
-## Summary checklist
+## Readiness checklist
 
-Before starting Netptune, confirm you have all of the following:
-
-- SendGrid API key
-- Verified sender email address in SendGrid
-- S3 bucket created (AWS or MinIO)
-- S3 access key ID and secret key
-- GitHub OAuth App client ID and secret (optional)
-- All values populated in your .env or Helm secrets file
+- Cloudflare Email Sending enabled with an API token and account ID
+- Verified sender address configured in the API and jobs service
+- Turnstile widget created for the application hostname
+- Turnstile site key compiled into the client and secret configured on the API
+- GitHub, Google, and Microsoft OAuth redirect URIs registered
+- Private S3 bucket and credentials configured on API, jobs, and activity
+- Application origin and CORS settings updated for the public hostname

@@ -12,13 +12,13 @@ export const features: Feature[] = [
     icon: Zap,
     title: 'Real-time, out of the box',
     description:
-      'When your teammate moves a task, you see it move. When someone posts a comment, it appears instantly — no polling, no refreshing, no guesswork.',
+      'Board and task changes are delivered over server-sent events, keeping teammates in sync without repeatedly refreshing the page.',
   },
   {
     icon: ClipboardList,
-    title: 'Full audit trails, always',
+    title: 'Detailed activity and audit history',
     description:
-      'Every change is logged automatically — who made it, what changed, and when. More than 20 tracked activity types give you complete visibility into how your project evolved.',
+      'Tracked changes record who acted, what changed, and when. More than 20 activity types cover task, board, workspace, member, and authentication events.',
   },
   {
     icon: MessageSquare,
@@ -30,7 +30,7 @@ export const features: Feature[] = [
     icon: FileText,
     title: 'Rich task details',
     description:
-      'A powerful editor, file attachments via any S3-compatible store, tags, due dates, priorities, and estimates — without the bloat of tools that try to do everything.',
+      'A rich editor, AWS S3-backed attachments, tags, priorities, estimates, relations, and comments keep context attached to the work.',
   },
   {
     icon: Workflow,

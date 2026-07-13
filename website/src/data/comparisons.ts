@@ -2,27 +2,27 @@ import type { Comparison } from '~/types/comparison';
 
 export const comparisons: Comparison[] = [
   {
-    competitor: 'vs. Jira',
-    headline: 'Less configuration overhead.',
+    competitor: 'Open source',
+    headline: 'Inspect it, change it, contribute to it.',
     description:
-      'No XML workflows, no permission schemes spanning three nested menus. Boards that work the way your team works — set up in minutes, not days.',
+      'The complete application is available under the MIT license, from the Angular client to the .NET services and Helm chart.',
   },
   {
-    competitor: 'vs. Trello',
-    headline: 'More than just cards.',
+    competitor: 'Self-hosted',
+    headline: 'Keep the deployment under your control.',
     description:
-      'Full audit logs, workspace permissions, real-time sync, and role-based access. Everything Trello leaves out when your team grows past five people.',
+      'Run Netptune in Kubernetes with the maintained Helm chart and choose where its database, object storage, and workloads live.',
   },
   {
-    competitor: 'vs. Linear',
-    headline: 'Open source and self-hostable.',
+    competitor: 'Permissions',
+    headline: 'Four roles with granular capabilities.',
     description:
-      'Keep your data exactly where you want it. MIT licensed, no vendor dependency, and deploy on any infrastructure — not just theirs.',
+      'Owner, Admin, Member, and Viewer defaults are backed by explicit workspace permissions for projects, boards, tasks, members, and more.',
   },
   {
-    competitor: 'vs. Asana',
-    headline: 'No per-seat pricing when self-hosted.',
+    competitor: 'Traceability',
+    headline: 'Understand how work changed.',
     description:
-      'Own your deployment completely. No invoices that scale with headcount. Run it on your own servers and pay nothing for additional seats.',
+      'Activity records, audit views, and automation run history provide a clear account of changes and background actions.',
   },
 ];
