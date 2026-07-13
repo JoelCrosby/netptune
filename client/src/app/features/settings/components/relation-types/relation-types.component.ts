@@ -24,6 +24,7 @@ import {
 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import {
   TableComponent,
   TableEmptyCellDirective,
@@ -38,6 +39,7 @@ import { finalize, first } from 'rxjs';
   selector: 'app-relation-types',
   imports: [
     StrokedButtonComponent,
+    SectionHeaderComponent,
     IconButtonComponent,
     TableComponent,
     TableEmptyCellDirective,
@@ -52,9 +54,11 @@ import { finalize, first } from 'rxjs';
     LucideTrash2,
   ],
   template: `<section>
-    <div class="mb-4 flex items-center justify-between gap-3">
-      <h3 class="font-overpass text-[1.4rem] font-normal">Task relations</h3>
+    <app-section-header
+      heading="Task relations"
+      description='How tasks can be linked to one another. A relation reads one way from the source task and the other way from the target — "Blocks" one way, "Is Blocked By" the other.'>
       <button
+        sectionHeaderActions
         app-stroked-button
         type="button"
         [disabled]="loading()"
@@ -62,13 +66,7 @@ import { finalize, first } from 'rxjs';
         <svg lucidePlus class="h-4 w-4"></svg>
         <span>Create relation type</span>
       </button>
-    </div>
-
-    <p class="text-muted-foreground mb-4 text-sm">
-      How tasks can be linked to one another. A relation reads one way from the
-      source task and the other way from the target — "Blocks" one way, "Is
-      Blocked By" the other.
-    </p>
+    </app-section-header>
 
     @if (error()) {
       <div class="text-danger mb-3 text-sm">{{ error() }}</div>

@@ -24,6 +24,7 @@ import {
 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import {
   TableComponent,
   TableEmptyCellDirective,
@@ -38,6 +39,7 @@ import { finalize, first } from 'rxjs';
   selector: 'app-statuses',
   imports: [
     StrokedButtonComponent,
+    SectionHeaderComponent,
     IconButtonComponent,
     TableComponent,
     TableEmptyCellDirective,
@@ -52,9 +54,9 @@ import { finalize, first } from 'rxjs';
     LucideTrash2,
   ],
   template: `<section>
-    <div class="mb-4 flex items-center justify-between gap-3">
-      <h3 class="font-overpass text-[1.4rem] font-normal">Task statuses</h3>
+    <app-section-header heading="Task statuses">
       <button
+        sectionHeaderActions
         app-stroked-button
         type="button"
         [disabled]="loading()"
@@ -62,7 +64,7 @@ import { finalize, first } from 'rxjs';
         <svg lucidePlus class="h-4 w-4"></svg>
         <span>Create status</span>
       </button>
-    </div>
+    </app-section-header>
 
     @if (error()) {
       <div class="text-danger mb-3 text-sm">{{ error() }}</div>

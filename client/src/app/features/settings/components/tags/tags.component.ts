@@ -9,6 +9,7 @@ import {
   EditTagDialogResult,
 } from '@entry/dialogs/edit-tag-dialog/edit-tag-dialog.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import {
   TableComponent,
@@ -34,19 +35,23 @@ import { tagResource } from '@app/core/resources/tag.resource';
     LucidePlus,
     LucideX,
     StrokedButtonComponent,
+    SectionHeaderComponent,
     TableComponent,
     TableEmptyCellDirective,
     TableHeaderRowDirective,
     TableHeadDirective,
     TableRowDirective,
   ],
-  template: `<div class="mb-4 flex max-w-xl items-center justify-between gap-3">
-      <h3 class="font-overpass text-[1.4rem] font-normal">Tags</h3>
-      <button app-stroked-button type="button" (click)="openCreateDialog()">
+  template: `<app-section-header class="max-w-xl" heading="Tags">
+      <button
+        sectionHeaderActions
+        app-stroked-button
+        type="button"
+        (click)="openCreateDialog()">
         <svg lucidePlus class="h-4 w-4"></svg>
         <span>Create tag</span>
       </button>
-    </div>
+    </app-section-header>
 
     <app-table
       containerClass="max-w-xl overflow-hidden"

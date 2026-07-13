@@ -12,15 +12,18 @@ import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.select
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 
 @Component({
   selector: 'app-workspace-settings',
-  imports: [FlatButtonComponent, StrokedButtonComponent],
-  template: `<h3 class="font-overpass text-[1.4rem] font-normal">
-      Visibility and access
-    </h3>
+  imports: [
+    FlatButtonComponent,
+    StrokedButtonComponent,
+    SectionHeaderComponent,
+  ],
+  template: `<app-section-header heading="Visibility and access" />
 
-    <div class="mt-4 flex flex-col items-start gap-4">
+    <div class="flex flex-col items-start gap-4">
       @if (canUpdate()) {
         <p class="text-foreground/80 mb-2 text-sm">
           @if (workspace()?.isPublic) {

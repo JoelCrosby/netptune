@@ -23,6 +23,7 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { firstValueFrom, map } from 'rxjs';
 
 @Component({
@@ -33,12 +34,11 @@ import { firstValueFrom, map } from 'rxjs';
     FormTextAreaComponent,
     ColorSelectComponent,
     FlatButtonComponent,
+    SectionHeaderComponent,
   ],
-  template: `<h3 class="font-overpass text-[1.4rem] font-normal">
-      Workspace Details
-    </h3>
+  template: `<app-section-header heading="Workspace Details" />
 
-    <form class="mt-4 grid max-w-2xl gap-4">
+    <form class="grid max-w-2xl gap-4">
       <app-form-input
         [formField]="detailsForm.name"
         label="Name"

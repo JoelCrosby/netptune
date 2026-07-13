@@ -8,14 +8,13 @@ import {
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { RecentItemsService } from '../../../../shell/command-palette/recent-items.service';
 
 @Component({
   selector: 'app-settings',
   template: `
-    <h3 class="font-overpass mb-4 text-[1.4rem] font-normal">
-      User Preferences
-    </h3>
+    <app-section-header heading="User Preferences" />
 
     @for (group of visibleGroups(); track group.key) {
       <section class="mt-6">
@@ -83,6 +82,7 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
     FlatButtonComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    SectionHeaderComponent,
   ],
 })
 export class SettingsComponent {
