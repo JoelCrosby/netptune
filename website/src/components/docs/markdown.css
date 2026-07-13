@@ -18,7 +18,7 @@
   }
 
   .docs-markdown a {
-    @apply text-brand underline underline-offset-2 hover:text-brand-dark;
+    @apply font-medium text-violet-700 underline decoration-violet-300 underline-offset-3 transition-colors hover:text-brand dark:text-violet-300 dark:decoration-violet-500/50 dark:hover:text-fuchsia-300;
   }
 
   .docs-markdown > ul,
@@ -37,19 +37,19 @@
   }
 
   .docs-markdown code:not(pre code) {
-    @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[13px] text-slate-700 dark:bg-white/10 dark:text-white/75;
+    @apply rounded-md bg-violet-50 px-1.5 py-0.5 font-mono text-[13px] text-violet-800 ring-1 ring-violet-200/70 dark:bg-violet-500/10 dark:text-violet-200 dark:ring-violet-500/20;
   }
 
   .docs-markdown pre {
-    @apply my-6 overflow-x-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-sm leading-relaxed text-slate-300 dark:border-white/10;
+    @apply my-6 overflow-x-auto rounded-xl border border-violet-300/25 bg-slate-950 p-5 text-sm leading-relaxed text-slate-300 shadow-lg shadow-brand/5 dark:border-violet-500/20 dark:bg-[#070707];
   }
 
   .docs-markdown table {
-    @apply my-6 w-full min-w-max overflow-hidden rounded-lg text-sm;
+    @apply my-6 w-full min-w-max overflow-hidden rounded-xl border border-slate-200 text-sm dark:border-white/10;
   }
 
   .docs-markdown table thead {
-    @apply border-b border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5;
+    @apply border-b border-violet-200/70 bg-violet-50/70 dark:border-violet-500/15 dark:bg-violet-500/[0.08];
   }
 
   .docs-markdown table th {
@@ -61,7 +61,7 @@
   }
 
   .docs-markdown .docs-admonition {
-    @apply my-6 rounded-lg border p-4 text-sm;
+    @apply my-6 rounded-xl border p-4 text-sm shadow-sm;
   }
 
   .docs-markdown .docs-admonition::before {
@@ -82,17 +82,37 @@
   }
 
   .docs-markdown .docs-admonition-tip {
-    @apply border-green-200 bg-green-50 dark:border-green-500/25 dark:bg-green-500/10;
+    @apply border-violet-200 bg-gradient-to-r from-violet-50 to-fuchsia-50/60 dark:border-violet-500/25 dark:from-violet-500/10 dark:to-fuchsia-500/[0.07];
   }
 
-  .docs-markdown .docs-admonition-warning,
-  .docs-markdown .docs-admonition-danger {
+  .docs-markdown .docs-admonition-tip::before {
+    @apply text-violet-700 dark:text-violet-300;
+  }
+
+  .docs-markdown .docs-admonition-warning {
     @apply border-amber-200 bg-amber-50 dark:border-amber-500/25 dark:bg-amber-500/10;
+  }
+
+  .docs-markdown .docs-admonition-warning::before {
+    @apply text-amber-700 dark:text-amber-300;
+  }
+
+  .docs-markdown .docs-admonition-danger {
+    @apply border-red-200 bg-red-50 dark:border-red-500/25 dark:bg-red-500/10;
+  }
+
+  .docs-markdown .docs-admonition-danger::before {
+    @apply text-red-700 dark:text-red-300;
   }
 
   .docs-markdown .docs-admonition-note,
   .docs-markdown .docs-admonition-info {
-    @apply border-blue-200 bg-blue-50 dark:border-blue-500/25 dark:bg-blue-500/10;
+    @apply border-slate-200 bg-gradient-to-r from-slate-50 to-violet-50/50 dark:border-white/10 dark:from-white/[0.06] dark:to-violet-500/[0.07];
+  }
+
+  .docs-markdown .docs-admonition-note::before,
+  .docs-markdown .docs-admonition-info::before {
+    @apply text-brand dark:text-violet-300;
   }
 
   .docs-markdown .docs-admonition > :last-child {
@@ -104,7 +124,7 @@
   }
 
   .docs-markdown .docs-cards li {
-    @apply rounded-xl border border-slate-200 p-6 dark:border-white/10;
+    @apply rounded-xl border border-slate-200 bg-gradient-to-b from-white to-slate-50/70 p-6 transition-all hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-lg hover:shadow-brand/5 dark:border-white/10 dark:from-white/[0.07] dark:to-white/[0.025] dark:hover:border-violet-500/40;
   }
 
   .docs-markdown .docs-cards a {
