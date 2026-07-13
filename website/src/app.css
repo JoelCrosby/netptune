@@ -44,3 +44,17 @@ html {
 main {
   min-height: calc(100vh - 64px - 502px - 1px);
 }
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(103 58 183 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(103 58 183 / 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 82%);
+}
+
+.dark .hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+}

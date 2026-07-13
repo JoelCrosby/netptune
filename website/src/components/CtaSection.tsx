@@ -3,8 +3,10 @@ import Button from './Button';
 
 export default function CtaSection() {
   return (
-    <section class="bg-dark px-6 py-20 dark:bg-black">
-      <div class="mx-auto max-w-3xl text-center">
+    <section class="relative overflow-hidden bg-dark px-6 py-24 dark:bg-black">
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_100%,rgba(103,58,183,0.35),transparent)]" />
+      <div class="absolute bottom-0 left-1/2 h-48 w-96 -translate-x-1/2 rounded-full bg-fuchsia-600/10 blur-[100px]" />
+      <div class="relative mx-auto max-w-3xl text-center">
         <h2 class="mb-4 text-4xl leading-tight font-bold text-white sm:text-5xl">
           Run your projects on software
           <br />

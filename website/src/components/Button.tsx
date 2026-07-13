@@ -33,7 +33,7 @@ export default function Button(props: ButtonProps) {
   const size = () => local.size ?? 'md';
 
   const classes = () =>
-    `inline-flex items-center justify-center gap-2 rounded font-medium transition-colors cursor-pointer ${variantClasses[variant()]} ${sizeClasses[size()]} ${local.class ?? ''}`;
+    `inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-200 cursor-pointer ${variantClasses[variant()]} ${sizeClasses[size()]} ${local.class ?? ''}`;
 
   return (
     <Show
