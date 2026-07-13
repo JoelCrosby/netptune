@@ -15,7 +15,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { StepComponent } from '@static/components/stepper/step.component';
 import { StepperComponent } from '@static/components/stepper/stepper.component';
 import { finalize } from 'rxjs';
@@ -44,7 +44,7 @@ import { AutomationsService } from '../../services/automations.service';
     RouterLink,
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     StepperComponent,
@@ -70,9 +70,7 @@ import { AutomationsService } from '../../services/automations.service';
       </app-page-header>
 
       @if (loading()) {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="32px" />
-        </div>
+        <app-page-loading />
       } @else {
         <form
           class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]"

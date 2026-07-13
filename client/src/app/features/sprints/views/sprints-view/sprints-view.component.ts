@@ -25,7 +25,7 @@ import {
 } from '@static/components/datatable/datatable.types';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import {
   TabGroupComponent,
   TabItem,
@@ -42,7 +42,7 @@ type StatusFilter = SprintStatus | null;
     RouterLink,
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     DatePipe,
     FlatButtonComponent,
     TabGroupComponent,
@@ -68,9 +68,7 @@ type StatusFilter = SprintStatus | null;
       </app-page-header>
 
       @if (loading()) {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="32px" />
-        </div>
+        <app-page-loading />
       } @else {
         <div class="flex flex-col gap-6">
           <app-tab-group

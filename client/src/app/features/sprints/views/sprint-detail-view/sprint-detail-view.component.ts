@@ -31,7 +31,7 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
@@ -47,7 +47,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
     DatePipe,
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     FlatButtonComponent,
     IconButtonComponent,
     LucideListPlus,
@@ -65,9 +65,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
       <app-page-header title="Sprint" />
 
       @if (loading()) {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="32px" />
-        </div>
+        <app-page-loading />
       } @else if (sprint(); as sprint) {
         <section class="flex flex-col gap-4">
           <div class="flex flex-wrap items-start justify-between gap-4">

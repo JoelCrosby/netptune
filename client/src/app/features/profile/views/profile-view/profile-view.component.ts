@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { Store } from '@ngrx/store';
 import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
@@ -16,7 +16,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     UpdateProfileComponent,
     ChangePasswordComponent,
     LinkedProvidersComponent,
@@ -28,9 +28,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     <app-page-header title="Profile" />
 
     @if (loading()) {
-      <div class="flex h-full flex-col items-center justify-center">
-        <app-spinner diameter="32px" />
-      </div>
+      <app-page-loading />
     } @else {
       <app-update-profile />
       <div class="border-border my-8 border-b-2"></div>

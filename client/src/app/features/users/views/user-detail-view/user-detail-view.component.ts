@@ -6,14 +6,14 @@ import {
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
 
 @Component({
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     UserDetailComponent,
   ],
   template: `
@@ -21,9 +21,7 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
       <app-page-header [title]="user()?.displayName" />
 
       @if (loading()) {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="32px" />
-        </div>
+        <app-page-loading />
       } @else {
         <app-user-detail />
       }

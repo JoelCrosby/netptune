@@ -14,6 +14,7 @@ import { DatatableCellTemplateDirective } from '@app/static/components/datatable
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@app/static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@app/static/components/datatable/datatable.types';
+import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
 import { StatusCategory } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
@@ -53,6 +54,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     DatatableCellTemplateDirective,
     DatatableComponent,
     DatatableEmptyDirective,
+    EmptyStateComponent,
     TaskListFiltersComponent,
     DatePipe,
     TooltipDirective,
@@ -133,30 +135,31 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
         >
       </ng-template>
 
-      <div appDatatableEmpty class="flex justify-center">
-        <div
-          class="my-10 flex h-full flex-col items-center justify-center gap-2">
-          <svg size="38" lucideListChecks></svg>
-          <h4 class="mx-16 text-center font-normal">
-            {{
-              filtersActive()
-                ? 'No tasks match these filters.'
-                : 'There are currently no tasks.'
-            }}
-          </h4>
+      <app-empty-state
+        appDatatableEmpty
+        [title]="
+          filtersActive()
+            ? 'No tasks match these filters.'
+            : 'There are currently no tasks.'
+        "
+        [description]="
+          filtersActive()
+            ? ''
+            : 'Use the Create Task button to create your first task and get started.'
+        ">
+        <svg emptyStateIcon size="38" lucideListChecks></svg>
 
-          @if (canCreate() && !filtersActive()) {
-            <p class="text-foreground/70 mb-4 text-center text-sm">
-              Use the Create Task button to create your first task and get
-              started.
-            </p>
-            <button app-flat-button type="button" (click)="createTaskClicked()">
-              <svg size="20" lucidePlus></svg>
-              <span>Create Task</span>
-            </button>
-          }
-        </div>
-      </div>
+        @if (canCreate() && !filtersActive()) {
+          <button
+            emptyStateAction
+            app-flat-button
+            type="button"
+            (click)="createTaskClicked()">
+            <svg size="20" lucidePlus></svg>
+            <span>Create Task</span>
+          </button>
+        }
+      </app-empty-state>
     </app-datatable>
   `,
 })

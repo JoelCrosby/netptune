@@ -7,13 +7,13 @@ import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/worksp
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 
 @Component({
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     WorkspaceListComponent,
     BuildNumberComponent,
   ],
@@ -24,9 +24,7 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
       (actionClick)="openWorkspaceDialog()" />
 
     @if (loading()) {
-      <div class="flex h-full flex-col items-center justify-center">
-        <app-spinner diameter="32px" />
-      </div>
+      <app-page-loading />
     } @else {
       <app-workspace-list />
       <app-build-number />

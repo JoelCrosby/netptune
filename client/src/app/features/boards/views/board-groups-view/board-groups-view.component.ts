@@ -70,7 +70,7 @@ import { IconButtonComponent } from '@static/components/button/icon-button.compo
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
 
 @Component({
@@ -100,7 +100,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     PageContainerComponent,
     PageHeaderComponent,
     BoardGroupHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     CdkDropList,
     ScrollShadowDirective,
     BoardGroupComponent,
@@ -131,9 +131,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     }
 
     @if (loading()) {
-      <div class="flex h-full flex-col items-center justify-center">
-        <app-spinner diameter="32px" />
-      </div>
+      <app-page-loading />
     } @else {
       @if (visibleGroups(); as groups) {
         <div

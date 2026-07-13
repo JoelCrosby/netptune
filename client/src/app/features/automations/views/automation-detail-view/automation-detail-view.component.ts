@@ -16,7 +16,7 @@ import { CardComponent } from '@static/components/card/card.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { EMPTY, finalize, forkJoin, switchMap } from 'rxjs';
 import { AutomationDetailHeadingComponent } from '../../components/automation-detail-heading.component';
 import { AutomationDetailStatsComponent } from '../../components/automation-detail-stats.component';
@@ -30,7 +30,7 @@ import { AutomationsService } from '../../services/automations.service';
     RouterLink,
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     CardComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
@@ -68,9 +68,7 @@ import { AutomationsService } from '../../services/automations.service';
       </app-page-header>
 
       @if (loading()) {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="32px" />
-        </div>
+        <app-page-loading />
       } @else if (error()) {
         <app-card class="min-h-0! p-6! text-center">
           <p class="mb-4 text-sm text-red-500">Failed to load automation.</p>

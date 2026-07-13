@@ -11,6 +11,7 @@ import { DatatableCellTemplateDirective } from '@app/static/components/datatable
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@app/static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@app/static/components/datatable/datatable.types';
+import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskArchiveService } from '@core/store/tasks/task-archive.service';
@@ -27,6 +28,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     DatatableCellTemplateDirective,
     DatatableComponent,
     DatatableEmptyDirective,
+    EmptyStateComponent,
     DatePipe,
     LucideArchiveRestore,
     StrokedButtonComponent,
@@ -90,18 +92,12 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
         </span>
       </ng-template>
 
-      <div appDatatableEmpty class="flex justify-center">
-        <div
-          class="my-10 flex h-full flex-col items-center justify-center gap-2">
-          <svg size="38" lucideArchiveRestore></svg>
-          <h4 class="mx-16 text-center font-normal">
-            There are currently no deleted tasks.
-          </h4>
-          <p class="text-foreground/70 mb-4 text-center text-sm">
-            Deleted tasks show up here, where they can be restored.
-          </p>
-        </div>
-      </div>
+      <app-empty-state
+        appDatatableEmpty
+        title="There are currently no deleted tasks."
+        description="Deleted tasks show up here, where they can be restored.">
+        <svg emptyStateIcon size="38" lucideArchiveRestore></svg>
+      </app-empty-state>
     </app-datatable>
   `,
 })

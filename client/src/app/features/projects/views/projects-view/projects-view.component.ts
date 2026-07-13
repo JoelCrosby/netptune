@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { DialogService } from '@core/services/dialog.service';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import {
@@ -19,7 +19,7 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     ProjectListComponent,
   ],
   template: `
@@ -35,9 +35,7 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
       }
 
       @if (loading()) {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="32px" />
-        </div>
+        <app-page-loading />
       } @else {
         <app-project-list />
       }

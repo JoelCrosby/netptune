@@ -3,13 +3,13 @@ import { projectDetailResource } from '@app/core/resources/project.resource';
 import { ProjectDetailComponent } from '@projects/components/project-detail/project-detail.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 
 @Component({
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     ProjectDetailComponent,
   ],
   template: `<app-page-container
@@ -20,9 +20,7 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
     <app-page-header title="Project" />
 
     @if (project.isLoading()) {
-      <div class="flex h-full flex-col items-center justify-center">
-        <app-spinner diameter="32px" />
-      </div>
+      <app-page-loading />
     } @else {
       <app-project-detail [project]="project.value()" />
     }

@@ -5,7 +5,7 @@ import {
   loadTaskDetails,
 } from '@app/core/store/tasks/tasks.actions';
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
-import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
+import { PageLoadingComponent } from '@app/static/components/page-loading/page-loading.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
@@ -76,16 +76,14 @@ import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/wor
           <app-task-dates [task]="task" />
         </div>
       } @else {
-        <div class="flex h-full flex-col items-center justify-center">
-          <app-spinner diameter="64" />
-        </div>
+        <app-page-loading diameter="64" />
       }
     </app-page-container>
   `,
   imports: [
     LucideCheck,
     ActivityMenuComponent,
-    SpinnerComponent,
+    PageLoadingComponent,
     SprintBadgeComponent,
     TaskDates,
     TaskScopeIdComponent,
