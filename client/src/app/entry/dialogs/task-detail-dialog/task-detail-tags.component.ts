@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, linkedSignal } from '@angular/core';
 import { MAX_PAGE_SIZE } from '@app/core/models/pagination';
 import { Tag } from '@app/core/models/tag';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
@@ -48,7 +48,7 @@ export class TaskDetailTagsComponent {
 
   task = this.store.selectSignal(selectDetailTask);
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
-  selectedTags = computed(() => this.task()?.tags ?? []);
+  selectedTags = linkedSignal(() => this.task()?.tags ?? []);
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 
   canUpdate = selectCanUpdateTask(this.store);
@@ -59,11 +59,13 @@ export class TaskDetailTagsComponent {
 
     if (!task || !identifier) return;
 
-    const currentTags = new Set(task.tags);
+    const currentTags = new Set(this.selectedTags());
     const nextTags = new Set(tags);
 
+    this.selectedTags.set(tags);
+
     const added = tags.find((t) => !currentTags.has(t));
-    const removed = task.tags.find((t) => !nextTags.has(t));
+    const removed = [...currentTags].find((t) => !nextTags.has(t));
 
     if (removed) {
       this.store.dispatch(

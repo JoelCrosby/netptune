@@ -377,7 +377,7 @@ export class ProjectTasksEffects {
   addTagToTask$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.addTagToTask.init),
-      switchMap(({ identifier, request }) =>
+      concatMap(({ identifier, request }) =>
         this.projectTasksHubService.addTagToTask(identifier, request).pipe(
           unwrapClientReposne(),
           map((tag) => actions.addTagToTask.success({ tag })),

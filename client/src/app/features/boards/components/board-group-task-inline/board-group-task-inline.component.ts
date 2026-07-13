@@ -84,7 +84,8 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   private document = inject(DocumentService);
   private store = inject(Store);
   private elementRef = inject(ElementRef);
-  private inputElementRef = viewChild<ElementRef>('textarea');
+  private inputElementRef =
+    viewChild<ElementRef<HTMLTextAreaElement>>('textarea');
 
   readonly boardGroupId = input.required<number>();
   readonly canceled = output();
@@ -167,7 +168,9 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
 
     if (!projectId || !user) return;
 
-    const name = this.taskForm.name().value();
+    const name =
+      this.inputElementRef()?.nativeElement.value ??
+      this.taskForm.name().value();
 
     const task: AddProjectTaskRequest = {
       name: name.trim(),
