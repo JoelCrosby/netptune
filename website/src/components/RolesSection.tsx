@@ -22,17 +22,19 @@ export default function RolesSection() {
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <For each={roles}>
           {(role) => (
-            <div class={`rounded-xl border p-6 ${role.color}`}>
-              <div class="mb-3 flex items-center gap-2">
+            <div class="rounded-2xl border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/70 p-6 dark:border-white/10 dark:from-white/[0.07] dark:to-white/[0.025]">
+              <div class={`mb-3 flex items-center gap-2 ${role.color}`}>
                 <div class={`h-2.5 w-2.5 rounded-full ${role.dot}`} />
                 <h3 class="text-[15px] font-bold">{role.name}</h3>
               </div>
-              <p class="mb-5 text-sm leading-snug opacity-70">{role.description}</p>
+              <p class="mb-5 text-sm leading-snug text-slate-500 dark:text-white/55">
+                {role.description}
+              </p>
               <ul class="space-y-1.5">
                 <For each={role.permissions}>
                   {(p) => (
-                    <li class="flex items-center gap-2 text-xs opacity-80">
-                      <Check size={12} />
+                    <li class="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
+                      <Check size={12} class={role.color} />
                       {p}
                     </li>
                   )}
