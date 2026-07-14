@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { createAsyncAction } from '@core/util/create-async-action';
+import { WorkspaceRole } from '@core/enums/workspace-role';
 import { createAction, props } from '@ngrx/store';
 
 export const clearState = createAction('[Users] Clear State');
@@ -72,6 +73,19 @@ export const toggleUserPermission = createAsyncAction(
   {
     init: props<{ userId: string; permission: string }>(),
     success: props<{ userId: string; permission: string }>(),
+    fail: props<{ error: HttpErrorResponse | Error }>(),
+  }
+);
+
+export const updateWorkspaceRole = createAsyncAction(
+  '[Users] Update Workspace Role',
+  {
+    init: props<{ userId: string; role: WorkspaceRole }>(),
+    success: props<{
+      userId: string;
+      role: WorkspaceRole;
+      permissions: string[];
+    }>(),
     fail: props<{ error: HttpErrorResponse | Error }>(),
   }
 );

@@ -108,6 +108,7 @@ export class AutomationTriggerEditorComponent {
     TaskChangeField.owner,
     TaskChangeField.priority,
     TaskChangeField.estimate,
+    TaskChangeField.dueDate,
   ];
   readonly statuses = input.required<Status[]>();
   readonly assigneeChangeModeOptions = [

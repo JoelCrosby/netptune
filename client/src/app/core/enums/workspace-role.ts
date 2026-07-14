@@ -4,3 +4,10 @@ export enum WorkspaceRole {
   admin = 100,
   owner = 1000,
 }
+
+export const workspaceRoleLabels: Record<WorkspaceRole, string> = {
+  [WorkspaceRole.viewer]: 'Viewer',
+  [WorkspaceRole.member]: 'Member',
+  [WorkspaceRole.admin]: 'Admin',
+  [WorkspaceRole.owner]: 'Owner',
+};

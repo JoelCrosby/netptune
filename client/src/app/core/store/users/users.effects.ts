@@ -109,6 +109,26 @@ export class UsersEffects {
     );
   });
 
+  updateWorkspaceRole$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.updateWorkspaceRole.init),
+      switchMap(({ userId, role }) =>
+        this.usersService.updateWorkspaceRole(userId, role).pipe(
+          unwrapClientReposne(),
+          tap(() => this.snackbar.open('Workspace role updated')),
+          map((result) =>
+            actions.updateWorkspaceRole.success({
+              userId,
+              role: result.role,
+              permissions: result.permissions,
+            })
+          ),
+          catchError((error) => of(actions.updateWorkspaceRole.fail({ error })))
+        )
+      )
+    );
+  });
+
   resendInvite$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.resendInvite.init),

@@ -114,7 +114,7 @@ The current API reads all three provider configurations with a required-value he
 
 ## S3 storage
 
-Netptune uses S3 for task attachments. The activity-retention job also writes audit archives to the same configured bucket before deleting archived database rows.
+Netptune uses S3 for uploaded profile pictures and rich-text media. The activity-retention job also writes audit archives to the same configured bucket before deleting archived database rows.
 
 Create a private bucket and an access key with permission to list the bucket and read, write, and delete its objects. Configure the same values on the API, jobs, and activity services:
 

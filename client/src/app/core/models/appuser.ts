@@ -1,4 +1,5 @@
 import { ProjectTask } from './project-task';
+import { WorkspaceRole } from '../enums/workspace-role';
 
 export interface AppUser {
   id: string;
@@ -17,6 +18,6 @@ export interface AppUser {
 }
 
 export interface WorkspaceAppUser extends AppUser {
-  isWorkspaceOwner: boolean;
+  role: WorkspaceRole;
   isPending?: boolean;
 }

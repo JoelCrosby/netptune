@@ -34,6 +34,8 @@ public sealed class TaskViewRowMap
 
     public decimal? Task_Estimate_Value { get; init; }
 
+    public DateOnly? Task_Due_Date { get; init; }
+
     public int? Project_Id { get; init; }
 
     public int? Sprint_Id { get; init; }

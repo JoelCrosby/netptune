@@ -19,6 +19,7 @@ public static class UsersEndpoints
         group.MapPost("/resend-invite", HandleResendInvite).RequireAuthorization(NetptunePermissions.Members.Invite);
         group.MapPost("/remove", HandleRemoveUserFromWorkspace).RequireAuthorization(NetptunePermissions.Members.Remove);
         group.MapPost("/toggle-permission", HandleTogglePermission).RequireAuthorization(NetptunePermissions.Members.UpdatePermission);
+        group.MapPut("/role", HandleUpdateRole).RequireAuthorization(NetptunePermissions.Members.UpdateRole);
         group.MapGet("/get-by-email", HandleGetUserByEmail);
         group.MapGet("/all", HandleGetAll);
 
@@ -95,6 +96,18 @@ public static class UsersEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new ToggleUserPermissionCommand(request), cancellationToken);
+
+        if (!result.IsSuccess) return Results.BadRequest(result.Message);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleUpdateRole(
+        IMediator mediator,
+        UpdateWorkspaceRoleRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateWorkspaceRoleCommand(request), cancellationToken);
 
         if (!result.IsSuccess) return Results.BadRequest(result.Message);
 

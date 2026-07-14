@@ -12,6 +12,7 @@ SELECT w.slug              AS workspace_key
      , st.name             AS task_status
      , pt.created_at       AS task_created_at
      , pt.updated_at       AS task_updated_at
+     , pt.due_date         AS task_due_date
      , ptibg.sort_order    AS task_sort_order
      , bg.name             AS board_group_name
      , bg.sort_order       AS board_group_sort_order

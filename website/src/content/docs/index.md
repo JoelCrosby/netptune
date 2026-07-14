@@ -32,7 +32,7 @@ The chart can also deploy `ghcr.io/joelcrosby/netptune-website`, the SolidStart 
 | Valkey                | `valkey/valkey:9.0`          | Distributed cache and data-protection storage.                                |
 | NATS                  | `nats:2.14.3-alpine`         | JetStream-backed event delivery between the API, jobs, and activity services. |
 | Meilisearch           | `getmeili/meilisearch:v1.10` | Workspace search indexes.                                                     |
-| S3-compatible storage | External                     | Task attachments and archived audit data.                                     |
+| S3-compatible storage | External                     | Uploaded media and archived audit data.                                       |
 
 PostgreSQL, NATS, and Meilisearch use persistent volume claims in the chart. Valkey is currently deployed without a persistent volume.
 

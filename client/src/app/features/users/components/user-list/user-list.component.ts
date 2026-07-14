@@ -14,6 +14,7 @@ import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
+import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 
 @Component({
   selector: 'app-user-list',
@@ -61,10 +62,10 @@ import { DatatableDataSource } from '@static/components/datatable/datatable.type
       <ng-template appDatatableCell="status" let-user>
         @if (user.isPending) {
           <app-badge color="pending" shape="rounded">Pending</app-badge>
-        } @else if (user.isWorkspaceOwner) {
+        } @else if (user.role === workspaceRole.owner) {
           <app-badge color="info" shape="rounded">Owner</app-badge>
         } @else {
-          <app-badge shape="rounded">Member</app-badge>
+          <app-badge shape="rounded">{{ roleLabel(user.role) }}</app-badge>
         }
       </ng-template>
     </app-datatable>
@@ -74,6 +75,7 @@ export class UserListComponent {
   private store = inject(Store);
 
   readonly countChange = output<number>();
+  readonly workspaceRole = WorkspaceRole;
 
   canReadUsers = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.read)
@@ -118,10 +120,14 @@ export class UserListComponent {
   }
 
   onRemoveClicked(user: WorkspaceAppUser) {
-    if (!user || user.isWorkspaceOwner) return;
+    if (!user || user.role === WorkspaceRole.owner) return;
     this.store.dispatch(
       removeUsersFromWorkspace.init({ emailAddresses: [user.email] })
     );
+  }
+
+  roleLabel(role: WorkspaceRole) {
+    return workspaceRoleLabels[role];
   }
 
   onResendClicked(user: WorkspaceAppUser) {

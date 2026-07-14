@@ -18,6 +18,7 @@ export interface ProjectTask extends Basemodel {
   priority: TaskPriority | null;
   estimateType: EstimateType | null;
   estimateValue: number | null;
+  dueDate?: string | null;
 
   sortOrder: number;
 
@@ -52,4 +53,5 @@ export interface AddProjectTaskRequest {
   priority?: TaskPriority;
   estimateType?: EstimateType;
   estimateValue?: number;
+  dueDate?: string | null;
 }

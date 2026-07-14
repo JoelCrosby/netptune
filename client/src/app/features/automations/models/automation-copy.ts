@@ -27,6 +27,7 @@ export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
   [TaskChangeField.owner]: 'Owner',
   [TaskChangeField.priority]: 'Priority',
   [TaskChangeField.estimate]: 'Estimate',
+  [TaskChangeField.dueDate]: 'Due date',
 };
 
 export const assigneeChangeModeLabels: Record<AssigneeChangeMode, string> = {

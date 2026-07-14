@@ -29,6 +29,7 @@ export interface BoardViewTask {
   priority: TaskPriority | null;
   estimateType: EstimateType | null;
   estimateValue: number | null;
+  dueDate?: string | null;
   createdAt: string;
   updatedAt: string;
   sprintId?: number | null;

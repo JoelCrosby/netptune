@@ -38,7 +38,7 @@ An Open Source self-hostable project management application built for teams. Org
 - **Activity feed** — per-board audit log of all changes
 - **Authentication** — email/password registration and GitHub, Google, or Microsoft OAuth
 - **User management** — invite and manage workspace members with role-based access
-- **File attachments** — S3-compatible object storage for task attachments
+- **Due dates** — Set and track task deadlines across projects and boards
 - **CSV import & export** — move tasks in or out of any board
 - **Background jobs** — async job processing for notifications and heavy operations
 

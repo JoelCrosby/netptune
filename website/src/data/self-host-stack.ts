@@ -25,7 +25,7 @@ export const selfHostStack: StackItem[] = [
   {
     icon: Archive,
     label: 'AWS S3',
-    sublabel: 'Attachments and audit archives',
+    sublabel: 'Media and audit archives',
   },
   {
     icon: Layers,

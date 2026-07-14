@@ -52,6 +52,8 @@ public class TasksViewRowMap
 
     public DateTime? Task_Updated_At { get; set; }
 
+    public DateOnly? Task_Due_Date { get; set; }
+
     public string Workspace_Key { get; set; } = null!;
 
     public string Workspace_Identifier { get; set; } = null!;

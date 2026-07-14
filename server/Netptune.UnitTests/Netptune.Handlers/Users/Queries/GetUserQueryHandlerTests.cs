@@ -45,7 +45,7 @@ public class GetUserQueryHandlerTests
 
         var result = await Handler.Handle(new GetUserQuery("userId"), TestContext.Current.CancellationToken);
 
-        result.Should().BeEquivalentTo(new UserViewModel
+        result.Should().BeEquivalentTo(new WorkspaceUserViewModel
         {
             Id = user.Id,
             Firstname = user.Firstname,
@@ -57,6 +57,7 @@ public class GetUserQueryHandlerTests
             LastLoginTime = user.LastLoginTime,
             RegistrationDate = user.RegistrationDate,
             Permissions = [],
+            Role = WorkspaceRole.Owner,
         });
     }
 

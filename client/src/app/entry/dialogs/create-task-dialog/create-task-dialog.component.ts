@@ -68,6 +68,7 @@ interface CreateTaskForm {
             [(priority)]="priority"
             [(projectId)]="projectId"
             [(sprintId)]="sprintId"
+            [(dueDate)]="dueDate"
             [(assignees)]="assignees"
             [estimateType]="estimateType()"
             [estimateValue]="estimateValue()"
@@ -101,6 +102,7 @@ export class CreateTaskDialogComponent {
   readonly estimateType = signal<EstimateType | null>(null);
   readonly estimateValue = signal<number | null>(null);
   readonly sprintId = signal<number | null>(this.data?.sprintId ?? null);
+  readonly dueDate = signal('');
   readonly projectId = signal<number | null>(
     this.data?.projectId ?? this.currentProjectId() ?? null
   );
@@ -160,6 +162,7 @@ export class CreateTaskDialogComponent {
       description: description.trim(),
       projectId,
       sprintId: this.sprintId(),
+      dueDate: this.dueDate() || null,
     };
 
     if (statusId !== null) task.statusId = statusId;

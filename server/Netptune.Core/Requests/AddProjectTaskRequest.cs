@@ -31,4 +31,6 @@ public record AddProjectTaskRequest
     public EstimateType? EstimateType { get; set; }
 
     public decimal? EstimateValue { get; set; }
+
+    public DateOnly? DueDate { get; set; }
 }

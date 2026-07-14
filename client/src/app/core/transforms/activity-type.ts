@@ -12,6 +12,8 @@ export interface MergedActivity {
 }
 
 const STATUS_FIELD = 'status';
+const fieldLabel = (field: string): string =>
+  field === 'duedate' ? 'due date' : field;
 
 /** The fields the server writes are lower case, but nothing downstream should depend on that. */
 const normaliseFields = (fields?: string[] | null): string[] => {
@@ -37,8 +39,7 @@ const toSentenceList = (values: string[]): string =>
  */
 const statusPhrase = (value: MergedActivity): string => {
   const fields = value.meta?.['fields'] as
-    | Record<string, { new?: string } | undefined>
-    | undefined;
+    Record<string, { new?: string } | undefined> | undefined;
 
   const status = fields?.[STATUS_FIELD]?.new;
 
@@ -59,7 +60,7 @@ export const mergedActivitySummary = (value: MergedActivity): string | null => {
   const parts: string[] = [];
 
   if (others.length) {
-    parts.push(`updated ${toSentenceList(others)}`);
+    parts.push(`updated ${toSentenceList(others.map(fieldLabel))}`);
   }
 
   if (fields.includes(STATUS_FIELD)) {
@@ -125,6 +126,8 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Changed priority';
     case ActivityType.modifyEstimate:
       return 'Changed estimate';
+    case ActivityType.modifyDueDate:
+      return 'Changed due date';
     case ActivityType.restore:
       return 'Restored';
     default:

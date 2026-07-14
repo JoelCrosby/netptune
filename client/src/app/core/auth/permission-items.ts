@@ -92,6 +92,11 @@ export const netptunePermissionLabels: PermissionLabels = {
       label: 'Update Member Permissions',
       icon: LucideUserLock,
     },
+    updateRole: {
+      key: 'members.update_role',
+      label: 'Update Member Roles',
+      icon: LucideUserLock,
+    },
   },
   projects: {
     read: { key: 'projects.read', label: 'View Projects', icon: LucideEye },

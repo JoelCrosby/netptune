@@ -73,6 +73,26 @@ const reducer = createReducer(
     ...state,
     loading: false,
     loadingError: error,
+  })),
+  on(actions.updateWorkspaceRole.init, (state): UsersState => ({
+    ...state,
+    loading: true,
+  })),
+  on(
+    actions.updateWorkspaceRole.success,
+    (state, { userId, role, permissions }): UsersState => ({
+      ...state,
+      loading: false,
+      userDetail:
+        state.userDetail?.id === userId
+          ? { ...state.userDetail, role, permissions }
+          : state.userDetail,
+    })
+  ),
+  on(actions.updateWorkspaceRole.fail, (state, { error }): UsersState => ({
+    ...state,
+    loading: false,
+    loadingError: error,
   }))
 );
 

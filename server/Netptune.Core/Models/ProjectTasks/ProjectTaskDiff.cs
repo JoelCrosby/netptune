@@ -26,6 +26,8 @@ public record ProjectTaskDiff
 
     public ValueDiff<EstimateType> Estimate { get; init; } = null!;
 
+    public ValueDiff<DateOnly?> DueDate { get; init; } = null!;
+
     public AssigneeDiff Assignees { get; init; } = null!;
 
     public bool HasChanges => ChangedFields.Any();
@@ -39,6 +41,7 @@ public record ProjectTaskDiff
             if (Status.Modified) yield return TaskChangeField.Status;
             if (Priority.Modified) yield return TaskChangeField.Priority;
             if (Estimate.Modified) yield return TaskChangeField.Estimate;
+            if (DueDate.Modified) yield return TaskChangeField.DueDate;
             if (Assignees.Modified) yield return TaskChangeField.Assignees;
         }
     }
@@ -68,6 +71,8 @@ public record ProjectTaskDiff
 
         var estimateChanged = updated.EstimateType != old.EstimateType || updated.EstimateValue != old.EstimateValue;
         var estimateTypeValue = updated.EstimateType ?? EstimateType.StoryPoints;
+
+        var dueDateChanged = updated.DueDate != old.DueDate;
 
         var oldAssigneeIds = old.Assignees.Select(a => a.Id).ToHashSet();
         var newAssigneeIds = updated.Assignees.Select(a => a.Id).ToHashSet();
@@ -106,6 +111,12 @@ public record ProjectTaskDiff
                 OldValue = old.EstimateType ?? EstimateType.StoryPoints,
                 NewValue = estimateTypeValue,
             },
+            DueDate = new ValueDiff<DateOnly?>
+            {
+                Modified = dueDateChanged,
+                OldValue = old.DueDate,
+                NewValue = updated.DueDate,
+            },
             Assignees = new AssigneeDiff
             {
                 Modified = addedAssignees.Count > 0 || removedAssignees.Count > 0,
@@ -142,6 +153,16 @@ public record ProjectTaskDiff
         if (Estimate.Modified)
         {
             changes.Add(TaskFieldChange.Create(TaskChangeField.Estimate, Estimate.OldValue, Estimate.NewValue));
+        }
+
+        if (DueDate.Modified)
+        {
+            changes.Add(new TaskFieldChange
+            {
+                Field = TaskChangeField.DueDate,
+                OldValue = DueDate.OldValue?.ToString("yyyy-MM-dd"),
+                NewValue = DueDate.NewValue?.ToString("yyyy-MM-dd"),
+            });
         }
 
         if (Assignees.Modified)
@@ -183,6 +204,10 @@ public record ProjectTaskDiff
 
                     case TaskChangeField.Estimate:
                         options.Add(ActivityType.ModifyEstimate, change.Field, change.OldValue, change.NewValue);
+                        break;
+
+                    case TaskChangeField.DueDate:
+                        options.Add(ActivityType.ModifyDueDate, change.Field, change.OldValue, change.NewValue);
                         break;
 
                     case TaskChangeField.Assignees:

@@ -1,7 +1,17 @@
+using System.Collections.Frozen;
+using System.Reflection;
+
 namespace Netptune.Core.Authorization;
 
 public static class NetptunePermissions
 {
+    public static IReadOnlySet<string> All { get; } = typeof(NetptunePermissions)
+        .GetNestedTypes(BindingFlags.Public)
+        .SelectMany(type => type.GetFields(BindingFlags.Public | BindingFlags.Static))
+        .Where(field => field.IsLiteral && field.FieldType == typeof(string))
+        .Select(field => (string)field.GetRawConstantValue()!)
+        .ToFrozenSet();
+
     public static class Workspace
     {
         public const string Read = "workspace.read";
@@ -18,6 +28,7 @@ public static class NetptunePermissions
         public const string Remove = "members.remove";
         public const string UpdateProfile = "members.update_profile";
         public const string UpdatePermission = "members.update_permission";
+        public const string UpdateRole = "members.update_role";
     }
 
     public static class Projects

@@ -63,12 +63,12 @@ The API publishes email work to NATS. The jobs service consumes that work and se
 
 ### S3 storage
 
-| Variable                        | Required | Description                                     |
-| ------------------------------- | -------- | ----------------------------------------------- |
-| `NETPTUNE_S3_BUCKET_NAME`       | Yes      | Bucket used for attachments and audit archives. |
-| `NETPTUNE_S3_REGION`            | Yes      | AWS region passed to the S3 client.             |
-| `NETPTUNE_S3_ACCESS_KEY_ID`     | Yes      | S3 access key ID.                               |
-| `NETPTUNE_S3_SECRET_ACCESS_KEY` | Yes      | S3 secret access key.                           |
+| Variable                        | Required | Description                                        |
+| ------------------------------- | -------- | -------------------------------------------------- |
+| `NETPTUNE_S3_BUCKET_NAME`       | Yes      | Bucket used for uploaded media and audit archives. |
+| `NETPTUNE_S3_REGION`            | Yes      | AWS region passed to the S3 client.                |
+| `NETPTUNE_S3_ACCESS_KEY_ID`     | Yes      | S3 access key ID.                                  |
+| `NETPTUNE_S3_SECRET_ACCESS_KEY` | Yes      | S3 secret access key.                              |
 
 The current storage options do not expose a custom S3 endpoint variable. AWS S3-style credentials and region are supported directly; arbitrary MinIO endpoints are not configurable by the current `Program.cs` files.
 

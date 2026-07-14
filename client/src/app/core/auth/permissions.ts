@@ -12,6 +12,7 @@ export const netptunePermissions = {
     remove: 'members.remove',
     updateProfile: 'members.update_profile',
     updatePermissions: 'members.update_permission',
+    updateRole: 'members.update_role',
   },
   projects: {
     read: 'projects.read',

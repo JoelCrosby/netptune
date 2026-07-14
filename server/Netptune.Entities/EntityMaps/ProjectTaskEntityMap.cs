@@ -55,6 +55,12 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsRequired(false);
 
         builder
+            .Property(task => task.DueDate)
+            .HasColumnName("due_date")
+            .HasColumnType("date")
+            .IsRequired(false);
+
+        builder
             .HasOne(task => task.Sprint)
             .WithMany(sprint => sprint.ProjectTasks)
             .HasForeignKey(task => task.SprintId)

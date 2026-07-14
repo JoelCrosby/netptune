@@ -34,4 +34,5 @@ public enum ActivityType
     Restore = 26,
     AddRelation = 27,
     RemoveRelation = 28,
+    ModifyDueDate = 29,
 }

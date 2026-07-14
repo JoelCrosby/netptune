@@ -31,6 +31,7 @@ public class CreateTaskCommandHandlerTests
 
     public CreateTaskCommandHandlerTests()
     {
+        Fixture.Register(() => DateOnly.FromDateTime(Fixture.Create<DateTime>()));
         Handler = new(UnitOfWork, Identity, Activity, EventPublisher);
     }
 

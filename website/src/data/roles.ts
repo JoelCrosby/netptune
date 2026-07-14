@@ -33,7 +33,7 @@ export const roles: Role[] = [
     permissions: [
       'Create & edit tasks',
       'Post comments',
-      'Add attachments',
+      'Set task due dates',
       'All viewer permissions',
     ],
   },

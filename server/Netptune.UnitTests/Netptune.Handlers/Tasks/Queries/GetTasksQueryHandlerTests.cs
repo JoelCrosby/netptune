@@ -23,6 +23,7 @@ public class GetTasksQueryHandlerTests
 
     public GetTasksQueryHandlerTests()
     {
+        Fixture.Register(() => DateOnly.FromDateTime(Fixture.Create<DateTime>()));
         Handler = new(UnitOfWork, Identity);
     }
 

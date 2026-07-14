@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { ClientResponse } from '@core/models/client-response';
+import { WorkspaceRole } from '@core/enums/workspace-role';
 import {
   appendPageParams,
   DEFAULT_PAGE_SIZE,
@@ -51,5 +52,11 @@ export class UsersService {
       userId,
       permission,
     });
+  }
+
+  updateWorkspaceRole(userId: string, role: WorkspaceRole) {
+    return this.http.put<
+      ClientResponse<{ role: WorkspaceRole; permissions: string[] }>
+    >(`api/users/role`, { userId, role });
   }
 }

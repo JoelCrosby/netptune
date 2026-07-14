@@ -2,6 +2,7 @@ using System.Diagnostics;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.SeedData;
@@ -31,6 +32,7 @@ public sealed class SeedDataService : IHostedService
 
         if (await dbContext.Users.AnyAsync(ct))
         {
+            await SyncOwnerPermissions(dbContext, ct);
             Logger.LogInformation("{Service} data already present, skipping seed", nameof(SeedDataService));
             return;
         }
@@ -61,6 +63,21 @@ public sealed class SeedDataService : IHostedService
         timer.Stop();
 
         Logger.LogInformation("{Service} finished execution in {Elapsed}", nameof(SeedDataService), $"{timer.ElapsedMilliseconds:N}ms");
+    }
+
+    private static async Task SyncOwnerPermissions(DataContext dbContext, CancellationToken ct)
+    {
+        var owners = await dbContext.WorkspaceAppUsers
+            .Where(workspaceUser => workspaceUser.Role == WorkspaceRole.Owner)
+            .ToListAsync(ct);
+        var ownerPermissions = WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Owner);
+
+        foreach (var owner in owners)
+        {
+            owner.Permissions = ownerPermissions.ToList();
+        }
+
+        await dbContext.SaveChangesAsync(ct);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

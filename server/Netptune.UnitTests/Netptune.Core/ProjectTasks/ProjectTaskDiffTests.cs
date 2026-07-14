@@ -49,6 +49,7 @@ public class ProjectTaskDiffTests
         TaskPriority? priority = TaskPriority.Low,
         EstimateType? estimateType = EstimateType.StoryPoints,
         decimal? estimateValue = 3,
+        DateOnly? dueDate = null,
         params string[] assignees)
     {
         return new TaskViewModel
@@ -60,8 +61,23 @@ public class ProjectTaskDiffTests
             Priority = priority,
             EstimateType = estimateType,
             EstimateValue = estimateValue,
+            DueDate = dueDate,
             Assignees = assignees.Select(id => new AssigneeViewModel { Id = id }).ToList(),
         };
+    }
+
+    [Fact]
+    public void LogDiff_ShouldLogDueDateChangesIncludingClearingTheDate()
+    {
+        var old = Task(dueDate: new DateOnly(2026, 7, 14));
+        var updated = Task(dueDate: null);
+
+        var dueDate = LogDiff(old, updated).Events.Single();
+
+        dueDate.Type.Should().Be(ActivityType.ModifyDueDate);
+        dueDate.Field.Should().Be(TaskChangeField.DueDate);
+        dueDate.OldValue.Should().Be("2026-07-14");
+        dueDate.NewValue.Should().BeNull();
     }
 
     private ActivityMessage LogDiff(TaskViewModel old, TaskViewModel updated)

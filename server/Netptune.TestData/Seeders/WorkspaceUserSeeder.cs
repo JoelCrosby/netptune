@@ -12,7 +12,9 @@ internal static class WorkspaceUserSeeder
             {
                 User = user,
                 Workspace = workspace,
-                Permissions = WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Owner).ToList(),
+                Role = workspace.Owner == user ? WorkspaceRole.Owner : WorkspaceRole.Member,
+                Permissions = WorkspaceRolePermissions.GetDefaultPermissions(
+                    workspace.Owner == user ? WorkspaceRole.Owner : WorkspaceRole.Member).ToList(),
             }))
             .ToList();
 }

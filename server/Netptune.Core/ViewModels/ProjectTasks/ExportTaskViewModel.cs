@@ -20,6 +20,8 @@ public class ExportTaskViewModel
 
     public DateTime? UpdatedAt { get; init; }
 
+    public DateOnly? DueDate { get; init; }
+
     public HashSet<string> Assignees { get; init; } = new();
 
     public string Owner { get; init; }= null!;

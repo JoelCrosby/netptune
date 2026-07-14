@@ -1,9 +1,12 @@
+using System.Text.Json.Serialization;
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests;
 
 public record UpdateProjectTaskRequest
 {
+    private DateOnly? dueDate;
+
     public int Id { get; set; }
 
     public string? Name { get; set; }
@@ -25,4 +28,17 @@ public record UpdateProjectTaskRequest
     public EstimateType? EstimateType { get; set; }
 
     public decimal? EstimateValue { get; set; }
+
+    public DateOnly? DueDate
+    {
+        get => dueDate;
+        set
+        {
+            dueDate = value;
+            DueDateSpecified = true;
+        }
+    }
+
+    [JsonIgnore]
+    public bool DueDateSpecified { get; private set; }
 }

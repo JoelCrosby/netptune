@@ -31,6 +31,7 @@ public class UpdateTaskCommandHandlerTests
 
     public UpdateTaskCommandHandlerTests()
     {
+        Fixture.Register(() => DateOnly.FromDateTime(Fixture.Create<DateTime>()));
         Identity.GetCurrentUserId().Returns("user-1");
         Handler = new(UnitOfWork, Activity, EventPublisher, Identity);
     }
@@ -143,6 +144,37 @@ public class UpdateTaskCommandHandlerTests
         await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).Transaction(Arg.Any<Func<Task>>());
+    }
+
+    [Fact]
+    public async Task Update_ShouldPreserveDueDate_WhenFieldIsOmitted()
+    {
+        var dueDate = new DateOnly(2026, 7, 20);
+        var request = new UpdateProjectTaskRequest { Id = 42, Name = "Task" };
+        var task = BuildTask();
+        task.DueDate = dueDate;
+        var viewModel = new TaskViewModel { Id = task.Id, Name = task.Name, DueDate = dueDate };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        task.DueDate.Should().Be(dueDate);
+    }
+
+    [Fact]
+    public async Task Update_ShouldClearDueDate_WhenFieldIsExplicitlyNull()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42, Name = "Task", DueDate = null };
+        var task = BuildTask();
+        task.DueDate = new DateOnly(2026, 7, 20);
+        var viewModel = new TaskViewModel { Id = task.Id, Name = task.Name, DueDate = null };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        task.DueDate.Should().BeNull();
     }
 
     [Fact]

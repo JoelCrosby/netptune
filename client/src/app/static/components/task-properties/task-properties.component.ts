@@ -9,6 +9,7 @@ import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
+import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import {
   TaskEstimate,
   TaskEstimateSelectComponent,
@@ -33,6 +34,7 @@ export interface TaskReporter {
     TaskProjectSelectComponent,
     TaskSprintSelectComponent,
     TaskStatusSelectComponent,
+    FormInputComponent,
   ],
   template: `
     <div class="flex flex-col">
@@ -87,6 +89,15 @@ export interface TaskReporter {
           (estimateChange)="estimateChange.emit($event)" />
       </div>
 
+      <div>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">Due date</h4>
+        <app-form-input
+          name="dueDate"
+          type="date"
+          [noMargin]="true"
+          [(value)]="dueDate" />
+      </div>
+
       @if (readProjects() && showProject()) {
         <div>
           <h4 class="font-sm mt-4 mb-2 font-semibold">Project</h4>
@@ -114,6 +125,7 @@ export class TaskPropertiesComponent {
   readonly priority = model<TaskPriority | null>(null);
   readonly estimateType = input<EstimateType | null>(null);
   readonly estimateValue = input<number | null>(null);
+  readonly dueDate = model('');
   readonly projectId = model<number | null>(null);
   readonly sprintId = model<number | null>(null);
   readonly assignees = model<(AppUser | AssigneeViewModel)[]>([]);

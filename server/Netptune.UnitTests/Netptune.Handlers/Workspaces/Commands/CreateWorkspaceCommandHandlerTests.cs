@@ -3,6 +3,7 @@ using AutoFixture;
 using FluentAssertions;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -52,6 +53,12 @@ public class CreateWorkspaceCommandHandlerTests
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.Slug.Should().NotBeNull();
+        await UnitOfWork.Workspaces.Received(1).AddAsync(
+            Arg.Is<Workspace>(workspace => workspace.WorkspaceUsers.Count == 1
+                && workspace.WorkspaceUsers.Single().Role == WorkspaceRole.Owner
+                && workspace.WorkspaceUsers.Single().Permissions.ToHashSet()
+                    .SetEquals(NetptunePermissions.All)),
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

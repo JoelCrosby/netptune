@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using FluentAssertions;
 
 using Netptune.Core.Requests;
+using Netptune.Core.Authorization;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Users;
@@ -46,9 +47,40 @@ public sealed class UsersEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<UserViewModel>();
+        var result = await response.Content.ReadFromJsonAsync<WorkspaceUserViewModel>();
 
         result.Should().NotBeNull();
+        result.Role.Should().Be(WorkspaceRole.Owner);
+        result.Permissions.Should().BeEquivalentTo(NetptunePermissions.All);
+    }
+
+    [Fact]
+    public async Task UpdateRole_ShouldReplaceTheMembersRoleAndPermissions()
+    {
+        var userId = SeedData.Users.ElementAt(1).Id;
+
+        var response = await Client.PutAsJsonAsync("api/users/role", new UpdateWorkspaceRoleRequest
+        {
+            UserId = userId,
+            Role = WorkspaceRole.Viewer,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<WorkspaceRoleUpdateViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Role.Should().Be(WorkspaceRole.Viewer);
+        result.Payload.Permissions.Should().BeEquivalentTo(
+            WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer));
+
+        var getResponse = await Client.GetAsync($"api/users/{userId}");
+        var updatedUser = await getResponse.Content.ReadFromJsonAsync<WorkspaceUserViewModel>();
+
+        updatedUser!.Role.Should().Be(WorkspaceRole.Viewer);
+        updatedUser.Permissions.Should().BeEquivalentTo(
+            WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer));
     }
 
     [Fact]

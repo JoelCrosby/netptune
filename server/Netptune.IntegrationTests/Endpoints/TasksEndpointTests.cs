@@ -206,6 +206,7 @@ public sealed class TasksEndpointTests
             Name = "updated name",
             Description = "updated description",
             StatusId = completeStatus.Id,
+            DueDate = new DateOnly(2026, 7, 31),
         };
 
         var response = await Client.PutAsJsonAsync("api/tasks", request);
@@ -219,6 +220,17 @@ public sealed class TasksEndpointTests
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.StatusId.Should().Be(completeStatus.Id);
         result.Payload.StatusKey.Should().Be(completeStatus.Key);
+        result.Payload.DueDate.Should().Be(request.DueDate);
+
+        var clearResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = request.Id,
+            DueDate = null,
+        });
+        var cleared = await clearResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        cleared.IsSuccess.Should().BeTrue();
+        cleared.Payload!.DueDate.Should().BeNull();
     }
 
     [Fact]
@@ -260,6 +272,7 @@ public sealed class TasksEndpointTests
             Description = "new description",
             StatusId = inProgressStatus.Id,
             ProjectId = 1,
+            DueDate = new DateOnly(2026, 8, 15),
         };
 
         var response = await Client.PostAsJsonAsync("api/tasks", request);
@@ -273,6 +286,7 @@ public sealed class TasksEndpointTests
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.StatusId.Should().Be(inProgressStatus.Id);
         result.Payload.StatusKey.Should().Be(inProgressStatus.Key);
+        result.Payload.DueDate.Should().Be(request.DueDate);
     }
 
     [Fact]

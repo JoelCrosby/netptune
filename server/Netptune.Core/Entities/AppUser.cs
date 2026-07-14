@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 using Netptune.Core.BaseEntities;
+using Netptune.Core.Authorization;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Users;
 
@@ -40,6 +41,24 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
             LastLoginTime = LastLoginTime,
             RegistrationDate = RegistrationDate,
             Permissions = permissions?.ToList() ?? [],
+        };
+    }
+
+    public WorkspaceUserViewModel ToWorkspaceViewModel(WorkspaceRole role, HashSet<string>? permissions = null)
+    {
+        return new WorkspaceUserViewModel
+        {
+            Id = Id,
+            Firstname = Firstname,
+            Lastname = Lastname,
+            PictureUrl = PictureUrl,
+            DisplayName = DisplayName,
+            Email = Email!,
+            UserName = UserName!,
+            LastLoginTime = LastLoginTime,
+            RegistrationDate = RegistrationDate,
+            Permissions = permissions?.ToList() ?? [],
+            Role = role,
         };
     }
 

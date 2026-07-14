@@ -17,7 +17,9 @@ public static class AutoFixtures
 
     private static Fixture CreateFixture()
     {
-        return new();
+        var fixture = new Fixture();
+        fixture.Register(() => DateOnly.FromDateTime(fixture.Create<DateTime>()));
+        return fixture;
     }
 
     public static IPostprocessComposer<AppUser> AppUserFixture => Fixture

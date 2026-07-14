@@ -79,6 +79,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             Priority = req.Priority,
             EstimateType = req.EstimateType,
             EstimateValue = req.EstimateValue,
+            DueDate = req.DueDate,
             ProjectTaskAppUsers = [new() { UserId = userId }],
         };
 

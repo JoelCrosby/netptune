@@ -55,6 +55,8 @@ public class BoardViewTask
 
     public decimal? EstimateValue { get; set; }
 
+    public DateOnly? DueDate { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }

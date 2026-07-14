@@ -3,7 +3,7 @@ import {
   Zap,
   History,
   ShieldCheck,
-  Paperclip,
+  CalendarDays,
   MessageSquare,
   LogIn,
   Server,
@@ -36,9 +36,9 @@ export const featureGridItems: Feature[] = [
     description: 'Owner, Admin, Member, and Viewer roles per workspace',
   },
   {
-    icon: Paperclip,
-    title: 'File attachments',
-    description: 'Store task attachments in your own AWS S3 bucket',
+    icon: CalendarDays,
+    title: 'Task due dates',
+    description: 'Keep deadlines visible alongside the work',
   },
   {
     icon: MessageSquare,

@@ -68,10 +68,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.RelationTypes.Manage,
     };
 
-    private static readonly IReadOnlySet<string> OwnerPermissions = new HashSet<string>(AdminPermissions)
-    {
-        NetptunePermissions.Workspace.DeletePermanent,
-    };
+    private static readonly IReadOnlySet<string> OwnerPermissions = NetptunePermissions.All;
 
     public static IReadOnlySet<string> GetDefaultPermissions(WorkspaceRole role) => role switch
     {

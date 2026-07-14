@@ -6,9 +6,9 @@ using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Handlers.Users.Queries;
 
-public sealed record GetUserQuery(string UserId) : IRequest<UserViewModel?>;
+public sealed record GetUserQuery(string UserId) : IRequest<WorkspaceUserViewModel?>;
 
-public sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserViewModel?>
+public sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, WorkspaceUserViewModel?>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -21,7 +21,7 @@ public sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserView
         PermissionCache = permissionCache;
     }
 
-    public async ValueTask<UserViewModel?> Handle(GetUserQuery request, CancellationToken cancellationToken)
+    public async ValueTask<WorkspaceUserViewModel?> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
         var user = await UnitOfWork.Users.GetAsync(request.UserId, true, cancellationToken);
 
@@ -32,6 +32,6 @@ public sealed class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserView
 
         if (workspaceUser is null) return null;
 
-        return user.ToViewModel(workspaceUser.Permissions);
+        return user.ToWorkspaceViewModel(workspaceUser.Role, workspaceUser.Permissions);
     }
 }

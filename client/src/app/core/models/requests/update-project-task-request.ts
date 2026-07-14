@@ -14,4 +14,5 @@ export interface UpdateProjectTaskRequest {
   priority?: TaskPriority | null;
   estimateType?: EstimateType | null;
   estimateValue?: number | null;
+  dueDate?: string | null;
 }

@@ -30,7 +30,7 @@ export const features: Feature[] = [
     icon: FileText,
     title: 'Useful issue primitives',
     description:
-      'Descriptions, tags, priorities, estimates, relations, assignees, and S3-backed attachments are built in.',
+      'Descriptions, tags, priorities, estimates, due dates, relations, and multiple assignees are built in.',
   },
   {
     icon: Workflow,

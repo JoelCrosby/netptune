@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 using Netptune.Entities.Contexts;
 
@@ -28,6 +29,12 @@ public class HostedDatabaseService : IHostedService
             .Handle<Exception>()
             .WaitAndRetry(delay)
             .Execute(() => context.Database.EnsureCreatedAsync(cancellationToken));
+
+        // EnsureCreated does not evolve an existing database. Keep this additive,
+        // idempotent upgrade here until the project adopts EF migrations.
+        await context.Database.ExecuteSqlRawAsync(
+            "ALTER TABLE project_tasks ADD COLUMN IF NOT EXISTS due_date date",
+            cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

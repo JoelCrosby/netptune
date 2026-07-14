@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Models;
+using Netptune.Core.Authorization;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -64,5 +65,22 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
             .FirstOrDefaultAsync(cancellationToken);
 
         existing?.Permissions = permissions.ToList();
+    }
+
+    public async Task SetUserRole(
+        string userId,
+        int workspaceId,
+        WorkspaceRole role,
+        IEnumerable<string> permissions,
+        CancellationToken cancellationToken = default)
+    {
+        var existing = await Context.WorkspaceAppUsers
+            .Where(user => user.UserId == userId && user.WorkspaceId == workspaceId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (existing is null) return;
+
+        existing.Role = role;
+        existing.Permissions = permissions.ToList();
     }
 }

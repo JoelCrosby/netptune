@@ -60,6 +60,11 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             result.EstimateType = req.EstimateType ?? result.EstimateType;
             result.EstimateValue = req.EstimateValue ?? result.EstimateValue;
 
+            if (req.DueDateSpecified)
+            {
+                result.DueDate = req.DueDate;
+            }
+
             if (req.AssigneeIds is not null)
             {
                 result.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
