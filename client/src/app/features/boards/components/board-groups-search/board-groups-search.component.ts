@@ -8,7 +8,7 @@ import { SearchInputComponent } from '@static/components/search-input/search-inp
   selector: 'app-board-groups-search',
   imports: [SearchInputComponent],
   template: `
-    <app-search-input [term]="searchTerm()" (search)="onSearch($event)" />
+    <app-search-input [term]="searchTerm()" (searchChange)="onSearch($event)" />
   `,
 })
 export class BoardGroupsSearchComponent {

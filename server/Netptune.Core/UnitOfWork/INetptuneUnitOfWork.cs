@@ -56,4 +56,8 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     IAncestorRepository Ancestors { get; }
 
     IWorkspaceInviteRepository WorkspaceInvites { get; }
+
+    IWorkspaceFileRepository WorkspaceFiles { get; }
+
+    ITaskFileRepository TaskFiles { get; }
 }

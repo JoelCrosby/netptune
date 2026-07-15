@@ -13,4 +13,5 @@ public enum EntityType
     Sprint,
     Status,
     RelationType,
+    WorkspaceFile,
 }

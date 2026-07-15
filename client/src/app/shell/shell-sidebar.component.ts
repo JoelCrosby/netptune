@@ -20,6 +20,7 @@ import {
   LucideLayoutGrid,
   LucideListChecks,
   LucideLogs,
+  LucideHardDrive,
   LucideSettings,
   LucideSettings2,
   LucideShield,
@@ -123,6 +124,10 @@ export class ShellSidebarComponent {
     selectHasPermission(netptunePermissions.audit.read)
   );
 
+  canReadStorage = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.storage.read)
+  );
+
   canReadSprints = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.read)
   );
@@ -213,6 +218,14 @@ export class ShellSidebarComponent {
         label: 'Audit Log',
         value: ['./audit'],
         icon: LucideShield,
+      });
+    }
+
+    if (this.canReadStorage()) {
+      links.push({
+        label: 'Storage',
+        value: ['./storage'],
+        icon: LucideHardDrive,
       });
     }
 

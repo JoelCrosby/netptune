@@ -95,6 +95,22 @@ public class WorkspaceAuthorizationHandlerTests
     }
 
     [Fact]
+    public async Task HandleRequirement_ShouldSucceed_WhenAuthenticatedRequestUsesWorkspaceRoute()
+    {
+        var user = AuthenticatedUserWithoutWorkspaceClaim();
+        var requirement = new WorkspaceRequirement();
+
+        Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
+        Identity.GetCurrentUserId().Returns(UserId);
+        Cache.IsUserInWorkspace(UserId, WorkspaceKey).Returns(true);
+
+        var context = CreateContext(user, requirement);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task HandleRequirement_ShouldSucceed_WhenAnonymousUserRequestsPublicWorkspace()
     {
         var user = AnonymousUser();

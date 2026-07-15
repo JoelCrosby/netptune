@@ -1,9 +1,9 @@
 using Mediator;
+using Microsoft.AspNetCore.Mvc;
 using Netptune.Core.Authorization;
-using Netptune.Core.Services;
-using Netptune.Core.Storage;
-using Netptune.Core.Utilities;
-using Netptune.Handlers.Users.Commands;
+using Netptune.Core.Requests;
+using Netptune.Handlers.Storage.Commands;
+using Netptune.Handlers.Storage.Queries;
 
 namespace Netptune.App.Endpoints;
 
@@ -17,73 +17,95 @@ public static class StorageEndpoints
             .RequireAuthorization(NetptunePermissions.Storage.UploadProfilePicture);
         group.MapPost("/media", HandleUploadMedia)
             .RequireAuthorization(NetptunePermissions.Storage.UploadMedia);
+        group.MapGet("/usage", HandleGetUsage)
+            .RequireAuthorization(NetptunePermissions.Storage.Read);
+        group.MapGet("/files", HandleGetFiles)
+            .RequireAuthorization(NetptunePermissions.Storage.Read);
+        group.MapDelete("/files/{id:int}", HandleDeleteFile)
+            .RequireAuthorization(NetptunePermissions.Storage.Manage);
 
         return group;
     }
 
-    public static async Task<IResult> HandleUploadProfilePicture(
-        IStorageService storageService,
-        IIdentityService identity,
-        IMediator mediator,
-        HttpRequest request,
-        CancellationToken cancellationToken)
+    public static async Task<IResult> HandleUploadProfilePicture(IMediator mediator, HttpRequest request, CancellationToken cancellationToken)
     {
-        var file = request.Form.Files.FirstOrDefault();
+        if (!request.HasFormContentType)
+        {
+            return Results.BadRequest("Multipart form data is required.");
+        }
+
+        var form = await request.ReadFormAsync(cancellationToken);
+        var file = form.Files.FirstOrDefault();
 
         if (file is null)
         {
-            return Results.BadRequest("Import File must be provided. Only one file can be uploaded at a time.");
+            return Results.BadRequest("A file is required.");
         }
 
-        if (file.Length > 50 * 1024 * 1024)
+        await using var stream = file.OpenReadStream();
+        var command = new UploadProfilePictureCommand
         {
-            return Results.BadRequest("Request file size exceeds maximum of 50MB.");
+            Content = stream,
+            FileName = file.FileName,
+            ContentType = file.ContentType,
+            Length = file.Length,
+        };
+        var result = await mediator.Send(command, cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
         }
 
-        var userId = identity.GetCurrentUserId();
-        var extension = Path.GetExtension(file.FileName);
-        var key = Path.Join(PathConstants.ProfilePicturePath, $"{userId}-{UniqueIdBuilder.Generate(userId)}{extension}");
+        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+    }
 
-        var fileStream = file.OpenReadStream();
-
-        var result = await storageService.UploadFileAsync(fileStream, key, key);
-
-        if (!result.IsSuccess || result.Payload is null)
+    public static async Task<IResult> HandleUploadMedia(IMediator mediator, HttpRequest request, CancellationToken cancellationToken)
+    {
+        if (!request.HasFormContentType)
         {
-            return Results.BadRequest();
+            return Results.BadRequest("Multipart form data is required.");
         }
 
-        await mediator.Send(new UpdateUserCommand(new()
+        var form = await request.ReadFormAsync(cancellationToken);
+        var file = form.Files.FirstOrDefault();
+
+        if (file is null)
         {
-            Id = userId,
-            PictureUrl = result.Payload.Uri,
-        }), cancellationToken);
+            return Results.BadRequest("A file is required.");
+        }
+
+        await using var stream = file.OpenReadStream();
+        var command = new UploadStorageMediaCommand
+        {
+            Content = stream,
+            FileName = file.FileName,
+            ContentType = file.ContentType,
+            Length = file.Length,
+        };
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.IsSuccess ? Results.Ok(result) : Results.Conflict(result);
+    }
+
+    private static async Task<IResult> HandleGetUsage(IMediator mediator, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetWorkspaceStorageUsageQuery(), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetFiles(IMediator mediator, [AsParameters] WorkspaceFileFilter filter, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetWorkspaceFilesQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleUploadMedia(
-        IStorageService storageService,
-        IIdentityService identity,
-        HttpRequest request,
-        CancellationToken cancellationToken)
+    private static async Task<IResult> HandleDeleteFile(IMediator mediator, int id, CancellationToken cancellationToken)
     {
-        var workspaceKey = identity.GetWorkspaceKey();
-        var file = request.Form.Files[0];
+        var result = await mediator.Send(new DeleteWorkspaceFileCommand(id), cancellationToken);
 
-        if (file.Length > 50 * 1024 * 1024)
-        {
-            return Results.BadRequest("Request file size exceeds maximum of 50MB.");
-        }
-
-        var userId = identity.GetCurrentUserId();
-        var extension = Path.GetExtension(file.FileName);
-        var key = Path.Join(PathConstants.MediaPath(workspaceKey), $"{UniqueIdBuilder.Generate(userId)}{extension}");
-
-        var fileStream = file.OpenReadStream();
-
-        var result = await storageService.UploadFileAsync(fileStream, file.FileName, key);
-
-        return Results.Ok(result);
+        return result.IsNotFound ? Results.NotFound(result) : Results.NoContent();
     }
 }

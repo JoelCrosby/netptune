@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
+using Netptune.Core.Storage;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.Activity.Services;
@@ -75,7 +76,13 @@ public sealed class AuditRetentionJob
 
             using var stream = WriteNdjson(batch);
 
-            var uploaded = await storage.UploadFileAsync(stream, archiveKey, archiveKey);
+            var uploadOptions = new StorageUploadOptions
+            {
+                Name = archiveKey,
+                Key = archiveKey,
+                ContentType = "application/x-ndjson",
+            };
+            var uploaded = await storage.UploadFileAsync(stream, uploadOptions, cancellationToken);
 
             if (!uploaded.IsSuccess)
             {

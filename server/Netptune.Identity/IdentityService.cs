@@ -54,19 +54,14 @@ public class IdentityService : IIdentityService
 
     public string GetWorkspaceKey()
     {
-        var context = Context.HttpContext;
+        var workspaceKey = TryGetWorkspaceKey();
 
-        if (context is null)
+        if (workspaceKey is not null)
         {
-            throw new Exception("HttpContext was null");
+            return workspaceKey;
         }
 
-        if (context.Request.Headers.TryGetValue("workspace", out var workspace))
-        {
-            return workspace!;
-        }
-
-        throw new Exception("request context did not contain a 'workspace' header.");
+        throw new Exception("request context did not contain a workspace header or route value.");
     }
 
     public string? TryGetWorkspaceKey()
@@ -78,6 +73,11 @@ public class IdentityService : IIdentityService
         if (context.Request.Headers.TryGetValue("workspace", out var workspace))
         {
             return workspace!;
+        }
+
+        if (context.Request.RouteValues.TryGetValue("workspaceKey", out var routeWorkspace) && routeWorkspace is string workspaceKey)
+        {
+            return workspaceKey;
         }
 
         return null;

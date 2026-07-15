@@ -36,6 +36,8 @@ public sealed class AutomationTestFixture : IAsyncLifetime
 #pragma warning disable CS0618
         NpgsqlConnection.GlobalTypeMapper.MapEnum<WorkspaceRole>();
         NpgsqlConnection.GlobalTypeMapper.MapEnum<SprintStatus>();
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<WorkspaceFilePurpose>();
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<WorkspaceFileStatus>();
         NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
 #pragma warning restore CS0618
 
@@ -49,6 +51,8 @@ public sealed class AutomationTestFixture : IAsyncLifetime
                 {
                     npgsql.MapEnum<WorkspaceRole>();
                     npgsql.MapEnum<SprintStatus>();
+                    npgsql.MapEnum<WorkspaceFilePurpose>();
+                    npgsql.MapEnum<WorkspaceFileStatus>();
                 })
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(new AuditLogImmutabilityInterceptor());

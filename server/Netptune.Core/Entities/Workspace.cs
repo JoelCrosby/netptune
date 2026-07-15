@@ -9,6 +9,8 @@ namespace Netptune.Core.Entities;
 
 public record Workspace : AuditableEntity<int>
 {
+    public const long DefaultStorageLimitBytes = 5L * 1024 * 1024 * 1024;
+
     public string Name { get; set; } = null!;
 
     public string? Description { get; set; }
@@ -18,6 +20,10 @@ public record Workspace : AuditableEntity<int>
     public WorkspaceMeta? MetaInfo { get; set; }
 
     public bool IsPublic { get; set; }
+
+    public long StorageUsedBytes { get; set; }
+
+    public long StorageLimitBytes { get; set; } = DefaultStorageLimitBytes;
 
     #region NavigationProperties
 
@@ -29,6 +35,9 @@ public record Workspace : AuditableEntity<int>
 
     [JsonIgnore]
     public ICollection<ProjectTask> Tasks { get; set; } = new HashSet<ProjectTask>();
+
+    [JsonIgnore]
+    public ICollection<WorkspaceFile> Files { get; set; } = new HashSet<WorkspaceFile>();
 
     [JsonIgnore]
     public ICollection<AppUser> Users { get; set; } = new HashSet<AppUser>();

@@ -1,6 +1,7 @@
 import { Component, HostBinding, computed, input } from '@angular/core';
 
 export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer';
+export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
 
 @Component({
   selector: 'app-progress-bar',
@@ -75,21 +76,37 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer';
       @if (mode() === 'buffer') {
         <div class="buffer-bg absolute inset-0"></div>
         <div
-          class="bg-primary/30 absolute inset-y-0 left-0 rounded-full transition-[width] duration-300"
+          class="absolute inset-y-0 left-0 rounded-full opacity-30 transition-[width] duration-300"
+          [class.bg-primary]="color() === 'primary'"
+          [class.bg-warn]="color() === 'warn'"
+          [class.bg-destructive]="color() === 'destructive'"
           [style.width]="clampedBufferValue() + '%'"></div>
       } @else {
-        <div class="bg-primary/20 absolute inset-0 rounded-full"></div>
+        <div
+          class="absolute inset-0 rounded-full opacity-20"
+          [class.bg-primary]="color() === 'primary'"
+          [class.bg-warn]="color() === 'warn'"
+          [class.bg-destructive]="color() === 'destructive'"></div>
       }
 
       <!-- Primary bar -->
       @if (mode() === 'indeterminate') {
         <div
-          class="bar-primary-indeterminate bg-primary absolute inset-y-0 rounded-full"></div>
+          class="bar-primary-indeterminate absolute inset-y-0 rounded-full"
+          [class.bg-primary]="color() === 'primary'"
+          [class.bg-warn]="color() === 'warn'"
+          [class.bg-destructive]="color() === 'destructive'"></div>
         <div
-          class="bar-secondary-indeterminate bg-primary absolute inset-y-0 rounded-full"></div>
+          class="bar-secondary-indeterminate absolute inset-y-0 rounded-full"
+          [class.bg-primary]="color() === 'primary'"
+          [class.bg-warn]="color() === 'warn'"
+          [class.bg-destructive]="color() === 'destructive'"></div>
       } @else {
         <div
-          class="bg-primary absolute inset-y-0 left-0 rounded-full transition-[width] duration-300"
+          class="absolute inset-y-0 left-0 rounded-full transition-[width] duration-300"
+          [class.bg-primary]="color() === 'primary'"
+          [class.bg-warn]="color() === 'warn'"
+          [class.bg-destructive]="color() === 'destructive'"
           [style.width]="clampedValue() + '%'"></div>
       }
     </div>
@@ -97,6 +114,7 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer';
 })
 export class ProgressBarComponent {
   readonly mode = input<ProgressBarMode>('determinate');
+  readonly color = input<ProgressBarColor>('primary');
   readonly value = input(0);
   readonly bufferValue = input(0);
 

@@ -30,6 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, withLatestFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
+import { TaskDetailFilesComponent } from '@entry/dialogs/task-detail-dialog/task-detail-files.component';
 
 @Component({
   selector: 'app-task-detail-page',
@@ -61,6 +62,11 @@ import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/wor
             }
 
             <app-task-detail-description />
+
+            @if (readFiles()) {
+              <app-task-detail-files [systemId]="task.systemId" />
+            }
+
             <app-task-detail-relations />
             <app-task-detail-comments />
           </div>
@@ -95,6 +101,7 @@ import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/wor
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,
     PageContainerComponent,
+    TaskDetailFilesComponent,
   ],
   providers: [TaskDetailService],
 })
@@ -111,6 +118,10 @@ export class TaskDetailPageComponent implements OnDestroy {
 
   readTags = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tags.read)
+  );
+
+  readFiles = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.files.read)
   );
 
   constructor() {

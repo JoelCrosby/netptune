@@ -1,6 +1,7 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.ViewModels.Files;
 
 namespace Netptune.Core.Repositories;
 
@@ -18,16 +19,19 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
 
     Task<bool> Exists(string slug, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Permanently removes a workspace and every row that hangs off it.
-    /// <para>
-    /// Every foreign key into a workspace-scoped table is <c>Restrict</c>, so the workspace row can
-    /// only go once nothing points at it any more. The delete order is the whole substance of this
-    /// method — it lives in one place so a new workspace-scoped table has one obvious spot to be
-    /// added to.
-    /// </para>
-    /// </summary>
     Task DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<Dictionary<int, string>> GetSlugsByIds(IEnumerable<int> ids, CancellationToken cancellationToken = default);
+
+    Task<WorkspaceStorageUsageViewModel?> GetStorageUsage(int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<bool> TryReserveStorage(int workspaceId, long sizeBytes, CancellationToken cancellationToken = default);
+
+    Task ReleaseStorage(int workspaceId, long sizeBytes, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetAllIds(CancellationToken cancellationToken = default);
+
+    Task<Workspace?> GetForStorageUpdate(int id, CancellationToken cancellationToken = default);
+
+    Task SetStorageUsage(int id, long sizeBytes, CancellationToken cancellationToken = default);
 }

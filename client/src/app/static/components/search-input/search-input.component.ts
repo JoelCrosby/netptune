@@ -59,7 +59,7 @@ import { LucideSearch, LucideX } from '@lucide/angular';
 })
 export class SearchInputComponent {
   readonly term = input<string | null | undefined>('');
-  readonly search = output<string | null>();
+  readonly searchChange = output<string | null>();
 
   readonly termFormModel = signal({
     term: this.term() ?? '',
@@ -97,13 +97,13 @@ export class SearchInputComponent {
       return;
     }
 
-    this.search.emit(this.termForm.term().value());
+    this.searchChange.emit(this.termForm.term().value());
   }
 
   onClearClicked() {
     this.termForm.term().value.set('');
     this.termForm.term().reset();
 
-    this.search.emit(null);
+    this.searchChange.emit(null);
   }
 }

@@ -90,6 +90,14 @@ export const netptunePermissions = {
   storage: {
     uploadProfilePicture: 'storage.upload_profile_picture',
     uploadMedia: 'storage.upload_media',
+    read: 'storage.read',
+    manage: 'storage.manage',
+  },
+  files: {
+    read: 'files.read',
+    upload: 'files.upload',
+    deleteOwn: 'files.delete_own',
+    deleteAny: 'files.delete_any',
   },
 } as const;
 

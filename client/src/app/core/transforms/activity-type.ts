@@ -128,6 +128,10 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Changed estimate';
     case ActivityType.modifyDueDate:
       return 'Changed due date';
+    case ActivityType.addFile:
+      return 'Added file';
+    case ActivityType.removeFile:
+      return 'Removed file';
     case ActivityType.restore:
       return 'Restored';
     default:

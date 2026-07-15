@@ -26,9 +26,12 @@ public class WorkspaceAuthorizationHandler : AuthorizationHandler<WorkspaceRequi
         if (context.User.Identity?.IsAuthenticated == true)
         {
             var workspaceClaim = context.User.Claims.FirstOrDefault(claim => claim.Type == NetptuneClaims.Workspace);
-            var workspaceKey = workspaceClaim?.Value;
+            var workspaceKey = workspaceClaim?.Value ?? Identity.TryGetWorkspaceKey();
 
-            if (workspaceKey is null) return;
+            if (string.IsNullOrWhiteSpace(workspaceKey))
+            {
+                return;
+            }
 
             var userId = Identity.GetCurrentUserId();
             var memberOfWorkspace = await Cache.IsUserInWorkspace(userId, workspaceKey);

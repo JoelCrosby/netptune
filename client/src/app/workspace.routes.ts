@@ -119,6 +119,12 @@ export const routes: Routes = [
         data: { title: 'Audit Log' },
       },
       {
+        path: 'storage',
+        loadChildren: () => import('./features/storage/storage.routes').then((m) => m.routes),
+        canActivate: [authGuard],
+        data: { title: 'Storage' },
+      },
+      {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.routes').then((m) => m.routes),
         canActivate: [authGuard],

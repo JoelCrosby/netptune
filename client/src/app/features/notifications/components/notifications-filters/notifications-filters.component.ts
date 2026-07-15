@@ -25,7 +25,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
     <div class="mb-3 flex h-18 flex-wrap items-center gap-3 py-2">
       <app-search-input
         [term]="searchTerm()"
-        (search)="searchChange.emit($event)" />
+        (searchChange)="searchChange.emit($event)" />
 
       <app-user-select
         class="min-w-44"

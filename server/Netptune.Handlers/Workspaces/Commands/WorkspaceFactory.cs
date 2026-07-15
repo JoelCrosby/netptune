@@ -12,7 +12,12 @@ namespace Netptune.Handlers.Workspaces.Commands;
 
 internal static class WorkspaceFactory
 {
-    internal static Task<ClientResponse<WorkspaceViewModel>> CreateAsync(AddWorkspaceRequest request, AppUser user, INetptuneUnitOfWork unitOfWork, CancellationToken cancellationToken = default)
+    internal static Task<ClientResponse<WorkspaceViewModel>> CreateAsync(
+        AddWorkspaceRequest request,
+        AppUser user,
+        INetptuneUnitOfWork unitOfWork,
+        long storageLimitBytes,
+        CancellationToken cancellationToken = default)
     {
         return unitOfWork.Transaction(async () =>
         {
@@ -24,6 +29,7 @@ internal static class WorkspaceFactory
                 OwnerId = user.Id,
                 Slug = request.Slug.ToUrlSlug(),
                 MetaInfo = request.MetaInfo,
+                StorageLimitBytes = Math.Max(0, storageLimitBytes),
             };
 
             var workspace = await unitOfWork.Workspaces.AddAsync(entity, cancellationToken);

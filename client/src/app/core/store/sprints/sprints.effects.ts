@@ -404,17 +404,13 @@ export class SprintsEffects {
     );
   });
 
-  // A task created directly into a sprint (from the sprint detail view) isn't
-  // covered by the sprint's own add/remove flows, so reload the sprint task
-  // list and refresh the detail to keep the row list and stats in sync.
   refreshSprintOnTaskCreated$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(TaskActions.createProjectTask.success),
-      filter(({ task }) => task.sprintId != null),
+      map(({ task }) => task.sprintId),
+      filter((sprintId): sprintId is number => sprintId != null),
       tap(() => this.tasksHub.reloadTaskList()),
-      map(({ task }) =>
-        actions.loadSprintDetail.init({ sprintId: task.sprintId! })
-      )
+      map((sprintId) => actions.loadSprintDetail.init({ sprintId }))
     );
   });
 }

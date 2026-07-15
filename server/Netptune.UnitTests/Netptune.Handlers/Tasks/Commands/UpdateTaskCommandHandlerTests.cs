@@ -43,6 +43,7 @@ public class UpdateTaskCommandHandlerTests
             .Without(p => p.Project)
             .Without(p => p.ProjectTaskInBoardGroups)
             .Without(p => p.ProjectTaskTags)
+            .Without(p => p.Files)
             .Without(p => p.Tags)
             .Without(p => p.Sprint)
             .With(p => p.Status, AutoFixtures.TaskStatus)

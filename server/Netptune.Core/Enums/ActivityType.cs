@@ -35,4 +35,6 @@ public enum ActivityType
     AddRelation = 27,
     RemoveRelation = 28,
     ModifyDueDate = 29,
+    AddFile = 30,
+    RemoveFile = 31,
 }

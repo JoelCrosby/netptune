@@ -7,6 +7,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Storage;
 using Netptune.Entities.Configuration;
 using Netptune.Entities.Contexts;
 
@@ -100,9 +101,9 @@ public sealed class CountingStorageService : IStorageService
         return new FailureScope(this);
     }
 
-    public async Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, string name, string key)
+    public async Task<ClientResponse<UploadResponse>> UploadFileAsync(Stream stream, StorageUploadOptions uploadOptions, CancellationToken cancellationToken = default)
     {
-        Uploads.Add(key);
+        Uploads.Add(uploadOptions.Key);
 
         using var reader = new StreamReader(stream, leaveOpen: true);
 
@@ -121,12 +122,27 @@ public sealed class CountingStorageService : IStorageService
 
         return ClientResponse<UploadResponse>.Success(new UploadResponse
         {
-            Name = name,
-            Key = key,
-            Path = key,
+            Name = uploadOptions.Name,
+            Key = uploadOptions.Key,
+            Path = uploadOptions.Key,
             Size = size,
-            Uri = $"https://bucket.s3.region.suffix/{key}",
+            Uri = $"https://bucket.s3.region.suffix/{uploadOptions.Key}",
         });
+    }
+
+    public Task<Uri?> GetReadUriAsync(StorageReadOptions readOptions, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult<Uri?>(new Uri($"https://storage.test/{readOptions.Key}"));
+    }
+
+    public Task DeleteFileAsync(string key, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(Uploads.Contains(key));
     }
 
     private sealed class FailureScope(CountingStorageService storage) : IDisposable

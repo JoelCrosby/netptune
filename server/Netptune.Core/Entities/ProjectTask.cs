@@ -54,6 +54,9 @@ public record ProjectTask : WorkspaceEntity<int>
     public ICollection<ProjectTaskTag> ProjectTaskTags { get; set; } = new HashSet<ProjectTaskTag>();
 
     [JsonIgnore]
+    public ICollection<TaskFile> Files { get; set; } = new HashSet<TaskFile>();
+
+    [JsonIgnore]
     public ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
 
     #endregion

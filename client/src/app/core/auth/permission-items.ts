@@ -322,5 +322,29 @@ export const netptunePermissionLabels: PermissionLabels = {
       label: 'Upload Media',
       icon: LucideUpload,
     },
+    read: {
+      key: 'storage.read',
+      label: 'View Workspace Storage',
+      icon: LucideEye,
+    },
+    manage: {
+      key: 'storage.manage',
+      label: 'Manage Workspace Storage',
+      icon: LucideTrash2,
+    },
+  },
+  files: {
+    read: { key: 'files.read', label: 'View Files', icon: LucideEye },
+    upload: { key: 'files.upload', label: 'Upload Files', icon: LucideUpload },
+    deleteOwn: {
+      key: 'files.delete_own',
+      label: 'Delete Own Files',
+      icon: LucideTrash2,
+    },
+    deleteAny: {
+      key: 'files.delete_any',
+      label: 'Delete Any File',
+      icon: LucideTrash2,
+    },
   },
 };

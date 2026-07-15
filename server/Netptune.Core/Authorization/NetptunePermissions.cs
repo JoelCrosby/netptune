@@ -134,5 +134,15 @@ public static class NetptunePermissions
     {
         public const string UploadProfilePicture = "storage.upload_profile_picture";
         public const string UploadMedia = "storage.upload_media";
+        public const string Read = "storage.read";
+        public const string Manage = "storage.manage";
+    }
+
+    public static class Files
+    {
+        public const string Read = "files.read";
+        public const string Upload = "files.upload";
+        public const string DeleteOwn = "files.delete_own";
+        public const string DeleteAny = "files.delete_any";
     }
 }

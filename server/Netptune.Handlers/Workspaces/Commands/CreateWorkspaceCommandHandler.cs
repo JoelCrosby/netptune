@@ -6,6 +6,8 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
+using Netptune.Core.Models.Options;
+using Microsoft.Extensions.Options;
 
 namespace Netptune.Handlers.Workspaces.Commands;
 
@@ -16,18 +18,30 @@ public sealed class CreateWorkspaceCommandHandler : IRequestHandler<CreateWorksp
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly WorkspaceStorageOptions StorageOptions;
 
-    public CreateWorkspaceCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public CreateWorkspaceCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IOptions<WorkspaceStorageOptions> storageOptions)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        StorageOptions = storageOptions.Value;
     }
 
     public async ValueTask<ClientResponse<WorkspaceViewModel>> Handle(CreateWorkspaceCommand request, CancellationToken cancellationToken)
     {
         var user = await Identity.GetCurrentUser();
-        var result = await WorkspaceFactory.CreateAsync(request.Request, user, UnitOfWork, cancellationToken);
+
+        var result = await WorkspaceFactory.CreateAsync(
+            request.Request,
+            user,
+            UnitOfWork,
+            StorageOptions.DefaultWorkspaceLimitBytes,
+            cancellationToken);
 
         if (result.IsSuccess && result.Payload is { } workspace)
         {

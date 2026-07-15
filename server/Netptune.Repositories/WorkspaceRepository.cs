@@ -4,6 +4,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Enums;
+using Netptune.Core.ViewModels.Files;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -133,6 +135,7 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
     public Task<List<Workspace>> GetWorkspaces(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
+
         var page = pageRequest.GetPage();
         var pageSize = pageRequest.GetPageSize(PaginationDefaults.MaxAdminPageSize);
 
@@ -158,5 +161,64 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .Where(w => ids.Contains(w.Id) && !w.IsDeleted)
             .Select(w => new { w.Id, w.Slug })
             .ToDictionaryAsync(w => w.Id, w => w.Slug, cancellationToken);
+    }
+
+    public Task<WorkspaceStorageUsageViewModel?> GetStorageUsage(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(workspace => workspace.Id == workspaceId)
+            .Select(workspace => new WorkspaceStorageUsageViewModel
+            {
+                UsedBytes = workspace.StorageUsedBytes,
+                LimitBytes = workspace.StorageLimitBytes,
+                AvailableBytes = Math.Max(0, workspace.StorageLimitBytes - workspace.StorageUsedBytes),
+                Percentage = workspace.StorageLimitBytes == 0 ? 100 : workspace.StorageUsedBytes * 100d / workspace.StorageLimitBytes,
+                FileCount = workspace.Files.Count(file => !file.IsDeleted && file.Status == WorkspaceFileStatus.Ready),
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<bool> TryReserveStorage(int workspaceId, long sizeBytes, CancellationToken cancellationToken = default)
+    {
+        var updated = await Entities
+            .Where(workspace => workspace.Id == workspaceId &&
+                workspace.StorageUsedBytes + sizeBytes <= workspace.StorageLimitBytes)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(
+                workspace => workspace.StorageUsedBytes,
+                workspace => workspace.StorageUsedBytes + sizeBytes), cancellationToken);
+
+        return updated > 0;
+    }
+
+    public async Task ReleaseStorage(int workspaceId, long sizeBytes, CancellationToken cancellationToken = default)
+    {
+        await Entities
+            .Where(workspace => workspace.Id == workspaceId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(
+                workspace => workspace.StorageUsedBytes,
+                workspace => Math.Max(0, workspace.StorageUsedBytes - sizeBytes)), cancellationToken);
+    }
+
+    public Task<List<int>> GetAllIds(CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Select(workspace => workspace.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<Workspace?> GetForStorageUpdate(int id, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .FromSqlInterpolated($"SELECT * FROM workspaces WHERE id = {id} FOR UPDATE")
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task SetStorageUsage(int id, long sizeBytes, CancellationToken cancellationToken = default)
+    {
+        await Entities
+            .Where(workspace => workspace.Id == id)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(workspace => workspace.StorageUsedBytes, sizeBytes), cancellationToken);
     }
 }

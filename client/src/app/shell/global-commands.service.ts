@@ -22,6 +22,10 @@ export class GlobalCommandsService implements OnDestroy {
     selectHasPermission(netptunePermissions.automations.read)
   );
   private automationCommandRegistered = false;
+  private canReadStorage = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.storage.read)
+  );
+  private storageCommandRegistered = false;
 
   private readonly commandIds = [
     'nav.dashboard',
@@ -32,6 +36,7 @@ export class GlobalCommandsService implements OnDestroy {
     'nav.automations',
     'nav.users',
     'nav.settings',
+    'nav.storage',
   ];
 
   constructor() {
@@ -122,6 +127,33 @@ export class GlobalCommandsService implements OnDestroy {
       if (!canRead && this.automationCommandRegistered) {
         untracked(() => this.registry.unregister(['nav.automations']));
         this.automationCommandRegistered = false;
+      }
+    });
+
+    effect(() => {
+      const canRead = this.canReadStorage();
+
+      if (canRead && !this.storageCommandRegistered) {
+        untracked(() =>
+          this.registry.register([
+            {
+              id: 'nav.storage',
+              label: 'Go to Storage',
+              group: 'navigation',
+              icon: 'hard-drive',
+              keywords: ['storage', 'files', 'uploads', 'navigate'],
+              execute: () => this.navigate('storage'),
+            },
+          ])
+        );
+
+        this.storageCommandRegistered = true;
+      }
+
+      if (!canRead && this.storageCommandRegistered) {
+        untracked(() => this.registry.unregister(['nav.storage']));
+
+        this.storageCommandRegistered = false;
       }
     });
   }

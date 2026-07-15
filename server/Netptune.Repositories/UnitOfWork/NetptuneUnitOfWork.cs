@@ -34,6 +34,8 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IRefreshTokenRepository RefreshTokens { get; }
     public IAncestorRepository Ancestors { get; }
     public IWorkspaceInviteRepository WorkspaceInvites { get; }
+    public IWorkspaceFileRepository WorkspaceFiles { get; }
+    public ITaskFileRepository TaskFiles { get; }
 
     public NetptuneUnitOfWork(
         DataContext context,
@@ -65,5 +67,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         RefreshTokens = new RefreshTokenRepository(context, connectionFactory);
         Ancestors = new AncestorRepository(connectionFactory);
         WorkspaceInvites = new WorkspaceInviteRepository(context, connectionFactory);
+        WorkspaceFiles = new WorkspaceFileRepository(context, connectionFactory);
+        TaskFiles = new TaskFileRepository(context, connectionFactory);
     }
 }

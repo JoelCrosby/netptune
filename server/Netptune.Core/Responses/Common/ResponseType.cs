@@ -4,4 +4,5 @@ public enum ResponseType
 {
     Default = 0,
     NotFound = 1,
+    Forbidden = 2,
 }

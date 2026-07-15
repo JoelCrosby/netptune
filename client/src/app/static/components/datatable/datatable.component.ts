@@ -250,7 +250,7 @@ import {
     </div>
 
     <app-table-pagination
-      itemLabel="tasks"
+      [itemLabel]="itemLabel()"
       [page]="currentPage()"
       [pageSize]="pageSize()"
       [pageSizeOptions]="[25, 50, 100]"
@@ -282,6 +282,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   rowClass = input<DatatableRowClass<T> | ''>('');
   emptyCellClass = input('');
   emptyMessage = input('No rows to display.');
+  itemLabel = input('tasks');
   skeletonRows = input(8);
   stickyHeader = input(false);
   sort = model<DatatableSort | null>(null);
@@ -497,6 +498,10 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   setPageSize(pageSize: number) {
     this.pageSize.set(pageSize);
     this.currentPage.set(1);
+  }
+
+  reload() {
+    this.resourceRef.reload();
   }
 
   toggleSort(column: DatatableColumn<T>) {

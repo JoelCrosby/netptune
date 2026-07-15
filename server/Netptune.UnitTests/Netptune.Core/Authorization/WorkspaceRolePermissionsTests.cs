@@ -13,4 +13,19 @@ public class WorkspaceRolePermissionsTests
 
         ownerPermissions.Should().BeEquivalentTo(NetptunePermissions.All);
     }
+
+    [Fact]
+    public void FilePermissions_ShouldMatchRoleDefaults()
+    {
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer)
+            .Should().Contain(NetptunePermissions.Files.Read)
+            .And.NotContain(NetptunePermissions.Files.Upload);
+
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Member)
+            .Should().Contain([NetptunePermissions.Files.Read, NetptunePermissions.Files.Upload, NetptunePermissions.Files.DeleteOwn])
+            .And.NotContain(NetptunePermissions.Storage.Read);
+
+        WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Admin)
+            .Should().Contain([NetptunePermissions.Files.DeleteAny, NetptunePermissions.Storage.Read, NetptunePermissions.Storage.Manage]);
+    }
 }

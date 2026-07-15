@@ -30,6 +30,7 @@ import { TaskDetailTagsComponent } from './task-detail-tags.component';
 import { TaskDetailService } from './task-detail.service';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { TaskDetailFilesComponent } from './task-detail-files.component';
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -61,6 +62,9 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
             }
 
             <app-task-detail-description />
+            @if (readFiles()) {
+              <app-task-detail-files [systemId]="task.systemId" />
+            }
             <app-task-detail-relations />
             <app-task-detail-comments />
           </div>
@@ -95,6 +99,7 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
     TaskDetailCommentsComponent,
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,
+    TaskDetailFilesComponent,
   ],
   providers: [TaskDetailService],
 })
@@ -114,6 +119,10 @@ export class TaskDetailDialogComponent implements OnDestroy {
 
   readTags = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tags.read)
+  );
+
+  readFiles = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.files.read)
   );
 
   constructor() {

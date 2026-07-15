@@ -27,6 +27,8 @@ public static class NetptuneEntitiesConfiguration
         #pragma warning disable CS0618 // Type or member is obsolete
         NpgsqlConnection.GlobalTypeMapper.MapEnum<WorkspaceRole>();
         NpgsqlConnection.GlobalTypeMapper.MapEnum<SprintStatus>();
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<WorkspaceFilePurpose>();
+        NpgsqlConnection.GlobalTypeMapper.MapEnum<WorkspaceFileStatus>();
         NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
         #pragma warning restore CS0618 // Type or member is obsolete
 
@@ -43,6 +45,8 @@ public static class NetptuneEntitiesConfiguration
                 {
                     npgsql.MapEnum<WorkspaceRole>();
                     npgsql.MapEnum<SprintStatus>();
+                    npgsql.MapEnum<WorkspaceFilePurpose>();
+                    npgsql.MapEnum<WorkspaceFileStatus>();
                 })
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(new AuditLogImmutabilityInterceptor());

@@ -121,6 +121,7 @@ builder.Services.AddNetptuneHandlers();
 builder.Services.AddNetptuneRateLimiter();
 
 builder.Services.AddValidation();
+builder.Services.AddNetptuneWorkspaceStorage(configuration);
 
 var app = builder.Build();
 
@@ -153,6 +154,7 @@ apiGroup.MapCommentsEndpoints();
 apiGroup.MapMetaEndpoints();
 apiGroup.MapProjectsEndpoints();
 apiGroup.MapStorageEndpoints();
+apiGroup.MapWorkspaceFilesEndpoints();
 apiGroup.MapSprintsEndpoints();
 apiGroup.MapStatusesEndpoints();
 apiGroup.MapRelationTypesEndpoints();

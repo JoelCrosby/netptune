@@ -75,6 +75,7 @@ public static class AutoFixtures
         .Without(p => p.Project)
         .Without(p => p.ProjectTaskInBoardGroups)
         .Without(p => p.ProjectTaskTags)
+        .Without(p => p.Files)
         .Without(p => p.Tags)
         .Without(p => p.Sprint)
         .With(p => p.Status, TaskStatus)
@@ -170,6 +171,7 @@ public static class AutoFixtures
         .Without(p => p.WorkspaceUsers)
         .Without(p => p.Tasks)
         .Without(p => p.Users)
+        .Without(p => p.Files)
         .WithoutAuditable()
         .Create();
 

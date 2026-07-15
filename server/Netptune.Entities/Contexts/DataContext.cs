@@ -37,6 +37,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<AutomationRule> AutomationRules { get; set; } = null!;
     public DbSet<AutomationAction> AutomationActions { get; set; } = null!;
     public DbSet<AutomationRun> AutomationRuns { get; set; } = null!;
+    public DbSet<WorkspaceFile> WorkspaceFiles { get; set; } = null!;
 
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<UserPreferenceValue> UserPreferenceValues { get; set; } = null!;
@@ -50,6 +51,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<ProjectTaskRelation> ProjectTaskRelations { get; set; } = null!;
     public DbSet<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = null!;
     public DbSet<WorkspaceInvite> WorkspaceInvites { get; set; } = null!;
+    public DbSet<TaskFile> TaskFiles { get; set; } = null!;
 
     public DataContext() { }
 
@@ -66,6 +68,8 @@ public class DataContext : IdentityDbContext<AppUser>
             {
                 npgsql.MapEnum<WorkspaceRole>();
                 npgsql.MapEnum<SprintStatus>();
+                npgsql.MapEnum<WorkspaceFilePurpose>();
+                npgsql.MapEnum<WorkspaceFileStatus>();
             })
             .UseSnakeCaseNamingConvention()
             .AddInterceptors(new AuditLogImmutabilityInterceptor());

@@ -47,8 +47,12 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
             new (ClaimTypes.Name, user.DisplayName),
             new (ClaimTypes.NameIdentifier, user.Id),
             new (ClaimTypes.Email, user.Email!),
-            new (NetptuneClaims.Workspace, "netptune"),
         };
+
+        if (Request.Headers.TryGetValue("workspace", out var workspace))
+        {
+            claims.Add(new Claim(NetptuneClaims.Workspace, workspace!));
+        }
 
         var identity = new ClaimsIdentity(claims, AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);

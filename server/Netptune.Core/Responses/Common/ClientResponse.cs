@@ -16,6 +16,8 @@ public readonly struct ClientResponse
 
     public bool IsNotFound => ResponseType == ResponseType.NotFound;
 
+    public bool IsForbidden => ResponseType == ResponseType.Forbidden;
+
     public static readonly ClientResponse Success = new ()
     {
         IsSuccess = true,
@@ -27,6 +29,8 @@ public readonly struct ClientResponse
     }
 
     public static readonly ClientResponse NotFound = new(false, null,  ResponseType.NotFound);
+
+    public static readonly ClientResponse Forbidden = new(false, null, ResponseType.Forbidden);
 }
 
 public readonly struct ClientResponse<TPayload>
@@ -50,6 +54,8 @@ public readonly struct ClientResponse<TPayload>
 
     public bool IsNotFound => ResponseType == ResponseType.NotFound;
 
+    public bool IsForbidden => ResponseType == ResponseType.Forbidden;
+
     public static ClientResponse<TPayload> Success(string? message = null)
     {
         return new(true, message: message);
@@ -71,6 +77,8 @@ public readonly struct ClientResponse<TPayload>
     }
 
     public static readonly ClientResponse<TPayload> NotFound = new (false, default, null, ResponseType.NotFound);
+
+    public static readonly ClientResponse<TPayload> Forbidden = new(false, default, null, ResponseType.Forbidden);
 
     public static implicit operator ClientResponse<TPayload>(TPayload payload) => new (isSuccess: true, payload: payload, message: null);
 }

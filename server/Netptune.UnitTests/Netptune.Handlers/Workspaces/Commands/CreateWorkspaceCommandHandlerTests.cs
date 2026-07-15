@@ -11,6 +11,8 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Handlers.Workspaces.Commands;
+using Netptune.Core.Models.Options;
+using Microsoft.Extensions.Options;
 
 using NSubstitute;
 
@@ -28,7 +30,7 @@ public class CreateWorkspaceCommandHandlerTests
 
     public CreateWorkspaceCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, Activity, Options.Create(new WorkspaceStorageOptions()));
     }
 
     [Fact]

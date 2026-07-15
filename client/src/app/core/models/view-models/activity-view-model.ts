@@ -45,4 +45,6 @@ export enum ActivityType {
   addRelation = 27,
   removeRelation = 28,
   modifyDueDate = 29,
+  addFile = 30,
+  removeFile = 31,
 }

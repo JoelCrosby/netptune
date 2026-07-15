@@ -154,6 +154,23 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return await entity.FirstOrDefaultAsync(cancellationToken);
     }
 
+    public Task<ProjectTask?> GetTaskInWorkspace(string systemId, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        var parts = systemId.Split('-');
+
+        if (!int.TryParse(parts.LastOrDefault(), out var scopeId))
+        {
+            return Task.FromResult<ProjectTask?>(null);
+        }
+
+        var projectKey = parts.Length > 1 ? parts[0] : null;
+
+        return Entities
+            .AsNoTracking()
+            .SingleOrDefaultAsync(task => task.WorkspaceId == workspaceId && !task.IsDeleted &&
+                task.ProjectScopeId == scopeId && (projectKey == null || task.Project!.Key == projectKey), cancellationToken);
+    }
+
     public async Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         var entity = GetTaskFromSystemId(systemId, workspaceKey, true);

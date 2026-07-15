@@ -8,6 +8,8 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Handlers.Workspaces.Commands;
+using Netptune.Core.Models.Options;
+using Microsoft.Extensions.Options;
 
 using NSubstitute;
 
@@ -23,7 +25,7 @@ public class CreateWorkspaceForNewUserCommandHandlerTests
 
     public CreateWorkspaceForNewUserCommandHandlerTests()
     {
-        Handler = new(UnitOfWork);
+        Handler = new(UnitOfWork, Options.Create(new WorkspaceStorageOptions()));
     }
 
     [Fact]

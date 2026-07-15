@@ -35,6 +35,22 @@ public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
             .HasColumnType("jsonb")
             .IsRequired();
 
+        builder
+            .Property(workspace => workspace.StorageUsedBytes)
+            .HasDefaultValue(0L)
+            .IsRequired();
+
+        builder
+            .Property(workspace => workspace.StorageLimitBytes)
+            .HasDefaultValue(Workspace.DefaultStorageLimitBytes)
+            .IsRequired();
+
+        builder.ToTable(table =>
+        {
+            table.HasCheckConstraint("ck_workspaces_storage_used_bytes", "storage_used_bytes >= 0");
+            table.HasCheckConstraint("ck_workspaces_storage_limit_bytes", "storage_limit_bytes >= 0");
+        });
+
         // (One-to-One) Workspace > Task
 
         builder

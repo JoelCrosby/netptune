@@ -62,6 +62,20 @@ public static class StringExtensions
         return Regex.Replace(input, @"[^\u0020-\u007E]", string.Empty);
     }
 
+    public static string SanitizeFileName(this string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return string.Empty;
+        }
+
+        var normalizedPath = input.Replace('\\', '/');
+        var fileName = Path.GetFileName(normalizedPath);
+        var singleLineFileName = string.Concat(fileName.GetLines());
+
+        return new string(singleLineFileName.Where(character => !char.IsControl(character) && character is not '"').ToArray());
+    }
+
     public static string GetRequiredValue(this IConfiguration configuration, string key)
     {
         var value = configuration[key];

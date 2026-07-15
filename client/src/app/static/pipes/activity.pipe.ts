@@ -78,6 +78,11 @@ const getMeta = (value: ActivityViewModel) => {
 
       return `${meta.label} ${meta.relatedTaskSystemId ?? ''}`.trim();
     }
+    case ActivityType.addFile:
+    case ActivityType.removeFile: {
+      const meta = value.meta as { fileName: string };
+      return meta?.fileName ?? '';
+    }
     default:
       return '';
   }
