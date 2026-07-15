@@ -45,6 +45,13 @@ WITH filtered_tasks AS (
                ELSE CONCAT_WS(' ', d.firstname, d.lastname)
            END AS deleted_by_username
          , d.picture_url AS deleted_by_picture_url
+         , EXISTS (
+               SELECT 1
+               FROM comments c
+               WHERE c.entity_type = @taskEntityType
+                 AND c.entity_id = pt.id
+                 AND NOT c.is_deleted
+           ) AS has_comments
          , COUNT(*) OVER() AS total_count
     FROM project_tasks pt
              INNER JOIN workspaces w ON pt.workspace_id = w.id
@@ -120,6 +127,7 @@ SELECT ft.total_count
      , ft.deleted_by_picture_url
      , ft.project_key
      , ft.project_name
+     , ft.has_comments
      , t.name AS tag
      , u.id AS assignee_id
      , u.firstname AS assignee_firstname

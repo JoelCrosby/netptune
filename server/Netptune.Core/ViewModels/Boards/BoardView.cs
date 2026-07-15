@@ -49,6 +49,8 @@ public class BoardViewTask
 
     public IList<string> Tags { get; set; } = null!;
 
+    public bool HasComments { get; set; }
+
     public TaskPriority? Priority { get; set; }
 
     public EstimateType? EstimateType { get; set; }

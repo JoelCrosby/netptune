@@ -66,6 +66,13 @@ SELECT lt.task_id
      , bg.sort_order       AS board_group_sort_order
      , lt.workspace_id
      , lt.project_id
+     , EXISTS (
+           SELECT 1
+           FROM comments c
+           WHERE c.entity_type = @taskEntityType
+             AND c.entity_id = lt.task_id
+             AND NOT c.is_deleted
+       )                    AS has_comments
      , COALESCE((
            SELECT array_agg(t.name ORDER BY t.name)
            FROM project_task_tags ptt

@@ -3,6 +3,7 @@ import { ProjectTask } from '../project-task';
 
 export interface TaskViewModel extends ProjectTask {
   assignees: AssigneeViewModel[];
+  hasComments: boolean;
   ownerUsername: string;
   ownerPictureUrl?: string | null;
   deletedByUsername?: string | null;

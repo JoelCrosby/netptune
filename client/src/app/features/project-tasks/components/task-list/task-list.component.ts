@@ -29,6 +29,7 @@ import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/tas
 import {
   LucideCheck,
   LucideListChecks,
+  LucideMessageSquareText,
   LucidePlus,
   LucideTrash2,
 } from '@lucide/angular';
@@ -51,6 +52,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     LucideCheck,
     LucideListChecks,
     LucidePlus,
+    LucideMessageSquareText,
     AvatarStackComponent,
     BadgeComponent,
     SprintBadgeComponent,
@@ -84,10 +86,17 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 
       <ng-template appDatatableCell="name" let-task>
         <button
-          class="block w-full cursor-pointer truncate text-left font-medium hover:underline"
+          class="block flex w-full cursor-pointer items-center gap-2 truncate text-left font-medium hover:underline"
           type="button"
           (click)="titleClicked(task)">
           {{ task.name }}
+          @if (task.hasComments) {
+            <svg
+              lucideMessageSquareText
+              class="text-muted h-4 w-4"
+              aria-label="Has comments"
+              appTooltip="Has comments"></svg>
+          }
         </button>
       </ng-template>
 

@@ -58,7 +58,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
         var results = await connection.QueryMultipleAsync(new CommandDefinition(
             SqlScripts.GetBoardView,
-            new { boardId, searchPhrase, sprintId },
+            new { boardId, searchPhrase, sprintId, taskEntityType = EntityType.Task },
             cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();
@@ -100,6 +100,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 StatusCategory = row.Task_Status_Category,
                 SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
                 Tags = row.Tags.ToList(),
+                HasComments = row.Has_Comments,
                 Priority = row.Task_Priority,
                 EstimateType = row.Task_Estimate_Type,
                 EstimateValue = row.Task_Estimate_Value,

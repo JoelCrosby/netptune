@@ -11,7 +11,11 @@ import {
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
-import { LucideCheck, LucideFlag } from '@lucide/angular';
+import {
+  LucideCheck,
+  LucideFlag,
+  LucideMessageSquareText,
+} from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
@@ -25,6 +29,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
     TaskScopeIdComponent,
     LucideFlag,
     LucideCheck,
+    LucideMessageSquareText,
     NgClass,
     TooltipDirective,
     SprintBadgeComponent,
@@ -55,6 +60,14 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
     <div class="mt-2 flex w-full flex-row items-center justify-between">
       <div class="flex items-center gap-2">
         <app-task-scope-id [id]="task().systemId" />
+
+        @if (task().hasComments) {
+          <svg
+            lucideMessageSquareText
+            class="text-muted h-4 w-4"
+            aria-label="Has comments"
+            appTooltip="Has comments"></svg>
+        }
 
         @if (task().statusCategory === statusCategory.done) {
           <svg lucideCheck class="text-green-500">done</svg>

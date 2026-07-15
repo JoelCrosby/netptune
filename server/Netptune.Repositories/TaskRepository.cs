@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -243,6 +244,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             search,
             searchPattern,
             deleted,
+            taskEntityType = EntityType.Task,
             pageSize,
             skip,
         }, cancellationToken: cancellationToken));
@@ -378,6 +380,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 DeletedByUsername = row.Deleted_By_Username,
                 DeletedByPictureUrl = row.Deleted_By_Picture_Url,
                 ProjectName = row.Project_Name ?? string.Empty,
+                HasComments = row.Has_Comments,
                 Tags = [],
                 Assignees = [],
             };
@@ -414,7 +417,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         });
     }
 
-    private static Expression<Func<ProjectTask, TaskViewModel>> TaskToViewModel()
+    private Expression<Func<ProjectTask, TaskViewModel>> TaskToViewModel()
     {
         return x => new TaskViewModel
         {
@@ -448,6 +451,10 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 : x.Owner.Firstname + " " + x.Owner.Lastname,
             OwnerPictureUrl = x.Owner.PictureUrl,
             ProjectName = x.Project == null ? string.Empty : x.Project.Name,
+            HasComments = Context.Comments.Any(comment =>
+                comment.EntityType == EntityType.Task &&
+                comment.EntityId == x.Id &&
+                !comment.IsDeleted),
             Tags = x.Tags.Select(t => t.Name).OrderBy(n => n).ToList(),
             Assignees = x.ProjectTaskAppUsers.Select(u => new AssigneeViewModel
             {

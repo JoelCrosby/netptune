@@ -96,6 +96,7 @@ public sealed class TasksEndpointTests
 
         searchResult.IsSuccess.Should().BeTrue();
         searchResult.Payload!.Items.Should().NotBeEmpty();
+        searchResult.Payload.Items.Should().OnlyContain(task => task.HasComments);
         searchResult.Payload.Items.Should().OnlyContain(task =>
             task.Name.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase) ||
             task.ProjectName!.Contains("OpenTelemetry", StringComparison.OrdinalIgnoreCase) ||
@@ -415,6 +416,10 @@ public sealed class TasksEndpointTests
             .Single(group => group.Id == request.NewGroupId)
             .Tasks.Should()
             .Contain(task => task.Id == request.TaskId);
+        boardView.Groups
+            .Single(group => group.Id == request.NewGroupId)
+            .Tasks.Single(task => task.Id == request.TaskId)
+            .HasComments.Should().BeTrue();
 
         var activity = await GetActivity(EntityType.Task, request.TaskId, ActivityType.Move);
         activity.Should().NotBeNull();

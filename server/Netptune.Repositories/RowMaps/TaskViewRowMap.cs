@@ -66,6 +66,8 @@ public sealed class TaskViewRowMap
 
     public string? Tag { get; init; }
 
+    public bool Has_Comments { get; init; }
+
     public string? Assignee_Id { get; init; }
 
     public string? Assignee_Firstname { get; init; }

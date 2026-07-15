@@ -54,6 +54,8 @@ public class BoardViewRowMap
 
     public string[] Tags { get; set; } = [];
 
+    public bool Has_Comments { get; set; }
+
     public string Assignees { get; set; } = "[]";
 }
 
