@@ -16,12 +16,14 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 import { DialogService } from '@app/core/services/dialog.service';
 import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
+import { map, of, startWith, switchMap, timer } from 'rxjs';
 import {
   LucideArrowDown,
   LucideArrowUp,
@@ -262,17 +264,12 @@ import {
 })
 export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
-  private dialog = inject(DialogService);
-  private store = inject(Store);
-  // The active workspace travels as a request header (set by the auth
-  // interceptor), not in the URL or query params, so the resource's request is
-  // identical across workspaces. Track the identifier so we can force a refetch
-  // when it changes — otherwise the table keeps showing the previous
-  // workspace's rows after a switch.
-  private readonly workspaceIdentifier = this.store.selectSignal(
+  dialog = inject(DialogService);
+  store = inject(Store);
+  workspaceIdentifier = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier
   );
-  private workspaceTracked = false;
+  workspaceTracked = false;
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });
@@ -287,23 +284,23 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   stickyHeader = input(false);
   sort = model<DatatableSort | null>(null);
   selectionChanged = output<T[]>();
-  // Emitted whenever the resource settles (initial load and every reload) so
-  // hosts can react to row totals without reaching into the resource directly,
-  // which would force it to evaluate before this component's inputs are bound.
   loaded = output<{ totalCount: number; hasValue: boolean }>();
 
   currentPage = signal(1);
   pageSize = signal(50);
-  totalCount = computed(
-    () => this.resourceRef.value()?.payload?.totalCount ?? 0
-  );
-  totalPages = computed(
-    () => this.resourceRef.value()?.payload?.totalPages ?? 0
-  );
+
+  totalCount = computed(() => {
+    return this.resourceRef.value()?.payload?.totalCount ?? 0;
+  });
+
+  totalPages = computed(() => {
+    return this.resourceRef.value()?.payload?.totalPages ?? 0;
+  });
 
   iconInputs = { size: 16 };
   classes = classes;
   lastResolvedRows = signal<readonly T[]>([]);
+
   cellTemplates = contentChildren<DatatableCellTemplateDirective<T>>(
     DatatableCellTemplateDirective
   );
@@ -337,17 +334,17 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     params: this.buildParams(),
   }));
 
-  showMenuColumn = computed(() => Boolean(this.data().menu?.length));
-  showUtilityColumn = computed(
-    () => this.showMenuColumn() || this.customizableColumns()
-  );
   columns = computed(() => this.data().columns);
+  showMenuColumn = computed(() => Boolean(this.data().menu?.length));
+  showUtilityColumn = computed(() => {
+    return this.showMenuColumn() || this.customizableColumns();
+  });
 
   columnPreferences = signal<DatatableColumnPreference[] | null>(null);
 
-  effectivePreferences = computed(() =>
-    reconcileColumnPreferences(this.columns(), this.columnPreferences())
-  );
+  effectivePreferences = computed(() => {
+    return reconcileColumnPreferences(this.columns(), this.columnPreferences());
+  });
 
   visibleColumns = computed(() => {
     const byId = new Map(this.columns().map((column) => [column.id, column]));
@@ -381,16 +378,31 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
   resourceLoading = computed(() => this.resourceRef?.isLoading() ?? false);
 
-  // Show skeleton rows only when the resource is loading and there are no
-  // previously resolved rows to keep on screen (i.e. the initial load).
-  // During a reload we keep the stale rows visible via visibleRows() instead.
-  showSkeleton = computed(
-    () => this.resourceLoading() && this.lastResolvedRows().length === 0
+  delayedResourceLoading = toSignal(
+    toObservable(this.resourceLoading).pipe(
+      switchMap((isLoading) => {
+        if (!isLoading) {
+          return of(false);
+        }
+
+        return timer(100).pipe(
+          map(() => true),
+          startWith(false)
+        );
+      })
+    ),
+    { initialValue: false }
   );
 
-  skeletonRowRange = computed(() =>
-    Array.from({ length: this.skeletonRows() })
-  );
+  showSkeleton = computed(() => {
+    return (
+      this.delayedResourceLoading() && this.lastResolvedRows().length === 0
+    );
+  });
+
+  skeletonRowRange = computed(() => {
+    return Array.from({ length: this.skeletonRows() });
+  });
 
   currentRows = computed(() => {
     const resource = this.resourceRef;
@@ -471,9 +483,6 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     });
 
     effect(() => {
-      // Refetch when the active workspace changes. Skip the first observation
-      // so we don't double-fetch the initial load (the resource fetches itself
-      // on creation).
       this.workspaceIdentifier();
 
       untracked(() => {
