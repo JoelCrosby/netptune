@@ -83,6 +83,7 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         var result = await Entities
             .IsReadonly(true)
             .Where(workspace => workspace.Slug == slug && !workspace.IsDeleted)
+            .OrderBy(workspace => workspace.Id)
             .Select(x => x.Id)
             .Take(1)
             .ToListAsync(cancellationToken);

@@ -109,6 +109,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         return Entities
             .Where(sprint => sprint.Id == sprintId && sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
             .AsNoTracking()
+            .AsSplitQuery()
             .Select(SprintToDetailViewModel())
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -126,6 +127,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             .OrderByDescending(sprint => sprint.StartDate)
             .ThenByDescending(sprint => sprint.Id)
             .AsNoTracking()
+            .AsSplitQuery()
             .Select(SprintToDetailViewModel())
             .FirstOrDefaultAsync(cancellationToken);
     }
