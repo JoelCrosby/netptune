@@ -29,12 +29,17 @@ public class CreateProjectCommandHandlerTests
     public CreateProjectCommandHandlerTests()
     {
         Handler = new(UnitOfWork, Identity, Activity);
+        UnitOfWork.Statuses
+            .GetAllInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
     }
 
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<AddProjectRequest>().Create();
+        var request = Fixture.Build<AddProjectRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
         var viewModel = Fixture.Build<ProjectViewModel>()
             .With(x => x.Name, request.Name)
             .With(x => x.Description, request.Description)
@@ -67,7 +72,9 @@ public class CreateProjectCommandHandlerTests
     [Fact]
     public async Task Create_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture.Build<AddProjectRequest>().Create();
+        var request = Fixture.Build<AddProjectRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
         var viewModel = Fixture.Build<ProjectViewModel>()
             .With(x => x.Name, request.Name)
             .With(x => x.Description, request.Description)
@@ -94,7 +101,9 @@ public class CreateProjectCommandHandlerTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
-        var request = Fixture.Build<AddProjectRequest>().Create();
+        var request = Fixture.Build<AddProjectRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);

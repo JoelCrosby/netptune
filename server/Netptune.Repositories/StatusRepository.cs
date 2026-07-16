@@ -6,6 +6,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Statuses;
+using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.ViewModels.Statuses;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -139,6 +140,36 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
         if (missing.Count == 0) return;
 
         await Entities.AddRangeAsync(missing, cancellationToken);
+    }
+
+    public async Task EnsureNewTaskStatus(int workspaceId, string? ownerId, CancellationToken cancellationToken = default)
+    {
+        var exists = await Entities.AnyAsync(status =>
+            status.WorkspaceId == workspaceId &&
+            status.EntityType == EntityType.Task &&
+            status.Key == WorkspaceSetupTemplateCatalog.NewStatusKey &&
+            !status.IsDeleted,
+            cancellationToken);
+
+        if (exists) return;
+
+        var definition = WorkspaceSetupTemplateCatalog
+            .Find(WorkspaceSetupTemplateCatalog.DefaultKey)!
+            .Statuses
+            .Single(status => status.Key == WorkspaceSetupTemplateCatalog.NewStatusKey);
+
+        await Entities.AddAsync(new Status
+        {
+            WorkspaceId = workspaceId,
+            OwnerId = ownerId,
+            EntityType = EntityType.Task,
+            Name = definition.Name,
+            Key = definition.Key,
+            Color = definition.Color,
+            Category = definition.Category,
+            SortOrder = 0,
+            IsSystem = true,
+        }, cancellationToken);
     }
 
     public static string BuildKey(string name)

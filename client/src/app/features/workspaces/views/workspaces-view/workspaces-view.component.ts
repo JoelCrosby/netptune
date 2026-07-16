@@ -38,7 +38,8 @@ export class WorkspacesViewComponent {
   loading = this.store.selectSignal(selectWorkspacesLoading);
 
   openWorkspaceDialog() {
-    this.dialog.open(WorkspaceDialogComponent, {
+    this.dialog.openWizard(WorkspaceDialogComponent, {
+      title: 'Create Workspace',
       data: null,
       width: '720px',
     });

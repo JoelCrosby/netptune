@@ -89,6 +89,9 @@ public static class BoardsEndpoints
     {
         var result = await mediator.Send(new CreateBoardCommand(request), cancellationToken);
 
+        if (result.IsNotFound) return Results.NotFound(result);
+        if (!result.IsSuccess) return Results.BadRequest(result);
+
         return Results.Ok(result);
     }
 

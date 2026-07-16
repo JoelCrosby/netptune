@@ -27,9 +27,6 @@ public sealed class GetStatusesQueryHandler : IRequestHandler<GetStatusesQuery, 
 
         if (workspaceId is null) return null;
 
-        await UnitOfWork.Statuses.EnsureDefaultTaskStatuses(workspaceId.Value, Identity.GetCurrentUserId(), cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
-
         return await UnitOfWork.Statuses.GetViewModelsForWorkspace(workspaceId.Value, request.Filter.EntityType, cancellationToken);
     }
 }

@@ -5,4 +5,5 @@ export interface AddWorkspaceRequest {
   name?: string;
   description?: string;
   metaInfo: WorkspaceMeta;
+  templateKey?: string;
 }

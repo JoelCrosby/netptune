@@ -33,18 +33,24 @@ public class ActivityLogger : IActivityLogger
             : context.Connection.RemoteIpAddress?.ToString();
     }
 
-    private string? GetUserAgent() =>
-        HttpContextAccessor.HttpContext?.Request.Headers.UserAgent.ToString();
+    private string? GetUserAgent()
+    {
+        return HttpContextAccessor.HttpContext?.Request.Headers.UserAgent.ToString();
+    }
+
+
+    private int GetWorkspaceId(int? workspaceId)
+    {
+        return workspaceId ?? Identity.GetWorkspaceId().GetAwaiter().GetResult();
+    }
 
     public void Log(Action<ActivityOptions> options)
     {
         var userId = Identity.GetCurrentUserId();
-        var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityOptions
         {
             UserId = userId,
-            WorkspaceId = workspaceId,
         };
 
         options.Invoke(activityOptions);
@@ -54,10 +60,7 @@ public class ActivityLogger : IActivityLogger
             throw new Exception($"Cannot call log with null {nameof(activityOptions.EntityId)}.");
         }
 
-        if (activityOptions.WorkspaceId is null)
-        {
-            throw new Exception($"Cannot call log with null {nameof(activityOptions.WorkspaceId)}.");
-        }
+        var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
 
         var activity = new ActivityEvent
         {
@@ -66,7 +69,7 @@ public class ActivityLogger : IActivityLogger
             EntityType = activityOptions.EntityType,
             UserId = activityOptions.UserId,
             EntityId = activityOptions.EntityId.Value,
-            WorkspaceId = activityOptions.WorkspaceId.Value,
+            WorkspaceId = workspaceId,
             OccurredAt = DateTime.UtcNow,
             IpAddress = GetIpAddress(),
             UserAgent = GetUserAgent(),
@@ -79,12 +82,10 @@ public class ActivityLogger : IActivityLogger
     public void LogChanges(Action<ActivityChangeSetOptions> options)
     {
         var userId = Identity.GetCurrentUserId();
-        var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var changeSetOptions = new ActivityChangeSetOptions
         {
             UserId = userId,
-            WorkspaceId = workspaceId,
         };
 
         options.Invoke(changeSetOptions);
@@ -94,13 +95,9 @@ public class ActivityLogger : IActivityLogger
             throw new Exception($"Cannot call log with null {nameof(changeSetOptions.EntityId)}.");
         }
 
-        if (changeSetOptions.WorkspaceId is null)
-        {
-            throw new Exception($"Cannot call log with null {nameof(changeSetOptions.WorkspaceId)}.");
-        }
-
         if (changeSetOptions.Changes.Count == 0) return;
 
+        var workspaceId = GetWorkspaceId(changeSetOptions.WorkspaceId);
         var ipAddress = GetIpAddress();
         var userAgent = GetUserAgent();
         var occurredAt = DateTime.UtcNow;
@@ -113,7 +110,7 @@ public class ActivityLogger : IActivityLogger
                 EntityType = changeSetOptions.EntityType,
                 UserId = changeSetOptions.UserId,
                 EntityId = changeSetOptions.EntityId.Value,
-                WorkspaceId = changeSetOptions.WorkspaceId.Value,
+                WorkspaceId = workspaceId,
                 OccurredAt = occurredAt,
                 Field = change.Field,
                 OldValue = ActivityValue.Truncate(change.OldValue),
@@ -132,21 +129,15 @@ public class ActivityLogger : IActivityLogger
     public void LogMany(Action<ActivityMultipleOptions> options)
     {
         var userId = Identity.GetCurrentUserId();
-        var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityMultipleOptions
         {
             UserId = userId,
-            WorkspaceId = workspaceId,
         };
 
         options.Invoke(activityOptions);
 
-        if (activityOptions.WorkspaceId is null)
-        {
-            throw new Exception($"Cannot call log with null {nameof(activityOptions.WorkspaceId)}.");
-        }
-
+        var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
         var ipAddress = GetIpAddress();
         var userAgent = GetUserAgent();
 
@@ -158,7 +149,7 @@ public class ActivityLogger : IActivityLogger
                 EntityType = activityOptions.EntityType,
                 UserId = activityOptions.UserId,
                 EntityId = entityId,
-                WorkspaceId = activityOptions.WorkspaceId.Value,
+                WorkspaceId = workspaceId,
                 OccurredAt = DateTime.UtcNow,
                 IpAddress = ipAddress,
                 UserAgent = userAgent,
@@ -170,12 +161,10 @@ public class ActivityLogger : IActivityLogger
     public void LogWith<TMeta>(Action<ActivityOptions<TMeta>> options) where TMeta : class
     {
         var userId = Identity.GetCurrentUserId();
-        var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityOptions<TMeta>
         {
             UserId = userId,
-            WorkspaceId = workspaceId,
         };
 
         options.Invoke(activityOptions);
@@ -185,10 +174,7 @@ public class ActivityLogger : IActivityLogger
             throw new Exception($"Cannot call log with null {nameof(activityOptions.EntityId)}.");
         }
 
-        if (activityOptions.WorkspaceId is null)
-        {
-            throw new Exception($"Cannot call log with null {nameof(activityOptions.WorkspaceId)}.");
-        }
+        var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
 
         var activity = new ActivityEvent
         {
@@ -197,7 +183,7 @@ public class ActivityLogger : IActivityLogger
             EntityType = activityOptions.EntityType,
             UserId = activityOptions.UserId,
             EntityId = activityOptions.EntityId.Value,
-            WorkspaceId = activityOptions.WorkspaceId.Value,
+            WorkspaceId = workspaceId,
             OccurredAt = DateTime.UtcNow,
             Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
             IpAddress = GetIpAddress(),
@@ -210,20 +196,15 @@ public class ActivityLogger : IActivityLogger
     public void LogWithMany<TMeta>(Action<ActivityMultipleOptions<TMeta>> options) where TMeta : class
     {
         var userId = Identity.GetCurrentUserId();
-        var workspaceId = Identity.GetWorkspaceId().GetAwaiter().GetResult();
 
         var activityOptions = new ActivityMultipleOptions<TMeta>
         {
             UserId = userId,
-            WorkspaceId = workspaceId,
         };
 
         options.Invoke(activityOptions);
 
-        if (activityOptions.WorkspaceId is null)
-        {
-            throw new Exception($"Cannot call log with null {nameof(activityOptions.WorkspaceId)}.");
-        }
+        var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
 
         var activities = activityOptions.EntityIds
             .Select(entityId => new ActivityEvent
@@ -233,7 +214,7 @@ public class ActivityLogger : IActivityLogger
                 EntityType = activityOptions.EntityType,
                 UserId = activityOptions.UserId,
                 EntityId = entityId,
-                WorkspaceId = activityOptions.WorkspaceId.Value,
+                WorkspaceId = workspaceId,
                 OccurredAt = DateTime.UtcNow,
                 Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
             });

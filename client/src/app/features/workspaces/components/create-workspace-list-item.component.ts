@@ -47,7 +47,8 @@ export class CreateWorkspaceListItemComponent {
   private dialog = inject(DialogService);
 
   openWorkspaceDialog() {
-    this.dialog.open(WorkspaceDialogComponent, {
+    this.dialog.openWizard(WorkspaceDialogComponent, {
+      title: 'Create Workspace',
       data: null,
       width: '720px',
     });

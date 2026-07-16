@@ -33,6 +33,12 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { firstValueFrom, map } from 'rxjs';
+import { SetupTemplatePickerComponent } from '../../components/setup-template-picker/setup-template-picker.component';
+import { StepperComponent } from '@static/components/stepper/stepper.component';
+import { StepComponent } from '@static/components/stepper/step.component';
+import { WorkspaceSetupTemplatesService } from '@core/services/workspace-setup-templates.service';
+import { SetupCreationSummaryComponent } from '../../components/setup-creation-summary/setup-creation-summary.component';
+import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -46,59 +52,141 @@ import { firstValueFrom, map } from 'rxjs';
     StrokedButtonComponent,
     DialogCloseDirective,
     FormField,
+    SetupTemplatePickerComponent,
+    StepperComponent,
+    StepComponent,
+    SetupCreationSummaryComponent,
+    LucideChevronLeft,
+    LucideChevronRight,
   ],
-  template: `<app-dialog-title>
-      {{ isEditMode ? 'Edit Workspace' : 'Add new Workspace' }}
-    </app-dialog-title>
+  template: `
+    @if (isEditMode) {
+      <app-dialog-title>Edit Workspace</app-dialog-title>
 
-    <form app-dialog-content class="form-auth">
-      <app-form-input
-        [formField]="dialogForm.name"
-        label="Name"
-        maxLength="1024" />
+      <form app-dialog-content class="form-auth min-w-0">
+        <app-form-input
+          [formField]="dialogForm.name"
+          label="Name"
+          maxLength="1024" />
 
-      <app-form-input
-        [formField]="dialogForm.identifier"
-        label="Identifier"
-        maxLength="1024"
-        [icon]="identifierIcon()"
-        [loading]="dialogForm.identifier().pending()"
-        [hint]="dialogForm.identifier().errors()[0]?.message" />
+        <app-form-input
+          [formField]="dialogForm.identifier"
+          label="Identifier"
+          maxLength="1024"
+          [icon]="identifierIcon()"
+          [loading]="dialogForm.identifier().pending()"
+          [hint]="dialogForm.identifier().errors()[0]?.message" />
 
-      <app-form-textarea
-        [formField]="dialogForm.description"
-        label="Description"
-        maxLength="4096" />
+        <app-form-textarea
+          [formField]="dialogForm.description"
+          label="Description"
+          maxLength="4096" />
 
-      <app-color-select [formField]="dialogForm.color" label="Color" />
-    </form>
+        <app-color-select [formField]="dialogForm.color" label="Color" />
+      </form>
 
-    <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close>Close</button>
-      <button app-flat-button (click)="getResult()">
-        {{ isEditMode ? 'Save Changes' : 'Save Workspace' }}
-      </button>
-    </div> `,
+      <div app-dialog-actions align="end">
+        <button app-stroked-button app-dialog-close>Close</button>
+        <button app-flat-button (click)="getResult()">Save Changes</button>
+      </div>
+    } @else {
+      <form app-dialog-content class="min-w-0">
+        <app-stepper mode="wizard" [(activeIndex)]="currentStep">
+          <app-step
+            title="Workspace details"
+            description="Name and identify the workspace.">
+            <div class="form-auth">
+              <app-form-input
+                [formField]="dialogForm.name"
+                label="Name"
+                maxLength="1024" />
+
+              <app-form-input
+                [formField]="dialogForm.identifier"
+                label="Identifier"
+                maxLength="1024"
+                [icon]="identifierIcon()"
+                [loading]="dialogForm.identifier().pending()"
+                [hint]="dialogForm.identifier().errors()[0]?.message" />
+
+              <app-form-textarea
+                [formField]="dialogForm.description"
+                label="Description"
+                maxLength="4096" />
+
+              <app-color-select [formField]="dialogForm.color" label="Color" />
+            </div>
+          </app-step>
+
+          <app-step
+            title="Workflow setup"
+            description="Choose the statuses, tags, relations, and board layout to start with.">
+            <app-setup-template-picker
+              [selectedKey]="dialogForm.templateKey().value()"
+              (selectedKeyChange)="setTemplate($event)" />
+          </app-step>
+
+          <app-step title="Summary" description="Review what will be created.">
+            <app-setup-creation-summary
+              entityType="Workspace"
+              secondaryLabel="Identifier"
+              [name]="dialogForm.name().value()"
+              [secondaryValue]="dialogForm.identifier().value()"
+              [templateKey]="dialogForm.templateKey().value()"
+              [template]="selectedTemplate()"
+              [showWorkspaceDefaults]="true" />
+          </app-step>
+        </app-stepper>
+      </form>
+
+      <div app-dialog-actions>
+        @if (currentStep() > 0) {
+          <button app-stroked-button (click)="previousStep()">
+            <svg lucideChevronLeft class="h-4 w-4" aria-hidden="true"></svg>
+            Back
+          </button>
+        }
+        @if (currentStep() < finalStep) {
+          <button
+            app-flat-button
+            class="ml-auto"
+            [disabled]="dialogForm().pending()"
+            (click)="nextStep()">
+            Next
+            <svg lucideChevronRight class="h-4 w-4" aria-hidden="true"></svg>
+          </button>
+        } @else {
+          <button app-flat-button class="ml-auto" (click)="getResult()">
+            Save Workspace
+          </button>
+        }
+      </div>
+    }
+  `,
 })
 export class WorkspaceDialogComponent {
   private store = inject(Store);
   private workspaceServcie = inject(WorkspacesService);
+  private setupTemplates = inject(WorkspaceSetupTemplatesService);
 
   dialogRef = inject<DialogRef<WorkspaceDialogComponent>>(DialogRef);
   data = inject<Workspace>(DIALOG_DATA, { optional: true });
+  currentStep = signal(0);
+  readonly finalStep = 2;
 
   dialogFormModel = signal({
     name: this.data?.name ?? '',
     identifier: this.data?.slug ?? '',
     description: this.data?.description ?? '',
     color: this.data?.metaInfo?.color ?? '',
+    templateKey: 'software',
   });
 
   dialogForm = form(this.dialogFormModel, (schema) => {
     required(schema.name);
     required(schema.identifier);
     required(schema.color);
-    disabled(schema.identifier, () => this.isEditMode);
+    disabled(schema.identifier, { when: () => this.isEditMode });
     debounce(schema.identifier, 600);
     validateAsync(schema.identifier, {
       params: ({ value }) => {
@@ -133,6 +221,14 @@ export class WorkspaceDialogComponent {
       }),
     });
   });
+
+  selectedTemplate = computed(() =>
+    this.setupTemplates
+      .templates()
+      .find(
+        (template) => template.key === this.dialogForm.templateKey().value()
+      )
+  );
 
   identifierCheck = signal(false);
 
@@ -196,6 +292,23 @@ export class WorkspaceDialogComponent {
     this.dialogRef.close();
   }
 
+  nextStep() {
+    if (this.currentStep() === 0) {
+      if (this.dialogForm().pending()) return;
+
+      if (this.dialogForm().invalid()) {
+        this.dialogForm().markAsTouched();
+        return;
+      }
+    }
+
+    this.currentStep.update((step) => Math.min(step + 1, this.finalStep));
+  }
+
+  previousStep() {
+    this.currentStep.update((step) => Math.max(step - 1, 0));
+  }
+
   editWorkspace() {
     const { name, identifier, description, color } = this.dialogForm;
 
@@ -211,8 +324,13 @@ export class WorkspaceDialogComponent {
     this.store.dispatch(Actions.editWorkspace.init({ request }));
   }
 
+  setTemplate(templateKey: string) {
+    this.dialogFormModel.update((model) => ({ ...model, templateKey }));
+  }
+
   createWorkspace() {
-    const { name, identifier, description, color } = this.dialogForm;
+    const { name, identifier, description, color, templateKey } =
+      this.dialogForm;
 
     const request: AddWorkspaceRequest = {
       name: name().value(),
@@ -221,6 +339,7 @@ export class WorkspaceDialogComponent {
       metaInfo: {
         color: color().value(),
       },
+      templateKey: templateKey().value(),
     };
 
     this.store.dispatch(Actions.createWorkspace.init({ request }));

@@ -24,4 +24,6 @@ public interface IStatusRepository : IWorkspaceEntityRepository<Status, int>
     Task<bool> IsInUse(int statusId, CancellationToken cancellationToken = default);
 
     Task EnsureDefaultTaskStatuses(int workspaceId, string? ownerId, CancellationToken cancellationToken = default);
+
+    Task EnsureNewTaskStatus(int workspaceId, string? ownerId, CancellationToken cancellationToken = default);
 }

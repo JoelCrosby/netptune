@@ -26,12 +26,23 @@ public class CreateWorkspaceForNewUserCommandHandlerTests
     public CreateWorkspaceForNewUserCommandHandlerTests()
     {
         Handler = new(UnitOfWork, Options.Create(new WorkspaceStorageOptions()));
+        UnitOfWork.Statuses
+            .GetAllInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+        UnitOfWork.RelationTypes
+            .GetAllInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+        UnitOfWork.Tags
+            .GetTagsInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
     }
 
     [Fact]
     public async Task CreateNewUserWorkspace_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<AddWorkspaceRequest>().Create();
+        var request = Fixture.Build<AddWorkspaceRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
         var user = AutoFixtures.AppUser;
 
         UnitOfWork.InvokeTransaction<ClientResponse<WorkspaceViewModel>>();

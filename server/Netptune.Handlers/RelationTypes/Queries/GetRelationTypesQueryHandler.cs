@@ -26,10 +26,6 @@ public sealed class GetRelationTypesQueryHandler : IRequestHandler<GetRelationTy
 
         if (workspaceId is null) return null;
 
-        // Backfills workspaces that predate the feature, matching how statuses seed lazily on read.
-        await UnitOfWork.RelationTypes.EnsureDefaultRelationTypes(workspaceId.Value, Identity.GetCurrentUserId(), cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
-
         return await UnitOfWork.RelationTypes.GetViewModelsForWorkspace(workspaceId.Value, cancellationToken);
     }
 }

@@ -15,4 +15,6 @@ public record AddBoardRequest
     public int? ProjectId { get; set; }
 
     public BoardMeta? Meta { get; set; }
+
+    public string? TemplateKey { get; init; }
 }

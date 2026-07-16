@@ -56,7 +56,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
         }
 
-        await UnitOfWork.Statuses.EnsureDefaultTaskStatuses(workspaceId.Value, user.Id, cancellationToken);
+        await UnitOfWork.Statuses.EnsureNewTaskStatus(workspaceId.Value, user.Id, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         var status = await ResolveStatus(req, project, workspaceId.Value, cancellationToken);

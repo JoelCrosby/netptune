@@ -82,6 +82,9 @@ export class ProjectsViewComponent {
   }
 
   showAddModal() {
-    this.dialog.open(ProjectDialogComponent, { width: '512px' });
+    this.dialog.openWizard(ProjectDialogComponent, {
+      title: 'Create Project',
+      width: '720px',
+    });
   }
 }

@@ -17,4 +17,6 @@ public record AddProjectRequest
     public ProjectMeta MetaInfo { get; set; } = null!;
 
     public int? DefaultStatusId { get; set; }
+
+    public string? TemplateKey { get; init; }
 }

@@ -26,12 +26,17 @@ public class CreateBoardCommandHandlerTests
     public CreateBoardCommandHandlerTests()
     {
         Handler = new(UnitOfWork, Activity);
+        UnitOfWork.Statuses
+            .GetAllInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
     }
 
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<AddBoardRequest>().Create();
+        var request = Fixture.Build<AddBoardRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
         var project = AutoFixtures.Project;
 
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
@@ -49,7 +54,9 @@ public class CreateBoardCommandHandlerTests
     [Fact]
     public async Task Create_CallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture.Build<AddBoardRequest>().Create();
+        var request = Fixture.Build<AddBoardRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
 
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
         UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
@@ -62,7 +69,9 @@ public class CreateBoardCommandHandlerTests
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenProjectNotFound()
     {
-        var request = Fixture.Build<AddBoardRequest>().Create();
+        var request = Fixture.Build<AddBoardRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
 
         UnitOfWork.Boards.AddAsync(Arg.Any<Board>(), TestContext.Current.CancellationToken).Returns(x => x.Arg<Board>());
         UnitOfWork.Projects.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();

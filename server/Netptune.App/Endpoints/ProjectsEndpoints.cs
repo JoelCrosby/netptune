@@ -56,6 +56,9 @@ public static class ProjectsEndpoints
     {
         var result = await mediator.Send(new CreateProjectCommand(request), cancellationToken);
 
+        if (result.IsNotFound) return Results.NotFound(result);
+        if (!result.IsSuccess) return Results.BadRequest(result);
+
         return Results.Ok(result);
     }
 

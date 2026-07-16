@@ -38,6 +38,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { SetupTemplatePickerComponent } from '@app/entry/components/setup-template-picker/setup-template-picker.component';
 
 @Component({
   selector: 'app-create-board',
@@ -74,6 +75,12 @@ import { map } from 'rxjs/operators';
       <app-color-select
         [formField]="boardForm.color"
         label="Color"></app-color-select>
+
+      @if (!isEditMode) {
+        <app-setup-template-picker
+          [selectedKey]="boardForm.templateKey().value()"
+          (selectedKeyChange)="setTemplate($event)" />
+      }
     </form>
 
     <div app-dialog-actions align="end">
@@ -94,6 +101,7 @@ import { map } from 'rxjs/operators';
     FormField,
     StrokedButtonComponent,
     FlatButtonComponent,
+    SetupTemplatePickerComponent,
   ],
 })
 export class CreateBoardComponent {
@@ -109,6 +117,7 @@ export class CreateBoardComponent {
     identifier: this.data?.identifier ?? '',
     color: this.data?.metaInfo?.color ?? '',
     projectId: this.data?.projectId ?? (null as number | null),
+    templateKey: 'software',
   });
 
   boardForm = form(this.boardFormModel, (schema) => {
@@ -200,7 +209,7 @@ export class CreateBoardComponent {
       return;
     }
 
-    const { name, identifier, color } = this.boardForm;
+    const { name, identifier, color, templateKey } = this.boardForm;
 
     if (this.isEditMode) {
       if (!this.data?.id) return;
@@ -227,12 +236,17 @@ export class CreateBoardComponent {
         meta: {
           color: color().value(),
         },
+        templateKey: templateKey().value(),
       };
 
       this.store.dispatch(createBoard.init({ request }));
     }
 
     this.dialogRef.close();
+  }
+
+  setTemplate(templateKey: string) {
+    this.boardFormModel.update((model) => ({ ...model, templateKey }));
   }
 
   getColorLabel(value: string) {

@@ -16,4 +16,6 @@ public record AddWorkspaceRequest
 
     [Required]
     public WorkspaceMeta MetaInfo { get; set; } = null!;
+
+    public string? TemplateKey { get; init; }
 }

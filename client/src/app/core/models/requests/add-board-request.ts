@@ -5,4 +5,5 @@ export interface AddBoardRequest {
   identifier: string;
   projectId: number;
   meta?: BoardMeta;
+  templateKey?: string;
 }

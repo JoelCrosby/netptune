@@ -1,11 +1,11 @@
 using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Extensions;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Tags;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Tags;
 
@@ -37,14 +37,14 @@ public sealed class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, 
             return ClientResponse<TagViewModel>.NotFound;
         }
 
-        var trimmedTag = request.Request.Tag.Trim().Capitalize();
+        var trimmedTag = TagNames.Normalize(request.Request.Tag);
         var alreadyExists = await UnitOfWork.Tags.Exists(trimmedTag, workspaceId.Value, cancellationToken);
 
         if (alreadyExists) return ClientResponse<TagViewModel>.Failed("Tag Name should be unique");
 
         var tag = new Tag
         {
-            Name = request.Request.Tag,
+            Name = trimmedTag,
             OwnerId = userId,
             WorkspaceId = workspaceId.Value,
             IsDeleted = false,

@@ -31,12 +31,28 @@ public class CreateWorkspaceCommandHandlerTests
     public CreateWorkspaceCommandHandlerTests()
     {
         Handler = new(UnitOfWork, Identity, Activity, Options.Create(new WorkspaceStorageOptions()));
+        ConfigureTemplateRepositories();
+    }
+
+    private void ConfigureTemplateRepositories()
+    {
+        UnitOfWork.Statuses
+            .GetAllInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+        UnitOfWork.RelationTypes
+            .GetAllInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+        UnitOfWork.Tags
+            .GetTagsInWorkspace(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns([]);
     }
 
     [Fact]
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<AddWorkspaceRequest>().Create();
+        var request = Fixture.Build<AddWorkspaceRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
@@ -66,7 +82,9 @@ public class CreateWorkspaceCommandHandlerTests
     [Fact]
     public async Task Create_CallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture.Build<AddWorkspaceRequest>().Create();
+        var request = Fixture.Build<AddWorkspaceRequest>()
+            .Without(item => item.TemplateKey)
+            .Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);

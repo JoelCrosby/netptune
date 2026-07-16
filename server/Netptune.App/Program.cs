@@ -165,6 +165,7 @@ apiGroup.MapUsersEndpoints();
 apiGroup.MapWorkspacesEndpoints();
 apiGroup.MapPublicEndpoints();
 apiGroup.MapSearchEndpoints();
+apiGroup.MapSetupTemplatesEndpoints();
 apiGroup.MapUserPreferencesEndpoints();
 apiGroup.MapCommandPaletteEndpoints();
 

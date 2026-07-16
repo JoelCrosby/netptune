@@ -78,6 +78,8 @@ public static class WorkspacesEndpoints
     {
         var result = await mediator.Send(new CreateWorkspaceCommand(request), cancellationToken);
 
+        if (!result.IsSuccess) return Results.BadRequest(result);
+
         return Results.Ok(result);
     }
 

@@ -3,11 +3,13 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
+using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Handlers.Onboarding.Templates;
 
 namespace Netptune.Handlers.Boards.Commands;
 
@@ -38,6 +40,12 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
         if (project is null) return ClientResponse<BoardViewModel>.NotFound;
 
         var workspaceId = project.WorkspaceId;
+        var template = WorkspaceSetupTemplateCatalog.Find(req.TemplateKey);
+
+        if (template is null)
+        {
+            return ClientResponse<BoardViewModel>.Failed($"Unknown setup template '{req.TemplateKey}'");
+        }
 
         var board = new Board
         {
@@ -48,13 +56,22 @@ public sealed class CreateBoardCommandHandler : IRequestHandler<CreateBoardComma
             WorkspaceId = workspaceId,
         };
 
-        var backlogStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspaceId, StatusCategory.Backlog, cancellationToken);
-        var activeStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspaceId, StatusCategory.Active, cancellationToken);
-        var doneStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspaceId, StatusCategory.Done, cancellationToken);
+        var groups = await WorkspaceSetupTemplateApplicator.ResolveBoardGroupsAsync(
+            template,
+            workspaceId,
+            UnitOfWork,
+            cancellationToken);
 
-        board.BoardGroups.Add(new() { Name = "Backlog", SortOrder = 1D, WorkspaceId = workspaceId, StatusId = backlogStatus?.Id });
-        board.BoardGroups.Add(new() { Name = "Todo", SortOrder = 1.1D, WorkspaceId = workspaceId, StatusId = activeStatus?.Id });
-        board.BoardGroups.Add(new() { Name = "Done", SortOrder = 1.2D, WorkspaceId = workspaceId, StatusId = doneStatus?.Id });
+        foreach (var group in groups)
+        {
+            board.BoardGroups.Add(new()
+            {
+                Name = group.Name,
+                SortOrder = group.SortOrder,
+                WorkspaceId = workspaceId,
+                StatusId = group.StatusId,
+            });
+        }
 
         var result = await UnitOfWork.Boards.AddAsync(board, cancellationToken);
 

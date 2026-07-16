@@ -2,11 +2,13 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
+using Netptune.Handlers.Onboarding.Templates;
 
 namespace Netptune.Handlers.Workspaces.Commands;
 
@@ -21,6 +23,13 @@ internal static class WorkspaceFactory
     {
         return unitOfWork.Transaction(async () =>
         {
+            var template = WorkspaceSetupTemplateCatalog.Find(request.TemplateKey);
+
+            if (template is null)
+            {
+                return ClientResponse<WorkspaceViewModel>.Failed("Setup template not found");
+            }
+
             var entity = new Workspace
             {
                 Name = request.Name,
@@ -35,18 +44,26 @@ internal static class WorkspaceFactory
             var workspace = await unitOfWork.Workspaces.AddAsync(entity, cancellationToken);
 
             await unitOfWork.CompleteAsync(cancellationToken);
-            await unitOfWork.Statuses.EnsureDefaultTaskStatuses(workspace.Id, user.Id, cancellationToken);
-            await unitOfWork.RelationTypes.EnsureDefaultRelationTypes(workspace.Id, user.Id, cancellationToken);
-            await unitOfWork.CompleteAsync(cancellationToken);
+            await WorkspaceSetupTemplateApplicator.MergeWorkspaceDefaultsAsync(
+                template,
+                workspace.Id,
+                user.Id,
+                unitOfWork,
+                cancellationToken);
 
-            var defaultStatus = await unitOfWork.Statuses.GetTaskStatusByKey(workspace.Id, "new", cancellationToken)
+            var defaultStatus = await unitOfWork.Statuses.GetTaskStatusByKey(
+                                    workspace.Id,
+                                    WorkspaceSetupTemplateCatalog.NewStatusKey,
+                                    cancellationToken)
                                 ?? await unitOfWork.Statuses.GetFirstTaskStatus(workspace.Id, cancellationToken);
 
             if (defaultStatus is null) return ClientResponse<WorkspaceViewModel>.Failed("Default task status not found");
 
-            var backlogStatus = await unitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Backlog, cancellationToken);
-            var activeStatus = await unitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Active, cancellationToken);
-            var doneStatus = await unitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Done, cancellationToken);
+            var boardGroups = await WorkspaceSetupTemplateApplicator.ResolveBoardGroupsAsync(
+                template,
+                workspace.Id,
+                unitOfWork,
+                cancellationToken);
 
             var permissions = WorkspaceRolePermissions
                 .GetDefaultPermissions(WorkspaceRole.Owner)
@@ -70,9 +87,7 @@ internal static class WorkspaceFactory
                 UserId = user.Id,
                 WorkspaceId = workspace.Id,
                 DefaultStatusId = defaultStatus.Id,
-                BacklogStatusId = backlogStatus?.Id,
-                ActiveStatusId = activeStatus?.Id,
-                DoneStatusId = doneStatus?.Id,
+                BoardGroups = boardGroups,
                 MetaInfo = new()
                 {
                     Color = request.MetaInfo.Color,

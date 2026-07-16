@@ -4,6 +4,7 @@ using Netptune.Core.BaseEntities;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
+using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Projects;
 
@@ -107,30 +108,15 @@ public record Project : WorkspaceEntity<int>
             },
             BoardType = BoardType.Default,
             WorkspaceId = workspaceId,
-            BoardGroups = new[]
-            {
-                new BoardGroup
+            BoardGroups = options.BoardGroups
+                .Select(group => new BoardGroup
                 {
-                    Name = "Backlog",
-                    SortOrder = 1D,
+                    Name = group.Name,
+                    SortOrder = group.SortOrder,
                     WorkspaceId = workspaceId,
-                    StatusId = options.BacklogStatusId,
-                },
-                new BoardGroup
-                {
-                    Name = "Todo",
-                    SortOrder = 1.1D,
-                    WorkspaceId = workspaceId,
-                    StatusId = options.ActiveStatusId,
-                },
-                new BoardGroup
-                {
-                    Name = "Done",
-                    SortOrder = 1.3D,
-                    WorkspaceId = workspaceId,
-                    StatusId = options.DoneStatusId,
-                },
-            },
+                    StatusId = group.StatusId,
+                })
+                .ToList(),
         };
     }
 
@@ -160,10 +146,5 @@ public class CreateProjectOptions
 
     public int? DefaultStatusId { get; init; }
 
-    // Optional pre-assigned statuses for the auto-created Backlog/Todo/Done groups.
-    public int? BacklogStatusId { get; init; }
-
-    public int? ActiveStatusId { get; init; }
-
-    public int? DoneStatusId { get; init; }
+    public IReadOnlyList<CreateBoardGroupOptions> BoardGroups { get; init; } = [];
 }

@@ -125,7 +125,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         var allTags = newTags.Concat(existingTags).ToDictionary(tag => tag.Name, tag => tag);
 
-        await UnitOfWork.Statuses.EnsureDefaultTaskStatuses(workspaceId, userId, CancellationToken.None);
+        await UnitOfWork.Statuses.EnsureNewTaskStatus(workspaceId, userId, CancellationToken.None);
         await UnitOfWork.CompleteAsync();
 
         var statuses = await UnitOfWork.Statuses.GetAllInWorkspace(workspaceId, isReadonly: true);

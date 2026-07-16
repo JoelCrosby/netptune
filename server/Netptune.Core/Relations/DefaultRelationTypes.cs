@@ -1,17 +1,22 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Onboarding.Templates;
 
 namespace Netptune.Core.Relations;
 
 public static class DefaultRelationTypes
 {
     public static readonly IReadOnlyList<DefaultRelationTypeDefinition> All =
-    [
-        new("Parent of", "Child of", "parent-of", "#8b5cf6", RelationCategory.Hierarchy, 0),
-        new("Blocks", "Is Blocked By", "blocks", "#b81414", RelationCategory.Dependency, 1),
-        new("Relates To", "Relates To", "relates-to", "#6b7280", RelationCategory.Related, 2),
-        new("Duplicates", "Is Duplicated By", "duplicates", "#f59e0b", RelationCategory.Duplicate, 3),
-    ];
+        WorkspaceSetupTemplateCatalog.Find(WorkspaceSetupTemplateCatalog.DefaultKey)!
+            .RelationTypes
+            .Select((definition, index) => new DefaultRelationTypeDefinition(
+                definition.Name,
+                definition.InverseName,
+                definition.Key,
+                definition.Color,
+                definition.Category,
+                index))
+            .ToList();
 
     public static RelationType Create(DefaultRelationTypeDefinition definition, int workspaceId, string? ownerId)
     {

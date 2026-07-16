@@ -1,12 +1,14 @@
 using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
+using Netptune.Handlers.Onboarding.Templates;
 
 namespace Netptune.Handlers.Projects.Commands;
 
@@ -36,16 +38,24 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
 
             var user = await Identity.GetCurrentUser();
             var projectKey = await UnitOfWork.Projects.GenerateProjectKey(request.Request.Name, workspace.Id, cancellationToken);
+            var template = WorkspaceSetupTemplateCatalog.Find(request.Request.TemplateKey);
 
-            await UnitOfWork.Statuses.EnsureDefaultTaskStatuses(workspace.Id, user.Id, cancellationToken);
+            if (template is null)
+            {
+                return ClientResponse<ProjectViewModel>.Failed($"Unknown setup template '{request.Request.TemplateKey}'");
+            }
+
+            await UnitOfWork.Statuses.EnsureNewTaskStatus(workspace.Id, user.Id, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             var defaultStatus = await ResolveDefaultStatus(request.Request.DefaultStatusId, workspace.Id, cancellationToken);
             if (defaultStatus is null) return ClientResponse<ProjectViewModel>.Failed("Default task status not found");
 
-            var backlogStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Backlog, cancellationToken);
-            var activeStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Active, cancellationToken);
-            var doneStatus = await UnitOfWork.Statuses.GetFirstTaskStatusByCategory(workspace.Id, StatusCategory.Done, cancellationToken);
+            var boardGroups = await WorkspaceSetupTemplateApplicator.ResolveBoardGroupsAsync(
+                template,
+                workspace.Id,
+                UnitOfWork,
+                cancellationToken);
 
             var project = Project.Create(new()
             {
@@ -57,9 +67,7 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
                 RepositoryUrl = request.Request.RepositoryUrl,
                 MetaInfo = request.Request.MetaInfo,
                 DefaultStatusId = defaultStatus.Id,
-                BacklogStatusId = backlogStatus?.Id,
-                ActiveStatusId = activeStatus?.Id,
-                DoneStatusId = doneStatus?.Id,
+                BoardGroups = boardGroups,
             });
 
             workspace.Projects.Add(project);
