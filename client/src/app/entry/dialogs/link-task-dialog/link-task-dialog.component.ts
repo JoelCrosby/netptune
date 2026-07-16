@@ -87,8 +87,8 @@ export interface LinkTaskDialogResult {
         (valueChange)="searchInput.set($event)" />
 
       <app-datatable
-        containerClass="h-[380px] overflow-auto"
-        tableClass="min-w-[660px]"
+        containerClass="h-[380px] overflow-y-auto overflow-x-hidden"
+        tableClass="table-fixed"
         rowClass="bg-card"
         emptyMessage="No tasks available to link."
         [data]="data"
@@ -205,7 +205,13 @@ export class LinkTaskDialogComponent {
     key: 'link-tasks',
     columns: [
       { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
-      { id: 'name', header: 'Task', accessor: 'name', sortable: true },
+      {
+        id: 'name',
+        header: 'Task',
+        accessor: 'name',
+        sortable: true,
+        cellClass: 'min-w-0',
+      },
       { id: 'status', header: 'Status', sortable: true, widthClass: 'w-40' },
     ],
     resource: {
