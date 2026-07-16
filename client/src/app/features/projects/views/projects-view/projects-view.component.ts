@@ -14,6 +14,9 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { LucideFolderOpen, LucidePlus } from '@lucide/angular';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 
 @Component({
   imports: [
@@ -21,6 +24,10 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
     PageHeaderComponent,
     PageLoadingComponent,
     ProjectListComponent,
+    EmptyStateComponent,
+    FlatButtonComponent,
+    LucideFolderOpen,
+    LucidePlus,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -36,6 +43,23 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 
       @if (loading()) {
         <app-page-loading />
+      } @else if (projects().length === 0) {
+        <app-empty-state
+          title="There are currently no projects."
+          description="Create your first project to organise related boards and tasks.">
+          <svg emptyStateIcon size="38" lucideFolderOpen></svg>
+
+          @if (canCreateProjects()) {
+            <button
+              emptyStateAction
+              app-flat-button
+              type="button"
+              (click)="showAddModal()">
+              <svg size="20" lucidePlus></svg>
+              <span>Create Project</span>
+            </button>
+          }
+        </app-empty-state>
       } @else {
         <app-project-list />
       }
