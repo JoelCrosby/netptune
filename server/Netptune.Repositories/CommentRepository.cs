@@ -28,6 +28,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             .Include(x => x.Owner)
             .Include(x => x.Reactions)
             .Include(x => x.Mentions).ThenInclude(m => m.User)
+            .AsSplitQuery()
             .ToReadonlyListAsync(isReadonly, cancellationToken);
     }
 
@@ -44,6 +45,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .AsNoTracking()
+            .AsSplitQuery()
             .Select(ToViewModel())
             .ToListAsync(cancellationToken);
     }
@@ -53,6 +55,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
         return Entities
             .Where(x => x.Id == id)
             .AsNoTracking()
+            .AsSplitQuery()
             .Select(ToViewModel())
             .FirstOrDefaultAsync(cancellationToken);
     }
