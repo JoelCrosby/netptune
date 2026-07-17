@@ -39,9 +39,22 @@ import { StepComponent } from '@static/components/stepper/step.component';
 import { WorkspaceSetupTemplatesService } from '@core/services/workspace-setup-templates.service';
 import { SetupCreationSummaryComponent } from '../../components/setup-creation-summary/setup-creation-summary.component';
 import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
+import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
+import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 
 @Component({
   selector: 'app-workspace-dialog',
+  host: {
+    '[style.--primary-rgb]': 'primaryRgb()',
+  },
+  styles: `
+    :host {
+      --primary: rgba(var(--primary-rgb));
+      --primary-selected: rgba(var(--primary-rgb), 0.6);
+      --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
+      --card-selected: var(--primary);
+    }
+  `,
   imports: [
     DialogTitleComponent,
     FormInputComponent,
@@ -168,6 +181,7 @@ export class WorkspaceDialogComponent {
   private store = inject(Store);
   private workspaceServcie = inject(WorkspacesService);
   private setupTemplates = inject(WorkspaceSetupTemplatesService);
+  private theme = this.store.selectSignal(selectEffectiveTheme);
 
   dialogRef = inject<DialogRef<WorkspaceDialogComponent>>(DialogRef);
   data = inject<Workspace>(DIALOG_DATA, { optional: true });
@@ -221,6 +235,14 @@ export class WorkspaceDialogComponent {
       }),
     });
   });
+
+  readonly primaryRgb = computed(
+    () =>
+      workspaceBrandVariables(
+        this.dialogForm.color().value(),
+        this.theme() === 'dark'
+      )['--primary-rgb']
+  );
 
   selectedTemplate = computed(() =>
     this.setupTemplates

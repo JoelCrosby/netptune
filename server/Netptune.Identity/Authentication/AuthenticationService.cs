@@ -6,8 +6,6 @@ using System.Text;
 using Flurl;
 
 using Microsoft.Extensions.Caching.Distributed;
-using Mediator;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +26,6 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Handlers.Workspaces.Commands;
 
 using WorkspaceAppUser = Netptune.Core.Relationships.WorkspaceAppUser;
 
@@ -42,7 +39,6 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly IHttpContextAccessor ContextAccessor;
     private readonly IIdentityService Identity;
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IMediator Mediator;
     private readonly IWorkspacePermissionCache WorkspacePermissionCache;
     private readonly ICacheProvider Cache;
 
@@ -59,7 +55,6 @@ public class NetptuneAuthService : INetptuneAuthService
         IHttpContextAccessor contextAccessor,
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
-        IMediator mediator,
         IWorkspacePermissionCache workspacePermissionCache,
         ICacheProvider cache)
     {
@@ -69,7 +64,6 @@ public class NetptuneAuthService : INetptuneAuthService
         ContextAccessor = contextAccessor;
         Identity = identity;
         UnitOfWork = unitOfWork;
-        Mediator = mediator;
         WorkspacePermissionCache = workspacePermissionCache;
         Cache = cache;
 
@@ -331,17 +325,6 @@ public class NetptuneAuthService : INetptuneAuthService
 
             await UnitOfWork.CompleteAsync();
         }
-
-        await Mediator.Send(new CreateWorkspaceForNewUserCommand(new()
-        {
-            Name = $"{user.Firstname}'s Workspace",
-            Description = "Personal Workspace",
-            Slug = user.Firstname.ToUrlSlug(true),
-            MetaInfo = new()
-            {
-                Color = "#843ADF",
-            },
-        }, user));
 
         if (!result.Succeeded)
         {

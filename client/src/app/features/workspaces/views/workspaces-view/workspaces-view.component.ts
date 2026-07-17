@@ -1,8 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, untracked } from '@angular/core';
 import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { DialogService } from '@core/services/dialog.service';
-import { selectWorkspacesLoading } from '@core/store/workspaces/workspaces.selectors';
+import {
+  selectAllWorkspaces,
+  selectWorkspacesLoaded,
+  selectWorkspacesLoading,
+} from '@core/store/workspaces/workspaces.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -36,6 +40,24 @@ export class WorkspacesViewComponent {
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectWorkspacesLoading);
+  private loaded = this.store.selectSignal(selectWorkspacesLoaded);
+  private workspaces = this.store.selectSignal(selectAllWorkspaces);
+  private initialSetupOpened = false;
+
+  constructor() {
+    effect(() => {
+      if (
+        !this.loaded() ||
+        this.workspaces().length > 0 ||
+        this.initialSetupOpened
+      ) {
+        return;
+      }
+
+      this.initialSetupOpened = true;
+      untracked(() => this.openWorkspaceDialog());
+    });
+  }
 
   openWorkspaceDialog() {
     this.dialog.openWizard(WorkspaceDialogComponent, {

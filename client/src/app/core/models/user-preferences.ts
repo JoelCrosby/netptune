@@ -19,7 +19,7 @@ export interface PreferenceDefinition {
   groupKey: string;
   label: string;
   controlType: 'select' | 'hidden';
-  valueType: 'string' | 'number-array' | 'number-array-map';
+  valueType: 'string' | 'number-array' | 'number-array-map' | 'string-map';
   defaultValue: unknown;
   allowedScopes: PreferenceScope[];
   options: PreferenceOption[];

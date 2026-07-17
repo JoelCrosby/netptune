@@ -5,8 +5,6 @@ using System.Text;
 
 using FluentAssertions;
 
-using Mediator;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
@@ -45,7 +43,6 @@ public class AuthenticationServiceTests
     private readonly IHttpContextAccessor ContextAccessor = Substitute.For<IHttpContextAccessor>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
-    private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly ICacheProvider Cache = Substitute.For<ICacheProvider>();
@@ -95,7 +92,6 @@ public class AuthenticationServiceTests
             ContextAccessor,
             Identity,
             UnitOfWork,
-            Mediator,
             WorkspacePermissionCache,
             Cache
         );

@@ -44,7 +44,7 @@ internal static class WorkspaceFactory
             var workspace = await unitOfWork.Workspaces.AddAsync(entity, cancellationToken);
 
             await unitOfWork.CompleteAsync(cancellationToken);
-            await WorkspaceSetupTemplateApplicator.MergeWorkspaceDefaultsAsync(
+            await WorkspaceSetupTemplateApplicator.ApplyWorkspaceDefaultsAsync(
                 template,
                 workspace.Id,
                 user.Id,
