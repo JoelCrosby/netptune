@@ -101,6 +101,12 @@ export const routes: Routes = [
         data: { title: 'Sprints' },
       },
       {
+        path: 'reports',
+        loadChildren: () => import('./features/reporting/reporting.routes').then((m) => m.routes),
+        runGuardsAndResolvers: 'always',
+        data: { title: 'Reports' },
+      },
+      {
         path: 'notifications',
         loadChildren: () => import('./features/notifications/notifications.routes').then((m) => m.routes),
         canActivate: [authGuard],

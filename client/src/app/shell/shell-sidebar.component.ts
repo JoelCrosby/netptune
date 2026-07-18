@@ -15,6 +15,7 @@ import {
   LucideCalendarDays,
   LucideCalendarRange,
   LucideChartNoAxesColumn,
+  LucideChartSpline,
   LucideGitFork,
   LucideLayoutDashboard,
   LucideLayoutGrid,
@@ -162,6 +163,11 @@ export class ShellSidebarComponent {
         label: 'Projects',
         value: ['./projects'],
         icon: LucideChartNoAxesColumn,
+      },
+      {
+        label: 'Reports',
+        value: ['./reports'],
+        icon: LucideChartSpline,
       },
       { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
       {
