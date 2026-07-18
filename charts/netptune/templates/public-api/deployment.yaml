@@ -1,0 +1,70 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "public-api-deployment"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "public-api"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "netptune-app"
+        app.kubernetes.io/component: "public-api"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: "kubernetes.io/hostname"
+          whenUnsatisfiable: "ScheduleAnyway"
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: "netptune-app"
+              app.kubernetes.io/component: "public-api"
+              app.kubernetes.io/instance: "{{ .Release.Name }}"
+      containers:
+        - image: "{{ .Values.parameters.publicApi.public_api_image }}"
+          name: "public-api"
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Production"
+          envFrom:
+            - configMapRef:
+                name: "public-api-config"
+            - secretRef:
+                name: "public-api-secrets"
+          ports:
+            - name: "http"
+              protocol: "TCP"
+              containerPort: {{ .Values.parameters.publicApi.port_http | int }}
+          imagePullPolicy: "Always"
+          livenessProbe:
+            httpGet:
+              path: "/health/live"
+              port: "http"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/health/ready"
+              port: "http"
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+{{- toYaml .Values.parameters.publicApi.resources | nindent 12 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "public-api"
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+  replicas: {{ .Values.parameters.publicApi.replicas | int }}
+  revisionHistoryLimit: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: "RollingUpdate"

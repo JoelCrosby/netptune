@@ -2,6 +2,7 @@ ingress:
   enabled: true
   host: "netptune.co.uk"
   appHost: "app.netptune.co.uk"
+  publicApiHost: "api.netptune.co.uk"
   tls:
     enabled: true
     email: ""
@@ -114,6 +115,21 @@ parameters:
         memory: "512Mi"
     port_http: 7400
     api_image: "ghcr.io/joelcrosby/netptune:latest"
+  publicApi:
+    replicas: 1
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 6
+      targetCPUUtilizationPercentage: 70
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        memory: "512Mi"
+    port_http: 7600
+    public_api_image: "ghcr.io/joelcrosby/netptune-public-api:latest"
   client:
     replicas: 1
     autoscaling:
@@ -189,6 +205,9 @@ secrets:
     turnstile_secret_key: ""
     cloudflare_email_token: ""
     cloudflare_account_id: ""
+  publicApi:
+    cache_password: ""
+    postgres_password: ""
 config:
   postgres:
     POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
@@ -220,6 +239,18 @@ config:
     OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
     ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
     ASPNETCORE_URLS: "http://0.0.0.0:7400"
+    CACHE_HOST: "cache-service"
+    CACHE_PORT: "6379"
+    POSTGRESDB_HOST: "postgres-service"
+    POSTGRESDB_PORT: "5432"
+    POSTGRESDB_USERNAME: "postgres"
+    POSTGRESDB_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres-service:5432/netptune"
+    POSTGRESDB_DATABASENAME: "netptune"
+    ConnectionStrings__nats: "nats://nats-service:4222"
+  publicApi:
+    OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+    ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+    ASPNETCORE_URLS: "http://0.0.0.0:7600"
     CACHE_HOST: "cache-service"
     CACHE_PORT: "6379"
     POSTGRESDB_HOST: "postgres-service"

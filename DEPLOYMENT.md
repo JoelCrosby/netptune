@@ -18,10 +18,13 @@ helm upgrade --install netptune-app charts/netptune/ \
   --namespace default \
   --set ingress.enabled=true \
   --set "ingress.host=your-domain.com" \
+  --set "ingress.publicApiHost=api.your-domain.com" \
   --set ingress.tls.enabled=true \
   --set "ingress.tls.email=your@email.com" \
   --set "secrets.postgres.postgres_password=<password>" \
   --set "secrets.cache.cache_password=<password>" \
+  --set "secrets.publicApi.cache_password=<password>" \
+  --set "secrets.publicApi.postgres_password=<password>" \
   --set "secrets.api.signing_key=<jwt-signing-key>" \
   --set "secrets.api.github_client_id=<github-client-id>" \
   --set "secrets.api.github_secret=<github-secret>" \
@@ -39,7 +42,7 @@ See [charts/netptune/values.yaml](charts/netptune/values.yaml) for the full set 
 The server projects use [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/) for local orchestration. Docker is required.
 
 ```bash
-# Start the full backend stack (API, jobs, Postgres, Redis, NATS)
+# Start the full backend stack (app API, public API, jobs, Postgres, Redis, NATS)
 cd server
 dotnet run --project Netptune.AppHost
 

@@ -33,6 +33,7 @@ Keep deployment-specific values outside `charts/netptune/values.yaml`. Start wit
 ingress:
   host: netptune.example.com
   appHost: app.netptune.example.com
+  publicApiHost: api.netptune.example.com
   tls:
     enabled: true
     email: admin@example.com
@@ -62,7 +63,7 @@ persistence:
     size: 40Gi
 ```
 
-The current route for `ingress.host` sends `/api/` to the API and `/` to the website service. `ingress.appHost` serves the Angular client and proxies `/api/` to the API.
+The current route for `ingress.host` sends `/api/` to the API and `/` to the website service. `ingress.appHost` serves the Angular client and proxies `/api/` to the API. `ingress.publicApiHost` sends the complete host to the separately deployed public API, including its `/docs` UI and `/openapi/v1.json` document.
 
 :::warning
 
@@ -148,6 +149,8 @@ The chart defaults application images to `latest` with `imagePullPolicy: Always`
 parameters:
   api:
     api_image: ghcr.io/joelcrosby/netptune:sha-<full-commit-sha>
+  publicApi:
+    public_api_image: ghcr.io/joelcrosby/netptune-public-api:sha-<full-commit-sha>
   jobs:
     jobs_image: ghcr.io/joelcrosby/netptune-jobs:sha-<full-commit-sha>
   activity:
@@ -158,6 +161,8 @@ parameters:
 website:
   image: ghcr.io/joelcrosby/netptune-website:sha-<full-commit-sha>
 ```
+
+The `/api/v1` route is served by the independently scalable public API deployment. Its API-key-only host shares PostgreSQL, Valkey, and NATS with the main application but has its own image, configuration, secrets, service, and health probes.
 
 The production client image currently contains the Netptune-hosted Cloudflare Turnstile site key at build time. A self-hosted deployment needs a client image rebuilt with its own site key in `client/src/environments/environment.prod.ts`; the Helm chart only configures the server-side secret.
 

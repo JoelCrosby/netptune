@@ -14,6 +14,24 @@ spec:
   hostnames:
     - "{{ .Values.ingress.host }}"
   rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/api/v1"
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: security-headers
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: body-size-limit
+      backendRefs:
+        - name: public-api-service
+          port: {{ .Values.parameters.publicApi.port_http | int }}
     # Server sent event streams. The buffering middleware (body-size-limit) buffers
     # responses as well as requests, which never flushes an open stream, so these
     # endpoints must bypass it.
@@ -80,6 +98,24 @@ spec:
   hostnames:
     - "{{ .Values.ingress.appHost }}"
   rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/api/v1"
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: security-headers
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: body-size-limit
+      backendRefs:
+        - name: public-api-service
+          port: {{ .Values.parameters.publicApi.port_http | int }}
     # Server sent event streams. The buffering middleware (body-size-limit) buffers
     # responses as well as requests, which never flushes an open stream, so these
     # endpoints must bypass it.

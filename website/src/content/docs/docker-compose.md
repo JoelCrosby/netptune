@@ -38,7 +38,7 @@ The backend is orchestrated locally with .NET Aspire rather than Compose. You ne
 dotnet run --project server/Netptune.AppHost/Netptune.AppHost.csproj
 ```
 
-The AppHost starts PostgreSQL, Valkey, NATS with JetStream, Meilisearch, seed data, the API, jobs, and activity projects. Service credentials used by the API and workers still need to be supplied through .NET user secrets or environment variables; see the [Configuration Reference](/docs/configuration).
+The AppHost starts PostgreSQL, Valkey, NATS with JetStream, Meilisearch, seed data, the app API, the API-key-only public API, jobs, and activity projects. Service credentials used by the APIs and workers still need to be supplied through .NET user secrets or environment variables; see the [Configuration Reference](/docs/configuration).
 
 Run the Angular client separately:
 
@@ -48,7 +48,7 @@ pnpm install
 pnpm start
 ```
 
-The development client runs on `http://localhost:6400` and the API launch profile uses `http://localhost:7400` and `https://localhost:7401`.
+The development client runs on `http://localhost:6400`. The app API launch profile uses `http://localhost:7400` and `https://localhost:7401`; the public API profile uses `http://localhost:7500` and `https://localhost:7501`.
 
 ## Production deployment
 

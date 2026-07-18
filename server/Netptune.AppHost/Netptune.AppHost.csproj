@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Netptune.ActivityServer\Netptune.ActivityServer.csproj" />
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.JobServer\Netptune.JobServer.csproj" />
+    <ProjectReference Include="..\Netptune.PublicApi\Netptune.PublicApi.csproj" />
     <ProjectReference Include="..\Netptune.SeedData\Netptune.SeedData.csproj" />
   </ItemGroup>
 

@@ -62,4 +62,12 @@ var api = builder
     .WithReference(meilisearch)
     .WithExternalHttpEndpoints();
 
+var publicApi = builder
+    .AddProject<Projects.Netptune_PublicApi>("public-api")
+    .WaitForCompletion(seedData)
+    .WithCache(cache)
+    .WithPostgres(postgresdb)
+    .WithNats(nats)
+    .WithExternalHttpEndpoints();
+
 builder.Build().Run();

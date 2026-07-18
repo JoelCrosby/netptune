@@ -1,0 +1,36 @@
+{{- if .Values.ingress.enabled }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: netptune-public-api
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "public-api"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  parentRefs:
+    - name: netptune-gateway
+      sectionName: https-public-api
+  hostnames:
+    - "{{ .Values.ingress.publicApiHost }}"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: security-headers
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: body-size-limit
+      backendRefs:
+        - name: public-api-service
+          port: {{ .Values.parameters.publicApi.port_http | int }}
+{{- end }}

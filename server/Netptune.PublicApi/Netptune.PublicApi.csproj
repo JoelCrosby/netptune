@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.OpenApi" />
+    <PackageReference Include="Scalar.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Netptune.Cache\Netptune.Cache.csproj" />
+    <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+    <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.Events\Netptune.Events.csproj" />
+    <ProjectReference Include="..\Netptune.Handlers\Netptune.Handlers.csproj" />
+    <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
+    <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
+    <ProjectReference Include="..\Netptune.ServiceDefaults\Netptune.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
+  </ItemGroup>
+
+</Project>

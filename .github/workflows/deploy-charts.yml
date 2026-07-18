@@ -17,6 +17,7 @@ concurrency:
 env:
   REGISTRY: ghcr.io
   APP_IMAGE_NAME: ${{ github.repository_owner }}/netptune
+  PUBLIC_API_IMAGE_NAME: ${{ github.repository_owner }}/netptune-public-api
   CLIENT_IMAGE_NAME: ${{ github.repository_owner }}/netptune-client
   JOBS_IMAGE_NAME: ${{ github.repository_owner }}/netptune-jobs
   ACTIVITY_IMAGE_NAME: ${{ github.repository_owner }}/netptune-activity
@@ -219,6 +220,59 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  build-public-api:
+    name: Build Public API Image
+    needs: [changes, test-server]
+    if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute build number
+        id: build_number
+        run: echo "value=$(date '+%Y%m%d').${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.PUBLIC_API_IMAGE_NAME }}
+          tags: |
+            type=sha,format=long
+            type=ref,event=branch
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: server/Netptune.PublicApi/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COMMIT=${{ github.sha }}
+            GITHUB_REF=${{ github.ref }}
+            BUILD_NUMBER=${{ steps.build_number.outputs.value }}
+            RUN_ID=${{ github.run_id }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   build-activity:
     name: Build Activity Image
     needs: [changes, test-server]
@@ -378,13 +432,14 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: [changes, test-server, build-app, build-jobs, build-activity, build-client, build-website]
+    needs: [changes, test-server, build-app, build-public-api, build-jobs, build-activity, build-client, build-website]
     if: |
       ${{
         always() &&
         needs.changes.outputs.deploy == 'true' &&
         (needs.test-server.result == 'success' || needs.test-server.result == 'skipped') &&
         (needs.build-app.result == 'success' || needs.build-app.result == 'skipped') &&
+        (needs.build-public-api.result == 'success' || needs.build-public-api.result == 'skipped') &&
         (needs.build-jobs.result == 'success' || needs.build-jobs.result == 'skipped') &&
         (needs.build-activity.result == 'success' || needs.build-activity.result == 'skipped') &&
         (needs.build-client.result == 'success' || needs.build-client.result == 'skipped') &&
@@ -416,6 +471,7 @@ jobs:
             --namespace default \
             --set ingress.enabled=true \
             --set "ingress.host=netptune.co.uk" \
+            --set "ingress.publicApiHost=api.netptune.co.uk" \
             --set ingress.tls.enabled=true \
             --set "ingress.tls.email=${{ secrets.TLS_EMAIL }}" \
             --set "parameters.client.api_url=http://api-service:7400" \
@@ -442,6 +498,8 @@ jobs:
             --set "secrets.api.turnstile_secret_key=${{ secrets.NETPTUNE_TURNSTILE_SECRET_KEY }}" \
             --set "secrets.api.cloudflare_email_token=${{ secrets.NETPTUNE_CLOUDFLARE_EMAIL_TOKEN }}" \
             --set "secrets.api.cloudflare_account_id=${{ secrets.NETPTUNE_CLOUDFLARE_ACCOUNT_ID }}" \
+            --set "secrets.publicApi.cache_password=${{ secrets.CACHE_PASSWORD }}" \
+            --set "secrets.publicApi.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.jobs.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.jobs.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.jobs.signing_key=${{ secrets.SIGNING_KEY }}" \
@@ -481,7 +539,7 @@ jobs:
           deployments=()
 
           if [[ "$SERVER_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then
-            deployments+=(api-deployment jobs-deployment activity-deployment)
+            deployments+=(api-deployment public-api-deployment jobs-deployment activity-deployment)
           fi
 
           if [[ "$CLIENT_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then

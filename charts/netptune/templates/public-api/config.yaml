@@ -1,0 +1,27 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "public-api-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "public-api"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: "{{ .Values.config.publicApi.ASPNETCORE_FORWARDEDHEADERS_ENABLED }}"
+  HTTP_PORTS: "{{ .Values.parameters.publicApi.port_http }}"
+  ASPNETCORE_URLS: "{{ .Values.config.publicApi.ASPNETCORE_URLS }}"
+  CACHE_HOST: "{{ .Values.config.publicApi.CACHE_HOST }}"
+  CACHE_PORT: "{{ .Values.config.publicApi.CACHE_PORT }}"
+  POSTGRESDB_HOST: "{{ .Values.config.publicApi.POSTGRESDB_HOST }}"
+  POSTGRESDB_PORT: "{{ .Values.config.publicApi.POSTGRESDB_PORT }}"
+  POSTGRESDB_USERNAME: "{{ .Values.config.publicApi.POSTGRESDB_USERNAME }}"
+  POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.publicApi.POSTGRESDB_JDBCCONNECTIONSTRING }}"
+  POSTGRESDB_DATABASENAME: "{{ .Values.config.publicApi.POSTGRESDB_DATABASENAME }}"
+  ConnectionStrings__nats: "{{ .Values.config.publicApi.ConnectionStrings__nats }}"
+{{- if .Values.aspire.enabled }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard-service:18889"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "{{ .Values.config.publicApi.OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY }}"
+  OTEL_SERVICE_NAME: "netptune-public-api"
+{{- end }}

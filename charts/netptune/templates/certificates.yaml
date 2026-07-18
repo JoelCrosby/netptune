@@ -21,6 +21,24 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: netptune-public-api-tls
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "public-api"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    cert-manager.io/issue-temporary-certificate: "true"
+spec:
+  secretName: netptune-public-api-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "{{ .Values.ingress.publicApiHost }}"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: netptune-app-tls
   labels:
     app.kubernetes.io/name: "netptune-app"

@@ -84,6 +84,8 @@ The current storage options do not expose a custom S3 endpoint variable. AWS S3-
 
 The API processes `X-Forwarded-For`, `X-Forwarded-Proto`, and `X-Forwarded-Host` and clears the default known-proxy restrictions.
 
+The public API uses the same PostgreSQL, Valkey, NATS, forwarded-header, and OTLP settings under `config.publicApi` and `secrets.publicApi`. Its chart port is `7600`; it does not require JWT signing or third-party OAuth secrets because it accepts API credentials only.
+
 ## Jobs service
 
 The jobs service requires PostgreSQL, Valkey, NATS, Meilisearch, Cloudflare email, and S3 configuration. It consumes these NATS subjects by default:
