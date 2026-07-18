@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,14 +10,18 @@ namespace Netptune.Identity.Authorization;
 
 public static class AuthorizationServiceCollectionExtensions
 {
-    public static void AddNeptuneAuthorization(this IServiceCollection services)
+    public static void AddNeptuneAuthorization(
+        this IServiceCollection services,
+        string authenticationScheme = AuthenticationSchemes.Smart)
     {
+        services.Configure<NetptuneAuthorizationOptions>(options =>
+            options.AuthenticationScheme = authenticationScheme);
         services.AddSingleton<IAuthorizationPolicyProvider, NetptuneAuthorizationPolicyProvider>();
 
         services.AddAuthorizationBuilder()
             .SetDefaultPolicy(new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .AddAuthenticationSchemes(authenticationScheme)
                 .Build())
             .AddPolicy(AuthenticationSchemes.Github, builder => builder
                 .RequireAuthenticatedUser()
@@ -32,8 +35,13 @@ public static class AuthorizationServiceCollectionExtensions
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(AuthenticationSchemes.Microsoft)
                 .Build())
+            .AddPolicy(NetptunePolicies.InteractiveUser, builder => builder
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(authenticationScheme)
+                .RequireClaim(NetptuneClaims.ActorType, AppUserType.User.ToString())
+                .Build())
             .AddPolicy(NetptunePolicies.Workspace, builder => builder.RequireAuthenticatedUser()
-                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .AddAuthenticationSchemes(authenticationScheme)
                 .AddRequirements(new WorkspaceRequirement())
                 .Build());
 

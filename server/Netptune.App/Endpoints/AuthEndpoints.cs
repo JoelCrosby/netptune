@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Netptune.App.Utility;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
+using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -34,13 +35,13 @@ public static class AuthEndpoints
         group.MapPost("/confirm-email", HandleConfirmEmail).AllowAnonymous();
         group.MapGet("/request-password-reset", HandleRequestPasswordReset).AllowAnonymous();
         group.MapPost("/reset-password", HandleResetPassword).AllowAnonymous();
-        group.MapPatch("/change-password", HandleChangePassword).RequireAuthorization();
-        group.MapGet("/current-user", HandleCurrentUser).AllowAnonymous();
+        group.MapPatch("/change-password", HandleChangePassword).RequireAuthorization(NetptunePolicies.InteractiveUser);
+        group.MapGet("/current-user", HandleCurrentUser).RequireAuthorization(NetptunePolicies.InteractiveUser);
         group.MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite).AllowAnonymous();
         group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
-        group.MapPost("/logout", HandleLogout).RequireAuthorization();
-        group.MapPost("/link-provider", HandleLinkProvider).RequireAuthorization();
-        group.MapGet("/login-providers", HandleGetLoginProviders).RequireAuthorization();
+        group.MapPost("/logout", HandleLogout).RequireAuthorization(NetptunePolicies.InteractiveUser);
+        group.MapPost("/link-provider", HandleLinkProvider).RequireAuthorization(NetptunePolicies.InteractiveUser);
+        group.MapGet("/login-providers", HandleGetLoginProviders).RequireAuthorization(NetptunePolicies.InteractiveUser);
 
         group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
         group.MapGet("/github-login-redirect", HandleGithubLoginCallback)
@@ -131,7 +132,8 @@ public static class AuthEndpoints
 
         var result = await authenticationService.Register(request);
 
-        if (!result.IsSuccess) {
+        if (!result.IsSuccess)
+        {
             return Results.Problem(
                 detail: result.Message ?? "Unauthorized",
                 statusCode: StatusCodes.Status401Unauthorized

@@ -32,7 +32,7 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
         var user = await DataContext.WorkspaceAppUsers
             .Include(u => u.Workspace)
             .Include(u => u.User)
-            .Where(u => u.Workspace.Slug == "netptune")
+            .Where(u => u.Workspace.Slug == "netptune" && u.User.UserType == AppUserType.User)
             .Select(u => u.User)
             .FirstOrDefaultAsync();
 
@@ -47,6 +47,7 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
             new (ClaimTypes.Name, user.DisplayName),
             new (ClaimTypes.NameIdentifier, user.Id),
             new (ClaimTypes.Email, user.Email!),
+            new (NetptuneClaims.ActorType, AppUserType.User.ToString()),
         };
 
         if (Request.Headers.TryGetValue("workspace", out var workspace))

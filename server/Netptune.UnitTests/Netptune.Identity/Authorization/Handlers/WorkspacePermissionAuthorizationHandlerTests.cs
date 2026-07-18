@@ -125,6 +125,48 @@ public class WorkspacePermissionAuthorizationHandlerTests
         context.HasSucceeded.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task HandleRequirement_ShouldSucceed_WhenCredentialAndMembershipBothGrantPermission()
+    {
+        var user = new ClaimsPrincipal(new ClaimsIdentity([
+            new Claim(ClaimTypes.NameIdentifier, UserId),
+            new Claim(NetptuneClaims.CredentialId, Guid.NewGuid().ToString()),
+            new Claim(NetptuneClaims.CredentialScope, NetptunePermissions.Tasks.Read),
+        ], "ApiKey"));
+        var requirement = new WorkspacePermissionRequirement(NetptunePermissions.Tasks.Read);
+
+        Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
+        Identity.GetCurrentUserId().Returns(UserId);
+        Cache.GetUserPermissions(UserId, WorkspaceKey)
+            .Returns(MakePermissions(WorkspaceRole.Member, NetptunePermissions.Tasks.Read));
+
+        var context = CreateContext(user, requirement);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task HandleRequirement_ShouldFail_WhenCredentialScopeDoesNotGrantMembershipPermission()
+    {
+        var user = new ClaimsPrincipal(new ClaimsIdentity([
+            new Claim(ClaimTypes.NameIdentifier, UserId),
+            new Claim(NetptuneClaims.CredentialId, Guid.NewGuid().ToString()),
+            new Claim(NetptuneClaims.CredentialScope, NetptunePermissions.Tasks.Read),
+        ], "ApiKey"));
+        var requirement = new WorkspacePermissionRequirement(NetptunePermissions.Tasks.Delete);
+
+        Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
+        Identity.GetCurrentUserId().Returns(UserId);
+        Cache.GetUserPermissions(UserId, WorkspaceKey)
+            .Returns(MakePermissions(WorkspaceRole.Admin, NetptunePermissions.Tasks.Delete));
+
+        var context = CreateContext(user, requirement);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
     // Unauthenticated — public workspace read access
 
     [Fact]

@@ -34,6 +34,11 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .Where(rule => rule.WorkspaceId == workspaceId)
             .Select(rule => rule.Id);
 
+        var serviceAccountUserIds = await Context.ServiceAccounts
+            .Where(account => account.WorkspaceId == workspaceId)
+            .Select(account => account.UserId)
+            .ToListAsync(cancellationToken);
+
         // Notifications and activity entries both point at activity logs, so they go first.
         await Context.Notifications.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.ActivityEntries.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
@@ -74,6 +79,9 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         await Context.UserPreferenceValues.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.WorkspaceInvites.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.WorkspaceAppUsers.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+
+        await Context.ServiceAccounts.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.AppUsers.Where(x => serviceAccountUserIds.Contains(x.Id)).ExecuteDeleteAsync(cancellationToken);
 
         await Context.Workspaces.Where(x => x.Id == workspaceId).ExecuteDeleteAsync(cancellationToken);
     }

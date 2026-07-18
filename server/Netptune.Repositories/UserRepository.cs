@@ -89,6 +89,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         var pageSize = pageRequest.GetPageSize(PaginationDefaults.MaxAdminPageSize);
 
         return Entities
+            .Where(user => user.UserType == AppUserType.User)
             .OrderBy(x => x.Firstname)
             .ThenBy(x => x.Lastname)
             .ThenBy(x => x.Id)
@@ -162,7 +163,9 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
     {
         var usersToRemove = await Context.WorkspaceAppUsers
             .Include(item => item.User)
-            .Where(item => item.WorkspaceId == workspaceId && userIds.Contains(item.UserId))
+            .Where(item => item.WorkspaceId == workspaceId
+                           && item.User.UserType == AppUserType.User
+                           && userIds.Contains(item.UserId))
             .ToListAsync(cancellationToken);
 
         Context.WorkspaceAppUsers.RemoveRange(usersToRemove);

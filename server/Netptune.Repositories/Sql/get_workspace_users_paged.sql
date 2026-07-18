@@ -32,6 +32,7 @@ WITH combined AS (
     FROM workspace_app_users wau
     JOIN users u ON u.id = wau.user_id
     WHERE wau.workspace_id = @workspace_id
+      AND u.user_type = 0
 
     UNION ALL
 

@@ -11,9 +11,11 @@ public class TestAuthorizationPolicyProvider : IAuthorizationPolicyProvider
 {
     private readonly NetptuneAuthorizationPolicyProvider Fallback;
 
-    public TestAuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
+    public TestAuthorizationPolicyProvider(
+        IOptions<AuthorizationOptions> options,
+        IOptions<NetptuneAuthorizationOptions> netptuneOptions)
     {
-        Fallback = new NetptuneAuthorizationPolicyProvider(options);
+        Fallback = new NetptuneAuthorizationPolicyProvider(options, netptuneOptions);
     }
 
     public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => Fallback.GetDefaultPolicyAsync();

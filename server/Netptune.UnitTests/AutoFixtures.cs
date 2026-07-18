@@ -24,13 +24,16 @@ public static class AutoFixtures
 
     public static IPostprocessComposer<AppUser> AppUserFixture => Fixture
         .Build<AppUser>()
+        .With(p => p.UserType, global::Netptune.Core.Authorization.AppUserType.User)
         .Without(p => p.ProjectTaskAppUsers)
         .Without(p => p.WorkspaceUsers)
         .Without(p => p.ProjectUsers)
         .Without(p => p.Tasks)
         .Without(p => p.Workspaces)
         .Without(p => p.ProjectTaskAppUsers)
-        .Without(p => p.RefreshTokens);
+        .Without(p => p.RefreshTokens)
+        .Without(p => p.ServiceAccount)
+        .Without(p => p.OwnedServiceAccounts);
 
     public static AppUser AppUser => AppUserFixture.Create();
 

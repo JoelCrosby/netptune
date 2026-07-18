@@ -16,6 +16,9 @@ public class DataContext : IdentityDbContext<AppUser>
 {
     // Auth
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+    public DbSet<ServiceAccount> ServiceAccounts { get; set; } = null!;
+    public DbSet<ServiceAccountOwner> ServiceAccountOwners { get; set; } = null!;
+    public DbSet<ApiCredential> ApiCredentials { get; set; } = null!;
 
     // Core data models
     public DbSet<Project> Projects { get; set; } = null!;

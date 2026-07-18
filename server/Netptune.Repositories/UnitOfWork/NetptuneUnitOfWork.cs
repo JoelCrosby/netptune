@@ -32,6 +32,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IUserPreferenceRepository UserPreferences { get; }
     public ICommandPaletteRecentItemRepository CommandPaletteRecentItems { get; }
     public IRefreshTokenRepository RefreshTokens { get; }
+    public IServiceAccountRepository ServiceAccounts { get; }
     public IAncestorRepository Ancestors { get; }
     public IWorkspaceInviteRepository WorkspaceInvites { get; }
     public IWorkspaceFileRepository WorkspaceFiles { get; }
@@ -65,6 +66,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         UserPreferences = new UserPreferenceRepository(context, connectionFactory);
         CommandPaletteRecentItems = new CommandPaletteRecentItemRepository(context, connectionFactory);
         RefreshTokens = new RefreshTokenRepository(context, connectionFactory);
+        ServiceAccounts = new ServiceAccountRepository(context, connectionFactory);
         Ancestors = new AncestorRepository(connectionFactory);
         WorkspaceInvites = new WorkspaceInviteRepository(context, connectionFactory);
         WorkspaceFiles = new WorkspaceFileRepository(context, connectionFactory);

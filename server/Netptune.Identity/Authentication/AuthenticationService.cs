@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -78,7 +79,7 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var appUser = await UserManager.FindByEmailAsync(model.Email);
 
-        if (model.Password is null || appUser is null)
+        if (model.Password is null || !IsInteractiveUser(appUser))
         {
             return LoginResult.Failed("Username or password is incorrect");
         }
@@ -106,7 +107,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         var appUser = await UserManager.FindByIdAsync(existing.UserId);
 
-        if (appUser is null)
+        if (!IsInteractiveUser(appUser))
         {
             return LoginResult.Failed("Invalid or expired refresh token");
         }
@@ -134,6 +135,11 @@ public class NetptuneAuthService : INetptuneAuthService
 
             if (existingByEmail is not null)
             {
+                if (!IsInteractiveUser(existingByEmail))
+                {
+                    return LoginResult.Failed("External login failed.");
+                }
+
                 return await CreateExternalLoginLinkResult(
                     existingByEmail,
                     providerScheme,
@@ -162,9 +168,9 @@ public class NetptuneAuthService : INetptuneAuthService
             }
         }
 
-        if (user is null)
+        if (!IsInteractiveUser(user))
         {
-            throw new InvalidOperationException("user login failed");
+            return LoginResult.Failed("External login failed.");
         }
 
         user.LastLoginTime = DateTime.UtcNow;
@@ -200,7 +206,7 @@ public class NetptuneAuthService : INetptuneAuthService
 
         var user = await UserManager.FindByIdAsync(pending.ExistingUserId);
 
-        if (user is null)
+        if (!IsInteractiveUser(user))
         {
             return LoginResult.Failed("External login link is invalid or expired.");
         }
@@ -356,13 +362,15 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var user = await UserManager.FindByIdAsync(userId);
 
-        if (user is null) return RegisterResult.Failed();
+        if (!IsInteractiveUser(user)) return RegisterResult.Failed();
 
         return await ConfirmEmail(user, code);
     }
 
     public async Task<RegisterResult> ConfirmEmail(AppUser user, string code)
     {
+        if (!IsInteractiveUser(user)) return RegisterResult.Failed();
+
         var result = await UserManager.ConfirmEmailAsync(user, code);
 
         if (!result.Succeeded) return RegisterResult.Failed();
@@ -376,7 +384,7 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var user = await UserManager.FindByEmailAsync(request.Email);
 
-        if (user is null) return ClientResponse.Failed();
+        if (!IsInteractiveUser(user)) return ClientResponse.Failed();
 
         var resetCode = await UserManager.GeneratePasswordResetTokenAsync(user);
 
@@ -411,7 +419,7 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var user = await UserManager.FindByIdAsync(request.UserId);
 
-        if (user is null) return LoginResult.Failed("Password Reset Failed, userId or code was invalid");
+        if (!IsInteractiveUser(user)) return LoginResult.Failed("Password Reset Failed, userId or code was invalid");
 
         var result = await UserManager.ResetPasswordAsync(user, request.Code, request.Password);
 
@@ -428,7 +436,7 @@ public class NetptuneAuthService : INetptuneAuthService
     {
         var user = await UserManager.FindByIdAsync(request.UserId);
 
-        if (user is null) return ClientResponse.Failed();
+        if (!IsInteractiveUser(user)) return ClientResponse.Failed();
 
         var result = await UserManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
@@ -519,6 +527,11 @@ public class NetptuneAuthService : INetptuneAuthService
 
     private async Task<AuthenticationTicket> GenerateTicket(AppUser appUser)
     {
+        if (!IsInteractiveUser(appUser))
+        {
+            throw new InvalidOperationException("Service accounts cannot receive interactive login tickets.");
+        }
+
         var expireDays = GetExpireDays();
         var refreshToken = await CreateRefreshToken(appUser.Id);
 
@@ -567,6 +580,7 @@ public class NetptuneAuthService : INetptuneAuthService
             new(ClaimTypes.Name, user.UserName!),
             new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Email, user.Email!),
+            new(NetptuneClaims.ActorType, AppUserType.User.ToString()),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey));
@@ -603,5 +617,10 @@ public class NetptuneAuthService : INetptuneAuthService
         var logins = await UserManager.GetLoginsAsync(user);
 
         return logins.Select(l => l.LoginProvider).ToList();
+    }
+
+    private static bool IsInteractiveUser([NotNullWhen(true)] AppUser? user)
+    {
+        return user?.UserType == AppUserType.User;
     }
 }

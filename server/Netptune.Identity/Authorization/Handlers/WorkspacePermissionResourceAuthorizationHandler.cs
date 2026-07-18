@@ -39,6 +39,18 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
                 return;
             }
 
+            var credentialScopes = context.User
+                .FindAll(NetptuneClaims.CredentialScope)
+                .Select(claim => claim.Value)
+                .ToHashSet(StringComparer.Ordinal);
+
+            if (context.User.HasClaim(claim => claim.Type == NetptuneClaims.CredentialId)
+                && !credentialScopes.Contains(requirement.Permission))
+            {
+                context.Fail();
+                return;
+            }
+
             if (workspaceUser.Role is WorkspaceRole.Owner or WorkspaceRole.Admin)
             {
                 context.Succeed(requirement);

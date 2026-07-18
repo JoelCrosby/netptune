@@ -130,6 +130,15 @@ public static class NetptunePermissions
         public const string Manage = "automations.manage";
     }
 
+    public static class ServiceAccounts
+    {
+        public const string Read = "service_accounts.read";
+        public const string Create = "service_accounts.create";
+        public const string Update = "service_accounts.update";
+        public const string Delete = "service_accounts.delete";
+        public const string ManageCredentials = "service_accounts.manage_credentials";
+    }
+
     public static class Storage
     {
         public const string UploadProfilePicture = "storage.upload_profile_picture";

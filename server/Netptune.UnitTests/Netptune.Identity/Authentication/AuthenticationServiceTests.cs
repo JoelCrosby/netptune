@@ -142,6 +142,9 @@ public class AuthenticationServiceTests
         token.Audiences.Should().Contain("test-issuer");
         token.Claims.Should().Contain(c => c.Type == ClaimTypes.NameIdentifier && c.Value == user.Id);
         token.Claims.Should().Contain(c => c.Type == ClaimTypes.Email && c.Value == user.Email);
+        token.Claims.Should().Contain(c =>
+            c.Type == NetptuneClaims.ActorType &&
+            c.Value == AppUserType.User.ToString());
         token.ValidTo.Should().BeAfter(DateTime.UtcNow.AddDays(6));
     }
 
@@ -156,6 +159,21 @@ public class AuthenticationServiceTests
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Username or password is incorrect");
+    }
+
+    [Fact]
+    public async Task LogIn_ShouldRejectServiceAccountsBeforeCheckingAPassword()
+    {
+        var user = AutoFixtures.AppUser;
+        user.UserType = AppUserType.ServiceAccount;
+        var request = new TokenRequest { Email = user.Email!, Password = "password" };
+        UserManager.FindByEmailAsync(request.Email).Returns(user);
+
+        var result = await Service.LogIn(request);
+
+        result.IsSuccess.Should().BeFalse();
+        await SignInManager.DidNotReceive()
+            .CheckPasswordSignInAsync(Arg.Any<AppUser>(), Arg.Any<string>(), Arg.Any<bool>());
     }
 
     [Fact]
@@ -389,6 +407,48 @@ public class AuthenticationServiceTests
     }
 
     [Fact]
+    public async Task LogInViaProvider_ShouldRejectServiceAccountFoundByProvider()
+    {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-service-account";
+        var user = AutoFixtures.AppUser;
+        user.UserType = AppUserType.ServiceAccount;
+
+        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+        UserManager.FindByLoginAsync(providerScheme, providerKey).Returns(user);
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("External login failed.");
+        await UserManager.DidNotReceive().UpdateAsync(Arg.Any<AppUser>());
+    }
+
+    [Fact]
+    public async Task LogInViaProvider_ShouldRejectServiceAccountWithMatchingEmail()
+    {
+        const string providerScheme = "GitHub";
+        const string providerKey = "github-service-account";
+        var user = AutoFixtures.AppUser;
+        user.UserType = AppUserType.ServiceAccount;
+
+        Identity.GetCurrentUserEmail().Returns(user.Email!);
+        Identity.GetProviderKey().Returns(providerKey);
+        UserManager.FindByLoginAsync(providerScheme, providerKey).ReturnsNull();
+        UserManager.FindByEmailAsync(user.Email!).Returns(user);
+
+        var result = await Service.LogInViaProvider(providerScheme);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("External login failed.");
+        await Cache.DidNotReceive().SetAsync(
+            Arg.Any<string>(),
+            Arg.Any<PendingExternalLogin>(),
+            Arg.Any<DistributedCacheEntryOptions>());
+    }
+
+    [Fact]
     public async Task LinkProvider_ShouldReturnSuccess_WhenPendingLinkBelongsToCurrentUser()
     {
         const string providerScheme = "GitHub";
@@ -487,6 +547,32 @@ public class AuthenticationServiceTests
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Login already exists");
+    }
+
+    [Fact]
+    public async Task LinkProvider_ShouldRejectServiceAccountBeforeAddingLogin()
+    {
+        const string token = "service-account-link-token";
+        var user = AutoFixtures.AppUser;
+        user.UserType = AppUserType.ServiceAccount;
+        var pending = new PendingExternalLogin
+        {
+            ExistingUserId = user.Id,
+            Provider = "GitHub",
+            ProviderKey = "github-service-account",
+            Email = user.Email!,
+            Created = DateTime.UtcNow,
+        };
+
+        Identity.GetCurrentUserId().Returns(user.Id);
+        Cache.GetValueAsync<PendingExternalLogin>(GetExternalLinkCacheKey(token)).Returns(pending);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
+
+        var result = await Service.LinkProvider(new LinkProviderRequest { Token = token });
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("External login link is invalid or expired.");
+        await UserManager.DidNotReceive().AddLoginAsync(Arg.Any<AppUser>(), Arg.Any<UserLoginInfo>());
     }
 
     private static string GetExternalLinkCacheKey(string token)
@@ -716,6 +802,18 @@ public class AuthenticationServiceTests
 
         result.IsSuccess.Should().BeTrue();
         result.Ticket.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ConfirmEmail_WithAppUser_ShouldRejectServiceAccountBeforeConfirmingEmail()
+    {
+        var user = AutoFixtures.AppUser;
+        user.UserType = AppUserType.ServiceAccount;
+
+        var result = await Service.ConfirmEmail(user, "valid-code");
+
+        result.IsSuccess.Should().BeFalse();
+        await UserManager.DidNotReceive().ConfirmEmailAsync(Arg.Any<AppUser>(), Arg.Any<string>());
     }
 
     // RequestPasswordReset

@@ -1,6 +1,5 @@
 using FluentAssertions;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.Options;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Netptune.Core.Authorization;
 using Netptune.Identity.Authorization;
 using Netptune.Identity.Authorization.Requirements;
+using Netptune.Identity.Authentication;
 
 using Xunit;
 
@@ -20,7 +20,9 @@ public class NetptuneAuthorizationPolicyProviderTests
     {
         var options = new AuthorizationOptions();
         options.AddPolicy("ConfiguredPolicy", builder => builder.RequireClaim("configured"));
-        var provider = new NetptuneAuthorizationPolicyProvider(Options.Create(options));
+        var provider = new NetptuneAuthorizationPolicyProvider(
+            Options.Create(options),
+            Options.Create(new NetptuneAuthorizationOptions()));
 
         var policy = await provider.GetPolicyAsync("ConfiguredPolicy");
 
@@ -35,15 +37,33 @@ public class NetptuneAuthorizationPolicyProviderTests
     public async Task GetPolicyAsync_ShouldCreateWorkspacePermissionPolicy_WhenPolicyIsNotConfigured()
     {
         const string policyName = NetptunePermissions.Tasks.Delete;
-        var provider = new NetptuneAuthorizationPolicyProvider(Options.Create(new AuthorizationOptions()));
+        var provider = new NetptuneAuthorizationPolicyProvider(
+            Options.Create(new AuthorizationOptions()),
+            Options.Create(new NetptuneAuthorizationOptions()));
 
         var policy = await provider.GetPolicyAsync(policyName);
 
         policy.Should().NotBeNull();
-        policy.AuthenticationSchemes.Should().ContainSingle(JwtBearerDefaults.AuthenticationScheme);
+        policy.AuthenticationSchemes.Should().ContainSingle(AuthenticationSchemes.Smart);
         policy.Requirements.OfType<WorkspaceRequirement>().Should().ContainSingle();
         policy.Requirements.OfType<WorkspacePermissionRequirement>()
             .Should()
             .ContainSingle(requirement => requirement.Permission == policyName);
+    }
+
+    [Fact]
+    public async Task GetPolicyAsync_ShouldUseConfiguredAuthenticationScheme()
+    {
+        var provider = new NetptuneAuthorizationPolicyProvider(
+            Options.Create(new AuthorizationOptions()),
+            Options.Create(new NetptuneAuthorizationOptions
+            {
+                AuthenticationScheme = AuthenticationSchemes.ApiKey,
+            }));
+
+        var policy = await provider.GetPolicyAsync(NetptunePermissions.Tasks.Read);
+
+        policy.Should().NotBeNull();
+        policy.AuthenticationSchemes.Should().ContainSingle(AuthenticationSchemes.ApiKey);
     }
 }

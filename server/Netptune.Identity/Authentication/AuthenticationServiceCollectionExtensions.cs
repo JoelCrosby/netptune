@@ -43,9 +43,19 @@ public static class AuthenticationServiceCollectionExtensions
 
         services.AddAuthentication(options =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = AuthenticationSchemes.Smart;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
+
+        .AddPolicyScheme(AuthenticationSchemes.Smart, AuthenticationSchemes.Smart, options =>
+        {
+            options.ForwardDefaultSelector = context =>
+                context.Request.Headers.Authorization.ToString().StartsWith("ApiKey ", StringComparison.OrdinalIgnoreCase)
+                    ? AuthenticationSchemes.ApiKey
+                    : JwtBearerDefaults.AuthenticationScheme;
+        })
+
+        .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(AuthenticationSchemes.ApiKey, _ => { })
 
         .AddJwtBearer(options =>
         {
@@ -170,6 +180,22 @@ public static class AuthenticationServiceCollectionExtensions
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
+    }
+
+    public static void AddNeptuneApiKeyAuthentication(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = AuthenticationSchemes.ApiKey;
+                options.DefaultChallengeScheme = AuthenticationSchemes.ApiKey;
+            })
+            .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(
+                AuthenticationSchemes.ApiKey,
+                _ => { });
+
+        services.AddScoped<IIdentityService, IdentityService>();
     }
 
     private static NetptuneAuthenticationOptions ConfigureServices(

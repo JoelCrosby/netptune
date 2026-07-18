@@ -70,6 +70,13 @@ public class IdentityService : IIdentityService
 
         if  (context is null) return null;
 
+        var claimWorkspace = context.User.Claims.FirstOrDefault(claim => claim.Type == "workspace")?.Value;
+
+        if (!string.IsNullOrWhiteSpace(claimWorkspace))
+        {
+            return claimWorkspace;
+        }
+
         if (context.Request.Headers.TryGetValue("workspace", out var workspace))
         {
             return workspace!;

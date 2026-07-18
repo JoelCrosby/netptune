@@ -13,6 +13,13 @@ public static class Extensions
 
     public static string GetRateLimitPartitionKey(this HttpContext context)
     {
+        var credentialId = context.User.FindFirstValue(Netptune.Core.Authorization.NetptuneClaims.CredentialId);
+
+        if (!string.IsNullOrEmpty(credentialId))
+        {
+            return $"credential:{credentialId}";
+        }
+
         var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(userId))

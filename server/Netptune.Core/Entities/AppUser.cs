@@ -11,6 +11,8 @@ namespace Netptune.Core.Entities;
 
 public class AppUser : IdentityUser, IKeyedEntity<string>
 {
+    public AppUserType UserType { get; set; } = AppUserType.User;
+
     public string Firstname { get; set; } = null!;
 
     public string Lastname { get; set; } = null!;
@@ -87,6 +89,12 @@ public class AppUser : IdentityUser, IKeyedEntity<string>
 
     [JsonIgnore]
     public ICollection<RefreshToken> RefreshTokens { get; init; } = new HashSet<RefreshToken>();
+
+    [JsonIgnore]
+    public ServiceAccount? ServiceAccount { get; init; }
+
+    [JsonIgnore]
+    public ICollection<ServiceAccountOwner> OwnedServiceAccounts { get; init; } = new HashSet<ServiceAccountOwner>();
 
     #endregion
 }
