@@ -30,11 +30,11 @@ const maxFileSize = 50 * 1024 * 1024;
         <svg lucideUpload class="h-4 w-4"></svg>
         Choose files
       </button>
-      <p class="text-muted-foreground text-xs">
+      <p class="text-muted text-xs">
         or drag and drop · 50 MiB maximum per file
       </p>
       @if (remainingBytes() !== undefined) {
-        <p class="text-muted-foreground mt-1 text-xs">
+        <p class="text-muted mt-1 text-xs">
           {{ formatBytes(remainingBytes()!) }} remaining
         </p>
       }
@@ -88,5 +88,4 @@ export class FileDropzoneComponent {
       this.filesSelected.emit(valid);
     }
   }
-
 }

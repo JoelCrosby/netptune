@@ -37,12 +37,12 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
         @if (uploading()) {
           <button
             type="button"
-            class="text-muted-foreground inline-flex items-center gap-1 text-xs hover:underline"
+            class="text-muted inline-flex items-center gap-1 text-xs hover:underline"
             (click)="cancelUploads()">
             <svg lucideX class="h-3 w-3"></svg> Cancel uploads
           </button>
         } @else if (loading()) {
-          <span class="text-muted-foreground text-xs">Loading…</span>
+          <span class="text-muted text-xs">Loading…</span>
         }
       </div>
 
@@ -79,9 +79,7 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
         }
         @for (file of files(); track file.id) {
           <div class="border-border flex items-center gap-3 rounded border p-2">
-            <svg
-              lucideFile
-              class="text-muted-foreground h-4 w-4 shrink-0"></svg>
+            <svg lucideFile class="text-muted h-4 w-4 shrink-0"></svg>
             <div class="min-w-0 flex-1">
               <a
                 class="block truncate font-medium hover:underline"
@@ -90,7 +88,7 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
                 rel="noopener"
                 >{{ file.originalName }}</a
               >
-              <span class="text-muted-foreground text-xs"
+              <span class="text-muted text-xs"
                 >{{ formatBytes(file.sizeBytes) }} ·
                 {{ file.uploadedByDisplayName || 'Unknown user' }}</span
               >
@@ -113,7 +111,7 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
           </div>
         } @empty {
           @if (!loading()) {
-            <p class="text-muted-foreground py-3 text-sm">
+            <p class="text-muted py-3 text-sm">
               No files have been added to this task.
             </p>
           }

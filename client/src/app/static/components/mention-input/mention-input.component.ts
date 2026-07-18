@@ -110,7 +110,7 @@ export interface MentionSubmitEvent {
             <span class="truncate">{{ user.displayName }}</span>
           </button>
         } @empty {
-          <div class="text-muted-foreground px-3 py-2 text-sm">No results</div>
+          <div class="text-muted px-3 py-2 text-sm">No results</div>
         }
       </div>
     </ng-template>

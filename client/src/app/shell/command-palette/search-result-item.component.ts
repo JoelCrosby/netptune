@@ -44,9 +44,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
       }
       <span class="flex-1 overflow-hidden text-left text-sm">
         <span class="block truncate">{{ result().title }}</span>
-        <span class="text-muted-foreground block truncate">{{
-          result().subtitle
-        }}</span>
+        <span class="text-muted block truncate">{{ result().subtitle }}</span>
       </span>
     </button>
   `,

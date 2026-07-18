@@ -8,7 +8,7 @@ import { CommandPaletteService } from './command-palette.service';
   template: `
     <button
       type="button"
-      class="text-muted-foreground bg-secondary-background hover:bg-secondary-background-hover hover:text-foreground flex h-8 min-w-64 cursor-pointer items-center gap-2 rounded-md px-3 text-xs transition-colors"
+      class="text-muted bg-secondary-background hover:bg-secondary-background-hover hover:text-foreground flex h-8 min-w-64 cursor-pointer items-center gap-2 rounded-md px-3 text-xs transition-colors"
       (click)="commandPalette.open()"
       aria-label="Open command palette">
       <svg lucideSearch class="h-3.5 w-3.5"></svg>

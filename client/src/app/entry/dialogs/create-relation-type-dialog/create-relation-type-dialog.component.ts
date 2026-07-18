@@ -47,7 +47,7 @@ export interface CreateRelationTypeDialogResult {
         }
       </app-form-select>
 
-      <p class="text-muted-foreground mb-4 text-sm">
+      <p class="text-muted mb-4 text-sm">
         {{ categoryDescription() }} The category cannot be changed later.
       </p>
 

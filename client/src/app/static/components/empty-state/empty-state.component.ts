@@ -7,7 +7,7 @@ import { booleanAttribute, Component, input } from '@angular/core';
   template: `<div
     class="flex flex-col items-center justify-center gap-2 text-center"
     [class]="compact() ? 'min-h-32 py-4' : 'my-10 h-full'">
-    <div class="text-muted-foreground" aria-hidden="true">
+    <div class="text-muted" aria-hidden="true">
       <ng-content select="[emptyStateIcon]" />
     </div>
 

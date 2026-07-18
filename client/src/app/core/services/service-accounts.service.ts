@@ -19,6 +19,10 @@ export class ServiceAccountsService {
     return this.http.post<ServiceAccount>('api/service-accounts', request);
   }
 
+  delete(serviceAccountId: number) {
+    return this.http.delete(`api/service-accounts/${serviceAccountId}`);
+  }
+
   createCredential(
     serviceAccountId: number,
     request: CreateApiCredentialRequest

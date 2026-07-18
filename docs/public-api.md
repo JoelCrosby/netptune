@@ -18,6 +18,11 @@ Content-Type: application/json
   "permissions": [
     "projects.read",
     "statuses.read",
+    "sprints.read",
+    "sprints.create",
+    "sprints.update",
+    "sprints.delete",
+    "sprints.manage_tasks",
     "tasks.read",
     "tasks.create",
     "tasks.update"
@@ -37,7 +42,7 @@ Content-Type: application/json
 
 {
   "name": "Local Codex",
-  "scopes": ["projects.read", "statuses.read", "tasks.read", "tasks.create", "tasks.update"],
+  "scopes": ["projects.read", "statuses.read", "sprints.read", "sprints.create", "sprints.update", "sprints.delete", "sprints.manage_tasks", "tasks.read", "tasks.create", "tasks.update"],
   "expiresAt": "2027-01-01T00:00:00Z"
 }
 ```
@@ -73,6 +78,11 @@ Available v1 routes are:
 
 - `GET /api/v1/projects`
 - `GET /api/v1/statuses`
+- `GET /api/v1/sprints`
+- `GET /api/v1/sprints/{id}`
+- `POST /api/v1/sprints`
+- `PATCH /api/v1/sprints/{id}`
+- `DELETE /api/v1/sprints/{id}`
 - `GET /api/v1/tasks`
 - `GET /api/v1/tasks/{id}`
 - `POST /api/v1/tasks`

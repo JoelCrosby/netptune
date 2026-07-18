@@ -62,7 +62,7 @@ interface RelationGroup {
     @for (group of groups(); track group.label) {
       <div class="mb-3">
         <div
-          class="text-muted-foreground mb-1 text-xs font-medium tracking-wide uppercase">
+          class="text-muted mb-1 text-xs font-medium tracking-wide uppercase">
           {{ group.label }}
         </div>
 
@@ -85,7 +85,7 @@ interface RelationGroup {
                 {{ relation.relatedTask.name }}
               </button>
 
-              <span class="text-muted-foreground shrink-0 text-xs">
+              <span class="text-muted shrink-0 text-xs">
                 {{ relation.relatedTask.statusName }}
               </span>
 
@@ -104,7 +104,7 @@ interface RelationGroup {
         </ul>
       </div>
     } @empty {
-      <div class="text-muted-foreground flex items-center gap-2 text-sm">
+      <div class="text-muted flex items-center gap-2 text-sm">
         <svg lucideLink2 class="h-4 w-4"></svg>
         <span>No linked tasks</span>
       </div>

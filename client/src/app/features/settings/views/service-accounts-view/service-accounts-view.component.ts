@@ -15,9 +15,9 @@ import {
   LucideBot,
   LucideKeyRound,
   LucidePlus,
-  LucideRotateCcwKey,
   LucideShieldCheck,
-  LucideTrash2,
+  LucideTrash,
+  LucideX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { BadgeComponent } from '@static/components/badge/badge.component';
@@ -44,9 +44,10 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
     LucideBot,
     LucideKeyRound,
     LucidePlus,
-    LucideRotateCcwKey,
+    LucideKeyRound,
     LucideShieldCheck,
-    LucideTrash2,
+    LucideTrash,
+    LucideX,
     BadgeComponent,
     FlatButtonComponent,
     IconButtonComponent,
@@ -105,26 +106,44 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
                     }
                   </div>
                   @if (account.description) {
-                    <p class="text-muted-foreground mt-1 text-sm">
+                    <p class="text-muted mt-1 text-sm">
                       {{ account.description }}
                     </p>
                   }
                 </div>
               </div>
 
-              @if (canManageCredentials() && !account.disabledAt) {
-                <button
-                  app-stroked-button
-                  type="button"
-                  [disabled]="busy()"
-                  (click)="openCreateCredential(account)">
-                  <svg lucideKeyRound class="h-4 w-4"></svg>
-                  Create credential
-                </button>
+              @if (!account.disabledAt) {
+                <div class="flex items-center gap-2">
+                  @if (canManageCredentials()) {
+                    <button
+                      app-stroked-button
+                      type="button"
+                      [disabled]="busy()"
+                      (click)="openCreateCredential(account)">
+                      <svg lucideKeyRound class="h-4 w-4"></svg>
+                      Create credential
+                    </button>
+                  }
+
+                  @if (canDelete()) {
+                    <button
+                      app-icon-button
+                      color="warn"
+                      type="button"
+                      appTooltip="Delete service account"
+                      [attr.aria-label]="'Delete ' + account.name"
+                      [disabled]="busy()"
+                      (click)="deleteAccount(account)">
+                      <svg lucideX class="h-4 w-4"></svg>
+                    </button>
+                  }
+                </div>
               }
             </header>
 
-            <div class="grid gap-6 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+            <div
+              class="grid gap-6 px-5 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
               <div>
                 <h4 class="mb-3 flex items-center gap-2 text-sm font-medium">
                   <svg lucideShieldCheck class="h-4 w-4"></svg>
@@ -136,7 +155,7 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
                       {{ getPermissionLabel(permission) }}
                     </app-badge>
                   } @empty {
-                    <span class="text-muted-foreground text-sm">
+                    <span class="text-muted text-sm">
                       No permissions granted
                     </span>
                   }
@@ -145,25 +164,29 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
 
               <div>
                 <h4 class="mb-3 flex items-center gap-2 text-sm font-medium">
-                  <svg lucideRotateCcwKey class="h-4 w-4"></svg>
+                  <svg lucideKeyRound class="h-4 w-4"></svg>
                   Credentials
                 </h4>
-                <div class="border-border divide-border divide-y rounded border">
-                  @for (credential of account.credentials; track credential.id) {
+                <div
+                  class="border-border divide-border divide-y rounded border">
+                  @for (
+                    credential of account.credentials;
+                    track credential.id
+                  ) {
                     <div class="flex items-center gap-3 px-3 py-3">
                       <div class="min-w-0 flex-1">
-                        <div class="flex flex-wrap items-center gap-2">
+                        <div class="flex flex-wrap items-center gap-4">
                           <span class="truncate text-sm font-medium">
                             {{ credential.name }}
                           </span>
-                          <code class="text-muted-foreground text-xs">
+                          <code class="text-muted text-xs">
                             {{ credential.tokenPrefix }}…
                           </code>
                           <app-badge [color]="credentialColor(credential)">
                             {{ credentialStatus(credential) }}
                           </app-badge>
                         </div>
-                        <p class="text-muted-foreground mt-1 text-xs">
+                        <p class="text-muted mt-2 text-xs">
                           Expires {{ formatDate(credential.expiresAt) }}
                           @if (credential.lastUsedAt) {
                             · Last used {{ formatDate(credential.lastUsedAt) }}
@@ -182,12 +205,12 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
                           [attr.aria-label]="'Revoke ' + credential.name"
                           [disabled]="busy()"
                           (click)="revokeCredential(account, credential)">
-                          <svg lucideTrash2 class="h-4 w-4"></svg>
+                          <svg lucideTrash class="h-4 w-4"></svg>
                         </button>
                       }
                     </div>
                   } @empty {
-                    <p class="text-muted-foreground px-3 py-4 text-sm">
+                    <p class="text-muted px-3 py-4 text-sm">
                       No credentials have been created.
                     </p>
                   }
@@ -240,9 +263,10 @@ export class ServiceAccountsViewComponent {
     selectHasPermission(netptunePermissions.serviceAccounts.create)
   );
   readonly canManageCredentials = this.store.selectSignal(
-    selectHasPermission(
-      netptunePermissions.serviceAccounts.manageCredentials
-    )
+    selectHasPermission(netptunePermissions.serviceAccounts.manageCredentials)
+  );
+  readonly canDelete = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.serviceAccounts.delete)
   );
 
   constructor() {
@@ -336,7 +360,8 @@ export class ServiceAccountsViewComponent {
 
           this.load();
         },
-        error: () => this.snackbar.error('Service account could not be created'),
+        error: () =>
+          this.snackbar.error('Service account could not be created'),
       });
   }
 
@@ -355,9 +380,9 @@ export class ServiceAccountsViewComponent {
         switchMap((request) => {
           if (!request) return EMPTY;
           this.busy.set(true);
-          return this.service.createCredential(account.id, request).pipe(
-            finalize(() => this.busy.set(false))
-          );
+          return this.service
+            .createCredential(account.id, request)
+            .pipe(finalize(() => this.busy.set(false)));
         }),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -368,6 +393,35 @@ export class ServiceAccountsViewComponent {
           this.load();
         },
         error: () => this.snackbar.error('Credential could not be created'),
+      });
+  }
+
+  deleteAccount(account: ServiceAccount) {
+    this.confirmation
+      .open({
+        title: 'Delete Service Account',
+        message: `Delete "${account.name}"? All of its credentials will immediately stop working. The account will remain in history as disabled.`,
+        acceptLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        color: 'warn',
+      })
+      .pipe(
+        switchMap((confirmed) => {
+          if (!confirmed) return EMPTY;
+          this.busy.set(true);
+          return this.service
+            .delete(account.id)
+            .pipe(finalize(() => this.busy.set(false)));
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.success('Service account deleted');
+          this.load();
+        },
+        error: () =>
+          this.snackbar.error('Service account could not be deleted'),
       });
   }
 
@@ -416,7 +470,8 @@ export class ServiceAccountsViewComponent {
 
   credentialStatus(credential: ApiCredential) {
     if (credential.revokedAt) return 'Revoked';
-    if (new Date(credential.expiresAt).getTime() <= Date.now()) return 'Expired';
+    if (new Date(credential.expiresAt).getTime() <= Date.now())
+      return 'Expired';
     return 'Active';
   }
 

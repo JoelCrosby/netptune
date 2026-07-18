@@ -37,12 +37,12 @@ import {
       <div class="flex flex-col gap-2 text-center">
         <h3 class="font-normal tracking-normal">Connect {{ provider() }}</h3>
         @if (pendingLink(); as link) {
-          <p class="text-muted-foreground text-sm leading-6">
+          <p class="text-muted text-sm leading-6">
             A Netptune account already exists for {{ link.email }}. Sign in to
             that account before connecting {{ link.provider }}.
           </p>
         } @else {
-          <p class="text-muted-foreground text-sm leading-6">
+          <p class="text-muted text-sm leading-6">
             This provider link is missing or expired. Start the provider sign-in
             again.
           </p>

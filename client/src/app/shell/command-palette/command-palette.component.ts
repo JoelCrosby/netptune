@@ -54,7 +54,7 @@ type PaletteItem =
           <input
             #searchInput
             type="text"
-            class="placeholder:text-muted-foreground flex h-11 w-full bg-transparent py-3 outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            class="placeholder:text-muted flex h-11 w-full bg-transparent py-3 outline-none disabled:cursor-not-allowed disabled:opacity-50"
             [placeholder]="inputPlaceholder()"
             [ngModel]="queryValue()"
             (ngModelChange)="onQueryChange($event)"
@@ -64,7 +64,7 @@ type PaletteItem =
 
         <div class="max-h-120 overflow-x-hidden overflow-y-auto p-1">
           @if (items().length === 0) {
-            <p class="text-muted-foreground py-6 text-center text-sm">
+            <p class="text-muted py-6 text-center text-sm">
               {{
                 queryValue()
                   ? 'No results found.'
@@ -75,9 +75,7 @@ type PaletteItem =
 
           @if (showRecentGroup()) {
             <div class="overflow-hidden p-1">
-              <p class="text-muted-foreground px-2 py-1.5 text-xs font-medium">
-                Recent
-              </p>
+              <p class="text-muted px-2 py-1.5 text-xs font-medium">Recent</p>
               @for (item of recentItems(); track item.url; let idx = $index) {
                 <app-recent-item
                   [item]="item"
@@ -91,9 +89,7 @@ type PaletteItem =
 
           @if (commandItems().length > 0 && !searchOnlyMode()) {
             <div class="overflow-hidden p-1">
-              <p class="text-muted-foreground px-2 py-1.5 text-xs font-medium">
-                Actions
-              </p>
+              <p class="text-muted px-2 py-1.5 text-xs font-medium">Actions</p>
               @for (cmd of commandItems(); track cmd.id; let idx = $index) {
                 <app-command-item
                   [command]="cmd"
@@ -109,9 +105,7 @@ type PaletteItem =
               <div class="bg-border -mx-1 my-1 h-px"></div>
             }
             <div class="overflow-hidden p-1">
-              <p class="text-muted-foreground px-2 py-1.5 text-xs font-medium">
-                Results
-              </p>
+              <p class="text-muted px-2 py-1.5 text-xs font-medium">Results</p>
               @for (
                 result of searchResultItems();
                 track result.url;

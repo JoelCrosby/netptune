@@ -98,8 +98,7 @@ type User = AssigneeViewModel | AppUser;
               [selected]="isSelected(option)"
               (clicked)="select($event)" />
           } @empty {
-            <div
-              class="text-muted-foreground flex h-9 items-center px-2 text-sm">
+            <div class="text-muted flex h-9 items-center px-2 text-sm">
               {{ noResults() }}
             </div>
           }

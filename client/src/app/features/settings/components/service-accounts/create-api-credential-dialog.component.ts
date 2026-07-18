@@ -36,9 +36,9 @@ import { permissionLabel } from './service-account-permissions';
   template: `<app-dialog-title>Create API Credential</app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
-      <p class="text-muted-foreground mb-5 text-sm">
-        Create a credential for <strong>{{ account.name }}</strong>. The secret
-        is displayed once and expires automatically after 90 days.
+      <p class="text-muted mb-5 text-sm">
+        Create a credential for <strong>{{ account.name }}</strong
+        >. The secret is displayed once and expires automatically after 90 days.
       </p>
 
       <app-form-input
@@ -50,7 +50,7 @@ import { permissionLabel } from './service-account-permissions';
 
       <fieldset class="mt-2">
         <legend class="mb-1 text-sm font-medium">Credential scopes</legend>
-        <p class="text-muted-foreground mb-3 text-xs">
+        <p class="text-muted mb-3 text-xs">
           Scopes can restrict this credential further than the service account.
         </p>
 
@@ -60,11 +60,13 @@ import { permissionLabel } from './service-account-permissions';
               <app-checkbox
                 [checked]="hasScope(permission)"
                 (changed)="setScope(permission, $event)">
-                <span class="text-sm">{{ getPermissionLabel(permission) }}</span>
+                <span class="text-sm">{{
+                  getPermissionLabel(permission)
+                }}</span>
               </app-checkbox>
             </div>
           } @empty {
-            <p class="text-muted-foreground px-4 py-3 text-sm">
+            <p class="text-muted px-4 py-3 text-sm">
               This service account has no API permissions.
             </p>
           }
@@ -86,10 +88,7 @@ import { permissionLabel } from './service-account-permissions';
 export class CreateApiCredentialDialogComponent {
   private readonly dialogRef =
     inject<
-      DialogRef<
-        CreateApiCredentialRequest,
-        CreateApiCredentialDialogComponent
-      >
+      DialogRef<CreateApiCredentialRequest, CreateApiCredentialDialogComponent>
     >(DialogRef);
 
   readonly account = inject<ServiceAccount>(DIALOG_DATA);

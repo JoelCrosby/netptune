@@ -8,7 +8,7 @@ import { Component, input } from '@angular/core';
       <h3 class="font-overpass text-[1.4rem] font-normal">{{ heading() }}</h3>
 
       @if (description()) {
-        <p class="text-muted-foreground mt-1 text-sm">{{ description() }}</p>
+        <p class="text-muted mt-1 text-sm">{{ description() }}</p>
       }
     </div>
 

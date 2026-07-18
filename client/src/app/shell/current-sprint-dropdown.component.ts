@@ -68,8 +68,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
         </button>
 
         <app-dropdown-menu #sprintMenu xPosition="before">
-          <div
-            class="text-muted-foreground px-3 py-2 text-xs font-semibold uppercase">
+          <div class="text-muted px-3 py-2 text-xs font-semibold uppercase">
             Current sprint
           </div>
 
@@ -89,7 +88,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
                 <span class="max-w-64 truncate font-medium">
                   {{ sprint.name }}
                 </span>
-                <span class="text-muted-foreground max-w-64 truncate text-xs">
+                <span class="text-muted max-w-64 truncate text-xs">
                   {{ sprint.projectName }}
                 </span>
               </span>

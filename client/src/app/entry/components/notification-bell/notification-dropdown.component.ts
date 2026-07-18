@@ -23,7 +23,7 @@ const DROPDOWN_LIMIT = 10;
         <span class="text-sm font-semibold">Notifications</span>
         @if (unreadCount() > 0) {
           <button
-            class="text-muted-foreground hover:text-primary cursor-pointer text-xs underline transition-colors"
+            class="text-muted hover:text-primary cursor-pointer text-xs underline transition-colors"
             (click)="markAllAsRead.emit()">
             Mark all as read
           </button>
@@ -57,7 +57,7 @@ const DROPDOWN_LIMIT = 10;
         @if (notifications().length) {
           <div class="border-border/50 sticky bottom-0 border-t bg-inherit">
             <button
-              class="hover:text-primary text-muted-foreground w-full cursor-pointer px-[1.2rem] py-3 text-center text-sm font-medium transition-colors"
+              class="hover:text-primary text-muted w-full cursor-pointer px-[1.2rem] py-3 text-center text-sm font-medium transition-colors"
               (click)="viewAll.emit()">
               View all notifications
             </button>

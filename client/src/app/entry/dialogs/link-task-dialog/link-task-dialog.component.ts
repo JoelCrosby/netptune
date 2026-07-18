@@ -75,7 +75,7 @@ export interface LinkTaskDialogResult {
         }
       </div>
 
-      <p class="text-muted-foreground text-sm">
+      <p class="text-muted text-sm">
         {{ summary() }}
       </p>
 
@@ -104,7 +104,7 @@ export interface LinkTaskDialogResult {
         </ng-template>
 
         <ng-template appDatatableCell="status" let-task>
-          <span class="text-muted-foreground text-xs">
+          <span class="text-muted text-xs">
             {{ task.statusName }}
           </span>
         </ng-template>

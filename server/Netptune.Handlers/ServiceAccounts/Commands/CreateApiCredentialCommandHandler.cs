@@ -48,6 +48,11 @@ public sealed class CreateApiCredentialCommandHandler
             return ClientResponse<ApiCredentialCreatedViewModel>.NotFound;
         }
 
+        if (serviceAccount.DisabledAt.HasValue)
+        {
+            return ClientResponse<ApiCredentialCreatedViewModel>.Failed("Deleted service accounts cannot create credentials.");
+        }
+
         var membership = await UnitOfWork.WorkspaceUsers.GetUserPermissions(
             serviceAccount.UserId,
             Identity.GetWorkspaceKey(),

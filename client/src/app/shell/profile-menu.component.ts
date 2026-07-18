@@ -56,7 +56,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
             {{ user.displayName || 'Profile' }}
           </div>
           @if (user.email) {
-            <div class="text-muted-foreground max-w-48 truncate text-xs">
+            <div class="text-muted max-w-48 truncate text-xs">
               {{ user.email }}
             </div>
           }

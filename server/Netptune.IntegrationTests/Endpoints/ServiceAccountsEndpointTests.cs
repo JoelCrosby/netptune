@@ -33,6 +33,8 @@ public sealed class ServiceAccountsEndpointTests
                 Permissions =
                 [
                     NetptunePermissions.Projects.Read,
+                    NetptunePermissions.Sprints.Read,
+                    NetptunePermissions.Sprints.Create,
                     NetptunePermissions.Tasks.Read,
                     NetptunePermissions.Tasks.Create,
                 ],
@@ -42,6 +44,8 @@ public sealed class ServiceAccountsEndpointTests
         var account = await createAccountResponse.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
         account.Should().NotBeNull();
         account!.Name.Should().Be(accountName);
+        account.Permissions.Should().Contain(NetptunePermissions.Sprints.Read);
+        account.Permissions.Should().Contain(NetptunePermissions.Sprints.Create);
 
         var createCredentialResponse = await Client.PostAsJsonAsync(
             $"api/service-accounts/{account.Id}/credentials",
@@ -72,5 +76,49 @@ public sealed class ServiceAccountsEndpointTests
             .Single(item => item.Id == account.Id)
             .Credentials.Single(item => item.Id == createdCredential.Id)
             .RevokedAt.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldDisableAccountAndRevokeCredentials()
+    {
+        var createAccountResponse = await Client.PostAsJsonAsync(
+            "api/service-accounts",
+            new CreateServiceAccountRequest
+            {
+                Name = $"Deleted agent {Guid.NewGuid():N}",
+                Permissions = [NetptunePermissions.Tasks.Read],
+            });
+        var account = await createAccountResponse.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
+
+        var createCredentialResponse = await Client.PostAsJsonAsync(
+            $"api/service-accounts/{account!.Id}/credentials",
+            new CreateApiCredentialRequest
+            {
+                Name = "Credential to revoke",
+                Scopes = [NetptunePermissions.Tasks.Read],
+            });
+        var credential = await createCredentialResponse.Content
+            .ReadFromJsonAsync<ApiCredentialCreatedViewModel>();
+
+        var deleteResponse = await Client.DeleteAsync($"api/service-accounts/{account.Id}");
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var accounts = await Client.GetFromJsonAsync<List<ServiceAccountViewModel>>(
+            "api/service-accounts");
+        var deletedAccount = accounts.Should().ContainSingle(item => item.Id == account.Id).Subject;
+        deletedAccount.DisabledAt.Should().NotBeNull();
+        deletedAccount.Credentials
+            .Single(item => item.Id == credential!.Id)
+            .RevokedAt.Should().NotBeNull();
+
+        var recreateCredentialResponse = await Client.PostAsJsonAsync(
+            $"api/service-accounts/{account.Id}/credentials",
+            new CreateApiCredentialRequest
+            {
+                Name = "Rejected credential",
+                Scopes = [NetptunePermissions.Tasks.Read],
+            });
+        recreateCredentialResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

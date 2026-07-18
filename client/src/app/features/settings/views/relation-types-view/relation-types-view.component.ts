@@ -103,7 +103,7 @@ import { finalize, first } from 'rxjs';
                 {{ relationType.name }}
               </button>
             </td>
-            <td class="text-muted-foreground truncate px-4 py-2 align-middle">
+            <td class="text-muted truncate px-4 py-2 align-middle">
               @if (isSymmetric(relationType)) {
                 <span class="italic">Same both ways</span>
               } @else {

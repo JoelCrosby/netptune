@@ -51,6 +51,31 @@ const apiPermissionOptions: ApiPermissionOption[] = [
     description: 'Resolve workflow status IDs.',
   },
   {
+    key: netptunePermissions.sprints.read,
+    label: 'View sprints',
+    description: 'Read sprint details and current scope.',
+  },
+  {
+    key: netptunePermissions.sprints.create,
+    label: 'Create sprints',
+    description: 'Create planning sprints for projects.',
+  },
+  {
+    key: netptunePermissions.sprints.update,
+    label: 'Update sprints',
+    description: 'Edit sprint details and lifecycle state.',
+  },
+  {
+    key: netptunePermissions.sprints.delete,
+    label: 'Delete sprints',
+    description: 'Delete planning or cancelled sprints.',
+  },
+  {
+    key: netptunePermissions.sprints.manageTasks,
+    label: 'Manage sprint tasks',
+    description: 'Add tasks to and remove tasks from sprints.',
+  },
+  {
     key: netptunePermissions.tasks.read,
     label: 'View tasks',
     description: 'Read tasks and their current state.',
@@ -90,10 +115,9 @@ const apiPermissionOptions: ApiPermissionOption[] = [
           title="Account details"
           description="Name and describe the service account.">
           <div class="form-auth">
-            <p class="text-muted-foreground mb-5 text-sm">
-              Service accounts are non-interactive identities owned by
-              workspace users. They cannot sign in through the normal login
-              flow.
+            <p class="text-muted mb-5 text-sm">
+              Service accounts are non-interactive identities owned by workspace
+              users. They cannot sign in through the normal login flow.
             </p>
 
             <app-form-input
@@ -117,7 +141,7 @@ const apiPermissionOptions: ApiPermissionOption[] = [
           description="Choose what this identity is allowed to do.">
           <fieldset>
             <legend class="mb-1 text-sm font-medium">API permissions</legend>
-            <p class="text-muted-foreground mb-3 text-xs">
+            <p class="text-muted mb-3 text-xs">
               Every credential is restricted to a subset of these account
               permissions.
             </p>
@@ -132,7 +156,7 @@ const apiPermissionOptions: ApiPermissionOption[] = [
                       <span class="text-sm font-medium">
                         {{ permission.label }}
                       </span>
-                      <span class="text-muted-foreground text-xs">
+                      <span class="text-muted text-xs">
                         {{ permission.description }}
                       </span>
                     </span>
@@ -158,7 +182,7 @@ const apiPermissionOptions: ApiPermissionOption[] = [
               (changed)="setCreateCredential($event)">
               <span class="flex flex-col gap-0.5">
                 <span class="text-sm font-medium">Create a credential now</span>
-                <span class="text-muted-foreground text-xs">
+                <span class="text-muted text-xs">
                   You can skip this and create one from the service-account page
                   later.
                 </span>
@@ -178,12 +202,15 @@ const apiPermissionOptions: ApiPermissionOption[] = [
               <legend class="mb-1 text-sm font-medium">
                 Credential scopes
               </legend>
-              <p class="text-muted-foreground mb-3 text-xs">
+              <p class="text-muted mb-3 text-xs">
                 Restrict this credential further than the account if needed.
               </p>
 
               <div class="border-border divide-border divide-y rounded border">
-                @for (permission of selectedPermissionOptions(); track permission.key) {
+                @for (
+                  permission of selectedPermissionOptions();
+                  track permission.key
+                ) {
                   <div class="px-4 py-3">
                     <app-checkbox
                       [checked]="hasCredentialScope(permission.key)"
@@ -204,9 +231,9 @@ const apiPermissionOptions: ApiPermissionOption[] = [
           } @else {
             <div
               class="border-border bg-background flex min-h-40 flex-col items-center justify-center rounded border p-6 text-center">
-              <svg lucideKeyRound class="text-muted-foreground mb-3 h-8 w-8"></svg>
+              <svg lucideKeyRound class="text-muted mb-3 h-8 w-8"></svg>
               <p class="font-medium">No credential will be created</p>
-              <p class="text-muted-foreground mt-1 text-sm">
+              <p class="text-muted mt-1 text-sm">
                 The service account will be ready for a credential whenever you
                 need one.
               </p>
@@ -221,7 +248,7 @@ const apiPermissionOptions: ApiPermissionOption[] = [
                 {{ accountForm.name().value() }}
               </h3>
               @if (accountForm.description().value()) {
-                <p class="text-muted-foreground mt-1 text-sm">
+                <p class="text-muted mt-1 text-sm">
                   {{ accountForm.description().value() }}
                 </p>
               }
@@ -251,12 +278,12 @@ const apiPermissionOptions: ApiPermissionOption[] = [
                 <p class="text-sm font-medium">
                   {{ accountForm.credentialName().value() }}
                 </p>
-                <p class="text-muted-foreground mt-1 text-xs">
+                <p class="text-muted mt-1 text-xs">
                   {{ credentialScopes().size }} scoped permissions · expires
                   after 90 days
                 </p>
               } @else {
-                <p class="text-muted-foreground text-sm">
+                <p class="text-muted text-sm">
                   Credential creation will be skipped.
                 </p>
               }
@@ -335,12 +362,14 @@ export class CreateServiceAccountDialogComponent {
     maxLength(schema.credentialName, 128);
   });
 
-  readonly createCredential = computed(
-    () => this.accountForm.createCredential().value()
+  readonly createCredential = computed(() =>
+    this.accountForm.createCredential().value()
   );
   readonly selectedPermissionOptions = computed(() => {
     const permissions = this.selectedPermissions();
-    return this.permissionOptions.filter((option) => permissions.has(option.key));
+    return this.permissionOptions.filter((option) =>
+      permissions.has(option.key)
+    );
   });
 
   hasPermission(permission: Permission) {

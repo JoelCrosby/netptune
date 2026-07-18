@@ -35,7 +35,7 @@ export interface EditRelationTypeDialogResult {
   template: `<app-dialog-title>Edit Relation Type</app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
-      <p class="text-muted-foreground mb-4 text-sm">
+      <p class="text-muted mb-4 text-sm">
         Category: {{ categoryLabel }}. A relation type's category is fixed once
         it exists, because changing it would hold existing links to rules they
         were never checked against.

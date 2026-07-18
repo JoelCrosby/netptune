@@ -15,7 +15,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
       <svg lucideZap class="h-4 w-4 shrink-0 opacity-50"></svg>
       <span class="flex-1 truncate text-left">{{ command().label }}</span>
       @if (command().shortcut) {
-        <span class="text-muted-foreground ml-auto tracking-widest">{{
+        <span class="text-muted ml-auto tracking-widest">{{
           command().shortcut
         }}</span>
       }
