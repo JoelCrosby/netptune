@@ -13,6 +13,7 @@ export const footerColumns: FooterColumn[] = [
     heading: 'Resources',
     links: [
       { label: 'Documentation', href: '/docs' },
+      { label: 'Public API', href: '/docs/public-api' },
       { label: 'Docker Compose status', href: '/docs/docker-compose' },
       { label: 'Kubernetes / Helm', href: '/docs/kubernetes' },
     ],

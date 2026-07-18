@@ -15,12 +15,13 @@ For a production deployment, start with the [Kubernetes / Helm guide](/docs/kube
 
 ### Application services
 
-| Service  | Image                                  | Responsibility                                                                                 |
-| -------- | -------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Client   | `ghcr.io/joelcrosby/netptune-client`   | Angular application served by Nginx. Nginx proxies `/api/` to the API service.                 |
-| API      | `ghcr.io/joelcrosby/netptune`          | ASP.NET Core API, authentication, business logic, file access, search, and server-sent events. |
-| Jobs     | `ghcr.io/joelcrosby/netptune-jobs`     | Email delivery, search indexing, and automation processing.                                    |
-| Activity | `ghcr.io/joelcrosby/netptune-activity` | Activity event processing, merge windows, and scheduled audit retention.                       |
+| Service    | Image                                    | Responsibility                                                                                 |
+| ---------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Client     | `ghcr.io/joelcrosby/netptune-client`     | Angular application served by Nginx. Nginx proxies `/api/` to the API service.                 |
+| API        | `ghcr.io/joelcrosby/netptune`            | ASP.NET Core API, authentication, business logic, file access, search, and server-sent events. |
+| Public API | `ghcr.io/joelcrosby/netptune-public-api` | API-key-only integration surface with OpenAPI documentation and independent scaling.           |
+| Jobs       | `ghcr.io/joelcrosby/netptune-jobs`       | Email delivery, search indexing, and automation processing.                                    |
+| Activity   | `ghcr.io/joelcrosby/netptune-activity`   | Activity event processing, merge windows, reporting events, and scheduled audit retention.     |
 
 The chart can also deploy `ghcr.io/joelcrosby/netptune-website`, the SolidStart marketing and documentation site. It is separate from the Angular application.
 
@@ -60,13 +61,14 @@ Headlamp, DbGate, and Aspire Dashboard are enabled in the current default values
 
 Images are published to GitHub Container Registry by manually dispatched workflows on the default branch.
 
-| Component | Image                                  |
-| --------- | -------------------------------------- |
-| API       | `ghcr.io/joelcrosby/netptune`          |
-| Client    | `ghcr.io/joelcrosby/netptune-client`   |
-| Jobs      | `ghcr.io/joelcrosby/netptune-jobs`     |
-| Activity  | `ghcr.io/joelcrosby/netptune-activity` |
-| Website   | `ghcr.io/joelcrosby/netptune-website`  |
+| Component  | Image                                    |
+| ---------- | ---------------------------------------- |
+| API        | `ghcr.io/joelcrosby/netptune`            |
+| Public API | `ghcr.io/joelcrosby/netptune-public-api` |
+| Client     | `ghcr.io/joelcrosby/netptune-client`     |
+| Jobs       | `ghcr.io/joelcrosby/netptune-jobs`       |
+| Activity   | `ghcr.io/joelcrosby/netptune-activity`   |
+| Website    | `ghcr.io/joelcrosby/netptune-website`    |
 
 The workflows publish `latest`, branch, and full commit-SHA tags. Pin SHA tags for repeatable production deployments.
 

@@ -11,6 +11,10 @@ import {
   Workflow,
   Search,
   FileSpreadsheet,
+  ChartNoAxesCombined,
+  Braces,
+  LayoutTemplate,
+  Paperclip,
 } from 'lucide-solid';
 import type { Feature } from '~/types/feature';
 
@@ -64,6 +68,26 @@ export const featureGridItems: Feature[] = [
     icon: FileSpreadsheet,
     title: 'CSV import & export',
     description: 'Move tasks in or out of any board — no lock-in',
+  },
+  {
+    icon: ChartNoAxesCombined,
+    title: 'Delivery reporting',
+    description: 'Flow, workload, burndown, and velocity in one workspace',
+  },
+  {
+    icon: Braces,
+    title: 'Public API',
+    description: 'Integrate projects, statuses, sprints, and tasks',
+  },
+  {
+    icon: LayoutTemplate,
+    title: 'Workspace templates',
+    description: 'Launch with a complete workflow instead of a blank slate',
+  },
+  {
+    icon: Paperclip,
+    title: 'Task files & workspace storage',
+    description: 'Attach files to work and manage storage from one place',
   },
   {
     icon: LogIn,

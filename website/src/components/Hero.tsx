@@ -18,8 +18,8 @@ export default function Hero() {
         </h1>
 
         <p class="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-slate-500 dark:text-white/55">
-          Plan issues, move work through boards and sprints, automate routine updates, and keep the
-          whole team synced in real time—from one focused workspace.
+          Plan issues, move work through boards and sprints, measure delivery with live reports, and
+          connect your tools through a scoped API—from one focused workspace.
         </p>
 
         <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">

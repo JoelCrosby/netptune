@@ -17,12 +17,18 @@ export const comparisons: Comparison[] = [
     competitor: 'Defaults included',
     headline: 'Useful immediately, adaptable when needed.',
     description:
-      'Boards, sprints, automations, search, permissions, and audit history work together without requiring a plugin marketplace.',
+      'Workspace templates, boards, sprints, reports, automations, search, and permissions work together without requiring a plugin marketplace.',
   },
   {
     competitor: 'Observable behavior',
     headline: 'Trace what changed and what ran.',
     description:
       'Activity records, audit views, and automation run history provide a clear account of changes and background actions.',
+  },
+  {
+    competitor: 'Integration ready',
+    headline: 'Automate without sharing a human login.',
+    description:
+      'Scoped service accounts, revocable credentials, OpenAPI documentation, and an independently scalable public API keep integrations explicit.',
   },
 ];

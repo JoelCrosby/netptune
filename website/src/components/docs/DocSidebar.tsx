@@ -18,6 +18,7 @@ const sections = [
     items: [
       { href: '/docs/configuration', label: 'Configuration' },
       { href: '/docs/external-services', label: 'External Services' },
+      { href: '/docs/public-api', label: 'Public API' },
     ],
   },
 ];
