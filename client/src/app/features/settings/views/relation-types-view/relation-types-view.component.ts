@@ -37,7 +37,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { finalize, first } from 'rxjs';
 
 @Component({
-  selector: 'app-relation-types',
+  selector: 'app-relation-types-view',
   imports: [
     StrokedButtonComponent,
     ColorSwatchComponent,
@@ -169,7 +169,7 @@ import { finalize, first } from 'rxjs';
     </app-table>
   </section>`,
 })
-export class RelationTypesComponent {
+export class RelationTypesViewComponent {
   private readonly relationTypesService = inject(RelationTypesService);
   private readonly dialog = inject(DialogService);
 

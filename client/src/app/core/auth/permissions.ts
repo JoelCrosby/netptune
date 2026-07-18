@@ -87,6 +87,13 @@ export const netptunePermissions = {
     read: 'automations.read',
     manage: 'automations.manage',
   },
+  serviceAccounts: {
+    read: 'service_accounts.read',
+    create: 'service_accounts.create',
+    update: 'service_accounts.update',
+    delete: 'service_accounts.delete',
+    manageCredentials: 'service_accounts.manage_credentials',
+  },
   storage: {
     uploadProfilePicture: 'storage.upload_profile_picture',
     uploadMedia: 'storage.upload_media',

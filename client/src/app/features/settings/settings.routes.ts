@@ -7,11 +7,11 @@ import { workspaceSettingsGuard } from './guards/workspace-settings.guard';
 export const routes: Routes = [
   {
     path: 'personal',
-    loadComponent: () => import('./views/personal-settings-view.component').then((m) => m.PersonalSettingsViewComponent),
+    loadComponent: () => import('./views/personal-settings-view/personal-settings-view.component').then((m) => m.PersonalSettingsViewComponent),
   },
   {
     path: 'workspace',
-    loadComponent: () => import('./views/workspace-settings-view.component').then((m) => m.WorkspaceSettingsViewComponent),
+    loadComponent: () => import('./views/workspace-settings-view/workspace-settings-view.component').then((m) => m.WorkspaceSettingsViewComponent),
     children: [
       {
         path: '',
@@ -30,21 +30,28 @@ export const routes: Routes = [
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.tags.read },
         title: 'Workspace Tags',
-        loadComponent: () => import('./components/tags/tags.component').then((m) => m.TagsComponent),
+        loadComponent: () => import('./views/tags-view/tags-view.component').then((m) => m.TagsViewComponent),
       },
       {
         path: 'statuses',
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.statuses.read },
         title: 'Workspace Statuses',
-        loadComponent: () => import('./components/statuses/statuses.component').then((m) => m.StatusesComponent),
+        loadComponent: () => import('./views/statuses-view/statuses-view.component').then((m) => m.StatusesViewComponent),
       },
       {
         path: 'relations',
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.relationTypes.read },
         title: 'Workspace Relations',
-        loadComponent: () => import('./components/relation-types/relation-types.component').then((m) => m.RelationTypesComponent),
+        loadComponent: () => import('./views/relation-types-view/relation-types-view.component').then((m) => m.RelationTypesViewComponent),
+      },
+      {
+        path: 'service-accounts',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.serviceAccounts.read },
+        title: 'Workspace Service Accounts',
+        loadComponent: () => import('./views/service-accounts-view/service-accounts-view.component').then((m) => m.ServiceAccountsViewComponent),
       },
       {
         path: '**',

@@ -24,6 +24,7 @@ import {
   LucideSettings,
   LucideSettings2,
   LucideShield,
+  LucideBot,
   LucideSquareCheckBig,
   LucideTable2,
   LucideTag,
@@ -118,6 +119,10 @@ export class ShellSidebarComponent {
 
   canReadRelationTypes = this.store.selectSignal(
     selectHasPermission(netptunePermissions.relationTypes.read)
+  );
+
+  canReadServiceAccounts = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.serviceAccounts.read)
   );
 
   canReadAudit = this.store.selectSignal(
@@ -260,6 +265,14 @@ export class ShellSidebarComponent {
         label: 'Relations',
         value: ['./settings/workspace/relations'],
         icon: LucideGitFork,
+      });
+    }
+
+    if (this.canReadServiceAccounts()) {
+      workspaceSettingsLinks.push({
+        label: 'Service Accounts',
+        value: ['./settings/workspace/service-accounts'],
+        icon: LucideBot,
       });
     }
 

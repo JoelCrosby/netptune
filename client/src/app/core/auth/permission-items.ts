@@ -311,6 +311,33 @@ export const netptunePermissionLabels: PermissionLabels = {
       icon: LucideWorkflow,
     },
   },
+  serviceAccounts: {
+    read: {
+      key: 'service_accounts.read',
+      label: 'View Service Accounts',
+      icon: LucideShield,
+    },
+    create: {
+      key: 'service_accounts.create',
+      label: 'Create Service Accounts',
+      icon: LucideCirclePlus,
+    },
+    update: {
+      key: 'service_accounts.update',
+      label: 'Edit Service Accounts',
+      icon: LucidePencil,
+    },
+    delete: {
+      key: 'service_accounts.delete',
+      label: 'Delete Service Accounts',
+      icon: LucideTrash2,
+    },
+    manageCredentials: {
+      key: 'service_accounts.manage_credentials',
+      label: 'Manage API Credentials',
+      icon: LucideUserLock,
+    },
+  },
   storage: {
     uploadProfilePicture: {
       key: 'storage.upload_profile_picture',

@@ -27,7 +27,7 @@ import { first } from 'rxjs';
 import { tagResource } from '@app/core/resources/tag.resource';
 
 @Component({
-  selector: 'app-tags',
+  selector: 'app-tags-view',
   imports: [
     IconButtonComponent,
     TooltipDirective,
@@ -102,7 +102,7 @@ import { tagResource } from '@app/core/resources/tag.resource';
       </tbody>
     </app-table> `,
 })
-export class TagsComponent {
+export class TagsViewComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
 

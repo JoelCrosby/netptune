@@ -37,7 +37,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { finalize, first } from 'rxjs';
 
 @Component({
-  selector: 'app-statuses',
+  selector: 'app-statuses-view',
   imports: [
     StrokedButtonComponent,
     ColorSwatchComponent,
@@ -149,7 +149,7 @@ import { finalize, first } from 'rxjs';
     </app-table>
   </section>`,
 })
-export class StatusesComponent {
+export class StatusesViewComponent {
   private readonly statusesService = inject(StatusesService);
   private readonly dialog = inject(DialogService);
 
