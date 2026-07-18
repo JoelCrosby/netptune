@@ -2,10 +2,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SprintStatus } from '@core/enums/sprint-status';
+import { ConfirmationService } from '@core/services/confirmation.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import * as RouteSelectors from '@core/core.route.selectors';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { getErrorMessage } from '@core/util/error-message';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
@@ -35,6 +37,7 @@ export class SprintsEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private sprintsService = inject(SprintsService);
   private snackbar = inject(SnackbarService);
+  private confirmation = inject(ConfirmationService);
   private store = inject(Store);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -150,9 +153,15 @@ export class SprintsEffects {
           unwrapClientReposne(),
           tap(() => this.snackbar.open('Sprint started')),
           map((sprint) => actions.updateSprint.success({ sprint })),
-          catchError((error: HttpErrorResponse) =>
-            of(actions.updateSprint.fail({ error }))
-          )
+          catchError((error: HttpErrorResponse) => {
+            void this.confirmation.open({
+              title: 'Unable to Start Sprint',
+              message: getErrorMessage(error, START_SPRINT_ERROR_FALLBACK),
+              isInfoMessage: true,
+            });
+
+            return of(actions.updateSprint.fail({ error }));
+          })
         )
       )
     );
@@ -414,3 +423,6 @@ export class SprintsEffects {
     );
   });
 }
+
+const START_SPRINT_ERROR_FALLBACK =
+  'The sprint could not be started. Please try again.';
