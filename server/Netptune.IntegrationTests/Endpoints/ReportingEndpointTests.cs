@@ -19,9 +19,9 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
     private readonly HttpClient Client = fixture.CreateNetptuneClient();
 
     [Fact]
-    public async Task Flow_ShouldReturnReport_WhenRangeIsValid()
+    public async Task Flow_ShouldReturnReport_WhenIanaTimeZoneIsValid()
     {
-        var response = await Client.GetAsync("api/reports/flow?from=2026-01-01&to=2026-12-31&timeZone=UTC");
+        var response = await Client.GetAsync("api/reports/flow?from=2026-01-01&to=2026-12-31&timeZone=Europe%2FLondon");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
         (await response.Content.ReadFromJsonAsync<FlowReport>()).Should().NotBeNull();

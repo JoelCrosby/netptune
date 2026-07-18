@@ -138,7 +138,8 @@ public sealed class ReportingRepository : IReportingRepository
     public async Task<SprintBurndownReport?> GetBurndown(ReportingScope scope, int sprintId, ReportingUnit unit, string timeZone, CancellationToken cancellationToken = default)
     {
         var workspaceId = scope.WorkspaceId;
-        var sprint = await Context.Sprints.AsNoTracking()
+        var sprint = await Context.Sprints
+            .AsNoTracking()
             .SingleOrDefaultAsync(item => item.Id == sprintId && item.WorkspaceId == workspaceId && !item.IsDeleted, cancellationToken);
 
         if (sprint is null || !scope.CanAccessProject(sprint.ProjectId))
@@ -171,8 +172,10 @@ public sealed class ReportingRepository : IReportingRepository
         var added = 0;
         var removed = 0;
         var missing = members.Values.Count(member => unit != ReportingUnit.Tasks && Value(member.Unit, member.Value, unit) is null);
+
         var points = new List<BurndownPoint>();
         var processed = new HashSet<long>();
+
         var localStart = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(sprint.StartedAt.Value, DateTimeKind.Utc), zone));
         var localEnd = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(end, DateTimeKind.Utc), zone));
         var dates = EachDate(localStart, localEnd);
@@ -256,18 +259,24 @@ public sealed class ReportingRepository : IReportingRepository
     {
         var workspaceId = scope.WorkspaceId;
         take = Math.Clamp(take, 1, 20);
+
         var sprints = await Context.Sprints.AsNoTracking()
             .Where(sprint => sprint.WorkspaceId == workspaceId && sprint.ProjectId == projectId && sprint.CompletedAt != null && !sprint.IsDeleted)
             .OrderByDescending(sprint => sprint.CompletedAt).Take(take)
             .ToListAsync(cancellationToken);
+
         var results = new List<VelocityPoint>();
         var excluded = 0;
 
         foreach (var sprint in sprints.OrderBy(item => item.CompletedAt))
         {
-            var lifecycle = await Context.EventRecords.AsNoTracking()
+            var lifecycle = await Context.EventRecords
+                .AsNoTracking()
                 .Where(record => record.WorkspaceId == workspaceId && record.SubjectType == "sprint" && record.SubjectId == sprint.Id.ToString())
-                .OrderBy(record => record.OccurredAt).ThenBy(record => record.Id).ToListAsync(cancellationToken);
+                .OrderBy(record => record.OccurredAt)
+                .ThenBy(record => record.Id)
+                .ToListAsync(cancellationToken);
+
             var started = lifecycle.FirstOrDefault(record => ReadString(record.Payload, "state") == "started");
             var completed = lifecycle.LastOrDefault(record => ReadString(record.Payload, "state") == "completed");
 
@@ -276,10 +285,12 @@ public sealed class ReportingRepository : IReportingRepository
                 excluded++;
                 continue;
             }
+
             var commitment = ReadCommitment(started.Payload).Values;
             var completion = ReadCommitment(completed.Payload).Values;
             var committedValue = commitment.Sum(member => Value(member.Unit, member.Value, unit) ?? 0);
             var completedValue = completion.Where(member => member.Done).Sum(member => Value(member.Unit, member.Value, unit) ?? 0);
+
             results.Add(new VelocityPoint
             {
                 SprintId = sprint.Id,
@@ -308,7 +319,10 @@ public sealed class ReportingRepository : IReportingRepository
     private async Task<List<EventRecord>> QueryEvents(int workspaceId, IReadOnlySet<int> permittedProjects, int? projectId, DateTime from, DateTime to, CancellationToken token)
     {
         var visibleProjectIds = permittedProjects.Select(id => id.ToString()).ToList();
-        var query = Context.EventRecords.AsNoTracking().Include(record => record.References)
+
+        var query = Context.EventRecords
+            .AsNoTracking()
+            .Include(record => record.References)
             .Where(record => record.WorkspaceId == workspaceId && record.OccurredAt >= from && record.OccurredAt <= to);
 
         query = projectId.HasValue
@@ -323,7 +337,8 @@ public sealed class ReportingRepository : IReportingRepository
     private async Task<DateTime?> CoverageStart(int workspaceId, IReadOnlySet<int> permittedProjects, int? projectId, CancellationToken token)
     {
         var visibleProjectIds = permittedProjects.Select(id => id.ToString()).ToList();
-        var query = Context.EventRecords.AsNoTracking()
+        var query = Context.EventRecords
+            .AsNoTracking()
             .Where(record => record.WorkspaceId == workspaceId && record.RetentionClass == EventRetentionClasses.Permanent);
 
         query = projectId.HasValue
@@ -355,12 +370,21 @@ public sealed class ReportingRepository : IReportingRepository
 
     private static TimeZoneInfo ResolveTimeZone(string value)
     {
-        try { return TimeZoneInfo.FindSystemTimeZoneById(value); }
-        catch (TimeZoneNotFoundException) { throw new InvalidReportingFilterException("The reporting time zone is invalid."); }
+        try
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById(value);
+        }
+        catch (TimeZoneNotFoundException)
+        {
+            throw new InvalidReportingFilterException("The reporting time zone is invalid.");
+        }
     }
 
-    private static string? ReadString(JsonDocument document, string property) =>
-        document.RootElement.TryGetProperty(property, out var value) && value.ValueKind != JsonValueKind.Null ? value.ToString() : null;
+    private static string? ReadString(JsonDocument document, string property)
+    {
+        return document.RootElement.TryGetProperty(property, out var value) && value.ValueKind != JsonValueKind.Null ? value.ToString() : null;
+    }
+
 
     private static decimal? Value(EstimateType? type, decimal? value, ReportingUnit unit) => unit switch
     {
@@ -370,8 +394,11 @@ public sealed class ReportingRepository : IReportingRepository
         _ => null,
     };
 
-    private static decimal? Value(string? type, decimal? value, ReportingUnit unit) =>
-        Enum.TryParse<EstimateType>(type, out var parsed) ? Value(parsed, value, unit) : unit == ReportingUnit.Tasks ? 1 : null;
+    private static decimal? Value(string? type, decimal? value, ReportingUnit unit)
+    {
+        return Enum.TryParse<EstimateType>(type, out var parsed) ? Value(parsed, value, unit) : unit == ReportingUnit.Tasks ? 1 : null;
+    }
+
 
     private static Dictionary<string, Member> ReadCommitment(JsonDocument document)
     {
