@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
@@ -19,11 +19,11 @@ public static class StatusesEndpoints
     }
 
     private static async Task<IResult> GetStatuses(
-        GetStatusesQueryHandler handler,
+        IMediator mediator,
         [AsParameters] StatusFilter filter,
         CancellationToken cancellationToken)
     {
-        var result = await handler.Handle(new GetStatusesQuery(filter), cancellationToken);
+        var result = await mediator.Send(new GetStatusesQuery(filter), cancellationToken);
         return result is null ? Results.NotFound() : Results.Ok(result);
     }
 }

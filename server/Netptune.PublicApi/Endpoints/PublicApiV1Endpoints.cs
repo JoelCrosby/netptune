@@ -15,6 +15,7 @@ public static class PublicApiV1Endpoints
             });
 
         group.MapProjectsEndpoints();
+        group.MapSprintsEndpoints();
         group.MapStatusesEndpoints();
         group.MapTasksEndpoints();
 

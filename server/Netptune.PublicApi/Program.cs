@@ -4,6 +4,7 @@ using Netptune.Cache;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
+using Netptune.Handlers;
 using Netptune.Identity.Authentication;
 using Netptune.Identity.Authorization;
 using Netptune.PublicApi.Configuration;
@@ -51,8 +52,9 @@ builder.Services.AddNetptuneServices(options =>
     options.ClientOrigin = configuration.GetRequiredValue("Origin");
     options.ContentRootPath = builder.Environment.ContentRootPath;
 });
+
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
-builder.Services.AddPublicApiHandlers();
+builder.Services.AddNetptuneHandlers();
 builder.Services.AddPublicApiRateLimiter();
 builder.Services.AddValidation();
 builder.Services.AddPublicApiOpenApi();
@@ -71,16 +73,16 @@ app.MapGroup("/api/v1")
 
 app.MapDefaultEndpoints();
 app.MapOpenApi();
+
 app.MapScalarApiReference("/docs", options => options
     .WithTitle("Netptune Public API")
     .AddPreferredSecuritySchemes(PublicApiOpenApi.SecuritySchemeName)
     .DisableDefaultFonts()
     .DisableAgent())
     .AllowAnonymous();
+
 app.MapGet("/", () => Results.Redirect("/docs"))
     .ExcludeFromDescription()
     .AllowAnonymous();
 
 app.Run();
-
-public partial class Program;

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
@@ -32,41 +32,41 @@ public static class TasksEndpoints
     }
 
     private static async Task<IResult> GetTasks(
-        GetTasksQueryHandler handler,
+        IMediator mediator,
         [AsParameters] TaskFilter filter,
         CancellationToken cancellationToken)
     {
-        return Results.Ok(await handler.Handle(new GetTasksQuery(filter), cancellationToken));
+        return Results.Ok(await mediator.Send(new GetTasksQuery(filter), cancellationToken));
     }
 
     private static async Task<IResult> GetTask(
-        GetTaskQueryHandler handler,
+        IMediator mediator,
         int id,
         CancellationToken cancellationToken)
     {
-        var result = await handler.Handle(new GetTaskQuery(id), cancellationToken);
+        var result = await mediator.Send(new GetTaskQuery(id), cancellationToken);
         return result is null ? Results.NotFound() : Results.Ok(result);
     }
 
     private static async Task<IResult> CreateTask(
-        CreateTaskCommandHandler handler,
+        IMediator mediator,
         AddProjectTaskRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await handler.Handle(new CreateTaskCommand(request), cancellationToken);
+        var result = await mediator.Send(new CreateTaskCommand(request), cancellationToken);
         return result.IsSuccess
             ? Results.Created($"/api/v1/tasks/{result.Payload!.Id}", result.Payload)
             : Results.BadRequest(result);
     }
 
     private static async Task<IResult> UpdateTask(
-        UpdateTaskCommandHandler handler,
+        IMediator mediator,
         int id,
         UpdateProjectTaskRequest request,
         CancellationToken cancellationToken)
     {
         request.Id = id;
-        var result = await handler.Handle(new UpdateTaskCommand(request), cancellationToken);
+        var result = await mediator.Send(new UpdateTaskCommand(request), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
         return result.IsSuccess ? Results.Ok(result.Payload) : Results.BadRequest(result);

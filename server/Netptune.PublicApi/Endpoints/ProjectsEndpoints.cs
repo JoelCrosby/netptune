@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
@@ -19,10 +19,10 @@ public static class ProjectsEndpoints
     }
 
     private static async Task<IResult> GetProjects(
-        GetProjectsQueryHandler handler,
+        IMediator mediator,
         [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        return Results.Ok(await handler.Handle(new GetProjectsQuery(page), cancellationToken));
+        return Results.Ok(await mediator.Send(new GetProjectsQuery(page), cancellationToken));
     }
 }
