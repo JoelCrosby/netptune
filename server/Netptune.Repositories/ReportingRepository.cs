@@ -408,12 +408,17 @@ public sealed class ReportingRepository : IReportingRepository
             return [];
         }
 
-        return array.EnumerateArray().ToDictionary(
-            item => item.GetProperty("taskId").ToString(),
-            item => new Member(
+        var members = new Dictionary<string, Member>();
+
+        foreach (var item in array.EnumerateArray())
+        {
+            members[item.GetProperty("taskId").ToString()] = new Member(
                 item.TryGetProperty("estimateType", out var unit) ? unit.ToString() : null,
                 item.TryGetProperty("estimateValue", out var value) && value.ValueKind == JsonValueKind.Number ? value.GetDecimal() : null,
-                item.TryGetProperty("statusCategory", out var status) && status.ToString() == nameof(StatusCategory.Done)));
+                item.TryGetProperty("statusCategory", out var status) && status.ToString() == nameof(StatusCategory.Done));
+        }
+
+        return members;
     }
 
     private static Member ReadMember(JsonDocument payload) => new(
