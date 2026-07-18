@@ -1,7 +1,10 @@
 using System.Globalization;
 using System.Text;
+
 using CsvHelper;
+
 using Mediator;
+
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Models.Files;
 using Netptune.Core.Services;
@@ -34,9 +37,12 @@ public sealed class ExportAuditLogQueryHandler : IRequestHandler<ExportAuditLogQ
         filter.From ??= floor;
         filter.To ??= ceiling;
 
-        if (filter.From < floor) filter.From = floor;
+        if (filter.From < floor)
+        {
+            filter.From = floor;
+        }
 
-        var rows = await UnitOfWork.ActivityLogs.GetAuditLogForExport(filter);
+        var rows = await UnitOfWork.EventRecords.GetAuditLogForExport(filter);
         var stream = await ToAuditCsvStream(rows);
 
         var workspaceKey = Identity.GetWorkspaceKey();

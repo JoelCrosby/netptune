@@ -28,11 +28,18 @@ public class CreateTaskCommandHandlerTests
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     public CreateTaskCommandHandlerTests()
     {
         Fixture.Register(() => DateOnly.FromDateTime(Fixture.Create<DateTime>()));
-        Handler = new(UnitOfWork, Identity, Activity, EventPublisher);
+        UnitOfWork.InvokeTransaction();
+        Handler = new(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher,
+            EventRecords);
     }
 
     private void SetupStatusDependencies()
@@ -44,7 +51,11 @@ public class CreateTaskCommandHandlerTests
             Category = StatusCategory.Todo,
         };
 
-        UnitOfWork.Statuses.GetInWorkspace(Arg.Any<int>(), 1, Arg.Any<bool>(), TestContext.Current.CancellationToken)
+        UnitOfWork.Statuses.GetInWorkspace(
+            Arg.Any<int>(),
+            1,
+            Arg.Any<bool>(),
+            TestContext.Current.CancellationToken)
             .Returns(status);
         UnitOfWork.Statuses.GetTaskStatusByKey(1, "new", TestContext.Current.CancellationToken)
             .Returns(status);
@@ -58,6 +69,7 @@ public class CreateTaskCommandHandlerTests
     public async Task Create_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = Fixture.Build<AddProjectTaskRequest>()
+            .Without(p => p.SprintId)
             .With(p => p.ProjectId, 1)
             .With(p => p.BoardGroupId, 1)
             .Create();
@@ -73,7 +85,11 @@ public class CreateTaskCommandHandlerTests
         SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
+            .Returns(new TaskCreationProject(
+                request.ProjectId!.Value,
+                "Project",
+                1,
+                5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
@@ -94,6 +110,7 @@ public class CreateTaskCommandHandlerTests
     public async Task Create_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<AddProjectTaskRequest>()
+            .Without(p => p.SprintId)
             .With(p => p.ProjectId, 1)
             .With(p => p.BoardGroupId, 1)
             .Create();
@@ -104,7 +121,11 @@ public class CreateTaskCommandHandlerTests
         SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
+            .Returns(new TaskCreationProject(
+                request.ProjectId!.Value,
+                "Project",
+                1,
+                5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
@@ -113,13 +134,14 @@ public class CreateTaskCommandHandlerTests
 
         await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Received(2).CompleteAsync(TestContext.Current.CancellationToken);
+        await UnitOfWork.Received(3).CompleteAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
     public async Task Create_ShouldReturnFailure_WhenProjectNotFound()
     {
         var request = Fixture.Build<AddProjectTaskRequest>()
+            .Without(p => p.SprintId)
             .With(p => p.ProjectId, 1)
             .With(p => p.BoardGroupId, 1)
             .Create();
@@ -140,6 +162,7 @@ public class CreateTaskCommandHandlerTests
     public async Task Create_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
         var request = Fixture.Build<AddProjectTaskRequest>()
+            .Without(p => p.SprintId)
             .With(p => p.ProjectId, 1)
             .With(p => p.BoardGroupId, 1)
             .Create();
@@ -155,6 +178,7 @@ public class CreateTaskCommandHandlerTests
     public async Task Create_ShouldReturnFailure_WhenScopeRefIdNull()
     {
         var request = Fixture.Build<AddProjectTaskRequest>()
+            .Without(p => p.SprintId)
             .With(p => p.ProjectId, 1)
             .With(p => p.BoardGroupId, 1)
             .Create();
@@ -165,7 +189,11 @@ public class CreateTaskCommandHandlerTests
         SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
+            .Returns(new TaskCreationProject(
+                request.ProjectId!.Value,
+                "Project",
+                1,
+                5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
@@ -181,6 +209,7 @@ public class CreateTaskCommandHandlerTests
     public async Task Create_ShouldLogActivity_WhenInputValid()
     {
         var request = Fixture.Build<AddProjectTaskRequest>()
+            .Without(p => p.SprintId)
             .With(p => p.ProjectId, 1)
             .With(p => p.BoardGroupId, 1)
             .Create();
@@ -191,7 +220,11 @@ public class CreateTaskCommandHandlerTests
         SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
-            .Returns(new TaskCreationProject(request.ProjectId!.Value, "Project", 1, 5));
+            .Returns(new TaskCreationProject(
+                request.ProjectId!.Value,
+                "Project",
+                1,
+                5));
         UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
         UnitOfWork.Tasks.GetNextScopeId(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);

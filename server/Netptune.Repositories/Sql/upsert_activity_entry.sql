@@ -7,7 +7,7 @@ INSERT INTO activity_entries (
     , activity_type
     , changed_fields
     , meta
-    , last_activity_log_id
+    , last_event_record_id
     , first_occurred_at
     , last_occurred_at
     , revision_count
@@ -35,7 +35,7 @@ VALUES (
     , @activity_type
     , @changed_fields::text[]
     , @meta::jsonb
-    , @last_activity_log_id
+    , @last_event_record_id
     , @first_occurred_at
     , @last_occurred_at
     , @revision_count
@@ -68,7 +68,7 @@ DO UPDATE SET
           ORDER BY 1
       )
 
-    , last_activity_log_id = EXCLUDED.last_activity_log_id
+    , last_event_record_id = EXCLUDED.last_event_record_id
 
     , meta = (COALESCE(activity_entries.meta, jsonb_build_object()) || COALESCE(EXCLUDED.meta, jsonb_build_object()))
              || jsonb_build_object('fields', (

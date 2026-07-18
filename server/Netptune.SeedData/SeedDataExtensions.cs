@@ -19,7 +19,7 @@ public static class SeedDataExtensions
 
         services.AddSingleton<ISeeder, BoardGroupTaskSeeder>();
         services.AddSingleton<ISeeder, TaskAssigneeSeeder>();
-        services.AddSingleton<ISeeder, ActivityLogSeeder>();
+        services.AddSingleton<ISeeder, EventRecordSeeder>();
         services.AddSingleton<ISeeder, CommentSeeder>();
         services.AddSingleton<ISeeder, TagSeeder>();
         services.AddSingleton<ISeeder, TaskTagSeeder>();

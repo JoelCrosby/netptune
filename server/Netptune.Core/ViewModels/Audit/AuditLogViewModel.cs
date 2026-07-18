@@ -6,9 +6,9 @@ namespace Netptune.Core.ViewModels.Audit;
 
 public class AuditLogViewModel
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     public DateTime OccurredAt { get; set; }
-    public string UserId { get; set; } = null!;
+    public string? UserId { get; set; }
     public string UserDisplayName { get; set; } = null!;
     public string? UserPictureUrl { get; set; }
     public ActivityType Type { get; set; }

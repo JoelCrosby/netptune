@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.UnitOfWork;
@@ -11,8 +11,11 @@ public static class NetptuneRepositoryConfigurations
 {
     public static void AddNetptuneRepository(this IServiceCollection services, Action<NetptuneRepositoryOptions> optionsAction)
     {
+
         if (optionsAction is null)
+        {
             throw new ArgumentNullException(nameof(optionsAction));
+        }
 
         var netptuneRepositoryOptions = new NetptuneRepositoryOptions();
 

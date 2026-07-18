@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 
 namespace Netptune.TestData.Seeders;
@@ -6,7 +7,7 @@ namespace Netptune.TestData.Seeders;
 internal static class NotificationSeeder
 {
     internal static List<Notification> Generate(
-        List<ActivityLog> activityLogs,
+        List<EventRecord> activityLogs,
         List<Workspace> workspaces,
         List<WorkspaceAppUser> workspaceUsers)
     {
@@ -16,14 +17,14 @@ internal static class NotificationSeeder
         return activityLogs.Take(20).Select((log, i) => new Notification
         {
             User = user,
-            ActivityLog = log,
+            EventRecord = log,
             Workspace = workspace,
             IsRead = i % 3 == 0,
             Link = $"/{workspace.Slug}/tasks",
-            EntityType = log.EntityType,
-            ActivityType = log.Type,
-            CreatedByUserId = log.UserId,
-            OwnerId = log.UserId,
+            EntityType = Enum.Parse<EntityType>(log.SubjectType!, true),
+            ActivityType = (ActivityType)log.Payload.RootElement.GetProperty("activityType").GetInt32(),
+            CreatedByUserId = log.ActorUserId!,
+            OwnerId = log.ActorUserId!,
         }).ToList();
     }
 }

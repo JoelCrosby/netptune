@@ -51,9 +51,9 @@ public class NotificationEntityMap : AuditableEntityMap<Notification, int>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
-            .HasOne(n => n.ActivityLog)
+            .HasOne(n => n.EventRecord)
             .WithMany()
-            .HasForeignKey(n => n.ActivityLogId)
+            .HasForeignKey(n => n.EventRecordId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder

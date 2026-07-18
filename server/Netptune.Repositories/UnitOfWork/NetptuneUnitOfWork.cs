@@ -24,7 +24,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public ITagRepository Tags { get; }
     public IStatusRepository Statuses { get; }
     public IRelationTypeRepository RelationTypes { get; }
-    public IActivityLogRepository ActivityLogs { get; }
+    public IEventRecordRepository EventRecords { get; }
     public IActivityEntryRepository ActivityEntries { get; }
     public IAutomationRepository Automations { get; }
     public IFlagRepository Flags { get; }
@@ -37,6 +37,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IWorkspaceInviteRepository WorkspaceInvites { get; }
     public IWorkspaceFileRepository WorkspaceFiles { get; }
     public ITaskFileRepository TaskFiles { get; }
+    public IReportingRepository Reports { get; }
 
     public NetptuneUnitOfWork(
         DataContext context,
@@ -58,7 +59,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Tags = new TagRepository(context, connectionFactory);
         Statuses = new StatusRepository(context, connectionFactory);
         RelationTypes = new RelationTypeRepository(context, connectionFactory);
-        ActivityLogs = new ActivityLogRepository(context, connectionFactory);
+        EventRecords = new EventRecordRepository(context, connectionFactory);
         ActivityEntries = new ActivityEntryRepository(context, connectionFactory);
         Automations = new AutomationRepository(context, connectionFactory);
         Flags = new FlagRepository(context, connectionFactory);
@@ -71,5 +72,6 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         WorkspaceInvites = new WorkspaceInviteRepository(context, connectionFactory);
         WorkspaceFiles = new WorkspaceFileRepository(context, connectionFactory);
         TaskFiles = new TaskFileRepository(context, connectionFactory);
+        Reports = new ReportingRepository(context);
     }
 }

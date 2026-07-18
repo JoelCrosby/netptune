@@ -22,7 +22,7 @@ public record ActivityEntry : WorkspaceEntity<int>
 
     public JsonDocument? Meta { get; set; }
 
-    public int LastActivityLogId { get; set; }
+    public long LastEventRecordId { get; set; }
 
     public DateTime FirstOccurredAt { get; init; }
 

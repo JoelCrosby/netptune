@@ -18,7 +18,7 @@ using Xunit;
 namespace Netptune.IntegrationTests.Activity;
 
 // Deliberately separate from NetptuneFixture's database: the shared seed data is calendar-anchored
-// (ActivityLogSeeder.BaseDate is 2025-01-01), so a growing slice of it is already past the retention cutoff
+// (EventRecordSeeder.BaseDate is 2025-01-01), so a growing slice of it is already past the retention cutoff
 // and running the real job against it would delete the rows the endpoint tests read.
 public sealed class AuditRetentionFixture : IAsyncLifetime
 {
@@ -65,7 +65,7 @@ public sealed class AuditRetentionFixture : IAsyncLifetime
             Name = "Audit",
             Slug = "audit",
             CreatedAt = DateTime.UtcNow,
-            MetaInfo = new (),
+            MetaInfo = new(),
         };
 
         db.Users.Add(user);

@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Netptune.Repositories\Netptune.Repositories.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
     <ProjectReference Include="..\Netptune.ServiceDefaults\Netptune.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
   </ItemGroup>
 
 </Project>

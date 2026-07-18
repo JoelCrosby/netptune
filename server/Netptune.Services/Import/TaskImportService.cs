@@ -5,6 +5,7 @@ using CsvHelper.Configuration;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Core.Import;
 using Netptune.Core.Models.Import;
@@ -23,12 +24,14 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService IdentityService;
     private readonly IActivityLogger Activity;
+    private readonly IEventRecordWriter EventRecords;
 
-    public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IActivityLogger activity)
+    public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IActivityLogger activity, IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         IdentityService = identityService;
         Activity = activity;
+        EventRecords = eventRecords;
     }
 
     public async Task<ClientResponse<TaskImportResult>> ImportWorkspaceTasks(string boardId, Stream stream)
@@ -43,6 +46,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             PrepareHeaderForMatch = args => args.Header.ToLower(),
             MissingFieldFound = args =>
             {
+
                 if (args.HeaderNames is not null)
                 {
                     headerValidator.AddMissingField(args.HeaderNames[args.Index]);
@@ -132,7 +136,13 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         var defaultStatus = ResolveDefaultStatus(project, statuses);
 
         var tasks = rows
-            .Select(CreateImportTask(project, workspaceId, users, statuses, defaultStatus, initialScopeId.Value))
+            .Select(CreateImportTask(
+                project,
+                workspaceId,
+                users,
+                statuses,
+                defaultStatus,
+                initialScopeId.Value))
             .ToList();
 
         var boardGroups = newGroups.Select((group, index) => new BoardGroup
@@ -152,11 +162,34 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
             await UnitOfWork.CompleteAsync();
 
-            var orderDict = existingGroups.Select(group => new
+            foreach (var task in tasks)
+            {
+                var taskStatus = statuses.Single(status => status.Id == task.StatusId);
+
+                await EventRecords.Append(new EventWriteRequest<EntityCreatedPayload>
                 {
-                    GroupId = group.Id,
-                    BaseOrder = group.TasksInGroups.MaxBy(task => task.SortOrder)?.SortOrder,
-                })
+                    WorkspaceId = workspaceId,
+                    EventKey = EventKeys.EntityCreated,
+                    SubjectType = EventEntityTypes.From(EntityType.Task),
+                    SubjectId = task.Id.ToString(),
+                    Payload = new EntityCreatedPayload
+                    {
+                        Name = task.Name,
+                        StatusId = task.StatusId,
+                        StatusCategory = taskStatus.Category.ToString(),
+                    },
+                    References =
+                    [
+                        new EventReferenceInput(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), project.Id.ToString()),
+                    ],
+                });
+            }
+
+            var orderDict = existingGroups.Select(group => new
+            {
+                GroupId = group.Id,
+                BaseOrder = group.TasksInGroups.MaxBy(task => task.SortOrder)?.SortOrder,
+            })
                 .ToDictionary(group => group.GroupId, group => group.BaseOrder);
 
             var allBoardGroups = boardGroups.Concat(existingGroups).ToList();
@@ -192,13 +225,14 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             IEnumerable<Tag> ParseTags(string? tagRow)
             {
                 var names = ParseTagString(tagRow);
+
                 return names.Select(name => allTags[name]).ToList();
             }
 
             var taskTagIndex = -1;
             var taskTags = tasks.Aggregate(new List<ProjectTaskTag>(), (acc, task) =>
             {
-                taskTagIndex ++;
+                taskTagIndex++;
 
                 var tagString = rows.ElementAtOrDefault(taskTagIndex)?.Tags;
 
@@ -275,9 +309,14 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         Status ResolveStatus(string? input)
         {
-            if (string.IsNullOrWhiteSpace(input)) return defaultStatus;
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return defaultStatus;
+            }
 
             var key = input.Trim().ToLowerInvariant();
+
             return statusMap.GetValueOrDefault(key) ?? defaultStatus;
         }
     }
@@ -291,7 +330,11 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         if (project.DefaultStatusId.HasValue)
         {
             var projectDefault = taskStatuses.FirstOrDefault(status => status.Id == project.DefaultStatusId.Value);
-            if (projectDefault is not null) return projectDefault;
+
+            if (projectDefault is not null)
+            {
+                return projectDefault;
+            }
         }
 
         return taskStatuses
@@ -323,7 +366,11 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         foreach (var item in items)
         {
             var userId = FindUserId(users, item);
-            if (userId is null) continue;
+
+            if (userId is null)
+            {
+                continue;
+            }
 
             results.Add(new ProjectTaskAppUser
             {
@@ -339,6 +386,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
         return rows
             .Aggregate(new HashSet<string>(), (result, current) =>
             {
+
                 if (!string.IsNullOrWhiteSpace(current.Owner))
                 {
                     result.Add(current.Owner.Trim().IdentityNormalize());
@@ -356,7 +404,11 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
     private static List<string> ParseCellArray(string? cell)
     {
-        if (string.IsNullOrWhiteSpace(cell)) return new List<string>();
+
+        if (string.IsNullOrWhiteSpace(cell))
+        {
+            return new List<string>();
+        }
 
         return cell.Split('|', StringSplitOptions.RemoveEmptyEntries).ToHashSet().ToList();
     }
@@ -376,6 +428,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
     private static IEnumerable<string> ParseTagString(string? tagString)
     {
+
         if (string.IsNullOrWhiteSpace(tagString))
         {
             return Array.Empty<string>();

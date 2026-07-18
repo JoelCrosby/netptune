@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Netptune.Activity.Services;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Entities.Contexts;
 
 using Xunit;
@@ -50,7 +51,7 @@ public class AuditRetentionJobTests(AuditRetentionFixture fixture) : IClassFixtu
 
         var cutoff = DateTime.UtcNow.AddDays(-365);
 
-        (await db.ActivityLogs.CountAsync(log => log.OccurredAt >= cutoff, CancellationToken))
+        (await db.EventRecords.CountAsync(log => log.OccurredAt >= cutoff, CancellationToken))
             .Should().BeGreaterThan(0);
     }
 
@@ -106,7 +107,7 @@ public class AuditRetentionJobTests(AuditRetentionFixture fixture) : IClassFixtu
         (await CountExpired()).Should().Be(0);
     }
 
-    private async Task<List<int>> ExpiredIds()
+    private async Task<List<long>> ExpiredIds()
     {
         using var scope = fixture.CreateScope();
 
@@ -114,10 +115,12 @@ public class AuditRetentionJobTests(AuditRetentionFixture fixture) : IClassFixtu
 
         var cutoff = DateTime.UtcNow.AddDays(-365);
 
-        return await db.ActivityLogs
+        var eventRecordIds = await db.EventRecords
             .Where(log => log.OccurredAt < cutoff)
             .Select(log => log.Id)
             .ToListAsync(CancellationToken);
+
+        return eventRecordIds;
     }
 
     private async Task<int> CountExpired()
@@ -128,7 +131,9 @@ public class AuditRetentionJobTests(AuditRetentionFixture fixture) : IClassFixtu
 
         var cutoff = DateTime.UtcNow.AddDays(-365);
 
-        return await db.ActivityLogs.CountAsync(log => log.OccurredAt < cutoff, CancellationToken);
+        var count = await db.EventRecords.CountAsync(log => log.OccurredAt < cutoff, CancellationToken);
+
+        return count;
     }
 
     private async Task SeedExpiredLogs(int count)
@@ -145,16 +150,18 @@ public class AuditRetentionJobTests(AuditRetentionFixture fixture) : IClassFixtu
 
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        db.ActivityLogs.Add(new ActivityLog
+        db.EventRecords.Add(new EventRecord
         {
             EventId = Guid.NewGuid(),
-            UserId = fixture.UserId,
+            ActorUserId = fixture.UserId,
             WorkspaceId = fixture.WorkspaceId,
-            WorkspaceSlug = "audit",
-            EntityType = EntityType.Task,
-            Type = ActivityType.Modify,
-            EntityId = 1,
+            EventKey = EventKeys.EntityActivityRecorded,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = "1",
             OccurredAt = occurredAt,
+            RecordedAt = occurredAt,
+            RetentionClass = EventRetentionClasses.Audit,
+            Payload = JsonSerializer.SerializeToDocument(new { activityType = (int)ActivityType.Modify }),
         });
 
         await db.SaveChangesAsync(CancellationToken);

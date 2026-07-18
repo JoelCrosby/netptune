@@ -7,8 +7,13 @@ using Netptune.Core.ViewModels.Audit;
 
 namespace Netptune.Core.Repositories;
 
-public interface IActivityLogRepository : IWorkspaceEntityRepository<ActivityLog, int>
+public interface IEventRecordRepository : IRepository<EventRecord, long>
 {
+    Task<EventRecord> AppendAsync(
+        EventRecord record,
+        bool publish,
+        CancellationToken cancellationToken = default);
+
     Task<List<ActivityViewModel>> GetActivities(
         EntityType entityType,
         int entityId,

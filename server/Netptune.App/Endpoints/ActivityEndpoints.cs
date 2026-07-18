@@ -1,5 +1,7 @@
 using Mediator;
+
 using Microsoft.AspNetCore.Mvc;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
@@ -27,7 +29,15 @@ public static class ActivityEndpoints
         CancellationToken cancellationToken)
     {
         var take = cursor.GetTake();
-        var result = await mediator.Send(new GetActivitiesQuery(entityType, id, take, cursor.Cursor), cancellationToken);
+        var query = new GetActivitiesQuery
+        {
+            EntityType = entityType,
+            EntityId = id,
+            Take = take,
+            Cursor = cursor.Cursor,
+        };
+
+        var result = await mediator.Send(query, cancellationToken);
 
         if (result.Payload?.Count == take && result.Payload.LastOrDefault() is { } last)
         {

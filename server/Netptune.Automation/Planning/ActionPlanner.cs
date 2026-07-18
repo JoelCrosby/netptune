@@ -7,6 +7,7 @@ using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 
 namespace Netptune.Automation.Planning;
 
@@ -78,7 +79,11 @@ internal sealed class ActionPlanner
                 run.Status = AutomationRunStatus.Failed;
                 run.Message = ex.Message;
 
-                Logger.LogError(ex, "Automation rule {RuleId} failed for task {TaskId}", rule.Id, task.Id);
+                Logger.LogError(
+                    ex,
+                    "Automation rule {RuleId} failed for task {TaskId}",
+                    rule.Id,
+                    task.Id);
             }
 
             runs.Add(run);
@@ -107,6 +112,7 @@ internal sealed class ActionPlanner
                 "Automation rule {RuleId} skipped task update action for task {TaskId}: no task fields configured",
                 execution.Rule.Id,
                 execution.Task.Id);
+
             return;
         }
 
@@ -139,30 +145,40 @@ internal sealed class ActionPlanner
                 "Automation rule {RuleId} skipped notification action for task {TaskId}: no recipients",
                 rule.Id,
                 task.Id);
+
             return;
         }
 
-        var activity = new ActivityLog
+        var activity = new EventRecord
         {
             EventId = Guid.NewGuid(),
-            OwnerId = execution.ActorUserId,
-            Type = ActivityType.Modify,
-            EntityType = EntityType.Task,
-            EntityId = task.Id,
-            UserId = execution.ActorUserId,
-            CreatedByUserId = execution.ActorUserId,
             WorkspaceId = task.WorkspaceId,
-            WorkspaceSlug = task.Workspace.Slug,
-            ProjectId = task.ProjectId,
-            ProjectSlug = task.Project?.Key,
-            TaskId = task.Id,
+            EventKey = EventKeys.EntityActivityRecorded,
+            SchemaVersion = 1,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = task.Id.ToString(),
             OccurredAt = DateTime.UtcNow,
-            Meta = JsonSerializer.SerializeToDocument(new
+            RecordedAt = DateTime.UtcNow,
+            ActorUserId = execution.ActorUserId,
+            RetentionClass = EventRetentionClasses.Audit,
+            Payload = JsonSerializer.SerializeToDocument(new
             {
+                activityType = (int)ActivityType.Modify,
+                workspaceSlug = task.Workspace.Slug,
+                projectSlug = task.Project?.Key,
                 automationRuleId = rule.Id,
                 automationRuleName = rule.Name,
                 message = ConfigReader.ReadString(action.Config, "message") ?? $"Automation '{rule.Name}' matched this task.",
             }, JsonOptions.Default),
+            References =
+            [
+                new EventReference
+                {
+                    Role = EventReferenceRoles.Scope,
+                    EntityType = EventEntityTypes.From(EntityType.Project),
+                    EntityId = task.ProjectId!.Value.ToString(),
+                },
+            ],
         };
 
         plans.Add(new NotificationActivityPlan
@@ -181,6 +197,7 @@ internal sealed class ActionPlanner
 
     private static IEnumerable<string> ToPresentUserId(string? userId)
     {
+
         if (!string.IsNullOrWhiteSpace(userId))
         {
             yield return userId;

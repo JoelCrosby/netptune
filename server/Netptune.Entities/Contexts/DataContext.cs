@@ -35,7 +35,10 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<CommentMention> CommentMentions { get; set; } = null!;
     public DbSet<Reaction> Reactions { get; set; } = null!;
     public DbSet<Tag> Tags { get; set; } = null!;
-    public DbSet<ActivityLog> ActivityLogs { get; set; } = null!;
+    public DbSet<EventRecord> EventRecords { get; set; } = null!;
+    public DbSet<EventReference> EventReferences { get; set; } = null!;
+    public DbSet<EventStreamHead> EventStreamHeads { get; set; } = null!;
+    public DbSet<EventOutbox> EventOutbox { get; set; } = null!;
     public DbSet<ActivityEntry> ActivityEntries { get; set; } = null!;
     public DbSet<AutomationRule> AutomationRules { get; set; } = null!;
     public DbSet<AutomationAction> AutomationActions { get; set; } = null!;
@@ -64,7 +67,11 @@ public class DataContext : IdentityDbContext<AppUser>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (optionsBuilder.IsConfigured) return;
+
+        if (optionsBuilder.IsConfigured)
+        {
+            return;
+        }
 
         optionsBuilder
             .UseNpgsql("Host=localhost;Database=netptune;Username=postgres;", npgsql =>
@@ -75,7 +82,7 @@ public class DataContext : IdentityDbContext<AppUser>
                 npgsql.MapEnum<WorkspaceFileStatus>();
             })
             .UseSnakeCaseNamingConvention()
-            .AddInterceptors(new AuditLogImmutabilityInterceptor());
+            .AddInterceptors(new EventRecordImmutabilityInterceptor());
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -137,8 +144,6 @@ public class DataContext : IdentityDbContext<AppUser>
     {
         foreach (var entity in entities)
         {
-            // ActivityLog is append-only; skip UpdatedAt stamping entirely
-            if (entity.Entity is ActivityLog) continue;
 
             if (entity.State == EntityState.Added && entity.Entity.CreatedAt == default)
             {

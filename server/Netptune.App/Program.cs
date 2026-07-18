@@ -156,6 +156,7 @@ apiGroup.MapProjectsEndpoints();
 apiGroup.MapStorageEndpoints();
 apiGroup.MapWorkspaceFilesEndpoints();
 apiGroup.MapSprintsEndpoints();
+apiGroup.MapReportingEndpoints();
 apiGroup.MapStatusesEndpoints();
 apiGroup.MapRelationTypesEndpoints();
 apiGroup.MapTaskRelationsEndpoints();

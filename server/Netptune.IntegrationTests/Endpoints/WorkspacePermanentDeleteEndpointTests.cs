@@ -98,7 +98,7 @@ public sealed class WorkspacePermanentDeleteEndpointTests
         (await context.Sprints.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
         (await context.Flags.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
         (await context.AutomationRules.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
-        (await context.ActivityLogs.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
+        (await context.EventRecords.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
         (await context.ActivityEntries.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
         (await context.Projects.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();
         (await context.ProjectTasks.AnyAsync(x => x.WorkspaceId == workspaceId)).Should().BeFalse();

@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -7,7 +8,16 @@ using Netptune.Core.ViewModels.Activity;
 
 namespace Netptune.Handlers.Activity.Queries;
 
-public sealed record GetActivitiesQuery(EntityType EntityType, int EntityId, int? Take = null, string? Cursor = null) : IRequest<ClientResponse<List<ActivityViewModel>>>;
+public sealed record GetActivitiesQuery : IRequest<ClientResponse<List<ActivityViewModel>>>
+{
+    public EntityType EntityType { get; init; }
+
+    public int EntityId { get; init; }
+
+    public int? Take { get; init; }
+
+    public string? Cursor { get; init; }
+}
 
 public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQuery, ClientResponse<List<ActivityViewModel>>>
 {
@@ -22,7 +32,7 @@ public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQue
 
     public async ValueTask<ClientResponse<List<ActivityViewModel>>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
     {
-        var activities = await UnitOfWork.ActivityLogs.GetActivities(
+        var activities = await UnitOfWork.EventRecords.GetActivities(
             request.EntityType,
             request.EntityId,
             cancellationToken,
@@ -36,7 +46,11 @@ public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQue
 
         foreach (var activity in activities.Where(a => a.Meta is not null))
         {
-            if (!activity.Meta!.RootElement.TryGetProperty("assigneeId", out var element)) continue;
+
+            if (!activity.Meta!.RootElement.TryGetProperty("assigneeId", out var element))
+            {
+                continue;
+            }
 
             var assigneeId = element.GetString();
 
@@ -53,7 +67,11 @@ public sealed class GetActivitiesQueryHandler : IRequestHandler<GetActivitiesQue
     {
         foreach (var activity in activities)
         {
-            if (activity.Meta?.RootElement is null) continue;
+
+            if (activity.Meta?.RootElement is null)
+            {
+                continue;
+            }
 
             if (activity.Meta.RootElement.TryGetProperty("assigneeId", out var element))
             {

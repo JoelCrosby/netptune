@@ -25,26 +25,37 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     public MoveTaskInBoardGroupCommandHandlerTests()
     {
         Identity.GetCurrentUserId().Returns("user-1");
-        Handler = new(UnitOfWork, Activity, EventPublisher, Identity);
+        Handler = new(
+            UnitOfWork,
+            Activity,
+            EventPublisher,
+            Identity,
+            EventRecords);
     }
 
     private void SetupTransfer(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup, int? groupStatusId = null)
     {
         UnitOfWork.InvokeTransaction<BoardGroupTaskTarget>();
         UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.NewGroupId, AutoFixtures.BoardGroup.Name, 7, 1, groupStatusId));
+            .Returns(new BoardGroupTaskTarget(
+                request.NewGroupId,
+                AutoFixtures.BoardGroup.Name,
+                7,
+                1,
+                groupStatusId));
         UnitOfWork.Tasks.GetTaskViewModel(request.TaskId, TestContext.Current.CancellationToken)
             .Returns(new TaskViewModel { Id = request.TaskId, StatusId = 1, WorkspaceId = 1 });
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroup);
         UnitOfWork.ProjectTasksInGroups.GetNeighborSortOrdersForInsert(
-                request.NewGroupId,
-                request.TaskId,
-                request.CurrentIndex,
-                TestContext.Current.CancellationToken)
+            request.NewGroupId,
+            request.TaskId,
+            request.CurrentIndex,
+            TestContext.Current.CancellationToken)
             .Returns(((double?)0D, (double?)2D));
     }
 
@@ -52,10 +63,10 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     {
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroup);
         UnitOfWork.ProjectTasksInGroups.GetNeighborSortOrdersForInsert(
-                request.NewGroupId,
-                request.TaskId,
-                request.CurrentIndex,
-                TestContext.Current.CancellationToken)
+            request.NewGroupId,
+            request.TaskId,
+            request.CurrentIndex,
+            TestContext.Current.CancellationToken)
             .Returns(((double?)0D, (double?)2D));
     }
 

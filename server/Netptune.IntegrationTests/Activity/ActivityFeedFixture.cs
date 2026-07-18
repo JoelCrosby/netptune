@@ -67,7 +67,7 @@ public sealed class ActivityFeedFixture : IAsyncLifetime
             Name = "Feed",
             Slug = "feed",
             CreatedAt = DateTime.UtcNow,
-            MetaInfo = new (),
+            MetaInfo = new(),
         };
 
         db.Users.AddRange(user, other);
@@ -82,9 +82,9 @@ public sealed class ActivityFeedFixture : IAsyncLifetime
 
     public IServiceScope CreateScope() => Provider.CreateScope();
 
-    public ActivityLogRepository CreateRepository(DataContext db)
+    public EventRecordRepository CreateRepository(DataContext db)
     {
-        return new ActivityLogRepository(db, new NetptuneConnectionFactory(ConnectionString));
+        return new EventRecordRepository(db, new NetptuneConnectionFactory(ConnectionString));
     }
 
     public async ValueTask DisposeAsync()

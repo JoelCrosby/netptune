@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Activity;
@@ -22,7 +23,14 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
     private CancellationToken CancellationToken => TestContext.Current.CancellationToken;
 
-    private static readonly DateTime Base = new(2026, 3, 1, 9, 0, 0, DateTimeKind.Utc);
+    private static readonly DateTime Base = new(
+        2026,
+        3,
+        1,
+        9,
+        0,
+        0,
+        DateTimeKind.Utc);
 
     [Fact]
     public async Task GetActivities_ShouldRenderMergedEntry_WithChangedFieldsRevisionCountAndFirstTime()
@@ -93,10 +101,14 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         using var scope = NewScope(out var db);
 
         var logs = Enumerable.Range(0, 12)
-            .Select(i => NewLog(entityId, fixture.UserId, ActivityType.ModifyDescription, Base.AddSeconds(i * 20)))
+            .Select(i => NewLog(
+                entityId,
+                fixture.UserId,
+                ActivityType.ModifyDescription,
+                Base.AddSeconds(i * 20)))
             .ToList();
 
-        db.ActivityLogs.AddRange(logs);
+        db.EventRecords.AddRange(logs);
 
         db.ActivityEntries.Add(NewEntry(
             entityId,
@@ -148,8 +160,12 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         using var scope = NewScope(out var db);
 
-        db.ActivityLogs.AddRange(Enumerable.Range(0, 5)
-            .Select(i => NewLog(entityId, fixture.UserId, ActivityType.ModifyDescription, Base.AddSeconds(i))));
+        db.EventRecords.AddRange(Enumerable.Range(0, 5)
+            .Select(i => NewLog(
+                entityId,
+                fixture.UserId,
+                ActivityType.ModifyDescription,
+                Base.AddSeconds(i))));
 
         await db.SaveChangesAsync(CancellationToken);
 
@@ -167,18 +183,60 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         using var scope = NewScope(out var db);
 
         db.ActivityEntries.AddRange(
-            NewEntry(entityId, fixture.UserId, ActivityType.ModifyDescription, ["description"],
-                first: Base.AddMinutes(1), last: Base.AddMinutes(1), revisions: 1, meta: null),
-            NewEntry(entityId, fixture.UserId, ActivityType.ModifyName, ["name"],
-                first: Base.AddMinutes(2), last: Base.AddMinutes(2), revisions: 1, meta: null),
-            NewEntry(entityId, fixture.UserId, ActivityType.AddTag, [],
-                first: Base.AddMinutes(3), last: Base.AddMinutes(3), revisions: 1, meta: null),
-            NewEntry(entityId, fixture.UserId, ActivityType.Assign, [],
-                first: Base.AddMinutes(4), last: Base.AddMinutes(4), revisions: 1, meta: null),
-            NewEntry(entityId, fixture.UserId, ActivityType.Move, [],
-                first: Base.AddMinutes(4), last: Base.AddMinutes(4), revisions: 1, meta: null),
-            NewEntry(entityId, fixture.UserId, ActivityType.Create, [],
-                first: Base.AddMinutes(6), last: Base.AddMinutes(6), revisions: 1, meta: null));
+            NewEntry(
+                entityId,
+                fixture.UserId,
+                ActivityType.ModifyDescription,
+                ["description"],
+                first: Base.AddMinutes(1),
+                last: Base.AddMinutes(1),
+                revisions: 1,
+                meta: null),
+            NewEntry(
+                entityId,
+                fixture.UserId,
+                ActivityType.ModifyName,
+                ["name"],
+                first: Base.AddMinutes(2),
+                last: Base.AddMinutes(2),
+                revisions: 1,
+                meta: null),
+            NewEntry(
+                entityId,
+                fixture.UserId,
+                ActivityType.AddTag,
+                [],
+                first: Base.AddMinutes(3),
+                last: Base.AddMinutes(3),
+                revisions: 1,
+                meta: null),
+            NewEntry(
+                entityId,
+                fixture.UserId,
+                ActivityType.Assign,
+                [],
+                first: Base.AddMinutes(4),
+                last: Base.AddMinutes(4),
+                revisions: 1,
+                meta: null),
+            NewEntry(
+                entityId,
+                fixture.UserId,
+                ActivityType.Move,
+                [],
+                first: Base.AddMinutes(4),
+                last: Base.AddMinutes(4),
+                revisions: 1,
+                meta: null),
+            NewEntry(
+                entityId,
+                fixture.UserId,
+                ActivityType.Create,
+                [],
+                first: Base.AddMinutes(6),
+                last: Base.AddMinutes(6),
+                revisions: 1,
+                meta: null));
 
         await db.SaveChangesAsync(CancellationToken);
 
@@ -189,7 +247,12 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         for (var page = 0; page < 3; page++)
         {
-            var items = await repository.GetActivities(EntityType.Task, entityId, CancellationToken, take: 2, cursor: cursor);
+            var items = await repository.GetActivities(
+                EntityType.Task,
+                entityId,
+                CancellationToken,
+                take: 2,
+                cursor: cursor);
 
             items.Should().HaveCount(2);
 
@@ -198,7 +261,12 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
             cursor = CursorRequest.Create(items[^1].Time, items[^1].Id);
         }
 
-        (await repository.GetActivities(EntityType.Task, entityId, CancellationToken, take: 2, cursor: cursor))
+        (await repository.GetActivities(
+            EntityType.Task,
+            entityId,
+            CancellationToken,
+            take: 2,
+            cursor: cursor))
             .Should().BeEmpty("six entries read two at a time is exactly three pages");
 
         var ids = pages.SelectMany(page => page).Select(activity => activity.Id).ToList();
@@ -222,15 +290,18 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         return scope;
     }
 
-    private ActivityLog NewLog(int entityId, string userId, ActivityType type, DateTime occurredAt) => new()
+    private EventRecord NewLog(int entityId, string userId, ActivityType type, DateTime occurredAt) => new()
     {
         EventId = Guid.NewGuid(),
         WorkspaceId = fixture.WorkspaceId,
-        EntityType = EntityType.Task,
-        EntityId = entityId,
-        UserId = userId,
-        Type = type,
+        EventKey = EventKeys.EntityActivityRecorded,
+        SubjectType = EventEntityTypes.From(EntityType.Task),
+        SubjectId = entityId.ToString(),
+        ActorUserId = userId,
         OccurredAt = occurredAt,
+        RecordedAt = occurredAt,
+        RetentionClass = EventRetentionClasses.Audit,
+        Payload = JsonSerializer.SerializeToDocument(new { activityType = (int)type }),
     };
 
     private ActivityEntry NewEntry(
@@ -242,21 +313,21 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         DateTime last,
         int revisions,
         JsonDocument? meta) => new()
-    {
-        WorkspaceId = fixture.WorkspaceId,
-        EntityType = EntityType.Task,
-        EntityId = entityId,
-        UserId = userId,
-        ActivityType = type,
-        ChangedFields = changedFields,
-        Meta = meta,
-        FirstOccurredAt = first,
-        LastOccurredAt = last,
-        RevisionCount = revisions,
-        IsOpen = false,
-        WindowExpiresAt = last.AddMinutes(5),
-        NotifiedAt = last,
-    };
+        {
+            WorkspaceId = fixture.WorkspaceId,
+            EntityType = EntityType.Task,
+            EntityId = entityId,
+            UserId = userId,
+            ActivityType = type,
+            ChangedFields = changedFields,
+            Meta = meta,
+            FirstOccurredAt = first,
+            LastOccurredAt = last,
+            RevisionCount = revisions,
+            IsOpen = false,
+            WindowExpiresAt = last.AddMinutes(5),
+            NotifiedAt = last,
+        };
 
     private static JsonDocument Meta(params (string Field, string Old, string New)[] fields)
     {

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Http;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
@@ -22,7 +23,7 @@ public static class NetptuneServicesConfiguration
 
         services.AddHttpClient();
         services.AddMemoryCache();
-        services.AddHttpContextAccessor();
+        services.AddNetptuneEventRecording();
 
         services.AddTransient<IHostingService, HostingService>();
         services.AddTransient<IPublicWorkspaceService, PublicWorkspaceService>();
@@ -41,9 +42,21 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<IAncestorService, AncestorService>();
     }
 
+    public static IServiceCollection AddNetptuneEventRecording(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddTransient<IEventRecordWriter, EventRecordWriter>();
+
+        return services;
+    }
+
     private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)
     {
-        if (action is null) throw new ArgumentNullException(nameof(action));
+
+        if (action is null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
 
         var options = new HostingOptions();
 

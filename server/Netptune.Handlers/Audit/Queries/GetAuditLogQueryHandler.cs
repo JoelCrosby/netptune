@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -25,7 +26,7 @@ public sealed class GetAuditLogQueryHandler : IRequestHandler<GetAuditLogQuery, 
         var filter = request.Filter;
         filter.WorkspaceId = await Identity.GetWorkspaceId();
 
-        var page = await UnitOfWork.ActivityLogs.GetAuditLog(filter);
+        var page = await UnitOfWork.EventRecords.GetAuditLog(filter);
 
         return page;
     }

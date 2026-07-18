@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 using Netptune.Core.ViewModels.Sprints;
@@ -14,6 +15,8 @@ public record Sprint : WorkspaceEntity<int>
     public SprintStatus Status { get; set; }
 
     public DateTime StartDate { get; set; }
+
+    public DateTime? StartedAt { get; set; }
 
     public DateTime EndDate { get; set; }
 
@@ -36,6 +39,7 @@ public record Sprint : WorkspaceEntity<int>
             Goal = Goal,
             Status = Status,
             StartDate = StartDate,
+            StartedAt = StartedAt,
             EndDate = EndDate,
             CompletedAt = CompletedAt,
             ProjectId = ProjectId,

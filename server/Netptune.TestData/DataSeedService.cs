@@ -56,12 +56,12 @@ public sealed class DataSeedService : IHostedService
 
             await context.SaveChangesAsync(ct);
 
-            var activityLogs = ActivityLogSeeder.Generate(tasks, users, workspaces);
+            var activityLogs = EventRecordSeeder.Generate(tasks, users, workspaces);
             var comments = CommentSeeder.Generate(tasks, users);
             var tags = TagSeeder.Generate(users, tasks);
             var taskTags = TaskTagSeeder.Generate(tags, tasks, users);
 
-            await context.ActivityLogs.AddRangeAsync(activityLogs, ct);
+            await context.EventRecords.AddRangeAsync(activityLogs, ct);
             await context.Comments.AddRangeAsync(comments, ct);
             await context.Tags.AddRangeAsync(tags, ct);
             await context.ProjectTaskTags.AddRangeAsync(taskTags, ct);
@@ -69,7 +69,7 @@ public sealed class DataSeedService : IHostedService
             await context.SaveChangesAsync(ct);
 
             var notifications = NotificationSeeder.Generate(activityLogs, workspaces, workspaceUsers);
-            var activityEntries = ActivityEntrySeeder.Generate(activityLogs);
+            var activityEntries = ActivityEntrySeeder.Generate(activityLogs, users, workspaces);
 
             await context.Notifications.AddRangeAsync(notifications, ct);
             await context.ActivityEntries.AddRangeAsync(activityEntries, ct);

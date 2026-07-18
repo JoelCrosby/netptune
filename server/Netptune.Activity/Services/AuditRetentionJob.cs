@@ -46,7 +46,11 @@ public sealed class AuditRetentionJob
         var storage = scope.ServiceProvider.GetRequiredService<IStorageService>();
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        await ArchiveAsync(db, storage, cutoff, cancellationToken);
+        await ArchiveAsync(
+            db,
+            storage,
+            cutoff,
+            cancellationToken);
     }
 
     private async Task ArchiveAsync(
@@ -61,14 +65,17 @@ public sealed class AuditRetentionJob
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            var batch = await db.ActivityLogs
+            var batch = await db.EventRecords
                 .AsNoTracking()
-                .Where(x => x.OccurredAt < cutoff)
+                .Where(x => x.RetentionClass == EventRetentionClasses.Audit && x.OccurredAt < cutoff)
                 .OrderBy(x => x.Id)
                 .Take(BatchSize)
                 .ToListAsync(cancellationToken);
 
-            if (batch.Count == 0) break;
+            if (batch.Count == 0)
+            {
+                break;
+            }
 
             batchNumber++;
 
@@ -96,9 +103,9 @@ public sealed class AuditRetentionJob
 
             var ids = batch.Select(x => x.Id).ToList();
 
-            // Deletes exactly what the upload above carried, and bypasses AuditLogImmutabilityInterceptor —
+            // Deletes exactly what the upload above carried, and bypasses EventRecordImmutabilityInterceptor —
             // both deliberate. A row must never be deleted unless the archive holding it reached S3.
-            var deleted = await db.ActivityLogs
+            var deleted = await db.EventRecords
                 .Where(x => ids.Contains(x.Id))
                 .ExecuteDeleteAsync(cancellationToken);
 
@@ -115,6 +122,7 @@ public sealed class AuditRetentionJob
         if (archived == 0)
         {
             Logger.LogInformation("AuditRetentionJob: nothing to archive");
+
             return;
         }
 
@@ -125,7 +133,7 @@ public sealed class AuditRetentionJob
             batchNumber);
     }
 
-    private static MemoryStream WriteNdjson(IEnumerable<ActivityLog> logs)
+    private static MemoryStream WriteNdjson(IEnumerable<EventRecord> logs)
     {
         var stream = new MemoryStream();
 
@@ -136,20 +144,20 @@ public sealed class AuditRetentionJob
                 writer.WriteLine(JsonSerializer.Serialize(new
                 {
                     log.Id,
+                    log.EventId,
+                    log.EventKey,
+                    log.SchemaVersion,
+                    log.SubjectType,
+                    log.SubjectId,
+                    log.SubjectSequence,
                     log.OccurredAt,
-                    log.UserId,
+                    log.RecordedAt,
+                    log.ActorUserId,
                     log.WorkspaceId,
-                    log.WorkspaceSlug,
-                    log.EntityType,
-                    log.Type,
-                    log.EntityId,
-                    log.ProjectId,
-                    log.ProjectSlug,
-                    log.BoardId,
-                    log.BoardSlug,
-                    log.BoardGroupId,
-                    log.TaskId,
-                    Meta = log.Meta?.RootElement.ToString(),
+                    log.CorrelationId,
+                    log.CausationEventId,
+                    log.RetentionClass,
+                    Payload = log.Payload.RootElement,
                 }));
             }
         }

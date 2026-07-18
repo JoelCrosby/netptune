@@ -34,7 +34,7 @@ public class GetActivitiesQueryHandlerTests
     [Fact]
     public async Task GetActivities_ShouldReturnCorrectly_WhenValidId()
     {
-        UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
+        UnitOfWork.EventRecords.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
             {
                 Fixture.Build<ActivityViewModel>()
                     .Without(x => x.Meta)
@@ -48,7 +48,8 @@ public class GetActivitiesQueryHandlerTests
                 Fixture.Create<UserAvatar>(),
             });
 
-        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), TestContext.Current.CancellationToken);
+        var query = new GetActivitiesQuery { EntityType = EntityType.Task, EntityId = 1 };
+        var result = await Handler.Handle(query, TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
     }
@@ -58,7 +59,7 @@ public class GetActivitiesQueryHandlerTests
     {
         const string userId = "user-id-1";
 
-        UnitOfWork.ActivityLogs.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
+        UnitOfWork.EventRecords.GetActivities(Arg.Any<EntityType>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(new List<ActivityViewModel>
             {
                 Fixture.Build<ActivityViewModel>()
                     .Without(x => x.Meta)
@@ -81,7 +82,8 @@ public class GetActivitiesQueryHandlerTests
                 },
             });
 
-        var result = await Handler.Handle(new GetActivitiesQuery(EntityType.Task, 1), TestContext.Current.CancellationToken);
+        var query = new GetActivitiesQuery { EntityType = EntityType.Task, EntityId = 1 };
+        var result = await Handler.Handle(query, TestContext.Current.CancellationToken);
 
         result.Payload!.FirstOrDefault()!.Assignee.Should().NotBeNull();
     }

@@ -24,7 +24,7 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
     {
     }
 
-    public static Expression<Func<ActivityEntry, bool>> MergeCandidatePredicate(
+    private static Expression<Func<ActivityEntry, bool>> MergeCandidatePredicate(
         int workspaceId,
         EntityType entityType,
         int entityId,
@@ -41,7 +41,7 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
             && entry.WindowExpiresAt > now;
     }
 
-    public static Expression<Func<ActivityEntry, bool>> OtherUsersOpenEntriesPredicate(
+    private static Expression<Func<ActivityEntry, bool>> OtherUsersOpenEntriesPredicate(
         int workspaceId,
         EntityType entityType,
         int entityId,
@@ -66,7 +66,12 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
         CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(MergeCandidatePredicate(workspaceId, entityType, entityId, userId, now))
+            .Where(MergeCandidatePredicate(
+                workspaceId,
+                entityType,
+                entityId,
+                userId,
+                now))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -79,13 +84,18 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
         CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(OtherUsersOpenEntriesPredicate(workspaceId, entityType, entityId, userId, now))
+            .Where(OtherUsersOpenEntriesPredicate(
+                workspaceId,
+                entityType,
+                entityId,
+                userId,
+                now))
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(entry => entry.WindowExpiresAt, now)
                 .SetProperty(entry => entry.UpdatedAt, now), cancellationToken);
     }
 
-    public static IQueryable<ActivityEntry> UpsertQuery(
+    private static IQueryable<ActivityEntry> UpsertQuery(
         DbSet<ActivityEntry> entries,
         ActivityEntryUpsert upsert,
         DateTime now,
@@ -96,13 +106,13 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
             ActivityEntryScripts.UpsertActivityEntry,
             Value("workspace_id", upsert.WorkspaceId),
             Value("workspace_slug", upsert.WorkspaceSlug),
-            Value("entity_type", (int) upsert.EntityType),
+            Value("entity_type", (int)upsert.EntityType),
             Value("entity_id", upsert.EntityId),
             Value("user_id", upsert.UserId),
-            Value("activity_type", (int) upsert.ActivityType),
+            Value("activity_type", (int)upsert.ActivityType),
             Value("changed_fields", upsert.ChangedFields),
             Value("meta", upsert.MetaJson),
-            Value("last_activity_log_id", upsert.LastActivityLogId),
+            Value("last_event_record_id", upsert.LastEventRecordId),
             Timestamp("first_occurred_at", upsert.FirstOccurredAt),
             Timestamp("last_occurred_at", upsert.LastOccurredAt),
             Value("revision_count", upsert.RevisionCount),
@@ -115,10 +125,10 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
             Timestamp("now", now),
             Value("window_seconds", windowDuration.TotalSeconds),
             Value("max_window_seconds", maxWindowDuration.TotalSeconds),
-            Value("merged_activity_type", (int) ActivityType.Modify));
+            Value("merged_activity_type", (int)ActivityType.Modify));
     }
 
-    public static IQueryable<ActivityEntry> ClaimQuery(DbSet<ActivityEntry> entries, int limit)
+    private static IQueryable<ActivityEntry> ClaimQuery(DbSet<ActivityEntry> entries, int limit)
     {
         return entries.FromSqlRaw(ActivityEntryScripts.CloseExpiredActivityEntries, Value("limit", limit));
     }
@@ -130,7 +140,12 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
         TimeSpan maxWindowDuration,
         CancellationToken cancellationToken = default)
     {
-        var entries = await UpsertQuery(Entities, upsert, now, windowDuration, maxWindowDuration)
+        var entries = await UpsertQuery(
+            Entities,
+            upsert,
+            now,
+            windowDuration,
+            maxWindowDuration)
             .ToListAsync(cancellationToken);
 
         return entries.FirstOrDefault() is { } entry
@@ -140,12 +155,12 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
 
     private static NpgsqlParameter Value(string name, object? value)
     {
-        return new (name, value ?? DBNull.Value);
+        return new(name, value ?? DBNull.Value);
     }
 
     private static NpgsqlParameter Timestamp(string name, DateTime value)
     {
-        return new (name, NpgsqlDbType.TimestampTz) { Value = value };
+        return new(name, NpgsqlDbType.TimestampTz) { Value = value };
     }
 
     public Task<int> CloseStaleEntry(

@@ -19,6 +19,11 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+// Mediator generates registrations for the entire shared Netptune.Handlers assembly.
+// This host maps only its public subset, so app-only handler dependencies must not
+// prevent the independently hosted API from starting in Development.
+builder.Host.UseDefaultServiceProvider(options => options.ValidateOnBuild = false);
+
 builder.AddServiceDefaults();
 
 var connectionString = configuration.GetNetptuneConnectionString("netptune");

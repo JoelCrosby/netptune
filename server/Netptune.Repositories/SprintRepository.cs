@@ -54,7 +54,10 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
     {
         var idList = sprintIds.ToList();
 
-        if (idList.Count == 0) return Task.FromResult(new List<SprintViewModel>());
+        if (idList.Count == 0)
+        {
+            return Task.FromResult(new List<SprintViewModel>());
+        }
 
         return Entities
             .Where(sprint => idList.Contains(sprint.Id) && !sprint.IsDeleted)
@@ -141,6 +144,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         var query = Entities
             .Include(sprint => sprint.Project)
             .Include(sprint => sprint.ProjectTasks)
+            .ThenInclude(task => task.Status)
             .Include(sprint => sprint.Workspace)
             .Where(sprint => sprint.Id == sprintId && sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
             .AsSplitQuery();
@@ -187,6 +191,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             Goal = sprint.Goal,
             Status = sprint.Status,
             StartDate = sprint.StartDate,
+            StartedAt = sprint.StartedAt,
             EndDate = sprint.EndDate,
             CompletedAt = sprint.CompletedAt,
             ProjectId = sprint.ProjectId,
@@ -224,6 +229,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             Goal = sprint.Goal,
             Status = sprint.Status,
             StartDate = sprint.StartDate,
+            StartedAt = sprint.StartedAt,
             EndDate = sprint.EndDate,
             CompletedAt = sprint.CompletedAt,
             ProjectId = sprint.ProjectId,

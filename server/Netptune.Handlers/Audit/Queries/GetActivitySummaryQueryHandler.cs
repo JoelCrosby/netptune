@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -25,7 +26,7 @@ public sealed class GetActivitySummaryQueryHandler : IRequestHandler<GetActivity
         var filter = request.Filter;
         filter.WorkspaceId = await Identity.GetWorkspaceId();
 
-        var points = await UnitOfWork.ActivityLogs.GetActivitySummary(filter);
+        var points = await UnitOfWork.EventRecords.GetActivitySummary(filter);
 
         return points;
     }

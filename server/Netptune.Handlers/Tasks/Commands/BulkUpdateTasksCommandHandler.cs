@@ -3,6 +3,8 @@ using Mediator;
 using Microsoft.Extensions.Logging;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -18,15 +20,18 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly ILogger<BulkUpdateTasksCommandHandler> Logger;
+    private readonly IEventRecordWriter EventRecords;
 
     public BulkUpdateTasksCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        ILogger<BulkUpdateTasksCommandHandler> logger)
+        ILogger<BulkUpdateTasksCommandHandler> logger,
+        IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Logger = logger;
+        EventRecords = eventRecords;
     }
 
     public async ValueTask<ClientResponse> Handle(BulkUpdateTasksCommand command, CancellationToken cancellationToken)
@@ -37,7 +42,10 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         // Scope to tasks that actually belong to the caller's workspace.
         var taskIds = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(req.TaskIds, workspaceId, cancellationToken);
 
-        if (taskIds.Count == 0) return ClientResponse.Success;
+        if (taskIds.Count == 0)
+        {
+            return ClientResponse.Success;
+        }
 
         var tasks = await UnitOfWork.Tasks.GetTasksForUpdate(taskIds, cancellationToken);
 
@@ -53,16 +61,33 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         {
             foreach (var task in tasks)
             {
+                var oldStatusId = task.StatusId;
+                var oldStatusCategory = task.Status.Category;
+                var oldEstimateType = task.EstimateType;
+                var oldEstimateValue = task.EstimateValue;
+                var oldSprintId = task.SprintId;
                 var projectChanged = req.ProjectId.HasValue && task.ProjectId != req.ProjectId.Value;
 
                 if (status is not null)
                 {
                     task.StatusId = status.Id;
+                    task.Status = status;
                 }
 
-                if (req.Priority.HasValue) task.Priority = req.Priority;
-                if (req.EstimateType.HasValue) task.EstimateType = req.EstimateType;
-                if (req.EstimateValue.HasValue) task.EstimateValue = req.EstimateValue;
+                if (req.Priority.HasValue)
+                {
+                    task.Priority = req.Priority;
+                }
+
+                if (req.EstimateType.HasValue)
+                {
+                    task.EstimateType = req.EstimateType;
+                }
+
+                if (req.EstimateValue.HasValue)
+                {
+                    task.EstimateValue = req.EstimateValue;
+                }
 
                 if (req.ClearSprint)
                 {
@@ -75,7 +100,11 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
                 if (projectChanged)
                 {
-                    await MoveToProject(task, req.ProjectId!.Value, scopeIncrements, cancellationToken);
+                    await MoveToProject(
+                        task,
+                        req.ProjectId!.Value,
+                        scopeIncrements,
+                        cancellationToken);
                 }
 
                 if (req.AssigneeIds is not null)
@@ -88,9 +117,112 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
                 // Moving a task to a different project invalidates its board-group
                 // membership, which belongs to the old project's board.
+
                 if (projectChanged)
                 {
                     await RepositionInBoardGroup(task, cancellationToken);
+                }
+
+                var references = new List<EventReferenceInput>();
+
+                if (task.ProjectId.HasValue)
+                {
+                    references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), task.ProjectId.Value.ToString()));
+                }
+
+                if (task.SprintId.HasValue)
+                {
+                    references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Sprint), task.SprintId.Value.ToString()));
+                }
+
+                if (oldStatusId != task.StatusId && status is not null)
+                {
+                    await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+                    {
+                        WorkspaceId = workspaceId,
+                        EventKey = EventKeys.EntityFieldTransitioned,
+                        SubjectType = EventEntityTypes.From(EntityType.Task),
+                        SubjectId = task.Id.ToString(),
+                        Payload = new FieldTransitionedPayload
+                        {
+                            Field = "status",
+                            OldValue = oldStatusId.ToString(),
+                            NewValue = task.StatusId.ToString(),
+                            OldCategory = oldStatusCategory.ToString(),
+                            NewCategory = status.Category.ToString(),
+                        },
+                        References = references,
+                    }, cancellationToken);
+                }
+
+                if (oldEstimateType != task.EstimateType || oldEstimateValue != task.EstimateValue)
+                {
+                    await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+                    {
+                        WorkspaceId = workspaceId,
+                        EventKey = EventKeys.EntityFieldTransitioned,
+                        SubjectType = EventEntityTypes.From(EntityType.Task),
+                        SubjectId = task.Id.ToString(),
+                        Payload = new FieldTransitionedPayload
+                        {
+                            Field = "estimate",
+                            OldUnit = oldEstimateType?.ToString(),
+                            NewUnit = task.EstimateType?.ToString(),
+                            OldNumericValue = oldEstimateValue,
+                            NewNumericValue = task.EstimateValue,
+                        },
+                        References = references,
+                    }, cancellationToken);
+
+                    if (task.SprintId.HasValue && await IsActiveSprint(task.SprintId.Value, cancellationToken))
+                    {
+                        await EventRecords.Append(new EventWriteRequest<ScopeMemberAttributeChangedPayload>
+                        {
+                            WorkspaceId = workspaceId,
+                            EventKey = EventKeys.ScopeMemberAttributeChanged,
+                            SubjectType = EventEntityTypes.From(EntityType.Sprint),
+                            SubjectId = task.SprintId.Value.ToString(),
+                            Payload = new ScopeMemberAttributeChangedPayload
+                            {
+                                MemberType = EventEntityTypes.From(EntityType.Task),
+                                MemberId = task.Id.ToString(),
+                                Field = "estimate",
+                                OldUnit = oldEstimateType?.ToString(),
+                                NewUnit = task.EstimateType?.ToString(),
+                                OldNumericValue = oldEstimateValue,
+                                NewNumericValue = task.EstimateValue,
+                            },
+                            References =
+                            [
+                                new(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), task.Id.ToString()),
+                                ..references,
+                            ],
+                        }, cancellationToken);
+                    }
+                }
+
+                if (oldSprintId != task.SprintId)
+                {
+
+                    if (oldSprintId.HasValue && await IsActiveSprint(oldSprintId.Value, cancellationToken))
+                    {
+                        await AppendScopeChange(
+                            task,
+                            oldSprintId.Value,
+                            "removed",
+                            workspaceId,
+                            cancellationToken);
+                    }
+
+                    if (task.SprintId.HasValue && await IsActiveSprint(task.SprintId.Value, cancellationToken))
+                    {
+                        await AppendScopeChange(
+                            task,
+                            task.SprintId.Value,
+                            "added",
+                            workspaceId,
+                            cancellationToken);
+                    }
                 }
             }
 
@@ -99,6 +231,41 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
         return ClientResponse.Success;
     }
+
+    private async Task<bool> IsActiveSprint(int sprintId, CancellationToken cancellationToken)
+    {
+        var sprint = await UnitOfWork.Sprints.GetAsync(sprintId, true, cancellationToken);
+
+        return sprint?.Status == SprintStatus.Active;
+    }
+
+    private Task<EventRecord> AppendScopeChange(
+        ProjectTask task,
+        int sprintId,
+        string change,
+        int workspaceId,
+        CancellationToken cancellationToken) => EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
+        {
+            WorkspaceId = workspaceId,
+            EventKey = EventKeys.ScopeMemberChanged,
+            SubjectType = EventEntityTypes.From(EntityType.Sprint),
+            SubjectId = sprintId.ToString(),
+            Payload = new ScopeMemberChangedPayload
+            {
+                Change = change,
+                MemberType = EventEntityTypes.From(EntityType.Task),
+                MemberId = task.Id.ToString(),
+                EstimateType = task.EstimateType?.ToString(),
+                EstimateValue = task.EstimateValue,
+                StatusId = task.StatusId,
+                StatusCategory = task.Status.Category.ToString(),
+            },
+            References =
+        [
+            new(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), task.Id.ToString()),
+            new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), task.ProjectId!.Value.ToString()),
+        ],
+        }, cancellationToken);
 
     private async Task MoveToProject(ProjectTask task, int projectId, Dictionary<int, int> scopeIncrements, CancellationToken cancellationToken)
     {
@@ -116,7 +283,11 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
     private async Task RepositionInBoardGroup(ProjectTask task, CancellationToken cancellationToken)
     {
-        if (task.ProjectId is null) return;
+
+        if (task.ProjectId is null)
+        {
+            return;
+        }
 
         var group = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(task.ProjectId.Value, cancellationToken);
 
@@ -125,6 +296,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             Logger.LogInformation(
                 "Project with id {ProjectId} does not have a default board group",
                 task.ProjectId.Value);
+
             return;
         }
 

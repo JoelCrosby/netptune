@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Net;
 
 using Mediator;
 
@@ -39,58 +40,63 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         Merge = merge.Value;
     }
 
-    private sealed record ActivityRecord(ActivityEvent Event, ActivityLog Log, ActivityAncestors Ancestors)
+    private sealed record ActivityRecord(ActivityEvent Event, EventRecord Log, ActivityAncestors Ancestors)
     {
-        public int WorkspaceId => Log.WorkspaceId;
+        public int WorkspaceId => Event.WorkspaceId;
 
-        public EntityType EntityType => Log.EntityType;
+        public EntityType EntityType => Event.EntityType;
 
-        public int EntityId => Log.EntityId!.Value;
+        public int EntityId => Event.EntityId!.Value;
 
-        public string UserId => Log.UserId;
+        public string UserId => Event.UserId;
     }
 
     public async ValueTask<Unit> Handle(ActivityMessage request, CancellationToken cancellationToken)
     {
         var events = await FilterProcessedEvents(request.Events, cancellationToken);
 
-        if (events.Count == 0) return default;
+        if (events.Count == 0)
+        {
+            return default;
+        }
 
         var records = new List<ActivityRecord>();
 
         foreach (var activity in events)
         {
+
             if (activity.EntityId is null)
             {
                 throw new Exception("IActivityEvent EntityId cannot be null.");
             }
 
-            var ancestors = await ActivityLinks.Resolve(UnitOfWork, activity.EntityType, activity.EntityId.Value, cancellationToken);
+            var ancestors = await ActivityLinks.Resolve(
+                UnitOfWork,
+                activity.EntityType,
+                activity.EntityId.Value,
+                cancellationToken);
 
-            var log = new ActivityLog
+            var log = new EventRecord
             {
                 EventId = activity.EventId,
-                OwnerId = activity.UserId,
-                Type = activity.Type,
-                EntityType = activity.EntityType,
-                EntityId = activity.EntityId,
-                UserId = activity.UserId,
-                CreatedByUserId = activity.UserId,
                 WorkspaceId = activity.WorkspaceId,
-                TaskId = ancestors.TaskId,
-                ProjectId = ancestors.ProjectId,
-                BoardId = ancestors.BoardId,
-                BoardGroupId = ancestors.BoardGroupId,
+                EventKey = EventKeys.EntityActivityRecorded,
+                SchemaVersion = 1,
+                SubjectType = EventEntityTypes.From(activity.EntityType),
+                SubjectId = activity.EntityId.Value.ToString(),
                 OccurredAt = activity.OccurredAt,
-                Meta = BuildMeta(activity),
-                BoardSlug = ancestors.BoardKey,
-                ProjectSlug = ancestors.ProjectKey,
-                WorkspaceSlug = ancestors.WorkspaceKey,
+                RecordedAt = DateTime.UtcNow,
+                ActorUserId = activity.UserId,
+                IpAddress = IPAddress.TryParse(activity.IpAddress, out var ipAddress) ? ipAddress : null,
+                UserAgent = activity.UserAgent,
+                RetentionClass = EventRetentionClasses.Audit,
+                Payload = BuildPayload(activity, ancestors),
+                References = BuildReferences(activity, ancestors),
             };
 
-            await UnitOfWork.ActivityLogs.AddAsync(log, cancellationToken);
+            await UnitOfWork.EventRecords.AddAsync(log, cancellationToken);
 
-            records.Add(new (activity, log, ancestors));
+            records.Add(new(activity, log, ancestors));
         }
 
         var notifications = new List<Notification>();
@@ -115,15 +121,18 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         return default;
     }
 
-    private bool IsDiscrete(ActivityRecord record) => !Merge.IsMergeable(record.Log.Type);
+    private bool IsDiscrete(ActivityRecord record) => !Merge.IsMergeable(record.Event.Type);
 
     private async Task<List<ActivityEvent>> FilterProcessedEvents(List<ActivityEvent> events, CancellationToken cancellationToken)
     {
         var eventIds = events.Select(activity => activity.EventId).ToList();
 
-        if (eventIds.Count == 0) return events;
+        if (eventIds.Count == 0)
+        {
+            return events;
+        }
 
-        var processed = await UnitOfWork.ActivityLogs.GetExistingEventIds(eventIds, cancellationToken);
+        var processed = await UnitOfWork.EventRecords.GetExistingEventIds(eventIds, cancellationToken);
         var seen = new HashSet<Guid>();
 
         return events
@@ -144,7 +153,12 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
             var (workspaceId, entityType, entityId, userId) = group.Key;
 
             await UnitOfWork.ActivityEntries.ExpireEntriesForOtherUsers(
-                workspaceId, entityType, entityId, userId, now, cancellationToken);
+                workspaceId,
+                entityType,
+                entityId,
+                userId,
+                now,
+                cancellationToken);
 
             var mergeable = group.Where(record => !IsDiscrete(record)).ToList();
 
@@ -153,7 +167,10 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 await UnitOfWork.ActivityEntries.AddAsync(BuildDiscreteEntry(record, now), cancellationToken);
             }
 
-            if (mergeable.Count == 0) continue;
+            if (mergeable.Count == 0)
+            {
+                continue;
+            }
 
             await UpsertEntryAsync(mergeable, now, cancellationToken);
         }
@@ -168,12 +185,24 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         for (var attempt = 0; attempt < MaxUpsertAttempts; attempt++)
         {
             var result = await UnitOfWork.ActivityEntries.UpsertEntry(
-                upsert, now, Merge.WindowDuration, Merge.MaxWindowDuration, cancellationToken);
+                upsert,
+                now,
+                Merge.WindowDuration,
+                Merge.MaxWindowDuration,
+                cancellationToken);
 
-            if (result is UpsertEntryResult.Upserted) return;
+            if (result is UpsertEntryResult.Upserted)
+            {
+                return;
+            }
 
             await UnitOfWork.ActivityEntries.CloseStaleEntry(
-                upsert.WorkspaceId, upsert.EntityType, upsert.EntityId, upsert.UserId, now, cancellationToken);
+                upsert.WorkspaceId,
+                upsert.EntityType,
+                upsert.EntityId,
+                upsert.UserId,
+                now,
+                cancellationToken);
         }
 
         throw new InvalidOperationException(
@@ -185,9 +214,9 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         var events = mergeable.Select(record => record.Event).ToList();
         var last = mergeable[^1];
 
-        var types = mergeable.Select(record => record.Log.Type).Distinct().ToList();
+        var types = mergeable.Select(record => record.Event.Type).Distinct().ToList();
 
-        return new ()
+        return new()
         {
             WorkspaceId = last.WorkspaceId,
             EntityType = last.EntityType,
@@ -198,7 +227,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
             ChangedFields = ActivityEntryMeta.ChangedFields(events),
             MetaJson = ActivityEntryMeta.Build(events),
-            LastActivityLogId = last.Log.Id,
+            LastEventRecordId = last.Log.Id,
 
             FirstOccurredAt = mergeable.Min(record => record.Log.OccurredAt),
             LastOccurredAt = mergeable.Max(record => record.Log.OccurredAt),
@@ -218,17 +247,17 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
     {
         var events = new List<ActivityEvent> { record.Event };
 
-        return new ()
+        return new()
         {
             WorkspaceId = record.WorkspaceId,
             WorkspaceSlug = record.Ancestors.WorkspaceKey,
             EntityType = record.EntityType,
             EntityId = record.EntityId,
             UserId = record.UserId,
-            ActivityType = record.Log.Type,
+            ActivityType = record.Event.Type,
             ChangedFields = ActivityEntryMeta.ChangedFields(events),
-            Meta = record.Log.Meta is null ? null : JsonDocument.Parse(record.Log.Meta.RootElement.GetRawText()),
-            LastActivityLogId = record.Log.Id,
+            Meta = JsonDocument.Parse(record.Log.Payload.RootElement.GetRawText()),
+            LastEventRecordId = record.Log.Id,
             FirstOccurredAt = record.Log.OccurredAt,
             LastOccurredAt = record.Log.OccurredAt,
             RevisionCount = 1,
@@ -252,7 +281,11 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
     private async Task<List<Notification>> CreateNotificationsAsync(List<ActivityRecord> records, CancellationToken cancellationToken)
     {
-        if (records.Count == 0) return [];
+
+        if (records.Count == 0)
+        {
+            return [];
+        }
 
         var workspaceIds = records.Select(record => record.WorkspaceId).Distinct().ToList();
 
@@ -263,36 +296,57 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
         foreach (var (activity, log, ancestors) in records)
         {
-            if (AuditOnlyTypes.Contains(log.Type)) continue;
 
-            if (!slugsByWorkspace.TryGetValue(log.WorkspaceId, out var slug)) continue;
-            if (!usersByWorkspace.TryGetValue(log.WorkspaceId, out var allUserIds)) continue;
+            if (AuditOnlyTypes.Contains(activity.Type))
+            {
+                continue;
+            }
+
+            if (!slugsByWorkspace.TryGetValue(activity.WorkspaceId, out var slug))
+            {
+                continue;
+            }
+
+            if (!usersByWorkspace.TryGetValue(activity.WorkspaceId, out var allUserIds))
+            {
+                continue;
+            }
 
             var recipientUserIds = activity.RecipientUserIds;
 
             var recipients = recipientUserIds is { Count: > 0 }
-                ? recipientUserIds.Where(id => id != log.UserId && allUserIds.Contains(id)).ToList()
-                : allUserIds.Where(id => id != log.UserId).ToList();
+                ? recipientUserIds.Where(id => id != activity.UserId && allUserIds.Contains(id)).ToList()
+                : allUserIds.Where(id => id != activity.UserId).ToList();
 
-            if (recipients.Count == 0) continue;
+            if (recipients.Count == 0)
+            {
+                continue;
+            }
 
-            var link = ActivityLinks.Build(slug, log.EntityType, log.EntityId, ancestors);
+            var link = ActivityLinks.Build(
+                slug,
+                activity.EntityType,
+                activity.EntityId,
+                ancestors);
 
             allNotifications.AddRange(recipients.Select(userId => new Notification
             {
                 UserId = userId,
-                ActivityLogId = log.Id,
+                EventRecordId = log.Id,
                 IsRead = false,
                 Link = link,
-                WorkspaceId = log.WorkspaceId,
-                EntityType = log.EntityType,
-                ActivityType = log.Type,
-                CreatedByUserId = log.UserId,
-                OwnerId = log.UserId,
+                WorkspaceId = activity.WorkspaceId,
+                EntityType = activity.EntityType,
+                ActivityType = activity.Type,
+                CreatedByUserId = activity.UserId,
+                OwnerId = activity.UserId,
             }));
         }
 
-        if (allNotifications.Count == 0) return allNotifications;
+        if (allNotifications.Count == 0)
+        {
+            return allNotifications;
+        }
 
         await UnitOfWork.Notifications.AddRangeAsync(allNotifications, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
@@ -300,14 +354,21 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         return allNotifications;
     }
 
-    private static JsonDocument? BuildMeta(ActivityEvent activity)
+    private static JsonDocument BuildPayload(ActivityEvent activity, ActivityAncestors ancestors)
     {
-        if (activity.IpAddress is null && activity.UserAgent is null && activity.Meta is null)
+        var dict = new Dictionary<string, object?>
         {
-            return null;
-        }
-
-        var dict = new Dictionary<string, object?>();
+            ["activityType"] = (int)activity.Type,
+            ["field"] = activity.Field?.ToString(),
+            ["oldValue"] = activity.OldValue,
+            ["newValue"] = activity.NewValue,
+            ["oldValueHash"] = activity.OldValueHash,
+            ["newValueHash"] = activity.NewValueHash,
+            ["recipientUserIds"] = activity.RecipientUserIds,
+            ["workspaceSlug"] = ancestors.WorkspaceKey,
+            ["projectSlug"] = ancestors.ProjectKey,
+            ["boardSlug"] = ancestors.BoardKey,
+        };
 
         if (activity.Meta is not null)
         {
@@ -318,17 +379,66 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
             }
         }
 
-        if (activity.IpAddress is not null) dict["ipAddress"] = activity.IpAddress;
-        if (activity.UserAgent is not null) dict["userAgent"] = activity.UserAgent;
-
         return JsonDocument.Parse(JsonSerializer.Serialize(dict));
+    }
+
+    private static HashSet<EventReference> BuildReferences(ActivityEvent activity, ActivityAncestors ancestors)
+    {
+        var references = new HashSet<EventReference>();
+
+        AddReference(
+            references,
+            EventReferenceRoles.Scope,
+            EntityType.Project,
+            ancestors.ProjectId);
+        AddReference(
+            references,
+            EventReferenceRoles.Scope,
+            EntityType.Board,
+            ancestors.BoardId);
+        AddReference(
+            references,
+            EventReferenceRoles.Scope,
+            EntityType.BoardGroup,
+            ancestors.BoardGroupId);
+        AddReference(
+            references,
+            EventReferenceRoles.Parent,
+            EntityType.Task,
+            ancestors.TaskId);
+
+        return references;
+    }
+
+    private static void AddReference(
+        ISet<EventReference> references,
+        string role,
+        EntityType entityType,
+        int? entityId)
+    {
+
+        if (!entityId.HasValue)
+        {
+            return;
+        }
+
+        references.Add(new EventReference
+        {
+            Role = role,
+            EntityType = EventEntityTypes.From(entityType),
+            EntityId = entityId.Value.ToString(),
+        });
     }
 
     private Task PublishNotificationEventsAsync(
         List<Notification> notifications,
         CancellationToken cancellationToken)
     {
-        if (notifications.Count == 0) return Task.CompletedTask;
+
+        if (notifications.Count == 0)
+        {
+            return Task.CompletedTask;
+        }
 
         var events = notifications.Select(notification =>
             new UserNotificationEvent(

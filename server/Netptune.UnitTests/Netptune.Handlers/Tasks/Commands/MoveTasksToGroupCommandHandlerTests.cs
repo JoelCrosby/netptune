@@ -28,18 +28,29 @@ public class MoveTasksToGroupCommandHandlerTests
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     public MoveTasksToGroupCommandHandlerTests()
     {
         Identity.GetCurrentUserId().Returns("user-1");
-        Handler = new(UnitOfWork, Activity, EventPublisher, Identity);
+        Handler = new(
+            UnitOfWork,
+            Activity,
+            EventPublisher,
+            Identity,
+            EventRecords);
     }
 
     private void SetupHandlerDependencies(MoveTasksToGroupRequest request, int? groupStatusId = null)
     {
         UnitOfWork.InvokeTransaction();
         UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.NewGroupId.Value, AutoFixtures.BoardGroup.Name, 7, 1, groupStatusId));
+            .Returns(new BoardGroupTaskTarget(
+                request.NewGroupId.Value,
+                AutoFixtures.BoardGroup.Name,
+                7,
+                1,
+                groupStatusId));
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(request.TaskIds);
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), true, TestContext.Current.CancellationToken)
             .Returns(request.TaskIds.Select(id => new ProjectTask

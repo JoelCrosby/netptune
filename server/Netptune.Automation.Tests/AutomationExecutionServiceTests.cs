@@ -209,11 +209,11 @@ public sealed class AutomationExecutionServiceTests
         await scope.AutomationExecution.ExecuteUnassignedRules(TestContext.Current.CancellationToken);
 
         var notification = await scope.Db.Notifications.SingleAsync(TestContext.Current.CancellationToken);
-        var activityLog = await scope.Db.ActivityLogs.SingleAsync(TestContext.Current.CancellationToken);
+        var activityLog = await scope.Db.EventRecords.SingleAsync(TestContext.Current.CancellationToken);
         var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
 
         notification.UserId.Should().Be(scenario.Owner.Id);
-        notification.ActivityLogId.Should().Be(activityLog.Id);
+        notification.EventRecordId.Should().Be(activityLog.Id);
         notification.Link.Should().Be($"/{scenario.Workspace.Slug}/tasks/{scenario.Project.Key}-{scenario.Task.ProjectScopeId}");
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
     }

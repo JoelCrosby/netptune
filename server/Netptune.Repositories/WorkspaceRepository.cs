@@ -42,7 +42,7 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         // Notifications and activity entries both point at activity logs, so they go first.
         await Context.Notifications.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
         await Context.ActivityEntries.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
-        await Context.ActivityLogs.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
+        await Context.EventRecords.Where(x => x.WorkspaceId == workspaceId).ExecuteDeleteAsync(cancellationToken);
 
         // Runs and actions belong to a rule; flags can reference one too.
         await Context.AutomationRuns.Where(x => automationRuleIds.Contains(x.AutomationRuleId)).ExecuteDeleteAsync(cancellationToken);
@@ -96,7 +96,10 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .Take(1)
             .ToListAsync(cancellationToken);
 
-        if (result.Any()) return result.FirstOrDefault();
+        if (result.Any())
+        {
+            return result.FirstOrDefault();
+        }
 
         return null;
     }
@@ -110,6 +113,7 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
 
     public Task<Workspace?> GetBySlugWithTasks(string slug, bool includeRelated, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
+
         if (includeRelated)
         {
             return Entities

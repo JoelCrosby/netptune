@@ -1,6 +1,9 @@
 using Mediator;
+
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Events;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -20,17 +23,20 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
     private readonly IActivityLogger Activity;
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
+    private readonly IEventRecordWriter EventRecords;
 
     public UpdateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IActivityLogger activity,
         IEventPublisher eventPublisher,
-        IIdentityService identity)
+        IIdentityService identity,
+        IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
         EventPublisher = eventPublisher;
         Identity = identity;
+        EventRecords = eventRecords;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
@@ -38,11 +44,20 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         var req = request.Request;
         var old = await UnitOfWork.Tasks.GetTaskViewModel(req.Id, cancellationToken);
 
-        if (old is null) return ClientResponse<TaskViewModel>.NotFound;
+        if (old is null)
+        {
+            return ClientResponse<TaskViewModel>.NotFound;
+        }
 
         var result = await UnitOfWork.Tasks.GetTaskForUpdate(req.Id, cancellationToken);
 
-        if (result is null) return ClientResponse<TaskViewModel>.NotFound;
+        if (result is null)
+        {
+            return ClientResponse<TaskViewModel>.NotFound;
+        }
+
+        TaskViewModel? response = null;
+        ProjectTaskDiff? diff = null;
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -74,13 +89,33 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             }
 
             await UnitOfWork.CompleteAsync(cancellationToken);
+
+            response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id, cancellationToken);
+
+            if (response is null)
+            {
+                return;
+            }
+
+            diff = ProjectTaskDiff.Create(old, response);
+
+            await AppendReportingEvents(
+                old,
+                response,
+                diff,
+                cancellationToken);
+            await UnitOfWork.CompleteAsync(cancellationToken);
         });
 
-        var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id, cancellationToken);
+        if (response is null)
+        {
+            return ClientResponse<TaskViewModel>.NotFound;
+        }
 
-        if (response is null) return ClientResponse<TaskViewModel>.NotFound;
-
-        var diff = ProjectTaskDiff.Create(old, response);
+        if (diff is null)
+        {
+            return ClientResponse<TaskViewModel>.Success(response);
+        }
 
         diff.LogDiff(Activity, response.Id);
 
@@ -90,6 +125,84 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         }
 
         return ClientResponse<TaskViewModel>.Success(response);
+    }
+
+    private async Task AppendReportingEvents(
+        TaskViewModel old,
+        TaskViewModel updated,
+        ProjectTaskDiff diff,
+        CancellationToken cancellationToken)
+    {
+        foreach (var change in diff.ToTaskFieldChanges())
+        {
+            var payload = new FieldTransitionedPayload
+            {
+                Field = change.Field.ToString().ToLowerInvariant(),
+                OldValue = change.OldValue,
+                NewValue = change.NewValue,
+                OldCategory = change.Field == TaskChangeField.Status ? old.StatusCategory.ToString() : null,
+                NewCategory = change.Field == TaskChangeField.Status ? updated.StatusCategory.ToString() : null,
+                OldUnit = change.Field == TaskChangeField.Estimate ? old.EstimateType?.ToString() : null,
+                NewUnit = change.Field == TaskChangeField.Estimate ? updated.EstimateType?.ToString() : null,
+                OldNumericValue = change.Field == TaskChangeField.Estimate ? old.EstimateValue : null,
+                NewNumericValue = change.Field == TaskChangeField.Estimate ? updated.EstimateValue : null,
+            };
+
+            var references = new List<EventReferenceInput>();
+            var projectId = updated.ProjectId ?? old.ProjectId;
+
+            if (projectId.HasValue)
+            {
+                references.Add(new(
+                    EventReferenceRoles.Scope,
+                    EventEntityTypes.From(EntityType.Project),
+                    projectId.Value.ToString()));
+            }
+
+            if (updated.SprintId.HasValue)
+            {
+                references.Add(new EventReferenceInput(
+                    EventReferenceRoles.Scope,
+                    EventEntityTypes.From(EntityType.Sprint),
+                    updated.SprintId.Value.ToString()));
+            }
+
+            await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+            {
+                WorkspaceId = updated.WorkspaceId,
+                EventKey = EventKeys.EntityFieldTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = updated.Id.ToString(),
+                Payload = payload,
+                References = references,
+            }, cancellationToken);
+
+            if (change.Field == TaskChangeField.Estimate && updated.SprintId.HasValue && updated.SprintStatus == SprintStatus.Active)
+            {
+                await EventRecords.Append(new EventWriteRequest<ScopeMemberAttributeChangedPayload>
+                {
+                    WorkspaceId = updated.WorkspaceId,
+                    EventKey = EventKeys.ScopeMemberAttributeChanged,
+                    SubjectType = EventEntityTypes.From(EntityType.Sprint),
+                    SubjectId = updated.SprintId.Value.ToString(),
+                    Payload = new ScopeMemberAttributeChangedPayload
+                    {
+                        MemberType = EventEntityTypes.From(EntityType.Task),
+                        MemberId = updated.Id.ToString(),
+                        Field = "estimate",
+                        OldUnit = old.EstimateType?.ToString(),
+                        NewUnit = updated.EstimateType?.ToString(),
+                        OldNumericValue = old.EstimateValue,
+                        NewNumericValue = updated.EstimateValue,
+                    },
+                    References =
+                    [
+                        new EventReferenceInput(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), updated.Id.ToString()),
+                        ..references,
+                    ],
+                }, cancellationToken);
+            }
+        }
     }
 
     private Task PublishTaskChanged(TaskViewModel current, ProjectTaskDiff diff)
@@ -105,9 +218,12 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
     private async Task<Status?> ResolveStatus(UpdateProjectTaskRequest request, int workspaceId, CancellationToken cancellationToken)
     {
+
         if (request.StatusId.HasValue)
         {
-            return await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
+            var status = await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
+
+            return status;
         }
 
         return null;

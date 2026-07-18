@@ -1,6 +1,9 @@
 using Mediator;
+
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
+using Netptune.Core.Events;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -17,13 +20,20 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
     private readonly IEventPublisher EventPublisher;
+    private readonly IEventRecordWriter EventRecords;
 
-    public StartSprintCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity, IEventPublisher eventPublisher)
+    public StartSprintCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher,
+        IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
         EventPublisher = eventPublisher;
+        EventRecords = eventRecords;
     }
 
     public async ValueTask<ClientResponse<SprintViewModel>> Handle(StartSprintCommand request, CancellationToken cancellationToken)
@@ -31,18 +41,95 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
         var workspaceKey = Identity.GetWorkspaceKey();
         var sprint = await UnitOfWork.Sprints.GetSprintInWorkspaceAsync(workspaceKey, request.Id, cancellationToken: cancellationToken);
 
-        if (sprint is null) return ClientResponse<SprintViewModel>.NotFound;
-        if (sprint.Status != SprintStatus.Planning) return ClientResponse<SprintViewModel>.Failed("Only planning sprints can be started");
+        if (sprint is null)
+        {
+            return ClientResponse<SprintViewModel>.NotFound;
+        }
+
+        if (sprint.Status != SprintStatus.Planning)
+        {
+            return ClientResponse<SprintViewModel>.Failed("Only planning sprints can be started");
+        }
 
         var hasActiveSprint = await UnitOfWork.Sprints.HasActiveSprintAsync(sprint.ProjectId, sprint.Id, cancellationToken);
 
-        if (hasActiveSprint) return ClientResponse<SprintViewModel>.Failed("This project already has an active sprint");
+        if (hasActiveSprint)
+        {
+            return ClientResponse<SprintViewModel>.Failed("This project already has an active sprint");
+        }
 
         var user = await Identity.GetCurrentUser();
-        sprint.Status = SprintStatus.Active;
-        sprint.ModifiedByUserId = user.Id;
+        var startedAt = DateTime.UtcNow;
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        await UnitOfWork.Transaction(async () =>
+        {
+            sprint.Status = SprintStatus.Active;
+            sprint.StartedAt = startedAt;
+            sprint.ModifiedByUserId = user.Id;
+
+            await EventRecords.Append(new EventWriteRequest<ScopeLifecyclePayload>
+            {
+                WorkspaceId = sprint.WorkspaceId,
+                EventKey = EventKeys.ScopeLifecycleTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Sprint),
+                SubjectId = sprint.Id.ToString(),
+                OccurredAt = startedAt,
+                Payload = new ScopeLifecyclePayload
+                {
+                    State = "started",
+                    PlannedStart = sprint.StartDate,
+                    PlannedEnd = sprint.EndDate,
+                    ActualStart = startedAt,
+                    Commitment = sprint.ProjectTasks
+                        .Where(task => !task.IsDeleted)
+                        .Select(task => new SprintCommitmentMember
+                        {
+                            TaskId = task.Id,
+                            StatusId = task.StatusId,
+                            StatusCategory = task.Status.Category.ToString(),
+                            EstimateType = task.EstimateType?.ToString(),
+                            EstimateValue = task.EstimateValue,
+                        })
+                        .ToList(),
+                },
+                References =
+                [
+                    new EventReferenceInput(
+                        EventReferenceRoles.Scope,
+                        EventEntityTypes.From(EntityType.Project),
+                        sprint.ProjectId.ToString()),
+                ],
+            }, cancellationToken);
+
+            foreach (var task in sprint.ProjectTasks.Where(task => !task.IsDeleted))
+            {
+                await EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
+                {
+                    WorkspaceId = sprint.WorkspaceId,
+                    EventKey = EventKeys.ScopeMemberChanged,
+                    SubjectType = EventEntityTypes.From(EntityType.Sprint),
+                    SubjectId = sprint.Id.ToString(),
+                    OccurredAt = startedAt,
+                    Payload = new ScopeMemberChangedPayload
+                    {
+                        Change = "committed",
+                        MemberType = EventEntityTypes.From(EntityType.Task),
+                        MemberId = task.Id.ToString(),
+                        EstimateType = task.EstimateType?.ToString(),
+                        EstimateValue = task.EstimateValue,
+                        StatusId = task.StatusId,
+                        StatusCategory = task.Status.Category.ToString(),
+                    },
+                    References =
+                    [
+                        new EventReferenceInput(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), task.Id.ToString()),
+                        new EventReferenceInput(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), sprint.ProjectId.ToString()),
+                    ],
+                }, cancellationToken);
+            }
+
+            await UnitOfWork.CompleteAsync(cancellationToken);
+        });
 
         var result = await UnitOfWork.Sprints.GetSprintDetailAsync(workspaceKey, sprint.Id, cancellationToken);
 

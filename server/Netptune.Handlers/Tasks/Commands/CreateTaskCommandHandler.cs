@@ -1,7 +1,10 @@
 using Mediator;
+
 using Microsoft.EntityFrameworkCore;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
@@ -11,6 +14,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
+
 using Polly;
 
 namespace Netptune.Handlers.Tasks.Commands;
@@ -23,17 +27,20 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
     private readonly IEventPublisher EventPublisher;
+    private readonly IEventRecordWriter EventRecords;
 
     public CreateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IActivityLogger activity,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
         EventPublisher = eventPublisher;
+        EventRecords = eventRecords;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
@@ -59,11 +66,27 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         await UnitOfWork.Statuses.EnsureNewTaskStatus(workspaceId.Value, user.Id, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var status = await ResolveStatus(req, project, workspaceId.Value, cancellationToken);
+        var status = await ResolveStatus(
+            req,
+            project,
+            workspaceId.Value,
+            cancellationToken);
 
         if (status is null)
         {
             return ClientResponse<TaskViewModel>.Failed("Task status not found");
+        }
+
+        Sprint? targetSprint = null;
+
+        if (req.SprintId.HasValue)
+        {
+            targetSprint = await UnitOfWork.Sprints.GetAsync(req.SprintId.Value, true, cancellationToken);
+
+            if (targetSprint is null || targetSprint.WorkspaceId != workspaceId.Value || targetSprint.ProjectId != project.Id || targetSprint.Status == SprintStatus.Completed)
+            {
+                return ClientResponse<TaskViewModel>.Failed($"Sprint with Id {req.SprintId} not found");
+            }
         }
 
         var task = new ProjectTask
@@ -94,21 +117,88 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
         var scopeIdRef = await UnitOfWork.Tasks.GetNextScopeId(project.Id, cancellationToken: cancellationToken);
 
-        if (!scopeIdRef.HasValue) return ClientResponse<TaskViewModel>.Failed($"Unable to get scope id for project with id {project.Id}");
+        if (!scopeIdRef.HasValue)
+        {
+            return ClientResponse<TaskViewModel>.Failed($"Unable to get scope id for project with id {project.Id}");
+        }
 
         var scopeId = scopeIdRef.Value;
         task.ProjectScopeId = scopeId;
 
         var result = await UnitOfWork.Tasks.AddAsync(task, cancellationToken);
 
-        await Policy
-            .Handle<DbUpdateException>()
-            .Retry(4, (_, _, _) => scopeId++)
-            .Execute(async () =>
+        await UnitOfWork.Transaction(async () =>
+        {
+            await Policy
+                .Handle<DbUpdateException>()
+                .Retry(4, (_, _, _) => scopeId++)
+                .Execute(async () =>
+                {
+                    result.ProjectScopeId = scopeId;
+
+                    var savedCount = await UnitOfWork.CompleteAsync(cancellationToken);
+
+                    return savedCount;
+                });
+
+            await EventRecords.Append(new EventWriteRequest<EntityCreatedPayload>
             {
-                result.ProjectScopeId = scopeId;
-                return await UnitOfWork.CompleteAsync(cancellationToken);
-            });
+                WorkspaceId = task.WorkspaceId,
+                EventKey = EventKeys.EntityCreated,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = result.Id.ToString(),
+                Payload = new EntityCreatedPayload
+                {
+                    Name = task.Name,
+                    StatusId = task.StatusId,
+                    StatusCategory = status.Category.ToString(),
+                    SprintId = task.SprintId,
+                    EstimateType = task.EstimateType?.ToString(),
+                    EstimateValue = task.EstimateValue,
+                },
+                References =
+                [
+                    new EventReferenceInput(
+                        EventReferenceRoles.Scope,
+                        EventEntityTypes.From(EntityType.Project),
+                        task.ProjectId!.Value.ToString()),
+                ],
+            }, cancellationToken);
+
+            if (task.SprintId.HasValue && targetSprint?.Status == SprintStatus.Active)
+            {
+                await EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
+                {
+                    WorkspaceId = task.WorkspaceId,
+                    EventKey = EventKeys.ScopeMemberChanged,
+                    SubjectType = EventEntityTypes.From(EntityType.Sprint),
+                    SubjectId = task.SprintId.Value.ToString(),
+                    Payload = new ScopeMemberChangedPayload
+                    {
+                        Change = "added",
+                        MemberType = EventEntityTypes.From(EntityType.Task),
+                        MemberId = result.Id.ToString(),
+                        EstimateType = task.EstimateType?.ToString(),
+                        EstimateValue = task.EstimateValue,
+                        StatusId = task.StatusId,
+                        StatusCategory = status.Category.ToString(),
+                    },
+                    References =
+                    [
+                        new EventReferenceInput(
+                            EventReferenceRoles.Member,
+                            EventEntityTypes.From(EntityType.Task),
+                            result.Id.ToString()),
+                        new EventReferenceInput(
+                            EventReferenceRoles.Scope,
+                            EventEntityTypes.From(EntityType.Project),
+                            task.ProjectId!.Value.ToString()),
+                    ],
+                }, cancellationToken);
+            }
+
+            await UnitOfWork.CompleteAsync(cancellationToken);
+        });
 
         var response = await UnitOfWork.Tasks.GetTaskViewModel(result.Id, cancellationToken);
 
@@ -134,7 +224,10 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     {
         var boardGroup = await UnitOfWork.BoardGroups.GetTaskTarget(groupId, cancellationToken);
 
-        if (boardGroup is null) throw new Exception($"BoardGroup with id of {groupId} does not exist.");
+        if (boardGroup is null)
+        {
+            throw new Exception($"BoardGroup with id of {groupId} does not exist.");
+        }
 
         if (boardGroup.StatusId.HasValue)
         {
@@ -159,7 +252,10 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     {
         var boardGroup = await UnitOfWork.BoardGroups.GetDefaultTaskTarget(project.Id, cancellationToken);
 
-        if (boardGroup is null) throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board group.");
+        if (boardGroup is null)
+        {
+            throw new Exception($"Project '{project.Name}' With Id {project.Id} does not have a default board group.");
+        }
 
         task.ProjectTaskInBoardGroups.Add(new ProjectTaskInBoardGroup
         {
@@ -171,18 +267,33 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
 
     private async Task<Status?> ResolveStatus(AddProjectTaskRequest request, TaskCreationProject project, int workspaceId, CancellationToken cancellationToken)
     {
+
         if (request.StatusId.HasValue)
         {
-            return await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
+            var requestedStatus = await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
+
+            return requestedStatus;
         }
 
         if (project.DefaultStatusId.HasValue)
         {
             var status = await UnitOfWork.Statuses.GetInWorkspace(project.DefaultStatusId.Value, workspaceId, cancellationToken: cancellationToken);
-            if (status is not null) return status;
+
+            if (status is not null)
+            {
+                return status;
+            }
         }
 
-        return await UnitOfWork.Statuses.GetTaskStatusByKey(workspaceId, "new", cancellationToken)
-               ?? await UnitOfWork.Statuses.GetFirstTaskStatus(workspaceId, cancellationToken);
+        var newStatus = await UnitOfWork.Statuses.GetTaskStatusByKey(workspaceId, "new", cancellationToken);
+
+        if (newStatus is not null)
+        {
+            return newStatus;
+        }
+
+        var firstStatus = await UnitOfWork.Statuses.GetFirstTaskStatus(workspaceId, cancellationToken);
+
+        return firstStatus;
     }
 }

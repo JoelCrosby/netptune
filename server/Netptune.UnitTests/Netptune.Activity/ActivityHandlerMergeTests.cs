@@ -36,11 +36,11 @@ public class ActivityHandlerMergeTests
             .GetProjectTaskAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(new ActivityAncestors { WorkspaceId = WorkspaceId, TaskId = 10, ProjectKey = "PROJ", TaskScopeId = 42 });
 
-        UnitOfWork.ActivityLogs
-            .AddAsync(Arg.Any<ActivityLog>(), Arg.Any<CancellationToken>())
+        UnitOfWork.EventRecords
+            .AddAsync(Arg.Any<EventRecord>(), Arg.Any<CancellationToken>())
             .Returns(x =>
             {
-                var log = x.Arg<ActivityLog>();
+                var log = x.Arg<EventRecord>();
 
                 // Stand in for the identity column.
                 log.Id = NextLogId++;
@@ -48,7 +48,7 @@ public class ActivityHandlerMergeTests
                 return log;
             });
 
-        UnitOfWork.ActivityLogs
+        UnitOfWork.EventRecords
             .GetExistingEventIds(Arg.Any<IEnumerable<Guid>>(), Arg.Any<CancellationToken>())
             .Returns(new HashSet<Guid>());
 
@@ -57,8 +57,13 @@ public class ActivityHandlerMergeTests
             .Returns(x => x.Arg<ActivityEntry>());
 
         UnitOfWork.ActivityEntries
-            .UpsertEntry(Arg.Any<ActivityEntryUpsert>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
-            .Returns(new UpsertEntryResult.Upserted(new ()));
+            .UpsertEntry(
+            Arg.Any<ActivityEntryUpsert>(),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>())
+            .Returns(new UpsertEntryResult.Upserted(new()));
 
         UnitOfWork.Workspaces
             .GetSlugsByIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
@@ -72,7 +77,7 @@ public class ActivityHandlerMergeTests
     }
 
     private ActivityHandler Handler(ActivityMergeOptions? merge = null) =>
-        new (UnitOfWork, NotificationEvents, Options.Create(merge ?? new ActivityMergeOptions()));
+        new(UnitOfWork, NotificationEvents, Options.Create(merge ?? new ActivityMergeOptions()));
 
     [Fact]
     public async Task Handle_ShouldNotNotify_ForMergeableTypes()
@@ -91,18 +96,26 @@ public class ActivityHandlerMergeTests
     {
         await Handler().Handle(new ActivityMessage([
             Change(TaskChangeField.Description, "a", "b"),
-            Change(TaskChangeField.Name, "one", "two", ActivityType.ModifyName),
-            Change(TaskChangeField.Priority, "None", "High", ActivityType.ModifyPriority),
+            Change(
+                TaskChangeField.Name,
+                "one",
+                "two",
+                ActivityType.ModifyName),
+            Change(
+                TaskChangeField.Priority,
+                "None",
+                "High",
+                ActivityType.ModifyPriority),
         ]), CancellationToken);
 
-        await UnitOfWork.ActivityLogs.Received(3).AddAsync(Arg.Any<ActivityLog>(), Arg.Any<CancellationToken>());
+        await UnitOfWork.EventRecords.Received(3).AddAsync(Arg.Any<EventRecord>(), Arg.Any<CancellationToken>());
 
         await UnitOfWork.ActivityEntries.Received(1).UpsertEntry(
             Arg.Is<ActivityEntryUpsert>(upsert =>
                 upsert.RevisionCount == 3
                 && upsert.ActivityType == ActivityType.Modify
                 && upsert.ChangedFields.SequenceEqual(new[] { "description", "name", "priority" })
-                && upsert.LastActivityLogId == 3),
+                && upsert.LastEventRecordId == 3),
             Arg.Any<DateTime>(),
             Arg.Any<TimeSpan>(),
             Arg.Any<TimeSpan>(),
@@ -118,7 +131,11 @@ public class ActivityHandlerMergeTests
         ]), CancellationToken);
 
         await UnitOfWork.ActivityEntries.Received(1).UpsertEntry(
-            Arg.Any<ActivityEntryUpsert>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>());
+            Arg.Any<ActivityEntryUpsert>(),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>());
 
         await UnitOfWork.ActivityEntries.Received(1).AddAsync(
             Arg.Is<ActivityEntry>(entry =>
@@ -138,7 +155,12 @@ public class ActivityHandlerMergeTests
         await Handler().Handle(new ActivityMessage(Change(TaskChangeField.Description, "a", "b")), CancellationToken);
 
         await UnitOfWork.ActivityEntries.Received(1).ExpireEntriesForOtherUsers(
-            WorkspaceId, EntityType.Task, EntityId, ActorUserId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
+            WorkspaceId,
+            EntityType.Task,
+            EntityId,
+            ActorUserId,
+            Arg.Any<DateTime>(),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -147,15 +169,25 @@ public class ActivityHandlerMergeTests
         var attempts = 0;
 
         UnitOfWork.ActivityEntries
-            .UpsertEntry(Arg.Any<ActivityEntryUpsert>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
+            .UpsertEntry(
+            Arg.Any<ActivityEntryUpsert>(),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>())
             .Returns(UpsertEntryResult (_) => attempts++ == 0
                 ? new UpsertEntryResult.SlotHeldByStaleEntry()
-                : new UpsertEntryResult.Upserted(new ()));
+                : new UpsertEntryResult.Upserted(new()));
 
         await Handler().Handle(new ActivityMessage(Change(TaskChangeField.Description, "a", "b")), CancellationToken);
 
         await UnitOfWork.ActivityEntries.Received(1).CloseStaleEntry(
-            WorkspaceId, EntityType.Task, EntityId, ActorUserId, Arg.Any<DateTime>(), Arg.Any<CancellationToken>());
+            WorkspaceId,
+            EntityType.Task,
+            EntityId,
+            ActorUserId,
+            Arg.Any<DateTime>(),
+            Arg.Any<CancellationToken>());
 
         attempts.Should().Be(2);
     }
@@ -164,7 +196,12 @@ public class ActivityHandlerMergeTests
     public async Task Handle_ShouldGiveUp_RatherThanSpin_WhenTheSlotNeverFrees()
     {
         UnitOfWork.ActivityEntries
-            .UpsertEntry(Arg.Any<ActivityEntryUpsert>(), Arg.Any<DateTime>(), Arg.Any<TimeSpan>(), Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>())
+            .UpsertEntry(
+            Arg.Any<ActivityEntryUpsert>(),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>())
             .Returns(new UpsertEntryResult.SlotHeldByStaleEntry());
 
         var act = () => Handler().Handle(new ActivityMessage(Change(TaskChangeField.Description, "a", "b")), CancellationToken).AsTask();
@@ -178,7 +215,7 @@ public class ActivityHandlerMergeTests
         string? oldValue,
         string? newValue,
         ActivityType type = ActivityType.ModifyDescription) =>
-        new ()
+        new()
         {
             EventId = Guid.NewGuid(),
             Type = type,
@@ -193,7 +230,7 @@ public class ActivityHandlerMergeTests
         };
 
     private static ActivityEvent Discrete(ActivityType type) =>
-        new ()
+        new()
         {
             EventId = Guid.NewGuid(),
             Type = type,

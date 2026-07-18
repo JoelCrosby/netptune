@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Entities.EntityMaps.BaseMaps;
@@ -29,6 +30,10 @@ public class SprintEntityMap : WorkspaceEntityMap<Sprint, int>
         builder
             .Property(sprint => sprint.StartDate)
             .IsRequired();
+
+        builder
+            .Property(sprint => sprint.StartedAt)
+            .IsRequired(false);
 
         builder
             .Property(sprint => sprint.EndDate)

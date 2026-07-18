@@ -14,6 +14,8 @@ public record SprintViewModel
 
     public DateTime StartDate { get; init; }
 
+    public DateTime? StartedAt { get; init; }
+
     public DateTime EndDate { get; init; }
 
     public DateTime? CompletedAt { get; init; }

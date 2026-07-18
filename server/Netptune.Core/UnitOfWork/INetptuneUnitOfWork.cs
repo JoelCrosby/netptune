@@ -37,7 +37,7 @@ public interface INetptuneUnitOfWork : IUnitOfWork
 
     IRelationTypeRepository RelationTypes { get; }
 
-    IActivityLogRepository ActivityLogs { get; }
+    IEventRecordRepository EventRecords { get; }
 
     IActivityEntryRepository ActivityEntries { get; }
 
@@ -62,4 +62,6 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     IWorkspaceFileRepository WorkspaceFiles { get; }
 
     ITaskFileRepository TaskFiles { get; }
+
+    IReportingRepository Reports { get; }
 }

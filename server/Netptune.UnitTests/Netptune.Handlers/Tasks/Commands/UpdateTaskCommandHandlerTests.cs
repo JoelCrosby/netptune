@@ -28,12 +28,18 @@ public class UpdateTaskCommandHandlerTests
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     public UpdateTaskCommandHandlerTests()
     {
         Fixture.Register(() => DateOnly.FromDateTime(Fixture.Create<DateTime>()));
         Identity.GetCurrentUserId().Returns("user-1");
-        Handler = new(UnitOfWork, Activity, EventPublisher, Identity);
+        Handler = new(
+            UnitOfWork,
+            Activity,
+            EventPublisher,
+            Identity,
+            EventRecords);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)
@@ -65,6 +71,7 @@ public class UpdateTaskCommandHandlerTests
                 callInfo.Arg<Action<ActivityChangeSetOptions>>().Invoke(opts);
                 types.AddRange(opts.Changes.Select(change => change.Type));
             });
+
         return types;
     }
 

@@ -9,7 +9,7 @@ public record Notification : AuditableEntity<int>
 {
     public string UserId { get; init; } = null!;
 
-    public int ActivityLogId { get; init; }
+    public long EventRecordId { get; init; }
 
     public int? ActivityEntryId { get; init; }
 
@@ -29,7 +29,7 @@ public record Notification : AuditableEntity<int>
     public AppUser User { get; set; } = null!;
 
     [JsonIgnore]
-    public ActivityLog ActivityLog { get; set; } = null!;
+    public EventRecord EventRecord { get; set; } = null!;
 
     [JsonIgnore]
     public Workspace Workspace { get; set; } = null!;

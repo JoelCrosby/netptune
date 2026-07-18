@@ -19,6 +19,7 @@ public static class AutoFixtures
     {
         var fixture = new Fixture();
         fixture.Register(() => DateOnly.FromDateTime(fixture.Create<DateTime>()));
+
         return fixture;
     }
 
@@ -40,7 +41,7 @@ public static class AutoFixtures
     public static Comment Comment => Fixture
         .Build<Comment>()
         .With(p => p.Reactions, new List<Reaction>())
-        .With(p => p.Mentions, new  List<CommentMention>())
+        .With(p => p.Mentions, new List<CommentMention>())
         .WithoutWorkspace()
         .Create();
 
@@ -139,7 +140,7 @@ public static class AutoFixtures
     public static Notification Notification => Fixture
         .Build<Notification>()
         .Without(p => p.User)
-        .Without(p => p.ActivityLog)
+        .Without(p => p.EventRecord)
         .Without(p => p.Workspace)
         .WithoutAuditable()
         .With(p => p.IsRead, false)

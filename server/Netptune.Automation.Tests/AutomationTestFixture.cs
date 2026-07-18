@@ -3,7 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
+using Netptune.Core.Entities;
+using Netptune.Core.Events;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
@@ -55,11 +58,12 @@ public sealed class AutomationTestFixture : IAsyncLifetime
                     npgsql.MapEnum<WorkspaceFileStatus>();
                 })
                 .UseSnakeCaseNamingConvention()
-                .AddInterceptors(new AuditLogImmutabilityInterceptor());
+                .AddInterceptors(new EventRecordImmutabilityInterceptor());
         });
 
         services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(DbContainer.GetConnectionString()));
         services.AddScoped<INetptuneUnitOfWork, NetptuneUnitOfWork>();
+        services.AddSingleton<IEventRecordWriter, NoOpEventRecordWriter>();
         services.AddSingleton<INotificationEventPublisher, NoOpNotificationEventPublisher>();
         services.AddNetptuneAutomation();
 
@@ -91,7 +95,7 @@ public sealed class AutomationTestFixture : IAsyncLifetime
     {
         await db.Database.ExecuteSqlRawAsync("""
             TRUNCATE TABLE
-                activity_logs,
+                event_records,
                 automation_actions,
                 automation_runs,
                 automation_rules,
@@ -126,4 +130,18 @@ public sealed class AutomationTestFixture : IAsyncLifetime
             return Task.CompletedTask;
         }
     }
+}
+
+internal sealed class NoOpEventRecordWriter : IEventRecordWriter
+{
+    public Task<EventRecord> Append<TPayload>(EventWriteRequest<TPayload> request, CancellationToken cancellationToken = default)
+        where TPayload : class => Task.FromResult(new EventRecord
+        {
+            EventKey = request.EventKey,
+            WorkspaceId = request.WorkspaceId,
+            SubjectType = request.SubjectType,
+            SubjectId = request.SubjectId,
+            OccurredAt = request.OccurredAt ?? DateTime.UtcNow,
+            RecordedAt = DateTime.UtcNow,
+        });
 }

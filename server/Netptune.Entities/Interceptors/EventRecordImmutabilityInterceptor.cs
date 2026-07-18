@@ -5,13 +5,14 @@ using Netptune.Core.Entities;
 
 namespace Netptune.Entities.Interceptors;
 
-// Guards ActivityLog only. ActivityEntry, the feed projection, is mutated in place on every merge and must
+// Guards EventRecord only. ActivityEntry, the feed projection, is mutated in place on every merge and must
 // never be added here.
-public sealed class AuditLogImmutabilityInterceptor : SaveChangesInterceptor
+public sealed class EventRecordImmutabilityInterceptor : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
-        ThrowIfAuditLogMutated(eventData.Context);
+        ThrowIfEventRecordMutated(eventData.Context);
+
         return base.SavingChanges(eventData, result);
     }
 
@@ -20,21 +21,26 @@ public sealed class AuditLogImmutabilityInterceptor : SaveChangesInterceptor
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        ThrowIfAuditLogMutated(eventData.Context);
+        ThrowIfEventRecordMutated(eventData.Context);
+
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    private static void ThrowIfAuditLogMutated(DbContext? context)
+    private static void ThrowIfEventRecordMutated(DbContext? context)
     {
-        if (context is null) return;
+
+        if (context is null)
+        {
+            return;
+        }
 
         var mutated = context.ChangeTracker
-            .Entries<ActivityLog>()
+            .Entries<EventRecord>()
             .Any(e => e.State is EntityState.Modified or EntityState.Deleted);
 
         if (mutated)
         {
-            throw new InvalidOperationException("ActivityLog records are immutable and cannot be updated or deleted.");
+            throw new InvalidOperationException("EventRecord records are immutable and cannot be updated or deleted.");
         }
     }
 }

@@ -28,7 +28,11 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         for (var index = 0; index < 12; index++)
         {
-            await Handle(Change(entityId, TaskChangeField.Description, $"v{index}", $"v{index + 1}"));
+            await Handle(Change(
+                entityId,
+                TaskChangeField.Description,
+                $"v{index}",
+                $"v{index + 1}"));
         }
 
         var entries = await Entries(entityId);
@@ -53,7 +57,11 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         for (var index = 0; index < 20; index++)
         {
-            await Handle(Change(entityId, TaskChangeField.Description, $"v{index}", $"v{index + 1}"));
+            await Handle(Change(
+                entityId,
+                TaskChangeField.Description,
+                $"v{index}",
+                $"v{index + 1}"));
         }
 
         (await Entries(entityId)).Should().ContainSingle();
@@ -65,10 +73,24 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1003;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "a", "b"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
         await Handle(
-            Change(entityId, TaskChangeField.Priority, "None", "High", ActivityType.ModifyPriority),
-            Change(entityId, TaskChangeField.Name, "one", "two", ActivityType.ModifyName));
+            Change(
+                entityId,
+                TaskChangeField.Priority,
+                "None",
+                "High",
+                ActivityType.ModifyPriority),
+            Change(
+                entityId,
+                TaskChangeField.Name,
+                "one",
+                "two",
+                ActivityType.ModifyName));
 
         var entry = (await Entries(entityId)).Should().ContainSingle().Subject;
 
@@ -82,11 +104,19 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1004;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "a", "b"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
 
         await Rewind(entityId, TimeSpan.FromMinutes(6));
 
-        await Handle(Change(entityId, TaskChangeField.Description, "b", "c"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "b",
+            "c"));
 
         var entries = await Entries(entityId);
 
@@ -103,11 +133,25 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1005;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "a", "b"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
 
-        await Handle(Change(entityId, TaskChangeField.Status, "Todo", "Done", ActivityType.ModifyStatus, fixture.OtherUserId));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Status,
+            "Todo",
+            "Done",
+            ActivityType.ModifyStatus,
+            fixture.OtherUserId));
 
-        await Handle(Change(entityId, TaskChangeField.Description, "b", "c"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "b",
+            "c"));
 
         var entries = await Entries(entityId);
 
@@ -151,13 +195,21 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1008;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "a", "b"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
 
         var first = (await Entries(entityId)).Single().WindowExpiresAt;
 
         await Rewind(entityId, TimeSpan.FromMinutes(2));
 
-        await Handle(Change(entityId, TaskChangeField.Description, "b", "c"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "b",
+            "c"));
 
         var second = (await Entries(entityId)).Single().WindowExpiresAt;
 
@@ -171,13 +223,21 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         // Unbroken editing: an edit every two minutes, so the window slides every time and never lapses. One
         // 28 minute rewind would be a gap instead, and would expire the burst rather than stretch it.
-        await Handle(Change(entityId, TaskChangeField.Description, "v0", "v1"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "v0",
+            "v1"));
 
         for (var index = 1; index <= 14; index++)
         {
             await Rewind(entityId, TimeSpan.FromMinutes(2));
 
-            await Handle(Change(entityId, TaskChangeField.Description, $"v{index}", $"v{index + 1}"));
+            await Handle(Change(
+                entityId,
+                TaskChangeField.Description,
+                $"v{index}",
+                $"v{index + 1}"));
         }
 
         var entry = (await Entries(entityId)).Should().ContainSingle().Subject;
@@ -196,9 +256,17 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         for (var index = 0; index < 30; index++)
         {
-            if (index > 0) await Rewind(entityId, TimeSpan.FromMinutes(2));
 
-            await Handle(Change(entityId, TaskChangeField.Description, $"v{index}", $"v{index + 1}"));
+            if (index > 0)
+            {
+                await Rewind(entityId, TimeSpan.FromMinutes(2));
+            }
+
+            await Handle(Change(
+                entityId,
+                TaskChangeField.Description,
+                $"v{index}",
+                $"v{index + 1}"));
         }
 
         var entries = await Entries(entityId);
@@ -230,7 +298,11 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
                 await gate.Task;
 
                 await handler.Handle(
-                    new ActivityMessage(Change(entityId, TaskChangeField.Description, $"v{index}", $"v{index + 1}")),
+                    new ActivityMessage(Change(
+                        entityId,
+                        TaskChangeField.Description,
+                        $"v{index}",
+                        $"v{index + 1}")),
                     CancellationToken);
             }
         }).ToList();
@@ -259,11 +331,23 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         var message = new[]
         {
-            Change(entityId, TaskChangeField.Description, "a", "b"),
-            Change(entityId, TaskChangeField.Description, "b", "c"),
+            Change(
+                entityId,
+                TaskChangeField.Description,
+                "a",
+                "b"),
+            Change(
+                entityId,
+                TaskChangeField.Description,
+                "b",
+                "c"),
         };
 
-        await FailOnceInserting("activity_entries", $"NEW.entity_id = {entityId}", entityId, async () =>
+        await FailOnceInserting(
+            "activity_entries",
+            $"NEW.entity_id = {entityId}",
+            entityId,
+            async () =>
         {
             var crashed = async () => await Handle(message, null);
 
@@ -292,14 +376,26 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         var message = new[]
         {
-            Change(entityId, TaskChangeField.Description, "a", "b"),
-            Change(entityId, TaskChangeField.Description, "b", "c"),
+            Change(
+                entityId,
+                TaskChangeField.Description,
+                "a",
+                "b"),
+            Change(
+                entityId,
+                TaskChangeField.Description,
+                "b",
+                "c"),
             Discrete(entityId, ActivityType.Restore),
         };
 
-        var restore = (int) ActivityType.Restore;
+        var restore = (int)ActivityType.Restore;
 
-        await FailOnceInserting("notifications", $"NEW.activity_type = {restore}", entityId, async () =>
+        await FailOnceInserting(
+            "notifications",
+            $"NEW.activity_type = {restore}",
+            entityId,
+            async () =>
         {
             var crashed = async () => await Handle(message, null);
 
@@ -335,8 +431,16 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         const int liveEntityId = 1012;
         const int expiredEntityId = 1013;
 
-        await Handle(Change(liveEntityId, TaskChangeField.Description, "a", "b"));
-        await Handle(Change(expiredEntityId, TaskChangeField.Description, "a", "b"));
+        await Handle(Change(
+            liveEntityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
+        await Handle(Change(
+            expiredEntityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
 
         await Rewind(expiredEntityId, TimeSpan.FromMinutes(6));
 
@@ -359,7 +463,11 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         for (var index = 0; index < 15; index++)
         {
-            await Handle(Change(entityId, TaskChangeField.Description, $"v{index}", $"v{index + 1}"));
+            await Handle(Change(
+                entityId,
+                TaskChangeField.Description,
+                $"v{index}",
+                $"v{index + 1}"));
         }
 
         (await NotificationCount(entityId)).Should().Be(0, "an open entry is not yet notifiable — the burst has not finished");
@@ -378,11 +486,11 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         var lastLogId = await LastLedgerRowId(entityId);
 
-        entry.LastActivityLogId.Should().Be(lastLogId);
+        entry.LastEventRecordId.Should().Be(lastLogId);
 
         notifications.Should().OnlyContain(notification => notification.ActivityEntryId == entry.Id);
-        notifications.Should().OnlyContain(notification => notification.ActivityLogId == lastLogId,
-            "ActivityLogId stays non-nullable and points at the last ledger row folded into the entry");
+        notifications.Should().OnlyContain(notification => notification.EventRecordId == lastLogId,
+            "EventRecordId stays non-nullable and points at the last ledger row folded into the entry");
     }
 
     [Fact]
@@ -390,7 +498,11 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1015;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "a", "b"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
         await Rewind(entityId, TimeSpan.FromMinutes(6));
 
         for (var tick = 0; tick < 5; tick++)
@@ -410,7 +522,11 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         for (var index = 0; index < entries; index++)
         {
-            await Handle(Change(firstEntityId + index, TaskChangeField.Description, "a", "b"));
+            await Handle(Change(
+                firstEntityId + index,
+                TaskChangeField.Description,
+                "a",
+                "b"));
         }
 
         for (var index = 0; index < entries; index++)
@@ -461,9 +577,21 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1016;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "original", "original typo"));
-        await Handle(Change(entityId, TaskChangeField.Description, "original typo", "original typoo"));
-        await Handle(Change(entityId, TaskChangeField.Description, "original typoo", "original"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "original",
+            "original typo"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "original typo",
+            "original typoo"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "original typoo",
+            "original"));
 
         await Rewind(entityId, TimeSpan.FromMinutes(6));
 
@@ -494,7 +622,12 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         var before = prefix + " the original fifth paragraph";
         var after = prefix + " a completely rewritten fifth paragraph";
 
-        await Handle(Change(entityId, TaskChangeField.Description, before, after, hash: true));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            before,
+            after,
+            hash: true));
 
         await Rewind(entityId, TimeSpan.FromMinutes(6));
 
@@ -515,8 +648,16 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1018;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "a", "b"));
-        await Handle(Change(entityId, TaskChangeField.Description, "b", "c"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "b",
+            "c"));
 
         (await NotificationCount(entityId)).Should().Be(0, "the field edits are deferred until the window closes");
 
@@ -541,11 +682,19 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
     {
         const int entityId = 1303;
 
-        await Handle(Change(entityId, TaskChangeField.Description, "a", "b"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "a",
+            "b"));
 
         await ExecuteSql($"UPDATE activity_entries SET is_deleted = TRUE WHERE entity_id = {entityId}");
 
-        await Handle(Change(entityId, TaskChangeField.Description, "b", "c"));
+        await Handle(Change(
+            entityId,
+            TaskChangeField.Description,
+            "b",
+            "c"));
 
         var visible = await Entries(entityId);
 
@@ -572,7 +721,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         string? userId = null,
         bool hash = false)
     {
-        return new ()
+        return new()
         {
             EventId = Guid.NewGuid(),
             Type = type,
@@ -591,7 +740,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
     private ActivityEvent Discrete(int entityId, ActivityType type, string? userId = null)
     {
-        return new ()
+        return new()
         {
             EventId = Guid.NewGuid(),
             Type = type,
@@ -687,11 +836,13 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        return await db.ActivityEntries
+        var entries = await db.ActivityEntries
             .AsNoTracking()
             .Where(entry => entry.EntityId == entityId && (includeDeleted || !entry.IsDeleted))
             .OrderBy(entry => entry.Id)
             .ToListAsync(CancellationToken);
+
+        return entries;
     }
 
     private async Task<int> LedgerRows(int entityId)
@@ -700,18 +851,22 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        return await db.ActivityLogs.CountAsync(log => log.EntityId == entityId, CancellationToken);
+        var count = await db.EventRecords.CountAsync(log => log.SubjectId == entityId.ToString(), CancellationToken);
+
+        return count;
     }
 
-    private async Task<int> LastLedgerRowId(int entityId)
+    private async Task<long> LastLedgerRowId(int entityId)
     {
         using var scope = fixture.CreateScope();
 
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        return await db.ActivityLogs
-            .Where(log => log.EntityId == entityId)
+        var eventRecordId = await db.EventRecords
+            .Where(log => log.SubjectId == entityId.ToString())
             .MaxAsync(log => log.Id, CancellationToken);
+
+        return eventRecordId;
     }
 
     private async Task<List<Notification>> NotificationsFor(int entityId)
@@ -722,10 +877,12 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        return await db.Notifications
+        var notifications = await db.Notifications
             .AsNoTracking()
             .Where(notification => notification.ActivityEntryId != null && entryIds.Contains(notification.ActivityEntryId.Value))
             .ToListAsync(CancellationToken);
+
+        return notifications;
     }
 
     private async Task<List<Notification>> AllNotifications(int entityId)
@@ -734,12 +891,18 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
         var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        return await db.Notifications
+        var notifications = await db.Notifications
             .AsNoTracking()
-            .Join(db.ActivityLogs, notification => notification.ActivityLogId, log => log.Id, (notification, log) => new { notification, log })
-            .Where(row => row.log.EntityId == entityId)
+            .Join(
+            db.EventRecords,
+            notification => notification.EventRecordId,
+            log => log.Id,
+            (notification, log) => new { notification, log })
+            .Where(row => row.log.SubjectId == entityId.ToString())
             .Select(row => row.notification)
             .ToListAsync(CancellationToken);
+
+        return notifications;
     }
 
     private async Task<int> NotificationCount(int entityId) => (await AllNotifications(entityId)).Count;

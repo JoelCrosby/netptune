@@ -18,7 +18,7 @@ public sealed record ActivityEntryUpsert
 
     public required string MetaJson { get; init; }
 
-    public required int LastActivityLogId { get; init; }
+    public required long LastEventRecordId { get; init; }
 
     public required DateTime FirstOccurredAt { get; init; }
 

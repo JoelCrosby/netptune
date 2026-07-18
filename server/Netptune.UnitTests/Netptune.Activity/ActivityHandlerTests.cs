@@ -35,8 +35,14 @@ public class ActivityHandlerTests
 
     private static readonly ActivityAncestors DefaultAncestors = new()
     {
-        WorkspaceId = WorkspaceId, ProjectId = 1, BoardId = 1, BoardGroupId = 1,
-        TaskId = 10, TaskScopeId = 42, ProjectKey = "PROJ", BoardKey = "board-1",
+        WorkspaceId = WorkspaceId,
+        ProjectId = 1,
+        BoardId = 1,
+        BoardGroupId = 1,
+        TaskId = 10,
+        TaskScopeId = 42,
+        ProjectKey = "PROJ",
+        BoardKey = "board-1",
     };
 
     public ActivityHandlerTests()
@@ -61,18 +67,21 @@ public class ActivityHandlerTests
             .GetSprintAncestors(Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(DefaultAncestors);
 
-        UnitOfWork.ActivityLogs
-            .AddAsync(Arg.Any<ActivityLog>(), Arg.Any<CancellationToken>())
+        UnitOfWork.EventRecords
+            .AddAsync(Arg.Any<EventRecord>(), Arg.Any<CancellationToken>())
             .Returns(x =>
             {
-                var log = x.Arg<ActivityLog>();
+                var log = x.Arg<EventRecord>();
 
-                if (log.EventId is { } eventId) PersistedEventIds.Add(eventId);
+                if (log.EventId is { } eventId)
+                {
+                    PersistedEventIds.Add(eventId);
+                }
 
                 return log;
             });
 
-        UnitOfWork.ActivityLogs
+        UnitOfWork.EventRecords
             .GetExistingEventIds(Arg.Any<IEnumerable<Guid>>(), Arg.Any<CancellationToken>())
             .Returns(x => x.Arg<IEnumerable<Guid>>().Where(PersistedEventIds.Contains).ToHashSet());
 
@@ -115,28 +124,28 @@ public class ActivityHandlerTests
             .Create();
 
     [Fact]
-    public async Task Handle_ShouldPersistActivityLog_ForEachEvent()
+    public async Task Handle_ShouldPersistEventRecord_ForEachEvent()
     {
         var message = new ActivityMessage([BuildEvent(), BuildEvent()]);
 
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
-        await UnitOfWork.ActivityLogs.Received(2).AddAsync(Arg.Any<ActivityLog>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.EventRecords.Received(2).AddAsync(Arg.Any<EventRecord>(), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(3).CompleteAsync(TestContext.Current.CancellationToken);
         await UnitOfWork.Received(1).Transaction(Arg.Any<Func<Task>>(), Arg.Any<bool>());
     }
 
     [Fact]
-    public async Task Handle_ShouldPersistEventId_OnActivityLog()
+    public async Task Handle_ShouldPersistEventId_OnEventRecord()
     {
         var @event = BuildEvent();
         var message = new ActivityMessage(@event);
 
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
-        await UnitOfWork.ActivityLogs.Received(1).AddAsync(
-            Arg.Is<ActivityLog>(log => log.EventId == @event.EventId),
+        await UnitOfWork.EventRecords.Received(1).AddAsync(
+            Arg.Is<EventRecord>(log => log.EventId == @event.EventId),
             TestContext.Current.CancellationToken);
     }
 
@@ -148,7 +157,7 @@ public class ActivityHandlerTests
         await Handler.Handle(message, TestContext.Current.CancellationToken);
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
-        await UnitOfWork.ActivityLogs.Received(1).AddAsync(Arg.Any<ActivityLog>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.EventRecords.Received(1).AddAsync(Arg.Any<EventRecord>(), TestContext.Current.CancellationToken);
         await UnitOfWork.Notifications.Received(1).AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), TestContext.Current.CancellationToken);
     }
 
@@ -160,7 +169,7 @@ public class ActivityHandlerTests
 
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
-        await UnitOfWork.ActivityLogs.Received(1).AddAsync(Arg.Any<ActivityLog>(), TestContext.Current.CancellationToken);
+        await UnitOfWork.EventRecords.Received(1).AddAsync(Arg.Any<EventRecord>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -176,7 +185,7 @@ public class ActivityHandlerTests
             notifications.All(n => n.UserId != ActorUserId) &&
             notifications.Any(n => n.UserId == OtherUserId1) &&
             notifications.Any(n => n.UserId == OtherUserId2)), TestContext.Current.CancellationToken);
-            // ReSharper enable PossibleMultipleEnumeration
+        // ReSharper enable PossibleMultipleEnumeration
     }
 
     [Fact]

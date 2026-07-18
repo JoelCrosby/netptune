@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.SeedData.Seeders;
@@ -10,21 +11,23 @@ public sealed class NotificationSeeder : ISeeder
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
     {
         context.Notifications.AddRange(
-            context.ActivityLogs.Take(20).Select((log, i) =>
+            context.EventRecords.Take(20).Select((log, i) =>
             {
-                var workspaceUsers = context.UsersFor(log.Workspace);
+                var workspace = context.Workspaces.Single(item => item.Id == log.WorkspaceId);
+                var workspaceUsers = context.UsersFor(workspace);
+                var actor = context.Users.Single(user => user.Id == log.ActorUserId);
 
                 return new Notification
                 {
-                    ActivityLog = log,
+                    EventRecord = log,
                     User = workspaceUsers[i % workspaceUsers.Count],
-                    Workspace = log.Workspace,
+                    Workspace = workspace,
                     IsRead = i % 3 == 0,
-                    Link = $"/{log.Workspace.Slug}/tasks",
-                    EntityType = log.EntityType,
-                    ActivityType = log.Type,
-                    CreatedByUserId = log.User.Id,
-                    OwnerId = log.User.Id,
+                    Link = $"/{workspace.Slug}/tasks",
+                    EntityType = Enum.Parse<EntityType>(log.SubjectType!, true),
+                    ActivityType = (ActivityType)log.Payload.RootElement.GetProperty("activityType").GetInt32(),
+                    CreatedByUserId = actor.Id,
+                    OwnerId = actor.Id,
                 };
             })
         );
@@ -34,17 +37,23 @@ public sealed class NotificationSeeder : ISeeder
         var loginUser = context.Users[0];
 
         context.Notifications.AddRange(
-            context.ActivityLogs.Take(30).Select((log, i) => new Notification
+            context.EventRecords.Take(30).Select((log, i) =>
             {
-                ActivityLog = log,
-                User = loginUser,
-                Workspace = log.Workspace,
-                IsRead = i % 4 == 0,
-                Link = $"/{log.Workspace.Slug}/tasks",
-                EntityType = log.EntityType,
-                ActivityType = log.Type,
-                CreatedByUserId = log.User.Id,
-                OwnerId = log.User.Id,
+                var workspace = context.Workspaces.Single(item => item.Id == log.WorkspaceId);
+                var actor = context.Users.Single(user => user.Id == log.ActorUserId);
+
+                return new Notification
+                {
+                    EventRecord = log,
+                    User = loginUser,
+                    Workspace = workspace,
+                    IsRead = i % 4 == 0,
+                    Link = $"/{workspace.Slug}/tasks",
+                    EntityType = Enum.Parse<EntityType>(log.SubjectType!, true),
+                    ActivityType = (ActivityType)log.Payload.RootElement.GetProperty("activityType").GetInt32(),
+                    CreatedByUserId = actor.Id,
+                    OwnerId = actor.Id,
+                };
             })
         );
 

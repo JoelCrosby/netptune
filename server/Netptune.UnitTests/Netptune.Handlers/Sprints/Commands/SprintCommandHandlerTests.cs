@@ -10,6 +10,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Sprints;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Sprints.Commands;
 using Netptune.Handlers.Sprints.Queries;
 
@@ -28,17 +29,23 @@ public class SprintCommandHandlerTests
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     public SprintCommandHandlerTests()
     {
         Identity.GetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetCurrentUser().Returns(new AppUser { Id = "user-1" });
+        UnitOfWork.InvokeTransaction();
     }
 
     [Fact]
     public async Task Create_ShouldAddPlanningSprint_WhenInputValid()
     {
-        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new CreateSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher);
         var workspace = CreateWorkspace();
         var project = CreateProject(workspace.Id);
         var request = new AddSprintRequest
@@ -59,6 +66,7 @@ public class SprintCommandHandlerTests
             {
                 addedSprint = callInfo.Arg<Sprint>();
                 addedSprint.Id = sprintViewModel.Id;
+
                 return addedSprint;
             });
         UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprintViewModel.Id, TestContext.Current.CancellationToken)
@@ -86,7 +94,11 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Create_ShouldFail_WhenNameIsBlank()
     {
-        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new CreateSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher);
         var request = new AddSprintRequest
         {
             Name = " ",
@@ -110,7 +122,11 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Create_ShouldFail_WhenProjectIsOutsideWorkspace()
     {
-        var handler = new CreateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new CreateSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher);
         var request = new AddSprintRequest
         {
             Name = "Sprint 1",
@@ -134,9 +150,19 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Start_ShouldActivatePlanningSprint_WhenNoOtherActiveSprintExists()
     {
-        var handler = new StartSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new StartSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher,
+            EventRecords);
         var sprint = CreateSprint(status: SprintStatus.Planning);
-        var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, sprint.Name, sprint.ProjectId, sprint.WorkspaceId, SprintStatus.Active);
+        var sprintViewModel = CreateSprintDetailViewModel(
+            sprint.Id,
+            sprint.Name,
+            sprint.ProjectId,
+            sprint.WorkspaceId,
+            SprintStatus.Active);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
             .Returns(sprint);
@@ -162,7 +188,12 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Start_ShouldFail_WhenProjectAlreadyHasActiveSprint()
     {
-        var handler = new StartSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new StartSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher,
+            EventRecords);
         var sprint = CreateSprint(status: SprintStatus.Planning);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
@@ -181,9 +212,19 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Complete_ShouldCompleteActiveSprint()
     {
-        var handler = new CompleteSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new CompleteSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher,
+            EventRecords);
         var sprint = CreateSprint(status: SprintStatus.Active);
-        var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, sprint.Name, sprint.ProjectId, sprint.WorkspaceId, SprintStatus.Completed);
+        var sprintViewModel = CreateSprintDetailViewModel(
+            sprint.Id,
+            sprint.Name,
+            sprint.ProjectId,
+            sprint.WorkspaceId,
+            SprintStatus.Completed);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
             .Returns(sprint);
@@ -208,19 +249,40 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task AddTasks_ShouldAssignDistinctProjectTasksToSprint()
     {
-        var handler = new AddTasksToSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new AddTasksToSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventRecords);
         var sprint = CreateSprint(status: SprintStatus.Planning);
         var firstTask = CreateTask(id: 10, workspaceId: sprint.WorkspaceId, projectId: sprint.ProjectId);
         var secondTask = CreateTask(id: 11, workspaceId: sprint.WorkspaceId, projectId: sprint.ProjectId);
         var request = new AddTasksToSprintRequest { TaskIds = [firstTask.Id, firstTask.Id, secondTask.Id] };
-        var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, sprint.Name, sprint.ProjectId, sprint.WorkspaceId);
+        var sprintViewModel = CreateSprintDetailViewModel(
+            sprint.Id,
+            sprint.Name,
+            sprint.ProjectId,
+            sprint.WorkspaceId);
 
         UnitOfWork.Sprints.GetTaskAssignmentTarget(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
-            .Returns(new SprintTaskAssignmentTarget(sprint.Id, sprint.Status, sprint.WorkspaceId, sprint.ProjectId));
+            .Returns(new SprintTaskAssignmentTarget(
+                sprint.Id,
+                sprint.Status,
+                sprint.WorkspaceId,
+                sprint.ProjectId));
         UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, TestContext.Current.CancellationToken)
             .Returns([firstTask.Id, secondTask.Id]);
-        UnitOfWork.Tasks.GetValidTaskIdsInProject(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, sprint.ProjectId, TestContext.Current.CancellationToken)
+        UnitOfWork.Tasks.GetValidTaskIdsInProject(
+            Arg.Any<IEnumerable<int>>(),
+            sprint.WorkspaceId,
+            sprint.ProjectId,
+            TestContext.Current.CancellationToken)
             .Returns([firstTask.Id, secondTask.Id]);
+        UnitOfWork.Tasks.GetTaskViewModels(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken)
+            .Returns([
+                new() { Id = firstTask.Id, StatusId = firstTask.StatusId, StatusCategory = StatusCategory.Todo },
+                new() { Id = secondTask.Id, StatusId = secondTask.StatusId, StatusCategory = StatusCategory.Todo },
+            ]);
         UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
             .Returns(sprintViewModel);
 
@@ -237,15 +299,27 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task AddTasks_ShouldFail_WhenTaskProjectDoesNotMatchSprintProject()
     {
-        var handler = new AddTasksToSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new AddTasksToSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventRecords);
         var sprint = CreateSprint(status: SprintStatus.Planning, projectId: 20);
         var task = CreateTask(id: 10, workspaceId: sprint.WorkspaceId, projectId: 21);
 
         UnitOfWork.Sprints.GetTaskAssignmentTarget(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
-            .Returns(new SprintTaskAssignmentTarget(sprint.Id, sprint.Status, sprint.WorkspaceId, sprint.ProjectId));
+            .Returns(new SprintTaskAssignmentTarget(
+                sprint.Id,
+                sprint.Status,
+                sprint.WorkspaceId,
+                sprint.ProjectId));
         UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, TestContext.Current.CancellationToken)
             .Returns([task.Id]);
-        UnitOfWork.Tasks.GetValidTaskIdsInProject(Arg.Any<IEnumerable<int>>(), sprint.WorkspaceId, sprint.ProjectId, TestContext.Current.CancellationToken)
+        UnitOfWork.Tasks.GetValidTaskIdsInProject(
+            Arg.Any<IEnumerable<int>>(),
+            sprint.WorkspaceId,
+            sprint.ProjectId,
+            TestContext.Current.CancellationToken)
             .Returns([]);
 
         var result = await handler.Handle(
@@ -262,13 +336,34 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task RemoveTask_ShouldClearTaskSprintId_WhenTaskIsInSprint()
     {
-        var handler = new RemoveTaskFromSprintCommandHandler(UnitOfWork, Identity, Activity);
+        var handler = new RemoveTaskFromSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventRecords);
         var sprint = CreateSprint(status: SprintStatus.Active);
-        var task = CreateTask(id: 10, workspaceId: sprint.WorkspaceId, projectId: sprint.ProjectId, sprintId: sprint.Id);
-        var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, sprint.Name, sprint.ProjectId, sprint.WorkspaceId, SprintStatus.Active);
+        var task = CreateTask(
+            id: 10,
+            workspaceId: sprint.WorkspaceId,
+            projectId: sprint.ProjectId,
+            sprintId: sprint.Id);
+        var sprintViewModel = CreateSprintDetailViewModel(
+            sprint.Id,
+            sprint.Name,
+            sprint.ProjectId,
+            sprint.WorkspaceId,
+            SprintStatus.Active);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
             .Returns(sprint);
+        UnitOfWork.Tasks.GetTaskViewModel(task.Id, TestContext.Current.CancellationToken)
+            .Returns(new TaskViewModel
+            {
+                Id = task.Id,
+                SprintId = sprint.Id,
+                StatusId = task.StatusId,
+                StatusCategory = StatusCategory.Todo,
+            });
         UnitOfWork.Tasks.GetAsync(task.Id, cancellationToken: TestContext.Current.CancellationToken).Returns(task);
         UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
             .Returns(sprintViewModel);
@@ -284,9 +379,17 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldSoftDeletePlanningSprint_AndClearTasks()
     {
-        var handler = new DeleteSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new DeleteSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Planning);
-        var task = CreateTask(id: 10, workspaceId: sprint.WorkspaceId, projectId: sprint.ProjectId, sprintId: sprint.Id);
+        var task = CreateTask(
+            id: 10,
+            workspaceId: sprint.WorkspaceId,
+            projectId: sprint.ProjectId,
+            sprintId: sprint.Id);
         sprint.ProjectTasks = [task];
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
@@ -310,7 +413,11 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldFail_WhenSprintIsActive()
     {
-        var handler = new DeleteSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new DeleteSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Active);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
@@ -328,7 +435,11 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Update_ShouldApplyEditableFields_WhenInputValid()
     {
-        var handler = new UpdateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new UpdateSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Planning);
         var request = new UpdateSprintRequest
         {
@@ -339,7 +450,12 @@ public class SprintCommandHandlerTests
             EndDate = new DateTime(2026, 06, 15),
             Status = SprintStatus.Active,
         };
-        var sprintViewModel = CreateSprintDetailViewModel(sprint.Id, "Renamed sprint", sprint.ProjectId, sprint.WorkspaceId, SprintStatus.Active);
+        var sprintViewModel = CreateSprintDetailViewModel(
+            sprint.Id,
+            "Renamed sprint",
+            sprint.ProjectId,
+            sprint.WorkspaceId,
+            SprintStatus.Active);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
             .Returns(sprint);
@@ -362,7 +478,11 @@ public class SprintCommandHandlerTests
     [Fact]
     public async Task Update_ShouldFail_WhenCompletedSprintIsEditedWithoutCancelling()
     {
-        var handler = new UpdateSprintCommandHandler(UnitOfWork, Identity, Activity, EventPublisher);
+        var handler = new UpdateSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher);
         var sprint = CreateSprint(status: SprintStatus.Completed);
 
         UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)

@@ -16,7 +16,7 @@ public sealed class SeedContext
     public List<Status> Statuses { get; } = [];
     public List<ProjectTask> Tasks { get; } = [];
     public List<ProjectTaskAppUser> TaskAssignees { get; } = [];
-    public List<ActivityLog> ActivityLogs { get; } = [];
+    public List<EventRecord> EventRecords { get; } = [];
     public List<Comment> Comments { get; } = [];
     public List<Tag> Tags { get; } = [];
     public List<ProjectTaskTag> TaskTags { get; } = [];
