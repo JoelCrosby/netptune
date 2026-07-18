@@ -5,15 +5,19 @@ export interface ReportChartTheme {
   border: string;
 }
 
+export const REPORT_CHART_LABEL_STYLE = {
+  cssClass: 'fill-muted',
+  fontSize: '11px',
+};
+
 export function readReportChartTheme(): ReportChartTheme {
   const styles = getComputedStyle(document.documentElement);
-  const color = (name: string) =>
-    `hsl(${styles.getPropertyValue(name).trim()})`;
+  const color = (name: string) => styles.getPropertyValue(name).trim();
 
   return {
     primary: color('--primary'),
     foreground: color('--foreground'),
-    mutedForeground: color('--muted-foreground'),
+    mutedForeground: color('--muted'),
     border: color('--border'),
   };
 }

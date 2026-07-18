@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   ReportingUnit,
   SprintBurndownReport,
@@ -21,9 +21,9 @@ import {
   TableHeadDirective,
   TableRowDirective,
 } from '@static/components/table/table.component';
-import { NgApexchartsModule } from 'ng-apexcharts';
+import { SprintBurndownChartComponent } from './charts/sprint-burndown-chart.component';
+import { SprintVelocityChartComponent } from './charts/sprint-velocity-chart.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
-import { reportChartThemeSignal } from '../utils/report-chart-theme';
 
 @Component({
   selector: 'app-sprint-report',
@@ -34,10 +34,11 @@ import { reportChartThemeSignal } from '../utils/report-chart-theme';
     CardSubtitleComponent,
     CardTitleComponent,
     EmptyStateComponent,
-    NgApexchartsModule,
     PageLoadingComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
+    SprintBurndownChartComponent,
+    SprintVelocityChartComponent,
     StatComponent,
     StrokedButtonComponent,
     TableComponent,
@@ -89,16 +90,7 @@ import { reportChartThemeSignal } from '../utils/report-chart-theme';
             </app-card-subtitle>
           </app-card-header>
           <app-card-content>
-            <apx-chart
-              aria-label="Sprint remaining work and ideal burndown"
-              [series]="burndownSeries()"
-              [chart]="lineChart"
-              [colors]="chartColors()"
-              [xaxis]="dateAxis()"
-              [yaxis]="numberAxis()"
-              [grid]="grid()"
-              [stroke]="lineStroke"
-              [dataLabels]="dataLabels" />
+            <app-sprint-burndown-chart [points]="report.points" />
           </app-card-content>
         </app-card>
 
@@ -159,15 +151,7 @@ import { reportChartThemeSignal } from '../utils/report-chart-theme';
                 </app-card-subtitle>
               </app-card-header>
               <app-card-content>
-                <apx-chart
-                  aria-label="Committed and completed sprint velocity"
-                  [series]="velocitySeries()"
-                  [chart]="barChart"
-                  [colors]="chartColors()"
-                  [xaxis]="velocityAxis()"
-                  [yaxis]="numberAxis()"
-                  [grid]="grid()"
-                  [dataLabels]="dataLabels" />
+                <app-sprint-velocity-chart [sprints]="report.sprints" />
               </app-card-content>
             </app-card>
 
@@ -206,7 +190,6 @@ export class SprintReportComponent {
   readonly sprintId = input<number>();
   readonly projectId = input<number>();
   readonly unit = input.required<ReportingUnit>();
-  readonly theme = reportChartThemeSignal();
   readonly burndown = httpResource<SprintBurndownReport>(() => {
     const sprintId = this.sprintId();
     return sprintId
@@ -219,65 +202,4 @@ export class SprintReportComponent {
       ? `api/reports/velocity?projectId=${projectId}&unit=${this.unit()}&take=12`
       : undefined;
   });
-  readonly burndownSeries = computed(() => {
-    const points = this.burndown.value()?.points ?? [];
-    return [
-      {
-        name: 'Remaining',
-        data: points.map((point) => [
-          new Date(point.date).getTime(),
-          point.remaining,
-        ]),
-      },
-      {
-        name: 'Ideal',
-        data: points.map((point) => [
-          new Date(point.date).getTime(),
-          point.ideal,
-        ]),
-      },
-    ];
-  });
-  readonly velocitySeries = computed(() => {
-    const points = this.velocity.value()?.sprints ?? [];
-    return [
-      { name: 'Committed', data: points.map((point) => point.committed) },
-      { name: 'Completed', data: points.map((point) => point.completed) },
-    ];
-  });
-  readonly chartColors = computed(() => [
-    this.theme().primary,
-    this.theme().mutedForeground,
-  ]);
-  readonly dateAxis = computed(() => ({
-    type: 'datetime' as const,
-    labels: { style: { colors: this.theme().mutedForeground } },
-  }));
-  readonly velocityAxis = computed(() => ({
-    categories: (this.velocity.value()?.sprints ?? []).map(
-      (point) => point.sprintName
-    ),
-    labels: { style: { colors: this.theme().mutedForeground } },
-  }));
-  readonly numberAxis = computed(() => ({
-    min: 0,
-    labels: { style: { colors: this.theme().mutedForeground } },
-  }));
-  readonly grid = computed(() => ({ borderColor: this.theme().border }));
-  readonly lineChart = {
-    type: 'line' as const,
-    height: 280,
-    toolbar: { show: false },
-  };
-  readonly barChart = {
-    type: 'bar' as const,
-    height: 260,
-    toolbar: { show: false },
-  };
-  readonly lineStroke = {
-    width: [3, 2],
-    dashArray: [0, 6],
-    curve: 'straight' as const,
-  };
-  readonly dataLabels = { enabled: false };
 }

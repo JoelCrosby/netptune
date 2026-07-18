@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FlowReport } from '@core/models/reporting';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CardContentComponent } from '@static/components/card/card-content.component';
@@ -17,9 +17,8 @@ import {
   TableHeadDirective,
   TableRowDirective,
 } from '@static/components/table/table.component';
-import { NgApexchartsModule } from 'ng-apexcharts';
+import { FlowThroughputChartComponent } from './charts/flow-throughput-chart.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
-import { reportChartThemeSignal } from '../utils/report-chart-theme';
 
 @Component({
   selector: 'app-flow-report',
@@ -30,7 +29,7 @@ import { reportChartThemeSignal } from '../utils/report-chart-theme';
     CardSubtitleComponent,
     CardTitleComponent,
     EmptyStateComponent,
-    NgApexchartsModule,
+    FlowThroughputChartComponent,
     PageLoadingComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
@@ -86,16 +85,7 @@ import { reportChartThemeSignal } from '../utils/report-chart-theme';
               <app-card-subtitle>Completed tasks over time</app-card-subtitle>
             </app-card-header>
             <app-card-content>
-              <apx-chart
-                aria-label="Completed tasks over time"
-                [series]="series()"
-                [chart]="chart"
-                [colors]="colors()"
-                [xaxis]="xaxis()"
-                [yaxis]="yaxis()"
-                [grid]="grid()"
-                [stroke]="stroke"
-                [dataLabels]="dataLabels" />
+              <app-flow-throughput-chart [buckets]="report.buckets" />
             </app-card-content>
           </app-card>
 
@@ -127,39 +117,9 @@ import { reportChartThemeSignal } from '../utils/report-chart-theme';
 })
 export class FlowReportComponent {
   readonly query = input.required<string>();
-  readonly theme = reportChartThemeSignal();
   readonly resource = httpResource<FlowReport>(
     () => `api/reports/flow?${this.query()}`
   );
-  readonly series = computed(() => [
-    {
-      name: 'Completed',
-      data: (this.resource.value()?.buckets ?? []).map((bucket) => [
-        new Date(bucket.date).getTime(),
-        bucket.completed,
-      ]),
-    },
-  ]);
-  readonly colors = computed(() => [this.theme().primary]);
-  readonly xaxis = computed(() => ({
-    type: 'datetime' as const,
-    labels: { style: { colors: this.theme().mutedForeground } },
-  }));
-  readonly yaxis = computed(() => ({
-    min: 0,
-    labels: {
-      style: { colors: this.theme().mutedForeground },
-      formatter: (value: number) => Math.floor(value).toString(),
-    },
-  }));
-  readonly grid = computed(() => ({ borderColor: this.theme().border }));
-  readonly chart = {
-    type: 'bar' as const,
-    height: 260,
-    toolbar: { show: false },
-  };
-  readonly stroke = { width: 2 };
-  readonly dataLabels = { enabled: false };
 
   hours(value?: number | null): string {
     return value == null ? '—' : `${Math.round(value * 10) / 10}h`;
