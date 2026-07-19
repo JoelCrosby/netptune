@@ -24,6 +24,7 @@ import { TaskDetailService } from './task-detail.service';
       [priority]="task().priority"
       [estimateType]="task().estimateType"
       [estimateValue]="task().estimateValue"
+      [startDate]="task().startDate ?? ''"
       [dueDate]="task().dueDate ?? ''"
       [projectId]="task().projectId"
       [sprintId]="task().sprintId ?? null"
@@ -34,6 +35,7 @@ import { TaskDetailService } from './task-detail.service';
       (statusIdChange)="selectStatus($event)"
       (priorityChange)="selectPriority($event)"
       (estimateChange)="selectEstimate($event)"
+      (startDateChange)="selectStartDate($event)"
       (dueDateChange)="selectDueDate($event)"
       (projectIdChange)="selectProject($event)"
       (sprintIdChange)="selectSprint($event)"
@@ -62,6 +64,10 @@ export class TaskDetailPropertiesComponent {
 
   selectEstimate({ estimateType, estimateValue }: TaskEstimate) {
     this.taskDetailService.updateTask({ estimateType, estimateValue });
+  }
+
+  selectStartDate(startDate: string) {
+    this.taskDetailService.updateTask({ startDate: startDate || null });
   }
 
   selectDueDate(dueDate: string) {

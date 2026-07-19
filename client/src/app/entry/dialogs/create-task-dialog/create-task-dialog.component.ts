@@ -1,5 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormField, form, minLength, required } from '@angular/forms/signals';
 import { EditorComponent } from '@app/static/components/editor/editor.component';
 import { EstimateType } from '@core/enums/estimate-type';
@@ -68,6 +68,7 @@ interface CreateTaskForm {
             [(priority)]="priority"
             [(projectId)]="projectId"
             [(sprintId)]="sprintId"
+            [(startDate)]="startDate"
             [(dueDate)]="dueDate"
             [(assignees)]="assignees"
             [estimateType]="estimateType()"
@@ -76,13 +77,24 @@ interface CreateTaskForm {
             [showSprint]="!data?.sprintId"
             [multiple]="false"
             (estimateChange)="setEstimate($event)" />
+
+          @if (scheduleInvalid()) {
+            <p class="mt-3 text-sm text-red-600" role="alert">
+              Start date must be on or before due date.
+            </p>
+          }
         </div>
       </div>
     </form>
 
     <div app-dialog-actions align="end">
       <button app-stroked-button (click)="close()">Close</button>
-      <button app-flat-button (click)="saveClicked()">Save Task</button>
+      <button
+        app-flat-button
+        [disabled]="scheduleInvalid()"
+        (click)="saveClicked()">
+        Save Task
+      </button>
     </div> `,
 })
 export class CreateTaskDialogComponent {
@@ -102,11 +114,18 @@ export class CreateTaskDialogComponent {
   readonly estimateType = signal<EstimateType | null>(null);
   readonly estimateValue = signal<number | null>(null);
   readonly sprintId = signal<number | null>(this.data?.sprintId ?? null);
+  readonly startDate = signal('');
   readonly dueDate = signal('');
   readonly projectId = signal<number | null>(
     this.data?.projectId ?? this.currentProjectId() ?? null
   );
   readonly assignees = signal<(AppUser | AssigneeViewModel)[]>([]);
+  readonly scheduleInvalid = computed(() => {
+    const startDate = this.startDate();
+    const dueDate = this.dueDate();
+
+    return startDate !== '' && dueDate !== '' && startDate > dueDate;
+  });
 
   taskFormModel = signal<CreateTaskForm>({
     name: '',
@@ -128,6 +147,10 @@ export class CreateTaskDialogComponent {
   }
 
   saveClicked() {
+    if (this.scheduleInvalid()) {
+      return;
+    }
+
     const workspace = this.currentWorkspace();
     const projectId = this.projectId();
 
@@ -162,6 +185,7 @@ export class CreateTaskDialogComponent {
       description: description.trim(),
       projectId,
       sprintId: this.sprintId(),
+      startDate: this.startDate() || null,
       dueDate: this.dueDate() || null,
     };
 

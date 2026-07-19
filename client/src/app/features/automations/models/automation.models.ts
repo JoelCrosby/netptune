@@ -16,6 +16,7 @@ export enum TaskChangeField {
   priority = 5,
   estimate = 6,
   dueDate = 7,
+  startDate = 9,
 }
 
 export enum AssigneeChangeMode {

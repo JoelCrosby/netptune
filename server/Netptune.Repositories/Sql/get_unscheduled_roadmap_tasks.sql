@@ -29,14 +29,10 @@ FROM project_tasks pt
          INNER JOIN statuses st ON pt.status_id = st.id AND NOT st.is_deleted
 WHERE pt.workspace_id = @workspaceId
   AND NOT pt.is_deleted
+  AND pt.start_date IS NULL
+  AND pt.due_date IS NULL
   AND pt.project_id = ANY(@allowedProjectIds)
   AND (CARDINALITY(@projectIds) = 0 OR pt.project_id = ANY(@projectIds))
   AND (CARDINALITY(@sprintIds) = 0 OR pt.sprint_id = ANY(@sprintIds))
-  AND (
-      (pt.start_date IS NOT NULL AND pt.due_date IS NOT NULL
-          AND pt.start_date <= @to AND pt.due_date >= @from)
-      OR (pt.start_date IS NULL AND pt.due_date BETWEEN @from AND @to)
-      OR (pt.due_date IS NULL AND pt.start_date BETWEEN @from AND @to)
-  )
-ORDER BY COALESCE(pt.start_date, pt.due_date), p.name, pt.project_scope_id, pt.id
-LIMIT @take;
+ORDER BY {taskOrder}
+LIMIT @pageSize OFFSET @skip;

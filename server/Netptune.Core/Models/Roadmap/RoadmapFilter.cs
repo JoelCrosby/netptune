@@ -9,6 +9,4 @@ public sealed record RoadmapFilter
     public IReadOnlyCollection<int> ProjectIds { get; init; } = [];
 
     public IReadOnlyCollection<int> SprintIds { get; init; } = [];
-
-    public bool IncludeUnscheduled { get; init; } = true;
 }

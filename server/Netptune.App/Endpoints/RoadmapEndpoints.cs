@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Roadmap;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Handlers.Roadmap.Queries;
 
@@ -19,15 +20,12 @@ public static class RoadmapEndpoints
 
         public int[]? SprintIds { get; init; }
 
-        public bool? IncludeUnscheduled { get; init; }
-
         public RoadmapFilter ToFilter() => new()
         {
             From = From,
             To = To,
             ProjectIds = ProjectIds ?? [],
             SprintIds = SprintIds ?? [],
-            IncludeUnscheduled = IncludeUnscheduled ?? true,
         };
     }
 
@@ -36,8 +34,22 @@ public static class RoadmapEndpoints
         builder
             .MapGet("roadmap", GetRoadmap)
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
+        builder
+            .MapGet("roadmap/unscheduled-tasks", GetUnscheduledTasks)
+            .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         return builder;
+    }
+
+    private static async Task<IResult> GetUnscheduledTasks(
+        IMediator mediator,
+        [AsParameters] RoadmapUnscheduledTaskFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetUnscheduledRoadmapTasksQuery(filter);
+        var result = await mediator.Send(query, cancellationToken);
+
+        return Results.Ok(result);
     }
 
     private static async Task<IResult> GetRoadmap(

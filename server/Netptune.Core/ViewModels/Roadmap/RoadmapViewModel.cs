@@ -15,10 +15,6 @@ public sealed record RoadmapViewModel
 
     public IReadOnlyList<RoadmapSprintViewModel> Sprints { get; init; } = [];
 
-    public IReadOnlyList<RoadmapTaskViewModel> UnscheduledTasks { get; init; } = [];
-
-    public int UnscheduledCount { get; init; }
-
     public bool Truncated { get; init; }
 }
 

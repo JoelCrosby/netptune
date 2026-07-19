@@ -10,7 +10,6 @@ import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { LucideCheck } from '@lucide/angular';
@@ -31,6 +30,10 @@ import { TaskDetailService } from './task-detail.service';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { TaskDetailFilesComponent } from './task-detail-files.component';
+
+export interface TaskDetailDialogData {
+  systemId: string;
+}
 
 @Component({
   selector: 'app-task-detail-dialog',
@@ -104,7 +107,7 @@ import { TaskDetailFilesComponent } from './task-detail-files.component';
   providers: [TaskDetailService],
 })
 export class TaskDetailDialogComponent implements OnDestroy {
-  data = inject<TaskViewModel>(DIALOG_DATA, { optional: false });
+  data = inject<TaskDetailDialogData>(DIALOG_DATA, { optional: false });
   store = inject(Store);
   private dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
   private actions$ = inject(Actions);

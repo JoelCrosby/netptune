@@ -107,6 +107,12 @@ export const routes: Routes = [
         data: { title: 'Reports' },
       },
       {
+        path: 'roadmap',
+        loadChildren: () => import('./features/roadmap/roadmap.routes').then((m) => m.routes),
+        runGuardsAndResolvers: 'always',
+        data: { title: 'Roadmap' },
+      },
+      {
         path: 'notifications',
         loadChildren: () => import('./features/notifications/notifications.routes').then((m) => m.routes),
         canActivate: [authGuard],

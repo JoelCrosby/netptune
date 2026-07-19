@@ -12,8 +12,12 @@ export interface MergedActivity {
 }
 
 const STATUS_FIELD = 'status';
-const fieldLabel = (field: string): string =>
-  field === 'duedate' ? 'due date' : field;
+const fieldLabel = (field: string): string => {
+  if (field === 'duedate') return 'due date';
+  if (field === 'startdate') return 'start date';
+
+  return field;
+};
 
 /** The fields the server writes are lower case, but nothing downstream should depend on that. */
 const normaliseFields = (fields?: string[] | null): string[] => {
@@ -128,6 +132,8 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Changed estimate';
     case ActivityType.modifyDueDate:
       return 'Changed due date';
+    case ActivityType.modifyStartDate:
+      return 'Changed start date';
     case ActivityType.addFile:
       return 'Added file';
     case ActivityType.removeFile:

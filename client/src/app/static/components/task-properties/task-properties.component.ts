@@ -90,6 +90,15 @@ export interface TaskReporter {
       </div>
 
       <div>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">Start date</h4>
+        <app-form-input
+          name="startDate"
+          type="date"
+          [noMargin]="true"
+          [(value)]="startDate" />
+      </div>
+
+      <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Due date</h4>
         <app-form-input
           name="dueDate"
@@ -125,6 +134,7 @@ export class TaskPropertiesComponent {
   readonly priority = model<TaskPriority | null>(null);
   readonly estimateType = input<EstimateType | null>(null);
   readonly estimateValue = input<number | null>(null);
+  readonly startDate = model('');
   readonly dueDate = model('');
   readonly projectId = model<number | null>(null);
   readonly sprintId = model<number | null>(null);

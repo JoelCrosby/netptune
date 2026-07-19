@@ -46,14 +46,12 @@ public sealed class RoadmapEndpointTests
         });
         var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
-        var response = await Client.GetAsync(
-            "api/roadmap?from=2026-07-10&to=2026-07-12&includeUnscheduled=false");
+        var response = await Client.GetAsync("api/roadmap?from=2026-07-10&to=2026-07-12");
         var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
         roadmap!.Tasks.Should().Contain(task => task.Id == created.Payload!.Id);
-        roadmap.UnscheduledTasks.Should().BeEmpty();
         roadmap.Truncated.Should().BeFalse();
     }
 
@@ -63,7 +61,7 @@ public sealed class RoadmapEndpointTests
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var from = today.AddDays(-60);
         var to = today.AddDays(60);
-        var url = $"api/roadmap?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}&includeUnscheduled=false";
+        var url = $"api/roadmap?from={from:yyyy-MM-dd}&to={to:yyyy-MM-dd}";
         var response = await Client.GetAsync(url);
         var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
 
@@ -101,15 +99,22 @@ public sealed class RoadmapEndpointTests
     }
 
     [Fact]
-    public async Task Get_ShouldReturnTheBoundedUnscheduledSummary()
+    public async Task GetUnscheduledTasks_ShouldReturnAPaginatedResult()
     {
-        var response = await Client.GetAsync("api/roadmap?from=2026-07-01&to=2026-07-31");
-        var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
+        var response = await Client.GetAsync(
+            "api/roadmap/unscheduled-tasks?page=1&pageSize=1&sortBy=name&sortDirection=asc");
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<RoadmapTaskViewModel>>>();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        roadmap.Should().NotBeNull();
-        roadmap!.UnscheduledCount.Should().BeGreaterThan(0);
-        roadmap.UnscheduledTasks.Should().HaveCountLessThanOrEqualTo(200);
+        result.Should().NotBeNull();
+        result!.IsSuccess.Should().BeTrue();
+        result.Payload.Should().NotBeNull();
+        result.Payload!.Page.Should().Be(1);
+        result.Payload.PageSize.Should().Be(1);
+        result.Payload.TotalCount.Should().BeGreaterThan(0);
+        result.Payload.Items.Should().HaveCount(1);
+        result.Payload.Items.Should().OnlyContain(task => !task.StartDate.HasValue && !task.DueDate.HasValue);
     }
 
     private async Task<Status> GetTaskStatus()

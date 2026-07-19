@@ -8,6 +8,8 @@ using Netptune.Core.Models.Reporting;
 using Netptune.Core.Models.Roadmap;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Roadmap;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Repositories.RowMaps;
@@ -18,7 +20,6 @@ namespace Netptune.Repositories;
 public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : IRoadmapRepository
 {
     private const int ScheduledTaskLimit = 2000;
-    private const int UnscheduledTaskLimit = 200;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -28,8 +29,6 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
     private sealed record RoadmapQueryContext
     {
         public required ReportingScope Scope { get; init; }
-
-        public required RoadmapFilter Filter { get; init; }
 
         public required int[] AllowedProjectIds { get; init; }
 
@@ -45,39 +44,23 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
     {
         using var connection = connectionFactory.StartConnection();
 
-        var context = new RoadmapQueryContext
-        {
-            Scope = scope,
-            Filter = filter,
-            AllowedProjectIds = scope.ProjectIds.OrderBy(id => id).ToArray(),
-            ProjectIds = filter.ProjectIds.Distinct().OrderBy(id => id).ToArray(),
-            SprintIds = filter.SprintIds.Distinct().OrderBy(id => id).ToArray(),
-        };
+        var context = CreateQueryContext(scope, filter.ProjectIds, filter.SprintIds);
 
         await ValidateSprintIds(connection, context, cancellationToken);
 
-        var scheduledRows = await GetTaskRows(
+        var scheduledRows = await GetScheduledTaskRows(
             connection,
             context,
-            false,
+            filter,
             ScheduledTaskLimit + 1,
             cancellationToken);
 
         var truncated = scheduledRows.Count > ScheduledTaskLimit;
         var scheduledTasks = scheduledRows.Take(ScheduledTaskLimit).Select(ToTaskViewModel).ToList();
-        var unscheduledRows = filter.IncludeUnscheduled
-            ? await GetTaskRows(connection, context, true, UnscheduledTaskLimit, cancellationToken)
-            : [];
-
-        var unscheduledTasks = unscheduledRows.Select(ToTaskViewModel).ToList();
-        var taskIds = scheduledTasks.Select(task => task.Id)
-            .Concat(unscheduledTasks.Select(task => task.Id))
-            .Distinct()
-            .ToArray();
+        var taskIds = scheduledTasks.Select(task => task.Id).ToArray();
 
         var relations = await GetRelations(connection, scope.WorkspaceId, taskIds, cancellationToken);
-        var sprints = await GetSprints(connection, context, cancellationToken);
-        var unscheduledCount = unscheduledRows.FirstOrDefault()?.Total_Count ?? 0;
+        var sprints = await GetSprints(connection, context, filter, cancellationToken);
 
         return new RoadmapViewModel
         {
@@ -86,9 +69,56 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
             Tasks = scheduledTasks,
             Relations = relations,
             Sprints = sprints,
-            UnscheduledTasks = unscheduledTasks,
-            UnscheduledCount = unscheduledCount,
             Truncated = truncated,
+        };
+    }
+
+    public async Task<PagedResponse<RoadmapTaskViewModel>> GetUnscheduledTasks(
+        ReportingScope scope,
+        RoadmapUnscheduledTaskFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        using var connection = connectionFactory.StartConnection();
+
+        var context = CreateQueryContext(scope, filter.ProjectIds, filter.SprintIds);
+
+        await ValidateSprintIds(connection, context, cancellationToken);
+
+        var page = filter.GetPage();
+        var pageSize = filter.GetPageSize();
+        var skip = (page - 1) * pageSize;
+        var taskOrder = GetUnscheduledTaskOrder(filter);
+        var sql = SqlScripts.GetUnscheduledRoadmapTasks.Replace("{taskOrder}", taskOrder);
+        var command = new CommandDefinition(
+            sql,
+            new
+            {
+                workspaceId = context.Scope.WorkspaceId,
+                allowedProjectIds = context.AllowedProjectIds,
+                projectIds = context.ProjectIds,
+                sprintIds = context.SprintIds,
+                pageSize,
+                skip,
+            },
+            cancellationToken: cancellationToken);
+        var rows = (await connection.QueryAsync<RoadmapTaskRowMap>(command)).ToList();
+        var totalCount = rows.FirstOrDefault()?.Total_Count ?? 0;
+        var tasks = rows.Select(ToTaskViewModel).ToList();
+
+        return new PagedResponse<RoadmapTaskViewModel>(tasks, page, pageSize, totalCount);
+    }
+
+    private static RoadmapQueryContext CreateQueryContext(
+        ReportingScope scope,
+        IReadOnlyCollection<int> projectIds,
+        IReadOnlyCollection<int> sprintIds)
+    {
+        return new RoadmapQueryContext
+        {
+            Scope = scope,
+            AllowedProjectIds = scope.ProjectIds.OrderBy(id => id).ToArray(),
+            ProjectIds = projectIds.Distinct().OrderBy(id => id).ToArray(),
+            SprintIds = sprintIds.Distinct().OrderBy(id => id).ToArray(),
         };
     }
 
@@ -121,10 +151,10 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
         }
     }
 
-    private static async Task<List<RoadmapTaskRowMap>> GetTaskRows(
+    private static async Task<List<RoadmapTaskRowMap>> GetScheduledTaskRows(
         IDbConnection connection,
         RoadmapQueryContext context,
-        bool unscheduled,
+        RoadmapFilter filter,
         int take,
         CancellationToken cancellationToken)
     {
@@ -136,9 +166,8 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 allowedProjectIds = context.AllowedProjectIds,
                 projectIds = context.ProjectIds,
                 sprintIds = context.SprintIds,
-                from = context.Filter.From.ToDateTime(TimeOnly.MinValue),
-                to = context.Filter.To.ToDateTime(TimeOnly.MinValue),
-                unscheduled,
+                from = filter.From.ToDateTime(TimeOnly.MinValue),
+                to = filter.To.ToDateTime(TimeOnly.MinValue),
                 take,
             },
             cancellationToken: cancellationToken);
@@ -180,6 +209,7 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
     private static async Task<IReadOnlyList<RoadmapSprintViewModel>> GetSprints(
         IDbConnection connection,
         RoadmapQueryContext context,
+        RoadmapFilter filter,
         CancellationToken cancellationToken)
     {
         var command = new CommandDefinition(
@@ -190,8 +220,8 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 allowedProjectIds = context.AllowedProjectIds,
                 projectIds = context.ProjectIds,
                 sprintIds = context.SprintIds,
-                from = context.Filter.From.ToDateTime(TimeOnly.MinValue),
-                to = context.Filter.To.ToDateTime(TimeOnly.MinValue),
+                from = filter.From.ToDateTime(TimeOnly.MinValue),
+                to = filter.To.ToDateTime(TimeOnly.MinValue),
             },
             cancellationToken: cancellationToken);
         var rows = await connection.QueryAsync<RoadmapSprintRowMap>(command);
@@ -205,6 +235,28 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
             Status = row.Status,
             ProjectId = row.Project_Id,
         }).ToList();
+    }
+
+    private static string GetUnscheduledTaskOrder(RoadmapUnscheduledTaskFilter filter)
+    {
+        var direction = string.Equals(filter.SortDirection, "asc", StringComparison.OrdinalIgnoreCase)
+            ? "ASC"
+            : "DESC";
+        var expression = filter.SortBy?.Trim() switch
+        {
+            "systemId" => "CONCAT_WS('-', p.key, pt.project_scope_id::text)",
+            "name" => "pt.name",
+            "projectName" => "p.name",
+            "statusName" => "st.name",
+            "priority" => "pt.priority",
+            "assignees" => "(SELECT COUNT(*) FROM project_task_app_users sort_ptau " +
+                "WHERE sort_ptau.project_task_id = pt.id)",
+            _ => null,
+        };
+
+        return expression is null
+            ? "p.name, pt.project_scope_id, pt.id"
+            : $"{expression} {direction} NULLS LAST, pt.id {direction}";
     }
 
     private static RoadmapTaskViewModel ToTaskViewModel(RoadmapTaskRowMap row)

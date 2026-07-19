@@ -47,4 +47,5 @@ export enum ActivityType {
   modifyDueDate = 29,
   addFile = 30,
   removeFile = 31,
+  modifyStartDate = 32,
 }
