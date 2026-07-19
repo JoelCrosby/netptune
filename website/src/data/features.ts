@@ -52,7 +52,7 @@ export const features: Feature[] = [
     icon: ChartNoAxesCombined,
     title: 'Reporting grounded in history',
     description:
-      'Inspect flow, workload, sprint burndown, and velocity using task counts, story points, or hours.',
+      'Track throughput, cycle time, sprint burndown, velocity, and current workload—computed from an append-only event history in task counts, story points, or hours, with the coverage date shown rather than reconstructed.',
   },
   {
     icon: Braces,
