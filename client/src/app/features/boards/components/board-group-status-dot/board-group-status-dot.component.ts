@@ -1,4 +1,4 @@
-import { Component, computed, effect, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { Status, StatusCategory } from '@core/models/status';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { LucideCheck } from '@lucide/angular';
@@ -28,8 +28,4 @@ export class BoardGroupStatusDotComponent {
   toolTip = computed(() => {
     return `Tasks moved into this group will be set to ${this.status().name}`;
   });
-
-  constructor() {
-    effect(() => console.log('status: ', this.status()));
-  }
 }
