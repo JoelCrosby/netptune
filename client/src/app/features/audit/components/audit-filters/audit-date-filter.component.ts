@@ -1,9 +1,9 @@
 import { Component, input, model } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { DatePickerComponent } from '@static/components/date-picker/date-picker.component';
 
 @Component({
   selector: 'app-audit-date-filter',
-  imports: [FormsModule],
+  imports: [DatePickerComponent],
   host: {
     class: 'flex flex-col gap-1',
   },
@@ -13,12 +13,10 @@ import { FormsModule } from '@angular/forms';
       [for]="controlId()">
       {{ label() }}
     </label>
-    <input
-      class="bg-background border-border h-10 rounded-sm border px-3 py-1.5 text-sm"
-      type="date"
-      [id]="controlId()"
-      [ngModel]="value()"
-      (ngModelChange)="value.set($event)" />
+    <app-date-picker
+      [controlId]="controlId()"
+      [ariaLabel]="label()"
+      [(value)]="value" />
   `,
 })
 export class AuditDateFilterComponent {

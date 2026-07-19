@@ -10,6 +10,7 @@ import {
   FormControlPrefixDirective,
 } from '../form-control/form-control.directives';
 import { FormErrorComponent } from '../form-error/form-error.component';
+import { DatePickerComponent } from '../date-picker/date-picker.component';
 
 @Component({
   selector: 'app-form-input',
@@ -21,6 +22,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     FormControlLabelDirective,
     FormControlHintDirective,
     FormControlPrefixDirective,
+    DatePickerComponent,
   ],
   template: `<div
     class="nept-form-control mb-[1.4rem] w-[inherit]"
@@ -38,18 +40,35 @@ import { FormErrorComponent } from '../form-error/form-error.component';
         <div appFormPrefix>{{ prefix() }}</div>
       }
 
-      <input
-        #input
-        appFormInput
-        [id]="name()"
-        [value]="value()"
-        [disabled]="disabled()"
-        [attr.type]="type()"
-        [attr.autocomplete]="autocomplete()"
-        [attr.placeholder]="placeholder()"
-        [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
-        (input)="onInputchange($event)"
-        (blur)="touched.set(true)" />
+      @if (type() === 'date') {
+        <app-date-picker
+          class="min-w-0 flex-1"
+          appearance="bare"
+          [controlId]="name()"
+          [value]="value()"
+          [placeholder]="placeholder() || 'Select date'"
+          [ariaLabel]="label() || 'Choose date'"
+          [min]="min()"
+          [max]="max()"
+          [disabled]="disabled()"
+          [required]="required()"
+          [buttonClass]="prefix() ? 'px-0 pr-3' : 'px-3'"
+          (valueChange)="value.set($event)"
+          (touched)="touched.set(true)" />
+      } @else {
+        <input
+          #input
+          appFormInput
+          [id]="name()"
+          [value]="value()"
+          [disabled]="disabled()"
+          [attr.type]="type()"
+          [attr.autocomplete]="autocomplete()"
+          [attr.placeholder]="placeholder()"
+          [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
+          (input)="onInputchange($event)"
+          (blur)="touched.set(true)" />
+      }
 
       @if (icon()) {
         <svg
@@ -84,6 +103,8 @@ export class FormInputComponent extends AbstractFormValueControl {
   readonly autocomplete = input('off');
   readonly placeholder = input<string | null>();
   readonly hint = input<string | null>();
+  readonly min = input<string>();
+  readonly max = input<string>();
   readonly loading = input<boolean | null>(false);
   readonly type = input<'text' | 'number' | 'email' | 'password' | 'date'>(
     'text'
@@ -91,7 +112,7 @@ export class FormInputComponent extends AbstractFormValueControl {
   readonly pending = input(false);
   readonly noMargin = input(false);
 
-  readonly input = viewChild.required<ElementRef>('input');
+  readonly input = viewChild<ElementRef>('input');
 
   readonly submitted = output<string>();
 
