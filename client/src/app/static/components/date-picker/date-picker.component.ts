@@ -15,11 +15,15 @@ import {
   viewChild,
 } from '@angular/core';
 import { LucideCalendarDays, LucideChevronDown } from '@lucide/angular';
-import { cn } from '../button/button.variants';
+import {
+  cn,
+  flatButtonVariants,
+  type FlatButtonColor,
+} from '../button/button.variants';
 import { CalendarComponent } from './calendar.component';
 import { parseDateValue } from './date-picker.utils';
 
-export type DatePickerAppearance = 'field' | 'bare';
+export type DatePickerAppearance = 'field' | 'flat' | 'bare';
 
 @Component({
   selector: 'app-date-picker',
@@ -79,6 +83,7 @@ export class DatePickerComponent implements OnDestroy {
   readonly disabled = input(false);
   readonly required = input(false);
   readonly appearance = input<DatePickerAppearance>('field');
+  readonly color = input<FlatButtonColor>('neutral');
   readonly buttonClass = input('');
   readonly touched = output();
   readonly open = signal(false);
@@ -92,10 +97,11 @@ export class DatePickerComponent implements OnDestroy {
 
   protected readonly triggerClass = computed(() =>
     cn(
-      'flex min-w-0 cursor-pointer items-center gap-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-foreground/30 disabled:pointer-events-none disabled:opacity-50',
-      this.appearance() === 'field'
-        ? 'border-border bg-form-field-background h-10 w-full rounded-sm border-2 px-3'
-        : 'h-10 w-full px-3',
+      this.appearance() === 'flat'
+        ? flatButtonVariants({ color: this.color() })
+        : 'flex h-10 w-full min-w-0 cursor-pointer items-center gap-2 px-3 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-foreground/30 disabled:pointer-events-none disabled:opacity-50',
+      this.appearance() === 'field' &&
+        'border-border bg-form-field-background rounded-sm border-2',
       this.buttonClass()
     )
   );

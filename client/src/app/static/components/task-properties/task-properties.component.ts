@@ -9,7 +9,7 @@ import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { DatePickerComponent } from '@static/components/date-picker/date-picker.component';
 import {
   TaskEstimate,
   TaskEstimateSelectComponent,
@@ -34,7 +34,7 @@ export interface TaskReporter {
     TaskProjectSelectComponent,
     TaskSprintSelectComponent,
     TaskStatusSelectComponent,
-    FormInputComponent,
+    DatePickerComponent,
   ],
   template: `
     <div class="flex flex-col">
@@ -91,19 +91,21 @@ export interface TaskReporter {
 
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Start date</h4>
-        <app-form-input
-          name="startDate"
-          type="date"
-          [noMargin]="true"
+        <app-date-picker
+          appearance="flat"
+          color="ghost"
+          ariaLabel="Start date"
+          buttonClass="justify-between"
           [(value)]="startDate" />
       </div>
 
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Due date</h4>
-        <app-form-input
-          name="dueDate"
-          type="date"
-          [noMargin]="true"
+        <app-date-picker
+          appearance="flat"
+          color="ghost"
+          ariaLabel="Due date"
+          buttonClass="justify-between"
           [(value)]="dueDate" />
       </div>
 
