@@ -178,11 +178,23 @@ public sealed class ReportingRepository : IReportingRepository
         var end = reportableSprint.CompletedAt ?? DateTime.UtcNow;
         var zone = ResolveTimeZone(filter.TimeZone);
 
-        var records = await Context.EventRecords.AsNoTracking()
-            .Include(record => record.References)
-            .Where(record => record.WorkspaceId == workspaceId && record.OccurredAt >= reportableSprint.StartedAt && record.OccurredAt <= end)
-            .Where(record => (record.SubjectType == "sprint" && record.SubjectId == filter.SprintId.ToString()) ||
-                record.References.Any(reference => reference.EntityType == "sprint" && reference.EntityId == filter.SprintId.ToString()))
+        var sprintKey = filter.SprintId.ToString();
+
+        // Split the subject/reference match into a UNION rather than an OR: a single OR forces the
+        // planner to scan every event in the workspace, while each branch here uses its own index
+        // (subject sequence / reference reverse-lookup). The replay below reads only payload/subject
+        // fields, so no reference include is needed.
+        var bySubject = Context.EventRecords.AsNoTracking()
+            .Where(record => record.WorkspaceId == workspaceId &&
+                record.OccurredAt >= reportableSprint.StartedAt && record.OccurredAt <= end &&
+                record.SubjectType == "sprint" && record.SubjectId == sprintKey);
+
+        var byReference = Context.EventRecords.AsNoTracking()
+            .Where(record => record.WorkspaceId == workspaceId &&
+                record.OccurredAt >= reportableSprint.StartedAt && record.OccurredAt <= end &&
+                record.References.Any(reference => reference.EntityType == "sprint" && reference.EntityId == sprintKey));
+
+        var records = await bySubject.Union(byReference)
             .OrderBy(record => record.OccurredAt).ThenBy(record => record.Id)
             .ToListAsync(cancellationToken);
 
