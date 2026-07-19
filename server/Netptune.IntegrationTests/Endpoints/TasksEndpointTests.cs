@@ -332,7 +332,26 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task DeleteMany_ShouldReturnCorrectly_WhenInputValid()
     {
-        var taskIds = new[] { 2, 4 };
+        // Create throwaway tasks to delete rather than clobbering seeded tasks that other tests read.
+        var inProgressStatus = await GetStatus("in-progress");
+
+        var taskIds = new List<int>();
+
+        foreach (var index in Enumerable.Range(0, 2))
+        {
+            var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+            {
+                Name = $"Delete many test {index}",
+                Description = "Task used to verify bulk deletion",
+                StatusId = inProgressStatus.Id,
+                ProjectId = 1,
+            });
+
+            createResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+            taskIds.Add(created.Payload!.Id);
+        }
 
         var request = new HttpRequestMessage
         {
