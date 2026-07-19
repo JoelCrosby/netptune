@@ -91,7 +91,7 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
             </app-card-content>
           </app-card>
 
-          <app-table>
+          <app-table containerClass="overflow-x-auto">
             <thead appTableHead>
               <tr appTableHeaderRow>
                 <th class="px-4 py-3">Date</th>
@@ -123,7 +123,7 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
               </app-card-content>
             </app-card>
 
-            <app-table>
+            <app-table containerClass="overflow-x-auto">
               <thead appTableHead>
                 <tr appTableHeaderRow>
                   <th class="px-4 py-3">Week starting</th>
