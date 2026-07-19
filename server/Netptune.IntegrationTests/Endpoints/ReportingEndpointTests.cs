@@ -136,11 +136,73 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
+    [Fact]
+    public async Task Flow_ShouldReturnNotFound_ForProjectInAnotherWorkspace()
+    {
+        var foreignProjectId = await GetProjectIdInWorkspace("linux");
+
+        var response = await Client.GetAsync(
+            $"api/reports/flow?from=2026-01-01&to=2026-12-31&timeZone=UTC&projectId={foreignProjectId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Velocity_ShouldReturnNotFound_ForProjectInAnotherWorkspace()
+    {
+        var foreignProjectId = await GetProjectIdInWorkspace("linux");
+
+        var response = await Client.GetAsync($"api/reports/velocity?projectId={foreignProjectId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Burndown_ShouldReturnNotFound_ForSprintInAnotherWorkspace()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        (await Client.PostAsync($"api/sprints/{sprint.Id}/start", null)).EnsureSuccessStatusCode();
+
+        // The owning workspace can read it, proving the 404 below is isolation and not a bad sprint.
+        (await Client.GetAsync($"api/reports/sprints/{sprint.Id}/burndown?unit=Tasks&timeZone=UTC"))
+            .StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var otherWorkspaceClient = CreateClientForWorkspace("linux");
+
+        var response = await otherWorkspaceClient.GetAsync(
+            $"api/reports/sprints/{sprint.Id}/burndown?unit=Tasks&timeZone=UTC");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    private HttpClient CreateClientForWorkspace(string slug)
+    {
+        var client = fixture.CreateNetptuneClient();
+        client.DefaultRequestHeaders.Remove("workspace");
+        client.DefaultRequestHeaders.Add("workspace", slug);
+
+        return client;
+    }
+
+    private async Task<int> GetProjectIdInWorkspace(string slug)
+    {
+        using var scope = fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Projects
+            .Where(project => project.Workspace.Slug == slug && !project.IsDeleted)
+            .Select(project => project.Id)
+            .FirstAsync();
+    }
+
     private async Task<ProjectViewModel> CreateProject()
     {
         var response = await Client.PostAsJsonAsync("api/projects", new AddProjectRequest
         {
-            Name = $"Report {Guid.NewGuid():N}"[..30],
+            // Lead with the guid so the derived project key (first 4 chars of the name) is unique;
+            // a shared "Report " prefix makes several projects collide on the workspace/key index.
+            Name = $"{Guid.NewGuid():N} Report"[..30],
             Description = "Reporting integration test project",
             MetaInfo = new ProjectMeta { Color = "#3366ff" },
         });
