@@ -12,3 +12,18 @@ export interface TimelineRange {
   startDate: string;
   endDate: string;
 }
+
+export interface TimelineHeaderGroup {
+  id: string;
+  label: string;
+  left: number;
+  width: number;
+}
+
+export interface TimelineDependency {
+  id: number;
+  sourceX: number;
+  sourceY: number;
+  targetX: number;
+  targetY: number;
+}

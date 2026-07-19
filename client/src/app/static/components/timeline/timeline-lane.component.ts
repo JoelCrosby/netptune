@@ -4,16 +4,18 @@ import {
   timelineGridBackgroundSize,
 } from './timeline-date-geometry';
 import { TimelineDateMarkerComponent } from './timeline-date-marker.component';
+import { TimelineWeekendShadingComponent } from './timeline-weekend-shading.component';
 
 @Component({
   selector: 'app-timeline-lane',
-  imports: [TimelineDateMarkerComponent],
+  imports: [TimelineDateMarkerComponent, TimelineWeekendShadingComponent],
   host: { class: 'block relative h-full' },
   template: `<div
     class="relative h-full"
     [style.width.px]="canvasWidth()"
     [style.background-image]="gridBackground"
     [style.background-size]="gridBackgroundSize()">
+    <app-timeline-weekend-shading [from]="from()" [dayWidth]="dayWidth()" />
     @if (highlightDate(); as date) {
       <app-timeline-date-marker
         [date]="date"

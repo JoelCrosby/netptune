@@ -46,6 +46,15 @@ export const dateLabel = (date: string, zoom: TimelineZoom): string => {
   return new Intl.DateTimeFormat(undefined, options).format(value);
 };
 
+export const monthLabel = (date: string): string =>
+  new Intl.DateTimeFormat(undefined, {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(`${date}T00:00:00Z`));
+
+export const yearLabel = (date: string): string => date.slice(0, 4);
+
 export const clippedRangeLeft = (
   from: string,
   start: string,

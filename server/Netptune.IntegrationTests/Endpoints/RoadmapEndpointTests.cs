@@ -12,6 +12,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Roadmap;
+using Netptune.Core.ViewModels.Relations;
 using Netptune.Entities.Contexts;
 using Netptune.TestData;
 
@@ -73,6 +74,31 @@ public sealed class RoadmapEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldReturnDependenciesFromTasksOutsideTheDateRange()
+    {
+        var status = await GetTaskStatus();
+        var blocker = await CreateTask("Roadmap off-range blocker", status.Id, new DateOnly(2026, 6, 1));
+        var blocked = await CreateTask("Roadmap visible blocked task", status.Id, new DateOnly(2026, 7, 20));
+        var relationTypeId = await GetRelationTypeId("blocks");
+        var relationResponse = await Client.PostAsJsonAsync("api/task-relations", new CreateTaskRelationRequest
+        {
+            SourceSystemId = blocker.SystemId,
+            TargetSystemId = blocked.SystemId,
+            RelationTypeId = relationTypeId,
+        });
+        var relation = await relationResponse.Content.ReadFromJsonAsync<ClientResponse<TaskRelationViewModel>>();
+
+        var response = await Client.GetAsync("api/roadmap?from=2026-07-20&to=2026-07-20");
+        var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        roadmap.Should().NotBeNull();
+        roadmap!.Tasks.Should().Contain(task => task.Id == blocked.Id);
+        roadmap.Tasks.Should().NotContain(task => task.Id == blocker.Id);
+        roadmap.Relations.Should().Contain(item => item.Id == relation!.Payload!.Id);
+    }
+
+    [Fact]
     public async Task Get_ShouldRejectRangesLongerThan366Days()
     {
         var response = await Client.GetAsync("api/roadmap?from=2026-01-01&to=2027-01-02");
@@ -128,5 +154,32 @@ public sealed class RoadmapEndpointTests
                 status.Workspace.Slug == "netptune" &&
                 status.EntityType == EntityType.Task &&
                 status.Key == "in-progress");
+    }
+
+    private async Task<TaskViewModel> CreateTask(string name, int statusId, DateOnly date)
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = name,
+            Description = "Task used to verify off-range roadmap dependencies",
+            StatusId = statusId,
+            ProjectId = 1,
+            StartDate = date,
+            DueDate = date,
+        });
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        return result!.Payload!;
+    }
+
+    private async Task<int> GetRelationTypeId(string key)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var relationType = await context.RelationTypes
+            .Include(type => type.Workspace)
+            .FirstAsync(type => type.Workspace.Slug == "netptune" && type.Key == key);
+
+        return relationType.Id;
     }
 }

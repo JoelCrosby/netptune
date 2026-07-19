@@ -1,14 +1,19 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { netptunePermissions } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
+import { loadSprints } from '@core/store/sprints/sprints.actions';
+import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import {
   addDays,
+  inclusiveDayCount,
   todayDate,
 } from '@static/components/timeline/timeline-date-geometry';
 import { TimelineZoom } from '@static/components/timeline/timeline.models';
@@ -47,13 +52,17 @@ const defaultTo = addDays(today, 45);
           [zoom]="zoom()"
           [projectId]="projectId()"
           [projects]="projects()"
+          [sprintId]="sprintId()"
+          [sprints]="sprintOptions()"
           [includeUnscheduled]="includeUnscheduled()"
           (fromChanged)="setParam('from', $event)"
           (toChanged)="setParam('to', $event)"
           (zoomChanged)="setParam('zoom', $event)"
           (projectChanged)="setProject($event)"
+          (sprintChanged)="setSprint($event)"
           (includeUnscheduledChanged)="setUnscheduled($event)"
           (todayRequested)="showToday()"
+          (rangeNavigationRequested)="navigateRange($event)"
           (refreshRequested)="refresh()" />
 
         @if (roadmap.error()) {
@@ -83,6 +92,7 @@ const defaultTo = addDays(today, 45);
         @if (includeUnscheduled()) {
           <app-roadmap-unscheduled
             [projectId]="projectId()"
+            [sprintId]="sprintId()"
             [reloadSignal]="unscheduledReload"
             (taskSelected)="openTask($event)" />
         }
@@ -100,10 +110,15 @@ export class RoadmapViewComponent {
   });
 
   readonly projects = this.store.selectSignal(selectAllProjects);
+  readonly sprints = this.store.selectSignal(selectAllSprints);
+  readonly canReadSprints = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.sprints.read)
+  );
   readonly unscheduledReload = signal(0);
   readonly from = computed(() => this.params().get('from') ?? defaultFrom);
   readonly to = computed(() => this.params().get('to') ?? defaultTo);
   readonly projectId = computed(() => this.numberParam('projectId'));
+  readonly sprintId = computed(() => this.numberParam('sprintId'));
   readonly includeUnscheduled = computed(
     () => this.params().get('unscheduled') !== 'false'
   );
@@ -117,17 +132,32 @@ export class RoadmapViewComponent {
       to: this.to(),
     });
     const projectId = this.projectId();
+    const sprintId = this.sprintId();
 
     if (projectId) {
       query.set('projectIds', String(projectId));
     }
 
+    if (sprintId) {
+      query.set('sprintIds', String(sprintId));
+    }
+
     return query.toString();
   });
   readonly roadmap = roadmapResource(this.query);
+  readonly sprintOptions = computed(() =>
+    this.sprints().length > 0
+      ? this.sprints()
+      : (this.roadmap.value()?.sprints ?? [])
+  );
 
   constructor() {
     this.store.dispatch(loadProjects.init());
+
+    if (this.canReadSprints()) {
+      this.store.dispatch(loadSprints.init({ filter: { take: 100 } }));
+    }
+
     this.ensureDefaultParams();
   }
 
@@ -140,7 +170,26 @@ export class RoadmapViewComponent {
   }
 
   setProject(projectId: number | null): void {
-    this.setParam('projectId', projectId?.toString() ?? '');
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        projectId: projectId?.toString() ?? null,
+        sprintId: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  setSprint(sprintId: number | null): void {
+    const sprint = this.sprintOptions().find((item) => item.id === sprintId);
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        sprintId,
+        projectId: sprint?.projectId ?? this.projectId() ?? null,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   setUnscheduled(includeUnscheduled: boolean): void {
@@ -154,6 +203,19 @@ export class RoadmapViewComponent {
       queryParams: {
         from: addDays(centre, -45),
         to: addDays(centre, 45),
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  navigateRange(direction: -1 | 1): void {
+    const rangeDays = Math.max(1, inclusiveDayCount(this.from(), this.to()));
+    const offset = rangeDays * direction;
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        from: addDays(this.from(), offset),
+        to: addDays(this.to(), offset),
       },
       queryParamsHandling: 'merge',
     });

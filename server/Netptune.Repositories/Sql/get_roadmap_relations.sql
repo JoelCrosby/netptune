@@ -9,7 +9,12 @@ FROM project_task_relations relation
                     ON relation.relation_type_id = relation_type.id
                         AND NOT relation_type.is_deleted
 WHERE relation.workspace_id = @workspaceId
-  AND relation.source_task_id = ANY(@taskIds)
-  AND relation.target_task_id = ANY(@taskIds)
   AND relation_type.category = ANY(@categories)
+  AND (
+      (relation_type.category = @hierarchyCategory
+          AND relation.source_task_id = ANY(@taskIds)
+          AND relation.target_task_id = ANY(@taskIds))
+      OR (relation_type.category = @dependencyCategory
+          AND relation.target_task_id = ANY(@taskIds))
+  )
 ORDER BY relation_type.sort_order, relation.id;

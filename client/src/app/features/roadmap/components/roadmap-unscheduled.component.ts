@@ -88,14 +88,19 @@ import { RoadmapTask } from '../models/roadmap.models';
 })
 export class RoadmapUnscheduledComponent {
   readonly projectId = input<number>();
+  readonly sprintId = input<number>();
   readonly reloadSignal = input.required<Signal<unknown>>();
   readonly taskSelected = output<RoadmapTask>();
   readonly totalCount = signal(0);
 
   private readonly params = computed<Params>(() => {
     const projectId = this.projectId();
+    const sprintId = this.sprintId();
 
-    return projectId ? { projectIds: projectId } : {};
+    return {
+      ...(projectId ? { projectIds: projectId } : {}),
+      ...(sprintId ? { sprintIds: sprintId } : {}),
+    };
   });
 
   readonly data = computed<DatatableDataSource<RoadmapTask>>(() => ({

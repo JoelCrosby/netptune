@@ -14,27 +14,35 @@ export const buildRoadmapGroups = (
   const parentByTaskId = new Map<number, number>();
   const childrenByTaskId = new Map<number, number[]>();
   const blockerCountByTaskId = new Map<number, number>();
+  const offscreenBlockerCountByTaskId = new Map<number, number>();
 
   for (const relation of relations) {
     const hasVisibleSource = tasksById.has(relation.sourceTaskId);
     const hasVisibleTarget = tasksById.has(relation.targetTaskId);
 
-    if (!hasVisibleSource || !hasVisibleTarget) {
-      continue;
-    }
-
-    if (relation.category === RelationCategory.hierarchy) {
+    if (
+      relation.category === RelationCategory.hierarchy &&
+      hasVisibleSource &&
+      hasVisibleTarget
+    ) {
       parentByTaskId.set(relation.targetTaskId, relation.sourceTaskId);
       const children = childrenByTaskId.get(relation.sourceTaskId) ?? [];
       children.push(relation.targetTaskId);
       childrenByTaskId.set(relation.sourceTaskId, children);
     }
 
-    if (relation.category === RelationCategory.dependency) {
+    if (relation.category === RelationCategory.dependency && hasVisibleTarget) {
       blockerCountByTaskId.set(
         relation.targetTaskId,
         (blockerCountByTaskId.get(relation.targetTaskId) ?? 0) + 1
       );
+
+      if (!hasVisibleSource) {
+        offscreenBlockerCountByTaskId.set(
+          relation.targetTaskId,
+          (offscreenBlockerCountByTaskId.get(relation.targetTaskId) ?? 0) + 1
+        );
+      }
     }
   }
 
@@ -54,17 +62,54 @@ export const buildRoadmapGroups = (
         tasksInProject,
         parentByTaskId,
         childrenByTaskId,
-        blockerCountByTaskId
+        blockerCountByTaskId,
+        offscreenBlockerCountByTaskId
       ),
     }))
     .sort((left, right) => left.name.localeCompare(right.name));
+};
+
+export const filterCollapsedRoadmapGroups = (
+  groups: RoadmapProjectGroup[],
+  collapsedProjectIds: ReadonlySet<number>,
+  collapsedTaskIds: ReadonlySet<number>
+): RoadmapProjectGroup[] =>
+  groups.map((group) => ({
+    ...group,
+    tasks: collapsedProjectIds.has(group.id)
+      ? []
+      : filterCollapsedTasks(group.tasks, collapsedTaskIds),
+  }));
+
+const filterCollapsedTasks = (
+  rows: RoadmapDisplayTask[],
+  collapsedTaskIds: ReadonlySet<number>
+): RoadmapDisplayTask[] => {
+  const visibleRows: RoadmapDisplayTask[] = [];
+  let collapsedDepth: number | undefined;
+
+  for (const row of rows) {
+    if (collapsedDepth !== undefined && row.depth > collapsedDepth) {
+      continue;
+    }
+
+    collapsedDepth = undefined;
+    visibleRows.push(row);
+
+    if (row.hasChildren && collapsedTaskIds.has(row.task.id)) {
+      collapsedDepth = row.depth;
+    }
+  }
+
+  return visibleRows;
 };
 
 const flattenProjectTasks = (
   tasks: RoadmapTask[],
   parentByTaskId: ReadonlyMap<number, number>,
   childrenByTaskId: ReadonlyMap<number, number[]>,
-  blockerCountByTaskId: ReadonlyMap<number, number>
+  blockerCountByTaskId: ReadonlyMap<number, number>,
+  offscreenBlockerCountByTaskId: ReadonlyMap<number, number>
 ): RoadmapDisplayTask[] => {
   const taskIds = new Set(tasks.map((task) => task.id));
   const tasksById = new Map(tasks.map((task) => [task.id, task]));
@@ -86,7 +131,10 @@ const flattenProjectTasks = (
     rows.push({
       task,
       depth,
+      parentTaskId: parentByTaskId.get(taskId),
+      hasChildren: (childrenByTaskId.get(taskId)?.length ?? 0) > 0,
       blockedByCount: blockerCountByTaskId.get(taskId) ?? 0,
+      offscreenBlockedByCount: offscreenBlockerCountByTaskId.get(taskId) ?? 0,
     });
 
     const children = (childrenByTaskId.get(taskId) ?? [])

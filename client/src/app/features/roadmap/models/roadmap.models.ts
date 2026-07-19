@@ -60,5 +60,8 @@ export interface RoadmapProjectGroup {
 export interface RoadmapDisplayTask {
   task: RoadmapTask;
   depth: number;
+  parentTaskId?: number;
+  hasChildren: boolean;
   blockedByCount: number;
+  offscreenBlockedByCount: number;
 }

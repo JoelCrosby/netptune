@@ -188,11 +188,15 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
             return [];
         }
 
-        var categories = new[] { (int)RelationCategory.Hierarchy, (int)RelationCategory.Dependency };
+        var hierarchyCategory = (int) RelationCategory.Hierarchy;
+        var dependencyCategory = (int) RelationCategory.Dependency;
+        var categories = new[] { hierarchyCategory, dependencyCategory };
+
         var command = new CommandDefinition(
             SqlScripts.GetRoadmapRelations,
-            new { workspaceId, taskIds, categories },
+            new { workspaceId, taskIds, categories, hierarchyCategory, dependencyCategory },
             cancellationToken: cancellationToken);
+
         var rows = await connection.QueryAsync<RoadmapRelationRowMap>(command);
 
         return rows.Select(row => new RoadmapRelationViewModel
