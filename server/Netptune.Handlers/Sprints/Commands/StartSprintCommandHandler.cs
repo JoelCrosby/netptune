@@ -61,6 +61,8 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
         var user = await Identity.GetCurrentUser();
         var startedAt = DateTime.UtcNow;
 
+        var committedTasks = GetUniqueSprintTasks(sprint);
+
         await UnitOfWork.Transaction(async () =>
         {
             sprint.Status = SprintStatus.Active;
@@ -80,8 +82,7 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                     PlannedStart = sprint.StartDate,
                     PlannedEnd = sprint.EndDate,
                     ActualStart = startedAt,
-                    Commitment = sprint.ProjectTasks
-                        .Where(task => !task.IsDeleted)
+                    Commitment = committedTasks
                         .Select(task => new SprintCommitmentMember
                         {
                             TaskId = task.Id,
@@ -103,7 +104,7 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                 ],
             }, cancellationToken);
 
-            foreach (var task in sprint.ProjectTasks.Where(task => !task.IsDeleted))
+            foreach (var task in committedTasks)
             {
                 await EventRecords.Append(new EventWriteRequest<ScopeMemberChangedPayload>
                 {
@@ -163,5 +164,17 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
         return result is null
             ? ClientResponse<SprintViewModel>.NotFound
             : ClientResponse<SprintViewModel>.Success(result);
+    }
+
+    // The sprint's task graph can contain the same task more than once; collapsing to unique tasks
+    // keeps the committed snapshot and per-member events free of duplicates that would otherwise
+    // break burndown replay downstream.
+    private static List<ProjectTask> GetUniqueSprintTasks(Sprint sprint)
+    {
+        return sprint.ProjectTasks
+            .Where(task => !task.IsDeleted)
+            .GroupBy(task => task.Id)
+            .Select(group => group.First())
+            .ToList();
     }
 }

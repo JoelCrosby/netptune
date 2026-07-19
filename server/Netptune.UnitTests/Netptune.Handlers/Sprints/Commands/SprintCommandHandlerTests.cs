@@ -2,6 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Models.Sprints;
@@ -183,6 +184,48 @@ public class SprintCommandHandlerTests
             && message.EntityType == "sprint"
             && message.EntityIds.Contains(sprint.Id)
             && message.WorkspaceSlug == WorkspaceKey));
+    }
+
+    [Fact]
+    public async Task Start_ShouldWriteDistinctCommitment_WhenSprintTasksContainDuplicateIds()
+    {
+        var handler = new StartSprintCommandHandler(
+            UnitOfWork,
+            Identity,
+            Activity,
+            EventPublisher,
+            EventRecords);
+        var sprint = CreateSprint(status: SprintStatus.Planning);
+        var status = new Status { Category = StatusCategory.Todo };
+
+        // The same task appears twice, mirroring a cartesian-duplicated ProjectTasks graph. The
+        // committed snapshot and per-member events must still be written once per task, otherwise
+        // burndown replay throws on the duplicate key.
+        sprint.ProjectTasks =
+        [
+            CreateCommittedTask(id: 231, sprint, status),
+            CreateCommittedTask(id: 231, sprint, status),
+        ];
+
+        var sprintViewModel = CreateSprintDetailViewModel(
+            sprint.Id,
+            sprint.Name,
+            sprint.ProjectId,
+            sprint.WorkspaceId,
+            SprintStatus.Active);
+
+        UnitOfWork.Sprints.GetSprintInWorkspaceAsync(WorkspaceKey, sprint.Id, cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(sprint);
+        UnitOfWork.Sprints.HasActiveSprintAsync(sprint.ProjectId, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(false);
+        UnitOfWork.Sprints.GetSprintDetailAsync(WorkspaceKey, sprint.Id, TestContext.Current.CancellationToken)
+            .Returns(sprintViewModel);
+
+        var result = await handler.Handle(new StartSprintCommand(sprint.Id), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        CaptureCommitment().Select(member => member.TaskId).Should().Equal(231);
+        CountCommittedMemberEvents().Should().Be(1);
     }
 
     [Fact]
@@ -564,6 +607,27 @@ public class SprintCommandHandlerTests
             SprintId = sprintId,
         };
     }
+
+    private static ProjectTask CreateCommittedTask(int id, Sprint sprint, Status status)
+    {
+        var task = CreateTask(id, sprint.WorkspaceId, sprint.ProjectId, sprint.Id);
+        task.StatusId = status.Id;
+        task.Status = status;
+        return task;
+    }
+
+    private IReadOnlyCollection<SprintCommitmentMember> CaptureCommitment() =>
+        EventRecords.ReceivedCalls()
+            .Select(call => call.GetArguments()[0])
+            .OfType<EventWriteRequest<ScopeLifecyclePayload>>()
+            .Single()
+            .Payload.Commitment;
+
+    private int CountCommittedMemberEvents() =>
+        EventRecords.ReceivedCalls()
+            .Select(call => call.GetArguments()[0])
+            .OfType<EventWriteRequest<ScopeMemberChangedPayload>>()
+            .Count(request => request.Payload.Change == "committed");
 
     private static SprintDetailViewModel CreateSprintDetailViewModel(
         int id = 30,
