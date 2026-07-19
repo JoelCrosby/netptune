@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
@@ -8,6 +8,7 @@ import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { loadSprints } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -19,7 +20,7 @@ import {
 import { TimelineZoom } from '@static/components/timeline/timeline.models';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { RoadmapFiltersComponent } from '../components/roadmap-filters.component';
-import { RoadmapTimelineComponent } from '../components/roadmap-timeline.component';
+import { RoadmapPlanningTimelineComponent } from '../components/roadmap-planning-timeline.component';
 import { RoadmapUnscheduledComponent } from '../components/roadmap-unscheduled.component';
 import { RoadmapTask } from '../models/roadmap.models';
 import { roadmapResource } from '../resources/roadmap.resource';
@@ -34,7 +35,7 @@ const defaultTo = addDays(today, 45);
     PageContainerComponent,
     PageHeaderComponent,
     RoadmapFiltersComponent,
-    RoadmapTimelineComponent,
+    RoadmapPlanningTimelineComponent,
     RoadmapUnscheduledComponent,
   ],
   template: `
@@ -79,11 +80,14 @@ const defaultTo = addDays(today, 45);
             </div>
           }
 
-          <app-roadmap-timeline
+          <app-roadmap-planning-timeline
             [view]="view"
             [from]="from()"
             [to]="to()"
             [zoom]="zoom()"
+            [canUpdateTasks]="canUpdateTasks()"
+            [realtimeGroup]="realtimeGroup()"
+            (refreshRequested)="refreshRoadmap()"
             (taskSelected)="openTask($event)" />
         }
       </section>
@@ -105,12 +109,23 @@ export class RoadmapViewComponent {
   private readonly router = inject(Router);
   private readonly store = inject(Store);
   private readonly dialog = inject(DialogService);
+  private readonly planningTimeline = viewChild(
+    RoadmapPlanningTimelineComponent
+  );
+
   private readonly params = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
   });
 
   readonly projects = this.store.selectSignal(selectAllProjects);
   readonly sprints = this.store.selectSignal(selectAllSprints);
+  readonly workspaceIdentifier = this.store.selectSignal(
+    selectCurrentWorkspaceIdentifier
+  );
+
+  readonly canUpdateTasks = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tasks.update)
+  );
   readonly canReadSprints = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.read)
   );
@@ -122,10 +137,12 @@ export class RoadmapViewComponent {
   readonly includeUnscheduled = computed(
     () => this.params().get('unscheduled') !== 'false'
   );
+
   readonly zoom = computed<TimelineZoom>(() => {
     const value = this.params().get('zoom');
     return value === 'day' || value === 'month' ? value : 'week';
   });
+
   readonly query = computed(() => {
     const query = new URLSearchParams({
       from: this.from(),
@@ -144,7 +161,13 @@ export class RoadmapViewComponent {
 
     return query.toString();
   });
+
   readonly roadmap = roadmapResource(this.query);
+  readonly realtimeGroup = computed(() => {
+    const workspace = this.workspaceIdentifier();
+    return workspace ? `tasks:${workspace}` : undefined;
+  });
+
   readonly sprintOptions = computed(() =>
     this.sprints().length > 0
       ? this.sprints()
@@ -222,8 +245,19 @@ export class RoadmapViewComponent {
   }
 
   refresh(): void {
-    this.roadmap.reload();
+    const planningTimeline = this.planningTimeline();
+
+    if (planningTimeline) {
+      planningTimeline.requestRefresh();
+    } else {
+      this.refreshRoadmap();
+    }
+
     this.unscheduledReload.update((value) => value + 1);
+  }
+
+  refreshRoadmap(): void {
+    this.roadmap.reload();
   }
 
   openTask(task: RoadmapTask): void {

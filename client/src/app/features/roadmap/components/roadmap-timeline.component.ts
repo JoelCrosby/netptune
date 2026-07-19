@@ -24,6 +24,7 @@ import {
 } from '@static/components/timeline/timeline.models';
 import {
   RoadmapProjectGroup,
+  RoadmapScheduleChange,
   RoadmapTask,
   RoadmapViewModel,
 } from '../models/roadmap.models';
@@ -97,6 +98,8 @@ const taskRowHeight = 44;
             <app-roadmap-task-row
               [row]="row"
               [collapsed]="isTaskCollapsed(row.task.id)"
+              [editable]="canUpdateTasks()"
+              [busy]="pendingTaskIds().has(row.task.id)"
               [taskColumnWidth]="taskColumnWidth"
               [canvasWidth]="canvasWidth()"
               [dayWidth]="dayWidth()"
@@ -105,6 +108,7 @@ const taskRowHeight = 44;
               [from]="from()"
               [to]="to()"
               (collapseToggled)="toggleTask($event)"
+              (scheduleChanged)="scheduleChanged.emit($event)"
               (taskSelected)="taskSelected.emit($event)" />
           }
         } @empty {
@@ -131,7 +135,10 @@ export class RoadmapTimelineComponent {
   readonly from = input.required<string>();
   readonly to = input.required<string>();
   readonly zoom = input.required<TimelineZoom>();
+  readonly canUpdateTasks = input(false);
+  readonly pendingTaskIds = input<ReadonlySet<number>>(new Set());
   readonly taskSelected = output<RoadmapTask>();
+  readonly scheduleChanged = output<RoadmapScheduleChange>();
   readonly collapsedProjectIds = signal<ReadonlySet<number>>(new Set());
   readonly collapsedTaskIds = signal<ReadonlySet<number>>(new Set());
 

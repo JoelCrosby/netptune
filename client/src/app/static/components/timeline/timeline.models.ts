@@ -27,3 +27,8 @@ export interface TimelineDependency {
   targetX: number;
   targetY: number;
 }
+
+export interface TimelineSchedule {
+  startDate: string | null;
+  endDate: string | null;
+}

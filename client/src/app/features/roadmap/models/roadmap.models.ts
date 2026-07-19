@@ -3,6 +3,7 @@ import { TaskPriority } from '@core/enums/task-priority';
 import { RelationCategory } from '@core/models/relation-type';
 import { StatusCategory } from '@core/models/status';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
+import { TimelineSchedule } from '@static/components/timeline/timeline.models';
 
 export interface RoadmapViewModel {
   from: string;
@@ -64,4 +65,9 @@ export interface RoadmapDisplayTask {
   hasChildren: boolean;
   blockedByCount: number;
   offscreenBlockedByCount: number;
+}
+
+export interface RoadmapScheduleChange {
+  task: RoadmapTask;
+  schedule: TimelineSchedule;
 }

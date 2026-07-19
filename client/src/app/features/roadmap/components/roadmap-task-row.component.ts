@@ -2,7 +2,12 @@ import { Component, input, output } from '@angular/core';
 import { LucideChevronDown, LucideChevronRight } from '@lucide/angular';
 import { TimelineBarComponent } from '@static/components/timeline/timeline-bar.component';
 import { TimelineLaneComponent } from '@static/components/timeline/timeline-lane.component';
-import { RoadmapDisplayTask, RoadmapTask } from '../models/roadmap.models';
+import { TimelineSchedule } from '@static/components/timeline/timeline.models';
+import {
+  RoadmapDisplayTask,
+  RoadmapScheduleChange,
+  RoadmapTask,
+} from '../models/roadmap.models';
 
 @Component({
   selector: 'app-roadmap-task-row',
@@ -78,6 +83,9 @@ import { RoadmapDisplayTask, RoadmapTask } from '../models/roadmap.models';
           [from]="from()"
           [to]="to()"
           [dayWidth]="dayWidth()"
+          [editable]="editable()"
+          [busy]="busy()"
+          (scheduleChanged)="changeSchedule($event)"
           (activated)="taskSelected.emit(row().task)" />
       </app-timeline-lane>
     </div>
@@ -93,8 +101,15 @@ export class RoadmapTaskRowComponent {
   readonly from = input.required<string>();
   readonly to = input.required<string>();
   readonly collapsed = input(false);
+  readonly editable = input(false);
+  readonly busy = input(false);
   readonly taskSelected = output<RoadmapTask>();
   readonly collapseToggled = output<number>();
+  readonly scheduleChanged = output<RoadmapScheduleChange>();
+
+  changeSchedule(schedule: TimelineSchedule): void {
+    this.scheduleChanged.emit({ task: this.row().task, schedule });
+  }
 
   collapseLabel(): string {
     return `${this.collapsed() ? 'Expand' : 'Collapse'} ${this.row().task.systemId}`;
@@ -113,6 +128,9 @@ export class RoadmapTaskRowComponent {
   taskAriaLabel(task: RoadmapTask): string {
     const start = task.startDate ? `starts ${task.startDate}` : 'no start date';
     const due = task.dueDate ? `due ${task.dueDate}` : 'no due date';
-    return `${task.systemId} ${task.name}, ${start}, ${due}`;
+    const instructions = this.editable()
+      ? '. Arrow keys move; Shift plus Arrow resizes the due date; Alt plus Arrow resizes the start date'
+      : '';
+    return `${task.systemId} ${task.name}, ${start}, ${due}${instructions}`;
   }
 }
