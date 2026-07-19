@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
@@ -55,7 +56,9 @@ public sealed class WorkspacesLeaveEndpointTests
         // is a non-owner member that can leave without mutating shared state.
         const string slug = "leave-test-workspace";
 
-        var (workspaceId, userId) = await SeedMembership(slug);
+        var currentUser = await Client.GetFromJsonAsync<CurrentUserResponse>("api/auth/current-user");
+        var userId = currentUser!.UserId;
+        var workspaceId = await SeedMembership(slug, userId);
 
         var response = await Client.PostAsync($"api/workspaces/{slug}/leave", null);
 
@@ -68,16 +71,10 @@ public sealed class WorkspacesLeaveEndpointTests
         (await IsMember(workspaceId, userId)).Should().BeFalse();
     }
 
-    private async Task<(int WorkspaceId, string UserId)> SeedMembership(string slug)
+    private async Task<int> SeedMembership(string slug, string userId)
     {
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
-
-        // The user the test client authenticates as (first member of "netptune").
-        var userId = await context.WorkspaceAppUsers
-            .Where(member => member.Workspace.Slug == "netptune")
-            .Select(member => member.UserId)
-            .FirstAsync();
 
         var ownerId = await context.AppUsers
             .Where(user => user.Id != userId)
@@ -105,7 +102,7 @@ public sealed class WorkspacesLeaveEndpointTests
 
         await context.SaveChangesAsync();
 
-        return (workspace.Id, userId);
+        return workspace.Id;
     }
 
     private async Task<bool> IsMember(int workspaceId, string userId)

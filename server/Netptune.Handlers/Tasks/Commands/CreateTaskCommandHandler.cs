@@ -141,6 +141,26 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
                     return savedCount;
                 });
 
+            var creationReferences = new List<EventReferenceInput>
+            {
+                new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Scope,
+                    EntityType = EventEntityTypes.From(EntityType.Project),
+                    EntityId = task.ProjectId!.Value.ToString(),
+                },
+            };
+
+            if (task.SprintId.HasValue)
+            {
+                creationReferences.Add(new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Scope,
+                    EntityType = EventEntityTypes.From(EntityType.Sprint),
+                    EntityId = task.SprintId.Value.ToString(),
+                });
+            }
+
             await EventRecords.Append(new EventWriteRequest<EntityCreatedPayload>
             {
                 WorkspaceId = task.WorkspaceId,
@@ -156,13 +176,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
                     EstimateType = task.EstimateType?.ToString(),
                     EstimateValue = task.EstimateValue,
                 },
-                References =
-                [
-                    new EventReferenceInput(
-                        EventReferenceRoles.Scope,
-                        EventEntityTypes.From(EntityType.Project),
-                        task.ProjectId!.Value.ToString()),
-                ],
+                References = creationReferences,
             }, cancellationToken);
 
             if (task.SprintId.HasValue && targetSprint?.Status == SprintStatus.Active)
@@ -185,14 +199,18 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
                     },
                     References =
                     [
-                        new EventReferenceInput(
-                            EventReferenceRoles.Member,
-                            EventEntityTypes.From(EntityType.Task),
-                            result.Id.ToString()),
-                        new EventReferenceInput(
-                            EventReferenceRoles.Scope,
-                            EventEntityTypes.From(EntityType.Project),
-                            task.ProjectId!.Value.ToString()),
+                        new EventReferenceInput
+                        {
+                            Role = EventReferenceRoles.Member,
+                            EntityType = EventEntityTypes.From(EntityType.Task),
+                            EntityId = result.Id.ToString(),
+                        },
+                        new EventReferenceInput
+                        {
+                            Role = EventReferenceRoles.Scope,
+                            EntityType = EventEntityTypes.From(EntityType.Project),
+                            EntityId = task.ProjectId!.Value.ToString(),
+                        },
                     ],
                 }, cancellationToken);
             }

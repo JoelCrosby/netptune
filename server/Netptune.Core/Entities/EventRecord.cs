@@ -60,9 +60,14 @@ public sealed record EventReference
 
     public EventRecord EventRecord { get; init; } = null!;
 
-    public bool Equals(EventReference? other) => other is not null &&
-        EventRecordId == other.EventRecordId && Role == other.Role &&
-        EntityType == other.EntityType && EntityId == other.EntityId;
+    public bool Equals(EventReference? other)
+    {
+        return other is not null &&
+            EventRecordId == other.EventRecordId &&
+            Role == other.Role &&
+            EntityType == other.EntityType &&
+            EntityId == other.EntityId;
+    }
 
     public override int GetHashCode() => HashCode.Combine(
         EventRecordId,
@@ -81,8 +86,13 @@ public sealed record EventStreamHead
 
     public long CurrentSequence { get; set; }
 
-    public bool Equals(EventStreamHead? other) => other is not null &&
-        WorkspaceId == other.WorkspaceId && SubjectType == other.SubjectType && SubjectId == other.SubjectId;
+    public bool Equals(EventStreamHead? other)
+    {
+        return other is not null &&
+            WorkspaceId == other.WorkspaceId &&
+            SubjectType == other.SubjectType &&
+            SubjectId == other.SubjectId;
+    }
 
     public override int GetHashCode() => HashCode.Combine(WorkspaceId, SubjectType, SubjectId);
 }
@@ -105,9 +115,30 @@ public sealed record EventOutbox
 
     public EventRecord EventRecord { get; init; } = null!;
 
-    public bool Equals(EventOutbox? other) => other is not null && EventRecordId == other.EventRecordId;
+    public bool Equals(EventOutbox? other)
+    {
+        return other is not null && EventRecordId == other.EventRecordId;
+    }
 
     public override int GetHashCode() => EventRecordId.GetHashCode();
+}
+
+public sealed record EventConsumerReceipt
+{
+    public string ConsumerKey { get; init; } = null!;
+
+    public Guid EventId { get; init; }
+
+    public DateTime ProcessedAt { get; init; }
+
+    public bool Equals(EventConsumerReceipt? other)
+    {
+        return other is not null &&
+            ConsumerKey == other.ConsumerKey &&
+            EventId == other.EventId;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(ConsumerKey, EventId);
 }
 
 public static class EventRetentionClasses

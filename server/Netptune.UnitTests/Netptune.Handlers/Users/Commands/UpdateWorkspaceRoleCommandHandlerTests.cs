@@ -72,7 +72,7 @@ public class UpdateWorkspaceRoleCommandHandlerTests
             TestContext.Current.CancellationToken);
         PermissionCache.Received(1).Remove(Arg.Is<WorkspaceUserKey>(key =>
             key.UserId == targetUserId && key.WorkspaceKey == workspaceKey));
-        Activity.Received(1).LogWith<UserRoleActivityMeta>(
+        Activity.Received(1).LogWith(
             Arg.Is<Action<ActivityOptions<UserRoleActivityMeta>>>(log => LogsRoleChange(
                 log,
                 targetUserId,

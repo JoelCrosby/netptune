@@ -78,10 +78,9 @@ public sealed class StorageEndpointTests
         var systemId = tasksResponse.Payload!.Items.Single().SystemId;
         var before = await Client.GetFromJsonAsync<ClientResponse<WorkspaceStorageUsageViewModel>>("api/storage/usage");
 
-        using var content = new MultipartFormDataContent
-        {
-            { new ByteArrayContent([10, 20, 30, 40]), "files", "evidence.pdf" },
-        };
+        using var content = new MultipartFormDataContent();
+
+        content.Add(new ByteArrayContent([10, 20, 30, 40]), "files", "evidence.pdf");
         content.First().Headers.ContentType = new("application/pdf");
         var uploadResponse = await Client.PostAsync($"api/tasks/{systemId}/files", content);
         uploadResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -130,10 +129,9 @@ public sealed class StorageEndpointTests
             var tasksResponse = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>("api/tasks?pageSize=1");
             var systemId = tasksResponse.Payload!.Items.Single().SystemId;
 
-            using var content = new MultipartFormDataContent
-            {
-                { new ByteArrayContent([1]), "files", "over-limit.txt" },
-            };
+            using var content = new MultipartFormDataContent();
+
+            content.Add(new ByteArrayContent([1]), "files", "over-limit.txt");
 
             var response = await Client.PostAsync($"api/tasks/{systemId}/files", content);
 
@@ -155,11 +153,10 @@ public sealed class StorageEndpointTests
     [Fact]
     public async Task TaskFile_ShouldRejectMultipleFiles()
     {
-        using var content = new MultipartFormDataContent
-        {
-            { new ByteArrayContent([1]), "files", "first.txt" },
-            { new ByteArrayContent([2]), "files", "second.txt" },
-        };
+        using var content = new MultipartFormDataContent();
+
+        content.Add(new ByteArrayContent([1]), "files", "first.txt");
+        content.Add(new ByteArrayContent([2]), "files", "second.txt");
 
         var response = await Client.PostAsync("api/tasks/NET-1/files", content);
 

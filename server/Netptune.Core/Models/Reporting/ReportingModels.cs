@@ -7,6 +7,12 @@ public enum ReportingUnit
     Hours,
 }
 
+public enum ReportingGrouping
+{
+    Day,
+    Week,
+}
+
 public sealed record ReportingFilter
 {
     public int? ProjectId { get; init; }
@@ -18,6 +24,26 @@ public sealed record ReportingFilter
     public ReportingUnit Unit { get; init; } = ReportingUnit.Tasks;
 
     public string TimeZone { get; init; } = "UTC";
+
+    public ReportingGrouping Grouping { get; init; } = ReportingGrouping.Day;
+}
+
+public sealed record SprintBurndownFilter
+{
+    public int SprintId { get; init; }
+
+    public ReportingUnit Unit { get; init; } = ReportingUnit.Tasks;
+
+    public string TimeZone { get; init; } = "UTC";
+}
+
+public sealed record VelocityFilter
+{
+    public int ProjectId { get; init; }
+
+    public ReportingUnit Unit { get; init; } = ReportingUnit.Tasks;
+
+    public int Take { get; init; } = 12;
 }
 
 public sealed record ReportingCoverage(DateTime? CoverageStart, bool IsPartial);
@@ -34,10 +60,25 @@ public sealed record FlowReport
 
     public int CycleTimeSampleSize { get; init; }
 
+    public int CurrentOpenTaskCount { get; init; }
+
+    public IReadOnlyCollection<CycleTimeBucket> CycleTimeBuckets { get; init; } = [];
+
     public required ReportingCoverage Coverage { get; init; }
 }
 
-public sealed record FlowBucket(DateOnly Date, int Completed, decimal? MedianCycleTimeHours);
+public sealed record FlowBucket(DateOnly Date, int Completed);
+
+public sealed record CycleTimeBucket
+{
+    public DateOnly WeekStarting { get; init; }
+
+    public decimal? MedianCycleTimeHours { get; init; }
+
+    public decimal? P85CycleTimeHours { get; init; }
+
+    public int SampleSize { get; init; }
+}
 
 public sealed record WorkloadReport
 {
@@ -83,6 +124,10 @@ public sealed record SprintBurndownReport
 
     public int MissingEstimateCount { get; init; }
 
+    public int CompletedCount { get; init; }
+
+    public decimal CompletionPercentage { get; init; }
+
     public required ReportingCoverage Coverage { get; init; }
 }
 
@@ -119,6 +164,14 @@ public sealed record VelocityPoint
     public decimal Committed { get; init; }
 
     public decimal Completed { get; init; }
+
+    public int MissingEstimateCount { get; init; }
+
+    public int CompletedCount { get; init; }
+
+    public decimal CompletionPercentage { get; init; }
+
+    public int DifferentUnitEstimateCount { get; init; }
 }
 
 public sealed class InvalidReportingFilterException(string message) : Exception(message);

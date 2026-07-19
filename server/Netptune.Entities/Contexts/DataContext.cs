@@ -39,6 +39,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<EventReference> EventReferences { get; set; } = null!;
     public DbSet<EventStreamHead> EventStreamHeads { get; set; } = null!;
     public DbSet<EventOutbox> EventOutbox { get; set; } = null!;
+    public DbSet<EventConsumerReceipt> EventConsumerReceipts { get; set; } = null!;
     public DbSet<ActivityEntry> ActivityEntries { get; set; } = null!;
     public DbSet<AutomationRule> AutomationRules { get; set; } = null!;
     public DbSet<AutomationAction> AutomationActions { get; set; } = null!;

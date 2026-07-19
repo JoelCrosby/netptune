@@ -6,11 +6,11 @@ import {
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@core/auth/auth.service';
 import {
   logoutSuccess,
   refreshTokenSuccess,
 } from '@app/core/store/auth/auth.actions';
+import { AuthService } from '@core/auth/auth.service';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
@@ -26,6 +26,11 @@ import { WorkspaceService } from '../services/workspace.service';
 import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 let sessionRefreshRequest$: ReturnType<AuthService['refresh']> | null = null;
+
+export const resolveWorkspaceHeader = (
+  workspaceRoute: string | null,
+  selectedWorkspace: string | undefined
+): string | undefined => workspaceRoute ?? selectedWorkspace;
 
 export const authInterceptor = (
   req: HttpRequest<unknown>,
@@ -82,7 +87,10 @@ export const authInterceptor = (
       });
 
       const workspaceRoute = workspaceService.getWorkspaceRoute();
-      const workspaceHeader = workspaceId ?? workspaceRoute;
+      const workspaceHeader = resolveWorkspaceHeader(
+        workspaceRoute,
+        workspaceId
+      );
 
       if (workspaceHeader) {
         req = req.clone({

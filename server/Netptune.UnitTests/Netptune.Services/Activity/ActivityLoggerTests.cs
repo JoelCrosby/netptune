@@ -60,4 +60,27 @@ public class ActivityLoggerTests
         await EventPublisher.Received(1).Dispatch(Arg.Is<ActivityMessage>(message =>
             message.Events.Single().WorkspaceId == WorkspaceId));
     }
+
+    [Fact]
+    public async Task Log_ShouldNotPublishACompetingActivityMessage_WhenCanonicalEventWasCaptured()
+    {
+        Identity.GetCurrentUserId().Returns("user-1");
+        var capture = new CanonicalEventCapture();
+        capture.Record(WorkspaceId, EventEntityTypes.From(EntityType.Task), "7");
+        var logger = new ActivityLogger(
+            EventPublisher,
+            Identity,
+            new HttpContextAccessor(),
+            capture);
+
+        logger.Log(options =>
+        {
+            options.EntityId = 7;
+            options.WorkspaceId = WorkspaceId;
+            options.EntityType = EntityType.Task;
+            options.Type = ActivityType.ModifyStatus;
+        });
+
+        await EventPublisher.DidNotReceive().Dispatch(Arg.Any<ActivityMessage>());
+    }
 }

@@ -1,68 +1,73 @@
 import { Component, computed, input } from '@angular/core';
-import { VelocityPoint } from '@core/models/reporting';
+import { CycleTimeBucket } from '@core/models/reporting';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import {
   REPORT_CHART_LABEL_STYLE,
-  formatReportValue,
   reportChartThemeSignal,
 } from '../../utils/report-chart-theme';
 
 @Component({
-  selector: 'app-sprint-velocity-chart',
+  selector: 'app-flow-cycle-time-chart',
   imports: [NgApexchartsModule],
   host: { class: 'block' },
   template: `
     <apx-chart
-      aria-label="Committed and completed sprint velocity"
+      aria-label="Weekly median and 85th-percentile cycle time"
       [series]="series()"
       [chart]="chart"
       [colors]="colors()"
-      [xaxis]="xaxis()"
+      [xaxis]="xaxis"
       [yaxis]="yaxis"
       [grid]="grid()"
       [legend]="legend()"
-      [tooltip]="tooltip"
+      [stroke]="stroke"
       [dataLabels]="dataLabels" />
   `,
 })
-export class SprintVelocityChartComponent {
-  readonly sprints = input.required<VelocityPoint[]>();
+export class FlowCycleTimeChartComponent {
+  readonly buckets = input.required<CycleTimeBucket[]>();
   private readonly theme = reportChartThemeSignal();
 
   readonly series = computed(() => [
     {
-      name: 'Committed',
-      data: this.sprints().map((point) => point.committed),
+      name: 'Median',
+      data: this.buckets().map((bucket) => [
+        new Date(bucket.weekStarting).getTime(),
+        bucket.medianCycleTimeHours,
+      ]),
     },
     {
-      name: 'Completed',
-      data: this.sprints().map((point) => point.completed),
+      name: '85th percentile',
+      data: this.buckets().map((bucket) => [
+        new Date(bucket.weekStarting).getTime(),
+        bucket.p85CycleTimeHours,
+      ]),
     },
   ]);
   readonly colors = computed(() => [
     this.theme().primary,
     this.theme().mutedForeground,
   ]);
-  readonly xaxis = computed(() => ({
-    categories: this.sprints().map((point) => point.sprintName),
-    labels: { style: REPORT_CHART_LABEL_STYLE },
-  }));
   readonly grid = computed(() => ({ borderColor: this.theme().border }));
   readonly legend = computed(() => ({
     labels: { colors: this.theme().mutedForeground },
   }));
   readonly chart = {
-    type: 'bar' as const,
+    type: 'line' as const,
     height: 260,
     toolbar: { show: false },
+  };
+  readonly xaxis = {
+    type: 'datetime' as const,
+    labels: { style: REPORT_CHART_LABEL_STYLE },
   };
   readonly yaxis = {
     min: 0,
     labels: {
       style: REPORT_CHART_LABEL_STYLE,
-      formatter: formatReportValue,
+      formatter: (value: number) => `${Math.round(value * 10) / 10}h`,
     },
   };
-  readonly tooltip = { y: { formatter: formatReportValue } };
+  readonly stroke = { width: [3, 2], curve: 'straight' as const };
   readonly dataLabels = { enabled: false };
 }

@@ -67,4 +67,11 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<EventMessageProcessor>();
         services.AddHostedService<EventConsumerService>();
     }
+
+    public static IServiceCollection AddCanonicalEventConsumer(this IServiceCollection services)
+    {
+        services.AddHostedService<CanonicalEventConsumerService>();
+
+        return services;
+    }
 }

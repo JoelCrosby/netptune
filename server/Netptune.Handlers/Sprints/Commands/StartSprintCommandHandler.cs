@@ -94,10 +94,12 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                 },
                 References =
                 [
-                    new EventReferenceInput(
-                        EventReferenceRoles.Scope,
-                        EventEntityTypes.From(EntityType.Project),
-                        sprint.ProjectId.ToString()),
+                    new EventReferenceInput
+                    {
+                        Role = EventReferenceRoles.Scope,
+                        EntityType = EventEntityTypes.From(EntityType.Project),
+                        EntityId = sprint.ProjectId.ToString(),
+                    },
                 ],
             }, cancellationToken);
 
@@ -122,8 +124,18 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                     },
                     References =
                     [
-                        new EventReferenceInput(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), task.Id.ToString()),
-                        new EventReferenceInput(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), sprint.ProjectId.ToString()),
+                        new EventReferenceInput
+                        {
+                            Role = EventReferenceRoles.Member,
+                            EntityType = EventEntityTypes.From(EntityType.Task),
+                            EntityId = task.Id.ToString(),
+                        },
+                        new EventReferenceInput
+                        {
+                            Role = EventReferenceRoles.Scope,
+                            EntityType = EventEntityTypes.From(EntityType.Project),
+                            EntityId = sprint.ProjectId.ToString(),
+                        },
                     ],
                 }, cancellationToken);
             }

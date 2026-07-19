@@ -64,7 +64,7 @@ public class WorkspaceSetupTemplateCatalogTests
         var basic = WorkspaceSetupTemplateCatalog.Find(null);
 
         basic.Should().NotBeNull();
-        basic!.Key.Should().Be(WorkspaceSetupTemplateCatalog.DefaultKey);
+        basic.Key.Should().Be(WorkspaceSetupTemplateCatalog.DefaultKey);
         basic.BoardGroups.Select(group => group.Name)
             .Should().Equal("Backlog", "Todo", "Done");
     }

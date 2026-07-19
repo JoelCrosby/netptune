@@ -8,7 +8,13 @@ public interface IReportingRepository
 
     Task<WorkloadReport> GetWorkload(ReportingScope scope, ReportingFilter filter, CancellationToken cancellationToken = default);
 
-    Task<SprintBurndownReport?> GetBurndown(ReportingScope scope, int sprintId, ReportingUnit unit, string timeZone, CancellationToken cancellationToken = default);
+    Task<SprintBurndownReport?> GetBurndown(
+        ReportingScope scope,
+        SprintBurndownFilter filter,
+        CancellationToken cancellationToken = default);
 
-    Task<VelocityReport> GetVelocity(ReportingScope scope, int projectId, ReportingUnit unit, int take, CancellationToken cancellationToken = default);
+    Task<VelocityReport> GetVelocity(
+        ReportingScope scope,
+        VelocityFilter filter,
+        CancellationToken cancellationToken = default);
 }

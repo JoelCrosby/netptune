@@ -127,12 +127,22 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
                 if (task.ProjectId.HasValue)
                 {
-                    references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), task.ProjectId.Value.ToString()));
+                    references.Add(new EventReferenceInput
+                    {
+                        Role = EventReferenceRoles.Scope,
+                        EntityType = EventEntityTypes.From(EntityType.Project),
+                        EntityId = task.ProjectId.Value.ToString(),
+                    });
                 }
 
                 if (task.SprintId.HasValue)
                 {
-                    references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Sprint), task.SprintId.Value.ToString()));
+                    references.Add(new EventReferenceInput
+                    {
+                        Role = EventReferenceRoles.Scope,
+                        EntityType = EventEntityTypes.From(EntityType.Sprint),
+                        EntityId = task.SprintId.Value.ToString(),
+                    });
                 }
 
                 if (oldStatusId != task.StatusId && status is not null)
@@ -194,7 +204,12 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                             },
                             References =
                             [
-                                new(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), task.Id.ToString()),
+                                new EventReferenceInput
+                                {
+                                    Role = EventReferenceRoles.Member,
+                                    EntityType = EventEntityTypes.From(EntityType.Task),
+                                    EntityId = task.Id.ToString(),
+                                },
                                 ..references,
                             ],
                         }, cancellationToken);
@@ -262,8 +277,18 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             },
             References =
         [
-            new(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), task.Id.ToString()),
-            new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), task.ProjectId!.Value.ToString()),
+            new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Member,
+                EntityType = EventEntityTypes.From(EntityType.Task),
+                EntityId = task.Id.ToString(),
+            },
+            new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Project),
+                EntityId = task.ProjectId!.Value.ToString(),
+            },
         ],
         }, cancellationToken);
 

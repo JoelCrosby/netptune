@@ -7,6 +7,7 @@ import { catchError, first, map, switchMap } from 'rxjs/operators';
 import { currentUser } from '../store/auth/auth.actions';
 import { setCurrentWorkspace } from '../store/workspaces/workspaces.actions';
 import { WorkspacesService } from '../store/workspaces/workspaces.service';
+import { WorkspaceService } from '../services/workspace.service';
 import { AuthService } from './auth.service';
 
 export const workspaceGuard: CanActivateFn = (
@@ -16,6 +17,7 @@ export const workspaceGuard: CanActivateFn = (
   const router = inject(Router);
   const auth = inject(AuthService);
   const workspaces = inject(WorkspacesService);
+  const workspaceService = inject(WorkspaceService);
 
   const workspaceKey =
     route.paramMap.get('workspace') ?? route.parent?.paramMap.get('workspace');
@@ -28,6 +30,9 @@ export const workspaceGuard: CanActivateFn = (
       }
 
       if (isAuthenticated) {
+        const previousWorkspace = workspaceService.currentWorkspace();
+        workspaceService.setWorkspace(workspaceKey);
+
         return workspaces.getBySlug(workspaceKey).pipe(
           switchMap((workspace) => {
             store.dispatch(setCurrentWorkspace({ workspace }));
@@ -39,7 +44,11 @@ export const workspaceGuard: CanActivateFn = (
               })
             );
           }),
-          catchError(() => of(router.createUrlTree(['/auth/login'])))
+          catchError(() => {
+            workspaceService.setWorkspace(previousWorkspace);
+
+            return of(router.createUrlTree(['/auth/login']));
+          })
         );
       }
 

@@ -7,6 +7,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Services.Activity;
@@ -16,15 +17,18 @@ public sealed class EventRecordWriter : IEventRecordWriter
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService? Identity;
     private readonly IHttpContextAccessor? HttpContextAccessor;
+    private readonly ICanonicalEventCapture? Capture;
 
     public EventRecordWriter(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService? identity = null,
-        IHttpContextAccessor? httpContextAccessor = null)
+        IHttpContextAccessor? httpContextAccessor = null,
+        ICanonicalEventCapture? capture = null)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         HttpContextAccessor = httpContextAccessor;
+        Capture = capture;
     }
 
     public async Task<EventRecord> Append<TPayload>(
@@ -65,6 +69,18 @@ public sealed class EventRecordWriter : IEventRecordWriter
         };
 
         var appendedRecord = await UnitOfWork.EventRecords.AppendAsync(record, request.Publish, cancellationToken);
+        var hasWorkspace = workspaceId.HasValue;
+        var hasSubjectType = request.SubjectType is not null;
+        var hasSubjectId = request.SubjectId is not null;
+        var hasCapturableSubject = hasWorkspace && hasSubjectType && hasSubjectId;
+
+        if (hasCapturableSubject)
+        {
+            Capture?.Record(
+                workspaceId.GetValueOrDefault(),
+                request.SubjectType!,
+                request.SubjectId!);
+        }
 
         return appendedRecord;
     }
@@ -76,7 +92,6 @@ public sealed class EventRecordWriter : IEventRecordWriter
 
     private static IPAddress? GetIpAddress(HttpContext? context)
     {
-
         if (context is null)
         {
             return null;

@@ -13,6 +13,7 @@ using NATS.Client.Core;
 using NATS.Client.JetStream;
 using NATS.Client.JetStream.Models;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Services.Activity;
 using Netptune.Events;
@@ -52,13 +53,16 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
 
         var jetStream = provider.GetRequiredService<INatsJSContext>();
 
-        try
+        foreach (var stream in new[] { MessageKeys.Queue, MessageKeys.CanonicalQueue })
         {
-            await jetStream.DeleteStreamAsync(MessageKeys.Queue, CancellationToken);
-        }
-        catch (NatsJSApiException exception) when (exception.Error.Code is 404)
-        {
-            // stream does not exist yet.
+            try
+            {
+                await jetStream.DeleteStreamAsync(stream, CancellationToken);
+            }
+            catch (NatsJSApiException exception) when (exception.Error.Code is 404)
+            {
+                // stream does not exist yet.
+            }
         }
     }
 
@@ -120,7 +124,7 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
         var info = await GetConsumer(jetStream, MessageKeys.Consumers.Activity);
 
         info.NumRedelivered.Should().BeGreaterThanOrEqualTo(1);
-        (info.NumAckPending + (long) info.NumPending).Should().BeGreaterThanOrEqualTo(1);
+        (info.NumAckPending + (long)info.NumPending).Should().BeGreaterThanOrEqualTo(1);
 
         var ordered = Deliveries.OrderBy(delivery => delivery).ToList();
 
@@ -271,7 +275,80 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
 
         var stream = await jetStream.GetStreamAsync(MessageKeys.Queue, cancellationToken: CancellationToken);
 
-        stream.Info.Config.Subjects.Should().BeEquivalentTo([MessageKeys.Subjects.Typed]);
+        stream.Info.Config.Subjects.Should().BeEquivalentTo(MessageKeys.Subjects.Legacy);
+    }
+
+    [Fact]
+    public async Task CanonicalPublisher_ShouldUseTheDedicatedFactStreamAndStableEnvelope()
+    {
+        await using var provider = BuildProvider();
+
+        var jetStream = provider.GetRequiredService<INatsJSContext>();
+        var eventId = Guid.NewGuid();
+        var envelope = new CanonicalEventEnvelope
+        {
+            EventId = eventId,
+            EventRecordId = 42,
+            EventKey = EventKeys.EntityCreated,
+            SchemaVersion = 1,
+            WorkspaceId = 7,
+            SubjectType = "task",
+            SubjectId = "9",
+            SubjectSequence = 3,
+            OccurredAt = DateTime.UtcNow,
+            RecordedAt = DateTime.UtcNow,
+            RetentionClass = EventRetentionClasses.Permanent,
+            Payload = JsonSerializer.SerializeToElement(new { name = "Canonical task" }),
+        };
+
+        await provider.GetRequiredService<IEventPublisher>().DispatchCanonical(
+            envelope,
+            CancellationToken);
+
+        var messages = await ReadSubject(
+            jetStream,
+            $"netptune.events.v1.{EventKeys.EntityCreated}",
+            MessageKeys.CanonicalQueue);
+        var message = messages.Should().ContainSingle().Subject.Data!;
+        var published = JsonSerializer.Deserialize<CanonicalEventEnvelope>(message.Payload);
+
+        message.Type.Should().Be(typeof(CanonicalEventEnvelope).FullName);
+        published.Should().NotBeNull();
+        published.EventId.Should().Be(eventId);
+        published.EventRecordId.Should().Be(42);
+
+        var stream = await jetStream.GetStreamAsync(
+            MessageKeys.CanonicalQueue,
+            cancellationToken: CancellationToken);
+
+        stream.Info.Config.Subjects.Should().BeEquivalentTo([MessageKeys.Subjects.Canonical]);
+    }
+
+    [Fact]
+    public async Task CanonicalStream_ShouldNarrowTheExistingLegacyWildcard_BeforeCreation()
+    {
+        await using var provider = BuildProvider();
+
+        var jetStream = provider.GetRequiredService<INatsJSContext>();
+
+        await jetStream.CreateOrUpdateStreamAsync(new StreamConfig
+        {
+            Name = MessageKeys.Queue,
+            Subjects = ["netptune.>"],
+            Storage = StreamConfigStorage.File,
+        }, CancellationToken);
+
+        await provider.GetRequiredService<EventStream>().EnsureCanonicalCreated(CancellationToken);
+
+        var legacy = await jetStream.GetStreamAsync(
+            MessageKeys.Queue,
+            cancellationToken: CancellationToken);
+        var canonical = await jetStream.GetStreamAsync(
+            MessageKeys.CanonicalQueue,
+            cancellationToken: CancellationToken);
+
+        legacy.Info.Config.Subjects.Should().BeEquivalentTo(MessageKeys.Subjects.Legacy);
+        canonical.Info.Config.Subjects.Should().BeEquivalentTo([MessageKeys.Subjects.Canonical]);
     }
 
     [Fact]
@@ -395,7 +472,7 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
 
         await service.StartAsync(CancellationToken);
 
-        return new (service);
+        return new(service);
     }
 
     // A core NATS subscription, not a JetStream one: advisories are published on the system's own subjects
@@ -480,10 +557,13 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
         return info!;
     }
 
-    private async Task<List<INatsJSMsg<EventMessage>>> ReadSubject(INatsJSContext jetStream, string subject)
+    private async Task<List<INatsJSMsg<EventMessage>>> ReadSubject(
+        INatsJSContext jetStream,
+        string subject,
+        string streamName = MessageKeys.Queue)
     {
         var consumer = await jetStream.CreateOrderedConsumerAsync(
-            MessageKeys.Queue,
+            streamName,
             new NatsJSOrderedConsumerOpts { FilterSubjects = [subject] },
             CancellationToken);
 

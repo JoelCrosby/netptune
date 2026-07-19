@@ -51,7 +51,7 @@ public sealed class WorkspacePermanentDeleteEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         await AssertWorkspaceFullyGone(workspaceId);
     }
@@ -70,7 +70,7 @@ public sealed class WorkspacePermanentDeleteEndpointTests
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<WorkspaceViewModel>>();
 
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
 
         return result.Payload!;
     }

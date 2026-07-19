@@ -10,6 +10,14 @@ export const REPORT_CHART_LABEL_STYLE = {
   fontSize: '11px',
 };
 
+const REPORT_VALUE_FORMATTER = new Intl.NumberFormat(undefined, {
+  maximumFractionDigits: 1,
+});
+
+export function formatReportValue(value: number): string {
+  return REPORT_VALUE_FORMATTER.format(value);
+}
+
 export function readReportChartTheme(): ReportChartTheme {
   const styles = getComputedStyle(document.documentElement);
   const color = (name: string) => styles.getPropertyValue(name).trim();

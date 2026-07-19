@@ -31,7 +31,7 @@ public class TestStorageService : IStorageService
 
     public Task<Uri?> GetReadUriAsync(StorageReadOptions readOptions, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult<Uri?>(Objects.ContainsKey(readOptions.Key) ? new Uri($"https://storage.test/{Uri.EscapeDataString(readOptions.Key)}") : null);
+        return Task.FromResult(Objects.ContainsKey(readOptions.Key) ? new Uri($"https://storage.test/{Uri.EscapeDataString(readOptions.Key)}") : null);
     }
 
     public Task DeleteFileAsync(string key, CancellationToken cancellationToken = default)

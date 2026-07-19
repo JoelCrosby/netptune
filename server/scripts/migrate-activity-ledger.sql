@@ -145,6 +145,16 @@ CREATE INDEX IF NOT EXISTS ix_event_outbox_available_at_lease_expires_at
 CREATE INDEX IF NOT EXISTS ix_event_outbox_dead_lettered_at
     ON public.event_outbox(dead_lettered_at);
 
+CREATE TABLE IF NOT EXISTS public.event_consumer_receipts (
+    consumer_key varchar(128) NOT NULL,
+    event_id uuid NOT NULL,
+    processed_at timestamp without time zone NOT NULL,
+    CONSTRAINT pk_event_consumer_receipts PRIMARY KEY (consumer_key, event_id)
+);
+
+CREATE INDEX IF NOT EXISTS ix_event_consumer_receipts_processed_at
+    ON public.event_consumer_receipts(processed_at);
+
 INSERT INTO public.event_records (
       event_id
     , workspace_id

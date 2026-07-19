@@ -2,53 +2,44 @@ using Mediator;
 
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Services;
+using Netptune.Core.Services.Reporting;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Reporting.Queries;
 
-public sealed record GetVelocityReportQuery(int ProjectId, ReportingUnit Unit, int Take)
+public sealed record GetVelocityReportQuery(VelocityFilter Filter)
     : IRequest<ClientResponse<VelocityReport>>;
 
 public sealed class GetVelocityReportQueryHandler : IRequestHandler<GetVelocityReportQuery, ClientResponse<VelocityReport>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IIdentityService Identity;
+    private readonly IReportingScopeResolver ScopeResolver;
 
-    public GetVelocityReportQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetVelocityReportQueryHandler(INetptuneUnitOfWork unitOfWork, IReportingScopeResolver scopeResolver)
     {
         UnitOfWork = unitOfWork;
-        Identity = identity;
+        ScopeResolver = scopeResolver;
     }
 
     public async ValueTask<ClientResponse<VelocityReport>> Handle(GetVelocityReportQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var workspaceKey = Identity.GetWorkspaceKey();
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
+            var scope = await ScopeResolver.Resolve(cancellationToken);
 
-            if (!workspaceId.HasValue)
+            if (scope is null)
             {
                 return ClientResponse<VelocityReport>.NotFound;
             }
 
-            var projectIds = await UnitOfWork.Projects.GetAllIdsInWorkspace(
-                workspaceId.Value,
-                cancellationToken: cancellationToken);
-
-            var scope = new ReportingScope(workspaceId.Value, projectIds.ToHashSet());
-
-            if (!scope.CanAccessProject(request.ProjectId))
+            if (!scope.CanAccessProject(request.Filter.ProjectId))
             {
                 return ClientResponse<VelocityReport>.NotFound;
             }
 
             var report = await UnitOfWork.Reports.GetVelocity(
                 scope,
-                request.ProjectId,
-                request.Unit,
-                request.Take,
+                request.Filter,
                 cancellationToken);
 
             return ClientResponse<VelocityReport>.Success(report);

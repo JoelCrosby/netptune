@@ -43,7 +43,7 @@ public sealed class ServiceAccountsEndpointTests
         createAccountResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var account = await createAccountResponse.Content.ReadFromJsonAsync<ServiceAccountViewModel>();
         account.Should().NotBeNull();
-        account!.Name.Should().Be(accountName);
+        account.Name.Should().Be(accountName);
         account.Permissions.Should().Contain(NetptunePermissions.Sprints.Read);
         account.Permissions.Should().Contain(NetptunePermissions.Sprints.Create);
 
@@ -59,7 +59,7 @@ public sealed class ServiceAccountsEndpointTests
         var createdCredential = await createCredentialResponse.Content
             .ReadFromJsonAsync<ApiCredentialCreatedViewModel>();
         createdCredential.Should().NotBeNull();
-        createdCredential!.Token.Should().StartWith("ntp_");
+        createdCredential.Token.Should().StartWith("ntp_");
 
         var accounts = await Client.GetFromJsonAsync<List<ServiceAccountViewModel>>(
             "api/service-accounts");

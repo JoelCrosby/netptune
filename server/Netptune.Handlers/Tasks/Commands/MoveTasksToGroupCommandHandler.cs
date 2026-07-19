@@ -72,12 +72,22 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
 
                         if (oldTask.ProjectId.HasValue)
                         {
-                            references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), oldTask.ProjectId.Value.ToString()));
+                            references.Add(new EventReferenceInput
+                            {
+                                Role = EventReferenceRoles.Scope,
+                                EntityType = EventEntityTypes.From(EntityType.Project),
+                                EntityId = oldTask.ProjectId.Value.ToString(),
+                            });
                         }
 
                         if (oldTask.SprintId.HasValue)
                         {
-                            references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Sprint), oldTask.SprintId.Value.ToString()));
+                            references.Add(new EventReferenceInput
+                            {
+                                Role = EventReferenceRoles.Scope,
+                                EntityType = EventEntityTypes.From(EntityType.Sprint),
+                                EntityId = oldTask.SprintId.Value.ToString(),
+                            });
                         }
                         await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
                         {

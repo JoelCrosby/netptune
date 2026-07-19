@@ -168,7 +168,16 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
                            && userIds.Contains(item.UserId))
             .ToListAsync(cancellationToken);
 
-        Context.WorkspaceAppUsers.RemoveRange(usersToRemove);
+        if (usersToRemove.Count == 0)
+        {
+            return usersToRemove;
+        }
+
+        var userIdsToRemove = usersToRemove.Select(user => user.Id);
+
+        await Context.WorkspaceAppUsers
+            .Where(user => userIdsToRemove.Contains(user.Id))
+            .ExecuteDeleteAsync(cancellationToken);
 
         return usersToRemove;
     }

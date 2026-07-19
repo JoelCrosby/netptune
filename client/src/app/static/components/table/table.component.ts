@@ -19,7 +19,8 @@ import { IconButtonComponent } from '../button/icon-button.component';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 
-const defaultContainerClass = 'border-border rounded border custom-scroll';
+const defaultContainerClass =
+  'bg-background border-border rounded border custom-scroll';
 const defaultTableClass = 'w-full text-sm custom-scroll';
 
 @Component({
@@ -221,7 +222,7 @@ export class TablePaginationComponent {
 @Directive({
   selector: 'thead[appTableHead]',
   host: {
-    class: 'bg-background border-border border-b rounded-t',
+    class: 'border-border border-b',
     '[class.sticky]': 'sticky',
     '[class.top-0]': 'sticky',
     '[class.z-10]': 'sticky',
@@ -234,7 +235,7 @@ export class TableHeadDirective {
 @Directive({
   selector: 'tr[appTableHeaderRow]',
   host: {
-    class: 'text-left text-xs font-medium tracking-wide uppercase',
+    class: 'text-left text-xs font-medium tracking-wide',
   },
 })
 export class TableHeaderRowDirective {}
@@ -242,7 +243,8 @@ export class TableHeaderRowDirective {}
 @Directive({
   selector: 'tr[appTableRow]',
   host: {
-    class: 'border-border hover:bg-foreground/5 border-b transition-colors',
+    class:
+      'border-border hover:bg-foreground/5 border-b last:border-0 transition-colors',
   },
 })
 export class TableRowDirective {}

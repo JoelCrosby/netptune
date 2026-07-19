@@ -2,48 +2,39 @@ using Mediator;
 
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Services;
+using Netptune.Core.Services.Reporting;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Reporting.Queries;
 
-public sealed record GetSprintBurndownReportQuery(int SprintId, ReportingUnit Unit, string TimeZone)
+public sealed record GetSprintBurndownReportQuery(SprintBurndownFilter Filter)
     : IRequest<ClientResponse<SprintBurndownReport>>;
 
 public sealed class GetSprintBurndownReportQueryHandler : IRequestHandler<GetSprintBurndownReportQuery, ClientResponse<SprintBurndownReport>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IIdentityService Identity;
+    private readonly IReportingScopeResolver ScopeResolver;
 
-    public GetSprintBurndownReportQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetSprintBurndownReportQueryHandler(INetptuneUnitOfWork unitOfWork, IReportingScopeResolver scopeResolver)
     {
         UnitOfWork = unitOfWork;
-        Identity = identity;
+        ScopeResolver = scopeResolver;
     }
 
     public async ValueTask<ClientResponse<SprintBurndownReport>> Handle(GetSprintBurndownReportQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var workspaceKey = Identity.GetWorkspaceKey();
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
+            var scope = await ScopeResolver.Resolve(cancellationToken);
 
-            if (!workspaceId.HasValue)
+            if (scope is null)
             {
                 return ClientResponse<SprintBurndownReport>.NotFound;
             }
 
-            var projectIds = await UnitOfWork.Projects.GetAllIdsInWorkspace(
-                workspaceId.Value,
-                cancellationToken: cancellationToken);
-
-            var scope = new ReportingScope(workspaceId.Value, projectIds.ToHashSet());
-
             var report = await UnitOfWork.Reports.GetBurndown(
                 scope,
-                request.SprintId,
-                request.Unit,
-                request.TimeZone,
+                request.Filter,
                 cancellationToken);
 
             return report is null

@@ -2,7 +2,7 @@ using Mediator;
 
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Services;
+using Netptune.Core.Services.Reporting;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Reporting.Queries;
@@ -12,31 +12,24 @@ public sealed record GetWorkloadReportQuery(ReportingFilter Filter) : IRequest<C
 public sealed class GetWorkloadReportQueryHandler : IRequestHandler<GetWorkloadReportQuery, ClientResponse<WorkloadReport>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IIdentityService Identity;
+    private readonly IReportingScopeResolver ScopeResolver;
 
-    public GetWorkloadReportQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetWorkloadReportQueryHandler(INetptuneUnitOfWork unitOfWork, IReportingScopeResolver scopeResolver)
     {
         UnitOfWork = unitOfWork;
-        Identity = identity;
+        ScopeResolver = scopeResolver;
     }
 
     public async ValueTask<ClientResponse<WorkloadReport>> Handle(GetWorkloadReportQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var workspaceKey = Identity.GetWorkspaceKey();
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
+            var scope = await ScopeResolver.Resolve(cancellationToken);
 
-            if (!workspaceId.HasValue)
+            if (scope is null)
             {
                 return ClientResponse<WorkloadReport>.NotFound;
             }
-
-            var projectIds = await UnitOfWork.Projects.GetAllIdsInWorkspace(
-                workspaceId.Value,
-                cancellationToken: cancellationToken);
-
-            var scope = new ReportingScope(workspaceId.Value, projectIds.ToHashSet());
 
             if (request.Filter.ProjectId.HasValue && !scope.CanAccessProject(request.Filter.ProjectId.Value))
             {

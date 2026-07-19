@@ -8,6 +8,8 @@ public sealed record CanonicalEventEnvelope : IEventMessage
 
     public required Guid EventId { get; init; }
 
+    public required long EventRecordId { get; init; }
+
     public required string EventKey { get; init; }
 
     public required short SchemaVersion { get; init; }

@@ -68,7 +68,7 @@ public sealed class ActivityMergeFixture : IAsyncLifetime
             Name = "Merge",
             Slug = "merge",
             CreatedAt = DateTime.UtcNow,
-            MetaInfo = new (),
+            MetaInfo = new(),
         };
 
         db.Workspaces.Add(workspace);
@@ -114,14 +114,15 @@ public sealed class ActivityMergeFixture : IAsyncLifetime
         var handler = new ActivityHandler(
             scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>(),
             scope.ServiceProvider.GetRequiredService<INotificationEventPublisher>(),
-            Options.Create(merge ?? new ActivityMergeOptions()));
+            Options.Create(merge ?? new ActivityMergeOptions()),
+            scope.ServiceProvider.GetRequiredService<DataContext>());
 
         return (scope, handler);
     }
 
     public ActivityMergeWindowJob CreateSweeper(ActivityMergeOptions? merge = null)
     {
-        return new (
+        return new(
             ScopeFactory,
             Options.Create(merge ?? new ActivityMergeOptions()),
             Provider.GetRequiredService<ILogger<ActivityMergeWindowJob>>());
@@ -141,7 +142,7 @@ public sealed class RecordingNotificationEventPublisher : INotificationEventPubl
 
     public Task PublishAsync(string userId, NotificationEvent notificationEvent, CancellationToken cancellationToken = default)
     {
-        Published.Add(new (userId, notificationEvent));
+        Published.Add(new(userId, notificationEvent));
 
         return Task.CompletedTask;
     }

@@ -96,3 +96,14 @@ public sealed class EventOutboxEntityMap : IEntityTypeConfiguration<EventOutbox>
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
+
+public sealed class EventConsumerReceiptEntityMap : IEntityTypeConfiguration<EventConsumerReceipt>
+{
+    public void Configure(EntityTypeBuilder<EventConsumerReceipt> builder)
+    {
+        builder.ToTable("event_consumer_receipts");
+        builder.HasKey(receipt => new { receipt.ConsumerKey, receipt.EventId });
+        builder.Property(receipt => receipt.ConsumerKey).HasMaxLength(128);
+        builder.HasIndex(receipt => receipt.ProcessedAt);
+    }
+}

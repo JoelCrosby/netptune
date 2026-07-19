@@ -18,6 +18,7 @@ import {
   TableRowDirective,
 } from '@static/components/table/table.component';
 import { FlowThroughputChartComponent } from './charts/flow-throughput-chart.component';
+import { FlowCycleTimeChartComponent } from './charts/flow-cycle-time-chart.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
 
 @Component({
@@ -30,6 +31,7 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
     CardTitleComponent,
     EmptyStateComponent,
     FlowThroughputChartComponent,
+    FlowCycleTimeChartComponent,
     PageLoadingComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
@@ -74,8 +76,8 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
             label="85th percentile"
             [value]="hours(report.p85CycleTimeHours)" />
           <app-stat
-            label="Cycle samples"
-            [value]="report.cycleTimeSampleSize" />
+            label="Current open tasks"
+            [value]="report.currentOpenTaskCount" />
         </div>
 
         @if (report.buckets.length) {
@@ -105,6 +107,50 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
               }
             </tbody>
           </app-table>
+
+          @if (report.cycleTimeBuckets.length) {
+            <app-card>
+              <app-card-header>
+                <app-card-title>Cycle-time trend</app-card-title>
+                <app-card-subtitle>
+                  Weekly median and 85th percentile from
+                  {{ report.cycleTimeSampleSize }} completed cycle samples
+                </app-card-subtitle>
+              </app-card-header>
+              <app-card-content>
+                <app-flow-cycle-time-chart
+                  [buckets]="report.cycleTimeBuckets" />
+              </app-card-content>
+            </app-card>
+
+            <app-table>
+              <thead appTableHead>
+                <tr appTableHeaderRow>
+                  <th class="px-4 py-3">Week starting</th>
+                  <th class="px-4 py-3">Median</th>
+                  <th class="px-4 py-3">85th percentile</th>
+                  <th class="px-4 py-3">Samples</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (
+                  bucket of report.cycleTimeBuckets;
+                  track bucket.weekStarting
+                ) {
+                  <tr appTableRow>
+                    <td class="px-4 py-2.5">{{ bucket.weekStarting }}</td>
+                    <td class="px-4 py-2.5">
+                      {{ hours(bucket.medianCycleTimeHours) }}
+                    </td>
+                    <td class="px-4 py-2.5">
+                      {{ hours(bucket.p85CycleTimeHours) }}
+                    </td>
+                    <td class="px-4 py-2.5">{{ bucket.sampleSize }}</td>
+                  </tr>
+                }
+              </tbody>
+            </app-table>
+          }
         } @else {
           <app-empty-state
             compact

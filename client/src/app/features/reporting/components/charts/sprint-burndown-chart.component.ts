@@ -3,6 +3,7 @@ import { BurndownPoint } from '@core/models/reporting';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import {
   REPORT_CHART_LABEL_STYLE,
+  formatReportValue,
   reportChartThemeSignal,
 } from '../../utils/report-chart-theme';
 
@@ -21,6 +22,7 @@ import {
       [grid]="grid()"
       [legend]="legend()"
       [stroke]="stroke"
+      [tooltip]="tooltip"
       [dataLabels]="dataLabels" />
   `,
 })
@@ -37,6 +39,13 @@ export class SprintBurndownChartComponent {
       ]),
     },
     {
+      name: 'Total scope',
+      data: this.points().map((point) => [
+        new Date(point.date).getTime(),
+        point.totalScope,
+      ]),
+    },
+    {
       name: 'Ideal',
       data: this.points().map((point) => [
         new Date(point.date).getTime(),
@@ -46,6 +55,7 @@ export class SprintBurndownChartComponent {
   ]);
   readonly colors = computed(() => [
     this.theme().primary,
+    this.theme().foreground,
     this.theme().mutedForeground,
   ]);
   readonly grid = computed(() => ({ borderColor: this.theme().border }));
@@ -63,11 +73,15 @@ export class SprintBurndownChartComponent {
   };
   readonly yaxis = {
     min: 0,
-    labels: { style: REPORT_CHART_LABEL_STYLE },
+    labels: {
+      style: REPORT_CHART_LABEL_STYLE,
+      formatter: formatReportValue,
+    },
   };
+  readonly tooltip = { y: { formatter: formatReportValue } };
   readonly stroke = {
-    width: [3, 2],
-    dashArray: [0, 6],
+    width: [3, 2, 2],
+    dashArray: [0, 0, 6],
     curve: 'straight' as const,
   };
   readonly dataLabels = { enabled: false };

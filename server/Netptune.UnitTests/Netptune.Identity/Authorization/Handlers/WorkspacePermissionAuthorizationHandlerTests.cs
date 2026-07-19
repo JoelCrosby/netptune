@@ -35,16 +35,18 @@ public class WorkspacePermissionAuthorizationHandlerTests
         Handler = new WorkspacePermissionResourceAuthorizationHandler(Identity, Cache, UnitOfWork);
     }
 
-    private static AuthorizationHandlerContext CreateContext(ClaimsPrincipal user, WorkspacePermissionRequirement requirement)
+    private static AuthorizationHandlerContext CreateContext(
+        ClaimsPrincipal user,
+        WorkspacePermissionRequirement requirement,
+        object? resource = null)
     {
-        return new AuthorizationHandlerContext([requirement], user, null);
+        return new AuthorizationHandlerContext([requirement], user, resource);
     }
 
     private static ClaimsPrincipal AuthenticatedUser() =>
         new(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, UserId)], "Bearer"));
 
-    private static ClaimsPrincipal AnonymousUser() =>
-        new(new ClaimsIdentity());
+    private static ClaimsPrincipal AnonymousUser() => new(new ClaimsIdentity());
 
     private static UserPermissions MakePermissions(WorkspaceRole role, params string[] permissions) =>
         new()
@@ -94,6 +96,26 @@ public class WorkspacePermissionAuthorizationHandlerTests
     }
 
     [Fact]
+    public async Task HandleRequirement_ShouldAuthorizeTheExplicitWorkspaceResource_InsteadOfTheHeader()
+    {
+        const string requestedWorkspace = "new-workspace";
+        var user = AuthenticatedUser();
+        var requirement = new WorkspacePermissionRequirement(NetptunePermissions.Workspace.Read);
+
+        Identity.TryGetWorkspaceKey().Returns("old-workspace");
+        Identity.GetCurrentUserId().Returns(UserId);
+        Cache.GetUserPermissions(UserId, requestedWorkspace)
+            .Returns(MakePermissions(WorkspaceRole.Owner));
+
+        var context = CreateContext(user, requirement, requestedWorkspace);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeTrue();
+        await Cache.Received(1).GetUserPermissions(UserId, requestedWorkspace);
+        await Cache.DidNotReceive().GetUserPermissions(UserId, "old-workspace");
+    }
+
+    [Fact]
     public async Task HandleRequirement_ShouldFail_WhenMemberLacksRequiredPermission()
     {
         var user = AuthenticatedUser();
@@ -137,7 +159,8 @@ public class WorkspacePermissionAuthorizationHandlerTests
 
         Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetCurrentUserId().Returns(UserId);
-        Cache.GetUserPermissions(UserId, WorkspaceKey)
+        Cache
+            .GetUserPermissions(UserId, WorkspaceKey)
             .Returns(MakePermissions(WorkspaceRole.Member, NetptunePermissions.Tasks.Read));
 
         var context = CreateContext(user, requirement);
@@ -158,7 +181,8 @@ public class WorkspacePermissionAuthorizationHandlerTests
 
         Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
         Identity.GetCurrentUserId().Returns(UserId);
-        Cache.GetUserPermissions(UserId, WorkspaceKey)
+        Cache
+            .GetUserPermissions(UserId, WorkspaceKey)
             .Returns(MakePermissions(WorkspaceRole.Admin, NetptunePermissions.Tasks.Delete));
 
         var context = CreateContext(user, requirement);

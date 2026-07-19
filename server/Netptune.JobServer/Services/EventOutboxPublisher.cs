@@ -47,6 +47,7 @@ public sealed class EventOutboxPublisher : BackgroundService
             catch (Exception exception)
             {
                 Logger.LogError(exception, "The canonical event outbox loop failed");
+
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
@@ -134,6 +135,7 @@ public sealed class EventOutboxPublisher : BackgroundService
     private static CanonicalEventEnvelope ToEnvelope(EventRecord record) => new()
     {
         EventId = record.EventId,
+        EventRecordId = record.Id,
         EventKey = record.EventKey,
         SchemaVersion = record.SchemaVersion,
         WorkspaceId = record.WorkspaceId,

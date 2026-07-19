@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
@@ -710,6 +712,91 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
 
     #endregion
 
+    #region CanonicalEvents
+
+    [Fact]
+    public async Task HandleCanonicalEvent_ShouldProjectOnce_WhenTheMessageIsRedelivered()
+    {
+        const int entityId = 1401;
+        var eventId = Guid.NewGuid();
+        var occurredAt = DateTime.UtcNow;
+        var payload = JsonSerializer.SerializeToDocument(new
+        {
+            field = "description",
+            oldValue = "before",
+            newValue = "after",
+        });
+
+        long eventRecordId;
+
+        using (var scope = fixture.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var record = new EventRecord
+            {
+                EventId = eventId,
+                WorkspaceId = fixture.WorkspaceId,
+                EventKey = EventKeys.EntityFieldTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = entityId.ToString(),
+                ActorUserId = fixture.ActorUserId,
+                OccurredAt = occurredAt,
+                RecordedAt = occurredAt,
+                RetentionClass = EventRetentionClasses.Permanent,
+                Payload = payload,
+            };
+
+            db.EventRecords.Add(record);
+            await db.SaveChangesAsync(CancellationToken);
+
+            eventRecordId = record.Id;
+        }
+
+        var envelope = new CanonicalEventEnvelope
+        {
+            EventId = eventId,
+            EventRecordId = eventRecordId,
+            EventKey = EventKeys.EntityFieldTransitioned,
+            SchemaVersion = 1,
+            WorkspaceId = fixture.WorkspaceId,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = entityId.ToString(),
+            ActorUserId = fixture.ActorUserId,
+            OccurredAt = occurredAt,
+            RecordedAt = occurredAt,
+            RetentionClass = EventRetentionClasses.Permanent,
+            Payload = payload.RootElement.Clone(),
+        };
+
+        var (firstScope, firstHandler) = fixture.CreateHandler();
+
+        using (firstScope)
+        {
+            await firstHandler.Handle(envelope, CancellationToken);
+        }
+
+        var (secondScope, secondHandler) = fixture.CreateHandler();
+
+        using (secondScope)
+        {
+            await secondHandler.Handle(envelope, CancellationToken);
+        }
+
+        var entries = await Entries(entityId);
+
+        entries.Should().ContainSingle();
+        entries[0].RevisionCount.Should().Be(1);
+
+        using var verificationScope = fixture.CreateScope();
+        var verificationDb = verificationScope.ServiceProvider.GetRequiredService<DataContext>();
+
+        (await verificationDb.EventConsumerReceipts.CountAsync(
+            receipt => receipt.EventId == eventId,
+            CancellationToken)).Should().Be(1);
+    }
+
+    #endregion
+
     #region Helpers
 
     private ActivityEvent Change(
@@ -914,7 +1001,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             .GetProperty(field)
             .GetProperty(key);
 
-        return value.ValueKind is System.Text.Json.JsonValueKind.String ? value.GetString() : null;
+        return value.ValueKind is JsonValueKind.String ? value.GetString() : null;
     }
 
     #endregion

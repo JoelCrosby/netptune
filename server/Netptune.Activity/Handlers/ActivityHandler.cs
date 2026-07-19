@@ -1,8 +1,9 @@
-using System.Text.Json;
 using System.Net;
+using System.Text.Json;
 
 using Mediator;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 using Netptune.Activity.Services;
@@ -12,11 +13,15 @@ using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
+using Netptune.Entities.Contexts;
 
 namespace Netptune.Activity.Handlers;
 
-public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
+public sealed class ActivityHandler :
+    IRequestHandler<ActivityMessage>,
+    IRequestHandler<CanonicalEventEnvelope>
 {
+    private const string CanonicalConsumerKey = "activity-projection-v1";
     private static readonly HashSet<ActivityType> AuditOnlyTypes =
     [
         ActivityType.ExportRequested,
@@ -29,15 +34,18 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly INotificationEventPublisher NotificationEvents;
     private readonly ActivityMergeOptions Merge;
+    private readonly DataContext? Context;
 
     public ActivityHandler(
         INetptuneUnitOfWork unitOfWork,
         INotificationEventPublisher notificationEvents,
-        IOptions<ActivityMergeOptions> merge)
+        IOptions<ActivityMergeOptions> merge,
+        DataContext? context = null)
     {
         UnitOfWork = unitOfWork;
         NotificationEvents = notificationEvents;
         Merge = merge.Value;
+        Context = context;
     }
 
     private sealed record ActivityRecord(ActivityEvent Event, EventRecord Log, ActivityAncestors Ancestors)
@@ -50,6 +58,8 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
         public string UserId => Event.UserId;
     }
+
+    private sealed record ActivityReferenceInput(string Role, EntityType EntityType, int? EntityId);
 
     public async ValueTask<Unit> Handle(ActivityMessage request, CancellationToken cancellationToken)
     {
@@ -64,7 +74,6 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
 
         foreach (var activity in events)
         {
-
             if (activity.EntityId is null)
             {
                 throw new Exception("IActivityEvent EntityId cannot be null.");
@@ -91,7 +100,7 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
                 UserAgent = activity.UserAgent,
                 RetentionClass = EventRetentionClasses.Audit,
                 Payload = BuildPayload(activity, ancestors),
-                References = BuildReferences(activity, ancestors),
+                References = BuildReferences(ancestors),
             };
 
             await UnitOfWork.EventRecords.AddAsync(log, cancellationToken);
@@ -119,6 +128,120 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         await PublishNotificationEventsAsync(notifications, cancellationToken);
 
         return default;
+    }
+
+    public async ValueTask<Unit> Handle(
+        CanonicalEventEnvelope request,
+        CancellationToken cancellationToken)
+    {
+        var hasProjectionContext = Context is not null;
+        var hasProjectableActivity = TryBuildActivityEvent(request, out var activity);
+        var canHandleEvent = hasProjectionContext && hasProjectableActivity;
+
+        if (!canHandleEvent)
+        {
+            return default;
+        }
+
+        var context = Context!;
+        var alreadyProjected = await context.EventConsumerReceipts.AnyAsync(
+            receipt => receipt.ConsumerKey == CanonicalConsumerKey && receipt.EventId == request.EventId,
+            cancellationToken);
+
+        if (alreadyProjected)
+        {
+            return default;
+        }
+
+        var log = await context.EventRecords
+            .SingleOrDefaultAsync(record => record.Id == request.EventRecordId, cancellationToken);
+
+        if (log is null)
+        {
+            throw new InvalidOperationException(
+                $"Canonical event record {request.EventRecordId} could not be loaded for projection.");
+        }
+
+        var ancestors = await ActivityLinks.Resolve(
+            UnitOfWork,
+            activity.EntityType,
+            activity.EntityId!.Value,
+            cancellationToken);
+        var record = new ActivityRecord(activity, log, ancestors);
+        var notifications = new List<Notification>();
+
+        await UnitOfWork.Transaction(async () =>
+        {
+            await ProjectEntriesAsync([record], cancellationToken);
+            List<ActivityRecord> notificationRecords = IsDiscrete(record) ? [record] : [];
+
+            notifications = await CreateNotificationsAsync(notificationRecords, cancellationToken);
+
+            context.EventConsumerReceipts.Add(new EventConsumerReceipt
+            {
+                ConsumerKey = CanonicalConsumerKey,
+                EventId = request.EventId,
+                ProcessedAt = DateTime.UtcNow,
+            });
+
+            await UnitOfWork.CompleteAsync(cancellationToken);
+        });
+
+        await PublishNotificationEventsAsync(notifications, cancellationToken);
+
+        return default;
+    }
+
+    private static bool TryBuildActivityEvent(
+        CanonicalEventEnvelope envelope,
+        out ActivityEvent activity)
+    {
+        activity = null!;
+        var hasWorkspaceContext = envelope.WorkspaceId.HasValue;
+        var hasActor = envelope.ActorUserId is not null;
+
+        var hasSupportedEntityType = EventEntityTypes.TryParse(envelope.SubjectType, out var entityType);
+
+        var hasNumericEntityId = int.TryParse(envelope.SubjectId, out var entityId);
+        var canProjectActivity = hasWorkspaceContext &&
+            hasActor &&
+            hasSupportedEntityType &&
+            hasNumericEntityId;
+
+        if (!canProjectActivity)
+        {
+            return false;
+        }
+
+        var payload = envelope.Payload;
+        var field = GetPayloadString(payload, "field");
+        var activityType = EventKeys.ActivityTypeFor(envelope.EventKey, payload);
+
+        activity = new ActivityEvent
+        {
+            EventId = envelope.EventId,
+            EntityType = entityType,
+            UserId = envelope.ActorUserId!,
+            Type = activityType,
+            EntityId = entityId,
+            WorkspaceId = envelope.WorkspaceId.GetValueOrDefault(),
+            Field = Enum.TryParse<TaskChangeField>(field, true, out var parsedField)
+                ? parsedField
+                : null,
+            OldValue = GetPayloadString(payload, "oldValue"),
+            NewValue = GetPayloadString(payload, "newValue"),
+            OccurredAt = envelope.OccurredAt,
+        };
+
+        return true;
+    }
+
+    private static string? GetPayloadString(JsonElement payload, string propertyName)
+    {
+        var propertyExists = payload.TryGetProperty(propertyName, out var value);
+        var propertyHasValue = propertyExists && value.ValueKind is not JsonValueKind.Null;
+
+        return propertyHasValue ? value.ToString() : null;
     }
 
     private bool IsDiscrete(ActivityRecord record) => !Merge.IsMergeable(record.Event.Type);
@@ -382,51 +505,41 @@ public sealed class ActivityHandler : IRequestHandler<ActivityMessage>
         return JsonDocument.Parse(JsonSerializer.Serialize(dict));
     }
 
-    private static HashSet<EventReference> BuildReferences(ActivityEvent activity, ActivityAncestors ancestors)
+    private static HashSet<EventReference> BuildReferences(ActivityAncestors ancestors)
     {
         var references = new HashSet<EventReference>();
 
         AddReference(
             references,
-            EventReferenceRoles.Scope,
-            EntityType.Project,
-            ancestors.ProjectId);
+            new ActivityReferenceInput(EventReferenceRoles.Scope, EntityType.Project, ancestors.ProjectId));
         AddReference(
             references,
-            EventReferenceRoles.Scope,
-            EntityType.Board,
-            ancestors.BoardId);
+            new ActivityReferenceInput(EventReferenceRoles.Scope, EntityType.Board, ancestors.BoardId));
         AddReference(
             references,
-            EventReferenceRoles.Scope,
-            EntityType.BoardGroup,
-            ancestors.BoardGroupId);
+            new ActivityReferenceInput(EventReferenceRoles.Scope, EntityType.BoardGroup, ancestors.BoardGroupId));
         AddReference(
             references,
-            EventReferenceRoles.Parent,
-            EntityType.Task,
-            ancestors.TaskId);
+            new ActivityReferenceInput(EventReferenceRoles.Parent, EntityType.Task, ancestors.TaskId));
 
         return references;
     }
 
     private static void AddReference(
         ISet<EventReference> references,
-        string role,
-        EntityType entityType,
-        int? entityId)
+        ActivityReferenceInput input)
     {
 
-        if (!entityId.HasValue)
+        if (!input.EntityId.HasValue)
         {
             return;
         }
 
         references.Add(new EventReference
         {
-            Role = role,
-            EntityType = EventEntityTypes.From(entityType),
-            EntityId = entityId.Value.ToString(),
+            Role = input.Role,
+            EntityType = EventEntityTypes.From(input.EntityType),
+            EntityId = input.EntityId.Value.ToString(),
         });
     }
 

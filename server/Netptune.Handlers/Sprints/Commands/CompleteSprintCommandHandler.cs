@@ -88,10 +88,12 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
                 },
                 References =
                 [
-                    new EventReferenceInput(
-                        EventReferenceRoles.Scope,
-                        EventEntityTypes.From(EntityType.Project),
-                        sprint.ProjectId.ToString()),
+                    new EventReferenceInput
+                    {
+                        Role = EventReferenceRoles.Scope,
+                        EntityType = EventEntityTypes.From(EntityType.Project),
+                        EntityId = sprint.ProjectId.ToString(),
+                    },
                 ],
             }, cancellationToken);
 

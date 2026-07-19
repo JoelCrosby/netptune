@@ -14,6 +14,10 @@ namespace Netptune.Repositories;
 
 public sealed class ReportingRepository : IReportingRepository
 {
+    private sealed record ReportingEventScope(ReportingScope Scope, int? ProjectId);
+
+    private sealed record ReportingEventRange(DateTime From, DateTime To);
+
     private readonly DataContext Context;
 
     public ReportingRepository(DataContext context)
@@ -26,41 +30,38 @@ public sealed class ReportingRepository : IReportingRepository
         var workspaceId = scope.WorkspaceId;
 
         var (from, to) = ResolveRange(filter);
+        var eventScope = new ReportingEventScope(scope, filter.ProjectId);
 
-        var coverageStart = await CoverageStart(
-            workspaceId,
-            scope.ProjectIds,
-            filter.ProjectId,
-            cancellationToken);
+        var coverageStart = await CoverageStart(eventScope, cancellationToken);
+        var eventRange = new ReportingEventRange(coverageStart ?? from, to);
 
-        var events = await QueryEvents(
-            workspaceId,
-            scope.ProjectIds,
-            filter.ProjectId,
-            coverageStart ?? from,
-            to,
-            cancellationToken);
+        var events = await QueryEvents(eventScope, eventRange, cancellationToken);
 
         var facts = new List<FlowFact>();
 
         foreach (var record in events.Where(record => record.SubjectType == "task"))
         {
-
             if (record.SubjectId is null)
             {
                 continue;
             }
 
-            if (record.EventKey == EventKeys.EntityCreated)
+            var field = ReadString(record.Payload, "field");
+            var isTaskCreation = record.EventKey == EventKeys.EntityCreated;
+            var isStatusTransition = record.EventKey == EventKeys.EntityFieldTransitioned &&
+                field == "status";
+
+            if (isTaskCreation)
             {
                 facts.Add(new FlowFact(record.SubjectId, record.OccurredAt, FlowFactType.Created));
+                var wasCreatedInDone = ReadString(record.Payload, "statusCategory") == nameof(StatusCategory.Done);
 
-                if (ReadString(record.Payload, "statusCategory") == nameof(StatusCategory.Done))
+                if (wasCreatedInDone)
                 {
                     facts.Add(new FlowFact(record.SubjectId, record.OccurredAt, FlowFactType.Done));
                 }
             }
-            else if (record.EventKey == EventKeys.EntityFieldTransitioned && ReadString(record.Payload, "field") == "status")
+            else if (isStatusTransition)
             {
                 var category = ReadString(record.Payload, "newCategory");
 
@@ -78,12 +79,26 @@ public sealed class ReportingRepository : IReportingRepository
 
         var timeZone = ResolveTimeZone(filter.TimeZone);
 
-        return FlowMetricCalculator.Calculate(
-            facts,
-            timeZone,
-            from,
-            to,
-            coverageStart);
+        var calculation = new FlowCalculationInput
+        {
+            Facts = facts,
+            TimeZone = timeZone,
+            From = from,
+            To = to,
+            CoverageStart = coverageStart,
+            Grouping = filter.Grouping,
+        };
+        var report = FlowMetricCalculator.Calculate(calculation);
+        var visibleProjectIds = scope.ProjectIds.ToList();
+        var currentOpenTaskCount = await Context.ProjectTasks
+            .AsNoTracking()
+            .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
+            .Where(task => task.ProjectId != null && visibleProjectIds.Contains(task.ProjectId.Value))
+            .Where(task => filter.ProjectId == null || task.ProjectId == filter.ProjectId)
+            .Where(task => task.Status.Category != StatusCategory.Done && task.Status.Category != StatusCategory.Inactive)
+            .CountAsync(cancellationToken);
+
+        return report with { CurrentOpenTaskCount = currentOpenTaskCount };
     }
 
     public async Task<WorkloadReport> GetWorkload(ReportingScope scope, ReportingFilter filter, CancellationToken cancellationToken = default)
@@ -135,31 +150,39 @@ public sealed class ReportingRepository : IReportingRepository
         };
     }
 
-    public async Task<SprintBurndownReport?> GetBurndown(ReportingScope scope, int sprintId, ReportingUnit unit, string timeZone, CancellationToken cancellationToken = default)
+    public async Task<SprintBurndownReport?> GetBurndown(
+        ReportingScope scope,
+        SprintBurndownFilter filter,
+        CancellationToken cancellationToken = default)
     {
         var workspaceId = scope.WorkspaceId;
         var sprint = await Context.Sprints
             .AsNoTracking()
-            .SingleOrDefaultAsync(item => item.Id == sprintId && item.WorkspaceId == workspaceId && !item.IsDeleted, cancellationToken);
+            .SingleOrDefaultAsync(item => item.Id == filter.SprintId && item.WorkspaceId == workspaceId && !item.IsDeleted, cancellationToken);
+        var sprintExists = sprint is not null;
+        var projectIsVisible = sprintExists && scope.CanAccessProject(sprint!.ProjectId);
+        var canReportSprint = sprintExists && projectIsVisible;
 
-        if (sprint is null || !scope.CanAccessProject(sprint.ProjectId))
+        if (!canReportSprint)
         {
             return null;
         }
 
-        if (sprint.StartedAt is null)
+        var reportableSprint = sprint!;
+
+        if (reportableSprint.StartedAt is null)
         {
             throw new InvalidReportingFilterException("This sprint has no recorded start baseline.");
         }
 
-        var end = sprint.CompletedAt ?? DateTime.UtcNow;
-        var zone = ResolveTimeZone(timeZone);
+        var end = reportableSprint.CompletedAt ?? DateTime.UtcNow;
+        var zone = ResolveTimeZone(filter.TimeZone);
 
         var records = await Context.EventRecords.AsNoTracking()
             .Include(record => record.References)
-            .Where(record => record.WorkspaceId == workspaceId && record.OccurredAt >= sprint.StartedAt && record.OccurredAt <= end)
-            .Where(record => (record.SubjectType == "sprint" && record.SubjectId == sprintId.ToString()) ||
-                record.References.Any(reference => reference.EntityType == "sprint" && reference.EntityId == sprintId.ToString()))
+            .Where(record => record.WorkspaceId == workspaceId && record.OccurredAt >= reportableSprint.StartedAt && record.OccurredAt <= end)
+            .Where(record => (record.SubjectType == "sprint" && record.SubjectId == filter.SprintId.ToString()) ||
+                record.References.Any(reference => reference.EntityType == "sprint" && reference.EntityId == filter.SprintId.ToString()))
             .OrderBy(record => record.OccurredAt).ThenBy(record => record.Id)
             .ToListAsync(cancellationToken);
 
@@ -171,13 +194,18 @@ public sealed class ReportingRepository : IReportingRepository
         var committed = members.Count;
         var added = 0;
         var removed = 0;
-        var missing = members.Values.Count(member => unit != ReportingUnit.Tasks && Value(member.Unit, member.Value, unit) is null);
+        var startingCommitment = members.Values.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
 
         var points = new List<BurndownPoint>();
         var processed = new HashSet<long>();
 
-        var localStart = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(sprint.StartedAt.Value, DateTimeKind.Utc), zone));
+        var localStart = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.SpecifyKind(reportableSprint.StartedAt.Value, DateTimeKind.Utc),
+            zone));
         var localEnd = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(end, DateTimeKind.Utc), zone));
+        var plannedEnd = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.SpecifyKind(reportableSprint.EndDate, DateTimeKind.Utc),
+            zone));
         var dates = EachDate(localStart, localEnd);
 
         foreach (var date in dates)
@@ -187,8 +215,12 @@ public sealed class ReportingRepository : IReportingRepository
             foreach (var record in records.Where(record => record.OccurredAt <= boundary && !processed.Contains(record.Id)))
             {
                 processed.Add(record.Id);
+                var isScopeMembershipChange = record.EventKey == EventKeys.ScopeMemberChanged;
+                var isMemberAttributeChange = record.EventKey == EventKeys.ScopeMemberAttributeChanged;
+                var isTaskStatusChange = record.SubjectType == "task" &&
+                    ReadString(record.Payload, "field") == "status";
 
-                if (record.EventKey == EventKeys.ScopeMemberChanged)
+                if (isScopeMembershipChange)
                 {
                     var taskId = ReadString(record.Payload, "memberId");
 
@@ -197,71 +229,78 @@ public sealed class ReportingRepository : IReportingRepository
                         continue;
                     }
 
-                    if (ReadString(record.Payload, "change") == "added")
+                    var change = ReadString(record.Payload, "change");
+                    var memberWasAdded = change == "added";
+                    var memberWasRemoved = change == "removed";
+
+                    if (memberWasAdded)
                     {
                         members[taskId] = ReadMember(record.Payload);
                         added++;
                     }
-                    else if (ReadString(record.Payload, "change") == "removed")
+                    else if (memberWasRemoved)
                     {
                         members.Remove(taskId);
                         removed++;
                     }
                 }
-                else if (record.EventKey == EventKeys.ScopeMemberAttributeChanged)
+                else if (isMemberAttributeChange)
                 {
-                    var taskId = ReadString(record.Payload, "memberId");
-
-                    if (taskId is not null && members.TryGetValue(taskId, out var member) && ReadString(record.Payload, "field") == "estimate")
-                    {
-                        members[taskId] = member with
-                        {
-                            Unit = ReadString(record.Payload, "newUnit"),
-                            Value = decimal.TryParse(ReadString(record.Payload, "newNumericValue"), out var estimate) ? estimate : null,
-                        };
-                    }
+                    ApplyMemberAttributeChange(record, members);
                 }
-                else if (record.SubjectType == "task" && ReadString(record.Payload, "field") == "status" && record.SubjectId is not null && members.TryGetValue(record.SubjectId, out var member))
+                else if (isTaskStatusChange)
                 {
-                    members[record.SubjectId] = member with { Done = ReadString(record.Payload, "newCategory") == nameof(StatusCategory.Done) };
+                    ApplyTaskStatusChange(record, members);
                 }
             }
 
-            var total = members.Values.Sum(member => Value(member.Unit, member.Value, unit) ?? 0);
-            var remaining = members.Values.Where(member => !member.Done).Sum(member => Value(member.Unit, member.Value, unit) ?? 0);
+            var total = members.Values.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
+            var remaining = members.Values.Where(member => !member.Done).Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
             var elapsed = Math.Max(0, date.DayNumber - localStart.DayNumber);
-            var duration = Math.Max(1, localEnd.DayNumber - localStart.DayNumber);
+            var duration = Math.Max(1, plannedEnd.DayNumber - localStart.DayNumber);
 
             points.Add(new BurndownPoint
             {
                 Date = date,
                 Remaining = remaining,
                 TotalScope = total,
-                Ideal = total * Math.Max(0, duration - elapsed) / duration,
+                Ideal = startingCommitment * Math.Max(0, duration - elapsed) / duration,
             });
         }
 
+        var completedCount = members.Values.Count(member => member.Done);
+        var completionPercentage = members.Count == 0
+            ? 0
+            : decimal.Round((decimal)completedCount / members.Count * 100, 1);
+        var missing = members.Values.Count(
+            member => filter.Unit != ReportingUnit.Tasks && Value(member.Unit, member.Value, filter.Unit) is null);
+
         return new SprintBurndownReport
         {
-            SprintId = sprint.Id,
-            SprintName = sprint.Name,
-            Unit = unit,
+            SprintId = reportableSprint.Id,
+            SprintName = reportableSprint.Name,
+            Unit = filter.Unit,
             Points = points,
             CommittedCount = committed,
             AddedCount = added,
             RemovedCount = removed,
             MissingEstimateCount = missing,
+            CompletedCount = completedCount,
+            CompletionPercentage = completionPercentage,
             Coverage = new ReportingCoverage(start.OccurredAt, false),
         };
     }
 
-    public async Task<VelocityReport> GetVelocity(ReportingScope scope, int projectId, ReportingUnit unit, int take, CancellationToken cancellationToken = default)
+    public async Task<VelocityReport> GetVelocity(
+        ReportingScope scope,
+        VelocityFilter filter,
+        CancellationToken cancellationToken = default)
     {
         var workspaceId = scope.WorkspaceId;
-        take = Math.Clamp(take, 1, 20);
+        var take = Math.Clamp(filter.Take, 1, 20);
 
         var sprints = await Context.Sprints.AsNoTracking()
-            .Where(sprint => sprint.WorkspaceId == workspaceId && sprint.ProjectId == projectId && sprint.CompletedAt != null && !sprint.IsDeleted)
+            .Where(sprint => sprint.WorkspaceId == workspaceId && sprint.ProjectId == filter.ProjectId && sprint.CompletedAt != null && !sprint.IsDeleted)
             .OrderByDescending(sprint => sprint.CompletedAt).Take(take)
             .ToListAsync(cancellationToken);
 
@@ -270,26 +309,48 @@ public sealed class ReportingRepository : IReportingRepository
 
         foreach (var sprint in sprints.OrderBy(item => item.CompletedAt))
         {
+            var sprintId = sprint.Id.ToString();
             var lifecycle = await Context.EventRecords
                 .AsNoTracking()
-                .Where(record => record.WorkspaceId == workspaceId && record.SubjectType == "sprint" && record.SubjectId == sprint.Id.ToString())
+                .Include(record => record.References)
+                .Where(record => record.WorkspaceId == workspaceId)
+                .Where(record => (record.SubjectType == "sprint" && record.SubjectId == sprintId) ||
+                    record.References.Any(reference => reference.EntityType == "sprint" && reference.EntityId == sprintId))
                 .OrderBy(record => record.OccurredAt)
                 .ThenBy(record => record.Id)
                 .ToListAsync(cancellationToken);
 
             var started = lifecycle.FirstOrDefault(record => ReadString(record.Payload, "state") == "started");
             var completed = lifecycle.LastOrDefault(record => ReadString(record.Payload, "state") == "completed");
+            var hasCompleteLifecycle = started is not null && completed is not null;
 
-            if (started is null || completed is null)
+            if (!hasCompleteLifecycle)
             {
                 excluded++;
                 continue;
             }
 
-            var commitment = ReadCommitment(started.Payload).Values;
-            var completion = ReadCommitment(completed.Payload).Values;
-            var committedValue = commitment.Sum(member => Value(member.Unit, member.Value, unit) ?? 0);
-            var completedValue = completion.Where(member => member.Done).Sum(member => Value(member.Unit, member.Value, unit) ?? 0);
+            var sprintStartedAt = started!.OccurredAt;
+            var sprintCompletedAt = completed!.OccurredAt;
+            var commitment = ReadCommitment(started.Payload);
+            var completion = ReadCommitment(completed.Payload);
+            var completedTaskIds = lifecycle
+                .Where(record => IsTaskCompletionWithinSprint(record, sprintStartedAt, sprintCompletedAt))
+                .Select(record => record.SubjectId!)
+                .ToHashSet();
+            var finalCompletedMembers = completion
+                .Where(pair => completedTaskIds.Contains(pair.Key))
+                .Select(pair => pair.Value)
+                .ToList();
+            var committedValue = commitment.Values.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
+            var completedValue = finalCompletedMembers.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
+            var missingEstimateCount = filter.Unit == ReportingUnit.Tasks
+                ? 0
+                : finalCompletedMembers.Count(member => member.Unit is null || member.Value is null);
+            var expectedUnit = UnitEstimateType(filter.Unit);
+            var differentUnitEstimateCount = expectedUnit is null
+                ? 0
+                : finalCompletedMembers.Count(member => member.Unit is not null && member.Unit != expectedUnit);
 
             results.Add(new VelocityPoint
             {
@@ -298,35 +359,39 @@ public sealed class ReportingRepository : IReportingRepository
                 CompletedAt = sprint.CompletedAt!.Value,
                 Committed = committedValue,
                 Completed = completedValue,
+                MissingEstimateCount = missingEstimateCount,
+                DifferentUnitEstimateCount = differentUnitEstimateCount,
             });
         }
 
-        var coverage = await CoverageStart(
-            workspaceId,
-            scope.ProjectIds,
-            projectId,
-            cancellationToken);
+        var eventScope = new ReportingEventScope(scope, filter.ProjectId);
+        var coverage = await CoverageStart(eventScope, cancellationToken);
 
         return new VelocityReport
         {
             Sprints = results,
-            Unit = unit,
+            Unit = filter.Unit,
             ExcludedSprintCount = excluded,
             Coverage = new ReportingCoverage(coverage, excluded > 0),
         };
     }
 
-    private async Task<List<EventRecord>> QueryEvents(int workspaceId, IReadOnlySet<int> permittedProjects, int? projectId, DateTime from, DateTime to, CancellationToken token)
+    private async Task<List<EventRecord>> QueryEvents(
+        ReportingEventScope eventScope,
+        ReportingEventRange range,
+        CancellationToken token)
     {
-        var visibleProjectIds = permittedProjects.Select(id => id.ToString()).ToList();
+        var visibleProjectIds = eventScope.Scope.ProjectIds.Select(id => id.ToString()).ToList();
 
         var query = Context.EventRecords
             .AsNoTracking()
             .Include(record => record.References)
-            .Where(record => record.WorkspaceId == workspaceId && record.OccurredAt >= from && record.OccurredAt <= to);
+            .Where(record => record.WorkspaceId == eventScope.Scope.WorkspaceId &&
+                record.OccurredAt >= range.From &&
+                record.OccurredAt <= range.To);
 
-        query = projectId.HasValue
-            ? query.Where(record => record.References.Any(reference => reference.EntityType == "project" && reference.EntityId == projectId.Value.ToString()))
+        query = eventScope.ProjectId.HasValue
+            ? query.Where(record => record.References.Any(reference => reference.EntityType == "project" && reference.EntityId == eventScope.ProjectId.Value.ToString()))
             : query.Where(record => record.References.Any(reference => reference.EntityType == "project" && visibleProjectIds.Contains(reference.EntityId)));
 
         var events = await query.OrderBy(record => record.OccurredAt).ThenBy(record => record.Id).ToListAsync(token);
@@ -334,15 +399,17 @@ public sealed class ReportingRepository : IReportingRepository
         return events;
     }
 
-    private async Task<DateTime?> CoverageStart(int workspaceId, IReadOnlySet<int> permittedProjects, int? projectId, CancellationToken token)
+    private async Task<DateTime?> CoverageStart(
+        ReportingEventScope eventScope,
+        CancellationToken token)
     {
-        var visibleProjectIds = permittedProjects.Select(id => id.ToString()).ToList();
+        var visibleProjectIds = eventScope.Scope.ProjectIds.Select(id => id.ToString()).ToList();
         var query = Context.EventRecords
             .AsNoTracking()
-            .Where(record => record.WorkspaceId == workspaceId && record.RetentionClass == EventRetentionClasses.Permanent);
+            .Where(record => record.WorkspaceId == eventScope.Scope.WorkspaceId && record.RetentionClass == EventRetentionClasses.Permanent);
 
-        query = projectId.HasValue
-            ? query.Where(record => record.References.Any(reference => reference.EntityType == "project" && reference.EntityId == projectId.Value.ToString()))
+        query = eventScope.ProjectId.HasValue
+            ? query.Where(record => record.References.Any(reference => reference.EntityType == "project" && reference.EntityId == eventScope.ProjectId.Value.ToString()))
             : query.Where(record => record.References.Any(reference => reference.EntityType == "project" && visibleProjectIds.Contains(reference.EntityId)));
 
         var coverageStart = await query.MinAsync(record => (DateTime?)record.OccurredAt, token);
@@ -350,10 +417,74 @@ public sealed class ReportingRepository : IReportingRepository
         return coverageStart;
     }
 
+    private static void ApplyMemberAttributeChange(
+        EventRecord record,
+        Dictionary<string, Member> members)
+    {
+        var taskId = ReadString(record.Payload, "memberId");
+        var isEstimateChange = ReadString(record.Payload, "field") == "estimate";
+        var memberExists = members.TryGetValue(taskId ?? string.Empty, out var member);
+        var canApplyEstimateChange = taskId is not null && isEstimateChange && memberExists;
+
+        if (!canApplyEstimateChange)
+        {
+            return;
+        }
+
+        var hasEstimateValue = decimal.TryParse(
+            ReadString(record.Payload, "newNumericValue"),
+            out var estimate);
+
+        members[taskId!] = member! with
+        {
+            Unit = ReadString(record.Payload, "newUnit"),
+            Value = hasEstimateValue ? estimate : null,
+        };
+    }
+
+    private static void ApplyTaskStatusChange(
+        EventRecord record,
+        Dictionary<string, Member> members)
+    {
+        var taskId = record.SubjectId;
+        var memberExists = members.TryGetValue(taskId ?? string.Empty, out var member);
+        var canApplyStatusChange = taskId is not null && memberExists;
+
+        if (!canApplyStatusChange)
+        {
+            return;
+        }
+
+        var movedToDone = ReadString(record.Payload, "newCategory") == nameof(StatusCategory.Done);
+
+        members[taskId!] = member! with { Done = movedToDone };
+    }
+
+    private static bool IsTaskCompletionWithinSprint(
+        EventRecord record,
+        DateTime sprintStartedAt,
+        DateTime sprintCompletedAt)
+    {
+        var occurredAfterStart = record.OccurredAt >= sprintStartedAt;
+        var occurredBeforeCompletion = record.OccurredAt <= sprintCompletedAt;
+        var occurredDuringSprint = occurredAfterStart && occurredBeforeCompletion;
+        var isIdentifiableTask = record.SubjectType == "task" && record.SubjectId is not null;
+        var isStatusTransition = record.EventKey == EventKeys.EntityFieldTransitioned &&
+            ReadString(record.Payload, "field") == "status";
+        var transitionedToDone = isStatusTransition &&
+            ReadString(record.Payload, "newCategory") == nameof(StatusCategory.Done);
+        var isTaskCreation = record.EventKey == EventKeys.EntityCreated;
+        var wasCreatedInDone = isTaskCreation &&
+            ReadString(record.Payload, "statusCategory") == nameof(StatusCategory.Done);
+        var isCompletion = transitionedToDone || wasCreatedInDone;
+
+        return occurredDuringSprint && isIdentifiableTask && isCompletion;
+    }
+
     private static (DateTime From, DateTime To) ResolveRange(ReportingFilter filter)
     {
         var to = filter.To ?? DateTime.UtcNow;
-        var from = filter.From ?? to.AddDays(-30);
+        var from = filter.From ?? to.AddDays(-90);
 
         if (from > to)
         {
@@ -376,13 +507,20 @@ public sealed class ReportingRepository : IReportingRepository
         }
         catch (TimeZoneNotFoundException)
         {
-            throw new InvalidReportingFilterException("The reporting time zone is invalid.");
+            return TimeZoneInfo.Utc;
+        }
+        catch (InvalidTimeZoneException)
+        {
+            return TimeZoneInfo.Utc;
         }
     }
 
     private static string? ReadString(JsonDocument document, string property)
     {
-        return document.RootElement.TryGetProperty(property, out var value) && value.ValueKind != JsonValueKind.Null ? value.ToString() : null;
+        var propertyExists = document.RootElement.TryGetProperty(property, out var value);
+        var propertyHasValue = propertyExists && value.ValueKind != JsonValueKind.Null;
+
+        return propertyHasValue ? value.ToString() : null;
     }
 
 
@@ -396,14 +534,32 @@ public sealed class ReportingRepository : IReportingRepository
 
     private static decimal? Value(string? type, decimal? value, ReportingUnit unit)
     {
-        return Enum.TryParse<EstimateType>(type, out var parsed) ? Value(parsed, value, unit) : unit == ReportingUnit.Tasks ? 1 : null;
+        var hasEstimateType = Enum.TryParse<EstimateType>(type, out var parsed);
+
+        if (hasEstimateType)
+        {
+            return Value(parsed, value, unit);
+        }
+
+        var usesTaskCount = unit == ReportingUnit.Tasks;
+
+        return usesTaskCount ? 1 : null;
     }
+
+    private static string? UnitEstimateType(ReportingUnit unit) => unit switch
+    {
+        ReportingUnit.StoryPoints => nameof(EstimateType.StoryPoints),
+        ReportingUnit.Hours => nameof(EstimateType.Hours),
+        _ => null,
+    };
 
 
     private static Dictionary<string, Member> ReadCommitment(JsonDocument document)
     {
+        var commitmentExists = document.RootElement.TryGetProperty("commitment", out var array);
+        var commitmentIsArray = commitmentExists && array.ValueKind == JsonValueKind.Array;
 
-        if (!document.RootElement.TryGetProperty("commitment", out var array) || array.ValueKind != JsonValueKind.Array)
+        if (!commitmentIsArray)
         {
             return [];
         }
@@ -412,10 +568,15 @@ public sealed class ReportingRepository : IReportingRepository
 
         foreach (var item in array.EnumerateArray())
         {
+            var hasEstimateValue = item.TryGetProperty("estimateValue", out var value) &&
+                value.ValueKind == JsonValueKind.Number;
+            var isDone = item.TryGetProperty("statusCategory", out var status) &&
+                status.ToString() == nameof(StatusCategory.Done);
+
             members[item.GetProperty("taskId").ToString()] = new Member(
                 item.TryGetProperty("estimateType", out var unit) ? unit.ToString() : null,
-                item.TryGetProperty("estimateValue", out var value) && value.ValueKind == JsonValueKind.Number ? value.GetDecimal() : null,
-                item.TryGetProperty("statusCategory", out var status) && status.ToString() == nameof(StatusCategory.Done));
+                hasEstimateValue ? value.GetDecimal() : null,
+                isDone);
         }
 
         return members;
@@ -428,7 +589,10 @@ public sealed class ReportingRepository : IReportingRepository
 
     private static IEnumerable<DateOnly> EachDate(DateOnly from, DateOnly to)
     {
-        for (var date = from; date <= to; date = date.AddDays(1)) yield return date;
+        for (var date = from; date <= to; date = date.AddDays(1))
+        {
+            yield return date;
+        }
     }
 
     private sealed record Member(string? Unit, decimal? Value, bool Done);

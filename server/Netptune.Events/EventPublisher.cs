@@ -46,19 +46,23 @@ public sealed class EventPublisher : IEventPublisher
 
     public async Task DispatchCanonical(CanonicalEventEnvelope envelope, CancellationToken cancellationToken = default)
     {
-        await Stream.EnsureCreated(cancellationToken);
+        await Stream.EnsureCanonicalCreated(cancellationToken);
+
         var subject = $"netptune.events.v1.{envelope.EventKey}";
         var message = new EventMessage
         {
-            Type = "netptune.canonical-event.v1",
+            Type = typeof(CanonicalEventEnvelope).FullName!,
             Payload = JsonSerializer.Serialize(envelope),
         };
+
         var ack = await JetStream.PublishAsync(
             subject,
             message,
             opts: new NatsJSPubOpts { MsgId = envelope.EventId.ToString("N") },
             cancellationToken: cancellationToken);
+
         ack.EnsureSuccess();
+
         Logger.LogInformation("[Event] canonical event {EventId} published to {Subject}", envelope.EventId, subject);
     }
 }

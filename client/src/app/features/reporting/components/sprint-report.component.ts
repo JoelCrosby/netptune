@@ -24,6 +24,7 @@ import {
 import { SprintBurndownChartComponent } from './charts/sprint-burndown-chart.component';
 import { SprintVelocityChartComponent } from './charts/sprint-velocity-chart.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
+import { formatReportValue } from '../utils/report-chart-theme';
 
 @Component({
   selector: 'app-sprint-report',
@@ -76,11 +77,23 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
         </app-empty-state>
       } @else if (burndown.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
-        <div class="grid grid-cols-3 gap-3">
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
           <app-stat label="Committed" [value]="report.committedCount" />
           <app-stat label="Added" [value]="report.addedCount" />
           <app-stat label="Removed" [value]="report.removedCount" />
+          <app-stat label="Completed" [value]="report.completedCount" />
+          <app-stat
+            label="Completion"
+            [value]="report.completionPercentage + '%'" />
         </div>
+
+        @if (shouldShowMissingEstimateWarning(report)) {
+          <p class="text-muted text-sm">
+            {{ report.missingEstimateCount }} current scope
+            {{ report.missingEstimateCount === 1 ? 'item has' : 'items have' }}
+            no compatible estimate and are excluded from numeric totals.
+          </p>
+        }
 
         <app-card>
           <app-card-header>
@@ -107,9 +120,15 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
             @for (point of report.points; track point.date) {
               <tr appTableRow>
                 <td class="px-4 py-2.5">{{ point.date }}</td>
-                <td class="px-4 py-2.5">{{ point.remaining }}</td>
-                <td class="px-4 py-2.5">{{ point.totalScope }}</td>
-                <td class="px-4 py-2.5">{{ point.ideal }}</td>
+                <td class="px-4 py-2.5">
+                  {{ formatValue(point.remaining) }}
+                </td>
+                <td class="px-4 py-2.5">
+                  {{ formatValue(point.totalScope) }}
+                </td>
+                <td class="px-4 py-2.5">
+                  {{ formatValue(point.ideal) }}
+                </td>
               </tr>
             }
           </tbody>
@@ -161,6 +180,8 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
                   <th class="px-4 py-3">Sprint</th>
                   <th class="px-4 py-3">Committed</th>
                   <th class="px-4 py-3">Completed</th>
+                  <th class="px-4 py-3">Missing estimate</th>
+                  <th class="px-4 py-3">Different unit</th>
                 </tr>
               </thead>
               <tbody>
@@ -169,8 +190,18 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
                     <td class="px-4 py-2.5 font-medium">
                       {{ point.sprintName }}
                     </td>
-                    <td class="px-4 py-2.5">{{ point.committed }}</td>
-                    <td class="px-4 py-2.5">{{ point.completed }}</td>
+                    <td class="px-4 py-2.5">
+                      {{ formatValue(point.committed) }}
+                    </td>
+                    <td class="px-4 py-2.5">
+                      {{ formatValue(point.completed) }}
+                    </td>
+                    <td class="px-4 py-2.5">
+                      {{ point.missingEstimateCount }}
+                    </td>
+                    <td class="px-4 py-2.5">
+                      {{ point.differentUnitEstimateCount }}
+                    </td>
                   </tr>
                 }
               </tbody>
@@ -187,13 +218,15 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
   `,
 })
 export class SprintReportComponent {
+  readonly formatValue = formatReportValue;
   readonly sprintId = input<number>();
   readonly projectId = input<number>();
   readonly unit = input.required<ReportingUnit>();
+  readonly timeZone = input.required<string>();
   readonly burndown = httpResource<SprintBurndownReport>(() => {
     const sprintId = this.sprintId();
     return sprintId
-      ? `api/reports/sprints/${sprintId}/burndown?unit=${this.unit()}&timeZone=${encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone)}`
+      ? `api/reports/sprints/${sprintId}/burndown?unit=${this.unit()}&timeZone=${encodeURIComponent(this.timeZone())}`
       : undefined;
   });
   readonly velocity = httpResource<VelocityReport>(() => {
@@ -202,4 +235,11 @@ export class SprintReportComponent {
       ? `api/reports/velocity?projectId=${projectId}&unit=${this.unit()}&take=12`
       : undefined;
   });
+
+  shouldShowMissingEstimateWarning(report: SprintBurndownReport): boolean {
+    const hasMissingEstimates = report.missingEstimateCount > 0;
+    const usesEstimatedUnit = report.unit !== 'Tasks';
+
+    return hasMissingEstimates && usesEstimatedUnit;
+  }
 }

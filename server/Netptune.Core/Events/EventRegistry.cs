@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
@@ -49,11 +51,63 @@ public static class EventKeys
 
     public static string RetentionFor(string eventKey) => eventKey switch
     {
-        EntityCreated or EntityDeleted or EntityRestored or EntityFieldTransitioned or ScopeMemberChanged or ScopeMemberAttributeChanged or ScopeLifecycleTransitioned
+        EntityCreated
+            or EntityDeleted
+            or EntityRestored
+            or EntityFieldTransitioned
+            or ScopeMemberChanged
+            or ScopeMemberAttributeChanged
+            or ScopeLifecycleTransitioned
             => EventRetentionClasses.Permanent,
-        SecurityLoginSucceeded or SecurityLoginFailed => EventRetentionClasses.Audit,
         _ => EventRetentionClasses.Audit,
     };
+
+    public static ActivityType ActivityTypeFor(string eventKey, JsonElement payload)
+    {
+        var field = ReadString(payload, "field");
+        var isEntityCreation = eventKey == EntityCreated;
+        var isScopeMembershipChange = eventKey == ScopeMemberChanged;
+        var isScopeLifecycleChange = eventKey == ScopeLifecycleTransitioned;
+        var isMemberAttributeChange = eventKey == ScopeMemberAttributeChanged;
+        var isEstimateTransition = field == "estimate";
+        var isEstimateChange = isMemberAttributeChange || isEstimateTransition;
+
+        if (isEntityCreation)
+        {
+            return ActivityType.Create;
+        }
+
+        if (isScopeMembershipChange)
+        {
+            var memberWasRemoved = ReadString(payload, "change") == "removed";
+
+            return memberWasRemoved
+                ? ActivityType.Unassign
+                : ActivityType.Assign;
+        }
+
+        if (isScopeLifecycleChange)
+        {
+            return ActivityType.ModifyStatus;
+        }
+
+        if (isEstimateChange)
+        {
+            return ActivityType.ModifyEstimate;
+        }
+
+        return field == "status"
+            ? ActivityType.ModifyStatus
+            : ActivityType.Modify;
+    }
+
+    private static string? ReadString(JsonElement payload, string propertyName)
+    {
+        var propertyExists = payload.TryGetProperty(propertyName, out var value);
+        var propertyHasValue = propertyExists && value.ValueKind is not JsonValueKind.Null;
+
+        return propertyHasValue ? value.ToString() : null;
+    }
 }
 
 public static class EventDefinitionRegistry
@@ -70,7 +124,6 @@ public static class EventDefinitionRegistry
 
     public static void Validate<TPayload>(EventWriteRequest<TPayload> request) where TPayload : class
     {
-
         if (!Definitions.TryGetValue((request.EventKey, request.SchemaVersion), out var payloadType))
         {
             throw new InvalidOperationException($"Event {request.EventKey} v{request.SchemaVersion} is not registered.");
@@ -81,7 +134,12 @@ public static class EventDefinitionRegistry
             throw new InvalidOperationException($"Event {request.EventKey} v{request.SchemaVersion} requires payload {payloadType.Name}.");
         }
 
-        if (request.WorkspaceId is null || string.IsNullOrWhiteSpace(request.SubjectType) || string.IsNullOrWhiteSpace(request.SubjectId))
+        var hasWorkspace = request.WorkspaceId.HasValue;
+        var hasSubjectType = !string.IsNullOrWhiteSpace(request.SubjectType);
+        var hasSubjectId = !string.IsNullOrWhiteSpace(request.SubjectId);
+        var hasRequiredDomainContext = hasWorkspace && hasSubjectType && hasSubjectId;
+
+        if (!hasRequiredDomainContext)
         {
             throw new InvalidOperationException($"Event {request.EventKey} requires a workspace and subject.");
         }

@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services;
@@ -15,18 +16,28 @@ public class ActivityLogger : IActivityLogger
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
     private readonly IHttpContextAccessor HttpContextAccessor;
+    private readonly ICanonicalEventCapture? Capture;
 
-    public ActivityLogger(IEventPublisher eventPublisher, IIdentityService identity, IHttpContextAccessor httpContextAccessor)
+    public ActivityLogger(
+        IEventPublisher eventPublisher,
+        IIdentityService identity,
+        IHttpContextAccessor httpContextAccessor,
+        ICanonicalEventCapture? capture = null)
     {
         EventPublisher = eventPublisher;
         Identity = identity;
         HttpContextAccessor = httpContextAccessor;
+        Capture = capture;
     }
 
     private string? GetIpAddress()
     {
         var context = HttpContextAccessor.HttpContext;
-        if (context is null) return null;
+
+        if (context is null)
+        {
+            return null;
+        }
 
         return context.Request.Headers.TryGetValue("X-Forwarded-For", out var forwarded)
             ? forwarded.ToString().Split(',')[0].Trim()
@@ -37,7 +48,6 @@ public class ActivityLogger : IActivityLogger
     {
         return HttpContextAccessor.HttpContext?.Request.Headers.UserAgent.ToString();
     }
-
 
     private int GetWorkspaceId(int? workspaceId)
     {
@@ -61,6 +71,11 @@ public class ActivityLogger : IActivityLogger
         }
 
         var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
+
+        if (WasCaptured(workspaceId, activityOptions.EntityType, activityOptions.EntityId.Value))
+        {
+            return;
+        }
 
         var activity = new ActivityEvent
         {
@@ -98,6 +113,11 @@ public class ActivityLogger : IActivityLogger
         if (changeSetOptions.Changes.Count == 0) return;
 
         var workspaceId = GetWorkspaceId(changeSetOptions.WorkspaceId);
+
+        if (WasCaptured(workspaceId, changeSetOptions.EntityType, changeSetOptions.EntityId.Value))
+        {
+            return;
+        }
         var ipAddress = GetIpAddress();
         var userAgent = GetUserAgent();
         var occurredAt = DateTime.UtcNow;
@@ -142,6 +162,7 @@ public class ActivityLogger : IActivityLogger
         var userAgent = GetUserAgent();
 
         var activities = activityOptions.EntityIds
+            .Where(entityId => !WasCaptured(workspaceId, activityOptions.EntityType, entityId))
             .Select(entityId => new ActivityEvent
             {
                 EventId = Guid.NewGuid(),
@@ -176,6 +197,11 @@ public class ActivityLogger : IActivityLogger
 
         var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
 
+        if (WasCaptured(workspaceId, activityOptions.EntityType, activityOptions.EntityId.Value))
+        {
+            return;
+        }
+
         var activity = new ActivityEvent
         {
             EventId = Guid.NewGuid(),
@@ -207,6 +233,7 @@ public class ActivityLogger : IActivityLogger
         var workspaceId = GetWorkspaceId(activityOptions.WorkspaceId);
 
         var activities = activityOptions.EntityIds
+            .Where(entityId => !WasCaptured(workspaceId, activityOptions.EntityType, entityId))
             .Select(entityId => new ActivityEvent
             {
                 EventId = Guid.NewGuid(),
@@ -220,5 +247,13 @@ public class ActivityLogger : IActivityLogger
             });
 
         EventPublisher.Dispatch(new ActivityMessage(activities));
+    }
+
+    private bool WasCaptured(int workspaceId, EntityType entityType, int entityId)
+    {
+        return Capture?.Contains(
+            workspaceId,
+            EventEntityTypes.From(entityType),
+            entityId.ToString()) ?? false;
     }
 }

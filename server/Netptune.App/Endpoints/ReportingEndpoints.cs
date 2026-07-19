@@ -9,6 +9,60 @@ namespace Netptune.App.Endpoints;
 
 public static class ReportingEndpoints
 {
+    private sealed record FlowReportRequest
+    {
+        public int? ProjectId { get; init; }
+
+        public DateTime? From { get; init; }
+
+        public DateTime? To { get; init; }
+
+        public ReportingUnit? Unit { get; init; }
+
+        public string? TimeZone { get; init; }
+
+        public ReportingGrouping? Grouping { get; init; }
+
+        public ReportingFilter ToFilter() => new()
+        {
+            ProjectId = ProjectId,
+            From = From,
+            To = To,
+            Unit = Unit ?? ReportingUnit.Tasks,
+            TimeZone = TimeZone ?? "UTC",
+            Grouping = Grouping ?? ReportingGrouping.Day,
+        };
+    }
+
+    private sealed record WorkloadReportRequest(int? ProjectId, ReportingUnit? Unit)
+    {
+        public ReportingFilter ToFilter() => new()
+        {
+            ProjectId = ProjectId,
+            Unit = Unit ?? ReportingUnit.Tasks,
+        };
+    }
+
+    private sealed record SprintBurndownReportRequest(int SprintId, ReportingUnit? Unit, string? TimeZone)
+    {
+        public SprintBurndownFilter ToFilter() => new()
+        {
+            SprintId = SprintId,
+            Unit = Unit ?? ReportingUnit.Tasks,
+            TimeZone = TimeZone ?? "UTC",
+        };
+    }
+
+    private sealed record VelocityReportRequest(int ProjectId, ReportingUnit? Unit, int? Take)
+    {
+        public VelocityFilter ToFilter() => new()
+        {
+            ProjectId = ProjectId,
+            Unit = Unit ?? ReportingUnit.Tasks,
+            Take = Take ?? 12,
+        };
+    }
+
     public static RouteGroupBuilder MapReportingEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("reports");
@@ -33,51 +87,46 @@ public static class ReportingEndpoints
 
     private static async Task<IResult> GetFlow(
         IMediator mediator,
-        int? projectId = null,
-        DateTime? from = null,
-        DateTime? to = null,
-        ReportingUnit unit = ReportingUnit.Tasks,
-        string timeZone = "UTC",
+        [AsParameters] FlowReportRequest request,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetFlowReportQuery(
-            new ReportingFilter { ProjectId = projectId, From = from, To = to, Unit = unit, TimeZone = timeZone }), cancellationToken);
+        var filter = request.ToFilter();
+        var result = await mediator.Send(new GetFlowReportQuery(filter), cancellationToken);
 
         return ToResult(result);
     }
 
     private static async Task<IResult> GetWorkload(
         IMediator mediator,
-        int? projectId = null,
-        ReportingUnit unit = ReportingUnit.Tasks,
+        [AsParameters] WorkloadReportRequest request,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetWorkloadReportQuery(
-            new ReportingFilter { ProjectId = projectId, Unit = unit }), cancellationToken);
+        var filter = request.ToFilter();
+        var result = await mediator.Send(new GetWorkloadReportQuery(filter), cancellationToken);
 
         return ToResult(result);
     }
 
     private static async Task<IResult> GetBurndown(
         IMediator mediator,
-        int sprintId,
-        ReportingUnit unit = ReportingUnit.Tasks,
-        string timeZone = "UTC",
+        [AsParameters] SprintBurndownReportRequest request,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetSprintBurndownReportQuery(sprintId, unit, timeZone), cancellationToken);
+        var filter = request.ToFilter();
+        var query = new GetSprintBurndownReportQuery(filter);
+        var result = await mediator.Send(query, cancellationToken);
 
         return ToResult(result);
     }
 
     private static async Task<IResult> GetVelocity(
         IMediator mediator,
-        int projectId,
-        ReportingUnit unit = ReportingUnit.Tasks,
-        int take = 12,
+        [AsParameters] VelocityReportRequest request,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send(new GetVelocityReportQuery(projectId, unit, take), cancellationToken);
+        var filter = request.ToFilter();
+        var query = new GetVelocityReportQuery(filter);
+        var result = await mediator.Send(query, cancellationToken);
 
         return ToResult(result);
     }

@@ -27,7 +27,14 @@ public sealed record EventWriteRequest<TPayload> where TPayload : class
     public bool Publish { get; init; } = true;
 }
 
-public sealed record EventReferenceInput(string Role, string EntityType, string EntityId);
+public sealed record EventReferenceInput
+{
+    public required string Role { get; init; }
+
+    public required string EntityType { get; init; }
+
+    public required string EntityId { get; init; }
+}
 
 public sealed record EntityCreatedPayload
 {

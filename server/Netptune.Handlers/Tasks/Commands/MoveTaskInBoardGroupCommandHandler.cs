@@ -154,12 +154,22 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
 
         if (projectId.HasValue)
         {
-            references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), projectId.Value.ToString()));
+            references.Add(new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Project),
+                EntityId = projectId.Value.ToString(),
+            });
         }
 
         if (sprintId.HasValue)
         {
-            references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Sprint), sprintId.Value.ToString()));
+            references.Add(new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Sprint),
+                EntityId = sprintId.Value.ToString(),
+            });
         }
 
         return references;

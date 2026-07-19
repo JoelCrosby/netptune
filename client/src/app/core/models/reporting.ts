@@ -1,4 +1,5 @@
 export type ReportingUnit = 'Tasks' | 'StoryPoints' | 'Hours';
+export type ReportingGrouping = 'Day' | 'Week';
 
 export interface ReportingCoverage {
   coverageStart?: string | null;
@@ -8,7 +9,13 @@ export interface ReportingCoverage {
 export interface FlowBucket {
   date: string;
   completed: number;
+}
+
+export interface CycleTimeBucket {
+  weekStarting: string;
   medianCycleTimeHours?: number | null;
+  p85CycleTimeHours?: number | null;
+  sampleSize: number;
 }
 
 export interface FlowReport {
@@ -17,6 +24,8 @@ export interface FlowReport {
   medianCycleTimeHours?: number | null;
   p85CycleTimeHours?: number | null;
   cycleTimeSampleSize: number;
+  currentOpenTaskCount: number;
+  cycleTimeBuckets: CycleTimeBucket[];
   coverage: ReportingCoverage;
 }
 
@@ -52,6 +61,8 @@ export interface SprintBurndownReport {
   addedCount: number;
   removedCount: number;
   missingEstimateCount: number;
+  completedCount: number;
+  completionPercentage: number;
   coverage: ReportingCoverage;
 }
 
@@ -61,6 +72,8 @@ export interface VelocityPoint {
   completedAt: string;
   committed: number;
   completed: number;
+  missingEstimateCount: number;
+  differentUnitEstimateCount: number;
 }
 
 export interface VelocityReport {

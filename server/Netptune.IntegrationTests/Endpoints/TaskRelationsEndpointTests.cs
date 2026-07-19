@@ -14,6 +14,7 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
+[Collection(WorkspaceMutationCollection.Name)]
 public sealed class TaskRelationsEndpointTests
 {
     private readonly HttpClient Client;

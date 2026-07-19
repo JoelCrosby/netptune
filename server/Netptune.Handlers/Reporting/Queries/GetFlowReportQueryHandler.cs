@@ -2,7 +2,7 @@ using Mediator;
 
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Services;
+using Netptune.Core.Services.Reporting;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Reporting.Queries;
@@ -12,31 +12,24 @@ public sealed record GetFlowReportQuery(ReportingFilter Filter) : IRequest<Clien
 public sealed class GetFlowReportQueryHandler : IRequestHandler<GetFlowReportQuery, ClientResponse<FlowReport>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly IIdentityService Identity;
+    private readonly IReportingScopeResolver ScopeResolver;
 
-    public GetFlowReportQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetFlowReportQueryHandler(INetptuneUnitOfWork unitOfWork, IReportingScopeResolver scopeResolver)
     {
         UnitOfWork = unitOfWork;
-        Identity = identity;
+        ScopeResolver = scopeResolver;
     }
 
     public async ValueTask<ClientResponse<FlowReport>> Handle(GetFlowReportQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var workspaceKey = Identity.GetWorkspaceKey();
-            var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
+            var scope = await ScopeResolver.Resolve(cancellationToken);
 
-            if (!workspaceId.HasValue)
+            if (scope is null)
             {
                 return ClientResponse<FlowReport>.NotFound;
             }
-
-            var projectIds = await UnitOfWork.Projects.GetAllIdsInWorkspace(
-                workspaceId.Value,
-                cancellationToken: cancellationToken);
-
-            var scope = new ReportingScope(workspaceId.Value, projectIds.ToHashSet());
 
             if (request.Filter.ProjectId.HasValue && !scope.CanAccessProject(request.Filter.ProjectId.Value))
             {

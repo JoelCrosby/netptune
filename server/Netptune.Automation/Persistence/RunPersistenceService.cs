@@ -129,12 +129,22 @@ internal sealed class RunPersistenceService
 
                 if (task.ProjectId.HasValue)
                 {
-                    references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), task.ProjectId.Value.ToString()));
+                    references.Add(new EventReferenceInput
+                    {
+                        Role = EventReferenceRoles.Scope,
+                        EntityType = EventEntityTypes.From(EntityType.Project),
+                        EntityId = task.ProjectId.Value.ToString(),
+                    });
                 }
 
                 if (task.SprintId.HasValue)
                 {
-                    references.Add(new(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Sprint), task.SprintId.Value.ToString()));
+                    references.Add(new EventReferenceInput
+                    {
+                        Role = EventReferenceRoles.Scope,
+                        EntityType = EventEntityTypes.From(EntityType.Sprint),
+                        EntityId = task.SprintId.Value.ToString(),
+                    });
                 }
                 await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
                 {

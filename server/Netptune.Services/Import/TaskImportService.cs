@@ -180,7 +180,12 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
                     },
                     References =
                     [
-                        new EventReferenceInput(EventReferenceRoles.Scope, EventEntityTypes.From(EntityType.Project), project.Id.ToString()),
+                        new EventReferenceInput
+                        {
+                            Role = EventReferenceRoles.Scope,
+                            EntityType = EventEntityTypes.From(EntityType.Project),
+                            EntityId = project.Id.ToString(),
+                        },
                     ],
                 });
             }
@@ -407,7 +412,7 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         if (string.IsNullOrWhiteSpace(cell))
         {
-            return new List<string>();
+            return [];
         }
 
         return cell.Split('|', StringSplitOptions.RemoveEmptyEntries).ToHashSet().ToList();
@@ -431,12 +436,12 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         if (string.IsNullOrWhiteSpace(tagString))
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         if (!tagString.Contains('|'))
         {
-            return new[] { tagString.Trim() };
+            return [tagString.Trim()];
         }
 
         return tagString

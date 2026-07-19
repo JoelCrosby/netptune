@@ -44,30 +44,29 @@ public static class WorkspacesEndpoints
         string key,
         CancellationToken cancellationToken)
     {
+        var result = await mediator.Send(new GetWorkspaceQuery(key), cancellationToken);
+
+        if (result is null)
+        {
+            return Results.NotFound();
+        }
+
         var authorizationResult = await authorizationService.AuthorizeAsync(
             context.User, key, NetptunePermissions.Workspace.Read);
 
-        if (!authorizationResult.Succeeded) return Results.Forbid();
-
-        var result = await mediator.Send(new GetWorkspaceQuery(key), cancellationToken);
-
-        if (result is null) return Results.NotFound();
+        if (!authorizationResult.Succeeded)
+        {
+            return Results.Forbid();
+        }
 
         return Results.Ok(result);
     }
 
     public static async Task<IResult> HandlePut(
         IMediator mediator,
-        IAuthorizationService authorizationService,
-        HttpContext context,
         UpdateWorkspaceRequest request,
         CancellationToken cancellationToken)
     {
-        var authorizationResult = await authorizationService.AuthorizeAsync(
-            context.User, request.Slug!, NetptunePermissions.Workspace.Update);
-
-        if (!authorizationResult.Succeeded) return Results.Forbid();
-
         var result = await mediator.Send(new UpdateWorkspaceCommand(request), cancellationToken);
 
         return Results.Ok(result);
@@ -109,14 +108,27 @@ public static class WorkspacesEndpoints
         string key,
         CancellationToken cancellationToken)
     {
+        var workspace = await mediator.Send(new GetWorkspaceQuery(key), cancellationToken);
+
+        if (workspace is null)
+        {
+            return Results.NotFound();
+        }
+
         var authorizationResult = await authorizationService.AuthorizeAsync(
             context.User, key, NetptunePermissions.Workspace.Read);
 
-        if (!authorizationResult.Succeeded) return Results.Forbid();
+        if (!authorizationResult.Succeeded)
+        {
+            return Results.Forbid();
+        }
 
         var result = await mediator.Send(new LeaveWorkspaceCommand(key), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
 
         return Results.Ok(result);
     }

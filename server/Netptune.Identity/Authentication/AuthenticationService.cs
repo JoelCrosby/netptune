@@ -17,7 +17,6 @@ using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
-using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;

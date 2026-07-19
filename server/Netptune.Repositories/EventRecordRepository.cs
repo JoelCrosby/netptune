@@ -1,10 +1,9 @@
 using System.Linq.Expressions;
 using System.Text.Json;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+using Dapper;
 
-using Npgsql;
+using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -22,24 +21,26 @@ namespace Netptune.Repositories;
 
 public class EventRecordRepository : Repository<DataContext, EventRecord, long>, IEventRecordRepository
 {
+    private sealed record EventSubject(int WorkspaceId, string SubjectType, string SubjectId);
+
     public EventRecordRepository(DataContext context, IDbConnectionFactory connectionFactory)
         : base(context, connectionFactory)
     {
     }
 
-    public async Task<EventRecord> AppendAsync(
-        EventRecord record,
-        bool publish,
-        CancellationToken cancellationToken = default)
+    public async Task<EventRecord> AppendAsync(EventRecord record, bool publish, CancellationToken cancellationToken = default)
     {
+        var hasIdentifiableSubject = record.WorkspaceId.HasValue &&
+            record.SubjectType is not null &&
+            record.SubjectId is not null;
 
-        if (record.WorkspaceId.HasValue && record.SubjectType is not null && record.SubjectId is not null)
+        if (hasIdentifiableSubject)
         {
-            record.SubjectSequence = await AllocateSubjectSequence(
-                record.WorkspaceId.Value,
-                record.SubjectType,
-                record.SubjectId,
-                cancellationToken);
+            var subject = new EventSubject(
+                record.WorkspaceId.GetValueOrDefault(),
+                record.SubjectType!,
+                record.SubjectId!);
+            record.SubjectSequence = await AllocateSubjectSequence(subject, cancellationToken);
         }
 
         await Entities.AddAsync(record, cancellationToken);
@@ -56,37 +57,27 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         return record;
     }
 
-    private async Task<long> AllocateSubjectSequence(
-        int workspaceId,
-        string subjectType,
-        string subjectId,
-        CancellationToken cancellationToken)
+    private async Task<long> AllocateSubjectSequence(EventSubject subject, CancellationToken cancellationToken)
     {
-        var connection = (NpgsqlConnection)Context.Database.GetDbConnection();
-
-        if (connection.State != System.Data.ConnectionState.Open)
-        {
-            await connection.OpenAsync(cancellationToken);
-        }
-
-        await using var command = connection.CreateCommand();
-        command.Transaction = Context.Database.CurrentTransaction?.GetDbTransaction() as NpgsqlTransaction;
-        command.CommandText =
+        const string sql =
             """
             INSERT INTO event_stream_heads (workspace_id, subject_type, subject_id, current_sequence)
-            VALUES (@workspace_id, @subject_type, @subject_id, 1)
+            VALUES (@WorkspaceId, @SubjectType, @SubjectId, 1)
             ON CONFLICT (workspace_id, subject_type, subject_id)
             DO UPDATE SET current_sequence = event_stream_heads.current_sequence + 1
             RETURNING current_sequence;
             """;
-        command.Parameters.AddWithValue("workspace_id", workspaceId);
-        command.Parameters.AddWithValue("subject_type", subjectType);
-        command.Parameters.AddWithValue("subject_id", subjectId);
+        using var connection = ConnectionFactory.StartConnection();
 
-        var sequence = await command.ExecuteScalarAsync(cancellationToken)
-            ?? throw new InvalidOperationException("The event subject sequence could not be allocated.");
+        var command = new CommandDefinition(sql, subject, cancellationToken: cancellationToken);
+        var sequence = await connection.ExecuteScalarAsync<long?>(command);
 
-        return (long)sequence;
+        if (!sequence.HasValue)
+        {
+            throw new InvalidOperationException("The event subject sequence could not be allocated.");
+        }
+
+        return sequence.Value;
     }
 
     public async Task<List<ActivityViewModel>> GetActivities(
@@ -100,11 +91,11 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
 
         Expression<Func<ActivityEntry, bool>> predicate = entityType switch
         {
-            EntityType.Task => x => (x.EntityId == entityId || x.TaskId == entityId),
-            EntityType.Board => x => (x.EntityId == entityId || x.BoardId == entityId),
-            EntityType.Project => x => (x.EntityId == entityId || x.ProjectId == entityId),
-            EntityType.Workspace => x => (x.EntityId == entityId || x.WorkspaceId == entityId),
-            EntityType.BoardGroup => x => (x.EntityId == entityId || x.BoardGroupId == entityId),
+            EntityType.Task => x => x.EntityId == entityId || x.TaskId == entityId,
+            EntityType.Board => x => x.EntityId == entityId || x.BoardId == entityId,
+            EntityType.Project => x => x.EntityId == entityId || x.ProjectId == entityId,
+            EntityType.Workspace => x => x.EntityId == entityId || x.WorkspaceId == entityId,
+            EntityType.BoardGroup => x => x.EntityId == entityId || x.BoardGroupId == entityId,
             EntityType.Sprint => x => x.EntityId == entityId,
             EntityType.Status => x => x.EntityId == entityId,
             _ => _ => true,
@@ -233,9 +224,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
 
         if (filter.ActivityType is not null)
         {
-            var activityType = (int)filter.ActivityType.Value;
-            query = query.Where(x =>
-                x.Payload.RootElement.GetProperty("activityType").GetInt32() == activityType);
+            query = ApplyActivityTypeFilter(query, filter.ActivityType.Value);
         }
 
         if (filter.From is not null)
@@ -249,6 +238,80 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         }
 
         return query;
+    }
+
+    private static IQueryable<EventRecord> ApplyActivityTypeFilter(
+        IQueryable<EventRecord> query,
+        ActivityType activityType)
+    {
+        var legacyActivityType = (int)activityType;
+
+        return activityType switch
+        {
+            ActivityType.Create => ApplyCreateActivityFilter(query, legacyActivityType),
+            ActivityType.ModifyStatus => ApplyStatusModificationFilter(query, legacyActivityType),
+            ActivityType.ModifyEstimate => ApplyEstimateModificationFilter(query, legacyActivityType),
+            ActivityType.Assign => ApplyAssignmentFilter(query, legacyActivityType),
+            ActivityType.Unassign => ApplyUnassignmentFilter(query, legacyActivityType),
+            _ => ApplyLegacyActivityFilter(query, legacyActivityType),
+        };
+    }
+
+    private static IQueryable<EventRecord> ApplyCreateActivityFilter(
+        IQueryable<EventRecord> query,
+        int legacyActivityType)
+    {
+        return query.Where(record =>
+            record.EventKey == EventKeys.EntityCreated ||
+            (record.EventKey == EventKeys.EntityActivityRecorded &&
+                record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
+    }
+
+    private static IQueryable<EventRecord> ApplyStatusModificationFilter(
+        IQueryable<EventRecord> query,
+        int legacyActivityType)
+    {
+        return query.Where(record =>
+            record.EventKey == EventKeys.ScopeLifecycleTransitioned ||
+            (record.EventKey == EventKeys.EntityFieldTransitioned && record.Payload.RootElement.GetProperty("field").GetString() == "status") ||
+            (record.EventKey == EventKeys.EntityActivityRecorded && record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
+    }
+
+    private static IQueryable<EventRecord> ApplyEstimateModificationFilter(
+        IQueryable<EventRecord> query,
+        int legacyActivityType)
+    {
+        return query.Where(record =>
+            record.EventKey == EventKeys.ScopeMemberAttributeChanged ||
+            (record.EventKey == EventKeys.EntityFieldTransitioned && record.Payload.RootElement.GetProperty("field").GetString() == "estimate") ||
+            (record.EventKey == EventKeys.EntityActivityRecorded && record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
+    }
+
+    private static IQueryable<EventRecord> ApplyAssignmentFilter(
+        IQueryable<EventRecord> query,
+        int legacyActivityType)
+    {
+        return query.Where(record =>
+            (record.EventKey == EventKeys.ScopeMemberChanged && record.Payload.RootElement.GetProperty("change").GetString() != "removed") ||
+            (record.EventKey == EventKeys.EntityActivityRecorded && record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
+    }
+
+    private static IQueryable<EventRecord> ApplyUnassignmentFilter(
+        IQueryable<EventRecord> query,
+        int legacyActivityType)
+    {
+        return query.Where(record =>
+            (record.EventKey == EventKeys.ScopeMemberChanged && record.Payload.RootElement.GetProperty("change").GetString() == "removed") ||
+            (record.EventKey == EventKeys.EntityActivityRecorded && record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
+    }
+
+    private static IQueryable<EventRecord> ApplyLegacyActivityFilter(
+        IQueryable<EventRecord> query,
+        int legacyActivityType)
+    {
+        return query.Where(record =>
+            record.EventKey == EventKeys.EntityActivityRecorded &&
+            record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType);
     }
 
     private async Task<List<AuditLogViewModel>> ToAuditViewModels(
@@ -269,28 +332,47 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         return records.Select(record =>
         {
             actors.TryGetValue(record.ActorUserId ?? string.Empty, out var actor);
+
             var payload = record.Payload.RootElement;
-            var activityType = payload.TryGetProperty("activityType", out var typeValue)
+            var hasLegacyActivityType = payload.TryGetProperty("activityType", out var typeValue);
+            var activityType = hasLegacyActivityType
                 ? (ActivityType)typeValue.GetInt32()
-                : ActivityType.Modify;
-            var entityType = EventEntityTypes.TryParse(record.SubjectType, out var parsedEntityType)
+                : EventKeys.ActivityTypeFor(record.EventKey, payload);
+            var hasKnownEntityType = EventEntityTypes.TryParse(record.SubjectType, out var parsedEntityType);
+            var entityType = hasKnownEntityType
                 ? parsedEntityType
                 : EntityType.Workspace;
+            var actorIsUnknown = actor is null;
+            var actorHasNoDisplayName = !actorIsUnknown &&
+                string.IsNullOrEmpty(actor!.Firstname) &&
+                string.IsNullOrEmpty(actor.Lastname);
+            string actorDisplayName;
+
+            if (actorIsUnknown)
+            {
+                actorDisplayName = "System";
+            }
+            else if (actorHasNoDisplayName)
+            {
+                actorDisplayName = actor!.UserName!;
+            }
+            else
+            {
+                actorDisplayName = actor!.Firstname + " " + actor.Lastname;
+            }
+
+            var hasNumericEntityId = int.TryParse(record.SubjectId, out var entityId);
 
             return new AuditLogViewModel
             {
                 Id = record.Id,
                 OccurredAt = record.OccurredAt,
                 UserId = record.ActorUserId,
-                UserDisplayName = actor is null
-                    ? "System"
-                    : string.IsNullOrEmpty(actor.Firstname) && string.IsNullOrEmpty(actor.Lastname)
-                        ? actor.UserName!
-                        : actor.Firstname + " " + actor.Lastname,
+                UserDisplayName = actorDisplayName,
                 UserPictureUrl = actor?.PictureUrl,
                 Type = activityType,
                 EntityType = entityType,
-                EntityId = int.TryParse(record.SubjectId, out var entityId) ? entityId : null,
+                EntityId = hasNumericEntityId ? entityId : null,
                 WorkspaceSlug = GetPayloadString(payload, "workspaceSlug"),
                 ProjectSlug = GetPayloadString(payload, "projectSlug"),
                 BoardSlug = GetPayloadString(payload, "boardSlug"),

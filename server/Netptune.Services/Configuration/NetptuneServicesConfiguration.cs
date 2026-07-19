@@ -7,10 +7,12 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
 using Netptune.Core.Services.Integration;
+using Netptune.Core.Services.Reporting;
 using Netptune.Services.Activity;
 using Netptune.Services.Export;
 using Netptune.Services.Import;
 using Netptune.Services.Integration;
+using Netptune.Services.Reporting;
 
 
 namespace Netptune.Services.Configuration;
@@ -30,6 +32,7 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<ITaskImportService, TaskImportService>();
         services.AddTransient<ITaskExportService, TaskExportService>();
         services.AddTransient<IWebService, WebService>();
+        services.AddTransient<IReportingScopeResolver, ReportingScopeResolver>();
 
         services.AddSafeHttpClient<IHtmlDocumentService, HtmlDocumentService>(options =>
         {
@@ -45,6 +48,7 @@ public static class NetptuneServicesConfiguration
     public static IServiceCollection AddNetptuneEventRecording(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
+        services.AddScoped<ICanonicalEventCapture, CanonicalEventCapture>();
         services.AddTransient<IEventRecordWriter, EventRecordWriter>();
 
         return services;

@@ -1,7 +1,6 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;

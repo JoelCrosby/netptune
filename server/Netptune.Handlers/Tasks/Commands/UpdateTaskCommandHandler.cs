@@ -153,18 +153,22 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
 
             if (projectId.HasValue)
             {
-                references.Add(new(
-                    EventReferenceRoles.Scope,
-                    EventEntityTypes.From(EntityType.Project),
-                    projectId.Value.ToString()));
+                references.Add(new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Scope,
+                    EntityType = EventEntityTypes.From(EntityType.Project),
+                    EntityId = projectId.Value.ToString(),
+                });
             }
 
             if (updated.SprintId.HasValue)
             {
-                references.Add(new EventReferenceInput(
-                    EventReferenceRoles.Scope,
-                    EventEntityTypes.From(EntityType.Sprint),
-                    updated.SprintId.Value.ToString()));
+                references.Add(new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Scope,
+                    EntityType = EventEntityTypes.From(EntityType.Sprint),
+                    EntityId = updated.SprintId.Value.ToString(),
+                });
             }
 
             await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
@@ -197,7 +201,12 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
                     },
                     References =
                     [
-                        new EventReferenceInput(EventReferenceRoles.Member, EventEntityTypes.From(EntityType.Task), updated.Id.ToString()),
+                        new EventReferenceInput
+                        {
+                            Role = EventReferenceRoles.Member,
+                            EntityType = EventEntityTypes.From(EntityType.Task),
+                            EntityId = updated.Id.ToString(),
+                        },
                         ..references,
                     ],
                 }, cancellationToken);
