@@ -1,7 +1,5 @@
 using Mediator;
 
-using Microsoft.EntityFrameworkCore;
-
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
@@ -14,8 +12,6 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
-
-using Polly;
 
 namespace Netptune.Handlers.Tasks.Commands;
 
@@ -115,31 +111,20 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             await AddTaskToBoardGroup(project, task, cancellationToken);
         }
 
-        var scopeIdRef = await UnitOfWork.Tasks.GetNextScopeId(project.Id, cancellationToken: cancellationToken);
+        var scopeId = await UnitOfWork.Projects.ReserveTaskScopeIds(project.Id, 1, cancellationToken);
 
-        if (!scopeIdRef.HasValue)
+        if (!scopeId.HasValue)
         {
             return ClientResponse<TaskViewModel>.Failed($"Unable to get scope id for project with id {project.Id}");
         }
 
-        var scopeId = scopeIdRef.Value;
-        task.ProjectScopeId = scopeId;
+        task.ProjectScopeId = scopeId.Value;
 
         var result = await UnitOfWork.Tasks.AddAsync(task, cancellationToken);
 
         await UnitOfWork.Transaction(async () =>
         {
-            await Policy
-                .Handle<DbUpdateException>()
-                .Retry(4, (_, _, _) => scopeId++)
-                .Execute(async () =>
-                {
-                    result.ProjectScopeId = scopeId;
-
-                    var savedCount = await UnitOfWork.CompleteAsync(cancellationToken);
-
-                    return savedCount;
-                });
+            await UnitOfWork.CompleteAsync(cancellationToken);
 
             var creationReferences = new List<EventReferenceInput>
             {

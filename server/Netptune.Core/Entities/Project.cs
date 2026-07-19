@@ -24,6 +24,8 @@ public record Project : WorkspaceEntity<int>
 
     public int? DefaultStatusId { get; set; }
 
+    public int NextTaskScopeId { get; set; } = 1;
+
     #region NavigationProperties
 
     [JsonIgnore]

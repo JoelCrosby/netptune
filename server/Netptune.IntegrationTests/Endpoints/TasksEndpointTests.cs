@@ -292,6 +292,74 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Create_ShouldAllocateUniqueProjectScopeIds_WhenRequestsAreConcurrent()
+    {
+        const int requestCount = 50;
+
+        var inProgressStatus = await GetStatus("in-progress");
+        var requests = Enumerable.Range(0, requestCount)
+            .Select(index => Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+            {
+                Name = $"Concurrent scope allocation {index}",
+                Description = "Task used to verify atomic project scope allocation",
+                StatusId = inProgressStatus.Id,
+                ProjectId = 1,
+            }));
+
+        var responses = await Task.WhenAll(requests);
+
+        responses.Should().OnlyContain(response => response.StatusCode == HttpStatusCode.OK);
+
+        var results = await Task.WhenAll(responses.Select(response =>
+            response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>()));
+        var tasks = results.Select(result => result!.Payload!).ToList();
+
+        tasks.Should().HaveCount(requestCount);
+        tasks.Select(task => task.ProjectScopeId).Should().OnlyHaveUniqueItems();
+        tasks.Select(task => task.SystemId).Should().OnlyHaveUniqueItems();
+    }
+
+    [Fact]
+    public async Task BulkUpdate_ShouldReserveUniqueProjectScopeIds_WhenMovingTasksToProject()
+    {
+        const int targetProjectId = 3;
+
+        var inProgressStatus = await GetStatus("in-progress");
+        var createRequests = Enumerable.Range(0, 2)
+            .Select(index => Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+            {
+                Name = $"Bulk project move scope allocation {index}",
+                Description = "Task used to verify project move scope allocation",
+                StatusId = inProgressStatus.Id,
+                ProjectId = 1,
+            }));
+        var createResponses = await Task.WhenAll(createRequests);
+        var createResults = await Task.WhenAll(createResponses.Select(response =>
+            response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>()));
+        var taskIds = createResults.Select(result => result!.Payload!.Id).ToList();
+
+        var moveResponse = await Client.PostAsJsonAsync("api/tasks/bulk-update", new BulkUpdateTasksRequest
+        {
+            TaskIds = taskIds,
+            ProjectId = targetProjectId,
+        });
+
+        moveResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var movedTasks = await Task.WhenAll(taskIds.Select(async taskId =>
+        {
+            var response = await Client.GetAsync($"api/tasks/{taskId}");
+            var task = await response.Content.ReadFromJsonAsync<TaskViewModel>();
+
+            return task;
+        }));
+
+        movedTasks.Should().OnlyContain(task => task!.ProjectId == targetProjectId);
+        movedTasks.Select(task => task!.ProjectScopeId).Should().OnlyHaveUniqueItems();
+        movedTasks.Select(task => task!.SystemId).Should().OnlyHaveUniqueItems();
+    }
+
+    [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenInputNotValid()
     {
         var request = new AddProjectTaskRequest

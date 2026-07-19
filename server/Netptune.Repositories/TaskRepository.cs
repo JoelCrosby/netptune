@@ -558,17 +558,6 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return results.ToList();
     }
 
-    public async Task<int?> GetNextScopeId(int projectId, int increment = 0, CancellationToken cancellationToken = default)
-    {
-        var taskCount = await Entities
-            .Where(x => x.ProjectId == projectId)
-            .OrderByDescending(x => x.ProjectScopeId)
-            .Select(x => x.ProjectScopeId)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        return taskCount + 1 + increment;
-    }
-
     public Task<int> UpdateTaskStatus(int id, int statusId, CancellationToken cancellationToken = default)
     {
         return Entities

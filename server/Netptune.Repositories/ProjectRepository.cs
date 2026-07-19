@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
 
+using Dapper;
+
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
@@ -11,6 +13,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.Sql;
 
 namespace Netptune.Repositories;
 
@@ -95,6 +98,27 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .AsNoTracking()
             .Select(project => new TaskCreationProject(project.Id, project.Name, project.WorkspaceId, project.DefaultStatusId))
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<int?> ReserveTaskScopeIds(
+        int projectId,
+        int count,
+        CancellationToken cancellationToken = default)
+    {
+
+        if (count <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), count, "Scope ID reservation count must be positive.");
+        }
+
+        using var connection = ConnectionFactory.StartConnection();
+        var command = new CommandDefinition(
+            SqlScripts.ReserveTaskScopeIds,
+            new { projectId, count },
+            cancellationToken: cancellationToken);
+        var firstScopeId = await connection.QuerySingleOrDefaultAsync<int?>(command);
+
+        return firstScopeId;
     }
 
     public async Task<bool> IsProjectKeyAvailable(string key, int workspaceId, CancellationToken cancellationToken = default)

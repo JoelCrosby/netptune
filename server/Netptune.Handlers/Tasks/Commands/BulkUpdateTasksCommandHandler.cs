@@ -54,8 +54,22 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             ? await UnitOfWork.Statuses.GetInWorkspace(req.StatusId.Value, workspaceId, cancellationToken: cancellationToken)
             : null;
 
-        // Tasks moved to the same project each need a distinct scope id; track per-project increments.
-        var scopeIncrements = new Dictionary<int, int>();
+        var targetProjectId = req.ProjectId;
+        var movedTaskCount = targetProjectId.HasValue
+            ? tasks.Count(task => task.ProjectId != targetProjectId.Value)
+            : 0;
+        var nextProjectScopeId = movedTaskCount > 0
+            ? await UnitOfWork.Projects.ReserveTaskScopeIds(
+                targetProjectId!.Value,
+                movedTaskCount,
+                cancellationToken)
+            : null;
+        var scopeReservationFailed = movedTaskCount > 0 && !nextProjectScopeId.HasValue;
+
+        if (scopeReservationFailed)
+        {
+            return ClientResponse.Failed($"Project with Id {targetProjectId} not found");
+        }
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -100,11 +114,11 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
 
                 if (projectChanged)
                 {
-                    await MoveToProject(
+                    MoveToProject(
                         task,
                         req.ProjectId!.Value,
-                        scopeIncrements,
-                        cancellationToken);
+                        nextProjectScopeId!.Value);
+                    nextProjectScopeId++;
                 }
 
                 if (req.AssigneeIds is not null)
@@ -292,17 +306,9 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
         ],
         }, cancellationToken);
 
-    private async Task MoveToProject(ProjectTask task, int projectId, Dictionary<int, int> scopeIncrements, CancellationToken cancellationToken)
+    private static void MoveToProject(ProjectTask task, int projectId, int projectScopeId)
     {
-        var increment = scopeIncrements.GetValueOrDefault(projectId);
-        var nextScopeId = await UnitOfWork.Tasks.GetNextScopeId(projectId, increment, cancellationToken);
-
-        if (nextScopeId.HasValue)
-        {
-            task.ProjectScopeId = nextScopeId.Value;
-        }
-
-        scopeIncrements[projectId] = increment + 1;
+        task.ProjectScopeId = projectScopeId;
         task.ProjectId = projectId;
     }
 

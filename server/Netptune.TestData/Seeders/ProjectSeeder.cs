@@ -23,6 +23,7 @@ internal static class ProjectSeeder
             Description = Descriptions[i],
             Key = name.ToUrlSlug()[..3],
             MetaInfo = new(),
+            NextTaskScopeId = 8,
             Owner = users[i % users.Count],
             Workspace = workspaces[i % workspaces.Count],
             DefaultStatus = statuses?.First(status =>

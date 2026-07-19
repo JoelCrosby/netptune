@@ -31,6 +31,11 @@ public class ProjectEntityMap : WorkspaceEntityMap<Project, int>
             .IsRequired();
 
         builder
+            .Property(project => project.NextTaskScopeId)
+            .HasDefaultValue(1)
+            .IsRequired();
+
+        builder
             .HasOne(project => project.Workspace)
             .WithMany(workspace => workspace.Projects)
             .HasForeignKey(project => project.WorkspaceId)

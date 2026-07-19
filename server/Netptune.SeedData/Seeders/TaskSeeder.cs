@@ -1190,6 +1190,11 @@ public sealed class TaskSeeder : ISeeder
 
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
     {
+        foreach (var project in context.Projects)
+        {
+            project.NextTaskScopeId = ProjectTasks[project.Key].Count();
+        }
+
         context.Tasks.AddRange(context.Projects.SelectMany((project, pi) =>
             ProjectTasks[project.Key].Select((task, i) => new ProjectTask
             {

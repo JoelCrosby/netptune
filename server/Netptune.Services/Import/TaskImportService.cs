@@ -110,7 +110,9 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         var newGroups = groups.Where(group => !string.IsNullOrEmpty(group) && !existingGroupNames.Contains(group));
 
-        var initialScopeId = await UnitOfWork.Tasks.GetNextScopeId(project.Id);
+        var initialScopeId = rows.Count == 0
+            ? 1
+            : await UnitOfWork.Projects.ReserveTaskScopeIds(project.Id, rows.Count);
 
         if (initialScopeId is null)
         {
