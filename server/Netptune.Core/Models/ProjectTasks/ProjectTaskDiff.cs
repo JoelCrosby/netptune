@@ -1,4 +1,4 @@
-﻿using Netptune.Core.Enums;
+using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -30,6 +30,8 @@ public record ProjectTaskDiff
 
     public AssigneeDiff Assignees { get; init; } = null!;
 
+    public TagDiff Tags { get; init; } = null!;
+
     public bool HasChanges => ChangedFields.Any();
 
     public IEnumerable<TaskChangeField> ChangedFields
@@ -43,10 +45,20 @@ public record ProjectTaskDiff
             if (Estimate.Modified) yield return TaskChangeField.Estimate;
             if (DueDate.Modified) yield return TaskChangeField.DueDate;
             if (Assignees.Modified) yield return TaskChangeField.Assignees;
+            if (Tags.Modified) yield return TaskChangeField.Tags;
         }
     }
 
     public record AssigneeDiff
+    {
+        public bool Modified { get; init; }
+
+        public List<string> Added { get; init; } = [];
+
+        public List<string> Removed { get; init; } = [];
+    }
+
+    public record TagDiff
     {
         public bool Modified { get; init; }
 
@@ -78,6 +90,11 @@ public record ProjectTaskDiff
         var newAssigneeIds = updated.Assignees.Select(a => a.Id).ToHashSet();
         var addedAssignees = newAssigneeIds.Except(oldAssigneeIds).ToList();
         var removedAssignees = oldAssigneeIds.Except(newAssigneeIds).ToList();
+
+        var oldTags = old.Tags.ToHashSet(StringComparer.Ordinal);
+        var newTags = updated.Tags.ToHashSet(StringComparer.Ordinal);
+        var addedTags = newTags.Except(oldTags).ToList();
+        var removedTags = oldTags.Except(newTags).ToList();
 
         return new ProjectTaskDiff
         {
@@ -122,6 +139,12 @@ public record ProjectTaskDiff
                 Modified = addedAssignees.Count > 0 || removedAssignees.Count > 0,
                 Added = addedAssignees,
                 Removed = removedAssignees,
+            },
+            Tags = new TagDiff
+            {
+                Modified = addedTags.Count > 0 || removedTags.Count > 0,
+                Added = addedTags,
+                Removed = removedTags,
             },
         };
     }
@@ -168,6 +191,11 @@ public record ProjectTaskDiff
         if (Assignees.Modified)
         {
             changes.Add(TaskFieldChange.Assignees(Assignees.Added, Assignees.Removed));
+        }
+
+        if (Tags.Modified)
+        {
+            changes.Add(TaskFieldChange.Tags(Tags.Added, Tags.Removed));
         }
 
         return changes;

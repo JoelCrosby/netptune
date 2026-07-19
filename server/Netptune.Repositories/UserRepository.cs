@@ -82,6 +82,54 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         };
     }
 
+    public async Task<IPagedResult<AssigneeViewModel>> GetWorkspaceAssigneesPaged(
+        int workspaceId,
+        AssigneeFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        var page = filter.GetPage();
+        var pageSize = filter.GetPageSize();
+        var query = Context.WorkspaceAppUsers
+            .Where(workspaceUser => workspaceUser.WorkspaceId == workspaceId)
+            .Select(workspaceUser => workspaceUser.User);
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var pattern = $"%{filter.Search.Trim()}%";
+            query = query.Where(user =>
+                EF.Functions.ILike(user.Firstname, pattern)
+                || EF.Functions.ILike(user.Lastname, pattern)
+                || EF.Functions.ILike(user.UserName!, pattern));
+        }
+
+        var rowCount = await query.CountAsync(cancellationToken);
+        var results = await query
+            .OrderBy(user => user.Firstname)
+            .ThenBy(user => user.Lastname)
+            .ThenBy(user => user.Id)
+            .Skip(filter.GetSkip())
+            .Take(pageSize)
+            .Select(user => new AssigneeViewModel
+            {
+                Id = user.Id,
+                DisplayName = string.IsNullOrEmpty(user.Firstname) && string.IsNullOrEmpty(user.Lastname)
+                    ? user.UserName!
+                    : user.Firstname + " " + user.Lastname,
+                PictureUrl = user.PictureUrl,
+            })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<AssigneeViewModel>
+        {
+            Results = results,
+            CurrentPage = page,
+            PageSize = pageSize,
+            RowCount = rowCount,
+            PageCount = rowCount == 0 ? 0 : (rowCount + pageSize - 1) / pageSize,
+        };
+    }
+
     public Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();

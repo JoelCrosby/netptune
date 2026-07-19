@@ -36,6 +36,16 @@ public static class SprintsEndpoints
             .WithDescription("Deletes a planning or cancelled sprint.")
             .RequireAuthorization(NetptunePermissions.Sprints.Delete);
 
+        group.MapPost("/sprints/{id:int}/tasks", AddTasks)
+            .WithSummary("Add tasks to a sprint")
+            .WithDescription("Adds existing tasks from the sprint's project to a planning or active sprint.")
+            .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks);
+
+        group.MapDelete("/sprints/{id:int}/tasks/{taskId:int}", RemoveTask)
+            .WithSummary("Remove a task from a sprint")
+            .WithDescription("Removes an existing task from a planning or active sprint.")
+            .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks);
+
         return group;
     }
 
@@ -106,5 +116,41 @@ public static class SprintsEndpoints
 
         if (result.IsNotFound) return Results.NotFound();
         return result.IsSuccess ? Results.NoContent() : Results.BadRequest(result);
+    }
+
+    private static async Task<IResult> AddTasks(
+        IMediator mediator,
+        int id,
+        AddTasksToSprintRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(
+            new AddTasksToSprintCommand(id, request),
+            cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        return result.IsSuccess ? Results.Ok(result.Payload) : Results.BadRequest(result);
+    }
+
+    private static async Task<IResult> RemoveTask(
+        IMediator mediator,
+        int id,
+        int taskId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(
+            new RemoveTaskFromSprintCommand(id, taskId),
+            cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        return result.IsSuccess ? Results.Ok(result.Payload) : Results.BadRequest(result);
     }
 }

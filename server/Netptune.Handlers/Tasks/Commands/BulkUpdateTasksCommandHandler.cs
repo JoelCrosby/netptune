@@ -38,21 +38,100 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
     {
         var req = command.Request;
         var workspaceId = await Identity.GetWorkspaceId();
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var requestedTaskIds = req.TaskIds.Distinct().ToList();
 
-        // Scope to tasks that actually belong to the caller's workspace.
-        var taskIds = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(req.TaskIds, workspaceId, cancellationToken);
-
-        if (taskIds.Count == 0)
+        if (requestedTaskIds.Count == 0)
         {
-            return ClientResponse.Success;
+            return ClientResponse.Failed("At least one task is required");
+        }
+
+        var taskIds = await UnitOfWork.Tasks.GetValidTaskIdsInWorkspace(
+            requestedTaskIds,
+            workspaceId,
+            cancellationToken);
+        var missingTaskIds = requestedTaskIds.Except(taskIds).ToList();
+
+        if (missingTaskIds.Count > 0)
+        {
+            return ClientResponse.Failed(
+                $"Tasks were not found in the workspace: {string.Join(", ", missingTaskIds)}");
         }
 
         var tasks = await UnitOfWork.Tasks.GetTasksForUpdate(taskIds, cancellationToken);
-
-        // Resolve the target status once — it applies to every selected task.
         var status = req.StatusId.HasValue
             ? await UnitOfWork.Statuses.GetInWorkspace(req.StatusId.Value, workspaceId, cancellationToken: cancellationToken)
             : null;
+
+        if (req.StatusId.HasValue && status is null)
+        {
+            return ClientResponse.Failed($"Status with id {req.StatusId.Value} was not found in the workspace");
+        }
+
+        if (req.ClearSprint && req.SprintId.HasValue)
+        {
+            return ClientResponse.Failed("SprintId and ClearSprint cannot both be supplied");
+        }
+
+        if (req.SprintId.HasValue)
+        {
+            var sprint = await UnitOfWork.Sprints.GetTaskAssignmentTarget(
+                workspaceKey,
+                req.SprintId.Value,
+                cancellationToken);
+
+            if (sprint is null)
+            {
+                return ClientResponse.Failed($"Sprint with id {req.SprintId.Value} was not found in the workspace");
+            }
+
+            var sprintAcceptsTasks = sprint.Status is SprintStatus.Planning or SprintStatus.Active;
+
+            if (!sprintAcceptsTasks)
+            {
+                return ClientResponse.Failed("Completed or cancelled sprints cannot be changed");
+            }
+
+            var targetProjectIds = tasks
+                .Select(task => req.ProjectId ?? task.ProjectId)
+                .Distinct()
+                .ToList();
+            var allTasksBelongToSprintProject = targetProjectIds.Count == 1
+                && targetProjectIds[0] == sprint.ProjectId;
+
+            if (!allTasksBelongToSprintProject)
+            {
+                return ClientResponse.Failed("Every task must belong to the sprint's project");
+            }
+        }
+
+        var assigneeIds = req.AssigneeIds?
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
+
+        if (req.AssigneeIds is not null)
+        {
+            var containsInvalidAssignee = assigneeIds!.Count != req.AssigneeIds.Count;
+
+            if (containsInvalidAssignee)
+            {
+                return ClientResponse.Failed("Assignee IDs cannot be empty or duplicated");
+            }
+
+            var assignees = await UnitOfWork.Users.IsUserInWorkspaceRange(
+                assigneeIds,
+                workspaceId,
+                cancellationToken);
+            var validAssigneeIds = assignees.Select(assignee => assignee.Id).ToHashSet(StringComparer.Ordinal);
+            var missingAssigneeIds = assigneeIds.Where(id => !validAssigneeIds.Contains(id)).ToList();
+
+            if (missingAssigneeIds.Count > 0)
+            {
+                return ClientResponse.Failed(
+                    $"Assignees were not found in the workspace: {string.Join(", ", missingAssigneeIds)}");
+            }
+        }
 
         var targetProjectId = req.ProjectId;
         var movedTaskCount = targetProjectId.HasValue
@@ -126,7 +205,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                     task.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
                         task.Id,
                         task.ProjectTaskAppUsers,
-                        req.AssigneeIds).ToList();
+                        assigneeIds!).ToList();
                 }
 
                 // Moving a task to a different project invalidates its board-group

@@ -236,6 +236,43 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Update_ShouldReplaceAndClearExistingWorkspaceTags()
+    {
+        var inProgressStatus = await GetStatus("in-progress");
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Public API tag replacement",
+            Description = "Task used to verify tag replacement persistence",
+            StatusId = inProgressStatus.Id,
+            ProjectId = 1,
+        });
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+        var taskId = created.Payload!.Id;
+
+        var updateResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = taskId,
+            Tags = ["Typescript"],
+        });
+        var updated = await updateResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        updated.IsSuccess.Should().BeTrue();
+        updated.Payload!.Tags.Should().Equal("Typescript");
+
+        var clearResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = taskId,
+            Tags = [],
+        });
+        var cleared = await clearResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        clearResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        cleared.IsSuccess.Should().BeTrue();
+        cleared.Payload!.Tags.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Update_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
         var request = new UpdateProjectTaskRequest
@@ -423,7 +460,7 @@ public sealed class TasksEndpointTests
 
         var request = new HttpRequestMessage
         {
-            RequestUri = new ("api/tasks", UriKind.Relative),
+            RequestUri = new("api/tasks", UriKind.Relative),
             Method = HttpMethod.Delete,
             Content = JsonContent.Create(taskIds),
         };

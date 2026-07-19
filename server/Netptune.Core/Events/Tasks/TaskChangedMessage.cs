@@ -50,4 +50,14 @@ public record TaskFieldChange
             RemovedValues = removedValues.ToList(),
         };
     }
+
+    public static TaskFieldChange Tags(IEnumerable<string> addedValues, IEnumerable<string> removedValues)
+    {
+        return new TaskFieldChange
+        {
+            Field = TaskChangeField.Tags,
+            AddedValues = addedValues.ToList(),
+            RemovedValues = removedValues.ToList(),
+        };
+    }
 }

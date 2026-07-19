@@ -181,6 +181,22 @@ public class ProjectTaskDiffTests
     }
 
     [Fact]
+    public void ToTaskFieldChanges_ShouldIncludeAddedAndRemovedTags()
+    {
+        var old = Task();
+        old.Tags = ["Architecture", "Bug"];
+        var updated = Task();
+        updated.Tags = ["Architecture", "Feature"];
+
+        var change = ProjectTaskDiff.Create(old, updated)
+            .ToTaskFieldChanges()
+            .Single(field => field.Field == TaskChangeField.Tags);
+
+        change.AddedValues.Should().Equal("Feature");
+        change.RemovedValues.Should().Equal("Bug");
+    }
+
+    [Fact]
     public void LogDiff_ShouldDispatchNothing_WhenNothingChanged()
     {
         var task = Task();

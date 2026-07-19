@@ -6,6 +6,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Entities;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -87,7 +88,56 @@ public class UpdateTaskCommandHandlerTests
             Priority = task.Priority,
             EstimateType = task.EstimateType,
             EstimateValue = task.EstimateValue,
+            WorkspaceId = task.WorkspaceId,
         };
+
+        Identity.GetWorkspaceId().Returns(task.WorkspaceId);
+
+        if (request.StatusId.HasValue)
+        {
+            var status = AutoFixtures.TaskStatus;
+            status.Id = request.StatusId.Value;
+            UnitOfWork.Statuses
+                .GetInWorkspace(
+                    request.StatusId.Value,
+                    task.WorkspaceId,
+                    cancellationToken: Arg.Any<CancellationToken>())
+                .Returns(status);
+        }
+
+        if (request.AssigneeIds is not null)
+        {
+            var assignees = request.AssigneeIds
+                .Distinct()
+                .Select(id => new AppUser { Id = id })
+                .ToList();
+            UnitOfWork.Users
+                .IsUserInWorkspaceRange(
+                    Arg.Any<IEnumerable<string>>(),
+                    task.WorkspaceId,
+                    Arg.Any<CancellationToken>())
+                .Returns(assignees);
+        }
+
+        if (request.Tags is not null)
+        {
+            var tags = request.Tags
+                .Distinct()
+                .Select((name, index) => new Tag
+                {
+                    Id = index + 1,
+                    Name = name,
+                    WorkspaceId = task.WorkspaceId,
+                })
+                .ToList();
+            UnitOfWork.Tags
+                .GetTagsByValueInWorkspace(
+                    task.WorkspaceId,
+                    Arg.Any<IEnumerable<string>>(),
+                    true,
+                    Arg.Any<CancellationToken>())
+                .Returns(tags);
+        }
 
         UnitOfWork.Tasks.GetTaskForUpdate(request.Id, Arg.Any<CancellationToken>()).Returns(task);
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(oldViewModel, viewModel);
@@ -329,5 +379,157 @@ public class UpdateTaskCommandHandlerTests
                 change.Field == TaskChangeField.Name &&
                 change.OldValue == "Original name" &&
                 change.NewValue == "Updated name")));
+    }
+
+    [Fact]
+    public async Task Update_ShouldReplaceTags_WhenAllTagsExistInWorkspace()
+    {
+        var request = new UpdateProjectTaskRequest
+        {
+            Id = 42,
+            Tags = ["📝 Architecture", "🐞 Bug"],
+        };
+        var task = BuildTask();
+        task.Id = request.Id;
+        task.ProjectTaskTags =
+        [
+            new ProjectTaskTag
+            {
+                ProjectTaskId = task.Id,
+                TagId = 7,
+            },
+        ];
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            WorkspaceId = task.WorkspaceId,
+            Tags = request.Tags,
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(
+            new UpdateTaskCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        task.ProjectTaskTags.Select(tag => tag.TagId).Should().BeEquivalentTo([1, 2]);
+    }
+
+    [Fact]
+    public async Task Update_ShouldClearTags_WhenTagsAreEmpty()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42, Tags = [] };
+        var task = BuildTask();
+        task.Id = request.Id;
+        task.ProjectTaskTags =
+        [
+            new ProjectTaskTag
+            {
+                ProjectTaskId = task.Id,
+                TagId = 7,
+            },
+        ];
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            WorkspaceId = task.WorkspaceId,
+            Tags = [],
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(
+            new UpdateTaskCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        task.ProjectTaskTags.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Update_ShouldRejectTagsOutsideWorkspace()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42, Tags = ["Private"] };
+        var task = BuildTask();
+        task.Id = request.Id;
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            WorkspaceId = task.WorkspaceId,
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+        UnitOfWork.Tags
+            .GetTagsByValueInWorkspace(
+                task.WorkspaceId,
+                Arg.Any<IEnumerable<string>>(),
+                true,
+                Arg.Any<CancellationToken>())
+            .Returns([]);
+
+        var result = await Handler.Handle(
+            new UpdateTaskCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("not found in the workspace");
+        await UnitOfWork.DidNotReceive().Transaction(Arg.Any<Func<Task>>());
+    }
+
+    [Fact]
+    public async Task Update_ShouldRejectDuplicateTags()
+    {
+        var request = new UpdateProjectTaskRequest
+        {
+            Id = 42,
+            Tags = ["Bug", "Bug"],
+        };
+        var task = BuildTask();
+        task.Id = request.Id;
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            WorkspaceId = task.WorkspaceId,
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(
+            new UpdateTaskCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Tags cannot be empty or duplicated");
+        await UnitOfWork.DidNotReceive().Transaction(Arg.Any<Func<Task>>());
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnNotFound_WhenTaskIsOutsideWorkspace()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42, Name = "Updated" };
+        var task = BuildTask();
+        var oldViewModel = new TaskViewModel
+        {
+            Id = request.Id,
+            Name = task.Name,
+            WorkspaceId = task.WorkspaceId,
+        };
+
+        Identity.GetWorkspaceId().Returns(task.WorkspaceId + 1);
+        UnitOfWork.Tasks.GetTaskViewModel(request.Id, Arg.Any<CancellationToken>()).Returns(oldViewModel);
+
+        var result = await Handler.Handle(
+            new UpdateTaskCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsNotFound.Should().BeTrue();
+        await UnitOfWork.Tasks.DidNotReceive().GetTaskForUpdate(
+            Arg.Any<int>(),
+            Arg.Any<CancellationToken>());
     }
 }

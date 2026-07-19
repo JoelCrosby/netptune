@@ -10,4 +10,5 @@ public enum TaskChangeField
     Priority = 5,
     Estimate = 6,
     DueDate = 7,
+    Tags = 8,
 }
