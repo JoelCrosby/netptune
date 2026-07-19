@@ -32,7 +32,7 @@ public class CreateTaskCommandHandlerTests
 
     public CreateTaskCommandHandlerTests()
     {
-        Fixture.Register(() => DateOnly.FromDateTime(Fixture.Create<DateTime>()));
+        Fixture.Register(() => new DateOnly(2026, 7, 1));
         UnitOfWork.InvokeTransaction();
         Handler = new(
             UnitOfWork,
@@ -40,6 +40,23 @@ public class CreateTaskCommandHandlerTests
             Activity,
             EventPublisher,
             EventRecords);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenStartDateIsAfterDueDate()
+    {
+        var request = new AddProjectTaskRequest
+        {
+            Name = "Invalid schedule",
+            ProjectId = 1,
+            StartDate = new DateOnly(2026, 7, 20),
+            DueDate = new DateOnly(2026, 7, 19),
+        };
+
+        var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(ProjectTaskSchedule.InvalidDateRangeMessage);
     }
 
     private void SetupStatusDependencies()

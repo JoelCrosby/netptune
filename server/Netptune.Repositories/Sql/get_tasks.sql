@@ -16,6 +16,7 @@ WITH filtered_tasks AS (
          , pt.priority
          , pt.estimate_type
          , pt.estimate_value
+         , pt.start_date
          , pt.due_date
          , pt.project_id
          , pt.sprint_id
@@ -112,6 +113,7 @@ SELECT ft.total_count
      , ft.priority AS task_priority
      , ft.estimate_type AS task_estimate_type
      , ft.estimate_value AS task_estimate_value
+     , ft.start_date AS task_start_date
      , ft.due_date AS task_due_date
      , ft.project_id
      , ft.sprint_id

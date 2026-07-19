@@ -6,6 +6,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Entities;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -33,7 +34,7 @@ public class UpdateTaskCommandHandlerTests
 
     public UpdateTaskCommandHandlerTests()
     {
-        Fixture.Register(() => DateOnly.FromDateTime(Fixture.Create<DateTime>()));
+        Fixture.Register(() => new DateOnly(2026, 7, 1));
         Identity.GetCurrentUserId().Returns("user-1");
         Handler = new(
             UnitOfWork,
@@ -88,6 +89,8 @@ public class UpdateTaskCommandHandlerTests
             Priority = task.Priority,
             EstimateType = task.EstimateType,
             EstimateValue = task.EstimateValue,
+            StartDate = task.StartDate,
+            DueDate = task.DueDate,
             WorkspaceId = task.WorkspaceId,
         };
 
@@ -233,6 +236,74 @@ public class UpdateTaskCommandHandlerTests
         await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
 
         task.DueDate.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Update_ShouldPreserveStartDate_WhenFieldIsOmitted()
+    {
+        var startDate = new DateOnly(2026, 7, 10);
+        var request = new UpdateProjectTaskRequest { Id = 42, Name = "Task" };
+        var task = BuildTask();
+        task.StartDate = startDate;
+        task.DueDate = new DateOnly(2026, 7, 20);
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            StartDate = startDate,
+            DueDate = task.DueDate,
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        task.StartDate.Should().Be(startDate);
+    }
+
+    [Fact]
+    public async Task Update_ShouldClearStartDate_WhenFieldIsExplicitlyNull()
+    {
+        var request = new UpdateProjectTaskRequest { Id = 42, Name = "Task", StartDate = null };
+        var task = BuildTask();
+        task.StartDate = new DateOnly(2026, 7, 10);
+        task.DueDate = new DateOnly(2026, 7, 20);
+        var viewModel = new TaskViewModel { Id = task.Id, Name = task.Name, DueDate = task.DueDate };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        task.StartDate.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnFailure_WhenEffectiveStartDateIsAfterDueDate()
+    {
+        var request = new UpdateProjectTaskRequest
+        {
+            Id = 42,
+            Name = "Task",
+            StartDate = new DateOnly(2026, 7, 21),
+        };
+        var task = BuildTask();
+        task.StartDate = new DateOnly(2026, 7, 10);
+        task.DueDate = new DateOnly(2026, 7, 20);
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            StartDate = task.StartDate,
+            DueDate = task.DueDate,
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        var result = await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be(ProjectTaskSchedule.InvalidDateRangeMessage);
+        task.StartDate.Should().Be(new DateOnly(2026, 7, 10));
     }
 
     [Fact]

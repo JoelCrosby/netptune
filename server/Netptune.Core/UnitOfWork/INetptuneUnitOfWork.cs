@@ -64,4 +64,6 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     ITaskFileRepository TaskFiles { get; }
 
     IReportingRepository Reports { get; }
+
+    IRoadmapRepository Roadmaps { get; }
 }

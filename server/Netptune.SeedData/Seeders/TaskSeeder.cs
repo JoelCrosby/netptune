@@ -1190,28 +1190,58 @@ public sealed class TaskSeeder : ISeeder
 
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
     {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
         foreach (var project in context.Projects)
         {
             project.NextTaskScopeId = ProjectTasks[project.Key].Count();
         }
 
-        context.Tasks.AddRange(context.Projects.SelectMany((project, pi) =>
-            ProjectTasks[project.Key].Select((task, i) => new ProjectTask
+        context.Tasks.AddRange(context.Projects.SelectMany((project, projectIndex) =>
+        {
+            var taskStatuses = context.Statuses
+                .Where(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)
+                .OrderBy(status => status.SortOrder)
+                .ThenBy(status => status.Id)
+                .ToList();
+
+            return ProjectTasks[project.Key].Select((task, taskIndex) =>
             {
-                Name = task.Name,
-                Description = task.Description,
-                Status = context.Statuses
-                    .Where(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)
-                    .OrderBy(status => status.SortOrder)
-                    .ThenBy(status => status.Id)
-                    .ElementAt((pi * 8 + i) % context.Statuses.Count(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)),
-                Owner = context.Users[(pi + i) % context.Users.Count],
-                Project = project,
-                ProjectScopeId = i,
-                Workspace = project.Workspace,
-            })
-        ));
+                var schedule = GetSchedule(today, projectIndex, taskIndex);
+
+                return new ProjectTask
+                {
+                    Name = task.Name,
+                    Description = task.Description,
+                    Status = taskStatuses[(projectIndex * 8 + taskIndex) % taskStatuses.Count],
+                    Owner = context.Users[(projectIndex + taskIndex) % context.Users.Count],
+                    Project = project,
+                    ProjectScopeId = taskIndex,
+                    Workspace = project.Workspace,
+                    StartDate = schedule.StartDate,
+                    DueDate = schedule.DueDate,
+                };
+            });
+        }));
 
         await dbContext.ProjectTasks.AddRangeAsync(context.Tasks, ct);
+    }
+
+    private static (DateOnly? StartDate, DateOnly? DueDate) GetSchedule(DateOnly today, int projectIndex, int taskIndex)
+    {
+        var projectOffset = projectIndex % 4 * 3;
+        var anchor = today.AddDays(projectOffset);
+
+        return (taskIndex % 8) switch
+        {
+            0 => (anchor.AddDays(-21), anchor.AddDays(-7)),
+            1 => (anchor.AddDays(-10), anchor.AddDays(4)),
+            2 => (anchor, anchor.AddDays(14)),
+            3 => (null, anchor.AddDays(5)),
+            4 => (anchor.AddDays(7), anchor.AddDays(28)),
+            5 => (anchor.AddDays(14), anchor.AddDays(35)),
+            6 => (anchor.AddDays(30), null),
+            _ => (null, null),
+        };
     }
 }

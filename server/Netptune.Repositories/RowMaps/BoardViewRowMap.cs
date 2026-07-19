@@ -24,6 +24,8 @@ public class BoardViewRowMap
 
     public decimal? Task_Estimate_Value { get; set; }
 
+    public DateOnly? Task_Start_Date { get; set; }
+
     public DateOnly? Task_Due_Date { get; set; }
 
     public DateTime Task_Created_At { get; set; }

@@ -37,4 +37,5 @@ public enum ActivityType
     ModifyDueDate = 29,
     AddFile = 30,
     RemoveFile = 31,
+    ModifyStartDate = 32,
 }

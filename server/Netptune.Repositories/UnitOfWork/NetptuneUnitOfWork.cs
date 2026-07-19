@@ -38,6 +38,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IWorkspaceFileRepository WorkspaceFiles { get; }
     public ITaskFileRepository TaskFiles { get; }
     public IReportingRepository Reports { get; }
+    public IRoadmapRepository Roadmaps { get; }
 
     public NetptuneUnitOfWork(
         DataContext context,
@@ -73,5 +74,6 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         WorkspaceFiles = new WorkspaceFileRepository(context, connectionFactory);
         TaskFiles = new TaskFileRepository(context, connectionFactory);
         Reports = new ReportingRepository(context);
+        Roadmaps = new RoadmapRepository(connectionFactory);
     }
 }

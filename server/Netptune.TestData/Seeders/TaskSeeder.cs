@@ -29,21 +29,55 @@ internal static class TaskSeeder
         "EF Core 9 introduces breaking changes to the query pipeline and owned entity mapping. Resolve migration conflicts and update affected raw SQL queries.",
     ];
 
-    internal static List<ProjectTask> Generate(List<AppUser> users, List<Project> projects, List<Status> statuses) =>
-        projects
-            .SelectMany((project, pi) => Enumerable.Range(0, 8).Select(i => new ProjectTask
+    internal static List<ProjectTask> Generate(List<AppUser> users, List<Project> projects, List<Status> statuses)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        return projects
+            .SelectMany((project, projectIndex) =>
             {
-                Status = statuses
+                var taskStatuses = statuses
                     .Where(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)
                     .OrderBy(status => status.SortOrder)
                     .ThenBy(status => status.Id)
-                    .ElementAt((pi * 8 + i) % statuses.Count(status => status.Workspace == project.Workspace && status.EntityType == EntityType.Task)),
-                Name = Names[i],
-                Description = Descriptions[i],
-                Owner = users[(pi + i) % users.Count],
-                Project = project,
-                ProjectScopeId = i,
-                Workspace = project.Workspace,
-            }))
+                    .ToList();
+
+                return Enumerable.Range(0, 8).Select(taskIndex =>
+                {
+                    var schedule = GetSchedule(today, projectIndex, taskIndex);
+
+                    return new ProjectTask
+                    {
+                        Status = taskStatuses[(projectIndex * 8 + taskIndex) % taskStatuses.Count],
+                        Name = Names[taskIndex],
+                        Description = Descriptions[taskIndex],
+                        Owner = users[(projectIndex + taskIndex) % users.Count],
+                        Project = project,
+                        ProjectScopeId = taskIndex,
+                        Workspace = project.Workspace,
+                        StartDate = schedule.StartDate,
+                        DueDate = schedule.DueDate,
+                    };
+                });
+            })
             .ToList();
+    }
+
+    private static (DateOnly? StartDate, DateOnly? DueDate) GetSchedule(DateOnly today, int projectIndex, int taskIndex)
+    {
+        var projectOffset = projectIndex % 4 * 3;
+        var anchor = today.AddDays(projectOffset);
+
+        return taskIndex switch
+        {
+            0 => (anchor.AddDays(-21), anchor.AddDays(-7)),
+            1 => (anchor.AddDays(-10), anchor.AddDays(4)),
+            2 => (anchor, anchor.AddDays(14)),
+            3 => (null, anchor.AddDays(5)),
+            4 => (anchor.AddDays(7), anchor.AddDays(28)),
+            5 => (anchor.AddDays(14), anchor.AddDays(35)),
+            6 => (anchor.AddDays(30), null),
+            _ => (null, null),
+        };
+    }
 }

@@ -16,6 +16,7 @@ internal static class ActivityEntrySeeder
         ActivityType.ModifyPriority,
         ActivityType.ModifyEstimate,
         ActivityType.ModifyDueDate,
+        ActivityType.ModifyStartDate,
     ];
 
     private static readonly TimeSpan Bucket = TimeSpan.FromMinutes(5);
@@ -105,6 +106,7 @@ internal static class ActivityEntrySeeder
         ActivityType.ModifyPriority => "priority",
         ActivityType.ModifyEstimate => "estimate",
         ActivityType.ModifyDueDate => "dueDate",
+        ActivityType.ModifyStartDate => "startDate",
         _ => null,
     };
 }

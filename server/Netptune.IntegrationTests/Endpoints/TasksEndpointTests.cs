@@ -208,6 +208,7 @@ public sealed class TasksEndpointTests
             Name = "updated name",
             Description = "updated description",
             StatusId = completeStatus.Id,
+            StartDate = new DateOnly(2026, 7, 15),
             DueDate = new DateOnly(2026, 7, 31),
         };
 
@@ -222,17 +223,29 @@ public sealed class TasksEndpointTests
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.StatusId.Should().Be(completeStatus.Id);
         result.Payload.StatusKey.Should().Be(completeStatus.Key);
+        result.Payload.StartDate.Should().Be(request.StartDate);
         result.Payload.DueDate.Should().Be(request.DueDate);
 
-        var clearResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        var clearResponse = await Client.PutAsJsonAsync("api/tasks", new
         {
             Id = request.Id,
-            DueDate = null,
+            DueDate = (DateOnly?)null,
         });
         var cleared = await clearResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
         cleared.IsSuccess.Should().BeTrue();
+        cleared.Payload!.StartDate.Should().Be(request.StartDate);
         cleared.Payload!.DueDate.Should().BeNull();
+
+        var clearStartResponse = await Client.PutAsJsonAsync("api/tasks", new
+        {
+            Id = request.Id,
+            StartDate = (DateOnly?)null,
+        });
+        var clearedStart = await clearStartResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        clearedStart.IsSuccess.Should().BeTrue();
+        clearedStart.Payload!.StartDate.Should().BeNull();
     }
 
     [Fact]
@@ -311,6 +324,7 @@ public sealed class TasksEndpointTests
             Description = "new description",
             StatusId = inProgressStatus.Id,
             ProjectId = 1,
+            StartDate = new DateOnly(2026, 8, 1),
             DueDate = new DateOnly(2026, 8, 15),
         };
 
@@ -325,7 +339,30 @@ public sealed class TasksEndpointTests
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.StatusId.Should().Be(inProgressStatus.Id);
         result.Payload.StatusKey.Should().Be(inProgressStatus.Key);
+        result.Payload.StartDate.Should().Be(request.StartDate);
         result.Payload.DueDate.Should().Be(request.DueDate);
+    }
+
+    [Fact]
+    public async Task Create_ShouldRejectTask_WhenStartDateIsAfterDueDate()
+    {
+        var inProgressStatus = await GetStatus("in-progress");
+        var request = new AddProjectTaskRequest
+        {
+            Name = "Invalid task schedule",
+            Description = "Task used to verify schedule validation",
+            StatusId = inProgressStatus.Id,
+            ProjectId = 1,
+            StartDate = new DateOnly(2026, 8, 16),
+            DueDate = new DateOnly(2026, 8, 15),
+        };
+
+        var response = await Client.PostAsJsonAsync("api/tasks", request);
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Task start date must be on or before its due date");
     }
 
     [Fact]

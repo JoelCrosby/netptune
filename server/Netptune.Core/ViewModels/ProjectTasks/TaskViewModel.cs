@@ -39,6 +39,8 @@ public record TaskViewModel
 
     public decimal? EstimateValue { get; set; }
 
+    public DateOnly? StartDate { get; set; }
+
     public DateOnly? DueDate { get; set; }
 
     public double SortOrder { get; set; }

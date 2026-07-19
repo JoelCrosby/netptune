@@ -57,6 +57,15 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             return ClientResponse<TaskViewModel>.NotFound;
         }
 
+        var startDate = req.StartDateSpecified ? req.StartDate : result.StartDate;
+        var dueDate = req.DueDateSpecified ? req.DueDate : result.DueDate;
+        var hasValidSchedule = ProjectTaskSchedule.IsValid(startDate, dueDate);
+
+        if (!hasValidSchedule)
+        {
+            return ClientResponse<TaskViewModel>.Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
+        }
+
         var status = await ResolveStatus(req, workspaceId, cancellationToken);
 
         if (req.StatusId.HasValue && status is null)
@@ -115,6 +124,11 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             result.Priority = req.Priority ?? result.Priority;
             result.EstimateType = req.EstimateType ?? result.EstimateType;
             result.EstimateValue = req.EstimateValue ?? result.EstimateValue;
+
+            if (req.StartDateSpecified)
+            {
+                result.StartDate = req.StartDate;
+            }
 
             if (req.DueDateSpecified)
             {

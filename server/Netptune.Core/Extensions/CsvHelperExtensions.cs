@@ -13,10 +13,17 @@ public static class CsvHelperExtensions
         },
     };
 
+    private static readonly TypeConverterOptions DateOnlyConverterOptions = new()
+    {
+        Formats = ["yyyy-MM-dd"],
+    };
+
     public static CsvWriter AddDateFormatting(this CsvWriter csv)
     {
         csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(ConverterOptions);
         csv.Context.TypeConverterOptionsCache.AddOptions<DateTime?>(ConverterOptions);
+        csv.Context.TypeConverterOptionsCache.AddOptions<DateOnly>(DateOnlyConverterOptions);
+        csv.Context.TypeConverterOptionsCache.AddOptions<DateOnly?>(DateOnlyConverterOptions);
 
         return csv;
     }
@@ -25,6 +32,8 @@ public static class CsvHelperExtensions
     {
         csv.Context.TypeConverterOptionsCache.AddOptions<DateTime>(ConverterOptions);
         csv.Context.TypeConverterOptionsCache.AddOptions<DateTime?>(ConverterOptions);
+        csv.Context.TypeConverterOptionsCache.AddOptions<DateOnly>(DateOnlyConverterOptions);
+        csv.Context.TypeConverterOptionsCache.AddOptions<DateOnly?>(DateOnlyConverterOptions);
 
         return csv;
     }

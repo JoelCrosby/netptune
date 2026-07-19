@@ -11,4 +11,5 @@ public enum TaskChangeField
     Estimate = 6,
     DueDate = 7,
     Tags = 8,
+    StartDate = 9,
 }

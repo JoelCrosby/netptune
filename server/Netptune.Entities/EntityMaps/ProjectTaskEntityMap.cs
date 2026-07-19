@@ -55,6 +55,12 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .IsRequired(false);
 
         builder
+            .Property(task => task.StartDate)
+            .HasColumnName("start_date")
+            .HasColumnType("date")
+            .IsRequired(false);
+
+        builder
             .Property(task => task.DueDate)
             .HasColumnName("due_date")
             .HasColumnType("date")

@@ -21,6 +21,7 @@ public sealed class ActivityMergeOptions
         ActivityType.ModifyPriority,
         ActivityType.ModifyEstimate,
         ActivityType.ModifyDueDate,
+        ActivityType.ModifyStartDate,
     ];
 
     public bool IsMergeable(ActivityType type) => MergeableTypes.Contains(type);

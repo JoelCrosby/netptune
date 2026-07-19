@@ -14,6 +14,8 @@ public sealed class TaskImportRowMap : ClassMap<TaskImportRow>
         Map(m => m.Status).Optional();
         Map(m => m.CreatedAt).Optional();
         Map(m => m.UpdatedAt).Optional();
+        Map(m => m.StartDate).Optional();
+        Map(m => m.DueDate).Optional();
         Map(m => m.Assignees);
         Map(m => m.Owner);
         Map(m => m.Group);

@@ -262,6 +262,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             Priority = task.Priority,
             EstimateType = task.EstimateType,
             EstimateValue = task.EstimateValue,
+            StartDate = task.StartDate,
             DueDate = task.DueDate,
             ProjectId = task.ProjectId,
             SprintId = task.SprintId,

@@ -40,6 +40,7 @@ public static class EventKeys
         ActivityType.ModifyPriority or
         ActivityType.ModifyEstimate or
         ActivityType.ModifyDueDate or
+        ActivityType.ModifyStartDate or
         ActivityType.WorkspaceSettingsChanged or
         ActivityType.RoleChanged or
         ActivityType.PermissionChanged => EntityFieldTransitioned,
@@ -71,6 +72,8 @@ public static class EventKeys
         var isMemberAttributeChange = eventKey == ScopeMemberAttributeChanged;
         var isEstimateTransition = field == "estimate";
         var isEstimateChange = isMemberAttributeChange || isEstimateTransition;
+        var isStartDateTransition = field == "startdate";
+        var isDueDateTransition = field == "duedate";
 
         if (isEntityCreation)
         {
@@ -94,6 +97,16 @@ public static class EventKeys
         if (isEstimateChange)
         {
             return ActivityType.ModifyEstimate;
+        }
+
+        if (isStartDateTransition)
+        {
+            return ActivityType.ModifyStartDate;
+        }
+
+        if (isDueDateTransition)
+        {
+            return ActivityType.ModifyDueDate;
         }
 
         return field == "status"

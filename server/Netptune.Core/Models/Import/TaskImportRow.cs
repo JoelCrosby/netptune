@@ -12,6 +12,10 @@ public record TaskImportRow
 
     public DateTime? UpdatedAt { get; init; }
 
+    public DateOnly? StartDate { get; init; }
+
+    public DateOnly? DueDate { get; init; }
+
     public string? Assignees { get; init; }
 
     public required  string Owner { get; init; }

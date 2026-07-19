@@ -42,6 +42,13 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
         var req = request.Request;
+        var hasValidSchedule = ProjectTaskSchedule.IsValid(req.StartDate, req.DueDate);
+
+        if (!hasValidSchedule)
+        {
+            return ClientResponse<TaskViewModel>.Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
+        }
+
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey, cancellationToken);
 
@@ -98,6 +105,7 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             Priority = req.Priority,
             EstimateType = req.EstimateType,
             EstimateValue = req.EstimateValue,
+            StartDate = req.StartDate,
             DueDate = req.DueDate,
             ProjectTaskAppUsers = [new() { UserId = userId }],
         };

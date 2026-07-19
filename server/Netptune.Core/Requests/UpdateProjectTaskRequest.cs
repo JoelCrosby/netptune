@@ -5,6 +5,8 @@ namespace Netptune.Core.Requests;
 
 public record UpdateProjectTaskRequest
 {
+    private DateOnly? startDate;
+
     private DateOnly? dueDate;
 
     public int Id { get; set; }
@@ -28,6 +30,19 @@ public record UpdateProjectTaskRequest
     public EstimateType? EstimateType { get; set; }
 
     public decimal? EstimateValue { get; set; }
+
+    public DateOnly? StartDate
+    {
+        get => startDate;
+        set
+        {
+            startDate = value;
+            StartDateSpecified = true;
+        }
+    }
+
+    [JsonIgnore]
+    public bool StartDateSpecified { get; private set; }
 
     public DateOnly? DueDate
     {

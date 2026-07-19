@@ -23,6 +23,8 @@ public record ProjectTask : WorkspaceEntity<int>
 
     public decimal? EstimateValue { get; set; }
 
+    public DateOnly? StartDate { get; set; }
+
     public DateOnly? DueDate { get; set; }
 
     #region ForeignKeys
@@ -94,6 +96,7 @@ public record ProjectTask : WorkspaceEntity<int>
             Priority = Priority,
             EstimateType = EstimateType,
             EstimateValue = EstimateValue,
+            StartDate = StartDate,
             DueDate = DueDate,
             Tags = Tags.Select(x => x.Name).OrderBy(x => x).ToList(),
             Assignees = ProjectTaskAppUsers

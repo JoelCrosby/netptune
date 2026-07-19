@@ -104,6 +104,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 Priority = row.Task_Priority,
                 EstimateType = row.Task_Estimate_Type,
                 EstimateValue = row.Task_Estimate_Value,
+                StartDate = row.Task_Start_Date,
                 DueDate = row.Task_Due_Date,
                 CreatedAt = row.Task_Created_At,
                 UpdatedAt = row.Task_Updated_At,

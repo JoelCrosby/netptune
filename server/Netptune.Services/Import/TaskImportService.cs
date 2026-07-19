@@ -9,6 +9,7 @@ using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Core.Import;
 using Netptune.Core.Models.Import;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -63,6 +64,12 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
 
         // Read csv rows into PCO
         var rows = await csv.GetRecordsAsync<TaskImportRow>().ToListAsync();
+        var containsInvalidSchedule = rows.Any(row => !ProjectTaskSchedule.IsValid(row.StartDate, row.DueDate));
+
+        if (containsInvalidSchedule)
+        {
+            return Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
+        }
 
         var validationResult = headerValidator.GetResult();
 
@@ -310,6 +317,8 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
                 StatusId = status.Id,
                 OwnerId = FindUserId(userList, row.Owner),
                 ProjectScopeId = initialScopeId + i,
+                StartDate = row.StartDate,
+                DueDate = row.DueDate,
                 ProjectTaskAppUsers = GetUsersFromArrayCell(userList, row.Assignees),
             };
         };
