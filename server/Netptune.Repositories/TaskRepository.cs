@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -112,6 +113,31 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Where(x => idList.Contains(x.Id))
             .AsNoTracking()
             .Select(TaskToViewModel())
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<TaskSearchReference>> GetTaskSearchReferences(
+        IEnumerable<int> taskIds,
+        string workspaceKey,
+        CancellationToken cancellationToken = default)
+    {
+        var idList = taskIds.ToList();
+
+        if (idList.Count == 0)
+        {
+            return Task.FromResult(new List<TaskSearchReference>());
+        }
+
+        return Entities
+            .AsNoTracking()
+            .Where(task => idList.Contains(task.Id))
+            .Where(task => task.Workspace.Slug == workspaceKey && !task.IsDeleted)
+            .Select(task => new TaskSearchReference(
+                task.Id,
+                task.Project == null
+                    ? task.ProjectScopeId.ToString()
+                    : task.Project.Key + "-" + task.ProjectScopeId.ToString(),
+                task.Project == null ? null : task.Project.Key))
             .ToListAsync(cancellationToken);
     }
 

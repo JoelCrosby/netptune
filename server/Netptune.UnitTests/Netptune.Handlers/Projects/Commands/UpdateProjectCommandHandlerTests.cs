@@ -3,6 +3,7 @@ using AutoFixture;
 using FluentAssertions;
 
 using Netptune.Core.Requests;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
@@ -22,10 +23,11 @@ public class UpdateProjectCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
 
     public UpdateProjectCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
@@ -54,15 +56,22 @@ public class UpdateProjectCommandHandlerTests
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<UpdateProjectRequest>().Create();
+        var project = AutoFixtures.Project;
 
         Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
-        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
+        Identity.GetWorkspaceKey().Returns("workspace");
+        UnitOfWork.Projects.GetWithIncludes(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(project);
         UnitOfWork.Statuses.GetInWorkspace(Arg.Any<int>(), Arg.Any<int>(), cancellationToken: TestContext.Current.CancellationToken)
             .Returns(AutoFixtures.TaskStatus with { Id = request.DefaultStatusId ?? 5 });
 
         await Handler.Handle(new UpdateProjectCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(message =>
+            message.Operation == SearchIndexOperation.Index
+            && message.EntityType == "project"
+            && message.EntityIds.Contains(project.Id)
+            && message.WorkspaceSlug == "workspace"));
     }
 
     [Fact]

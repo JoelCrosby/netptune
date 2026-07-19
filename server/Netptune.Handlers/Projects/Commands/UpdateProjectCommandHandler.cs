@@ -1,5 +1,6 @@
 using Mediator;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -16,12 +17,18 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public UpdateProjectCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public UpdateProjectCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<ProjectViewModel>> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
@@ -60,6 +67,16 @@ public sealed class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectC
             options.EntityId = project.Id;
             options.EntityType = EntityType.Project;
             options.Type = ActivityType.Modify;
+        });
+
+        var workspaceKey = Identity.GetWorkspaceKey();
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Index,
+            EntityType = "project",
+            EntityIds = [project.Id],
+            WorkspaceSlug = workspaceKey,
         });
 
         return project.ToViewModel();

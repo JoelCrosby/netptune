@@ -12,12 +12,12 @@ public static class TaskSearchDocumentExtensions
             TaskId = task.Id,
             Title = task.Name,
             Description = task.Description,
-            SystemId = task.SystemId,
             WorkspaceSlug = workspaceSlug,
             Status = task.StatusName,
             Priority = task.Priority?.ToString(),
             AssigneeIds = task.Assignees.Select(assignee => assignee.Id).ToList(),
             ProjectId = task.ProjectId,
+            ProjectScopeId = task.ProjectScopeId,
             UpdatedAt = (task.UpdatedAt ?? task.CreatedAt).UtcDateTime,
         };
     }

@@ -130,13 +130,14 @@ public sealed class MeilisearchService : IMeilisearchService
             Type = "task",
             Id = hit.TaskId,
             Title = hit.Title,
-            Subtitle = $"{hit.ProjectKey} · {hit.Status}",
-            Url = $"/{hit.WorkspaceSlug}/tasks/{hit.SystemId}",
+            Subtitle = hit.Status,
+            Url = string.Empty,
             Metadata = new Dictionary<string, object?>
             {
                 ["status"] = hit.Status,
                 ["priority"] = hit.Priority,
-                ["projectKey"] = hit.ProjectKey,
+                ["projectId"] = hit.ProjectId,
+                ["projectScopeId"] = hit.ProjectScopeId,
             },
         });
     }
@@ -208,7 +209,7 @@ public sealed class MeilisearchService : IMeilisearchService
         var index = Client.Index("tasks");
         await index.UpdateSettingsAsync(new Settings
         {
-            SearchableAttributes = ["title", "description", "systemId"],
+            SearchableAttributes = ["title", "description"],
             FilterableAttributes = ["workspaceSlug", "status", "priority", "assigneeIds", "tagIds", "projectId"],
             SortableAttributes = ["updatedAt"],
         }, ct);

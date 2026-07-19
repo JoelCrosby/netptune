@@ -10,8 +10,6 @@ public record TaskSearchDocument
 
     public string? Description { get; init; }
 
-    public string? SystemId { get; init; }
-
     public required string WorkspaceSlug { get; init; }
 
     public required string Status { get; init; }
@@ -24,7 +22,7 @@ public record TaskSearchDocument
 
     public int? ProjectId { get; init; }
 
-    public string? ProjectKey { get; init; }
+    public int ProjectScopeId { get; init; }
 
     public DateTime UpdatedAt { get; init; }
 }
