@@ -21,13 +21,13 @@ import {
   template: `
     <div class="border-border flex h-11 border-b">
       <div
-        class="border-border bg-card sticky left-0 z-10 flex shrink-0 items-center overflow-hidden border-r pr-3"
+        class="border-border bg-card sticky left-0 z-12 flex shrink-0 items-center overflow-hidden border-r"
         [style.width.px]="taskColumnWidth()"
         [style.padding-left.px]="8 + row().depth * 18">
         @if (row().hasChildren) {
           <button
             type="button"
-            class="hover:bg-muted/60 flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded"
+            class="hover:bg-muted/10 flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded"
             [attr.aria-label]="collapseLabel()"
             [attr.aria-expanded]="!collapsed()"
             (click)="collapseToggled.emit(row().task.id)">
@@ -43,10 +43,10 @@ import {
 
         <button
           type="button"
-          class="hover:bg-muted/10 flex min-w-0 flex-1 cursor-pointer items-center gap-2 self-stretch overflow-hidden text-left"
+          class="hover:bg-muted/10 flex min-w-0 flex-1 cursor-pointer items-center gap-2 self-stretch overflow-hidden px-2 text-left"
           [title]="row().task.systemId + ' ' + row().task.name"
           (click)="taskSelected.emit(row().task)">
-          <span class="text-muted-foreground w-16 shrink-0 text-xs">
+          <span class="text-muted w-14 shrink-0 truncate text-xs">
             {{ row().task.systemId }}
           </span>
           <span class="truncate text-sm">{{ row().task.name }}</span>

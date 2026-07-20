@@ -34,7 +34,7 @@ import {
 } from '../utils/roadmap-row-builder';
 import { RoadmapTaskRowComponent } from './roadmap-task-row.component';
 
-const taskColumnWidth = 320;
+const defaultTaskColumnWidth = 320;
 const headerHeight = 80;
 const projectRowHeight = 36;
 const taskRowHeight = 44;
@@ -58,7 +58,8 @@ const taskRowHeight = 44;
       <div [style.width.px]="totalWidth()" class="relative min-h-full">
         <app-timeline-header
           itemLabel="Task"
-          [itemColumnWidth]="taskColumnWidth"
+          [itemColumnWidth]="taskColumnWidth()"
+          [itemColumnResizable]="true"
           [canvasWidth]="canvasWidth()"
           [dayWidth]="dayWidth()"
           [majorIntervalDays]="majorIntervalDays()"
@@ -67,14 +68,15 @@ const taskRowHeight = 44;
           [to]="to()"
           [ticks]="ticks()"
           [headerGroups]="headerGroups()"
-          [ranges]="sprintRanges()" />
+          [ranges]="sprintRanges()"
+          (itemColumnWidthChanged)="taskColumnWidth.set($event)" />
 
         @for (group of groups(); track group.id) {
           <div class="border-border bg-muted/30 flex h-9 border-b">
             <button
               type="button"
-              class="border-border bg-muted/5 hover:bg-muted/60 sticky left-0 z-10 flex shrink-0 cursor-pointer items-center gap-2 border-r px-3 text-left text-sm font-semibold"
-              [style.width.px]="taskColumnWidth"
+              class="border-border bg-muted/5 hover:bg-muted/60 sticky left-0 z-16 flex shrink-0 cursor-pointer items-center gap-2 border-r px-3 text-left text-sm font-semibold"
+              [style.width.px]="taskColumnWidth()"
               [attr.aria-expanded]="!isProjectCollapsed(group.id)"
               [attr.aria-label]="projectCollapseLabel(group)"
               (click)="toggleProject(group.id)">
@@ -100,7 +102,7 @@ const taskRowHeight = 44;
               [collapsed]="isTaskCollapsed(row.task.id)"
               [editable]="canUpdateTasks()"
               [busy]="pendingTaskIds().has(row.task.id)"
-              [taskColumnWidth]="taskColumnWidth"
+              [taskColumnWidth]="taskColumnWidth()"
               [canvasWidth]="canvasWidth()"
               [dayWidth]="dayWidth()"
               [majorIntervalDays]="majorIntervalDays()"
@@ -119,7 +121,7 @@ const taskRowHeight = 44;
 
         <div
           class="pointer-events-none absolute"
-          [style.left.px]="taskColumnWidth"
+          [style.left.px]="taskColumnWidth()"
           [style.top.px]="headerHeight">
           <app-timeline-dependencies
             [dependencies]="dependencies()"
@@ -142,7 +144,7 @@ export class RoadmapTimelineComponent {
   readonly collapsedProjectIds = signal<ReadonlySet<number>>(new Set());
   readonly collapsedTaskIds = signal<ReadonlySet<number>>(new Set());
 
-  readonly taskColumnWidth = taskColumnWidth;
+  readonly taskColumnWidth = signal(defaultTaskColumnWidth);
   readonly headerHeight = headerHeight;
   readonly today = todayDate();
   readonly dayWidth = computed(() => timelineDayWidth(this.zoom()));
@@ -153,7 +155,9 @@ export class RoadmapTimelineComponent {
     () =>
       Math.max(1, inclusiveDayCount(this.from(), this.to())) * this.dayWidth()
   );
-  readonly totalWidth = computed(() => taskColumnWidth + this.canvasWidth());
+  readonly totalWidth = computed(
+    () => this.taskColumnWidth() + this.canvasWidth()
+  );
   readonly allGroups = computed(() =>
     buildRoadmapGroups(this.view().tasks, this.view().relations)
   );

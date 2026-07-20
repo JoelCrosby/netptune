@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import {
   clippedRangeLeft,
   clippedRangeWidth,
@@ -23,6 +23,25 @@ import {
         class="border-border bg-card sticky left-0 z-30 flex shrink-0 items-center border-r px-4 font-semibold"
         [style.width.px]="itemColumnWidth()">
         {{ itemLabel() }}
+        @if (itemColumnResizable()) {
+          <div
+            role="separator"
+            tabindex="0"
+            aria-orientation="vertical"
+            class="group absolute top-0 right-0 z-10 flex h-screen w-3 translate-x-1/2 cursor-col-resize touch-none items-center justify-center outline-none"
+            [attr.aria-label]="'Resize ' + itemLabel() + ' column'"
+            [attr.aria-valuemin]="itemColumnMinWidth()"
+            [attr.aria-valuemax]="itemColumnMaxWidth()"
+            [attr.aria-valuenow]="itemColumnWidth()"
+            (pointerdown)="startColumnResize($event)"
+            (pointermove)="moveColumnResize($event)"
+            (pointerup)="finishColumnResize($event)"
+            (pointercancel)="finishColumnResize($event)"
+            (keydown)="resizeColumnWithKeyboard($event)">
+            <span
+              class="bg-border group-hover:bg-primary group-focus-visible:bg-primary h-full w-px transition-colors"></span>
+          </div>
+        }
       </div>
       <div
         class="relative h-full"
@@ -69,6 +88,10 @@ import {
 export class TimelineHeaderComponent {
   readonly itemLabel = input('Item');
   readonly itemColumnWidth = input.required<number>();
+  readonly itemColumnResizable = input(false);
+  readonly itemColumnMinWidth = input(200);
+  readonly itemColumnMaxWidth = input(640);
+  readonly itemColumnWidthChanged = output<number>();
   readonly canvasWidth = input.required<number>();
   readonly dayWidth = input.required<number>();
   readonly majorIntervalDays = input(1);
@@ -82,6 +105,62 @@ export class TimelineHeaderComponent {
   readonly gridBackgroundSize = computed(() =>
     timelineGridBackgroundSize(this.dayWidth(), this.majorIntervalDays())
   );
+  private columnResize?: { originX: number; originWidth: number };
+
+  startColumnResize(event: PointerEvent): void {
+    if (event.button !== 0) {
+      return;
+    }
+
+    event.preventDefault();
+    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+    this.columnResize = {
+      originX: event.clientX,
+      originWidth: this.itemColumnWidth(),
+    };
+  }
+
+  moveColumnResize(event: PointerEvent): void {
+    const resize = this.columnResize;
+
+    if (!resize) {
+      return;
+    }
+
+    const width = resize.originWidth + event.clientX - resize.originX;
+    this.itemColumnWidthChanged.emit(this.clampColumnWidth(width));
+  }
+
+  finishColumnResize(event: PointerEvent): void {
+    this.columnResize = undefined;
+    const target = event.currentTarget as HTMLElement;
+
+    if (target.hasPointerCapture(event.pointerId)) {
+      target.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  resizeColumnWithKeyboard(event: KeyboardEvent): void {
+    const step = event.shiftKey ? 32 : 16;
+    const width =
+      event.key === 'ArrowLeft'
+        ? this.itemColumnWidth() - step
+        : event.key === 'ArrowRight'
+          ? this.itemColumnWidth() + step
+          : event.key === 'Home'
+            ? this.itemColumnMinWidth()
+            : event.key === 'End'
+              ? this.itemColumnMaxWidth()
+              : undefined;
+
+    if (width === undefined) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.itemColumnWidthChanged.emit(this.clampColumnWidth(width));
+  }
 
   rangeLeft(start: string): number {
     return clippedRangeLeft(this.from(), start.slice(0, 10), this.dayWidth());
@@ -94,6 +173,13 @@ export class TimelineHeaderComponent {
       start.slice(0, 10),
       end.slice(0, 10),
       this.dayWidth()
+    );
+  }
+
+  private clampColumnWidth(width: number): number {
+    return Math.min(
+      this.itemColumnMaxWidth(),
+      Math.max(this.itemColumnMinWidth(), width)
     );
   }
 }
