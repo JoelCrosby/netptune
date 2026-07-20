@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScheduledTask } from '@core/models/scheduled-task';
+import { DialogService } from '@core/services/dialog.service';
 import { TaskSchedulingService } from '@core/services/task-scheduling.service';
 import { SseService } from '@core/sse/sse.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -18,8 +19,13 @@ import { debounceTime, Subject } from 'rxjs';
 import {
   CalendarDay,
   CalendarTaskMove,
+  CalendarTaskMoveRequest,
   CalendarViewModel,
 } from '../../models/calendar.models';
+import {
+  CalendarMoveTaskDialogComponent,
+  CalendarMoveTaskDialogResult,
+} from '../../dialogs/calendar-move-task-dialog.component';
 import { moveTaskSchedule } from '../../utils/calendar-tasks';
 import { CalendarMonthGridComponent } from '../calendar-month-grid/calendar-month-grid.component';
 import { CalendarSelectedDayTableComponent } from '../calendar-selected-day-table/calendar-selected-day-table.component';
@@ -38,6 +44,7 @@ import { CalendarSelectedDayTableComponent } from '../calendar-selected-day-tabl
         [pendingTaskIds]="pendingTaskIds()"
         (daySelected)="selectedDate.set($event)"
         (taskSelected)="taskSelected.emit($event)"
+        (taskMoveRequested)="requestTaskMove($event)"
         (taskMoved)="moveTask($event)" />
     </div>
 
@@ -64,6 +71,7 @@ export class CalendarPlanningMonthComponent {
   readonly refreshRequested = output();
 
   private readonly scheduling = inject(TaskSchedulingService);
+  private readonly dialog = inject(DialogService);
   private readonly snackbar = inject(SnackbarService);
   private readonly sse = inject(SseService);
   private readonly destroyRef = inject(DestroyRef);
@@ -93,6 +101,38 @@ export class CalendarPlanningMonthComponent {
 
   requestRefresh(): void {
     this.refreshSignals.next();
+  }
+
+  protected requestTaskMove(request: CalendarTaskMoveRequest): void {
+    if (!this.canUpdateTasks() || this.pendingTaskIds().has(request.task.id)) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open<
+      CalendarMoveTaskDialogResult,
+      CalendarTaskMoveRequest,
+      CalendarMoveTaskDialogComponent
+    >(CalendarMoveTaskDialogComponent, {
+      ariaLabel: `Move ${request.task.systemId}`,
+      autoFocus: 'first-tabbable',
+      data: request,
+      maxWidth: 'calc(100vw - 2rem)',
+      width: '28rem',
+    });
+
+    dialogRef.closed
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (!result || result.date === request.fromDate) {
+          return;
+        }
+
+        this.moveTask({
+          task: request.task,
+          fromDate: request.fromDate,
+          toDate: result.date,
+        });
+      });
   }
 
   protected moveTask(change: CalendarTaskMove): void {

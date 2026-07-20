@@ -20,4 +20,9 @@ export interface CalendarTaskMove {
   toDate: string;
 }
 
+export interface CalendarTaskMoveRequest {
+  task: ScheduledTask;
+  fromDate: string;
+}
+
 export const calendarTaskDragType = 'application/x-netptune-calendar-task';

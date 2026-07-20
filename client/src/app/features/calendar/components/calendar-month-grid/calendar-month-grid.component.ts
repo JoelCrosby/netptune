@@ -1,9 +1,10 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { Grid, GridCell, GridCellWidget, GridRow } from '@angular/aria/grid';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import {
   CalendarDay,
   CalendarTaskMove,
+  CalendarTaskMoveRequest,
   calendarTaskDragType,
 } from '../../models/calendar.models';
 import { calendarDayLabel } from '../../utils/calendar-range';
@@ -12,10 +13,11 @@ import {
   calendarTaskLanesByDate,
   compareCalendarTasks,
   taskOccursOn,
+  taskStartsOn,
 } from '../../utils/calendar-tasks';
 import { CalendarTaskItemComponent } from '../calendar-task-item/calendar-task-item.component';
 
-const visibleTaskCount = 4;
+const visibleTaskCount = 3;
 
 @Component({
   selector: 'app-calendar-month-grid',
@@ -36,7 +38,9 @@ const visibleTaskCount = 4;
       focusMode="roving"
       rowWrap="continuous"
       colWrap="continuous"
-      aria-label="Task calendar">
+      aria-label="Task calendar"
+      (dragleave)="leaveGrid($event)"
+      (dragend)="endTaskDrag()">
       @for (week of weeks(); track week[0].date; let weekIndex = $index) {
         <div ngGridRow class="grid grid-cols-7" [rowIndex]="weekIndex + 1">
           @for (day of week; track day.date; let dayIndex = $index) {
@@ -48,13 +52,14 @@ const visibleTaskCount = 4;
               [class.ring-primary]="day.today"
               [class.ring-1]="day.today"
               [class.bg-primary/10]="selectedDate() === day.date"
+              [class.calendar-drop-target]="dragTargetDate() === day.date"
               [attr.aria-label]="dayLabel(day)"
               [rowIndex]="weekIndex + 1"
               [colIndex]="dayIndex + 1"
               (click)="selectDay(day.date)"
-              (dragover)="allowDrop($event)"
+              (dragover)="allowDrop($event, day.date)"
               (drop)="dropTask($event, day.date)">
-              <div class="mb-1 flex items-center justify-between">
+              <div class="mb-2 flex items-center justify-between">
                 <span
                   class="flex h-6 min-w-6 items-center justify-center rounded-full text-xs"
                   [class.bg-primary]="day.today"
@@ -62,18 +67,31 @@ const visibleTaskCount = 4;
                   [class.text-muted-foreground]="!day.currentMonth">
                   {{ day.dayNumber }}
                 </span>
+                @if (dragTargetDate() === day.date) {
+                  <span
+                    class="bg-primary text-primary-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold"
+                    aria-hidden="true">
+                    Drop here
+                  </span>
+                }
               </div>
 
-              <div class="space-y-0.5">
+              <div class="space-y-1 pb-1">
                 @for (task of visibleTaskLanes(day.date); track $index) {
                   @if (task) {
                     <app-calendar-task-item
                       [task]="task"
                       [date]="day.date"
+                      [dayIndex]="dayIndex"
+                      [showLabel]="showTaskLabel(task, day.date, dayIndex)"
                       [editable]="
                         canUpdateTasks() && !pendingTaskIds().has(task.id)
                       "
-                      (taskSelected)="taskSelected.emit($event)" />
+                      (dragStarted)="startTaskDrag(day.date)"
+                      (taskSelected)="taskSelected.emit($event)"
+                      (moveRequested)="
+                        taskMoveRequested.emit({ task, fromDate: day.date })
+                      " />
                   } @else {
                     <div class="h-6" aria-hidden="true"></div>
                   }
@@ -101,6 +119,12 @@ const visibleTaskCount = 4;
       display: block;
       min-width: 44rem;
     }
+
+    .calendar-drop-target {
+      z-index: 1;
+      background-color: color-mix(in srgb, var(--primary) 16%, var(--card));
+      box-shadow: inset 0 0 0 2px var(--primary);
+    }
   `,
 })
 export class CalendarMonthGridComponent {
@@ -113,6 +137,10 @@ export class CalendarMonthGridComponent {
   readonly daySelected = output<string>();
   readonly taskSelected = output<ScheduledTask>();
   readonly taskMoved = output<CalendarTaskMove>();
+  readonly taskMoveRequested = output<CalendarTaskMoveRequest>();
+
+  protected readonly dragSourceDate = signal<string | undefined>(undefined);
+  protected readonly dragTargetDate = signal<string | undefined>(undefined);
 
   protected readonly weekdays = [
     'Sunday',
@@ -166,23 +194,61 @@ export class CalendarMonthGridComponent {
     return `Show ${count} more tasks for ${calendarDayLabel(date)}`;
   }
 
+  protected showTaskLabel(
+    task: ScheduledTask,
+    date: string,
+    dayIndex: number
+  ): boolean {
+    return dayIndex === 0 || taskStartsOn(task) === date;
+  }
+
   protected selectDay(date: string): void {
     this.daySelected.emit(date);
   }
 
-  protected allowDrop(event: DragEvent): void {
-    if (
+  protected startTaskDrag(fromDate: string): void {
+    this.dragSourceDate.set(fromDate);
+    this.dragTargetDate.set(undefined);
+  }
+
+  protected allowDrop(event: DragEvent, date: string): void {
+    const validTarget =
       this.canUpdateTasks() &&
-      Array.from(event.dataTransfer?.types ?? []).includes(calendarTaskDragType)
-    ) {
-      event.preventDefault();
-      if (event.dataTransfer) {
-        event.dataTransfer.dropEffect = 'move';
-      }
+      this.dragSourceDate() !== date &&
+      Array.from(event.dataTransfer?.types ?? []).includes(
+        calendarTaskDragType
+      );
+
+    if (!validTarget) {
+      this.dragTargetDate.set(undefined);
+      return;
+    }
+
+    event.preventDefault();
+    this.dragTargetDate.set(date);
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
     }
   }
 
+  protected leaveGrid(event: DragEvent): void {
+    const grid = event.currentTarget as HTMLElement;
+    const nextTarget = event.relatedTarget;
+    if (nextTarget instanceof Node && grid.contains(nextTarget)) {
+      return;
+    }
+
+    this.dragTargetDate.set(undefined);
+  }
+
+  protected endTaskDrag(): void {
+    this.dragSourceDate.set(undefined);
+    this.dragTargetDate.set(undefined);
+  }
+
   protected dropTask(event: DragEvent, toDate: string): void {
+    this.endTaskDrag();
+
     if (!this.canUpdateTasks() || !event.dataTransfer) {
       return;
     }
