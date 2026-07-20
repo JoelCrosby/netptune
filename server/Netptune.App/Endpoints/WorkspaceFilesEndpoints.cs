@@ -75,7 +75,7 @@ public static class WorkspaceFilesEndpoints
             return Results.NotFound(result);
         }
 
-        await BroadcastAsync(boardEvents, http);
+        await boardEvents.BroadcastRequestAsync(http);
 
         return Results.Ok(result);
     }
@@ -94,7 +94,7 @@ public static class WorkspaceFilesEndpoints
             return Results.Forbid();
         }
 
-        await BroadcastAsync(boardEvents, http);
+        await boardEvents.BroadcastRequestAsync(http);
 
         return Results.NoContent();
     }
@@ -125,10 +125,4 @@ public static class WorkspaceFilesEndpoints
         return Results.Redirect(result.Payload!.ToString());
     }
 
-    private static Task BroadcastAsync(IBoardEventService service, HttpContext context)
-    {
-        var group = context.Request.Headers["X-Group"].ToString();
-
-        return string.IsNullOrEmpty(group) ? Task.CompletedTask : service.BroadcastAsync(group, context.Connection.Id);
-    }
 }

@@ -1,4 +1,6 @@
 using Mediator;
+
+using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Handlers.Boards.Commands;
@@ -74,12 +76,21 @@ public static class BoardsEndpoints
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandlePut(IMediator mediator, UpdateBoardRequest request,
+    public static async Task<IResult> HandlePut(
+        IMediator mediator,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        UpdateBoardRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdateBoardCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound)
+        {
+            return Results.NotFound();
+        }
+
+        await boardEventService.BroadcastRequestAsync(context);
 
         return Results.Ok(result);
     }
@@ -95,12 +106,21 @@ public static class BoardsEndpoints
         return Results.Ok(result);
     }
 
-    public static async Task<IResult> HandleDelete(IMediator mediator, int id,
+    public static async Task<IResult> HandleDelete(
+        IMediator mediator,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        int id,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteBoardCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        await boardEventService.BroadcastRequestAsync(context);
 
         return Results.Ok(result);
     }

@@ -56,7 +56,9 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 builder.Services.AddSingleton<BuildInfo>();
-builder.Services.AddSingleton<IBoardEventService, BoardEventService>();
+builder.Services.AddSingleton<BoardEventService>();
+builder.Services.AddSingleton<IBoardEventService>(services => services.GetRequiredService<BoardEventService>());
+builder.Services.AddHostedService<BoardEventService>(services => services.GetRequiredService<BoardEventService>());
 builder.Services.AddSingleton<INotificationEventService, NotificationEventService>();
 builder.Services.AddSingleton<IPreferenceDefinitionRegistry, PreferenceDefinitionRegistry>();
 

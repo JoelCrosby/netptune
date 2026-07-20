@@ -97,7 +97,7 @@ export class RoadmapPlanningTimelineComponent {
     this.setTaskPending(task.id, true);
 
     this.planning
-      .updateSchedule(group, task.id, change.schedule)
+      .updateSchedule(task.id, change.schedule)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

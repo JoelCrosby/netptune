@@ -1,4 +1,5 @@
 using Netptune.App.Services;
+using Netptune.Core.Cache;
 using Netptune.Core.Services;
 
 namespace Netptune.App.Endpoints;
@@ -18,11 +19,29 @@ public static class BoardEventsEndpoints
         HttpContext context,
         IBoardEventService boardEventService,
         IIdentityService identity,
-        string group)
+        IWorkspacePermissionCache permissionCache,
+        string workspace,
+        string group,
+        string clientId)
     {
-        var clientId = context.Connection.Id;
         var userId = identity.GetCurrentUserId();
+        var permissions = await permissionCache.GetUserPermissions(userId, workspace);
 
-        await boardEventService.SubscribeAsync(group, clientId, userId, context.Response, context.RequestAborted);
+        if (permissions is null)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return;
+        }
+
+        var subscription = new RealtimeSubscription
+        {
+            Workspace = workspace,
+            Group = group,
+            SourceClientId = clientId,
+            ConnectionId = context.Connection.Id,
+            UserId = userId,
+        };
+
+        await boardEventService.SubscribeAsync(subscription, context.Response, context.RequestAborted);
     }
 }

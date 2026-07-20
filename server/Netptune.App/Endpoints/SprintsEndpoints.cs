@@ -146,7 +146,7 @@ public static class SprintsEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await BroadcastAsync(boardEventService, context);
+        await boardEventService.BroadcastRequestAsync(context);
 
         return Results.Ok(result);
     }
@@ -163,18 +163,9 @@ public static class SprintsEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await BroadcastAsync(boardEventService, context);
+        await boardEventService.BroadcastRequestAsync(context);
 
         return Results.Ok(result);
     }
 
-    private static Task BroadcastAsync(IBoardEventService boardEventService, HttpContext context)
-    {
-        var group = context.Request.Headers["X-Group"].ToString();
-        var clientId = context.Connection.Id;
-
-        if (string.IsNullOrEmpty(group)) return Task.CompletedTask;
-
-        return boardEventService.BroadcastAsync(group, clientId);
-    }
 }

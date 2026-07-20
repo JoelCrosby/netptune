@@ -3,6 +3,7 @@ import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
+import { RealtimeClientIdService } from './realtime-client-id.service';
 import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 @Injectable({
@@ -10,7 +11,8 @@ import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces
 })
 export class SseService {
   private store = inject(Store);
-  private eventSource: EventSource | null = null;
+  private readonly realtimeClientId = inject(RealtimeClientIdService);
+  private eventSource?: EventSource;
 
   private readonly isAuthenticated = this.store.selectSignal(
     selectIsAuthenticated
@@ -28,12 +30,17 @@ export class SseService {
 
     this.disconnect();
 
-    const params = new URLSearchParams({ group });
     const workspaceId = this.workspaceId();
 
-    if (workspaceId) {
-      params.set('workspace', workspaceId);
+    if (!workspaceId) {
+      return;
     }
+
+    const params = new URLSearchParams({
+      clientId: this.realtimeClientId.value,
+      group,
+      workspace: workspaceId,
+    });
 
     const url = `${environment.apiEndpoint}api/hubs/board-events?${params.toString()}`;
 
@@ -63,6 +70,7 @@ export class SseService {
 
     this.eventSource.onopen = () => {
       Logger.log('%c[SSE][Connected]', 'color: lime');
+      onEvent();
     };
   }
 
@@ -70,7 +78,7 @@ export class SseService {
     if (!this.eventSource) return;
 
     this.eventSource.close();
-    this.eventSource = null;
+    this.eventSource = undefined;
 
     Logger.log('%c[SSE][Disconnected]', 'color: orange');
   }

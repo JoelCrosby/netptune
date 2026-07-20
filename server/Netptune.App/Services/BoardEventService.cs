@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading.Channels;
 
@@ -5,7 +6,27 @@ using StackExchange.Redis;
 
 namespace Netptune.App.Services;
 
-public record ClientChannel(string Client, string Group, DateTimeOffset CreatedAt);
+public sealed record WorkspaceEvent
+{
+    public required string Workspace { get; init; }
+
+    public required string SourceClientId { get; init; }
+
+    public DateTimeOffset CreatedAt { get; init; }
+}
+
+public sealed record RealtimeSubscription
+{
+    public required string Workspace { get; init; }
+
+    public required string Group { get; init; }
+
+    public required string SourceClientId { get; init; }
+
+    public required string ConnectionId { get; init; }
+
+    public required string UserId { get; init; }
+}
 
 public enum PresenceKind
 {
@@ -14,17 +35,67 @@ public enum PresenceKind
     Leave,
 }
 
-public record PresenceMessage(string Group, string UserId, string ClientId, PresenceKind Kind);
-
-public class BoardEventService(ILogger<BoardEventService> logger, IConnectionMultiplexer connection) : IBoardEventService
+public sealed record PresenceMessage
 {
-    private readonly RedisChannel RealTimeGroupChannel = RedisChannel.Literal("real-time-groups");
-    private readonly RedisChannel PresenceChannel = RedisChannel.Literal("board-presence");
+    public required string Workspace { get; init; }
+
+    public required string Group { get; init; }
+
+    public required string UserId { get; init; }
+
+    public required string ClientId { get; init; }
+
+    public PresenceKind Kind { get; init; }
+}
+
+public sealed class BoardEventService : IBoardEventService, IHostedService
+{
+    private const int ConnectionQueueCapacity = 32;
+    private static readonly RedisChannel WorkspaceEventChannel = RedisChannel.Literal("workspace-events");
+    private static readonly RedisChannel PresenceChannel = RedisChannel.Literal("board-presence");
+
+    private readonly ILogger<BoardEventService> Logger;
+    private readonly ISubscriber Subscriber;
+    private readonly ConcurrentDictionary<string, LocalConnection> Connections = new();
+    private readonly Dictionary<PresenceGroup, Dictionary<string, HashSet<string>>> Presence = [];
+    private readonly object PresenceLock = new();
+
+    private readonly record struct PresenceGroup(string Workspace, string Group);
+
+    private sealed record LocalConnection
+    {
+        public required RealtimeSubscription Subscription { get; init; }
+
+        public required Channel<string> Outbound { get; init; }
+    }
+
+    public BoardEventService(ILogger<BoardEventService> logger, IConnectionMultiplexer connection)
+    {
+        Logger = logger;
+        Subscriber = connection.GetSubscriber();
+    }
+
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        var eventQueue = await Subscriber.SubscribeAsync(WorkspaceEventChannel);
+        var presenceQueue = await Subscriber.SubscribeAsync(PresenceChannel);
+        eventQueue.OnMessage(HandleWorkspaceEvent);
+        presenceQueue.OnMessage(HandlePresenceMessageAsync);
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await Subscriber.UnsubscribeAsync(WorkspaceEventChannel);
+        await Subscriber.UnsubscribeAsync(PresenceChannel);
+
+        foreach (var connection in Connections.Values)
+        {
+            connection.Outbound.Writer.TryComplete();
+        }
+    }
 
     public async Task SubscribeAsync(
-        string group,
-        string clientId,
-        string userId,
+        RealtimeSubscription subscription,
         HttpResponse response,
         CancellationToken cancellationToken)
     {
@@ -35,79 +106,22 @@ public class BoardEventService(ILogger<BoardEventService> logger, IConnectionMul
 
         await response.Body.FlushAsync(cancellationToken);
 
-        var subscriber = connection.GetSubscriber();
-        var reloadQueue = await subscriber.SubscribeAsync(RealTimeGroupChannel);
-        var presenceQueue = await subscriber.SubscribeAsync(PresenceChannel);
-
-        // Every SSE frame is written by the single consumer loop at the bottom of this method.
-        // The reload and presence handlers only enqueue frames, so they never touch the response
-        // concurrently.
-        var outbound = Channel.CreateUnbounded<string>(new UnboundedChannelOptions { SingleReader = true });
-
-        // Per-connection view of who is online in this group, keyed by userId. Only ever touched
-        // from the presence handler, which Redis invokes sequentially for this queue.
-        var present = new Dictionary<string, HashSet<string>> { [userId] = [clientId] };
-
-        reloadQueue.OnMessage(message =>
+        var outbound = Channel.CreateBounded<string>(new BoundedChannelOptions(ConnectionQueueCapacity)
         {
-            try
-            {
-                var clientChannel = JsonSerializer.Deserialize(message.Message.ToString(), BoardEventSerializerContext.Default.ClientChannel);
-
-                if (clientChannel is null) return;
-
-                var notFromConnectedClient = clientChannel.Client != clientId;
-                var isSameGroup = clientChannel.Group == group;
-
-                if (notFromConnectedClient && isSameGroup)
-                {
-                    outbound.Writer.TryWrite("data: update\n\n");
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Message deserialization failed");
-            }
+            FullMode = BoundedChannelFullMode.Wait,
+            SingleReader = true,
+            SingleWriter = false,
         });
-
-        // Send the initial snapshot (just this client) before the presence handler can mutate the map.
-        outbound.Writer.TryWrite(PresenceFrame(present));
-
-        presenceQueue.OnMessage(message =>
+        var localConnection = new LocalConnection
         {
-            try
-            {
-                var presence = JsonSerializer.Deserialize(message.Message.ToString(), BoardEventSerializerContext.Default.PresenceMessage);
+            Subscription = subscription,
+            Outbound = outbound,
+        };
 
-                if (presence is null || presence.Group != group || presence.ClientId == clientId) return;
-
-                var changed = presence.Kind switch
-                {
-                    PresenceKind.Join => AddPresence(present, presence.UserId, presence.ClientId),
-                    PresenceKind.Hello => AddPresence(present, presence.UserId, presence.ClientId),
-                    PresenceKind.Leave => RemovePresence(present, presence.UserId, presence.ClientId),
-                    _ => false,
-                };
-
-                // Reply to joins so the newcomer learns we are here. Hello replies do not trigger further replies.
-                if (presence.Kind is PresenceKind.Join)
-                {
-                    _ = BroadcastPresenceAsync(group, userId, clientId, PresenceKind.Hello);
-                }
-
-                if (changed)
-                {
-                    outbound.Writer.TryWrite(PresenceFrame(present));
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Presence message handling failed");
-            }
-        });
-
-        // Announce our arrival so existing viewers reply with their presence.
-        await BroadcastPresenceAsync(group, userId, clientId, PresenceKind.Join);
+        Connections[subscription.ConnectionId] = localConnection;
+        AddPresence(subscription);
+        WritePresenceFrames(subscription.Workspace, subscription.Group);
+        await BroadcastPresenceAsync(subscription, PresenceKind.Join);
 
         try
         {
@@ -119,63 +133,250 @@ public class BoardEventService(ILogger<BoardEventService> logger, IConnectionMul
         }
         catch (OperationCanceledException)
         {
-            logger.LogDebug("Client disconnected");
+            Logger.LogDebug("Realtime client disconnected");
         }
         finally
         {
-            await BroadcastPresenceAsync(group, userId, clientId, PresenceKind.Leave);
-            await reloadQueue.UnsubscribeAsync();
-            await presenceQueue.UnsubscribeAsync();
+            Connections.TryRemove(subscription.ConnectionId, out _);
+            RemovePresence(subscription);
+            WritePresenceFrames(subscription.Workspace, subscription.Group);
+            await BroadcastPresenceAsync(subscription, PresenceKind.Leave);
         }
     }
 
-    private static string PresenceFrame(Dictionary<string, HashSet<string>> present)
+    public Task BroadcastAsync(string workspace, string sourceClientId)
     {
-        var users = present.Keys.ToArray();
-        var json = JsonSerializer.Serialize(users, BoardEventSerializerContext.Default.StringArray);
+        var message = new WorkspaceEvent
+        {
+            Workspace = workspace,
+            SourceClientId = sourceClientId,
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+        var json = JsonSerializer.Serialize(message, BoardEventSerializerContext.Default.WorkspaceEvent);
 
-        return $"event: presence\ndata: {json}\n\n";
+        return Subscriber.PublishAsync(WorkspaceEventChannel, json);
     }
 
-    // Returns true when the user transitions to online (their first connection in this group).
-    private static bool AddPresence(Dictionary<string, HashSet<string>> present, string userId, string clientId)
+    private void HandleWorkspaceEvent(ChannelMessage message)
     {
-        if (present.TryGetValue(userId, out var clients))
+        try
         {
-            clients.Add(clientId);
+            var workspaceEvent = JsonSerializer.Deserialize(
+                message.Message.ToString(),
+                BoardEventSerializerContext.Default.WorkspaceEvent);
+
+            if (workspaceEvent is null)
+            {
+                return;
+            }
+
+            foreach (var connection in Connections.Values)
+            {
+                var subscription = connection.Subscription;
+                var isSameWorkspace = subscription.Workspace == workspaceEvent.Workspace;
+                var isSourceClient = subscription.SourceClientId == workspaceEvent.SourceClientId;
+
+                if (isSameWorkspace && !isSourceClient)
+                {
+                    TryWrite(connection, "data: update\n\n");
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError(exception, "Workspace event deserialization failed");
+        }
+    }
+
+    private async Task HandlePresenceMessageAsync(ChannelMessage message)
+    {
+        try
+        {
+            var presence = JsonSerializer.Deserialize(
+                message.Message.ToString(),
+                BoardEventSerializerContext.Default.PresenceMessage);
+
+            if (presence is null)
+            {
+                return;
+            }
+
+            var changed = ApplyPresence(presence);
+
+            if (presence.Kind is PresenceKind.Join)
+            {
+                await ReplyToPresenceJoin(presence);
+            }
+
+            if (changed)
+            {
+                WritePresenceFrames(presence.Workspace, presence.Group);
+            }
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError(exception, "Presence message handling failed");
+        }
+    }
+
+    private Task ReplyToPresenceJoin(PresenceMessage presence)
+    {
+        var replies = Connections.Values
+            .Select(connection => connection.Subscription)
+            .Where(subscription =>
+                subscription.Workspace == presence.Workspace &&
+                subscription.Group == presence.Group &&
+                subscription.ConnectionId != presence.ClientId)
+            .Select(subscription => BroadcastPresenceAsync(subscription, PresenceKind.Hello));
+
+        return Task.WhenAll(replies);
+    }
+
+    private Task BroadcastPresenceAsync(RealtimeSubscription subscription, PresenceKind kind)
+    {
+        var message = new PresenceMessage
+        {
+            Workspace = subscription.Workspace,
+            Group = subscription.Group,
+            UserId = subscription.UserId,
+            ClientId = subscription.ConnectionId,
+            Kind = kind,
+        };
+        var json = JsonSerializer.Serialize(message, BoardEventSerializerContext.Default.PresenceMessage);
+
+        return Subscriber.PublishAsync(PresenceChannel, json);
+    }
+
+    private void AddPresence(RealtimeSubscription subscription)
+    {
+        var group = new PresenceGroup(subscription.Workspace, subscription.Group);
+
+        lock (PresenceLock)
+        {
+            if (!Presence.TryGetValue(group, out var users))
+            {
+                users = [];
+                Presence[group] = users;
+            }
+
+            if (!users.TryGetValue(subscription.UserId, out var clients))
+            {
+                clients = [];
+                users[subscription.UserId] = clients;
+            }
+
+            clients.Add(subscription.ConnectionId);
+        }
+    }
+
+    private void RemovePresence(RealtimeSubscription subscription)
+    {
+        var message = new PresenceMessage
+        {
+            Workspace = subscription.Workspace,
+            Group = subscription.Group,
+            UserId = subscription.UserId,
+            ClientId = subscription.ConnectionId,
+            Kind = PresenceKind.Leave,
+        };
+        ApplyPresence(message);
+    }
+
+    private bool ApplyPresence(PresenceMessage message)
+    {
+        var group = new PresenceGroup(message.Workspace, message.Group);
+
+        lock (PresenceLock)
+        {
+            return message.Kind switch
+            {
+                PresenceKind.Join => AddPresence(Presence, group, message.UserId, message.ClientId),
+                PresenceKind.Hello => AddPresence(Presence, group, message.UserId, message.ClientId),
+                PresenceKind.Leave => RemovePresence(Presence, group, message.UserId, message.ClientId),
+                _ => false,
+            };
+        }
+    }
+
+    private static bool AddPresence(
+        Dictionary<PresenceGroup, Dictionary<string, HashSet<string>>> presence,
+        PresenceGroup group,
+        string userId,
+        string clientId)
+    {
+        if (!presence.TryGetValue(group, out var users))
+        {
+            users = [];
+            presence[group] = users;
+        }
+
+        if (!users.TryGetValue(userId, out var clients))
+        {
+            clients = [];
+            users[userId] = clients;
+        }
+
+        return clients.Add(clientId);
+    }
+
+    private static bool RemovePresence(
+        Dictionary<PresenceGroup, Dictionary<string, HashSet<string>>> presence,
+        PresenceGroup group,
+        string userId,
+        string clientId)
+    {
+        if (!presence.TryGetValue(group, out var users) || !users.TryGetValue(userId, out var clients))
+        {
             return false;
         }
 
-        present[userId] = [clientId];
-        return true;
+        var changed = clients.Remove(clientId);
+
+        if (clients.Count == 0)
+        {
+            users.Remove(userId);
+        }
+
+        if (users.Count == 0)
+        {
+            presence.Remove(group);
+        }
+
+        return changed;
     }
 
-    // Returns true when the user transitions to offline (their last connection in this group left).
-    private static bool RemovePresence(Dictionary<string, HashSet<string>> present, string userId, string clientId)
+    private void WritePresenceFrames(string workspace, string group)
     {
-        if (!present.TryGetValue(userId, out var clients)) return false;
+        var users = GetPresentUsers(workspace, group);
+        var json = JsonSerializer.Serialize(users, BoardEventSerializerContext.Default.StringArray);
+        var frame = $"event: presence\ndata: {json}\n\n";
 
-        clients.Remove(clientId);
+        foreach (var connection in Connections.Values)
+        {
+            var subscription = connection.Subscription;
 
-        if (clients.Count > 0) return false;
-
-        present.Remove(userId);
-        return true;
+            if (subscription.Workspace == workspace && subscription.Group == group)
+            {
+                TryWrite(connection, frame);
+            }
+        }
     }
 
-    private Task BroadcastPresenceAsync(string group, string userId, string clientId, PresenceKind kind)
+    private string[] GetPresentUsers(string workspace, string group)
     {
-        var message = new PresenceMessage(group, userId, clientId, kind);
-        var json = JsonSerializer.Serialize(message, BoardEventSerializerContext.Default.PresenceMessage);
+        var presenceGroup = new PresenceGroup(workspace, group);
 
-        return connection.GetSubscriber().PublishAsync(PresenceChannel, json);
+        lock (PresenceLock)
+        {
+            return Presence.TryGetValue(presenceGroup, out var users) ? users.Keys.ToArray() : [];
+        }
     }
 
-    public Task BroadcastAsync(string group, string clientId)
+    private static void TryWrite(LocalConnection connection, string frame)
     {
-        var message = new ClientChannel(clientId, group, DateTimeOffset.UtcNow);
-        var json = JsonSerializer.Serialize(message, BoardEventSerializerContext.Default.ClientChannel);
-
-        return connection.GetSubscriber().PublishAsync(RealTimeGroupChannel, json);
+        if (!connection.Outbound.Writer.TryWrite(frame))
+        {
+            connection.Outbound.Writer.TryComplete();
+        }
     }
 }

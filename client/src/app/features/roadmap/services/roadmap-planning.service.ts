@@ -11,7 +11,6 @@ export class RoadmapPlanningService {
   private readonly http = inject(HttpClient);
 
   updateSchedule(
-    group: string,
     taskId: number,
     schedule: TimelineSchedule
   ): Observable<void> {
@@ -22,8 +21,7 @@ export class RoadmapPlanningService {
           id: taskId,
           startDate: schedule.startDate,
           dueDate: schedule.endDate,
-        },
-        { headers: { 'X-Group': group } }
+        }
       )
       .pipe(
         unwrapClientReposne(),

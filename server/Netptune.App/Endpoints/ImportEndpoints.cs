@@ -1,3 +1,4 @@
+using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Services.Import;
 
@@ -17,10 +18,11 @@ public static class ImportEndpoints
 
     public static async Task<IResult> HandleImportWorkspaceTasks(
         ITaskImportService taskImportService,
-        HttpRequest request,
+        IBoardEventService boardEventService,
+        HttpContext context,
         string boardId)
     {
-        var file = request.Form.Files.FirstOrDefault();
+        var file = context.Request.Form.Files.FirstOrDefault();
 
         if (file is null)
         {
@@ -35,6 +37,11 @@ public static class ImportEndpoints
         var stream = file.OpenReadStream();
 
         var result = await taskImportService.ImportWorkspaceTasks(boardId, stream);
+
+        if (result.IsSuccess)
+        {
+            await boardEventService.BroadcastRequestAsync(context);
+        }
 
         return Results.Ok(result);
     }

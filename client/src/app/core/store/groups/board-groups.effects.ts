@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as BoardActions from '@core/store/boards/boards.actions';
 import * as RouteSelectors from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
@@ -60,6 +61,7 @@ export class BoardGroupsEffects {
         actions.moveMatchingTasks.success,
         actions.reassignTasks.success,
         actions.editBoardGroup.success,
+        BoardActions.updateBoard.success,
         TaskActions.importTasks.success,
         TaskActions.deleteTagFromTask.success,
         TaskActions.addTagToTask.success

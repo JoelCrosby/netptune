@@ -23,6 +23,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { WorkspaceService } from '../services/workspace.service';
+import { RealtimeClientIdService } from '../sse/realtime-client-id.service';
 import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 let sessionRefreshRequest$: ReturnType<AuthService['refresh']> | null = null;
@@ -40,6 +41,7 @@ export const authInterceptor = (
   const router = inject(Router);
   const workspaceService = inject(WorkspaceService);
   const authService = inject(AuthService);
+  const realtimeClientId = inject(RealtimeClientIdService);
 
   const isAuthManagementRequest = (req: HttpRequest<unknown>): boolean => {
     return (
@@ -82,6 +84,10 @@ export const authInterceptor = (
     first(),
     switchMap((workspaceId) => {
       req = req.clone({
+        headers: req.headers.set(
+          'X-Realtime-Client',
+          realtimeClientId.value
+        ),
         url: environment.apiEndpoint + req.url,
         withCredentials: true,
       });
