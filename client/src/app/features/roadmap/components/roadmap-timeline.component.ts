@@ -22,6 +22,7 @@ import {
   TimelineTick,
   TimelineZoom,
 } from '@static/components/timeline/timeline.models';
+import { timelineHeaderHeight } from '@static/components/timeline/timeline-range-layout';
 import {
   RoadmapProjectGroup,
   RoadmapScheduleChange,
@@ -37,7 +38,6 @@ import { countOffscreenDependencies } from '../utils/roadmap-relation-index';
 import { RoadmapTaskRowComponent } from './roadmap-task-row.component';
 
 const defaultTaskColumnWidth = 320;
-const headerHeight = 80;
 const projectRowHeight = 36;
 const taskRowHeight = 44;
 
@@ -130,7 +130,7 @@ const taskRowHeight = 44;
         <div
           class="pointer-events-none absolute"
           [style.left.px]="taskColumnWidth()"
-          [style.top.px]="headerHeight">
+          [style.top.px]="headerHeight()">
           <app-timeline-dependencies
             [dependencies]="dependencies()"
             [width]="canvasWidth()"
@@ -154,7 +154,6 @@ export class RoadmapTimelineComponent {
   readonly taskDragActive = signal(false);
 
   readonly taskColumnWidth = signal(defaultTaskColumnWidth);
-  readonly headerHeight = headerHeight;
   readonly today = todayDate();
   readonly dayWidth = computed(() => timelineDayWidth(this.zoom()));
   readonly majorIntervalDays = computed(() =>
@@ -206,6 +205,9 @@ export class RoadmapTimelineComponent {
       startDate: sprint.startDate,
       endDate: sprint.endDate,
     }))
+  );
+  readonly headerHeight = computed(() =>
+    timelineHeaderHeight(this.sprintRanges())
   );
 
   readonly ticks = computed<TimelineTick[]>(() => {

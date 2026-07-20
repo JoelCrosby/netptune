@@ -8,6 +8,12 @@ import {
 import { TimelineDateMarkerComponent } from './timeline-date-marker.component';
 import { TimelineWeekendShadingComponent } from './timeline-weekend-shading.component';
 import {
+  layoutTimelineRanges,
+  timelineHeaderHeight,
+  timelineRangeLaneHeight,
+  timelineRangeTop,
+} from './timeline-range-layout';
+import {
   TimelineHeaderGroup,
   TimelineRange,
   TimelineTick,
@@ -18,7 +24,9 @@ import {
   imports: [TimelineDateMarkerComponent, TimelineWeekendShadingComponent],
   host: { class: 'block sticky top-0 z-20' },
   template: `
-    <div class="border-border bg-card flex h-20 border-b">
+    <div
+      class="border-border bg-card flex border-b"
+      [style.height.px]="height()">
       <div
         class="border-border bg-card sticky left-0 z-30 flex shrink-0 items-center border-r px-4 font-semibold"
         [style.width.px]="itemColumnWidth()">
@@ -72,13 +80,14 @@ import {
             {{ tick.label }}
           </span>
         }
-        @for (range of ranges(); track range.id) {
+        @for (range of rangeLayouts(); track range.id) {
           <div
-            class="absolute bottom-1 h-5 overflow-hidden rounded bg-violet-500/15 px-2 text-xs leading-5 whitespace-nowrap text-violet-700 dark:text-violet-300"
+            class="border-primary/25 bg-primary/15 text-foreground absolute h-5 overflow-hidden rounded border px-2 text-xs leading-4.5 font-medium whitespace-nowrap"
+            [style.top.px]="rangeTop(range.lane)"
             [style.left.px]="rangeLeft(range.startDate)"
             [style.width.px]="rangeWidth(range.startDate, range.endDate)"
             [title]="range.label">
-            {{ range.label }}
+            <span class="block truncate">{{ range.label }}</span>
           </div>
         }
       </div>
@@ -105,6 +114,8 @@ export class TimelineHeaderComponent {
   readonly gridBackgroundSize = computed(() =>
     timelineGridBackgroundSize(this.dayWidth(), this.majorIntervalDays())
   );
+  readonly rangeLayouts = computed(() => layoutTimelineRanges(this.ranges()));
+  readonly height = computed(() => timelineHeaderHeight(this.ranges()));
   private columnResize?: { originX: number; originWidth: number };
 
   startColumnResize(event: PointerEvent): void {
@@ -174,6 +185,10 @@ export class TimelineHeaderComponent {
       end.slice(0, 10),
       this.dayWidth()
     );
+  }
+
+  rangeTop(lane: number): number {
+    return timelineRangeTop + lane * timelineRangeLaneHeight;
   }
 
   private clampColumnWidth(width: number): number {

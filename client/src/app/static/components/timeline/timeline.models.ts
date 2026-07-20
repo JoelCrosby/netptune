@@ -13,6 +13,10 @@ export interface TimelineRange {
   endDate: string;
 }
 
+export interface TimelineRangeLayout extends TimelineRange {
+  lane: number;
+}
+
 export interface TimelineHeaderGroup {
   id: string;
   label: string;
