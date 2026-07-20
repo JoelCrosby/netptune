@@ -24,6 +24,7 @@ public static class SeedDataExtensions
         services.AddSingleton<ISeeder, TagSeeder>();
         services.AddSingleton<ISeeder, TaskTagSeeder>();
 
+        services.AddSingleton<ISeeder, SprintReportingSeeder>();
         services.AddSingleton<ISeeder, NotificationSeeder>();
 
         services.AddHostedService<SeedDataService>();

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Entities.Contexts;
@@ -8,6 +10,8 @@ public sealed class SprintSeeder : ISeeder
 {
     private const int CompletedSprintTaskCount = 6;
     private const int ActiveSprintTaskCount = 8;
+
+    private static readonly decimal[] StoryPointEstimates = [3, 5, 2, 8, 3, 5, 1, 3];
 
     private sealed record SprintSeed(string Name, string Goal);
 
@@ -75,10 +79,11 @@ public sealed class SprintSeeder : ISeeder
 
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
     {
-        var activeStart = StartOfWeek(DateTime.UtcNow.Date);
+        var activeStart = StartOfWeek(DateTime.UtcNow.Date).AddDays(-7);
         var activeEnd = activeStart.AddDays(13);
         var completedStart = activeStart.AddDays(-14);
         var completedEnd = activeStart.AddDays(-1);
+        var assignments = new List<(Project Project, Sprint Completed, Sprint Active)>();
 
         foreach (var (project, projectIndex) in context.Projects.Select((project, index) => (project, index)))
         {
@@ -112,56 +117,97 @@ public sealed class SprintSeeder : ISeeder
 
             context.Sprints.Add(completedSprint);
             context.Sprints.Add(activeSprint);
-
-            AssignProjectTasks(context, project, completedSprint, activeSprint);
+            assignments.Add((project, completedSprint, activeSprint));
         }
 
         EnsureSprintNamesAreUnique(context.Sprints);
 
         await dbContext.Sprints.AddRangeAsync(context.Sprints, ct);
+
+        foreach (var assignment in assignments)
+        {
+            await AssignProjectTasks(
+                dbContext,
+                context,
+                assignment.Project,
+                assignment.Completed,
+                assignment.Active,
+                ct);
+        }
     }
 
-    private static void AssignProjectTasks(
+    private static async Task AssignProjectTasks(
+        DataContext dbContext,
         SeedContext context,
         Project project,
         Sprint completedSprint,
-        Sprint activeSprint)
+        Sprint activeSprint,
+        CancellationToken ct)
     {
         var projectTasks = context.Tasks.Where(task => task.Project == project).ToList();
         var completedStatus = context.Statuses.First(status =>
             status.Workspace == project.Workspace &&
             status.EntityType == EntityType.Task &&
             status.Category == StatusCategory.Done);
+        var activeStatus = context.Statuses.First(status =>
+            status.Workspace == project.Workspace &&
+            status.EntityType == EntityType.Task &&
+            status.Category == StatusCategory.Active);
+        var todoStatus = context.Statuses.First(status =>
+            status.Workspace == project.Workspace &&
+            status.EntityType == EntityType.Task &&
+            status.Category == StatusCategory.Todo);
         var completedStart = DateOnly.FromDateTime(completedSprint.StartDate);
         var completedEnd = DateOnly.FromDateTime(completedSprint.EndDate);
         var activeStart = DateOnly.FromDateTime(activeSprint.StartDate);
         var activeEnd = DateOnly.FromDateTime(activeSprint.EndDate);
 
-        foreach (var (task, taskIndex) in projectTasks
-                     .Take(CompletedSprintTaskCount)
+        var completedTasks = projectTasks.Take(CompletedSprintTaskCount).ToList();
+        var activeTasks = projectTasks.Skip(CompletedSprintTaskCount).Take(ActiveSprintTaskCount).ToList();
+
+        foreach (var (task, taskIndex) in completedTasks
                      .Select((task, index) => (task, index)))
         {
             var taskStart = completedStart.AddDays(taskIndex * 2);
             var proposedDueDate = taskStart.AddDays(3);
 
             task.Sprint = completedSprint;
-            task.Status = completedStatus;
+            task.EstimateType = EstimateType.StoryPoints;
+            task.EstimateValue = StoryPointEstimates[taskIndex];
             task.StartDate = taskStart;
             task.DueDate = proposedDueDate > completedEnd ? completedEnd : proposedDueDate;
         }
 
-        foreach (var (task, taskIndex) in projectTasks
-                     .Skip(CompletedSprintTaskCount)
-                     .Take(ActiveSprintTaskCount)
+        foreach (var (task, taskIndex) in activeTasks
                      .Select((task, index) => (task, index)))
         {
             var taskStart = activeStart.AddDays(taskIndex);
             var proposedDueDate = taskStart.AddDays(4);
 
             task.Sprint = activeSprint;
+            task.EstimateType = EstimateType.StoryPoints;
+            task.EstimateValue = StoryPointEstimates[taskIndex];
             task.StartDate = taskStart;
             task.DueDate = proposedDueDate > activeEnd ? activeEnd : proposedDueDate;
         }
+
+        await UpdateTaskStatuses(dbContext, completedTasks, completedStatus, ct);
+        await UpdateTaskStatuses(dbContext, activeTasks.Take(2), completedStatus, ct);
+        await UpdateTaskStatuses(dbContext, activeTasks.Skip(2).Take(3), activeStatus, ct);
+        await UpdateTaskStatuses(dbContext, activeTasks.Skip(5), todoStatus, ct);
+    }
+
+    private static async Task UpdateTaskStatuses(
+        DataContext dbContext,
+        IEnumerable<ProjectTask> tasks,
+        Status status,
+        CancellationToken ct)
+    {
+        var taskIds = tasks.Select(task => task.Id).ToList();
+
+        await dbContext.ProjectTasks
+            .Where(task => taskIds.Contains(task.Id))
+            .ExecuteUpdateAsync(setters => setters.SetProperty(task => task.StatusId, status.Id), ct);
     }
 
     private static void EnsureSprintNamesAreUnique(IReadOnlyCollection<Sprint> sprints)
