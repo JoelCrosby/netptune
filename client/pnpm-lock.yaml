@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@angular/aria':
+        specifier: ^22.0.5
+        version: 22.0.5(@angular/cdk@22.0.4(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@angular/platform-browser@22.0.6(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))
       '@angular/cdk':
         specifier: ^22.0.4
         version: 22.0.4(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@angular/platform-browser@22.0.6(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)))(rxjs@7.8.2)
@@ -332,6 +335,12 @@ packages:
       '@typescript-eslint/utils': ^8.0.0
       eslint: ^9.0.0 || ^10.0.0
       typescript: '*'
+
+  '@angular/aria@22.0.5':
+    resolution: {integrity: sha512-dPty2PTXkUGr5Qn31W9RpHQq5jwe8fSkpb0KLwFrojP08ZQpnQv6SnwpFhqz2fqCwh3vSqbvk5G1PSDSqFC/8A==}
+    peerDependencies:
+      '@angular/cdk': 22.0.5
+      '@angular/core': ^22.0.0 || ^23.0.0
 
   '@angular/build@22.0.6':
     resolution: {integrity: sha512-mIp1snH1haw4pKiJwUmKyp9f31NRUTeUwqrl9W59X3Iv54egOnD1EdCc0jsW7WJVr/JHRZYVt/ooFelUB8uV8g==}
@@ -3683,6 +3692,12 @@ snapshots:
       '@typescript-eslint/utils': 8.63.0(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.6.0(jiti@2.7.0)
       typescript: 6.0.3
+
+  '@angular/aria@22.0.5(@angular/cdk@22.0.4(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@angular/platform-browser@22.0.6(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/cdk': 22.0.4(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@angular/platform-browser@22.0.6(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/core': 22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)
+      tslib: 2.8.1
 
   '@angular/build@22.0.6(@angular/compiler-cli@22.0.6(@angular/compiler@22.0.6)(typescript@6.0.3))(@angular/compiler@22.0.6)(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@angular/platform-browser@22.0.6(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)))(chokidar@5.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(postcss@8.5.16)(tailwindcss@4.3.2)(tslib@2.8.1)(typescript@6.0.3)':
     dependencies:

@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SseService } from '@core/sse/sse.service';
+import { TaskSchedulingService } from '@core/services/task-scheduling.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TimelineZoom } from '@static/components/timeline/timeline.models';
 import { debounceTime, Subject } from 'rxjs';
@@ -18,7 +19,6 @@ import {
   RoadmapTask,
   RoadmapViewModel,
 } from '../models/roadmap.models';
-import { RoadmapPlanningService } from '../services/roadmap-planning.service';
 import { RoadmapTimelineComponent } from './roadmap-timeline.component';
 
 @Component({
@@ -47,7 +47,7 @@ export class RoadmapPlanningTimelineComponent {
   readonly taskSelected = output<RoadmapTask>();
   readonly refreshRequested = output();
 
-  private readonly planning = inject(RoadmapPlanningService);
+  private readonly planning = inject(TaskSchedulingService);
   private readonly snackbar = inject(SnackbarService);
   private readonly sse = inject(SseService);
   private readonly destroyRef = inject(DestroyRef);

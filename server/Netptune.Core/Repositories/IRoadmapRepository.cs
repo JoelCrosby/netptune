@@ -10,5 +10,7 @@ public interface IRoadmapRepository
 {
     Task<RoadmapViewModel> GetRoadmap(ReportingScope scope, RoadmapFilter filter, CancellationToken cancellationToken = default);
 
+    Task<PagedResponse<RoadmapTaskViewModel>> GetCalendarTasks(ReportingScope scope, CalendarTaskFilter filter, CancellationToken cancellationToken = default);
+
     Task<PagedResponse<RoadmapTaskViewModel>> GetUnscheduledTasks(ReportingScope scope, RoadmapUnscheduledTaskFilter filter, CancellationToken cancellationToken = default);
 }

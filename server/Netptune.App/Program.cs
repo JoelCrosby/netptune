@@ -160,6 +160,7 @@ apiGroup.MapWorkspaceFilesEndpoints();
 apiGroup.MapSprintsEndpoints();
 apiGroup.MapReportingEndpoints();
 apiGroup.MapRoadmapEndpoints();
+apiGroup.MapCalendarEndpoints();
 apiGroup.MapStatusesEndpoints();
 apiGroup.MapRelationTypesEndpoints();
 apiGroup.MapTaskRelationsEndpoints();

@@ -113,6 +113,12 @@ export const routes: Routes = [
         data: { title: 'Roadmap' },
       },
       {
+        path: 'calendar',
+        loadChildren: () => import('./features/calendar/calendar.routes').then((m) => m.routes),
+        runGuardsAndResolvers: 'always',
+        data: { title: 'Calendar' },
+      },
+      {
         path: 'notifications',
         loadChildren: () => import('./features/notifications/notifications.routes').then((m) => m.routes),
         canActivate: [authGuard],

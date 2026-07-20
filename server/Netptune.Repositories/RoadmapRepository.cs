@@ -108,6 +108,44 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
         return new PagedResponse<RoadmapTaskViewModel>(tasks, page, pageSize, totalCount);
     }
 
+    public async Task<PagedResponse<RoadmapTaskViewModel>> GetCalendarTasks(
+        ReportingScope scope,
+        CalendarTaskFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        using var connection = connectionFactory.StartConnection();
+
+        var projectIds = filter.ProjectId.HasValue ? new[] { filter.ProjectId.Value } : [];
+        var sprintIds = filter.SprintId.HasValue ? new[] { filter.SprintId.Value } : [];
+        var context = CreateQueryContext(scope, projectIds, sprintIds);
+
+        await ValidateSprintIds(connection, context, cancellationToken);
+
+        var page = filter.GetPage();
+        var pageSize = filter.GetPageSize();
+        var skip = (page - 1) * pageSize;
+        var taskOrder = GetCalendarTaskOrder(filter);
+        var sql = SqlScripts.GetCalendarTasks.Replace("{taskOrder}", taskOrder);
+        var command = new CommandDefinition(
+            sql,
+            new
+            {
+                workspaceId = context.Scope.WorkspaceId,
+                allowedProjectIds = context.AllowedProjectIds,
+                projectId = filter.ProjectId,
+                sprintId = filter.SprintId,
+                date = filter.Date.ToDateTime(TimeOnly.MinValue),
+                pageSize,
+                skip,
+            },
+            cancellationToken: cancellationToken);
+        var rows = (await connection.QueryAsync<RoadmapTaskRowMap>(command)).ToList();
+        var totalCount = rows.FirstOrDefault()?.Total_Count ?? 0;
+        var tasks = rows.Select(ToTaskViewModel).ToList();
+
+        return new PagedResponse<RoadmapTaskViewModel>(tasks, page, pageSize, totalCount);
+    }
+
     private static RoadmapQueryContext CreateQueryContext(
         ReportingScope scope,
         IReadOnlyCollection<int> projectIds,
@@ -253,6 +291,28 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
             "projectName" => "p.name",
             "statusName" => "st.name",
             "priority" => "pt.priority",
+            "assignees" => "(SELECT COUNT(*) FROM project_task_app_users sort_ptau " +
+                "WHERE sort_ptau.project_task_id = pt.id)",
+            _ => null,
+        };
+
+        return expression is null
+            ? "p.name, pt.project_scope_id, pt.id"
+            : $"{expression} {direction} NULLS LAST, pt.id {direction}";
+    }
+
+    private static string GetCalendarTaskOrder(CalendarTaskFilter filter)
+    {
+        var direction = string.Equals(filter.SortDirection, "asc", StringComparison.OrdinalIgnoreCase)
+            ? "ASC"
+            : "DESC";
+        var expression = filter.SortBy?.Trim() switch
+        {
+            "systemId" => "CONCAT_WS('-', p.key, pt.project_scope_id::text)",
+            "name" => "pt.name",
+            "projectName" => "p.name",
+            "statusName" => "st.name",
+            "schedule" => "COALESCE(pt.start_date, pt.due_date)",
             "assignees" => "(SELECT COUNT(*) FROM project_task_app_users sort_ptau " +
                 "WHERE sort_ptau.project_task_id = pt.id)",
             _ => null,

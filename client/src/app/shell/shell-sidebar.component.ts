@@ -175,6 +175,11 @@ export class ShellSidebarComponent {
         value: ['./roadmap'],
         icon: LucideChartGantt,
       },
+      {
+        label: 'Calendar',
+        value: ['./calendar'],
+        icon: LucideCalendarDays,
+      },
       { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
       {
         label: 'Tasks',

@@ -1,9 +1,9 @@
 import { SprintStatus } from '@core/enums/sprint-status';
-import { TaskPriority } from '@core/enums/task-priority';
+import {
+  ScheduledTask,
+  ScheduledTaskChange,
+} from '@core/models/scheduled-task';
 import { RelationCategory } from '@core/models/relation-type';
-import { StatusCategory } from '@core/models/status';
-import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { TimelineSchedule } from '@static/components/timeline/timeline.models';
 
 export interface RoadmapViewModel {
   from: string;
@@ -14,25 +14,7 @@ export interface RoadmapViewModel {
   truncated: boolean;
 }
 
-export interface RoadmapTask {
-  id: number;
-  projectScopeId: number;
-  systemId: string;
-  name: string;
-  projectId: number;
-  projectName: string;
-  projectKey: string;
-  statusId: number;
-  statusName: string;
-  statusKey: string;
-  statusColor?: string | null;
-  statusCategory: StatusCategory;
-  priority?: TaskPriority | null;
-  startDate?: string | null;
-  dueDate?: string | null;
-  sprintId?: number | null;
-  assignees: AssigneeViewModel[];
-}
+export type RoadmapTask = ScheduledTask;
 
 export interface RoadmapRelation {
   id: number;
@@ -67,9 +49,6 @@ export interface RoadmapDisplayTask {
   offscreenBlockedByCount: number;
 }
 
-export interface RoadmapScheduleChange {
-  task: RoadmapTask;
-  schedule: TimelineSchedule;
-}
+export type RoadmapScheduleChange = ScheduledTaskChange;
 
 export const roadmapTaskDragType = 'application/x-netptune-roadmap-task';
