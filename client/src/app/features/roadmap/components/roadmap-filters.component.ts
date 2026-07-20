@@ -7,6 +7,7 @@ import {
   LucideChevronRight,
 } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { DateDropdownButtonComponent } from '@static/components/dropdown-menu/date-dropdown-button.component';
 import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
@@ -24,6 +25,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
   imports: [
     DateDropdownButtonComponent,
     DropdownButtonComponent,
+    CheckboxComponent,
     LucideCheck,
     LucideChevronLeft,
     LucideChevronRight,
@@ -140,14 +142,12 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
         }
       </app-dropdown-button>
 
-      <label class="flex cursor-pointer items-center gap-2 px-2 text-sm">
-        <input
-          type="checkbox"
-          class="h-4 w-4"
-          [checked]="includeUnscheduled()"
-          (change)="changeUnscheduled($event)" />
-        <span>Show unscheduled</span>
-      </label>
+      <app-checkbox
+        class="px-2 text-sm"
+        [checked]="includeUnscheduled()"
+        (changed)="includeUnscheduledChanged.emit($event)">
+        Show unscheduled
+      </app-checkbox>
 
       <div class="ml-auto flex items-center gap-2">
         <button
@@ -234,10 +234,5 @@ export class RoadmapFiltersComponent {
       this.sprints().find((sprint) => sprint.id === this.sprintId())?.name ??
       'All sprints'
     );
-  }
-
-  protected changeUnscheduled(event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.includeUnscheduledChanged.emit(checked);
   }
 }
