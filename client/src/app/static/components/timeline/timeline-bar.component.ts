@@ -21,7 +21,7 @@ interface PointerInteraction {
     @if (milestone()) {
       <button
         type="button"
-        class="absolute top-3 h-5 w-5 rotate-45 rounded-sm border border-white/60 bg-blue-600 shadow"
+        class="border-primary-foreground/60 bg-primary focus-visible:ring-primary-foreground focus-visible:ring-offset-card absolute top-3 h-5 w-5 rotate-45 rounded-sm border shadow focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         [class.cursor-grab]="editable() && !busy()"
         [class.cursor-pointer]="!editable()"
         [class.opacity-60]="busy()"
@@ -38,7 +38,7 @@ interface PointerInteraction {
     } @else {
       <button
         type="button"
-        class="absolute top-2 h-7 min-w-2 overflow-hidden rounded bg-blue-600 px-2 text-left text-xs leading-7 text-white shadow hover:bg-blue-700"
+        class="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary-foreground focus-visible:ring-offset-card absolute top-2 h-7 min-w-2 overflow-hidden rounded px-2 text-left text-xs leading-7 shadow focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         [class.cursor-grab]="editable() && !busy()"
         [class.cursor-pointer]="!editable()"
         [class.opacity-60]="busy()"
@@ -59,7 +59,7 @@ interface PointerInteraction {
 
     @if (editable() && !busy()) {
       <span
-        class="absolute top-2 z-10 h-7 w-1.5 cursor-ew-resize touch-none rounded-l bg-blue-950/35 hover:bg-blue-950/60"
+        class="bg-primary-foreground/35 hover:bg-primary-foreground/60 absolute top-2 z-10 h-7 w-1.5 cursor-ew-resize touch-none rounded-l"
         [style.left.px]="left() - 3"
         title="Resize start date"
         aria-hidden="true"
@@ -68,7 +68,7 @@ interface PointerInteraction {
         (pointerup)="finishPointerInteraction($event)"
         (pointercancel)="cancelPointerInteraction()"></span>
       <span
-        class="absolute top-2 z-10 h-7 w-1.5 cursor-ew-resize touch-none rounded-r bg-blue-950/35 hover:bg-blue-950/60"
+        class="bg-primary-foreground/35 hover:bg-primary-foreground/60 absolute top-2 z-10 h-7 w-1.5 cursor-ew-resize touch-none rounded-r"
         [style.left.px]="left() + width() - 3"
         title="Resize due date"
         aria-hidden="true"

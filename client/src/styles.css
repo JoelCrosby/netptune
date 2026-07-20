@@ -18,6 +18,7 @@
 
 @theme inline {
   --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-accent: var(--primary);
   --color-primary-selected: var(--primary-selected);
   --color-primary-selected-hover: var(--primary-selected-hover);
@@ -84,6 +85,7 @@
 
   --primary-rgb: 103, 58, 183;
   --primary: rgba(var(--primary-rgb));
+  --primary-foreground: rgba(255, 255, 255, 1);
   --primary-selected: rgba(var(--primary-rgb), 0.6);
   --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
 
@@ -145,6 +147,7 @@
 
   --primary-rgb: 179, 157, 219;
   --primary: rgba(var(--primary-rgb));
+  --primary-foreground: rgba(0, 0, 0, 0.87);
   --primary-selected: rgba(var(--primary-rgb), 0.6);
   --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
   --primary-hover-rgb: 220, 207, 242;
@@ -187,4 +190,3 @@
 html {
   background-color: var(--background);
 }
-

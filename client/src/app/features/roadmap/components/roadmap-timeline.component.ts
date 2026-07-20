@@ -56,7 +56,7 @@ const taskRowHeight = 44;
     <div
       class="custom-scroll bg-card h-full overflow-auto"
       [class.ring-2]="taskDragActive()"
-      [class.ring-blue-500]="taskDragActive()"
+      [class.ring-primary]="taskDragActive()"
       role="region"
       aria-label="Task timeline"
       (dragenter)="showTaskDropTarget($event)"
