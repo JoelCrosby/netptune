@@ -27,11 +27,13 @@ import {
   RoadmapScheduleChange,
   RoadmapTask,
   RoadmapViewModel,
+  roadmapTaskDragType,
 } from '../models/roadmap.models';
 import {
   buildRoadmapGroups,
   filterCollapsedRoadmapGroups,
 } from '../utils/roadmap-row-builder';
+import { countOffscreenDependencies } from '../utils/roadmap-relation-index';
 import { RoadmapTaskRowComponent } from './roadmap-task-row.component';
 
 const defaultTaskColumnWidth = 320;
@@ -53,8 +55,14 @@ const taskRowHeight = 44;
   template: `
     <div
       class="custom-scroll bg-card h-full overflow-auto"
+      [class.ring-2]="taskDragActive()"
+      [class.ring-blue-500]="taskDragActive()"
       role="region"
-      aria-label="Task timeline">
+      aria-label="Task timeline"
+      (dragenter)="showTaskDropTarget($event)"
+      (dragover)="allowTaskDrop($event)"
+      (dragleave)="hideTaskDropTarget($event)"
+      (drop)="scheduleDroppedTask($event)">
       <div [style.width.px]="totalWidth()" class="relative min-h-full">
         <app-timeline-header
           itemLabel="Task"
@@ -143,6 +151,7 @@ export class RoadmapTimelineComponent {
   readonly scheduleChanged = output<RoadmapScheduleChange>();
   readonly collapsedProjectIds = signal<ReadonlySet<number>>(new Set());
   readonly collapsedTaskIds = signal<ReadonlySet<number>>(new Set());
+  readonly taskDragActive = signal(false);
 
   readonly taskColumnWidth = signal(defaultTaskColumnWidth);
   readonly headerHeight = headerHeight;
@@ -151,16 +160,20 @@ export class RoadmapTimelineComponent {
   readonly majorIntervalDays = computed(() =>
     this.zoom() === 'day' ? 1 : this.zoom() === 'week' ? 7 : 30
   );
+
   readonly canvasWidth = computed(
     () =>
       Math.max(1, inclusiveDayCount(this.from(), this.to())) * this.dayWidth()
   );
+
   readonly totalWidth = computed(
     () => this.taskColumnWidth() + this.canvasWidth()
   );
+
   readonly allGroups = computed(() =>
     buildRoadmapGroups(this.view().tasks, this.view().relations)
   );
+
   readonly groups = computed(() => {
     const groups = filterCollapsedRoadmapGroups(
       this.allGroups(),
@@ -171,19 +184,21 @@ export class RoadmapTimelineComponent {
       groups.flatMap((group) => group.tasks.map((row) => row.task.id))
     );
 
+    const offscreenBlockerCounts = countOffscreenDependencies(
+      this.view().relations,
+      visibleTaskIds,
+      RelationCategory.dependency
+    );
+
     return groups.map((group) => ({
       ...group,
       tasks: group.tasks.map((row) => ({
         ...row,
-        offscreenBlockedByCount: this.view().relations.filter(
-          (relation) =>
-            relation.category === RelationCategory.dependency &&
-            relation.targetTaskId === row.task.id &&
-            !visibleTaskIds.has(relation.sourceTaskId)
-        ).length,
+        offscreenBlockedByCount: offscreenBlockerCounts.get(row.task.id) ?? 0,
       })),
     }));
   });
+
   readonly sprintRanges = computed<TimelineRange[]>(() =>
     this.view().sprints.map((sprint) => ({
       id: sprint.id,
@@ -192,6 +207,7 @@ export class RoadmapTimelineComponent {
       endDate: sprint.endDate,
     }))
   );
+
   readonly ticks = computed<TimelineTick[]>(() => {
     const count = Math.max(0, inclusiveDayCount(this.from(), this.to()));
     const ticks: TimelineTick[] = [];
@@ -236,6 +252,7 @@ export class RoadmapTimelineComponent {
 
     return groups;
   });
+
   readonly bodyHeight = computed(
     () =>
       this.groups().length * projectRowHeight +
@@ -244,6 +261,7 @@ export class RoadmapTimelineComponent {
         0
       )
   );
+
   readonly dependencies = computed<TimelineDependency[]>(() => {
     const taskPositions = this.taskPositions();
 
@@ -291,6 +309,72 @@ export class RoadmapTimelineComponent {
     return `${this.isProjectCollapsed(group.id) ? 'Expand' : 'Collapse'} ${group.name}`;
   }
 
+  showTaskDropTarget(event: DragEvent): void {
+    if (this.isRoadmapTaskDrag(event)) {
+      this.taskDragActive.set(true);
+    }
+  }
+
+  allowTaskDrop(event: DragEvent): void {
+    if (!this.isRoadmapTaskDrag(event) || !this.canUpdateTasks()) {
+      return;
+    }
+
+    event.preventDefault();
+    this.taskDragActive.set(true);
+
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  hideTaskDropTarget(event: DragEvent): void {
+    const target = event.currentTarget as HTMLElement;
+    const nextTarget = event.relatedTarget as Node | null;
+
+    if (!nextTarget || !target.contains(nextTarget)) {
+      this.taskDragActive.set(false);
+    }
+  }
+
+  scheduleDroppedTask(event: DragEvent): void {
+    this.taskDragActive.set(false);
+
+    if (!this.canUpdateTasks() || !event.dataTransfer) {
+      return;
+    }
+
+    const task = parseDraggedTask(
+      event.dataTransfer.getData(roadmapTaskDragType)
+    );
+
+    if (!task) {
+      return;
+    }
+
+    event.preventDefault();
+    const target = event.currentTarget as HTMLElement;
+    const timelineX =
+      event.clientX -
+      target.getBoundingClientRect().left +
+      target.scrollLeft -
+      this.taskColumnWidth();
+    const lastDayOffset = Math.max(
+      0,
+      inclusiveDayCount(this.from(), this.to()) - 1
+    );
+    const dayOffset = Math.min(
+      lastDayOffset,
+      Math.max(0, Math.floor(timelineX / this.dayWidth()))
+    );
+    const date = addDays(this.from(), dayOffset);
+
+    this.scheduleChanged.emit({
+      task,
+      schedule: { startDate: date, endDate: date },
+    });
+  }
+
   private showTick(date: string, offset: number): boolean {
     if (this.zoom() === 'day') {
       return true;
@@ -301,6 +385,13 @@ export class RoadmapTimelineComponent {
     }
 
     return offset === 0 || date.endsWith('-01');
+  }
+
+  private isRoadmapTaskDrag(event: DragEvent): boolean {
+    return (
+      this.canUpdateTasks() &&
+      Array.from(event.dataTransfer?.types ?? []).includes(roadmapTaskDragType)
+    );
   }
 
   private taskPositions(): Map<
@@ -353,4 +444,15 @@ const toggledSet = (
   }
 
   return updated;
+};
+
+const parseDraggedTask = (value: string): RoadmapTask | undefined => {
+  try {
+    const task = JSON.parse(value) as Partial<RoadmapTask>;
+    return typeof task.id === 'number' && typeof task.systemId === 'string'
+      ? (task as RoadmapTask)
+      : undefined;
+  } catch {
+    return undefined;
+  }
 };

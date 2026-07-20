@@ -17,6 +17,12 @@ import {
     TimelineBarComponent,
     TimelineLaneComponent,
   ],
+  styles: `
+    :host {
+      content-visibility: auto;
+      contain-intrinsic-block-size: 44px;
+    }
+  `,
   host: { class: 'block' },
   template: `
     <div class="border-border flex h-11 border-b">

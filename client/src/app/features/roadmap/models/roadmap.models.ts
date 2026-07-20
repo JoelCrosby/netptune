@@ -71,3 +71,5 @@ export interface RoadmapScheduleChange {
   task: RoadmapTask;
   schedule: TimelineSchedule;
 }
+
+export const roadmapTaskDragType = 'application/x-netptune-roadmap-task';

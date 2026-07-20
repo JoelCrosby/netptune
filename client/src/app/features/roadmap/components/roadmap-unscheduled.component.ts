@@ -17,7 +17,11 @@ import { DatatableCellTemplateDirective } from '@static/components/datatable/dat
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { RoadmapTask } from '../models/roadmap.models';
+import {
+  RoadmapScheduleChange,
+  RoadmapTask,
+  roadmapTaskDragType,
+} from '../models/roadmap.models';
 
 @Component({
   selector: 'app-roadmap-unscheduled',
@@ -49,8 +53,23 @@ import { RoadmapTask } from '../models/roadmap.models';
           <button
             type="button"
             class="block w-full cursor-pointer truncate text-left font-medium hover:underline"
+            [class.cursor-grab]="canUpdateTasks()"
+            [attr.draggable]="canUpdateTasks()"
+            [title]="taskDragTitle(task)"
+            (dragstart)="startTaskDrag($event, task)"
             (click)="taskSelected.emit(task)">
             {{ task.name }}
+          </button>
+        </ng-template>
+
+        <ng-template appDatatableCell="schedule" let-task>
+          <button
+            type="button"
+            class="hover:bg-muted rounded border px-2 py-1 text-xs"
+            [attr.aria-label]="scheduleLabel(task)"
+            [title]="scheduleLabel(task)"
+            (click)="scheduleAtRangeStart(task)">
+            Schedule
           </button>
         </ng-template>
 
@@ -89,8 +108,11 @@ import { RoadmapTask } from '../models/roadmap.models';
 export class RoadmapUnscheduledComponent {
   readonly projectId = input<number>();
   readonly sprintId = input<number>();
+  readonly canUpdateTasks = input(false);
+  readonly scheduleDate = input.required<string>();
   readonly reloadSignal = input.required<Signal<unknown>>();
   readonly taskSelected = output<RoadmapTask>();
+  readonly scheduleRequested = output<RoadmapScheduleChange>();
   readonly totalCount = signal(0);
 
   private readonly params = computed<Params>(() => {
@@ -149,6 +171,15 @@ export class RoadmapUnscheduledComponent {
         sortable: true,
         widthClass: 'w-40',
       },
+      ...(this.canUpdateTasks()
+        ? [
+            {
+              id: 'schedule' as const,
+              header: 'Schedule',
+              widthClass: 'w-36',
+            },
+          ]
+        : []),
     ],
     resource: {
       url: 'api/roadmap/unscheduled-tasks',
@@ -165,5 +196,33 @@ export class RoadmapUnscheduledComponent {
 
   priorityColor(priority: TaskPriority): string {
     return taskPriorityColors[priority];
+  }
+
+  startTaskDrag(event: DragEvent, task: RoadmapTask): void {
+    if (!this.canUpdateTasks() || !event.dataTransfer) {
+      event.preventDefault();
+      return;
+    }
+
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData(roadmapTaskDragType, JSON.stringify(task));
+  }
+
+  scheduleAtRangeStart(task: RoadmapTask): void {
+    const date = this.scheduleDate();
+    this.scheduleRequested.emit({
+      task,
+      schedule: { startDate: date, endDate: date },
+    });
+  }
+
+  scheduleLabel(task: RoadmapTask): string {
+    return `Schedule ${task.systemId} on ${this.scheduleDate()}`;
+  }
+
+  taskDragTitle(task: RoadmapTask): string {
+    return this.canUpdateTasks()
+      ? `Open ${task.systemId}, or drag it onto the timeline to schedule it`
+      : `Open ${task.systemId}`;
   }
 }

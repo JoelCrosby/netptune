@@ -79,9 +79,9 @@ export class RoadmapPlanningTimelineComponent {
     const task = this.optimisticView().tasks.find(
       (item) => item.id === change.task.id
     );
+
     const canStartUpdate =
       !!group &&
-      !!task &&
       this.canUpdateTasks() &&
       !this.pendingTaskIds().has(change.task.id);
 
@@ -89,25 +89,33 @@ export class RoadmapPlanningTimelineComponent {
       return;
     }
 
-    const previousSchedule = {
-      startDate: task.startDate ?? null,
-      endDate: task.dueDate ?? null,
-    };
-    this.setTaskSchedule(task.id, change.schedule);
-    this.setTaskPending(task.id, true);
+    const previousSchedule = task
+      ? {
+          startDate: task.startDate ?? null,
+          endDate: task.dueDate ?? null,
+        }
+      : undefined;
+
+    this.setTaskSchedule(change.task, change.schedule);
+    this.setTaskPending(change.task.id, true);
 
     this.planning
-      .updateSchedule(task.id, change.schedule)
+      .updateSchedule(change.task.id, change.schedule)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.setTaskPending(task.id, false);
+          this.setTaskPending(change.task.id, false);
           this.snackbar.success('Task schedule updated');
           this.requestRefresh();
         },
         error: () => {
-          this.setTaskSchedule(task.id, previousSchedule);
-          this.setTaskPending(task.id, false);
+          if (previousSchedule) {
+            this.setTaskSchedule(change.task, previousSchedule);
+          } else {
+            this.removeTask(change.task.id);
+          }
+
+          this.setTaskPending(change.task.id, false);
           this.snackbar.error('Task schedule could not be updated');
 
           if (this.refreshQueued) {
@@ -122,20 +130,32 @@ export class RoadmapPlanningTimelineComponent {
   }
 
   private setTaskSchedule(
-    taskId: number,
+    changedTask: RoadmapTask,
     schedule: { startDate: string | null; endDate: string | null }
   ): void {
+    this.optimisticView.update((view) => {
+      const hasTask = view.tasks.some((task) => task.id === changedTask.id);
+      const scheduledTask = {
+        ...changedTask,
+        startDate: schedule.startDate,
+        dueDate: schedule.endDate,
+      };
+
+      return {
+        ...view,
+        tasks: hasTask
+          ? view.tasks.map((task) =>
+              task.id === changedTask.id ? scheduledTask : task
+            )
+          : [...view.tasks, scheduledTask],
+      };
+    });
+  }
+
+  private removeTask(taskId: number): void {
     this.optimisticView.update((view) => ({
       ...view,
-      tasks: view.tasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              startDate: schedule.startDate,
-              dueDate: schedule.endDate,
-            }
-          : task
-      ),
+      tasks: view.tasks.filter((task) => task.id !== taskId),
     }));
   }
 

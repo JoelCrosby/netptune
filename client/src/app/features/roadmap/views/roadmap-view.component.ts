@@ -22,8 +22,9 @@ import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/tas
 import { RoadmapFiltersComponent } from '../components/roadmap-filters.component';
 import { RoadmapPlanningTimelineComponent } from '../components/roadmap-planning-timeline.component';
 import { RoadmapUnscheduledComponent } from '../components/roadmap-unscheduled.component';
-import { RoadmapTask } from '../models/roadmap.models';
+import { RoadmapScheduleChange, RoadmapTask } from '../models/roadmap.models';
 import { roadmapResource } from '../resources/roadmap.resource';
+import { validateRoadmapRange } from '../utils/roadmap-range';
 
 const today = todayDate();
 const defaultFrom = addDays(today, -45);
@@ -66,7 +67,13 @@ const defaultTo = addDays(today, 45);
           (rangeNavigationRequested)="navigateRange($event)"
           (refreshRequested)="refresh()" />
 
-        @if (roadmap.error()) {
+        @if (rangeValidationError(); as validationError) {
+          <div
+            class="border-danger/30 bg-danger/5 text-danger m-4 rounded border p-4"
+            role="alert">
+            {{ validationError }}
+          </div>
+        } @else if (roadmap.error()) {
           <div
             class="border-danger/30 bg-danger/5 text-danger m-4 rounded border p-4">
             The roadmap could not be loaded. Check the selected date range and
@@ -87,7 +94,7 @@ const defaultTo = addDays(today, 45);
             [zoom]="zoom()"
             [canUpdateTasks]="canUpdateTasks()"
             [realtimeGroup]="realtimeGroup()"
-            (refreshRequested)="refreshRoadmap()"
+            (refreshRequested)="refreshRoadmapData()"
             (taskSelected)="openTask($event)" />
         }
       </section>
@@ -97,7 +104,10 @@ const defaultTo = addDays(today, 45);
           <app-roadmap-unscheduled
             [projectId]="projectId()"
             [sprintId]="sprintId()"
+            [canUpdateTasks]="canUpdateTasks()"
+            [scheduleDate]="from()"
             [reloadSignal]="unscheduledReload"
+            (scheduleRequested)="scheduleTask($event)"
             (taskSelected)="openTask($event)" />
         }
       }
@@ -137,13 +147,20 @@ export class RoadmapViewComponent {
   readonly includeUnscheduled = computed(
     () => this.params().get('unscheduled') !== 'false'
   );
+  readonly rangeValidationError = computed(() =>
+    validateRoadmapRange(this.from(), this.to())
+  );
 
   readonly zoom = computed<TimelineZoom>(() => {
     const value = this.params().get('zoom');
     return value === 'day' || value === 'month' ? value : 'week';
   });
 
-  readonly query = computed(() => {
+  readonly query = computed<string | undefined>(() => {
+    if (this.rangeValidationError()) {
+      return undefined;
+    }
+
     const query = new URLSearchParams({
       from: this.from(),
       to: this.to(),
@@ -258,6 +275,15 @@ export class RoadmapViewComponent {
 
   refreshRoadmap(): void {
     this.roadmap.reload();
+  }
+
+  refreshRoadmapData(): void {
+    this.refreshRoadmap();
+    this.unscheduledReload.update((value) => value + 1);
+  }
+
+  scheduleTask(change: RoadmapScheduleChange): void {
+    this.planningTimeline()?.updateSchedule(change);
   }
 
   openTask(task: RoadmapTask): void {
