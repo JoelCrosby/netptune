@@ -17,6 +17,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
       <app-avatar
         [imageUrl]="option().pictureUrl"
         [name]="option().displayName"
+        [isServiceAccount]="option().isServiceAccount ?? false"
         size="sm" />
       <span>{{ option().displayName }}</span>
     </div>

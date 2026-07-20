@@ -10,6 +10,8 @@ public record CommentViewModel
 
     public string? UserDisplayImage { get; init; }
 
+    public bool UserIsServiceAccount { get; init; }
+
     public string UserId { get; init; } = null!;
 
     public string Body { get; init; } = null!;

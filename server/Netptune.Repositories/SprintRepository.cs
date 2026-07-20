@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Sprints;
@@ -276,6 +277,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
                 ? task.Owner.UserName!
                 : task.Owner.Firstname + " " + task.Owner.Lastname,
             OwnerPictureUrl = task.Owner.PictureUrl,
+            OwnerIsServiceAccount = task.Owner.UserType == AppUserType.ServiceAccount,
             ProjectName = task.Project == null ? string.Empty : task.Project.Name,
             Tags = task.Tags.Select(tag => tag.Name).OrderBy(name => name).ToList(),
             Assignees = task.ProjectTaskAppUsers.Select(user => new AssigneeViewModel
@@ -283,6 +285,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
                 Id = user.User.Id,
                 DisplayName = user.User.Firstname + " " + user.User.Lastname,
                 PictureUrl = user.User.PictureUrl,
+                IsServiceAccount = user.User.UserType == AppUserType.ServiceAccount,
             }).ToList(),
         };
     }

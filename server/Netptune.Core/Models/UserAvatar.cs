@@ -7,4 +7,6 @@ public class UserAvatar
     public string DisplayName { get; init; } = null!;
 
     public string? ProfilePictureUrl { get; init; }
+
+    public bool IsServiceAccount { get; init; }
 }

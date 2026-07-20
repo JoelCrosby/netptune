@@ -14,6 +14,8 @@ public class UserViewModel
 
     public string DisplayName { get; init; } = null!;
 
+    public bool IsServiceAccount { get; init; }
+
     public string? Email { get; init; }
 
     public string? UserName { get; init; }

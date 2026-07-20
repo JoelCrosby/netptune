@@ -39,6 +39,7 @@ WITH filtered_tasks AS (
                ELSE CONCAT_WS(' ', o.firstname, o.lastname)
            END AS owner_username
          , o.picture_url AS owner_picture_url
+         , o.user_type AS owner_user_type
          , CASE
                WHEN d.id IS NULL THEN NULL
                WHEN NULLIF(CONCAT_WS(' ', d.firstname, d.lastname), '') IS NULL
@@ -46,6 +47,7 @@ WITH filtered_tasks AS (
                ELSE CONCAT_WS(' ', d.firstname, d.lastname)
            END AS deleted_by_username
          , d.picture_url AS deleted_by_picture_url
+         , d.user_type AS deleted_by_user_type
          , EXISTS (
                SELECT 1
                FROM comments c
@@ -125,8 +127,10 @@ SELECT ft.total_count
      , ft.updated_at AS task_updated_at
      , ft.owner_username
      , ft.owner_picture_url
+     , ft.owner_user_type
      , ft.deleted_by_username
      , ft.deleted_by_picture_url
+     , ft.deleted_by_user_type
      , ft.project_key
      , ft.project_name
      , ft.has_comments
@@ -135,6 +139,7 @@ SELECT ft.total_count
      , u.firstname AS assignee_firstname
      , u.lastname AS assignee_lastname
      , u.picture_url AS assignee_picture_url
+     , u.user_type AS assignee_user_type
 FROM filtered_tasks ft
          LEFT JOIN project_task_tags ptt ON ft.id = ptt.project_task_id
          LEFT JOIN tags t ON ptt.tag_id = t.id AND NOT t.is_deleted

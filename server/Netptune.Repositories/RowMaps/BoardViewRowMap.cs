@@ -70,6 +70,8 @@ public class BoardViewAssigneeRowMap
     public string Lastname { get; set; } = null!;
 
     public string? Picture_Url { get; set; }
+
+    public bool Is_Service_Account { get; set; }
 }
 
 public class BoardViewMetaRowMap

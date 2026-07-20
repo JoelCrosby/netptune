@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Netptune.Core.Authorization;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
@@ -92,6 +93,7 @@ public record ProjectTask : WorkspaceEntity<int>
             UpdatedAt = UpdatedAt,
             OwnerUsername = Owner?.DisplayName ?? string.Empty,
             OwnerPictureUrl = Owner?.PictureUrl ?? string.Empty,
+            OwnerIsServiceAccount = Owner?.UserType == AppUserType.ServiceAccount,
             ProjectName = Project?.Name ?? string.Empty,
             Priority = Priority,
             EstimateType = EstimateType,
@@ -106,6 +108,7 @@ public record ProjectTask : WorkspaceEntity<int>
                     Id = u.Id,
                     DisplayName = $"{u.Firstname} {u.Lastname}",
                     PictureUrl = u.PictureUrl,
+                    IsServiceAccount = u.UserType == AppUserType.ServiceAccount,
                 })
                 .ToList(),
         };

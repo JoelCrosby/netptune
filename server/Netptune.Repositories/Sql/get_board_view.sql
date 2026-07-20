@@ -86,7 +86,8 @@ SELECT lt.task_id
                        'id', u.id,
                        'firstname', u.firstname,
                        'lastname', u.lastname,
-                       'picture_url', u.picture_url) ORDER BY u.id)
+                       'picture_url', u.picture_url,
+                       'is_service_account', u.user_type = 1) ORDER BY u.id)
            FROM project_task_app_users ptau
                     INNER JOIN users u on ptau.user_id = u.id
            WHERE ptau.project_task_id = lt.task_id

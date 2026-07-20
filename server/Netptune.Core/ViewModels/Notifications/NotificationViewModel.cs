@@ -24,6 +24,8 @@ public class NotificationViewModel
 
     public string? ActorPictureUrl { get; set; }
 
+    public bool ActorIsServiceAccount { get; set; }
+
     public string? EntityName { get; set; }
 
     public string? EntityIdentifier { get; set; }

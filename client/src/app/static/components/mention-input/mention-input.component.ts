@@ -106,7 +106,8 @@ export interface MentionSubmitEvent {
             <app-avatar
               size="sm"
               [name]="user.displayName"
-              [imageUrl]="user.pictureUrl" />
+              [imageUrl]="user.pictureUrl"
+              [isServiceAccount]="user.isServiceAccount ?? false" />
             <span class="truncate">{{ user.displayName }}</span>
           </button>
         } @empty {

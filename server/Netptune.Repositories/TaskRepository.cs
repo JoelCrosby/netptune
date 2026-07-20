@@ -4,6 +4,7 @@ using Dapper;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
@@ -405,8 +406,10 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 UpdatedAt = row.Task_Updated_At,
                 OwnerUsername = row.Owner_Username,
                 OwnerPictureUrl = row.Owner_Picture_Url,
+                OwnerIsServiceAccount = row.Owner_User_Type == AppUserType.ServiceAccount,
                 DeletedByUsername = row.Deleted_By_Username,
                 DeletedByPictureUrl = row.Deleted_By_Picture_Url,
+                DeletedByIsServiceAccount = row.Deleted_By_User_Type == AppUserType.ServiceAccount,
                 ProjectName = row.Project_Name ?? string.Empty,
                 HasComments = row.Has_Comments,
                 Tags = [],
@@ -442,6 +445,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             Id = row.Assignee_Id,
             DisplayName = $"{row.Assignee_Firstname} {row.Assignee_Lastname}",
             PictureUrl = row.Assignee_Picture_Url,
+            IsServiceAccount = row.Assignee_User_Type == AppUserType.ServiceAccount,
         });
     }
 
@@ -479,6 +483,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 ? x.Owner.UserName!
                 : x.Owner.Firstname + " " + x.Owner.Lastname,
             OwnerPictureUrl = x.Owner.PictureUrl,
+            OwnerIsServiceAccount = x.Owner.UserType == AppUserType.ServiceAccount,
             ProjectName = x.Project == null ? string.Empty : x.Project.Name,
             HasComments = Context.Comments.Any(comment =>
                 comment.EntityType == EntityType.Task &&
@@ -490,6 +495,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 Id = u.User.Id,
                 DisplayName = u.User.Firstname + " " + u.User.Lastname,
                 PictureUrl = u.User.PictureUrl,
+                IsServiceAccount = u.User.UserType == AppUserType.ServiceAccount,
             }).ToList(),
         };
     }

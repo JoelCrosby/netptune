@@ -116,6 +116,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
                     ? user.UserName!
                     : user.Firstname + " " + user.Lastname,
                 PictureUrl = user.PictureUrl,
+                IsServiceAccount = user.UserType == AppUserType.ServiceAccount,
             })
             .AsNoTracking()
             .ToListAsync(cancellationToken);
@@ -293,6 +294,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
                 Id = x.UserId,
                 DisplayName = x.User.DisplayName,
                 ProfilePictureUrl = x.User.PictureUrl,
+                IsServiceAccount = x.User.UserType == AppUserType.ServiceAccount,
             })
             .AsNoTracking()
             .ToListAsync(cancellationToken);

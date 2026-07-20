@@ -6,8 +6,10 @@ export interface TaskViewModel extends ProjectTask {
   hasComments: boolean;
   ownerUsername: string;
   ownerPictureUrl?: string | null;
+  ownerIsServiceAccount?: boolean;
   deletedByUsername?: string | null;
   deletedByPictureUrl?: string | null;
+  deletedByIsServiceAccount?: boolean;
   projectName: string;
   systemId: string;
   workspaceKey: string;

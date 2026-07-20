@@ -14,6 +14,7 @@ WITH notification_feed AS (
         , al.actor_user_id  AS actoruserid
         , TRIM(u.firstname || ' ' || u.lastname) AS actorusername
         , u.picture_url     AS actorPictureUrl
+        , u.user_type = 1   AS actorIsServiceAccount
         , n.activity_entry_id AS activityentryid
         , ae.changed_fields   AS changedfieldsarray
         , ae.revision_count   AS revisioncount

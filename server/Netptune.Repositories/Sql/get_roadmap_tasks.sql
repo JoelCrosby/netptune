@@ -18,7 +18,8 @@ SELECT COUNT(*) OVER() AS total_count
            SELECT json_agg(json_build_object(
                        'id', u.id,
                        'displayName', COALESCE(NULLIF(TRIM(CONCAT_WS(' ', u.firstname, u.lastname)), ''), u.user_name),
-                       'pictureUrl', u.picture_url)
+                       'pictureUrl', u.picture_url,
+                       'isServiceAccount', u.user_type = 1)
                    ORDER BY u.id)
            FROM project_task_app_users ptau
                     INNER JOIN users u ON ptau.user_id = u.id

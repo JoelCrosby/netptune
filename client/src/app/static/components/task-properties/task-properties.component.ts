@@ -22,6 +22,7 @@ import { TaskStatusSelectComponent } from './task-status-select.component';
 export interface TaskReporter {
   displayName: string;
   pictureUrl?: string | null;
+  isServiceAccount?: boolean;
 }
 
 @Component({
@@ -58,7 +59,8 @@ export interface TaskReporter {
             <app-avatar
               size="sm"
               [name]="reporter.displayName"
-              [imageUrl]="reporter.pictureUrl" />
+              [imageUrl]="reporter.pictureUrl"
+              [isServiceAccount]="reporter.isServiceAccount ?? false" />
             <small class="ml-2 text-sm font-medium">
               {{ reporter.displayName }}
             </small>

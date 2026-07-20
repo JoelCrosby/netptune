@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
@@ -69,6 +70,7 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
                 ? x.Owner.UserName!
                 : x.Owner.Firstname + " " + x.Owner.Lastname,
             UserDisplayImage = x.Owner.PictureUrl,
+            UserIsServiceAccount = x.Owner.UserType == AppUserType.ServiceAccount,
             UserId = x.OwnerId!,
             Body = x.Body,
             EntityId = x.EntityId,

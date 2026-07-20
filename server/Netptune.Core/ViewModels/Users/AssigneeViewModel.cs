@@ -7,4 +7,6 @@ public class AssigneeViewModel
     public string DisplayName { get; init; } = null!;
 
     public string? PictureUrl { get; init; }
+
+    public bool IsServiceAccount { get; init; }
 }

@@ -5,6 +5,7 @@ export interface AvatarStackItem {
   id: string;
   displayName: string;
   pictureUrl?: string | null;
+  isServiceAccount?: boolean;
 }
 
 @Component({
@@ -19,7 +20,8 @@ export interface AvatarStackItem {
         class="ring-card rounded-full ring-2"
         size="sm"
         [name]="avatar.displayName"
-        [imageUrl]="avatar.pictureUrl" />
+        [imageUrl]="avatar.pictureUrl"
+        [isServiceAccount]="avatar.isServiceAccount ?? false" />
     }
   `,
 })

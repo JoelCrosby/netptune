@@ -23,6 +23,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
         <app-avatar
           [name]="user.displayName"
           [imageUrl]="user.pictureUrl"
+          [isServiceAccount]="user.isServiceAccount ?? false"
           size="xl" />
         <p
           class="text-foreground/70 bg-secondary-background rounded-sm px-4 py-1 text-lg font-medium">

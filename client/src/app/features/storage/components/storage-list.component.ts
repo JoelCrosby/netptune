@@ -108,7 +108,8 @@ import {
           <div class="flex items-center gap-2">
             <app-avatar
               [name]="file.uploadedByDisplayName"
-              [imageUrl]="file.uploadedByPictureUrl" />
+              [imageUrl]="file.uploadedByPictureUrl"
+              [isServiceAccount]="file.uploadedByIsServiceAccount ?? false" />
             <span class="truncate">{{ file.uploadedByDisplayName }}</span>
           </div>
         } @else {

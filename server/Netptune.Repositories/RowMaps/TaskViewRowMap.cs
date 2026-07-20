@@ -1,3 +1,4 @@
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 
 // ReSharper disable InconsistentNaming
@@ -58,9 +59,13 @@ public sealed class TaskViewRowMap
 
     public string? Owner_Picture_Url { get; init; }
 
+    public AppUserType Owner_User_Type { get; init; }
+
     public string? Deleted_By_Username { get; init; }
 
     public string? Deleted_By_Picture_Url { get; init; }
+
+    public AppUserType? Deleted_By_User_Type { get; init; }
 
     public string? Project_Key { get; init; }
 
@@ -77,4 +82,6 @@ public sealed class TaskViewRowMap
     public string? Assignee_Lastname { get; init; }
 
     public string? Assignee_Picture_Url { get; init; }
+
+    public AppUserType? Assignee_User_Type { get; init; }
 }

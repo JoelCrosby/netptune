@@ -55,6 +55,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
             class="flex-none"
             [imageUrl]="notification.actorPictureUrl"
             [name]="notification.actorUsername"
+            [isServiceAccount]="notification.actorIsServiceAccount ?? false"
             size="sm" />
           <span class="min-w-0 truncate text-sm font-medium">
             {{ notification.actorUsername }}

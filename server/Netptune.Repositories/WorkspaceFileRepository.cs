@@ -1,3 +1,4 @@
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -220,6 +221,8 @@ public sealed class WorkspaceFileRepository : WorkspaceEntityRepository<DataCont
                 ? null
                 : file.CreatedByUser.Firstname + " " + file.CreatedByUser.Lastname,
             UploadedByPictureUrl = file.CreatedByUser == null ? null : file.CreatedByUser.PictureUrl,
+            UploadedByIsServiceAccount = file.CreatedByUser != null &&
+                file.CreatedByUser.UserType == AppUserType.ServiceAccount,
             TaskId = file.TaskFiles.Select(link => (int?)link.ProjectTask.Id).FirstOrDefault(),
             TaskSystemId = file.TaskFiles.Select(link => link.ProjectTask.Project == null
                 ? link.ProjectTask.ProjectScopeId.ToString()

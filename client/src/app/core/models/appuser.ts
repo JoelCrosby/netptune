@@ -9,6 +9,7 @@ export interface AppUser {
   email: string;
   userName: string;
   displayName: string;
+  isServiceAccount?: boolean;
   pictureUrl?: string | null;
   lastLoginTime: Date;
   registrationDate: Date;

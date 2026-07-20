@@ -61,6 +61,7 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
                   class="shrink-0 grow-0 basis-8"
                   [imageUrl]="activity.userPictureUrl"
                   [name]="activity.userUsername"
+                  [isServiceAccount]="activity.userIsServiceAccount ?? false"
                   size="sm">
                 </app-avatar>
                 <span class="font-medium tracking-[0.225px] whitespace-nowrap">

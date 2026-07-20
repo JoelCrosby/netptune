@@ -76,7 +76,8 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
             <app-avatar
               size="sm"
               [name]="task.deletedByUsername"
-              [imageUrl]="task.deletedByPictureUrl" />
+              [imageUrl]="task.deletedByPictureUrl"
+              [isServiceAccount]="task.deletedByIsServiceAccount ?? false" />
             <span class="truncate text-sm">{{ task.deletedByUsername }}</span>
           </div>
         } @else {

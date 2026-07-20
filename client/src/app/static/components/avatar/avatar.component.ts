@@ -1,5 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { avatarColors } from '@core/util/colors/colors';
+import { LucideBot } from '@lucide/angular';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
@@ -28,7 +29,7 @@ export type AvatarSize = NonNullable<
 
 @Component({
   selector: 'app-avatar',
-  imports: [TooltipDirective, AvatarPipe],
+  imports: [TooltipDirective, AvatarPipe, LucideBot],
   template: `
     <div
       [class]="className()"
@@ -44,6 +45,8 @@ export type AvatarSize = NonNullable<
           class="h-full w-full object-cover"
           [src]="imageUrl()"
           [alt]="name()" />
+      } @else if (isServiceAccount()) {
+        <svg lucideBot class="h-1/2 w-1/2" aria-hidden="true"></svg>
       } @else {
         {{ name() | avatar }}
       }
@@ -54,6 +57,7 @@ export class AvatarComponent {
   readonly name = input<string | null>();
   readonly size = input<AvatarSize | undefined>('sm');
   readonly imageUrl = input<string | null>();
+  readonly isServiceAccount = input(false);
   readonly border = input(false);
   readonly tooltip = input(true);
 

@@ -51,6 +51,7 @@ export class TaskDetailPropertiesComponent {
   readonly reporter = computed<TaskReporter>(() => ({
     displayName: this.task().ownerUsername,
     pictureUrl: this.task().ownerPictureUrl,
+    isServiceAccount: this.task().ownerIsServiceAccount,
   }));
 
   selectStatus(statusId: number | null) {

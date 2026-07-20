@@ -64,6 +64,7 @@ type User = AssigneeViewModel | AppUser;
           <app-avatar
             [imageUrl]="user.pictureUrl"
             [name]="user.displayName"
+            [isServiceAccount]="user.isServiceAccount ?? false"
             size="sm" />
           @if (!compact()) {
             <small class="text-sm font-medium tracking-tight">{{

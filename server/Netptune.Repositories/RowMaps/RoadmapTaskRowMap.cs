@@ -48,4 +48,6 @@ public sealed class RoadmapAssigneeRowMap
     public required string DisplayName { get; init; }
 
     public string? PictureUrl { get; init; }
+
+    public bool IsServiceAccount { get; init; }
 }

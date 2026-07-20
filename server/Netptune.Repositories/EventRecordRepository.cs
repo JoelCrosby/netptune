@@ -5,6 +5,7 @@ using Dapper;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
@@ -128,6 +129,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
                     ? y.User.UserName!
                     : y.User.Firstname + " " + y.User.Lastname,
                 UserPictureUrl = y.User.PictureUrl,
+                UserIsServiceAccount = y.User.UserType == AppUserType.ServiceAccount,
                 Time = y.LastOccurredAt,
                 FirstTime = y.FirstOccurredAt,
                 RevisionCount = y.RevisionCount,

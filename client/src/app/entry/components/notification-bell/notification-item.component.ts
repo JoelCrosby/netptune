@@ -29,6 +29,7 @@ import { Store } from '@ngrx/store';
           class="shrink-0 grow-0 basis-8"
           [imageUrl]="notification.actorPictureUrl"
           [name]="notification.actorUsername"
+          [isServiceAccount]="notification.actorIsServiceAccount ?? false"
           size="md" />
 
         <div class="flex flex-1 flex-col gap-1">

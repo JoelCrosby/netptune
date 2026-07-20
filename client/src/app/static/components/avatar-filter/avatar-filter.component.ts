@@ -6,6 +6,7 @@ export interface AvatarFilterOption {
   id: string;
   displayName?: string | null;
   pictureUrl?: string | null;
+  isServiceAccount?: boolean;
   selected?: boolean;
   online?: boolean;
 }
@@ -28,6 +29,7 @@ export interface AvatarFilterOption {
                 size="lg"
                 [name]="option.displayName"
                 [imageUrl]="option.pictureUrl"
+                [isServiceAccount]="option.isServiceAccount ?? false"
                 (click)="optionClicked.emit(option)" />
             </div>
             @if (option.online) {

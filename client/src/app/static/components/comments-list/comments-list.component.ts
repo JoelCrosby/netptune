@@ -61,7 +61,8 @@ export interface CommentSubmitEvent {
             <app-avatar
               size="md"
               [name]="comment.userDisplayName"
-              [imageUrl]="comment.userDisplayImage">
+              [imageUrl]="comment.userDisplayImage"
+              [isServiceAccount]="comment.userIsServiceAccount ?? false">
             </app-avatar>
 
             <div class="flex flex-1 flex-col">

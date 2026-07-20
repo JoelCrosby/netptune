@@ -17,6 +17,8 @@ public class ActivityViewModel
 
     public string? UserPictureUrl { get; set; }
 
+    public bool UserIsServiceAccount { get; set; }
+
     public ActivityType Type { get; set; }
 
     public int? EntityId { get; set; }

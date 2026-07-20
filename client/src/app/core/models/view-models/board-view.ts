@@ -52,4 +52,5 @@ export interface AssigneeViewModel {
   id: string;
   displayName: string;
   pictureUrl: string;
+  isServiceAccount?: boolean;
 }

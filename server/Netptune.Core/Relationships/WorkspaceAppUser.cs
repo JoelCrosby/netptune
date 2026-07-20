@@ -37,6 +37,7 @@ public record WorkspaceAppUser : KeyedEntity<int>
             Firstname = User.Firstname,
             Lastname = User.Lastname,
             Id = User.Id,
+            IsServiceAccount = User.UserType == AppUserType.ServiceAccount,
             LastLoginTime = User.LastLoginTime,
             PictureUrl = User.PictureUrl,
             RegistrationDate = User.RegistrationDate,

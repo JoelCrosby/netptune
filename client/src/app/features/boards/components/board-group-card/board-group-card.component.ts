@@ -97,7 +97,8 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
               size="sm"
               class="task-card-user-chip"
               [name]="assignee.displayName"
-              [imageUrl]="assignee.pictureUrl">
+              [imageUrl]="assignee.pictureUrl"
+              [isServiceAccount]="assignee.isServiceAccount ?? false">
             </app-avatar>
           }
         </div>

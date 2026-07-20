@@ -40,6 +40,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
             class="flex-none"
             [imageUrl]="user.pictureUrl"
             [name]="user.displayName"
+            [isServiceAccount]="user.isServiceAccount ?? false"
             size="sm" />
           <a
             [routerLink]="routerLink(user)"

@@ -24,6 +24,8 @@ public sealed record WorkspaceFileViewModel
 
     public string? UploadedByPictureUrl { get; init; }
 
+    public bool UploadedByIsServiceAccount { get; init; }
+
     public int? TaskId { get; init; }
 
     public string? TaskSystemId { get; init; }

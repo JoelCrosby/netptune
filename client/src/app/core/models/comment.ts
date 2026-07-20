@@ -9,6 +9,7 @@ export interface CommentViewModel {
   id: number;
   userDisplayName: string;
   userDisplayImage: string;
+  userIsServiceAccount?: boolean;
   userId: string;
   body: string;
   entityId: number;

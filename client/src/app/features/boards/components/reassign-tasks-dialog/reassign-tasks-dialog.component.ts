@@ -40,7 +40,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
                 class="shrink-0 basis-6"
                 size="sm"
                 [name]="user.displayName"
-                [imageUrl]="user.pictureUrl">
+                [imageUrl]="user.pictureUrl"
+                [isServiceAccount]="user.isServiceAccount ?? false">
               </app-avatar>
               <span>{{ user.displayName }}</span>
             </div>

@@ -291,6 +291,7 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 Id = assignee.Id,
                 DisplayName = assignee.DisplayName,
                 PictureUrl = assignee.PictureUrl,
+                IsServiceAccount = assignee.IsServiceAccount,
             }).ToList(),
         };
     }

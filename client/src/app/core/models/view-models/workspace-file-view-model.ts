@@ -14,6 +14,7 @@ export interface WorkspaceFileViewModel {
   uploadedByUserId?: string;
   uploadedByDisplayName?: string;
   uploadedByPictureUrl?: string;
+  uploadedByIsServiceAccount?: boolean;
   taskId?: number;
   taskSystemId?: string;
   taskName?: string;

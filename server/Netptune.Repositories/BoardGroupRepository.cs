@@ -138,6 +138,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             Id = assignee.Id,
             DisplayName = $"{assignee.Firstname} {assignee.Lastname}",
             PictureUrl = assignee.Picture_Url,
+            IsServiceAccount = assignee.Is_Service_Account,
         });
     }
 
