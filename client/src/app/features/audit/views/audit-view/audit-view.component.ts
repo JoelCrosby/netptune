@@ -19,9 +19,9 @@ import { AuditStore } from '@audit/audit-state.service';
   template: `
     <app-page-container>
       <app-page-header title="Audit Log" />
-      <app-audit-filters />
+      <app-audit-filters (filterChange)="auditTable.goToFirstPage()" />
       <app-audit-activity-chart />
-      <app-audit-table />
+      <app-audit-table #auditTable />
     </app-page-container>
   `,
 })

@@ -1,21 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
-import { appendPageParams } from '@core/models/pagination';
 import {
   AuditActivityPoint,
   AuditLogFilter,
-  AuditLogPage,
 } from '@core/models/view-models/audit-log-view-model';
 
 @Injectable({ providedIn: 'root' })
 export class AuditService {
   private http = inject(HttpClient);
-
-  getAuditLog(filter: AuditLogFilter) {
-    const params = this.buildParams(filter);
-    return this.http.get<ClientResponse<AuditLogPage>>('api/audit', { params });
-  }
 
   getActivitySummary(filter: AuditLogFilter) {
     const params = this.buildParams(filter);
@@ -35,7 +28,7 @@ export class AuditService {
   }
 
   private buildParams(filter: AuditLogFilter): HttpParams {
-    let params = appendPageParams(new HttpParams(), filter);
+    let params = new HttpParams();
 
     if (filter.userId) params = params.set('userId', filter.userId);
     if (filter.entityType !== undefined)

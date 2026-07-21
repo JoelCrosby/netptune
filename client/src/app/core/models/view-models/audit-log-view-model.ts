@@ -1,4 +1,4 @@
-import { Page, PageQuery } from '../pagination';
+import { PageQuery } from '../pagination';
 import { EntityType } from '../entity-type';
 import { ActivityType } from './activity-view-model';
 
@@ -16,8 +16,6 @@ export interface AuditLogViewModel {
   boardSlug?: string;
   meta?: Record<string, unknown>;
 }
-
-export type AuditLogPage = Page<AuditLogViewModel>;
 
 export interface AuditActivityPoint {
   date: string;

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { AuditLogFilter } from '@core/models/view-models/audit-log-view-model';
 import { AuditService } from '@core/store/audit/audit.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -41,18 +41,21 @@ export class AuditFiltersComponent {
 
   fromDate = signal<string>('');
   toDate = signal<string>('');
+  readonly filterChange = output();
 
   onApply() {
     this.state.applyFilters(
       this.fromDate() || undefined,
       this.toDate() || undefined
     );
+    this.filterChange.emit();
   }
 
   onReset() {
     this.fromDate.set('');
     this.toDate.set('');
     this.state.reset();
+    this.filterChange.emit();
   }
 
   onExport() {

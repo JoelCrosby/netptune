@@ -1,105 +1,111 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
+import { Params } from '@angular/router';
 import { AuditStore } from '@audit/audit-state.service';
 import { ActivityType } from '@core/models/view-models/activity-view-model';
+import { AuditLogViewModel } from '@core/models/view-models/audit-log-view-model';
+import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
+import { DatatableComponent } from '@static/components/datatable/datatable.component';
+import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { ActivityTypePipe } from '@static/pipes/activity-type.pipe';
 import { EntityTypePipe } from '@static/pipes/entity-type.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
-import {
-  TableComponent,
-  TableEmptyCellDirective,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TablePaginationComponent,
-  TableRowDirective,
-} from '@static/components/table/table.component';
 
 @Component({
   selector: 'app-audit-table',
   imports: [
     ActivityTypePipe,
+    DatatableCellTemplateDirective,
+    DatatableComponent,
     EntityTypePipe,
     PrettyDatePipe,
-    TableComponent,
-    TableEmptyCellDirective,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TablePaginationComponent,
-    TableRowDirective,
   ],
   template: `
-    @if (state.loading()) {
-      <p class="text-foreground/50 py-12 text-center text-sm">Loading…</p>
-    } @else if (state.error()) {
-      <p class="py-12 text-center text-sm text-red-500">
-        Failed to load audit log.
-      </p>
-    } @else {
-      <app-table containerClass="h-[calc(100vh-42rem)] overflow-auto">
-        <thead appTableHead [sticky]="true">
-          <tr appTableHeaderRow>
-            <th class="px-4 py-3">Timestamp</th>
-            <th class="px-4 py-3">Actor</th>
-            <th class="px-4 py-3">Action</th>
-            <th class="px-4 py-3">Entity</th>
-            <th class="px-4 py-3">Context</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of state.items(); track row.id) {
-            <tr appTableRow>
-              <td
-                class="text-foreground/70 px-4 py-2.5 font-mono text-xs whitespace-nowrap">
-                {{ row.occurredAt | prettyDate }}
-              </td>
-              <td class="px-4 py-2.5 font-medium">
-                {{ row.userDisplayName }}
-              </td>
-              <td class="px-4 py-2.5">
-                <span
-                  [class]="
-                    'rounded px-2 py-0.5 text-xs font-medium ' +
-                    pillClass(row.type)
-                  ">
-                  {{ row.type | activityType }}
-                </span>
-              </td>
-              <td class="text-foreground/80 px-4 py-2.5">
-                {{ row.entityType | entityType }}
-                @if (row.entityId) {
-                  <span class="text-foreground/50"> #{{ row.entityId }}</span>
-                }
-              </td>
-              <td class="text-foreground/60 px-4 py-2.5 text-xs">
-                @if (row.projectSlug) {
-                  <span>{{ row.projectSlug }}</span>
-                }
-                @if (row.boardSlug) {
-                  <span class="ml-1">/ {{ row.boardSlug }}</span>
-                }
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td appTableEmptyCell colspan="5">No audit events found.</td>
-            </tr>
-          }
-        </tbody>
+    <app-datatable
+      containerClass="h-[calc(100vh-42rem)] overflow-auto"
+      tableClass="min-w-180 table-fixed"
+      emptyMessage="No audit events found."
+      itemLabel="events"
+      [data]="data"
+      [stickyHeader]="true">
+      <ng-template appDatatableCell="occurredAt" let-row>
+        <span class="text-foreground/70 font-mono text-xs whitespace-nowrap">
+          {{ row.occurredAt | prettyDate }}
+        </span>
+      </ng-template>
 
-        <app-table-pagination
-          itemLabel="events"
-          [page]="state.currentPage()"
-          [pageSize]="state.pageSize()"
-          [pageSizeOptions]="[10, 25, 50, 100]"
-          [totalItems]="state.totalCount()"
-          [totalPages]="state.totalPages()"
-          (pageChange)="state.goToPage($event)"
-          (pageSizeChange)="state.setPageSize($event)" />
-      </app-table>
-    }
+      <ng-template appDatatableCell="userDisplayName" let-row>
+        <span class="font-medium">{{ row.userDisplayName }}</span>
+      </ng-template>
+
+      <ng-template appDatatableCell="type" let-row>
+        <span
+          [class]="
+            'rounded px-2 py-0.5 text-xs font-medium ' + pillClass(row.type)
+          ">
+          {{ row.type | activityType }}
+        </span>
+      </ng-template>
+
+      <ng-template appDatatableCell="entityType" let-row>
+        <span class="text-foreground/80">
+          {{ row.entityType | entityType }}
+          @if (row.entityId) {
+            <span class="text-foreground/50"> #{{ row.entityId }}</span>
+          }
+        </span>
+      </ng-template>
+
+      <ng-template appDatatableCell="context" let-row>
+        <span class="text-foreground/60 text-xs">
+          @if (row.projectSlug) {
+            <span>{{ row.projectSlug }}</span>
+          }
+          @if (row.boardSlug) {
+            <span class="ml-1">/ {{ row.boardSlug }}</span>
+          }
+        </span>
+      </ng-template>
+    </app-datatable>
   `,
 })
 export class AuditTableComponent {
-  protected state = inject(AuditStore);
+  private readonly state = inject(AuditStore);
+  private readonly datatable = viewChild.required(
+    DatatableComponent<AuditLogViewModel>
+  );
+
+  private readonly resourceParams = computed<Params>(() => {
+    const filter = this.state.filter();
+
+    return {
+      userId: filter.userId,
+      entityType: filter.entityType,
+      activityType: filter.activityType,
+      from: filter.from,
+      to: filter.to,
+    };
+  });
+
+  protected readonly data: DatatableDataSource<AuditLogViewModel> = {
+    key: 'audit-log',
+    columns: [
+      { id: 'occurredAt', header: 'Timestamp', widthClass: 'w-64' },
+      { id: 'userDisplayName', header: 'Actor', widthClass: 'w-48' },
+      { id: 'type', header: 'Action', widthClass: 'w-40' },
+      { id: 'entityType', header: 'Entity', widthClass: 'w-40' },
+      { id: 'context', header: 'Context' },
+    ],
+    resource: {
+      url: 'api/audit',
+      params: this.resourceParams,
+    },
+    rows: (response) => response?.payload?.items ?? [],
+    trackBy: (_: number, row: AuditLogViewModel) => row.id,
+  };
+
+  goToFirstPage() {
+    this.datatable().goToPage(1);
+  }
 
   protected pillClass(type: ActivityType): string {
     switch (type) {
