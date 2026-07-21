@@ -3,12 +3,16 @@ import { Params } from '@angular/router';
 import { AuditStore } from '@audit/audit-state.service';
 import { ActivityType } from '@core/models/view-models/activity-view-model';
 import { AuditLogViewModel } from '@core/models/view-models/audit-log-view-model';
+import { DialogService } from '@core/services/dialog.service';
+import { LucideExternalLink } from '@lucide/angular';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { ActivityTypePipe } from '@static/pipes/activity-type.pipe';
 import { EntityTypePipe } from '@static/pipes/entity-type.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-dialog.component';
 
 @Component({
   selector: 'app-audit-table',
@@ -17,6 +21,8 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
     DatatableCellTemplateDirective,
     DatatableComponent,
     EntityTypePipe,
+    IconButtonComponent,
+    LucideExternalLink,
     PrettyDatePipe,
   ],
   template: `
@@ -56,20 +62,26 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
       </ng-template>
 
       <ng-template appDatatableCell="context" let-row>
-        <span class="text-foreground/60 text-xs">
-          @if (row.projectSlug) {
-            <span>{{ row.projectSlug }}</span>
-          }
-          @if (row.boardSlug) {
-            <span class="ml-1">/ {{ row.boardSlug }}</span>
-          }
-        </span>
+        <span class="text-foreground/70 text-sm">{{ row.summary }}</span>
+      </ng-template>
+
+      <ng-template appDatatableCell="details" let-row>
+        <div class="flex justify-end">
+          <button
+            app-icon-button
+            type="button"
+            aria-label="View full audit log details"
+            (click)="openDetails(row)">
+            <svg lucideExternalLink class="h-4 w-4"></svg>
+          </button>
+        </div>
       </ng-template>
     </app-datatable>
   `,
 })
 export class AuditTableComponent {
   private readonly state = inject(AuditStore);
+  private readonly dialog = inject(DialogService);
   private readonly datatable = viewChild.required(
     DatatableComponent<AuditLogViewModel>
   );
@@ -91,9 +103,17 @@ export class AuditTableComponent {
     columns: [
       { id: 'occurredAt', header: 'Timestamp', widthClass: 'w-64' },
       { id: 'userDisplayName', header: 'Actor', widthClass: 'w-48' },
-      { id: 'type', header: 'Action', widthClass: 'w-40' },
+      { id: 'type', header: 'Action', widthClass: 'w-48' },
       { id: 'entityType', header: 'Entity', widthClass: 'w-40' },
       { id: 'context', header: 'Context' },
+      {
+        id: 'details',
+        header: '',
+        align: 'end',
+        ariaLabel: 'Details',
+        cellClass: 'px-2 py-0',
+        widthClass: 'w-14',
+      },
     ],
     resource: {
       url: 'api/audit',
@@ -105,6 +125,14 @@ export class AuditTableComponent {
 
   goToFirstPage() {
     this.datatable().goToPage(1);
+  }
+
+  protected openDetails(row: AuditLogViewModel) {
+    this.dialog.open(AuditLogDetailDialogComponent, {
+      ariaLabel: 'Audit log details',
+      data: { id: row.id },
+      width: AuditLogDetailDialogComponent.width,
+    });
   }
 
   protected pillClass(type: ActivityType): string {

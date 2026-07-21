@@ -19,6 +19,9 @@ public static class AuditEndpoints
         group.MapGet("/summary", HandleGetActivitySummary)
             .RequireAuthorization(NetptunePermissions.Audit.Read);
 
+        group.MapGet("/{id:long}", HandleGetAuditLogDetail)
+            .RequireAuthorization(NetptunePermissions.Audit.Read);
+
         group.MapGet("/export", HandleExport)
             .RequireAuthorization(NetptunePermissions.Audit.Export);
 
@@ -43,6 +46,18 @@ public static class AuditEndpoints
         var result = await mediator.Send(new GetActivitySummaryQuery(filter), cancellationToken);
 
         return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetAuditLogDetail(
+        IMediator mediator,
+        long id,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAuditLogDetailQuery(id), cancellationToken);
+
+        return result.IsNotFound
+            ? Results.NotFound(result)
+            : Results.Ok(result);
     }
 
     private static async Task<IResult> HandleExport(

@@ -18,6 +18,8 @@ public interface IEventRecordRepository : IRepository<EventRecord, long>
 
     Task<PagedResponse<AuditLogViewModel>> GetAuditLog(int workspaceId, AuditLogFilter filter, CancellationToken cancellationToken = default);
 
+    Task<AuditLogDetailViewModel?> GetAuditLogDetail(int workspaceId, long id, CancellationToken cancellationToken = default);
+
     Task<List<AuditLogViewModel>> GetAuditLogForExport(int workspaceId, AuditLogFilter filter, CancellationToken cancellationToken = default);
 
     Task<List<AuditActivityPoint>> GetActivitySummary(int workspaceId, AuditLogFilter filter, CancellationToken cancellationToken = default);

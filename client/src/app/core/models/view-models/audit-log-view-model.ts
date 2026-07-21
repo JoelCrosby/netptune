@@ -14,7 +14,30 @@ export interface AuditLogViewModel {
   workspaceSlug?: string;
   projectSlug?: string;
   boardSlug?: string;
+  summary: string;
   meta?: Record<string, unknown>;
+}
+
+export interface AuditLogReferenceViewModel {
+  role: string;
+  entityType: string;
+  entityId: string;
+}
+
+export interface AuditLogDetailViewModel extends AuditLogViewModel {
+  eventId: string;
+  eventKey: string;
+  schemaVersion: number;
+  subjectType?: string;
+  subjectId?: string;
+  subjectSequence?: number;
+  recordedAt: string;
+  correlationId?: string;
+  causationEventId?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  retentionClass: string;
+  references: AuditLogReferenceViewModel[];
 }
 
 export interface AuditActivityPoint {

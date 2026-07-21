@@ -184,6 +184,64 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         return new PagedResponse<AuditLogViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
     }
 
+    public async Task<AuditLogDetailViewModel?> GetAuditLogDetail(
+        int workspaceId,
+        long id,
+        CancellationToken cancellationToken = default)
+    {
+        var record = await Entities
+            .AsNoTracking()
+            .Include(eventRecord => eventRecord.References)
+            .SingleOrDefaultAsync(
+                eventRecord => eventRecord.Id == id && eventRecord.WorkspaceId == workspaceId,
+                cancellationToken);
+
+        if (record is null)
+        {
+            return null;
+        }
+
+        var auditLog = (await ToAuditViewModels([record], cancellationToken)).Single();
+
+        return new AuditLogDetailViewModel
+        {
+            Id = auditLog.Id,
+            OccurredAt = auditLog.OccurredAt,
+            UserId = auditLog.UserId,
+            UserDisplayName = auditLog.UserDisplayName,
+            UserPictureUrl = auditLog.UserPictureUrl,
+            Type = auditLog.Type,
+            EntityType = auditLog.EntityType,
+            EntityId = auditLog.EntityId,
+            WorkspaceSlug = auditLog.WorkspaceSlug,
+            ProjectSlug = auditLog.ProjectSlug,
+            BoardSlug = auditLog.BoardSlug,
+            Summary = auditLog.Summary,
+            Meta = auditLog.Meta,
+            EventId = record.EventId,
+            EventKey = record.EventKey,
+            SchemaVersion = record.SchemaVersion,
+            SubjectType = record.SubjectType,
+            SubjectId = record.SubjectId,
+            SubjectSequence = record.SubjectSequence,
+            RecordedAt = record.RecordedAt,
+            CorrelationId = record.CorrelationId,
+            CausationEventId = record.CausationEventId,
+            IpAddress = record.IpAddress?.ToString(),
+            UserAgent = record.UserAgent,
+            RetentionClass = record.RetentionClass,
+            References = record.References
+                .OrderBy(reference => reference.Role)
+                .ThenBy(reference => reference.EntityType)
+                .ThenBy(reference => reference.EntityId)
+                .Select(reference => new AuditLogReferenceViewModel(
+                    reference.Role,
+                    reference.EntityType,
+                    reference.EntityId))
+                .ToList(),
+        };
+    }
+
     public async Task<List<AuditLogViewModel>> GetAuditLogForExport(
         int workspaceId,
         AuditLogFilter filter,
@@ -335,6 +393,7 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             .AsNoTracking()
             .Where(user => actorIds.Contains(user.Id))
             .ToDictionaryAsync(user => user.Id, cancellationToken);
+        var statusNames = await GetStatusNames(records, cancellationToken);
 
         return records.Select(record =>
         {
@@ -383,9 +442,303 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
                 WorkspaceSlug = GetPayloadString(payload, "workspaceSlug"),
                 ProjectSlug = GetPayloadString(payload, "projectSlug"),
                 BoardSlug = GetPayloadString(payload, "boardSlug"),
+                Summary = BuildSummary(record, activityType, statusNames),
                 Meta = JsonDocument.Parse(record.Payload.RootElement.GetRawText()),
             };
         }).ToList();
+    }
+
+    private async Task<Dictionary<int, string>> GetStatusNames(
+        IReadOnlyCollection<EventRecord> records,
+        CancellationToken cancellationToken)
+    {
+        var statusIds = records
+            .SelectMany(GetStatusIds)
+            .Distinct()
+            .ToList();
+        var workspaceIds = records
+            .Where(record => record.WorkspaceId.HasValue)
+            .Select(record => record.WorkspaceId!.Value)
+            .Distinct()
+            .ToList();
+
+        if (statusIds.Count == 0 || workspaceIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await Context.Statuses
+            .AsNoTracking()
+            .Where(status => statusIds.Contains(status.Id) && workspaceIds.Contains(status.WorkspaceId))
+            .ToDictionaryAsync(status => status.Id, status => status.Name, cancellationToken);
+    }
+
+    private static IEnumerable<int> GetStatusIds(EventRecord record)
+    {
+        var payload = record.Payload.RootElement;
+        var field = GetPayloadValue(payload, "field");
+        var isStatusChange = string.Equals(field, "status", StringComparison.OrdinalIgnoreCase);
+
+        if (!isStatusChange)
+        {
+            yield break;
+        }
+
+        var oldValueIsStatusId = int.TryParse(GetPayloadValue(payload, "oldValue"), out var oldStatusId);
+
+        if (oldValueIsStatusId)
+        {
+            yield return oldStatusId;
+        }
+
+        var newValueIsStatusId = int.TryParse(GetPayloadValue(payload, "newValue"), out var newStatusId);
+
+        if (newValueIsStatusId)
+        {
+            yield return newStatusId;
+        }
+    }
+
+    private static string BuildSummary(
+        EventRecord record,
+        ActivityType activityType,
+        IReadOnlyDictionary<int, string> statusNames)
+    {
+        var payload = record.Payload.RootElement;
+        var summary = record.EventKey switch
+        {
+            EventKeys.EntityCreated => FormatCreatedSummary(payload),
+            EventKeys.EntityDeleted => "Entity deleted",
+            EventKeys.EntityRestored => "Entity restored",
+            EventKeys.EntityFieldTransitioned => FormatFieldTransition(payload, statusNames),
+            EventKeys.ScopeMemberChanged => FormatMemberChange(payload),
+            EventKeys.ScopeMemberAttributeChanged => FormatMemberAttributeChange(payload),
+            EventKeys.ScopeLifecycleTransitioned => FormatLifecycleChange(payload),
+            _ => FormatLegacySummary(payload, activityType, statusNames),
+        };
+
+        return Truncate(summary, 140);
+    }
+
+    private static string FormatCreatedSummary(JsonElement payload)
+    {
+        var name = GetPayloadValue(payload, "name");
+
+        return name is null ? "Entity created" : $"Created {FormatValue(name)}";
+    }
+
+    private static string FormatFieldTransition(JsonElement payload, IReadOnlyDictionary<int, string> statusNames)
+    {
+        var fieldValue = GetPayloadValue(payload, "field") ?? "field";
+        var field = Humanize(fieldValue);
+        var oldValue = ResolveFieldValue(fieldValue, GetTransitionValue(payload, "old"), statusNames);
+        var newValue = ResolveFieldValue(fieldValue, GetTransitionValue(payload, "new"), statusNames);
+
+        return $"{field}: {FormatValue(oldValue)} → {FormatValue(newValue)}";
+    }
+
+    private static string FormatMemberChange(JsonElement payload)
+    {
+        var memberType = Humanize(GetPayloadValue(payload, "memberType") ?? "member");
+        var memberId = GetPayloadValue(payload, "memberId");
+        var change = Humanize(GetPayloadValue(payload, "change") ?? "changed").ToLowerInvariant();
+        var member = memberId is null ? memberType : $"{memberType} {FormatValue(memberId)}";
+
+        return $"{member} {change}";
+    }
+
+    private static string FormatMemberAttributeChange(JsonElement payload)
+    {
+        var memberType = Humanize(GetPayloadValue(payload, "memberType") ?? "member");
+        var memberId = FormatValue(GetPayloadValue(payload, "memberId"));
+        var field = Humanize(GetPayloadValue(payload, "field") ?? "field");
+        var oldValue = GetTransitionValue(payload, "old");
+        var newValue = GetTransitionValue(payload, "new");
+
+        return $"{memberType} {memberId} {field}: {FormatValue(oldValue)} → {FormatValue(newValue)}";
+    }
+
+    private static string FormatLifecycleChange(JsonElement payload)
+    {
+        var state = GetPayloadValue(payload, "state");
+
+        return state is null ? "Lifecycle changed" : $"State: {Humanize(state)}";
+    }
+
+    private static string FormatLegacySummary(
+        JsonElement payload,
+        ActivityType activityType,
+        IReadOnlyDictionary<int, string> statusNames)
+    {
+        var oldValue = GetPayloadValue(payload, "oldValue");
+        var newValue = GetPayloadValue(payload, "newValue");
+        var hasTransition = oldValue is not null || newValue is not null;
+
+        if (hasTransition)
+        {
+            var fieldValue = GetPayloadValue(payload, "field") ?? activityType.ToString();
+            var field = Humanize(fieldValue);
+            oldValue = ResolveFieldValue(fieldValue, oldValue, statusNames);
+            newValue = ResolveFieldValue(fieldValue, newValue, statusNames);
+
+            return $"{field}: {FormatValue(oldValue)} → {FormatValue(newValue)}";
+        }
+
+        var tagName = GetPayloadValue(payload, "tagName");
+
+        if (tagName is not null)
+        {
+            return $"Tag: {FormatValue(tagName)}";
+        }
+
+        var relatedTask = GetPayloadValue(payload, "relatedTaskSystemId");
+
+        if (relatedTask is not null)
+        {
+            var relation = GetPayloadValue(payload, "label") ?? GetPayloadValue(payload, "relationTypeName");
+
+            return $"Relation: {FormatValue(relation)} {FormatValue(relatedTask)}";
+        }
+
+        var group = GetPayloadValue(payload, "group");
+
+        if (group is not null)
+        {
+            return $"Group: {FormatValue(group)}";
+        }
+
+        var permission = GetPayloadValue(payload, "permission");
+
+        if (permission is not null)
+        {
+            var granted = GetPayloadValue(payload, "granted") == bool.TrueString;
+
+            return $"Permission: {FormatValue(permission)} {(granted ? "granted" : "revoked")}";
+        }
+
+        var oldRole = GetPayloadValue(payload, "oldRole");
+        var newRole = GetPayloadValue(payload, "newRole");
+        var hasRoleChange = oldRole is not null || newRole is not null;
+
+        if (hasRoleChange)
+        {
+            return $"Role: {FormatValue(oldRole)} → {FormatValue(newRole)}";
+        }
+
+        var fileName = GetPayloadValue(payload, "fileName");
+
+        if (fileName is not null)
+        {
+            return $"File: {FormatValue(fileName)}";
+        }
+
+        var assigneeId = GetPayloadValue(payload, "assigneeId");
+
+        if (assigneeId is not null)
+        {
+            return $"Assignee: {FormatValue(assigneeId)}";
+        }
+
+        var exportType = GetPayloadValue(payload, "exportType");
+
+        if (exportType is not null)
+        {
+            return $"Export: {Humanize(exportType)}";
+        }
+
+        var hasEmails = payload.TryGetProperty("emails", out var emails) && emails.ValueKind is JsonValueKind.Array;
+
+        if (hasEmails)
+        {
+            var values = emails
+                .EnumerateArray()
+                .Where(email => email.ValueKind is JsonValueKind.String)
+                .Select(email => email.GetString())
+                .Where(email => email is not null)
+                .Cast<string>()
+                .ToList();
+            var visibleEmails = string.Join(", ", values.Take(2));
+            var remainingCount = values.Count - 2;
+            var suffix = remainingCount > 0 ? $" +{remainingCount} more" : string.Empty;
+
+            return values.Count == 0 ? "Users changed" : $"Users: {visibleEmails}{suffix}";
+        }
+
+        return "No additional details";
+    }
+
+    private static string? ResolveFieldValue(
+        string field,
+        string? value,
+        IReadOnlyDictionary<int, string> statusNames)
+    {
+        var isStatus = string.Equals(field, "status", StringComparison.OrdinalIgnoreCase);
+        var valueIsStatusId = int.TryParse(value, out var statusId);
+        var canResolveStatus = isStatus && valueIsStatusId;
+
+        if (!canResolveStatus)
+        {
+            return value;
+        }
+
+        var hasStatusName = statusNames.TryGetValue(statusId, out var statusName);
+
+        return hasStatusName ? statusName : value;
+    }
+
+    private static string? GetTransitionValue(JsonElement payload, string prefix)
+    {
+        return GetPayloadValue(payload, $"{prefix}Value")
+            ?? GetPayloadValue(payload, $"{prefix}Category")
+            ?? GetPayloadValue(payload, $"{prefix}NumericValue");
+    }
+
+    private static string? GetPayloadValue(JsonElement payload, string propertyName)
+    {
+        if (!payload.TryGetProperty(propertyName, out var value) || value.ValueKind is JsonValueKind.Null)
+        {
+            return null;
+        }
+
+        return value.ValueKind is JsonValueKind.String
+            ? value.GetString()
+            : value.ToString();
+    }
+
+    private static string FormatValue(string? value)
+    {
+        return value is null ? "None" : Truncate(value, 48);
+    }
+
+    private static string Humanize(string value)
+    {
+        var normalized = value
+            .Replace("startdate", "start date", StringComparison.OrdinalIgnoreCase)
+            .Replace("duedate", "due date", StringComparison.OrdinalIgnoreCase);
+        var words = new List<char>(normalized.Length + 4);
+
+        foreach (var character in normalized)
+        {
+            var needsSeparator = char.IsUpper(character) && words.Count > 0 && words[^1] != ' ';
+
+            if (needsSeparator)
+            {
+                words.Add(' ');
+            }
+
+            words.Add(character);
+        }
+
+        var result = new string([.. words]).Trim();
+
+        return result.Length == 0
+            ? result
+            : char.ToUpperInvariant(result[0]) + result[1..];
+    }
+
+    private static string Truncate(string value, int maxLength)
+    {
+        return value.Length <= maxLength ? value : value[..(maxLength - 1)] + "…";
     }
 
     private static string? GetPayloadString(JsonElement payload, string propertyName)

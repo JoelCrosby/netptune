@@ -152,6 +152,86 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
     }
 
     [Fact]
+    public async Task GetAuditLog_ShouldReturnSummaryAndWorkspaceScopedDetail()
+    {
+        var entityId = Interlocked.Increment(ref NextEntityId);
+
+        using var scope = NewScope(out var db);
+
+        var oldStatus = new Status
+        {
+            WorkspaceId = fixture.WorkspaceId,
+            EntityType = EntityType.Task,
+            Name = "To do",
+            Key = $"audit-todo-{entityId}",
+            Category = StatusCategory.Todo,
+            SortOrder = 1,
+        };
+        var newStatus = new Status
+        {
+            WorkspaceId = fixture.WorkspaceId,
+            EntityType = EntityType.Task,
+            Name = "In progress",
+            Key = $"audit-active-{entityId}",
+            Category = StatusCategory.Active,
+            SortOrder = 2,
+        };
+        db.Statuses.AddRange(oldStatus, newStatus);
+
+        await db.SaveChangesAsync(CancellationToken);
+
+        var log = new EventRecord
+        {
+            EventId = Guid.NewGuid(),
+            WorkspaceId = fixture.WorkspaceId,
+            EventKey = EventKeys.EntityFieldTransitioned,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = entityId.ToString(),
+            ActorUserId = fixture.UserId,
+            OccurredAt = Base,
+            RecordedAt = Base.AddSeconds(1),
+            RetentionClass = EventRetentionClasses.Permanent,
+            Payload = JsonSerializer.SerializeToDocument(new
+            {
+                field = "status",
+                oldValue = oldStatus.Id.ToString(),
+                newValue = newStatus.Id.ToString(),
+            }),
+        };
+        log.References.Add(new EventReference
+        {
+            Role = EventReferenceRoles.Parent,
+            EntityType = EventEntityTypes.From(EntityType.Project),
+            EntityId = "42",
+        });
+        db.EventRecords.Add(log);
+
+        await db.SaveChangesAsync(CancellationToken);
+
+        var repository = fixture.CreateRepository(db);
+        var page = await repository.GetAuditLog(
+            fixture.WorkspaceId,
+            new AuditLogFilter { EntityType = EntityType.Task },
+            CancellationToken);
+        var detail = await repository.GetAuditLogDetail(fixture.WorkspaceId, log.Id, CancellationToken);
+        var otherWorkspaceDetail = await repository.GetAuditLogDetail(
+            fixture.WorkspaceId + 1,
+            log.Id,
+            CancellationToken);
+
+        page.Items.Should().Contain(item => item.Id == log.Id && item.Summary == "Status: To do → In progress");
+        detail.Should().NotBeNull();
+        detail!.EventId.Should().Be(log.EventId);
+        detail.EventKey.Should().Be(EventKeys.EntityFieldTransitioned);
+        detail.Meta!.RootElement.GetProperty("newValue").GetString().Should().Be(newStatus.Id.ToString());
+        detail.References.Should().ContainSingle(reference =>
+            reference.Role == EventReferenceRoles.Parent &&
+            reference.EntityType == EventEntityTypes.From(EntityType.Project) &&
+            reference.EntityId == "42");
+        otherWorkspaceDetail.Should().BeNull();
+    }
+
+    [Fact]
     public async Task GetActivities_ShouldReturnEmpty_WhenEntriesTableHasNothingForTheEntity()
     {
         var entityId = Interlocked.Increment(ref NextEntityId);
