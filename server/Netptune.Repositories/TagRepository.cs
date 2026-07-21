@@ -82,15 +82,14 @@ public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, I
     public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
+        var pagination = pageRequest.GetPagination();
 
         return Entities
             .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId)
             .OrderBy(x => x.CreatedAt)
             .ThenBy(x => x.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .AsNoTracking()
             .Select(x => new TagViewModel
             {

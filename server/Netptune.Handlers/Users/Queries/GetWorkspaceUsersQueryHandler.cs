@@ -24,12 +24,13 @@ public sealed class GetWorkspaceUsersQueryHandler : IRequestHandler<GetWorkspace
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var pageRequest = request.Page ?? new PageRequest();
+        var pagination = pageRequest.GetPagination();
 
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, true, cancellationToken);
 
         if (workspace is null)
         {
-            return new PagedResponse<WorkspaceUserViewModel>([], pageRequest.GetPage(), pageRequest.GetPageSize(), 0);
+            return new PagedResponse<WorkspaceUserViewModel>([], pagination.Page, pagination.PageSize, 0);
         }
 
         // Members and pending invites are merged, sorted and paginated in the database.

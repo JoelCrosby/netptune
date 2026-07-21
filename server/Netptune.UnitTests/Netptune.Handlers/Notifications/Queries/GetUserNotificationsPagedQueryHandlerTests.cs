@@ -35,11 +35,18 @@ public class GetUserNotificationsPagedQueryHandlerTests
         var notifications = new List<NotificationViewModel> { new(), new() };
 
         UnitOfWork.Notifications
-            .GetUserNotifications(UserId, WorkspaceId, null, null, 0, 25, TestContext.Current.CancellationToken).Returns(notifications);
+            .GetUserNotifications(
+                UserId,
+                WorkspaceId,
+                new PageRequest { Page = 1, PageSize = 25 }.GetPagination(),
+                null,
+                null,
+                TestContext.Current.CancellationToken)
+            .Returns(notifications);
         UnitOfWork.Notifications
             .GetUserNotificationsCount(UserId, WorkspaceId, null, null, TestContext.Current.CancellationToken).Returns(40);
 
-        var query = new GetUserNotificationsPagedQuery(new PageRequest { Page = 1, PageSize = 25 });
+        var query = new GetUserNotificationsPagedQuery(new NotificationFilter { Page = 1, PageSize = 25 });
 
         var result = await Handler.Handle(query, TestContext.Current.CancellationToken);
 
@@ -55,16 +62,27 @@ public class GetUserNotificationsPagedQueryHandlerTests
     public async Task GetUserNotificationsPaged_ShouldQueryWithCorrectSkipAndTake()
     {
         UnitOfWork.Notifications
-            .GetUserNotifications(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken)
+            .GetUserNotifications(
+                Arg.Any<string>(),
+                Arg.Any<int>(),
+                Arg.Any<Pagination>(),
+                Arg.Any<string?>(),
+                Arg.Any<string?>(),
+                TestContext.Current.CancellationToken)
             .Returns(new List<NotificationViewModel>());
 
-        var query = new GetUserNotificationsPagedQuery(new PageRequest { Page = 3, PageSize = 10 });
+        var query = new GetUserNotificationsPagedQuery(new NotificationFilter { Page = 3, PageSize = 10 });
 
         await Handler.Handle(query, TestContext.Current.CancellationToken);
 
-        // Page 3 at a page size of 10 => skip 20, take 10.
         await UnitOfWork.Notifications.Received(1)
-            .GetUserNotifications(UserId, WorkspaceId, null, null, 20, 10, TestContext.Current.CancellationToken);
+            .GetUserNotifications(
+                UserId,
+                WorkspaceId,
+                new PageRequest { Page = 3, PageSize = 10 }.GetPagination(),
+                null,
+                null,
+                TestContext.Current.CancellationToken);
         await UnitOfWork.Notifications.Received(1)
             .GetUserNotificationsCount(UserId, WorkspaceId, null, null, TestContext.Current.CancellationToken);
     }

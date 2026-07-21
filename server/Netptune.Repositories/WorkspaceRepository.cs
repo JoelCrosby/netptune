@@ -131,8 +131,7 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
     public Task<List<Workspace>> GetUserWorkspaces(string userId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
+        var pagination = pageRequest.GetPagination();
 
         return Context.WorkspaceAppUsers
             .Where(x => x.UserId == userId)
@@ -140,8 +139,8 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .Where(x => !x.IsDeleted)
             .OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt)
             .ThenByDescending(x => x.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .ToListAsync(cancellationToken);
     }
 
@@ -149,15 +148,14 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
     {
         pageRequest ??= new PageRequest();
 
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize(PaginationDefaults.MaxAdminPageSize);
+        var pagination = pageRequest.GetPagination(PaginationDefaults.MaxAdminPageSize);
 
         return Entities
             .Where(x => !x.IsDeleted)
             .OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt)
             .ThenByDescending(x => x.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }

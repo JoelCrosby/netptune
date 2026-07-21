@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Notifications;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -17,7 +18,13 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
     : Repository<DataContext, Notification, int>(context, connectionFactory), INotificationRepository
 {
 
-    public async Task<List<NotificationViewModel>> GetUserNotifications(string userId, int workspaceId, string? search = null, string? actorId = null, int skip = 0, int take = 50, CancellationToken cancellationToken = default)
+    public async Task<List<NotificationViewModel>> GetUserNotifications(
+        string userId,
+        int workspaceId,
+        Pagination pagination,
+        string? search = null,
+        string? actorId = null,
+        CancellationToken cancellationToken = default)
     {
         using var connection = ConnectionFactory.StartConnection();
 
@@ -27,8 +34,8 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
             workspaceId,
             search = ToSearchParam(search),
             actorId = ToActorParam(actorId),
-            skip,
-            take,
+            skip = pagination.Skip,
+            take = pagination.PageSize,
             taskType = EntityType.Task,
             projectType = EntityType.Project,
             boardType = EntityType.Board,

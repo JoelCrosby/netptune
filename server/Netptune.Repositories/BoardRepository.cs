@@ -27,16 +27,15 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
     public Task<List<Board>> GetBoardsInProject(int projectId, bool isReadonly = false, bool includeGroups = false, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
+        var pagination = pageRequest.GetPagination();
 
         var query = Entities
             .Where(board => board.ProjectId == projectId)
             .Where(board => !board.IsDeleted)
             .OrderByDescending(board => board.UpdatedAt ?? board.CreatedAt)
             .ThenByDescending(board => board.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .IsReadonly(isReadonly);
 
         if (!includeGroups) return query.ToListAsync(cancellationToken);
@@ -89,9 +88,7 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
     public async Task<List<BoardsViewModel>> GetBoardViewModels(string slug, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
-        var skip = (page - 1) * pageSize;
+        var pagination = pageRequest.GetPagination();
 
         using var connection = ConnectionFactory.StartConnection();
 
@@ -126,7 +123,12 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                 ORDER BY COALESCE(p.updated_at, p.created_at) DESC, p.id DESC, COALESCE(b.updated_at, b.created_at) DESC, b.id DESC
                 OFFSET @skip
                 LIMIT @pageSize
-            ", new { slug, skip, pageSize }, cancellationToken: cancellationToken));
+            ", new
+            {
+                slug,
+                skip = pagination.Skip,
+                pageSize = pagination.PageSize,
+            }, cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewModelRowMap>();
 

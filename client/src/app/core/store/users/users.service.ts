@@ -3,12 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { ClientResponse } from '@core/models/client-response';
 import { WorkspaceRole } from '@core/enums/workspace-role';
-import {
-  appendPageParams,
-  DEFAULT_PAGE_SIZE,
-  Page,
-  PageQuery,
-} from '@core/models/pagination';
+import { appendPageParams, Page, PageQuery } from '@core/models/pagination';
 
 @Injectable({
   providedIn: 'root',
@@ -22,10 +17,7 @@ export class UsersService {
 
   getUsersInWorkspace(query?: PageQuery) {
     return this.http.get<ClientResponse<Page<WorkspaceAppUser>>>(`api/users`, {
-      params: appendPageParams(new HttpParams(), {
-        page: query?.page ?? 1,
-        pageSize: query?.pageSize ?? DEFAULT_PAGE_SIZE,
-      }),
+      params: appendPageParams(new HttpParams(), query),
     });
   }
 

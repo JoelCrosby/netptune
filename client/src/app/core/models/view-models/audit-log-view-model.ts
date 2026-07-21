@@ -1,3 +1,4 @@
+import { Page, PageQuery } from '../pagination';
 import { EntityType } from '../entity-type';
 import { ActivityType } from './activity-view-model';
 
@@ -16,25 +17,17 @@ export interface AuditLogViewModel {
   meta?: Record<string, unknown>;
 }
 
-export interface AuditLogPage {
-  items: AuditLogViewModel[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
+export type AuditLogPage = Page<AuditLogViewModel>;
 
 export interface AuditActivityPoint {
   date: string;
   count: number;
 }
 
-export interface AuditLogFilter {
+export interface AuditLogFilter extends PageQuery {
   userId?: string;
   entityType?: EntityType;
   activityType?: ActivityType;
   from?: string;
   to?: string;
-  page?: number;
-  pageSize?: number;
 }

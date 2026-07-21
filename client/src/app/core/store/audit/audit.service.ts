@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
+import { appendPageParams } from '@core/models/pagination';
 import {
   AuditActivityPoint,
   AuditLogFilter,
@@ -33,19 +34,16 @@ export class AuditService {
     });
   }
 
-  private buildParams(filter: AuditLogFilter): Record<string, string> {
-    const params: Record<string, string> = {};
+  private buildParams(filter: AuditLogFilter): HttpParams {
+    let params = appendPageParams(new HttpParams(), filter);
 
-    if (filter.userId) params['userId'] = filter.userId;
+    if (filter.userId) params = params.set('userId', filter.userId);
     if (filter.entityType !== undefined)
-      params['entityType'] = String(filter.entityType);
+      params = params.set('entityType', filter.entityType);
     if (filter.activityType !== undefined)
-      params['activityType'] = String(filter.activityType);
-    if (filter.from) params['from'] = filter.from;
-    if (filter.to) params['to'] = filter.to;
-    if (filter.page !== undefined) params['page'] = String(filter.page);
-    if (filter.pageSize !== undefined)
-      params['pageSize'] = String(filter.pageSize);
+      params = params.set('activityType', filter.activityType);
+    if (filter.from) params = params.set('from', filter.from);
+    if (filter.to) params = params.set('to', filter.to);
 
     return params;
   }

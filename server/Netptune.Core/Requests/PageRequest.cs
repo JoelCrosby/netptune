@@ -10,18 +10,26 @@ public class PageRequest
 
     public string? SortDirection { get; init; }
 
-    public int GetPage()
+    public Pagination GetPagination(int maxPageSize = PaginationDefaults.MaxPageSize)
     {
-        return Math.Max(Page ?? PaginationDefaults.DefaultPage, 1);
+        var page = Math.Max(Page ?? PaginationDefaults.DefaultPage, 1);
+        var pageSize = Math.Clamp(PageSize ?? PaginationDefaults.DefaultPageSize, 1, maxPageSize);
+
+        return new Pagination(page, pageSize);
+    }
+}
+
+public readonly record struct Pagination
+{
+    internal Pagination(int page, int pageSize)
+    {
+        Page = page;
+        PageSize = pageSize;
     }
 
-    public int GetPageSize(int maxPageSize = PaginationDefaults.MaxPageSize)
-    {
-        return Math.Clamp(PageSize ?? PaginationDefaults.DefaultPageSize, 1, maxPageSize);
-    }
+    public int Page { get; }
 
-    public int GetSkip()
-    {
-        return (GetPage() - 1) * GetPageSize();
-    }
+    public int PageSize { get; }
+
+    public int Skip => (int)Math.Min((long)(Page - 1) * PageSize, int.MaxValue);
 }

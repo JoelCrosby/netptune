@@ -8,9 +8,9 @@ using Netptune.Core.ViewModels.Audit;
 
 namespace Netptune.Handlers.Audit.Queries;
 
-public sealed record GetAuditLogQuery(AuditLogFilter Filter) : IRequest<ClientResponse<AuditLogPage>>;
+public sealed record GetAuditLogQuery(AuditLogFilter Filter) : IRequest<ClientResponse<PagedResponse<AuditLogViewModel>>>;
 
-public sealed class GetAuditLogQueryHandler : IRequestHandler<GetAuditLogQuery, ClientResponse<AuditLogPage>>
+public sealed class GetAuditLogQueryHandler : IRequestHandler<GetAuditLogQuery, ClientResponse<PagedResponse<AuditLogViewModel>>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -21,12 +21,13 @@ public sealed class GetAuditLogQueryHandler : IRequestHandler<GetAuditLogQuery, 
         Identity = identity;
     }
 
-    public async ValueTask<ClientResponse<AuditLogPage>> Handle(GetAuditLogQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ClientResponse<PagedResponse<AuditLogViewModel>>> Handle(
+        GetAuditLogQuery request,
+        CancellationToken cancellationToken)
     {
-        var filter = request.Filter;
-        filter.WorkspaceId = await Identity.GetWorkspaceId();
+        var workspaceId = await Identity.GetWorkspaceId();
 
-        var page = await UnitOfWork.EventRecords.GetAuditLog(filter);
+        var page = await UnitOfWork.EventRecords.GetAuditLog(workspaceId, request.Filter, cancellationToken);
 
         return page;
     }

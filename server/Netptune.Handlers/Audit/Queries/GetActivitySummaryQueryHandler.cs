@@ -23,10 +23,9 @@ public sealed class GetActivitySummaryQueryHandler : IRequestHandler<GetActivity
 
     public async ValueTask<ClientResponse<List<AuditActivityPoint>>> Handle(GetActivitySummaryQuery request, CancellationToken cancellationToken)
     {
-        var filter = request.Filter;
-        filter.WorkspaceId = await Identity.GetWorkspaceId();
+        var workspaceId = await Identity.GetWorkspaceId();
 
-        var points = await UnitOfWork.EventRecords.GetActivitySummary(filter);
+        var points = await UnitOfWork.EventRecords.GetActivitySummary(workspaceId, request.Filter, cancellationToken);
 
         return points;
     }

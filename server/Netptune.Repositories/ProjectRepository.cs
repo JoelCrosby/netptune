@@ -37,15 +37,14 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
     public Task<List<ProjectViewModel>> GetProjects(string workspaceKey, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
+        var pagination = pageRequest.GetPagination();
 
         return Entities
             .Where(project => project.Workspace.Slug == workspaceKey && !project.IsDeleted)
             .OrderByDescending(project => project.UpdatedAt ?? project.CreatedAt)
             .ThenByDescending(project => project.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .AsNoTracking()
             .Select(ProjectToViewModel())
             .ToListAsync(cancellationToken);

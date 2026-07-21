@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommentViewModel } from '@core/models/comment';
 import { ProjectTask as TaskModel } from '@core/models/project-task';
+import { PageQuery } from '@core/models/pagination';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ActionState, DEFAULT_ACTION_STATE } from '@core/types/action-state';
 import { AsyncEntityState } from '@core/util/entity/async-entity-state';
@@ -56,13 +57,11 @@ export interface TaskListGroup {
   emptyMessage: string;
 }
 
-export interface ProjectTasksFilter {
+export interface ProjectTasksFilter extends PageQuery {
   search?: string | null;
   sprintId?: number;
   noSprint?: boolean;
   tags?: string[];
   statusIds?: number[];
   assignees?: string[];
-  page?: number;
-  pageSize?: number;
 }

@@ -1,6 +1,6 @@
 namespace Netptune.Core.Requests;
 
-public class NotificationFilter
+public class NotificationFilter : PageRequest
 {
     public string? Search { get; init; }
 

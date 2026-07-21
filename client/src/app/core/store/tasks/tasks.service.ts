@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { CommentViewModel } from '@core/models/comment';
-import { DEFAULT_PAGE_SIZE, Page } from '@core/models/pagination';
+import { appendPageParams, Page } from '@core/models/pagination';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
 import { TaskImportResult } from '@core/models/import/task-import-result';
@@ -48,8 +48,7 @@ export class ProjectTasksService {
       params = params.append('assignees', assignee);
     }
 
-    params = params.set('page', filter?.page ?? 1);
-    params = params.set('pageSize', filter?.pageSize ?? DEFAULT_PAGE_SIZE);
+    params = appendPageParams(params, filter);
 
     return this.http.get<ClientResponse<Page<TaskViewModel>>>('api/tasks', {
       params,
@@ -89,10 +88,7 @@ export class ProjectTasksService {
 
   getComments(systemId: string) {
     return this.http.get<CommentViewModel[]>(`api/comments/task/${systemId}`, {
-      params: {
-        page: 1,
-        pageSize: DEFAULT_PAGE_SIZE,
-      },
+      params: appendPageParams(),
     });
   }
 

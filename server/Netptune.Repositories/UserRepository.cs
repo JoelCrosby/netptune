@@ -38,8 +38,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
 
     public async Task<IPagedResult<WorkspaceUserViewModel>> GetWorkspaceUsersPaged(int workspaceId, PageRequest pageRequest, CancellationToken cancellationToken = default)
     {
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
+        var pagination = pageRequest.GetPagination();
 
         using var connection = StartConnection();
 
@@ -48,8 +47,8 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             new
             {
                 workspace_id = workspaceId,
-                limit = pageSize,
-                offset = pageRequest.GetSkip(),
+                limit = pagination.PageSize,
+                offset = pagination.Skip,
                 sort_by = pageRequest.SortBy ?? string.Empty,
                 sort_direction = pageRequest.SortDirection ?? string.Empty,
             },
@@ -75,10 +74,10 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         return new PagedResult<WorkspaceUserViewModel>
         {
             Results = results,
-            CurrentPage = page,
-            PageSize = pageSize,
+            CurrentPage = pagination.Page,
+            PageSize = pagination.PageSize,
             RowCount = rowCount,
-            PageCount = (rowCount + pageSize - 1) / pageSize,
+            PageCount = (rowCount + pagination.PageSize - 1) / pagination.PageSize,
         };
     }
 
@@ -87,8 +86,7 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         AssigneeFilter filter,
         CancellationToken cancellationToken = default)
     {
-        var page = filter.GetPage();
-        var pageSize = filter.GetPageSize();
+        var pagination = filter.GetPagination();
         var query = Context.WorkspaceAppUsers
             .Where(workspaceUser => workspaceUser.WorkspaceId == workspaceId)
             .Select(workspaceUser => workspaceUser.User);
@@ -107,8 +105,8 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .OrderBy(user => user.Firstname)
             .ThenBy(user => user.Lastname)
             .ThenBy(user => user.Id)
-            .Skip(filter.GetSkip())
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .Select(user => new AssigneeViewModel
             {
                 Id = user.Id,
@@ -124,26 +122,25 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         return new PagedResult<AssigneeViewModel>
         {
             Results = results,
-            CurrentPage = page,
-            PageSize = pageSize,
+            CurrentPage = pagination.Page,
+            PageSize = pagination.PageSize,
             RowCount = rowCount,
-            PageCount = rowCount == 0 ? 0 : (rowCount + pageSize - 1) / pageSize,
+            PageCount = rowCount == 0 ? 0 : (rowCount + pagination.PageSize - 1) / pagination.PageSize,
         };
     }
 
     public Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize(PaginationDefaults.MaxAdminPageSize);
+        var pagination = pageRequest.GetPagination(PaginationDefaults.MaxAdminPageSize);
 
         return Entities
             .Where(user => user.UserType == AppUserType.User)
             .OrderBy(x => x.Firstname)
             .ThenBy(x => x.Lastname)
             .ThenBy(x => x.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }

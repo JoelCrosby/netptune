@@ -13,6 +13,7 @@ using Netptune.Core.Models.Audit;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Activity;
 using Netptune.Core.ViewModels.Audit;
 using Netptune.Entities.Contexts;
@@ -160,34 +161,35 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         return existing.ToHashSet();
     }
 
-    public async Task<AuditLogPage> GetAuditLog(AuditLogFilter filter, CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<AuditLogViewModel>> GetAuditLog(
+        int workspaceId,
+        AuditLogFilter filter,
+        CancellationToken cancellationToken = default)
     {
-        var query = BuildAuditQuery(filter);
+        var query = BuildAuditQuery(workspaceId, filter);
+        var pagination = filter.GetPagination(PaginationDefaults.MaxAdminPageSize);
 
         var totalCount = await query.CountAsync(cancellationToken);
 
         var records = await query
             .OrderByDescending(x => x.OccurredAt)
             .ThenByDescending(x => x.Id)
-            .Skip((filter.Page - 1) * filter.PageSize)
-            .Take(filter.PageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         var items = await ToAuditViewModels(records, cancellationToken);
 
-        return new AuditLogPage
-        {
-            Items = items,
-            TotalCount = totalCount,
-            Page = filter.Page,
-            PageSize = filter.PageSize,
-        };
+        return new PagedResponse<AuditLogViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
     }
 
-    public async Task<List<AuditLogViewModel>> GetAuditLogForExport(AuditLogFilter filter, CancellationToken cancellationToken = default)
+    public async Task<List<AuditLogViewModel>> GetAuditLogForExport(
+        int workspaceId,
+        AuditLogFilter filter,
+        CancellationToken cancellationToken = default)
     {
-        var records = await BuildAuditQuery(filter)
+        var records = await BuildAuditQuery(workspaceId, filter)
             .OrderByDescending(x => x.OccurredAt)
             .ThenByDescending(x => x.Id)
             .Take(PaginationDefaults.MaxExportRows)
@@ -199,9 +201,12 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         return auditLogs;
     }
 
-    public Task<List<AuditActivityPoint>> GetActivitySummary(AuditLogFilter filter, CancellationToken cancellationToken = default)
+    public Task<List<AuditActivityPoint>> GetActivitySummary(
+        int workspaceId,
+        AuditLogFilter filter,
+        CancellationToken cancellationToken = default)
     {
-        return BuildAuditQuery(filter)
+        return BuildAuditQuery(workspaceId, filter)
             .GroupBy(x => x.OccurredAt.Date)
             .Select(g => new AuditActivityPoint { Date = g.Key, Count = g.Count() })
             .OrderBy(x => x.Date)
@@ -209,9 +214,9 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             .ToListAsync(cancellationToken);
     }
 
-    private IQueryable<EventRecord> BuildAuditQuery(AuditLogFilter filter)
+    private IQueryable<EventRecord> BuildAuditQuery(int workspaceId, AuditLogFilter filter)
     {
-        var query = Entities.Where(x => x.WorkspaceId == filter.WorkspaceId);
+        var query = Entities.Where(x => x.WorkspaceId == workspaceId);
 
         if (filter.UserId is not null)
         {

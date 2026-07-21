@@ -1,3 +1,5 @@
+import { PageQuery } from '../pagination';
+
 export enum WorkspaceFilePurpose {
   taskFile = 0,
   inlineMedia = 1,
@@ -37,9 +39,7 @@ export interface FileUploadResult {
   error?: string;
 }
 
-export interface WorkspaceFileFilter {
-  page?: number;
-  pageSize?: number;
+export interface WorkspaceFileFilter extends PageQuery {
   query?: string;
   purpose?: WorkspaceFilePurpose;
   contentTypeGroup?: string;

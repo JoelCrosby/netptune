@@ -36,15 +36,14 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
     public Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
-        var page = pageRequest.GetPage();
-        var pageSize = pageRequest.GetPageSize();
+        var pagination = pageRequest.GetPagination();
 
         return Entities
             .Where(x => !x.IsDeleted && x.EntityType == EntityType.Task && x.EntityId == taskId)
             .OrderByDescending(x => x.CreatedAt)
             .ThenByDescending(x => x.Id)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .AsNoTracking()
             .AsSplitQuery()
             .Select(ToViewModel())

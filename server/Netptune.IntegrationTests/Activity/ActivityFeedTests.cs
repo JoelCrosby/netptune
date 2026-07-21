@@ -129,9 +129,8 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         feed.Should().HaveCount(1);
         feed[0].RevisionCount.Should().Be(12);
 
-        var audit = await repository.GetAuditLog(new AuditLogFilter
+        var audit = await repository.GetAuditLog(fixture.WorkspaceId, new AuditLogFilter
         {
-            WorkspaceId = fixture.WorkspaceId,
             EntityType = EntityType.Task,
             From = Base.AddMinutes(-1),
             To = Base.AddMinutes(30),
@@ -141,9 +140,8 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         audit.Items.Where(item => item.EntityId == entityId).Should().HaveCount(12);
 
-        var summary = await repository.GetActivitySummary(new AuditLogFilter
+        var summary = await repository.GetActivitySummary(fixture.WorkspaceId, new AuditLogFilter
         {
-            WorkspaceId = fixture.WorkspaceId,
             From = Base.AddMinutes(-1),
             To = Base.AddMinutes(30),
             Page = 1,

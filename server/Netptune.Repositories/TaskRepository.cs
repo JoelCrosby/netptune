@@ -245,9 +245,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
         var statusIds = filter.StatusIds;
         var assignees = filter.Assignees.Where(assignee => !string.IsNullOrWhiteSpace(assignee)).ToArray();
-        var page = Math.Max(filter.Page ?? PaginationDefaults.DefaultPage, 1);
-        var pageSize = Math.Clamp(filter.PageSize ?? PaginationDefaults.DefaultPageSize, 1, PaginationDefaults.MaxPageSize);
-        var skip = (page - 1) * pageSize;
+        var pagination = filter.GetPagination();
         var taskOrder = GetTaskOrderBy(filter);
         var rowOrder = GetTaskRowOrderBy(filter);
 
@@ -273,14 +271,18 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             searchPattern,
             deleted,
             taskEntityType = EntityType.Task,
-            pageSize,
-            skip,
+            pageSize = pagination.PageSize,
+            skip = pagination.Skip,
         }, cancellationToken: cancellationToken));
 
         var rowList = rows.ToList();
         var totalCount = rowList.FirstOrDefault()?.Total_Count ?? 0;
 
-        return new PagedResponse<TaskViewModel>(RowsToTaskViewModels(rowList), page, pageSize, totalCount);
+        return new PagedResponse<TaskViewModel>(
+            RowsToTaskViewModels(rowList),
+            pagination.Page,
+            pagination.PageSize,
+            totalCount);
     }
 
     public async Task<List<TaskStatusBreakdownItem>> GetTaskStatusBreakdownAsync(string workspaceKey, CancellationToken cancellationToken = default)

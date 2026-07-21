@@ -28,8 +28,8 @@ public sealed class ExportAuditLogQueryHandler : IRequestHandler<ExportAuditLogQ
 
     public async ValueTask<FileResponse> Handle(ExportAuditLogQuery request, CancellationToken cancellationToken)
     {
+        var workspaceId = await Identity.GetWorkspaceId();
         var filter = request.Filter;
-        filter.WorkspaceId = await Identity.GetWorkspaceId();
 
         var ceiling = DateTime.UtcNow;
         var floor = ceiling.AddMonths(-12);
@@ -42,7 +42,7 @@ public sealed class ExportAuditLogQueryHandler : IRequestHandler<ExportAuditLogQ
             filter.From = floor;
         }
 
-        var rows = await UnitOfWork.EventRecords.GetAuditLogForExport(filter);
+        var rows = await UnitOfWork.EventRecords.GetAuditLogForExport(workspaceId, filter, cancellationToken);
         var stream = await ToAuditCsvStream(rows);
 
         var workspaceKey = Identity.GetWorkspaceKey();

@@ -72,14 +72,13 @@ public sealed class WorkspaceFileRepository : WorkspaceEntityRepository<DataCont
                 : query.OrderBy(file => file.CreatedAt),
         };
 
-        var page = filter.GetPage();
-        var pageSize = filter.GetPageSize();
+        var pagination = filter.GetPagination();
         var items = await Project(query, currentUserId, canDeleteAny)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
             .ToListAsync(cancellationToken);
 
-        return new(items, page, pageSize, total);
+        return new(items, pagination.Page, pagination.PageSize, total);
     }
 
     public async Task<IReadOnlyList<WorkspaceFileViewModel>> GetTaskFiles(int workspaceId, int taskId, string currentUserId, bool canDeleteAny, CancellationToken cancellationToken = default)

@@ -47,7 +47,7 @@ export function appendPageParams(
   query?: PageQuery
 ): HttpParams {
   params = params.set('page', query?.page ?? 1);
-  params = params.set('pageSize', query?.pageSize ?? MAX_PAGE_SIZE);
+  params = params.set('pageSize', query?.pageSize ?? DEFAULT_PAGE_SIZE);
 
   return params;
 }

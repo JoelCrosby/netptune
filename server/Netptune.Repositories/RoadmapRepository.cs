@@ -84,9 +84,7 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
 
         await ValidateSprintIds(connection, context, cancellationToken);
 
-        var page = filter.GetPage();
-        var pageSize = filter.GetPageSize();
-        var skip = (page - 1) * pageSize;
+        var pagination = filter.GetPagination();
         var taskOrder = GetUnscheduledTaskOrder(filter);
         var sql = SqlScripts.GetUnscheduledRoadmapTasks.Replace("{taskOrder}", taskOrder);
         var search = filter.Search?.Trim().ToLowerInvariant() ?? string.Empty;
@@ -106,15 +104,19 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 tags,
                 statusIds = filter.StatusIds,
                 assignees,
-                pageSize,
-                skip,
+                pageSize = pagination.PageSize,
+                skip = pagination.Skip,
             },
             cancellationToken: cancellationToken);
         var rows = (await connection.QueryAsync<RoadmapTaskRowMap>(command)).ToList();
         var totalCount = rows.FirstOrDefault()?.Total_Count ?? 0;
         var tasks = rows.Select(ToTaskViewModel).ToList();
 
-        return new PagedResponse<RoadmapTaskViewModel>(tasks, page, pageSize, totalCount);
+        return new PagedResponse<RoadmapTaskViewModel>(
+            tasks,
+            pagination.Page,
+            pagination.PageSize,
+            totalCount);
     }
 
     public async Task<PagedResponse<RoadmapTaskViewModel>> GetCalendarTasks(
@@ -130,9 +132,7 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
 
         await ValidateSprintIds(connection, context, cancellationToken);
 
-        var page = filter.GetPage();
-        var pageSize = filter.GetPageSize();
-        var skip = (page - 1) * pageSize;
+        var pagination = filter.GetPagination();
         var taskOrder = GetCalendarTaskOrder(filter);
         var sql = SqlScripts.GetCalendarTasks.Replace("{taskOrder}", taskOrder);
         var search = filter.Search?.Trim().ToLowerInvariant() ?? string.Empty;
@@ -153,15 +153,19 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 tags,
                 statusIds = filter.StatusIds,
                 assignees,
-                pageSize,
-                skip,
+                pageSize = pagination.PageSize,
+                skip = pagination.Skip,
             },
             cancellationToken: cancellationToken);
         var rows = (await connection.QueryAsync<RoadmapTaskRowMap>(command)).ToList();
         var totalCount = rows.FirstOrDefault()?.Total_Count ?? 0;
         var tasks = rows.Select(ToTaskViewModel).ToList();
 
-        return new PagedResponse<RoadmapTaskViewModel>(tasks, page, pageSize, totalCount);
+        return new PagedResponse<RoadmapTaskViewModel>(
+            tasks,
+            pagination.Page,
+            pagination.PageSize,
+            totalCount);
     }
 
     private static RoadmapQueryContext CreateQueryContext(

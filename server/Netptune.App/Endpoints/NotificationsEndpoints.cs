@@ -46,9 +46,13 @@ public static class NotificationsEndpoints
         return builder;
     }
 
-    private static async Task<IResult> HandleGet(IMediator mediator, [AsParameters] PageRequest page, [AsParameters] NotificationFilter filter, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleGet(
+        IMediator mediator,
+        [AsParameters] NotificationFilter filter,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetUserNotificationsPagedQuery(page, filter), cancellationToken);
+        var result = await mediator.Send(new GetUserNotificationsPagedQuery(filter), cancellationToken);
+
         return Results.Ok(result);
     }
 
