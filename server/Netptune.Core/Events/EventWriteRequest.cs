@@ -18,6 +18,8 @@ public sealed record EventWriteRequest<TPayload> where TPayload : class
 
     public string? ActorUserId { get; init; }
 
+    public bool ResolveActorFromIdentity { get; init; } = true;
+
     public DateTime? OccurredAt { get; init; }
 
     public Guid? CorrelationId { get; init; }
@@ -132,4 +134,32 @@ public sealed record SprintCommitmentMember
     public string? EstimateType { get; init; }
 
     public decimal? EstimateValue { get; init; }
+}
+
+public sealed record AuthenticationEventPayload
+{
+    public required string Method { get; init; }
+
+    public string? Email { get; init; }
+}
+
+public sealed record ExportRequestedPayload
+{
+    public required string ExportType { get; init; }
+
+    public string? Scope { get; init; }
+}
+
+public sealed record WorkspaceRoleChangedPayload
+{
+    public required string TargetUserId { get; init; }
+
+    public required string OldRole { get; init; }
+
+    public required string NewRole { get; init; }
+}
+
+public sealed record WorkspaceSettingsChangedPayload
+{
+    public IReadOnlyCollection<string> Fields { get; init; } = [];
 }

@@ -1,5 +1,8 @@
+using System.Text.Json;
+
 using FluentAssertions;
 
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
 
 using Xunit;
@@ -40,5 +43,41 @@ public sealed class EventDefinitionRegistryTests
         var action = () => EventDefinitionRegistry.Validate(request);
 
         action.Should().Throw<InvalidOperationException>().WithMessage("*requires payload*");
+    }
+
+    [Theory]
+    [InlineData(EventKeys.SecurityLoginSucceeded, ActivityType.LoginSuccess)]
+    [InlineData(EventKeys.SecurityLoginFailed, ActivityType.LoginFailed)]
+    [InlineData(EventKeys.ExportRequested, ActivityType.ExportRequested)]
+    [InlineData(EventKeys.WorkspaceRoleChanged, ActivityType.RoleChanged)]
+    [InlineData(EventKeys.WorkspaceSettingsChanged, ActivityType.WorkspaceSettingsChanged)]
+    public void ActivityTypeFor_ShouldMapAuditEventKeys(string eventKey, ActivityType expected)
+    {
+        using var payload = JsonDocument.Parse("{}");
+
+        var result = EventKeys.ActivityTypeFor(eventKey, payload.RootElement);
+
+        result.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Validate_ShouldAcceptGlobalSecurityEvent()
+    {
+        var request = new EventWriteRequest<AuthenticationEventPayload>
+        {
+            EventKey = EventKeys.SecurityLoginFailed,
+            SubjectType = EventEntityTypes.From(EntityType.User),
+            SubjectId = "unknown@example.com",
+            ResolveActorFromIdentity = false,
+            Payload = new AuthenticationEventPayload
+            {
+                Method = "password",
+                Email = "unknown@example.com",
+            },
+        };
+
+        var action = () => EventDefinitionRegistry.Validate(request);
+
+        action.Should().NotThrow();
     }
 }

@@ -318,8 +318,24 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             ActivityType.ModifyEstimate => ApplyEstimateModificationFilter(query, legacyActivityType),
             ActivityType.Assign => ApplyAssignmentFilter(query, legacyActivityType),
             ActivityType.Unassign => ApplyUnassignmentFilter(query, legacyActivityType),
+            ActivityType.LoginSuccess => ApplyCanonicalActivityFilter(query, EventKeys.SecurityLoginSucceeded, legacyActivityType),
+            ActivityType.LoginFailed => ApplyCanonicalActivityFilter(query, EventKeys.SecurityLoginFailed, legacyActivityType),
+            ActivityType.ExportRequested => ApplyCanonicalActivityFilter(query, EventKeys.ExportRequested, legacyActivityType),
+            ActivityType.RoleChanged => ApplyCanonicalActivityFilter(query, EventKeys.WorkspaceRoleChanged, legacyActivityType),
+            ActivityType.WorkspaceSettingsChanged => ApplyCanonicalActivityFilter(query, EventKeys.WorkspaceSettingsChanged, legacyActivityType),
             _ => ApplyLegacyActivityFilter(query, legacyActivityType),
         };
+    }
+
+    private static IQueryable<EventRecord> ApplyCanonicalActivityFilter(
+        IQueryable<EventRecord> query,
+        string eventKey,
+        int legacyActivityType)
+    {
+        return query.Where(record =>
+            record.EventKey == eventKey ||
+            (record.EventKey == EventKeys.EntityActivityRecorded &&
+                record.Payload.RootElement.GetProperty("activityType").GetInt32() == legacyActivityType));
     }
 
     private static IQueryable<EventRecord> ApplyCreateActivityFilter(
@@ -514,6 +530,9 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EventKeys.ScopeMemberChanged => FormatMemberChange(payload),
             EventKeys.ScopeMemberAttributeChanged => FormatMemberAttributeChange(payload),
             EventKeys.ScopeLifecycleTransitioned => FormatLifecycleChange(payload),
+            EventKeys.SecurityLoginSucceeded => FormatAuthentication(payload, succeeded: true),
+            EventKeys.SecurityLoginFailed => FormatAuthentication(payload, succeeded: false),
+            EventKeys.WorkspaceSettingsChanged => FormatWorkspaceSettingsChange(payload),
             _ => FormatLegacySummary(payload, activityType, statusNames),
         };
 
@@ -563,6 +582,39 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
         var state = GetPayloadValue(payload, "state");
 
         return state is null ? "Lifecycle changed" : $"State: {Humanize(state)}";
+    }
+
+    private static string FormatAuthentication(JsonElement payload, bool succeeded)
+    {
+        var outcome = succeeded ? "Login succeeded" : "Login failed";
+        var email = GetPayloadValue(payload, "email");
+        var method = GetPayloadValue(payload, "method");
+        var subject = email is null ? outcome : $"{outcome} for {FormatValue(email)}";
+
+        return method is null ? subject : $"{subject} via {Humanize(method).ToLowerInvariant()}";
+    }
+
+    private static string FormatWorkspaceSettingsChange(JsonElement payload)
+    {
+        var hasFields = payload.TryGetProperty("fields", out var fields) && fields.ValueKind is JsonValueKind.Array;
+
+        if (!hasFields)
+        {
+            return "Workspace settings changed";
+        }
+
+        var labels = fields
+            .EnumerateArray()
+            .Where(field => field.ValueKind is JsonValueKind.String)
+            .Select(field => field.GetString())
+            .Where(field => field is not null)
+            .Cast<string>()
+            .Select(Humanize)
+            .ToList();
+
+        return labels.Count == 0
+            ? "Workspace settings changed"
+            : $"Changed {string.Join(", ", labels)}";
     }
 
     private static string FormatLegacySummary(

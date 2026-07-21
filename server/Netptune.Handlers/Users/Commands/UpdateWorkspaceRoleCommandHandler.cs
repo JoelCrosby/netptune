@@ -1,12 +1,13 @@
 using Mediator;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events.Users;
+using Netptune.Core.Events;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Users;
 
@@ -21,18 +22,18 @@ public sealed class UpdateWorkspaceRoleCommandHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IWorkspacePermissionCache PermissionCache;
-    private readonly IActivityLogger Activity;
+    private readonly IEventRecordWriter EventRecords;
 
     public UpdateWorkspaceRoleCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IWorkspacePermissionCache permissionCache,
-        IActivityLogger activity)
+        IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         PermissionCache = permissionCache;
-        Activity = activity;
+        EventRecords = eventRecords;
     }
 
     public async ValueTask<ClientResponse<WorkspaceRoleUpdateViewModel>> Handle(
@@ -81,26 +82,36 @@ public sealed class UpdateWorkspaceRoleCommandHandler
             req.Role,
             permissions,
             cancellationToken);
+
+        await EventRecords.Append(new EventWriteRequest<WorkspaceRoleChangedPayload>
+        {
+            WorkspaceId = workspace.Id,
+            EventKey = EventKeys.WorkspaceRoleChanged,
+            SubjectType = EventEntityTypes.From(EntityType.Workspace),
+            SubjectId = workspace.Id.ToString(),
+            Payload = new WorkspaceRoleChangedPayload
+            {
+                TargetUserId = req.UserId,
+                OldRole = oldRole.ToString(),
+                NewRole = req.Role.ToString(),
+            },
+            References =
+            [
+                new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Member,
+                    EntityType = EventEntityTypes.From(EntityType.User),
+                    EntityId = req.UserId,
+                },
+            ],
+        }, cancellationToken);
+
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         PermissionCache.Remove(new WorkspaceUserKey
         {
             UserId = req.UserId,
             WorkspaceKey = workspaceKey,
-        });
-
-        Activity.LogWith<UserRoleActivityMeta>(options =>
-        {
-            options.EntityId = workspace.Id;
-            options.WorkspaceId = workspace.Id;
-            options.EntityType = EntityType.Workspace;
-            options.Type = ActivityType.RoleChanged;
-            options.Meta = new UserRoleActivityMeta
-            {
-                TargetUserId = req.UserId,
-                OldRole = oldRole,
-                NewRole = req.Role,
-            };
         });
 
         return ClientResponse<WorkspaceRoleUpdateViewModel>.Success(new WorkspaceRoleUpdateViewModel

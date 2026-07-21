@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Audit;
@@ -39,15 +40,17 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         using var scope = NewScope(out var db);
 
-        db.ActivityEntries.Add(NewEntry(
-            entityId,
-            fixture.UserId,
-            ActivityType.Modify,
-            ["description", "priority"],
-            first: Base,
-            last: Base.AddMinutes(4),
-            revisions: 12,
-            meta: Meta(("description", "before", "after"), ("priority", "None", "High"))));
+        db.ActivityEntries.Add(NewEntry(new ActivityEntryInput
+        {
+            EntityId = entityId,
+            UserId = fixture.UserId,
+            Type = ActivityType.Modify,
+            ChangedFields = ["description", "priority"],
+            First = Base,
+            Last = Base.AddMinutes(4),
+            Revisions = 12,
+            Meta = Meta(("description", "before", "after"), ("priority", "None", "High")),
+        }));
 
         await db.SaveChangesAsync(CancellationToken);
 
@@ -73,15 +76,17 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         using var scope = NewScope(out var db);
 
-        db.ActivityEntries.Add(NewEntry(
-            entityId,
-            fixture.UserId,
-            ActivityType.ModifyDescription,
-            ["description"],
-            first: Base,
-            last: Base,
-            revisions: 1,
-            meta: Meta(("description", "a", "b"))));
+        db.ActivityEntries.Add(NewEntry(new ActivityEntryInput
+        {
+            EntityId = entityId,
+            UserId = fixture.UserId,
+            Type = ActivityType.ModifyDescription,
+            ChangedFields = ["description"],
+            First = Base,
+            Last = Base,
+            Revisions = 1,
+            Meta = Meta(("description", "a", "b")),
+        }));
 
         await db.SaveChangesAsync(CancellationToken);
 
@@ -110,15 +115,17 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         db.EventRecords.AddRange(logs);
 
-        db.ActivityEntries.Add(NewEntry(
-            entityId,
-            fixture.UserId,
-            ActivityType.ModifyDescription,
-            ["description"],
-            first: Base,
-            last: Base.AddSeconds(11 * 20),
-            revisions: 12,
-            meta: Meta(("description", "before", "after"))));
+        db.ActivityEntries.Add(NewEntry(new ActivityEntryInput
+        {
+            EntityId = entityId,
+            UserId = fixture.UserId,
+            Type = ActivityType.ModifyDescription,
+            ChangedFields = ["description"],
+            First = Base,
+            Last = Base.AddSeconds(11 * 20),
+            Revisions = 12,
+            Meta = Meta(("description", "before", "after")),
+        }));
 
         await db.SaveChangesAsync(CancellationToken);
 
@@ -232,6 +239,63 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
     }
 
     [Fact]
+    public async Task GetAuditLog_ShouldReturnAndFilterCanonicalAuditActivityTypes()
+    {
+        using var scope = NewScope(out var db);
+
+        var events = new[]
+        {
+            NewCanonicalAuditLog(
+                EventKeys.SecurityLoginSucceeded,
+                new AuthenticationEventPayload { Method = "password", Email = "user@example.com" }),
+            NewCanonicalAuditLog(
+                EventKeys.SecurityLoginFailed,
+                new AuthenticationEventPayload { Method = "password", Email = "user@example.com" }),
+            NewCanonicalAuditLog(
+                EventKeys.ExportRequested,
+                new ExportRequestedPayload { ExportType = "audit-log" }),
+            NewCanonicalAuditLog(
+                EventKeys.WorkspaceRoleChanged,
+                new WorkspaceRoleChangedPayload
+                {
+                    TargetUserId = fixture.OtherUserId,
+                    OldRole = "Member",
+                    NewRole = "Viewer",
+                }),
+            NewCanonicalAuditLog(
+                EventKeys.WorkspaceSettingsChanged,
+                new WorkspaceSettingsChangedPayload { Fields = ["name"] }),
+        };
+
+        db.EventRecords.AddRange(events);
+
+        await db.SaveChangesAsync(CancellationToken);
+
+        var repository = fixture.CreateRepository(db);
+        var expected = new[]
+        {
+            ActivityType.LoginSuccess,
+            ActivityType.LoginFailed,
+            ActivityType.ExportRequested,
+            ActivityType.RoleChanged,
+            ActivityType.WorkspaceSettingsChanged,
+        };
+
+        foreach (var (eventRecord, activityType) in events.Zip(expected))
+        {
+            var page = await repository.GetAuditLog(
+                fixture.WorkspaceId,
+                new AuditLogFilter { ActivityType = activityType },
+                CancellationToken);
+
+            page.Items.Should().Contain(item =>
+                item.Id == eventRecord.Id &&
+                item.Type == activityType &&
+                item.Summary != "No additional details");
+        }
+    }
+
+    [Fact]
     public async Task GetActivities_ShouldReturnEmpty_WhenEntriesTableHasNothingForTheEntity()
     {
         var entityId = Interlocked.Increment(ref NextEntityId);
@@ -261,60 +325,66 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         using var scope = NewScope(out var db);
 
         db.ActivityEntries.AddRange(
-            NewEntry(
-                entityId,
-                fixture.UserId,
-                ActivityType.ModifyDescription,
-                ["description"],
-                first: Base.AddMinutes(1),
-                last: Base.AddMinutes(1),
-                revisions: 1,
-                meta: null),
-            NewEntry(
-                entityId,
-                fixture.UserId,
-                ActivityType.ModifyName,
-                ["name"],
-                first: Base.AddMinutes(2),
-                last: Base.AddMinutes(2),
-                revisions: 1,
-                meta: null),
-            NewEntry(
-                entityId,
-                fixture.UserId,
-                ActivityType.AddTag,
-                [],
-                first: Base.AddMinutes(3),
-                last: Base.AddMinutes(3),
-                revisions: 1,
-                meta: null),
-            NewEntry(
-                entityId,
-                fixture.UserId,
-                ActivityType.Assign,
-                [],
-                first: Base.AddMinutes(4),
-                last: Base.AddMinutes(4),
-                revisions: 1,
-                meta: null),
-            NewEntry(
-                entityId,
-                fixture.UserId,
-                ActivityType.Move,
-                [],
-                first: Base.AddMinutes(4),
-                last: Base.AddMinutes(4),
-                revisions: 1,
-                meta: null),
-            NewEntry(
-                entityId,
-                fixture.UserId,
-                ActivityType.Create,
-                [],
-                first: Base.AddMinutes(6),
-                last: Base.AddMinutes(6),
-                revisions: 1,
-                meta: null));
+            NewEntry(new ActivityEntryInput
+            {
+                EntityId = entityId,
+                UserId = fixture.UserId,
+                Type = ActivityType.ModifyDescription,
+                ChangedFields = ["description"],
+                First = Base.AddMinutes(1),
+                Last = Base.AddMinutes(1),
+                Revisions = 1,
+            }),
+            NewEntry(new ActivityEntryInput
+            {
+                EntityId = entityId,
+                UserId = fixture.UserId,
+                Type = ActivityType.ModifyName,
+                ChangedFields = ["name"],
+                First = Base.AddMinutes(2),
+                Last = Base.AddMinutes(2),
+                Revisions = 1,
+            }),
+            NewEntry(new ActivityEntryInput
+            {
+                EntityId = entityId,
+                UserId = fixture.UserId,
+                Type = ActivityType.AddTag,
+                ChangedFields = [],
+                First = Base.AddMinutes(3),
+                Last = Base.AddMinutes(3),
+                Revisions = 1,
+            }),
+            NewEntry(new ActivityEntryInput
+            {
+                EntityId = entityId,
+                UserId = fixture.UserId,
+                Type = ActivityType.Assign,
+                ChangedFields = [],
+                First = Base.AddMinutes(4),
+                Last = Base.AddMinutes(4),
+                Revisions = 1,
+            }),
+            NewEntry(new ActivityEntryInput
+            {
+                EntityId = entityId,
+                UserId = fixture.UserId,
+                Type = ActivityType.Move,
+                ChangedFields = [],
+                First = Base.AddMinutes(4),
+                Last = Base.AddMinutes(4),
+                Revisions = 1,
+            }),
+            NewEntry(new ActivityEntryInput
+            {
+                EntityId = entityId,
+                UserId = fixture.UserId,
+                Type = ActivityType.Create,
+                ChangedFields = [],
+                First = Base.AddMinutes(6),
+                Last = Base.AddMinutes(6),
+                Revisions = 1,
+            }));
 
         await db.SaveChangesAsync(CancellationToken);
 
@@ -382,30 +452,58 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         Payload = JsonSerializer.SerializeToDocument(new { activityType = (int)type }),
     };
 
-    private ActivityEntry NewEntry(
-        int entityId,
-        string userId,
-        ActivityType type,
-        List<string> changedFields,
-        DateTime first,
-        DateTime last,
-        int revisions,
-        JsonDocument? meta) => new()
+    private EventRecord NewCanonicalAuditLog<TPayload>(string eventKey, TPayload payload) where TPayload : class
+    {
+        return new()
         {
+            EventId = Guid.NewGuid(),
             WorkspaceId = fixture.WorkspaceId,
-            EntityType = EntityType.Task,
-            EntityId = entityId,
-            UserId = userId,
-            ActivityType = type,
-            ChangedFields = changedFields,
-            Meta = meta,
-            FirstOccurredAt = first,
-            LastOccurredAt = last,
-            RevisionCount = revisions,
-            IsOpen = false,
-            WindowExpiresAt = last.AddMinutes(5),
-            NotifiedAt = last,
+            EventKey = eventKey,
+            SubjectType = EventEntityTypes.From(EntityType.Workspace),
+            SubjectId = fixture.WorkspaceId.ToString(),
+            ActorUserId = fixture.UserId,
+            OccurredAt = Base.AddHours(1),
+            RecordedAt = Base.AddHours(1),
+            RetentionClass = EventKeys.RetentionFor(eventKey),
+            Payload = JsonSerializer.SerializeToDocument(payload, JsonOptions.Default),
         };
+    }
+
+    private ActivityEntry NewEntry(ActivityEntryInput input) => new()
+    {
+        WorkspaceId = fixture.WorkspaceId,
+        EntityType = EntityType.Task,
+        EntityId = input.EntityId,
+        UserId = input.UserId,
+        ActivityType = input.Type,
+        ChangedFields = input.ChangedFields,
+        Meta = input.Meta,
+        FirstOccurredAt = input.First,
+        LastOccurredAt = input.Last,
+        RevisionCount = input.Revisions,
+        IsOpen = false,
+        WindowExpiresAt = input.Last.AddMinutes(5),
+        NotifiedAt = input.Last,
+    };
+
+    private sealed record ActivityEntryInput
+    {
+        public int EntityId { get; init; }
+
+        public required string UserId { get; init; }
+
+        public ActivityType Type { get; init; }
+
+        public required List<string> ChangedFields { get; init; }
+
+        public DateTime First { get; init; }
+
+        public DateTime Last { get; init; }
+
+        public int Revisions { get; init; }
+
+        public JsonDocument? Meta { get; init; }
+    }
 
     private static JsonDocument Meta(params (string Field, string Old, string New)[] fields)
     {

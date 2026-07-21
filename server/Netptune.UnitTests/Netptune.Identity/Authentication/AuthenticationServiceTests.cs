@@ -15,6 +15,8 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models;
 using Netptune.Core.Models.Messaging;
@@ -46,6 +48,7 @@ public class AuthenticationServiceTests
     private readonly IConfiguration Configuration = Substitute.For<IConfiguration>();
     private readonly IWorkspacePermissionCache WorkspacePermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly ICacheProvider Cache = Substitute.For<ICacheProvider>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     private const string SigningKey = "test-signing-key-that-is-long-enough-for-hmac-sha256";
 
@@ -58,6 +61,9 @@ public class AuthenticationServiceTests
         Configuration["Tokens:Issuer"].Returns("test-issuer");
         Configuration["Tokens:ExpireDays"].Returns("7");
         Configuration["Origin"].Returns("https://test.example.com");
+        UnitOfWork.WorkspaceUsers
+            .GetWorkspaceIdsForUser(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns([]);
 
         var userStore = Substitute.For<IUserStore<AppUser>>();
 
@@ -93,7 +99,8 @@ public class AuthenticationServiceTests
             Identity,
             UnitOfWork,
             WorkspacePermissionCache,
-            Cache
+            Cache,
+            EventRecords
         );
     }
 
@@ -159,6 +166,14 @@ public class AuthenticationServiceTests
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Be("Username or password is incorrect");
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<AuthenticationEventPayload>>(eventRequest =>
+                eventRequest.EventKey == EventKeys.SecurityLoginFailed &&
+                eventRequest.WorkspaceId == null &&
+                eventRequest.SubjectType == EventEntityTypes.From(EntityType.User) &&
+                eventRequest.SubjectId == request.Email &&
+                !eventRequest.ResolveActorFromIdentity),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -220,6 +235,50 @@ public class AuthenticationServiceTests
         await Service.LogIn(request);
 
         await UserManager.Received(1).UpdateAsync(user);
+    }
+
+    [Fact]
+    public async Task LogIn_ShouldEmitSuccessfulLoginForUserWorkspaces()
+    {
+        var user = AutoFixtures.AppUser;
+        var request = new TokenRequest { Email = user.Email!, Password = "password" };
+
+        UserManager.FindByEmailAsync(request.Email).Returns(user);
+        SignInManager.CheckPasswordSignInAsync(user, request.Password, false).Returns(SignInResult.Success);
+        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+        UnitOfWork.WorkspaceUsers.GetWorkspaceIdsForUser(user.Id, Arg.Any<CancellationToken>()).Returns([42]);
+
+        await Service.LogIn(request);
+
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<AuthenticationEventPayload>>(eventRequest =>
+                eventRequest.EventKey == EventKeys.SecurityLoginSucceeded &&
+                eventRequest.WorkspaceId == 42 &&
+                eventRequest.ActorUserId == user.Id &&
+                eventRequest.Payload.Method == "password" &&
+                eventRequest.Payload.Email == request.Email),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task LogIn_ShouldEmitFailedLoginWithoutClaimingTheTargetAsActor()
+    {
+        var user = AutoFixtures.AppUser;
+        var request = new TokenRequest { Email = user.Email!, Password = "wrong-password" };
+
+        UserManager.FindByEmailAsync(request.Email).Returns(user);
+        SignInManager.CheckPasswordSignInAsync(user, request.Password, false).Returns(SignInResult.Failed);
+        UnitOfWork.WorkspaceUsers.GetWorkspaceIdsForUser(user.Id, Arg.Any<CancellationToken>()).Returns([42]);
+
+        await Service.LogIn(request);
+
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<AuthenticationEventPayload>>(eventRequest =>
+                eventRequest.EventKey == EventKeys.SecurityLoginFailed &&
+                eventRequest.WorkspaceId == 42 &&
+                eventRequest.ActorUserId == null &&
+                !eventRequest.ResolveActorFromIdentity),
+            Arg.Any<CancellationToken>());
     }
 
     // Refresh
@@ -332,11 +391,21 @@ public class AuthenticationServiceTests
         Identity.GetProviderKey().Returns(providerKey);
         UserManager.FindByLoginAsync(providerScheme, providerKey).Returns(user);
         UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+        UnitOfWork.WorkspaceUsers
+            .GetWorkspaceIdsForUser(user.Id, Arg.Any<CancellationToken>())
+            .Returns([42]);
 
         var result = await Service.LogInViaProvider(providerScheme);
 
         result.IsSuccess.Should().BeTrue();
         result.Ticket.Should().NotBeNull();
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<AuthenticationEventPayload>>(eventRequest =>
+                eventRequest.EventKey == EventKeys.SecurityLoginSucceeded &&
+                eventRequest.WorkspaceId == 42 &&
+                eventRequest.ActorUserId == user.Id &&
+                eventRequest.Payload.Method == providerScheme),
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -1004,10 +1073,10 @@ public class AuthenticationServiceTests
         Identity.TryGetWorkspaceKey().Returns(workspaceKey);
         WorkspacePermissionCache.GetUserPermissions(user.Id, workspaceKey).Returns(new UserPermissions
         {
-           Permissions = [],
-           Role = WorkspaceRole.Owner,
-           UserId = user.Id,
-           WorkspaceKey = workspaceKey,
+            Permissions = [],
+            Role = WorkspaceRole.Owner,
+            UserId = user.Id,
+            WorkspaceKey = workspaceKey,
         });
 
         var result = await Service.CurrentUser();

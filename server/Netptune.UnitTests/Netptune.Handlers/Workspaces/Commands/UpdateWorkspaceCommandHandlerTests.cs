@@ -3,8 +3,8 @@ using AutoFixture;
 using FluentAssertions;
 
 using Netptune.Core.Requests;
+using Netptune.Core.Events;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Workspaces.Commands;
 
@@ -21,11 +21,11 @@ public class UpdateWorkspaceCommandHandlerTests
     private readonly UpdateWorkspaceCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
-    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     public UpdateWorkspaceCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, EventRecords);
     }
 
     [Fact]
@@ -60,6 +60,38 @@ public class UpdateWorkspaceCommandHandlerTests
         await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldEmitWorkspaceSettingsChanged_WhenValuesChange()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            Name = "Updated workspace",
+            IsPublic = true,
+        };
+        var workspace = AutoFixtures.Workspace with
+        {
+            Id = 42,
+            Name = "Original workspace",
+            IsPublic = false,
+        };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<WorkspaceSettingsChangedPayload>>(eventRequest =>
+                eventRequest.EventKey == EventKeys.WorkspaceSettingsChanged &&
+                eventRequest.WorkspaceId == workspace.Id &&
+                eventRequest.Payload.Fields.SequenceEqual(new[] { "name", "visibility" })),
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

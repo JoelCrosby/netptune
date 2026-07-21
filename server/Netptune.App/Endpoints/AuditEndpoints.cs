@@ -1,8 +1,9 @@
 using Mediator;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Activity;
+using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Audit.Queries;
 
 namespace Netptune.App.Endpoints;
@@ -62,14 +63,20 @@ public static class AuditEndpoints
 
     private static async Task<IResult> HandleExport(
         IMediator mediator,
-        IActivityLogger activity,
+        IEventRecordWriter eventRecords,
+        INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         [AsParameters] AuditLogFilter filter,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new ExportAuditLogQuery(filter), cancellationToken);
 
-        await ExportEndpoints.LogExportRequested(activity, identity, "audit-log");
+        await ExportEndpoints.LogExportRequested(
+            eventRecords,
+            unitOfWork,
+            identity,
+            new ExportEndpoints.ExportAuditDetails("audit-log"),
+            cancellationToken);
 
         return Results.File(result.Stream, result.ContentType, result.Filename);
     }

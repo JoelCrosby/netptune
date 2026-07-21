@@ -15,5 +15,7 @@ public interface IWorkspaceUserRepository : IRepository<WorkspaceAppUser, int>
 
     Task<List<string>> GetWorkspaceUserIds(int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<List<int>> GetWorkspaceIdsForUser(string userId, CancellationToken cancellationToken = default);
+
     Task<Dictionary<int, List<string>>> GetWorkspaceUserIdsByWorkspaceIds(IEnumerable<int> workspaceIds, CancellationToken cancellationToken = default);
 }

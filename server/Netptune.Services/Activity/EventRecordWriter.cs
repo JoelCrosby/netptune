@@ -40,7 +40,12 @@ public sealed class EventRecordWriter : IEventRecordWriter
 
         var context = HttpContextAccessor?.HttpContext;
         var workspaceId = request.WorkspaceId;
-        var actorUserId = request.ActorUserId ?? Identity?.GetCurrentUserId();
+        var actorUserId = request.ActorUserId;
+
+        if (actorUserId is null && request.ResolveActorFromIdentity)
+        {
+            actorUserId = Identity?.GetCurrentUserId();
+        }
         var eventKey = request.EventKey;
 
         var record = new EventRecord

@@ -26,6 +26,9 @@ public static class EventKeys
     public const string ScopeLifecycleTransitioned = "scope.lifecycle-transitioned";
     public const string SecurityLoginSucceeded = "security.login-succeeded";
     public const string SecurityLoginFailed = "security.login-failed";
+    public const string ExportRequested = "export.requested";
+    public const string WorkspaceRoleChanged = "workspace.member-role-changed";
+    public const string WorkspaceSettingsChanged = "workspace.settings-changed";
     public const string EntityActivityRecorded = "entity.activity-recorded";
 
     public static string From(ActivityType type) => type switch
@@ -41,10 +44,11 @@ public static class EventKeys
         ActivityType.ModifyEstimate or
         ActivityType.ModifyDueDate or
         ActivityType.ModifyStartDate or
-        ActivityType.WorkspaceSettingsChanged or
-        ActivityType.RoleChanged or
         ActivityType.PermissionChanged => EntityFieldTransitioned,
         ActivityType.Assign or ActivityType.Unassign => ScopeMemberChanged,
+        ActivityType.RoleChanged => WorkspaceRoleChanged,
+        ActivityType.WorkspaceSettingsChanged => WorkspaceSettingsChanged,
+        ActivityType.ExportRequested => ExportRequested,
         ActivityType.LoginSuccess => SecurityLoginSucceeded,
         ActivityType.LoginFailed => SecurityLoginFailed,
         _ => EntityActivityRecorded,
@@ -59,12 +63,29 @@ public static class EventKeys
             or ScopeMemberChanged
             or ScopeMemberAttributeChanged
             or ScopeLifecycleTransitioned
+            or WorkspaceRoleChanged
+            or WorkspaceSettingsChanged
             => EventRetentionClasses.Permanent,
         _ => EventRetentionClasses.Audit,
     };
 
     public static ActivityType ActivityTypeFor(string eventKey, JsonElement payload)
     {
+        var directActivityType = eventKey switch
+        {
+            SecurityLoginSucceeded => ActivityType.LoginSuccess,
+            SecurityLoginFailed => ActivityType.LoginFailed,
+            ExportRequested => ActivityType.ExportRequested,
+            WorkspaceRoleChanged => ActivityType.RoleChanged,
+            WorkspaceSettingsChanged => ActivityType.WorkspaceSettingsChanged,
+            _ => (ActivityType?)null,
+        };
+
+        if (directActivityType.HasValue)
+        {
+            return directActivityType.Value;
+        }
+
         var field = ReadString(payload, "field");
         var isEntityCreation = eventKey == EntityCreated;
         var isScopeMembershipChange = eventKey == ScopeMemberChanged;
@@ -133,6 +154,11 @@ public static class EventDefinitionRegistry
             [(EventKeys.ScopeMemberChanged, 1)] = typeof(ScopeMemberChangedPayload),
             [(EventKeys.ScopeMemberAttributeChanged, 1)] = typeof(ScopeMemberAttributeChangedPayload),
             [(EventKeys.ScopeLifecycleTransitioned, 1)] = typeof(ScopeLifecyclePayload),
+            [(EventKeys.SecurityLoginSucceeded, 1)] = typeof(AuthenticationEventPayload),
+            [(EventKeys.SecurityLoginFailed, 1)] = typeof(AuthenticationEventPayload),
+            [(EventKeys.ExportRequested, 1)] = typeof(ExportRequestedPayload),
+            [(EventKeys.WorkspaceRoleChanged, 1)] = typeof(WorkspaceRoleChangedPayload),
+            [(EventKeys.WorkspaceSettingsChanged, 1)] = typeof(WorkspaceSettingsChangedPayload),
         };
 
     public static void Validate<TPayload>(EventWriteRequest<TPayload> request) where TPayload : class
@@ -147,10 +173,11 @@ public static class EventDefinitionRegistry
             throw new InvalidOperationException($"Event {request.EventKey} v{request.SchemaVersion} requires payload {payloadType.Name}.");
         }
 
-        var hasWorkspace = request.WorkspaceId.HasValue;
         var hasSubjectType = !string.IsNullOrWhiteSpace(request.SubjectType);
         var hasSubjectId = !string.IsNullOrWhiteSpace(request.SubjectId);
-        var hasRequiredDomainContext = hasWorkspace && hasSubjectType && hasSubjectId;
+        var isSecurityEvent = request.EventKey is EventKeys.SecurityLoginSucceeded or EventKeys.SecurityLoginFailed;
+        var hasRequiredWorkspace = request.WorkspaceId.HasValue || isSecurityEvent;
+        var hasRequiredDomainContext = hasRequiredWorkspace && hasSubjectType && hasSubjectId;
 
         if (!hasRequiredDomainContext)
         {

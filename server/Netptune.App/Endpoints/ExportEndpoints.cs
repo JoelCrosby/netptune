@@ -1,14 +1,16 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
-using Netptune.Core.Models.Activity;
+using Netptune.Core.Events;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Export;
+using Netptune.Core.UnitOfWork;
 
 namespace Netptune.App.Endpoints;
 
 public static class ExportEndpoints
 {
+    internal sealed record ExportAuditDetails(string ExportType, string? Scope = null);
+
     public static RouteGroupBuilder MapExportEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("export");
@@ -23,48 +25,65 @@ public static class ExportEndpoints
 
     public static async Task<IResult> HandleExportWorkspaceTasks(
         ITaskExportService taskExportService,
-        IActivityLogger activity,
-        IIdentityService identity)
+        IEventRecordWriter eventRecords,
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        CancellationToken cancellationToken)
     {
         var result = await taskExportService.ExportWorkspaceTasks();
 
-        await LogExportRequested(activity, identity, "workspace-tasks");
+        await LogExportRequested(
+            eventRecords,
+            unitOfWork,
+            identity,
+            new ExportAuditDetails("workspace-tasks"),
+            cancellationToken);
 
         return Results.File(result.Stream, result.ContentType, result.Filename);
     }
 
     public static async Task<IResult> HandleExportBoardTasks(
         ITaskExportService taskExportService,
-        IActivityLogger activity,
+        IEventRecordWriter eventRecords,
+        INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        string boardId)
+        string boardId,
+        CancellationToken cancellationToken)
     {
         var result = await taskExportService.ExportBoardTasks(boardId);
 
-        await LogExportRequested(activity, identity, "board-tasks", boardId);
+        await LogExportRequested(
+            eventRecords,
+            unitOfWork,
+            identity,
+            new ExportAuditDetails("board-tasks", boardId),
+            cancellationToken);
 
         return Results.File(result.Stream, result.ContentType, result.Filename);
     }
 
     internal static async Task LogExportRequested(
-        IActivityLogger activity,
+        IEventRecordWriter eventRecords,
+        INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        string exportType,
-        string? scope = null)
+        ExportAuditDetails details,
+        CancellationToken cancellationToken)
     {
         var workspaceId = await identity.GetWorkspaceId();
 
-        activity.LogWith<ExportRequestedMeta>(options =>
+        await eventRecords.Append(new EventWriteRequest<ExportRequestedPayload>
         {
-            options.EntityId = workspaceId;
-            options.WorkspaceId = workspaceId;
-            options.EntityType = EntityType.Workspace;
-            options.Type = ActivityType.ExportRequested;
-            options.Meta = new()
+            WorkspaceId = workspaceId,
+            EventKey = EventKeys.ExportRequested,
+            SubjectType = EventEntityTypes.From(EntityType.Workspace),
+            SubjectId = workspaceId.ToString(),
+            Payload = new ExportRequestedPayload
             {
-                ExportType = exportType,
-                Scope = scope,
-            };
-        });
+                ExportType = details.ExportType,
+                Scope = details.Scope,
+            },
+        }, cancellationToken);
+
+        await unitOfWork.CompleteAsync(cancellationToken);
     }
 }

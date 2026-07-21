@@ -18,6 +18,8 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Extensions;
 using Netptune.Core.Messaging;
 using Netptune.Core.Models.Authentication;
@@ -41,6 +43,7 @@ public class NetptuneAuthService : INetptuneAuthService
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IWorkspacePermissionCache WorkspacePermissionCache;
     private readonly ICacheProvider Cache;
+    private readonly IEventRecordWriter EventRecords;
 
     private readonly string Issuer;
     private readonly string SecurityKey;
@@ -56,7 +59,8 @@ public class NetptuneAuthService : INetptuneAuthService
         IIdentityService identity,
         INetptuneUnitOfWork unitOfWork,
         IWorkspacePermissionCache workspacePermissionCache,
-        ICacheProvider cache)
+        ICacheProvider cache,
+        IEventRecordWriter eventRecords)
     {
         SignInManager = signInManager;
         UserManager = userManager;
@@ -66,6 +70,7 @@ public class NetptuneAuthService : INetptuneAuthService
         UnitOfWork = unitOfWork;
         WorkspacePermissionCache = workspacePermissionCache;
         Cache = cache;
+        EventRecords = eventRecords;
 
         Issuer = configuration.GetRequiredValue("Tokens:Issuer");
         ExpireDays = configuration.GetRequiredValue("Tokens:ExpireDays");
@@ -80,18 +85,29 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (model.Password is null || !IsInteractiveUser(appUser))
         {
+            await LogAuthenticationEvent(appUser, model.Email, "password", succeeded: false);
+
             return LoginResult.Failed("Username or password is incorrect");
         }
 
         var result = await SignInManager.CheckPasswordSignInAsync(appUser, model.Password, false);
 
-        if (!result.Succeeded) return LoginResult.Failed("Username or password is incorrect");
+        if (!result.Succeeded)
+        {
+            await LogAuthenticationEvent(appUser, model.Email, "password", succeeded: false);
+
+            return LoginResult.Failed("Username or password is incorrect");
+        }
 
         appUser.LastLoginTime = DateTime.UtcNow;
 
         await UserManager.UpdateAsync(appUser);
 
-        return LoginResult.Success(await GenerateTicket(appUser));
+        var ticket = await GenerateTicket(appUser);
+
+        await LogAuthenticationEvent(appUser, model.Email, "password", succeeded: true);
+
+        return LoginResult.Success(ticket);
     }
 
     public async Task<LoginResult> Refresh(RefreshTokenRequest request)
@@ -136,6 +152,8 @@ public class NetptuneAuthService : INetptuneAuthService
             {
                 if (!IsInteractiveUser(existingByEmail))
                 {
+                    await LogAuthenticationEvent(existingByEmail, email, providerScheme, succeeded: false);
+
                     return LoginResult.Failed("External login failed.");
                 }
 
@@ -169,6 +187,8 @@ public class NetptuneAuthService : INetptuneAuthService
 
         if (!IsInteractiveUser(user))
         {
+            await LogAuthenticationEvent(user, email, providerScheme, succeeded: false);
+
             return LoginResult.Failed("External login failed.");
         }
 
@@ -178,7 +198,73 @@ public class NetptuneAuthService : INetptuneAuthService
 
         var ticket = await GenerateTicket(user);
 
+        await LogAuthenticationEvent(user, email, providerScheme, succeeded: true);
+
         return LoginResult.Success(ticket);
+    }
+
+    private async Task LogAuthenticationEvent(AppUser? user, string email, string method, bool succeeded)
+    {
+        var workspaceIds = user is null
+            ? []
+            : await UnitOfWork.WorkspaceUsers.GetWorkspaceIdsForUser(user.Id);
+
+        if (workspaceIds.Count == 0)
+        {
+            var workspaceKey = Identity.TryGetWorkspaceKey();
+            var workspaceId = workspaceKey is null
+                ? null
+                : await UnitOfWork.Workspaces.GetIdBySlug(workspaceKey);
+
+            if (workspaceId.HasValue)
+            {
+                workspaceIds.Add(workspaceId.Value);
+            }
+        }
+
+        var eventKey = succeeded
+            ? EventKeys.SecurityLoginSucceeded
+            : EventKeys.SecurityLoginFailed;
+
+        var actorUserId = succeeded ? user?.Id : null;
+        var payload = new AuthenticationEventPayload
+        {
+            Method = method,
+            Email = email,
+        };
+
+        if (workspaceIds.Count == 0)
+        {
+            var subjectId = user?.Id ?? email.Trim().ToLowerInvariant();
+
+            await EventRecords.Append(new EventWriteRequest<AuthenticationEventPayload>
+            {
+                EventKey = eventKey,
+                SubjectType = EventEntityTypes.From(EntityType.User),
+                SubjectId = string.IsNullOrWhiteSpace(subjectId) ? "unknown" : subjectId,
+                ActorUserId = actorUserId,
+                ResolveActorFromIdentity = false,
+                Payload = payload,
+            });
+        }
+        else
+        {
+            foreach (var workspaceId in workspaceIds.Distinct())
+            {
+                await EventRecords.Append(new EventWriteRequest<AuthenticationEventPayload>
+                {
+                    WorkspaceId = workspaceId,
+                    EventKey = eventKey,
+                    SubjectType = EventEntityTypes.From(EntityType.Workspace),
+                    SubjectId = workspaceId.ToString(),
+                    ActorUserId = actorUserId,
+                    ResolveActorFromIdentity = false,
+                    Payload = payload,
+                });
+            }
+        }
+
+        await UnitOfWork.CompleteAsync();
     }
 
     public async Task<LoginResult> LinkProvider(LinkProviderRequest request)

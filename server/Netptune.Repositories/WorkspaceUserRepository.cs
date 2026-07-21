@@ -45,6 +45,15 @@ public class WorkspaceUserRepository : Repository<DataContext, WorkspaceAppUser,
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<int>> GetWorkspaceIdsForUser(string userId, CancellationToken cancellationToken = default)
+    {
+        return Context.WorkspaceAppUsers
+            .AsNoTracking()
+            .Where(user => user.UserId == userId && !user.Workspace.IsDeleted)
+            .Select(user => user.WorkspaceId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Dictionary<int, List<string>>> GetWorkspaceUserIdsByWorkspaceIds(IEnumerable<int> workspaceIds, CancellationToken cancellationToken = default)
     {
         var rows = await Context.WorkspaceAppUsers
