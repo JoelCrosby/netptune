@@ -74,6 +74,35 @@ public sealed class RoadmapEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldApplyTaskListFilters()
+    {
+        var status = await GetTaskStatus();
+        var user = SeedData.Users.ElementAt(0);
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Roadmap uniquely filtered task",
+            Description = "Task used to verify roadmap task-list filters",
+            StatusId = status.Id,
+            ProjectId = 1,
+            AssigneeId = user.Id,
+            StartDate = new DateOnly(2026, 7, 14),
+            DueDate = new DateOnly(2026, 7, 16),
+        });
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        var response = await Client.GetAsync(
+            $"api/roadmap?from=2026-07-01&to=2026-07-31&search=uniquely%20filtered&statusIds={status.Id}&assignees={user.Id}");
+        var roadmap = await response.Content.ReadFromJsonAsync<RoadmapViewModel>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        roadmap.Should().NotBeNull();
+        roadmap!.Tasks.Should().ContainSingle(task => task.Id == created!.Payload!.Id);
+        roadmap.Tasks.Should().OnlyContain(task =>
+            task.StatusId == status.Id &&
+            task.Assignees.Any(assignee => assignee.Id == user.Id));
+    }
+
+    [Fact]
     public async Task Get_ShouldReturnDependenciesFromTasksOutsideTheDateRange()
     {
         var status = await GetTaskStatus();

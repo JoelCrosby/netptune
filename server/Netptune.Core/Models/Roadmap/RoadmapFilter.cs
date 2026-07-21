@@ -9,4 +9,12 @@ public sealed record RoadmapFilter
     public IReadOnlyCollection<int> ProjectIds { get; init; } = [];
 
     public IReadOnlyCollection<int> SprintIds { get; init; } = [];
+
+    public string? Search { get; init; }
+
+    public IReadOnlyCollection<string> Tags { get; init; } = [];
+
+    public IReadOnlyCollection<int> StatusIds { get; init; } = [];
+
+    public IReadOnlyCollection<string> Assignees { get; init; } = [];
 }

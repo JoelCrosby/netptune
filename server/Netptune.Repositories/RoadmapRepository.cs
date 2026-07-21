@@ -89,6 +89,10 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
         var skip = (page - 1) * pageSize;
         var taskOrder = GetUnscheduledTaskOrder(filter);
         var sql = SqlScripts.GetUnscheduledRoadmapTasks.Replace("{taskOrder}", taskOrder);
+        var search = filter.Search?.Trim().ToLowerInvariant() ?? string.Empty;
+        var searchPattern = $"%{search}%";
+        var tags = CleanValues(filter.Tags);
+        var assignees = CleanValues(filter.Assignees);
         var command = new CommandDefinition(
             sql,
             new
@@ -97,6 +101,11 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 allowedProjectIds = context.AllowedProjectIds,
                 projectIds = context.ProjectIds,
                 sprintIds = context.SprintIds,
+                search,
+                searchPattern,
+                tags,
+                statusIds = filter.StatusIds,
+                assignees,
                 pageSize,
                 skip,
             },
@@ -126,6 +135,10 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
         var skip = (page - 1) * pageSize;
         var taskOrder = GetCalendarTaskOrder(filter);
         var sql = SqlScripts.GetCalendarTasks.Replace("{taskOrder}", taskOrder);
+        var search = filter.Search?.Trim().ToLowerInvariant() ?? string.Empty;
+        var searchPattern = $"%{search}%";
+        var tags = CleanValues(filter.Tags);
+        var assignees = CleanValues(filter.Assignees);
         var command = new CommandDefinition(
             sql,
             new
@@ -135,6 +148,11 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 projectId = filter.ProjectId,
                 sprintId = filter.SprintId,
                 date = filter.Date.ToDateTime(TimeOnly.MinValue),
+                search,
+                searchPattern,
+                tags,
+                statusIds = filter.StatusIds,
+                assignees,
                 pageSize,
                 skip,
             },
@@ -196,6 +214,10 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
         int take,
         CancellationToken cancellationToken)
     {
+        var search = filter.Search?.Trim().ToLowerInvariant() ?? string.Empty;
+        var searchPattern = $"%{search}%";
+        var tags = CleanValues(filter.Tags);
+        var assignees = CleanValues(filter.Assignees);
         var command = new CommandDefinition(
             SqlScripts.GetRoadmapTasks,
             new
@@ -204,6 +226,11 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
                 allowedProjectIds = context.AllowedProjectIds,
                 projectIds = context.ProjectIds,
                 sprintIds = context.SprintIds,
+                search,
+                searchPattern,
+                tags,
+                statusIds = filter.StatusIds,
+                assignees,
                 from = filter.From.ToDateTime(TimeOnly.MinValue),
                 to = filter.To.ToDateTime(TimeOnly.MinValue),
                 take,
@@ -321,6 +348,15 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
         return expression is null
             ? "p.name, pt.project_scope_id, pt.id"
             : $"{expression} {direction} NULLS LAST, pt.id {direction}";
+    }
+
+    private static string[] CleanValues(IEnumerable<string> values)
+    {
+        return values
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
     }
 
     private static RoadmapTaskViewModel ToTaskViewModel(RoadmapTaskRowMap row)

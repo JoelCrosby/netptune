@@ -10,6 +10,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
+import {
+  parseTaskFilterRouteParams,
+  TaskFilterRouteParams,
+} from '@core/router/task-filter-route-params';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
@@ -20,6 +24,7 @@ import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/tas
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
 import { todayDate } from '@static/components/timeline/timeline-date-geometry';
 import { CalendarPlanningMonthComponent } from '../../components/calendar-planning-month/calendar-planning-month.component';
 import { CalendarToolbarComponent } from '../../components/calendar-toolbar/calendar-toolbar.component';
@@ -37,6 +42,7 @@ import {
     CalendarToolbarComponent,
     PageContainerComponent,
     PageHeaderComponent,
+    TaskViewFiltersComponent,
   ],
   template: `
     <app-page-container
@@ -59,6 +65,17 @@ import {
           (todayRequested)="showToday()"
           (refreshRequested)="refresh()" />
 
+        <app-task-view-filters
+          [search]="taskFilters().term ?? undefined"
+          [assigneeIds]="taskFilters().users ?? []"
+          [tagNames]="taskFilters().tags ?? []"
+          [statusIds]="taskFilters().statuses ?? []"
+          (searchChanged)="setTaskFilter('term', $event)"
+          (assigneeIdsChanged)="setTaskFilter('users', $event)"
+          (tagNamesChanged)="setTaskFilter('tags', $event)"
+          (statusIdsChanged)="setTaskFilter('statusIds', $event)"
+          (cleared)="clearTaskFilters()" />
+
         @if (calendar.error()) {
           <div
             class="border-danger/30 bg-danger/5 text-danger m-4 rounded border p-4"
@@ -80,6 +97,10 @@ import {
             [canUpdateTasks]="canUpdateTasks()"
             [projectId]="projectId()"
             [sprintId]="sprintId()"
+            [search]="taskFilters().term ?? undefined"
+            [assigneeIds]="taskFilters().users ?? []"
+            [tagNames]="taskFilters().tags ?? []"
+            [statusIds]="taskFilters().statuses ?? []"
             [realtimeGroup]="realtimeGroup()"
             (refreshRequested)="refreshCalendar()"
             (taskSelected)="openTask($event)" />
@@ -118,11 +139,15 @@ export class CalendarViewComponent {
   readonly range = computed(() => calendarMonthRange(this.month()));
   readonly projectId = computed(() => this.numberParam('projectId'));
   readonly sprintId = computed(() => this.numberParam('sprintId'));
+  readonly taskFilters = computed(() =>
+    parseTaskFilterRouteParams(this.params())
+  );
   readonly query = computed(() => {
     const range = this.range();
     const query = new URLSearchParams({ from: range.from, to: range.to });
     const projectId = this.projectId();
     const sprintId = this.sprintId();
+    const taskFilters = this.taskFilters();
 
     if (projectId) {
       query.set('projectIds', String(projectId));
@@ -130,6 +155,8 @@ export class CalendarViewComponent {
     if (sprintId) {
       query.set('sprintIds', String(sprintId));
     }
+
+    appendTaskFilters(query, taskFilters);
 
     return query.toString();
   });
@@ -186,6 +213,26 @@ export class CalendarViewComponent {
     });
   }
 
+  setTaskFilter(
+    key: 'term' | 'users' | 'tags' | 'statusIds',
+    value: string | string[] | number[] | null
+  ): void {
+    const hasValue = Array.isArray(value) ? value.length > 0 : !!value;
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { [key]: hasValue ? value : null },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  clearTaskFilters(): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { term: null, users: null, tags: null, statusIds: null },
+      queryParamsHandling: 'merge',
+    });
+  }
+
   refresh(): void {
     const planningMonth = this.planningMonth();
     if (planningMonth) {
@@ -234,4 +281,19 @@ export class CalendarViewComponent {
       replaceUrl: true,
     });
   }
+}
+
+function appendTaskFilters(
+  query: URLSearchParams,
+  filters: TaskFilterRouteParams
+): void {
+  if (filters.term) {
+    query.set('search', filters.term);
+  }
+
+  filters.users?.forEach((value) => query.append('assignees', value));
+  filters.tags?.forEach((value) => query.append('tags', value));
+  filters.statuses?.forEach((value) =>
+    query.append('statusIds', value.toString())
+  );
 }

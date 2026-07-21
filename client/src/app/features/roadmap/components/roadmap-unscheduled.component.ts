@@ -108,6 +108,10 @@ import {
 export class RoadmapUnscheduledComponent {
   readonly projectId = input<number>();
   readonly sprintId = input<number>();
+  readonly search = input<string>();
+  readonly assigneeIds = input<string[]>([]);
+  readonly tagNames = input<string[]>([]);
+  readonly statusIds = input<number[]>([]);
   readonly canUpdateTasks = input(false);
   readonly scheduleDate = input.required<string>();
   readonly reloadSignal = input.required<Signal<unknown>>();
@@ -122,6 +126,10 @@ export class RoadmapUnscheduledComponent {
     return {
       ...(projectId ? { projectIds: projectId } : {}),
       ...(sprintId ? { sprintIds: sprintId } : {}),
+      ...(this.search() ? { search: this.search() } : {}),
+      ...(this.assigneeIds().length ? { assignees: this.assigneeIds() } : {}),
+      ...(this.tagNames().length ? { tags: this.tagNames() } : {}),
+      ...(this.statusIds().length ? { statusIds: this.statusIds() } : {}),
     };
   });
 

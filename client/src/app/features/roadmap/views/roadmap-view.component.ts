@@ -10,6 +10,11 @@ import { loadSprints } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
+import {
+  parseTaskFilterRouteParams,
+  TaskFilterRouteParams,
+} from '@core/router/task-filter-route-params';
+import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import {
@@ -38,6 +43,7 @@ const defaultTo = addDays(today, 45);
     RoadmapFiltersComponent,
     RoadmapPlanningTimelineComponent,
     RoadmapUnscheduledComponent,
+    TaskViewFiltersComponent,
   ],
   template: `
     <app-page-container
@@ -66,6 +72,17 @@ const defaultTo = addDays(today, 45);
           (todayRequested)="showToday()"
           (rangeNavigationRequested)="navigateRange($event)"
           (refreshRequested)="refresh()" />
+
+        <app-task-view-filters
+          [search]="taskFilters().term ?? undefined"
+          [assigneeIds]="taskFilters().users ?? []"
+          [tagNames]="taskFilters().tags ?? []"
+          [statusIds]="taskFilters().statuses ?? []"
+          (searchChanged)="setTaskFilter('term', $event)"
+          (assigneeIdsChanged)="setTaskFilter('users', $event)"
+          (tagNamesChanged)="setTaskFilter('tags', $event)"
+          (statusIdsChanged)="setTaskFilter('statusIds', $event)"
+          (cleared)="clearTaskFilters()" />
 
         @if (rangeValidationError(); as validationError) {
           <div
@@ -104,6 +121,10 @@ const defaultTo = addDays(today, 45);
           <app-roadmap-unscheduled
             [projectId]="projectId()"
             [sprintId]="sprintId()"
+            [search]="taskFilters().term ?? undefined"
+            [assigneeIds]="taskFilters().users ?? []"
+            [tagNames]="taskFilters().tags ?? []"
+            [statusIds]="taskFilters().statuses ?? []"
             [canUpdateTasks]="canUpdateTasks()"
             [scheduleDate]="from()"
             [reloadSignal]="unscheduledReload"
@@ -144,6 +165,9 @@ export class RoadmapViewComponent {
   readonly to = computed(() => this.params().get('to') ?? defaultTo);
   readonly projectId = computed(() => this.numberParam('projectId'));
   readonly sprintId = computed(() => this.numberParam('sprintId'));
+  readonly taskFilters = computed(() =>
+    parseTaskFilterRouteParams(this.params())
+  );
   readonly includeUnscheduled = computed(
     () => this.params().get('unscheduled') !== 'false'
   );
@@ -167,6 +191,7 @@ export class RoadmapViewComponent {
     });
     const projectId = this.projectId();
     const sprintId = this.sprintId();
+    const taskFilters = this.taskFilters();
 
     if (projectId) {
       query.set('projectIds', String(projectId));
@@ -175,6 +200,8 @@ export class RoadmapViewComponent {
     if (sprintId) {
       query.set('sprintIds', String(sprintId));
     }
+
+    appendTaskFilters(query, taskFilters);
 
     return query.toString();
   });
@@ -234,6 +261,26 @@ export class RoadmapViewComponent {
 
   setUnscheduled(includeUnscheduled: boolean): void {
     this.setParam('unscheduled', String(includeUnscheduled));
+  }
+
+  setTaskFilter(
+    key: 'term' | 'users' | 'tags' | 'statusIds',
+    value: string | string[] | number[] | null
+  ): void {
+    const hasValue = Array.isArray(value) ? value.length > 0 : !!value;
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { [key]: hasValue ? value : null },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  clearTaskFilters(): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { term: null, users: null, tags: null, statusIds: null },
+      queryParamsHandling: 'merge',
+    });
   }
 
   showToday(): void {
@@ -324,4 +371,19 @@ export class RoadmapViewComponent {
       replaceUrl: true,
     });
   }
+}
+
+function appendTaskFilters(
+  query: URLSearchParams,
+  filters: TaskFilterRouteParams
+): void {
+  if (filters.term) {
+    query.set('search', filters.term);
+  }
+
+  filters.users?.forEach((value) => query.append('assignees', value));
+  filters.tags?.forEach((value) => query.append('tags', value));
+  filters.statuses?.forEach((value) =>
+    query.append('statusIds', value.toString())
+  );
 }

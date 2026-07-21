@@ -20,12 +20,24 @@ public static class RoadmapEndpoints
 
         public int[]? SprintIds { get; init; }
 
+        public string? Search { get; init; }
+
+        public string[]? Tags { get; init; }
+
+        public int[]? StatusIds { get; init; }
+
+        public string[]? Assignees { get; init; }
+
         public RoadmapFilter ToFilter() => new()
         {
             From = From,
             To = To,
             ProjectIds = ProjectIds ?? [],
             SprintIds = SprintIds ?? [],
+            Search = Search,
+            Tags = Tags ?? [],
+            StatusIds = StatusIds ?? [],
+            Assignees = Assignees ?? [],
         };
     }
 

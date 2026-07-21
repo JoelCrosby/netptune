@@ -52,6 +52,10 @@ import { CalendarSelectedDayTableComponent } from '../calendar-selected-day-tabl
       [date]="selectedDate()"
       [projectId]="projectId()"
       [sprintId]="sprintId()"
+      [search]="search()"
+      [assigneeIds]="assigneeIds()"
+      [tagNames]="tagNames()"
+      [statusIds]="statusIds()"
       [reloadSignal]="dayTableReload"
       (taskSelected)="taskSelected.emit($event)" />
 
@@ -67,6 +71,10 @@ export class CalendarPlanningMonthComponent {
   readonly canUpdateTasks = input(false);
   readonly projectId = input<number>();
   readonly sprintId = input<number>();
+  readonly search = input<string>();
+  readonly assigneeIds = input<string[]>([]);
+  readonly tagNames = input<string[]>([]);
+  readonly statusIds = input<number[]>([]);
   readonly taskSelected = output<ScheduledTask>();
   readonly refreshRequested = output();
 

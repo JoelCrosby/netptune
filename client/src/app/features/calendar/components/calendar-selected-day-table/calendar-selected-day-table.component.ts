@@ -74,6 +74,10 @@ export class CalendarSelectedDayTableComponent {
   readonly date = input.required<string>();
   readonly projectId = input<number>();
   readonly sprintId = input<number>();
+  readonly search = input<string>();
+  readonly assigneeIds = input<string[]>([]);
+  readonly tagNames = input<string[]>([]);
+  readonly statusIds = input<number[]>([]);
   readonly reloadSignal = input.required<Signal<unknown>>();
   readonly taskSelected = output<ScheduledTask>();
 
@@ -82,6 +86,10 @@ export class CalendarSelectedDayTableComponent {
     date: this.date(),
     projectId: this.projectId(),
     sprintId: this.sprintId(),
+    search: this.search(),
+    assignees: this.assigneeIds(),
+    tags: this.tagNames(),
+    statusIds: this.statusIds(),
   }));
   readonly data = computed<DatatableDataSource<ScheduledTask>>(() => ({
     key: 'calendar-selected-day-tasks',
