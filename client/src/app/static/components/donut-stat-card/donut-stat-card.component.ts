@@ -1,4 +1,5 @@
 import { Component, computed, input } from '@angular/core';
+import { colorHex } from '@core/util/colors/colors';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ColorSwatchComponent } from '../color-swatch/color-swatch.component';
 
@@ -76,7 +77,9 @@ export class DonutStatCardComponent {
 
   readonly series = computed(() => this.items().map((item) => item.value));
   readonly labels = computed(() => this.items().map((item) => item.label));
-  readonly colors = computed(() => this.items().map((item) => item.color));
+  readonly colors = computed(() =>
+    this.items().map((item) => colorHex(item.color))
+  );
 
   readonly plotOptions = computed(() => {
     const total = this.resolvedTotal();

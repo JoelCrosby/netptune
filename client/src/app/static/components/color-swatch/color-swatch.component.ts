@@ -1,4 +1,5 @@
 import { Component, computed, input } from '@angular/core';
+import { colorSwatchClass } from '@core/util/colors/colors';
 
 export type ColorSwatchVariant = 'dot' | 'swatch';
 
@@ -13,12 +14,13 @@ const variantClasses: Record<ColorSwatchVariant, string> = {
   host: {
     'aria-hidden': 'true',
     '[class]': 'className()',
-    '[style.background-color]': "color() ?? '#64748b'",
   },
 })
 export class ColorSwatchComponent {
   readonly color = input.required<string | null | undefined>();
   readonly variant = input<ColorSwatchVariant>('dot');
 
-  protected readonly className = computed(() => variantClasses[this.variant()]);
+  protected readonly className = computed(
+    () => `${variantClasses[this.variant()]} ${colorSwatchClass(this.color())}`
+  );
 }

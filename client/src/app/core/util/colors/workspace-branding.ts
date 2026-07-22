@@ -3,6 +3,7 @@ import {
   hexToShadeTriplet,
   PastelOptions,
 } from './color-conversion';
+import { colorHex } from './colors';
 
 const LIGHT_PASTEL: PastelOptions = { saturation: 0.85, lightness: 0.04 };
 const DARK_PASTEL: PastelOptions = { saturation: 1.0, lightness: 0.5 };
@@ -23,18 +24,24 @@ export const workspaceBrandVariables = (
     };
   }
 
+  const resolvedColor = colorHex(color);
+
   return {
     '--primary-rgb': hexToRgbTriplet(
-      color,
+      resolvedColor,
       isDark ? DARK_PASTEL : LIGHT_PASTEL
     ),
     '--side-bar-rgb': isDark
       ? null
-      : hexToShadeTriplet(color, SIDE_BAR_LIGHTNESS, SIDE_BAR_SATURATION),
+      : hexToShadeTriplet(
+          resolvedColor,
+          SIDE_BAR_LIGHTNESS,
+          SIDE_BAR_SATURATION
+        ),
     '--side-bar-active-rgb': isDark
       ? null
       : hexToShadeTriplet(
-          color,
+          resolvedColor,
           SIDE_BAR_ACTIVE_LIGHTNESS,
           SIDE_BAR_SATURATION
         ),

@@ -10,7 +10,7 @@ public sealed class BoardSeeder : ISeeder
 {
     public int Phase => 1;
 
-    private const string DefaultColor = "#3b82f6";
+    private const string DefaultColor = "blue";
 
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)
     {

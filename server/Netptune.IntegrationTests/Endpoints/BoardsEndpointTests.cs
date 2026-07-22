@@ -47,7 +47,7 @@ public sealed class BoardsEndpointTests
             Name = "Updated name",
             Meta = new()
             {
-                Color = "#123456",
+                Color = "blue",
             },
         };
 

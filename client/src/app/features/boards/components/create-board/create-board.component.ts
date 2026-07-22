@@ -250,7 +250,7 @@ export class CreateBoardComponent {
   }
 
   getColorLabel(value: string) {
-    const obj = this.colors.find((color) => color.color === value);
-    return obj && obj.name;
+    const obj = this.colors.find((color) => color.name === value);
+    return obj?.label;
   }
 }

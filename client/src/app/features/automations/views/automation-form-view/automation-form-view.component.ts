@@ -18,7 +18,6 @@ import {
 import { AutomationFormPreviewComponent } from '../../components/automation-form-preview.component';
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
-import { describeAutomationRule } from '../../models/automation-copy';
 import { buildAutomationRuleRequest } from '../../models/automation-rule-request-builder';
 import {
   AutomationActionType,
@@ -117,8 +116,7 @@ import { AutomationsService } from '../../services/automations.service';
           <app-automation-form-preview
             [trigger]="triggerPreview()"
             [actions]="actions()"
-            [statuses]="taskStatuses()"
-            [savePreview]="savePreview()" />
+            [statuses]="taskStatuses()" />
         </form>
       }
     </app-page-container>
@@ -238,14 +236,6 @@ export class AutomationFormViewComponent {
       assigneeChangeMode: null,
     };
   });
-
-  readonly savePreview = computed(() =>
-    describeAutomationRule(
-      this.triggerPreview(),
-      this.actions(),
-      this.taskStatuses()
-    )
-  );
 
   onSubmit() {
     const request = this.buildRequest();

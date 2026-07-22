@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Netptune.Core.Colors;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
@@ -77,7 +78,7 @@ public sealed class WorkspacesEndpointTests
             Slug = "create-test-workspace",
             MetaInfo = new ()
             {
-                Color = "#cccccc",
+                Color = NamedColors.FallbackColor,
             },
         };
 
@@ -100,7 +101,7 @@ public sealed class WorkspacesEndpointTests
             Slug = "create-test-workspace",
             MetaInfo = new ()
             {
-                Color = "#cccccc",
+                Color = NamedColors.FallbackColor,
             },
         };
 
@@ -119,7 +120,7 @@ public sealed class WorkspacesEndpointTests
             Slug = "linux",
             MetaInfo = new ()
             {
-                Color = "#cccccc",
+                Color = NamedColors.FallbackColor,
             },
         };
 
@@ -144,7 +145,7 @@ public sealed class WorkspacesEndpointTests
             Description = "create test workspace description",
             MetaInfo = new ()
             {
-                Color = "#cccccc",
+                Color = NamedColors.FallbackColor,
             },
         };
 

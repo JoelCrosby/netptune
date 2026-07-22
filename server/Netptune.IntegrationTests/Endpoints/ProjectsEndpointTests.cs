@@ -95,7 +95,7 @@ public sealed class ProjectsEndpointTests
             Description = "project description",
             MetaInfo = new ()
             {
-                Color = "#ffffff",
+                Color = "blue",
             },
         };
 
@@ -118,7 +118,7 @@ public sealed class ProjectsEndpointTests
             Description = "project description",
             MetaInfo = new ()
             {
-                Color = "#ffffff",
+                Color = "blue",
             },
         };
 

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
+using Netptune.Core.Colors;
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
@@ -86,7 +87,7 @@ public sealed class WorkspacesLeaveEndpointTests
             Name = "Leave Test Workspace",
             Slug = slug,
             OwnerId = ownerId,
-            MetaInfo = new() { Color = "#cccccc" },
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
         };
 
         context.Workspaces.Add(workspace);

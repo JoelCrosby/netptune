@@ -204,7 +204,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
             // a shared "Report " prefix makes several projects collide on the workspace/key index.
             Name = $"{Guid.NewGuid():N} Report"[..30],
             Description = "Reporting integration test project",
-            MetaInfo = new ProjectMeta { Color = "#3366ff" },
+            MetaInfo = new ProjectMeta { Color = "blue" },
         });
         response.EnsureSuccessStatusCode();
 

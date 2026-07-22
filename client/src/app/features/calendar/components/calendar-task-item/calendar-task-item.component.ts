@@ -2,6 +2,7 @@ import { Component, computed, input, output } from '@angular/core';
 import { GridCellWidget } from '@angular/aria/grid';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { StatusCategory } from '@core/models/status';
+import { colorHex } from '@core/util/colors/colors';
 import { calendarTaskDragType } from '../../models/calendar.models';
 import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
 
@@ -22,8 +23,8 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
       [class.border-l-0]="continuesBefore()"
       [class.border-r-0]="continuesAfter()"
       [class.opacity-60]="completed()"
-      [style.--calendar-task-color]="task().statusColor || null"
-      [style.border-left-color]="!continuesBefore() ? task().statusColor : null"
+      [style.--calendar-task-color]="statusColor()"
+      [style.border-left-color]="!continuesBefore() ? statusColor() : null"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-keyshortcuts]="editable() ? 'M' : null"
       [attr.title]="ariaLabel()"
@@ -100,6 +101,7 @@ export class CalendarTaskItemComponent {
   readonly taskSelected = output<ScheduledTask>();
   readonly moveRequested = output();
   readonly dragStarted = output();
+  readonly statusColor = computed(() => colorHex(this.task().statusColor));
 
   readonly continuesBefore = computed(() => {
     const start = taskStartsOn(this.task());

@@ -9,7 +9,6 @@ import {
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { Store } from '@ngrx/store';
-import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
@@ -18,7 +17,7 @@ import {
 } from '@static/components/datatable/datatable.types';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { taskStatusBadgeClass } from '../utils/task-status-badge-class';
+import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
 
 @Component({
   selector: 'app-dashboard-assigned-tasks',
@@ -28,7 +27,7 @@ import { taskStatusBadgeClass } from '../utils/task-status-badge-class';
     DatatableCellTemplateDirective,
     TaskScopeIdComponent,
     SprintBadgeComponent,
-    BadgeComponent,
+    TaskStatusPillComponent,
   ],
   template: `
     <section class="flex flex-col gap-3">
@@ -75,11 +74,10 @@ import { taskStatusBadgeClass } from '../utils/task-status-badge-class';
         </ng-template>
 
         <ng-template appDatatableCell="status" let-task>
-          <app-badge
-            shape="rounded"
-            [class]="statusBadgeClass(task.statusCategory)">
-            {{ task.statusName }}
-          </app-badge>
+          <app-task-status-pill
+            [name]="task.statusName"
+            [color]="task.statusColor"
+            [category]="task.statusCategory" />
         </ng-template>
 
         <ng-template appDatatableCell="priority" let-task>
@@ -104,8 +102,6 @@ export class DashboardAssignedTasksComponent {
   readonly totalCount = signal<number | null>(null);
 
   readonly currentUserId = this.store.selectSignal(selectCurrentUserId);
-
-  readonly statusBadgeClass = taskStatusBadgeClass;
 
   private params = computed<Params>(() => {
     const userId = this.currentUserId();

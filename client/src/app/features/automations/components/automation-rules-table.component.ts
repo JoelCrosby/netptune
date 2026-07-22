@@ -11,8 +11,9 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { Status } from '@core/models/status';
 import {
   automationRunStatusLabels,
-  describeAutomationActions,
-  describeAutomationTrigger,
+  AutomationCopySegment,
+  describeAutomationActionsSegments,
+  describeAutomationTriggerSegments,
   runStatusClass,
 } from '../models/automation-copy';
 import {
@@ -20,6 +21,7 @@ import {
   AutomationRunStatus,
 } from '../models/automation.models';
 import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.component';
+import { AutomationDescriptionComponent } from './automation-description.component';
 
 @Component({
   selector: 'app-automation-rules-table',
@@ -28,6 +30,7 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
     IconButtonComponent,
     PrettyDatePipe,
     AutomationEnabledBadgeComponent,
+    AutomationDescriptionComponent,
     LucideCirclePause,
     LucideCirclePlay,
     LucidePencil,
@@ -63,10 +66,14 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
                 </div>
               </td>
               <td class="text-foreground/80 min-w-64 px-4 py-3 align-top">
-                {{ triggerSummary(rule) }}
+                <app-automation-description
+                  [segments]="triggerSummary(rule)"
+                  [statuses]="statuses()" />
               </td>
               <td class="text-foreground/70 min-w-72 px-4 py-3 align-top">
-                {{ actionsSummary(rule) }}
+                <app-automation-description
+                  [segments]="actionsSummary(rule)"
+                  [statuses]="statuses()" />
               </td>
               <td
                 class="text-foreground/70 px-4 py-3 align-top font-mono text-xs whitespace-nowrap">
@@ -139,12 +146,12 @@ export class AutomationRulesTableComponent {
   readonly editRule = output<AutomationRuleListItem>();
   readonly deleteRule = output<AutomationRuleListItem>();
 
-  triggerSummary(rule: AutomationRuleListItem): string {
-    return describeAutomationTrigger(rule.trigger, this.statuses());
+  triggerSummary(rule: AutomationRuleListItem): AutomationCopySegment[] {
+    return describeAutomationTriggerSegments(rule.trigger, this.statuses());
   }
 
-  actionsSummary(rule: AutomationRuleListItem): string {
-    return describeAutomationActions(rule.actions, this.statuses());
+  actionsSummary(rule: AutomationRuleListItem): AutomationCopySegment[] {
+    return describeAutomationActionsSegments(rule.actions, this.statuses());
   }
 
   runStatusLabel(status: AutomationRunStatus): string {

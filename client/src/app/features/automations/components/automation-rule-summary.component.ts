@@ -5,14 +5,16 @@ import { CardSubtitleComponent } from '@static/components/card/card-subtitle.com
 import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { Status } from '@core/models/status';
 import {
-  describeAutomationActions,
-  describeAutomationRule,
-  describeAutomationTrigger,
+  AutomationCopySegment,
+  describeAutomationActionsSegments,
+  describeAutomationRuleSegments,
+  describeAutomationTriggerSegments,
 } from '../models/automation-copy';
 import {
   AutomationAction,
   AutomationTrigger,
 } from '../models/automation.models';
+import { AutomationDescriptionComponent } from './automation-description.component';
 
 @Component({
   selector: 'app-automation-rule-summary',
@@ -21,13 +23,16 @@ import {
     CardHeaderComponent,
     CardSubtitleComponent,
     CardTitleComponent,
+    AutomationDescriptionComponent,
   ],
   template: `
     <app-card>
       <app-card-header>
         <app-card-title>Rule Preview</app-card-title>
         <app-card-subtitle>
-          {{ ruleSummary() }}
+          <app-automation-description
+            [segments]="ruleSummary()"
+            [statuses]="statuses()" />
         </app-card-subtitle>
       </app-card-header>
 
@@ -37,7 +42,11 @@ import {
             class="text-muted mb-1 text-xs font-semibold tracking-wide uppercase">
             When
           </h3>
-          <p class="text-sm">{{ triggerSummary() }}</p>
+          <p class="text-sm">
+            <app-automation-description
+              [segments]="triggerSummary()"
+              [statuses]="statuses()" />
+          </p>
         </div>
 
         <div>
@@ -45,7 +54,11 @@ import {
             class="text-muted mb-1 text-xs font-semibold tracking-wide uppercase">
             Then
           </h3>
-          <p class="text-sm">{{ actionsSummary() }}</p>
+          <p class="text-sm">
+            <app-automation-description
+              [segments]="actionsSummary()"
+              [statuses]="statuses()" />
+          </p>
         </div>
       </div>
     </app-card>
@@ -56,19 +69,19 @@ export class AutomationRuleSummaryComponent {
   readonly actions = input.required<AutomationAction[]>();
   readonly statuses = input<Status[]>([]);
 
-  ruleSummary(): string {
-    return describeAutomationRule(
+  ruleSummary(): AutomationCopySegment[] {
+    return describeAutomationRuleSegments(
       this.trigger(),
       this.actions(),
       this.statuses()
     );
   }
 
-  triggerSummary(): string {
-    return describeAutomationTrigger(this.trigger(), this.statuses());
+  triggerSummary(): AutomationCopySegment[] {
+    return describeAutomationTriggerSegments(this.trigger(), this.statuses());
   }
 
-  actionsSummary(): string {
-    return describeAutomationActions(this.actions(), this.statuses());
+  actionsSummary(): AutomationCopySegment[] {
+    return describeAutomationActionsSegments(this.actions(), this.statuses());
   }
 }

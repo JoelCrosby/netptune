@@ -1,6 +1,7 @@
 import { Component, Signal, computed, input, output } from '@angular/core';
 import { Params } from '@angular/router';
 import { ScheduledTask } from '@core/models/scheduled-task';
+import { colorSwatchClass } from '@core/util/colors/colors';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -52,8 +53,9 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
         <ng-template appDatatableCell="statusName" let-task>
           <span class="inline-flex items-center gap-1.5">
             <span
-              class="h-2 w-2 rounded-full"
-              [style.background-color]="task.statusColor"></span>
+              [class]="
+                'h-2 w-2 rounded-full ' + colorSwatchClass(task.statusColor)
+              "></span>
             <span>{{ task.statusName }}</span>
           </span>
         </ng-template>
@@ -71,6 +73,7 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
   styles: ``,
 })
 export class CalendarSelectedDayTableComponent {
+  readonly colorSwatchClass = colorSwatchClass;
   readonly date = input.required<string>();
   readonly projectId = input<number>();
   readonly sprintId = input<number>();

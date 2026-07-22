@@ -32,7 +32,7 @@ public class UpdateBoardCommandHandlerTests
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = Fixture.Build<UpdateBoardRequest>()
-            .With(x => x.Meta, new BoardMeta { Color = "#123456" })
+            .With(x => x.Meta, new BoardMeta { Color = "blue" })
             .Create();
         var board = AutoFixtures.Board;
 

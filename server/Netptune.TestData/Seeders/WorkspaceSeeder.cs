@@ -13,7 +13,7 @@ internal static class WorkspaceSeeder
         "Harness open source synergies",
     ];
 
-    private static readonly string[] Colors = ["#3b82f6", "#10b981"];
+    private static readonly string[] Colors = ["blue", "emerald"];
 
     internal static List<Workspace> Generate(List<AppUser> users) =>
         Names.Select((name, i) => new Workspace

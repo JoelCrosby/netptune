@@ -7,6 +7,7 @@ import {
 } from '@core/models/relation-type';
 import { DialogService } from '@core/services/dialog.service';
 import { RelationTypesService } from '@core/services/relation-types.service';
+import { fallbackColor } from '@core/util/colors/colors';
 import {
   CreateRelationTypeDialogComponent,
   CreateRelationTypeDialogResult,
@@ -230,7 +231,7 @@ export class RelationTypesViewComponent {
         name,
         inverseName: result.inverseName,
         category: result.category,
-        color: '#64748b',
+        color: fallbackColor,
       })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({

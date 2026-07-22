@@ -10,6 +10,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { TaskRelationsService } from '@core/services/task-relations.service';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { colorSwatchClass } from '@core/util/colors/colors';
 import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -71,9 +72,9 @@ interface RelationGroup {
             <li
               class="border-border bg-card flex items-center gap-3 rounded border px-3 py-2">
               <span
-                class="h-2 w-2 shrink-0 rounded-full"
-                [style.background-color]="
-                  relation.relatedTask.statusColor ?? '#64748b'
+                [class]="
+                  'h-2 w-2 shrink-0 rounded-full ' +
+                  colorSwatchClass(relation.relatedTask.statusColor)
                 "></span>
 
               <app-task-scope-id [id]="relation.relatedTask.systemId" />
@@ -112,6 +113,7 @@ interface RelationGroup {
   `,
 })
 export class TaskDetailRelationsComponent {
+  readonly colorSwatchClass = colorSwatchClass;
   private readonly store = inject(Store);
   private readonly relationsService = inject(TaskRelationsService);
   private readonly dialog = inject(DialogService);

@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Colors;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Workspace;
@@ -63,7 +64,7 @@ public sealed class WorkspacePermanentDeleteEndpointTests
             Name = slug,
             Description = $"{slug} description",
             Slug = slug,
-            MetaInfo = new() { Color = "#cccccc" },
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);

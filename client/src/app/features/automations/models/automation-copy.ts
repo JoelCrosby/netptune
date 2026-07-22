@@ -57,6 +57,150 @@ export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
   [AutomationRunStatus.skipped]: 'Skipped',
 };
 
+export type AutomationCopySegment =
+  { type: 'text'; text: string } | { type: 'status'; statusId: number };
+
+export function describeAutomationTriggerSegments(
+  trigger: AutomationTrigger,
+  statuses: Status[] = []
+): AutomationCopySegment[] {
+  if (trigger.type === AutomationTriggerType.taskStatusChanged) {
+    return statusSentence('When a task changes to ', trigger.statusId);
+  }
+
+  if (trigger.type !== AutomationTriggerType.taskChanged) {
+    return textSegments(describeAutomationTrigger(trigger, statuses));
+  }
+
+  const fields = trigger.fields?.length
+    ? trigger.fields.map((field) => taskChangeFieldLabels[field])
+    : ['selected fields'];
+  const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
+
+  if (trigger.conditions?.length) {
+    const conditionSegments = trigger.conditions.map((condition) =>
+      describeFieldConditionSegments(condition, statuses)
+    );
+
+    return [
+      ...textSegments(`When a task's ${fieldText} changes, where `),
+      ...joinSegments(conditionSegments, ' and '),
+    ];
+  }
+
+  const hasStatus = trigger.fields?.includes(TaskChangeField.status);
+
+  if (hasStatus && isNotNullOrUndefined(trigger.statusId)) {
+    return statusSentence(
+      `When a task's ${fieldText} changes, with status becoming `,
+      trigger.statusId
+    );
+  }
+
+  return textSegments(describeAutomationTrigger(trigger, statuses));
+}
+
+export function describeAutomationActionSegments(
+  action: AutomationAction,
+  statuses: Status[] = []
+): AutomationCopySegment[] {
+  const hasStatusUpdate =
+    action.type === AutomationActionType.updateTask &&
+    isNotNullOrUndefined(action.statusId);
+
+  if (!hasStatusUpdate) {
+    return textSegments(describeAutomationAction(action, statuses));
+  }
+
+  const updates: AutomationCopySegment[][] = [
+    statusSentence('status to ', action.statusId),
+  ];
+
+  if (isNotNullOrUndefined(action.priority)) {
+    updates.push(
+      textSegments(`priority to ${taskPriorityLabels[action.priority]}`)
+    );
+  }
+
+  return [
+    ...textSegments("Update the task's "),
+    ...joinSegments(updates, ' and '),
+  ];
+}
+
+export function describeAutomationActionsSegments(
+  actions: AutomationAction[],
+  statuses: Status[] = []
+): AutomationCopySegment[] {
+  if (!actions.length) return textSegments('No actions configured');
+
+  return joinSegments(
+    actions.map((action) => describeAutomationActionSegments(action, statuses)),
+    ', then '
+  );
+}
+
+export function describeAutomationRuleSegments(
+  trigger: AutomationTrigger,
+  actions: AutomationAction[],
+  statuses: Status[] = []
+): AutomationCopySegment[] {
+  return [
+    ...describeAutomationTriggerSegments(trigger, statuses),
+    ...textSegments(', '),
+    ...describeAutomationActionsSegments(actions, statuses),
+    ...textSegments('.'),
+  ];
+}
+
+function describeFieldConditionSegments(
+  condition: AutomationFieldCondition,
+  statuses: Status[]
+): AutomationCopySegment[] {
+  const hasStatusValue =
+    condition.field === TaskChangeField.status &&
+    condition.value &&
+    Number.isInteger(Number(condition.value));
+  const hasSupportedOperator =
+    condition.operator === AutomationConditionOperator.equals ||
+    condition.operator === AutomationConditionOperator.notEquals;
+
+  if (!hasStatusValue || !hasSupportedOperator) {
+    return textSegments(describeFieldCondition(condition, statuses));
+  }
+
+  const operator =
+    condition.operator === AutomationConditionOperator.equals
+      ? 'equals'
+      : 'does not equal';
+
+  return statusSentence(`status ${operator} `, Number(condition.value));
+}
+
+function statusSentence(
+  prefix: string,
+  statusId: number | null | undefined
+): AutomationCopySegment[] {
+  if (!isNotNullOrUndefined(statusId)) {
+    return textSegments(`${prefix}a selected status`);
+  }
+
+  return [...textSegments(prefix), { type: 'status', statusId }];
+}
+
+function textSegments(text: string): AutomationCopySegment[] {
+  return [{ type: 'text', text }];
+}
+
+function joinSegments(
+  groups: AutomationCopySegment[][],
+  separator: string
+): AutomationCopySegment[] {
+  return groups.flatMap((group, index) =>
+    index === 0 ? group : [...textSegments(separator), ...group]
+  );
+}
+
 export function describeAutomationTrigger(
   trigger: AutomationTrigger,
   statuses: Status[] = []

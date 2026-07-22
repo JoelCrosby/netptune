@@ -12,6 +12,7 @@ import {
   taskPriorityColors,
   taskPriorityLabels,
 } from '@core/enums/task-priority';
+import { colorSwatchClass } from '@core/util/colors/colors';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -76,8 +77,10 @@ import {
         <ng-template appDatatableCell="statusName" let-task>
           <span class="inline-flex min-w-0 items-center gap-2">
             <span
-              class="h-2 w-2 shrink-0 rounded-full"
-              [style.background-color]="task.statusColor"></span>
+              [class]="
+                'h-2 w-2 shrink-0 rounded-full ' +
+                colorSwatchClass(task.statusColor)
+              "></span>
             <span class="truncate">{{ task.statusName }}</span>
           </span>
         </ng-template>
@@ -106,6 +109,7 @@ import {
   `,
 })
 export class RoadmapUnscheduledComponent {
+  readonly colorSwatchClass = colorSwatchClass;
   readonly projectId = input<number>();
   readonly sprintId = input<number>();
   readonly search = input<string>();

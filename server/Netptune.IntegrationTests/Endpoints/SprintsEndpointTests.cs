@@ -144,7 +144,7 @@ public sealed class SprintsEndpointTests
             Description = "Project for sprint integration tests",
             MetaInfo = new()
             {
-                Color = "#3b82f6",
+                Color = "blue",
             },
         };
 

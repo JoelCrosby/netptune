@@ -6,7 +6,7 @@ namespace Netptune.TestData.Seeders;
 
 internal static class BoardSeeder
 {
-    private const string DefaultColor = "#3b82f6";
+    private const string DefaultColor = "blue";
 
     internal static List<Board> Generate(List<AppUser> users, List<Project> projects) =>
         ProjectSeeder.Names.Select((name, i) => new Board

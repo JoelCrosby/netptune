@@ -1,5 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { colorBackgroundClass } from '@core/util/colors/colors';
 import { LucideChartColumnBig } from '@lucide/angular';
 import { CardHeaderImageComponent } from '@static/components/card/card-header-image.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
@@ -19,7 +20,7 @@ import { FromNowPipe } from '@static/pipes/from-now.pipe';
     class="bg-card-header border-border flex min-h-38 min-w-72 flex-col overflow-hidden rounded border">
     <div class="flex p-6">
       <app-card-header-image
-        [style.background-color]="board().metaInfo.color || 'inherit'">
+        [class]="colorBackgroundClass(board().metaInfo.color)">
         <svg lucideChartColumnBig></svg>
       </app-card-header-image>
       <app-card-header>
@@ -44,6 +45,7 @@ import { FromNowPipe } from '@static/pipes/from-now.pipe';
   </div>`,
 })
 export class BoardsGridCardComponent {
+  readonly colorBackgroundClass = colorBackgroundClass;
   board = input.required<BoardViewModel>();
   fromNow = inject(FromNowPipe);
 

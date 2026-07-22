@@ -7,6 +7,7 @@ import {
   statusCategoryLabels,
   statusCategoryOptions,
 } from '@core/models/status';
+import { fallbackColor } from '@core/util/colors/colors';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
@@ -74,7 +75,7 @@ export class EditStatusDialogComponent {
 
   readonly statusFormModel = signal({
     name: this.data.name,
-    color: this.data.color ?? '#64748b',
+    color: this.data.color ?? fallbackColor,
     category: this.data.category,
   });
 

@@ -1,3 +1,4 @@
+using Netptune.Core.Colors;
 using Netptune.Core.Enums;
 
 namespace Netptune.Core.Onboarding.Templates;
@@ -9,10 +10,10 @@ public static class WorkspaceSetupTemplateCatalog
 
     private static readonly IReadOnlyList<SetupTemplateRelationDefinition> StandardRelations =
     [
-        Relation("Parent of", "Child of", "parent-of", "#8b5cf6", RelationCategory.Hierarchy),
-        Relation("Blocks", "Is Blocked By", "blocks", "#b81414", RelationCategory.Dependency),
-        Relation("Relates To", "Relates To", "relates-to", "#6b7280", RelationCategory.Related),
-        Relation("Duplicates", "Is Duplicated By", "duplicates", "#f59e0b", RelationCategory.Duplicate),
+        Relation("Parent of", "Child of", "parent-of", NamedColors.Violet, RelationCategory.Hierarchy),
+        Relation("Blocks", "Is Blocked By", "blocks", NamedColors.Red, RelationCategory.Dependency),
+        Relation("Relates To", "Relates To", "relates-to", NamedColors.Slate, RelationCategory.Related),
+        Relation("Duplicates", "Is Duplicated By", "duplicates", NamedColors.Amber, RelationCategory.Duplicate),
     ];
 
     public static readonly IReadOnlyList<WorkspaceSetupTemplateDefinition> All =
@@ -24,13 +25,13 @@ public static class WorkspaceSetupTemplateCatalog
             Description = "A flexible workflow for small teams and general project work.",
             Statuses =
             [
-                Status("New", NewStatusKey, "#6b7280", StatusCategory.Todo),
-                Status("In Progress", "in-progress", "#2563eb", StatusCategory.Active),
-                Status("On Hold", "on-hold", "#f59e0b", StatusCategory.Backlog),
-                Status("Un-assigned", "un-assigned", "#8b5cf6", StatusCategory.Backlog),
-                Status("Blocked", "blocked", "#b81414", StatusCategory.Inactive),
-                Status("Inactive", "inactive", "#64748b", StatusCategory.Inactive),
-                Status("Complete", "complete", "#16a34a", StatusCategory.Done),
+                Status("New", NewStatusKey, NamedColors.Slate, StatusCategory.Todo),
+                Status("In Progress", "in-progress", NamedColors.Blue, StatusCategory.Active),
+                Status("On Hold", "on-hold", NamedColors.Amber, StatusCategory.Backlog),
+                Status("Un-assigned", "un-assigned", NamedColors.Violet, StatusCategory.Backlog),
+                Status("Blocked", "blocked", NamedColors.Red, StatusCategory.Inactive),
+                Status("Inactive", "inactive", NamedColors.Slate, StatusCategory.Inactive),
+                Status("Complete", "complete", NamedColors.Green, StatusCategory.Done),
             ],
             Tags = ["Feature", "Bug", "Improvement", "Documentation"],
             RelationTypes = StandardRelations,
@@ -49,13 +50,13 @@ public static class WorkspaceSetupTemplateCatalog
             IsRecommended = true,
             Statuses =
             [
-                Status("New", NewStatusKey, "#6b7280", StatusCategory.Todo),
-                Status("Backlog", "backlog", "#64748b", StatusCategory.Backlog),
-                Status("Ready", "ready", "#8b5cf6", StatusCategory.Todo),
-                Status("In Progress", "in-progress", "#2563eb", StatusCategory.Active),
-                Status("In Review", "in-review", "#0d9488", StatusCategory.Active),
-                Status("Blocked", "blocked", "#b81414", StatusCategory.Inactive),
-                Status("Done", "done", "#16a34a", StatusCategory.Done),
+                Status("New", NewStatusKey, NamedColors.Slate, StatusCategory.Todo),
+                Status("Backlog", "backlog", NamedColors.Slate, StatusCategory.Backlog),
+                Status("Ready", "ready", NamedColors.Violet, StatusCategory.Todo),
+                Status("In Progress", "in-progress", NamedColors.Blue, StatusCategory.Active),
+                Status("In Review", "in-review", NamedColors.Teal, StatusCategory.Active),
+                Status("Blocked", "blocked", NamedColors.Red, StatusCategory.Inactive),
+                Status("Done", "done", NamedColors.Green, StatusCategory.Done),
             ],
             Tags = ["Feature", "Bug", "Tech Debt", "Documentation", "Security"],
             RelationTypes = StandardRelations,
@@ -75,13 +76,13 @@ public static class WorkspaceSetupTemplateCatalog
             Description = "An editorial workflow from ideas and drafting through review and publication.",
             Statuses =
             [
-                Status("New", NewStatusKey, "#6b7280", StatusCategory.Todo),
-                Status("Ideas", "ideas", "#8b5cf6", StatusCategory.Backlog),
-                Status("Planned", "planned", "#64748b", StatusCategory.Todo),
-                Status("Drafting", "drafting", "#2563eb", StatusCategory.Active),
-                Status("In Review", "in-review", "#0d9488", StatusCategory.Active),
-                Status("Published", "published", "#16a34a", StatusCategory.Done),
-                Status("Archived", "archived", "#6b7280", StatusCategory.Inactive),
+                Status("New", NewStatusKey, NamedColors.Slate, StatusCategory.Todo),
+                Status("Ideas", "ideas", NamedColors.Violet, StatusCategory.Backlog),
+                Status("Planned", "planned", NamedColors.Slate, StatusCategory.Todo),
+                Status("Drafting", "drafting", NamedColors.Blue, StatusCategory.Active),
+                Status("In Review", "in-review", NamedColors.Teal, StatusCategory.Active),
+                Status("Published", "published", NamedColors.Green, StatusCategory.Done),
+                Status("Archived", "archived", NamedColors.Slate, StatusCategory.Inactive),
             ],
             Tags = ["Blog", "Documentation", "Social", "Campaign"],
             RelationTypes = StandardRelations,
@@ -101,13 +102,13 @@ public static class WorkspaceSetupTemplateCatalog
             Description = "Only the essentials: New, In Progress, and Done.",
             Statuses =
             [
-                Status("New", NewStatusKey, "#6b7280", StatusCategory.Todo),
-                Status("In Progress", "in-progress", "#2563eb", StatusCategory.Active),
-                Status("Done", "done", "#16a34a", StatusCategory.Done),
+                Status("New", NewStatusKey, NamedColors.Slate, StatusCategory.Todo),
+                Status("In Progress", "in-progress", NamedColors.Blue, StatusCategory.Active),
+                Status("Done", "done", NamedColors.Green, StatusCategory.Done),
             ],
             RelationTypes =
             [
-                Relation("Relates To", "Relates To", "relates-to", "#6b7280", RelationCategory.Related),
+                Relation("Relates To", "Relates To", "relates-to", NamedColors.Slate, RelationCategory.Related),
             ],
             BoardGroups =
             [

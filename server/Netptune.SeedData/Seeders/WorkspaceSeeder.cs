@@ -10,10 +10,10 @@ public sealed class WorkspaceSeeder : ISeeder
 
     private static readonly (string Name, string Slug, string Color, string Description)[] Data =
     [
-        ("Acme Corp",        "acme-corp",        "#3b82f6", "Engineering hub for Acme Corp products and services"),
-        ("Startup Hub",      "startup-hub",      "#10b981", "Product development workspace for the Startup Hub team"),
-        ("Open Source",      "open-source",      "#f59e0b", "Community-driven open source projects and tooling"),
-        ("DevOps Platform",  "devops-platform",  "#8b5cf6", "Infrastructure, deployment pipelines, and observability"),
+        ("Acme Corp",        "acme-corp",        "blue", "Engineering hub for Acme Corp products and services"),
+        ("Startup Hub",      "startup-hub",      "emerald", "Product development workspace for the Startup Hub team"),
+        ("Open Source",      "open-source",      "amber", "Community-driven open source projects and tooling"),
+        ("DevOps Platform",  "devops-platform",  "violet", "Infrastructure, deployment pipelines, and observability"),
     ];
 
     public async Task SeedAsync(DataContext dbContext, SeedContext context, CancellationToken ct)

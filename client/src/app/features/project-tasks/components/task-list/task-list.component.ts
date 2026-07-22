@@ -15,7 +15,6 @@ import { DatatableEmptyDirective } from '@app/static/components/datatable/datata
 import { DatatableComponent } from '@app/static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@app/static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
-import { StatusCategory } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import * as actions from '@core/store/tasks/tasks.actions';
@@ -27,7 +26,6 @@ import {
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import {
-  LucideCheck,
   LucideListChecks,
   LucideMessageSquareText,
   LucidePlus,
@@ -35,9 +33,9 @@ import {
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
-import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
+import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
 import { injectParams } from '@app/core/router/signals';
 import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
@@ -49,12 +47,11 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
   selector: 'app-task-list',
   imports: [
     FlatButtonComponent,
-    LucideCheck,
     LucideListChecks,
     LucidePlus,
     LucideMessageSquareText,
     AvatarStackComponent,
-    BadgeComponent,
+    TaskStatusPillComponent,
     SprintBadgeComponent,
     TaskScopeIdComponent,
     DatatableCellTemplateDirective,
@@ -112,14 +109,10 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
       </ng-template>
 
       <ng-template appDatatableCell="status" let-task>
-        <app-badge
-          shape="rounded"
-          [class]="'gap-1.5 ' + statusBadgeClass(task.statusCategory)">
-          @if (task.statusCategory === statusCategory.done) {
-            <svg lucideCheck class="h-3.5 w-3.5"></svg>
-          }
-          {{ task.statusName }}
-        </app-badge>
+        <app-task-status-pill
+          [name]="task.statusName"
+          [color]="task.statusColor"
+          [category]="task.statusCategory" />
       </ng-template>
 
       <ng-template appDatatableCell="assignees" let-task>
@@ -180,8 +173,6 @@ export class TaskListComponent {
 
   taskFilter = this.store.selectSignal(selectProjectTasksFilter);
   filtersActive = this.store.selectSignal(selectTaskFiltersActive);
-
-  statusCategory = StatusCategory;
 
   canCreate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.create)
@@ -329,20 +320,5 @@ export class TaskListComponent {
         task,
       })
     );
-  }
-
-  statusBadgeClass(status: StatusCategory): string {
-    switch (status) {
-      case StatusCategory.todo:
-        return 'bg-blue-100 text-blue-700';
-      case StatusCategory.active:
-        return 'bg-yellow-100 text-yellow-700';
-      case StatusCategory.done:
-        return 'bg-green-100 text-green-700';
-      case StatusCategory.backlog:
-        return 'bg-purple-100 text-purple-700';
-      default:
-        return 'bg-neutral-100 text-neutral-600';
-    }
   }
 }

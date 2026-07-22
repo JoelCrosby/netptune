@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
+using Netptune.Core.Colors;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.RelationTypes;
@@ -9,6 +10,8 @@ namespace Netptune.Core.Entities;
 
 public record RelationType : WorkspaceEntity<int>
 {
+    private string? _color;
+
     public string Name { get; set; } = null!;
 
     public string InverseName { get; set; } = null!;
@@ -17,7 +20,11 @@ public record RelationType : WorkspaceEntity<int>
 
     public string? Description { get; set; }
 
-    public string? Color { get; set; }
+    public string? Color
+    {
+        get => _color;
+        set => _color = NamedColors.Normalize(value);
+    }
 
     public double SortOrder { get; set; }
 

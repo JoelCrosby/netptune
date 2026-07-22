@@ -6,6 +6,7 @@ import {
   isSymmetricCategory,
   relationCategoryLabels,
 } from '@core/models/relation-type';
+import { fallbackColor } from '@core/util/colors/colors';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
@@ -77,7 +78,7 @@ export class EditRelationTypeDialogComponent {
   readonly relationTypeFormModel = signal({
     name: this.data.name,
     inverseName: this.data.inverseName,
-    color: this.data.color ?? '#64748b',
+    color: this.data.color ?? fallbackColor,
   });
 
   readonly relationTypeForm = form(this.relationTypeFormModel, (schema) => {
