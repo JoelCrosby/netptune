@@ -1,5 +1,14 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import {
+  apply,
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+  validate,
+} from '@angular/forms/signals';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { updateSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
@@ -10,6 +19,7 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-edit-sprint-dialog',
@@ -20,38 +30,34 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
     StrokedButtonComponent,
     FormInputComponent,
     FormTextAreaComponent,
+    FormField,
   ],
   template: `
     <app-dialog-title>Edit Sprint</app-dialog-title>
 
-    <form class="flex flex-col gap-3" (ngSubmit)="onSubmit()">
+    <form class="flex flex-col gap-3" (submit)="onSubmit($event)">
       <app-form-input
         label="Name"
-        name="name"
-        [required]="true"
-        [(value)]="name" />
+        maxLength="256"
+        [formField]="sprintForm.name" />
 
-      <app-form-textarea label="Goal" name="goal" rows="3" [(value)]="goal" />
+      <app-form-textarea
+        label="Goal"
+        rows="3"
+        maxLength="32768"
+        [formField]="sprintForm.goal" />
 
       <div class="grid grid-cols-2 gap-3">
         <app-form-input
           label="Start"
-          name="startDate"
           type="date"
-          [required]="true"
-          [(value)]="startDate" />
+          [formField]="sprintForm.startDate" />
 
         <app-form-input
           label="End"
-          name="endDate"
           type="date"
-          [required]="true"
-          [(value)]="endDate" />
+          [formField]="sprintForm.endDate" />
       </div>
-
-      @if (dateError) {
-        <p class="text-sm text-red-600">{{ dateError }}</p>
-      }
     </form>
 
     <div app-dialog-actions align="end">
@@ -62,8 +68,8 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
         app-flat-button
         color="primary"
         type="button"
-        [disabled]="updateLoading() || !name.trim()"
-        (click)="onSubmit()">
+        [disabled]="updateLoading()"
+        (click)="onSubmit($event)">
         Save
       </button>
     </div>
@@ -76,35 +82,53 @@ export class EditSprintDialogComponent {
 
   readonly updateLoading = this.store.selectSignal(selectSprintUpdateLoading);
 
-  name = this.sprint.name;
-  goal = this.sprint.goal ?? '';
-  startDate = toDateInputValue(new Date(this.sprint.startDate));
-  endDate = toDateInputValue(new Date(this.sprint.endDate));
-  dateError?: string;
+  readonly sprintFormModel = signal({
+    name: this.sprint.name,
+    goal: this.sprint.goal ?? '',
+    startDate: toDateInputValue(new Date(this.sprint.startDate)),
+    endDate: toDateInputValue(new Date(this.sprint.endDate)),
+  });
 
-  onSubmit() {
-    if (!this.sprint.id || !this.name.trim()) return;
+  readonly sprintForm = form(this.sprintFormModel, (schema) => {
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 256 }));
+    maxLength(schema.goal, 32768);
+    required(schema.startDate, { message: 'Start date is required.' });
+    required(schema.endDate, { message: 'End date is required.' });
+    validate(schema.endDate, (context) => {
+      const startDate = context.valueOf(schema.startDate);
+      const endDate = context.value();
 
-    if (this.endDate < this.startDate) {
-      this.dateError = 'End date must be after start date.';
-      return;
-    }
+      if (!startDate || !endDate || endDate >= startDate) return undefined;
 
-    this.dateError = undefined;
+      return {
+        kind: 'dateOrder',
+        message: 'End date must be on or after the start date.',
+      };
+    });
+  });
 
-    this.store.dispatch(
-      updateSprint.init({
-        request: {
-          id: this.sprint.id,
-          name: this.name.trim(),
-          goal: this.goal.trim() || null,
-          startDate: this.startDate,
-          endDate: this.endDate,
-        },
-      })
-    );
+  onSubmit(event: Event) {
+    event.preventDefault();
 
-    this.dialogRef.close();
+    if (!this.sprint.id) return;
+
+    submit(this.sprintForm, async () => {
+      const value = this.sprintFormModel();
+
+      this.store.dispatch(
+        updateSprint.init({
+          request: {
+            id: this.sprint.id,
+            name: value.name.trim(),
+            goal: value.goal.trim() || null,
+            startDate: value.startDate,
+            endDate: value.endDate,
+          },
+        })
+      );
+
+      this.dialogRef.close();
+    });
   }
 }
 

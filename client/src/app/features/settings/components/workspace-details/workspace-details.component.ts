@@ -7,10 +7,13 @@ import {
   signal,
 } from '@angular/core';
 import {
+  apply,
   debounce,
   FormField,
   form,
+  maxLength,
   required,
+  submit,
   validateAsync,
 } from '@angular/forms/signals';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
@@ -25,6 +28,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { firstValueFrom, map } from 'rxjs';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-workspace-details',
@@ -38,7 +42,7 @@ import { firstValueFrom, map } from 'rxjs';
   ],
   template: `<app-section-header heading="Workspace Details" />
 
-    <form class="grid max-w-2xl gap-4">
+    <form class="grid max-w-2xl gap-4" (submit)="save($event)">
       <app-form-input
         [formField]="detailsForm.name"
         label="Name"
@@ -50,10 +54,7 @@ import { firstValueFrom, map } from 'rxjs';
         maxLength="1024"
         [icon]="identifierIcon()"
         [loading]="detailsForm.identifier().pending()"
-        [hint]="
-          detailsForm.identifier().errors()[0]?.message ??
-          'Changing the identifier changes the workspace URL and will break existing shared links.'
-        " />
+        hint="Changing the identifier changes the workspace URL and will break existing shared links." />
 
       <app-form-textarea
         [formField]="detailsForm.description"
@@ -63,9 +64,7 @@ import { firstValueFrom, map } from 'rxjs';
       <app-color-select [formField]="detailsForm.color" label="Color" />
 
       <div>
-        <button app-flat-button type="button" (click)="save()">
-          Save Changes
-        </button>
+        <button app-flat-button type="submit">Save Changes</button>
       </div>
     </form>`,
 })
@@ -83,8 +82,16 @@ export class WorkspaceDetailsComponent {
   });
 
   detailsForm = form(this.detailsFormModel, (schema) => {
-    required(schema.name);
-    required(schema.identifier);
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 1024 }));
+    apply(
+      schema.identifier,
+      requiredTextSchema({
+        label: 'Identifier',
+        minLength: 4,
+        maxLength: 1024,
+      })
+    );
+    maxLength(schema.description, 4096);
     required(schema.color);
     debounce(schema.identifier, 600);
     validateAsync(schema.identifier, {
@@ -108,7 +115,7 @@ export class WorkspaceDetailsComponent {
         }),
       onSuccess: (isUnique) => {
         if (isUnique) {
-          return null;
+          return undefined;
         }
 
         return {
@@ -147,27 +154,22 @@ export class WorkspaceDetailsComponent {
     });
   }
 
-  save() {
-    if (this.detailsForm().pending()) {
-      return;
-    }
+  save(event: Event) {
+    event.preventDefault();
 
-    if (this.detailsForm().invalid()) {
-      this.detailsForm().markAsTouched();
-      return;
-    }
+    submit(this.detailsForm, async () => {
+      const { name, identifier, description, color } = this.detailsForm;
 
-    const { name, identifier, description, color } = this.detailsForm;
+      const request: UpdateWorkspaceRequest = {
+        name: name().value().trim(),
+        slug: identifier().value().trim(),
+        description: description().value().trim(),
+        metaInfo: {
+          color: color().value(),
+        },
+      };
 
-    const request: UpdateWorkspaceRequest = {
-      name: name().value(),
-      slug: identifier().value(),
-      description: description().value(),
-      metaInfo: {
-        color: color().value(),
-      },
-    };
-
-    this.store.dispatch(Actions.editWorkspace.init({ request }));
+      this.store.dispatch(Actions.editWorkspace.init({ request }));
+    });
   }
 }

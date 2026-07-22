@@ -4,7 +4,9 @@ import {
   email,
   FormField,
   form,
+  maxLength,
   required,
+  submit,
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { requestPasswordReset } from '@app/core/store/auth/auth.actions';
@@ -37,7 +39,7 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
       <app-form-input
         [formField]="requestForm.email"
         label="Email"
-        maxLength="1024"
+        maxLength="128"
         id="email"
         type="email"
         autocomplete="username">
@@ -70,18 +72,16 @@ export class RequestPasswordResetComponent {
   });
 
   requestForm = form(this.requestFormModel, (schema) => {
-    required(schema.email);
-    email(schema.email);
+    required(schema.email, { message: 'Email is required.' });
+    email(schema.email, { message: 'Enter a valid email address.' });
+    maxLength(schema.email, 128);
     disabled(schema, () => this.loading());
   });
 
   requestPasswordReset() {
-    if (this.requestForm().invalid()) {
-      this.requestForm().markAsDirty();
-      return;
-    }
-
-    const email = this.requestForm.email().value();
-    this.store.dispatch(requestPasswordReset.init({ email }));
+    submit(this.requestForm, async () => {
+      const email = this.requestForm.email().value().trim();
+      this.store.dispatch(requestPasswordReset.init({ email }));
+    });
   }
 }

@@ -1,5 +1,13 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { disabled, FormField, form, required } from '@angular/forms/signals';
+import {
+  disabled,
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+  validate,
+} from '@angular/forms/signals';
 import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { Store } from '@ngrx/store';
@@ -13,8 +21,43 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 
 @Component({
   selector: 'app-change-password',
-  templateUrl: './change-password.component.html',
   imports: [FormField, FormInputComponent, StrokedButtonComponent],
+  template: `<form
+    class="max-w-120 px-0"
+    (submit)="changePasswordClicked($event)">
+    <app-form-input
+      type="password"
+      [formField]="passwordForm.currentPassword"
+      autocomplete="current-password"
+      label="Current Password">
+    </app-form-input>
+
+    <app-form-input
+      type="password"
+      [formField]="passwordForm.newPassword"
+      autocomplete="new-password"
+      label="New Password">
+    </app-form-input>
+
+    <app-form-input
+      type="password"
+      [formField]="passwordForm.confirmPassword"
+      autocomplete="new-password"
+      label="Confirm Password">
+    </app-form-input>
+
+    @if (error()) {
+      <div class="text-warn my-1 mb-3 text-sm font-medium">{{ error() }}</div>
+    }
+
+    <button
+      class="mt-3 ml-auto block"
+      app-stroked-button
+      type="submit"
+      [disabled]="loading()">
+      Change Password
+    </button>
+  </form> `,
 })
 export class ChangePasswordComponent {
   private store = inject(Store);
@@ -31,6 +74,16 @@ export class ChangePasswordComponent {
     required(schema.currentPassword);
     required(schema.newPassword);
     required(schema.confirmPassword);
+    maxLength(schema.currentPassword, 1024);
+    maxLength(schema.newPassword, 1024);
+    maxLength(schema.confirmPassword, 1024);
+    validate(schema.confirmPassword, (context) => {
+      if (context.value() === context.valueOf(schema.newPassword)) {
+        return undefined;
+      }
+
+      return { kind: 'passwordMismatch', message: 'Passwords do not match.' };
+    });
     disabled(schema, () => this.loading());
   });
 
@@ -45,51 +98,24 @@ export class ChangePasswordComponent {
       }
     });
 
-    effect(() => {
-      if (
-        this.passwordForm().touched() &&
-        this.passwordForm.confirmPassword().value()
-      ) {
-        this.passwordsMatch();
-      }
-    });
-
     effect(() => this.error.set(this.changePasswordError() ?? ''));
   }
 
-  passwordsMatch() {
-    const pass = this.passwordForm.newPassword().value();
-    const confirmPass = this.passwordForm.confirmPassword().value();
-
-    if (pass === confirmPass) {
-      this.error.set('');
-      return false;
-    } else {
-      this.error.set('Passwords do not match.');
-      return true;
-    }
-  }
-
-  changePasswordClicked() {
-    if (this.passwordsMatch()) {
-      return;
-    }
-
-    if (this.passwordForm().invalid()) {
-      return;
-    }
-
+  changePasswordClicked(event: Event) {
+    event.preventDefault();
     const userIdSignal = this.store.selectSignal(selectCurrentUserId);
     const userId = userIdSignal();
 
     if (!userId) return;
 
-    const request: ChangePasswordRequest = {
-      userId,
-      currentPassword: this.passwordForm.currentPassword().value(),
-      newPassword: this.passwordForm.newPassword().value(),
-    };
+    submit(this.passwordForm, async () => {
+      const request: ChangePasswordRequest = {
+        userId,
+        currentPassword: this.passwordForm.currentPassword().value(),
+        newPassword: this.passwordForm.newPassword().value(),
+      };
 
-    this.store.dispatch(changePassword.init({ request }));
+      this.store.dispatch(changePassword.init({ request }));
+    });
   }
 }

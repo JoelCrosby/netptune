@@ -6,11 +6,13 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {
+  apply,
   disabled,
   form,
   FormField,
   maxLength,
   required,
+  submit,
 } from '@angular/forms/signals';
 import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
@@ -26,6 +28,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-project-detail',
@@ -113,11 +116,12 @@ export class ProjectDetailComponent implements OnDestroy {
 
   projectForm = form(this.projectFormModel, (schema) => {
     required(schema.id);
-    required(schema.key);
-    required(schema.name);
+    apply(
+      schema.key,
+      requiredTextSchema({ label: 'Project ID', maxLength: 6 })
+    );
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
     required(schema.defaultStatusId);
-    maxLength(schema.key, 6);
-    maxLength(schema.name, 128);
     maxLength(schema.description, 4096);
     maxLength(schema.repositoryUrl, 1024);
     disabled(schema, { when: () => this.loading() });
@@ -130,27 +134,23 @@ export class ProjectDetailComponent implements OnDestroy {
   updateClicked(event: Event) {
     event.preventDefault();
 
-    if (this.projectForm().invalid()) {
-      return;
-    }
+    submit(this.projectForm, async () => {
+      const { name, description, repositoryUrl, key, defaultStatusId } =
+        this.projectForm;
+      const id = this.projectForm.id().value();
 
-    this.projectForm().reset();
+      if (id === null || id === undefined) return;
 
-    const { name, description, repositoryUrl, key, defaultStatusId } =
-      this.projectForm;
-    const id = this.projectForm.id().value();
+      const project: UpdateProjectRequest = {
+        id,
+        name: name().value().trim(),
+        description: description().value().trim(),
+        repositoryUrl: repositoryUrl().value().trim(),
+        key: key().value().trim(),
+        defaultStatusId: defaultStatusId().value() || null,
+      };
 
-    if (id === null || id === undefined) return;
-
-    const project: UpdateProjectRequest = {
-      id,
-      name: name().value(),
-      description: description().value(),
-      repositoryUrl: repositoryUrl().value(),
-      key: key().value(),
-      defaultStatusId: defaultStatusId().value() || null,
-    };
-
-    this.store.dispatch(updateProject.init({ project }));
+      this.store.dispatch(updateProject.init({ project }));
+    });
   }
 }

@@ -4,7 +4,9 @@ import {
   email,
   form,
   FormField,
+  maxLength,
   required,
+  submit,
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { ButtonLinkComponent } from '@app/static/components/button/button-link.component';
@@ -60,7 +62,7 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
       <app-form-input
         [formField]="loginForm.email"
         label="Email"
-        maxLength="1024"
+        maxLength="128"
         id="email"
         type="email"
         autocomplete="username">
@@ -127,32 +129,31 @@ export class LoginComponent {
   });
 
   loginForm = form(this.loginFormModel, (schema) => {
-    required(schema.email);
-    email(schema.email);
-    required(schema.password);
+    required(schema.email, { message: 'Email is required.' });
+    email(schema.email, { message: 'Enter a valid email address.' });
+    maxLength(schema.email, 128);
+    required(schema.password, { message: 'Password is required.' });
+    maxLength(schema.password, 1024);
     required(schema.turnstile);
     disabled(schema, () => this.loading());
   });
 
   login() {
-    if (this.loginForm().invalid()) {
-      this.loginForm().markAsDirty();
-      return;
-    }
+    submit(this.loginForm, async () => {
+      const email = this.loginForm.email().value().trim();
+      const password = this.loginForm.password().value();
+      const turnstile = this.loginForm.turnstile().value();
 
-    const email = this.loginForm.email().value();
-    const password = this.loginForm.password().value();
-    const turnstile = this.loginForm.turnstile().value();
-
-    this.store.dispatch(
-      login.init({
-        request: {
-          email,
-          password,
-          turnstile,
-        },
-      })
-    );
+      this.store.dispatch(
+        login.init({
+          request: {
+            email,
+            password,
+            turnstile,
+          },
+        })
+      );
+    });
   }
 
   onTurnstileResult(token: string) {

@@ -1,6 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import {
+  apply,
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+} from '@angular/forms/signals';
 import {
   RelationType,
   isSymmetricCategory,
@@ -14,6 +21,7 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface EditRelationTypeDialogResult {
   name: string;
@@ -82,26 +90,23 @@ export class EditRelationTypeDialogComponent {
   });
 
   readonly relationTypeForm = form(this.relationTypeFormModel, (schema) => {
-    required(schema.name);
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
+    maxLength(schema.inverseName, 128);
+    maxLength(schema.color, 32);
     required(schema.color);
   });
 
   submit(event: Event) {
     event.preventDefault();
 
-    if (this.relationTypeForm().invalid()) {
-      this.relationTypeForm().markAsTouched();
-      return;
-    }
+    submit(this.relationTypeForm, async () => {
+      const name = this.relationTypeForm.name().value().trim();
+      const color = this.relationTypeForm.color().value();
+      const inverseName = this.isSymmetric
+        ? name
+        : this.relationTypeForm.inverseName().value().trim() || name;
 
-    const name = this.relationTypeForm.name().value().trim();
-    const color = this.relationTypeForm.color().value();
-    if (!name) return;
-
-    const inverseName = this.isSymmetric
-      ? name
-      : this.relationTypeForm.inverseName().value().trim() || name;
-
-    this.dialogRef.close({ name, inverseName, color });
+      this.dialogRef.close({ name, inverseName, color });
+    });
   }
 }

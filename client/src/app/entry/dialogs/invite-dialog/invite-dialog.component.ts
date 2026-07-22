@@ -3,7 +3,14 @@ import { Component, inject, signal } from '@angular/core';
 import { DialogContentComponent } from '@static/components/dialog-content/dialog-content.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 
-import { email, FormField, form, required } from '@angular/forms/signals';
+import {
+  email,
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+} from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -48,8 +55,14 @@ import { LucideUserRoundPlus } from '@lucide/angular';
     </app-dialog-content>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button (click)="close()">Close</button>
-      <button app-flat-button (click)="getResult()">Invite Users</button>
+      <button app-stroked-button type="button" (click)="close()">Close</button>
+      <button
+        app-flat-button
+        type="button"
+        [disabled]="users().length === 0"
+        (click)="getResult()">
+        Invite Users
+      </button>
     </div> `,
 })
 export class InviteDialogComponent {
@@ -65,8 +78,9 @@ export class InviteDialogComponent {
   });
 
   inviteForm = form(this.inviteFormModel, (schema) => {
-    required(schema.email);
-    email(schema.email);
+    required(schema.email, { message: 'Email is required.' });
+    email(schema.email, { message: 'Enter a valid email address.' });
+    maxLength(schema.email, 128);
   });
 
   close() {
@@ -74,35 +88,31 @@ export class InviteDialogComponent {
   }
 
   getResult() {
+    if (this.users().length === 0) return;
+
     this.dialogRef.close(this.users());
   }
 
   add(event: Event) {
     event.preventDefault();
 
-    if (this.inviteForm().invalid()) {
-      this.inviteForm().markAsDirty();
-      return;
-    }
+    submit(this.inviteForm, async () => {
+      const user = this.inviteForm.email().value().trim().toLowerCase();
 
-    const user = this.inviteForm.email().value();
+      if (!this.users().includes(user)) {
+        this.users.update((users) => [...users, user]);
+      }
 
-    if (this.users().includes(user)) {
       this.inviteForm.email().value.set('');
       this.inviteForm.email().reset();
-      return;
-    }
-
-    this.users.update((u) => [...u, user]);
-    this.inviteForm.email().value.set('');
-    this.inviteForm.email().reset();
+    });
   }
 
   remove(user: string): void {
     const index = this.users().indexOf(user);
 
     if (index >= 0) {
-      this.users.update((u) => u.splice(index, 1));
+      this.users.update((users) => users.filter((item) => item !== user));
     }
   }
 }

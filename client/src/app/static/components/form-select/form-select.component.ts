@@ -12,7 +12,11 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { FormValueControl } from '@angular/forms/signals';
+import {
+  FormValueControl,
+  ValidationError,
+  WithOptionalFieldTree,
+} from '@angular/forms/signals';
 import {
   LucideChevronDown,
   LucideDynamicIcon,
@@ -29,6 +33,7 @@ import { FormSelectDropdownComponent } from './form-select-dropdown.component';
 import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectDropdownStyleDirective } from './form-select.directives';
 import { FormSelectService } from './form-select.service';
+import { FormErrorComponent } from '../form-error/form-error.component';
 
 @Component({
   selector: 'app-form-select',
@@ -43,6 +48,7 @@ import { FormSelectService } from './form-select.service';
     FormControlLabelDirective,
     FormControlHintDirective,
     FormControlPrefixDirective,
+    FormErrorComponent,
   ],
   template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
     @if (label()) {
@@ -106,6 +112,14 @@ import { FormSelectService } from './form-select.service';
     @if (hint()) {
       <small appFormHint> {{ hint() }} </small>
     }
+
+    @if (touched() && errors().length > 0) {
+      @for (error of errors(); track error.kind) {
+        <app-form-error>
+          {{ error.message }}
+        </app-form-error>
+      }
+    }
   </div> `,
 })
 export class FormSelectComponent<
@@ -137,6 +151,9 @@ export class FormSelectComponent<
   readonly isReadonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
+  readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>(
+    []
+  );
   readonly pending = input<boolean>(false);
 
   selectedPortal?: CdkPortal;

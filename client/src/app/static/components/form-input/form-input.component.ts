@@ -62,6 +62,9 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
           [id]="name()"
           [value]="value()"
           [disabled]="disabled()"
+          [required]="required()"
+          [attr.minLength]="minLength()"
+          [attr.maxLength]="maxLength()"
           [attr.type]="type()"
           [attr.autocomplete]="autocomplete()"
           [attr.placeholder]="placeholder()"
@@ -105,6 +108,8 @@ export class FormInputComponent extends AbstractFormValueControl {
   readonly hint = input<string | null>();
   readonly min = input<string>();
   readonly max = input<string>();
+  readonly minLength = input<string | number | null>();
+  readonly maxLength = input<string | number | null>();
   readonly loading = input<boolean | null>(false);
   readonly type = input<'text' | 'number' | 'email' | 'password' | 'date'>(
     'text'

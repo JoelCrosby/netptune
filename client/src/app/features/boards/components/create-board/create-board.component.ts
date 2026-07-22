@@ -8,9 +8,11 @@ import {
   signal,
 } from '@angular/core';
 import {
+  apply,
   form,
   FormField,
   required,
+  submit,
   validateAsync,
 } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
@@ -39,6 +41,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SetupTemplatePickerComponent } from '@app/entry/components/setup-template-picker/setup-template-picker.component';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-create-board',
@@ -84,8 +87,8 @@ import { SetupTemplatePickerComponent } from '@app/entry/components/setup-templa
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close>Close</button>
-      <button app-flat-button (click)="getResult()">
+      <button app-stroked-button app-dialog-close type="button">Close</button>
+      <button app-flat-button type="button" (click)="getResult()">
         {{ isEditMode ? 'Save Changes' : 'Create Board' }}
       </button>
     </div>
@@ -121,8 +124,18 @@ export class CreateBoardComponent {
   });
 
   boardForm = form(this.boardFormModel, (schema) => {
-    required(schema.name);
-    required(schema.identifier);
+    apply(
+      schema.name,
+      requiredTextSchema({ label: 'Board name', maxLength: 1024 })
+    );
+    apply(
+      schema.identifier,
+      requiredTextSchema({
+        label: 'Board identifier',
+        minLength: 4,
+        maxLength: 1024,
+      })
+    );
     required(schema.color);
     required(schema.projectId, { when: () => !this.isEditMode });
     validateAsync(schema.identifier, {
@@ -147,7 +160,7 @@ export class CreateBoardComponent {
         }),
       onSuccess: (isUnique) => {
         if (isUnique) {
-          return null;
+          return undefined;
         }
 
         return {
@@ -200,49 +213,42 @@ export class CreateBoardComponent {
   }
 
   getResult() {
-    if (this.boardForm().pending()) {
-      return;
-    }
+    submit(this.boardForm, async () => {
+      const { name, identifier, color, templateKey } = this.boardForm;
 
-    if (this.boardForm().invalid()) {
-      this.boardForm().markAsTouched();
-      return;
-    }
+      if (this.isEditMode) {
+        if (!this.data?.id) return;
 
-    const { name, identifier, color, templateKey } = this.boardForm;
+        const request: UpdateBoardRequest = {
+          id: this.data.id,
+          name: name().value().trim(),
+          identifier: identifier().value().trim(),
+          meta: {
+            color: color().value(),
+          },
+        };
 
-    if (this.isEditMode) {
-      if (!this.data?.id) return;
+        this.store.dispatch(updateBoard.init({ request }));
+      } else {
+        const projectId = this.boardForm.projectId().value();
 
-      const request: UpdateBoardRequest = {
-        id: this.data.id,
-        name: name().value(),
-        identifier: identifier().value(),
-        meta: {
-          color: color().value(),
-        },
-      };
+        if (!projectId) return;
 
-      this.store.dispatch(updateBoard.init({ request }));
-    } else {
-      const projectId = this.boardForm.projectId().value();
+        const request: AddBoardRequest = {
+          name: name().value().trim(),
+          identifier: identifier().value().trim(),
+          projectId,
+          meta: {
+            color: color().value(),
+          },
+          templateKey: templateKey().value(),
+        };
 
-      if (!projectId) return;
+        this.store.dispatch(createBoard.init({ request }));
+      }
 
-      const request: AddBoardRequest = {
-        name: name().value(),
-        identifier: identifier().value(),
-        projectId,
-        meta: {
-          color: color().value(),
-        },
-        templateKey: templateKey().value(),
-      };
-
-      this.store.dispatch(createBoard.init({ request }));
-    }
-
-    this.dialogRef.close();
+      this.dialogRef.close();
+    });
   }
 
   setTemplate(templateKey: string) {

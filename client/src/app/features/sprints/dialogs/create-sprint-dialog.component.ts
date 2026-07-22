@@ -1,5 +1,14 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  apply,
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+  validate,
+} from '@angular/forms/signals';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { createSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintCreateLoading } from '@core/store/sprints/sprints.selectors';
@@ -12,6 +21,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-create-sprint-dialog',
@@ -24,16 +34,16 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
     FormSelectComponent,
     FormSelectOptionComponent,
     FormTextAreaComponent,
+    FormField,
   ],
   template: `
     <app-dialog-title>Create Sprint</app-dialog-title>
 
-    <form class="flex flex-col gap-3" (ngSubmit)="onSubmit()">
+    <form class="flex flex-col gap-3" (submit)="onSubmit($event)">
       <app-form-select
         label="Project"
         placeholder="Select project"
-        [value]="projectId ?? null"
-        (changed)="onProjectSelected($event)">
+        [formField]="sprintForm.projectId">
         @for (project of projects(); track project.id) {
           <app-form-select-option [value]="project.id!">
             {{ project.name }}
@@ -43,31 +53,26 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 
       <app-form-input
         label="Name"
-        name="name"
-        [required]="true"
-        [(value)]="name" />
+        maxLength="256"
+        [formField]="sprintForm.name" />
 
-      <app-form-textarea label="Goal" name="goal" rows="3" [(value)]="goal" />
+      <app-form-textarea
+        label="Goal"
+        rows="3"
+        maxLength="32768"
+        [formField]="sprintForm.goal" />
 
       <div class="grid grid-cols-2 gap-3">
         <app-form-input
           label="Start"
-          name="startDate"
           type="date"
-          [required]="true"
-          [(value)]="startDate" />
+          [formField]="sprintForm.startDate" />
 
         <app-form-input
           label="End"
-          name="endDate"
           type="date"
-          [required]="true"
-          [(value)]="endDate" />
+          [formField]="sprintForm.endDate" />
       </div>
-
-      @if (dateError) {
-        <p class="text-sm text-red-600">{{ dateError }}</p>
-      }
     </form>
 
     <div app-dialog-actions align="end">
@@ -78,8 +83,8 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
         app-flat-button
         color="primary"
         type="button"
-        [disabled]="createLoading() || !projectId || !name.trim()"
-        (click)="onSubmit()">
+        [disabled]="createLoading()"
+        (click)="onSubmit($event)">
         Create
       </button>
     </div>
@@ -102,49 +107,64 @@ export class CreateSprintDialogComponent {
     };
   });
 
-  projectId?: number;
-  name = '';
-  goal = '';
-  startDate = this.defaultDates().start;
-  endDate = this.defaultDates().end;
-  dateError?: string;
+  readonly sprintFormModel = signal({
+    projectId: null as number | null,
+    name: '',
+    goal: '',
+    startDate: this.defaultDates().start,
+    endDate: this.defaultDates().end,
+  });
+
+  readonly sprintForm = form(this.sprintFormModel, (schema) => {
+    required(schema.projectId, { message: 'Project is required.' });
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 256 }));
+    maxLength(schema.goal, 32768);
+    required(schema.startDate, { message: 'Start date is required.' });
+    required(schema.endDate, { message: 'End date is required.' });
+    validate(schema.endDate, (context) => {
+      const startDate = context.valueOf(schema.startDate);
+      const endDate = context.value();
+
+      if (!startDate || !endDate || endDate >= startDate) return undefined;
+
+      return {
+        kind: 'dateOrder',
+        message: 'End date must be on or after the start date.',
+      };
+    });
+  });
 
   constructor() {
     effect(() => {
       const firstProject = this.projects()[0];
-      if (!this.projectId && firstProject) {
-        this.projectId = firstProject.id;
+      if (!this.sprintForm.projectId().value() && firstProject) {
+        this.sprintForm.projectId().value.set(firstProject.id);
       }
     });
   }
 
-  onProjectSelected(projectId: number) {
-    this.projectId = projectId;
-  }
+  onSubmit(event: Event) {
+    event.preventDefault();
 
-  onSubmit() {
-    if (!this.projectId || !this.name.trim()) return;
+    submit(this.sprintForm, async () => {
+      const value = this.sprintFormModel();
 
-    if (this.endDate < this.startDate) {
-      this.dateError = 'End date must be after start date.';
-      return;
-    }
+      if (!value.projectId) return;
 
-    this.dateError = undefined;
+      this.store.dispatch(
+        createSprint.init({
+          request: {
+            projectId: value.projectId,
+            name: value.name.trim(),
+            goal: value.goal.trim() || null,
+            startDate: value.startDate,
+            endDate: value.endDate,
+          },
+        })
+      );
 
-    this.store.dispatch(
-      createSprint.init({
-        request: {
-          projectId: this.projectId,
-          name: this.name.trim(),
-          goal: this.goal.trim() || null,
-          startDate: this.startDate,
-          endDate: this.endDate,
-        },
-      })
-    );
-
-    this.dialogRef.close();
+      this.dialogRef.close();
+    });
   }
 }
 

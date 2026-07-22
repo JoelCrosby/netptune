@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import { apply, FormField, form, submit } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import * as BoardGroupActions from '@app/core/store/groups/board-groups.actions';
@@ -12,6 +12,7 @@ import { DialogTitleComponent } from '@static/components/dialog-title/dialog-tit
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { statusResource } from '@core/resources/status.resources';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface BoardGroupDialogData {
   boardId: number;
@@ -63,8 +64,8 @@ export interface BoardGroupDialogData {
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close>Close</button>
-      <button app-flat-button (click)="onSubmit($event)">
+      <button app-stroked-button app-dialog-close type="button">Close</button>
+      <button app-flat-button type="button" (click)="onSubmit($event)">
         {{ isEdit ? 'Save' : 'Add Group' }}
       </button>
     </div> `,
@@ -84,42 +85,45 @@ export class BoardGroupDialogComponent {
   });
 
   groupForm = form(this.groupFormModel, (schema) => {
-    required(schema.group);
+    apply(
+      schema.group,
+      requiredTextSchema({ label: 'Group name', maxLength: 128 })
+    );
   });
 
   onSubmit(event: Event) {
     event.preventDefault();
 
-    if (this.groupForm().invalid()) return;
+    submit(this.groupForm, async () => {
+      const name = this.groupForm.group().value().trim();
+      const statusId = this.groupForm.statusId().value();
+      const boardGroupId = this.data.boardGroupId;
 
-    const name = this.groupForm.group().value();
-    const statusId = this.groupForm.statusId().value();
-    const boardGroupId = this.data.boardGroupId;
+      if (boardGroupId !== undefined) {
+        this.store.dispatch(
+          BoardGroupActions.editBoardGroup.init({
+            request: {
+              boardGroupId,
+              name,
+              statusId: statusId ?? undefined,
+              clearStatus: statusId === null,
+            },
+          })
+        );
+      } else {
+        this.store.dispatch(
+          BoardGroupActions.createBoardGroup.init({
+            identifier: this.data.identifier,
+            request: {
+              name,
+              boardId: this.data.boardId,
+              statusId,
+            },
+          })
+        );
+      }
 
-    if (boardGroupId !== undefined) {
-      this.store.dispatch(
-        BoardGroupActions.editBoardGroup.init({
-          request: {
-            boardGroupId,
-            name,
-            statusId: statusId ?? undefined,
-            clearStatus: statusId === null,
-          },
-        })
-      );
-    } else {
-      this.store.dispatch(
-        BoardGroupActions.createBoardGroup.init({
-          identifier: this.data.identifier,
-          request: {
-            name,
-            boardId: this.data.boardId,
-            statusId,
-          },
-        })
-      );
-    }
-
-    this.dialogRef.close();
+      this.dialogRef.close();
+    });
   }
 }

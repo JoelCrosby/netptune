@@ -1,6 +1,12 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import {
+  apply,
+  FormField,
+  form,
+  required,
+  submit,
+} from '@angular/forms/signals';
 import {
   StatusCategory,
   statusCategoryLabels,
@@ -14,6 +20,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface CreateStatusDialogResult {
   name: string;
@@ -71,23 +78,19 @@ export class CreateStatusDialogComponent {
   });
 
   readonly statusForm = form(this.statusFormModel, (schema) => {
-    required(schema.name);
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
     required(schema.category);
   });
 
   submit(event: Event) {
     event.preventDefault();
 
-    if (this.statusForm().invalid()) {
-      this.statusForm().markAsTouched();
-      return;
-    }
+    submit(this.statusForm, async () => {
+      const name = this.statusForm.name().value().trim();
+      const category = this.statusForm.category().value();
 
-    const name = this.statusForm.name().value().trim();
-    const category = this.statusForm.category().value();
-    if (!name) return;
-
-    this.dialogRef.close({ name, category });
+      this.dialogRef.close({ name, category });
+    });
   }
 
   categoryLabel(category: StatusCategory) {

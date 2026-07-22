@@ -1,6 +1,13 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import {
+  apply,
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+} from '@angular/forms/signals';
 import {
   RelationCategory,
   isSymmetricCategory,
@@ -16,6 +23,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface CreateRelationTypeDialogResult {
   name: string;
@@ -91,7 +99,8 @@ export class CreateRelationTypeDialogComponent {
   });
 
   readonly relationTypeForm = form(this.relationTypeFormModel, (schema) => {
-    required(schema.name);
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
+    maxLength(schema.inverseName, 128);
     required(schema.category);
   });
 
@@ -106,22 +115,18 @@ export class CreateRelationTypeDialogComponent {
   submit(event: Event) {
     event.preventDefault();
 
-    if (this.relationTypeForm().invalid()) {
-      this.relationTypeForm().markAsTouched();
-      return;
-    }
+    submit(this.relationTypeForm, async () => {
+      const name = this.relationTypeForm.name().value().trim();
+      const category = this.relationTypeForm.category().value();
 
-    const name = this.relationTypeForm.name().value().trim();
-    const category = this.relationTypeForm.category().value();
-    if (!name) return;
+      // A symmetric type reads the same both ways, so the inverse mirrors the name. The server
+      // enforces this too — it is not relying on the client to have got it right.
+      const inverseName = this.isSymmetric()
+        ? name
+        : this.relationTypeForm.inverseName().value().trim() || name;
 
-    // A symmetric type reads the same both ways, so the inverse mirrors the name. The server
-    // enforces this too — it is not relying on the client to have got it right.
-    const inverseName = this.isSymmetric()
-      ? name
-      : this.relationTypeForm.inverseName().value().trim() || name;
-
-    this.dialogRef.close({ name, inverseName, category });
+      this.dialogRef.close({ name, inverseName, category });
+    });
   }
 
   categoryLabel(category: RelationCategory) {

@@ -10,9 +10,12 @@ import {
 import {
   debounce,
   disabled,
+  apply,
   FormField,
   form,
+  maxLength,
   required,
+  submit,
   validateAsync,
 } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -41,6 +44,7 @@ import { SetupCreationSummaryComponent } from '../../components/setup-creation-s
 import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
 import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-workspace-dialog',
@@ -88,7 +92,7 @@ import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
           maxLength="1024"
           [icon]="identifierIcon()"
           [loading]="dialogForm.identifier().pending()"
-          [hint]="dialogForm.identifier().errors()[0]?.message" />
+          hint="Used in workspace URLs." />
 
         <app-form-textarea
           [formField]="dialogForm.description"
@@ -99,8 +103,10 @@ import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
       </form>
 
       <div app-dialog-actions align="end">
-        <button app-stroked-button app-dialog-close>Close</button>
-        <button app-flat-button (click)="getResult()">Save Changes</button>
+        <button app-stroked-button app-dialog-close type="button">Close</button>
+        <button app-flat-button type="button" (click)="getResult()">
+          Save Changes
+        </button>
       </div>
     } @else {
       <form app-dialog-content class="min-w-0">
@@ -120,7 +126,7 @@ import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
                 maxLength="1024"
                 [icon]="identifierIcon()"
                 [loading]="dialogForm.identifier().pending()"
-                [hint]="dialogForm.identifier().errors()[0]?.message" />
+                hint="Used in workspace URLs." />
 
               <app-form-textarea
                 [formField]="dialogForm.description"
@@ -154,7 +160,7 @@ import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 
       <div app-dialog-actions>
         @if (currentStep() > 0) {
-          <button app-stroked-button (click)="previousStep()">
+          <button app-stroked-button type="button" (click)="previousStep()">
             <svg lucideChevronLeft class="h-4 w-4" aria-hidden="true"></svg>
             Back
           </button>
@@ -163,13 +169,18 @@ import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
           <button
             app-flat-button
             class="ml-auto"
+            type="button"
             [disabled]="dialogForm().pending()"
             (click)="nextStep()">
             Next
             <svg lucideChevronRight class="h-4 w-4" aria-hidden="true"></svg>
           </button>
         } @else {
-          <button app-flat-button class="ml-auto" (click)="getResult()">
+          <button
+            app-flat-button
+            class="ml-auto"
+            type="button"
+            (click)="getResult()">
             Save Workspace
           </button>
         }
@@ -197,8 +208,16 @@ export class WorkspaceDialogComponent {
   });
 
   dialogForm = form(this.dialogFormModel, (schema) => {
-    required(schema.name);
-    required(schema.identifier);
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 1024 }));
+    apply(
+      schema.identifier,
+      requiredTextSchema({
+        label: 'Identifier',
+        minLength: 4,
+        maxLength: 1024,
+      })
+    );
+    maxLength(schema.description, 4096);
     required(schema.color);
     disabled(schema.identifier, { when: () => this.isEditMode });
     debounce(schema.identifier, 600);
@@ -221,7 +240,7 @@ export class WorkspaceDialogComponent {
         }),
       onSuccess: (isUnique) => {
         if (isUnique) {
-          return null;
+          return undefined;
         }
 
         return {
@@ -252,22 +271,12 @@ export class WorkspaceDialogComponent {
       )
   );
 
-  identifierCheck = signal(false);
-
   identifierIcon = computed(() => {
     if (this.dialogForm.identifier().valid()) {
       return LucideCheck;
     }
 
     return null;
-  });
-
-  identifierHint = computed(() => {
-    const taken = this.dialogForm
-      .identifier()
-      .errors()
-      .find((x) => x.message === 'already-taken');
-    return taken ? 'Identifier is already taken' : null;
   });
 
   colors = colorDictionary();
@@ -296,22 +305,15 @@ export class WorkspaceDialogComponent {
   }
 
   getResult() {
-    if (this.dialogForm().pending()) {
-      return;
-    }
+    submit(this.dialogForm, async () => {
+      if (this.isEditMode) {
+        this.editWorkspace();
+      } else {
+        this.createWorkspace();
+      }
 
-    if (this.dialogForm().invalid()) {
-      this.dialogForm().markAsTouched();
-      return;
-    }
-
-    if (this.isEditMode) {
-      this.editWorkspace();
-    } else {
-      this.createWorkspace();
-    }
-
-    this.dialogRef.close();
+      this.dialogRef.close();
+    });
   }
 
   nextStep() {
@@ -335,9 +337,9 @@ export class WorkspaceDialogComponent {
     const { name, identifier, description, color } = this.dialogForm;
 
     const request: UpdateWorkspaceRequest = {
-      name: name().value(),
-      slug: identifier().value(),
-      description: description().value(),
+      name: name().value().trim(),
+      slug: identifier().value().trim(),
+      description: description().value().trim(),
       metaInfo: {
         color: color().value(),
       },
@@ -355,9 +357,9 @@ export class WorkspaceDialogComponent {
       this.dialogForm;
 
     const request: AddWorkspaceRequest = {
-      name: name().value(),
-      slug: identifier().value(),
-      description: description().value(),
+      name: name().value().trim(),
+      slug: identifier().value().trim(),
+      description: description().value().trim(),
       metaInfo: {
         color: color().value(),
       },

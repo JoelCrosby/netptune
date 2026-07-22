@@ -11,6 +11,7 @@ import {
   FormControlHintDirective,
   FormControlLabelDirective,
 } from '../form-control/form-control.directives';
+import { FormErrorComponent } from '../form-error/form-error.component';
 
 @Component({
   selector: 'app-color-select',
@@ -19,6 +20,7 @@ import {
     LucideCheck,
     FormControlLabelDirective,
     FormControlHintDirective,
+    FormErrorComponent,
   ],
   template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
     @if (label()) {
@@ -56,6 +58,14 @@ import {
 
     @if (hint()) {
       <small appFormHint> {{ hint() }} </small>
+    }
+
+    @if (touched() && errors().length > 0) {
+      @for (error of errors(); track error.kind) {
+        <app-form-error>
+          {{ error.message }}
+        </app-form-error>
+      }
     }
   </div> `,
 })

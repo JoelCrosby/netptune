@@ -1,6 +1,12 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
-import { FormField, form, minLength, required } from '@angular/forms/signals';
+import {
+  apply,
+  FormField,
+  form,
+  maxLength,
+  submit,
+} from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { AddProjectRequest } from '@core/models/project';
@@ -16,6 +22,7 @@ import { StepComponent } from '@static/components/stepper/step.component';
 import { WorkspaceSetupTemplatesService } from '@core/services/workspace-setup-templates.service';
 import { SetupCreationSummaryComponent } from '../../components/setup-creation-summary/setup-creation-summary.component';
 import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-project-dialog',
@@ -82,18 +89,26 @@ import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
 
     <div app-dialog-actions>
       @if (currentStep() > 0) {
-        <button app-stroked-button (click)="previousStep()">
+        <button app-stroked-button type="button" (click)="previousStep()">
           <svg lucideChevronLeft class="h-4 w-4" aria-hidden="true"></svg>
           Back
         </button>
       }
       @if (currentStep() < finalStep) {
-        <button app-flat-button class="ml-auto" (click)="nextStep()">
+        <button
+          app-flat-button
+          class="ml-auto"
+          type="button"
+          (click)="nextStep()">
           Next
           <svg lucideChevronRight class="h-4 w-4" aria-hidden="true"></svg>
         </button>
       } @else {
-        <button app-flat-button class="ml-auto" (click)="getResult()">
+        <button
+          app-flat-button
+          class="ml-auto"
+          type="button"
+          (click)="getResult()">
           Create Project
         </button>
       }
@@ -109,7 +124,7 @@ export class ProjectDialogComponent {
 
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
 
-  prjectFormModel = signal({
+  projectFormModel = signal({
     name: '',
     repositoryUrl: '',
     description: '',
@@ -118,9 +133,13 @@ export class ProjectDialogComponent {
     templateKey: 'software',
   });
 
-  projectForm = form(this.prjectFormModel, (schema) => {
-    required(schema.name);
-    minLength(schema.name, 4);
+  projectForm = form(this.projectFormModel, (schema) => {
+    apply(
+      schema.name,
+      requiredTextSchema({ label: 'Name', minLength: 4, maxLength: 1024 })
+    );
+    maxLength(schema.repositoryUrl, 1024);
+    maxLength(schema.description, 4096);
   });
 
   selectedTemplate = computed(() =>
@@ -147,32 +166,28 @@ export class ProjectDialogComponent {
   getResult() {
     const workspace = this.currentWorkspace();
 
-    if (this.projectForm().invalid()) {
-      this.projectForm().markAsTouched();
-      return;
-    }
-
-    const { name, repositoryUrl, description, color, templateKey } =
-      this.projectForm;
-
     if (!workspace?.slug) return;
 
-    const project: AddProjectRequest = {
-      name: name().value(),
-      description: description().value(),
-      repositoryUrl: repositoryUrl().value(),
-      metaInfo: {
-        color: color().value() as string,
-      },
-      templateKey: templateKey().value(),
-    };
+    submit(this.projectForm, async () => {
+      const { name, repositoryUrl, description, color, templateKey } =
+        this.projectForm;
 
-    this.store.dispatch(createProject.init({ project }));
+      const project: AddProjectRequest = {
+        name: name().value().trim(),
+        description: description().value().trim(),
+        repositoryUrl: repositoryUrl().value().trim(),
+        metaInfo: {
+          color: color().value() as string,
+        },
+        templateKey: templateKey().value(),
+      };
 
-    this.dialogRef.close();
+      this.store.dispatch(createProject.init({ project }));
+      this.dialogRef.close();
+    });
   }
 
   setTemplate(templateKey: string) {
-    this.prjectFormModel.update((model) => ({ ...model, templateKey }));
+    this.projectFormModel.update((model) => ({ ...model, templateKey }));
   }
 }

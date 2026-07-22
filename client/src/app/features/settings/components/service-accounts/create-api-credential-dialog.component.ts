@@ -1,11 +1,10 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
 import {
+  apply,
   FormField,
   form,
-  maxLength,
-  minLength,
-  required,
+  submit as submitForm,
 } from '@angular/forms/signals';
 import { Permission } from '@core/auth/permissions';
 import {
@@ -20,6 +19,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { permissionLabel } from './service-account-permissions';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-create-api-credential-dialog',
@@ -98,9 +98,14 @@ export class CreateApiCredentialDialogComponent {
 
   readonly credentialFormModel = signal({ name: '' });
   readonly credentialForm = form(this.credentialFormModel, (schema) => {
-    required(schema.name, { message: 'Credential name is required.' });
-    minLength(schema.name, 2);
-    maxLength(schema.name, 128);
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: 'Credential name',
+        minLength: 2,
+        maxLength: 128,
+      })
+    );
   });
 
   hasScope(permission: Permission) {
@@ -126,14 +131,13 @@ export class CreateApiCredentialDialogComponent {
   submit(event: Event) {
     event.preventDefault();
 
-    if (this.credentialForm().invalid() || this.selectedScopes().size === 0) {
-      this.credentialForm().markAsTouched();
-      return;
-    }
+    if (this.selectedScopes().size === 0) return;
 
-    this.dialogRef.close({
-      name: this.credentialForm.name().value().trim(),
-      scopes: [...this.selectedScopes()],
+    submitForm(this.credentialForm, async () => {
+      this.dialogRef.close({
+        name: this.credentialForm.name().value().trim(),
+        scopes: [...this.selectedScopes()],
+      });
     });
   }
 }

@@ -1,6 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import {
+  apply,
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+} from '@angular/forms/signals';
 import {
   Status,
   StatusCategory,
@@ -17,6 +24,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface EditStatusDialogResult {
   name: string;
@@ -80,7 +88,8 @@ export class EditStatusDialogComponent {
   });
 
   readonly statusForm = form(this.statusFormModel, (schema) => {
-    required(schema.name);
+    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
+    maxLength(schema.color, 32);
     required(schema.color);
     required(schema.category);
   });
@@ -88,17 +97,13 @@ export class EditStatusDialogComponent {
   submit(event: Event) {
     event.preventDefault();
 
-    if (this.statusForm().invalid()) {
-      this.statusForm().markAsTouched();
-      return;
-    }
+    submit(this.statusForm, async () => {
+      const name = this.statusForm.name().value().trim();
+      const color = this.statusForm.color().value();
+      const category = this.statusForm.category().value();
 
-    const name = this.statusForm.name().value().trim();
-    const color = this.statusForm.color().value();
-    const category = this.statusForm.category().value();
-    if (!name) return;
-
-    this.dialogRef.close({ name, color, category });
+      this.dialogRef.close({ name, color, category });
+    });
   }
 
   categoryLabel(category: StatusCategory) {

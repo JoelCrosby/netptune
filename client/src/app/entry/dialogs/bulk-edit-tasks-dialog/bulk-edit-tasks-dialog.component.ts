@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, submit, validate } from '@angular/forms/signals';
 import { Store } from '@ngrx/store';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { bulkUpdateTasks } from '@core/store/tasks/tasks.actions';
@@ -50,7 +50,7 @@ interface BulkEditTasksForm {
   template: `
     <app-dialog-title>Bulk edit tasks</app-dialog-title>
 
-    <form app-dialog-content>
+    <form app-dialog-content (submit)="apply($event)">
       <p class="text-muted mb-4 text-sm">
         Applying to {{ taskCount() }}
         {{ taskCount() === 1 ? 'task' : 'tasks' }}. Fields left on
@@ -144,8 +144,8 @@ interface BulkEditTasksForm {
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button (click)="close()">Cancel</button>
-      <button app-flat-button (click)="apply()">
+      <button app-stroked-button type="button" (click)="close()">Cancel</button>
+      <button app-flat-button type="button" (click)="apply($event)">
         Apply to {{ taskCount() }} {{ taskCount() === 1 ? 'task' : 'tasks' }}
       </button>
     </div>
@@ -187,25 +187,36 @@ export class BulkEditTasksDialogComponent {
     assigneeIds: [],
   });
 
-  readonly editForm = form(this.editFormModel);
+  readonly editForm = form(this.editFormModel, (schema) => {
+    validate(schema.estimateValue, ({ value }) => {
+      const estimate = value().trim();
+
+      if (!estimate || Number.isFinite(Number(estimate))) return undefined;
+
+      return { kind: 'number', message: 'Enter a valid story point value.' };
+    });
+  });
 
   close() {
     this.dialogRef.close();
   }
 
-  apply() {
+  apply(event: Event) {
+    event.preventDefault();
     const workspaceId = this.workspaceId();
 
     if (!workspaceId) return;
 
-    this.store.dispatch(
-      bulkUpdateTasks.init({
-        identifier: `[workspace] ${workspaceId}`,
-        request: this.buildRequest(),
-      })
-    );
+    submit(this.editForm, async () => {
+      this.store.dispatch(
+        bulkUpdateTasks.init({
+          identifier: `[workspace] ${workspaceId}`,
+          request: this.buildRequest(),
+        })
+      );
 
-    this.dialogRef.close();
+      this.dialogRef.close();
+    });
   }
 
   private buildRequest(): BulkUpdateTasksRequest {

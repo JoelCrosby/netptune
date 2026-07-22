@@ -4,8 +4,10 @@ import {
   disabled,
   form,
   FormField,
+  maxLength,
   minLength,
   required,
+  submit,
   validate,
 } from '@angular/forms/signals';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -96,33 +98,34 @@ export class ResetPasswordComponent {
   });
 
   resetForm = form(this.resetFormModel, (schema) => {
-    required(schema.password0);
-    required(schema.password1);
+    required(schema.password0, { message: 'Password is required.' });
+    required(schema.password1, { message: 'Confirm your password.' });
     minLength(schema.password0, 4);
     minLength(schema.password1, 4);
+    maxLength(schema.password0, 1024);
+    maxLength(schema.password1, 1024);
     disabled(schema, () => this.loading());
-    validate(schema.password1, ({ value }) => {
-      if (this.resetForm.password0().value() === value()) {
+    validate(schema.password1, (context) => {
+      if (context.valueOf(schema.password0) !== context.value()) {
         return {
           kind: 'noMatch',
           message: 'Passwords do not match',
         };
       }
 
-      return null;
+      return undefined;
     });
   });
 
   resetPassword() {
-    if (!this.request || this.resetForm().invalid()) return;
+    submit(this.resetForm, async () => {
+      const password = this.resetForm.password0().value();
+      const request: ResetPasswordRequest = {
+        ...this.request(),
+        password,
+      };
 
-    const password = this.resetForm.password0().value();
-
-    const request: ResetPasswordRequest = {
-      ...this.request(),
-      password,
-    };
-
-    this.store.dispatch(resetPassword.init({ request }));
+      this.store.dispatch(resetPassword.init({ request }));
+    });
   }
 }

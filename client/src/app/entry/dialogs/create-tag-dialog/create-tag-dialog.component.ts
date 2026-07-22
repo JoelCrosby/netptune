@@ -1,12 +1,13 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import { apply, FormField, form, submit } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface CreateTagDialogResult {
   name: string;
@@ -47,20 +48,19 @@ export class CreateTagDialogComponent {
   });
 
   readonly tagForm = form(this.tagFormModel, (schema) => {
-    required(schema.name);
+    apply(
+      schema.name,
+      requiredTextSchema({ label: 'Name', maxLength: 128, minLength: 2 })
+    );
   });
 
   submit(event: Event) {
     event.preventDefault();
 
-    if (this.tagForm().invalid()) {
-      this.tagForm().markAsTouched();
-      return;
-    }
+    submit(this.tagForm, async () => {
+      const name = this.tagForm.name().value().trim();
 
-    const name = this.tagForm.name().value().trim();
-    if (!name) return;
-
-    this.dialogRef.close({ name });
+      this.dialogRef.close({ name });
+    });
   }
 }

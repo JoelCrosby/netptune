@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
+  apply,
   disabled,
   email,
   form,
@@ -15,6 +16,7 @@ import {
   maxLength,
   minLength,
   required,
+  submit,
   validate,
 } from '@angular/forms/signals';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -29,6 +31,7 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-register',
@@ -53,7 +56,7 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
       <app-form-input
         [formField]="registerForm.firstname"
         label="Firstname"
-        maxLength="1024"
+        maxLength="128"
         id="firstname"
         autocomplete="given-name">
       </app-form-input>
@@ -61,7 +64,7 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
       <app-form-input
         [formField]="registerForm.lastname"
         label="Lastname"
-        maxLength="1024"
+        maxLength="128"
         id="lastname"
         autocomplete="family-name">
       </app-form-input>
@@ -69,7 +72,7 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
       <app-form-input
         [formField]="registerForm.email"
         label="Email"
-        maxLength="1024"
+        maxLength="128"
         id="email"
         type="email"
         autocomplete="username">
@@ -139,29 +142,35 @@ export class RegisterComponent implements OnDestroy {
   });
 
   registerForm = form(this.registerFormModel, (schema) => {
-    required(schema.firstname);
-    maxLength(schema.firstname, 128);
-    required(schema.lastname);
-    maxLength(schema.lastname, 128);
-    required(schema.email);
-    email(schema.email);
+    apply(
+      schema.firstname,
+      requiredTextSchema({ label: 'First name', maxLength: 128 })
+    );
+    apply(
+      schema.lastname,
+      requiredTextSchema({ label: 'Last name', maxLength: 128 })
+    );
+    required(schema.email, { message: 'Email is required.' });
+    email(schema.email, { message: 'Enter a valid email address.' });
     maxLength(schema.email, 128);
-    required(schema.password0);
+    required(schema.password0, { message: 'Password is required.' });
     minLength(schema.password0, 4);
-    required(schema.password1);
+    maxLength(schema.password0, 1024);
+    required(schema.password1, { message: 'Confirm your password.' });
     minLength(schema.password1, 4);
+    maxLength(schema.password1, 1024);
     disabled(schema, () => this.loading());
     disabled(schema.email, () => !!this.invite()?.code);
     required(schema.turnstile);
-    validate(schema.password1, ({ value }) => {
-      if (this.registerForm.password0().value() !== value()) {
+    validate(schema.password1, (context) => {
+      if (context.valueOf(schema.password0) !== context.value()) {
         return {
           kind: 'noMatch',
           message: 'Passwords do not match',
         };
       }
 
-      return null;
+      return undefined;
     });
   });
 
@@ -180,31 +189,27 @@ export class RegisterComponent implements OnDestroy {
   }
 
   register() {
-    const firstname = this.registerForm.firstname().value();
-    const lastname = this.registerForm.lastname().value();
-    const email = this.registerForm.email().value();
-    const password = this.registerForm.password0().value();
-    const turnstile = this.registerForm.turnstile().value();
+    submit(this.registerForm, async () => {
+      const firstname = this.registerForm.firstname().value().trim();
+      const lastname = this.registerForm.lastname().value().trim();
+      const email = this.registerForm.email().value().trim();
+      const password = this.registerForm.password0().value();
+      const turnstile = this.registerForm.turnstile().value();
+      const inviteCode = this.invite()?.code;
 
-    const inviteCode = this.invite()?.code;
-
-    if (this.registerForm().invalid()) {
-      this.registerForm().markAsDirty();
-      return;
-    }
-
-    this.store.dispatch(
-      AuthActions.register.init({
-        request: {
-          firstname,
-          lastname,
-          email,
-          password,
-          inviteCode,
-          turnstile,
-        },
-      })
-    );
+      this.store.dispatch(
+        AuthActions.register.init({
+          request: {
+            firstname,
+            lastname,
+            email,
+            password,
+            inviteCode,
+            turnstile,
+          },
+        })
+      );
+    });
   }
 
   onTurnstileResult(token: string) {

@@ -1,11 +1,13 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
 import {
+  apply,
   FormField,
   form,
   maxLength,
-  minLength,
   required,
+  submit as submitForm,
+  validate,
 } from '@angular/forms/signals';
 import { Permission, netptunePermissions } from '@core/auth/permissions';
 import {
@@ -27,6 +29,7 @@ import { StepComponent } from '@static/components/stepper/step.component';
 import { StepperComponent } from '@static/components/stepper/stepper.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { permissionLabel } from './service-account-permissions';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 interface ApiPermissionOption {
   key: Permission;
@@ -348,17 +351,34 @@ export class CreateServiceAccountDialogComponent {
   });
 
   readonly accountForm = form(this.accountFormModel, (schema) => {
-    required(schema.name, { message: 'Name is required.' });
-    minLength(schema.name, 2, {
-      message: 'Name must have at least 2 characters.',
-    });
-    maxLength(schema.name, 128);
+    apply(
+      schema.name,
+      requiredTextSchema({ label: 'Name', minLength: 2, maxLength: 128 })
+    );
     maxLength(schema.description, 2048);
     required(schema.credentialName, {
       message: 'Credential name is required.',
       when: (context) => context.valueOf(schema.createCredential),
     });
-    minLength(schema.credentialName, 2);
+    validate(schema.credentialName, (context) => {
+      if (!context.valueOf(schema.createCredential)) return undefined;
+
+      const name = context.value().trim();
+
+      if (!name) {
+        return {
+          kind: 'whitespace',
+          message: 'Credential name is required.',
+        };
+      }
+
+      if (name.length >= 2) return undefined;
+
+      return {
+        kind: 'minLength',
+        message: 'Credential name must have at least 2 characters.',
+      };
+    });
     maxLength(schema.credentialName, 128);
   });
 
@@ -414,23 +434,25 @@ export class CreateServiceAccountDialogComponent {
   submit() {
     if (!this.isComplete()) return;
 
-    const name = this.accountForm.name().value().trim();
-    const description = this.accountForm.description().value().trim();
-    const createCredential = this.createCredential();
+    submitForm(this.accountForm, async () => {
+      const name = this.accountForm.name().value().trim();
+      const description = this.accountForm.description().value().trim();
+      const createCredential = this.createCredential();
 
-    this.dialogRef.close({
-      account: {
-        name,
-        description: description || undefined,
-        permissions: [...this.selectedPermissions()],
-        ownerUserIds: [],
-      },
-      credential: createCredential
-        ? {
-            name: this.accountForm.credentialName().value().trim(),
-            scopes: [...this.credentialScopes()],
-          }
-        : undefined,
+      this.dialogRef.close({
+        account: {
+          name,
+          description: description || undefined,
+          permissions: [...this.selectedPermissions()],
+          ownerUserIds: [],
+        },
+        credential: createCredential
+          ? {
+              name: this.accountForm.credentialName().value().trim(),
+              scopes: [...this.credentialScopes()],
+            }
+          : undefined,
+      });
     });
   }
 

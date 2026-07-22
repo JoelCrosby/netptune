@@ -12,12 +12,12 @@ import {
   viewChild,
 } from '@angular/core';
 import {
+  apply,
   debounce,
   disabled,
   form,
   FormField,
-  maxLength,
-  required,
+  submit,
 } from '@angular/forms/signals';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import {
@@ -38,6 +38,7 @@ import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DocumentService } from '@static/services/document.service';
 import { selectSelectedSprintFilter } from '@app/core/store/sprints/sprints.selectors';
+import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-board-group-task-inline',
@@ -103,8 +104,10 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   });
 
   taskForm = form(this.taskFormModel, (schema) => {
-    required(schema.name);
-    maxLength(schema.name, 256);
+    apply(
+      schema.name,
+      requiredTextSchema({ label: 'Task summary', maxLength: 256 })
+    );
     disabled(schema.name, { when: () => !this.isEditActive() });
     debounce(schema.name, 240);
   });
@@ -168,20 +171,21 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
 
     if (!projectId || !user) return;
 
-    const name =
-      this.inputElementRef()?.nativeElement.value ??
-      this.taskForm.name().value();
+    submit(this.taskForm, async () => {
+      const name =
+        this.inputElementRef()?.nativeElement.value ??
+        this.taskForm.name().value();
 
-    const task: AddProjectTaskRequest = {
-      name: name.trim(),
-      projectId,
-      assigneeId: user.userId,
-      boardGroupId: this.boardGroupId(),
-    };
+      const task: AddProjectTaskRequest = {
+        name: name.trim(),
+        projectId,
+        assigneeId: user.userId,
+        boardGroupId: this.boardGroupId(),
+      };
 
-    this.store.dispatch(createProjectTask.init({ task }));
-
-    this.loading.set(true);
+      this.store.dispatch(createProjectTask.init({ task }));
+      this.loading.set(true);
+    });
   }
 
   onEscape() {
