@@ -99,6 +99,7 @@ public sealed class AutomationTestFixture : IAsyncLifetime
         await db.Database.ExecuteSqlRawAsync("""
             TRUNCATE TABLE
                 event_records,
+                scheduled_automation_actions,
                 automation_actions,
                 automation_runs,
                 automation_rules,

@@ -41,12 +41,15 @@ internal sealed class RunPersistenceService
         var activityLogs = plan.NotificationPlans.Select(notificationPlan => notificationPlan.Activity).ToList();
         var comments = BuildComments(plan.CommentPlans);
         var commentEntities = comments.Select(comment => comment.Entity).ToList();
+        var immediateTaskDeletions = plan.TaskDeletionPlans.Where(deletion => deletion.Delay <= TimeSpan.Zero).ToList();
+        var scheduledActions = BuildScheduledActions(plan.TaskDeletionPlans);
 
         activity?.SetTag("automation.flags.created", plan.Flags.Count);
         activity?.SetTag("automation.event_records.created", activityLogs.Count);
         activity?.SetTag("automation.task_updates.planned", plan.TaskUpdatePlans.Count);
         activity?.SetTag("automation.comments.planned", comments.Count);
         activity?.SetTag("automation.task_deletions.planned", plan.TaskDeletionPlans.Count);
+        activity?.SetTag("automation.actions.scheduled", scheduledActions.Count);
 
         Logger.LogInformation(
             "Persisting automation results for trigger {TriggerType}: {RunCount} runs, {EventRecordCount} activity logs, {FlagCount} flags, {TaskUpdateCount} task updates, {CommentCount} comments, {TaskDeletionCount} task deletions",
@@ -68,6 +71,7 @@ internal sealed class RunPersistenceService
             await UnitOfWork.EventRecords.AddRangeAsync(activityLogs, cancellationToken);
             await UnitOfWork.Flags.AddRangeAsync(plan.Flags, cancellationToken);
             await UnitOfWork.Automations.AddRunsAsync(plan.Runs, cancellationToken);
+            await UnitOfWork.Automations.AddScheduledActionsAsync(scheduledActions, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             await AppendCommentEvents(comments, cancellationToken);
@@ -78,7 +82,7 @@ internal sealed class RunPersistenceService
             await UnitOfWork.Notifications.AddRangeAsync(notifications, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
-            appliedTaskDeletions = await ApplyTaskDeletions(plan.TaskDeletionPlans, cancellationToken);
+            appliedTaskDeletions = await ApplyTaskDeletions(immediateTaskDeletions, cancellationToken);
         });
 
         await RemoveDeletedTasksFromSearch(appliedTaskDeletions);
@@ -89,6 +93,26 @@ internal sealed class RunPersistenceService
             notifications.Count);
 
         return notifications;
+    }
+
+    private static List<ScheduledAutomationAction> BuildScheduledActions(List<TaskDeletionPlan> deletionPlans)
+    {
+        return deletionPlans
+            .Where(plan => plan.Delay > TimeSpan.Zero)
+            .Select(plan => new ScheduledAutomationAction
+            {
+                AutomationRuleId = plan.Execution.Rule.Id,
+                AutomationActionId = plan.Action.Id,
+                TaskId = plan.Execution.Task.Id,
+                ActionType = AutomationActionType.DeleteTask,
+                Status = ScheduledAutomationActionStatus.Pending,
+                ExpectedStatusId = plan.Execution.Task.StatusId,
+                ExecuteAt = plan.Execution.TriggeredAt.Add(plan.Delay),
+                IdempotencyKey = $"{plan.Execution.IdempotencyKey}:action:{plan.Action.Id}",
+                OwnerId = plan.Execution.ActorUserId,
+                CreatedByUserId = plan.Execution.ActorUserId,
+            })
+            .ToList();
     }
 
     private async Task<List<TaskDeletionPlan>> ApplyTaskDeletions(

@@ -74,9 +74,7 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
             .AnyAsync(run => run.IdempotencyKey == idempotencyKey, cancellationToken);
     }
 
-    public Task<List<string>> GetExistingRunKeys(
-        IReadOnlyCollection<string> idempotencyKeys,
-        CancellationToken cancellationToken = default)
+    public Task<List<string>> GetExistingRunKeys(IReadOnlyCollection<string> idempotencyKeys, CancellationToken cancellationToken = default)
     {
         return Context.Set<AutomationRun>()
             .Where(run => idempotencyKeys.Contains(run.IdempotencyKey))
@@ -87,6 +85,45 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
     public Task AddRunsAsync(IEnumerable<AutomationRun> runs, CancellationToken cancellationToken = default)
     {
         return Context.Set<AutomationRun>().AddRangeAsync(runs, cancellationToken);
+    }
+
+    public Task AddScheduledActionsAsync(IEnumerable<ScheduledAutomationAction> actions, CancellationToken cancellationToken = default)
+    {
+        return Context.Set<ScheduledAutomationAction>().AddRangeAsync(actions, cancellationToken);
+    }
+
+    public Task<List<ScheduledAutomationAction>> GetDueScheduledActions(DateTime executeBefore, CancellationToken cancellationToken = default)
+    {
+        return Context.Set<ScheduledAutomationAction>()
+            .Where(action => action.Status == ScheduledAutomationActionStatus.Pending)
+            .Where(action => action.ExecuteAt <= executeBefore)
+            .Include(action => action.AutomationRule)
+            .Include(action => action.AutomationAction)
+            .Include(action => action.Task)
+                .ThenInclude(task => task.Workspace)
+            .OrderBy(action => action.ExecuteAt)
+            .Take(100)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> CancelPendingTaskActions(
+        int taskId,
+        Guid currentEventId,
+        string actorUserId,
+        CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+        var currentEventKey = $":event:{currentEventId}:";
+
+        return Context.Set<ScheduledAutomationAction>()
+            .Where(action => action.TaskId == taskId)
+            .Where(action => action.Status == ScheduledAutomationActionStatus.Pending)
+            .Where(action => !action.IdempotencyKey.Contains(currentEventKey))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(action => action.Status, ScheduledAutomationActionStatus.Cancelled)
+                .SetProperty(action => action.ProcessedAt, now)
+                .SetProperty(action => action.ModifiedByUserId, actorUserId)
+                .SetProperty(action => action.UpdatedAt, now), cancellationToken);
     }
 
     public Task<List<AutomationRunViewModel>> GetRuns(

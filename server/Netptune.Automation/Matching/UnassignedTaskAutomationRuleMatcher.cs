@@ -108,6 +108,7 @@ internal sealed class UnassignedTaskAutomationRuleMatcher
                     Task = task,
                     ActorUserId = actorUserId,
                     IdempotencyKey = $"rule:{rule.Rule.Id}:task:{task.Id}:unassigned:{runDate}",
+                    TriggeredAt = now,
                 });
             }
         }

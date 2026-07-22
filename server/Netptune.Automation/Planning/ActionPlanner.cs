@@ -82,13 +82,14 @@ internal sealed class ActionPlanner
             };
             var contribution = automationAction.Plan(context);
 
-            AddContribution(plan, execution, contribution);
+            AddContribution(plan, execution, action, contribution);
         }
     }
 
     private static void AddContribution(
         ActionPlan plan,
         PendingAutomationExecution execution,
+        AutomationAction action,
         AutomationActionPlanContribution contribution)
     {
         if (contribution.Notification is { } notification)
@@ -126,9 +127,9 @@ internal sealed class ActionPlanner
             plan.CommentPlans.Add(new CommentPlan(execution, commentBody));
         }
 
-        if (contribution.DeleteTask)
+        if (contribution.TaskDeletion is { } taskDeletion)
         {
-            plan.TaskDeletionPlans.Add(new TaskDeletionPlan(execution));
+            plan.TaskDeletionPlans.Add(new TaskDeletionPlan(execution, action, taskDeletion.Delay));
         }
     }
 

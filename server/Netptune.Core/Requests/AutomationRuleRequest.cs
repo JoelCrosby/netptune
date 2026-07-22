@@ -44,4 +44,8 @@ public record AutomationActionRequest
     public int? StatusId { get; init; }
 
     public TaskPriority? Priority { get; init; }
+
+    public int? DelayAmount { get; init; }
+
+    public AutomationDelayUnit? DelayUnit { get; init; }
 }

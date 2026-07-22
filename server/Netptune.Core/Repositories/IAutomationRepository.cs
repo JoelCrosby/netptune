@@ -9,20 +9,21 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 {
     Task<List<AutomationRule>> GetRulesInWorkspace(int workspaceId, bool enabledOnly = false, CancellationToken cancellationToken = default);
 
-    Task<List<AutomationRule>> GetEnabledRulesForTrigger(
-        AutomationTriggerType triggerType,
-        int? workspaceId = null,
-        CancellationToken cancellationToken = default);
+    Task<List<AutomationRule>> GetEnabledRulesForTrigger(AutomationTriggerType triggerType, int? workspaceId = null, CancellationToken cancellationToken = default);
 
     Task<AutomationRule?> GetRuleInWorkspace(int ruleId, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<bool> HasRun(string idempotencyKey, CancellationToken cancellationToken = default);
 
-    Task<List<string>> GetExistingRunKeys(
-        IReadOnlyCollection<string> idempotencyKeys,
-        CancellationToken cancellationToken = default);
+    Task<List<string>> GetExistingRunKeys(IReadOnlyCollection<string> idempotencyKeys, CancellationToken cancellationToken = default);
 
     Task AddRunsAsync(IEnumerable<AutomationRun> runs, CancellationToken cancellationToken = default);
+
+    Task AddScheduledActionsAsync(IEnumerable<ScheduledAutomationAction> actions, CancellationToken cancellationToken = default);
+
+    Task<List<ScheduledAutomationAction>> GetDueScheduledActions(DateTime executeBefore, CancellationToken cancellationToken = default);
+
+    Task<int> CancelPendingTaskActions(int taskId, Guid currentEventId, string actorUserId, CancellationToken cancellationToken = default);
 
     Task<List<AutomationRunViewModel>> GetRuns(int ruleId, int workspaceId, int take = 50, CancellationToken cancellationToken = default);
 }

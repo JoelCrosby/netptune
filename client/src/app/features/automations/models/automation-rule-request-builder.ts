@@ -2,6 +2,7 @@ import {
   AutomationAction,
   AutomationActionRequest,
   AutomationActionType,
+  AutomationDelayUnit,
   AutomationConditionOperator,
   AutomationRuleRequest,
   AutomationTrigger,
@@ -76,6 +77,37 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
     )
   ) {
     return 'Task update actions need a status or priority.';
+  }
+
+  const delayedDeletion = actions.find(
+    (action) =>
+      action.type === AutomationActionType.deleteTask &&
+      (!Number.isInteger(action.delayAmount) ||
+        action.delayAmount === null ||
+        action.delayAmount === undefined ||
+        action.delayAmount < 0)
+  );
+
+  if (delayedDeletion) {
+    return 'Delete task action delay must be a whole number of 0 or more.';
+  }
+
+  const excessiveDelay = actions.some((action) => {
+    if (action.type !== AutomationActionType.deleteTask) return false;
+
+    const amount = action.delayAmount ?? 0;
+    const multiplier =
+      action.delayUnit === AutomationDelayUnit.days
+        ? 1440
+        : action.delayUnit === AutomationDelayUnit.hours
+          ? 60
+          : 1;
+
+    return amount * multiplier > 525600;
+  });
+
+  if (excessiveDelay) {
+    return 'Delete task action delay cannot exceed 365 days.';
   }
 
   return null;
@@ -160,6 +192,14 @@ function toActionRequest(action: AutomationAction): AutomationActionRequest {
     priority:
       action.type === AutomationActionType.updateTask
         ? (action.priority ?? null)
+        : null,
+    delayAmount:
+      action.type === AutomationActionType.deleteTask
+        ? (action.delayAmount ?? 0)
+        : null,
+    delayUnit:
+      action.type === AutomationActionType.deleteTask
+        ? (action.delayUnit ?? null)
         : null,
   };
 }

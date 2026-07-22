@@ -15,6 +15,7 @@ import { actionTypeLabels } from '../models/automation-copy';
 import {
   AutomationAction,
   AutomationActionType,
+  AutomationDelayUnit,
 } from '../models/automation.models';
 
 export interface EditableAutomationAction extends AutomationAction {
@@ -130,9 +131,7 @@ export interface AutomationActionUpdate {
                         })
                       " />
                   </div>
-                } @else if (
-                  action.type === automationActionType.updateTask
-                ) {
+                } @else if (action.type === automationActionType.updateTask) {
                   <div class="grid gap-4 md:grid-cols-2">
                     <div class="flex flex-col gap-3">
                       <app-checkbox
@@ -200,12 +199,47 @@ export interface AutomationActionUpdate {
                       }
                     </div>
                   </div>
-                } @else if (
-                  action.type === automationActionType.deleteTask
-                ) {
+                } @else if (action.type === automationActionType.deleteTask) {
+                  <div class="grid gap-3 md:grid-cols-2">
+                    <app-form-input
+                      label="Delay"
+                      type="number"
+                      min="0"
+                      max="525600"
+                      [value]="delayAmountValue(action)"
+                      (valueChange)="
+                        actionUpdated.emit({
+                          clientId: action.clientId,
+                          patch: { delayAmount: parseDelayAmount($event) },
+                        })
+                      " />
+                    <app-form-select
+                      label="Unit"
+                      [value]="action.delayUnit ?? automationDelayUnit.minutes"
+                      (changed)="
+                        actionUpdated.emit({
+                          clientId: action.clientId,
+                          patch: { delayUnit: $event },
+                        })
+                      ">
+                      <app-form-select-option
+                        [value]="automationDelayUnit.minutes">
+                        Minutes
+                      </app-form-select-option>
+                      <app-form-select-option
+                        [value]="automationDelayUnit.hours">
+                        Hours
+                      </app-form-select-option>
+                      <app-form-select-option
+                        [value]="automationDelayUnit.days">
+                        Days
+                      </app-form-select-option>
+                    </app-form-select>
+                  </div>
                   <p class="text-sm text-red-600 dark:text-red-400">
-                    This task will be deleted when the automation runs. Deleted
-                    tasks can be restored from the archive.
+                    The task will only be deleted if its status has not changed
+                    during the delay. Deleted tasks can be restored from the
+                    archive.
                   </p>
                 }
               </div>
@@ -228,6 +262,7 @@ export interface AutomationActionUpdate {
 })
 export class AutomationActionsEditorComponent {
   readonly automationActionType = AutomationActionType;
+  readonly automationDelayUnit = AutomationDelayUnit;
   readonly actionTypes = [
     AutomationActionType.notifyTaskAssignees,
     AutomationActionType.flagTask,
@@ -257,5 +292,17 @@ export class AutomationActionsEditorComponent {
 
   hasPriorityUpdate(action: AutomationAction): boolean {
     return action.priority !== null && action.priority !== undefined;
+  }
+
+  parseDelayAmount(value: string): number | null {
+    if (!value.trim()) return null;
+
+    const amount = Number(value);
+
+    return Number.isInteger(amount) ? amount : null;
+  }
+
+  delayAmountValue(action: AutomationAction): string {
+    return String(action.delayAmount ?? 0);
   }
 }

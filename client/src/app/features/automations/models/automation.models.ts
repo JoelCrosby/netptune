@@ -52,6 +52,12 @@ export enum AutomationActionType {
   deleteTask = 4,
 }
 
+export enum AutomationDelayUnit {
+  minutes = 0,
+  hours = 1,
+  days = 2,
+}
+
 export enum AutomationRunStatus {
   succeeded = 0,
   failed = 1,
@@ -77,6 +83,8 @@ export interface AutomationAction {
   flagDescription?: string | null;
   statusId?: number | null;
   priority?: TaskPriority | null;
+  delayAmount?: number | null;
+  delayUnit?: AutomationDelayUnit | null;
 }
 
 export interface AutomationRule {
@@ -117,6 +125,8 @@ export interface AutomationActionRequest {
   flagDescription?: string | null;
   statusId?: number | null;
   priority?: TaskPriority | null;
+  delayAmount?: number | null;
+  delayUnit?: AutomationDelayUnit | null;
 }
 
 export interface AutomationRuleListItem extends AutomationRule {

@@ -87,6 +87,7 @@ internal sealed class TaskChangedAutomationRuleMatcher
                 Task = task,
                 ActorUserId = message.ActorUserId,
                 IdempotencyKey = $"rule:{rule.Id}:task:{message.TaskId}:event:{message.EventId}",
+                TriggeredAt = message.OccurredAt,
             });
         }
 

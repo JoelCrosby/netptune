@@ -22,6 +22,7 @@ import { describeAutomationRule } from '../../models/automation-copy';
 import { buildAutomationRuleRequest } from '../../models/automation-rule-request-builder';
 import {
   AutomationActionType,
+  AutomationDelayUnit,
   AutomationConditionOperator,
   AutomationFieldCondition,
   AutomationRule,
@@ -195,6 +196,11 @@ export class AutomationFormViewComponent {
           ? this.defaultActiveStatusId()
           : null,
       priority: null,
+      delayAmount: type === AutomationActionType.deleteTask ? 0 : null,
+      delayUnit:
+        type === AutomationActionType.deleteTask
+          ? AutomationDelayUnit.days
+          : null,
     });
   }
 
@@ -328,6 +334,8 @@ export class AutomationFormViewComponent {
       flagDescription: null,
       statusId: null,
       priority: null,
+      delayAmount: null,
+      delayUnit: null,
     };
   }
 

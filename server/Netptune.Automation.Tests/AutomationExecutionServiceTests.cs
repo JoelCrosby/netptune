@@ -1,11 +1,16 @@
+using System.Text.Json;
+
 using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Encoding;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Automations;
+using Netptune.Entities.Contexts;
 
 using Xunit;
 
@@ -236,6 +241,111 @@ public sealed class AutomationExecutionServiceTests
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
         var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
 
+        var message = new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, inProgressStatusId, completeStatusId),
+            ],
+        };
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var task = await scope.Db.ProjectTasks.IgnoreQueryFilters().SingleAsync(task => task.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        task.IsDeleted.Should().BeTrue();
+        task.DeletedByUserId.Should().Be(scenario.Owner.Id);
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task ExecuteScheduledActions_deletes_task_after_configured_delay()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            "complete",
+            actionType: AutomationActionType.DeleteTask);
+        await ConfigureDeleteDelay(scope.Db, rule, 1, AutomationDelayUnit.Hours);
+
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var triggeredAt = DateTime.UtcNow;
+
+        var message = new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            OccurredAt = triggeredAt,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, inProgressStatusId, completeStatusId),
+            ],
+        };
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(TestContext.Current.CancellationToken);
+        var taskBeforeDelay = await scope.Db.ProjectTasks.SingleAsync(TestContext.Current.CancellationToken);
+
+        taskBeforeDelay.IsDeleted.Should().BeFalse();
+        scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Pending);
+        scheduledAction.ExpectedStatusId.Should().Be(completeStatusId);
+        scheduledAction.ExecuteAt.Should().BeCloseTo(triggeredAt.AddHours(1), TimeSpan.FromMilliseconds(1));
+
+        scheduledAction.ExecuteAt = DateTime.UtcNow.AddMinutes(-1);
+
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var deletedTask = await scope.Db.ProjectTasks.IgnoreQueryFilters()
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        var completedAction = await scope.Db.ScheduledAutomationActions.SingleAsync(
+            TestContext.Current.CancellationToken);
+
+        deletedTask.IsDeleted.Should().BeTrue();
+        deletedTask.DeletedByUserId.Should().Be(scenario.Owner.Id);
+        completedAction.Status.Should().Be(ScheduledAutomationActionStatus.Completed);
+        completedAction.ProcessedAt.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_cancels_delayed_deletion_when_status_changes()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            "complete",
+            actionType: AutomationActionType.DeleteTask);
+
+        await ConfigureDeleteDelay(scope.Db, rule, 1, AutomationDelayUnit.Hours);
+
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
@@ -248,14 +358,59 @@ public sealed class AutomationExecutionServiceTests
             ],
         }, TestContext.Current.CancellationToken);
 
-        scope.Db.ChangeTracker.Clear();
-        var task = await scope.Db.ProjectTasks.IgnoreQueryFilters()
-            .SingleAsync(task => task.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
-        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+        await scope.Db.ProjectTasks
+            .Where(task => task.Id == scenario.Task.Id)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(task => task.StatusId, inProgressStatusId),
+                TestContext.Current.CancellationToken);
 
-        task.IsDeleted.Should().BeTrue();
-        task.DeletedByUserId.Should().Be(scenario.Owner.Id);
-        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, completeStatusId, inProgressStatusId),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(TestContext.Current.CancellationToken);
+
+        scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Cancelled);
+
+        scheduledAction.ExecuteAt = DateTime.UtcNow.AddMinutes(-1);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var task = await scope.Db.ProjectTasks.SingleAsync(TestContext.Current.CancellationToken);
+
+        task.IsDeleted.Should().BeFalse();
+        task.StatusId.Should().Be(inProgressStatusId);
+    }
+
+    private static async Task ConfigureDeleteDelay(
+        DataContext db,
+        AutomationRule rule,
+        int delayAmount,
+        AutomationDelayUnit delayUnit)
+    {
+        var action = await db.AutomationActions.SingleAsync(
+            item => item.AutomationRuleId == rule.Id && item.Type == AutomationActionType.DeleteTask,
+            TestContext.Current.CancellationToken);
+
+        action.Config = JsonSerializer.SerializeToDocument(new
+        {
+            delayAmount,
+            delayUnit,
+        }, JsonOptions.Default);
+
+        await db.SaveChangesAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -295,6 +450,7 @@ public sealed class AutomationExecutionServiceTests
             scope.Db,
             assignTask: false,
             taskUpdatedAt: DateTime.UtcNow.AddDays(-3));
+
         await AutomationTestData.CreateUnassignedRule(
             scope.Db,
             scenario,
@@ -319,6 +475,7 @@ public sealed class AutomationExecutionServiceTests
         await using var scope = await Fixture.CreateScope();
 
         var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,

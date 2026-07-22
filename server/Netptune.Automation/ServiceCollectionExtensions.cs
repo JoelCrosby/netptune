@@ -32,6 +32,10 @@ public static class ServiceCollectionExtensions
 
             options.StartupDelay = ReadTimeSpan(section, nameof(ScheduleOptions.StartupDelay), options.StartupDelay);
             options.RunInterval = ReadTimeSpan(section, nameof(ScheduleOptions.RunInterval), options.RunInterval);
+            options.DelayedActionRunInterval = ReadTimeSpan(
+                section,
+                nameof(ScheduleOptions.DelayedActionRunInterval),
+                options.DelayedActionRunInterval);
         });
     }
 
@@ -55,8 +59,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<RunPersistenceService>();
         services.AddScoped<NotificationPublisher>();
         services.AddScoped<ExecutionService>();
+        services.AddScoped<ScheduledActionService>();
         services.AddScoped<IExecutionService>(provider => provider.GetRequiredService<ExecutionService>());
         services.AddHostedService<ScheduleService>();
+        services.AddHostedService<DelayedActionScheduleService>();
 
         return services;
     }

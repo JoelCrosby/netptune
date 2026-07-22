@@ -6,6 +6,7 @@ import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
   AutomationAction,
   AutomationActionType,
+  AutomationDelayUnit,
   AutomationConditionOperator,
   AutomationFieldCondition,
   AutomationRunStatus,
@@ -147,8 +148,20 @@ export function describeAutomationAction(action: AutomationAction): string {
         ? `Add comment: "${action.comment}"`
         : 'Add a comment';
     case AutomationActionType.deleteTask:
-      return 'Delete the task';
+      return describeDeleteTaskAction(action);
   }
+}
+
+function describeDeleteTaskAction(action: AutomationAction): string {
+  const amount = action.delayAmount ?? 0;
+
+  if (amount <= 0) return 'Delete the task';
+
+  const unit = action.delayUnit ?? AutomationDelayUnit.minutes;
+  const label = AutomationDelayUnit[unit];
+  const unitLabel = amount === 1 ? label.replace(/s$/, '') : label;
+
+  return `Delete the task after ${amount} ${unitLabel}`;
 }
 
 function describeUpdateTaskAction(action: AutomationAction): string {

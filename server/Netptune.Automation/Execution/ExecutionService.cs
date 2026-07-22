@@ -16,6 +16,8 @@ public interface IExecutionService
     Task ExecuteUnassignedRules(CancellationToken cancellationToken);
 
     Task ExecuteDueDateRules(CancellationToken cancellationToken);
+
+    Task ExecuteScheduledActions(CancellationToken cancellationToken);
 }
 
 internal sealed class ExecutionService : IExecutionService
@@ -24,6 +26,7 @@ internal sealed class ExecutionService : IExecutionService
     private readonly UnassignedTaskAutomationRuleMatcher UnassignedTaskMatcher;
     private readonly DueDateAutomationRuleMatcher DueDateMatcher;
     private readonly RuleExecutor RuleExecutor;
+    private readonly ScheduledActionService ScheduledActions;
     private readonly ILogger<ExecutionService> Logger;
 
     public ExecutionService(
@@ -31,12 +34,14 @@ internal sealed class ExecutionService : IExecutionService
         UnassignedTaskAutomationRuleMatcher unassignedTaskMatcher,
         DueDateAutomationRuleMatcher dueDateMatcher,
         RuleExecutor ruleExecutor,
+        ScheduledActionService scheduledActions,
         ILogger<ExecutionService> logger)
     {
         TaskChangedMatcher = taskChangedMatcher;
         UnassignedTaskMatcher = unassignedTaskMatcher;
         DueDateMatcher = dueDateMatcher;
         RuleExecutor = ruleExecutor;
+        ScheduledActions = scheduledActions;
         Logger = logger;
     }
 
@@ -54,6 +59,8 @@ internal sealed class ExecutionService : IExecutionService
 
         try
         {
+            await ScheduledActions.CancelForStatusChange(message, cancellationToken);
+
             var executions = await TaskChangedMatcher.Match(message, cancellationToken);
 
             await RuleExecutor.Execute(AutomationTriggerType.TaskChanged, executions, cancellationToken);
@@ -128,5 +135,10 @@ internal sealed class ExecutionService : IExecutionService
                 AutomationTriggerType.TaskDueDateApproaching,
                 Stopwatch.GetElapsedTime(startedAt));
         }
+    }
+
+    public Task ExecuteScheduledActions(CancellationToken cancellationToken)
+    {
+        return ScheduledActions.ExecuteDue(cancellationToken);
     }
 }

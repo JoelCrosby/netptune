@@ -103,6 +103,7 @@ internal sealed class DueDateAutomationRuleMatcher
                     Task = task,
                     ActorUserId = actorUserId,
                     IdempotencyKey = $"rule:{rule.Rule.Id}:task:{task.Id}:due:{dueDate:yyyy-MM-dd}",
+                    TriggeredAt = DateTime.UtcNow,
                 });
             }
         }

@@ -11,4 +11,6 @@ internal sealed record PendingAutomationExecution
     public required string ActorUserId { get; init; }
 
     public required string IdempotencyKey { get; init; }
+
+    public required DateTime TriggeredAt { get; init; }
 }

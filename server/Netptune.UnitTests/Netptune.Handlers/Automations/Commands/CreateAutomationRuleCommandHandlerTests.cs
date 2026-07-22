@@ -316,6 +316,12 @@ public class CreateAutomationRuleCommandHandlerTests
                     Type = AutomationActionType.AddComment,
                     Comment = "Review requested by automation",
                 },
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.DeleteTask,
+                    DelayAmount = 2,
+                    DelayUnit = AutomationDelayUnit.Hours,
+                },
             ],
         };
 
@@ -325,7 +331,7 @@ public class CreateAutomationRuleCommandHandlerTests
         savedRule.Should().NotBeNull();
         savedRule!.WorkspaceId.Should().Be(123);
         savedRule.Name.Should().Be("Done notification");
-        savedRule.Actions.Should().HaveCount(3);
+        savedRule.Actions.Should().HaveCount(4);
 
         var condition = savedRule.TriggerConfig!.RootElement.GetProperty("conditions")[0];
         condition.GetProperty("field").GetInt32().Should().Be((int)TaskChangeField.Status);
@@ -334,6 +340,12 @@ public class CreateAutomationRuleCommandHandlerTests
 
         var commentAction = savedRule.Actions.Single(action => action.Type == AutomationActionType.AddComment);
         commentAction.Config!.RootElement.GetProperty("comment").GetString().Should().Be("Review requested by automation");
+
+        var deleteAction = savedRule.Actions.Single(action => action.Type == AutomationActionType.DeleteTask);
+        deleteAction.Config!.RootElement.GetProperty("delayAmount").GetInt32().Should().Be(2);
+        deleteAction.Config.RootElement.GetProperty("delayUnit").GetInt32().Should().Be((int)AutomationDelayUnit.Hours);
+        result.Payload!.Actions.Single(action => action.Type == AutomationActionType.DeleteTask)
+            .DelayAmount.Should().Be(2);
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());
     }
 }

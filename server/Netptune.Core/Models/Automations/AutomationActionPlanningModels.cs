@@ -24,7 +24,7 @@ public sealed record AutomationActionPlanContribution
 
     public string? CommentBody { get; init; }
 
-    public bool DeleteTask { get; init; }
+    public AutomationTaskDeletionContribution? TaskDeletion { get; init; }
 }
 
 public sealed record AutomationNotificationContribution(EventRecord Activity, List<string> RecipientUserIds);
@@ -32,3 +32,5 @@ public sealed record AutomationNotificationContribution(EventRecord Activity, Li
 public sealed record AutomationFlagContribution(string Name, string Description);
 
 public sealed record AutomationTaskUpdateContribution(int? StatusId, TaskPriority? Priority);
+
+public sealed record AutomationTaskDeletionContribution(TimeSpan Delay);

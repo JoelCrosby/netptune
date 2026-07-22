@@ -58,7 +58,6 @@ internal sealed class ScheduleService : BackgroundService
                     automationExecution.ExecuteDueDateRules,
                     activity,
                     stoppingToken);
-
                 Logger.LogInformation(
                     "Automation schedule cycle completed in {ElapsedMilliseconds}ms",
                     Stopwatch.GetElapsedTime(startedAt).TotalMilliseconds);
