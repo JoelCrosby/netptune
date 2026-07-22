@@ -21,19 +21,33 @@ import { FromNowPipe } from '@static/pipes/from-now.pipe';
       --primary-selected: rgba(var(--primary-rgb), 0.6);
       --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
     }
+
+    .workspace-color-wash {
+      background: radial-gradient(
+        ellipse 120% 85% at 50% 110%,
+        rgba(var(--primary-rgb), 0.2) 0%,
+        transparent 72%
+      );
+    }
   `,
   template: `
-    <app-card-list-item
-      [title]="workspace().name"
-      [description]="workspace().description"
-      [subText]="'Last updated ' + (workspace().updatedAt | fromNow)"
-      [actions]="actions">
-      @if (workspace().isLastVisited) {
-        <app-badge color="primary" shape="rounded" class="mt-2 w-fit">
-          Last visited
-        </app-badge>
-      }
-    </app-card-list-item>
+    <div class="relative h-full overflow-hidden rounded">
+      <app-card-list-item
+        [title]="workspace().name"
+        [description]="workspace().description"
+        [subText]="'Last updated ' + (workspace().updatedAt | fromNow)"
+        [actions]="actions">
+        @if (workspace().isLastVisited) {
+          <app-badge color="primary" shape="rounded" class="mt-2 w-fit">
+            Last visited
+          </app-badge>
+        }
+      </app-card-list-item>
+
+      <div
+        aria-hidden="true"
+        class="workspace-color-wash pointer-events-none absolute inset-0"></div>
+    </div>
   `,
 })
 export class WorkspaceListItemComponent {
