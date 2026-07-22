@@ -83,7 +83,7 @@ export interface MentionSubmitEvent {
         <small appFormHint> {{ hint() }} </small>
       }
 
-      @if (errors()) {
+      @if (touched() && errors().length > 0) {
         @for (error of errors(); track error.kind) {
           <app-form-error>
             {{ error.message }}

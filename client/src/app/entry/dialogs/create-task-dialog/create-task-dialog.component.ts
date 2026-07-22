@@ -1,6 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
-import { FormField, form, minLength, required } from '@angular/forms/signals';
+import {
+  FormField,
+  form,
+  maxLength,
+  required,
+  submit,
+  validate,
+} from '@angular/forms/signals';
 import { EditorComponent } from '@app/static/components/editor/editor.component';
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
@@ -14,6 +21,7 @@ import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
+import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { TaskEstimate } from '@static/components/task-properties/task-estimate-select.component';
 import { TaskPropertiesComponent } from '@static/components/task-properties/task-properties.component';
@@ -38,27 +46,38 @@ interface CreateTaskForm {
     FlatButtonComponent,
     StrokedButtonComponent,
     EditorComponent,
+    FormErrorsComponent,
     TaskPropertiesComponent,
   ],
-  template: `<app-dialog-title>Add new Task</app-dialog-title>
+  template: `<app-dialog-title>
+      <div class="px-6">Create Task</div>
+    </app-dialog-title>
 
-    <form app-dialog-content novalidate (submit)="$event.preventDefault()">
-      <div class="flex flex-col gap-8 md:flex-row md:gap-12">
-        <div class="flex w-64 grow flex-col">
+    <form
+      id="create-task-form"
+      app-dialog-content
+      novalidate
+      (submit)="saveClicked($event)">
+      <div class="flex flex-col gap-8 px-6 md:flex-row md:gap-12">
+        <div class="flex w-92 grow flex-col">
           <app-form-input
             [formField]="taskForm.name"
             label="Summary"
-            maxLength="1024" />
+            maxLength="256" />
 
-          <label class="font-sm mb-2 font-semibold" for="description">
+          <label
+            id="description-label"
+            class="font-sm mb-2 font-semibold"
+            for="description">
             Description
           </label>
           <app-editor
-            aria-labelledby="description"
+            id="description"
+            aria-labelledby="description-label"
             placeholder="Add a Description..."
             [formField]="taskForm.description"
-            maxLength="4096"
             [isReadonly]="false" />
+          <app-form-errors [formField]="taskForm.description" />
         </div>
 
         <div
@@ -83,22 +102,25 @@ interface CreateTaskForm {
               Start date must be on or before due date.
             </p>
           }
+
+          @if (projectInvalid()) {
+            <p class="mt-3 text-sm text-red-600" role="alert">
+              Project is required.
+            </p>
+          }
         </div>
       </div>
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button (click)="close()">Close</button>
-      <button
-        app-flat-button
-        [disabled]="scheduleInvalid()"
-        (click)="saveClicked()">
+      <button app-stroked-button type="button" (click)="close()">Close</button>
+      <button app-flat-button type="submit" form="create-task-form">
         Save Task
       </button>
     </div> `,
 })
 export class CreateTaskDialogComponent {
-  static readonly width = '820px';
+  static readonly width = '972px';
 
   private store = inject(Store);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
@@ -120,12 +142,16 @@ export class CreateTaskDialogComponent {
     this.data?.projectId ?? this.currentProjectId() ?? null
   );
   readonly assignees = signal<(AppUser | AssigneeViewModel)[]>([]);
+  readonly submissionAttempted = signal(false);
   readonly scheduleInvalid = computed(() => {
     const startDate = this.startDate();
     const dueDate = this.dueDate();
 
     return startDate !== '' && dueDate !== '' && startDate > dueDate;
   });
+  readonly projectInvalid = computed(
+    () => this.submissionAttempted() && this.projectId() === null
+  );
 
   taskFormModel = signal<CreateTaskForm>({
     name: '',
@@ -133,8 +159,37 @@ export class CreateTaskDialogComponent {
   });
 
   taskForm = form(this.taskFormModel, (schema) => {
-    required(schema.name);
-    minLength(schema.name, 4);
+    required(schema.name, { message: 'Summary is required.' });
+    validate(schema.name, ({ value }) => {
+      const valueToValidate = value();
+
+      if (!valueToValidate) return undefined;
+
+      const name = valueToValidate.trim();
+
+      if (!name) {
+        return { kind: 'whitespace', message: 'Summary is required.' };
+      }
+
+      if (name.length < 4) {
+        return {
+          kind: 'minLength',
+          message: 'Summary must have at least 4 characters.',
+        };
+      }
+
+      if (name.length > 256) {
+        return {
+          kind: 'maxLength',
+          message: 'Summary cannot exceed 256 characters.',
+        };
+      }
+
+      return undefined;
+    });
+    maxLength(schema.description, 4096, {
+      message: 'Description cannot exceed 4096 characters.',
+    });
   });
 
   setEstimate({ estimateType, estimateValue }: TaskEstimate) {
@@ -146,30 +201,31 @@ export class CreateTaskDialogComponent {
     this.dialogRef.close();
   }
 
-  saveClicked() {
-    if (this.scheduleInvalid()) {
-      return;
-    }
+  saveClicked(event: Event) {
+    event.preventDefault();
+    this.submissionAttempted.set(true);
 
-    const workspace = this.currentWorkspace();
-    const projectId = this.projectId();
+    submit(this.taskForm, async () => {
+      if (this.scheduleInvalid()) return;
 
-    if (projectId === null) {
-      throw new Error('project id is undefined');
-    }
+      const workspace = this.currentWorkspace();
+      const projectId = this.projectId();
 
-    if (!workspace?.slug) {
-      throw new Error('workspace slug is undefined');
-    }
+      if (projectId === null) return;
 
-    this.store.dispatch(
-      createProjectTask.init({
-        identifier: `[workspace] ${workspace.slug}`,
-        task: this.buildRequest(projectId),
-      })
-    );
+      if (!workspace?.slug) {
+        throw new Error('workspace slug is undefined');
+      }
 
-    this.dialogRef.close();
+      this.store.dispatch(
+        createProjectTask.init({
+          identifier: `[workspace] ${workspace.slug}`,
+          task: this.buildRequest(projectId),
+        })
+      );
+
+      this.dialogRef.close();
+    });
   }
 
   private buildRequest(projectId: number): AddProjectTaskRequest {

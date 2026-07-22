@@ -83,7 +83,7 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
       <small appFormHint> {{ hint() }} </small>
     }
 
-    @if (errors()) {
+    @if (touched() && errors().length > 0) {
       @for (error of errors(); track error.kind) {
         <app-form-error>
           {{ error.message }}
