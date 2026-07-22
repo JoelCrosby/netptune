@@ -11,6 +11,7 @@ import { CardDeleteComponent } from './card-delete.component';
 
 @Component({
   selector: 'app-card-list-item',
+  host: { class: 'block h-full' },
   imports: [
     CardComponent,
     CardTitleComponent,
@@ -22,7 +23,7 @@ import { CardDeleteComponent } from './card-delete.component';
     CardDeleteComponent,
   ],
   template: `
-    <app-card>
+    <app-card class="block h-full">
       <app-card-header>
         <app-card-title>
           {{ title() }}
@@ -47,7 +48,7 @@ import { CardDeleteComponent } from './card-delete.component';
         <ng-content />
       </app-card-content>
 
-      <app-card-actions [actions]="actions()" />
+      <app-card-actions class="mt-auto" [actions]="actions()" />
     </app-card>
   `,
 })

@@ -1,25 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { CardListComponent } from '@app/static/components/card/card-list.component';
-import { CreateWorkspaceListItemComponent } from './create-workspace-list-item.component';
 import { WorkspaceListItemComponent } from './workspace-list-item.component';
 
 @Component({
   selector: 'app-workspace-list',
-  imports: [
-    CardListComponent,
-    WorkspaceListItemComponent,
-    CreateWorkspaceListItemComponent,
-  ],
+  imports: [WorkspaceListItemComponent],
   template: `
-    <app-card-list>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
       @for (workspace of workspaces(); track workspace.id) {
         <app-workspace-list-item [workspace]="workspace" />
       }
-
-      <app-create-workspace-list-item />
-    </app-card-list>
+    </div>
   `,
 })
 export class WorkspaceListComponent {

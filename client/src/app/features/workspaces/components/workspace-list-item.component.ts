@@ -1,32 +1,20 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  effect,
-  inject,
-  input,
-} from '@angular/core';
+import { Component, ElementRef, effect, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
-import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { BadgeComponent } from '@app/static/components/badge/badge.component';
+import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { Workspace } from '@core/models/workspace';
-import { DialogService } from '@core/services/dialog.service';
+import { WorkspaceService } from '@core/services/workspace.service';
 import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
-import * as WorkspaceActions from '@core/store/workspaces/workspaces.actions';
 import { HeaderAction } from '@core/types/header-action';
 import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
-import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { LucidePanelsTopLeft } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
-import { WorkspaceService } from '../../../core/services/workspace.service';
 
 @Component({
   selector: 'app-workspace-list-item',
   imports: [BadgeComponent, CardListItemComponent, FromNowPipe],
-  // The derived variables are declared on :root, where they resolve against the
-  // root --primary-rgb and inherit as finished colours. Re-declaring them here
-  // makes them resolve against the --primary-rgb set on this card instead.
+  host: { class: 'block h-full' },
   styles: `
     :host {
       --primary: rgba(var(--primary-rgb));
@@ -39,8 +27,7 @@ import { WorkspaceService } from '../../../core/services/workspace.service';
       [title]="workspace().name"
       [description]="workspace().description"
       [subText]="'Last updated ' + (workspace().updatedAt | fromNow)"
-      [actions]="actions"
-      (delete)="deleteClicked(workspace())">
+      [actions]="actions">
       @if (workspace().isLastVisited) {
         <app-badge color="primary" shape="rounded" class="mt-2 w-fit">
           Last visited
@@ -49,10 +36,8 @@ import { WorkspaceService } from '../../../core/services/workspace.service';
     </app-card-list-item>
   `,
 })
-export class WorkspaceListItemComponent implements OnInit {
+export class WorkspaceListItemComponent {
   private store = inject(Store);
-  private dialog = inject(DialogService);
-
   private workspaceService = inject(WorkspaceService);
   private router = inject(Router);
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -61,7 +46,13 @@ export class WorkspaceListItemComponent implements OnInit {
 
   private theme = this.store.selectSignal(selectEffectiveTheme);
 
-  actions!: HeaderAction[];
+  readonly actions: HeaderAction[] = [
+    {
+      label: 'Go To Projects',
+      click: () => this.onGotToClicked(),
+      icon: LucidePanelsTopLeft,
+    },
+  ];
 
   constructor() {
     // Scope the brand variables to the card, so each workspace's controls are
@@ -84,38 +75,8 @@ export class WorkspaceListItemComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.actions = [
-      {
-        label: 'Go To Projects',
-        click: () => this.onGotToClicked(),
-        icon: LucidePanelsTopLeft,
-      },
-      {
-        label: 'Manage Users',
-        isLink: true,
-        routerLink: ['/', this.workspace().slug, 'users'],
-      },
-      {
-        label: 'Edit Workspace',
-        click: () => this.onEditClicked(),
-      },
-    ];
-  }
-
   onGotToClicked() {
     this.workspaceService.setWorkspace(this.workspace().slug);
     this.router.navigate(['/', this.workspace().slug, 'projects']);
-  }
-
-  onEditClicked() {
-    this.dialog.open(WorkspaceDialogComponent, {
-      data: this.workspace(),
-      width: '720px',
-    });
-  }
-
-  deleteClicked(workspace: Workspace) {
-    this.store.dispatch(WorkspaceActions.deleteWorkspace.init({ workspace }));
   }
 }
