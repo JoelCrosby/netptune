@@ -14,9 +14,9 @@ import type { Feature } from '~/types/feature';
 export const features: Feature[] = [
   {
     icon: Kanban,
-    title: 'Boards without ceremony',
+    title: 'Plan from every angle',
     description:
-      'Model the workflow your team already uses with custom columns, drag-and-drop ordering, and multiple boards per project.',
+      'Move between custom Kanban boards, a month calendar, and an editable roadmap without rebuilding the plan.',
   },
   {
     icon: Zap,
@@ -34,19 +34,19 @@ export const features: Feature[] = [
     icon: MessageSquare,
     title: 'Context beside the work',
     description:
-      'Keep decisions, reactions, and implementation notes attached to the task instead of losing them in another chat thread.',
+      'Keep editable comments, mentions, decisions, and implementation notes attached to the task instead of losing them in another chat thread.',
   },
   {
     icon: FileText,
     title: 'Useful issue primitives',
     description:
-      'Descriptions, file attachments, tags, priorities, estimates, due dates, relations, and multiple assignees are built in.',
+      'Start and due dates, files, tags, estimates, multiple assignees, parent-child relationships, and blocking dependencies are built in.',
   },
   {
     icon: Workflow,
     title: 'Automate the repetitive path',
     description:
-      'React to workflow events with rules that notify assignees, flag tasks, or update fields—and inspect every run afterward.',
+      'Trigger on field changes, unassigned work, or approaching due dates, then chain notifications, comments, updates, flags, or safe delayed deletion.',
   },
   {
     icon: ChartNoAxesCombined,

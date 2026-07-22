@@ -32,15 +32,80 @@ export const featureHighlights: FeatureHighlight[] = [
     ),
   },
   {
-    eyebrow: 'Automations',
-    title: 'Set the rules. Skip the busywork.',
+    eyebrow: 'Calendar',
+    title: 'Make every deadline visible.',
     description:
-      'Build trigger-based rules that react when a task changes status, has fields updated, or sits unassigned for too long — then notify assignees, flag the task, or update it automatically.',
+      'Plan scheduled work on a monthly calendar, inspect everything due on a selected day, and reschedule tasks without leaving the view.',
     reversed: true,
     extra: () => (
       <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
-        Every run is recorded, so you can see exactly which rules fired, on which tasks, and what
-        they changed.
+        Filter the same schedule by project, sprint, status, priority, assignee, or tag, with an
+        unscheduled queue ready for planning.
+      </p>
+    ),
+    visual: () => (
+      <div class="min-w-0 flex-1">
+        <img
+          width={1440}
+          height={900}
+          loading="lazy"
+          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
+          src="/images/calendar-light.webp"
+          alt="Netptune calendar view showing scheduled tasks and the selected-day task table"
+        />
+        <img
+          width={1440}
+          height={900}
+          loading="lazy"
+          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
+          src="/images/calendar-dark.webp"
+          alt="Netptune calendar view in dark mode showing scheduled tasks and filters"
+        />
+      </div>
+    ),
+  },
+  {
+    eyebrow: 'Roadmap',
+    title: 'See the path from now to shipped.',
+    description:
+      'Shape the longer view on an editable timeline, adjust task dates in place, and plan work directly from the unscheduled queue.',
+    extra: () => (
+      <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
+        Sprint windows and dependency lines keep blocked work, sequencing, and delivery dates in one
+        view.
+      </p>
+    ),
+    visual: () => (
+      <div class="min-w-0 flex-1">
+        <img
+          width={1440}
+          height={900}
+          loading="lazy"
+          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
+          src="/images/roadmap-light.webp"
+          alt="Netptune roadmap showing tasks and sprints across an editable timeline"
+        />
+        <img
+          width={1440}
+          height={900}
+          loading="lazy"
+          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
+          src="/images/roadmap-dark.webp"
+          alt="Netptune roadmap in dark mode showing scheduled and unscheduled work"
+        />
+      </div>
+    ),
+  },
+  {
+    eyebrow: 'Automations',
+    title: 'Set the rules. Skip the busywork.',
+    description:
+      'React to precise field changes, approaching due dates, or work left unassigned. Chain actions to notify assignees, add a comment, update fields, flag work, or delete stale tasks after a safety delay.',
+    reversed: true,
+    extra: () => (
+      <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
+        Field conditions keep rules targeted, every run is recorded, and delayed deletion is
+        cancelled when the task moves on—with archived tasks still recoverable.
       </p>
     ),
     visual: () => (

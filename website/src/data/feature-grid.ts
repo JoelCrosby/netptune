@@ -13,6 +13,11 @@ import {
   FileSpreadsheet,
   ChartNoAxesCombined,
   Braces,
+  BellRing,
+  CalendarRange,
+  ChartGantt,
+  GitBranch,
+  Keyboard,
   LayoutTemplate,
   Paperclip,
 } from 'lucide-solid';
@@ -37,7 +42,7 @@ export const featureGridItems: Feature[] = [
   {
     icon: ShieldCheck,
     title: 'Role-based access',
-    description: 'Owner, Admin, Member, and Viewer roles per workspace',
+    description: 'Assign and change Owner, Admin, Member, and Viewer roles',
   },
   {
     icon: CalendarDays,
@@ -47,7 +52,7 @@ export const featureGridItems: Feature[] = [
   {
     icon: MessageSquare,
     title: 'Task comments',
-    description: 'Keep discussion and context attached to each task',
+    description: 'Editable discussion and mentions attached to each task',
   },
   {
     icon: Timer,
@@ -57,12 +62,12 @@ export const featureGridItems: Feature[] = [
   {
     icon: Workflow,
     title: 'Automations',
-    description: 'Rules that notify, flag, or update tasks automatically',
+    description: 'Due-date and field rules with chainable actions and run history',
   },
   {
     icon: Search,
     title: 'Instant search',
-    description: 'Find tasks across the workspace from the command palette',
+    description: 'Scope command-palette results with task and project prefixes',
   },
   {
     icon: FileSpreadsheet,
@@ -88,6 +93,31 @@ export const featureGridItems: Feature[] = [
     icon: Paperclip,
     title: 'Task files & workspace storage',
     description: 'Attach files to work and manage storage from one place',
+  },
+  {
+    icon: CalendarRange,
+    title: 'Calendar planning',
+    description: 'Schedule, filter, and reschedule work on a monthly calendar',
+  },
+  {
+    icon: ChartGantt,
+    title: 'Roadmap timeline',
+    description: 'Edit dates, plan unscheduled work, and see sprint context',
+  },
+  {
+    icon: GitBranch,
+    title: 'Task relationships',
+    description: 'Model parent-child work and cycle-safe blocking dependencies',
+  },
+  {
+    icon: BellRing,
+    title: 'Notification controls',
+    description: 'Choose event types globally or for an individual workspace',
+  },
+  {
+    icon: Keyboard,
+    title: 'Keyboard navigation',
+    description: 'Jump to projects, tasks, boards, search, and automations',
   },
   {
     icon: LogIn,
