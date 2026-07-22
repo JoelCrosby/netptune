@@ -49,6 +49,7 @@ export enum AutomationActionType {
   flagTask = 1,
   updateTask = 2,
   addComment = 3,
+  deleteTask = 4,
 }
 
 export enum AutomationRunStatus {

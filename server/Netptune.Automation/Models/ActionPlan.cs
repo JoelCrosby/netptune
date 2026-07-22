@@ -13,4 +13,6 @@ internal sealed record ActionPlan
     public required List<TaskUpdatePlan> TaskUpdatePlans { get; init; }
 
     public required List<CommentPlan> CommentPlans { get; init; }
+
+    public required List<TaskDeletionPlan> TaskDeletionPlans { get; init; }
 }

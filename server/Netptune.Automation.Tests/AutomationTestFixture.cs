@@ -7,6 +7,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
@@ -66,6 +67,7 @@ public sealed class AutomationTestFixture : IAsyncLifetime
         services.AddScoped<RecordingEventRecordWriter>();
         services.AddScoped<IEventRecordWriter>(provider => provider.GetRequiredService<RecordingEventRecordWriter>());
         services.AddSingleton<INotificationEventPublisher, NoOpNotificationEventPublisher>();
+        services.AddSingleton<IEventPublisher, NoOpEventPublisher>();
         services.AddNetptuneAutomation();
 
         Services = services.BuildServiceProvider();
@@ -128,6 +130,19 @@ public sealed class AutomationTestFixture : IAsyncLifetime
         public Task PublishManyAsync(
             IEnumerable<UserNotificationEvent> notificationEvents,
             CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class NoOpEventPublisher : IEventPublisher
+    {
+        public Task Dispatch<TEvent>(TEvent @event) where TEvent : class, IEventMessage
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task DispatchCanonical(CanonicalEventEnvelope envelope, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

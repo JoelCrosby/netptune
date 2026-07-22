@@ -23,6 +23,8 @@ public sealed record AutomationActionPlanContribution
     public AutomationTaskUpdateContribution? TaskUpdate { get; init; }
 
     public string? CommentBody { get; init; }
+
+    public bool DeleteTask { get; init; }
 }
 
 public sealed record AutomationNotificationContribution(EventRecord Activity, List<string> RecipientUserIds);

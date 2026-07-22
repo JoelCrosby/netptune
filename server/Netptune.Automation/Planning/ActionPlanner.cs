@@ -31,6 +31,7 @@ internal sealed class ActionPlanner
             FlagPlans = [],
             TaskUpdatePlans = [],
             CommentPlans = [],
+            TaskDeletionPlans = [],
         };
 
         foreach (var execution in executions)
@@ -123,6 +124,11 @@ internal sealed class ActionPlanner
         if (contribution.CommentBody is { } commentBody)
         {
             plan.CommentPlans.Add(new CommentPlan(execution, commentBody));
+        }
+
+        if (contribution.DeleteTask)
+        {
+            plan.TaskDeletionPlans.Add(new TaskDeletionPlan(execution));
         }
     }
 

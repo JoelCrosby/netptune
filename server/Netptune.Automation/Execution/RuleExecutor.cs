@@ -72,6 +72,7 @@ internal sealed class RuleExecutor
             Flags = flags,
             TaskUpdatePlans = plan.TaskUpdatePlans,
             CommentPlans = plan.CommentPlans,
+            TaskDeletionPlans = plan.TaskDeletionPlans,
         };
 
         var notifications = await Persistence.Persist(persistencePlan, cancellationToken);

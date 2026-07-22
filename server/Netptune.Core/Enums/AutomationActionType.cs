@@ -6,4 +6,5 @@ public enum AutomationActionType
     FlagTask = 1,
     UpdateTask = 2,
     AddComment = 3,
+    DeleteTask = 4,
 }

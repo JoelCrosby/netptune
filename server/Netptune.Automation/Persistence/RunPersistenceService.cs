@@ -6,7 +6,9 @@ using Netptune.Automation.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Notifications;
 
@@ -19,15 +21,18 @@ internal sealed class RunPersistenceService
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ILogger<RunPersistenceService> Logger;
     private readonly IEventRecordWriter EventRecords;
+    private readonly IEventPublisher EventPublisher;
 
     public RunPersistenceService(
         INetptuneUnitOfWork unitOfWork,
         ILogger<RunPersistenceService> logger,
-        IEventRecordWriter eventRecords)
+        IEventRecordWriter eventRecords,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Logger = logger;
         EventRecords = eventRecords;
+        EventPublisher = eventPublisher;
     }
 
     internal async Task<List<Notification>> Persist(AutomationPersistencePlan plan, CancellationToken cancellationToken)
@@ -41,17 +46,20 @@ internal sealed class RunPersistenceService
         activity?.SetTag("automation.event_records.created", activityLogs.Count);
         activity?.SetTag("automation.task_updates.planned", plan.TaskUpdatePlans.Count);
         activity?.SetTag("automation.comments.planned", comments.Count);
+        activity?.SetTag("automation.task_deletions.planned", plan.TaskDeletionPlans.Count);
 
         Logger.LogInformation(
-            "Persisting automation results for trigger {TriggerType}: {RunCount} runs, {EventRecordCount} activity logs, {FlagCount} flags, {TaskUpdateCount} task updates, {CommentCount} comments",
+            "Persisting automation results for trigger {TriggerType}: {RunCount} runs, {EventRecordCount} activity logs, {FlagCount} flags, {TaskUpdateCount} task updates, {CommentCount} comments, {TaskDeletionCount} task deletions",
             plan.TriggerType,
             plan.Runs.Count,
             activityLogs.Count,
             plan.Flags.Count,
             plan.TaskUpdatePlans.Count,
-            comments.Count);
+            comments.Count,
+            plan.TaskDeletionPlans.Count);
 
         List<Notification> notifications = [];
+        List<TaskDeletionPlan> appliedTaskDeletions = [];
 
         await UnitOfWork.Transaction(async () =>
         {
@@ -69,7 +77,11 @@ internal sealed class RunPersistenceService
 
             await UnitOfWork.Notifications.AddRangeAsync(notifications, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
+
+            appliedTaskDeletions = await ApplyTaskDeletions(plan.TaskDeletionPlans, cancellationToken);
         });
+
+        await RemoveDeletedTasksFromSearch(appliedTaskDeletions);
 
         Logger.LogInformation(
             "Persisted automation results for trigger {TriggerType}: {NotificationCount} notifications",
@@ -77,6 +89,47 @@ internal sealed class RunPersistenceService
             notifications.Count);
 
         return notifications;
+    }
+
+    private async Task<List<TaskDeletionPlan>> ApplyTaskDeletions(
+        List<TaskDeletionPlan> taskDeletionPlans,
+        CancellationToken cancellationToken)
+    {
+        var appliedPlans = new List<TaskDeletionPlan>();
+
+        foreach (var plan in taskDeletionPlans)
+        {
+            var taskId = plan.Execution.Task.Id;
+            var affected = await UnitOfWork.Tasks.SoftDelete(taskId, plan.Execution.ActorUserId, cancellationToken);
+
+            if (affected == 0)
+            {
+                continue;
+            }
+
+            appliedPlans.Add(plan);
+        }
+
+        Activity.Current?.SetTag("automation.task_deletions.applied", appliedPlans.Count);
+        Logger.LogInformation("Applied automation task deletions to {DeletedTaskCount} tasks", appliedPlans.Count);
+
+        return appliedPlans;
+    }
+
+    private async Task RemoveDeletedTasksFromSearch(List<TaskDeletionPlan> taskDeletionPlans)
+    {
+        foreach (var workspaceGroup in taskDeletionPlans.GroupBy(plan => plan.Execution.Task.Workspace.Slug))
+        {
+            var taskIds = workspaceGroup.Select(plan => plan.Execution.Task.Id).Distinct().ToList();
+
+            await EventPublisher.Dispatch(new SearchIndexEvent
+            {
+                Operation = SearchIndexOperation.Delete,
+                EntityType = "task",
+                EntityIds = taskIds,
+                WorkspaceSlug = workspaceGroup.Key,
+            });
+        }
     }
 
     private static List<PlannedComment> BuildComments(List<CommentPlan> plans)

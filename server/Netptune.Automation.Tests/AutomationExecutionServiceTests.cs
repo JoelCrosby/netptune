@@ -220,6 +220,45 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_deletes_task_for_matching_rule()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            "complete",
+            actionType: AutomationActionType.DeleteTask);
+
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, inProgressStatusId, completeStatusId),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+        var task = await scope.Db.ProjectTasks.IgnoreQueryFilters()
+            .SingleAsync(task => task.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        task.IsDeleted.Should().BeTrue();
+        task.DeletedByUserId.Should().Be(scenario.Owner.Id);
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
     public async Task ExecuteTaskChangedRules_supports_status_changed_rules()
     {
         await using var scope = await Fixture.CreateScope();

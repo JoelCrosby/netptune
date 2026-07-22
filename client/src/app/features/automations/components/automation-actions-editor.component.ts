@@ -130,7 +130,9 @@ export interface AutomationActionUpdate {
                         })
                       " />
                   </div>
-                } @else {
+                } @else if (
+                  action.type === automationActionType.updateTask
+                ) {
                   <div class="grid gap-4 md:grid-cols-2">
                     <div class="flex flex-col gap-3">
                       <app-checkbox
@@ -198,6 +200,13 @@ export interface AutomationActionUpdate {
                       }
                     </div>
                   </div>
+                } @else if (
+                  action.type === automationActionType.deleteTask
+                ) {
+                  <p class="text-sm text-red-600 dark:text-red-400">
+                    This task will be deleted when the automation runs. Deleted
+                    tasks can be restored from the archive.
+                  </p>
                 }
               </div>
 
@@ -224,6 +233,7 @@ export class AutomationActionsEditorComponent {
     AutomationActionType.flagTask,
     AutomationActionType.updateTask,
     AutomationActionType.addComment,
+    AutomationActionType.deleteTask,
   ];
   readonly taskPriorities = taskPriorityOptions;
   readonly defaultTaskPriority = TaskPriority.none;

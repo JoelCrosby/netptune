@@ -207,6 +207,7 @@ internal static class AutomationTestData
             {
                 comment = "Added by test automation",
             }),
+            AutomationActionType.DeleteTask => JsonSerializer.SerializeToDocument(new { }),
             _ => JsonSerializer.SerializeToDocument(new { }),
         };
     }
