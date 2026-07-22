@@ -6,6 +6,8 @@ import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
   AutomationAction,
   AutomationActionType,
+  AutomationConditionOperator,
+  AutomationFieldCondition,
   AutomationRunStatus,
   AutomationTrigger,
   AutomationTriggerType,
@@ -29,6 +31,7 @@ export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
   [TaskChangeField.priority]: 'Priority',
   [TaskChangeField.estimate]: 'Estimate',
   [TaskChangeField.dueDate]: 'Due date',
+  [TaskChangeField.tags]: 'Tags',
   [TaskChangeField.startDate]: 'Start date',
 };
 
@@ -76,6 +79,15 @@ function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
     : ['selected fields'];
   const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
 
+  if (trigger.conditions?.length) {
+    const conditionText = joinNaturalList(
+      trigger.conditions.map(describeFieldCondition),
+      'and'
+    );
+
+    return `When a task's ${fieldText} changes, where ${conditionText}`;
+  }
+
   if (
     trigger.fields?.includes(TaskChangeField.status) &&
     isNotNullOrUndefined(trigger.statusId)
@@ -91,6 +103,30 @@ function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
   }
 
   return `When a task's ${fieldText} changes`;
+}
+
+function describeFieldCondition(condition: AutomationFieldCondition): string {
+  const field = toLowerText(taskChangeFieldLabels[condition.field]);
+  const value = condition.value ? ` “${condition.value}”` : '';
+
+  switch (condition.operator) {
+    case AutomationConditionOperator.any:
+      return `${field} has any change`;
+    case AutomationConditionOperator.equals:
+      return `${field} equals${value}`;
+    case AutomationConditionOperator.notEquals:
+      return `${field} does not equal${value}`;
+    case AutomationConditionOperator.contains:
+      return `${field} contains${value}`;
+    case AutomationConditionOperator.isEmpty:
+      return `${field} is empty`;
+    case AutomationConditionOperator.isNotEmpty:
+      return `${field} is not empty`;
+    case AutomationConditionOperator.added:
+      return `${value.trim() || field} is added`;
+    case AutomationConditionOperator.removed:
+      return `${value.trim() || field} is removed`;
+  }
 }
 
 export function describeAutomationAction(action: AutomationAction): string {

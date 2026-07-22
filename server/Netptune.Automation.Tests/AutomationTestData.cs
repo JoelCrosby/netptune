@@ -3,8 +3,10 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Relationships;
 using Netptune.Core.Statuses;
 using Netptune.Entities.Contexts;
@@ -106,6 +108,7 @@ internal static class AutomationTestData
         IReadOnlyCollection<TaskChangeField> fields,
         string? statusKey = null,
         AssigneeChangeMode? assigneeChangeMode = null,
+        IReadOnlyCollection<AutomationFieldCondition>? conditions = null,
         AutomationActionType actionType = AutomationActionType.FlagTask)
     {
         var statusId = statusKey is null ? (int?)null : await GetStatusId(db, scenario, statusKey);
@@ -115,6 +118,7 @@ internal static class AutomationTestData
             fields,
             statusId,
             assigneeChangeMode,
+            conditions,
         }, actionType);
     }
 
@@ -158,7 +162,7 @@ internal static class AutomationTestData
             Name = "Automation Rule",
             IsEnabled = true,
             TriggerType = triggerType,
-            TriggerConfig = JsonSerializer.SerializeToDocument(triggerConfig),
+            TriggerConfig = JsonSerializer.SerializeToDocument(triggerConfig, JsonOptions.Default),
             WorkspaceId = scenario.Workspace.Id,
             OwnerId = scenario.Owner.Id,
             CreatedByUserId = scenario.Owner.Id,

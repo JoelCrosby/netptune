@@ -3,6 +3,7 @@ using System.Text.Json;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.ViewModels.Automations;
@@ -39,6 +40,7 @@ internal static class AutomationMapping
             AutomationTriggerType.TaskChanged => JsonSerializer.SerializeToDocument(new
             {
                 fields = trigger.Fields,
+                conditions = trigger.Conditions,
                 statusId = trigger.StatusId,
                 assigneeChangeMode = trigger.AssigneeChangeMode,
             }, JsonOptions.Default),
@@ -71,6 +73,7 @@ internal static class AutomationMapping
             {
                 Type = type,
                 Fields = ReadEnumList<TaskChangeField>(config, "fields"),
+                Conditions = ReadList<AutomationFieldCondition>(config, "conditions"),
                 StatusId = ReadInt(config, "statusId"),
                 AssigneeChangeMode = ReadEnum<AssigneeChangeMode>(config, "assigneeChangeMode"),
             },
@@ -78,6 +81,7 @@ internal static class AutomationMapping
             {
                 Type = type,
                 Fields = [TaskChangeField.Status],
+                Conditions = [],
                 StatusId = ReadInt(config, "statusId"),
             },
             AutomationTriggerType.TaskUnassignedFor => new AutomationTriggerViewModel
@@ -174,6 +178,23 @@ internal static class AutomationMapping
                && element.TryGetInt32(out var value)
             ? value
             : null;
+    }
+
+    private static List<T> ReadList<T>(JsonDocument? document, string property)
+    {
+        if (document is null || !document.RootElement.TryGetProperty(property, out var element))
+        {
+            return [];
+        }
+
+        try
+        {
+            return element.Deserialize<List<T>>(JsonOptions.Default) ?? [];
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
     }
 
 }

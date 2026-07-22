@@ -17,7 +17,25 @@ export enum TaskChangeField {
   priority = 5,
   estimate = 6,
   dueDate = 7,
+  tags = 8,
   startDate = 9,
+}
+
+export enum AutomationConditionOperator {
+  any = 0,
+  equals = 1,
+  notEquals = 2,
+  contains = 3,
+  isEmpty = 4,
+  isNotEmpty = 5,
+  added = 6,
+  removed = 7,
+}
+
+export interface AutomationFieldCondition {
+  field: TaskChangeField;
+  operator: AutomationConditionOperator;
+  value?: string | null;
 }
 
 export enum AssigneeChangeMode {
@@ -44,6 +62,7 @@ export interface AutomationTrigger {
   fields?: TaskChangeField[] | null;
   statusId?: number | null;
   assigneeChangeMode?: AssigneeChangeMode | null;
+  conditions?: AutomationFieldCondition[] | null;
   durationDays?: number | null;
 }
 

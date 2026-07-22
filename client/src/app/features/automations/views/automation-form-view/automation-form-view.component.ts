@@ -1,12 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  computed,
-  effect,
-  inject,
-  signal,
-  untracked,
-} from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StatusesService } from '@core/services/statuses.service';
@@ -30,6 +22,8 @@ import { describeAutomationRule } from '../../models/automation-copy';
 import { buildAutomationRuleRequest } from '../../models/automation-rule-request-builder';
 import {
   AutomationActionType,
+  AutomationConditionOperator,
+  AutomationFieldCondition,
   AutomationRule,
   AutomationRuleRequest,
   AutomationTrigger,
@@ -92,8 +86,7 @@ import { AutomationsService } from '../../services/automations.service';
                   [statuses]="taskStatuses()"
                   [(triggerType)]="triggerType"
                   [(taskFields)]="taskFields"
-                  [(status)]="status"
-                  [(assigneeChangeMode)]="assigneeChangeMode"
+                  [(conditions)]="conditions"
                   [(durationDays)]="durationDays" />
               </app-step>
 
@@ -143,9 +136,6 @@ export class AutomationFormViewComponent {
   readonly taskStatuses = toSignal(this.statusesService.get(), {
     initialValue: [],
   });
-  readonly defaultCompleteStatusId = computed(
-    () => this.statusIdByKey('complete') ?? this.taskStatuses()[0]?.id ?? null
-  );
   readonly defaultActiveStatusId = computed(
     () =>
       this.statusIdByKey('in-progress') ??
@@ -164,20 +154,10 @@ export class AutomationFormViewComponent {
   readonly isEnabled = signal(true);
   readonly triggerType = signal(AutomationTriggerType.taskChanged);
   readonly taskFields = signal<TaskChangeField[]>([TaskChangeField.status]);
-
-  readonly assigneeChangeMode = signal(AssigneeChangeMode.addedOrRemoved);
+  readonly conditions = signal<AutomationFieldCondition[]>([]);
   readonly durationDays = signal('3');
 
-  readonly status = signal<number | null>(null);
-
   constructor() {
-    effect(() => {
-      const defaultId = this.defaultCompleteStatusId();
-      if (defaultId !== null && untracked(this.status) === null) {
-        this.status.set(defaultId);
-      }
-    });
-
     if (this.isEdit()) {
       this.loadRule();
     }
@@ -233,12 +213,11 @@ export class AutomationFormViewComponent {
       return {
         type: AutomationTriggerType.taskChanged,
         fields,
-        statusId: fields.includes(TaskChangeField.status)
-          ? this.status()
-          : null,
-        assigneeChangeMode: fields.includes(TaskChangeField.assignees)
-          ? this.assigneeChangeMode()
-          : null,
+        conditions: this.conditions().filter((condition) =>
+          fields.includes(condition.field)
+        ),
+        statusId: null,
+        assigneeChangeMode: null,
         durationDays: null,
       };
     }
@@ -247,6 +226,7 @@ export class AutomationFormViewComponent {
       type: this.triggerType(),
       fields: null,
       durationDays: Number(this.durationDays()),
+      conditions: null,
       statusId: null,
       assigneeChangeMode: null,
     };
@@ -313,10 +293,7 @@ export class AutomationFormViewComponent {
         ? rule.trigger.fields
         : [TaskChangeField.status]
     );
-    this.status.set(rule.trigger.statusId ?? this.defaultCompleteStatusId());
-    this.assigneeChangeMode.set(
-      rule.trigger.assigneeChangeMode ?? AssigneeChangeMode.addedOrRemoved
-    );
+    this.conditions.set(this.ruleConditions(rule));
     this.durationDays.set(String(rule.trigger.durationDays ?? 3));
     this.actions.set(
       rule.actions.length
@@ -352,6 +329,48 @@ export class AutomationFormViewComponent {
       statusId: null,
       priority: null,
     };
+  }
+
+  private ruleConditions(rule: AutomationRule): AutomationFieldCondition[] {
+    if (rule.trigger.conditions?.length) {
+      return rule.trigger.conditions;
+    }
+
+    const conditions: AutomationFieldCondition[] = [];
+
+    if (rule.trigger.statusId !== null && rule.trigger.statusId !== undefined) {
+      conditions.push({
+        field: TaskChangeField.status,
+        operator: AutomationConditionOperator.equals,
+        value: String(rule.trigger.statusId),
+      });
+    }
+
+    if (
+      rule.trigger.assigneeChangeMode !== null &&
+      rule.trigger.assigneeChangeMode !== undefined
+    ) {
+      conditions.push({
+        field: TaskChangeField.assignees,
+        operator: this.assigneeOperator(rule.trigger.assigneeChangeMode),
+        value: null,
+      });
+    }
+
+    return conditions;
+  }
+
+  private assigneeOperator(
+    mode: AssigneeChangeMode
+  ): AutomationConditionOperator {
+    switch (mode) {
+      case AssigneeChangeMode.added:
+        return AutomationConditionOperator.added;
+      case AssigneeChangeMode.removed:
+        return AutomationConditionOperator.removed;
+      default:
+        return AutomationConditionOperator.any;
+    }
   }
 
   private statusIdByKey(key: string): number | null {

@@ -1,4 +1,5 @@
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 
 namespace Netptune.Core.Requests;
 
@@ -18,6 +19,8 @@ public record AutomationTriggerRequest
     public AutomationTriggerType Type { get; init; }
 
     public List<TaskChangeField>? Fields { get; init; }
+
+    public List<AutomationFieldCondition>? Conditions { get; init; }
 
     public int? StatusId { get; init; }
 

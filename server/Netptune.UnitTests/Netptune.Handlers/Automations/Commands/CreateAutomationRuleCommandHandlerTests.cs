@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Automation.Actions;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -175,6 +176,74 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldFail_WhenConditionFieldIsNotWatched()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Conditional notification",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+                Conditions =
+                [
+                    new AutomationFieldCondition(
+                        TaskChangeField.Priority,
+                        AutomationConditionOperator.Equals,
+                        "High"),
+                ],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("included in fields");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenConditionValueIsMissing()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Conditional notification",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+                Conditions =
+                [
+                    new AutomationFieldCondition(
+                        TaskChangeField.Name,
+                        AutomationConditionOperator.Contains,
+                        null),
+                ],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("requires a value");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldFail_WhenDueDateTriggerHasInvalidDuration()
     {
         var request = new AutomationRuleRequest
@@ -221,6 +290,13 @@ public class CreateAutomationRuleCommandHandlerTests
             {
                 Type = AutomationTriggerType.TaskChanged,
                 Fields = [TaskChangeField.Status],
+                Conditions =
+                [
+                    new AutomationFieldCondition(
+                        TaskChangeField.Status,
+                        AutomationConditionOperator.Equals,
+                        "12"),
+                ],
                 StatusId = 12,
             },
             Actions =
@@ -250,6 +326,12 @@ public class CreateAutomationRuleCommandHandlerTests
         savedRule!.WorkspaceId.Should().Be(123);
         savedRule.Name.Should().Be("Done notification");
         savedRule.Actions.Should().HaveCount(3);
+
+        var condition = savedRule.TriggerConfig!.RootElement.GetProperty("conditions")[0];
+        condition.GetProperty("field").GetInt32().Should().Be((int)TaskChangeField.Status);
+        condition.GetProperty("operator").GetInt32().Should().Be((int)AutomationConditionOperator.Equals);
+        condition.GetProperty("value").GetString().Should().Be("12");
+
         var commentAction = savedRule.Actions.Single(action => action.Type == AutomationActionType.AddComment);
         commentAction.Config!.RootElement.GetProperty("comment").GetString().Should().Be("Review requested by automation");
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());

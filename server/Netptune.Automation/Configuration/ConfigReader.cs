@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using Netptune.Core.Encoding;
+
 namespace Netptune.Automation.Configuration;
 
 internal static class ConfigReader
@@ -77,5 +79,22 @@ internal static class ConfigReader
                && element.ValueKind == JsonValueKind.String
             ? element.GetString()
             : null;
+    }
+
+    public static List<T> ReadList<T>(JsonDocument? document, string property)
+    {
+        if (document is null || !document.RootElement.TryGetProperty(property, out var element))
+        {
+            return [];
+        }
+
+        try
+        {
+            return element.Deserialize<List<T>>(JsonOptions.Default) ?? [];
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
     }
 }

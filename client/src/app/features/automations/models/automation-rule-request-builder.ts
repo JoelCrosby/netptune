@@ -2,10 +2,10 @@ import {
   AutomationAction,
   AutomationActionRequest,
   AutomationActionType,
+  AutomationConditionOperator,
   AutomationRuleRequest,
   AutomationTrigger,
   AutomationTriggerType,
-  TaskChangeField,
 } from './automation.models';
 
 export interface AutomationRuleDraft {
@@ -87,11 +87,20 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
       return 'Choose at least one task field to watch.';
     }
 
-    if (
-      trigger.fields.includes(TaskChangeField.status) &&
-      trigger.statusId === null
-    ) {
-      return 'Choose a status to watch.';
+    const invalidCondition = trigger.conditions?.find((condition) => {
+      const requiresValue =
+        condition.operator === AutomationConditionOperator.equals ||
+        condition.operator === AutomationConditionOperator.notEquals ||
+        condition.operator === AutomationConditionOperator.contains;
+
+      return (
+        !trigger.fields?.includes(condition.field) ||
+        (requiresValue && !condition.value?.trim())
+      );
+    });
+
+    if (invalidCondition) {
+      return 'Complete each field condition before saving.';
     }
   }
 

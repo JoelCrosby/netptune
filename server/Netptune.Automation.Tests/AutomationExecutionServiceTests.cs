@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.Automations;
 
 using Xunit;
 
@@ -23,6 +24,7 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_creates_run_and_flag_for_matching_status_rule()
     {
         await using var scope = await Fixture.CreateScope();
+
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
         var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
@@ -62,14 +64,17 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_is_idempotent_for_same_event()
     {
         await using var scope = await Fixture.CreateScope();
+
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
         var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
             "complete");
+
         var eventId = Guid.NewGuid();
         var message = new TaskChangedMessage
         {
@@ -97,6 +102,7 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_creates_run_for_matching_name_rule()
     {
         await using var scope = await Fixture.CreateScope();
+
         var scenario = await AutomationTestData.CreateScenario(scope.Db);
         var rule = await AutomationTestData.CreateTaskChangedRule(scope.Db, scenario, [TaskChangeField.Name]);
 
@@ -123,7 +129,9 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_updates_task_for_matching_rule()
     {
         await using var scope = await Fixture.CreateScope();
+
         var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
@@ -215,6 +223,7 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteTaskChangedRules_supports_status_changed_rules()
     {
         await using var scope = await Fixture.CreateScope();
+
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
         var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
@@ -242,6 +251,7 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteUnassignedRules_creates_notification_for_eligible_unassigned_task()
     {
         await using var scope = await Fixture.CreateScope();
+
         var scenario = await AutomationTestData.CreateScenario(
             scope.Db,
             assignTask: false,
@@ -265,9 +275,117 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_matches_scalar_field_condition()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            conditions:
+            [
+                new AutomationFieldCondition(
+                    TaskChangeField.Name,
+                    AutomationConditionOperator.Contains,
+                    "urgent"),
+            ]);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "Urgent request"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_skips_nonmatching_scalar_field_condition()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Priority],
+            conditions:
+            [
+                new AutomationFieldCondition(
+                    TaskChangeField.Priority,
+                    AutomationConditionOperator.Equals,
+                    "Critical"),
+            ]);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Priority, TaskPriority.Low, TaskPriority.High),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_matches_specific_collection_value()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Tags],
+            conditions:
+            [
+                new AutomationFieldCondition(
+                    TaskChangeField.Tags,
+                    AutomationConditionOperator.Added,
+                    "Release"),
+            ]);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Tags(["release"], []),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(1);
+    }
+
+    [Fact]
     public async Task ExecuteDueDateRules_creates_run_for_task_due_on_configured_day()
     {
         await using var scope = await Fixture.CreateScope();
+
         var dueDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(3);
         var scenario = await AutomationTestData.CreateScenario(scope.Db, dueDate: dueDate);
         var rule = await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 3);
@@ -288,8 +406,10 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteDueDateRules_is_idempotent_for_same_due_date()
     {
         await using var scope = await Fixture.CreateScope();
+
         var dueDate = DateOnly.FromDateTime(DateTime.UtcNow);
         var scenario = await AutomationTestData.CreateScenario(scope.Db, dueDate: dueDate);
+
         await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 0);
 
         await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
@@ -306,8 +426,10 @@ public sealed class AutomationExecutionServiceTests
     public async Task ExecuteDueDateRules_does_not_run_before_configured_day()
     {
         await using var scope = await Fixture.CreateScope();
+
         var dueDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(4);
         var scenario = await AutomationTestData.CreateScenario(scope.Db, dueDate: dueDate);
+
         await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 3);
 
         await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);

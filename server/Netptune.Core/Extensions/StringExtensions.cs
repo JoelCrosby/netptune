@@ -94,4 +94,15 @@ public static class StringExtensions
     {
         return input.Normalize().ToUpperInvariant();
     }
+
+    public static bool EqualsOrdinalIgnoreCase(this string? input, string? value)
+    {
+        return string.Equals(input, value, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public static bool ContainsOrdinalIgnoreCase(this string? input, string? value)
+    {
+        return !string.IsNullOrWhiteSpace(value) &&
+               input?.Contains(value, StringComparison.OrdinalIgnoreCase) == true;
+    }
 }

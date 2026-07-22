@@ -5,15 +5,16 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import {
-  assigneeChangeModeLabels,
   taskChangeFieldLabels,
   triggerTypeLabels,
 } from '../models/automation-copy';
 import {
-  AssigneeChangeMode,
+  AutomationConditionOperator,
+  AutomationFieldCondition,
   AutomationTriggerType,
   TaskChangeField,
 } from '../models/automation.models';
+import { AutomationFieldConditionEditorComponent } from './automation-field-condition-editor.component';
 
 @Component({
   selector: 'app-automation-trigger-editor',
@@ -22,6 +23,7 @@ import {
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    AutomationFieldConditionEditorComponent,
   ],
   template: `
     <div class="flex flex-col gap-4">
@@ -47,34 +49,16 @@ import {
           </div>
         </div>
 
-        @if (hasTaskField(taskChangeField.status)) {
-          <div class="flex flex-col gap-3">
-            <div class="min-w-64 flex-1">
-              <app-form-select label="Status changes to" [(value)]="status">
-                @for (option of statuses(); track option.id) {
-                  <app-form-select-option [value]="option.id">
-                    {{ option.name }}
-                  </app-form-select-option>
-                }
-              </app-form-select>
-            </div>
-          </div>
-        }
-
-        @if (hasTaskField(taskChangeField.assignees)) {
-          <div class="flex flex-wrap items-end gap-3">
-            <span class="pb-7 text-sm">Assignees are</span>
-            <div class="min-w-64 flex-1">
-              <app-form-select
-                label="Assignee change"
-                [(value)]="assigneeChangeMode">
-                @for (option of assigneeChangeModeOptions; track option) {
-                  <app-form-select-option [value]="option">
-                    {{ assigneeChangeModeLabel(option) }}
-                  </app-form-select-option>
-                }
-              </app-form-select>
-            </div>
+        @if (taskFields().length) {
+          <div class="border-border flex flex-col gap-3 border-t pt-4">
+            <span class="text-sm font-medium">Conditions</span>
+            @for (field of taskFields(); track field) {
+              <app-automation-field-condition-editor
+                [field]="field"
+                [statuses]="statuses()"
+                [condition]="conditionFor(field)"
+                (conditionChange)="setCondition($event)" />
+            }
           </div>
         }
       } @else if (triggerType() === automationTriggerType.taskUnassignedFor) {
@@ -107,7 +91,6 @@ import {
 })
 export class AutomationTriggerEditorComponent {
   readonly automationTriggerType = AutomationTriggerType;
-  readonly taskChangeField = TaskChangeField;
   readonly triggerTypes = [
     AutomationTriggerType.taskChanged,
     AutomationTriggerType.taskUnassignedFor,
@@ -118,27 +101,19 @@ export class AutomationTriggerEditorComponent {
     TaskChangeField.description,
     TaskChangeField.status,
     TaskChangeField.assignees,
-    TaskChangeField.owner,
     TaskChangeField.priority,
     TaskChangeField.estimate,
     TaskChangeField.dueDate,
+    TaskChangeField.tags,
     TaskChangeField.startDate,
   ];
   readonly statuses = input.required<Status[]>();
-  readonly assigneeChangeModeOptions = [
-    AssigneeChangeMode.addedOrRemoved,
-    AssigneeChangeMode.added,
-    AssigneeChangeMode.removed,
-  ];
 
   readonly triggerType = model<AutomationTriggerType>(
     AutomationTriggerType.taskChanged
   );
   readonly taskFields = model<TaskChangeField[]>([TaskChangeField.status]);
-  readonly status = model<number | null>(null);
-  readonly assigneeChangeMode = model<AssigneeChangeMode>(
-    AssigneeChangeMode.addedOrRemoved
-  );
+  readonly conditions = model<AutomationFieldCondition[]>([]);
   readonly durationDays = model('3');
 
   triggerTypeLabel(type: AutomationTriggerType): string {
@@ -147,10 +122,6 @@ export class AutomationTriggerEditorComponent {
 
   taskFieldLabel(field: TaskChangeField): string {
     return taskChangeFieldLabels[field];
-  }
-
-  assigneeChangeModeLabel(mode: AssigneeChangeMode): string {
-    return assigneeChangeModeLabels[mode];
   }
 
   hasTaskField(field: TaskChangeField): boolean {
@@ -165,5 +136,33 @@ export class AutomationTriggerEditorComponent {
         ? [...new Set([...fields, field])]
         : fields.filter((selected) => selected !== field)
     );
+
+    if (checked && !this.conditions().some((item) => item.field === field)) {
+      this.conditions.update((conditions) => [
+        ...conditions,
+        { field, operator: AutomationConditionOperator.any, value: null },
+      ]);
+    } else if (!checked) {
+      this.conditions.update((conditions) =>
+        conditions.filter((condition) => condition.field !== field)
+      );
+    }
+  }
+
+  conditionFor(field: TaskChangeField): AutomationFieldCondition {
+    return (
+      this.conditions().find((condition) => condition.field === field) ?? {
+        field,
+        operator: AutomationConditionOperator.any,
+        value: null,
+      }
+    );
+  }
+
+  setCondition(condition: AutomationFieldCondition) {
+    this.conditions.update((conditions) => [
+      ...conditions.filter((item) => item.field !== condition.field),
+      condition,
+    ]);
   }
 }

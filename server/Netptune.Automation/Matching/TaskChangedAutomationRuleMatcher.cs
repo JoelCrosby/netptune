@@ -8,6 +8,8 @@ using Netptune.Automation.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Extensions;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
@@ -17,17 +19,13 @@ internal sealed class TaskChangedAutomationRuleMatcher
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ILogger<TaskChangedAutomationRuleMatcher> Logger;
 
-    public TaskChangedAutomationRuleMatcher(
-        INetptuneUnitOfWork unitOfWork,
-        ILogger<TaskChangedAutomationRuleMatcher> logger)
+    public TaskChangedAutomationRuleMatcher(INetptuneUnitOfWork unitOfWork, ILogger<TaskChangedAutomationRuleMatcher> logger)
     {
         UnitOfWork = unitOfWork;
         Logger = logger;
     }
 
-    internal async Task<List<PendingAutomationExecution>> Match(
-        TaskChangedMessage message,
-        CancellationToken cancellationToken)
+    internal async Task<List<PendingAutomationExecution>> Match(TaskChangedMessage message, CancellationToken cancellationToken)
     {
         var activity = Activity.Current;
 
@@ -41,13 +39,16 @@ internal sealed class TaskChangedAutomationRuleMatcher
             AutomationTriggerType.TaskChanged,
             message.WorkspaceId,
             cancellationToken);
+
         var statusRules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
             AutomationTriggerType.TaskStatusChanged,
             message.WorkspaceId,
             cancellationToken);
+
         var rules = taskChangedRules.Concat(statusRules).ToList();
 
         Telemetry.RecordRulesEvaluated(AutomationTriggerType.TaskChanged, rules.Count);
+
         activity?.SetTag("automation.rules.evaluated", rules.Count);
 
         if (rules.Count == 0)
@@ -101,9 +102,7 @@ internal sealed class TaskChangedAutomationRuleMatcher
         return executions;
     }
 
-    private bool Matches(
-        AutomationRule rule,
-        TaskChangedMessage message)
+    private bool Matches(AutomationRule rule, TaskChangedMessage message)
     {
         return rule.TriggerType switch
         {
@@ -113,14 +112,14 @@ internal sealed class TaskChangedAutomationRuleMatcher
         };
     }
 
-    private bool MatchesTaskChangedRule(
-        AutomationRule rule,
-        TaskChangedMessage message)
+    private bool MatchesTaskChangedRule(AutomationRule rule, TaskChangedMessage message)
     {
         var configuredFields = ConfigReader.ReadEnumList<TaskChangeField>(rule.TriggerConfig, "fields");
         var watchedFields = configuredFields.Count == 0
             ? Enum.GetValues<TaskChangeField>().ToHashSet()
             : configuredFields.ToHashSet();
+
+        var conditions = ConfigReader.ReadList<AutomationFieldCondition>(rule.TriggerConfig, "conditions");
 
         foreach (var change in message.Changes)
         {
@@ -129,7 +128,9 @@ internal sealed class TaskChangedAutomationRuleMatcher
                 continue;
             }
 
-            if (MatchesFieldCondition(rule,  change))
+            var condition = conditions.FirstOrDefault(candidate => candidate.Field == change.Field);
+
+            if (MatchesFieldCondition(rule, change, condition))
             {
                 return true;
             }
@@ -145,10 +146,13 @@ internal sealed class TaskChangedAutomationRuleMatcher
         return statusChange is not null && MatchesStatusCondition(rule, statusChange);
     }
 
-    private static bool MatchesFieldCondition(
-        AutomationRule rule,
-        TaskFieldChange change)
+    private static bool MatchesFieldCondition(AutomationRule rule, TaskFieldChange change, AutomationFieldCondition? condition)
     {
+        if (condition is not null)
+        {
+            return MatchesCondition(condition, change);
+        }
+
         var matches = change.Field switch
         {
             TaskChangeField.Status => MatchesStatusCondition(rule, change),
@@ -159,9 +163,30 @@ internal sealed class TaskChangedAutomationRuleMatcher
         return matches;
     }
 
-    private static bool MatchesStatusCondition(
-        AutomationRule rule,
-        TaskFieldChange change)
+    private static bool MatchesCondition(AutomationFieldCondition condition, TaskFieldChange change)
+    {
+        return condition.Operator switch
+        {
+            AutomationConditionOperator.Any => true,
+            AutomationConditionOperator.Equals => change.NewValue.EqualsOrdinalIgnoreCase(condition.Value),
+            AutomationConditionOperator.NotEquals => !change.NewValue.EqualsOrdinalIgnoreCase(condition.Value),
+            AutomationConditionOperator.Contains => change.NewValue.ContainsOrdinalIgnoreCase(condition.Value),
+            AutomationConditionOperator.IsEmpty => string.IsNullOrWhiteSpace(change.NewValue),
+            AutomationConditionOperator.IsNotEmpty => !string.IsNullOrWhiteSpace(change.NewValue),
+            AutomationConditionOperator.Added => MatchesCollection(change.AddedValues, condition.Value),
+            AutomationConditionOperator.Removed => MatchesCollection(change.RemovedValues, condition.Value),
+            _ => false,
+        };
+    }
+
+    private static bool MatchesCollection(IReadOnlyCollection<string> values, string? expected)
+    {
+        return string.IsNullOrWhiteSpace(expected)
+            ? values.Count > 0
+            : values.Any(value => value.EqualsOrdinalIgnoreCase(expected));
+    }
+
+    private static bool MatchesStatusCondition(AutomationRule rule, TaskFieldChange change)
     {
         var configuredStatusId = ConfigReader.ReadInt(rule.TriggerConfig, "statusId");
 
