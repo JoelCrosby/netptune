@@ -18,8 +18,13 @@ export interface PreferenceDefinition {
   key: string;
   groupKey: string;
   label: string;
-  controlType: 'select' | 'hidden';
-  valueType: 'string' | 'number-array' | 'number-array-map' | 'string-map';
+  controlType: 'select' | 'toggle' | 'hidden';
+  valueType:
+    | 'string'
+    | 'boolean'
+    | 'number-array'
+    | 'number-array-map'
+    | 'string-map';
   defaultValue: unknown;
   allowedScopes: PreferenceScope[];
   options: PreferenceOption[];

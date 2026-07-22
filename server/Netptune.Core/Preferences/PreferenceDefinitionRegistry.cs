@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using Netptune.Core.Enums;
+
 namespace Netptune.Core.Preferences;
 
 public interface IPreferenceDefinitionRegistry
@@ -35,6 +37,12 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         {
             Key = "workspace",
             Label = "Workspace",
+            Order = 25,
+        },
+        new()
+        {
+            Key = "notifications",
+            Label = "Notifications",
             Order = 20,
         },
     ];
@@ -115,7 +123,63 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             Internal = true,
             Order = 10,
         },
+        ..NotificationDefinitions(),
     ];
+
+    private static IEnumerable<PreferenceDefinition> NotificationDefinitions()
+    {
+        var activityTypes = Enum.GetValues<ActivityType>()
+            .Where(activityType => activityType is not ActivityType.ExportRequested
+                and not ActivityType.LoginSuccess
+                and not ActivityType.LoginFailed);
+
+        return activityTypes.Select((activityType, index) => new PreferenceDefinition
+        {
+            Key = PreferenceKeys.NotificationEvent(activityType),
+            GroupKey = "notifications",
+            Label = NotificationLabel(activityType),
+            ControlType = "toggle",
+            ValueType = "boolean",
+            DefaultValue = JsonSerializer.SerializeToElement(true),
+            AllowedScopes = [PreferenceScopes.Global, PreferenceScopes.Workspace],
+            Order = (index + 1) * 10,
+        });
+    }
+
+    private static string NotificationLabel(ActivityType activityType) => activityType switch
+    {
+        ActivityType.Create => "Created",
+        ActivityType.Modify => "Updated",
+        ActivityType.Delete => "Deleted",
+        ActivityType.Assign => "Assigned",
+        ActivityType.Move => "Moved",
+        ActivityType.Reorder => "Reordered",
+        ActivityType.ModifyName => "Name changed",
+        ActivityType.ModifyDescription => "Description changed",
+        ActivityType.ModifyStatus => "Status changed",
+        ActivityType.Invite => "Invited",
+        ActivityType.Remove => "Removed",
+        ActivityType.PermissionChanged => "Permissions changed",
+        ActivityType.Unassign => "Unassigned",
+        ActivityType.AddTag => "Tag added",
+        ActivityType.RemoveTag => "Tag removed",
+        ActivityType.RoleChanged => "Role changed",
+        ActivityType.WorkspaceSettingsChanged => "Workspace settings changed",
+        ActivityType.Mention => "Mentioned",
+        ActivityType.ModifyPriority => "Priority changed",
+        ActivityType.ModifyEstimate => "Estimate changed",
+        ActivityType.Restore => "Restored",
+        ActivityType.AddRelation => "Relation added",
+        ActivityType.RemoveRelation => "Relation removed",
+        ActivityType.ModifyDueDate => "Due date changed",
+        ActivityType.AddFile => "File added",
+        ActivityType.RemoveFile => "File removed",
+        ActivityType.ModifyStartDate => "Start date changed",
+        ActivityType.AddComment => "Comment added",
+        ActivityType.ModifyComment => "Comment changed",
+        ActivityType.RemoveComment => "Comment removed",
+        _ => activityType.ToString(),
+    };
 
     public IReadOnlyList<PreferenceDefinitionGroup> GetGroups()
     {

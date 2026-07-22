@@ -5,15 +5,9 @@ namespace Netptune.Core.Repositories;
 
 public interface IUserPreferenceRepository : IRepository<UserPreferenceValue, int>
 {
-    Task<List<UserPreferenceValue>> GetValues(
-        string userId,
-        string key,
-        int? workspaceId,
-        CancellationToken cancellationToken = default);
+    Task<List<UserPreferenceValue>> GetValues(IEnumerable<string> userIds, string key, int workspaceId, CancellationToken cancellationToken = default);
 
-    Task<UserPreferenceValue?> GetScopedValue(
-        string userId,
-        string key,
-        int? workspaceId,
-        CancellationToken cancellationToken = default);
+    Task<List<UserPreferenceValue>> GetValues(string userId, string key, int? workspaceId, CancellationToken cancellationToken = default);
+
+    Task<UserPreferenceValue?> GetScopedValue(string userId, string key, int? workspaceId, CancellationToken cancellationToken = default);
 }

@@ -52,6 +52,20 @@ public class ActivityEntryMetaTests
         fields.Should().Equal("description", "priority");
     }
 
+    [Fact]
+    public void Build_CollectsExplicitRecipientsAcrossEvents()
+    {
+        var first = Change(TaskChangeField.Description, "a", "b", ["one", "two"]);
+        var second = Change(TaskChangeField.Description, "b", "c", ["two", "three"]);
+
+        var meta = Parse(ActivityEntryMeta.Build([first, second]));
+        var recipients = meta.GetProperty("recipientUserIds")
+            .EnumerateArray()
+            .Select(item => item.GetString());
+
+        recipients.Should().Equal("one", "two", "three");
+    }
+
     #endregion
 
     #region NoOp
@@ -129,12 +143,17 @@ public class ActivityEntryMetaTests
 
     #endregion
 
-    private static ActivityEvent Change(TaskChangeField field, string? oldValue, string? newValue) => new ()
+    private static ActivityEvent Change(
+        TaskChangeField field,
+        string? oldValue,
+        string? newValue,
+        List<string>? recipientUserIds = null) => new()
     {
         Field = field,
         OldValue = oldValue,
         NewValue = newValue,
         OccurredAt = DateTime.UtcNow,
+        RecipientUserIds = recipientUserIds,
     };
 
     private static ActivityEvent Truncated(string? oldValue, string? newValue) => new ()

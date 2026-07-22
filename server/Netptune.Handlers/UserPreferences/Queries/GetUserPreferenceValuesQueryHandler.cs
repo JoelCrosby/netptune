@@ -84,7 +84,7 @@ public sealed class GetUserPreferenceValuesQueryHandler
             userId,
             definition.Key,
             workspaceId,
-            cancellationToken);
+            cancellationToken) ?? [];
 
         var globalValue = values.FirstOrDefault(value => value.WorkspaceId is null)?.Value.RootElement.Clone();
         var workspaceValue = values.FirstOrDefault(value => value.WorkspaceId == workspaceId)?.Value.RootElement.Clone();

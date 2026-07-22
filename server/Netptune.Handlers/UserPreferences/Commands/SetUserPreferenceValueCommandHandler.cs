@@ -98,7 +98,7 @@ public sealed class SetUserPreferenceValueCommandHandler
             userId,
             definition.Key,
             workspaceId,
-            cancellationToken);
+            cancellationToken) ?? [];
 
         var globalValue = values.FirstOrDefault(value => value.WorkspaceId is null)?.Value.RootElement.Clone();
         var workspaceValue = values.FirstOrDefault(value => value.WorkspaceId == workspaceId)?.Value.RootElement.Clone();
@@ -140,6 +140,11 @@ public sealed class SetUserPreferenceValueCommandHandler
         {
             return value.ValueKind == JsonValueKind.Object
                    && value.EnumerateObject().All(property => property.Value.ValueKind == JsonValueKind.String);
+        }
+
+        if (definition.ValueType == "boolean")
+        {
+            return value.ValueKind is JsonValueKind.True or JsonValueKind.False;
         }
 
         if (definition.ValueType == "string" && value.ValueKind != JsonValueKind.String) return false;

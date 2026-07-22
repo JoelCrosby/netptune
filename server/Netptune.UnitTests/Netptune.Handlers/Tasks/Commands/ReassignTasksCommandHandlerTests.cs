@@ -60,6 +60,17 @@ public class ReassignTasksCommandHandlerTests
 
         await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
 
-        Activity.Received(1).LogWithMany(Arg.Any<Action<ActivityMultipleOptions<AssignActivityMeta>>>());
+        Activity.Received(1).LogWithMany(Arg.Is<Action<ActivityMultipleOptions<AssignActivityMeta>>>(configure =>
+            CapturesRecipient(configure, request.AssigneeId)));
+    }
+
+    private static bool CapturesRecipient(
+        Action<ActivityMultipleOptions<AssignActivityMeta>> configure,
+        string assigneeId)
+    {
+        var options = new ActivityMultipleOptions<AssignActivityMeta>();
+        configure(options);
+
+        return options.RecipientUserIds?.SequenceEqual([assigneeId]) == true;
     }
 }

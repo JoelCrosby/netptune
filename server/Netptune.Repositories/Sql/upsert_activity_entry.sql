@@ -84,6 +84,13 @@ DO UPDATE SET
                  FULL OUTER JOIN jsonb_each(COALESCE(EXCLUDED.meta -> 'fields', jsonb_build_object())) AS incoming
                    ON existing.key = incoming.key
              ))
+             || jsonb_build_object('recipientUserIds', (
+                 SELECT COALESCE(jsonb_agg(DISTINCT recipient_id), '[]'::jsonb)
+                 FROM jsonb_array_elements(
+                     COALESCE(activity_entries.meta -> 'recipientUserIds', '[]'::jsonb)
+                     || COALESCE(EXCLUDED.meta -> 'recipientUserIds', '[]'::jsonb)
+                 ) AS recipient_id
+             ))
 
     , first_occurred_at = LEAST(activity_entries.first_occurred_at, EXCLUDED.first_occurred_at)
     , last_occurred_at = GREATEST(activity_entries.last_occurred_at, EXCLUDED.last_occurred_at)

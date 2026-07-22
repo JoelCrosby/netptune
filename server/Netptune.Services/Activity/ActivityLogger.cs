@@ -174,6 +174,7 @@ public class ActivityLogger : IActivityLogger
                 OccurredAt = DateTime.UtcNow,
                 IpAddress = ipAddress,
                 UserAgent = userAgent,
+                RecipientUserIds = activityOptions.RecipientUserIds,
             });
 
         EventPublisher.Dispatch(new ActivityMessage(activities));
@@ -214,6 +215,7 @@ public class ActivityLogger : IActivityLogger
             Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
             IpAddress = GetIpAddress(),
             UserAgent = GetUserAgent(),
+            RecipientUserIds = activityOptions.RecipientUserIds,
         };
 
         EventPublisher.Dispatch(new ActivityMessage(activity));
@@ -244,6 +246,7 @@ public class ActivityLogger : IActivityLogger
                 WorkspaceId = workspaceId,
                 OccurredAt = DateTime.UtcNow,
                 Meta = JsonSerializer.Serialize(activityOptions.Meta, JsonOptions.Default),
+                RecipientUserIds = activityOptions.RecipientUserIds,
             });
 
         EventPublisher.Dispatch(new ActivityMessage(activities));

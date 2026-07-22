@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Netptune.Core.Enums;
 using Netptune.Core.Preferences;
 using Netptune.Core.Responses.Common;
 
@@ -81,13 +82,30 @@ public sealed class UserPreferencesEndpointTests
         var result = await response.Content.ReadFromJsonAsync<PreferenceValuesResponse>();
         var preferences = result!.Groups.SelectMany(group => group.Preferences).ToList();
 
-        result.Groups.Select(group => group.Key).Should().Equal("appearance", "commandPalette", "boards", "workspace");
-        preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.AppearanceTheme);
-        preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.CommandPaletteRecentItemsScope);
-        preferences.Should().Contain(preference => preference.Definition.Key == PreferenceKeys.BoardHiddenGroupIds);
+        result.Groups
+            .Select(group => group.Key)
+            .Should()
+            .Equal("appearance", "commandPalette", "boards", "notifications", "workspace");
+        preferences
+            .Should()
+            .Contain(preference => preference.Definition.Key == PreferenceKeys.AppearanceTheme);
+        preferences
+            .Should()
+            .Contain(preference => preference.Definition.Key == PreferenceKeys.CommandPaletteRecentItemsScope);
+        preferences
+            .Should()
+            .Contain(preference => preference.Definition.Key == PreferenceKeys.BoardHiddenGroupIds);
+        preferences
+            .Should()
+            .Contain(preference => preference.Definition.Key == PreferenceKeys.NotificationEvent(ActivityType.Mention));
+
         preferences
             .Where(preference => !preference.Definition.Internal)
-            .Should().OnlyContain(preference => preference.Definition.Options.Count > 0);
+            .Should()
+            .OnlyContain(preference =>
+                preference.Definition.ControlType == "select" && preference.Definition.Options.Count > 0
+                || preference.Definition.ControlType == "toggle"
+                && preference.Definition.ValueType == "boolean");
     }
 
     [Fact]

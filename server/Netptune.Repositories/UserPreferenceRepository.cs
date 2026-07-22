@@ -12,6 +12,23 @@ public class UserPreferenceRepository(DataContext context, IDbConnectionFactory 
     : Repository<DataContext, UserPreferenceValue, int>(context, connectionFactory), IUserPreferenceRepository
 {
     public Task<List<UserPreferenceValue>> GetValues(
+        IEnumerable<string> userIds,
+        string key,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        var ids = userIds.Distinct().ToList();
+
+        return Entities
+            .AsNoTracking()
+            .Where(preference =>
+                ids.Contains(preference.UserId) &&
+                preference.Key == key &&
+                (preference.WorkspaceId == null || preference.WorkspaceId == workspaceId))
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<UserPreferenceValue>> GetValues(
         string userId,
         string key,
         int? workspaceId,

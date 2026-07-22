@@ -1,5 +1,6 @@
 using FluentAssertions;
 
+using Netptune.Core.Enums;
 using Netptune.Core.Preferences;
 
 using Xunit;
@@ -39,6 +40,19 @@ public class PreferenceDefinitionRegistryTests
         preference.DefaultValue.GetString().Should().Be("light");
         preference.AllowedScopes.Should().Equal(PreferenceScopes.Global);
         preference.Options.Select(option => option.Value).Should().Equal("light", "dark");
+    }
+
+    [Fact]
+    public void GetGroups_ReturnsNotificationToggle_ForEachNotifiableActivityType()
+    {
+        var group = Registry.GetGroups().Single(group => group.Key == "notifications");
+        var mention = group.Preferences.Single(preference =>
+            preference.Key == PreferenceKeys.NotificationEvent(ActivityType.Mention));
+
+        mention.ControlType.Should().Be("toggle");
+        mention.ValueType.Should().Be("boolean");
+        mention.DefaultValue.GetBoolean().Should().BeTrue();
+        mention.AllowedScopes.Should().Equal(PreferenceScopes.Global, PreferenceScopes.Workspace);
     }
 
     [Fact]

@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using Netptune.Core.Enums;
+
 namespace Netptune.Core.Preferences;
 
 public static class PreferenceKeys
@@ -9,6 +11,11 @@ public static class PreferenceKeys
     public const string BoardHiddenGroupIds = "boards.hiddenGroupIds";
     public const string BoardTaskSort = "boards.taskSort";
     public const string WorkspaceLastVisited = "workspace.lastVisited";
+
+    public static string NotificationEvent(ActivityType activityType)
+    {
+        return $"notifications.events.{activityType.ToString().ToLowerInvariant()}";
+    }
 }
 
 public static class PreferenceScopes

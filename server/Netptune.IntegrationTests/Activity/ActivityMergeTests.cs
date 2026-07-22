@@ -806,7 +806,8 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
         string? newValue,
         ActivityType type = ActivityType.ModifyDescription,
         string? userId = null,
-        bool hash = false)
+        bool hash = false,
+        bool notify = true)
     {
         return new()
         {
@@ -822,6 +823,9 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             NewValue = ActivityValue.Truncate(newValue),
             OldValueHash = hash ? ActivityValue.HashIfTruncated(oldValue) : null,
             NewValueHash = hash ? ActivityValue.HashIfTruncated(newValue) : null,
+            RecipientUserIds = notify
+                ? [fixture.ActorUserId, fixture.OtherUserId, fixture.ThirdUserId]
+                : null,
         };
     }
 
@@ -836,6 +840,7 @@ public class ActivityMergeTests(ActivityMergeFixture fixture) : IClassFixture<Ac
             WorkspaceId = fixture.WorkspaceId,
             UserId = userId ?? fixture.ActorUserId,
             OccurredAt = DateTime.UtcNow,
+            RecipientUserIds = [fixture.ActorUserId, fixture.OtherUserId, fixture.ThirdUserId],
         };
     }
 

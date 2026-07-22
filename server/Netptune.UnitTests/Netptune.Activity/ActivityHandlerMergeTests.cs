@@ -239,5 +239,6 @@ public class ActivityHandlerMergeTests
             WorkspaceId = WorkspaceId,
             UserId = ActorUserId,
             OccurredAt = DateTime.UtcNow,
+            RecipientUserIds = [OtherUserId],
         };
 }

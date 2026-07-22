@@ -14,6 +14,7 @@ using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
+using Netptune.Services.Notifications;
 
 namespace Netptune.Activity.Handlers;
 
@@ -454,11 +455,17 @@ public sealed class ActivityHandler :
                 continue;
             }
 
-            var recipientUserIds = activity.RecipientUserIds;
-
-            var recipients = recipientUserIds is not null
-                ? recipientUserIds.Where(id => id != activity.UserId && allUserIds.Contains(id)).ToList()
-                : allUserIds.Where(id => id != activity.UserId).ToList();
+            var recipients = await NotificationRecipientResolver.Resolve(
+                UnitOfWork,
+                new NotificationRecipientRequest
+                {
+                    RequestedUserIds = activity.RecipientUserIds,
+                    WorkspaceUserIds = allUserIds,
+                    ActorUserId = activity.UserId,
+                    WorkspaceId = activity.WorkspaceId,
+                    ActivityType = activity.Type,
+                },
+                cancellationToken);
 
             if (recipients.Count == 0)
             {

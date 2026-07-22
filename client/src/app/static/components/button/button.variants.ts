@@ -204,7 +204,7 @@ export const flatButtonVariants = cva(
         ghost:
           'bg-transparent text-foreground hover:bg-foreground/10 active:bg-foreground/20 focus-visible:ring-foreground',
         contrast:
-          'text-background bg-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
+          'text-background bg-foreground hover:bg-foreground/80 focus-visible:ring-foreground',
       },
     },
     defaultVariants: {

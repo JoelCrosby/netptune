@@ -8,6 +8,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Services.Notifications;
 
 namespace Netptune.Automation.Persistence;
 
@@ -63,7 +64,7 @@ internal sealed class RunPersistenceService
 
             await AppendCommentEvents(comments, cancellationToken);
 
-            notifications = BuildNotifications(plan.NotificationPlans);
+            notifications = await BuildNotifications(plan.NotificationPlans, cancellationToken);
             activity?.SetTag("automation.notifications.created", notifications.Count);
 
             await UnitOfWork.Notifications.AddRangeAsync(notifications, cancellationToken);
@@ -245,29 +246,45 @@ internal sealed class RunPersistenceService
         Logger.LogInformation("Applied automation task updates to {UpdatedTaskCount} tasks", updatedTaskIds.Count);
     }
 
-    private static List<Notification> BuildNotifications(List<NotificationActivityPlan> activityPlans)
+    private async Task<List<Notification>> BuildNotifications(List<NotificationActivityPlan> activityPlans, CancellationToken cancellationToken)
     {
-        return activityPlans
-            .SelectMany(plan =>
-            {
-                var task = plan.Execution.Task;
-                var actorUserId = plan.Execution.ActorUserId;
-                var link = BuildTaskLink(task);
+        var notifications = new List<Notification>();
 
-                return plan.RecipientUserIds.Select(userId => new Notification
+        foreach (var plan in activityPlans)
+        {
+            var task = plan.Execution.Task;
+            var actorUserId = plan.Execution.ActorUserId;
+
+            var recipients = await NotificationRecipientResolver.Resolve(
+                UnitOfWork,
+                new NotificationRecipientRequest
                 {
-                    UserId = userId,
-                    EventRecordId = plan.Activity.Id,
-                    IsRead = false,
-                    Link = link,
+                    RequestedUserIds = plan.RecipientUserIds,
+                    WorkspaceUserIds = plan.RecipientUserIds,
+                    ActorUserId = actorUserId,
                     WorkspaceId = task.WorkspaceId,
-                    EntityType = EntityType.Task,
                     ActivityType = ActivityType.Modify,
-                    CreatedByUserId = actorUserId,
-                    OwnerId = actorUserId,
-                });
-            })
-            .ToList();
+                    ExcludeActor = false,
+                },
+                cancellationToken);
+
+            var link = BuildTaskLink(task);
+
+            notifications.AddRange(recipients.Select(userId => new Notification
+            {
+                UserId = userId,
+                EventRecordId = plan.Activity.Id,
+                IsRead = false,
+                Link = link,
+                WorkspaceId = task.WorkspaceId,
+                EntityType = EntityType.Task,
+                ActivityType = ActivityType.Modify,
+                CreatedByUserId = actorUserId,
+                OwnerId = actorUserId,
+            }));
+        }
+
+        return notifications;
     }
 
     private static string BuildTaskLink(ProjectTask task)

@@ -45,6 +45,8 @@ public class ActivityMultipleOptions
 
     [Required]
     public ActivityType Type { get; set; }
+
+    public List<string>? RecipientUserIds { get; set; }
 }
 
 public class ActivityMultipleOptions<TMeta> : ActivityMultipleOptions where TMeta : class

@@ -17,6 +17,7 @@ internal static class ActivityEntryMeta
     private const string NewKey = "new";
     private const string OldHashKey = "oldHash";
     private const string NewHashKey = "newHash";
+    private const string RecipientUserIdsKey = "recipientUserIds";
 
     public static string Build(IReadOnlyList<ActivityEvent> eventsOldestFirst)
     {
@@ -49,6 +50,17 @@ internal static class ActivityEntryMeta
         {
             [FieldsKey] = fields,
         };
+
+        var recipientUserIds = eventsOldestFirst
+            .SelectMany(activity => activity.RecipientUserIds ?? [])
+            .Distinct()
+            .Select(userId => (JsonNode?)JsonValue.Create(userId))
+            .ToArray();
+
+        if (recipientUserIds.Length > 0)
+        {
+            meta[RecipientUserIdsKey] = new JsonArray(recipientUserIds);
+        }
 
         var last = eventsOldestFirst[^1];
 

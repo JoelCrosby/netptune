@@ -36,6 +36,7 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.Assign;
             options.Meta = new AssignActivityMeta { AssigneeId = req.AssigneeId };
+            options.RecipientUserIds = [req.AssigneeId];
         });
 
         return ClientResponse.Success;

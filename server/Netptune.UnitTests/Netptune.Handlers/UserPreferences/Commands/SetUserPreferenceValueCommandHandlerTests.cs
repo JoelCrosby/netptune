@@ -3,6 +3,7 @@ using System.Text.Json;
 using FluentAssertions;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Preferences;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -94,6 +95,36 @@ public class SetUserPreferenceValueCommandHandlerTests
             Arg.Any<UserPreferenceValue>(),
             TestContext.Current.CancellationToken);
         await UnitOfWork.DidNotReceive().CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task SetUserPreferenceValue_AcceptsBooleanNotificationPreference()
+    {
+        var key = PreferenceKeys.NotificationEvent(ActivityType.Mention);
+
+        UnitOfWork.UserPreferences
+            .GetScopedValue(UserId, key, WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns((UserPreferenceValue?)null);
+        UnitOfWork.UserPreferences
+            .AddAsync(Arg.Any<UserPreferenceValue>(), TestContext.Current.CancellationToken)
+            .Returns(call => call.Arg<UserPreferenceValue>());
+        UnitOfWork.UserPreferences
+            .GetValues(UserId, key, WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns([]);
+
+        var result = await Handler.Handle(
+            new SetUserPreferenceValueCommand
+            {
+                Key = key,
+                Scope = PreferenceScopes.Workspace,
+                Value = JsonSerializer.SerializeToElement(false),
+            },
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        await UnitOfWork.UserPreferences.Received(1).AddAsync(
+            Arg.Is<UserPreferenceValue>(preference => !preference.Value.RootElement.GetBoolean()),
+            TestContext.Current.CancellationToken);
     }
 
     private static UserPreferenceValue CreatePreference(string key, int? workspaceId, string value)

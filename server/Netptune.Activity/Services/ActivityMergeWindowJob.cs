@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,12 +9,10 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
+using Netptune.Services.Notifications;
 
 namespace Netptune.Activity.Services;
 
-// Closes expired merge windows and fans out the notifications deferred while they were open. ActivityHandler
-// raises no notifications at all for mergeable field edits, so this is the only thing that ever notifies for
-// them.
 public sealed class ActivityMergeWindowJob : BackgroundService
 {
     private const int BatchSize = 200;
@@ -182,7 +182,18 @@ public sealed class ActivityMergeWindowJob : BackgroundService
                 continue;
             }
 
-            var recipients = allUserIds.Where(userId => userId != entry.UserId).ToList();
+            var requestedUserIds = ReadRecipientUserIds(entry.Meta);
+            var recipients = await NotificationRecipientResolver.Resolve(
+                unitOfWork,
+                new NotificationRecipientRequest
+                {
+                    RequestedUserIds = requestedUserIds,
+                    WorkspaceUserIds = allUserIds,
+                    ActorUserId = entry.UserId,
+                    WorkspaceId = entry.WorkspaceId,
+                    ActivityType = entry.ActivityType,
+                },
+                cancellationToken);
 
             if (recipients.Count == 0)
             {
@@ -221,5 +232,29 @@ public sealed class ActivityMergeWindowJob : BackgroundService
         }
 
         return notifications;
+    }
+
+    private static List<string> ReadRecipientUserIds(JsonDocument? meta)
+    {
+        if (meta is null)
+        {
+            return [];
+        }
+
+        var hasRecipients = meta.RootElement.TryGetProperty("recipientUserIds", out var recipients);
+        var recipientsAreArray = hasRecipients && recipients.ValueKind == JsonValueKind.Array;
+
+        if (!recipientsAreArray)
+        {
+            return [];
+        }
+
+        return recipients
+            .EnumerateArray()
+            .Where(item => item.ValueKind == JsonValueKind.String)
+            .Select(item => item.GetString())
+            .Where(item => item is not null)
+            .Cast<string>()
+            .ToList();
     }
 }
