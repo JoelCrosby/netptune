@@ -5,14 +5,19 @@ import {
 } from '@core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import {
+  deleteWorkspace,
   leaveWorkspace,
   toggleWorkspaceIsPublic,
 } from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { Workspace } from '@core/models/workspace';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { DialogService } from '@core/services/dialog.service';
+import { DeleteWorkspaceDialogComponent } from '../delete-workspace-dialog/delete-workspace-dialog.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-workspace-settings',
@@ -36,7 +41,11 @@ import { SectionHeaderComponent } from '@static/components/section-header/sectio
           }
         </p>
 
-        <button app-flat-button color="warn" (click)="togglePublic()">
+        <button
+          app-flat-button
+          color="warn"
+          type="button"
+          (click)="togglePublic()">
           {{
             isPublic()
               ? 'Mark Workspace as Private'
@@ -51,14 +60,31 @@ import { SectionHeaderComponent } from '@static/components/section-header/sectio
           to be re-invited to rejoin.
         </p>
 
-        <button app-stroked-button color="warn" (click)="leave()">
+        <button app-stroked-button color="warn" type="button" (click)="leave()">
           Leave Workspace
         </button>
       }
-    </div>`,
+    </div>
+
+    @if (canDelete()) {
+      <div class="border-border my-8 border-b-2"></div>
+
+      <app-section-header
+        heading="Danger zone"
+        description="Deleting a workspace affects every member and all of its content." />
+
+      <button
+        app-flat-button
+        color="warn"
+        type="button"
+        (click)="openDeleteDialog()">
+        Delete Workspace
+      </button>
+    }`,
 })
 export class WorkspaceSettings {
   private store = inject(Store);
+  private dialog = inject(DialogService);
 
   isPublic = computed(() => this.workspace()?.isPublic ?? false);
   workspace = this.store.selectSignal(selectCurrentWorkspace);
@@ -66,6 +92,9 @@ export class WorkspaceSettings {
 
   canUpdate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.workspace.update)
+  );
+  canDelete = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.workspace.delete)
   );
 
   canLeave = computed(() => {
@@ -90,5 +119,27 @@ export class WorkspaceSettings {
     if (!workspace?.slug) return;
 
     this.store.dispatch(leaveWorkspace.init({ workspace }));
+  }
+
+  openDeleteDialog() {
+    const workspace = this.workspace();
+
+    if (!workspace?.slug) return;
+
+    const dialogRef = this.dialog.open<
+      boolean,
+      Workspace,
+      DeleteWorkspaceDialogComponent
+    >(DeleteWorkspaceDialogComponent, {
+      width: '600px',
+      data: workspace,
+      ariaLabel: `Delete ${workspace.name} workspace`,
+    });
+
+    dialogRef.closed.pipe(take(1)).subscribe((confirmed) => {
+      if (confirmed) {
+        this.store.dispatch(deleteWorkspace.init({ workspace }));
+      }
+    });
   }
 }

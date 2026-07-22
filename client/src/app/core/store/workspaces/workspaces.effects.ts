@@ -139,18 +139,15 @@ export class WorkspacesEffects implements OnInitEffects {
     return this.actions$.pipe(
       ofType(actions.deleteWorkspace.init),
       switchMap(({ workspace }) =>
-        this.confirmation.open(DELETE_WORKSPACE_CONFIRMATION).pipe(
-          switchMap((result) => {
-            if (!result) return EMPTY;
-
-            return this.workspacesService.delete(workspace).pipe(
-              tap(() => this.snackbar.open('Workspace deleted')),
-              map(() => actions.deleteWorkspace.success({ workspace })),
-              catchError((error: HttpErrorResponse) =>
-                of(actions.deleteWorkspace.fail({ error }))
-              )
-            );
-          })
+        this.workspacesService.delete(workspace).pipe(
+          tap(() => {
+            this.snackbar.open('Workspace deleted');
+            void this.router.navigate(['/workspaces']);
+          }),
+          map(() => actions.deleteWorkspace.success({ workspace })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.deleteWorkspace.fail({ error }))
+          )
         )
       )
     );
@@ -259,14 +256,6 @@ const getWorkspaceSlug = (url: string): string | null => {
   }
 
   return decodeURIComponent(segment);
-};
-
-const DELETE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to delete this Workspace?',
-  title: 'Delete Workspace',
-  color: 'warn',
 };
 
 const LEAVE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {

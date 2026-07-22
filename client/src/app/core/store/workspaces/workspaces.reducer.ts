@@ -81,7 +81,13 @@ const reducer = createReducer(
         return state;
       }
 
-      return adapter.removeOne(workspace.id, state);
+      return adapter.removeOne(workspace.id, {
+        ...state,
+        currentWorkspace:
+          state.currentWorkspace?.id === workspace.id
+            ? undefined
+            : state.currentWorkspace,
+      });
     }
   ),
 
