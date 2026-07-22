@@ -1,3 +1,5 @@
+using Netptune.Core.Enums;
+
 namespace Netptune.Core.Requests;
 
 public sealed class TaskFilter : PageRequest
@@ -17,6 +19,8 @@ public sealed class TaskFilter : PageRequest
     public int[] StatusIds { get; init; } = [];
 
     public int[] StatusCategories { get; init; } = [];
+
+    public TaskPriority[] Priorities { get; init; } = [];
 
     public string[] Assignees { get; init; } = [];
 

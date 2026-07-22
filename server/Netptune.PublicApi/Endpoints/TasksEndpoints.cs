@@ -16,7 +16,7 @@ public static class TasksEndpoints
     {
         group.MapGet("/tasks", GetTasks)
             .WithSummary("List tasks")
-            .WithDescription("Returns a filtered, paginated list of tasks in the credential's workspace.")
+            .WithDescription("Returns a paginated list of tasks. Filter by status, priority, assignee, or tag.")
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapGet("/tasks/{id:int}", GetTask)
             .WithSummary("Get a task")
@@ -40,10 +40,13 @@ public static class TasksEndpoints
 
     private static async Task<IResult> GetTasks(
         IMediator mediator,
-        [AsParameters] TaskFilter filter,
+        [AsParameters] PublicTaskFilter filter,
         CancellationToken cancellationToken)
     {
-        return Results.Ok(await mediator.Send(new GetTasksQuery(filter), cancellationToken));
+        var taskFilter = filter.ToTaskFilter();
+        var result = await mediator.Send(new GetTasksQuery(taskFilter), cancellationToken);
+
+        return Results.Ok(result);
     }
 
     private static async Task<IResult> GetTask(

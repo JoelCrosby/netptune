@@ -38,6 +38,17 @@ Content-Type: application/json
 }
 ```
 
+## Search and filter tasks
+
+`GET /api/v1/tasks` accepts `search`, `statusIds`, `priorities`, `assignees`, and `tags` query parameters. Statuses use IDs returned by `GET /api/v1/statuses`, assignees use IDs returned by `GET /api/v1/assignees`, and tags use their workspace names.
+
+```http
+GET /api/v1/tasks?search=release&statusIds=4&priorities=3&assignees=410e28ea-0f01-47a4-b889-68d283f39aa7&tags=Documentation
+Authorization: ApiKey ntp_<credential-id>_<secret>
+```
+
+Repeat a filter parameter to match any supplied value within that field. Different filter fields are combined, so a task must match every supplied field.
+
 ## Available routes
 
 - `GET /api/v1/projects`

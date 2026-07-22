@@ -244,6 +244,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var searchPattern = $"%{search}%";
         var tags = filter.Tags.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToArray();
         var statusIds = filter.StatusIds;
+        var priorities = filter.Priorities.Select(priority => (int)priority).ToArray();
         var assignees = filter.Assignees.Where(assignee => !string.IsNullOrWhiteSpace(assignee)).ToArray();
         var pagination = filter.GetPagination();
         var taskOrder = GetTaskOrderBy(filter);
@@ -265,6 +266,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             noSprint = filter.NoSprint ?? false,
             statusIds,
             statusCategories = filter.StatusCategories,
+            priorities,
             tags,
             assignees,
             search,

@@ -83,6 +83,15 @@ GET /api/v1/assignees?search=joel&page=1&pageSize=25
 Authorization: ApiKey ntp_<credential-id>_<secret>
 ```
 
+Search and filter tasks by status ID, priority, assignee ID, and tag name:
+
+```http
+GET /api/v1/tasks?search=release&statusIds=4&priorities=3&assignees=410e28ea-0f01-47a4-b889-68d283f39aa7&tags=Documentation
+Authorization: ApiKey ntp_<credential-id>_<secret>
+```
+
+Repeat a filter parameter to match any supplied value within that field. Different filter fields are combined, so a task must match every supplied field.
+
 Bulk-update tasks. Every supplied task and assignee must belong to the credential's workspace. When `sprintId` is supplied, every task must belong to that sprint's project.
 
 ```http

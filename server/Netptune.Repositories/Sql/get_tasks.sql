@@ -72,6 +72,9 @@ WITH filtered_tasks AS (
       AND (@noSprint = FALSE OR pt.sprint_id IS NULL)
       AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
       AND (CARDINALITY(@statusCategories) = 0 OR st.category = ANY(@statusCategories))
+      AND (CARDINALITY(@priorities) = 0
+          OR pt.priority = ANY(@priorities)
+          OR (0 = ANY(@priorities) AND pt.priority IS NULL))
       AND (CARDINALITY(@assignees) = 0 OR EXISTS (
           SELECT 1
           FROM project_task_app_users ptau_filter

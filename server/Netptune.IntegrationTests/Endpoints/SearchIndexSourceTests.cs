@@ -43,6 +43,29 @@ public sealed class SearchIndexSourceTests
         all.Select(task => task.Id).Should().OnlyHaveUniqueItems();
     }
 
+    [Fact]
+    public async Task GetTasksAsync_ShouldFilterByPriority()
+    {
+        var ct = TestContext.Current.CancellationToken;
+        var search = $"priority-filter-{Guid.NewGuid():N}";
+
+        await SeedPriorityTasks(search, ct);
+
+        using var scope = Fixture.CreateScope();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+        var filter = new TaskFilter
+        {
+            Search = search,
+            Priorities = [TaskPriority.High],
+        };
+
+        var result = await unitOfWork.Tasks.GetTasksAsync(WorkspaceSlug, filter, cancellationToken: ct);
+
+        result.Items.Should().ContainSingle();
+        result.Items[0].Name.Should().Be($"{search}-high");
+        result.Items[0].Priority.Should().Be(TaskPriority.High);
+    }
+
     private async Task SeedTasks(int count, CancellationToken ct)
     {
         using var scope = Fixture.CreateScope();
@@ -71,6 +94,46 @@ public sealed class SearchIndexSourceTests
             StatusId = status.Id,
             OwnerId = project.OwnerId,
         });
+
+        await context.ProjectTasks.AddRangeAsync(tasks, ct);
+        await context.SaveChangesAsync(ct);
+    }
+
+    private async Task SeedPriorityTasks(string namePrefix, CancellationToken ct)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        var workspace = await context.Workspaces.SingleAsync(item => item.Slug == WorkspaceSlug, ct);
+        var project = await context.Projects.FirstAsync(item => item.WorkspaceId == workspace.Id, ct);
+        var status = await context.Statuses.FirstAsync(
+            item => item.WorkspaceId == workspace.Id && item.EntityType == EntityType.Task, ct);
+        var nextScopeId = await context.ProjectTasks
+            .Where(task => task.ProjectId == project.Id)
+            .MaxAsync(task => (int?)task.ProjectScopeId, ct) ?? 0;
+        var tasks = new[]
+        {
+            new ProjectTask
+            {
+                Name = $"{namePrefix}-high",
+                Priority = TaskPriority.High,
+                ProjectScopeId = nextScopeId + 1,
+                ProjectId = project.Id,
+                WorkspaceId = workspace.Id,
+                StatusId = status.Id,
+                OwnerId = project.OwnerId,
+            },
+            new ProjectTask
+            {
+                Name = $"{namePrefix}-low",
+                Priority = TaskPriority.Low,
+                ProjectScopeId = nextScopeId + 2,
+                ProjectId = project.Id,
+                WorkspaceId = workspace.Id,
+                StatusId = status.Id,
+                OwnerId = project.OwnerId,
+            },
+        };
 
         await context.ProjectTasks.AddRangeAsync(tasks, ct);
         await context.SaveChangesAsync(ct);
