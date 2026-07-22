@@ -3,6 +3,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import {
   Component,
   ElementRef,
+  effect,
   inject,
   input,
   OnDestroy,
@@ -136,6 +137,8 @@ export class MentionInputComponent
   readonly hint = input<string | null>();
   readonly loading = input<boolean | null>(false);
   readonly pending = input(false);
+  readonly initialMentionIds = input<readonly string[]>([]);
+  readonly clearOnSubmit = input(true);
 
   readonly users = input<AppUser[] | null>([]);
 
@@ -148,12 +151,25 @@ export class MentionInputComponent
   private mentionStart = -1;
   private mentionedUserIds = new Set<string>();
 
+  constructor() {
+    super();
+
+    effect(() => {
+      this.mentionedUserIds.clear();
+
+      for (const userId of this.initialMentionIds()) {
+        this.mentionedUserIds.add(userId);
+      }
+    });
+  }
+
   onInput(event: Event) {
     const el = event.target as HTMLInputElement;
     const val = el.value;
     const cursor = el.selectionStart ?? val.length;
 
     this.value.set(val);
+    this.pruneRemovedMentions(val);
 
     const atIndex = this.findActiveMentionStart(val, cursor);
 
@@ -230,9 +246,12 @@ export class MentionInputComponent
     if (!text) return;
 
     this.mentionSubmit.emit({ text, mentions: [...this.mentionedUserIds] });
-    this.value.set('');
-    this.mentionedUserIds.clear();
-    this.inputEl().nativeElement.value = '';
+
+    if (this.clearOnSubmit()) {
+      this.value.set('');
+      this.mentionedUserIds.clear();
+      this.inputEl().nativeElement.value = '';
+    }
   }
 
   private findActiveMentionStart(value: string, cursor: number): number {
@@ -245,6 +264,20 @@ export class MentionInputComponent
       if (value[i] === ' ') return -1;
     }
     return -1;
+  }
+
+  private pruneRemovedMentions(value: string) {
+    const usersById = new Map(
+      (this.users() ?? []).map((user) => [user.id, user])
+    );
+
+    for (const userId of this.mentionedUserIds) {
+      const user = usersById.get(userId);
+
+      if (user && !value.includes(`@${user.displayName}`)) {
+        this.mentionedUserIds.delete(userId);
+      }
+    }
   }
 
   private openDropdown(query: string, origin: HTMLInputElement) {

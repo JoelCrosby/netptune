@@ -29,6 +29,9 @@ public static class EventKeys
     public const string ExportRequested = "export.requested";
     public const string WorkspaceRoleChanged = "workspace.member-role-changed";
     public const string WorkspaceSettingsChanged = "workspace.settings-changed";
+    public const string CommentCreated = "comment.created";
+    public const string CommentUpdated = "comment.updated";
+    public const string CommentDeleted = "comment.deleted";
     public const string EntityActivityRecorded = "entity.activity-recorded";
 
     public static string From(ActivityType type) => type switch
@@ -51,6 +54,9 @@ public static class EventKeys
         ActivityType.ExportRequested => ExportRequested,
         ActivityType.LoginSuccess => SecurityLoginSucceeded,
         ActivityType.LoginFailed => SecurityLoginFailed,
+        ActivityType.AddComment => CommentCreated,
+        ActivityType.ModifyComment => CommentUpdated,
+        ActivityType.RemoveComment => CommentDeleted,
         _ => EntityActivityRecorded,
     };
 
@@ -65,6 +71,9 @@ public static class EventKeys
             or ScopeLifecycleTransitioned
             or WorkspaceRoleChanged
             or WorkspaceSettingsChanged
+            or CommentCreated
+            or CommentUpdated
+            or CommentDeleted
             => EventRetentionClasses.Permanent,
         _ => EventRetentionClasses.Audit,
     };
@@ -78,6 +87,9 @@ public static class EventKeys
             ExportRequested => ActivityType.ExportRequested,
             WorkspaceRoleChanged => ActivityType.RoleChanged,
             WorkspaceSettingsChanged => ActivityType.WorkspaceSettingsChanged,
+            CommentCreated => ActivityType.AddComment,
+            CommentUpdated => ActivityType.ModifyComment,
+            CommentDeleted => ActivityType.RemoveComment,
             _ => (ActivityType?)null,
         };
 
@@ -159,6 +171,9 @@ public static class EventDefinitionRegistry
             [(EventKeys.ExportRequested, 1)] = typeof(ExportRequestedPayload),
             [(EventKeys.WorkspaceRoleChanged, 1)] = typeof(WorkspaceRoleChangedPayload),
             [(EventKeys.WorkspaceSettingsChanged, 1)] = typeof(WorkspaceSettingsChangedPayload),
+            [(EventKeys.CommentCreated, 1)] = typeof(CommentEventPayload),
+            [(EventKeys.CommentUpdated, 1)] = typeof(CommentEventPayload),
+            [(EventKeys.CommentDeleted, 1)] = typeof(CommentEventPayload),
         };
 
     public static void Validate<TPayload>(EventWriteRequest<TPayload> request) where TPayload : class

@@ -49,4 +49,7 @@ export enum ActivityType {
   addFile = 30,
   removeFile = 31,
   modifyStartDate = 32,
+  addComment = 33,
+  modifyComment = 34,
+  removeComment = 35,
 }

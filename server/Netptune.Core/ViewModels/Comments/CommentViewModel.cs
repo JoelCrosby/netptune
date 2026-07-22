@@ -27,4 +27,6 @@ public record CommentViewModel
     public DateTime CreatedAt { get; init; }
 
     public DateTime? UpdatedAt { get; init; }
+
+    public bool IsEdited { get; init; }
 }

@@ -230,6 +230,7 @@ public sealed class ActivityHandler :
                 : null,
             OldValue = GetPayloadString(payload, "oldValue"),
             NewValue = GetPayloadString(payload, "newValue"),
+            RecipientUserIds = GetPayloadStrings(payload, "recipientUserIds"),
             OccurredAt = envelope.OccurredAt,
         };
 
@@ -242,6 +243,24 @@ public sealed class ActivityHandler :
         var propertyHasValue = propertyExists && value.ValueKind is not JsonValueKind.Null;
 
         return propertyHasValue ? value.ToString() : null;
+    }
+
+    private static List<string>? GetPayloadStrings(JsonElement payload, string propertyName)
+    {
+        var propertyExists = payload.TryGetProperty(propertyName, out var value);
+
+        if (!propertyExists || value.ValueKind != JsonValueKind.Array)
+        {
+            return null;
+        }
+
+        return value
+            .EnumerateArray()
+            .Where(item => item.ValueKind == JsonValueKind.String)
+            .Select(item => item.GetString())
+            .Where(item => item is not null)
+            .Cast<string>()
+            .ToList();
     }
 
     private bool IsDiscrete(ActivityRecord record) => !Merge.IsMergeable(record.Event.Type);
@@ -437,7 +456,7 @@ public sealed class ActivityHandler :
 
             var recipientUserIds = activity.RecipientUserIds;
 
-            var recipients = recipientUserIds is { Count: > 0 }
+            var recipients = recipientUserIds is not null
                 ? recipientUserIds.Where(id => id != activity.UserId && allUserIds.Contains(id)).ToList()
                 : allUserIds.Where(id => id != activity.UserId).ToList();
 
@@ -452,7 +471,7 @@ public sealed class ActivityHandler :
                 activity.EntityId,
                 ancestors);
 
-            allNotifications.AddRange(recipients.Select(userId => new Notification
+            var activityNotifications = recipients.Select(userId => new Notification
             {
                 UserId = userId,
                 EventRecordId = log.Id,
@@ -463,7 +482,9 @@ public sealed class ActivityHandler :
                 ActivityType = activity.Type,
                 CreatedByUserId = activity.UserId,
                 OwnerId = activity.UserId,
-            }));
+            });
+
+            allNotifications.AddRange(activityNotifications);
         }
 
         if (allNotifications.Count == 0)

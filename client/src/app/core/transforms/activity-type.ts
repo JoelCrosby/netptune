@@ -138,6 +138,12 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Added file';
     case ActivityType.removeFile:
       return 'Removed file';
+    case ActivityType.addComment:
+      return 'Added comment';
+    case ActivityType.modifyComment:
+      return 'Edited comment';
+    case ActivityType.removeComment:
+      return 'Deleted comment';
     case ActivityType.restore:
       return 'Restored';
     default:

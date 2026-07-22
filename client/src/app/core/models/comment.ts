@@ -17,7 +17,8 @@ export interface CommentViewModel {
   reactions: Reaction[];
   mentions: CommentMention[];
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
+  isEdited: boolean;
 }
 
 export interface Reaction {

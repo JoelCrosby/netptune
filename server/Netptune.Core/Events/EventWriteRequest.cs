@@ -163,3 +163,10 @@ public sealed record WorkspaceSettingsChangedPayload
 {
     public IReadOnlyCollection<string> Fields { get; init; } = [];
 }
+
+public sealed record CommentEventPayload
+{
+    public int CommentId { get; init; }
+
+    public IReadOnlyCollection<string> RecipientUserIds { get; init; } = [];
+}

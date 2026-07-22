@@ -38,4 +38,7 @@ public enum ActivityType
     AddFile = 30,
     RemoveFile = 31,
     ModifyStartDate = 32,
+    AddComment = 33,
+    ModifyComment = 34,
+    RemoveComment = 35,
 }

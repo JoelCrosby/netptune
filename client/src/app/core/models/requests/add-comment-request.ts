@@ -3,3 +3,8 @@ export interface AddCommentRequest {
   systemId: string;
   mentions: string[];
 }
+
+export interface UpdateCommentRequest {
+  comment: string;
+  mentions: string[];
+}

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
@@ -60,8 +61,19 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    private static Expression<Func<Comment, CommentViewModel>> ToViewModel()
+    public Task<Comment?> GetCommentForUpdate(int id, int workspaceId, CancellationToken cancellationToken = default)
     {
+        return Entities
+            .Include(comment => comment.Mentions)
+            .FirstOrDefaultAsync(
+                comment => comment.Id == id && comment.WorkspaceId == workspaceId && !comment.IsDeleted,
+                cancellationToken);
+    }
+
+    private Expression<Func<Comment, CommentViewModel>> ToViewModel()
+    {
+        var commentEntityType = EventEntityTypes.From(EntityType.Comment);
+
         return x => new CommentViewModel
         {
             Id = x.Id,
@@ -88,6 +100,10 @@ public class CommentRepository : WorkspaceEntityRepository<DataContext, Comment,
             }).ToList(),
             CreatedAt = x.CreatedAt,
             UpdatedAt = x.UpdatedAt,
+            IsEdited = Context.EventRecords.Any(eventRecord =>
+                eventRecord.EventKey == EventKeys.CommentUpdated &&
+                eventRecord.References.Any(reference =>
+                    reference.EntityType == commentEntityType && reference.EntityId == x.Id.ToString())),
         };
     }
 }

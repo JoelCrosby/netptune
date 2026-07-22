@@ -189,6 +189,29 @@ public class ActivityHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldNotCreateNotifications_WhenRecipientsAreExplicitlyEmpty()
+    {
+        var @event = BuildEvent();
+        @event = new ActivityEvent
+        {
+            EventId = @event.EventId,
+            EntityType = @event.EntityType,
+            UserId = @event.UserId,
+            Type = @event.Type,
+            EntityId = @event.EntityId,
+            WorkspaceId = @event.WorkspaceId,
+            OccurredAt = @event.OccurredAt,
+            RecipientUserIds = [],
+        };
+
+        await Handler.Handle(new ActivityMessage(@event), TestContext.Current.CancellationToken);
+
+        await UnitOfWork.Notifications.DidNotReceive().AddRangeAsync(
+            Arg.Any<IEnumerable<Notification>>(),
+            TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
     public async Task Handle_ShouldNotCreateNotifications_WhenActorIsOnlyWorkspaceMember()
     {
         UnitOfWork.WorkspaceUsers

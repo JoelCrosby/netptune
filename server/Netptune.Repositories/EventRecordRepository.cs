@@ -323,6 +323,9 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             ActivityType.ExportRequested => ApplyCanonicalActivityFilter(query, EventKeys.ExportRequested, legacyActivityType),
             ActivityType.RoleChanged => ApplyCanonicalActivityFilter(query, EventKeys.WorkspaceRoleChanged, legacyActivityType),
             ActivityType.WorkspaceSettingsChanged => ApplyCanonicalActivityFilter(query, EventKeys.WorkspaceSettingsChanged, legacyActivityType),
+            ActivityType.AddComment => ApplyCanonicalActivityFilter(query, EventKeys.CommentCreated, legacyActivityType),
+            ActivityType.ModifyComment => ApplyCanonicalActivityFilter(query, EventKeys.CommentUpdated, legacyActivityType),
+            ActivityType.RemoveComment => ApplyCanonicalActivityFilter(query, EventKeys.CommentDeleted, legacyActivityType),
             _ => ApplyLegacyActivityFilter(query, legacyActivityType),
         };
     }
@@ -533,6 +536,9 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             EventKeys.SecurityLoginSucceeded => FormatAuthentication(payload, succeeded: true),
             EventKeys.SecurityLoginFailed => FormatAuthentication(payload, succeeded: false),
             EventKeys.WorkspaceSettingsChanged => FormatWorkspaceSettingsChange(payload),
+            EventKeys.CommentCreated => "Comment added",
+            EventKeys.CommentUpdated => "Comment edited",
+            EventKeys.CommentDeleted => "Comment deleted",
             _ => FormatLegacySummary(payload, activityType, statusNames),
         };
 

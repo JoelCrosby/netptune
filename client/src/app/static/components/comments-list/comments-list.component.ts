@@ -1,12 +1,19 @@
-import { Component, input, output, SecurityContext } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  SecurityContext,
+  signal,
+} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { inject } from '@angular/core';
 import { UserResponse } from '@app/core/store/auth/auth.models';
 import { CommentViewModel } from '@core/models/comment';
 import { AppUser } from '@core/models/appuser';
 
 import {
   LucideEllipsis,
+  LucidePencil,
   LucideTrash2,
   LucideMessageSquare,
 } from '@lucide/angular';
@@ -15,6 +22,8 @@ import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component'
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
 import { FromNowPipe } from '../../pipes/from-now.pipe';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { FlatButtonComponent } from '../button/flat-button.component';
+import { StrokedButtonComponent } from '../button/stroked-button.component';
 import {
   MentionInputComponent,
   MentionSubmitEvent,
@@ -23,6 +32,10 @@ import {
 export interface CommentSubmitEvent {
   text: string;
   mentions: string[];
+}
+
+export interface CommentUpdateEvent extends CommentSubmitEvent {
+  comment: CommentViewModel;
 }
 
 @Component({
@@ -34,7 +47,10 @@ export interface CommentSubmitEvent {
     DropdownMenuComponent,
     MenuItemComponent,
     LucideEllipsis,
+    LucidePencil,
     LucideTrash2,
+    FlatButtonComponent,
+    StrokedButtonComponent,
     FromNowPipe,
   ],
   template: `
@@ -70,19 +86,46 @@ export interface CommentSubmitEvent {
                 {{ comment.userDisplayName }}
                 <small class="ml-[0.6rem] flex-1 opacity-60">
                   {{ comment.createdAt | fromNow }}
+                  @if (comment.isEdited) {
+                    <span> · edited</span>
+                  }
                 </small>
               </span>
-              <span
-                class="text-sm font-normal"
-                [innerHTML]="renderBody(comment.body)">
-              </span>
+              @if (editingCommentId() === comment.id) {
+                <app-mention-input
+                  #editInput
+                  class="w-full"
+                  [(value)]="editText"
+                  [users]="workspaceUsers()"
+                  [initialMentionIds]="editMentionIds()"
+                  [clearOnSubmit]="false"
+                  placeholder="Edit comment — type @ to mention"
+                  (mentionSubmit)="onEditSubmit(comment, $event)">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      app-stroked-button
+                      type="button"
+                      (click)="cancelEditing()">
+                      Cancel
+                    </button>
+                    <button
+                      app-flat-button
+                      type="button"
+                      [disabled]="!editText().trim()"
+                      (click)="editInput.submit()">
+                      Save
+                    </button>
+                  </div>
+                </app-mention-input>
+              } @else {
+                <span
+                  class="text-sm font-normal"
+                  [innerHTML]="renderBody(comment.body)">
+                </span>
+              }
             </div>
 
-            @if (
-              canDeleteAny() ||
-              (canDelete() &&
-                (comment.userId === user()?.userId || canDeleteAny()))
-            ) {
+            @if (canEditComment(comment) || canDeleteComment(comment)) {
               <div class="hidden w-10 group-hover:block">
                 <button
                   app-icon-button
@@ -91,12 +134,24 @@ export interface CommentSubmitEvent {
                   <svg lucideEllipsis class="h-4 w-4"></svg>
                 </button>
                 <app-dropdown-menu #commentMenu xPosition="before">
-                  <button
-                    app-menu-item
-                    (click)="deleteComment.emit(comment); commentMenu.close()">
-                    <svg lucideTrash2 class="h-4 w-4"></svg>
-                    <span>Delete Comment</span>
-                  </button>
+                  @if (canEditComment(comment)) {
+                    <button
+                      app-menu-item
+                      (click)="startEditing(comment); commentMenu.close()">
+                      <svg lucidePencil class="h-4 w-4"></svg>
+                      <span>Edit Comment</span>
+                    </button>
+                  }
+                  @if (canDeleteComment(comment)) {
+                    <button
+                      app-menu-item
+                      (click)="
+                        deleteComment.emit(comment); commentMenu.close()
+                      ">
+                      <svg lucideTrash2 class="h-4 w-4"></svg>
+                      <span>Delete Comment</span>
+                    </button>
+                  }
                 </app-dropdown-menu>
               </div>
             }
@@ -115,13 +170,50 @@ export class CommentsListComponent {
   readonly canDelete = input<boolean>(false);
   readonly canDeleteAny = input<boolean>(false);
   readonly canCreate = input<boolean>(false);
+  readonly canEdit = input<boolean>(false);
 
   readonly deleteComment = output<CommentViewModel>();
   readonly commentSubmit = output<CommentSubmitEvent>();
+  readonly updateComment = output<CommentUpdateEvent>();
   readonly lucideMessageSquare = LucideMessageSquare;
+  readonly editingCommentId = signal<number | null>(null);
+  readonly editText = signal('');
+  readonly editMentionIds = signal<string[]>([]);
 
   onMentionSubmit(event: MentionSubmitEvent) {
     this.commentSubmit.emit({ text: event.text, mentions: event.mentions });
+  }
+
+  startEditing(comment: CommentViewModel) {
+    this.editingCommentId.set(comment.id);
+    this.editText.set(comment.body);
+    this.editMentionIds.set(comment.mentions.map((mention) => mention.userId));
+  }
+
+  cancelEditing() {
+    this.editingCommentId.set(null);
+    this.editText.set('');
+    this.editMentionIds.set([]);
+  }
+
+  onEditSubmit(comment: CommentViewModel, event: MentionSubmitEvent) {
+    this.updateComment.emit({
+      comment,
+      text: event.text,
+      mentions: event.mentions,
+    });
+    this.cancelEditing();
+  }
+
+  canEditComment(comment: CommentViewModel) {
+    return this.canEdit() && comment.userId === this.user()?.userId;
+  }
+
+  canDeleteComment(comment: CommentViewModel) {
+    return (
+      this.canDeleteAny() ||
+      (this.canDelete() && comment.userId === this.user()?.userId)
+    );
   }
 
   renderBody(body: string): string {

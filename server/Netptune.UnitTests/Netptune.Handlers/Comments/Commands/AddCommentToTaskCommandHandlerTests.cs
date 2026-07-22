@@ -4,7 +4,7 @@ using FluentAssertions;
 
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Activity;
+using Netptune.Core.Events;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Handlers.Comments.Commands;
@@ -22,11 +22,13 @@ public class AddCommentToTaskCommandHandlerTests
     private readonly AddCommentToTaskCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
-    private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
 
     public AddCommentToTaskCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, EventRecords);
+        UnitOfWork.Transaction(Arg.Any<Func<Task>>(), Arg.Any<bool>())
+            .Returns(call => call.Arg<Func<Task>>()());
     }
 
     [Fact]
@@ -45,6 +47,12 @@ public class AddCommentToTaskCommandHandlerTests
         var result = await Handler.Handle(new AddCommentToTaskCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<CommentEventPayload>>(eventRequest =>
+                eventRequest.EventKey == EventKeys.CommentCreated &&
+                eventRequest.SubjectType == "task" &&
+                eventRequest.SubjectId == "10"),
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

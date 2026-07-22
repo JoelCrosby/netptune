@@ -265,6 +265,15 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
             NewCanonicalAuditLog(
                 EventKeys.WorkspaceSettingsChanged,
                 new WorkspaceSettingsChangedPayload { Fields = ["name"] }),
+            NewCanonicalAuditLog(
+                EventKeys.CommentCreated,
+                new CommentEventPayload { CommentId = 101 }),
+            NewCanonicalAuditLog(
+                EventKeys.CommentUpdated,
+                new CommentEventPayload { CommentId = 101 }),
+            NewCanonicalAuditLog(
+                EventKeys.CommentDeleted,
+                new CommentEventPayload { CommentId = 101 }),
         };
 
         db.EventRecords.AddRange(events);
@@ -279,6 +288,9 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
             ActivityType.ExportRequested,
             ActivityType.RoleChanged,
             ActivityType.WorkspaceSettingsChanged,
+            ActivityType.AddComment,
+            ActivityType.ModifyComment,
+            ActivityType.RemoveComment,
         };
 
         foreach (var (eventRecord, activityType) in events.Zip(expected))
@@ -302,12 +314,14 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         using var scope = NewScope(out var db);
 
-        db.EventRecords.AddRange(Enumerable.Range(0, 5)
+        var eventRecords = Enumerable.Range(0, 5)
             .Select(i => NewLog(
                 entityId,
                 fixture.UserId,
                 ActivityType.ModifyDescription,
-                Base.AddSeconds(i))));
+                Base.AddSeconds(i)));
+
+        db.EventRecords.AddRange(eventRecords);
 
         await db.SaveChangesAsync(CancellationToken);
 
@@ -324,7 +338,8 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         using var scope = NewScope(out var db);
 
-        db.ActivityEntries.AddRange(
+        var entries = new[]
+        {
             NewEntry(new ActivityEntryInput
             {
                 EntityId = entityId,
@@ -384,7 +399,10 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
                 First = Base.AddMinutes(6),
                 Last = Base.AddMinutes(6),
                 Revisions = 1,
-            }));
+            }),
+        };
+
+        db.ActivityEntries.AddRange(entries);
 
         await db.SaveChangesAsync(CancellationToken);
 

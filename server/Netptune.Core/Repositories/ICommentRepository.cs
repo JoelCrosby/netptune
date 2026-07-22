@@ -12,4 +12,6 @@ public interface ICommentRepository : IWorkspaceEntityRepository<Comment, int>
     Task<List<CommentViewModel>> GetCommentViewModelsForTask(int taskId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 
     Task<CommentViewModel?> GetCommentViewModel(int id, CancellationToken cancellationToken = default);
+
+    Task<Comment?> GetCommentForUpdate(int id, int workspaceId, CancellationToken cancellationToken = default);
 }

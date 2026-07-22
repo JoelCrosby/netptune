@@ -51,6 +51,9 @@ public sealed class EventDefinitionRegistryTests
     [InlineData(EventKeys.ExportRequested, ActivityType.ExportRequested)]
     [InlineData(EventKeys.WorkspaceRoleChanged, ActivityType.RoleChanged)]
     [InlineData(EventKeys.WorkspaceSettingsChanged, ActivityType.WorkspaceSettingsChanged)]
+    [InlineData(EventKeys.CommentCreated, ActivityType.AddComment)]
+    [InlineData(EventKeys.CommentUpdated, ActivityType.ModifyComment)]
+    [InlineData(EventKeys.CommentDeleted, ActivityType.RemoveComment)]
     public void ActivityTypeFor_ShouldMapAuditEventKeys(string eventKey, ActivityType expected)
     {
         using var payload = JsonDocument.Parse("{}");
@@ -74,6 +77,26 @@ public sealed class EventDefinitionRegistryTests
                 Method = "password",
                 Email = "unknown@example.com",
             },
+        };
+
+        var action = () => EventDefinitionRegistry.Validate(request);
+
+        action.Should().NotThrow();
+    }
+
+    [Theory]
+    [InlineData(EventKeys.CommentCreated)]
+    [InlineData(EventKeys.CommentUpdated)]
+    [InlineData(EventKeys.CommentDeleted)]
+    public void Validate_ShouldAcceptCommentEvent(string eventKey)
+    {
+        var request = new EventWriteRequest<CommentEventPayload>
+        {
+            WorkspaceId = 1,
+            EventKey = eventKey,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = "42",
+            Payload = new CommentEventPayload { CommentId = 7 },
         };
 
         var action = () => EventDefinitionRegistry.Validate(request);

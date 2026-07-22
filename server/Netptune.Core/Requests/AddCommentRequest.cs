@@ -12,3 +12,11 @@ public record AddCommentRequest
 
     public List<string> Mentions { get; set; } = new();
 }
+
+public sealed record UpdateCommentRequest
+{
+    [Required]
+    public string Comment { get; init; } = null!;
+
+    public List<string> Mentions { get; init; } = [];
+}

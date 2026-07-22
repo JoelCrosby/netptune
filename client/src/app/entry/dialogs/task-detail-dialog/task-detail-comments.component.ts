@@ -10,7 +10,10 @@ import {
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { CommentViewModel } from '@core/models/comment';
-import { AddCommentRequest } from '@core/models/requests/add-comment-request';
+import {
+  AddCommentRequest,
+  UpdateCommentRequest,
+} from '@core/models/requests/add-comment-request';
 import { selectAllUsers } from '@core/store/users/users.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Store } from '@ngrx/store';
@@ -18,6 +21,7 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
   CommentsListComponent,
   CommentSubmitEvent,
+  CommentUpdateEvent,
 } from '@static/components/comments-list/comments-list.component';
 import { EMPTY } from 'rxjs';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
@@ -32,8 +36,10 @@ import { ConfirmDialogOptions } from '../confirm-dialog/confirm-dialog.component
       [comments]="comments.value()"
       [workspaceUsers]="workspaceUsers()"
       (commentSubmit)="onCommentSubmit($event)"
+      (updateComment)="onUpdateComment($event)"
       (deleteComment)="onDeleteCommentClicked($event)"
       [canDelete]="canDeleteComment()"
+      [canEdit]="canCreateComment()"
       [canCreate]="canCreateComment()">
     </app-comments-list>
   `,
@@ -104,6 +110,25 @@ export class TaskDetailCommentsComponent {
         unwrapClientReposne(),
         tap(() => {
           this.snackbar.open('Comment deleted');
+          this.comments.reload();
+        }),
+        catchError(() => EMPTY)
+      )
+      .subscribe();
+  }
+
+  onUpdateComment(event: CommentUpdateEvent) {
+    const request: UpdateCommentRequest = {
+      comment: event.text,
+      mentions: event.mentions,
+    };
+
+    this.commentsService
+      .update(event.comment.id, request)
+      .pipe(
+        unwrapClientReposne(),
+        tap(() => {
+          this.snackbar.open('Comment updated');
           this.comments.reload();
         }),
         catchError(() => EMPTY)

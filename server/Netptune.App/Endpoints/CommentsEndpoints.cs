@@ -15,7 +15,8 @@ public static class CommentsEndpoints
 
         group.MapGet("/task/{systemId}", HandleGetCommentsForTask).RequireAuthorization(NetptunePermissions.Comments.Read);
         group.MapPost("/task", HandlePostTaskComment).RequireAuthorization(NetptunePermissions.Comments.Create);
-        group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.Comments.DeleteOwn);
+        group.MapPut("/{id:int}", HandleUpdate).RequireAuthorization(NetptunePermissions.Comments.Create);
+        group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Comments.Read);
 
         return group;
     }
@@ -46,7 +47,37 @@ public static class CommentsEndpoints
     {
         var result = await mediator.Send(new DeleteCommentCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound(result);
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        if (result.IsForbidden)
+        {
+            return Results.Forbid();
+        }
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleUpdate(IMediator mediator, int id, UpdateCommentRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateCommentCommand(id, request), cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        if (result.IsForbidden)
+        {
+            return Results.Forbid();
+        }
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
 
         return Results.Ok(result);
     }

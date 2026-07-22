@@ -1,12 +1,14 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
+using Netptune.Handlers.Comments;
 
 namespace Netptune.Handlers.Comments.Commands;
 
@@ -16,13 +18,16 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
-    private readonly IActivityLogger Activity;
+    private readonly IEventRecordWriter EventRecords;
 
-    public AddCommentToTaskCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public AddCommentToTaskCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
-        Activity = activity;
+        EventRecords = eventRecords;
     }
 
     public async ValueTask<ClientResponse<CommentViewModel>> Handle(AddCommentToTaskCommand request, CancellationToken cancellationToken)
@@ -65,31 +70,23 @@ public sealed class AddCommentToTaskCommandHandler : IRequestHandler<AddCommentT
         };
 
         await UnitOfWork.Comments.AddAsync(comment, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        await UnitOfWork.Transaction(async () =>
+        {
+            await UnitOfWork.CompleteAsync(cancellationToken);
+
+            var eventContext = new CommentEventContext(comment.WorkspaceId, comment.EntityId, comment.Id);
+            var commentEvent = CommentEvents.Create(eventContext, EventKeys.CommentCreated, filteredMentions);
+
+            await EventRecords.Append(commentEvent, cancellationToken);
+            await UnitOfWork.CompleteAsync(cancellationToken);
+        });
 
         var result = await UnitOfWork.Comments.GetCommentViewModel(comment.Id, cancellationToken);
 
         if (result is null)
         {
             return ClientResponse<CommentViewModel>.Failed("add comment failed");
-        }
-
-        Activity.Log(options =>
-        {
-            options.EntityId = comment.Id;
-            options.EntityType = EntityType.Comment;
-            options.Type = ActivityType.Create;
-        });
-
-        if (filteredMentions.Count > 0)
-        {
-            Activity.Log(options =>
-            {
-                options.EntityId = comment.Id;
-                options.EntityType = EntityType.Comment;
-                options.Type = ActivityType.Mention;
-                options.RecipientUserIds = filteredMentions;
-            });
         }
 
         return result;
