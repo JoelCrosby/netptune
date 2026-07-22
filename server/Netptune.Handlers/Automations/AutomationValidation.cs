@@ -16,16 +16,16 @@ internal static class AutomationValidation
         {
             AutomationTriggerType.TaskChanged when request.Trigger.Fields is null || request.Trigger.Fields.Count == 0 =>
                 "Task changed automations require at least one field.",
-            AutomationTriggerType.TaskChanged when request.Trigger.StatusId is not null &&
-                                                    !request.Trigger.Fields.Contains(TaskChangeField.Status) =>
+            AutomationTriggerType.TaskChanged when request.Trigger.StatusId is not null && !request.Trigger.Fields.Contains(TaskChangeField.Status) =>
                 "Task changed automations can only set status when watching the status field.",
-            AutomationTriggerType.TaskChanged when request.Trigger.AssigneeChangeMode is not null &&
-                                                    !request.Trigger.Fields.Contains(TaskChangeField.Assignees) =>
+            AutomationTriggerType.TaskChanged when request.Trigger.AssigneeChangeMode is not null && !request.Trigger.Fields.Contains(TaskChangeField.Assignees) =>
                 "Task changed automations can only set assigneeChangeMode when watching the assignees field.",
             AutomationTriggerType.TaskStatusChanged when request.Trigger.StatusId is null =>
                 "Task status changed automations require a status.",
             AutomationTriggerType.TaskUnassignedFor when request.Trigger.DurationDays is null or < 1 or > 365 =>
                 "Task unassigned automations require durationDays between 1 and 365.",
+            AutomationTriggerType.TaskDueDateApproaching when request.Trigger.DurationDays is null or < 0 or > 365 =>
+                "Task due-date automations require durationDays between 0 and 365.",
             _ => null,
         };
 

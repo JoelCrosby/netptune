@@ -20,7 +20,8 @@ internal static class AutomationTestData
         DataContext db,
         string taskStatusKey = "new",
         bool assignTask = true,
-        DateTime? taskUpdatedAt = null)
+        DateTime? taskUpdatedAt = null,
+        DateOnly? dueDate = null)
     {
         var owner = CreateUser(OwnerUserId, "owner@example.test");
         var assignee = CreateUser(AssigneeUserId, "assignee@example.test");
@@ -63,6 +64,7 @@ internal static class AutomationTestData
             OwnerId = owner.Id,
             CreatedByUserId = owner.Id,
             UpdatedAt = taskUpdatedAt,
+            DueDate = dueDate,
         };
 
         if (assignTask)
@@ -123,6 +125,18 @@ internal static class AutomationTestData
         AutomationActionType actionType = AutomationActionType.FlagTask)
     {
         return await CreateRule(db, scenario, AutomationTriggerType.TaskUnassignedFor, new
+        {
+            durationDays,
+        }, actionType);
+    }
+
+    public static async Task<AutomationRule> CreateDueDateRule(
+        DataContext db,
+        AutomationScenario scenario,
+        int durationDays,
+        AutomationActionType actionType = AutomationActionType.FlagTask)
+    {
+        return await CreateRule(db, scenario, AutomationTriggerType.TaskDueDateApproaching, new
         {
             durationDays,
         }, actionType);

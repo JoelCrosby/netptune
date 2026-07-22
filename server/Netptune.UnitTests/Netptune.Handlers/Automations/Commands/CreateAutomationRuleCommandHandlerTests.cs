@@ -165,6 +165,33 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldFail_WhenDueDateTriggerHasInvalidDuration()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Due-date notification",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskDueDateApproaching,
+                DurationDays = -1,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("durationDays");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldCreateRule_WhenRequestValid()
     {
         AutomationRule? savedRule = null;

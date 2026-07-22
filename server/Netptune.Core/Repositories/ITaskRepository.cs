@@ -23,7 +23,9 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<ProjectTask?> GetAutomationTask(int id, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectTask>> GetUnassignedAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateTime cutoff,CancellationToken cancellationToken = default);
+    Task<List<ProjectTask>> GetUnassignedAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateTime cutoff, CancellationToken cancellationToken = default);
+
+    Task<List<ProjectTask>> GetDueDateAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateOnly from, DateOnly to, CancellationToken cancellationToken = default);
 
     Task<ProjectTask?> GetTask(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 

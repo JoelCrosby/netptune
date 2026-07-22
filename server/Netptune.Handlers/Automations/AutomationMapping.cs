@@ -47,6 +47,10 @@ internal static class AutomationMapping
             {
                 durationDays = trigger.DurationDays,
             }, JsonOptions.Default),
+            AutomationTriggerType.TaskDueDateApproaching => JsonSerializer.SerializeToDocument(new
+            {
+                durationDays = trigger.DurationDays,
+            }, JsonOptions.Default),
             _ => null,
         };
     }
@@ -95,6 +99,11 @@ internal static class AutomationMapping
                 StatusId = ReadInt(config, "statusId"),
             },
             AutomationTriggerType.TaskUnassignedFor => new AutomationTriggerViewModel
+            {
+                Type = type,
+                DurationDays = ReadInt(config, "durationDays"),
+            },
+            AutomationTriggerType.TaskDueDateApproaching => new AutomationTriggerViewModel
             {
                 Type = type,
                 DurationDays = ReadInt(config, "durationDays"),

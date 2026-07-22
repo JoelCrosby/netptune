@@ -61,6 +61,11 @@ internal static class Telemetry
         return activity;
     }
 
+    public static Activity? StartActivity(string name)
+    {
+        return ActivitySource.StartActivity(name);
+    }
+
     public static void RecordRulesEvaluated(AutomationTriggerType triggerType, int count)
     {
         if (count > 0) RulesEvaluated.Add(count, TriggerTags(triggerType));

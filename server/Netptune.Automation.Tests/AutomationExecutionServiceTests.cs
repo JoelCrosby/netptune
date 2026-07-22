@@ -263,4 +263,59 @@ public sealed class AutomationExecutionServiceTests
         notification.Link.Should().Be($"/{scenario.Workspace.Slug}/tasks/{scenario.Project.Key}-{scenario.Task.ProjectScopeId}");
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
     }
+
+    [Fact]
+    public async Task ExecuteDueDateRules_creates_run_for_task_due_on_configured_day()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var dueDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(3);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, dueDate: dueDate);
+        var rule = await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 3);
+
+        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
+
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+        var flag = await scope.Db.Flags.SingleAsync(TestContext.Current.CancellationToken);
+
+        run.AutomationRuleId.Should().Be(rule.Id);
+        run.TriggerType.Should().Be(AutomationTriggerType.TaskDueDateApproaching);
+        run.IdempotencyKey.Should().EndWith($":due:{dueDate:yyyy-MM-dd}");
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+        flag.EntityId.Should().Be(scenario.Task.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteDueDateRules_is_idempotent_for_same_due_date()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var dueDate = DateOnly.FromDateTime(DateTime.UtcNow);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, dueDate: dueDate);
+        await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 0);
+
+        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+        var flagCount = await scope.Db.Flags.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(1);
+        flagCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ExecuteDueDateRules_does_not_run_before_configured_day()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var dueDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(4);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, dueDate: dueDate);
+        await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 3);
+
+        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+        var flagCount = await scope.Db.Flags.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(0);
+        flagCount.Should().Be(0);
+    }
 }

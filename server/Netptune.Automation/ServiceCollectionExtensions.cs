@@ -45,6 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(Options.Create(options));
         services.AddScoped<TaskChangedAutomationRuleMatcher>();
         services.AddScoped<UnassignedTaskAutomationRuleMatcher>();
+        services.AddScoped<DueDateAutomationRuleMatcher>();
         services.AddScoped<RuleExecutor>();
         services.AddScoped<ActionPlanner>();
         services.AddScoped<FlagPlanner>();

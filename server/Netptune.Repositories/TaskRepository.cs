@@ -95,6 +95,28 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<ProjectTask>> GetDueDateAutomationCandidates(
+        IReadOnlyCollection<int> workspaceIds,
+        DateOnly from,
+        DateOnly to,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Project)
+            .Include(task => task.Workspace)
+            .Include(task => task.Status)
+            .Where(task =>
+                workspaceIds.Contains(task.WorkspaceId) &&
+                !task.IsDeleted &&
+                task.Status.Category != StatusCategory.Done &&
+                task.DueDate >= from &&
+                task.DueDate <= to)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<TaskViewModel?> GetTaskViewModel(int taskId, CancellationToken cancellationToken = default)
     {
         return Entities

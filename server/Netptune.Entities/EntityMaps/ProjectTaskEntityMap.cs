@@ -88,6 +88,10 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
             .HasDatabaseName("ix_project_tasks_workspace_deleted_updated_id");
 
         builder
+            .HasIndex(task => new { task.WorkspaceId, task.IsDeleted, task.DueDate, task.Id })
+            .HasDatabaseName("ix_project_tasks_workspace_deleted_due_date_id");
+
+        builder
             .HasIndex(task => new { task.WorkspaceId, task.ProjectId, task.IsDeleted, task.UpdatedAt, task.Id })
             .HasDatabaseName("ix_project_tasks_workspace_project_deleted_updated_id");
 

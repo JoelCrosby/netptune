@@ -14,23 +14,28 @@ public interface IExecutionService
     Task ExecuteTaskChangedRules(TaskChangedMessage message, CancellationToken cancellationToken);
 
     Task ExecuteUnassignedRules(CancellationToken cancellationToken);
+
+    Task ExecuteDueDateRules(CancellationToken cancellationToken);
 }
 
 internal sealed class ExecutionService : IExecutionService
 {
     private readonly TaskChangedAutomationRuleMatcher TaskChangedMatcher;
     private readonly UnassignedTaskAutomationRuleMatcher UnassignedTaskMatcher;
+    private readonly DueDateAutomationRuleMatcher DueDateMatcher;
     private readonly RuleExecutor RuleExecutor;
     private readonly ILogger<ExecutionService> Logger;
 
     public ExecutionService(
         TaskChangedAutomationRuleMatcher taskChangedMatcher,
         UnassignedTaskAutomationRuleMatcher unassignedTaskMatcher,
+        DueDateAutomationRuleMatcher dueDateMatcher,
         RuleExecutor ruleExecutor,
         ILogger<ExecutionService> logger)
     {
         TaskChangedMatcher = taskChangedMatcher;
         UnassignedTaskMatcher = unassignedTaskMatcher;
+        DueDateMatcher = dueDateMatcher;
         RuleExecutor = ruleExecutor;
         Logger = logger;
     }
@@ -94,6 +99,33 @@ internal sealed class ExecutionService : IExecutionService
         {
             Telemetry.RecordExecutionDuration(
                 AutomationTriggerType.TaskUnassignedFor,
+                Stopwatch.GetElapsedTime(startedAt));
+        }
+    }
+
+    public async Task ExecuteDueDateRules(CancellationToken cancellationToken)
+    {
+        using var activity = Telemetry.StartActivity(
+            "automation.execute_due_date_rules",
+            AutomationTriggerType.TaskDueDateApproaching);
+        var startedAt = Stopwatch.GetTimestamp();
+
+        try
+        {
+            var executions = await DueDateMatcher.Match(cancellationToken);
+
+            await RuleExecutor.Execute(AutomationTriggerType.TaskDueDateApproaching, executions, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Telemetry.MarkFailed(activity, ex);
+            Logger.LogError(ex, "Scheduled due-date automation execution failed");
+            throw;
+        }
+        finally
+        {
+            Telemetry.RecordExecutionDuration(
+                AutomationTriggerType.TaskDueDateApproaching,
                 Stopwatch.GetElapsedTime(startedAt));
         }
     }

@@ -8,7 +8,6 @@ using Microsoft.Extensions.Options;
 using Netptune.Automation.Configuration;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Execution;
-using Netptune.Core.Enums;
 
 namespace Netptune.Automation.Scheduling;
 
@@ -39,9 +38,7 @@ internal sealed class ScheduleService : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            using var activity = Telemetry.StartActivity(
-                "automation.schedule.unassigned_rules",
-                AutomationTriggerType.TaskUnassignedFor);
+            using var activity = Telemetry.StartActivity("automation.schedule.rules");
             var startedAt = Stopwatch.GetTimestamp();
 
             try
@@ -51,7 +48,16 @@ internal sealed class ScheduleService : BackgroundService
                 using var scope = ScopeFactory.CreateScope();
                 var automationExecution = scope.ServiceProvider.GetRequiredService<IExecutionService>();
 
-                await automationExecution.ExecuteUnassignedRules(stoppingToken);
+                await ExecuteScheduledRules(
+                    "unassigned-task",
+                    automationExecution.ExecuteUnassignedRules,
+                    activity,
+                    stoppingToken);
+                await ExecuteScheduledRules(
+                    "due-date",
+                    automationExecution.ExecuteDueDateRules,
+                    activity,
+                    stoppingToken);
 
                 Logger.LogInformation(
                     "Automation schedule cycle completed in {ElapsedMilliseconds}ms",
@@ -64,6 +70,23 @@ internal sealed class ScheduleService : BackgroundService
             }
 
             await Task.Delay(Options.RunInterval, stoppingToken);
+        }
+    }
+
+    private async Task ExecuteScheduledRules(
+        string ruleSet,
+        Func<CancellationToken, Task> execute,
+        Activity? activity,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await execute(cancellationToken);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Telemetry.MarkFailed(activity, ex);
+            Logger.LogError(ex, "Scheduled {RuleSet} automation evaluation failed", ruleSet);
         }
     }
 }
