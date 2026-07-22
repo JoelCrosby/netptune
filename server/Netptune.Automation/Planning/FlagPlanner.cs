@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 
-using Netptune.Automation.Configuration;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Models;
 using Netptune.Core.Entities;
@@ -27,7 +26,10 @@ internal sealed class FlagPlanner
         List<FlagPlan> flagPlans,
         CancellationToken cancellationToken)
     {
-        if (flagPlans.Count == 0) return [];
+        if (flagPlans.Count == 0)
+        {
+            return [];
+        }
 
         var ruleIds = flagPlans.Select(plan => plan.Execution.Rule.Id).Distinct().ToList();
         var taskIds = flagPlans.Select(plan => plan.Execution.Task.Id).Distinct().ToList();
@@ -46,16 +48,14 @@ internal sealed class FlagPlanner
             {
                 var rule = plan.Execution.Rule;
                 var task = plan.Execution.Task;
-                var action = plan.Action;
-
                 return new Flag
                 {
                     WorkspaceId = task.WorkspaceId,
                     EntityType = EntityType.Task,
                     EntityId = task.Id,
                     AutomationRuleId = rule.Id,
-                    Name = ConfigReader.ReadString(action.Config, "flagName") ?? "Automation flag",
-                    Description = ConfigReader.ReadString(action.Config, "flagDescription") ?? $"Flagged by automation '{rule.Name}'.",
+                    Name = plan.Name,
+                    Description = plan.Description,
                     OwnerId = plan.Execution.ActorUserId,
                     CreatedByUserId = plan.Execution.ActorUserId,
                 };

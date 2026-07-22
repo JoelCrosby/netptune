@@ -1,4 +1,3 @@
-using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
 namespace Netptune.Automation.Models;
@@ -6,8 +5,6 @@ namespace Netptune.Automation.Models;
 internal sealed record TaskUpdatePlan
 {
     public required PendingAutomationExecution Execution { get; init; }
-
-    public required AutomationAction Action { get; init; }
 
     public int? StatusId { get; init; }
 

@@ -1,11 +1,12 @@
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Automations;
 
 namespace Netptune.Handlers.Automations;
 
 internal static class AutomationValidation
 {
-    public static string? Validate(AutomationRuleRequest request)
+    public static string? Validate(AutomationRuleRequest request, IAutomationActionRegistry actionRegistry)
     {
         if (string.IsNullOrWhiteSpace(request.Name))
         {
@@ -46,18 +47,14 @@ internal static class AutomationValidation
 
         foreach (var action in request.Actions)
         {
-            var actionError = action.Type switch
+            var automationAction = actionRegistry.Find(action.Type);
+
+            if (automationAction is null)
             {
-                AutomationActionType.FlagTask when string.IsNullOrWhiteSpace(action.FlagName) =>
-                    "Flag task actions require flagName.",
-                AutomationActionType.AddComment when string.IsNullOrWhiteSpace(action.Comment) =>
-                    "Add comment actions require comment.",
-                AutomationActionType.AddComment when action.Comment is { Length: > 32768 } =>
-                    "Add comment actions cannot exceed 32768 characters.",
-                AutomationActionType.UpdateTask when action.StatusId is null && action.Priority is null =>
-                    "Update task actions require status or priority.",
-                _ => null,
-            };
+                return $"Automation action type '{action.Type}' is not supported.";
+            }
+
+            var actionError = automationAction.Validate(action);
 
             if (actionError is not null)
             {

@@ -1,10 +1,14 @@
 using FluentAssertions;
 
+using Microsoft.Extensions.DependencyInjection;
+
+using Netptune.Automation.Actions;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Automations.Commands;
 
@@ -27,7 +31,13 @@ public class CreateAutomationRuleCommandHandlerTests
         Identity.GetWorkspaceId().Returns(123);
         Identity.GetCurrentUserId().Returns("user-1");
 
-        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity);
+        var services = new ServiceCollection();
+        services.AddNetptuneAutomationActions();
+        var actionRegistry = services
+            .BuildServiceProvider()
+            .GetRequiredService<IAutomationActionRegistry>();
+
+        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, actionRegistry);
     }
 
     [Fact]

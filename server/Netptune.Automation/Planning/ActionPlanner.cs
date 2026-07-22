@@ -2,227 +2,152 @@ using System.Text.Json;
 
 using Microsoft.Extensions.Logging;
 
-using Netptune.Automation.Configuration;
 using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events;
+using Netptune.Core.Models.Automations;
+using Netptune.Core.Services.Automations;
 
 namespace Netptune.Automation.Planning;
 
 internal sealed class ActionPlanner
 {
+    private readonly IAutomationActionRegistry ActionRegistry;
     private readonly ILogger<ActionPlanner> Logger;
 
-    public ActionPlanner(ILogger<ActionPlanner> logger)
+    public ActionPlanner(IAutomationActionRegistry actionRegistry, ILogger<ActionPlanner> logger)
     {
+        ActionRegistry = actionRegistry;
         Logger = logger;
     }
 
     internal ActionPlan Plan(List<PendingAutomationExecution> executions)
     {
-        var runs = new List<AutomationRun>(executions.Count);
-        var notificationPlans = new List<NotificationActivityPlan>();
-        var flagPlans = new List<FlagPlan>();
-        var taskUpdatePlans = new List<TaskUpdatePlan>();
-        var commentPlans = new List<CommentPlan>();
+        var plan = new ActionPlan
+        {
+            Runs = new List<AutomationRun>(executions.Count),
+            NotificationPlans = [],
+            FlagPlans = [],
+            TaskUpdatePlans = [],
+            CommentPlans = [],
+        };
 
         foreach (var execution in executions)
         {
-            var rule = execution.Rule;
-            var task = execution.Task;
-            var run = new AutomationRun
-            {
-                AutomationRuleId = rule.Id,
-                EntityType = EntityType.Task,
-                EntityId = task.Id,
-                TriggerType = rule.TriggerType,
-                Status = AutomationRunStatus.Succeeded,
-                IdempotencyKey = execution.IdempotencyKey,
-                OwnerId = execution.ActorUserId,
-                CreatedByUserId = execution.ActorUserId,
-                Context = JsonSerializer.SerializeToDocument(new
-                {
-                    taskId = task.Id,
-                    taskName = task.Name,
-                    ruleId = rule.Id,
-                    ruleName = rule.Name,
-                }, JsonOptions.Default),
-            };
+            var run = CreateRun(execution);
 
             try
             {
-                foreach (var action in rule.Actions.Where(action => !action.IsDeleted).OrderBy(action => action.SortOrder))
-                {
-                    switch (action.Type)
-                    {
-                        case AutomationActionType.NotifyTaskAssignees:
-                            AddNotificationPlan(notificationPlans, execution, action);
-                            break;
-                        case AutomationActionType.FlagTask:
-                            flagPlans.Add(new FlagPlan(execution, action));
-                            break;
-                        case AutomationActionType.UpdateTask:
-                            AddTaskUpdatePlan(taskUpdatePlans, execution, action);
-                            break;
-                        case AutomationActionType.AddComment:
-                            AddCommentPlan(commentPlans, execution, action);
-                            break;
-                        default:
-                            Logger.LogWarning(
-                                "Automation rule {RuleId} has unsupported action type {ActionType}",
-                                rule.Id,
-                                action.Type);
-                            break;
-                    }
-                }
+                PlanActions(execution, plan);
             }
             catch (Exception ex)
             {
                 run.Status = AutomationRunStatus.Failed;
                 run.Message = ex.Message;
 
-                Logger.LogError(
-                    ex,
-                    "Automation rule {RuleId} failed for task {TaskId}",
-                    rule.Id,
-                    task.Id);
+                Logger.LogError(ex, "Automation rule {RuleId} failed for task {TaskId}", execution.Rule.Id, execution.Task.Id);
             }
 
-            runs.Add(run);
+            plan.Runs.Add(run);
         }
 
-        return new ActionPlan
-        {
-            Runs = runs,
-            NotificationPlans = notificationPlans,
-            FlagPlans = flagPlans,
-            TaskUpdatePlans = taskUpdatePlans,
-            CommentPlans = commentPlans,
-        };
+        return plan;
     }
 
-    private void AddCommentPlan(List<CommentPlan> plans, PendingAutomationExecution execution, AutomationAction action)
+    private void PlanActions(PendingAutomationExecution execution, ActionPlan plan)
     {
-        var body = ConfigReader.ReadString(action.Config, "comment")?.Trim();
+        var actions = execution.Rule.Actions
+            .Where(action => !action.IsDeleted)
+            .OrderBy(action => action.SortOrder);
 
-        if (string.IsNullOrWhiteSpace(body))
+        foreach (var action in actions)
         {
-            Logger.LogDebug(
-                "Automation rule {RuleId} skipped add comment action for task {TaskId}: no comment configured",
-                execution.Rule.Id,
-                execution.Task.Id);
+            var automationAction = ActionRegistry.Find(action.Type);
 
-            return;
-        }
-
-        plans.Add(new CommentPlan(execution, action, body));
-    }
-
-    private void AddTaskUpdatePlan(
-        List<TaskUpdatePlan> plans,
-        PendingAutomationExecution execution,
-        AutomationAction action)
-    {
-        var statusId = ConfigReader.ReadInt(action.Config, "statusId");
-        var priority = ConfigReader.ReadEnum<TaskPriority>(action.Config, "priority");
-
-        if (statusId is null && priority is null)
-        {
-            Logger.LogDebug(
-                "Automation rule {RuleId} skipped task update action for task {TaskId}: no task fields configured",
-                execution.Rule.Id,
-                execution.Task.Id);
-
-            return;
-        }
-
-        plans.Add(new TaskUpdatePlan
-        {
-            Execution = execution,
-            Action = action,
-            StatusId = statusId,
-            Priority = priority,
-        });
-    }
-
-    private void AddNotificationPlan(
-        List<NotificationActivityPlan> plans,
-        PendingAutomationExecution execution,
-        AutomationAction action)
-    {
-        var task = execution.Task;
-        var rule = execution.Rule;
-        var recipientIds = task.ProjectTaskAppUsers
-            .Select(assignee => assignee.UserId)
-            .DefaultIfEmpty(task.OwnerId)
-            .SelectMany(ToPresentUserId)
-            .Distinct()
-            .ToList();
-
-        if (recipientIds.Count == 0)
-        {
-            Logger.LogDebug(
-                "Automation rule {RuleId} skipped notification action for task {TaskId}: no recipients",
-                rule.Id,
-                task.Id);
-
-            return;
-        }
-
-        var activity = new EventRecord
-        {
-            EventId = Guid.NewGuid(),
-            WorkspaceId = task.WorkspaceId,
-            EventKey = EventKeys.EntityActivityRecorded,
-            SchemaVersion = 1,
-            SubjectType = EventEntityTypes.From(EntityType.Task),
-            SubjectId = task.Id.ToString(),
-            OccurredAt = DateTime.UtcNow,
-            RecordedAt = DateTime.UtcNow,
-            ActorUserId = execution.ActorUserId,
-            RetentionClass = EventRetentionClasses.Audit,
-            Payload = JsonSerializer.SerializeToDocument(new
+            if (automationAction is null)
             {
-                activityType = (int)ActivityType.Modify,
-                workspaceSlug = task.Workspace.Slug,
-                projectSlug = task.Project?.Key,
-                automationRuleId = rule.Id,
-                automationRuleName = rule.Name,
-                message = ConfigReader.ReadString(action.Config, "message") ?? $"Automation '{rule.Name}' matched this task.",
-            }, JsonOptions.Default),
-            References =
-            [
-                new EventReference
-                {
-                    Role = EventReferenceRoles.Scope,
-                    EntityType = EventEntityTypes.From(EntityType.Project),
-                    EntityId = task.ProjectId!.Value.ToString(),
-                },
-            ],
-        };
+                Logger.LogWarning("Automation rule {RuleId} has unsupported action type {ActionType}", execution.Rule.Id, action.Type);
 
-        plans.Add(new NotificationActivityPlan
-        {
-            Execution = execution,
-            Activity = activity,
-            RecipientUserIds = recipientIds,
-        });
+                continue;
+            }
 
-        Logger.LogDebug(
-            "Automation rule {RuleId} planned notification activity for task {TaskId} with {RecipientCount} recipients",
-            rule.Id,
-            task.Id,
-            recipientIds.Count);
+            var context = new AutomationActionPlanningContext
+            {
+                Rule = execution.Rule,
+                Action = action,
+                Task = execution.Task,
+                ActorUserId = execution.ActorUserId,
+            };
+            var contribution = automationAction.Plan(context);
+
+            AddContribution(plan, execution, contribution);
+        }
     }
 
-    private static IEnumerable<string> ToPresentUserId(string? userId)
+    private static void AddContribution(
+        ActionPlan plan,
+        PendingAutomationExecution execution,
+        AutomationActionPlanContribution contribution)
     {
-
-        if (!string.IsNullOrWhiteSpace(userId))
+        if (contribution.Notification is { } notification)
         {
-            yield return userId;
+            plan.NotificationPlans.Add(new NotificationActivityPlan
+            {
+                Execution = execution,
+                Activity = notification.Activity,
+                RecipientUserIds = notification.RecipientUserIds,
+            });
         }
+
+        if (contribution.Flag is { } flag)
+        {
+            plan.FlagPlans.Add(new FlagPlan
+            {
+                Execution = execution,
+                Name = flag.Name,
+                Description = flag.Description,
+            });
+        }
+
+        if (contribution.TaskUpdate is { } taskUpdate)
+        {
+            plan.TaskUpdatePlans.Add(new TaskUpdatePlan
+            {
+                Execution = execution,
+                StatusId = taskUpdate.StatusId,
+                Priority = taskUpdate.Priority,
+            });
+        }
+
+        if (contribution.CommentBody is { } commentBody)
+        {
+            plan.CommentPlans.Add(new CommentPlan(execution, commentBody));
+        }
+    }
+
+    private static AutomationRun CreateRun(PendingAutomationExecution execution)
+    {
+        var rule = execution.Rule;
+        var task = execution.Task;
+
+        return new AutomationRun
+        {
+            AutomationRuleId = rule.Id,
+            EntityType = EntityType.Task,
+            EntityId = task.Id,
+            TriggerType = rule.TriggerType,
+            Status = AutomationRunStatus.Succeeded,
+            IdempotencyKey = execution.IdempotencyKey,
+            OwnerId = execution.ActorUserId,
+            CreatedByUserId = execution.ActorUserId,
+            Context = JsonSerializer.SerializeToDocument(new
+            {
+                taskId = task.Id,
+                taskName = task.Name,
+                ruleId = rule.Id,
+                ruleName = rule.Name,
+            }, JsonOptions.Default),
+        };
     }
 }

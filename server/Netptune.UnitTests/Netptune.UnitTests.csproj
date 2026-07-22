@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Activity\Netptune.Activity.csproj" />
+    <ProjectReference Include="..\Netptune.Automation\Netptune.Automation.csproj" />
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.Handlers\Netptune.Handlers.csproj" />
     <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />

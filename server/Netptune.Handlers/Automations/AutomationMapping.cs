@@ -4,13 +4,16 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Automations;
 using Netptune.Core.ViewModels.Automations;
 
 namespace Netptune.Handlers.Automations;
 
 internal static class AutomationMapping
 {
-    public static AutomationRuleViewModel ToViewModel(this AutomationRule rule)
+    public static AutomationRuleViewModel ToViewModel(
+        this AutomationRule rule,
+        IAutomationActionRegistry actionRegistry)
     {
         return new AutomationRuleViewModel
         {
@@ -22,7 +25,7 @@ internal static class AutomationMapping
             Actions = rule.Actions
                 .Where(action => !action.IsDeleted)
                 .OrderBy(action => action.SortOrder)
-                .Select(ToViewModel)
+                .Select(action => ToViewModel(action, actionRegistry))
                 .ToList(),
             CreatedAt = rule.CreatedAt,
             UpdatedAt = rule.UpdatedAt,
@@ -55,30 +58,9 @@ internal static class AutomationMapping
         };
     }
 
-    public static JsonDocument? ToActionConfig(AutomationActionRequest action)
+    public static JsonDocument? ToActionConfig(AutomationActionRequest action, IAutomationActionRegistry actionRegistry)
     {
-        return action.Type switch
-        {
-            AutomationActionType.NotifyTaskAssignees => JsonSerializer.SerializeToDocument(new
-            {
-                message = action.Message,
-            }, JsonOptions.Default),
-            AutomationActionType.AddComment => JsonSerializer.SerializeToDocument(new
-            {
-                comment = action.Comment?.Trim(),
-            }, JsonOptions.Default),
-            AutomationActionType.FlagTask => JsonSerializer.SerializeToDocument(new
-            {
-                flagName = action.FlagName,
-                flagDescription = action.FlagDescription,
-            }, JsonOptions.Default),
-            AutomationActionType.UpdateTask => JsonSerializer.SerializeToDocument(new
-            {
-                statusId = action.StatusId,
-                priority = action.Priority,
-            }, JsonOptions.Default),
-            _ => null,
-        };
+        return actionRegistry.Find(action.Type)?.CreateConfig(action);
     }
 
     public static AutomationTriggerViewModel ReadTrigger(AutomationTriggerType type, JsonDocument? config)
@@ -112,67 +94,23 @@ internal static class AutomationMapping
         };
     }
 
-    public static AutomationActionViewModel ToViewModel(this AutomationAction action)
+    private static AutomationActionViewModel ToViewModel(
+        AutomationAction action,
+        IAutomationActionRegistry actionRegistry)
     {
-        return action.Type switch
+        var automationAction = actionRegistry.Find(action.Type);
+
+        if (automationAction is not null)
         {
-            AutomationActionType.NotifyTaskAssignees => new AutomationActionViewModel
-            {
-                Id = action.Id,
-                Type = action.Type,
-                SortOrder = action.SortOrder,
-                Message = ReadString(action.Config, "message"),
-            },
-            AutomationActionType.AddComment => new AutomationActionViewModel
-            {
-                Id = action.Id,
-                Type = action.Type,
-                SortOrder = action.SortOrder,
-                Comment = ReadString(action.Config, "comment"),
-            },
-            AutomationActionType.FlagTask => new AutomationActionViewModel
-            {
-                Id = action.Id,
-                Type = action.Type,
-                SortOrder = action.SortOrder,
-                FlagName = ReadString(action.Config, "flagName"),
-                FlagDescription = ReadString(action.Config, "flagDescription"),
-            },
-            AutomationActionType.UpdateTask => new AutomationActionViewModel
-            {
-                Id = action.Id,
-                Type = action.Type,
-                SortOrder = action.SortOrder,
-                StatusId = ReadInt(action.Config, "statusId"),
-                Priority = ReadEnum<TaskPriority>(action.Config, "priority"),
-            },
-            _ => new AutomationActionViewModel
-            {
-                Id = action.Id,
-                Type = action.Type,
-                SortOrder = action.SortOrder,
-            },
+            return automationAction.ToViewModel(action);
+        }
+
+        return new AutomationActionViewModel
+        {
+            Id = action.Id,
+            Type = action.Type,
+            SortOrder = action.SortOrder,
         };
-    }
-
-    public static int? ReadDurationDays(JsonDocument? config)
-    {
-        return ReadInt(config, "durationDays");
-    }
-
-    public static string? ReadMessage(JsonDocument? config)
-    {
-        return ReadString(config, "message");
-    }
-
-    public static string? ReadFlagName(JsonDocument? config)
-    {
-        return ReadString(config, "flagName");
-    }
-
-    public static string? ReadFlagDescription(JsonDocument? config)
-    {
-        return ReadString(config, "flagDescription");
     }
 
     private static TEnum? ReadEnum<TEnum>(JsonDocument? document, string property)
@@ -238,12 +176,4 @@ internal static class AutomationMapping
             : null;
     }
 
-    private static string? ReadString(JsonDocument? document, string property)
-    {
-        return document is not null
-               && document.RootElement.TryGetProperty(property, out var element)
-               && element.ValueKind == JsonValueKind.String
-            ? element.GetString()
-            : null;
-    }
 }

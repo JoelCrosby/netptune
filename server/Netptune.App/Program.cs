@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
 
+using Netptune.Automation.Actions;
 using Netptune.App.Configuration;
 using Netptune.App.Endpoints;
 using Netptune.App.Middleware;
@@ -118,6 +119,7 @@ builder.Services.AddS3StorageService(options =>
 
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 
+builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddNetptuneHandlers();
 
 builder.Services.AddNetptuneRateLimiter();

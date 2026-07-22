@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using Netptune.Automation.Configuration;
+using Netptune.Automation.Actions;
 using Netptune.Automation.Execution;
 using Netptune.Automation.Matching;
 using Netptune.Automation.Notifications;
@@ -41,6 +42,8 @@ public static class ServiceCollectionExtensions
         var options = new ScheduleOptions();
         configure(options);
         options.Validate();
+
+        services.AddNetptuneAutomationActions();
 
         services.AddSingleton(Options.Create(options));
         services.AddScoped<TaskChangedAutomationRuleMatcher>();

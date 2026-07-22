@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
 
@@ -14,11 +15,16 @@ public sealed class GetAutomationRulesQueryHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IAutomationActionRegistry ActionRegistry;
 
-    public GetAutomationRulesQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetAutomationRulesQueryHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IAutomationActionRegistry actionRegistry)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        ActionRegistry = actionRegistry;
     }
 
     public async ValueTask<ClientResponse<List<AutomationRuleViewModel>>> Handle(
@@ -28,6 +34,8 @@ public sealed class GetAutomationRulesQueryHandler
         var workspaceId = await Identity.GetWorkspaceId();
         var rules = await UnitOfWork.Automations.GetRulesInWorkspace(workspaceId, cancellationToken: cancellationToken);
 
-        return ClientResponse<List<AutomationRuleViewModel>>.Success(rules.Select(rule => rule.ToViewModel()).ToList());
+        var viewModels = rules.Select(rule => rule.ToViewModel(ActionRegistry)).ToList();
+
+        return ClientResponse<List<AutomationRuleViewModel>>.Success(viewModels);
     }
 }

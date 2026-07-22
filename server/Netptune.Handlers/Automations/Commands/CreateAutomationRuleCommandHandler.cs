@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
 
@@ -16,20 +17,28 @@ public sealed class CreateAutomationRuleCommandHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IAutomationActionRegistry ActionRegistry;
 
-    public CreateAutomationRuleCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public CreateAutomationRuleCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IAutomationActionRegistry actionRegistry)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        ActionRegistry = actionRegistry;
     }
 
     public async ValueTask<ClientResponse<AutomationRuleViewModel>> Handle(
         CreateAutomationRuleCommand request,
         CancellationToken cancellationToken)
     {
-        var validationError = AutomationValidation.Validate(request.Request);
+        var validationError = AutomationValidation.Validate(request.Request, ActionRegistry);
 
-        if (validationError is not null) return ClientResponse<AutomationRuleViewModel>.Failed(validationError);
+        if (validationError is not null)
+        {
+            return ClientResponse<AutomationRuleViewModel>.Failed(validationError);
+        }
 
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
@@ -48,7 +57,7 @@ public sealed class CreateAutomationRuleCommandHandler
             {
                 Type = action.Type,
                 SortOrder = index,
-                Config = AutomationMapping.ToActionConfig(action),
+                Config = AutomationMapping.ToActionConfig(action, ActionRegistry),
                 OwnerId = userId,
                 CreatedByUserId = userId,
             }).ToList(),
@@ -57,6 +66,8 @@ public sealed class CreateAutomationRuleCommandHandler
         await UnitOfWork.Automations.AddAsync(rule, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        return ClientResponse<AutomationRuleViewModel>.Success(rule.ToViewModel());
+        var viewModel = rule.ToViewModel(ActionRegistry);
+
+        return ClientResponse<AutomationRuleViewModel>.Success(viewModel);
     }
 }

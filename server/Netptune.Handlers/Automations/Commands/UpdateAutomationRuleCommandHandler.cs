@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
 
@@ -16,26 +17,37 @@ public sealed class UpdateAutomationRuleCommandHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IAutomationActionRegistry ActionRegistry;
 
-    public UpdateAutomationRuleCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public UpdateAutomationRuleCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IAutomationActionRegistry actionRegistry)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
+        ActionRegistry = actionRegistry;
     }
 
     public async ValueTask<ClientResponse<AutomationRuleViewModel>> Handle(
         UpdateAutomationRuleCommand request,
         CancellationToken cancellationToken)
     {
-        var validationError = AutomationValidation.Validate(request.Request);
+        var validationError = AutomationValidation.Validate(request.Request, ActionRegistry);
 
-        if (validationError is not null) return ClientResponse<AutomationRuleViewModel>.Failed(validationError);
+        if (validationError is not null)
+        {
+            return ClientResponse<AutomationRuleViewModel>.Failed(validationError);
+        }
 
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
         var rule = await UnitOfWork.Automations.GetRuleInWorkspace(request.Id, workspaceId, cancellationToken: cancellationToken);
 
-        if (rule is null) return ClientResponse<AutomationRuleViewModel>.NotFound;
+        if (rule is null)
+        {
+            return ClientResponse<AutomationRuleViewModel>.NotFound;
+        }
 
         var req = request.Request;
 
@@ -57,7 +69,7 @@ public sealed class UpdateAutomationRuleCommandHandler
             {
                 Type = action.Type,
                 SortOrder = index,
-                Config = AutomationMapping.ToActionConfig(action),
+                Config = AutomationMapping.ToActionConfig(action, ActionRegistry),
                 OwnerId = userId,
                 CreatedByUserId = userId,
             });
@@ -65,6 +77,8 @@ public sealed class UpdateAutomationRuleCommandHandler
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        return ClientResponse<AutomationRuleViewModel>.Success(rule.ToViewModel());
+        var viewModel = rule.ToViewModel(ActionRegistry);
+
+        return ClientResponse<AutomationRuleViewModel>.Success(viewModel);
     }
 }
