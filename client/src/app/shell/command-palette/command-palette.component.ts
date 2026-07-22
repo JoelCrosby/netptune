@@ -220,7 +220,7 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
         setTimeout(() => {
           this.queryValue.set('');
           this.selectedIndex.set(0);
-          this.search.query.set('');
+          this.search.setQuery('');
           this.overlayRef.overlayElement
             .querySelector<HTMLInputElement>('input')
             ?.focus();
@@ -276,7 +276,23 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
       prefix === '>' || prefix === '#' || prefix === '@'
         ? q.slice(1).trim()
         : q.trim();
-    this.search.query.set(stripped);
+
+    if (prefix === '>') {
+      this.search.setQuery('');
+      return;
+    }
+
+    if (prefix === '#') {
+      this.search.setQuery(stripped, ['tasks']);
+      return;
+    }
+
+    if (prefix === '@') {
+      this.search.setQuery(stripped, ['projects']);
+      return;
+    }
+
+    this.search.setQuery(stripped);
   }
 
   moveSelection(delta: number) {
