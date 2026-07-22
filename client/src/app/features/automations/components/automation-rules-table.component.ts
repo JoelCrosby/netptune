@@ -8,6 +8,7 @@ import {
 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+import { Status } from '@core/models/status';
 import {
   automationRunStatusLabels,
   describeAutomationActions,
@@ -132,17 +133,18 @@ export class AutomationRulesTableComponent {
   readonly rules = input.required<AutomationRuleListItem[]>();
   readonly canManage = input.required<boolean>();
   readonly busyId = input<number | null>(null);
+  readonly statuses = input<Status[]>([]);
 
   readonly toggleRule = output<AutomationRuleListItem>();
   readonly editRule = output<AutomationRuleListItem>();
   readonly deleteRule = output<AutomationRuleListItem>();
 
   triggerSummary(rule: AutomationRuleListItem): string {
-    return describeAutomationTrigger(rule.trigger);
+    return describeAutomationTrigger(rule.trigger, this.statuses());
   }
 
   actionsSummary(rule: AutomationRuleListItem): string {
-    return describeAutomationActions(rule.actions);
+    return describeAutomationActions(rule.actions, this.statuses());
   }
 
   runStatusLabel(status: AutomationRunStatus): string {

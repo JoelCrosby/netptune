@@ -3,6 +3,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { StatusesService } from '@core/services/statuses.service';
+import { Status } from '@core/models/status';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { LucidePlus } from '@lucide/angular';
@@ -16,7 +18,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
-import { EMPTY, finalize, switchMap } from 'rxjs';
+import { EMPTY, finalize, forkJoin, switchMap } from 'rxjs';
 import {
   AutomationStat,
   AutomationStatGridComponent,
@@ -71,6 +73,7 @@ import { AutomationsService } from '../../services/automations.service';
             [rules]="rules()"
             [canManage]="canManage()"
             [busyId]="busyId()"
+            [statuses]="statuses()"
             (toggleRule)="onToggle($event)"
             (editRule)="onEdit($event)"
             (deleteRule)="onDelete($event)" />
@@ -101,6 +104,7 @@ import { AutomationsService } from '../../services/automations.service';
 })
 export class AutomationsViewComponent {
   private service = inject(AutomationsService);
+  private statusesService = inject(StatusesService);
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
   private store = inject(Store);
@@ -109,6 +113,7 @@ export class AutomationsViewComponent {
   private destroyRef = inject(DestroyRef);
 
   readonly rules = signal<AutomationRuleListItem[]>([]);
+  readonly statuses = signal<Status[]>([]);
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly busyId = signal<number | null>(null);
@@ -139,14 +144,19 @@ export class AutomationsViewComponent {
     this.loading.set(true);
     this.error.set(false);
 
-    this.service
-      .getRulesWithLastRun()
+    forkJoin({
+      rules: this.service.getRulesWithLastRun(),
+      statuses: this.statusesService.get(),
+    })
       .pipe(
         finalize(() => this.loading.set(false)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: (rules) => this.rules.set(rules),
+        next: ({ rules, statuses }) => {
+          this.rules.set(rules);
+          this.statuses.set(statuses);
+        },
         error: () => this.error.set(true),
       });
   }

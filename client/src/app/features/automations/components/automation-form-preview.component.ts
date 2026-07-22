@@ -8,6 +8,7 @@ import {
 } from '../models/automation.models';
 import { AutomationRuleSummaryComponent } from './automation-rule-summary.component';
 import { CardContentComponent } from '@app/static/components/card/card-content.component';
+import { Status } from '@core/models/status';
 
 @Component({
   selector: 'app-automation-form-preview',
@@ -22,7 +23,8 @@ import { CardContentComponent } from '@app/static/components/card/card-content.c
     <aside class="flex flex-col gap-5">
       <app-automation-rule-summary
         [trigger]="trigger()"
-        [actions]="actions()" />
+        [actions]="actions()"
+        [statuses]="statuses()" />
 
       <app-card>
         <app-card-header>
@@ -40,5 +42,6 @@ import { CardContentComponent } from '@app/static/components/card/card-content.c
 export class AutomationFormPreviewComponent {
   readonly trigger = input.required<AutomationTrigger>();
   readonly actions = input.required<AutomationAction[]>();
+  readonly statuses = input<Status[]>([]);
   readonly savePreview = input.required<string>();
 }

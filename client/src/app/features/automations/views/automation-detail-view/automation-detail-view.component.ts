@@ -3,6 +3,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { StatusesService } from '@core/services/statuses.service';
+import { Status } from '@core/models/status';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import {
@@ -86,7 +88,8 @@ import { AutomationsService } from '../../services/automations.service';
 
           <app-automation-rule-summary
             [trigger]="rule.trigger"
-            [actions]="rule.actions" />
+            [actions]="rule.actions"
+            [statuses]="statuses()" />
 
           <app-automation-detail-stats [rule]="rule" [runs]="runs()" />
 
@@ -106,6 +109,7 @@ import { AutomationsService } from '../../services/automations.service';
 })
 export class AutomationDetailViewComponent {
   private service = inject(AutomationsService);
+  private statusesService = inject(StatusesService);
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
   private route = inject(ActivatedRoute);
@@ -115,6 +119,7 @@ export class AutomationDetailViewComponent {
 
   readonly rule = signal<AutomationRule | null>(null);
   readonly runs = signal<AutomationRun[]>([]);
+  readonly statuses = signal<Status[]>([]);
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal(false);
@@ -140,15 +145,17 @@ export class AutomationDetailViewComponent {
     forkJoin({
       rule: this.service.getRule(id),
       runs: this.service.getRuns(id),
+      statuses: this.statusesService.get(),
     })
       .pipe(
         finalize(() => this.loading.set(false)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: ({ rule, runs }) => {
+        next: ({ rule, runs, statuses }) => {
           this.rule.set(rule);
           this.runs.set(runs);
+          this.statuses.set(statuses);
         },
         error: () => this.error.set(true),
       });

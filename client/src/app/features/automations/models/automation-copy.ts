@@ -1,5 +1,6 @@
 import { taskPriorityLabels } from '@core/enums/task-priority';
 import { EntityType } from '@core/models/entity-type';
+import { Status } from '@core/models/status';
 import { entityTypeToString } from '@core/transforms/entity-type';
 import { isNotNullOrUndefined } from '@core/util/nullish';
 import { joinNaturalList, toLowerText } from '@core/util/strings';
@@ -56,12 +57,15 @@ export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
   [AutomationRunStatus.skipped]: 'Skipped',
 };
 
-export function describeAutomationTrigger(trigger: AutomationTrigger): string {
+export function describeAutomationTrigger(
+  trigger: AutomationTrigger,
+  statuses: Status[] = []
+): string {
   switch (trigger.type) {
     case AutomationTriggerType.taskChanged:
-      return describeTaskChangedTrigger(trigger);
+      return describeTaskChangedTrigger(trigger, statuses);
     case AutomationTriggerType.taskStatusChanged:
-      return `When a task changes to ${statusLabel(trigger.statusId)}`;
+      return `When a task changes to ${statusLabel(trigger.statusId, statuses)}`;
     case AutomationTriggerType.taskUnassignedFor:
       return `When a task is unassigned for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
     case AutomationTriggerType.taskDueDateApproaching:
@@ -75,7 +79,10 @@ function describeDueDateTrigger(durationDays: number): string {
   return `When a task is due in ${durationDays} ${pluralizeDays(durationDays)}`;
 }
 
-function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
+function describeTaskChangedTrigger(
+  trigger: AutomationTrigger,
+  statuses: Status[]
+): string {
   const fields = trigger.fields?.length
     ? trigger.fields.map((field) => taskChangeFieldLabels[field])
     : ['selected fields'];
@@ -83,7 +90,9 @@ function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
 
   if (trigger.conditions?.length) {
     const conditionText = joinNaturalList(
-      trigger.conditions.map(describeFieldCondition),
+      trigger.conditions.map((condition) =>
+        describeFieldCondition(condition, statuses)
+      ),
       'and'
     );
 
@@ -94,7 +103,7 @@ function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
     trigger.fields?.includes(TaskChangeField.status) &&
     isNotNullOrUndefined(trigger.statusId)
   ) {
-    return `When a task's ${fieldText} changes, with status becoming ${statusLabel(trigger.statusId)}`;
+    return `When a task's ${fieldText} changes, with status becoming ${statusLabel(trigger.statusId, statuses)}`;
   }
 
   if (
@@ -107,9 +116,13 @@ function describeTaskChangedTrigger(trigger: AutomationTrigger): string {
   return `When a task's ${fieldText} changes`;
 }
 
-function describeFieldCondition(condition: AutomationFieldCondition): string {
+function describeFieldCondition(
+  condition: AutomationFieldCondition,
+  statuses: Status[]
+): string {
   const field = toLowerText(taskChangeFieldLabels[condition.field]);
-  const value = condition.value ? ` “${condition.value}”` : '';
+  const conditionValue = describeConditionValue(condition, statuses);
+  const value = conditionValue ? ` “${conditionValue}”` : '';
 
   switch (condition.operator) {
     case AutomationConditionOperator.any:
@@ -131,7 +144,25 @@ function describeFieldCondition(condition: AutomationFieldCondition): string {
   }
 }
 
-export function describeAutomationAction(action: AutomationAction): string {
+function describeConditionValue(
+  condition: AutomationFieldCondition,
+  statuses: Status[]
+): string | null {
+  if (!condition.value) return null;
+
+  if (condition.field !== TaskChangeField.status) return condition.value;
+
+  const statusId = Number(condition.value);
+
+  return Number.isInteger(statusId)
+    ? statusLabel(statusId, statuses)
+    : condition.value;
+}
+
+export function describeAutomationAction(
+  action: AutomationAction,
+  statuses: Status[] = []
+): string {
   switch (action.type) {
     case AutomationActionType.notifyTaskAssignees:
       return action.message
@@ -142,7 +173,7 @@ export function describeAutomationAction(action: AutomationAction): string {
         ? `Flag the task as "${action.flagName}"`
         : 'Flag the task';
     case AutomationActionType.updateTask:
-      return describeUpdateTaskAction(action);
+      return describeUpdateTaskAction(action, statuses);
     case AutomationActionType.addComment:
       return action.comment
         ? `Add comment: "${action.comment}"`
@@ -164,11 +195,14 @@ function describeDeleteTaskAction(action: AutomationAction): string {
   return `Delete the task after ${amount} ${unitLabel}`;
 }
 
-function describeUpdateTaskAction(action: AutomationAction): string {
+function describeUpdateTaskAction(
+  action: AutomationAction,
+  statuses: Status[]
+): string {
   const updates: string[] = [];
 
   if (isNotNullOrUndefined(action.statusId)) {
-    updates.push(`status to ${statusLabel(action.statusId)}`);
+    updates.push(`status to ${statusLabel(action.statusId, statuses)}`);
   }
 
   if (isNotNullOrUndefined(action.priority)) {
@@ -180,23 +214,35 @@ function describeUpdateTaskAction(action: AutomationAction): string {
     : 'Update the task';
 }
 
-export function describeAutomationActions(actions: AutomationAction[]): string {
+export function describeAutomationActions(
+  actions: AutomationAction[],
+  statuses: Status[] = []
+): string {
   if (!actions.length) return 'No actions configured';
 
-  return actions.map(describeAutomationAction).join(', then ');
+  return actions
+    .map((action) => describeAutomationAction(action, statuses))
+    .join(', then ');
 }
 
 export function describeAutomationRule(
   trigger: AutomationTrigger,
-  actions: AutomationAction[]
+  actions: AutomationAction[],
+  statuses: Status[] = []
 ): string {
-  return `${describeAutomationTrigger(trigger)}, ${describeAutomationActions(actions)}.`;
+  return `${describeAutomationTrigger(trigger, statuses)}, ${describeAutomationActions(actions, statuses)}.`;
 }
 
-export function statusLabel(statusId: number | null | undefined): string {
-  return isNotNullOrUndefined(statusId)
-    ? `status #${statusId}`
-    : 'a selected status';
+export function statusLabel(
+  statusId: number | null | undefined,
+  statuses: Status[] = []
+): string {
+  if (!isNotNullOrUndefined(statusId)) return 'a selected status';
+
+  return (
+    statuses.find((status) => status.id === statusId)?.name ??
+    `status #${statusId}`
+  );
 }
 
 export function runStatusClass(status: AutomationRunStatus): string {

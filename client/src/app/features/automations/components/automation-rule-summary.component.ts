@@ -3,6 +3,7 @@ import { CardComponent } from '@app/static/components/card/card.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
+import { Status } from '@core/models/status';
 import {
   describeAutomationActions,
   describeAutomationRule,
@@ -53,16 +54,21 @@ import {
 export class AutomationRuleSummaryComponent {
   readonly trigger = input.required<AutomationTrigger>();
   readonly actions = input.required<AutomationAction[]>();
+  readonly statuses = input<Status[]>([]);
 
   ruleSummary(): string {
-    return describeAutomationRule(this.trigger(), this.actions());
+    return describeAutomationRule(
+      this.trigger(),
+      this.actions(),
+      this.statuses()
+    );
   }
 
   triggerSummary(): string {
-    return describeAutomationTrigger(this.trigger());
+    return describeAutomationTrigger(this.trigger(), this.statuses());
   }
 
   actionsSummary(): string {
-    return describeAutomationActions(this.actions());
+    return describeAutomationActions(this.actions(), this.statuses());
   }
 }

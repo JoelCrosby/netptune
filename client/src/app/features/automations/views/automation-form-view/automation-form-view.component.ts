@@ -117,6 +117,7 @@ import { AutomationsService } from '../../services/automations.service';
           <app-automation-form-preview
             [trigger]="triggerPreview()"
             [actions]="actions()"
+            [statuses]="taskStatuses()"
             [savePreview]="savePreview()" />
         </form>
       }
@@ -239,7 +240,11 @@ export class AutomationFormViewComponent {
   });
 
   readonly savePreview = computed(() =>
-    describeAutomationRule(this.triggerPreview(), this.actions())
+    describeAutomationRule(
+      this.triggerPreview(),
+      this.actions(),
+      this.taskStatuses()
+    )
   );
 
   onSubmit() {
