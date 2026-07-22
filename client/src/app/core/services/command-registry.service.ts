@@ -6,7 +6,7 @@ export interface Command {
   keywords?: string[];
   group: 'navigation' | 'actions' | 'settings';
   icon?: string;
-  shortcut?: string;
+  shortcut?: readonly string[];
   execute: () => void;
 }
 

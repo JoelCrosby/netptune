@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { LucideZap } from '@lucide/angular';
 import { Command } from '@core/services/command-registry.service';
 import { CommandPaletteItemComponent } from './command-palette-item.component';
@@ -15,9 +15,9 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
       <svg lucideZap class="h-4 w-4 shrink-0 opacity-50"></svg>
       <span class="flex-1 truncate text-left">{{ command().label }}</span>
       @if (command().shortcut) {
-        <span class="text-muted ml-auto tracking-widest">{{
-          command().shortcut
-        }}</span>
+        <span class="text-muted ml-auto tracking-widest">
+          {{ shortcutLabel() }}
+        </span>
       }
     </button>
   `,
@@ -27,4 +27,10 @@ export class CommandItemComponent {
   selected = input(false);
   activate = output<Command>();
   hover = output();
+
+  readonly shortcutLabel = computed(() => {
+    return this.command()
+      .shortcut?.map((key) => key.toUpperCase())
+      .join(' ');
+  });
 }

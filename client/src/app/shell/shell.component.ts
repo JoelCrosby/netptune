@@ -21,9 +21,10 @@ import { CommandPaletteComponent } from './command-palette/command-palette.compo
 import { GlobalCommandsService } from './global-commands.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
+import { CommandShortcutService } from './command-palette/command-shortcut.service';
 
 @Component({
-  providers: [ShellService, GlobalCommandsService],
+  providers: [ShellService, GlobalCommandsService, CommandShortcutService],
   imports: [
     RouterOutlet,
     ShellSidebarComponent,
@@ -70,9 +71,10 @@ export class ShellComponent {
 
   shell = inject(ShellService);
   readonly globalCommands = inject(GlobalCommandsService);
+  readonly commandShortcuts = inject(CommandShortcutService);
   readonly preferences = inject(UserPreferencesService);
-  // Injected for its effect, which records the workspace the user is in.
   readonly lastWorkspace = inject(LastWorkspaceService);
+
   authenticated = this.store.selectSignal(selectIsAuthenticated);
   sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
 
