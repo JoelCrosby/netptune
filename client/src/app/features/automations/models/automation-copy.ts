@@ -17,6 +17,7 @@ export const triggerTypeLabels: Record<AutomationTriggerType, string> = {
   [AutomationTriggerType.taskStatusChanged]: 'Task status changes',
   [AutomationTriggerType.taskUnassignedFor]: 'Task is unassigned',
   [AutomationTriggerType.taskChanged]: 'Task changes',
+  [AutomationTriggerType.taskDueDateApproaching]: 'Task due date approaches',
 };
 
 export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
@@ -58,7 +59,15 @@ export function describeAutomationTrigger(trigger: AutomationTrigger): string {
       return `When a task changes to ${statusLabel(trigger.statusId)}`;
     case AutomationTriggerType.taskUnassignedFor:
       return `When a task is unassigned for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
+    case AutomationTriggerType.taskDueDateApproaching:
+      return describeDueDateTrigger(trigger.durationDays ?? 0);
   }
+}
+
+function describeDueDateTrigger(durationDays: number): string {
+  if (durationDays === 0) return 'When a task is due today';
+
+  return `When a task is due in ${durationDays} ${pluralizeDays(durationDays)}`;
 }
 
 function describeTaskChangedTrigger(trigger: AutomationTrigger): string {

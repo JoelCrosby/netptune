@@ -77,7 +77,7 @@ import {
             </div>
           </div>
         }
-      } @else {
+      } @else if (triggerType() === automationTriggerType.taskUnassignedFor) {
         <div class="flex flex-wrap items-end gap-3">
           <div class="w-48">
             <app-form-input
@@ -89,6 +89,18 @@ import {
           </div>
           <span class="pb-7 text-sm">days</span>
         </div>
+      } @else {
+        <div class="flex flex-wrap items-end gap-3">
+          <div class="w-32">
+            <app-form-input
+              label="Lead time"
+              name="durationDays"
+              type="number"
+              [required]="true"
+              [(value)]="durationDays" />
+          </div>
+          <span class="pb-7 text-sm">days before the due date</span>
+        </div>
       }
     </div>
   `,
@@ -99,6 +111,7 @@ export class AutomationTriggerEditorComponent {
   readonly triggerTypes = [
     AutomationTriggerType.taskChanged,
     AutomationTriggerType.taskUnassignedFor,
+    AutomationTriggerType.taskDueDateApproaching,
   ];
   readonly taskFieldOptions = [
     TaskChangeField.name,

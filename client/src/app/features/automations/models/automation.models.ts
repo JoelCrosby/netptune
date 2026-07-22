@@ -5,6 +5,7 @@ export enum AutomationTriggerType {
   taskStatusChanged = 0,
   taskUnassignedFor = 1,
   taskChanged = 2,
+  taskDueDateApproaching = 3,
 }
 
 export enum TaskChangeField {

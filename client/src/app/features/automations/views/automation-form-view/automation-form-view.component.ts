@@ -27,8 +27,8 @@ import { AutomationFormPreviewComponent } from '../../components/automation-form
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
 import { describeAutomationRule } from '../../models/automation-copy';
+import { buildAutomationRuleRequest } from '../../models/automation-rule-request-builder';
 import {
-  AutomationActionRequest,
   AutomationActionType,
   AutomationRule,
   AutomationRuleRequest,
@@ -171,10 +171,6 @@ export class AutomationFormViewComponent {
   readonly status = signal<number | null>(null);
 
   constructor() {
-    // Apply the default status once statuses load. Runs after change
-    // detection so the status <app-form-select> options are already
-    // initialised — writing the value eagerly during CD races the
-    // required `value` input on the options (NG0950).
     effect(() => {
       const defaultId = this.defaultCompleteStatusId();
       if (defaultId !== null && untracked(this.status) === null) {
@@ -248,7 +244,7 @@ export class AutomationFormViewComponent {
     }
 
     return {
-      type: AutomationTriggerType.taskUnassignedFor,
+      type: this.triggerType(),
       fields: null,
       durationDays: Number(this.durationDays()),
       statusId: null,
@@ -333,119 +329,16 @@ export class AutomationFormViewComponent {
   }
 
   private buildRequest(): AutomationRuleRequest | null {
-    this.validationError.set(null);
-
-    if (!this.name().trim()) {
-      this.validationError.set('Automation name is required.');
-      return null;
-    }
-
-    const actions = this.buildActions();
-    if (!actions.length) {
-      this.validationError.set('Add at least one action.');
-      return null;
-    }
-
-    const invalidFlag = actions.some(
-      (action) =>
-        action.type === AutomationActionType.flagTask &&
-        !action.flagName?.trim()
-    );
-
-    if (invalidFlag) {
-      this.validationError.set('Flag actions need a flag name.');
-      return null;
-    }
-
-    const invalidComment = actions.some(
-      (action) =>
-        action.type === AutomationActionType.addComment &&
-        !action.comment?.trim()
-    );
-
-    if (invalidComment) {
-      this.validationError.set('Add comment actions need a comment.');
-      return null;
-    }
-
-    const invalidUpdate = actions.some(
-      (action) =>
-        action.type === AutomationActionType.updateTask &&
-        action.statusId === null &&
-        action.priority === null
-    );
-
-    if (invalidUpdate) {
-      this.validationError.set(
-        'Task update actions need a status or priority.'
-      );
-      return null;
-    }
-
-    const trigger = this.triggerPreview();
-    if (
-      trigger.type === AutomationTriggerType.taskChanged &&
-      !trigger.fields?.length
-    ) {
-      this.validationError.set('Choose at least one task field to watch.');
-      return null;
-    }
-
-    if (
-      trigger.type === AutomationTriggerType.taskChanged &&
-      trigger.fields?.includes(TaskChangeField.status) &&
-      trigger.statusId === null
-    ) {
-      this.validationError.set('Choose a status to watch.');
-      return null;
-    }
-
-    if (
-      trigger.type === AutomationTriggerType.taskUnassignedFor &&
-      (!Number.isFinite(trigger.durationDays) ||
-        (trigger.durationDays ?? 0) < 1 ||
-        (trigger.durationDays ?? 0) > 365)
-    ) {
-      this.validationError.set('Unassigned duration must be 1 to 365 days.');
-      return null;
-    }
-
-    return {
-      name: this.name().trim(),
+    const result = buildAutomationRuleRequest({
+      name: this.name(),
       isEnabled: this.isEnabled(),
-      trigger,
-      actions,
-    };
-  }
+      trigger: this.triggerPreview(),
+      actions: this.actions(),
+    });
 
-  private buildActions(): AutomationActionRequest[] {
-    return this.actions().map((action) => ({
-      type: action.type,
-      message:
-        action.type === AutomationActionType.notifyTaskAssignees
-          ? action.message?.trim() || null
-          : null,
-      comment:
-        action.type === AutomationActionType.addComment
-          ? action.comment?.trim() || null
-          : null,
-      flagName:
-        action.type === AutomationActionType.flagTask
-          ? action.flagName?.trim() || null
-          : null,
-      flagDescription:
-        action.type === AutomationActionType.flagTask
-          ? action.flagDescription?.trim() || null
-          : null,
-      statusId:
-        action.type === AutomationActionType.updateTask
-          ? (action.statusId ?? null)
-          : null,
-      priority:
-        action.type === AutomationActionType.updateTask
-          ? (action.priority ?? null)
-          : null,
-    }));
+    this.validationError.set(result.error);
+
+    return result.request;
   }
 
   private newNotifyAction(): EditableAutomationAction {
