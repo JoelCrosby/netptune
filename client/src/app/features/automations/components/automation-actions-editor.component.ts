@@ -96,6 +96,18 @@ export interface AutomationActionUpdate {
                         patch: { message: $event },
                       })
                     " />
+                } @else if (action.type === automationActionType.addComment) {
+                  <app-form-textarea
+                    label="Comment"
+                    rows="3"
+                    [maxLength]="32768"
+                    [value]="action.comment ?? ''"
+                    (valueChange)="
+                      actionUpdated.emit({
+                        clientId: action.clientId,
+                        patch: { comment: $event },
+                      })
+                    " />
                 } @else if (action.type === automationActionType.flagTask) {
                   <div class="grid gap-3 md:grid-cols-2">
                     <app-form-input
@@ -211,6 +223,7 @@ export class AutomationActionsEditorComponent {
     AutomationActionType.notifyTaskAssignees,
     AutomationActionType.flagTask,
     AutomationActionType.updateTask,
+    AutomationActionType.addComment,
   ];
   readonly taskPriorities = taskPriorityOptions;
   readonly defaultTaskPriority = TaskPriority.none;

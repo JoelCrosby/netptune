@@ -59,6 +59,10 @@ internal static class AutomationMapping
             {
                 message = action.Message,
             }, JsonOptions.Default),
+            AutomationActionType.AddComment => JsonSerializer.SerializeToDocument(new
+            {
+                comment = action.Comment?.Trim(),
+            }, JsonOptions.Default),
             AutomationActionType.FlagTask => JsonSerializer.SerializeToDocument(new
             {
                 flagName = action.FlagName,
@@ -109,6 +113,13 @@ internal static class AutomationMapping
                 Type = action.Type,
                 SortOrder = action.SortOrder,
                 Message = ReadString(action.Config, "message"),
+            },
+            AutomationActionType.AddComment => new AutomationActionViewModel
+            {
+                Id = action.Id,
+                Type = action.Type,
+                SortOrder = action.SortOrder,
+                Comment = ReadString(action.Config, "comment"),
             },
             AutomationActionType.FlagTask => new AutomationActionViewModel
             {

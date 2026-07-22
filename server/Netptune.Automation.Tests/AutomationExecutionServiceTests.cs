@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
 
 using Xunit;
@@ -104,6 +105,7 @@ public sealed class AutomationExecutionServiceTests
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
             ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
             Changes =
             [
                 TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
@@ -163,6 +165,50 @@ public sealed class AutomationExecutionServiceTests
         task.StatusId.Should().Be(expectedStatusId);
         task.Status.Key.Should().Be("complete");
         task.ModifiedByUserId.Should().Be(scenario.Owner.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_adds_comment_for_matching_rule()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            actionType: AutomationActionType.AddComment);
+
+        var message = new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        };
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+
+        var comment = await scope.Db.Comments.SingleAsync(TestContext.Current.CancellationToken);
+        var commentEvent = scope.EventRecords.Events.Single(record => record.EventKey == EventKeys.CommentCreated);
+        var payload = commentEvent.Payload.Should().BeOfType<CommentEventPayload>().Subject;
+
+        comment.Body.Should().Be("Added by test automation");
+        comment.EntityType.Should().Be(EntityType.Task);
+        comment.EntityId.Should().Be(scenario.Task.Id);
+        comment.WorkspaceId.Should().Be(scenario.Workspace.Id);
+        comment.OwnerId.Should().Be(scenario.Owner.Id);
+        commentEvent.SubjectType.Should().Be(EventEntityTypes.From(EntityType.Task));
+        commentEvent.SubjectId.Should().Be(scenario.Task.Id.ToString());
+        commentEvent.ActorUserId.Should().Be(scenario.Owner.Id);
+        payload.CommentId.Should().Be(comment.Id);
+        payload.RecipientUserIds.Should().BeEmpty();
     }
 
     [Fact]

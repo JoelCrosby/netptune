@@ -55,19 +55,26 @@ internal sealed class RuleExecutor
 
         var pending = await GetPendingExecutions(triggerType, executions, cancellationToken);
 
-        if (pending.Count == 0) return;
+        if (pending.Count == 0)
+        {
+            return;
+        }
 
         var plan = ActionPlanner.Plan(pending);
         RecordRunResults(triggerType, plan.Runs);
 
         var flags = await FlagPlanner.BuildFlags(triggerType, plan.FlagPlans, cancellationToken);
-        var notifications = await Persistence.Persist(
-            triggerType,
-            plan.Runs,
-            plan.NotificationPlans,
-            flags,
-            plan.TaskUpdatePlans,
-            cancellationToken);
+        var persistencePlan = new AutomationPersistencePlan
+        {
+            TriggerType = triggerType,
+            Runs = plan.Runs,
+            NotificationPlans = plan.NotificationPlans,
+            Flags = flags,
+            TaskUpdatePlans = plan.TaskUpdatePlans,
+            CommentPlans = plan.CommentPlans,
+        };
+
+        var notifications = await Persistence.Persist(persistencePlan, cancellationToken);
 
         await NotificationPublisher.Publish(triggerType, notifications, cancellationToken);
     }

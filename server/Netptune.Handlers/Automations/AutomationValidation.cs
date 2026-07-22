@@ -29,7 +29,10 @@ internal static class AutomationValidation
             _ => null,
         };
 
-        if (triggerError is not null) return triggerError;
+        if (triggerError is not null)
+        {
+            return triggerError;
+        }
 
         if (request.Actions.Count == 0)
         {
@@ -47,12 +50,19 @@ internal static class AutomationValidation
             {
                 AutomationActionType.FlagTask when string.IsNullOrWhiteSpace(action.FlagName) =>
                     "Flag task actions require flagName.",
+                AutomationActionType.AddComment when string.IsNullOrWhiteSpace(action.Comment) =>
+                    "Add comment actions require comment.",
+                AutomationActionType.AddComment when action.Comment is { Length: > 32768 } =>
+                    "Add comment actions cannot exceed 32768 characters.",
                 AutomationActionType.UpdateTask when action.StatusId is null && action.Priority is null =>
                     "Update task actions require status or priority.",
                 _ => null,
             };
 
-            if (actionError is not null) return actionError;
+            if (actionError is not null)
+            {
+                return actionError;
+            }
         }
 
         return null;

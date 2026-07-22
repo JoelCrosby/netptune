@@ -185,6 +185,10 @@ internal static class AutomationTestData
                 statusId,
                 priority = TaskPriority.High,
             }),
+            AutomationActionType.AddComment => JsonSerializer.SerializeToDocument(new
+            {
+                comment = "Added by test automation",
+            }),
             _ => JsonSerializer.SerializeToDocument(new { }),
         };
     }

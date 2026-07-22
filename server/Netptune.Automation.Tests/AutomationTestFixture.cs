@@ -63,7 +63,8 @@ public sealed class AutomationTestFixture : IAsyncLifetime
 
         services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(DbContainer.GetConnectionString()));
         services.AddScoped<INetptuneUnitOfWork, NetptuneUnitOfWork>();
-        services.AddSingleton<IEventRecordWriter, NoOpEventRecordWriter>();
+        services.AddScoped<RecordingEventRecordWriter>();
+        services.AddScoped<IEventRecordWriter>(provider => provider.GetRequiredService<RecordingEventRecordWriter>());
         services.AddSingleton<INotificationEventPublisher, NoOpNotificationEventPublisher>();
         services.AddNetptuneAutomation();
 
@@ -101,6 +102,7 @@ public sealed class AutomationTestFixture : IAsyncLifetime
                 automation_rules,
                 flags,
                 notifications,
+                comments,
                 project_task_app_users,
                 project_tasks,
                 projects,
@@ -132,10 +134,42 @@ public sealed class AutomationTestFixture : IAsyncLifetime
     }
 }
 
-internal sealed class NoOpEventRecordWriter : IEventRecordWriter
+internal sealed record RecordedEvent
 {
+    public required string EventKey { get; init; }
+
+    public int? WorkspaceId { get; init; }
+
+    public string? SubjectType { get; init; }
+
+    public string? SubjectId { get; init; }
+
+    public string? ActorUserId { get; init; }
+
+    public required object Payload { get; init; }
+
+    public required IReadOnlyCollection<EventReferenceInput> References { get; init; }
+}
+
+internal sealed class RecordingEventRecordWriter : IEventRecordWriter
+{
+    public List<RecordedEvent> Events { get; } = [];
+
     public Task<EventRecord> Append<TPayload>(EventWriteRequest<TPayload> request, CancellationToken cancellationToken = default)
-        where TPayload : class => Task.FromResult(new EventRecord
+        where TPayload : class
+    {
+        Events.Add(new RecordedEvent
+        {
+            EventKey = request.EventKey,
+            WorkspaceId = request.WorkspaceId,
+            SubjectType = request.SubjectType,
+            SubjectId = request.SubjectId,
+            ActorUserId = request.ActorUserId,
+            Payload = request.Payload,
+            References = request.References,
+        });
+
+        return Task.FromResult(new EventRecord
         {
             EventKey = request.EventKey,
             WorkspaceId = request.WorkspaceId,
@@ -144,4 +178,5 @@ internal sealed class NoOpEventRecordWriter : IEventRecordWriter
             OccurredAt = request.OccurredAt ?? DateTime.UtcNow,
             RecordedAt = DateTime.UtcNow,
         });
+    }
 }

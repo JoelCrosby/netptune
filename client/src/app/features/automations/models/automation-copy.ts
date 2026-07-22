@@ -41,6 +41,7 @@ export const actionTypeLabels: Record<AutomationActionType, string> = {
   [AutomationActionType.notifyTaskAssignees]: 'Notify task assignees',
   [AutomationActionType.flagTask]: 'Flag task',
   [AutomationActionType.updateTask]: 'Update task',
+  [AutomationActionType.addComment]: 'Add comment',
 };
 
 export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
@@ -95,6 +96,10 @@ export function describeAutomationAction(action: AutomationAction): string {
         : 'Flag the task';
     case AutomationActionType.updateTask:
       return describeUpdateTaskAction(action);
+    case AutomationActionType.addComment:
+      return action.comment
+        ? `Add comment: "${action.comment}"`
+        : 'Add a comment';
   }
 }
 

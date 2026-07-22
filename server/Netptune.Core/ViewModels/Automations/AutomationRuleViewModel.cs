@@ -44,6 +44,8 @@ public record AutomationActionViewModel
 
     public string? Message { get; init; }
 
+    public string? Comment { get; init; }
+
     public string? FlagName { get; init; }
 
     public string? FlagDescription { get; init; }

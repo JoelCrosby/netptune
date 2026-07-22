@@ -26,6 +26,7 @@ internal sealed class ActionPlanner
         var notificationPlans = new List<NotificationActivityPlan>();
         var flagPlans = new List<FlagPlan>();
         var taskUpdatePlans = new List<TaskUpdatePlan>();
+        var commentPlans = new List<CommentPlan>();
 
         foreach (var execution in executions)
         {
@@ -65,6 +66,9 @@ internal sealed class ActionPlanner
                         case AutomationActionType.UpdateTask:
                             AddTaskUpdatePlan(taskUpdatePlans, execution, action);
                             break;
+                        case AutomationActionType.AddComment:
+                            AddCommentPlan(commentPlans, execution, action);
+                            break;
                         default:
                             Logger.LogWarning(
                                 "Automation rule {RuleId} has unsupported action type {ActionType}",
@@ -95,7 +99,25 @@ internal sealed class ActionPlanner
             NotificationPlans = notificationPlans,
             FlagPlans = flagPlans,
             TaskUpdatePlans = taskUpdatePlans,
+            CommentPlans = commentPlans,
         };
+    }
+
+    private void AddCommentPlan(List<CommentPlan> plans, PendingAutomationExecution execution, AutomationAction action)
+    {
+        var body = ConfigReader.ReadString(action.Config, "comment")?.Trim();
+
+        if (string.IsNullOrWhiteSpace(body))
+        {
+            Logger.LogDebug(
+                "Automation rule {RuleId} skipped add comment action for task {TaskId}: no comment configured",
+                execution.Rule.Id,
+                execution.Task.Id);
+
+            return;
+        }
+
+        plans.Add(new CommentPlan(execution, action, body));
     }
 
     private void AddTaskUpdatePlan(

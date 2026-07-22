@@ -137,6 +137,34 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldFail_WhenAddCommentActionMissingComment()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Comment on unassigned task",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskUnassignedFor,
+                DurationDays = 3,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.AddComment,
+                },
+            ],
+        };
+
+        var command = new CreateAutomationRuleCommand(request);
+        var result = await Handler.Handle(command, TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("comment");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldCreateRule_WhenRequestValid()
     {
         AutomationRule? savedRule = null;
@@ -170,6 +198,11 @@ public class CreateAutomationRuleCommandHandlerTests
                     Type = AutomationActionType.FlagTask,
                     FlagName = "Review",
                 },
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.AddComment,
+                    Comment = "Review requested by automation",
+                },
             ],
         };
 
@@ -179,7 +212,9 @@ public class CreateAutomationRuleCommandHandlerTests
         savedRule.Should().NotBeNull();
         savedRule!.WorkspaceId.Should().Be(123);
         savedRule.Name.Should().Be("Done notification");
-        savedRule.Actions.Should().HaveCount(2);
+        savedRule.Actions.Should().HaveCount(3);
+        var commentAction = savedRule.Actions.Single(action => action.Type == AutomationActionType.AddComment);
+        commentAction.Config!.RootElement.GetProperty("comment").GetString().Should().Be("Review requested by automation");
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());
     }
 }

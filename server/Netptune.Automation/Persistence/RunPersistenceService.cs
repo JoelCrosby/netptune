@@ -13,6 +13,8 @@ namespace Netptune.Automation.Persistence;
 
 internal sealed class RunPersistenceService
 {
+    private sealed record PlannedComment(Comment Entity, CommentPlan Plan);
+
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ILogger<RunPersistenceService> Logger;
     private readonly IEventRecordWriter EventRecords;
@@ -27,39 +29,41 @@ internal sealed class RunPersistenceService
         EventRecords = eventRecords;
     }
 
-    internal async Task<List<Notification>> Persist(
-        AutomationTriggerType triggerType,
-        List<AutomationRun> runs,
-        List<NotificationActivityPlan> notificationPlans,
-        List<Flag> flags,
-        List<TaskUpdatePlan> taskUpdatePlans,
-        CancellationToken cancellationToken)
+    internal async Task<List<Notification>> Persist(AutomationPersistencePlan plan, CancellationToken cancellationToken)
     {
         var activity = Activity.Current;
-        var activityLogs = notificationPlans.Select(plan => plan.Activity).ToList();
-        activity?.SetTag("automation.flags.created", flags.Count);
+        var activityLogs = plan.NotificationPlans.Select(notificationPlan => notificationPlan.Activity).ToList();
+        var comments = BuildComments(plan.CommentPlans);
+        var commentEntities = comments.Select(comment => comment.Entity).ToList();
+
+        activity?.SetTag("automation.flags.created", plan.Flags.Count);
         activity?.SetTag("automation.event_records.created", activityLogs.Count);
-        activity?.SetTag("automation.task_updates.planned", taskUpdatePlans.Count);
+        activity?.SetTag("automation.task_updates.planned", plan.TaskUpdatePlans.Count);
+        activity?.SetTag("automation.comments.planned", comments.Count);
 
         Logger.LogInformation(
-            "Persisting automation results for trigger {TriggerType}: {RunCount} runs, {EventRecordCount} activity logs, {FlagCount} flags, {TaskUpdateCount} task updates",
-            triggerType,
-            runs.Count,
+            "Persisting automation results for trigger {TriggerType}: {RunCount} runs, {EventRecordCount} activity logs, {FlagCount} flags, {TaskUpdateCount} task updates, {CommentCount} comments",
+            plan.TriggerType,
+            plan.Runs.Count,
             activityLogs.Count,
-            flags.Count,
-            taskUpdatePlans.Count);
+            plan.Flags.Count,
+            plan.TaskUpdatePlans.Count,
+            comments.Count);
 
         List<Notification> notifications = [];
 
         await UnitOfWork.Transaction(async () =>
         {
-            await ApplyTaskUpdates(taskUpdatePlans, cancellationToken);
+            await ApplyTaskUpdates(plan.TaskUpdatePlans, cancellationToken);
+            await UnitOfWork.Comments.AddRangeAsync(commentEntities, cancellationToken);
             await UnitOfWork.EventRecords.AddRangeAsync(activityLogs, cancellationToken);
-            await UnitOfWork.Flags.AddRangeAsync(flags, cancellationToken);
-            await UnitOfWork.Automations.AddRunsAsync(runs, cancellationToken);
+            await UnitOfWork.Flags.AddRangeAsync(plan.Flags, cancellationToken);
+            await UnitOfWork.Automations.AddRunsAsync(plan.Runs, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
-            notifications = BuildNotifications(notificationPlans);
+            await AppendCommentEvents(comments, cancellationToken);
+
+            notifications = BuildNotifications(plan.NotificationPlans);
             activity?.SetTag("automation.notifications.created", notifications.Count);
 
             await UnitOfWork.Notifications.AddRangeAsync(notifications, cancellationToken);
@@ -68,17 +72,72 @@ internal sealed class RunPersistenceService
 
         Logger.LogInformation(
             "Persisted automation results for trigger {TriggerType}: {NotificationCount} notifications",
-            triggerType,
+            plan.TriggerType,
             notifications.Count);
 
         return notifications;
     }
 
-    private async Task ApplyTaskUpdates(
-        List<TaskUpdatePlan> taskUpdatePlans,
-        CancellationToken cancellationToken)
+    private static List<PlannedComment> BuildComments(List<CommentPlan> plans)
     {
+        var comments = new List<PlannedComment>(plans.Count);
 
+        foreach (var plan in plans)
+        {
+            var comment = new Comment
+            {
+                Body = plan.Body,
+                EntityId = plan.Execution.Task.Id,
+                EntityType = EntityType.Task,
+                WorkspaceId = plan.Execution.Rule.WorkspaceId,
+                OwnerId = plan.Execution.ActorUserId,
+                CreatedByUserId = plan.Execution.ActorUserId,
+            };
+
+            comments.Add(new PlannedComment(comment, plan));
+        }
+
+        return comments;
+    }
+
+    private async Task AppendCommentEvents(List<PlannedComment> comments, CancellationToken cancellationToken)
+    {
+        foreach (var comment in comments)
+        {
+            var commentEvent = BuildCommentEvent(comment);
+
+            await EventRecords.Append(commentEvent, cancellationToken);
+        }
+    }
+
+    private static EventWriteRequest<CommentEventPayload> BuildCommentEvent(PlannedComment comment)
+    {
+        return new EventWriteRequest<CommentEventPayload>
+        {
+            WorkspaceId = comment.Entity.WorkspaceId,
+            EventKey = EventKeys.CommentCreated,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = comment.Entity.EntityId.ToString(),
+            ActorUserId = comment.Plan.Execution.ActorUserId,
+            Payload = new CommentEventPayload
+            {
+                CommentId = comment.Entity.Id,
+                RecipientUserIds = [],
+            },
+            References =
+            [
+                new EventReferenceInput
+                {
+                    Role = EventReferenceRoles.Member,
+                    EntityType = EventEntityTypes.From(EntityType.Comment),
+                    EntityId = comment.Entity.Id.ToString(),
+                },
+            ],
+        };
+    }
+
+    private async Task ApplyTaskUpdates(List<TaskUpdatePlan> taskUpdatePlans, CancellationToken cancellationToken)
+    {
         if (taskUpdatePlans.Count == 0)
         {
             return;
@@ -97,10 +156,7 @@ internal sealed class RunPersistenceService
 
                 if (task is null)
                 {
-                    Logger.LogWarning(
-                        "Automation rule {RuleId} could not update missing task {TaskId}",
-                        plan.Execution.Rule.Id,
-                        taskId);
+                    Logger.LogWarning("Automation rule {RuleId} could not update missing task {TaskId}", plan.Execution.Rule.Id, taskId);
                     continue;
                 }
 
@@ -120,7 +176,9 @@ internal sealed class RunPersistenceService
             {
                 var oldStatusId = task.StatusId;
                 var oldCategory = task.Status.Category;
+
                 await UnitOfWork.Tasks.UpdateTaskStatus(taskId, status.Id, cancellationToken);
+
                 task.StatusId = status.Id;
                 task.Status = status;
                 taskUpdated = true;
@@ -146,7 +204,8 @@ internal sealed class RunPersistenceService
                         EntityId = task.SprintId.Value.ToString(),
                     });
                 }
-                await EventRecords.Append(new EventWriteRequest<FieldTransitionedPayload>
+
+                var statusEvent = new EventWriteRequest<FieldTransitionedPayload>
                 {
                     WorkspaceId = plan.Execution.Rule.WorkspaceId,
                     EventKey = EventKeys.EntityFieldTransitioned,
@@ -162,7 +221,9 @@ internal sealed class RunPersistenceService
                         NewCategory = status.Category.ToString(),
                     },
                     References = references,
-                }, cancellationToken);
+                };
+
+                await EventRecords.Append(statusEvent, cancellationToken);
             }
 
             if (plan.Priority.HasValue && task.Priority != plan.Priority.Value)
@@ -181,9 +242,7 @@ internal sealed class RunPersistenceService
 
         Activity.Current?.SetTag("automation.task_updates.applied", updatedTaskIds.Count);
 
-        Logger.LogInformation(
-            "Applied automation task updates to {UpdatedTaskCount} tasks",
-            updatedTaskIds.Count);
+        Logger.LogInformation("Applied automation task updates to {UpdatedTaskCount} tasks", updatedTaskIds.Count);
     }
 
     private static List<Notification> BuildNotifications(List<NotificationActivityPlan> activityPlans)

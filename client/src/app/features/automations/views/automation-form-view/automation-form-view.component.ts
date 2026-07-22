@@ -211,6 +211,7 @@ export class AutomationFormViewComponent {
     this.updateAction(clientId, {
       type,
       message: type === AutomationActionType.notifyTaskAssignees ? '' : null,
+      comment: type === AutomationActionType.addComment ? '' : null,
       flagName: type === AutomationActionType.flagTask ? '' : null,
       flagDescription: type === AutomationActionType.flagTask ? '' : null,
       statusId:
@@ -356,6 +357,17 @@ export class AutomationFormViewComponent {
       return null;
     }
 
+    const invalidComment = actions.some(
+      (action) =>
+        action.type === AutomationActionType.addComment &&
+        !action.comment?.trim()
+    );
+
+    if (invalidComment) {
+      this.validationError.set('Add comment actions need a comment.');
+      return null;
+    }
+
     const invalidUpdate = actions.some(
       (action) =>
         action.type === AutomationActionType.updateTask &&
@@ -413,6 +425,10 @@ export class AutomationFormViewComponent {
         action.type === AutomationActionType.notifyTaskAssignees
           ? action.message?.trim() || null
           : null,
+      comment:
+        action.type === AutomationActionType.addComment
+          ? action.comment?.trim() || null
+          : null,
       flagName:
         action.type === AutomationActionType.flagTask
           ? action.flagName?.trim() || null
@@ -437,6 +453,7 @@ export class AutomationFormViewComponent {
       clientId: this.nextActionId++,
       type: AutomationActionType.notifyTaskAssignees,
       message: '',
+      comment: null,
       flagName: null,
       flagDescription: null,
       statusId: null,

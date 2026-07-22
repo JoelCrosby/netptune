@@ -29,6 +29,7 @@ export enum AutomationActionType {
   notifyTaskAssignees = 0,
   flagTask = 1,
   updateTask = 2,
+  addComment = 3,
 }
 
 export enum AutomationRunStatus {
@@ -50,6 +51,7 @@ export interface AutomationAction {
   type: AutomationActionType;
   sortOrder?: number;
   message?: string | null;
+  comment?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;
   statusId?: number | null;
@@ -89,6 +91,7 @@ export interface AutomationRuleRequest {
 export interface AutomationActionRequest {
   type: AutomationActionType;
   message?: string | null;
+  comment?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;
   statusId?: number | null;
