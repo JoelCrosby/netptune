@@ -101,6 +101,7 @@ public sealed class AutomationTestFixture : IAsyncLifetime
             TRUNCATE TABLE
                 event_records,
                 scheduled_automation_actions,
+                automation_action_results,
                 automation_actions,
                 automation_runs,
                 automation_rules,

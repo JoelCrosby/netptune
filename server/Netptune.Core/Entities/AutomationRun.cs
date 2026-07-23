@@ -26,4 +26,7 @@ public record AutomationRun : AuditableEntity<int>
 
     [JsonIgnore]
     public AutomationRule AutomationRule { get; set; } = null!;
+
+    [JsonIgnore]
+    public ICollection<AutomationActionResult> ActionResults { get; set; } = new HashSet<AutomationActionResult>();
 }

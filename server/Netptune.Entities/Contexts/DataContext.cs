@@ -44,6 +44,7 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<AutomationRule> AutomationRules { get; set; } = null!;
     public DbSet<AutomationAction> AutomationActions { get; set; } = null!;
     public DbSet<AutomationRun> AutomationRuns { get; set; } = null!;
+    public DbSet<AutomationActionResult> AutomationActionResults { get; set; } = null!;
     public DbSet<ScheduledAutomationAction> ScheduledAutomationActions { get; set; } = null!;
     public DbSet<WorkspaceFile> WorkspaceFiles { get; set; } = null!;
 

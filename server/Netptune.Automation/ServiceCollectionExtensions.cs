@@ -1,5 +1,3 @@
-using System.Globalization;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,8 +9,10 @@ using Netptune.Automation.Execution;
 using Netptune.Automation.Matching;
 using Netptune.Automation.Notifications;
 using Netptune.Automation.Persistence;
+using Netptune.Automation.Persistence.Actions;
 using Netptune.Automation.Planning;
 using Netptune.Automation.Scheduling;
+using Netptune.Core.Extensions;
 using Netptune.Core.Services.ProjectTasks;
 using Netptune.Services.ProjectTasks;
 
@@ -25,26 +25,21 @@ public static class ServiceCollectionExtensions
         return services.AddNetptuneAutomation(_ => { });
     }
 
-    public static IServiceCollection AddNetptuneAutomation(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddNetptuneAutomation(this IServiceCollection services, IConfiguration configuration)
     {
         return services.AddNetptuneAutomation(options =>
         {
             var section = configuration.GetSection(ScheduleOptions.SectionName);
 
-            options.StartupDelay = ReadTimeSpan(section, nameof(ScheduleOptions.StartupDelay), options.StartupDelay);
-            options.RunInterval = ReadTimeSpan(section, nameof(ScheduleOptions.RunInterval), options.RunInterval);
-            options.DelayedActionRunInterval = ReadTimeSpan(
-                section,
+            options.StartupDelay = section.ReadTimeSpan(nameof(ScheduleOptions.StartupDelay), options.StartupDelay);
+            options.RunInterval = section.ReadTimeSpan(nameof(ScheduleOptions.RunInterval), options.RunInterval);
+            options.DelayedActionRunInterval = section.ReadTimeSpan(
                 nameof(ScheduleOptions.DelayedActionRunInterval),
                 options.DelayedActionRunInterval);
         });
     }
 
-    public static IServiceCollection AddNetptuneAutomation(
-        this IServiceCollection services,
-        Action<ScheduleOptions> configure)
+    public static IServiceCollection AddNetptuneAutomation(this IServiceCollection services, Action<ScheduleOptions> configure)
     {
         var options = new ScheduleOptions();
         configure(options);
@@ -60,32 +55,23 @@ public static class ServiceCollectionExtensions
         services.AddScoped<RuleExecutor>();
         services.AddScoped<ActionPlanner>();
         services.AddScoped<FlagPlanner>();
+        services.AddScoped<AutomationActionExecutionHandlerRegistry>();
         services.AddScoped<RunPersistenceService>();
         services.AddScoped<NotificationPublisher>();
         services.AddScoped<ExecutionService>();
         services.AddScoped<ScheduledActionService>();
+
         services.AddScoped<IExecutionService>(provider => provider.GetRequiredService<ExecutionService>());
+
+        services.AddScoped<IAutomationActionExecutionHandler, NotifyTaskAssigneesExecutionHandler>();
+        services.AddScoped<IAutomationActionExecutionHandler, FlagTaskExecutionHandler>();
+        services.AddScoped<IAutomationActionExecutionHandler, UpdateTaskExecutionHandler>();
+        services.AddScoped<IAutomationActionExecutionHandler, AddCommentExecutionHandler>();
+        services.AddScoped<IAutomationActionExecutionHandler, DeleteTaskExecutionHandler>();
+
         services.AddHostedService<ScheduleService>();
         services.AddHostedService<DelayedActionScheduleService>();
 
         return services;
-    }
-
-    private static TimeSpan ReadTimeSpan(IConfiguration configuration, string key, TimeSpan fallback)
-    {
-        var value = configuration[key];
-
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return fallback;
-        }
-
-        if (TimeSpan.TryParse(value, CultureInfo.InvariantCulture, out var parsed))
-        {
-            return parsed;
-        }
-
-        throw new InvalidOperationException(
-            $"{ScheduleOptions.SectionName}:{key} must be a valid TimeSpan value, for example 00:05:00.");
     }
 }

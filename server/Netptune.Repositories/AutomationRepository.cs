@@ -148,6 +148,23 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
                 IdempotencyKey = run.IdempotencyKey,
                 Message = run.Message,
                 CreatedAt = run.CreatedAt,
+                ActionResults = run.ActionResults
+                    .OrderBy(result => result.SortOrder)
+                    .ThenBy(result => result.Id)
+                    .Select(result => new AutomationActionResultViewModel
+                    {
+                        Id = result.Id,
+                        AutomationActionId = result.AutomationActionId,
+                        ActionType = result.ActionType,
+                        SortOrder = result.SortOrder,
+                        Status = result.Status,
+                        IdempotencyKey = result.IdempotencyKey,
+                        StartedAt = result.StartedAt,
+                        CompletedAt = result.CompletedAt,
+                        Message = result.Message,
+                        Output = result.Output,
+                    })
+                    .ToList(),
             })
             .AsNoTracking()
             .ToListAsync(cancellationToken);

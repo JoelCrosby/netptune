@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Automation.Execution;
+using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.Automation.Tests;
@@ -17,6 +18,8 @@ public sealed class AutomationTestScope : IAsyncDisposable
     public DataContext Db => Scope.ServiceProvider.GetRequiredService<DataContext>();
 
     public IExecutionService AutomationExecution => Scope.ServiceProvider.GetRequiredService<IExecutionService>();
+
+    public INetptuneUnitOfWork UnitOfWork => Scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
 
     internal RecordingEventRecordWriter EventRecords => Scope.ServiceProvider.GetRequiredService<RecordingEventRecordWriter>();
 

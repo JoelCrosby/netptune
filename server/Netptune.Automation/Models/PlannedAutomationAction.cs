@@ -10,4 +10,6 @@ internal sealed class PlannedAutomationAction
     public required AutomationAction Action { get; init; }
 
     public required AutomationActionPlanContribution Contribution { get; init; }
+
+    public required AutomationActionResult Result { get; init; }
 }

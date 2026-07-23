@@ -76,6 +76,14 @@ export enum AutomationRunStatus {
   skipped = 2,
 }
 
+export enum AutomationActionResultStatus {
+  pending = 0,
+  succeeded = 1,
+  failed = 2,
+  skipped = 3,
+  scheduled = 4,
+}
+
 export interface AutomationTrigger {
   type: AutomationTriggerType;
   fields?: TaskChangeField[] | null;
@@ -121,6 +129,20 @@ export interface AutomationRun {
   idempotencyKey: string;
   message?: string | null;
   createdAt: Date;
+  actionResults: AutomationActionResult[];
+}
+
+export interface AutomationActionResult {
+  id: number;
+  automationActionId: number;
+  actionType: AutomationActionType;
+  sortOrder: number;
+  status: AutomationActionResultStatus;
+  idempotencyKey: string;
+  startedAt?: Date | null;
+  completedAt?: Date | null;
+  message?: string | null;
+  output?: Record<string, unknown> | null;
 }
 
 export interface AutomationRuleRequest {

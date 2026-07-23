@@ -146,16 +146,20 @@ public sealed class AutomationExecutionServiceTests
         var sourceEventId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
 
-        var configuredStatusId = await scope.Db.AutomationActions
+        var configuredAction = await scope.Db.AutomationActions
             .Where(action => action.Type == AutomationActionType.UpdateTask)
-            .Select(action => action.Config!.RootElement.GetProperty("statusId").GetInt32())
+            .Select(action => new
+            {
+                action.Id,
+                StatusId = action.Config!.RootElement.GetProperty("statusId").GetInt32(),
+            })
             .SingleAsync(TestContext.Current.CancellationToken);
         var expectedStatusId = await scope.Db.Statuses
             .Where(status => status.WorkspaceId == scenario.Workspace.Id && status.Key == "complete")
             .Select(status => status.Id)
             .SingleAsync(TestContext.Current.CancellationToken);
 
-        configuredStatusId.Should().Be(expectedStatusId);
+        configuredAction.StatusId.Should().Be(expectedStatusId);
         scope.Db.ChangeTracker.Clear();
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
@@ -216,6 +220,19 @@ public sealed class AutomationExecutionServiceTests
             .Select(change => change.Field)
             .Should()
             .BeEquivalentTo([TaskChangeField.Status, TaskChangeField.Priority]);
+
+        var runHistory = await scope.UnitOfWork.Automations.GetRuns(
+            rule.Id,
+            scenario.Workspace.Id,
+            cancellationToken: TestContext.Current.CancellationToken);
+        var actionResult = runHistory.Should().ContainSingle().Subject.ActionResults.Should().ContainSingle().Subject;
+
+        actionResult.AutomationActionId.Should().Be(configuredAction.Id);
+        actionResult.ActionType.Should().Be(AutomationActionType.UpdateTask);
+        actionResult.Status.Should().Be(AutomationActionResultStatus.Succeeded);
+        actionResult.StartedAt.Should().NotBeNull();
+        actionResult.CompletedAt.Should().NotBeNull();
+        actionResult.Output.Should().NotBeNull();
     }
 
     [Fact]
@@ -436,6 +453,28 @@ public sealed class AutomationExecutionServiceTests
 
         task.IsDeleted.Should().BeTrue();
         task.Status.Key.Should().Be(expectedStatusKey);
+
+        var actionResults = await scope.Db.AutomationActionResults
+            .OrderBy(result => result.SortOrder)
+            .ToListAsync(TestContext.Current.CancellationToken);
+        var expectedActionTypes = deleteFirst
+            ? new List<AutomationActionType>
+            {
+                AutomationActionType.DeleteTask,
+                AutomationActionType.UpdateTask,
+            }
+            : new List<AutomationActionType>
+            {
+                AutomationActionType.UpdateTask,
+                AutomationActionType.DeleteTask,
+            };
+        var expectedSecondStatus = deleteFirst
+            ? AutomationActionResultStatus.Skipped
+            : AutomationActionResultStatus.Succeeded;
+
+        actionResults.Select(result => result.ActionType).Should().Equal(expectedActionTypes);
+        actionResults[0].Status.Should().Be(AutomationActionResultStatus.Succeeded);
+        actionResults[1].Status.Should().Be(expectedSecondStatus);
     }
 
     [Fact]
@@ -493,10 +532,18 @@ public sealed class AutomationExecutionServiceTests
 
         var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
         var commentCount = await scope.Db.Comments.CountAsync(TestContext.Current.CancellationToken);
+        var actionResults = await scope.Db.AutomationActionResults
+            .OrderBy(result => result.SortOrder)
+            .ToListAsync(TestContext.Current.CancellationToken);
 
         run.Status.Should().Be(AutomationRunStatus.Failed);
         run.Message.Should().NotBeNullOrWhiteSpace();
         commentCount.Should().Be(0);
+        actionResults.Select(result => result.Status).Should().Equal(
+            AutomationActionResultStatus.Skipped,
+            AutomationActionResultStatus.Failed);
+        actionResults[0].Message.Should().Contain("cancelled");
+        actionResults[1].Message.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
@@ -536,10 +583,12 @@ public sealed class AutomationExecutionServiceTests
         scope.Db.ChangeTracker.Clear();
 
         var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(TestContext.Current.CancellationToken);
+        var actionResult = await scope.Db.AutomationActionResults.SingleAsync(TestContext.Current.CancellationToken);
         var taskBeforeDelay = await scope.Db.ProjectTasks.SingleAsync(TestContext.Current.CancellationToken);
 
         taskBeforeDelay.IsDeleted.Should().BeFalse();
         scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Pending);
+        actionResult.Status.Should().Be(AutomationActionResultStatus.Scheduled);
         scheduledAction.ExpectedStatusId.Should().Be(completeStatusId);
         scheduledAction.ExecuteAt.Should().BeCloseTo(triggeredAt.AddHours(1), TimeSpan.FromMilliseconds(1));
 

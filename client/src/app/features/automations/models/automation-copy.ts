@@ -13,6 +13,7 @@ import {
   AutomationConditionOperator,
   AutomationFieldCondition,
   AutomationRunStatus,
+  AutomationActionResultStatus,
   AutomationTrigger,
   AutomationTriggerType,
   AssigneeChangeMode,
@@ -57,6 +58,17 @@ export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
   [AutomationRunStatus.succeeded]: 'Succeeded',
   [AutomationRunStatus.failed]: 'Failed',
   [AutomationRunStatus.skipped]: 'Skipped',
+};
+
+export const automationActionResultStatusLabels: Record<
+  AutomationActionResultStatus,
+  string
+> = {
+  [AutomationActionResultStatus.pending]: 'Pending',
+  [AutomationActionResultStatus.succeeded]: 'Succeeded',
+  [AutomationActionResultStatus.failed]: 'Failed',
+  [AutomationActionResultStatus.skipped]: 'Skipped',
+  [AutomationActionResultStatus.scheduled]: 'Scheduled',
 };
 
 export type AutomationCopySegment =
