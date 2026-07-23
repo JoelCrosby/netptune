@@ -7,6 +7,8 @@ import { joinNaturalList, toLowerText } from '@core/util/strings';
 import {
   AutomationAction,
   AutomationActionType,
+  AutomationConditionGroup,
+  AutomationConditionGroupOperator,
   AutomationDelayUnit,
   AutomationConditionOperator,
   AutomationFieldCondition,
@@ -77,6 +79,13 @@ export function describeAutomationTriggerSegments(
     : ['selected fields'];
   const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
 
+  if (trigger.conditionGroup) {
+    return [
+      ...textSegments(`When a task's ${fieldText} changes, if `),
+      ...describeConditionGroupSegments(trigger.conditionGroup, statuses),
+    ];
+  }
+
   if (trigger.conditions?.length) {
     const conditionSegments = trigger.conditions.map((condition) =>
       describeFieldConditionSegments(condition, statuses)
@@ -84,7 +93,7 @@ export function describeAutomationTriggerSegments(
 
     return [
       ...textSegments(`When a task's ${fieldText} changes, where `),
-      ...joinSegments(conditionSegments, ' and '),
+      ...joinSegments(conditionSegments, ' or '),
     ];
   }
 
@@ -140,6 +149,26 @@ export function describeAutomationActionsSegments(
   );
 }
 
+export function describeAutomationConditionsSegments(
+  trigger: AutomationTrigger,
+  statuses: Status[] = []
+): AutomationCopySegment[] {
+  if (trigger.conditionGroup) {
+    return describeConditionGroupSegments(trigger.conditionGroup, statuses);
+  }
+
+  if (trigger.conditions?.length) {
+    return joinSegments(
+      trigger.conditions.map((condition) =>
+        describeFieldConditionSegments(condition, statuses)
+      ),
+      ' or '
+    );
+  }
+
+  return textSegments('Every matching task continues');
+}
+
 export function describeAutomationRuleSegments(
   trigger: AutomationTrigger,
   actions: AutomationAction[],
@@ -175,6 +204,29 @@ function describeFieldConditionSegments(
       : 'does not equal';
 
   return statusSentence(`status ${operator} `, Number(condition.value));
+}
+
+function describeConditionGroupSegments(
+  group: AutomationConditionGroup,
+  statuses: Status[]
+): AutomationCopySegment[] {
+  const members = [
+    ...group.conditions.map((condition) =>
+      describeFieldConditionSegments(condition, statuses)
+    ),
+    ...group.groups.map((nestedGroup) => [
+      ...textSegments('('),
+      ...describeConditionGroupSegments(nestedGroup, statuses),
+      ...textSegments(')'),
+    ]),
+  ];
+  const separator =
+    group.operator === AutomationConditionGroupOperator.all ? ' and ' : ' or ';
+  const segments = joinSegments(members, separator);
+
+  return group.operator === AutomationConditionGroupOperator.none
+    ? [...textSegments('none of ('), ...segments, ...textSegments(')')]
+    : segments;
 }
 
 function statusSentence(
@@ -232,12 +284,16 @@ function describeTaskChangedTrigger(
     : ['selected fields'];
   const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
 
+  if (trigger.conditionGroup) {
+    return `When a task's ${fieldText} changes, if ${describeConditionGroup(trigger.conditionGroup, statuses)}`;
+  }
+
   if (trigger.conditions?.length) {
     const conditionText = joinNaturalList(
       trigger.conditions.map((condition) =>
         describeFieldCondition(condition, statuses)
       ),
-      'and'
+      'or'
     );
 
     return `When a task's ${fieldText} changes, where ${conditionText}`;
@@ -258,6 +314,27 @@ function describeTaskChangedTrigger(
   }
 
   return `When a task's ${fieldText} changes`;
+}
+
+function describeConditionGroup(
+  group: AutomationConditionGroup,
+  statuses: Status[]
+): string {
+  const members = [
+    ...group.conditions.map((condition) =>
+      describeFieldCondition(condition, statuses)
+    ),
+    ...group.groups.map(
+      (nestedGroup) => `(${describeConditionGroup(nestedGroup, statuses)})`
+    ),
+  ];
+  const conjunction =
+    group.operator === AutomationConditionGroupOperator.all ? 'and' : 'or';
+  const description = joinNaturalList(members, conjunction);
+
+  return group.operator === AutomationConditionGroupOperator.none
+    ? `none of (${description})`
+    : description;
 }
 
 function describeFieldCondition(

@@ -19,9 +19,10 @@ interface SelectOption {
   selector: 'app-automation-field-condition-editor',
   imports: [FormInputComponent, FormSelectComponent, FormSelectOptionComponent],
   template: `
-    <div class="grid gap-3 sm:grid-cols-2">
+    <div class="grid min-w-0 gap-2 sm:grid-cols-2">
       <app-form-select
         [label]="fieldLabel()"
+        [noMargin]="true"
         [value]="condition().operator"
         (valueChange)="setOperator($event)">
         @for (option of operatorOptions(); track option.value) {
@@ -35,6 +36,7 @@ interface SelectOption {
         @if (field() === taskChangeField.status) {
           <app-form-select
             label="Value"
+            [noMargin]="true"
             [value]="condition().value ?? null"
             (valueChange)="setValue($event)">
             @for (status of statuses(); track status.id) {
@@ -46,6 +48,7 @@ interface SelectOption {
         } @else if (valueOptions().length) {
           <app-form-select
             label="Value"
+            [noMargin]="true"
             [value]="condition().value ?? null"
             (valueChange)="setValue($event)">
             @for (option of valueOptions(); track option.value) {
@@ -59,6 +62,7 @@ interface SelectOption {
             label="Value"
             [name]="'condition-' + field()"
             [type]="isDateField() ? 'date' : 'text'"
+            [noMargin]="true"
             [placeholder]="valuePlaceholder()"
             [value]="condition().value ?? ''"
             (valueChange)="setValue($event)" />
@@ -71,16 +75,28 @@ export class AutomationFieldConditionEditorComponent {
   readonly taskChangeField = TaskChangeField;
   readonly field = input.required<TaskChangeField>();
   readonly statuses = input.required<Status[]>();
+  readonly operatorLabel = input<string | null>(null);
   readonly condition = model.required<AutomationFieldCondition>();
 
   fieldLabel(): string {
-    return taskChangeFieldLabels[this.field()];
+    return this.operatorLabel() ?? taskChangeFieldLabels[this.field()];
   }
 
   operatorOptions(): { label: string; value: AutomationConditionOperator }[] {
     if (this.isCollectionField()) {
       return [
         { label: 'Any change', value: AutomationConditionOperator.any },
+        { label: 'Includes', value: AutomationConditionOperator.equals },
+        {
+          label: 'Does not include',
+          value: AutomationConditionOperator.notEquals,
+        },
+        { label: 'Contains text', value: AutomationConditionOperator.contains },
+        { label: 'Is empty', value: AutomationConditionOperator.isEmpty },
+        {
+          label: 'Is not empty',
+          value: AutomationConditionOperator.isNotEmpty,
+        },
         { label: 'Added', value: AutomationConditionOperator.added },
         { label: 'Removed', value: AutomationConditionOperator.removed },
       ];
@@ -141,7 +157,7 @@ export class AutomationFieldConditionEditorComponent {
     }
 
     return (
-      this.field() === TaskChangeField.tags &&
+      this.isCollectionField() &&
       (operator === AutomationConditionOperator.added ||
         operator === AutomationConditionOperator.removed)
     );
@@ -155,7 +171,10 @@ export class AutomationFieldConditionEditorComponent {
   }
 
   valuePlaceholder(): string {
-    return this.field() === TaskChangeField.tags ? 'Any tag' : '';
+    if (this.field() === TaskChangeField.tags) return 'Tag name';
+    if (this.field() === TaskChangeField.assignees) return 'User ID';
+
+    return '';
   }
 
   setOperator(operator: AutomationConditionOperator | null) {
@@ -177,7 +196,7 @@ export class AutomationFieldConditionEditorComponent {
       operator === AutomationConditionOperator.equals ||
       operator === AutomationConditionOperator.notEquals ||
       operator === AutomationConditionOperator.contains ||
-      (this.field() === TaskChangeField.tags &&
+      (this.isCollectionField() &&
         (operator === AutomationConditionOperator.added ||
           operator === AutomationConditionOperator.removed))
     );

@@ -2,6 +2,7 @@ import {
   AutomationAction,
   AutomationActionRequest,
   AutomationActionType,
+  AutomationConditionGroup,
   AutomationDelayUnit,
   AutomationConditionOperator,
   AutomationRuleRequest,
@@ -134,6 +135,12 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     if (invalidCondition) {
       return 'Complete each field condition before saving.';
     }
+
+    if (trigger.conditionGroup) {
+      const groupError = validateConditionGroup(trigger.conditionGroup);
+
+      if (groupError) return groupError;
+    }
   }
 
   if (
@@ -148,6 +155,43 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     !isDurationInRange(trigger.durationDays, 0)
   ) {
     return 'Due-date lead time must be 0 to 365 days.';
+  }
+
+  return null;
+}
+
+function validateConditionGroup(
+  group: AutomationConditionGroup,
+  depth = 1,
+  count = { value: 0 }
+): string | null {
+  if (depth > 4) return 'Condition groups can be nested up to 4 levels.';
+
+  if (!group.conditions.length && !group.groups.length) {
+    return 'Add at least one condition to each condition group.';
+  }
+
+  count.value += group.conditions.length;
+
+  if (count.value > 50) return 'Automations can have up to 50 conditions.';
+
+  const invalidCondition = group.conditions.find((condition) => {
+    const requiresValue =
+      condition.operator === AutomationConditionOperator.equals ||
+      condition.operator === AutomationConditionOperator.notEquals ||
+      condition.operator === AutomationConditionOperator.contains;
+
+    return requiresValue && !condition.value?.trim();
+  });
+
+  if (invalidCondition) {
+    return 'Complete each field condition before saving.';
+  }
+
+  for (const nestedGroup of group.groups) {
+    const error = validateConditionGroup(nestedGroup, depth + 1, count);
+
+    if (error) return error;
   }
 
   return null;

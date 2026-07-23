@@ -21,7 +21,9 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     FormControlPrefixDirective,
     FormErrorComponent,
   ],
-  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
+  template: `<div
+    class="nept-form-control mb-[1.4rem] w-[inherit]"
+    [class.mb-0!]="noMargin()">
     @if (label()) {
       <label [for]="name()" appFormLabel>
         {{ label() }}
@@ -78,6 +80,7 @@ export class FormTextAreaComponent extends AbstractFormValueControl {
   readonly minLength = input<string | number | undefined | null>(null);
   readonly maxLength = input<string | number | undefined | null>(null);
   readonly rows = input('2');
+  readonly noMargin = input(false);
 
   readonly input = viewChild.required<ElementRef>('input');
   readonly submitted = output<string>();

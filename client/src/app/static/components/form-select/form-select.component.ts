@@ -50,7 +50,9 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     FormControlPrefixDirective,
     FormErrorComponent,
   ],
-  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
+  template: `<div
+    class="nept-form-control mb-[1.4rem] w-[inherit]"
+    [class.mb-0!]="noMargin()">
     @if (label()) {
       <label [for]="name()" appFormLabel>
         {{ label() }}
@@ -155,6 +157,7 @@ export class FormSelectComponent<
     []
   );
   readonly pending = input<boolean>(false);
+  readonly noMargin = input(false);
 
   selectedPortal?: CdkPortal;
   keyManager?: ActiveDescendantKeyManager<FormSelectOptionComponent<TValue>>;

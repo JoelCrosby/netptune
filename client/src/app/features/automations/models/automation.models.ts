@@ -38,6 +38,18 @@ export interface AutomationFieldCondition {
   value?: string | null;
 }
 
+export enum AutomationConditionGroupOperator {
+  all = 0,
+  any = 1,
+  none = 2,
+}
+
+export interface AutomationConditionGroup {
+  operator: AutomationConditionGroupOperator;
+  conditions: AutomationFieldCondition[];
+  groups: AutomationConditionGroup[];
+}
+
 export enum AssigneeChangeMode {
   addedOrRemoved = 0,
   added = 1,
@@ -70,6 +82,7 @@ export interface AutomationTrigger {
   statusId?: number | null;
   assigneeChangeMode?: AssigneeChangeMode | null;
   conditions?: AutomationFieldCondition[] | null;
+  conditionGroup?: AutomationConditionGroup | null;
   durationDays?: number | null;
 }
 

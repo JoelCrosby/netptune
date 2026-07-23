@@ -15,6 +15,7 @@ import {
   AutomationActionsEditorComponent,
   EditableAutomationAction,
 } from '../../components/automation-actions-editor.component';
+import { AutomationConditionsEditorComponent } from '../../components/automation-conditions-editor.component';
 import { AutomationFormPreviewComponent } from '../../components/automation-form-preview.component';
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
@@ -22,8 +23,9 @@ import { buildAutomationRuleRequest } from '../../models/automation-rule-request
 import {
   AutomationActionType,
   AutomationDelayUnit,
+  AutomationConditionGroup,
+  AutomationConditionGroupOperator,
   AutomationConditionOperator,
-  AutomationFieldCondition,
   AutomationRule,
   AutomationRuleRequest,
   AutomationTrigger,
@@ -45,6 +47,7 @@ import { AutomationsService } from '../../services/automations.service';
     StepComponent,
     AutomationSettingsEditorComponent,
     AutomationTriggerEditorComponent,
+    AutomationConditionsEditorComponent,
     AutomationActionsEditorComponent,
     AutomationFormPreviewComponent,
   ],
@@ -69,7 +72,7 @@ import { AutomationsService } from '../../services/automations.service';
         <form
           class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]"
           (ngSubmit)="onSubmit()">
-          <div class="flex w-full max-w-lg flex-col gap-5">
+          <div class="flex w-full max-w-3xl flex-col gap-5">
             <app-stepper>
               <app-step
                 title="Settings"
@@ -83,12 +86,20 @@ import { AutomationsService } from '../../services/automations.service';
                 title="Trigger"
                 description="Choose the event that starts this automation.">
                 <app-automation-trigger-editor
-                  [statuses]="taskStatuses()"
                   [(triggerType)]="triggerType"
                   [(taskFields)]="taskFields"
-                  [(conditions)]="conditions"
                   [(durationDays)]="durationDays" />
               </app-step>
+
+              @if (triggerType() === automationTriggerType.taskChanged) {
+                <app-step
+                  title="Conditions"
+                  description="Optionally restrict which tasks can continue.">
+                  <app-automation-conditions-editor
+                    [statuses]="taskStatuses()"
+                    [(conditionGroup)]="conditionGroup" />
+                </app-step>
+              }
 
               <app-step
                 title="Actions"
@@ -123,6 +134,8 @@ import { AutomationsService } from '../../services/automations.service';
   `,
 })
 export class AutomationFormViewComponent {
+  readonly automationTriggerType = AutomationTriggerType;
+
   private service = inject(AutomationsService);
   private statusesService = inject(StatusesService);
   private snackbar = inject(SnackbarService);
@@ -154,7 +167,7 @@ export class AutomationFormViewComponent {
   readonly isEnabled = signal(true);
   readonly triggerType = signal(AutomationTriggerType.taskChanged);
   readonly taskFields = signal<TaskChangeField[]>([TaskChangeField.status]);
-  readonly conditions = signal<AutomationFieldCondition[]>([]);
+  readonly conditionGroup = signal<AutomationConditionGroup | null>(null);
   readonly durationDays = signal('3');
 
   constructor() {
@@ -218,9 +231,8 @@ export class AutomationFormViewComponent {
       return {
         type: AutomationTriggerType.taskChanged,
         fields,
-        conditions: this.conditions().filter((condition) =>
-          fields.includes(condition.field)
-        ),
+        conditions: null,
+        conditionGroup: this.conditionGroup(),
         statusId: null,
         assigneeChangeMode: null,
         durationDays: null,
@@ -232,6 +244,7 @@ export class AutomationFormViewComponent {
       fields: null,
       durationDays: Number(this.durationDays()),
       conditions: null,
+      conditionGroup: null,
       statusId: null,
       assigneeChangeMode: null,
     };
@@ -294,7 +307,7 @@ export class AutomationFormViewComponent {
         ? rule.trigger.fields
         : [TaskChangeField.status]
     );
-    this.conditions.set(this.ruleConditions(rule));
+    this.conditionGroup.set(this.ruleConditionGroup(rule));
     this.durationDays.set(String(rule.trigger.durationDays ?? 3));
     this.actions.set(
       rule.actions.length
@@ -334,33 +347,66 @@ export class AutomationFormViewComponent {
     };
   }
 
-  private ruleConditions(rule: AutomationRule): AutomationFieldCondition[] {
-    if (rule.trigger.conditions?.length) {
-      return rule.trigger.conditions;
+  private ruleConditionGroup(
+    rule: AutomationRule
+  ): AutomationConditionGroup | null {
+    if (rule.trigger.conditionGroup) {
+      return rule.trigger.conditionGroup;
     }
 
-    const conditions: AutomationFieldCondition[] = [];
+    const conditions = [...(rule.trigger.conditions ?? [])];
+    const configuredFields = new Set(
+      conditions.map((condition) => condition.field)
+    );
 
-    if (rule.trigger.statusId !== null && rule.trigger.statusId !== undefined) {
+    const hasLegacyStatus =
+      rule.trigger.statusId !== null && rule.trigger.statusId !== undefined;
+
+    if (hasLegacyStatus && !configuredFields.has(TaskChangeField.status)) {
       conditions.push({
         field: TaskChangeField.status,
         operator: AutomationConditionOperator.equals,
         value: String(rule.trigger.statusId),
       });
+      configuredFields.add(TaskChangeField.status);
     }
 
-    if (
+    const hasLegacyAssigneeMode =
       rule.trigger.assigneeChangeMode !== null &&
-      rule.trigger.assigneeChangeMode !== undefined
+      rule.trigger.assigneeChangeMode !== undefined;
+    const legacyAssigneeMode = rule.trigger.assigneeChangeMode;
+
+    if (
+      hasLegacyAssigneeMode &&
+      legacyAssigneeMode !== null &&
+      legacyAssigneeMode !== undefined &&
+      !configuredFields.has(TaskChangeField.assignees)
     ) {
       conditions.push({
         field: TaskChangeField.assignees,
-        operator: this.assigneeOperator(rule.trigger.assigneeChangeMode),
+        operator: this.assigneeOperator(legacyAssigneeMode),
         value: null,
       });
+      configuredFields.add(TaskChangeField.assignees);
     }
 
-    return conditions;
+    for (const field of rule.trigger.fields ?? []) {
+      if (!configuredFields.has(field)) {
+        conditions.push({
+          field,
+          operator: AutomationConditionOperator.any,
+          value: null,
+        });
+      }
+    }
+
+    if (!conditions.length) return null;
+
+    return {
+      operator: AutomationConditionGroupOperator.any,
+      conditions,
+      groups: [],
+    };
   }
 
   private assigneeOperator(

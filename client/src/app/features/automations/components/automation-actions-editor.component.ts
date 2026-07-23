@@ -1,7 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { TaskPriority, taskPriorityOptions } from '@core/enums/task-priority';
 import { Status } from '@core/models/status';
-import { LucidePlus, LucideTrash2 } from '@lucide/angular';
+import {
+  LucideGripVertical,
+  LucideListOrdered,
+  LucideListPlus,
+  LucideTrash2,
+} from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -44,7 +49,9 @@ export interface AutomationActionUpdate {
     FormTextAreaComponent,
     IconButtonComponent,
     StrokedButtonComponent,
-    LucidePlus,
+    LucideGripVertical,
+    LucideListOrdered,
+    LucideListPlus,
     LucideTrash2,
   ],
   template: `
@@ -53,25 +60,81 @@ export interface AutomationActionUpdate {
       Add the follow-up actions in the order they should run.
     </app-card-subtitle>
 
-    <div class="mt-2 flex flex-col gap-4">
-      <div class="flex items-start justify-between gap-3">
-        <button
-          app-stroked-button
-          type="button"
-          [disabled]="actions().length >= 10"
-          (click)="addAction.emit()">
-          <svg lucidePlus class="h-4 w-4"></svg>
-          Add Action
-        </button>
+    <section
+      class="border-border bg-background mt-4 overflow-hidden rounded-lg border shadow-sm"
+      aria-label="Follow-up actions">
+      <div
+        class="border-border bg-foreground/3 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3">
+        <div class="flex items-center gap-3">
+          <span
+            class="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+            <svg lucideListOrdered class="h-4 w-4" aria-hidden="true"></svg>
+          </span>
+          <div>
+            <p class="text-sm font-medium">Action sequence</p>
+            <p class="text-foreground/60 text-xs">
+              Actions run from top to bottom.
+            </p>
+          </div>
+        </div>
+        <span
+          class="bg-primary/10 text-primary rounded-full px-2.5 py-1 text-xs font-semibold">
+          {{ actions().length }} / 10
+        </span>
       </div>
 
-      <div class="flex flex-col gap-3">
-        @for (action of actions(); track action.clientId) {
-          <div class="border-border rounded border p-4">
-            <div class="flex flex-col-reverse gap-3">
-              <div class="flex flex-col gap-3">
+      <div class="flex flex-col p-3 sm:p-4">
+        @for (
+          action of actions();
+          track action.clientId;
+          let actionIndex = $index;
+          let lastAction = $last
+        ) {
+          <div class="flex min-w-0 gap-2 sm:gap-3">
+            <div
+              class="relative flex w-8 shrink-0 justify-center sm:w-10"
+              aria-hidden="true">
+              @if (!lastAction) {
+                <div
+                  class="bg-primary/30 absolute top-8 bottom-0 left-1/2 w-px"></div>
+              }
+              <span
+                class="bg-primary text-primary-foreground relative flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold shadow-sm">
+                {{ actionIndex + 1 }}
+              </span>
+            </div>
+
+            <article
+              class="border-border bg-background mb-3 min-w-0 flex-1 overflow-hidden rounded-lg border shadow-xs">
+              <header
+                class="border-border bg-foreground/3 flex items-center justify-between gap-2 border-b px-3 py-2">
+                <div class="flex min-w-0 items-center gap-2">
+                  <svg
+                    lucideGripVertical
+                    class="text-foreground/35 h-4 w-4 shrink-0"
+                    aria-hidden="true"></svg>
+                  <span class="truncate text-sm font-semibold">
+                    Action {{ actionIndex + 1 }}
+                  </span>
+                </div>
+
+                <button
+                  app-icon-button
+                  class="shrink-0"
+                  color="warn"
+                  type="button"
+                  aria-label="Remove action"
+                  title="Remove action"
+                  [disabled]="actions().length === 1"
+                  (click)="removeAction.emit(action.clientId)">
+                  <svg lucideTrash2 class="h-4 w-4"></svg>
+                </button>
+              </header>
+
+              <div class="flex min-w-0 flex-col gap-3 p-3">
                 <app-form-select
                   label="Action"
+                  [noMargin]="true"
                   [value]="action.type"
                   (changed)="
                     actionTypeChanged.emit({
@@ -90,6 +153,7 @@ export interface AutomationActionUpdate {
                   <app-form-textarea
                     label="Message"
                     rows="3"
+                    [noMargin]="true"
                     [value]="action.message ?? ''"
                     (valueChange)="
                       actionUpdated.emit({
@@ -101,6 +165,7 @@ export interface AutomationActionUpdate {
                   <app-form-textarea
                     label="Comment"
                     rows="3"
+                    [noMargin]="true"
                     [maxLength]="32768"
                     [value]="action.comment ?? ''"
                     (valueChange)="
@@ -114,6 +179,7 @@ export interface AutomationActionUpdate {
                     <app-form-input
                       label="Flag name"
                       [required]="true"
+                      [noMargin]="true"
                       [value]="action.flagName ?? ''"
                       (valueChange)="
                         actionUpdated.emit({
@@ -123,6 +189,7 @@ export interface AutomationActionUpdate {
                       " />
                     <app-form-input
                       label="Flag description"
+                      [noMargin]="true"
                       [value]="action.flagDescription ?? ''"
                       (valueChange)="
                         actionUpdated.emit({
@@ -149,6 +216,7 @@ export interface AutomationActionUpdate {
                       @if (hasStatusUpdate(action)) {
                         <app-form-select
                           label="Status"
+                          [noMargin]="true"
                           [value]="action.statusId ?? null"
                           (changed)="
                             actionUpdated.emit({
@@ -180,6 +248,7 @@ export interface AutomationActionUpdate {
                       @if (hasPriorityUpdate(action)) {
                         <app-form-select
                           label="Priority"
+                          [noMargin]="true"
                           [value]="action.priority ?? null"
                           (changed)="
                             actionUpdated.emit({
@@ -206,6 +275,7 @@ export interface AutomationActionUpdate {
                       type="number"
                       min="0"
                       max="525600"
+                      [noMargin]="true"
                       [value]="delayAmountValue(action)"
                       (valueChange)="
                         actionUpdated.emit({
@@ -215,6 +285,7 @@ export interface AutomationActionUpdate {
                       " />
                     <app-form-select
                       label="Unit"
+                      [noMargin]="true"
                       [value]="action.delayUnit ?? automationDelayUnit.minutes"
                       (changed)="
                         actionUpdated.emit({
@@ -243,21 +314,31 @@ export interface AutomationActionUpdate {
                   </p>
                 }
               </div>
+            </article>
+          </div>
 
+          @if (lastAction) {
+            <div class="flex min-w-0 gap-2 sm:gap-3">
+              <div class="flex w-8 shrink-0 justify-center sm:w-10">
+                <div
+                  class="border-primary/40 text-primary flex h-8 w-8 items-center justify-center rounded-full border border-dashed">
+                  <svg lucideListPlus class="h-4 w-4"></svg>
+                </div>
+              </div>
               <button
-                app-icon-button
+                app-stroked-button
+                class="gap-2 self-start"
                 type="button"
-                title="Remove action"
-                class="ml-auto"
-                [disabled]="actions().length === 1"
-                (click)="removeAction.emit(action.clientId)">
-                <svg lucideTrash2 class="h-4 w-4"></svg>
+                [disabled]="actions().length >= 10"
+                (click)="addAction.emit()">
+                <svg lucideListPlus class="h-4 w-4"></svg>
+                Add action
               </button>
             </div>
-          </div>
+          }
         }
       </div>
-    </div>
+    </section>
   `,
 })
 export class AutomationActionsEditorComponent {
