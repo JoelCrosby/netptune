@@ -27,6 +27,7 @@ export interface BoardViewTask {
   systemId: string;
   tags: string[];
   hasComments: boolean;
+  flagCount: number;
   priority: TaskPriority | null;
   estimateType: EstimateType | null;
   estimateValue: number | null;

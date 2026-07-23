@@ -58,6 +58,8 @@ public class BoardViewRowMap
 
     public bool Has_Comments { get; set; }
 
+    public int Flag_Count { get; set; }
+
     public string Assignees { get; set; } = "[]";
 }
 

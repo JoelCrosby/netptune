@@ -25,4 +25,6 @@ public sealed class TaskFilter : PageRequest
     public string[] Assignees { get; init; } = [];
 
     public bool? NoSprint { get; init; }
+
+    public bool? HasFlags { get; init; }
 }

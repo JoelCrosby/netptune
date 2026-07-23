@@ -10,6 +10,7 @@ import {
   LucideDownload,
   LucideEye,
   LucideFilePen,
+  LucideFlag,
   LucideIconInput,
   LucideImage,
   LucideLayoutDashboard,
@@ -309,6 +310,18 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'automations.manage',
       label: 'Manage Automations',
       icon: LucideWorkflow,
+    },
+  },
+  flags: {
+    read: {
+      key: 'flags.read',
+      label: 'View Task Flags',
+      icon: LucideFlag,
+    },
+    resolve: {
+      key: 'flags.resolve',
+      label: 'Resolve Task Flags',
+      icon: LucideFlag,
     },
   },
   serviceAccounts: {

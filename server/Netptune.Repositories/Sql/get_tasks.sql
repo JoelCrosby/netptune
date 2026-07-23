@@ -70,6 +70,14 @@ WITH filtered_tasks AS (
       AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)
       AND (@excludeTaskId IS NULL OR pt.id != @excludeTaskId)
       AND (@noSprint = FALSE OR pt.sprint_id IS NULL)
+      AND (@hasFlags IS NULL OR @hasFlags = EXISTS (
+          SELECT 1
+          FROM flags f_filter
+          WHERE f_filter.workspace_id = pt.workspace_id
+            AND f_filter.entity_type = @taskEntityType
+            AND f_filter.entity_id = pt.id
+            AND NOT f_filter.is_deleted
+      ))
       AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
       AND (CARDINALITY(@statusCategories) = 0 OR st.category = ANY(@statusCategories))
       AND (CARDINALITY(@priorities) = 0

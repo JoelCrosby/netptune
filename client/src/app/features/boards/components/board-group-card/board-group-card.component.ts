@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
 import {
@@ -11,6 +11,8 @@ import {
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
+import { netptunePermissions } from '@app/core/auth/permissions';
+import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import {
   LucideCheck,
   LucideFlag,
@@ -20,6 +22,8 @@ import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
+import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-board-group-card',
@@ -33,6 +37,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
     NgClass,
     TooltipDirective,
     SprintBadgeComponent,
+    TaskFlagBadgeComponent,
   ],
   template: `<div
     class="border-border bg-board-group-card mb-[.3rem] flex min-h-24 flex-col items-start overflow-hidden rounded-sm border p-2! text-[14px] tracking-[.1px] shadow-sm"
@@ -67,6 +72,10 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
             class="text-muted h-4 w-4"
             aria-label="Has comments"
             appTooltip="Has comments"></svg>
+        }
+
+        @if (readFlags()) {
+          <app-task-flag-badge [count]="task().flagCount" />
         }
 
         @if (task().statusCategory === statusCategory.done) {
@@ -107,10 +116,15 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
   </div> `,
 })
 export class BoardGroupCardComponent {
+  private readonly store = inject(Store);
+
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
   readonly statusCategory = StatusCategory;
   readonly priority = computed(() => this.task().priority);
+  readonly readFlags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.flags.read)
+  );
 
   priorityVisible = computed(() => {
     const p = this.priority();

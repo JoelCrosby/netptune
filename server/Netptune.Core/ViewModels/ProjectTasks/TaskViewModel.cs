@@ -1,4 +1,5 @@
 using Netptune.Core.Enums;
+using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.ViewModels.ProjectTasks;
@@ -33,6 +34,8 @@ public record TaskViewModel
 
     public bool HasComments { get; set; }
 
+    public List<TaskFlagViewModel> Flags { get; set; } = [];
+
     public TaskPriority? Priority { get; set; }
 
     public EstimateType? EstimateType { get; set; }
@@ -55,13 +58,13 @@ public record TaskViewModel
 
     public int? WorkspaceId { get; set; }
 
-    public string WorkspaceKey { get; set; }  = null!;
+    public string WorkspaceKey { get; set; } = null!;
 
     public DateTimeOffset CreatedAt { get; set; }
 
     public DateTimeOffset? UpdatedAt { get; set; }
 
-    public string OwnerUsername { get; set; }  = null!;
+    public string OwnerUsername { get; set; } = null!;
 
     public string? OwnerPictureUrl { get; set; }
 

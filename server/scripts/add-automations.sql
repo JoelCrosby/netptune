@@ -153,13 +153,29 @@ CREATE INDEX IF NOT EXISTS ix_scheduled_automation_actions_task_status
 ALTER TABLE flags
     ADD COLUMN IF NOT EXISTS entity_type integer NULL,
     ADD COLUMN IF NOT EXISTS entity_id integer NULL,
-    ADD COLUMN IF NOT EXISTS automation_rule_id integer NULL;
+    ADD COLUMN IF NOT EXISTS automation_rule_id integer NULL,
+    ADD COLUMN IF NOT EXISTS resolution integer NULL,
+    ADD COLUMN IF NOT EXISTS resolved_at timestamp with time zone NULL,
+    ADD COLUMN IF NOT EXISTS resolved_by_user_id text NULL REFERENCES users(id) ON DELETE RESTRICT;
 
 CREATE INDEX IF NOT EXISTS ix_flags_workspace_entity
     ON flags(workspace_id, entity_type, entity_id);
 
-CREATE UNIQUE INDEX IF NOT EXISTS ix_flags_automation_rule_entity
+DROP INDEX IF EXISTS ix_flags_automation_rule_entity;
+
+CREATE UNIQUE INDEX ix_flags_automation_rule_entity
     ON flags(automation_rule_id, entity_type, entity_id)
     WHERE automation_rule_id IS NOT NULL
       AND entity_type IS NOT NULL
-      AND entity_id IS NOT NULL;
+      AND entity_id IS NOT NULL
+      AND NOT is_deleted;
+
+UPDATE workspace_app_users
+SET permissions = permissions || '["flags.read"]'::jsonb
+WHERE role IN ('viewer', 'member')
+  AND NOT permissions @> '["flags.read"]'::jsonb;
+
+UPDATE workspace_app_users
+SET permissions = permissions || '["flags.resolve"]'::jsonb
+WHERE role = 'member'
+  AND NOT permissions @> '["flags.resolve"]'::jsonb;

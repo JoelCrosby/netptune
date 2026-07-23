@@ -13,6 +13,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
@@ -288,6 +289,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             excludeSprintId = filter.ExcludeSprintId,
             excludeTaskId = filter.ExcludeTaskId,
             noSprint = filter.NoSprint ?? false,
+            hasFlags = filter.HasFlags,
             statusIds,
             statusCategories = filter.StatusCategories,
             priorities,
@@ -304,8 +306,12 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var rowList = rows.ToList();
         var totalCount = rowList.FirstOrDefault()?.Total_Count ?? 0;
 
+        var taskViewModels = RowsToTaskViewModels(rowList);
+
+        await PopulateFlags(taskViewModels, cancellationToken);
+
         return new PagedResponse<TaskViewModel>(
-            RowsToTaskViewModels(rowList),
+            taskViewModels,
             pagination.Page,
             pagination.PageSize,
             totalCount);
@@ -517,6 +523,21 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 comment.EntityType == EntityType.Task &&
                 comment.EntityId == x.Id &&
                 !comment.IsDeleted),
+            Flags = Context.Flags
+                .Where(flag =>
+                    flag.EntityType == EntityType.Task &&
+                    flag.EntityId == x.Id &&
+                    !flag.IsDeleted)
+                .OrderByDescending(flag => flag.CreatedAt)
+                .Select(flag => new TaskFlagViewModel
+                {
+                    Id = flag.Id,
+                    Name = flag.Name,
+                    Description = flag.Description,
+                    AutomationRuleId = flag.AutomationRuleId,
+                    CreatedAt = flag.CreatedAt,
+                })
+                .ToList(),
             Tags = x.Tags.Select(t => t.Name).OrderBy(n => n).ToList(),
             Assignees = x.ProjectTaskAppUsers.Select(u => new AssigneeViewModel
             {
@@ -526,6 +547,46 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 IsServiceAccount = u.User.UserType == AppUserType.ServiceAccount,
             }).ToList(),
         };
+    }
+
+    private async Task PopulateFlags(List<TaskViewModel> tasks, CancellationToken cancellationToken)
+    {
+        var taskIds = tasks.Select(task => task.Id).ToList();
+
+        if (taskIds.Count == 0)
+        {
+            return;
+        }
+
+        var flags = await Context.Flags
+            .AsNoTracking()
+            .Where(flag =>
+                flag.EntityType == EntityType.Task &&
+                flag.EntityId.HasValue &&
+                taskIds.Contains(flag.EntityId.Value) &&
+                !flag.IsDeleted)
+            .OrderByDescending(flag => flag.CreatedAt)
+            .Select(flag => new
+            {
+                TaskId = flag.EntityId!.Value,
+                Flag = new TaskFlagViewModel
+                {
+                    Id = flag.Id,
+                    Name = flag.Name,
+                    Description = flag.Description,
+                    AutomationRuleId = flag.AutomationRuleId,
+                    CreatedAt = flag.CreatedAt,
+                },
+            })
+            .ToListAsync(cancellationToken);
+        var flagsByTask = flags
+            .GroupBy(item => item.TaskId)
+            .ToDictionary(group => group.Key, group => group.Select(item => item.Flag).ToList());
+
+        foreach (var task in tasks)
+        {
+            task.Flags = flagsByTask.GetValueOrDefault(task.Id) ?? [];
+        }
     }
 
     public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey, CancellationToken cancellationToken = default)

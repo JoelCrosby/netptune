@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
@@ -34,10 +35,22 @@ public class FlagEntityMap : WorkspaceEntityMap<Flag, int>
             .IsRequired(false);
 
         builder
+            .Property(flag => flag.Resolution)
+            .HasConversion<int?>()
+            .IsRequired(false);
+
+        builder
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(flag => flag.ResolvedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
             .HasIndex(flag => new { flag.WorkspaceId, flag.EntityType, flag.EntityId });
 
         builder
             .HasIndex(flag => new { flag.AutomationRuleId, flag.EntityType, flag.EntityId })
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("NOT is_deleted");
     }
 }

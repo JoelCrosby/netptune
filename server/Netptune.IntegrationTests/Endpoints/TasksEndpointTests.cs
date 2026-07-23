@@ -6,11 +6,14 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Activity;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Statuses;
 using Netptune.Entities.Contexts;
@@ -341,6 +344,81 @@ public sealed class TasksEndpointTests
         result.Payload.StatusKey.Should().Be(inProgressStatus.Key);
         result.Payload.StartDate.Should().Be(request.StartDate);
         result.Payload.DueDate.Should().Be(request.DueDate);
+    }
+
+    [Fact]
+    public async Task Flags_ShouldBeVisibleFilterableAndResolvable()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        int taskId;
+        int flagId;
+
+        using (var scope = Fixture.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var task = await context.ProjectTasks
+                .Include(item => item.Workspace)
+                .FirstAsync(item => item.Workspace.Slug == "netptune" && !item.IsDeleted, cancellationToken);
+            var flag = new Flag
+            {
+                WorkspaceId = task.WorkspaceId,
+                EntityType = EntityType.Task,
+                EntityId = task.Id,
+                Name = $"Integration flag {Guid.NewGuid():N}",
+                Description = "Requires attention",
+                OwnerId = task.OwnerId,
+                CreatedByUserId = task.OwnerId,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            context.Flags.Add(flag);
+            await context.SaveChangesAsync(cancellationToken);
+
+            taskId = task.Id;
+            flagId = flag.Id;
+        }
+
+        var flagsResponse = await Client.GetAsync($"api/tasks/{taskId}/flags", cancellationToken);
+        var flags = await flagsResponse.Content
+            .ReadFromJsonAsync<ClientResponse<List<TaskFlagViewModel>>>(cancellationToken);
+
+        flagsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        flags.IsSuccess.Should().BeTrue();
+        flags.Payload.Should().ContainSingle(item => item.Id == flagId);
+
+        var filteredResponse = await Client.GetAsync("api/tasks?hasFlags=true", cancellationToken);
+        var filtered = await filteredResponse.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(cancellationToken);
+
+        filteredResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        filtered.IsSuccess.Should().BeTrue();
+        filtered.Payload!.Items.Should().Contain(item =>
+            item.Id == taskId &&
+            item.Flags.Any(flag => flag.Id == flagId));
+
+        var resolveResponse = await Client.PutAsJsonAsync(
+            $"api/tasks/{taskId}/flags/{flagId}/resolution",
+            new ResolveTaskFlagRequest { Resolution = FlagResolutionType.Resolved },
+            cancellationToken);
+
+        resolveResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        using var verificationScope = Fixture.CreateScope();
+        var verificationContext = verificationScope.ServiceProvider.GetRequiredService<DataContext>();
+        var resolvedFlag = await verificationContext.Flags
+            .IgnoreQueryFilters()
+            .SingleAsync(item => item.Id == flagId, cancellationToken);
+        var auditEvent = await verificationContext.EventRecords
+            .SingleAsync(item =>
+                item.EventKey == EventKeys.FlagResolutionRecorded &&
+                item.SubjectId == taskId.ToString(),
+                cancellationToken);
+
+        resolvedFlag.IsDeleted.Should().BeTrue();
+        resolvedFlag.Resolution.Should().Be(FlagResolutionType.Resolved);
+        resolvedFlag.ResolvedAt.Should().NotBeNull();
+        resolvedFlag.ResolvedByUserId.Should().NotBeNullOrWhiteSpace();
+        auditEvent.ActorUserId.Should().Be(resolvedFlag.ResolvedByUserId);
     }
 
     [Fact]

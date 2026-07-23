@@ -32,6 +32,7 @@ public static class EventKeys
     public const string CommentCreated = "comment.created";
     public const string CommentUpdated = "comment.updated";
     public const string CommentDeleted = "comment.deleted";
+    public const string FlagResolutionRecorded = "flag.resolution-recorded";
     public const string EntityActivityRecorded = "entity.activity-recorded";
 
     public static string From(ActivityType type) => type switch
@@ -74,6 +75,7 @@ public static class EventKeys
             or CommentCreated
             or CommentUpdated
             or CommentDeleted
+            or FlagResolutionRecorded
             => EventRetentionClasses.Permanent,
         _ => EventRetentionClasses.Audit,
     };
@@ -90,6 +92,7 @@ public static class EventKeys
             CommentCreated => ActivityType.AddComment,
             CommentUpdated => ActivityType.ModifyComment,
             CommentDeleted => ActivityType.RemoveComment,
+            FlagResolutionRecorded => ActivityType.Modify,
             _ => (ActivityType?)null,
         };
 
@@ -174,6 +177,7 @@ public static class EventDefinitionRegistry
             [(EventKeys.CommentCreated, 1)] = typeof(CommentEventPayload),
             [(EventKeys.CommentUpdated, 1)] = typeof(CommentEventPayload),
             [(EventKeys.CommentDeleted, 1)] = typeof(CommentEventPayload),
+            [(EventKeys.FlagResolutionRecorded, 1)] = typeof(FlagResolutionPayload),
         };
 
     public static void Validate<TPayload>(EventWriteRequest<TPayload> request) where TPayload : class

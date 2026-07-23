@@ -101,6 +101,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 SystemId = $"{meta.Project_Key}-{row.Project_Scope_Id}",
                 Tags = row.Tags.ToList(),
                 HasComments = row.Has_Comments,
+                FlagCount = row.Flag_Count,
                 Priority = row.Task_Priority,
                 EstimateType = row.Task_Estimate_Type,
                 EstimateValue = row.Task_Estimate_Value,

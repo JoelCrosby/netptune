@@ -31,6 +31,7 @@ import { filter, withLatestFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
 import { TaskDetailFilesComponent } from '@entry/dialogs/task-detail-dialog/task-detail-files.component';
+import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-flags.component';
 
 @Component({
   selector: 'app-task-detail-page',
@@ -59,6 +60,10 @@ import { TaskDetailFilesComponent } from '@entry/dialogs/task-detail-dialog/task
           <div class="flex grow flex-col">
             @if (readTags()) {
               <app-task-detail-tags />
+            }
+
+            @if (readFlags()) {
+              <app-task-detail-flags />
             }
 
             <app-task-detail-description />
@@ -102,6 +107,7 @@ import { TaskDetailFilesComponent } from '@entry/dialogs/task-detail-dialog/task
     TaskDetailActionsComponent,
     PageContainerComponent,
     TaskDetailFilesComponent,
+    TaskDetailFlagsComponent,
   ],
   providers: [TaskDetailService],
 })
@@ -122,6 +128,10 @@ export class TaskDetailPageComponent implements OnDestroy {
 
   readFiles = this.store.selectSignal(
     selectHasPermission(netptunePermissions.files.read)
+  );
+
+  readFlags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.flags.read)
   );
 
   constructor() {

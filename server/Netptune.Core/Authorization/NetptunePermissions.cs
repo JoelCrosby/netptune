@@ -130,6 +130,12 @@ public static class NetptunePermissions
         public const string Manage = "automations.manage";
     }
 
+    public static class Flags
+    {
+        public const string Read = "flags.read";
+        public const string Resolve = "flags.resolve";
+    }
+
     public static class ServiceAccounts
     {
         public const string Read = "service_accounts.read";

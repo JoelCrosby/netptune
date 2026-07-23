@@ -87,6 +87,10 @@ export const netptunePermissions = {
     read: 'automations.read',
     manage: 'automations.manage',
   },
+  flags: {
+    read: 'flags.read',
+    resolve: 'flags.resolve',
+  },
   serviceAccounts: {
     read: 'service_accounts.read',
     create: 'service_accounts.create',

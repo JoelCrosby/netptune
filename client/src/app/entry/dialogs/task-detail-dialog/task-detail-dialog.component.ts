@@ -30,6 +30,7 @@ import { TaskDetailService } from './task-detail.service';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { TaskDetailFilesComponent } from './task-detail-files.component';
+import { TaskDetailFlagsComponent } from './task-detail-flags.component';
 
 export interface TaskDetailDialogData {
   systemId: string;
@@ -62,6 +63,10 @@ export interface TaskDetailDialogData {
           <div class="flex w-64 grow flex-col">
             @if (readTags()) {
               <app-task-detail-tags />
+            }
+
+            @if (readFlags()) {
+              <app-task-detail-flags />
             }
 
             <app-task-detail-description />
@@ -103,6 +108,7 @@ export interface TaskDetailDialogData {
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,
     TaskDetailFilesComponent,
+    TaskDetailFlagsComponent,
   ],
   providers: [TaskDetailService],
 })
@@ -126,6 +132,10 @@ export class TaskDetailDialogComponent implements OnDestroy {
 
   readFiles = this.store.selectSignal(
     selectHasPermission(netptunePermissions.files.read)
+  );
+
+  readFlags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.flags.read)
   );
 
   constructor() {

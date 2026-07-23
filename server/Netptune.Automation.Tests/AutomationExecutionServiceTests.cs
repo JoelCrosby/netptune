@@ -67,6 +67,60 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_can_flag_task_again_after_previous_flag_is_resolved()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            "in-progress");
+
+        TaskChangedMessage CreateMessage() => new()
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, newStatusId, inProgressStatusId),
+            ],
+        };
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(
+            CreateMessage(),
+            TestContext.Current.CancellationToken);
+
+        var firstFlag = await scope.Db.Flags.SingleAsync(TestContext.Current.CancellationToken);
+        firstFlag.IsDeleted = true;
+        firstFlag.Resolution = FlagResolutionType.Resolved;
+        firstFlag.ResolvedAt = DateTime.UtcNow;
+        firstFlag.ResolvedByUserId = scenario.Owner.Id;
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(
+            CreateMessage(),
+            TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var flags = await scope.Db.Flags
+            .IgnoreQueryFilters()
+            .Where(flag => flag.EntityId == scenario.Task.Id)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        flags.Should().HaveCount(2);
+        flags.Should().ContainSingle(flag => !flag.IsDeleted);
+        flags.Should().ContainSingle(flag => flag.Resolution == FlagResolutionType.Resolved);
+    }
+
+    [Fact]
     public async Task ExecuteTaskChangedRules_fails_without_mutation_when_permission_is_revoked()
     {
         await using var scope = await Fixture.CreateScope();

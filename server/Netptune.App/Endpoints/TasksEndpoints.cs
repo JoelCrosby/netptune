@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Handlers.Flags.Commands;
+using Netptune.Handlers.Flags.Queries;
 using Netptune.Handlers.Tasks.Commands;
 using Netptune.Handlers.Tasks.Queries;
 
@@ -21,6 +23,9 @@ public static class TasksEndpoints
         group.MapGet("/archive", HandleGetArchivedTasks).RequireAuthorization(NetptunePermissions.Tasks.Restore);
         group.MapGet("/{id}", HandleGetTask).RequireAuthorization(NetptunePermissions.Tasks.Read);
         group.MapGet("/detail", HandleGetTaskDetail).RequireAuthorization(NetptunePermissions.Tasks.Read);
+        group.MapGet("/{taskId:int}/flags", HandleGetTaskFlags).RequireAuthorization(NetptunePermissions.Flags.Read);
+        group.MapPut("/{taskId:int}/flags/{flagId:int}/resolution", HandleResolveTaskFlag)
+            .RequireAuthorization(NetptunePermissions.Flags.Resolve);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.Tasks.Update);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Tasks.Create);
         group.MapDelete("/", HandleDelete).RequireAuthorization(NetptunePermissions.Tasks.Delete);
@@ -32,6 +37,44 @@ public static class TasksEndpoints
         group.MapPost("/restore", HandleRestoreTasks).RequireAuthorization(NetptunePermissions.Tasks.Restore);
 
         return group;
+    }
+
+    public static async Task<IResult> HandleGetTaskFlags(
+        IMediator mediator,
+        int taskId,
+        CancellationToken cancellationToken)
+    {
+        var flags = await mediator.Send(new GetTaskFlagsQuery(taskId), cancellationToken);
+
+        return Results.Ok(flags);
+    }
+
+    public static async Task<IResult> HandleResolveTaskFlag(
+        IMediator mediator,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        int taskId,
+        int flagId,
+        ResolveTaskFlagRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(
+            new ResolveTaskFlagCommand(taskId, flagId, request),
+            cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        await boardEventService.BroadcastRequestAsync(context);
+
+        return Results.Ok(result);
     }
 
     public static async Task<IResult> HandleGetArchivedTasks(

@@ -51,6 +51,8 @@ public class BoardViewTask
 
     public bool HasComments { get; set; }
 
+    public int FlagCount { get; set; }
+
     public TaskPriority? Priority { get; set; }
 
     public EstimateType? EstimateType { get; set; }

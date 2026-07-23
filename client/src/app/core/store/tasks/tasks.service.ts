@@ -36,6 +36,10 @@ export class ProjectTasksService {
       params = params.set('noSprint', filter.noSprint);
     }
 
+    if (filter?.hasFlags !== undefined) {
+      params = params.set('hasFlags', filter.hasFlags);
+    }
+
     for (const tag of filter?.tags ?? []) {
       params = params.append('tags', tag);
     }
@@ -77,6 +81,13 @@ export class ProjectTasksService {
         systemId,
       },
     });
+  }
+
+  resolveFlag(taskId: number, flagId: number, resolution: FlagResolutionType) {
+    return this.http.put<ClientResponse>(
+      `api/tasks/${taskId}/flags/${flagId}/resolution`,
+      { resolution }
+    );
   }
 
   postComment(request: AddCommentRequest) {
@@ -128,4 +139,9 @@ export class ProjectTasksService {
       formData
     );
   }
+}
+
+export enum FlagResolutionType {
+  resolved = 0,
+  dismissed = 1,
 }

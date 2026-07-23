@@ -180,3 +180,14 @@ public sealed record CommentEventPayload
 
     public IReadOnlyCollection<string> RecipientUserIds { get; init; } = [];
 }
+
+public sealed record FlagResolutionPayload
+{
+    public int FlagId { get; init; }
+
+    public required string FlagName { get; init; }
+
+    public required string Resolution { get; init; }
+
+    public int? AutomationRuleId { get; init; }
+}

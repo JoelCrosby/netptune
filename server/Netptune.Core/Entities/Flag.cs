@@ -14,4 +14,10 @@ public record Flag : WorkspaceEntity<int>
     public int? EntityId { get; set; }
 
     public int? AutomationRuleId { get; set; }
+
+    public FlagResolutionType? Resolution { get; set; }
+
+    public DateTime? ResolvedAt { get; set; }
+
+    public string? ResolvedByUserId { get; set; }
 }

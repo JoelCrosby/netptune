@@ -4,6 +4,7 @@ import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-filter-container.component';
 import { TaskListAssigneesComponent } from './task-list-assignees.component';
 import { TaskListFilterSeparatorComponent } from './task-list-filter-separator.component';
+import { TaskListFlagsComponent } from './task-list-flags.component';
 import { TaskListSearchComponent } from './task-list-search.component';
 import { TaskListSelectionActionsComponent } from './task-list-selection-actions.component';
 import { TaskListStatusComponent } from './task-list-status.component';
@@ -15,6 +16,7 @@ import { netptunePermissions } from '@app/core/auth/permissions';
   selector: 'app-task-list-filters',
   imports: [
     TaskListFilterSeparatorComponent,
+    TaskListFlagsComponent,
     TaskListAssigneesComponent,
     TaskListSearchComponent,
     TaskListSelectionActionsComponent,
@@ -26,6 +28,11 @@ import { netptunePermissions } from '@app/core/auth/permissions';
       <app-task-list-search />
       <app-task-list-filter-separator />
       <app-task-list-assignees [assigneeOptions]="assigneeOptions()" />
+
+      @if (readFlags()) {
+        <app-task-list-filter-separator />
+        <app-task-list-flags />
+      }
 
       @if (readTags()) {
         <app-task-list-filter-separator />
@@ -51,5 +58,9 @@ export class TaskListFiltersComponent {
 
   readTags = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tags.read)
+  );
+
+  readFlags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.flags.read)
   );
 }

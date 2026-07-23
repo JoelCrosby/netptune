@@ -35,6 +35,7 @@ import { Store } from '@ngrx/store';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
+import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
 import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
 import { injectParams } from '@app/core/router/signals';
@@ -61,6 +62,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     TaskListFiltersComponent,
     DatePipe,
     TooltipDirective,
+    TaskFlagBadgeComponent,
   ],
   providers: [],
   template: `
@@ -93,6 +95,11 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
               class="text-muted h-4 w-4"
               aria-label="Has comments"
               appTooltip="Has comments"></svg>
+          }
+          @if (readFlags()) {
+            <app-task-flag-badge
+              [count]="task.flags.length"
+              [names]="flagNames(task)" />
           }
         </button>
       </ng-template>
@@ -172,13 +179,23 @@ export class TaskListComponent {
   selection = this.store.selectSignal(selectSelectedTaskIds);
 
   taskFilter = this.store.selectSignal(selectProjectTasksFilter);
-  filtersActive = this.store.selectSignal(selectTaskFiltersActive);
+  private readonly storeFiltersActive = this.store.selectSignal(
+    selectTaskFiltersActive
+  );
+  readonly filtersActive = computed(() => {
+    const routeFilters = parseTaskFilterRouteParams(this.params());
+
+    return this.storeFiltersActive() || routeFilters.hasFlags === true;
+  });
 
   canCreate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.create)
   );
   canDelete = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.delete)
+  );
+  readFlags = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.flags.read)
   );
 
   taskRequestParams = computed(() => {
@@ -213,6 +230,10 @@ export class TaskListComponent {
 
     return queryParams;
   });
+
+  flagNames(task: TaskViewModel): string[] {
+    return task.flags.map((flag) => flag.name);
+  }
 
   taskData: DatatableDataSource<TaskViewModel> = {
     key: 'task-list',

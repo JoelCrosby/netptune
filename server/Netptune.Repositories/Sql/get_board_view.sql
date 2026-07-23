@@ -75,6 +75,14 @@ SELECT lt.task_id
              AND c.entity_id = lt.task_id
              AND NOT c.is_deleted
        )                    AS has_comments
+     , (
+           SELECT COUNT(*)::integer
+           FROM flags f
+           WHERE f.workspace_id = lt.workspace_id
+             AND f.entity_type = @taskEntityType
+             AND f.entity_id = lt.task_id
+             AND NOT f.is_deleted
+       )                    AS flag_count
      , COALESCE((
            SELECT array_agg(t.name ORDER BY t.name)
            FROM project_task_tags ptt
