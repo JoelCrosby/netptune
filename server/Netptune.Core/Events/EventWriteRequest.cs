@@ -1,3 +1,5 @@
+using Netptune.Core.Enums;
+
 namespace Netptune.Core.Events;
 
 public sealed record EventWriteRequest<TPayload> where TPayload : class
@@ -56,6 +58,14 @@ public sealed record EntityCreatedPayload
 public sealed record FieldTransitionedPayload
 {
     public required string Field { get; init; }
+
+    public EventOriginType OriginType { get; init; }
+
+    public int? AutomationRuleId { get; init; }
+
+    public int? AutomationRunId { get; init; }
+
+    public int ChainDepth { get; init; }
 
     public string? OldValue { get; init; }
 

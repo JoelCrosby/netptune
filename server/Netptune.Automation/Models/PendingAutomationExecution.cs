@@ -13,4 +13,12 @@ internal sealed record PendingAutomationExecution
     public required string IdempotencyKey { get; init; }
 
     public required DateTime TriggeredAt { get; init; }
+
+    public Guid CorrelationId { get; init; } = Guid.NewGuid();
+
+    public Guid? CausationEventId { get; init; }
+
+    public int ChainDepth { get; init; }
+
+    public AutomationRun? Run { get; set; }
 }

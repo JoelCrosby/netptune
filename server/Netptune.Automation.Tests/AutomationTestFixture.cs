@@ -168,6 +168,10 @@ internal sealed record RecordedEvent
 
     public string? ActorUserId { get; init; }
 
+    public Guid? CorrelationId { get; init; }
+
+    public Guid? CausationEventId { get; init; }
+
     public required object Payload { get; init; }
 
     public required IReadOnlyCollection<EventReferenceInput> References { get; init; }
@@ -187,6 +191,8 @@ internal sealed class RecordingEventRecordWriter : IEventRecordWriter
             SubjectType = request.SubjectType,
             SubjectId = request.SubjectId,
             ActorUserId = request.ActorUserId,
+            CorrelationId = request.CorrelationId,
+            CausationEventId = request.CausationEventId,
             Payload = request.Payload,
             References = request.References,
         });

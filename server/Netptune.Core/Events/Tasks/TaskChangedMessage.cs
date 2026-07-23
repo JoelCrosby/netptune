@@ -8,6 +8,18 @@ public record TaskChangedMessage : IEventMessage
 
     public Guid EventId { get; init; } = Guid.NewGuid();
 
+    public EventOriginType OriginType { get; init; }
+
+    public Guid? CorrelationId { get; init; }
+
+    public Guid? CausationEventId { get; init; }
+
+    public int? AutomationRuleId { get; init; }
+
+    public int? AutomationRunId { get; init; }
+
+    public int ChainDepth { get; init; }
+
     public int WorkspaceId { get; init; }
 
     public int TaskId { get; init; }

@@ -72,9 +72,28 @@ internal sealed class TaskChangedAutomationRuleMatcher
         }
 
         var executions = new List<PendingAutomationExecution>();
+        var correlationId = message.CorrelationId ?? message.EventId;
+        var selfTriggerSkippedCount = 0;
 
         foreach (var rule in rules)
         {
+            var isAutomationEvent = message.OriginType == EventOriginType.Automation;
+            var isSourceRule = message.AutomationRuleId == rule.Id;
+            var isSelfTrigger = isAutomationEvent && isSourceRule;
+
+            if (isSelfTrigger)
+            {
+                selfTriggerSkippedCount++;
+
+                Logger.LogWarning(
+                    "Automation rule {RuleId} skipped its own task-change event {EventId} at chain depth {ChainDepth}",
+                    rule.Id,
+                    message.EventId,
+                    message.ChainDepth);
+
+                continue;
+            }
+
             if (!Matches(rule, message, task))
             {
                 continue;
@@ -87,7 +106,18 @@ internal sealed class TaskChangedAutomationRuleMatcher
                 ActorUserId = message.ActorUserId,
                 IdempotencyKey = $"rule:{rule.Id}:task:{message.TaskId}:event:{message.EventId}",
                 TriggeredAt = message.OccurredAt,
+                CorrelationId = correlationId,
+                CausationEventId = message.EventId,
+                ChainDepth = message.ChainDepth,
             });
+        }
+
+        if (selfTriggerSkippedCount > 0)
+        {
+            Telemetry.RecordRulesSkipped(
+                AutomationTriggerType.TaskChanged,
+                selfTriggerSkippedCount,
+                "self_trigger");
         }
 
         Telemetry.RecordRulesMatched(AutomationTriggerType.TaskChanged, executions.Count);

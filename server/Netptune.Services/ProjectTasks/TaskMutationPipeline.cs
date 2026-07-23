@@ -55,20 +55,24 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
         CancellationToken cancellationToken = default)
     {
         var changes = request.Diff.ToTaskFieldChanges();
+        var eventId = Guid.NewGuid();
+        var correlationId = request.CorrelationId ?? eventId;
 
         foreach (var change in changes)
         {
-            await AppendReportingEvent(
-                request.Previous,
-                request.Current,
-                request.ActorUserId,
-                change,
-                cancellationToken);
+            await AppendReportingEvent(request, correlationId, change, cancellationToken);
         }
 
         var message = request.Current.WorkspaceId.HasValue
             ? new TaskChangedMessage
             {
+                EventId = eventId,
+                OriginType = request.OriginType,
+                CorrelationId = correlationId,
+                CausationEventId = request.CausationEventId,
+                AutomationRuleId = request.AutomationRuleId,
+                AutomationRunId = request.AutomationRunId,
+                ChainDepth = request.ChainDepth,
                 WorkspaceId = request.Current.WorkspaceId.Value,
                 TaskId = request.Current.Id,
                 ActorUserId = request.ActorUserId,
@@ -100,15 +104,20 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
     }
 
     private async Task AppendReportingEvent(
-        TaskViewModel previous,
-        TaskViewModel current,
-        string actorUserId,
+        TaskMutationRequest request,
+        Guid correlationId,
         TaskFieldChange change,
         CancellationToken cancellationToken)
     {
+        var previous = request.Previous;
+        var current = request.Current;
         var payload = new FieldTransitionedPayload
         {
             Field = change.Field.ToString().ToLowerInvariant(),
+            OriginType = request.OriginType,
+            AutomationRuleId = request.AutomationRuleId,
+            AutomationRunId = request.AutomationRunId,
+            ChainDepth = request.ChainDepth,
             OldValue = change.OldValue,
             NewValue = change.NewValue,
             OldCategory = change.Field == TaskChangeField.Status ? previous.StatusCategory.ToString() : null,
@@ -126,7 +135,9 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
             EventKey = EventKeys.EntityFieldTransitioned,
             SubjectType = EventEntityTypes.From(EntityType.Task),
             SubjectId = current.Id.ToString(),
-            ActorUserId = actorUserId,
+            ActorUserId = request.ActorUserId,
+            CorrelationId = correlationId,
+            CausationEventId = request.CausationEventId,
             Payload = payload,
             References = references,
         }, cancellationToken);
@@ -137,24 +148,28 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
 
         if (estimateChangedInActiveSprint)
         {
-            await AppendSprintEstimateEvent(previous, current, actorUserId, references, cancellationToken);
+            await AppendSprintEstimateEvent(request, correlationId, references, cancellationToken);
         }
     }
 
     private async Task AppendSprintEstimateEvent(
-        TaskViewModel previous,
-        TaskViewModel current,
-        string actorUserId,
+        TaskMutationRequest request,
+        Guid correlationId,
         List<EventReferenceInput> references,
         CancellationToken cancellationToken)
     {
+        var previous = request.Previous;
+        var current = request.Current;
+
         await EventRecords.Append(new EventWriteRequest<ScopeMemberAttributeChangedPayload>
         {
             WorkspaceId = current.WorkspaceId,
             EventKey = EventKeys.ScopeMemberAttributeChanged,
             SubjectType = EventEntityTypes.From(EntityType.Sprint),
             SubjectId = current.SprintId!.Value.ToString(),
-            ActorUserId = actorUserId,
+            ActorUserId = request.ActorUserId,
+            CorrelationId = correlationId,
+            CausationEventId = request.CausationEventId,
             Payload = new ScopeMemberAttributeChangedPayload
             {
                 MemberType = EventEntityTypes.From(EntityType.Task),

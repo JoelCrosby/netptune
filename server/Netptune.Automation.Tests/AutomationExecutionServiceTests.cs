@@ -4,6 +4,7 @@ using FluentAssertions;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Automation.Execution;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -137,11 +138,13 @@ public sealed class AutomationExecutionServiceTests
 
         var scenario = await AutomationTestData.CreateScenario(scope.Db);
 
-        await AutomationTestData.CreateTaskChangedRule(
+        var rule = await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Name],
             actionType: AutomationActionType.UpdateTask);
+        var sourceEventId = Guid.NewGuid();
+        var correlationId = Guid.NewGuid();
 
         var configuredStatusId = await scope.Db.AutomationActions
             .Where(action => action.Type == AutomationActionType.UpdateTask)
@@ -157,6 +160,8 @@ public sealed class AutomationExecutionServiceTests
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
+            EventId = sourceEventId,
+            CorrelationId = correlationId,
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
             ActorUserId = scenario.Owner.Id,
@@ -184,18 +189,100 @@ public sealed class AutomationExecutionServiceTests
             .ToList();
         fieldEvents.Should().HaveCount(2);
         fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.ActorUserId == scenario.Owner.Id);
-        fieldEvents
-            .Select(recordedEvent => ((FieldTransitionedPayload)recordedEvent.Payload).Field)
+        fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.CorrelationId == correlationId);
+        fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.CausationEventId == sourceEventId);
+        var transitionPayloads = fieldEvents
+            .Select(recordedEvent => (FieldTransitionedPayload)recordedEvent.Payload)
+            .ToList();
+        transitionPayloads.Should().OnlyContain(payload => payload.OriginType == EventOriginType.Automation);
+        transitionPayloads.Should().OnlyContain(payload => payload.AutomationRuleId == rule.Id);
+        transitionPayloads.Should().OnlyContain(payload => payload.AutomationRunId == run.Id);
+        transitionPayloads.Should().OnlyContain(payload => payload.ChainDepth == 1);
+        transitionPayloads
+            .Select(payload => payload.Field)
             .Should()
             .BeEquivalentTo("status", "priority");
 
         var taskChanged = scope.EventPublisher.Events.OfType<TaskChangedMessage>().Should().ContainSingle().Subject;
         taskChanged.ActorUserId.Should().Be(scenario.Owner.Id);
         taskChanged.TaskId.Should().Be(scenario.Task.Id);
+        taskChanged.OriginType.Should().Be(EventOriginType.Automation);
+        taskChanged.CorrelationId.Should().Be(correlationId);
+        taskChanged.CausationEventId.Should().Be(sourceEventId);
+        taskChanged.AutomationRuleId.Should().Be(rule.Id);
+        taskChanged.AutomationRunId.Should().Be(run.Id);
+        taskChanged.ChainDepth.Should().Be(1);
         taskChanged.Changes
             .Select(change => change.Field)
             .Should()
             .BeEquivalentTo([TaskChangeField.Status, TaskChangeField.Priority]);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_skips_source_rule_but_allows_other_rules_in_chain()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var sourceRule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name]);
+        var chainedRule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name]);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            OriginType = EventOriginType.Automation,
+            AutomationRuleId = sourceRule.Id,
+            ChainDepth = 1,
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        var runs = await scope.Db.AutomationRuns.ToListAsync(TestContext.Current.CancellationToken);
+
+        runs.Should().ContainSingle();
+        runs[0].AutomationRuleId.Should().Be(chainedRule.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_stops_when_chain_depth_limit_is_reached()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name]);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            OriginType = EventOriginType.Automation,
+            ChainDepth = AutomationChainPolicy.MaxDepth,
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+        var flagCount = await scope.Db.Flags.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(0);
+        flagCount.Should().Be(0);
     }
 
     [Fact]

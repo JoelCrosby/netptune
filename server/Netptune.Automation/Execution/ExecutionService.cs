@@ -55,11 +55,29 @@ internal sealed class ExecutionService : IExecutionService
         activity?.SetTag("task.id", message.TaskId);
         activity?.SetTag("workspace.id", message.WorkspaceId);
         activity?.SetTag("automation.event_id", message.EventId.ToString());
+        activity?.SetTag("automation.origin_type", message.OriginType.ToString());
+        activity?.SetTag("automation.correlation_id", message.CorrelationId?.ToString());
+        activity?.SetTag("automation.chain_depth", message.ChainDepth);
         activity?.SetTag("automation.changed_fields", string.Join(",", message.Changes.Select(change => change.Field)));
 
         try
         {
             await ScheduledActions.CancelForStatusChange(message, cancellationToken);
+
+            var chainLimitReached = AutomationChainPolicy.HasReachedLimit(message.ChainDepth);
+
+            if (chainLimitReached)
+            {
+                Logger.LogWarning(
+                    "Task-change automation evaluation stopped at chain depth {ChainDepth} for task {TaskId} ({CorrelationId})",
+                    message.ChainDepth,
+                    message.TaskId,
+                    message.CorrelationId);
+                activity?.SetTag("automation.skip_reason", "chain_depth_limit");
+                Telemetry.RecordRulesSkipped(AutomationTriggerType.TaskChanged, 1, "chain_depth_limit");
+
+                return;
+            }
 
             var executions = await TaskChangedMatcher.Match(message, cancellationToken);
 

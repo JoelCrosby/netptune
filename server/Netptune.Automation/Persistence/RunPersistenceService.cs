@@ -299,12 +299,19 @@ internal sealed class RunPersistenceService
         }
 
         var diff = ProjectTaskDiff.Create(previous, current);
+        var nextChainDepth = execution.ChainDepth + 1;
         var outcome = await TaskMutationPipeline.Record(new TaskMutationRequest
         {
             Previous = previous,
             Current = current,
             Diff = diff,
             ActorUserId = execution.ActorUserId,
+            OriginType = EventOriginType.Automation,
+            CorrelationId = execution.CorrelationId,
+            CausationEventId = execution.CausationEventId,
+            AutomationRuleId = execution.Rule.Id,
+            AutomationRunId = execution.Run?.Id,
+            ChainDepth = nextChainDepth,
         }, cancellationToken);
 
         taskMutations.Add(outcome);

@@ -37,6 +37,7 @@ internal sealed class ActionPlanner
         foreach (var execution in orderedExecutions)
         {
             var run = CreateRun(execution);
+            execution.Run = run;
 
             try
             {
@@ -118,6 +119,9 @@ internal sealed class ActionPlanner
                 taskName = task.Name,
                 ruleId = rule.Id,
                 ruleName = rule.Name,
+                correlationId = execution.CorrelationId,
+                causationEventId = execution.CausationEventId,
+                chainDepth = execution.ChainDepth,
             }, JsonOptions.Default),
         };
     }

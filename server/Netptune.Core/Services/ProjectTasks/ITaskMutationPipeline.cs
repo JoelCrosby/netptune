@@ -15,6 +15,18 @@ public sealed record TaskMutationRequest
     public required ProjectTaskDiff Diff { get; init; }
 
     public required string ActorUserId { get; init; }
+
+    public EventOriginType OriginType { get; init; }
+
+    public Guid? CorrelationId { get; init; }
+
+    public Guid? CausationEventId { get; init; }
+
+    public int? AutomationRuleId { get; init; }
+
+    public int? AutomationRunId { get; init; }
+
+    public int ChainDepth { get; init; }
 }
 
 public sealed record TaskMutationOutcome(TaskMutationRequest Mutation, TaskChangedMessage? Message);
