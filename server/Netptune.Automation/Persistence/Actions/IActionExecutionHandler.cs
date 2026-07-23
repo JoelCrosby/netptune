@@ -5,7 +5,7 @@ using Netptune.Core.Services.ProjectTasks;
 
 namespace Netptune.Automation.Persistence.Actions;
 
-internal sealed record AutomationActionExecutionOutcome(AutomationActionResultStatus Status, string? Message = null);
+internal sealed record ActionOutcome(AutomationActionResultStatus Status, string? Message = null);
 
 internal sealed record AutomationPersistenceState
 {
@@ -20,23 +20,23 @@ internal sealed record AutomationPersistenceState
     public required List<TaskMutationOutcome> TaskMutations { get; init; }
 }
 
-internal interface IAutomationActionExecutionHandler
+internal interface IActionExecutionHandler
 {
     AutomationActionType Type { get; }
 
-    Task<AutomationActionExecutionOutcome> Execute(PlannedAutomationAction action, AutomationPersistenceState state, CancellationToken cancellationToken);
+    Task<ActionOutcome> Execute(PlannedAutomationAction action, AutomationPersistenceState state, CancellationToken cancellationToken);
 }
 
-internal static class AutomationActionExecutionOutcomes
+internal static class ActionOutcomes
 {
-    internal static AutomationActionExecutionOutcome Succeeded()
+    internal static ActionOutcome Succeeded()
     {
-        return new AutomationActionExecutionOutcome(AutomationActionResultStatus.Succeeded);
+        return new ActionOutcome(AutomationActionResultStatus.Succeeded);
     }
 
-    internal static AutomationActionExecutionOutcome InvalidContribution()
+    internal static ActionOutcome InvalidContribution()
     {
-        return new AutomationActionExecutionOutcome(
+        return new ActionOutcome(
             AutomationActionResultStatus.Skipped,
             "The action did not produce an executable contribution.");
     }

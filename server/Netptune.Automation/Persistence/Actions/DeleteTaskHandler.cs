@@ -9,18 +9,18 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence.Actions;
 
-internal sealed class DeleteTaskExecutionHandler : IAutomationActionExecutionHandler
+internal sealed class DeleteTaskHandler : IActionExecutionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
 
-    public DeleteTaskExecutionHandler(INetptuneUnitOfWork unitOfWork)
+    public DeleteTaskHandler(INetptuneUnitOfWork unitOfWork)
     {
         UnitOfWork = unitOfWork;
     }
 
     public AutomationActionType Type => AutomationActionType.DeleteTask;
 
-    public async Task<AutomationActionExecutionOutcome> Execute(
+    public async Task<ActionOutcome> Execute(
         PlannedAutomationAction action,
         AutomationPersistenceState state,
         CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ internal sealed class DeleteTaskExecutionHandler : IAutomationActionExecutionHan
 
         if (contribution is null)
         {
-            return AutomationActionExecutionOutcomes.InvalidContribution();
+            return ActionOutcomes.InvalidContribution();
         }
 
         if (contribution.Delay > TimeSpan.Zero)
@@ -43,7 +43,7 @@ internal sealed class DeleteTaskExecutionHandler : IAutomationActionExecutionHan
                 executeAt = scheduledAction.ExecuteAt,
             }, JsonOptions.Default);
 
-            return new AutomationActionExecutionOutcome(
+            return new ActionOutcome(
                 AutomationActionResultStatus.Scheduled,
                 "The action was scheduled for later execution.");
         }
@@ -56,7 +56,7 @@ internal sealed class DeleteTaskExecutionHandler : IAutomationActionExecutionHan
 
         if (affected == 0)
         {
-            return new AutomationActionExecutionOutcome(
+            return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
                 "The task was already deleted.");
         }
@@ -66,12 +66,15 @@ internal sealed class DeleteTaskExecutionHandler : IAutomationActionExecutionHan
 
         Activity.Current?.AddTag("automation.task_deletion.applied", execution.Task.Id);
 
-        return AutomationActionExecutionOutcomes.Succeeded();
+        return ActionOutcomes.Succeeded();
     }
 
     private static ScheduledAutomationAction BuildScheduledAction(PlannedAutomationAction action, TimeSpan delay)
     {
         var execution = action.Execution;
+        var triggerContext = execution.TriggerMessage is null
+            ? null
+            : JsonSerializer.SerializeToDocument(execution.TriggerMessage, JsonOptions.Default);
 
         return new ScheduledAutomationAction
         {
@@ -83,6 +86,7 @@ internal sealed class DeleteTaskExecutionHandler : IAutomationActionExecutionHan
             ExpectedStatusId = execution.Task.StatusId,
             ExecuteAt = execution.TriggeredAt.Add(delay),
             IdempotencyKey = $"{execution.IdempotencyKey}:action:{action.Action.Id}",
+            TriggerContext = triggerContext,
             OwnerId = execution.ActorUserId,
             CreatedByUserId = execution.ActorUserId,
         };

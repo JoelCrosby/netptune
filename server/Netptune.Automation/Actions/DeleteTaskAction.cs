@@ -10,7 +10,7 @@ using Netptune.Core.ViewModels.Automations;
 
 namespace Netptune.Automation.Actions;
 
-internal sealed class DeleteTaskAutomationAction : IAutomationAction
+internal sealed class DeleteTaskAction : IAutomationAction
 {
     public AutomationActionType Type => AutomationActionType.DeleteTask;
 

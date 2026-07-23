@@ -10,14 +10,14 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
 
-internal sealed class DueDateAutomationRuleMatcher
+internal sealed class DueDateRuleMatcher
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly ILogger<DueDateAutomationRuleMatcher> Logger;
+    private readonly ILogger<DueDateRuleMatcher> Logger;
 
-    public DueDateAutomationRuleMatcher(
+    public DueDateRuleMatcher(
         INetptuneUnitOfWork unitOfWork,
-        ILogger<DueDateAutomationRuleMatcher> logger)
+        ILogger<DueDateRuleMatcher> logger)
     {
         UnitOfWork = unitOfWork;
         Logger = logger;

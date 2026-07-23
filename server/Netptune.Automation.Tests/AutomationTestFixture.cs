@@ -95,6 +95,11 @@ public sealed class AutomationTestFixture : IAsyncLifetime
         return new AutomationTestScope(scope);
     }
 
+    internal AutomationTestScope CreateAdditionalScope()
+    {
+        return new AutomationTestScope(Services.CreateAsyncScope());
+    }
+
     private static async Task ResetDatabase(DataContext db)
     {
         await db.Database.ExecuteSqlRawAsync("""

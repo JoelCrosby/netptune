@@ -35,6 +35,24 @@ public sealed class ScheduledAutomationActionEntityMap : AuditableEntityMap<Sche
             .IsRequired(false);
 
         builder
+            .Property(action => action.ClaimId)
+            .IsRequired(false);
+
+        builder
+            .Property(action => action.LeaseExpiresAt)
+            .IsRequired(false);
+
+        builder
+            .Property(action => action.LastError)
+            .HasMaxLength(2048)
+            .IsRequired(false);
+
+        builder
+            .Property(action => action.TriggerContext)
+            .HasColumnType("jsonb")
+            .IsRequired(false);
+
+        builder
             .Property(action => action.IdempotencyKey)
             .HasMaxLength(768)
             .IsRequired();
@@ -60,6 +78,9 @@ public sealed class ScheduledAutomationActionEntityMap : AuditableEntityMap<Sche
 
         builder
             .HasIndex(action => new { action.Status, action.ExecuteAt });
+
+        builder
+            .HasIndex(action => new { action.Status, action.LeaseExpiresAt });
 
         builder
             .HasIndex(action => new { action.TaskId, action.Status });

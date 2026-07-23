@@ -9,11 +9,11 @@ public static class AutomationActionServiceCollectionExtensions
 {
     public static IServiceCollection AddNetptuneAutomationActions(this IServiceCollection services)
     {
-        var notifyAction = ServiceDescriptor.Singleton<IAutomationAction, NotifyTaskAssigneesAutomationAction>();
-        var flagAction = ServiceDescriptor.Singleton<IAutomationAction, FlagTaskAutomationAction>();
-        var updateAction = ServiceDescriptor.Singleton<IAutomationAction, UpdateTaskAutomationAction>();
-        var commentAction = ServiceDescriptor.Singleton<IAutomationAction, AddCommentAutomationAction>();
-        var deleteAction = ServiceDescriptor.Singleton<IAutomationAction, DeleteTaskAutomationAction>();
+        var notifyAction = ServiceDescriptor.Singleton<IAutomationAction, NotifyTaskAssigneesAction>();
+        var flagAction = ServiceDescriptor.Singleton<IAutomationAction, FlagTaskAction>();
+        var updateAction = ServiceDescriptor.Singleton<IAutomationAction, UpdateTaskAction>();
+        var commentAction = ServiceDescriptor.Singleton<IAutomationAction, AddCommentAction>();
+        var deleteAction = ServiceDescriptor.Singleton<IAutomationAction, DeleteTaskAction>();
 
         services.TryAddEnumerable(notifyAction);
         services.TryAddEnumerable(flagAction);

@@ -10,48 +10,53 @@ using Netptune.Core.ViewModels.Automations;
 
 namespace Netptune.Automation.Actions;
 
-internal sealed class FlagTaskAutomationAction : IAutomationAction
+internal sealed class UpdateTaskAction : IAutomationAction
 {
-    public AutomationActionType Type => AutomationActionType.FlagTask;
+    public AutomationActionType Type => AutomationActionType.UpdateTask;
 
     public string? Validate(AutomationActionRequest request)
     {
-        return string.IsNullOrWhiteSpace(request.FlagName) ? "Flag task actions require flagName." : null;
+        return request.StatusId is null && request.Priority is null
+            ? "Update task actions require status or priority."
+            : null;
     }
 
     public JsonDocument CreateConfig(AutomationActionRequest request)
     {
         return JsonSerializer.SerializeToDocument(new
         {
-            flagName = request.FlagName,
-            flagDescription = request.FlagDescription,
+            statusId = request.StatusId,
+            priority = request.Priority,
         }, JsonOptions.Default);
     }
 
     public AutomationActionViewModel ToViewModel(AutomationAction action)
     {
-        var flagName = JsonUtils.ReadString(action.Config, "flagName");
-        var flagDescription = JsonUtils.ReadString(action.Config, "flagDescription");
+        var statusId = JsonUtils.ReadInt(action.Config, "statusId");
+        var priority = JsonUtils.ReadEnum<TaskPriority>(action.Config, "priority");
 
         return new AutomationActionViewModel
         {
             Id = action.Id,
             Type = action.Type,
             SortOrder = action.SortOrder,
-            FlagName = flagName,
-            FlagDescription = flagDescription,
+            StatusId = statusId,
+            Priority = priority,
         };
     }
 
     public AutomationActionPlanContribution Plan(AutomationActionPlanningContext context)
     {
-        var rule = context.Rule;
-        var name = JsonUtils.ReadString(context.Action.Config, "flagName") ?? "Automation flag";
-        var description = JsonUtils.ReadString(context.Action.Config, "flagDescription") ?? $"Flagged by automation '{rule.Name}'.";
+        var statusId = JsonUtils.ReadInt(context.Action.Config, "statusId");
+        var priority = JsonUtils.ReadEnum<TaskPriority>(context.Action.Config, "priority");
+        var hasTaskUpdate = statusId is not null || priority is not null;
+        var taskUpdate = hasTaskUpdate
+            ? new AutomationTaskUpdateContribution(statusId, priority)
+            : null;
 
         return new AutomationActionPlanContribution
         {
-            Flag = new AutomationFlagContribution(name, description),
+            TaskUpdate = taskUpdate,
         };
     }
 }

@@ -19,14 +19,14 @@ internal sealed class RunPersistenceService
     private readonly ILogger<RunPersistenceService> Logger;
     private readonly IEventPublisher EventPublisher;
     private readonly ITaskMutationPipeline TaskMutationPipeline;
-    private readonly AutomationActionExecutionHandlerRegistry HandlerRegistry;
+    private readonly ActionHandlerRegistry HandlerRegistry;
 
     public RunPersistenceService(
         INetptuneUnitOfWork unitOfWork,
         ILogger<RunPersistenceService> logger,
         IEventPublisher eventPublisher,
         ITaskMutationPipeline taskMutationPipeline,
-        AutomationActionExecutionHandlerRegistry handlerRegistry)
+        ActionHandlerRegistry handlerRegistry)
     {
         UnitOfWork = unitOfWork;
         Logger = logger;
@@ -106,7 +106,7 @@ internal sealed class RunPersistenceService
         return state.Notifications;
     }
 
-    private async Task<AutomationActionExecutionOutcome> ApplyAction(
+    private async Task<ActionOutcome> ApplyAction(
         PlannedAutomationAction action,
         AutomationPersistenceState state,
         CancellationToken cancellationToken)
@@ -120,7 +120,7 @@ internal sealed class RunPersistenceService
                 action.Action.Id,
                 taskId);
 
-            return new AutomationActionExecutionOutcome(
+            return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
                 "The task was deleted by an earlier action.");
         }
@@ -133,7 +133,7 @@ internal sealed class RunPersistenceService
                 "No automation action execution handler is registered for action type {ActionType}",
                 action.Action.Type);
 
-            return new AutomationActionExecutionOutcome(
+            return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
                 "No execution handler is registered for the action type.");
         }

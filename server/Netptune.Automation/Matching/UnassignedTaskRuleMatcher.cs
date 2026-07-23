@@ -10,14 +10,14 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
 
-internal sealed class UnassignedTaskAutomationRuleMatcher
+internal sealed class UnassignedTaskRuleMatcher
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly ILogger<UnassignedTaskAutomationRuleMatcher> Logger;
+    private readonly ILogger<UnassignedTaskRuleMatcher> Logger;
 
-    public UnassignedTaskAutomationRuleMatcher(
+    public UnassignedTaskRuleMatcher(
         INetptuneUnitOfWork unitOfWork,
-        ILogger<UnassignedTaskAutomationRuleMatcher> logger)
+        ILogger<UnassignedTaskRuleMatcher> logger)
     {
         UnitOfWork = unitOfWork;
         Logger = logger;

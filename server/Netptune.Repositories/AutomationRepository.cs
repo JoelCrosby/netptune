@@ -1,12 +1,16 @@
+using Dapper;
+
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Automations;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Repositories.Sql;
 
 namespace Netptune.Repositories;
 
@@ -92,18 +96,87 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         return Context.Set<ScheduledAutomationAction>().AddRangeAsync(actions, cancellationToken);
     }
 
-    public Task<List<ScheduledAutomationAction>> GetDueScheduledActions(DateTime executeBefore, CancellationToken cancellationToken = default)
+    public async Task<List<ScheduledAutomationAction>> ClaimDueScheduledActions(
+        ScheduledActionClaim claim,
+        CancellationToken cancellationToken = default)
     {
-        return Context.Set<ScheduledAutomationAction>()
-            .Where(action => action.Status == ScheduledAutomationActionStatus.Pending)
-            .Where(action => action.ExecuteAt <= executeBefore)
+        var pendingStatus = (int)ScheduledAutomationActionStatus.Pending;
+        var processingStatus = (int)ScheduledAutomationActionStatus.Processing;
+
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(
+            SqlScripts.ClaimDueScheduledActions,
+            new
+            {
+                pendingStatus,
+                processingStatus,
+                dueBefore = claim.DueBefore,
+                batchSize = claim.BatchSize,
+                claimId = claim.ClaimId,
+                leaseExpiresAt = claim.LeaseExpiresAt,
+            },
+            cancellationToken: cancellationToken);
+
+        var claimedIds = await connection.QueryAsync<int>(command);
+        var claimedIdList = claimedIds.AsList();
+
+        if (claimedIdList.Count == 0)
+        {
+            return [];
+        }
+
+        return await Context.Set<ScheduledAutomationAction>()
+            .IgnoreQueryFilters()
+            .Where(action => !action.IsDeleted)
+            .Where(action => claimedIdList.Contains(action.Id))
+            .Where(action => action.ClaimId == claim.ClaimId)
             .Include(action => action.AutomationRule)
             .Include(action => action.AutomationAction)
             .Include(action => action.Task)
                 .ThenInclude(task => task.Workspace)
+            .Include(action => action.Task)
+                .ThenInclude(task => task.ProjectTaskAppUsers)
+            .Include(action => action.Task)
+                .ThenInclude(task => task.Tags)
             .OrderBy(action => action.ExecuteAt)
-            .Take(100)
+            .AsNoTracking()
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> CompleteClaimedScheduledAction(
+        ScheduledActionCompletion completion,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.Set<ScheduledAutomationAction>()
+            .Where(action => action.Id == completion.ActionId)
+            .Where(action => action.Status == ScheduledAutomationActionStatus.Processing)
+            .Where(action => action.ClaimId == completion.ClaimId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(action => action.Status, completion.Status)
+                .SetProperty(action => action.ProcessedAt, completion.ProcessedAt)
+                .SetProperty(action => action.ClaimId, (Guid?)null)
+                .SetProperty(action => action.LeaseExpiresAt, (DateTime?)null)
+                .SetProperty(action => action.LastError, completion.Error)
+                .SetProperty(action => action.UpdatedAt, completion.ProcessedAt), cancellationToken);
+    }
+
+    public Task<int> RetryClaimedScheduledAction(
+        ScheduledActionRetry retry,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.Set<ScheduledAutomationAction>()
+            .Where(action => action.Id == retry.ActionId)
+            .Where(action => action.Status == ScheduledAutomationActionStatus.Processing)
+            .Where(action => action.ClaimId == retry.ClaimId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(action => action.Status, ScheduledAutomationActionStatus.Pending)
+                .SetProperty(action => action.ExecuteAt, retry.ExecuteAt)
+                .SetProperty(action => action.ClaimId, (Guid?)null)
+                .SetProperty(action => action.LeaseExpiresAt, (DateTime?)null)
+                .SetProperty(action => action.LastError, retry.Error)
+                .SetProperty(action => action.UpdatedAt, DateTime.UtcNow), cancellationToken);
     }
 
     public Task<int> CancelPendingTaskActions(
@@ -117,11 +190,15 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
 
         return Context.Set<ScheduledAutomationAction>()
             .Where(action => action.TaskId == taskId)
-            .Where(action => action.Status == ScheduledAutomationActionStatus.Pending)
+            .Where(action =>
+                action.Status == ScheduledAutomationActionStatus.Pending ||
+                action.Status == ScheduledAutomationActionStatus.Processing)
             .Where(action => !action.IdempotencyKey.Contains(currentEventKey))
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(action => action.Status, ScheduledAutomationActionStatus.Cancelled)
                 .SetProperty(action => action.ProcessedAt, now)
+                .SetProperty(action => action.ClaimId, (Guid?)null)
+                .SetProperty(action => action.LeaseExpiresAt, (DateTime?)null)
                 .SetProperty(action => action.ModifiedByUserId, actorUserId)
                 .SetProperty(action => action.UpdatedAt, now), cancellationToken);
     }

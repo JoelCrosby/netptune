@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Netptune.Automation.Tests;
 
-public sealed class AutomationActionExecutionHandlerRegistryTests
+public sealed class ActionHandlerRegistryTests
 {
     [Fact]
     public void Constructor_throws_when_an_action_type_has_no_handler()
@@ -16,9 +16,9 @@ public sealed class AutomationActionExecutionHandlerRegistryTests
         var missingType = AutomationActionType.DeleteTask;
         var handlers = Enum.GetValues<AutomationActionType>()
             .Where(type => type != missingType)
-            .Select(type => new StubActionExecutionHandler(type));
+            .Select(type => new StubHandler(type));
 
-        var constructRegistry = () => new AutomationActionExecutionHandlerRegistry(handlers);
+        var constructRegistry = () => new ActionHandlerRegistry(handlers);
 
         constructRegistry.Should()
             .Throw<InvalidOperationException>()
@@ -30,27 +30,27 @@ public sealed class AutomationActionExecutionHandlerRegistryTests
     {
         var duplicateType = AutomationActionType.FlagTask;
         var handlers = Enum.GetValues<AutomationActionType>()
-            .Select<AutomationActionType, IAutomationActionExecutionHandler>(
-                type => new StubActionExecutionHandler(type))
-            .Append(new StubActionExecutionHandler(duplicateType));
+            .Select<AutomationActionType, IActionExecutionHandler>(
+                type => new StubHandler(type))
+            .Append(new StubHandler(duplicateType));
 
-        var constructRegistry = () => new AutomationActionExecutionHandlerRegistry(handlers);
+        var constructRegistry = () => new ActionHandlerRegistry(handlers);
 
         constructRegistry.Should()
             .Throw<InvalidOperationException>()
             .WithMessage($"*{duplicateType}*");
     }
 
-    private sealed class StubActionExecutionHandler : IAutomationActionExecutionHandler
+    private sealed class StubHandler : IActionExecutionHandler
     {
-        public StubActionExecutionHandler(AutomationActionType type)
+        public StubHandler(AutomationActionType type)
         {
             Type = type;
         }
 
         public AutomationActionType Type { get; }
 
-        public Task<AutomationActionExecutionOutcome> Execute(
+        public Task<ActionOutcome> Execute(
             PlannedAutomationAction action,
             AutomationPersistenceState state,
             CancellationToken cancellationToken)

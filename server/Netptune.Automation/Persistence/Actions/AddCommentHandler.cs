@@ -10,12 +10,12 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence.Actions;
 
-internal sealed class AddCommentExecutionHandler : IAutomationActionExecutionHandler
+internal sealed class AddCommentHandler : IActionExecutionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IEventRecordWriter EventRecords;
 
-    public AddCommentExecutionHandler(INetptuneUnitOfWork unitOfWork, IEventRecordWriter eventRecords)
+    public AddCommentHandler(INetptuneUnitOfWork unitOfWork, IEventRecordWriter eventRecords)
     {
         UnitOfWork = unitOfWork;
         EventRecords = eventRecords;
@@ -23,7 +23,7 @@ internal sealed class AddCommentExecutionHandler : IAutomationActionExecutionHan
 
     public AutomationActionType Type => AutomationActionType.AddComment;
 
-    public async Task<AutomationActionExecutionOutcome> Execute(
+    public async Task<ActionOutcome> Execute(
         PlannedAutomationAction action,
         AutomationPersistenceState state,
         CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ internal sealed class AddCommentExecutionHandler : IAutomationActionExecutionHan
 
         if (body is null)
         {
-            return AutomationActionExecutionOutcomes.InvalidContribution();
+            return ActionOutcomes.InvalidContribution();
         }
 
         var comment = BuildComment(action, body);
@@ -49,7 +49,7 @@ internal sealed class AddCommentExecutionHandler : IAutomationActionExecutionHan
             commentId = comment.Id,
         }, JsonOptions.Default);
 
-        return AutomationActionExecutionOutcomes.Succeeded();
+        return ActionOutcomes.Succeeded();
     }
 
     private static Comment BuildComment(PlannedAutomationAction action, string body)

@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Events.Tasks;
 
 namespace Netptune.Automation.Models;
 
@@ -19,6 +20,8 @@ internal sealed record PendingAutomationExecution
     public Guid? CausationEventId { get; init; }
 
     public int ChainDepth { get; init; }
+
+    public TaskChangedMessage? TriggerMessage { get; init; }
 
     public AutomationRun? Run { get; set; }
 }

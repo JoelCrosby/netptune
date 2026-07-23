@@ -10,18 +10,18 @@ using Netptune.Services.Notifications;
 
 namespace Netptune.Automation.Persistence.Actions;
 
-internal sealed class NotifyTaskAssigneesExecutionHandler : IAutomationActionExecutionHandler
+internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
 
-    public NotifyTaskAssigneesExecutionHandler(INetptuneUnitOfWork unitOfWork)
+    public NotifyTaskAssigneesHandler(INetptuneUnitOfWork unitOfWork)
     {
         UnitOfWork = unitOfWork;
     }
 
     public AutomationActionType Type => AutomationActionType.NotifyTaskAssignees;
 
-    public async Task<AutomationActionExecutionOutcome> Execute(
+    public async Task<ActionOutcome> Execute(
         PlannedAutomationAction action,
         AutomationPersistenceState state,
         CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ internal sealed class NotifyTaskAssigneesExecutionHandler : IAutomationActionExe
 
         if (contribution is null)
         {
-            return AutomationActionExecutionOutcomes.InvalidContribution();
+            return ActionOutcomes.InvalidContribution();
         }
 
         await UnitOfWork.EventRecords.AddRangeAsync([contribution.Activity], cancellationToken);
@@ -45,7 +45,7 @@ internal sealed class NotifyTaskAssigneesExecutionHandler : IAutomationActionExe
             notificationCount = actionNotifications.Count,
         }, JsonOptions.Default);
 
-        return AutomationActionExecutionOutcomes.Succeeded();
+        return ActionOutcomes.Succeeded();
     }
 
     private async Task<List<Notification>> BuildNotifications(

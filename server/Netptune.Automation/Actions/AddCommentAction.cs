@@ -10,7 +10,7 @@ using Netptune.Core.ViewModels.Automations;
 
 namespace Netptune.Automation.Actions;
 
-internal sealed class AddCommentAutomationAction : IAutomationAction
+internal sealed class AddCommentAction : IAutomationAction
 {
     public AutomationActionType Type => AutomationActionType.AddComment;
 

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Netptune.Automation.Configuration;
 using Netptune.Automation.Actions;
 using Netptune.Automation.Execution;
+using Netptune.Automation.Execution.Actions;
 using Netptune.Automation.Matching;
 using Netptune.Automation.Notifications;
 using Netptune.Automation.Persistence;
@@ -33,9 +34,11 @@ public static class ServiceCollectionExtensions
 
             options.StartupDelay = section.ReadTimeSpan(nameof(ScheduleOptions.StartupDelay), options.StartupDelay);
             options.RunInterval = section.ReadTimeSpan(nameof(ScheduleOptions.RunInterval), options.RunInterval);
-            options.DelayedActionRunInterval = section.ReadTimeSpan(
-                nameof(ScheduleOptions.DelayedActionRunInterval),
-                options.DelayedActionRunInterval);
+            options.DelayedActionRunInterval = section.ReadTimeSpan(nameof(ScheduleOptions.DelayedActionRunInterval), options.DelayedActionRunInterval);
+            options.DelayedActionClaimLease = section.ReadTimeSpan(nameof(ScheduleOptions.DelayedActionClaimLease), options.DelayedActionClaimLease);
+            options.DelayedActionRetryDelay = section.ReadTimeSpan(nameof(ScheduleOptions.DelayedActionRetryDelay), options.DelayedActionRetryDelay);
+            options.DelayedActionMaxAttempts = section.GetValue(nameof(ScheduleOptions.DelayedActionMaxAttempts), options.DelayedActionMaxAttempts);
+            options.DelayedActionBatchSize = section.GetValue(nameof(ScheduleOptions.DelayedActionBatchSize), options.DelayedActionBatchSize);
         });
     }
 
@@ -49,25 +52,28 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
 
         services.AddSingleton(Options.Create(options));
-        services.AddScoped<TaskChangedAutomationRuleMatcher>();
-        services.AddScoped<UnassignedTaskAutomationRuleMatcher>();
-        services.AddScoped<DueDateAutomationRuleMatcher>();
+        services.AddScoped<TaskChangedRuleMatcher>();
+        services.AddScoped<UnassignedTaskRuleMatcher>();
+        services.AddScoped<DueDateRuleMatcher>();
         services.AddScoped<RuleExecutor>();
         services.AddScoped<ActionPlanner>();
         services.AddScoped<FlagPlanner>();
-        services.AddScoped<AutomationActionExecutionHandlerRegistry>();
+        services.AddScoped<ActionHandlerRegistry>();
         services.AddScoped<RunPersistenceService>();
         services.AddScoped<NotificationPublisher>();
         services.AddScoped<ExecutionService>();
         services.AddScoped<ScheduledActionService>();
+        services.AddScoped<ScheduledActionEligibilityEvaluator>();
+        services.AddScoped<IScheduledActionHandler, ScheduledDeleteTaskHandler>();
+        services.AddScoped<ScheduledActionHandlerRegistry>();
 
         services.AddScoped<IExecutionService>(provider => provider.GetRequiredService<ExecutionService>());
 
-        services.AddScoped<IAutomationActionExecutionHandler, NotifyTaskAssigneesExecutionHandler>();
-        services.AddScoped<IAutomationActionExecutionHandler, FlagTaskExecutionHandler>();
-        services.AddScoped<IAutomationActionExecutionHandler, UpdateTaskExecutionHandler>();
-        services.AddScoped<IAutomationActionExecutionHandler, AddCommentExecutionHandler>();
-        services.AddScoped<IAutomationActionExecutionHandler, DeleteTaskExecutionHandler>();
+        services.AddScoped<IActionExecutionHandler, NotifyTaskAssigneesHandler>();
+        services.AddScoped<IActionExecutionHandler, FlagTaskHandler>();
+        services.AddScoped<IActionExecutionHandler, UpdateTaskHandler>();
+        services.AddScoped<IActionExecutionHandler, AddCommentHandler>();
+        services.AddScoped<IActionExecutionHandler, DeleteTaskHandler>();
 
         services.AddHostedService<ScheduleService>();
         services.AddHostedService<DelayedActionScheduleService>();

@@ -109,6 +109,11 @@ CREATE TABLE IF NOT EXISTS scheduled_automation_actions (
     expected_status_id integer NOT NULL,
     execute_at timestamp with time zone NOT NULL,
     processed_at timestamp with time zone NULL,
+    attempt_count integer NOT NULL DEFAULT 0,
+    claim_id uuid NULL,
+    lease_expires_at timestamp with time zone NULL,
+    last_error character varying(2048) NULL,
+    trigger_context jsonb NULL,
     idempotency_key character varying(768) NOT NULL,
     is_deleted boolean NOT NULL DEFAULT FALSE,
     created_at timestamp with time zone NOT NULL DEFAULT NOW(),
@@ -119,6 +124,13 @@ CREATE TABLE IF NOT EXISTS scheduled_automation_actions (
     owner_id text NULL REFERENCES users(id) ON DELETE RESTRICT
 );
 
+ALTER TABLE scheduled_automation_actions
+    ADD COLUMN IF NOT EXISTS attempt_count integer NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS claim_id uuid NULL,
+    ADD COLUMN IF NOT EXISTS lease_expires_at timestamp with time zone NULL,
+    ADD COLUMN IF NOT EXISTS last_error character varying(2048) NULL,
+    ADD COLUMN IF NOT EXISTS trigger_context jsonb NULL;
+
 CREATE INDEX IF NOT EXISTS ix_scheduled_automation_actions_is_deleted
     ON scheduled_automation_actions(is_deleted);
 
@@ -127,6 +139,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS ix_scheduled_automation_actions_idempotency_ke
 
 CREATE INDEX IF NOT EXISTS ix_scheduled_automation_actions_status_execute_at
     ON scheduled_automation_actions(status, execute_at);
+
+CREATE INDEX IF NOT EXISTS ix_scheduled_automation_actions_status_lease_expires_at
+    ON scheduled_automation_actions(status, lease_expires_at);
 
 CREATE INDEX IF NOT EXISTS ix_scheduled_automation_actions_task_status
     ON scheduled_automation_actions(task_id, status);

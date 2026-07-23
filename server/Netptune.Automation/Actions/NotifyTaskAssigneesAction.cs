@@ -11,7 +11,7 @@ using Netptune.Core.ViewModels.Automations;
 
 namespace Netptune.Automation.Actions;
 
-internal sealed class NotifyTaskAssigneesAutomationAction : IAutomationAction
+internal sealed class NotifyTaskAssigneesAction : IAutomationAction
 {
     public AutomationActionType Type => AutomationActionType.NotifyTaskAssignees;
 

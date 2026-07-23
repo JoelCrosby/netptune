@@ -1,5 +1,6 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Automations;
 
@@ -21,7 +22,11 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
 
     Task AddScheduledActionsAsync(IEnumerable<ScheduledAutomationAction> actions, CancellationToken cancellationToken = default);
 
-    Task<List<ScheduledAutomationAction>> GetDueScheduledActions(DateTime executeBefore, CancellationToken cancellationToken = default);
+    Task<List<ScheduledAutomationAction>> ClaimDueScheduledActions(ScheduledActionClaim claim, CancellationToken cancellationToken = default);
+
+    Task<int> CompleteClaimedScheduledAction(ScheduledActionCompletion completion, CancellationToken cancellationToken = default);
+
+    Task<int> RetryClaimedScheduledAction(ScheduledActionRetry retry, CancellationToken cancellationToken = default);
 
     Task<int> CancelPendingTaskActions(int taskId, Guid currentEventId, string actorUserId, CancellationToken cancellationToken = default);
 

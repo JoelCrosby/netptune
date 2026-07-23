@@ -22,17 +22,17 @@ public interface IExecutionService
 
 internal sealed class ExecutionService : IExecutionService
 {
-    private readonly TaskChangedAutomationRuleMatcher TaskChangedMatcher;
-    private readonly UnassignedTaskAutomationRuleMatcher UnassignedTaskMatcher;
-    private readonly DueDateAutomationRuleMatcher DueDateMatcher;
+    private readonly TaskChangedRuleMatcher TaskChangedMatcher;
+    private readonly UnassignedTaskRuleMatcher UnassignedTaskMatcher;
+    private readonly DueDateRuleMatcher DueDateMatcher;
     private readonly RuleExecutor RuleExecutor;
     private readonly ScheduledActionService ScheduledActions;
     private readonly ILogger<ExecutionService> Logger;
 
     public ExecutionService(
-        TaskChangedAutomationRuleMatcher taskChangedMatcher,
-        UnassignedTaskAutomationRuleMatcher unassignedTaskMatcher,
-        DueDateAutomationRuleMatcher dueDateMatcher,
+        TaskChangedRuleMatcher taskChangedMatcher,
+        UnassignedTaskRuleMatcher unassignedTaskMatcher,
+        DueDateRuleMatcher dueDateMatcher,
         RuleExecutor ruleExecutor,
         ScheduledActionService scheduledActions,
         ILogger<ExecutionService> logger)

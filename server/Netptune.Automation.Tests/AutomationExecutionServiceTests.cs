@@ -677,6 +677,198 @@ public sealed class AutomationExecutionServiceTests
         task.StatusId.Should().Be(inProgressStatusId);
     }
 
+    [Fact]
+    public async Task ExecuteScheduledActions_claims_due_action_once_across_competing_workers()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var setup = await ScheduleDueTaskDeletion(scope);
+        await using var competingScope = Fixture.CreateAdditionalScope();
+
+        await Task.WhenAll(
+            scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken),
+            competingScope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken));
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(
+            TestContext.Current.CancellationToken);
+        var deletedTask = await scope.Db.ProjectTasks
+            .IgnoreQueryFilters()
+            .SingleAsync(task => task.Id == setup.Scenario.Task.Id, TestContext.Current.CancellationToken);
+
+        scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Completed);
+        scheduledAction.AttemptCount.Should().Be(1);
+        scheduledAction.ClaimId.Should().BeNull();
+        scheduledAction.LeaseExpiresAt.Should().BeNull();
+        deletedTask.IsDeleted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ExecuteScheduledActions_retries_then_fails_a_broken_delayed_action()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var setup = await ScheduleDueTaskDeletion(scope);
+
+        setup.ScheduledAction.OwnerId = null;
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        for (var attempt = 1; attempt <= 3; attempt++)
+        {
+            await scope.Db.ScheduledAutomationActions
+                .Where(action => action.Id == setup.ScheduledAction.Id)
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(action => action.ExecuteAt, DateTime.UtcNow.AddMinutes(-1)),
+                    TestContext.Current.CancellationToken);
+
+            var attemptStartedAt = DateTime.UtcNow;
+            await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
+
+            if (attempt < 3)
+            {
+                scope.Db.ChangeTracker.Clear();
+
+                var pendingRetry = await scope.Db.ScheduledAutomationActions.SingleAsync(
+                    TestContext.Current.CancellationToken);
+                var expectedDelay = TimeSpan.FromMinutes(Math.Pow(2, attempt - 1));
+
+                pendingRetry.Status.Should().Be(ScheduledAutomationActionStatus.Pending);
+                pendingRetry.ExecuteAt.Should().BeCloseTo(
+                    attemptStartedAt.Add(expectedDelay),
+                    TimeSpan.FromSeconds(2));
+            }
+        }
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(
+            TestContext.Current.CancellationToken);
+        var task = await scope.Db.ProjectTasks.SingleAsync(
+            task => task.Id == setup.Scenario.Task.Id,
+            TestContext.Current.CancellationToken);
+
+        scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Failed);
+        scheduledAction.AttemptCount.Should().Be(3);
+        scheduledAction.ProcessedAt.Should().NotBeNull();
+        scheduledAction.LastError.Should().Contain("no execution user");
+        scheduledAction.ClaimId.Should().BeNull();
+        scheduledAction.LeaseExpiresAt.Should().BeNull();
+        task.IsDeleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExecuteScheduledActions_reclaims_action_after_worker_lease_expires()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var setup = await ScheduleDueTaskDeletion(scope);
+
+        setup.ScheduledAction.Status = ScheduledAutomationActionStatus.Processing;
+        setup.ScheduledAction.AttemptCount = 1;
+        setup.ScheduledAction.ClaimId = Guid.NewGuid();
+        setup.ScheduledAction.LeaseExpiresAt = DateTime.UtcNow.AddMinutes(-1);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(
+            TestContext.Current.CancellationToken);
+        var deletedTask = await scope.Db.ProjectTasks
+            .IgnoreQueryFilters()
+            .SingleAsync(task => task.Id == setup.Scenario.Task.Id, TestContext.Current.CancellationToken);
+
+        scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Completed);
+        scheduledAction.AttemptCount.Should().Be(2);
+        scheduledAction.ClaimId.Should().BeNull();
+        scheduledAction.LeaseExpiresAt.Should().BeNull();
+        deletedTask.IsDeleted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ExecuteScheduledActions_cancels_when_current_conditions_no_longer_match()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var conditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions =
+            [
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Priority,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = TaskPriority.High.ToString(),
+                },
+            ],
+        };
+        var setup = await ScheduleDueTaskDeletion(scope, TaskPriority.High, conditionGroup);
+
+        await scope.Db.ProjectTasks
+            .Where(task => task.Id == setup.Scenario.Task.Id)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(task => task.Priority, TaskPriority.Low),
+                TestContext.Current.CancellationToken);
+
+        await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(
+            TestContext.Current.CancellationToken);
+        var task = await scope.Db.ProjectTasks.SingleAsync(
+            task => task.Id == setup.Scenario.Task.Id,
+            TestContext.Current.CancellationToken);
+
+        scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Cancelled);
+        scheduledAction.AttemptCount.Should().Be(1);
+        scheduledAction.LastError.Should().Contain("no longer matches");
+        task.IsDeleted.Should().BeFalse();
+    }
+
+    private static async Task<(AutomationScenario Scenario, ScheduledAutomationAction ScheduledAction)>
+        ScheduleDueTaskDeletion(
+            AutomationTestScope scope,
+            TaskPriority? priority = null,
+            AutomationConditionGroup? conditionGroup = null)
+    {
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        scenario.Task.Priority = priority;
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            "complete",
+            conditionGroup: conditionGroup,
+            actionType: AutomationActionType.DeleteTask);
+        await ConfigureDeleteDelay(scope.Db, rule, 1, AutomationDelayUnit.Hours);
+
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, inProgressStatusId, completeStatusId),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(
+            TestContext.Current.CancellationToken);
+        scheduledAction.ExecuteAt = DateTime.UtcNow.AddMinutes(-1);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        return (scenario, scheduledAction);
+    }
+
     private static async Task ConfigureDeleteDelay(
         DataContext db,
         AutomationRule rule,

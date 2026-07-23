@@ -4,36 +4,36 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence.Actions;
 
-internal sealed class FlagTaskExecutionHandler : IAutomationActionExecutionHandler
+internal sealed class FlagTaskHandler : IActionExecutionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
 
-    public FlagTaskExecutionHandler(INetptuneUnitOfWork unitOfWork)
+    public FlagTaskHandler(INetptuneUnitOfWork unitOfWork)
     {
         UnitOfWork = unitOfWork;
     }
 
     public AutomationActionType Type => AutomationActionType.FlagTask;
 
-    public async Task<AutomationActionExecutionOutcome> Execute(
+    public async Task<ActionOutcome> Execute(
         PlannedAutomationAction action,
         AutomationPersistenceState state,
         CancellationToken cancellationToken)
     {
         if (action.Contribution.Flag is null)
         {
-            return AutomationActionExecutionOutcomes.InvalidContribution();
+            return ActionOutcomes.InvalidContribution();
         }
 
         if (!state.Flags.TryGetValue(action, out var flag))
         {
-            return new AutomationActionExecutionOutcome(
+            return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
                 "The task already has a flag from this rule.");
         }
 
         await UnitOfWork.Flags.AddRangeAsync([flag], cancellationToken);
 
-        return AutomationActionExecutionOutcomes.Succeeded();
+        return ActionOutcomes.Succeeded();
     }
 }

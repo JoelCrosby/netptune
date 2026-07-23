@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
@@ -22,6 +23,16 @@ public sealed record ScheduledAutomationAction : AuditableEntity<int>
     public DateTime ExecuteAt { get; set; }
 
     public DateTime? ProcessedAt { get; set; }
+
+    public int AttemptCount { get; set; }
+
+    public Guid? ClaimId { get; set; }
+
+    public DateTime? LeaseExpiresAt { get; set; }
+
+    public string? LastError { get; set; }
+
+    public JsonDocument? TriggerContext { get; set; }
 
     public string IdempotencyKey { get; set; } = null!;
 

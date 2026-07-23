@@ -2,11 +2,11 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Automation.Persistence.Actions;
 
-internal sealed class AutomationActionExecutionHandlerRegistry
+internal sealed class ActionHandlerRegistry
 {
-    private readonly Dictionary<AutomationActionType, IAutomationActionExecutionHandler> Handlers;
+    private readonly Dictionary<AutomationActionType, IActionExecutionHandler> Handlers;
 
-    public AutomationActionExecutionHandlerRegistry(IEnumerable<IAutomationActionExecutionHandler> handlers)
+    public ActionHandlerRegistry(IEnumerable<IActionExecutionHandler> handlers)
     {
         var handlerList = handlers.ToList();
         var duplicateTypes = handlerList
@@ -35,7 +35,7 @@ internal sealed class AutomationActionExecutionHandlerRegistry
         Handlers = handlerList.ToDictionary(handler => handler.Type);
     }
 
-    internal IAutomationActionExecutionHandler? Find(AutomationActionType type)
+    internal IActionExecutionHandler? Find(AutomationActionType type)
     {
         return Handlers.GetValueOrDefault(type);
     }

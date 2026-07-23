@@ -49,7 +49,7 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
     /// <param name="disableChangeDetection"></param>
     public async Task Transaction(Func<Task> callback, bool disableChangeDetection = false)
     {
-        var transaction = await Context.Database.BeginTransactionAsync();
+        await using var transaction = await Context.Database.BeginTransactionAsync();
 
         try
         {
@@ -79,7 +79,7 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
     /// <param name="disableChangeDetection"></param>
     public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback, bool disableChangeDetection = false)
     {
-        var transaction = await Context.Database.BeginTransactionAsync();
+        await using var transaction = await Context.Database.BeginTransactionAsync();
 
         try
         {

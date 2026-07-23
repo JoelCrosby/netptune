@@ -13,12 +13,12 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
 
-internal sealed class TaskChangedAutomationRuleMatcher
+internal sealed class TaskChangedRuleMatcher
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
-    private readonly ILogger<TaskChangedAutomationRuleMatcher> Logger;
+    private readonly ILogger<TaskChangedRuleMatcher> Logger;
 
-    public TaskChangedAutomationRuleMatcher(INetptuneUnitOfWork unitOfWork, ILogger<TaskChangedAutomationRuleMatcher> logger)
+    public TaskChangedRuleMatcher(INetptuneUnitOfWork unitOfWork, ILogger<TaskChangedRuleMatcher> logger)
     {
         UnitOfWork = unitOfWork;
         Logger = logger;
@@ -109,6 +109,7 @@ internal sealed class TaskChangedAutomationRuleMatcher
                 CorrelationId = correlationId,
                 CausationEventId = message.EventId,
                 ChainDepth = message.ChainDepth,
+                TriggerMessage = message,
             });
         }
 
@@ -132,7 +133,7 @@ internal sealed class TaskChangedAutomationRuleMatcher
         return executions;
     }
 
-    private bool Matches(AutomationRule rule, TaskChangedMessage message, ProjectTask task)
+    internal bool Matches(AutomationRule rule, TaskChangedMessage message, ProjectTask task)
     {
         return rule.TriggerType switch
         {

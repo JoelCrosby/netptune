@@ -13,16 +13,16 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence.Actions;
 
-internal sealed class UpdateTaskExecutionHandler : IAutomationActionExecutionHandler
+internal sealed class UpdateTaskHandler : IActionExecutionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ITaskMutationPipeline TaskMutationPipeline;
-    private readonly ILogger<UpdateTaskExecutionHandler> Logger;
+    private readonly ILogger<UpdateTaskHandler> Logger;
 
-    public UpdateTaskExecutionHandler(
+    public UpdateTaskHandler(
         INetptuneUnitOfWork unitOfWork,
         ITaskMutationPipeline taskMutationPipeline,
-        ILogger<UpdateTaskExecutionHandler> logger)
+        ILogger<UpdateTaskHandler> logger)
     {
         UnitOfWork = unitOfWork;
         TaskMutationPipeline = taskMutationPipeline;
@@ -31,7 +31,7 @@ internal sealed class UpdateTaskExecutionHandler : IAutomationActionExecutionHan
 
     public AutomationActionType Type => AutomationActionType.UpdateTask;
 
-    public async Task<AutomationActionExecutionOutcome> Execute(
+    public async Task<ActionOutcome> Execute(
         PlannedAutomationAction action,
         AutomationPersistenceState state,
         CancellationToken cancellationToken)
@@ -40,19 +40,19 @@ internal sealed class UpdateTaskExecutionHandler : IAutomationActionExecutionHan
 
         if (contribution is null)
         {
-            return AutomationActionExecutionOutcomes.InvalidContribution();
+            return ActionOutcomes.InvalidContribution();
         }
 
         var taskUpdated = await ApplyTaskUpdate(action, contribution, state.TaskMutations, cancellationToken);
 
         if (!taskUpdated)
         {
-            return new AutomationActionExecutionOutcome(
+            return new ActionOutcome(
                 AutomationActionResultStatus.Skipped,
                 "The task already has the configured values.");
         }
 
-        return AutomationActionExecutionOutcomes.Succeeded();
+        return ActionOutcomes.Succeeded();
     }
 
     private async Task<bool> ApplyTaskUpdate(
