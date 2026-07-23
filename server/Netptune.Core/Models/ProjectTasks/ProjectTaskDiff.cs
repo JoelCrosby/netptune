@@ -226,14 +226,23 @@ public record ProjectTaskDiff
         return changes;
     }
 
-    public void LogDiff(IActivityLogger activity, int entityId)
+    public void LogDiff(
+        IActivityLogger activity,
+        int entityId,
+        int? workspaceId = null,
+        string? actorUserId = null)
     {
-        if (!HasChanges) return;
+        if (!HasChanges)
+        {
+            return;
+        }
 
         activity.LogChanges(options =>
         {
             options.EntityId = entityId;
             options.EntityType = EntityType.Task;
+            options.WorkspaceId = workspaceId;
+            options.UserId = actorUserId ?? options.UserId;
 
             foreach (var change in ToTaskFieldChanges())
             {

@@ -2,6 +2,7 @@ using System.Globalization;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 using Netptune.Automation.Configuration;
@@ -12,6 +13,8 @@ using Netptune.Automation.Notifications;
 using Netptune.Automation.Persistence;
 using Netptune.Automation.Planning;
 using Netptune.Automation.Scheduling;
+using Netptune.Core.Services.ProjectTasks;
+using Netptune.Services.ProjectTasks;
 
 namespace Netptune.Automation;
 
@@ -48,6 +51,7 @@ public static class ServiceCollectionExtensions
         options.Validate();
 
         services.AddNetptuneAutomationActions();
+        services.TryAddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
 
         services.AddSingleton(Options.Create(options));
         services.AddScoped<TaskChangedAutomationRuleMatcher>();

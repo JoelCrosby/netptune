@@ -7,9 +7,11 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Automations;
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 using Netptune.Services.Notifications;
 
@@ -28,23 +30,28 @@ internal sealed class RunPersistenceService
         public required List<PlannedAutomationAction> AppliedTaskDeletions { get; init; }
 
         public required HashSet<int> DeletedTaskIds { get; init; }
+
+        public required List<TaskMutationOutcome> TaskMutations { get; init; }
     }
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ILogger<RunPersistenceService> Logger;
     private readonly IEventRecordWriter EventRecords;
     private readonly IEventPublisher EventPublisher;
+    private readonly ITaskMutationPipeline TaskMutationPipeline;
 
     public RunPersistenceService(
         INetptuneUnitOfWork unitOfWork,
         ILogger<RunPersistenceService> logger,
         IEventRecordWriter eventRecords,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        ITaskMutationPipeline taskMutationPipeline)
     {
         UnitOfWork = unitOfWork;
         Logger = logger;
         EventRecords = eventRecords;
         EventPublisher = eventPublisher;
+        TaskMutationPipeline = taskMutationPipeline;
     }
 
     internal async Task<List<Notification>> Persist(AutomationPersistencePlan plan, CancellationToken cancellationToken)
@@ -83,6 +90,7 @@ internal sealed class RunPersistenceService
             Notifications = [],
             AppliedTaskDeletions = [],
             DeletedTaskIds = [],
+            TaskMutations = [],
         };
 
         await UnitOfWork.Transaction(async () =>
@@ -99,6 +107,7 @@ internal sealed class RunPersistenceService
 
         activity?.SetTag("automation.notifications.created", state.Notifications.Count);
 
+        await PublishTaskMutations(state.TaskMutations);
         await RemoveDeletedTasksFromSearch(state.AppliedTaskDeletions);
 
         Logger.LogInformation(
@@ -140,7 +149,7 @@ internal sealed class RunPersistenceService
 
         if (contribution.TaskUpdate is { } taskUpdate)
         {
-            await ApplyTaskUpdate(action, taskUpdate, cancellationToken);
+            await ApplyTaskUpdate(action, taskUpdate, state.TaskMutations, cancellationToken);
         }
 
         if (contribution.CommentBody is { } commentBody)
@@ -235,13 +244,15 @@ internal sealed class RunPersistenceService
     private async Task ApplyTaskUpdate(
         PlannedAutomationAction action,
         AutomationTaskUpdateContribution contribution,
+        List<TaskMutationOutcome> taskMutations,
         CancellationToken cancellationToken)
     {
         var execution = action.Execution;
         var taskId = execution.Task.Id;
+        var previous = await UnitOfWork.Tasks.GetTaskViewModel(taskId, cancellationToken);
         var task = await UnitOfWork.Tasks.GetTaskForUpdate(taskId, cancellationToken);
 
-        if (task is null)
+        if (previous is null || task is null)
         {
             Logger.LogWarning(
                 "Automation rule {RuleId} could not update missing or deleted task {TaskId}",
@@ -251,7 +262,6 @@ internal sealed class RunPersistenceService
             return;
         }
 
-        var taskUpdated = false;
         var status = contribution.StatusId.HasValue
             ? await UnitOfWork.Statuses.GetInWorkspace(
                 contribution.StatusId.Value,
@@ -259,81 +269,46 @@ internal sealed class RunPersistenceService
                 cancellationToken: cancellationToken)
             : null;
 
-        if (status is not null && task.StatusId != status.Id)
+        var taskUpdated = TaskMutationPipeline.Apply(
+            task,
+            new TaskMutationValues(status, contribution.Priority));
+
+        if (!taskUpdated)
         {
-            var oldStatusId = task.StatusId;
-            var oldCategory = task.Status.Category;
-
-            await UnitOfWork.Tasks.UpdateTaskStatus(taskId, status.Id, cancellationToken);
-
-            task.StatusId = status.Id;
-            task.Status = status;
-            execution.Task.StatusId = status.Id;
-            execution.Task.Status = status;
-            taskUpdated = true;
-
-            var references = BuildTaskScopeReferences(task);
-            var statusEvent = new EventWriteRequest<FieldTransitionedPayload>
-            {
-                WorkspaceId = execution.Rule.WorkspaceId,
-                EventKey = EventKeys.EntityFieldTransitioned,
-                SubjectType = EventEntityTypes.From(EntityType.Task),
-                SubjectId = task.Id.ToString(),
-                ActorUserId = execution.ActorUserId,
-                Payload = new FieldTransitionedPayload
-                {
-                    Field = "status",
-                    OldValue = oldStatusId.ToString(),
-                    NewValue = status.Id.ToString(),
-                    OldCategory = oldCategory.ToString(),
-                    NewCategory = status.Category.ToString(),
-                },
-                References = references,
-            };
-
-            await EventRecords.Append(statusEvent, cancellationToken);
+            return;
         }
 
-        if (contribution.Priority.HasValue && task.Priority != contribution.Priority.Value)
+        execution.Task.StatusId = task.StatusId;
+        execution.Task.Status = task.Status;
+        execution.Task.Priority = task.Priority;
+        task.UpdatedAt = DateTime.UtcNow;
+        task.ModifiedByUserId = execution.ActorUserId;
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        var current = await UnitOfWork.Tasks.GetTaskViewModel(taskId, cancellationToken);
+
+        if (current is null)
         {
-            task.Priority = contribution.Priority.Value;
-            execution.Task.Priority = contribution.Priority.Value;
-            taskUpdated = true;
+            Logger.LogWarning(
+                "Automation rule {RuleId} could not record the update for task {TaskId}",
+                execution.Rule.Id,
+                taskId);
+
+            return;
         }
 
-        if (taskUpdated)
+        var diff = ProjectTaskDiff.Create(previous, current);
+        var outcome = await TaskMutationPipeline.Record(new TaskMutationRequest
         {
-            task.UpdatedAt = DateTime.UtcNow;
-            task.ModifiedByUserId = execution.ActorUserId;
-            Activity.Current?.AddTag("automation.task_update.applied", taskId);
-        }
-    }
+            Previous = previous,
+            Current = current,
+            Diff = diff,
+            ActorUserId = execution.ActorUserId,
+        }, cancellationToken);
 
-    private static List<EventReferenceInput> BuildTaskScopeReferences(ProjectTask task)
-    {
-        var references = new List<EventReferenceInput>();
-
-        if (task.ProjectId.HasValue)
-        {
-            references.Add(new EventReferenceInput
-            {
-                Role = EventReferenceRoles.Scope,
-                EntityType = EventEntityTypes.From(EntityType.Project),
-                EntityId = task.ProjectId.Value.ToString(),
-            });
-        }
-
-        if (task.SprintId.HasValue)
-        {
-            references.Add(new EventReferenceInput
-            {
-                Role = EventReferenceRoles.Scope,
-                EntityType = EventEntityTypes.From(EntityType.Sprint),
-                EntityId = task.SprintId.Value.ToString(),
-            });
-        }
-
-        return references;
+        taskMutations.Add(outcome);
+        Activity.Current?.AddTag("automation.task_update.applied", taskId);
     }
 
     private async Task ApplyTaskDeletion(
@@ -364,12 +339,11 @@ internal sealed class RunPersistenceService
 
         state.AppliedTaskDeletions.Add(action);
         state.DeletedTaskIds.Add(execution.Task.Id);
+
         Activity.Current?.AddTag("automation.task_deletion.applied", execution.Task.Id);
     }
 
-    private static ScheduledAutomationAction BuildScheduledAction(
-        PlannedAutomationAction action,
-        TimeSpan delay)
+    private static ScheduledAutomationAction BuildScheduledAction(PlannedAutomationAction action, TimeSpan delay)
     {
         var execution = action.Execution;
 
@@ -409,6 +383,14 @@ internal sealed class RunPersistenceService
         }
     }
 
+    private async Task PublishTaskMutations(List<TaskMutationOutcome> taskMutations)
+    {
+        foreach (var taskMutation in taskMutations)
+        {
+            await TaskMutationPipeline.Publish(taskMutation);
+        }
+    }
+
     private async Task<List<Notification>> BuildNotifications(
         PlannedAutomationAction action,
         AutomationNotificationContribution contribution,
@@ -416,6 +398,7 @@ internal sealed class RunPersistenceService
     {
         var task = action.Execution.Task;
         var actorUserId = action.Execution.ActorUserId;
+
         var recipients = await NotificationRecipientResolver.Resolve(
             UnitOfWork,
             new NotificationRecipientRequest
@@ -428,6 +411,7 @@ internal sealed class RunPersistenceService
                 ExcludeActor = false,
             },
             cancellationToken);
+
         var link = BuildTaskLink(task);
         var notifications = recipients.Select(userId => new Notification
         {
@@ -445,9 +429,7 @@ internal sealed class RunPersistenceService
         return notifications;
     }
 
-    private static int CountActions(
-        List<PlannedAutomationAction> actions,
-        Func<PlannedAutomationAction, bool> predicate)
+    private static int CountActions(List<PlannedAutomationAction> actions, Func<PlannedAutomationAction, bool> predicate)
     {
         return actions.Count(predicate);
     }

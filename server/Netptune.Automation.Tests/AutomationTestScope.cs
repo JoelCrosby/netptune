@@ -20,6 +20,8 @@ public sealed class AutomationTestScope : IAsyncDisposable
 
     internal RecordingEventRecordWriter EventRecords => Scope.ServiceProvider.GetRequiredService<RecordingEventRecordWriter>();
 
+    internal RecordingEventPublisher EventPublisher => Scope.ServiceProvider.GetRequiredService<RecordingEventPublisher>();
+
     public async ValueTask DisposeAsync()
     {
         await Scope.DisposeAsync();

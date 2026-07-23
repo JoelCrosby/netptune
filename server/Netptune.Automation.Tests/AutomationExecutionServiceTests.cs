@@ -178,6 +178,24 @@ public sealed class AutomationExecutionServiceTests
         task.StatusId.Should().Be(expectedStatusId);
         task.Status.Key.Should().Be("complete");
         task.ModifiedByUserId.Should().Be(scenario.Owner.Id);
+
+        var fieldEvents = scope.EventRecords.Events
+            .Where(recordedEvent => recordedEvent.EventKey == EventKeys.EntityFieldTransitioned)
+            .ToList();
+        fieldEvents.Should().HaveCount(2);
+        fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.ActorUserId == scenario.Owner.Id);
+        fieldEvents
+            .Select(recordedEvent => ((FieldTransitionedPayload)recordedEvent.Payload).Field)
+            .Should()
+            .BeEquivalentTo("status", "priority");
+
+        var taskChanged = scope.EventPublisher.Events.OfType<TaskChangedMessage>().Should().ContainSingle().Subject;
+        taskChanged.ActorUserId.Should().Be(scenario.Owner.Id);
+        taskChanged.TaskId.Should().Be(scenario.Task.Id);
+        taskChanged.Changes
+            .Select(change => change.Field)
+            .Should()
+            .BeEquivalentTo([TaskChangeField.Status, TaskChangeField.Priority]);
     }
 
     [Fact]

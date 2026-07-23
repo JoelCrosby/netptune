@@ -67,7 +67,8 @@ public sealed class AutomationTestFixture : IAsyncLifetime
         services.AddScoped<RecordingEventRecordWriter>();
         services.AddScoped<IEventRecordWriter>(provider => provider.GetRequiredService<RecordingEventRecordWriter>());
         services.AddSingleton<INotificationEventPublisher, NoOpNotificationEventPublisher>();
-        services.AddSingleton<IEventPublisher, NoOpEventPublisher>();
+        services.AddScoped<RecordingEventPublisher>();
+        services.AddScoped<IEventPublisher>(provider => provider.GetRequiredService<RecordingEventPublisher>());
         services.AddNetptuneAutomation();
 
         Services = services.BuildServiceProvider();
@@ -136,17 +137,22 @@ public sealed class AutomationTestFixture : IAsyncLifetime
         }
     }
 
-    private sealed class NoOpEventPublisher : IEventPublisher
-    {
-        public Task Dispatch<TEvent>(TEvent @event) where TEvent : class, IEventMessage
-        {
-            return Task.CompletedTask;
-        }
+}
 
-        public Task DispatchCanonical(CanonicalEventEnvelope envelope, CancellationToken cancellationToken = default)
-        {
-            return Task.CompletedTask;
-        }
+internal sealed class RecordingEventPublisher : IEventPublisher
+{
+    public List<object> Events { get; } = [];
+
+    public Task Dispatch<TEvent>(TEvent @event) where TEvent : class, IEventMessage
+    {
+        Events.Add(@event);
+
+        return Task.CompletedTask;
+    }
+
+    public Task DispatchCanonical(CanonicalEventEnvelope envelope, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
     }
 }
 

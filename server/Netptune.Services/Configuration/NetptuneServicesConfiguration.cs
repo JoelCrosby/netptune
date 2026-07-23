@@ -7,11 +7,13 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
 using Netptune.Core.Services.Integration;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.Services.Reporting;
 using Netptune.Services.Activity;
 using Netptune.Services.Export;
 using Netptune.Services.Import;
 using Netptune.Services.Integration;
+using Netptune.Services.ProjectTasks;
 using Netptune.Services.Reporting;
 
 
@@ -40,6 +42,7 @@ public static class NetptuneServicesConfiguration
         });
 
         services.AddTransient<IActivityLogger, ActivityLogger>();
+        services.AddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
         services.AddTransient<ITurnstileService, TurnstileService>();
 
         services.AddScoped<IAncestorService, AncestorService>();

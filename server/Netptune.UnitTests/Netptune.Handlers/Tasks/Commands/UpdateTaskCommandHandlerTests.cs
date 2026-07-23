@@ -14,6 +14,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Tasks.Commands;
+using Netptune.Services.ProjectTasks;
 
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -36,12 +37,10 @@ public class UpdateTaskCommandHandlerTests
     {
         Fixture.Register(() => new DateOnly(2026, 7, 1));
         Identity.GetCurrentUserId().Returns("user-1");
-        Handler = new(
-            UnitOfWork,
-            Activity,
-            EventPublisher,
-            Identity,
-            EventRecords);
+
+        var taskMutationPipeline = new TaskMutationPipeline(EventRecords, EventPublisher, Activity);
+
+        Handler = new(UnitOfWork, Identity, taskMutationPipeline);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)
