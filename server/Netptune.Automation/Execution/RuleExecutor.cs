@@ -8,6 +8,8 @@ using Netptune.Automation.Notifications;
 using Netptune.Automation.Persistence;
 using Netptune.Automation.Planning;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
+using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Execution;
@@ -15,6 +17,7 @@ namespace Netptune.Automation.Execution;
 internal sealed class RuleExecutor
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IAutomationActionRegistry ActionRegistry;
     private readonly ActionPlanner ActionPlanner;
     private readonly FlagPlanner FlagPlanner;
     private readonly RunPersistenceService Persistence;
@@ -23,6 +26,7 @@ internal sealed class RuleExecutor
 
     public RuleExecutor(
         INetptuneUnitOfWork unitOfWork,
+        IAutomationActionRegistry actionRegistry,
         ActionPlanner actionPlanner,
         FlagPlanner flagPlanner,
         RunPersistenceService persistence,
@@ -30,6 +34,7 @@ internal sealed class RuleExecutor
         ILogger<RuleExecutor> logger)
     {
         UnitOfWork = unitOfWork;
+        ActionRegistry = actionRegistry;
         ActionPlanner = actionPlanner;
         FlagPlanner = flagPlanner;
         Persistence = persistence;
@@ -60,7 +65,10 @@ internal sealed class RuleExecutor
             return;
         }
 
+        await AuthorizeExecutions(pending, cancellationToken);
+
         var plan = ActionPlanner.Plan(pending);
+
         RecordRunResults(triggerType, plan.Runs);
 
         var flags = await FlagPlanner.BuildFlags(triggerType, plan.Actions, cancellationToken);
@@ -86,12 +94,15 @@ internal sealed class RuleExecutor
         var idempotencyKeys = executions.Select(execution => execution.IdempotencyKey).Distinct().ToList();
         var existingKeys = await UnitOfWork.Automations.GetExistingRunKeys(idempotencyKeys, cancellationToken);
         var existingKeySet = existingKeys.ToHashSet();
+
         var pending = executions
             .Where(execution => !existingKeySet.Contains(execution.IdempotencyKey))
             .ToList();
 
         var skippedCount = executions.Count - pending.Count;
+
         Telemetry.RecordRunsSkipped(triggerType, skippedCount, "idempotency_key_exists");
+
         activity?.SetTag("automation.executions.pending", pending.Count);
         activity?.SetTag("automation.executions.skipped.idempotency", skippedCount);
 
@@ -104,12 +115,65 @@ internal sealed class RuleExecutor
         return pending;
     }
 
+    private async Task AuthorizeExecutions(List<PendingAutomationExecution> executions, CancellationToken cancellationToken)
+    {
+        var principals = new Dictionary<(int WorkspaceId, string UserId), AutomationExecutionPrincipal?>();
+
+        foreach (var execution in executions)
+        {
+            if (execution.ExecutionUserId is null)
+            {
+                execution.AuthorizationError = "The automation rule has no execution principal.";
+
+                continue;
+            }
+
+            var principalKey = (execution.Rule.WorkspaceId, execution.ExecutionUserId);
+
+            if (!principals.TryGetValue(principalKey, out var principal))
+            {
+                principal = await UnitOfWork.ServiceAccounts.GetAutomationPrincipal(
+                    execution.ExecutionUserId,
+                    execution.Rule.WorkspaceId,
+                    cancellationToken);
+                principals[principalKey] = principal;
+            }
+
+            if (principal is null)
+            {
+                execution.AuthorizationError = "The automation execution principal is no longer available.";
+
+                continue;
+            }
+
+            if (!principal.IsEnabled)
+            {
+                execution.AuthorizationError = "The automation execution principal is disabled.";
+
+                continue;
+            }
+
+            var requiredPermissions = AutomationPermissionPolicy.GetRequiredPermissions(
+                execution.Rule.Actions
+                    .Where(action => !action.IsDeleted)
+                    .Select(action => action.Type),
+                ActionRegistry);
+
+            if (!AutomationPermissionPolicy.HasRequiredPermissions(principal.Permissions, requiredPermissions))
+            {
+                execution.AuthorizationError = "The automation execution principal no longer has the required permissions.";
+            }
+        }
+    }
+
     private static void RecordRunResults(AutomationTriggerType triggerType, List<Core.Entities.AutomationRun> runs)
     {
         var activity = Activity.Current;
         var succeededCount = runs.Count(run => run.Status == AutomationRunStatus.Succeeded);
         var failedCount = runs.Count - succeededCount;
+
         Telemetry.RecordRunResults(triggerType, succeededCount, failedCount);
+
         activity?.SetTag("automation.runs.succeeded", succeededCount);
         activity?.SetTag("automation.runs.failed", failedCount);
     }

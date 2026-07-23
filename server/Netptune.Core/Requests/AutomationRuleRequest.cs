@@ -9,6 +9,8 @@ public record AutomationRuleRequest
 
     public bool IsEnabled { get; init; } = true;
 
+    public string? ExecutionUserId { get; init; }
+
     public AutomationTriggerRequest Trigger { get; init; } = null!;
 
     public List<AutomationActionRequest> Actions { get; init; } = [];

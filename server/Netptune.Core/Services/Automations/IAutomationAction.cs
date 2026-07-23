@@ -12,6 +12,8 @@ public interface IAutomationAction
 {
     AutomationActionType Type { get; }
 
+    IReadOnlySet<string> RequiredPermissions { get; }
+
     string? Validate(AutomationActionRequest request);
 
     JsonDocument CreateConfig(AutomationActionRequest request);

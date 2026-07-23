@@ -101,6 +101,11 @@ internal sealed class ScheduledActionService
                     cancelledCount++;
                 }
 
+                if (outcome.Status == ScheduledAutomationActionStatus.Failed)
+                {
+                    failedCount++;
+                }
+
                 if (outcome.RemoveTaskFromSearch)
                 {
                     searchRemovals.Add(scheduledAction);
@@ -144,25 +149,28 @@ internal sealed class ScheduledActionService
         DateTime now,
         CancellationToken cancellationToken)
     {
-        var isEligible = EligibilityEvaluator.IsEligible(scheduledAction, now);
+        var eligibility = await EligibilityEvaluator.Evaluate(
+            scheduledAction,
+            now,
+            cancellationToken);
 
-        if (!isEligible)
+        if (!eligibility.CanExecute)
         {
             var completion = new ScheduledActionCompletion
             {
                 ActionId = scheduledAction.Id,
                 ClaimId = claimId,
-                Status = ScheduledAutomationActionStatus.Cancelled,
+                Status = eligibility.Status,
                 ProcessedAt = now,
-                Error = "The rule, action, or task no longer matches.",
+                Error = eligibility.Message,
             };
-            var cancelled = await UnitOfWork.Automations.CompleteClaimedScheduledAction(
+            var updated = await UnitOfWork.Automations.CompleteClaimedScheduledAction(
                 completion,
                 cancellationToken);
 
-            EnsureClaimUpdated(scheduledAction.Id, cancelled);
+            EnsureClaimUpdated(scheduledAction.Id, updated);
 
-            return new ScheduledActionOutcome(ScheduledAutomationActionStatus.Cancelled);
+            return new ScheduledActionOutcome(eligibility.Status);
         }
 
         var handler = HandlerRegistry.Find(scheduledAction.ActionType);

@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -18,15 +19,18 @@ public sealed class CreateAutomationRuleCommandHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAutomationActionRegistry ActionRegistry;
+    private readonly IWorkspacePermissionCache PermissionCache;
 
     public CreateAutomationRuleCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IAutomationActionRegistry actionRegistry)
+        IAutomationActionRegistry actionRegistry,
+        IWorkspacePermissionCache permissionCache)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ActionRegistry = actionRegistry;
+        PermissionCache = permissionCache;
     }
 
     public async ValueTask<ClientResponse<AutomationRuleViewModel>> Handle(
@@ -43,12 +47,27 @@ public sealed class CreateAutomationRuleCommandHandler
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
         var req = request.Request;
+        var principalError = await AutomationPrincipalValidation.Validate(
+            req,
+            workspaceId,
+            userId,
+            Identity.GetWorkspaceKey(),
+            UnitOfWork,
+            PermissionCache,
+            ActionRegistry,
+            cancellationToken);
+
+        if (principalError is not null)
+        {
+            return ClientResponse<AutomationRuleViewModel>.Failed(principalError);
+        }
 
         var rule = new AutomationRule
         {
             WorkspaceId = workspaceId,
             Name = req.Name.Trim(),
             IsEnabled = req.IsEnabled,
+            ExecutionUserId = req.ExecutionUserId,
             TriggerType = req.Trigger.Type,
             TriggerConfig = AutomationMapping.ToTriggerConfig(req.Trigger),
             OwnerId = userId,

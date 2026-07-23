@@ -93,7 +93,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
         execution.Task.Status = task.Status;
         execution.Task.Priority = task.Priority;
         task.UpdatedAt = DateTime.UtcNow;
-        task.ModifiedByUserId = execution.ActorUserId;
+        task.ModifiedByUserId = execution.ExecutionUserId!;
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
@@ -116,7 +116,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
             Previous = previous,
             Current = current,
             Diff = diff,
-            ActorUserId = execution.ActorUserId,
+            ActorUserId = execution.ExecutionUserId!,
             OriginType = EventOriginType.Automation,
             CorrelationId = execution.CorrelationId,
             CausationEventId = execution.CausationEventId,

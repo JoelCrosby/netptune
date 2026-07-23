@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS automation_rules (
     workspace_id integer NOT NULL REFERENCES workspaces(id) ON DELETE RESTRICT,
     name character varying(256) NOT NULL,
     is_enabled boolean NOT NULL DEFAULT TRUE,
+    execution_user_id text NULL REFERENCES users(id) ON DELETE RESTRICT,
     trigger_type integer NOT NULL,
     trigger_config jsonb NULL,
     is_deleted boolean NOT NULL DEFAULT FALSE,
@@ -13,6 +14,9 @@ CREATE TABLE IF NOT EXISTS automation_rules (
     deleted_by_user_id text NULL REFERENCES users(id) ON DELETE RESTRICT,
     owner_id text NULL REFERENCES users(id) ON DELETE RESTRICT
 );
+
+ALTER TABLE automation_rules
+    ADD COLUMN IF NOT EXISTS execution_user_id text NULL REFERENCES users(id) ON DELETE RESTRICT;
 
 CREATE INDEX IF NOT EXISTS ix_automation_rules_is_deleted
     ON automation_rules(is_deleted);

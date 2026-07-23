@@ -103,7 +103,8 @@ internal sealed class TaskChangedRuleMatcher
             {
                 Rule = rule,
                 Task = task,
-                ActorUserId = message.ActorUserId,
+                ExecutionUserId = rule.ExecutionUserId,
+                InitiatingUserId = message.ActorUserId,
                 IdempotencyKey = $"rule:{rule.Id}:task:{message.TaskId}:event:{message.EventId}",
                 TriggeredAt = message.OccurredAt,
                 CorrelationId = correlationId,

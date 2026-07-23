@@ -5,19 +5,31 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Services.Automations;
+using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Execution;
 
 internal sealed class ScheduledActionEligibilityEvaluator
 {
     private readonly TaskChangedRuleMatcher TaskChangedMatcher;
+    private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IAutomationActionRegistry ActionRegistry;
 
-    public ScheduledActionEligibilityEvaluator(TaskChangedRuleMatcher taskChangedMatcher)
+    public ScheduledActionEligibilityEvaluator(
+        TaskChangedRuleMatcher taskChangedMatcher,
+        INetptuneUnitOfWork unitOfWork,
+        IAutomationActionRegistry actionRegistry)
     {
         TaskChangedMatcher = taskChangedMatcher;
+        UnitOfWork = unitOfWork;
+        ActionRegistry = actionRegistry;
     }
 
-    internal bool IsEligible(ScheduledAutomationAction scheduledAction, DateTime now)
+    internal async Task<ScheduledEligibility> Evaluate(
+        ScheduledAutomationAction scheduledAction,
+        DateTime now,
+        CancellationToken cancellationToken)
     {
         var rule = scheduledAction.AutomationRule;
         var action = scheduledAction.AutomationAction;
@@ -35,10 +47,10 @@ internal sealed class ScheduledActionEligibilityEvaluator
 
         if (!hasValidReferences)
         {
-            return false;
+            return ScheduledEligibility.Cancelled("The rule, action, or task no longer matches.");
         }
 
-        return rule.TriggerType switch
+        var matches = rule.TriggerType switch
         {
             AutomationTriggerType.TaskChanged or AutomationTriggerType.TaskStatusChanged =>
                 MatchesTaskChangedRule(scheduledAction),
@@ -46,6 +58,41 @@ internal sealed class ScheduledActionEligibilityEvaluator
             AutomationTriggerType.TaskDueDateApproaching => MatchesDueDateRule(scheduledAction, now),
             _ => false,
         };
+
+        if (!matches)
+        {
+            return ScheduledEligibility.Cancelled("The rule, action, or task no longer matches.");
+        }
+
+        if (rule.ExecutionUserId is null || rule.ExecutionUserId != scheduledAction.OwnerId)
+        {
+            return ScheduledEligibility.Failed("The automation rule has no valid execution principal.");
+        }
+
+        var principal = await UnitOfWork.ServiceAccounts.GetAutomationPrincipal(
+            rule.ExecutionUserId,
+            rule.WorkspaceId,
+            cancellationToken);
+
+        if (principal is null || !principal.IsEnabled)
+        {
+            return ScheduledEligibility.Failed("The automation execution principal is no longer available.");
+        }
+
+        var automationAction = ActionRegistry.Find(action.Type);
+
+        var requiredPermissions = AutomationPermissionPolicy.GetRequiredPermissions(
+            [action.Type],
+            ActionRegistry);
+
+        if (automationAction is null ||
+            !AutomationPermissionPolicy.HasRequiredPermissions(principal.Permissions, requiredPermissions))
+        {
+            return ScheduledEligibility.Failed(
+                "The automation execution principal no longer has the permission required by this action.");
+        }
+
+        return ScheduledEligibility.Eligible;
     }
 
     private bool MatchesTaskChangedRule(ScheduledAutomationAction scheduledAction)
@@ -98,5 +145,20 @@ internal sealed class ScheduledActionEligibilityEvaluator
         var expectedDueDate = DateOnly.FromDateTime(now).AddDays(duration);
 
         return scheduledAction.Task.DueDate == expectedDueDate;
+    }
+}
+
+internal sealed record ScheduledEligibility(bool CanExecute, ScheduledAutomationActionStatus Status, string? Message)
+{
+    public static readonly ScheduledEligibility Eligible = new(true, ScheduledAutomationActionStatus.Processing, null);
+
+    public static ScheduledEligibility Cancelled(string message)
+    {
+        return new ScheduledEligibility(false, ScheduledAutomationActionStatus.Cancelled, message);
+    }
+
+    public static ScheduledEligibility Failed(string message)
+    {
+        return new ScheduledEligibility(false, ScheduledAutomationActionStatus.Failed, message);
     }
 }

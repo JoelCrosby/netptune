@@ -113,6 +113,7 @@ export interface AutomationRule {
   workspaceId: number;
   name: string;
   isEnabled: boolean;
+  executionUserId: string | null;
   trigger: AutomationTrigger;
   actions: AutomationAction[];
   createdAt: Date;
@@ -148,6 +149,7 @@ export interface AutomationActionResult {
 export interface AutomationRuleRequest {
   name: string;
   isEnabled: boolean;
+  executionUserId: string;
   trigger: AutomationTrigger;
   actions: AutomationActionRequest[];
 }

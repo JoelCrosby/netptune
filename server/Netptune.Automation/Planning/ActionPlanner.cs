@@ -39,6 +39,14 @@ internal sealed class ActionPlanner
             var run = CreateRun(execution);
             execution.Run = run;
 
+            if (execution.AuthorizationError is not null)
+            {
+                FailUnauthorizedExecution(execution);
+                plan.Runs.Add(run);
+
+                continue;
+            }
+
             try
             {
                 var actions = PlanActions(execution);
@@ -93,7 +101,7 @@ internal sealed class ActionPlanner
                     Rule = execution.Rule,
                     Action = action,
                     Task = execution.Task,
-                    ActorUserId = execution.ActorUserId,
+                    ActorUserId = execution.ExecutionUserId!,
                 };
                 var contribution = automationAction.Plan(context);
 
@@ -127,8 +135,8 @@ internal sealed class ActionPlanner
             SortOrder = action.SortOrder,
             Status = AutomationActionResultStatus.Pending,
             IdempotencyKey = $"{execution.IdempotencyKey}:action:{action.Id}",
-            OwnerId = execution.ActorUserId,
-            CreatedByUserId = execution.ActorUserId,
+            OwnerId = execution.ExecutionUserId,
+            CreatedByUserId = execution.ExecutionUserId,
         };
     }
 
@@ -180,6 +188,26 @@ internal sealed class ActionPlanner
         result.CompletedAt = completedAt;
     }
 
+    private static void FailUnauthorizedExecution(PendingAutomationExecution execution)
+    {
+        var run = execution.Run!;
+        run.Status = AutomationRunStatus.Failed;
+        run.Message = execution.AuthorizationError;
+
+        foreach (var action in execution.Rule.Actions
+                     .Where(action => !action.IsDeleted)
+                     .OrderBy(action => action.SortOrder)
+                     .ThenBy(action => action.Id))
+        {
+            var result = CreateActionResult(execution, action);
+            CompleteActionResult(
+                result,
+                AutomationActionResultStatus.Skipped,
+                "The action was not run because the automation principal was not authorized.");
+            run.ActionResults.Add(result);
+        }
+    }
+
     private static AutomationRun CreateRun(PendingAutomationExecution execution)
     {
         var rule = execution.Rule;
@@ -193,8 +221,8 @@ internal sealed class ActionPlanner
             TriggerType = rule.TriggerType,
             Status = AutomationRunStatus.Succeeded,
             IdempotencyKey = execution.IdempotencyKey,
-            OwnerId = execution.ActorUserId,
-            CreatedByUserId = execution.ActorUserId,
+            OwnerId = execution.ExecutionUserId,
+            CreatedByUserId = execution.ExecutionUserId,
             Context = JsonSerializer.SerializeToDocument(new
             {
                 taskId = task.Id,
@@ -204,6 +232,8 @@ internal sealed class ActionPlanner
                 correlationId = execution.CorrelationId,
                 causationEventId = execution.CausationEventId,
                 chainDepth = execution.ChainDepth,
+                initiatingUserId = execution.InitiatingUserId,
+                executionUserId = execution.ExecutionUserId,
             }, JsonOptions.Default),
         };
     }

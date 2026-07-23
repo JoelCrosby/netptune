@@ -102,20 +102,11 @@ internal sealed class UnassignedTaskRuleMatcher
             {
                 if (taskTimestamp > now.AddDays(-rule.DurationDays)) continue;
 
-                var actorUserId = rule.Rule.OwnerId ?? rule.Rule.CreatedByUserId ?? task.OwnerId;
-
-                if (actorUserId is null)
-                {
-                    Logger.LogWarning("Automation rule {RuleId} skipped task {TaskId}: no actor user id", rule.Rule.Id, task.Id);
-                    Telemetry.RecordRunsSkipped(AutomationTriggerType.TaskUnassignedFor, 1, "missing_actor");
-                    continue;
-                }
-
                 executions.Add(new PendingAutomationExecution
                 {
                     Rule = rule.Rule,
                     Task = task,
-                    ActorUserId = actorUserId,
+                    ExecutionUserId = rule.Rule.ExecutionUserId,
                     IdempotencyKey = $"rule:{rule.Rule.Id}:task:{task.Id}:unassigned:{runDate}",
                     TriggeredAt = now,
                 });

@@ -51,7 +51,7 @@ internal sealed class DeleteTaskHandler : IActionExecutionHandler
         var execution = action.Execution;
         var affected = await UnitOfWork.Tasks.SoftDelete(
             execution.Task.Id,
-            execution.ActorUserId,
+            execution.ExecutionUserId!,
             cancellationToken);
 
         if (affected == 0)
@@ -87,8 +87,8 @@ internal sealed class DeleteTaskHandler : IActionExecutionHandler
             ExecuteAt = execution.TriggeredAt.Add(delay),
             IdempotencyKey = $"{execution.IdempotencyKey}:action:{action.Action.Id}",
             TriggerContext = triggerContext,
-            OwnerId = execution.ActorUserId,
-            CreatedByUserId = execution.ActorUserId,
+            OwnerId = execution.ExecutionUserId!,
+            CreatedByUserId = execution.ExecutionUserId!,
         };
     }
 }

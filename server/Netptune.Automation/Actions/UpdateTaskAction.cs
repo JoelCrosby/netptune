@@ -1,5 +1,6 @@
 using System.Text.Json;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -13,6 +14,11 @@ namespace Netptune.Automation.Actions;
 internal sealed class UpdateTaskAction : IAutomationAction
 {
     public AutomationActionType Type => AutomationActionType.UpdateTask;
+
+    public IReadOnlySet<string> RequiredPermissions { get; } = new HashSet<string>
+    {
+        NetptunePermissions.Tasks.Update,
+    };
 
     public string? Validate(AutomationActionRequest request)
     {

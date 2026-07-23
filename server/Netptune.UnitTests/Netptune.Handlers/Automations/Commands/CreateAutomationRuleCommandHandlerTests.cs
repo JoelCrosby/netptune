@@ -3,8 +3,11 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Automation.Actions;
+using Netptune.Core.Authorization;
+using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Requests;
@@ -24,13 +27,31 @@ public class CreateAutomationRuleCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IAutomationRepository Automations = Substitute.For<IAutomationRepository>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IServiceAccountRepository ServiceAccounts = Substitute.For<IServiceAccountRepository>();
+    private readonly IWorkspacePermissionCache PermissionCache = Substitute.For<IWorkspacePermissionCache>();
     private readonly CreateAutomationRuleCommandHandler Handler;
 
     public CreateAutomationRuleCommandHandlerTests()
     {
         UnitOfWork.Automations.Returns(Automations);
+        UnitOfWork.ServiceAccounts.Returns(ServiceAccounts);
         Identity.GetWorkspaceId().Returns(123);
         Identity.GetCurrentUserId().Returns("user-1");
+        Identity.GetWorkspaceKey().Returns("workspace");
+        PermissionCache.GetUserPermissions("user-1", "workspace").Returns(new UserPermissions
+        {
+            UserId = "user-1",
+            WorkspaceKey = "workspace",
+            Role = WorkspaceRole.Owner,
+            Permissions = [],
+        });
+        ServiceAccounts.GetAutomationPrincipal("service-user", 123, Arg.Any<CancellationToken>())
+            .Returns(new AutomationExecutionPrincipal
+            {
+                UserId = "service-user",
+                IsEnabled = true,
+                Permissions = NetptunePermissions.All,
+            });
 
         var services = new ServiceCollection();
         services.AddNetptuneAutomationActions();
@@ -38,7 +59,7 @@ public class CreateAutomationRuleCommandHandlerTests
             .BuildServiceProvider()
             .GetRequiredService<IAutomationActionRegistry>();
 
-        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, actionRegistry);
+        Handler = new CreateAutomationRuleCommandHandler(UnitOfWork, Identity, actionRegistry, PermissionCache);
     }
 
     [Fact]
@@ -228,6 +249,7 @@ public class CreateAutomationRuleCommandHandlerTests
         var request = new AutomationRuleRequest
         {
             Name = "High priority name change",
+            ExecutionUserId = "service-user",
             Trigger = new AutomationTriggerRequest
             {
                 Type = AutomationTriggerType.TaskChanged,
@@ -381,6 +403,7 @@ public class CreateAutomationRuleCommandHandlerTests
         var request = new AutomationRuleRequest
         {
             Name = " Done notification ",
+            ExecutionUserId = "service-user",
             Trigger = new AutomationTriggerRequest
             {
                 Type = AutomationTriggerType.TaskChanged,
@@ -444,5 +467,81 @@ public class CreateAutomationRuleCommandHandlerTests
         result.Payload!.Actions.Single(action => action.Type == AutomationActionType.DeleteTask)
             .DelayAmount.Should().Be(2);
         await UnitOfWork.Received(1).CompleteAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenExecutionPrincipalLacksActionPermission()
+    {
+        ServiceAccounts.GetAutomationPrincipal("limited-service-user", 123, Arg.Any<CancellationToken>())
+            .Returns(new AutomationExecutionPrincipal
+            {
+                UserId = "limited-service-user",
+                IsEnabled = true,
+                Permissions = new HashSet<string>(),
+            });
+        var request = new AutomationRuleRequest
+        {
+            Name = "Notify assignees",
+            ExecutionUserId = "limited-service-user",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(
+            new CreateAutomationRuleCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("does not have every permission");
+        await Automations.DidNotReceive()
+            .AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenAuthorLacksActionPermission()
+    {
+        PermissionCache.GetUserPermissions("user-1", "workspace").Returns(new UserPermissions
+        {
+            UserId = "user-1",
+            WorkspaceKey = "workspace",
+            Role = WorkspaceRole.Member,
+            Permissions = [],
+        });
+        var request = new AutomationRuleRequest
+        {
+            Name = "Notify assignees",
+            ExecutionUserId = "service-user",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(
+            new CreateAutomationRuleCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("permissions you do not have");
+        await Automations.DidNotReceive()
+            .AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
     }
 }

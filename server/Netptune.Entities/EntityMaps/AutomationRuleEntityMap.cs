@@ -23,6 +23,12 @@ public class AutomationRuleEntityMap : WorkspaceEntityMap<AutomationRule, int>
             .IsRequired();
 
         builder
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(rule => rule.ExecutionUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
             .Property(rule => rule.TriggerType)
             .HasConversion<int>()
             .IsRequired();

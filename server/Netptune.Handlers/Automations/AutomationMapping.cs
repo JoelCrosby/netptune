@@ -20,6 +20,7 @@ internal static class AutomationMapping
             WorkspaceId = rule.WorkspaceId,
             Name = rule.Name,
             IsEnabled = rule.IsEnabled,
+            ExecutionUserId = rule.ExecutionUserId,
             Trigger = ReadTrigger(rule.TriggerType, rule.TriggerConfig),
             Actions = rule.Actions
                 .Where(action => !action.IsDeleted)

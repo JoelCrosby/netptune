@@ -1,7 +1,15 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StatusesService } from '@core/services/statuses.service';
+import { ServiceAccountsService } from '@core/services/service-accounts.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -78,8 +86,10 @@ import { AutomationsService } from '../../services/automations.service';
                 title="Settings"
                 description="Name your automation and set whether it is active.">
                 <app-automation-settings-editor
+                  [serviceAccounts]="enabledServiceAccounts()"
                   [(name)]="name"
-                  [(isEnabled)]="isEnabled" />
+                  [(isEnabled)]="isEnabled"
+                  [(executionUserId)]="executionUserId" />
               </app-step>
 
               <app-step
@@ -138,6 +148,7 @@ export class AutomationFormViewComponent {
 
   private service = inject(AutomationsService);
   private statusesService = inject(StatusesService);
+  private serviceAccountsService = inject(ServiceAccountsService);
   private snackbar = inject(SnackbarService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -149,6 +160,12 @@ export class AutomationFormViewComponent {
   readonly taskStatuses = toSignal(this.statusesService.get(), {
     initialValue: [],
   });
+  readonly serviceAccounts = toSignal(this.serviceAccountsService.getAll(), {
+    initialValue: [],
+  });
+  readonly enabledServiceAccounts = computed(() =>
+    this.serviceAccounts().filter((account) => !account.disabledAt)
+  );
   readonly defaultActiveStatusId = computed(
     () =>
       this.statusIdByKey('in-progress') ??
@@ -165,12 +182,21 @@ export class AutomationFormViewComponent {
 
   readonly name = signal('');
   readonly isEnabled = signal(true);
+  readonly executionUserId = signal<string | null>(null);
   readonly triggerType = signal(AutomationTriggerType.taskChanged);
   readonly taskFields = signal<TaskChangeField[]>([TaskChangeField.status]);
   readonly conditionGroup = signal<AutomationConditionGroup | null>(null);
   readonly durationDays = signal('3');
 
   constructor() {
+    effect(() => {
+      if (!this.executionUserId()) {
+        this.executionUserId.set(
+          this.enabledServiceAccounts()[0]?.userId ?? null
+        );
+      }
+    });
+
     if (this.isEdit()) {
       this.loadRule();
     }
@@ -297,6 +323,7 @@ export class AutomationFormViewComponent {
   private populate(rule: AutomationRule) {
     this.name.set(rule.name);
     this.isEnabled.set(rule.isEnabled);
+    this.executionUserId.set(rule.executionUserId);
     this.triggerType.set(
       rule.trigger.type === AutomationTriggerType.taskStatusChanged
         ? AutomationTriggerType.taskChanged
@@ -323,6 +350,7 @@ export class AutomationFormViewComponent {
     const result = buildAutomationRuleRequest({
       name: this.name(),
       isEnabled: this.isEnabled(),
+      executionUserId: this.executionUserId(),
       trigger: this.triggerPreview(),
       actions: this.actions(),
     });

@@ -13,6 +13,7 @@ import {
 export interface AutomationRuleDraft {
   name: string;
   isEnabled: boolean;
+  executionUserId: string | null;
   trigger: AutomationTrigger;
   actions: AutomationAction[];
 }
@@ -28,6 +29,7 @@ export function buildAutomationRuleRequest(
   const actions = draft.actions.map(toActionRequest);
   const error =
     validateName(draft.name) ??
+    validateExecutionUser(draft.executionUserId) ??
     validateActions(actions) ??
     validateTrigger(draft.trigger);
 
@@ -37,11 +39,16 @@ export function buildAutomationRuleRequest(
     request: {
       name: draft.name.trim(),
       isEnabled: draft.isEnabled,
+      executionUserId: draft.executionUserId!,
       trigger: draft.trigger,
       actions,
     },
     error: null,
   };
+}
+
+function validateExecutionUser(executionUserId: string | null): string | null {
+  return executionUserId ? null : 'Choose an automation service account.';
 }
 
 function validateName(name: string): string | null {

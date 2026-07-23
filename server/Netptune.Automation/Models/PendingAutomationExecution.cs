@@ -9,7 +9,11 @@ internal sealed record PendingAutomationExecution
 
     public required ProjectTask Task { get; init; }
 
-    public required string ActorUserId { get; init; }
+    public string? ExecutionUserId { get; init; }
+
+    public string? InitiatingUserId { get; init; }
+
+    public string? AuthorizationError { get; set; }
 
     public required string IdempotencyKey { get; init; }
 

@@ -13,6 +13,8 @@ public record AutomationRuleViewModel
 
     public bool IsEnabled { get; init; }
 
+    public string? ExecutionUserId { get; init; }
+
     public AutomationTriggerViewModel Trigger { get; init; } = null!;
 
     public List<AutomationActionViewModel> Actions { get; init; } = [];

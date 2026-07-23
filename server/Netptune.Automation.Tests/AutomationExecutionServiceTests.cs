@@ -67,6 +67,53 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_fails_without_mutation_when_permission_is_revoked()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            "in-progress");
+
+        var membership = await scope.Db.WorkspaceAppUsers.SingleAsync(
+            item => item.UserId == scenario.ExecutionUser.Id,
+            TestContext.Current.CancellationToken);
+        membership.Permissions = [];
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, newStatusId, inProgressStatusId),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var run = await scope.Db.AutomationRuns
+            .Include(item => item.ActionResults)
+            .SingleAsync(TestContext.Current.CancellationToken);
+
+        run.Status.Should().Be(AutomationRunStatus.Failed);
+        run.Message.Should().Contain("required permissions");
+        run.ActionResults.Should().ContainSingle()
+            .Which.Status.Should().Be(AutomationActionResultStatus.Skipped);
+        (await scope.Db.Flags.AnyAsync(TestContext.Current.CancellationToken))
+            .Should().BeFalse();
+    }
+
+    [Fact]
     public async Task ExecuteTaskChangedRules_is_idempotent_for_same_event()
     {
         await using var scope = await Fixture.CreateScope();
@@ -186,13 +233,14 @@ public sealed class AutomationExecutionServiceTests
         task.Priority.Should().Be(TaskPriority.High);
         task.StatusId.Should().Be(expectedStatusId);
         task.Status.Key.Should().Be("complete");
-        task.ModifiedByUserId.Should().Be(scenario.Owner.Id);
+        task.ModifiedByUserId.Should().Be(scenario.ExecutionUser.Id);
 
         var fieldEvents = scope.EventRecords.Events
             .Where(recordedEvent => recordedEvent.EventKey == EventKeys.EntityFieldTransitioned)
             .ToList();
         fieldEvents.Should().HaveCount(2);
-        fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.ActorUserId == scenario.Owner.Id);
+        fieldEvents.Should().OnlyContain(recordedEvent =>
+            recordedEvent.ActorUserId == scenario.ExecutionUser.Id);
         fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.CorrelationId == correlationId);
         fieldEvents.Should().OnlyContain(recordedEvent => recordedEvent.CausationEventId == sourceEventId);
         var transitionPayloads = fieldEvents
@@ -208,7 +256,7 @@ public sealed class AutomationExecutionServiceTests
             .BeEquivalentTo("status", "priority");
 
         var taskChanged = scope.EventPublisher.Events.OfType<TaskChangedMessage>().Should().ContainSingle().Subject;
-        taskChanged.ActorUserId.Should().Be(scenario.Owner.Id);
+        taskChanged.ActorUserId.Should().Be(scenario.ExecutionUser.Id);
         taskChanged.TaskId.Should().Be(scenario.Task.Id);
         taskChanged.OriginType.Should().Be(EventOriginType.Automation);
         taskChanged.CorrelationId.Should().Be(correlationId);
@@ -233,6 +281,11 @@ public sealed class AutomationExecutionServiceTests
         actionResult.StartedAt.Should().NotBeNull();
         actionResult.CompletedAt.Should().NotBeNull();
         actionResult.Output.Should().NotBeNull();
+
+        run.Context!.RootElement.GetProperty("initiatingUserId").GetString()
+            .Should().Be(scenario.Owner.Id);
+        run.Context.RootElement.GetProperty("executionUserId").GetString()
+            .Should().Be(scenario.ExecutionUser.Id);
     }
 
     [Fact]
@@ -338,10 +391,10 @@ public sealed class AutomationExecutionServiceTests
         comment.EntityType.Should().Be(EntityType.Task);
         comment.EntityId.Should().Be(scenario.Task.Id);
         comment.WorkspaceId.Should().Be(scenario.Workspace.Id);
-        comment.OwnerId.Should().Be(scenario.Owner.Id);
+        comment.OwnerId.Should().Be(scenario.ExecutionUser.Id);
         commentEvent.SubjectType.Should().Be(EventEntityTypes.From(EntityType.Task));
         commentEvent.SubjectId.Should().Be(scenario.Task.Id.ToString());
-        commentEvent.ActorUserId.Should().Be(scenario.Owner.Id);
+        commentEvent.ActorUserId.Should().Be(scenario.ExecutionUser.Id);
         payload.CommentId.Should().Be(comment.Id);
         payload.RecipientUserIds.Should().BeEmpty();
     }
@@ -383,7 +436,7 @@ public sealed class AutomationExecutionServiceTests
         var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
 
         task.IsDeleted.Should().BeTrue();
-        task.DeletedByUserId.Should().Be(scenario.Owner.Id);
+        task.DeletedByUserId.Should().Be(scenario.ExecutionUser.Id);
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
     }
 
@@ -606,7 +659,7 @@ public sealed class AutomationExecutionServiceTests
             TestContext.Current.CancellationToken);
 
         deletedTask.IsDeleted.Should().BeTrue();
-        deletedTask.DeletedByUserId.Should().Be(scenario.Owner.Id);
+        deletedTask.DeletedByUserId.Should().Be(scenario.ExecutionUser.Id);
         completedAction.Status.Should().Be(ScheduledAutomationActionStatus.Completed);
         completedAction.ProcessedAt.Should().NotBeNull();
     }
@@ -704,7 +757,7 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
-    public async Task ExecuteScheduledActions_retries_then_fails_a_broken_delayed_action()
+    public async Task ExecuteScheduledActions_fails_immediately_without_a_valid_execution_principal()
     {
         await using var scope = await Fixture.CreateScope();
         var setup = await ScheduleDueTaskDeletion(scope);
@@ -712,31 +765,13 @@ public sealed class AutomationExecutionServiceTests
         setup.ScheduledAction.OwnerId = null;
         await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        for (var attempt = 1; attempt <= 3; attempt++)
-        {
-            await scope.Db.ScheduledAutomationActions
-                .Where(action => action.Id == setup.ScheduledAction.Id)
-                .ExecuteUpdateAsync(
-                    setters => setters.SetProperty(action => action.ExecuteAt, DateTime.UtcNow.AddMinutes(-1)),
-                    TestContext.Current.CancellationToken);
+        await scope.Db.ScheduledAutomationActions
+            .Where(action => action.Id == setup.ScheduledAction.Id)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(action => action.ExecuteAt, DateTime.UtcNow.AddMinutes(-1)),
+                TestContext.Current.CancellationToken);
 
-            var attemptStartedAt = DateTime.UtcNow;
-            await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
-
-            if (attempt < 3)
-            {
-                scope.Db.ChangeTracker.Clear();
-
-                var pendingRetry = await scope.Db.ScheduledAutomationActions.SingleAsync(
-                    TestContext.Current.CancellationToken);
-                var expectedDelay = TimeSpan.FromMinutes(Math.Pow(2, attempt - 1));
-
-                pendingRetry.Status.Should().Be(ScheduledAutomationActionStatus.Pending);
-                pendingRetry.ExecuteAt.Should().BeCloseTo(
-                    attemptStartedAt.Add(expectedDelay),
-                    TimeSpan.FromSeconds(2));
-            }
-        }
+        await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
 
         scope.Db.ChangeTracker.Clear();
 
@@ -747,9 +782,9 @@ public sealed class AutomationExecutionServiceTests
             TestContext.Current.CancellationToken);
 
         scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Failed);
-        scheduledAction.AttemptCount.Should().Be(3);
+        scheduledAction.AttemptCount.Should().Be(1);
         scheduledAction.ProcessedAt.Should().NotBeNull();
-        scheduledAction.LastError.Should().Contain("no execution user");
+        scheduledAction.LastError.Should().Contain("no valid execution principal");
         scheduledAction.ClaimId.Should().BeNull();
         scheduledAction.LeaseExpiresAt.Should().BeNull();
         task.IsDeleted.Should().BeFalse();
@@ -822,6 +857,33 @@ public sealed class AutomationExecutionServiceTests
         scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Cancelled);
         scheduledAction.AttemptCount.Should().Be(1);
         scheduledAction.LastError.Should().Contain("no longer matches");
+        task.IsDeleted.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExecuteScheduledActions_fails_when_permission_is_revoked_after_scheduling()
+    {
+        await using var scope = await Fixture.CreateScope();
+        var setup = await ScheduleDueTaskDeletion(scope);
+        var membership = await scope.Db.WorkspaceAppUsers.SingleAsync(
+            item => item.UserId == setup.Scenario.ExecutionUser.Id,
+            TestContext.Current.CancellationToken);
+        membership.Permissions = [];
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        await scope.AutomationExecution.ExecuteScheduledActions(TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var scheduledAction = await scope.Db.ScheduledAutomationActions.SingleAsync(
+            TestContext.Current.CancellationToken);
+        var task = await scope.Db.ProjectTasks.SingleAsync(
+            item => item.Id == setup.Scenario.Task.Id,
+            TestContext.Current.CancellationToken);
+
+        scheduledAction.Status.Should().Be(ScheduledAutomationActionStatus.Failed);
+        scheduledAction.AttemptCount.Should().Be(1);
+        scheduledAction.LastError.Should().Contain("permission required");
         task.IsDeleted.Should().BeFalse();
     }
 

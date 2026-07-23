@@ -7,4 +7,5 @@ internal sealed record AutomationScenario(
     Project Project,
     ProjectTask Task,
     AppUser Owner,
-    AppUser Assignee);
+    AppUser Assignee,
+    AppUser ExecutionUser);

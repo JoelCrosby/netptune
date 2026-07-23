@@ -62,8 +62,8 @@ internal sealed class FlagPlanner
                     AutomationRuleId = rule.Id,
                     Name = contribution.Name,
                     Description = contribution.Description,
-                    OwnerId = action.Execution.ActorUserId,
-                    CreatedByUserId = action.Execution.ActorUserId,
+                    OwnerId = action.Execution.ExecutionUserId!,
+                    CreatedByUserId = action.Execution.ExecutionUserId!,
                 };
             });
 

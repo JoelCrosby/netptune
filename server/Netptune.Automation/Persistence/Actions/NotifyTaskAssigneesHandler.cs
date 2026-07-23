@@ -54,7 +54,7 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
         CancellationToken cancellationToken)
     {
         var task = action.Execution.Task;
-        var actorUserId = action.Execution.ActorUserId;
+        var actorUserId = action.Execution.ExecutionUserId!;
         var recipients = await NotificationRecipientResolver.Resolve(
             UnitOfWork,
             new NotificationRecipientRequest

@@ -62,8 +62,8 @@ internal sealed class AddCommentHandler : IActionExecutionHandler
             EntityId = execution.Task.Id,
             EntityType = EntityType.Task,
             WorkspaceId = execution.Rule.WorkspaceId,
-            OwnerId = execution.ActorUserId,
-            CreatedByUserId = execution.ActorUserId,
+            OwnerId = execution.ExecutionUserId!,
+            CreatedByUserId = execution.ExecutionUserId!,
         };
     }
 
@@ -77,7 +77,7 @@ internal sealed class AddCommentHandler : IActionExecutionHandler
             EventKey = EventKeys.CommentCreated,
             SubjectType = EventEntityTypes.From(EntityType.Task),
             SubjectId = comment.EntityId.ToString(),
-            ActorUserId = action.Execution.ActorUserId,
+            ActorUserId = action.Execution.ExecutionUserId!,
             Payload = new CommentEventPayload
             {
                 CommentId = comment.Id,

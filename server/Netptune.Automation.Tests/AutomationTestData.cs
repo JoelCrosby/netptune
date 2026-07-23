@@ -2,8 +2,9 @@ using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 
-using Netptune.Core.Entities;
+using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
 using Netptune.Core.Models.Automations;
@@ -17,6 +18,7 @@ internal static class AutomationTestData
 {
     public const string OwnerUserId = "owner-user";
     public const string AssigneeUserId = "assignee-user";
+    public const string ExecutionUserId = "automation-service-user";
 
     public static async Task<AutomationScenario> CreateScenario(
         DataContext db,
@@ -27,6 +29,8 @@ internal static class AutomationTestData
     {
         var owner = CreateUser(OwnerUserId, "owner@example.test");
         var assignee = CreateUser(AssigneeUserId, "assignee@example.test");
+        var executionUser = CreateUser(ExecutionUserId, "automation@example.test");
+        executionUser.UserType = AppUserType.ServiceAccount;
         var workspace = new Workspace
         {
             Name = "Automation Workspace",
@@ -77,15 +81,38 @@ internal static class AutomationTestData
             });
         }
 
-        db.AppUsers.AddRange(owner, assignee);
+        var serviceAccount = new ServiceAccount
+        {
+            UserId = executionUser.Id,
+            Workspace = workspace,
+            CreatedByUserId = owner.Id,
+            CreatedAt = DateTime.UtcNow,
+        };
+        var serviceMembership = new WorkspaceAppUser
+        {
+            UserId = executionUser.Id,
+            Workspace = workspace,
+            Role = WorkspaceRole.Member,
+            Permissions =
+            [
+                NetptunePermissions.Tasks.Read,
+                NetptunePermissions.Tasks.Update,
+                NetptunePermissions.Tasks.DeleteAny,
+                NetptunePermissions.Comments.Create,
+            ],
+        };
+
+        db.AppUsers.AddRange(owner, assignee, executionUser);
         db.Workspaces.Add(workspace);
+        db.ServiceAccounts.Add(serviceAccount);
+        db.WorkspaceAppUsers.Add(serviceMembership);
         db.Statuses.AddRange(statuses);
         db.Projects.Add(project);
         db.ProjectTasks.Add(task);
 
         await db.SaveChangesAsync();
 
-        return new AutomationScenario(workspace, project, task, owner, assignee);
+        return new AutomationScenario(workspace, project, task, owner, assignee, executionUser);
     }
 
     public static async Task<AutomationRule> CreateStatusChangedRule(
@@ -166,6 +193,7 @@ internal static class AutomationTestData
             TriggerType = triggerType,
             TriggerConfig = JsonSerializer.SerializeToDocument(triggerConfig, JsonOptions.Default),
             WorkspaceId = scenario.Workspace.Id,
+            ExecutionUserId = scenario.ExecutionUser.Id,
             OwnerId = scenario.Owner.Id,
             CreatedByUserId = scenario.Owner.Id,
             Actions =

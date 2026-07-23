@@ -2,10 +2,11 @@ using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Models.Authentication;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
-using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Core.Relationships;
+using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -94,6 +95,40 @@ public sealed class ServiceAccountRepository : Repository<DataContext, ServiceAc
                     .ToList(),
             })
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<AutomationExecutionPrincipal?> GetAutomationPrincipal(
+        string userId,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        var principal = await Entities
+            .AsNoTracking()
+            .Where(account => account.UserId == userId && account.WorkspaceId == workspaceId)
+            .Select(account => new
+            {
+                account.UserId,
+                account.DisabledAt,
+                Permissions = Context.WorkspaceAppUsers
+                    .Where(membership =>
+                        membership.WorkspaceId == workspaceId &&
+                        membership.UserId == account.UserId)
+                    .Select(membership => membership.Permissions)
+                    .SingleOrDefault(),
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (principal is null)
+        {
+            return null;
+        }
+
+        return new AutomationExecutionPrincipal
+        {
+            UserId = principal.UserId,
+            IsEnabled = principal.DisabledAt is null,
+            Permissions = (principal.Permissions ?? []).ToHashSet(StringComparer.Ordinal),
+        };
     }
 
     public Task TouchCredential(Guid credentialId, DateTime usedAt, CancellationToken cancellationToken = default)

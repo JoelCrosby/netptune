@@ -46,6 +46,11 @@ internal static class AutomationValidation
             }
         }
 
+        if (string.IsNullOrWhiteSpace(request.ExecutionUserId))
+        {
+            return "An automation service account is required.";
+        }
+
         return null;
     }
 }
