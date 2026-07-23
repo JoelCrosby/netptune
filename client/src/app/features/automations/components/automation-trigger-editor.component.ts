@@ -1,9 +1,13 @@
 import { Component, model } from '@angular/core';
 import { LucideListChecks, LucideZap } from '@lucide/angular';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { IconCircleComponent } from '@static/components/icon-circle.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import {
   taskChangeFieldLabels,
   triggerTypeLabels,
@@ -20,33 +24,26 @@ import {
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    BadgeComponent,
+    IconCircleComponent,
+    PanelComponent,
+    PanelHeaderComponent,
     LucideListChecks,
-    LucideZap,
   ],
   template: `
     <div class="flex flex-col gap-4">
-      <section
-        class="border-border bg-background overflow-hidden rounded-lg border shadow-sm"
-        aria-label="Automation trigger">
-        <div
-          class="border-border bg-foreground/3 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3">
-          <div class="flex items-center gap-3">
-            <span
-              class="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full">
-              <svg lucideZap class="h-4 w-4" aria-hidden="true"></svg>
-            </span>
-            <div>
-              <p class="text-sm font-medium">Trigger event</p>
-              <p class="text-foreground/60 text-xs">
-                Choose what starts this automation.
-              </p>
-            </div>
-          </div>
-          <span
-            class="bg-primary/10 text-primary rounded-full px-2.5 py-1 text-[0.65rem] font-bold tracking-wider">
+      <app-panel aria-label="Automation trigger">
+        <app-panel-header
+          heading="Trigger event"
+          description="Choose what starts this automation."
+          [icon]="triggerIcon">
+          <app-badge
+            panelHeaderActions
+            color="primary"
+            class="text-[0.65rem] font-bold tracking-wider">
             WHEN
-          </span>
-        </div>
+          </app-badge>
+        </app-panel-header>
 
         <div class="flex min-w-0">
           <div
@@ -54,10 +51,10 @@ import {
             aria-hidden="true">
             <div
               class="bg-primary/30 absolute top-0 bottom-0 left-1/2 w-px"></div>
-            <span
-              class="bg-primary text-primary-foreground relative mt-4 flex h-8 w-8 items-center justify-center rounded-full shadow-sm">
-              <svg lucideZap class="h-4 w-4"></svg>
-            </span>
+            <app-icon-circle
+              class="mt-4"
+              appearance="solid"
+              [icon]="triggerIcon" />
           </div>
 
           <div class="flex min-w-0 flex-1 flex-col gap-4 p-3 sm:pl-0">
@@ -149,11 +146,12 @@ import {
             }
           </div>
         </div>
-      </section>
+      </app-panel>
     </div>
   `,
 })
 export class AutomationTriggerEditorComponent {
+  readonly triggerIcon = LucideZap;
   readonly automationTriggerType = AutomationTriggerType;
   readonly triggerTypes = [
     AutomationTriggerType.taskChanged,

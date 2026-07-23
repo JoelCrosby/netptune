@@ -1,5 +1,6 @@
 import { Component, input, model } from '@angular/core';
 import { Status } from '@core/models/status';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import {
   AutomationConditionGroup,
@@ -11,16 +12,19 @@ import { AutomationConditionGroupEditorComponent } from './automation-condition-
 
 @Component({
   selector: 'app-automation-conditions-editor',
-  imports: [AutomationConditionGroupEditorComponent, StrokedButtonComponent],
+  imports: [
+    AutomationConditionGroupEditorComponent,
+    BadgeComponent,
+    StrokedButtonComponent,
+  ],
   template: `
     <div class="flex flex-col gap-4">
       <div>
         <div class="flex items-center gap-2">
           <h2 class="font-overpass text-xl font-medium">If</h2>
-          <span
-            class="bg-foreground/8 text-foreground/60 rounded-full px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase">
+          <app-badge class="text-[0.65rem] tracking-wide uppercase">
             Optional
-          </span>
+          </app-badge>
         </div>
         <p class="text-foreground/60 text-sm">
           Restrict which tasks can continue to the follow-up actions.

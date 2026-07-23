@@ -7,6 +7,7 @@ import {
   LucideListPlus,
   LucideTrash2,
 } from '@lucide/angular';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -16,6 +17,8 @@ import { FormInputComponent } from '@static/components/form-input/form-input.com
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import { actionTypeLabels } from '../models/automation-copy';
 import {
   AutomationAction,
@@ -49,8 +52,10 @@ export interface AutomationActionUpdate {
     FormTextAreaComponent,
     IconButtonComponent,
     StrokedButtonComponent,
+    BadgeComponent,
+    PanelComponent,
+    PanelHeaderComponent,
     LucideGripVertical,
-    LucideListOrdered,
     LucideListPlus,
     LucideTrash2,
   ],
@@ -60,28 +65,15 @@ export interface AutomationActionUpdate {
       Add the follow-up actions in the order they should run.
     </app-card-subtitle>
 
-    <section
-      class="border-border bg-background mt-4 overflow-hidden rounded-lg border shadow-sm"
-      aria-label="Follow-up actions">
-      <div
-        class="border-border bg-foreground/3 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3">
-        <div class="flex items-center gap-3">
-          <span
-            class="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
-            <svg lucideListOrdered class="h-4 w-4" aria-hidden="true"></svg>
-          </span>
-          <div>
-            <p class="text-sm font-medium">Action sequence</p>
-            <p class="text-foreground/60 text-xs">
-              Actions run from top to bottom.
-            </p>
-          </div>
-        </div>
-        <span
-          class="bg-primary/10 text-primary rounded-full px-2.5 py-1 text-xs font-semibold">
+    <app-panel class="mt-4" aria-label="Follow-up actions">
+      <app-panel-header
+        heading="Action sequence"
+        description="Actions run from top to bottom."
+        [icon]="actionSequenceIcon">
+        <app-badge panelHeaderActions color="primary">
           {{ actions().length }} / 10
-        </span>
-      </div>
+        </app-badge>
+      </app-panel-header>
 
       <div class="flex flex-col p-3 sm:p-4">
         @for (
@@ -338,10 +330,11 @@ export interface AutomationActionUpdate {
           }
         }
       </div>
-    </section>
+    </app-panel>
   `,
 })
 export class AutomationActionsEditorComponent {
+  readonly actionSequenceIcon = LucideListOrdered;
   readonly automationActionType = AutomationActionType;
   readonly automationDelayUnit = AutomationDelayUnit;
   readonly actionTypes = [

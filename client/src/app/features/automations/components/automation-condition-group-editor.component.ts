@@ -4,6 +4,8 @@ import { Status } from '@core/models/status';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { IconCircleComponent } from '@static/components/icon-circle.component';
+import { PanelComponent } from '@static/components/panel.component';
 import { taskChangeFieldLabels } from '../models/automation-copy';
 import {
   AutomationConditionGroup,
@@ -28,25 +30,21 @@ import {
     IconButtonComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    IconCircleComponent,
+    PanelComponent,
     AutomationFieldConditionEditorComponent,
     LucideGripVertical,
     LucideLayersPlus,
-    LucideListFilter,
     LucideListPlus,
     LucideTrash2,
     forwardRef(() => AutomationConditionGroupEditorComponent),
   ],
   template: `
-    <section
-      class="border-border bg-background overflow-hidden rounded-lg border shadow-sm"
-      [attr.aria-label]="'Condition group: ' + operatorLabel()">
+    <app-panel [attr.aria-label]="'Condition group: ' + operatorLabel()">
       <div
         class="border-border bg-foreground/3 flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3">
         <div class="flex flex-wrap items-center gap-3">
-          <span
-            class="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
-            <svg lucideListFilter class="h-4 w-4" aria-hidden="true"></svg>
-          </span>
+          <app-icon-circle [icon]="conditionIcon" />
           <div class="flex flex-wrap items-center gap-2 text-sm">
             <span class="text-foreground/60 font-medium">Match</span>
             <div
@@ -204,10 +202,11 @@ import {
           </div>
         </div>
       </div>
-    </section>
+    </app-panel>
   `,
 })
 export class AutomationConditionGroupEditorComponent {
+  readonly conditionIcon = LucideListFilter;
   readonly maximumDepth = 4;
   readonly automationConditionGroupOperator = AutomationConditionGroupOperator;
 
