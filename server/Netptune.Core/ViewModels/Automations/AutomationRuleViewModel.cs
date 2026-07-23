@@ -30,6 +30,8 @@ public record AutomationTriggerViewModel
 
     public List<AutomationFieldCondition>? Conditions { get; init; }
 
+    public AutomationConditionGroup? ConditionGroup { get; init; }
+
     public int? StatusId { get; init; }
 
     public AssigneeChangeMode? AssigneeChangeMode { get; init; }

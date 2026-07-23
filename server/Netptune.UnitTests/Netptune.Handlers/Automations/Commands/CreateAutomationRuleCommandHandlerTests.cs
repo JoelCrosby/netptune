@@ -187,10 +187,12 @@ public class CreateAutomationRuleCommandHandlerTests
                 Fields = [TaskChangeField.Name],
                 Conditions =
                 [
-                    new AutomationFieldCondition(
-                        TaskChangeField.Priority,
-                        AutomationConditionOperator.Equals,
-                        "High"),
+                    new AutomationFieldCondition
+                    {
+                        Field = TaskChangeField.Priority,
+                        Operator = AutomationConditionOperator.Equals,
+                        Value = "High",
+                    },
                 ],
             },
             Actions =
@@ -210,6 +212,97 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldCreateRule_WhenGroupedConditionFieldIsNotWatched()
+    {
+        AutomationRule? savedRule = null;
+        Automations
+            .AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>())
+            .Returns(call =>
+            {
+                savedRule = call.Arg<AutomationRule>();
+                savedRule.Id = 42;
+
+                return savedRule;
+            });
+
+        var request = new AutomationRuleRequest
+        {
+            Name = "High priority name change",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+                ConditionGroup = new AutomationConditionGroup
+                {
+                    Operator = AutomationConditionGroupOperator.All,
+                    Conditions =
+                    [
+                        new AutomationFieldCondition
+                        {
+                            Field = TaskChangeField.Priority,
+                            Operator = AutomationConditionOperator.Equals,
+                            Value = TaskPriority.High.ToString(),
+                        },
+                    ],
+                },
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        savedRule.Should().NotBeNull();
+
+        var conditionGroup = savedRule!.TriggerConfig!.RootElement.GetProperty("conditionGroup");
+        var groupOperator = conditionGroup.GetProperty("operator").GetInt32();
+        var conditions = conditionGroup.GetProperty("conditions");
+        var firstCondition = conditions[0];
+        var conditionField = firstCondition.GetProperty("field").GetInt32();
+
+        groupOperator.Should().Be((int)AutomationConditionGroupOperator.All);
+        conditionField.Should().Be((int)TaskChangeField.Priority);
+        result.Payload!.Trigger.ConditionGroup.Should().BeEquivalentTo(request.Trigger.ConditionGroup);
+    }
+
+    [Fact]
+    public async Task Handle_ShouldFail_WhenConditionGroupIsEmpty()
+    {
+        var request = new AutomationRuleRequest
+        {
+            Name = "Empty condition group",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+                ConditionGroup = new AutomationConditionGroup
+                {
+                    Operator = AutomationConditionGroupOperator.All,
+                },
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("at least one condition");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task Handle_ShouldFail_WhenConditionValueIsMissing()
     {
         var request = new AutomationRuleRequest
@@ -221,10 +314,12 @@ public class CreateAutomationRuleCommandHandlerTests
                 Fields = [TaskChangeField.Name],
                 Conditions =
                 [
-                    new AutomationFieldCondition(
-                        TaskChangeField.Name,
-                        AutomationConditionOperator.Contains,
-                        null),
+                    new AutomationFieldCondition
+                    {
+                        Field = TaskChangeField.Name,
+                        Operator = AutomationConditionOperator.Contains,
+                        Value = null,
+                    },
                 ],
             },
             Actions =
@@ -292,10 +387,12 @@ public class CreateAutomationRuleCommandHandlerTests
                 Fields = [TaskChangeField.Status],
                 Conditions =
                 [
-                    new AutomationFieldCondition(
-                        TaskChangeField.Status,
-                        AutomationConditionOperator.Equals,
-                        "12"),
+                    new AutomationFieldCondition
+                    {
+                        Field = TaskChangeField.Status,
+                        Operator = AutomationConditionOperator.Equals,
+                        Value = "12",
+                    },
                 ],
                 StatusId = 12,
             },

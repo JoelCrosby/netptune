@@ -2,9 +2,9 @@ using System.Diagnostics;
 
 using Microsoft.Extensions.Logging;
 
-using Netptune.Automation.Configuration;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Models;
+using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.UnitOfWork;
 
@@ -37,13 +37,25 @@ internal sealed class DueDateAutomationRuleMatcher
         Telemetry.RecordRulesEvaluated(triggerType, rules.Count);
         activity?.SetTag("automation.rules.evaluated", rules.Count);
 
-        var ruleDefinitions = rules
-            .Select(rule => new { Rule = rule, DurationDays = ConfigReader.ReadInt(rule.TriggerConfig, "durationDays") })
+        var rulesWithDurations = rules
+            .Select(rule =>
+            {
+                var durationDays = JsonUtils.ReadInt(rule.TriggerConfig, "durationDays");
+
+                return new { Rule = rule, DurationDays = durationDays };
+            })
+            .ToList();
+
+        var validRulesWithDurations = rulesWithDurations
             .Where(rule => rule.DurationDays is >= 0 and <= 365)
+            .ToList();
+
+        var ruleDefinitions = validRulesWithDurations
             .Select(rule => new DueDateRuleDefinition(rule.Rule, rule.DurationDays.GetValueOrDefault()))
             .ToList();
 
         var invalidRuleCount = rules.Count - ruleDefinitions.Count;
+
         if (invalidRuleCount > 0)
         {
             Logger.LogWarning(
@@ -74,6 +86,7 @@ internal sealed class DueDateAutomationRuleMatcher
         var rulesByWorkspace = ruleDefinitions
             .GroupBy(rule => rule.Rule.WorkspaceId)
             .ToDictionary(group => group.Key, group => group.ToList());
+
         var executions = new List<PendingAutomationExecution>();
 
         foreach (var task in tasks)
@@ -86,7 +99,10 @@ internal sealed class DueDateAutomationRuleMatcher
 
             foreach (var rule in workspaceRules)
             {
-                if (dueDate != today.AddDays(rule.DurationDays)) continue;
+                if (dueDate != today.AddDays(rule.DurationDays))
+                {
+                    continue;
+                }
 
                 var actorUserId = rule.Rule.OwnerId ?? rule.Rule.CreatedByUserId ?? task.OwnerId;
 
@@ -94,6 +110,7 @@ internal sealed class DueDateAutomationRuleMatcher
                 {
                     Logger.LogWarning("Automation rule {RuleId} skipped task {TaskId}: no actor user id", rule.Rule.Id, task.Id);
                     Telemetry.RecordRunsSkipped(triggerType, 1, "missing_actor");
+
                     continue;
                 }
 

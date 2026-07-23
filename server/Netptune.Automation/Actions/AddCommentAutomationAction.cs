@@ -1,6 +1,5 @@
 using System.Text.Json;
 
-using Netptune.Automation.Configuration;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -35,22 +34,26 @@ internal sealed class AddCommentAutomationAction : IAutomationAction
 
     public AutomationActionViewModel ToViewModel(AutomationAction action)
     {
+        var comment = JsonUtils.ReadString(action.Config, "comment");
+
         return new AutomationActionViewModel
         {
             Id = action.Id,
             Type = action.Type,
             SortOrder = action.SortOrder,
-            Comment = ConfigReader.ReadString(action.Config, "comment"),
+            Comment = comment,
         };
     }
 
     public AutomationActionPlanContribution Plan(AutomationActionPlanningContext context)
     {
-        var body = ConfigReader.ReadString(context.Action.Config, "comment")?.Trim();
+        var body = JsonUtils.ReadString(context.Action.Config, "comment")?.Trim();
+        var hasCommentBody = !string.IsNullOrWhiteSpace(body);
+        var commentBody = hasCommentBody ? body : null;
 
         return new AutomationActionPlanContribution
         {
-            CommentBody = string.IsNullOrWhiteSpace(body) ? null : body,
+            CommentBody = commentBody,
         };
     }
 }

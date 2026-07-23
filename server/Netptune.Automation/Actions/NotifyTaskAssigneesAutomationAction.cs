@@ -1,6 +1,5 @@
 using System.Text.Json;
 
-using Netptune.Automation.Configuration;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -31,12 +30,14 @@ internal sealed class NotifyTaskAssigneesAutomationAction : IAutomationAction
 
     public AutomationActionViewModel ToViewModel(AutomationAction action)
     {
+        var message = JsonUtils.ReadString(action.Config, "message");
+
         return new AutomationActionViewModel
         {
             Id = action.Id,
             Type = action.Type,
             SortOrder = action.SortOrder,
-            Message = ConfigReader.ReadString(action.Config, "message"),
+            Message = message,
         };
     }
 
@@ -57,6 +58,9 @@ internal sealed class NotifyTaskAssigneesAutomationAction : IAutomationAction
             return new AutomationActionPlanContribution();
         }
 
+        var configuredMessage = JsonUtils.ReadString(context.Action.Config, "message");
+        var notificationMessage = configuredMessage ?? $"Automation '{rule.Name}' matched this task.";
+
         var activity = new EventRecord
         {
             EventId = Guid.NewGuid(),
@@ -76,8 +80,7 @@ internal sealed class NotifyTaskAssigneesAutomationAction : IAutomationAction
                 projectSlug = task.Project?.Key,
                 automationRuleId = rule.Id,
                 automationRuleName = rule.Name,
-                message = ConfigReader.ReadString(context.Action.Config, "message") ??
-                    $"Automation '{rule.Name}' matched this task.",
+                message = notificationMessage,
             }, JsonOptions.Default),
             References =
             [

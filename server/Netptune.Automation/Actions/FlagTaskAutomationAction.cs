@@ -1,6 +1,5 @@
 using System.Text.Json;
 
-using Netptune.Automation.Configuration;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -31,22 +30,24 @@ internal sealed class FlagTaskAutomationAction : IAutomationAction
 
     public AutomationActionViewModel ToViewModel(AutomationAction action)
     {
+        var flagName = JsonUtils.ReadString(action.Config, "flagName");
+        var flagDescription = JsonUtils.ReadString(action.Config, "flagDescription");
+
         return new AutomationActionViewModel
         {
             Id = action.Id,
             Type = action.Type,
             SortOrder = action.SortOrder,
-            FlagName = ConfigReader.ReadString(action.Config, "flagName"),
-            FlagDescription = ConfigReader.ReadString(action.Config, "flagDescription"),
+            FlagName = flagName,
+            FlagDescription = flagDescription,
         };
     }
 
     public AutomationActionPlanContribution Plan(AutomationActionPlanningContext context)
     {
         var rule = context.Rule;
-        var name = ConfigReader.ReadString(context.Action.Config, "flagName") ?? "Automation flag";
-        var description = ConfigReader.ReadString(context.Action.Config, "flagDescription") ??
-            $"Flagged by automation '{rule.Name}'.";
+        var name = JsonUtils.ReadString(context.Action.Config, "flagName") ?? "Automation flag";
+        var description = JsonUtils.ReadString(context.Action.Config, "flagDescription") ?? $"Flagged by automation '{rule.Name}'.";
 
         return new AutomationActionPlanContribution
         {

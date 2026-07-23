@@ -2,9 +2,9 @@ using System.Diagnostics;
 
 using Microsoft.Extensions.Logging;
 
-using Netptune.Automation.Configuration;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Models;
+using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.UnitOfWork;
 
@@ -36,9 +36,18 @@ internal sealed class UnassignedTaskAutomationRuleMatcher
         Telemetry.RecordRulesEvaluated(AutomationTriggerType.TaskUnassignedFor, rules.Count);
         activity?.SetTag("automation.rules.evaluated", rules.Count);
 
-        var ruleDefinitions = rules
-            .Select(rule => new { Rule = rule, DurationDays = ConfigReader.ReadInt(rule.TriggerConfig, "durationDays") })
+        var rulesWithDurations = rules
+            .Select(rule =>
+            {
+                var durationDays = JsonUtils.ReadInt(rule.TriggerConfig, "durationDays");
+
+                return new { Rule = rule, DurationDays = durationDays };
+            })
+            .ToList();
+        var validRulesWithDurations = rulesWithDurations
             .Where(rule => rule.DurationDays is >= 1)
+            .ToList();
+        var ruleDefinitions = validRulesWithDurations
             .Select(rule => new UnassignedRuleDefinition(rule.Rule, rule.DurationDays.GetValueOrDefault()))
             .ToList();
 

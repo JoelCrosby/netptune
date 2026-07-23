@@ -109,6 +109,7 @@ internal static class AutomationTestData
         string? statusKey = null,
         AssigneeChangeMode? assigneeChangeMode = null,
         IReadOnlyCollection<AutomationFieldCondition>? conditions = null,
+        AutomationConditionGroup? conditionGroup = null,
         AutomationActionType actionType = AutomationActionType.FlagTask)
     {
         var statusId = statusKey is null ? (int?)null : await GetStatusId(db, scenario, statusKey);
@@ -119,6 +120,7 @@ internal static class AutomationTestData
             statusId,
             assigneeChangeMode,
             conditions,
+            conditionGroup,
         }, actionType);
     }
 

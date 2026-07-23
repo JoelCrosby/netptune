@@ -482,10 +482,12 @@ public sealed class AutomationExecutionServiceTests
             [TaskChangeField.Name],
             conditions:
             [
-                new AutomationFieldCondition(
-                    TaskChangeField.Name,
-                    AutomationConditionOperator.Contains,
-                    "urgent"),
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Name,
+                    Operator = AutomationConditionOperator.Contains,
+                    Value = "urgent",
+                },
             ]);
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
@@ -518,10 +520,12 @@ public sealed class AutomationExecutionServiceTests
             [TaskChangeField.Priority],
             conditions:
             [
-                new AutomationFieldCondition(
-                    TaskChangeField.Priority,
-                    AutomationConditionOperator.Equals,
-                    "Critical"),
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Priority,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = "Critical",
+                },
             ]);
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
@@ -554,10 +558,12 @@ public sealed class AutomationExecutionServiceTests
             [TaskChangeField.Tags],
             conditions:
             [
-                new AutomationFieldCondition(
-                    TaskChangeField.Tags,
-                    AutomationConditionOperator.Added,
-                    "Release"),
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Tags,
+                    Operator = AutomationConditionOperator.Added,
+                    Value = "Release",
+                },
             ]);
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
@@ -571,6 +577,184 @@ public sealed class AutomationExecutionServiceTests
                 TaskFieldChange.Tags(["release"], []),
             ],
         }, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_matches_all_current_state_conditions()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        scenario.Task.Priority = TaskPriority.High;
+
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var conditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions =
+            [
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Status,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = inProgressStatusId.ToString(),
+                },
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Priority,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = TaskPriority.High.ToString(),
+                },
+            ],
+        };
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            conditionGroup: conditionGroup);
+
+        var message = new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", scenario.Task.Name),
+            ],
+        };
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_requires_every_condition_in_all_group()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var conditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions =
+            [
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Name,
+                    Operator = AutomationConditionOperator.Contains,
+                    Value = "Automation",
+                },
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Priority,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = TaskPriority.Critical.ToString(),
+                },
+            ],
+        };
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            conditionGroup: conditionGroup);
+
+        var message = new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", scenario.Task.Name),
+            ],
+        };
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_matches_nested_any_and_none_groups()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var conditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Groups =
+            [
+                new AutomationConditionGroup
+                {
+                    Operator = AutomationConditionGroupOperator.Any,
+                    Conditions =
+                    [
+                        new AutomationFieldCondition
+                        {
+                            Field = TaskChangeField.Priority,
+                            Operator = AutomationConditionOperator.Equals,
+                            Value = TaskPriority.High.ToString(),
+                        },
+                        new AutomationFieldCondition
+                        {
+                            Field = TaskChangeField.Name,
+                            Operator = AutomationConditionOperator.Contains,
+                            Value = "Automation",
+                        },
+                    ],
+                },
+                new AutomationConditionGroup
+                {
+                    Operator = AutomationConditionGroupOperator.None,
+                    Conditions =
+                    [
+                        new AutomationFieldCondition
+                        {
+                            Field = TaskChangeField.Description,
+                            Operator = AutomationConditionOperator.Contains,
+                            Value = "cancelled",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            conditionGroup: conditionGroup);
+
+        var message = new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", scenario.Task.Name),
+            ],
+        };
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
 
         var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
 

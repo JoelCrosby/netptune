@@ -68,9 +68,11 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return Entities
             .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Tags)
             .Include(task => task.Project)
             .Include(task => task.Workspace)
             .Include(task => task.Status)
+            .AsSplitQuery()
             .AsNoTracking()
             .FirstOrDefaultAsync(task => task.Id == id && !task.IsDeleted, cancellationToken);
     }

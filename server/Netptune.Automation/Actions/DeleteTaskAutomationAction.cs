@@ -1,6 +1,5 @@
 using System.Text.Json;
 
-using Netptune.Automation.Configuration;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -50,20 +49,23 @@ internal sealed class DeleteTaskAutomationAction : IAutomationAction
 
     public AutomationActionViewModel ToViewModel(AutomationAction action)
     {
+        var delayAmount = JsonUtils.ReadInt(action.Config, "delayAmount") ?? 0;
+        var delayUnit = JsonUtils.ReadEnum<AutomationDelayUnit>(action.Config, "delayUnit") ?? AutomationDelayUnit.Minutes;
+
         return new AutomationActionViewModel
         {
             Id = action.Id,
             Type = action.Type,
             SortOrder = action.SortOrder,
-            DelayAmount = ConfigReader.ReadInt(action.Config, "delayAmount") ?? 0,
-            DelayUnit = ConfigReader.ReadEnum<AutomationDelayUnit>(action.Config, "delayUnit") ?? AutomationDelayUnit.Minutes,
+            DelayAmount = delayAmount,
+            DelayUnit = delayUnit,
         };
     }
 
     public AutomationActionPlanContribution Plan(AutomationActionPlanningContext context)
     {
-        var delayAmount = ConfigReader.ReadInt(context.Action.Config, "delayAmount") ?? 0;
-        var delayUnit = ConfigReader.ReadEnum<AutomationDelayUnit>(context.Action.Config, "delayUnit") ?? AutomationDelayUnit.Minutes;
+        var delayAmount = JsonUtils.ReadInt(context.Action.Config, "delayAmount") ?? 0;
+        var delayUnit = JsonUtils.ReadEnum<AutomationDelayUnit>(context.Action.Config, "delayUnit") ?? AutomationDelayUnit.Minutes;
         var delay = CreateDelay(delayAmount, delayUnit);
 
         return new AutomationActionPlanContribution

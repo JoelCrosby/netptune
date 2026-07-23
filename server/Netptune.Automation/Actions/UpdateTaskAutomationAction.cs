@@ -1,6 +1,5 @@
 using System.Text.Json;
 
-using Netptune.Automation.Configuration;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -33,26 +32,31 @@ internal sealed class UpdateTaskAutomationAction : IAutomationAction
 
     public AutomationActionViewModel ToViewModel(AutomationAction action)
     {
+        var statusId = JsonUtils.ReadInt(action.Config, "statusId");
+        var priority = JsonUtils.ReadEnum<TaskPriority>(action.Config, "priority");
+
         return new AutomationActionViewModel
         {
             Id = action.Id,
             Type = action.Type,
             SortOrder = action.SortOrder,
-            StatusId = ConfigReader.ReadInt(action.Config, "statusId"),
-            Priority = ConfigReader.ReadEnum<TaskPriority>(action.Config, "priority"),
+            StatusId = statusId,
+            Priority = priority,
         };
     }
 
     public AutomationActionPlanContribution Plan(AutomationActionPlanningContext context)
     {
-        var statusId = ConfigReader.ReadInt(context.Action.Config, "statusId");
-        var priority = ConfigReader.ReadEnum<TaskPriority>(context.Action.Config, "priority");
+        var statusId = JsonUtils.ReadInt(context.Action.Config, "statusId");
+        var priority = JsonUtils.ReadEnum<TaskPriority>(context.Action.Config, "priority");
+        var hasTaskUpdate = statusId is not null || priority is not null;
+        var taskUpdate = hasTaskUpdate
+            ? new AutomationTaskUpdateContribution(statusId, priority)
+            : null;
 
         return new AutomationActionPlanContribution
         {
-            TaskUpdate = statusId is null && priority is null
-                ? null
-                : new AutomationTaskUpdateContribution(statusId, priority),
+            TaskUpdate = taskUpdate,
         };
     }
 }
