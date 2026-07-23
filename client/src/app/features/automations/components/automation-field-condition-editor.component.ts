@@ -1,5 +1,17 @@
 import { Component, input, model } from '@angular/core';
 import { Status } from '@core/models/status';
+import {
+  LucideAsterisk,
+  LucideCircleDashed,
+  LucideCircleDot,
+  LucideDynamicIcon,
+  LucideEqual,
+  LucideEqualNot,
+  LucideIconInput,
+  LucideMinus,
+  LucidePlus,
+  LucideTextSearch,
+} from '@lucide/angular';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -15,9 +27,20 @@ interface SelectOption {
   value: string;
 }
 
+interface OperatorOption {
+  icon: LucideIconInput;
+  label: string;
+  value: AutomationConditionOperator;
+}
+
 @Component({
   selector: 'app-automation-field-condition-editor',
-  imports: [FormInputComponent, FormSelectComponent, FormSelectOptionComponent],
+  imports: [
+    FormInputComponent,
+    FormSelectComponent,
+    FormSelectOptionComponent,
+    LucideDynamicIcon,
+  ],
   template: `
     <div class="grid min-w-0 gap-2 sm:grid-cols-2">
       <app-form-select
@@ -27,7 +50,13 @@ interface SelectOption {
         (valueChange)="setOperator($event)">
         @for (option of operatorOptions(); track option.value) {
           <app-form-select-option [value]="option.value">
-            {{ option.label }}
+            <span class="flex items-center gap-2">
+              <svg
+                [lucideIcon]="option.icon"
+                class="text-primary h-4 w-4 shrink-0"
+                aria-hidden="true"></svg>
+              <span>{{ option.label }}</span>
+            </span>
           </app-form-select-option>
         }
       </app-form-select>
@@ -82,42 +111,89 @@ export class AutomationFieldConditionEditorComponent {
     return this.operatorLabel() ?? taskChangeFieldLabels[this.field()];
   }
 
-  operatorOptions(): { label: string; value: AutomationConditionOperator }[] {
+  operatorOptions(): OperatorOption[] {
     if (this.isCollectionField()) {
       return [
-        { label: 'Any change', value: AutomationConditionOperator.any },
-        { label: 'Includes', value: AutomationConditionOperator.equals },
         {
+          icon: LucideAsterisk,
+          label: 'Any change',
+          value: AutomationConditionOperator.any,
+        },
+        {
+          icon: LucideEqual,
+          label: 'Includes',
+          value: AutomationConditionOperator.equals,
+        },
+        {
+          icon: LucideEqualNot,
           label: 'Does not include',
           value: AutomationConditionOperator.notEquals,
         },
-        { label: 'Contains text', value: AutomationConditionOperator.contains },
-        { label: 'Is empty', value: AutomationConditionOperator.isEmpty },
         {
+          icon: LucideTextSearch,
+          label: 'Contains text',
+          value: AutomationConditionOperator.contains,
+        },
+        {
+          icon: LucideCircleDashed,
+          label: 'Is empty',
+          value: AutomationConditionOperator.isEmpty,
+        },
+        {
+          icon: LucideCircleDot,
           label: 'Is not empty',
           value: AutomationConditionOperator.isNotEmpty,
         },
-        { label: 'Added', value: AutomationConditionOperator.added },
-        { label: 'Removed', value: AutomationConditionOperator.removed },
+        {
+          icon: LucidePlus,
+          label: 'Added',
+          value: AutomationConditionOperator.added,
+        },
+        {
+          icon: LucideMinus,
+          label: 'Removed',
+          value: AutomationConditionOperator.removed,
+        },
       ];
     }
 
-    const options = [
-      { label: 'Any change', value: AutomationConditionOperator.any },
-      { label: 'Equals', value: AutomationConditionOperator.equals },
-      { label: 'Does not equal', value: AutomationConditionOperator.notEquals },
+    const options: OperatorOption[] = [
+      {
+        icon: LucideAsterisk,
+        label: 'Any change',
+        value: AutomationConditionOperator.any,
+      },
+      {
+        icon: LucideEqual,
+        label: 'Equals',
+        value: AutomationConditionOperator.equals,
+      },
+      {
+        icon: LucideEqualNot,
+        label: 'Does not equal',
+        value: AutomationConditionOperator.notEquals,
+      },
     ];
 
     if (this.isTextField()) {
       options.push({
+        icon: LucideTextSearch,
         label: 'Contains',
         value: AutomationConditionOperator.contains,
       });
     }
 
     options.push(
-      { label: 'Is empty', value: AutomationConditionOperator.isEmpty },
-      { label: 'Is not empty', value: AutomationConditionOperator.isNotEmpty }
+      {
+        icon: LucideCircleDashed,
+        label: 'Is empty',
+        value: AutomationConditionOperator.isEmpty,
+      },
+      {
+        icon: LucideCircleDot,
+        label: 'Is not empty',
+        value: AutomationConditionOperator.isNotEmpty,
+      }
     );
 
     return options;
