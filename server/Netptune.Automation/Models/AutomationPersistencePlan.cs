@@ -9,13 +9,7 @@ internal sealed record AutomationPersistencePlan
 
     public required List<AutomationRun> Runs { get; init; }
 
-    public required List<NotificationActivityPlan> NotificationPlans { get; init; }
+    public required List<PlannedAutomationAction> Actions { get; init; }
 
-    public required List<Flag> Flags { get; init; }
-
-    public required List<TaskUpdatePlan> TaskUpdatePlans { get; init; }
-
-    public required List<CommentPlan> CommentPlans { get; init; }
-
-    public required List<TaskDeletionPlan> TaskDeletionPlans { get; init; }
+    public required Dictionary<PlannedAutomationAction, Flag> Flags { get; init; }
 }

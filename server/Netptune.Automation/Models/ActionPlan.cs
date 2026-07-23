@@ -6,13 +6,5 @@ internal sealed record ActionPlan
 {
     public required List<AutomationRun> Runs { get; init; }
 
-    public required List<NotificationActivityPlan> NotificationPlans { get; init; }
-
-    public required List<FlagPlan> FlagPlans { get; init; }
-
-    public required List<TaskUpdatePlan> TaskUpdatePlans { get; init; }
-
-    public required List<CommentPlan> CommentPlans { get; init; }
-
-    public required List<TaskDeletionPlan> TaskDeletionPlans { get; init; }
+    public required List<PlannedAutomationAction> Actions { get; init; }
 }

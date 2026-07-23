@@ -265,6 +265,135 @@ public sealed class AutomationExecutionServiceTests
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
     }
 
+    [Theory]
+    [InlineData(true, "new")]
+    [InlineData(false, "complete")]
+    public async Task ExecuteTaskChangedRules_applies_cross_type_actions_in_sort_order(
+        bool deleteFirst,
+        string expectedStatusKey)
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name]);
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var existingActions = rule.Actions.ToList();
+        var deleteSortOrder = deleteFirst ? 1 : 2;
+        var updateSortOrder = deleteFirst ? 2 : 1;
+
+        scope.Db.AutomationActions.RemoveRange(existingActions);
+        rule.Actions.Clear();
+        rule.Actions.Add(new AutomationAction
+        {
+            Type = AutomationActionType.DeleteTask,
+            SortOrder = deleteSortOrder,
+            Config = JsonSerializer.SerializeToDocument(new { }),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        });
+        rule.Actions.Add(new AutomationAction
+        {
+            Type = AutomationActionType.UpdateTask,
+            SortOrder = updateSortOrder,
+            Config = JsonSerializer.SerializeToDocument(new
+            {
+                statusId = completeStatusId,
+                priority = TaskPriority.High,
+            }),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        });
+
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        scope.Db.ChangeTracker.Clear();
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var task = await scope.Db.ProjectTasks
+            .IgnoreQueryFilters()
+            .Include(item => item.Status)
+            .SingleAsync(item => item.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
+
+        task.IsDeleted.Should().BeTrue();
+        task.Status.Key.Should().Be(expectedStatusKey);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_discards_prior_actions_when_planning_fails()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name]);
+        var existingActions = rule.Actions.ToList();
+
+        scope.Db.AutomationActions.RemoveRange(existingActions);
+        rule.Actions.Clear();
+        rule.Actions.Add(new AutomationAction
+        {
+            Type = AutomationActionType.AddComment,
+            SortOrder = 1,
+            Config = JsonSerializer.SerializeToDocument(new
+            {
+                comment = "This action must be discarded",
+            }),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        });
+        rule.Actions.Add(new AutomationAction
+        {
+            Type = AutomationActionType.DeleteTask,
+            SortOrder = 2,
+            Config = JsonSerializer.SerializeToDocument(new
+            {
+                delayAmount = int.MaxValue,
+                delayUnit = AutomationDelayUnit.Days,
+            }),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        });
+
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        scope.Db.ChangeTracker.Clear();
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+        var commentCount = await scope.Db.Comments.CountAsync(TestContext.Current.CancellationToken);
+
+        run.Status.Should().Be(AutomationRunStatus.Failed);
+        run.Message.Should().NotBeNullOrWhiteSpace();
+        commentCount.Should().Be(0);
+    }
+
     [Fact]
     public async Task ExecuteScheduledActions_deletes_task_after_configured_delay()
     {

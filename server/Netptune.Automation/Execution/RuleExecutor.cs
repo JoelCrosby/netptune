@@ -63,16 +63,13 @@ internal sealed class RuleExecutor
         var plan = ActionPlanner.Plan(pending);
         RecordRunResults(triggerType, plan.Runs);
 
-        var flags = await FlagPlanner.BuildFlags(triggerType, plan.FlagPlans, cancellationToken);
+        var flags = await FlagPlanner.BuildFlags(triggerType, plan.Actions, cancellationToken);
         var persistencePlan = new AutomationPersistencePlan
         {
             TriggerType = triggerType,
             Runs = plan.Runs,
-            NotificationPlans = plan.NotificationPlans,
+            Actions = plan.Actions,
             Flags = flags,
-            TaskUpdatePlans = plan.TaskUpdatePlans,
-            CommentPlans = plan.CommentPlans,
-            TaskDeletionPlans = plan.TaskDeletionPlans,
         };
 
         var notifications = await Persistence.Persist(persistencePlan, cancellationToken);

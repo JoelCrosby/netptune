@@ -27,20 +27,22 @@ internal sealed class ActionPlanner
         var plan = new ActionPlan
         {
             Runs = new List<AutomationRun>(executions.Count),
-            NotificationPlans = [],
-            FlagPlans = [],
-            TaskUpdatePlans = [],
-            CommentPlans = [],
-            TaskDeletionPlans = [],
+            Actions = [],
         };
 
-        foreach (var execution in executions)
+        var orderedExecutions = executions
+            .OrderBy(execution => execution.Rule.Id)
+            .ThenBy(execution => execution.Task.Id);
+
+        foreach (var execution in orderedExecutions)
         {
             var run = CreateRun(execution);
 
             try
             {
-                PlanActions(execution, plan);
+                var actions = PlanActions(execution);
+
+                plan.Actions.AddRange(actions);
             }
             catch (Exception ex)
             {
@@ -56,11 +58,13 @@ internal sealed class ActionPlanner
         return plan;
     }
 
-    private void PlanActions(PendingAutomationExecution execution, ActionPlan plan)
+    private List<PlannedAutomationAction> PlanActions(PendingAutomationExecution execution)
     {
         var actions = execution.Rule.Actions
             .Where(action => !action.IsDeleted)
-            .OrderBy(action => action.SortOrder);
+            .OrderBy(action => action.SortOrder)
+            .ThenBy(action => action.Id);
+        var plannedActions = new List<PlannedAutomationAction>();
 
         foreach (var action in actions)
         {
@@ -82,55 +86,15 @@ internal sealed class ActionPlanner
             };
             var contribution = automationAction.Plan(context);
 
-            AddContribution(plan, execution, action, contribution);
-        }
-    }
-
-    private static void AddContribution(
-        ActionPlan plan,
-        PendingAutomationExecution execution,
-        AutomationAction action,
-        AutomationActionPlanContribution contribution)
-    {
-        if (contribution.Notification is { } notification)
-        {
-            plan.NotificationPlans.Add(new NotificationActivityPlan
+            plannedActions.Add(new PlannedAutomationAction
             {
                 Execution = execution,
-                Activity = notification.Activity,
-                RecipientUserIds = notification.RecipientUserIds,
+                Action = action,
+                Contribution = contribution,
             });
         }
 
-        if (contribution.Flag is { } flag)
-        {
-            plan.FlagPlans.Add(new FlagPlan
-            {
-                Execution = execution,
-                Name = flag.Name,
-                Description = flag.Description,
-            });
-        }
-
-        if (contribution.TaskUpdate is { } taskUpdate)
-        {
-            plan.TaskUpdatePlans.Add(new TaskUpdatePlan
-            {
-                Execution = execution,
-                StatusId = taskUpdate.StatusId,
-                Priority = taskUpdate.Priority,
-            });
-        }
-
-        if (contribution.CommentBody is { } commentBody)
-        {
-            plan.CommentPlans.Add(new CommentPlan(execution, commentBody));
-        }
-
-        if (contribution.TaskDeletion is { } taskDeletion)
-        {
-            plan.TaskDeletionPlans.Add(new TaskDeletionPlan(execution, action, taskDeletion.Delay));
-        }
+        return plannedActions;
     }
 
     private static AutomationRun CreateRun(PendingAutomationExecution execution)

@@ -6,6 +6,7 @@ using Netptune.Automation.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -16,7 +17,18 @@ namespace Netptune.Automation.Persistence;
 
 internal sealed class RunPersistenceService
 {
-    private sealed record PlannedComment(Comment Entity, CommentPlan Plan);
+    private sealed record PlannedComment(Comment Entity, PlannedAutomationAction Action);
+
+    private sealed record PersistenceState
+    {
+        public required Dictionary<PlannedAutomationAction, Flag> Flags { get; init; }
+
+        public required List<Notification> Notifications { get; init; }
+
+        public required List<PlannedAutomationAction> AppliedTaskDeletions { get; init; }
+
+        public required HashSet<int> DeletedTaskIds { get; init; }
+    }
 
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ILogger<RunPersistenceService> Logger;
@@ -38,165 +50,171 @@ internal sealed class RunPersistenceService
     internal async Task<List<Notification>> Persist(AutomationPersistencePlan plan, CancellationToken cancellationToken)
     {
         var activity = Activity.Current;
-        var activityLogs = plan.NotificationPlans.Select(notificationPlan => notificationPlan.Activity).ToList();
-        var comments = BuildComments(plan.CommentPlans);
-        var commentEntities = comments.Select(comment => comment.Entity).ToList();
-        var immediateTaskDeletions = plan.TaskDeletionPlans.Where(deletion => deletion.Delay <= TimeSpan.Zero).ToList();
-        var scheduledActions = BuildScheduledActions(plan.TaskDeletionPlans);
+        var notificationCount = CountActions(plan.Actions, action => action.Contribution.Notification is not null);
+        var flagCount = plan.Flags.Count;
+        var taskUpdateCount = CountActions(plan.Actions, action => action.Contribution.TaskUpdate is not null);
+        var commentCount = CountActions(plan.Actions, action => action.Contribution.CommentBody is not null);
+        var taskDeletionCount = CountActions(plan.Actions, action => action.Contribution.TaskDeletion is not null);
+        var scheduledActionCount = CountActions(
+            plan.Actions,
+            action => action.Contribution.TaskDeletion?.Delay > TimeSpan.Zero);
 
-        activity?.SetTag("automation.flags.created", plan.Flags.Count);
-        activity?.SetTag("automation.event_records.created", activityLogs.Count);
-        activity?.SetTag("automation.task_updates.planned", plan.TaskUpdatePlans.Count);
-        activity?.SetTag("automation.comments.planned", comments.Count);
-        activity?.SetTag("automation.task_deletions.planned", plan.TaskDeletionPlans.Count);
-        activity?.SetTag("automation.actions.scheduled", scheduledActions.Count);
+        activity?.SetTag("automation.event_records.created", notificationCount);
+        activity?.SetTag("automation.flags.created", flagCount);
+        activity?.SetTag("automation.task_updates.planned", taskUpdateCount);
+        activity?.SetTag("automation.comments.planned", commentCount);
+        activity?.SetTag("automation.task_deletions.planned", taskDeletionCount);
+        activity?.SetTag("automation.actions.scheduled", scheduledActionCount);
 
         Logger.LogInformation(
-            "Persisting automation results for trigger {TriggerType}: {RunCount} runs, {EventRecordCount} activity logs, {FlagCount} flags, {TaskUpdateCount} task updates, {CommentCount} comments, {TaskDeletionCount} task deletions",
+            "Persisting {ActionCount} ordered automation actions for trigger {TriggerType}: {RunCount} runs, {NotificationCount} notifications, {FlagCount} flags, {TaskUpdateCount} task updates, {CommentCount} comments, {TaskDeletionCount} task deletions",
+            plan.Actions.Count,
             plan.TriggerType,
             plan.Runs.Count,
-            activityLogs.Count,
-            plan.Flags.Count,
-            plan.TaskUpdatePlans.Count,
-            comments.Count,
-            plan.TaskDeletionPlans.Count);
+            notificationCount,
+            flagCount,
+            taskUpdateCount,
+            commentCount,
+            taskDeletionCount);
 
-        List<Notification> notifications = [];
-        List<TaskDeletionPlan> appliedTaskDeletions = [];
+        var state = new PersistenceState
+        {
+            Flags = plan.Flags,
+            Notifications = [],
+            AppliedTaskDeletions = [],
+            DeletedTaskIds = [],
+        };
 
         await UnitOfWork.Transaction(async () =>
         {
-            await ApplyTaskUpdates(plan.TaskUpdatePlans, cancellationToken);
-            await UnitOfWork.Comments.AddRangeAsync(commentEntities, cancellationToken);
-            await UnitOfWork.EventRecords.AddRangeAsync(activityLogs, cancellationToken);
-            await UnitOfWork.Flags.AddRangeAsync(plan.Flags, cancellationToken);
             await UnitOfWork.Automations.AddRunsAsync(plan.Runs, cancellationToken);
-            await UnitOfWork.Automations.AddScheduledActionsAsync(scheduledActions, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
-            await AppendCommentEvents(comments, cancellationToken);
-
-            notifications = await BuildNotifications(plan.NotificationPlans, cancellationToken);
-            activity?.SetTag("automation.notifications.created", notifications.Count);
-
-            await UnitOfWork.Notifications.AddRangeAsync(notifications, cancellationToken);
-            await UnitOfWork.CompleteAsync(cancellationToken);
-
-            appliedTaskDeletions = await ApplyTaskDeletions(immediateTaskDeletions, cancellationToken);
+            foreach (var action in plan.Actions)
+            {
+                await ApplyAction(action, state, cancellationToken);
+                await UnitOfWork.CompleteAsync(cancellationToken);
+            }
         });
 
-        await RemoveDeletedTasksFromSearch(appliedTaskDeletions);
+        activity?.SetTag("automation.notifications.created", state.Notifications.Count);
+
+        await RemoveDeletedTasksFromSearch(state.AppliedTaskDeletions);
 
         Logger.LogInformation(
-            "Persisted automation results for trigger {TriggerType}: {NotificationCount} notifications",
+            "Persisted ordered automation actions for trigger {TriggerType}: {NotificationCount} notifications",
             plan.TriggerType,
-            notifications.Count);
+            state.Notifications.Count);
 
-        return notifications;
+        return state.Notifications;
     }
 
-    private static List<ScheduledAutomationAction> BuildScheduledActions(List<TaskDeletionPlan> deletionPlans)
-    {
-        return deletionPlans
-            .Where(plan => plan.Delay > TimeSpan.Zero)
-            .Select(plan => new ScheduledAutomationAction
-            {
-                AutomationRuleId = plan.Execution.Rule.Id,
-                AutomationActionId = plan.Action.Id,
-                TaskId = plan.Execution.Task.Id,
-                ActionType = AutomationActionType.DeleteTask,
-                Status = ScheduledAutomationActionStatus.Pending,
-                ExpectedStatusId = plan.Execution.Task.StatusId,
-                ExecuteAt = plan.Execution.TriggeredAt.Add(plan.Delay),
-                IdempotencyKey = $"{plan.Execution.IdempotencyKey}:action:{plan.Action.Id}",
-                OwnerId = plan.Execution.ActorUserId,
-                CreatedByUserId = plan.Execution.ActorUserId,
-            })
-            .ToList();
-    }
-
-    private async Task<List<TaskDeletionPlan>> ApplyTaskDeletions(
-        List<TaskDeletionPlan> taskDeletionPlans,
+    private async Task ApplyAction(
+        PlannedAutomationAction action,
+        PersistenceState state,
         CancellationToken cancellationToken)
     {
-        var appliedPlans = new List<TaskDeletionPlan>();
+        var taskId = action.Execution.Task.Id;
 
-        foreach (var plan in taskDeletionPlans)
+        if (state.DeletedTaskIds.Contains(taskId))
         {
-            var taskId = plan.Execution.Task.Id;
-            var affected = await UnitOfWork.Tasks.SoftDelete(taskId, plan.Execution.ActorUserId, cancellationToken);
+            Logger.LogInformation(
+                "Skipping automation action {ActionId} because task {TaskId} was deleted by an earlier action",
+                action.Action.Id,
+                taskId);
 
-            if (affected == 0)
-            {
-                continue;
-            }
-
-            appliedPlans.Add(plan);
+            return;
         }
 
-        Activity.Current?.SetTag("automation.task_deletions.applied", appliedPlans.Count);
-        Logger.LogInformation("Applied automation task deletions to {DeletedTaskCount} tasks", appliedPlans.Count);
+        var contribution = action.Contribution;
 
-        return appliedPlans;
+        if (contribution.Notification is { } notification)
+        {
+            await ApplyNotification(action, notification, state.Notifications, cancellationToken);
+        }
+
+        if (contribution.Flag is not null && state.Flags.TryGetValue(action, out var flag))
+        {
+            await UnitOfWork.Flags.AddRangeAsync([flag], cancellationToken);
+        }
+
+        if (contribution.TaskUpdate is { } taskUpdate)
+        {
+            await ApplyTaskUpdate(action, taskUpdate, cancellationToken);
+        }
+
+        if (contribution.CommentBody is { } commentBody)
+        {
+            await ApplyComment(action, commentBody, cancellationToken);
+        }
+
+        if (contribution.TaskDeletion is { } taskDeletion)
+        {
+            await ApplyTaskDeletion(action, taskDeletion, state, cancellationToken);
+        }
     }
 
-    private async Task RemoveDeletedTasksFromSearch(List<TaskDeletionPlan> taskDeletionPlans)
+    private async Task ApplyNotification(
+        PlannedAutomationAction action,
+        AutomationNotificationContribution contribution,
+        List<Notification> notifications,
+        CancellationToken cancellationToken)
     {
-        foreach (var workspaceGroup in taskDeletionPlans.GroupBy(plan => plan.Execution.Task.Workspace.Slug))
-        {
-            var taskIds = workspaceGroup.Select(plan => plan.Execution.Task.Id).Distinct().ToList();
+        await UnitOfWork.EventRecords.AddRangeAsync([contribution.Activity], cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
 
-            await EventPublisher.Dispatch(new SearchIndexEvent
-            {
-                Operation = SearchIndexOperation.Delete,
-                EntityType = "task",
-                EntityIds = taskIds,
-                WorkspaceSlug = workspaceGroup.Key,
-            });
-        }
+        var actionNotifications = await BuildNotifications(action, contribution, cancellationToken);
+
+        await UnitOfWork.Notifications.AddRangeAsync(actionNotifications, cancellationToken);
+        notifications.AddRange(actionNotifications);
     }
 
-    private static List<PlannedComment> BuildComments(List<CommentPlan> plans)
+    private async Task ApplyComment(
+        PlannedAutomationAction action,
+        string body,
+        CancellationToken cancellationToken)
     {
-        var comments = new List<PlannedComment>(plans.Count);
+        var comment = BuildComment(action, body);
 
-        foreach (var plan in plans)
-        {
-            var comment = new Comment
-            {
-                Body = plan.Body,
-                EntityId = plan.Execution.Task.Id,
-                EntityType = EntityType.Task,
-                WorkspaceId = plan.Execution.Rule.WorkspaceId,
-                OwnerId = plan.Execution.ActorUserId,
-                CreatedByUserId = plan.Execution.ActorUserId,
-            };
-
-            comments.Add(new PlannedComment(comment, plan));
-        }
-
-        return comments;
+        await UnitOfWork.Comments.AddRangeAsync([comment.Entity], cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
+        await AppendCommentEvent(comment, cancellationToken);
     }
 
-    private async Task AppendCommentEvents(List<PlannedComment> comments, CancellationToken cancellationToken)
+    private static PlannedComment BuildComment(PlannedAutomationAction action, string body)
     {
-        foreach (var comment in comments)
+        var execution = action.Execution;
+        var comment = new Comment
         {
-            var commentEvent = BuildCommentEvent(comment);
+            Body = body,
+            EntityId = execution.Task.Id,
+            EntityType = EntityType.Task,
+            WorkspaceId = execution.Rule.WorkspaceId,
+            OwnerId = execution.ActorUserId,
+            CreatedByUserId = execution.ActorUserId,
+        };
 
-            await EventRecords.Append(commentEvent, cancellationToken);
-        }
+        return new PlannedComment(comment, action);
+    }
+
+    private async Task AppendCommentEvent(PlannedComment comment, CancellationToken cancellationToken)
+    {
+        var commentEvent = BuildCommentEvent(comment);
+
+        await EventRecords.Append(commentEvent, cancellationToken);
     }
 
     private static EventWriteRequest<CommentEventPayload> BuildCommentEvent(PlannedComment comment)
     {
+        var execution = comment.Action.Execution;
+
         return new EventWriteRequest<CommentEventPayload>
         {
             WorkspaceId = comment.Entity.WorkspaceId,
             EventKey = EventKeys.CommentCreated,
             SubjectType = EventEntityTypes.From(EntityType.Task),
             SubjectId = comment.Entity.EntityId.ToString(),
-            ActorUserId = comment.Plan.Execution.ActorUserId,
+            ActorUserId = execution.ActorUserId,
             Payload = new CommentEventPayload
             {
                 CommentId = comment.Entity.Id,
@@ -214,154 +232,224 @@ internal sealed class RunPersistenceService
         };
     }
 
-    private async Task ApplyTaskUpdates(List<TaskUpdatePlan> taskUpdatePlans, CancellationToken cancellationToken)
+    private async Task ApplyTaskUpdate(
+        PlannedAutomationAction action,
+        AutomationTaskUpdateContribution contribution,
+        CancellationToken cancellationToken)
     {
-        if (taskUpdatePlans.Count == 0)
+        var execution = action.Execution;
+        var taskId = execution.Task.Id;
+        var task = await UnitOfWork.Tasks.GetTaskForUpdate(taskId, cancellationToken);
+
+        if (task is null)
+        {
+            Logger.LogWarning(
+                "Automation rule {RuleId} could not update missing or deleted task {TaskId}",
+                execution.Rule.Id,
+                taskId);
+
+            return;
+        }
+
+        var taskUpdated = false;
+        var status = contribution.StatusId.HasValue
+            ? await UnitOfWork.Statuses.GetInWorkspace(
+                contribution.StatusId.Value,
+                execution.Rule.WorkspaceId,
+                cancellationToken: cancellationToken)
+            : null;
+
+        if (status is not null && task.StatusId != status.Id)
+        {
+            var oldStatusId = task.StatusId;
+            var oldCategory = task.Status.Category;
+
+            await UnitOfWork.Tasks.UpdateTaskStatus(taskId, status.Id, cancellationToken);
+
+            task.StatusId = status.Id;
+            task.Status = status;
+            execution.Task.StatusId = status.Id;
+            execution.Task.Status = status;
+            taskUpdated = true;
+
+            var references = BuildTaskScopeReferences(task);
+            var statusEvent = new EventWriteRequest<FieldTransitionedPayload>
+            {
+                WorkspaceId = execution.Rule.WorkspaceId,
+                EventKey = EventKeys.EntityFieldTransitioned,
+                SubjectType = EventEntityTypes.From(EntityType.Task),
+                SubjectId = task.Id.ToString(),
+                ActorUserId = execution.ActorUserId,
+                Payload = new FieldTransitionedPayload
+                {
+                    Field = "status",
+                    OldValue = oldStatusId.ToString(),
+                    NewValue = status.Id.ToString(),
+                    OldCategory = oldCategory.ToString(),
+                    NewCategory = status.Category.ToString(),
+                },
+                References = references,
+            };
+
+            await EventRecords.Append(statusEvent, cancellationToken);
+        }
+
+        if (contribution.Priority.HasValue && task.Priority != contribution.Priority.Value)
+        {
+            task.Priority = contribution.Priority.Value;
+            execution.Task.Priority = contribution.Priority.Value;
+            taskUpdated = true;
+        }
+
+        if (taskUpdated)
+        {
+            task.UpdatedAt = DateTime.UtcNow;
+            task.ModifiedByUserId = execution.ActorUserId;
+            Activity.Current?.AddTag("automation.task_update.applied", taskId);
+        }
+    }
+
+    private static List<EventReferenceInput> BuildTaskScopeReferences(ProjectTask task)
+    {
+        var references = new List<EventReferenceInput>();
+
+        if (task.ProjectId.HasValue)
+        {
+            references.Add(new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Project),
+                EntityId = task.ProjectId.Value.ToString(),
+            });
+        }
+
+        if (task.SprintId.HasValue)
+        {
+            references.Add(new EventReferenceInput
+            {
+                Role = EventReferenceRoles.Scope,
+                EntityType = EventEntityTypes.From(EntityType.Sprint),
+                EntityId = task.SprintId.Value.ToString(),
+            });
+        }
+
+        return references;
+    }
+
+    private async Task ApplyTaskDeletion(
+        PlannedAutomationAction action,
+        AutomationTaskDeletionContribution contribution,
+        PersistenceState state,
+        CancellationToken cancellationToken)
+    {
+        if (contribution.Delay > TimeSpan.Zero)
+        {
+            var scheduledAction = BuildScheduledAction(action, contribution.Delay);
+
+            await UnitOfWork.Automations.AddScheduledActionsAsync([scheduledAction], cancellationToken);
+
+            return;
+        }
+
+        var execution = action.Execution;
+        var affected = await UnitOfWork.Tasks.SoftDelete(
+            execution.Task.Id,
+            execution.ActorUserId,
+            cancellationToken);
+
+        if (affected == 0)
         {
             return;
         }
 
-        var tasks = new Dictionary<int, ProjectTask>();
-        var updatedTaskIds = new HashSet<int>();
-
-        foreach (var plan in taskUpdatePlans)
-        {
-            var taskId = plan.Execution.Task.Id;
-
-            if (!tasks.TryGetValue(taskId, out var task))
-            {
-                task = await UnitOfWork.Tasks.GetTaskForUpdate(taskId, cancellationToken);
-
-                if (task is null)
-                {
-                    Logger.LogWarning("Automation rule {RuleId} could not update missing task {TaskId}", plan.Execution.Rule.Id, taskId);
-                    continue;
-                }
-
-                tasks[taskId] = task;
-            }
-
-            var taskUpdated = false;
-
-            var status = plan.StatusId.HasValue
-                ? await UnitOfWork.Statuses.GetInWorkspace(
-                    plan.StatusId.Value,
-                    plan.Execution.Rule.WorkspaceId,
-                    cancellationToken: cancellationToken)
-                : null;
-
-            if (status is not null && task.StatusId != status.Id)
-            {
-                var oldStatusId = task.StatusId;
-                var oldCategory = task.Status.Category;
-
-                await UnitOfWork.Tasks.UpdateTaskStatus(taskId, status.Id, cancellationToken);
-
-                task.StatusId = status.Id;
-                task.Status = status;
-                taskUpdated = true;
-
-                var references = new List<EventReferenceInput>();
-
-                if (task.ProjectId.HasValue)
-                {
-                    references.Add(new EventReferenceInput
-                    {
-                        Role = EventReferenceRoles.Scope,
-                        EntityType = EventEntityTypes.From(EntityType.Project),
-                        EntityId = task.ProjectId.Value.ToString(),
-                    });
-                }
-
-                if (task.SprintId.HasValue)
-                {
-                    references.Add(new EventReferenceInput
-                    {
-                        Role = EventReferenceRoles.Scope,
-                        EntityType = EventEntityTypes.From(EntityType.Sprint),
-                        EntityId = task.SprintId.Value.ToString(),
-                    });
-                }
-
-                var statusEvent = new EventWriteRequest<FieldTransitionedPayload>
-                {
-                    WorkspaceId = plan.Execution.Rule.WorkspaceId,
-                    EventKey = EventKeys.EntityFieldTransitioned,
-                    SubjectType = EventEntityTypes.From(EntityType.Task),
-                    SubjectId = task.Id.ToString(),
-                    ActorUserId = plan.Execution.ActorUserId,
-                    Payload = new FieldTransitionedPayload
-                    {
-                        Field = "status",
-                        OldValue = oldStatusId.ToString(),
-                        NewValue = status.Id.ToString(),
-                        OldCategory = oldCategory.ToString(),
-                        NewCategory = status.Category.ToString(),
-                    },
-                    References = references,
-                };
-
-                await EventRecords.Append(statusEvent, cancellationToken);
-            }
-
-            if (plan.Priority.HasValue && task.Priority != plan.Priority.Value)
-            {
-                task.Priority = plan.Priority.Value;
-                taskUpdated = true;
-            }
-
-            if (taskUpdated)
-            {
-                updatedTaskIds.Add(taskId);
-                task.UpdatedAt = DateTime.UtcNow;
-                task.ModifiedByUserId = plan.Execution.ActorUserId;
-            }
-        }
-
-        Activity.Current?.SetTag("automation.task_updates.applied", updatedTaskIds.Count);
-
-        Logger.LogInformation("Applied automation task updates to {UpdatedTaskCount} tasks", updatedTaskIds.Count);
+        state.AppliedTaskDeletions.Add(action);
+        state.DeletedTaskIds.Add(execution.Task.Id);
+        Activity.Current?.AddTag("automation.task_deletion.applied", execution.Task.Id);
     }
 
-    private async Task<List<Notification>> BuildNotifications(List<NotificationActivityPlan> activityPlans, CancellationToken cancellationToken)
+    private static ScheduledAutomationAction BuildScheduledAction(
+        PlannedAutomationAction action,
+        TimeSpan delay)
     {
-        var notifications = new List<Notification>();
+        var execution = action.Execution;
 
-        foreach (var plan in activityPlans)
+        return new ScheduledAutomationAction
         {
-            var task = plan.Execution.Task;
-            var actorUserId = plan.Execution.ActorUserId;
+            AutomationRuleId = execution.Rule.Id,
+            AutomationActionId = action.Action.Id,
+            TaskId = execution.Task.Id,
+            ActionType = AutomationActionType.DeleteTask,
+            Status = ScheduledAutomationActionStatus.Pending,
+            ExpectedStatusId = execution.Task.StatusId,
+            ExecuteAt = execution.TriggeredAt.Add(delay),
+            IdempotencyKey = $"{execution.IdempotencyKey}:action:{action.Action.Id}",
+            OwnerId = execution.ActorUserId,
+            CreatedByUserId = execution.ActorUserId,
+        };
+    }
 
-            var recipients = await NotificationRecipientResolver.Resolve(
-                UnitOfWork,
-                new NotificationRecipientRequest
-                {
-                    RequestedUserIds = plan.RecipientUserIds,
-                    WorkspaceUserIds = plan.RecipientUserIds,
-                    ActorUserId = actorUserId,
-                    WorkspaceId = task.WorkspaceId,
-                    ActivityType = ActivityType.Modify,
-                    ExcludeActor = false,
-                },
-                cancellationToken);
+    private async Task RemoveDeletedTasksFromSearch(List<PlannedAutomationAction> taskDeletions)
+    {
+        var workspaceGroups = taskDeletions.GroupBy(action => action.Execution.Task.Workspace.Slug);
 
-            var link = BuildTaskLink(task);
+        foreach (var workspaceGroup in workspaceGroups)
+        {
+            var taskIds = workspaceGroup
+                .Select(action => action.Execution.Task.Id)
+                .Distinct()
+                .ToList();
 
-            notifications.AddRange(recipients.Select(userId => new Notification
+            await EventPublisher.Dispatch(new SearchIndexEvent
             {
-                UserId = userId,
-                EventRecordId = plan.Activity.Id,
-                IsRead = false,
-                Link = link,
-                WorkspaceId = task.WorkspaceId,
-                EntityType = EntityType.Task,
-                ActivityType = ActivityType.Modify,
-                CreatedByUserId = actorUserId,
-                OwnerId = actorUserId,
-            }));
+                Operation = SearchIndexOperation.Delete,
+                EntityType = "task",
+                EntityIds = taskIds,
+                WorkspaceSlug = workspaceGroup.Key,
+            });
         }
+    }
+
+    private async Task<List<Notification>> BuildNotifications(
+        PlannedAutomationAction action,
+        AutomationNotificationContribution contribution,
+        CancellationToken cancellationToken)
+    {
+        var task = action.Execution.Task;
+        var actorUserId = action.Execution.ActorUserId;
+        var recipients = await NotificationRecipientResolver.Resolve(
+            UnitOfWork,
+            new NotificationRecipientRequest
+            {
+                RequestedUserIds = contribution.RecipientUserIds,
+                WorkspaceUserIds = contribution.RecipientUserIds,
+                ActorUserId = actorUserId,
+                WorkspaceId = task.WorkspaceId,
+                ActivityType = ActivityType.Modify,
+                ExcludeActor = false,
+            },
+            cancellationToken);
+        var link = BuildTaskLink(task);
+        var notifications = recipients.Select(userId => new Notification
+        {
+            UserId = userId,
+            EventRecordId = contribution.Activity.Id,
+            IsRead = false,
+            Link = link,
+            WorkspaceId = task.WorkspaceId,
+            EntityType = EntityType.Task,
+            ActivityType = ActivityType.Modify,
+            CreatedByUserId = actorUserId,
+            OwnerId = actorUserId,
+        }).ToList();
 
         return notifications;
+    }
+
+    private static int CountActions(
+        List<PlannedAutomationAction> actions,
+        Func<PlannedAutomationAction, bool> predicate)
+    {
+        return actions.Count(predicate);
     }
 
     private static string BuildTaskLink(ProjectTask task)
