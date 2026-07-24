@@ -123,6 +123,7 @@ import { AutomationsService } from '../../services/automations.service';
                   [actions]="actions()"
                   [statuses]="taskStatuses()"
                   [users]="workspaceUsers()"
+                  [ruleName]="name()"
                   [tags]="workspaceTagsResource.value()"
                   [sprints]="workspaceSprintsResource.value()"
                   [boardGroups]="workspaceBoardGroupsResource.value()"

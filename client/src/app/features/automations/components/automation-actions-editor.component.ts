@@ -150,6 +150,7 @@ export interface AutomationActionUpdate {
                   <app-automation-notify-editor
                     [action]="action"
                     [users]="users()"
+                    [ruleName]="ruleName()"
                     (patch)="
                       actionUpdated.emit({
                         clientId: action.clientId,
@@ -295,6 +296,7 @@ export class AutomationActionsEditorComponent {
   readonly actions = input.required<EditableAutomationAction[]>();
   readonly statuses = input.required<Status[]>();
   readonly users = input.required<WorkspaceAppUser[]>();
+  readonly ruleName = input('');
   readonly tags = input.required<Tag[]>();
   readonly sprints = input.required<SprintViewModel[]>();
   readonly boardGroups = input.required<AutomationBoardGroupOption[]>();

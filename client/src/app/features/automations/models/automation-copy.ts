@@ -1,5 +1,6 @@
 import { taskPriorityLabels } from '@core/enums/task-priority';
 import { workspaceRoleLabels } from '@core/enums/workspace-role';
+import { WorkspaceAppUser } from '@core/models/appuser';
 import { EntityType } from '@core/models/entity-type';
 import { Status } from '@core/models/status';
 import { entityTypeToString } from '@core/transforms/entity-type';
@@ -78,6 +79,32 @@ export const messageVariables = [
   'workspace.name',
   'rule.name',
 ];
+
+export const messageVariableSampleValues: Record<string, string> = {
+  'task.name': 'Fix login redirect',
+  'task.key': 'NETP-128',
+  'task.status': 'In Progress',
+  'task.priority': 'High',
+  'task.startDate': '2026-08-03',
+  'task.dueDate': '2026-08-10',
+  'project.name': 'Website Redesign',
+  'workspace.name': 'Acme',
+  'rule.name': 'Untitled automation',
+};
+
+export const notificationRecipientPreviewLabels: Record<
+  AutomationNotificationRecipient,
+  string
+> = {
+  [AutomationNotificationRecipient.assignees]: 'Everyone assigned to the task',
+  [AutomationNotificationRecipient.taskOwner]: 'The task owner',
+  [AutomationNotificationRecipient.triggeringUser]:
+    'The user whose change ran the rule',
+  [AutomationNotificationRecipient.specificUsers]: 'Chosen users',
+  [AutomationNotificationRecipient.projectMembers]:
+    "Everyone in the task's project",
+  [AutomationNotificationRecipient.workspaceRoles]: 'Chosen workspace roles',
+};
 
 export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
   [AutomationRunStatus.succeeded]: 'Succeeded',
@@ -418,11 +445,117 @@ function describeNotifyAction(action: AutomationAction): string {
     : `Notify ${audience}`;
 }
 
+export interface NotificationRecipientPreview {
+  text: string;
+  isIncomplete: boolean;
+}
+
+export function previewNotificationRecipients(
+  action: AutomationAction,
+  users: WorkspaceAppUser[]
+): NotificationRecipientPreview[] {
+  return selectedRecipients(action).map((recipient) => {
+    if (recipient === AutomationNotificationRecipient.specificUsers) {
+      return previewChosenUsers(action, users);
+    }
+
+    if (recipient === AutomationNotificationRecipient.workspaceRoles) {
+      return previewChosenRoles(action);
+    }
+
+    return {
+      text: notificationRecipientPreviewLabels[recipient],
+      isIncomplete: false,
+    };
+  });
+}
+
+export function previewNotificationMessage(
+  message: string | null | undefined,
+  ruleName: string
+): string {
+  if (!message?.trim()) {
+    return defaultNotificationMessage(ruleName);
+  }
+
+  return message.replace(/\{\{([^{}]*)\}\}/g, (token, variable: string) => {
+    return resolveSampleVariable(token, variable.trim(), ruleName);
+  });
+}
+
+function defaultNotificationMessage(ruleName: string): string {
+  return `Automation '${sampleRuleName(ruleName)}' matched this task.`;
+}
+
+function resolveSampleVariable(
+  token: string,
+  variable: string,
+  ruleName: string
+): string {
+  if (variable.toLowerCase() === 'rule.name') {
+    return sampleRuleName(ruleName);
+  }
+
+  const known = messageVariables.find((candidate) => {
+    return candidate.toLowerCase() === variable.toLowerCase();
+  });
+
+  if (!known) return token;
+
+  return messageVariableSampleValues[known];
+}
+
+function sampleRuleName(ruleName: string): string {
+  return ruleName.trim() || messageVariableSampleValues['rule.name'];
+}
+
+function previewChosenUsers(
+  action: AutomationAction,
+  users: WorkspaceAppUser[]
+): NotificationRecipientPreview {
+  const chosenIds = action.recipientUserIds ?? [];
+
+  if (!chosenIds.length) {
+    return { text: 'No users chosen yet', isIncomplete: true };
+  }
+
+  const names = chosenIds.map((id) => {
+    const user = users.find((candidate) => candidate.id === id);
+
+    return user?.displayName ?? 'Unknown user';
+  });
+
+  return { text: joinNaturalList(names), isIncomplete: false };
+}
+
+function previewChosenRoles(
+  action: AutomationAction
+): NotificationRecipientPreview {
+  const roles = action.recipientRoles ?? [];
+
+  if (!roles.length) {
+    return { text: 'No workspace roles chosen yet', isIncomplete: true };
+  }
+
+  const labels = roles.map((role) => {
+    return `Everyone with the ${workspaceRoleLabels[role]} role`;
+  });
+
+  return { text: joinNaturalList(labels), isIncomplete: false };
+}
+
+function selectedRecipients(
+  action: AutomationAction
+): AutomationNotificationRecipient[] {
+  if (!action.recipients?.length) {
+    return [AutomationNotificationRecipient.assignees];
+  }
+
+  return action.recipients;
+}
+
 export function describeNotificationAudience(action: AutomationAction): string {
-  const recipients = action.recipients?.length
-    ? action.recipients
-    : [AutomationNotificationRecipient.assignees];
-  const parts = recipients.map((recipient) => {
+  const parts = selectedRecipients(action).map((recipient) => {
     if (recipient === AutomationNotificationRecipient.workspaceRoles) {
       const roles = action.recipientRoles ?? [];
 
