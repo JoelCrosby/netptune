@@ -105,7 +105,7 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
 
         builder
             .Property(task => task.OwnerId)
-            .IsRequired();
+            .IsRequired(false);
 
         builder
             .HasIndex(task => task.Name)

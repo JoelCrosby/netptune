@@ -10,7 +10,7 @@ public record TaskViewModel
 
     public List<AssigneeViewModel> Assignees { get; set; } = new();
 
-    public string OwnerId { get; set; } = null!;
+    public string? OwnerId { get; set; }
 
     public int ProjectScopeId { get; set; }
 
@@ -51,6 +51,8 @@ public record TaskViewModel
     public int? ProjectId { get; set; }
 
     public int? SprintId { get; set; }
+
+    public int? BoardGroupId { get; set; }
 
     public string? SprintName { get; set; }
 

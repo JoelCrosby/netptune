@@ -11,7 +11,7 @@ public sealed class TaskViewRowMap
 
     public int Task_Id { get; init; }
 
-    public string Owner_Id { get; init; } = null!;
+    public string? Owner_Id { get; init; }
 
     public string Task_Name { get; init; } = null!;
 
@@ -43,6 +43,8 @@ public sealed class TaskViewRowMap
 
     public int? Sprint_Id { get; init; }
 
+    public int? Board_Group_Id { get; init; }
+
     public string? Sprint_Name { get; init; }
 
     public SprintStatus? Sprint_Status { get; init; }
@@ -55,7 +57,7 @@ public sealed class TaskViewRowMap
 
     public DateTime? Task_Updated_At { get; init; }
 
-    public string Owner_Username { get; init; } = null!;
+    public string? Owner_Username { get; init; }
 
     public string? Owner_Picture_Url { get; init; }
 

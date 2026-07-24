@@ -46,33 +46,43 @@ public sealed class CreateAutomationRuleCommandHandler
 
         var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
-        var req = request.Request;
-        var principalError = await AutomationPrincipalValidation.Validate(
-            req,
-            workspaceId,
-            userId,
-            Identity.GetWorkspaceKey(),
-            UnitOfWork,
-            PermissionCache,
-            ActionRegistry,
-            cancellationToken);
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var ruleRequest = request.Request;
+        var validationContext = new AutomationValidationContext
+        {
+            Request = ruleRequest,
+            WorkspaceId = workspaceId,
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            UnitOfWork = UnitOfWork,
+            PermissionCache = PermissionCache,
+            ActionRegistry = ActionRegistry,
+        };
+        var principalError = await AutomationPrincipalValidation.Validate(validationContext, cancellationToken);
 
         if (principalError is not null)
         {
             return ClientResponse<AutomationRuleViewModel>.Failed(principalError);
         }
 
+        var referenceError = await AutomationReferenceValidation.Validate(validationContext, cancellationToken);
+
+        if (referenceError is not null)
+        {
+            return ClientResponse<AutomationRuleViewModel>.Failed(referenceError);
+        }
+
         var rule = new AutomationRule
         {
             WorkspaceId = workspaceId,
-            Name = req.Name.Trim(),
-            IsEnabled = req.IsEnabled,
-            ExecutionUserId = req.ExecutionUserId,
-            TriggerType = req.Trigger.Type,
-            TriggerConfig = AutomationMapping.ToTriggerConfig(req.Trigger),
+            Name = ruleRequest.Name.Trim(),
+            IsEnabled = ruleRequest.IsEnabled,
+            ExecutionUserId = ruleRequest.ExecutionUserId,
+            TriggerType = ruleRequest.Trigger.Type,
+            TriggerConfig = AutomationMapping.ToTriggerConfig(ruleRequest.Trigger),
             OwnerId = userId,
             CreatedByUserId = userId,
-            Actions = req.Actions.Select((action, index) => new AutomationAction
+            Actions = ruleRequest.Actions.Select((action, index) => new AutomationAction
             {
                 Type = action.Type,
                 SortOrder = index,

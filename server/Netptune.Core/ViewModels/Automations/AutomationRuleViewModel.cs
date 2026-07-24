@@ -30,13 +30,7 @@ public record AutomationTriggerViewModel
 
     public List<TaskChangeField>? Fields { get; init; }
 
-    public List<AutomationFieldCondition>? Conditions { get; init; }
-
     public AutomationConditionGroup? ConditionGroup { get; init; }
-
-    public int? StatusId { get; init; }
-
-    public AssigneeChangeMode? AssigneeChangeMode { get; init; }
 
     public int? DurationDays { get; init; }
 }
@@ -60,6 +54,38 @@ public record AutomationActionViewModel
     public int? StatusId { get; init; }
 
     public TaskPriority? Priority { get; init; }
+
+    public string? TaskName { get; init; }
+
+    public string? TaskDescription { get; init; }
+
+    public bool ClearDescription { get; init; }
+
+    public string? OwnerId { get; init; }
+
+    public bool ClearOwner { get; init; }
+
+    public List<string>? AssigneeIds { get; init; }
+
+    public List<string> AddTags { get; init; } = [];
+
+    public List<string> RemoveTags { get; init; } = [];
+
+    public AutomationDateUpdate? StartDate { get; init; }
+
+    public AutomationDateUpdate? DueDate { get; init; }
+
+    public EstimateType? EstimateType { get; init; }
+
+    public decimal? EstimateValue { get; init; }
+
+    public bool ClearEstimate { get; init; }
+
+    public int? SprintId { get; init; }
+
+    public bool ClearSprint { get; init; }
+
+    public int? BoardGroupId { get; init; }
 
     public int? DelayAmount { get; init; }
 

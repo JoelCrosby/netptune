@@ -1,8 +1,8 @@
 import { TaskPriority } from '@core/enums/task-priority';
+import { EstimateType } from '@core/enums/estimate-type';
 import { EntityType } from '@core/models/entity-type';
 
 export enum AutomationTriggerType {
-  taskStatusChanged = 0,
   taskUnassignedFor = 1,
   taskChanged = 2,
   taskDueDateApproaching = 3,
@@ -19,6 +19,21 @@ export enum TaskChangeField {
   dueDate = 7,
   tags = 8,
   startDate = 9,
+  sprint = 10,
+  boardGroup = 11,
+}
+
+export enum AutomationDateUpdateMode {
+  absolute = 0,
+  relativeDays = 1,
+  relativeBusinessDays = 2,
+  clear = 3,
+}
+
+export interface AutomationDateUpdate {
+  mode: AutomationDateUpdateMode;
+  date?: string | null;
+  offset?: number | null;
 }
 
 export enum AutomationConditionOperator {
@@ -48,12 +63,6 @@ export interface AutomationConditionGroup {
   operator: AutomationConditionGroupOperator;
   conditions: AutomationFieldCondition[];
   groups: AutomationConditionGroup[];
-}
-
-export enum AssigneeChangeMode {
-  addedOrRemoved = 0,
-  added = 1,
-  removed = 2,
 }
 
 export enum AutomationActionType {
@@ -87,9 +96,6 @@ export enum AutomationActionResultStatus {
 export interface AutomationTrigger {
   type: AutomationTriggerType;
   fields?: TaskChangeField[] | null;
-  statusId?: number | null;
-  assigneeChangeMode?: AssigneeChangeMode | null;
-  conditions?: AutomationFieldCondition[] | null;
   conditionGroup?: AutomationConditionGroup | null;
   durationDays?: number | null;
 }
@@ -104,6 +110,22 @@ export interface AutomationAction {
   flagDescription?: string | null;
   statusId?: number | null;
   priority?: TaskPriority | null;
+  taskName?: string | null;
+  taskDescription?: string | null;
+  clearDescription?: boolean;
+  ownerId?: string | null;
+  clearOwner?: boolean;
+  assigneeIds?: string[] | null;
+  addTags?: string[];
+  removeTags?: string[];
+  startDate?: AutomationDateUpdate | null;
+  dueDate?: AutomationDateUpdate | null;
+  estimateType?: EstimateType | null;
+  estimateValue?: number | null;
+  clearEstimate?: boolean;
+  sprintId?: number | null;
+  clearSprint?: boolean;
+  boardGroupId?: number | null;
   delayAmount?: number | null;
   delayUnit?: AutomationDelayUnit | null;
 }
@@ -162,6 +184,22 @@ export interface AutomationActionRequest {
   flagDescription?: string | null;
   statusId?: number | null;
   priority?: TaskPriority | null;
+  taskName?: string | null;
+  taskDescription?: string | null;
+  clearDescription?: boolean;
+  ownerId?: string | null;
+  clearOwner?: boolean;
+  assigneeIds?: string[] | null;
+  addTags?: string[];
+  removeTags?: string[];
+  startDate?: AutomationDateUpdate | null;
+  dueDate?: AutomationDateUpdate | null;
+  estimateType?: EstimateType | null;
+  estimateValue?: number | null;
+  clearEstimate?: boolean;
+  sprintId?: number | null;
+  clearSprint?: boolean;
+  boardGroupId?: number | null;
   delayAmount?: number | null;
   delayUnit?: AutomationDelayUnit | null;
 }

@@ -22,36 +22,26 @@ public record AutomationTriggerRequest
 
     public List<TaskChangeField>? Fields { get; init; }
 
-    public List<AutomationFieldCondition>? Conditions { get; init; }
-
     public AutomationConditionGroup? ConditionGroup { get; init; }
-
-    public int? StatusId { get; init; }
-
-    public AssigneeChangeMode? AssigneeChangeMode { get; init; }
 
     public int? DurationDays { get; init; }
 
     public string? Validate()
     {
         var hasWatchedFields = Fields is { Count: > 0 };
-        var watchesStatus = Fields?.Contains(TaskChangeField.Status) == true;
-        var watchesAssignees = Fields?.Contains(TaskChangeField.Assignees) == true;
-        var statusConfigurationRequiresStatusField = StatusId is not null && !watchesStatus;
-        var assigneeConfigurationRequiresAssigneeField = AssigneeChangeMode is not null && !watchesAssignees;
         var hasValidUnassignedDuration = DurationDays is >= 1 and <= 365;
         var hasValidDueDateDuration = DurationDays is >= 0 and <= 365;
+        var hasSupportedType = Enum.IsDefined(Type);
+
+        if (!hasSupportedType)
+        {
+            return $"Automation trigger type '{Type}' is not supported.";
+        }
 
         var triggerError = Type switch
         {
             AutomationTriggerType.TaskChanged when !hasWatchedFields =>
                 "Task changed automations require at least one field.",
-            AutomationTriggerType.TaskChanged when statusConfigurationRequiresStatusField =>
-                "Task changed automations can only set status when watching the status field.",
-            AutomationTriggerType.TaskChanged when assigneeConfigurationRequiresAssigneeField =>
-                "Task changed automations can only set assigneeChangeMode when watching the assignees field.",
-            AutomationTriggerType.TaskStatusChanged when StatusId is null =>
-                "Task status changed automations require a status.",
             AutomationTriggerType.TaskUnassignedFor when !hasValidUnassignedDuration =>
                 "Task unassigned automations require durationDays between 1 and 365.",
             AutomationTriggerType.TaskDueDateApproaching when !hasValidDueDateDuration =>
@@ -69,53 +59,18 @@ public record AutomationTriggerRequest
 
     private string? ValidateConditions()
     {
-        var conditions = Conditions ?? [];
-        var hasLegacyConditions = conditions.Count > 0;
         var hasConditionGroup = ConditionGroup is not null;
-        var hasAnyConditions = hasLegacyConditions || hasConditionGroup;
         var supportsConditions = Type == AutomationTriggerType.TaskChanged;
-        var hasUnsupportedConditions = hasAnyConditions && !supportsConditions;
-        var hasConflictingConditionFormats = hasLegacyConditions && hasConditionGroup;
+        var hasUnsupportedConditions = hasConditionGroup && !supportsConditions;
 
         if (hasUnsupportedConditions)
         {
             return "Field conditions are only supported for task changed automations.";
         }
 
-        if (hasConflictingConditionFormats)
-        {
-            return "Task changed automations cannot combine legacy conditions with a condition group.";
-        }
-
         if (ConditionGroup is not null)
         {
             return ConditionGroup.Validate();
-        }
-
-        var conditionFields = conditions.Select(condition => condition.Field).ToList();
-        var uniqueConditionFieldCount = conditionFields.Distinct().Count();
-        var hasDuplicateConditionFields = conditionFields.Count != uniqueConditionFieldCount;
-
-        if (hasDuplicateConditionFields)
-        {
-            return "Task changed automations can only configure one condition per field.";
-        }
-
-        foreach (var condition in conditions)
-        {
-            var fieldIsWatched = Fields?.Contains(condition.Field) == true;
-
-            if (!fieldIsWatched)
-            {
-                return $"Condition field '{condition.Field}' must be included in fields.";
-            }
-
-            var error = condition.Validate();
-
-            if (error is not null)
-            {
-                return error;
-            }
         }
 
         return null;
@@ -137,6 +92,38 @@ public record AutomationActionRequest
     public int? StatusId { get; init; }
 
     public TaskPriority? Priority { get; init; }
+
+    public string? TaskName { get; init; }
+
+    public string? TaskDescription { get; init; }
+
+    public bool ClearDescription { get; init; }
+
+    public string? OwnerId { get; init; }
+
+    public bool ClearOwner { get; init; }
+
+    public List<string>? AssigneeIds { get; init; }
+
+    public List<string> AddTags { get; init; } = [];
+
+    public List<string> RemoveTags { get; init; } = [];
+
+    public AutomationDateUpdate? StartDate { get; init; }
+
+    public AutomationDateUpdate? DueDate { get; init; }
+
+    public EstimateType? EstimateType { get; init; }
+
+    public decimal? EstimateValue { get; init; }
+
+    public bool ClearEstimate { get; init; }
+
+    public int? SprintId { get; init; }
+
+    public bool ClearSprint { get; init; }
+
+    public int? BoardGroupId { get; init; }
 
     public int? DelayAmount { get; init; }
 

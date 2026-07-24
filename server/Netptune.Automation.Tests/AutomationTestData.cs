@@ -97,8 +97,12 @@ internal static class AutomationTestData
             [
                 NetptunePermissions.Tasks.Read,
                 NetptunePermissions.Tasks.Update,
+                NetptunePermissions.Tasks.Move,
+                NetptunePermissions.Tasks.Reassign,
                 NetptunePermissions.Tasks.DeleteAny,
+                NetptunePermissions.Sprints.ManageTasks,
                 NetptunePermissions.Comments.Create,
+                NetptunePermissions.Tags.Assign,
             ],
         };
 
@@ -115,40 +119,20 @@ internal static class AutomationTestData
         return new AutomationScenario(workspace, project, task, owner, assignee, executionUser);
     }
 
-    public static async Task<AutomationRule> CreateStatusChangedRule(
-        DataContext db,
-        AutomationScenario scenario,
-        string statusKey,
-        AutomationActionType actionType = AutomationActionType.FlagTask)
-    {
-        var statusId = await GetStatusId(db, scenario, statusKey);
-
-        return await CreateRule(db, scenario, AutomationTriggerType.TaskStatusChanged, new
-        {
-            statusId,
-        }, actionType);
-    }
-
     public static async Task<AutomationRule> CreateTaskChangedRule(
         DataContext db,
         AutomationScenario scenario,
         IReadOnlyCollection<TaskChangeField> fields,
-        string? statusKey = null,
-        AssigneeChangeMode? assigneeChangeMode = null,
-        IReadOnlyCollection<AutomationFieldCondition>? conditions = null,
         AutomationConditionGroup? conditionGroup = null,
         AutomationActionType actionType = AutomationActionType.FlagTask)
     {
-        var statusId = statusKey is null ? (int?)null : await GetStatusId(db, scenario, statusKey);
-
-        return await CreateRule(db, scenario, AutomationTriggerType.TaskChanged, new
+        var rule = await CreateRule(db, scenario, AutomationTriggerType.TaskChanged, new
         {
             fields,
-            statusId,
-            assigneeChangeMode,
-            conditions,
             conditionGroup,
         }, actionType);
+
+        return rule;
     }
 
     public static async Task<AutomationRule> CreateUnassignedRule(

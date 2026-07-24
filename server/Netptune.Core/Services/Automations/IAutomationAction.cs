@@ -14,6 +14,16 @@ public interface IAutomationAction
 
     IReadOnlySet<string> RequiredPermissions { get; }
 
+    IReadOnlySet<string> GetRequiredPermissions(AutomationActionRequest request)
+    {
+        return RequiredPermissions;
+    }
+
+    IReadOnlySet<string> GetRequiredPermissions(AutomationAction action)
+    {
+        return RequiredPermissions;
+    }
+
     string? Validate(AutomationActionRequest request);
 
     JsonDocument CreateConfig(AutomationActionRequest request);

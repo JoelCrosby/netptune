@@ -171,14 +171,17 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         return Entities
             .Where(group => group.Id == groupId && !group.IsDeleted)
             .AsNoTracking()
-            .Select(group => new BoardGroupTaskTarget(
-                group.Id,
-                group.Name,
-                Context.ProjectTaskInBoardGroups
+            .Select(group => new BoardGroupTaskTarget
+            {
+                Id = group.Id,
+                Name = group.Name,
+                MaxSortOrder = Context.ProjectTaskInBoardGroups
                     .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
                     .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D,
-                group.WorkspaceId,
-                group.StatusId))
+                WorkspaceId = group.WorkspaceId,
+                StatusId = group.StatusId,
+                ProjectId = group.Board != null ? group.Board.ProjectId : null,
+            })
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -192,15 +195,38 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 && !group.Board.IsDeleted)
             .OrderBy(group => group.SortOrder)
             .AsNoTracking()
-            .Select(group => new BoardGroupTaskTarget(
-                group.Id,
-                group.Name,
-                Context.ProjectTaskInBoardGroups
+            .Select(group => new BoardGroupTaskTarget
+            {
+                Id = group.Id,
+                Name = group.Name,
+                MaxSortOrder = Context.ProjectTaskInBoardGroups
                     .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
                     .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D,
-                group.WorkspaceId,
-                group.StatusId))
+                WorkspaceId = group.WorkspaceId,
+                StatusId = group.StatusId,
+                ProjectId = group.Board != null ? group.Board.ProjectId : null,
+            })
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<List<BoardGroupOptionViewModel>> GetOptionsInWorkspace(
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(group => group.WorkspaceId == workspaceId && !group.IsDeleted)
+            .Where(group => group.Board != null && !group.Board.IsDeleted && group.Board.Project != null)
+            .OrderBy(group => group.Board!.Project!.Name)
+            .ThenBy(group => group.Board!.Name)
+            .ThenBy(group => group.SortOrder)
+            .Select(group => new BoardGroupOptionViewModel
+            {
+                Id = group.Id,
+                Name = group.Name,
+                BoardName = group.Board!.Name,
+                ProjectName = group.Board.Project!.Name,
+            })
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<double> GetMaxTaskSortOrder(int groupId, CancellationToken cancellationToken = default)

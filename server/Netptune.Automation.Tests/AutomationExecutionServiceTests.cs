@@ -5,12 +5,15 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Automation.Execution;
+using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Meta;
 using Netptune.Core.Models.Automations;
+using Netptune.Core.Relationships;
 using Netptune.Entities.Contexts;
 
 using Xunit;
@@ -34,11 +37,12 @@ public sealed class AutomationExecutionServiceTests
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
         var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var conditionGroup = CreateStatusConditionGroup(inProgressStatusId);
         var rule = await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "in-progress");
+            conditionGroup);
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -74,12 +78,13 @@ public sealed class AutomationExecutionServiceTests
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
         var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var conditionGroup = CreateStatusConditionGroup(inProgressStatusId);
 
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "in-progress");
+            conditionGroup);
 
         TaskChangedMessage CreateMessage() => new()
         {
@@ -128,12 +133,13 @@ public sealed class AutomationExecutionServiceTests
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
         var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var conditionGroup = CreateStatusConditionGroup(inProgressStatusId);
 
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "in-progress");
+            conditionGroup);
 
         var membership = await scope.Db.WorkspaceAppUsers.SingleAsync(
             item => item.UserId == scenario.ExecutionUser.Id,
@@ -175,12 +181,13 @@ public sealed class AutomationExecutionServiceTests
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
         var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var conditionGroup = CreateStatusConditionGroup(completeStatusId);
 
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "complete");
+            conditionGroup);
 
         var eventId = Guid.NewGuid();
         var message = new TaskChangedMessage
@@ -343,6 +350,244 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_applies_expanded_task_updates()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            actionType: AutomationActionType.UpdateTask);
+        var nextOwner = new AppUser
+        {
+            Id = "next-owner",
+            Firstname = "Next",
+            Lastname = "Owner",
+            UserName = "next-owner@example.test",
+            NormalizedUserName = "NEXT-OWNER@EXAMPLE.TEST",
+            Email = "next-owner@example.test",
+            NormalizedEmail = "NEXT-OWNER@EXAMPLE.TEST",
+            EmailConfirmed = true,
+        };
+        var nextOwnerMembership = new WorkspaceAppUser
+        {
+            User = nextOwner,
+            Workspace = scenario.Workspace,
+            Role = WorkspaceRole.Member,
+            Permissions = [NetptunePermissions.Tasks.Read],
+        };
+        var oldTag = new Tag
+        {
+            Name = "old-tag",
+            Workspace = scenario.Workspace,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+        var newTag = new Tag
+        {
+            Name = "new-tag",
+            Workspace = scenario.Workspace,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+        var sprint = new Sprint
+        {
+            Name = "Target sprint",
+            Workspace = scenario.Workspace,
+            Project = scenario.Project,
+            Status = SprintStatus.Planning,
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(14),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+        var board = new Board
+        {
+            Name = "Automation board",
+            Identifier = "automation-board",
+            Workspace = scenario.Workspace,
+            Project = scenario.Project,
+            BoardType = BoardType.Default,
+            MetaInfo = new BoardMeta(),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+        var boardGroup = new BoardGroup
+        {
+            Name = "Doing",
+            Workspace = scenario.Workspace,
+            Board = board,
+            SortOrder = 1,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+
+        scenario.Task.ProjectTaskTags.Add(new ProjectTaskTag { Tag = oldTag });
+        scope.Db.AddRange(nextOwner, nextOwnerMembership, oldTag, newTag, sprint, board, boardGroup);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var action = await scope.Db.AutomationActions
+            .SingleAsync(
+                item => item.AutomationRuleId == rule.Id && !item.IsDeleted,
+                TestContext.Current.CancellationToken);
+        action.Config = JsonSerializer.SerializeToDocument(new
+        {
+            name = "Updated by automation",
+            description = "Expanded update",
+            ownerId = nextOwner.Id,
+            assigneeIds = Array.Empty<string>(),
+            addTags = new[] { newTag.Name },
+            removeTags = new[] { oldTag.Name },
+            dueDate = new
+            {
+                mode = AutomationDateUpdateMode.RelativeBusinessDays,
+                offset = 3,
+            },
+            estimateType = EstimateType.Hours,
+            estimateValue = 8,
+            sprintId = sprint.Id,
+            boardGroupId = boardGroup.Id,
+        }, JsonOptions.Default);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        scope.Db.ChangeTracker.Clear();
+
+        var runDate = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            EventId = Guid.NewGuid(),
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var task = await scope.Db.ProjectTasks
+            .Include(item => item.ProjectTaskAppUsers)
+            .Include(item => item.ProjectTaskTags)
+            .ThenInclude(item => item.Tag)
+            .SingleAsync(item => item.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
+        var taskInGroup = await scope.Db.ProjectTaskInBoardGroups
+            .SingleAsync(item => item.ProjectTaskId == task.Id, TestContext.Current.CancellationToken);
+
+        task.Name.Should().Be("Updated by automation");
+        task.Description.Should().Be("Expanded update");
+        task.OwnerId.Should().Be(nextOwner.Id);
+        task.ProjectTaskAppUsers.Should().BeEmpty();
+        task.ProjectTaskTags.Select(item => item.Tag.Name).Should().Equal("new-tag");
+        task.DueDate.Should().Be(AddBusinessDays(runDate, 3));
+        task.EstimateType.Should().Be(EstimateType.Hours);
+        task.EstimateValue.Should().Be(8);
+        task.SprintId.Should().Be(sprint.Id);
+        taskInGroup.BoardGroupId.Should().Be(boardGroup.Id);
+
+        var taskChanged = scope.EventPublisher.Events
+            .OfType<TaskChangedMessage>()
+            .Should()
+            .ContainSingle()
+            .Subject;
+        taskChanged.Changes.Select(change => change.Field).Should().Contain(
+        [
+            TaskChangeField.Name,
+            TaskChangeField.Description,
+            TaskChangeField.Owner,
+            TaskChangeField.Assignees,
+            TaskChangeField.Tags,
+            TaskChangeField.DueDate,
+            TaskChangeField.Estimate,
+            TaskChangeField.Sprint,
+            TaskChangeField.BoardGroup,
+        ]);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_clears_nullable_task_fields()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Name],
+            actionType: AutomationActionType.UpdateTask);
+        var sprint = new Sprint
+        {
+            Name = "Current sprint",
+            Workspace = scenario.Workspace,
+            Project = scenario.Project,
+            Status = SprintStatus.Planning,
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(14),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+
+        scenario.Task.Description = "Remove me";
+        scenario.Task.EstimateType = EstimateType.StoryPoints;
+        scenario.Task.EstimateValue = 5;
+        scenario.Task.StartDate = new DateOnly(2026, 7, 20);
+        scenario.Task.DueDate = new DateOnly(2026, 7, 30);
+        scenario.Task.Sprint = sprint;
+        scope.Db.Sprints.Add(sprint);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var action = await scope.Db.AutomationActions
+            .SingleAsync(
+                item => item.AutomationRuleId == rule.Id && !item.IsDeleted,
+                TestContext.Current.CancellationToken);
+        action.Config = JsonSerializer.SerializeToDocument(new
+        {
+            clearDescription = true,
+            clearOwner = true,
+            clearEstimate = true,
+            clearSprint = true,
+            startDate = new { mode = AutomationDateUpdateMode.Clear },
+            dueDate = new { mode = AutomationDateUpdateMode.Clear },
+        }, JsonOptions.Default);
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        scope.Db.ChangeTracker.Clear();
+
+        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        {
+            EventId = Guid.NewGuid(),
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Name, "Old name", "New name"),
+            ],
+        }, TestContext.Current.CancellationToken);
+
+        scope.Db.ChangeTracker.Clear();
+
+        var task = await scope.Db.ProjectTasks
+            .SingleAsync(item => item.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
+        var taskView = await scope.UnitOfWork.Tasks.GetTaskViewModel(
+            task.Id,
+            TestContext.Current.CancellationToken);
+
+        task.Description.Should().BeNull();
+        task.OwnerId.Should().BeNull();
+        task.EstimateType.Should().BeNull();
+        task.EstimateValue.Should().BeNull();
+        task.StartDate.Should().BeNull();
+        task.DueDate.Should().BeNull();
+        task.SprintId.Should().BeNull();
+        taskView.Should().NotBeNull();
+        taskView!.OwnerId.Should().BeNull();
+        taskView.OwnerUsername.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task ExecuteTaskChangedRules_skips_source_rule_but_allows_other_rules_in_chain()
     {
         await using var scope = await Fixture.CreateScope();
@@ -459,16 +704,16 @@ public sealed class AutomationExecutionServiceTests
         await using var scope = await Fixture.CreateScope();
 
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var conditionGroup = CreateStatusConditionGroup(completeStatusId);
 
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "complete",
+            conditionGroup,
             actionType: AutomationActionType.DeleteTask);
-
-        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
-        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
 
         var message = new TaskChangedMessage
         {
@@ -659,16 +904,17 @@ public sealed class AutomationExecutionServiceTests
         await using var scope = await Fixture.CreateScope();
 
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var conditionGroup = CreateStatusConditionGroup(completeStatusId);
         var rule = await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "complete",
+            conditionGroup,
             actionType: AutomationActionType.DeleteTask);
         await ConfigureDeleteDelay(scope.Db, rule, 1, AutomationDelayUnit.Hours);
 
-        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
-        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
         var triggeredAt = DateTime.UtcNow;
 
         var message = new TaskChangedMessage
@@ -724,17 +970,17 @@ public sealed class AutomationExecutionServiceTests
         await using var scope = await Fixture.CreateScope();
 
         var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var conditionGroup = CreateStatusConditionGroup(completeStatusId);
         var rule = await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "complete",
+            conditionGroup,
             actionType: AutomationActionType.DeleteTask);
 
         await ConfigureDeleteDelay(scope.Db, rule, 1, AutomationDelayUnit.Hours);
-
-        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
-        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -951,17 +1197,30 @@ public sealed class AutomationExecutionServiceTests
         scenario.Task.Priority = priority;
         await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
+        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
+        var statusCondition = new AutomationFieldCondition
+        {
+            Field = TaskChangeField.Status,
+            Operator = AutomationConditionOperator.Equals,
+            Value = completeStatusId.ToString(),
+        };
+        var conditions = conditionGroup?.Conditions.Prepend(statusCondition).ToList() ?? [statusCondition];
+        var groups = conditionGroup?.Groups ?? [];
+        var scheduledConditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions = conditions,
+            Groups = groups,
+        };
         var rule = await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Status],
-            "complete",
-            conditionGroup: conditionGroup,
+            scheduledConditionGroup,
             actionType: AutomationActionType.DeleteTask);
         await ConfigureDeleteDelay(scope.Db, rule, 1, AutomationDelayUnit.Hours);
 
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
-        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -985,6 +1244,23 @@ public sealed class AutomationExecutionServiceTests
         return (scenario, scheduledAction);
     }
 
+    private static AutomationConditionGroup CreateStatusConditionGroup(int statusId)
+    {
+        return new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions =
+            [
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Status,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = statusId.ToString(),
+                },
+            ],
+        };
+    }
+
     private static async Task ConfigureDeleteDelay(
         DataContext db,
         AutomationRule rule,
@@ -1002,34 +1278,6 @@ public sealed class AutomationExecutionServiceTests
         }, JsonOptions.Default);
 
         await db.SaveChangesAsync(TestContext.Current.CancellationToken);
-    }
-
-    [Fact]
-    public async Task ExecuteTaskChangedRules_supports_status_changed_rules()
-    {
-        await using var scope = await Fixture.CreateScope();
-
-        var scenario = await AutomationTestData.CreateScenario(scope.Db, "complete");
-        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
-        var completeStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "complete");
-        var rule = await AutomationTestData.CreateStatusChangedRule(scope.Db, scenario, "complete");
-
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
-        {
-            TaskId = scenario.Task.Id,
-            WorkspaceId = scenario.Workspace.Id,
-            ActorUserId = scenario.Owner.Id,
-            Changes =
-            [
-                TaskFieldChange.Create(TaskChangeField.Status, inProgressStatusId, completeStatusId),
-            ],
-        }, TestContext.Current.CancellationToken);
-
-        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
-
-        run.AutomationRuleId.Should().Be(rule.Id);
-        run.TriggerType.Should().Be(AutomationTriggerType.TaskStatusChanged);
-        run.Status.Should().Be(AutomationRunStatus.Succeeded);
     }
 
     [Fact]
@@ -1066,20 +1314,27 @@ public sealed class AutomationExecutionServiceTests
         await using var scope = await Fixture.CreateScope();
 
         var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        scenario.Task.Name = "Urgent request";
+
+        await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         await AutomationTestData.CreateTaskChangedRule(
             scope.Db,
             scenario,
             [TaskChangeField.Name],
-            conditions:
-            [
-                new AutomationFieldCondition
-                {
-                    Field = TaskChangeField.Name,
-                    Operator = AutomationConditionOperator.Contains,
-                    Value = "urgent",
-                },
-            ]);
+            conditionGroup: new AutomationConditionGroup
+            {
+                Operator = AutomationConditionGroupOperator.All,
+                Conditions =
+                [
+                    new AutomationFieldCondition
+                    {
+                        Field = TaskChangeField.Name,
+                        Operator = AutomationConditionOperator.Contains,
+                        Value = "urgent",
+                    },
+                ],
+            });
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -1109,15 +1364,19 @@ public sealed class AutomationExecutionServiceTests
             scope.Db,
             scenario,
             [TaskChangeField.Priority],
-            conditions:
-            [
-                new AutomationFieldCondition
-                {
-                    Field = TaskChangeField.Priority,
-                    Operator = AutomationConditionOperator.Equals,
-                    Value = "Critical",
-                },
-            ]);
+            conditionGroup: new AutomationConditionGroup
+            {
+                Operator = AutomationConditionGroupOperator.All,
+                Conditions =
+                [
+                    new AutomationFieldCondition
+                    {
+                        Field = TaskChangeField.Priority,
+                        Operator = AutomationConditionOperator.Equals,
+                        Value = "Critical",
+                    },
+                ],
+            });
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -1147,15 +1406,19 @@ public sealed class AutomationExecutionServiceTests
             scope.Db,
             scenario,
             [TaskChangeField.Tags],
-            conditions:
-            [
-                new AutomationFieldCondition
-                {
-                    Field = TaskChangeField.Tags,
-                    Operator = AutomationConditionOperator.Added,
-                    Value = "Release",
-                },
-            ]);
+            conditionGroup: new AutomationConditionGroup
+            {
+                Operator = AutomationConditionGroupOperator.All,
+                Conditions =
+                [
+                    new AutomationFieldCondition
+                    {
+                        Field = TaskChangeField.Tags,
+                        Operator = AutomationConditionOperator.Added,
+                        Value = "Release",
+                    },
+                ],
+            });
 
         await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
         {
@@ -1410,5 +1673,25 @@ public sealed class AutomationExecutionServiceTests
 
         runCount.Should().Be(0);
         flagCount.Should().Be(0);
+    }
+
+    private static DateOnly AddBusinessDays(DateOnly date, int offset)
+    {
+        var remaining = Math.Abs(offset);
+        var direction = Math.Sign(offset);
+        var result = date;
+
+        while (remaining > 0)
+        {
+            result = result.AddDays(direction);
+            var isWeekday = result.DayOfWeek is not DayOfWeek.Saturday and not DayOfWeek.Sunday;
+
+            if (isWeekday)
+            {
+                remaining--;
+            }
+        }
+
+        return result;
     }
 }

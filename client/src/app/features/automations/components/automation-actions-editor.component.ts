@@ -1,6 +1,9 @@
 import { Component, input, output } from '@angular/core';
-import { TaskPriority, taskPriorityOptions } from '@core/enums/task-priority';
+import { AutomationBoardGroupOption } from '@core/models/automation-board-group-option';
+import { WorkspaceAppUser } from '@core/models/appuser';
 import { Status } from '@core/models/status';
+import { Tag } from '@core/models/tag';
+import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import {
   LucideGripVertical,
   LucideListOrdered,
@@ -9,7 +12,6 @@ import {
 } from '@lucide/angular';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
@@ -25,6 +27,7 @@ import {
   AutomationActionType,
   AutomationDelayUnit,
 } from '../models/automation.models';
+import { AutomationTaskUpdateEditorComponent } from './automation-task-update-editor.component';
 
 export interface EditableAutomationAction extends AutomationAction {
   clientId: number;
@@ -45,7 +48,6 @@ export interface AutomationActionUpdate {
   imports: [
     CardSubtitleComponent,
     CardTitleComponent,
-    CheckboxComponent,
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
@@ -58,6 +60,7 @@ export interface AutomationActionUpdate {
     LucideGripVertical,
     LucideListPlus,
     LucideTrash2,
+    AutomationTaskUpdateEditorComponent,
   ],
   template: `
     <app-card-title>Then</app-card-title>
@@ -191,75 +194,20 @@ export interface AutomationActionUpdate {
                       " />
                   </div>
                 } @else if (action.type === automationActionType.updateTask) {
-                  <div class="grid gap-4 md:grid-cols-2">
-                    <div class="flex flex-col gap-3">
-                      <app-checkbox
-                        [checked]="hasStatusUpdate(action)"
-                        (changed)="
-                          actionUpdated.emit({
-                            clientId: action.clientId,
-                            patch: {
-                              statusId: $event ? defaultStatusId() : null,
-                            },
-                          })
-                        ">
-                        Set status
-                      </app-checkbox>
-                      @if (hasStatusUpdate(action)) {
-                        <app-form-select
-                          label="Status"
-                          [noMargin]="true"
-                          [value]="action.statusId ?? null"
-                          (changed)="
-                            actionUpdated.emit({
-                              clientId: action.clientId,
-                              patch: { statusId: $event },
-                            })
-                          ">
-                          @for (status of statuses(); track status.id) {
-                            <app-form-select-option [value]="status.id">
-                              {{ status.name }}
-                            </app-form-select-option>
-                          }
-                        </app-form-select>
-                      }
-                    </div>
-                    <div class="flex flex-col gap-3">
-                      <app-checkbox
-                        [checked]="hasPriorityUpdate(action)"
-                        (changed)="
-                          actionUpdated.emit({
-                            clientId: action.clientId,
-                            patch: {
-                              priority: $event ? defaultTaskPriority : null,
-                            },
-                          })
-                        ">
-                        Set priority
-                      </app-checkbox>
-                      @if (hasPriorityUpdate(action)) {
-                        <app-form-select
-                          label="Priority"
-                          [noMargin]="true"
-                          [value]="action.priority ?? null"
-                          (changed)="
-                            actionUpdated.emit({
-                              clientId: action.clientId,
-                              patch: { priority: $event },
-                            })
-                          ">
-                          @for (
-                            priority of taskPriorities;
-                            track priority.value
-                          ) {
-                            <app-form-select-option [value]="priority.value">
-                              {{ priority.label }}
-                            </app-form-select-option>
-                          }
-                        </app-form-select>
-                      }
-                    </div>
-                  </div>
+                  <app-automation-task-update-editor
+                    [action]="action"
+                    [statuses]="statuses()"
+                    [users]="users()"
+                    [tags]="tags()"
+                    [sprints]="sprints()"
+                    [boardGroups]="boardGroups()"
+                    [defaultStatusId]="defaultStatusId()"
+                    (patch)="
+                      actionUpdated.emit({
+                        clientId: action.clientId,
+                        patch: $event,
+                      })
+                    " />
                 } @else if (action.type === automationActionType.deleteTask) {
                   <div class="grid gap-3 md:grid-cols-2">
                     <app-form-input
@@ -344,11 +292,12 @@ export class AutomationActionsEditorComponent {
     AutomationActionType.addComment,
     AutomationActionType.deleteTask,
   ];
-  readonly taskPriorities = taskPriorityOptions;
-  readonly defaultTaskPriority = TaskPriority.none;
-
   readonly actions = input.required<EditableAutomationAction[]>();
   readonly statuses = input.required<Status[]>();
+  readonly users = input.required<WorkspaceAppUser[]>();
+  readonly tags = input.required<Tag[]>();
+  readonly sprints = input.required<SprintViewModel[]>();
+  readonly boardGroups = input.required<AutomationBoardGroupOption[]>();
   readonly defaultStatusId = input<number | null>(null);
 
   readonly addAction = output();
@@ -358,14 +307,6 @@ export class AutomationActionsEditorComponent {
 
   actionTypeLabel(type: AutomationActionType): string {
     return actionTypeLabels[type];
-  }
-
-  hasStatusUpdate(action: AutomationAction): boolean {
-    return action.statusId !== null && action.statusId !== undefined;
-  }
-
-  hasPriorityUpdate(action: AutomationAction): boolean {
-    return action.priority !== null && action.priority !== undefined;
   }
 
   parseDelayAmount(value: string): number | null {

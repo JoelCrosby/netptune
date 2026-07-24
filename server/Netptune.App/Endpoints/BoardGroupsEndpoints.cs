@@ -13,12 +13,20 @@ public static class BoardGroupsEndpoints
     {
         var group = builder.MapGroup("boardgroups");
 
+        group.MapGet("/options", HandleGetOptions).RequireAuthorization(NetptunePermissions.BoardGroups.Read);
         group.MapGet("/{id}", HandleGet).RequireAuthorization(NetptunePermissions.BoardGroups.Read);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.BoardGroups.Update);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.BoardGroups.Create);
         group.MapDelete("/{id}", HandleDelete).RequireAuthorization(NetptunePermissions.BoardGroups.Delete);
 
         return group;
+    }
+
+    public static async Task<IResult> HandleGetOptions(IMediator mediator, CancellationToken cancellationToken)
+    {
+        var options = await mediator.Send(new GetBoardGroupOptionsQuery(), cancellationToken);
+
+        return Results.Ok(options);
     }
 
     public static async Task<IResult> HandleGet(IMediator mediator, int id,

@@ -60,28 +60,6 @@ public sealed record AutomationFieldCondition
         };
     }
 
-    public bool Matches(TaskFieldChange change)
-    {
-        var newValueEqualsCondition = change.NewValue.EqualsOrdinalIgnoreCase(Value);
-        var newValueContainsCondition = change.NewValue.ContainsOrdinalIgnoreCase(Value);
-        var newValueIsEmpty = string.IsNullOrWhiteSpace(change.NewValue);
-        var matchingValueWasAdded = MatchesCollection(change.AddedValues);
-        var matchingValueWasRemoved = MatchesCollection(change.RemovedValues);
-
-        return Operator switch
-        {
-            AutomationConditionOperator.Any => true,
-            AutomationConditionOperator.Equals => newValueEqualsCondition,
-            AutomationConditionOperator.NotEquals => !newValueEqualsCondition,
-            AutomationConditionOperator.Contains => newValueContainsCondition,
-            AutomationConditionOperator.IsEmpty => newValueIsEmpty,
-            AutomationConditionOperator.IsNotEmpty => !newValueIsEmpty,
-            AutomationConditionOperator.Added => matchingValueWasAdded,
-            AutomationConditionOperator.Removed => matchingValueWasRemoved,
-            _ => false,
-        };
-    }
-
     public string? Validate()
     {
         var isDefinedField = Enum.IsDefined(Field);
@@ -159,6 +137,7 @@ public sealed record AutomationFieldCondition
             TaskChangeField.Priority => Enum.TryParse<TaskPriority>(Value, true, out _),
             TaskChangeField.Estimate => Enum.TryParse<EstimateType>(Value, true, out _),
             TaskChangeField.StartDate or TaskChangeField.DueDate => DateOnly.TryParse(Value, out _),
+            TaskChangeField.Sprint => int.TryParse(Value, out _),
             _ => true,
         };
 
@@ -182,6 +161,7 @@ public sealed record AutomationFieldCondition
             TaskChangeField.Estimate => task.EstimateType?.ToString(),
             TaskChangeField.DueDate => task.DueDate?.ToString("yyyy-MM-dd"),
             TaskChangeField.StartDate => task.StartDate?.ToString("yyyy-MM-dd"),
+            TaskChangeField.Sprint => task.SprintId?.ToString(),
             _ => null,
         };
 

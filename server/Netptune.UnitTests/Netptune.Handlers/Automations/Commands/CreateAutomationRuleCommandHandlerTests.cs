@@ -63,14 +63,14 @@ public class CreateAutomationRuleCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldFail_WhenStatusChangedTriggerMissingStatus()
+    public async Task Handle_ShouldFail_WhenTriggerTypeIsUnsupported()
     {
         var request = new AutomationRuleRequest
         {
-            Name = "Done notification",
+            Name = "Unsupported trigger",
             Trigger = new AutomationTriggerRequest
             {
-                Type = AutomationTriggerType.TaskStatusChanged,
+                Type = (AutomationTriggerType)0,
             },
             Actions =
             [
@@ -84,7 +84,7 @@ public class CreateAutomationRuleCommandHandlerTests
         var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Contain("status");
+        result.Message.Should().Contain("not supported");
         await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
     }
 
@@ -164,7 +164,49 @@ public class CreateAutomationRuleCommandHandlerTests
         var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Contain("status or priority");
+        result.Message.Should().Contain("at least one field update");
+        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_ShouldRequireReassignPermission_WhenUpdateActionChangesAssignees()
+    {
+        ServiceAccounts.GetAutomationPrincipal("service-user", 123, Arg.Any<CancellationToken>())
+            .Returns(new AutomationExecutionPrincipal
+            {
+                UserId = "service-user",
+                IsEnabled = true,
+                Permissions = new HashSet<string>
+                {
+                    NetptunePermissions.Tasks.Read,
+                    NetptunePermissions.Tasks.Update,
+                },
+            });
+        var request = new AutomationRuleRequest
+        {
+            Name = "Replace assignees",
+            ExecutionUserId = "service-user",
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Name],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.UpdateTask,
+                    AssigneeIds = [],
+                },
+            ],
+        };
+
+        var result = await Handler.Handle(
+            new CreateAutomationRuleCommand(request),
+            TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("required");
         await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
     }
 
@@ -193,42 +235,6 @@ public class CreateAutomationRuleCommandHandlerTests
 
         result.IsSuccess.Should().BeFalse();
         result.Message.Should().Contain("comment");
-        await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
-    }
-
-    [Fact]
-    public async Task Handle_ShouldFail_WhenConditionFieldIsNotWatched()
-    {
-        var request = new AutomationRuleRequest
-        {
-            Name = "Conditional notification",
-            Trigger = new AutomationTriggerRequest
-            {
-                Type = AutomationTriggerType.TaskChanged,
-                Fields = [TaskChangeField.Name],
-                Conditions =
-                [
-                    new AutomationFieldCondition
-                    {
-                        Field = TaskChangeField.Priority,
-                        Operator = AutomationConditionOperator.Equals,
-                        Value = "High",
-                    },
-                ],
-            },
-            Actions =
-            [
-                new AutomationActionRequest
-                {
-                    Type = AutomationActionType.NotifyTaskAssignees,
-                },
-            ],
-        };
-
-        var result = await Handler.Handle(new CreateAutomationRuleCommand(request), TestContext.Current.CancellationToken);
-
-        result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Contain("included in fields");
         await Automations.DidNotReceive().AddAsync(Arg.Any<AutomationRule>(), Arg.Any<CancellationToken>());
     }
 
@@ -334,15 +340,19 @@ public class CreateAutomationRuleCommandHandlerTests
             {
                 Type = AutomationTriggerType.TaskChanged,
                 Fields = [TaskChangeField.Name],
-                Conditions =
-                [
-                    new AutomationFieldCondition
-                    {
-                        Field = TaskChangeField.Name,
-                        Operator = AutomationConditionOperator.Contains,
-                        Value = null,
-                    },
-                ],
+                ConditionGroup = new AutomationConditionGroup
+                {
+                    Operator = AutomationConditionGroupOperator.All,
+                    Conditions =
+                    [
+                        new AutomationFieldCondition
+                        {
+                            Field = TaskChangeField.Name,
+                            Operator = AutomationConditionOperator.Contains,
+                            Value = null,
+                        },
+                    ],
+                },
             },
             Actions =
             [
@@ -408,16 +418,19 @@ public class CreateAutomationRuleCommandHandlerTests
             {
                 Type = AutomationTriggerType.TaskChanged,
                 Fields = [TaskChangeField.Status],
-                Conditions =
-                [
-                    new AutomationFieldCondition
-                    {
-                        Field = TaskChangeField.Status,
-                        Operator = AutomationConditionOperator.Equals,
-                        Value = "12",
-                    },
-                ],
-                StatusId = 12,
+                ConditionGroup = new AutomationConditionGroup
+                {
+                    Operator = AutomationConditionGroupOperator.All,
+                    Conditions =
+                    [
+                        new AutomationFieldCondition
+                        {
+                            Field = TaskChangeField.Status,
+                            Operator = AutomationConditionOperator.Equals,
+                            Value = "12",
+                        },
+                    ],
+                },
             },
             Actions =
             [
@@ -453,7 +466,8 @@ public class CreateAutomationRuleCommandHandlerTests
         savedRule.Name.Should().Be("Done notification");
         savedRule.Actions.Should().HaveCount(4);
 
-        var condition = savedRule.TriggerConfig!.RootElement.GetProperty("conditions")[0];
+        var conditionGroup = savedRule.TriggerConfig!.RootElement.GetProperty("conditionGroup");
+        var condition = conditionGroup.GetProperty("conditions")[0];
         condition.GetProperty("field").GetInt32().Should().Be((int)TaskChangeField.Status);
         condition.GetProperty("operator").GetInt32().Should().Be((int)AutomationConditionOperator.Equals);
         condition.GetProperty("value").GetString().Should().Be("12");

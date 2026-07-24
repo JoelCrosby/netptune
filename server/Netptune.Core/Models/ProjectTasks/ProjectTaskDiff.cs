@@ -22,6 +22,8 @@ public record ProjectTaskDiff
 
     public ValueDiff<int> Status { get; init; } = null!;
 
+    public ValueDiff<string> Owner { get; init; } = null!;
+
     public ValueDiff<TaskPriority> Priority { get; init; } = null!;
 
     public ValueDiff<EstimateType> Estimate { get; init; } = null!;
@@ -29,6 +31,10 @@ public record ProjectTaskDiff
     public ValueDiff<DateOnly?> StartDate { get; init; } = null!;
 
     public ValueDiff<DateOnly?> DueDate { get; init; } = null!;
+
+    public ValueDiff<int?> Sprint { get; init; } = null!;
+
+    public ValueDiff<int?> BoardGroup { get; init; } = null!;
 
     public AssigneeDiff Assignees { get; init; } = null!;
 
@@ -43,6 +49,7 @@ public record ProjectTaskDiff
             if (Name.Modified) yield return TaskChangeField.Name;
             if (Description.Modified) yield return TaskChangeField.Description;
             if (Status.Modified) yield return TaskChangeField.Status;
+            if (Owner.Modified) yield return TaskChangeField.Owner;
             if (Priority.Modified) yield return TaskChangeField.Priority;
             if (Estimate.Modified) yield return TaskChangeField.Estimate;
 
@@ -52,6 +59,8 @@ public record ProjectTaskDiff
             }
 
             if (DueDate.Modified) yield return TaskChangeField.DueDate;
+            if (Sprint.Modified) yield return TaskChangeField.Sprint;
+            if (BoardGroup.Modified) yield return TaskChangeField.BoardGroup;
             if (Assignees.Modified) yield return TaskChangeField.Assignees;
             if (Tags.Modified) yield return TaskChangeField.Tags;
         }
@@ -86,6 +95,8 @@ public record ProjectTaskDiff
         var statusChanged = updated.StatusId != old.StatusId;
         var statusValue = updated.StatusId;
 
+        var ownerChanged = updated.OwnerId != old.OwnerId;
+
         var priorityChanged = updated.Priority != old.Priority;
         var priorityValue = updated.Priority ?? TaskPriority.None;
 
@@ -94,6 +105,8 @@ public record ProjectTaskDiff
 
         var startDateChanged = updated.StartDate != old.StartDate;
         var dueDateChanged = updated.DueDate != old.DueDate;
+        var sprintChanged = updated.SprintId != old.SprintId;
+        var boardGroupChanged = updated.BoardGroupId != old.BoardGroupId;
 
         var oldAssigneeIds = old.Assignees.Select(a => a.Id).ToHashSet();
         var newAssigneeIds = updated.Assignees.Select(a => a.Id).ToHashSet();
@@ -125,6 +138,12 @@ public record ProjectTaskDiff
                 OldValue = old.StatusId,
                 NewValue = statusValue,
             },
+            Owner = new ValueDiff<string>
+            {
+                Modified = ownerChanged,
+                OldValue = old.OwnerId,
+                NewValue = updated.OwnerId,
+            },
             Priority = new ValueDiff<TaskPriority>
             {
                 Modified = priorityChanged,
@@ -148,6 +167,18 @@ public record ProjectTaskDiff
                 Modified = dueDateChanged,
                 OldValue = old.DueDate,
                 NewValue = updated.DueDate,
+            },
+            Sprint = new ValueDiff<int?>
+            {
+                Modified = sprintChanged,
+                OldValue = old.SprintId,
+                NewValue = updated.SprintId,
+            },
+            BoardGroup = new ValueDiff<int?>
+            {
+                Modified = boardGroupChanged,
+                OldValue = old.BoardGroupId,
+                NewValue = updated.BoardGroupId,
             },
             Assignees = new AssigneeDiff
             {
@@ -183,6 +214,11 @@ public record ProjectTaskDiff
             changes.Add(TaskFieldChange.Create(TaskChangeField.Status, Status.OldValue, Status.NewValue));
         }
 
+        if (Owner.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(TaskChangeField.Owner, Owner.OldValue, Owner.NewValue));
+        }
+
         if (Priority.Modified)
         {
             changes.Add(TaskFieldChange.Create(TaskChangeField.Priority, Priority.OldValue, Priority.NewValue));
@@ -211,6 +247,19 @@ public record ProjectTaskDiff
                 OldValue = DueDate.OldValue?.ToString("yyyy-MM-dd"),
                 NewValue = DueDate.NewValue?.ToString("yyyy-MM-dd"),
             });
+        }
+
+        if (Sprint.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(TaskChangeField.Sprint, Sprint.OldValue, Sprint.NewValue));
+        }
+
+        if (BoardGroup.Modified)
+        {
+            changes.Add(TaskFieldChange.Create(
+                TaskChangeField.BoardGroup,
+                BoardGroup.OldValue,
+                BoardGroup.NewValue));
         }
 
         if (Assignees.Modified)
@@ -260,6 +309,10 @@ public record ProjectTaskDiff
                         options.Add(ActivityType.ModifyStatus, change.Field, change.OldValue, change.NewValue);
                         break;
 
+                    case TaskChangeField.Owner:
+                        options.Add(ActivityType.Modify, change.Field, change.OldValue, change.NewValue);
+                        break;
+
                     case TaskChangeField.Priority:
                         options.Add(ActivityType.ModifyPriority, change.Field, change.OldValue, change.NewValue);
                         break;
@@ -276,6 +329,14 @@ public record ProjectTaskDiff
                         options.Add(ActivityType.ModifyDueDate, change.Field, change.OldValue, change.NewValue);
                         break;
 
+                    case TaskChangeField.Sprint:
+                        options.Add(ActivityType.Move, change.Field, change.OldValue, change.NewValue);
+                        break;
+
+                    case TaskChangeField.BoardGroup:
+                        options.Add(ActivityType.Move, change.Field, change.OldValue, change.NewValue);
+                        break;
+
                     case TaskChangeField.Assignees:
                         foreach (var assigneeId in change.AddedValues)
                         {
@@ -285,6 +346,19 @@ public record ProjectTaskDiff
                         foreach (var assigneeId in change.RemovedValues)
                         {
                             options.AddWith(ActivityType.Unassign, new AssignActivityMeta { AssigneeId = assigneeId });
+                        }
+
+                        break;
+
+                    case TaskChangeField.Tags:
+                        foreach (var tag in change.AddedValues)
+                        {
+                            options.Add(ActivityType.AddTag, change.Field, null, tag);
+                        }
+
+                        foreach (var tag in change.RemovedValues)
+                        {
+                            options.Add(ActivityType.RemoveTag, change.Field, tag, null);
                         }
 
                         break;

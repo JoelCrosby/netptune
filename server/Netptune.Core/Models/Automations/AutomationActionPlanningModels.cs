@@ -31,6 +31,43 @@ public sealed record AutomationNotificationContribution(EventRecord Activity, Li
 
 public sealed record AutomationFlagContribution(string Name, string Description);
 
-public sealed record AutomationTaskUpdateContribution(int? StatusId, TaskPriority? Priority);
+public sealed record AutomationTaskUpdateContribution
+{
+    public int? StatusId { get; init; }
+
+    public TaskPriority? Priority { get; init; }
+
+    public string? Name { get; init; }
+
+    public string? Description { get; init; }
+
+    public bool ClearDescription { get; init; }
+
+    public string? OwnerId { get; init; }
+
+    public bool ClearOwner { get; init; }
+
+    public List<string>? AssigneeIds { get; init; }
+
+    public List<string> AddTags { get; init; } = [];
+
+    public List<string> RemoveTags { get; init; } = [];
+
+    public AutomationDateUpdate? StartDate { get; init; }
+
+    public AutomationDateUpdate? DueDate { get; init; }
+
+    public EstimateType? EstimateType { get; init; }
+
+    public decimal? EstimateValue { get; init; }
+
+    public bool ClearEstimate { get; init; }
+
+    public int? SprintId { get; init; }
+
+    public bool ClearSprint { get; init; }
+
+    public int? BoardGroupId { get; init; }
+}
 
 public sealed record AutomationTaskDeletionContribution(TimeSpan Delay);

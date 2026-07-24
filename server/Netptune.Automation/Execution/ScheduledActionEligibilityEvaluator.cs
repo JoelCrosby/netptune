@@ -39,6 +39,7 @@ internal sealed class ScheduledActionEligibilityEvaluator
         var hasExpectedActionType = action.Type == scheduledAction.ActionType;
         var hasActiveTask = !task.IsDeleted;
         var hasExpectedStatus = task.StatusId == scheduledAction.ExpectedStatusId;
+
         var hasValidReferences = hasEnabledRule &&
             hasEnabledAction &&
             hasExpectedActionType &&
@@ -52,8 +53,7 @@ internal sealed class ScheduledActionEligibilityEvaluator
 
         var matches = rule.TriggerType switch
         {
-            AutomationTriggerType.TaskChanged or AutomationTriggerType.TaskStatusChanged =>
-                MatchesTaskChangedRule(scheduledAction),
+            AutomationTriggerType.TaskChanged => MatchesTaskChangedRule(scheduledAction),
             AutomationTriggerType.TaskUnassignedFor => MatchesUnassignedRule(scheduledAction, now),
             AutomationTriggerType.TaskDueDateApproaching => MatchesDueDateRule(scheduledAction, now),
             _ => false,
@@ -80,16 +80,11 @@ internal sealed class ScheduledActionEligibilityEvaluator
         }
 
         var automationAction = ActionRegistry.Find(action.Type);
+        var requiredPermissions = AutomationPermissionPolicy.GetRequiredPermissions([action], ActionRegistry);
 
-        var requiredPermissions = AutomationPermissionPolicy.GetRequiredPermissions(
-            [action.Type],
-            ActionRegistry);
-
-        if (automationAction is null ||
-            !AutomationPermissionPolicy.HasRequiredPermissions(principal.Permissions, requiredPermissions))
+        if (automationAction is null || !AutomationPermissionPolicy.HasRequiredPermissions(principal.Permissions, requiredPermissions))
         {
-            return ScheduledEligibility.Failed(
-                "The automation execution principal no longer has the permission required by this action.");
+            return ScheduledEligibility.Failed("The automation execution principal no longer has the permission required by this action.");
         }
 
         return ScheduledEligibility.Eligible;

@@ -76,9 +76,9 @@ internal sealed class ScheduledActionService
             ClaimId = claimId,
             BatchSize = Options.DelayedActionBatchSize,
         };
-        var scheduledActions = await UnitOfWork.Automations.ClaimDueScheduledActions(
-            claim,
-            cancellationToken);
+
+        var scheduledActions = await UnitOfWork.Automations.ClaimDueScheduledActions(claim, cancellationToken);
+
         var searchRemovals = new List<ScheduledAutomationAction>();
         var completedCount = 0;
         var cancelledCount = 0;
@@ -164,6 +164,7 @@ internal sealed class ScheduledActionService
                 ProcessedAt = now,
                 Error = eligibility.Message,
             };
+
             var updated = await UnitOfWork.Automations.CompleteClaimedScheduledAction(
                 completion,
                 cancellationToken);
@@ -191,6 +192,7 @@ internal sealed class ScheduledActionService
                 Status = executionOutcome.Status,
                 ProcessedAt = now,
             };
+
             var completed = await UnitOfWork.Automations.CompleteClaimedScheduledAction(
                 completion,
                 cancellationToken);

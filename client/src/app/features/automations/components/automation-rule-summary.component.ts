@@ -156,10 +156,7 @@ export class AutomationRuleSummaryComponent {
       trigger.type === AutomationTriggerType.taskChanged
         ? {
             ...trigger,
-            conditions: null,
             conditionGroup: null,
-            statusId: null,
-            assigneeChangeMode: null,
           }
         : trigger,
       this.statuses()
@@ -171,9 +168,7 @@ export class AutomationRuleSummaryComponent {
   }
 
   hasConditions(): boolean {
-    const trigger = this.trigger();
-
-    return !!trigger.conditionGroup || !!trigger.conditions?.length;
+    return !!this.trigger().conditionGroup;
   }
 
   conditionsSummary(): AutomationCopySegment[] {

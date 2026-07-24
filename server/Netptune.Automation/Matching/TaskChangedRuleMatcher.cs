@@ -34,17 +34,10 @@ internal sealed class TaskChangedRuleMatcher
             message.WorkspaceId,
             message.EventId);
 
-        var taskChangedRules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
+        var rules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
             AutomationTriggerType.TaskChanged,
             message.WorkspaceId,
             cancellationToken);
-
-        var statusRules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
-            AutomationTriggerType.TaskStatusChanged,
-            message.WorkspaceId,
-            cancellationToken);
-
-        var rules = taskChangedRules.Concat(statusRules).ToList();
 
         Telemetry.RecordRulesEvaluated(AutomationTriggerType.TaskChanged, rules.Count);
 
@@ -139,7 +132,6 @@ internal sealed class TaskChangedRuleMatcher
         return rule.TriggerType switch
         {
             AutomationTriggerType.TaskChanged => MatchesTaskChangedRule(rule, message, task),
-            AutomationTriggerType.TaskStatusChanged => MatchesStatusChangedRule(rule, message),
             _ => false,
         };
     }
@@ -165,85 +157,11 @@ internal sealed class TaskChangedRuleMatcher
 
         var conditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(rule.TriggerConfig, "conditionGroup");
 
-        if (conditionGroup is not null)
+        if (conditionGroup is null)
         {
-            return conditionGroup.Matches(task, message);
+            return true;
         }
 
-        var conditions = JsonUtils.ReadList<AutomationFieldCondition>(rule.TriggerConfig, "conditions");
-
-        foreach (var change in matchingChanges)
-        {
-            var condition = conditions.FirstOrDefault(candidate => candidate.Field == change.Field);
-
-            if (MatchesLegacyFieldCondition(rule, change, condition))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static bool MatchesStatusChangedRule(AutomationRule rule, TaskChangedMessage message)
-    {
-        var statusChange = message.Changes.FirstOrDefault(change => change.Field == TaskChangeField.Status);
-
-        if (statusChange is null)
-        {
-            return false;
-        }
-
-        return MatchesStatusCondition(rule, statusChange);
-    }
-
-    private static bool MatchesLegacyFieldCondition(
-        AutomationRule rule,
-        TaskFieldChange change,
-        AutomationFieldCondition? condition)
-    {
-        if (condition is not null)
-        {
-            return condition.Matches(change);
-        }
-
-        var matches = change.Field switch
-        {
-            TaskChangeField.Status => MatchesStatusCondition(rule, change),
-            TaskChangeField.Assignees => MatchesAssigneeCondition(rule, change),
-            _ => true,
-        };
-
-        return matches;
-    }
-
-    private static bool MatchesStatusCondition(AutomationRule rule, TaskFieldChange change)
-    {
-        var configuredStatusId = JsonUtils.ReadInt(rule.TriggerConfig, "statusId");
-
-        if (configuredStatusId.HasValue)
-        {
-            var hasNewStatusId = int.TryParse(change.NewValue, out var newStatusId);
-            var matchesConfiguredStatus = hasNewStatusId && newStatusId == configuredStatusId.Value;
-
-            return matchesConfiguredStatus;
-        }
-
-        return true;
-    }
-
-    private static bool MatchesAssigneeCondition(AutomationRule rule, TaskFieldChange change)
-    {
-        var mode = JsonUtils.ReadEnum<AssigneeChangeMode>(rule.TriggerConfig, "assigneeChangeMode") ?? AssigneeChangeMode.AddedOrRemoved;
-        var hasAddedAssignees = change.AddedValues.Count > 0;
-        var hasRemovedAssignees = change.RemovedValues.Count > 0;
-        var hasChangedAssignees = hasAddedAssignees || hasRemovedAssignees;
-
-        return mode switch
-        {
-            AssigneeChangeMode.Added => hasAddedAssignees,
-            AssigneeChangeMode.Removed => hasRemovedAssignees,
-            _ => hasChangedAssignees,
-        };
+        return conditionGroup.Matches(task, message);
     }
 }

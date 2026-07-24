@@ -7,7 +7,7 @@ export interface UpdateProjectTaskRequest {
   description: string;
   statusId?: number;
   sortOrder?: number;
-  ownerId: string;
+  ownerId?: string | null;
   assigneeIds?: string[];
   tags?: string[];
   projectId?: number;

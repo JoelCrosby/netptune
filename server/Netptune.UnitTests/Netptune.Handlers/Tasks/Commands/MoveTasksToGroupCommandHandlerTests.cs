@@ -45,12 +45,14 @@ public class MoveTasksToGroupCommandHandlerTests
     {
         UnitOfWork.InvokeTransaction();
         UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(
-                request.NewGroupId.Value,
-                AutoFixtures.BoardGroup.Name,
-                7,
-                1,
-                groupStatusId));
+            .Returns(new BoardGroupTaskTarget
+            {
+                Id = request.NewGroupId.Value,
+                Name = AutoFixtures.BoardGroup.Name,
+                MaxSortOrder = 7,
+                WorkspaceId = 1,
+                StatusId = groupStatusId,
+            });
         UnitOfWork.Tasks.GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken).Returns(request.TaskIds);
         UnitOfWork.Tasks.GetAllByIdAsync(Arg.Any<IEnumerable<int>>(), true, TestContext.Current.CancellationToken)
             .Returns(request.TaskIds.Select(id => new ProjectTask

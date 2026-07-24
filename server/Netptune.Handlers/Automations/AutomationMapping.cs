@@ -39,14 +39,7 @@ internal static class AutomationMapping
             AutomationTriggerType.TaskChanged => JsonSerializer.SerializeToDocument(new
             {
                 fields = trigger.Fields,
-                conditions = trigger.Conditions,
                 conditionGroup = trigger.ConditionGroup,
-                statusId = trigger.StatusId,
-                assigneeChangeMode = trigger.AssigneeChangeMode,
-            }, JsonOptions.Default),
-            AutomationTriggerType.TaskStatusChanged => JsonSerializer.SerializeToDocument(new
-            {
-                statusId = trigger.StatusId,
             }, JsonOptions.Default),
             AutomationTriggerType.TaskUnassignedFor => JsonSerializer.SerializeToDocument(new
             {
@@ -70,32 +63,13 @@ internal static class AutomationMapping
         if (type == AutomationTriggerType.TaskChanged)
         {
             var fields = JsonUtils.ReadEnumList<TaskChangeField>(config, "fields");
-            var conditions = JsonUtils.ReadList<AutomationFieldCondition>(config, "conditions");
             var conditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(config, "conditionGroup");
-            var statusId = JsonUtils.ReadInt(config, "statusId");
-            var assigneeChangeMode = JsonUtils.ReadEnum<AssigneeChangeMode>(config, "assigneeChangeMode");
 
             return new AutomationTriggerViewModel
             {
                 Type = type,
                 Fields = fields,
-                Conditions = conditions,
                 ConditionGroup = conditionGroup,
-                StatusId = statusId,
-                AssigneeChangeMode = assigneeChangeMode,
-            };
-        }
-
-        if (type == AutomationTriggerType.TaskStatusChanged)
-        {
-            var statusId = JsonUtils.ReadInt(config, "statusId");
-
-            return new AutomationTriggerViewModel
-            {
-                Type = type,
-                Fields = [TaskChangeField.Status],
-                Conditions = [],
-                StatusId = statusId,
             };
         }
 

@@ -6,10 +6,15 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { StatusesService } from '@core/services/statuses.service';
-import { ServiceAccountsService } from '@core/services/service-accounts.service';
+import { automationRuleResource } from '@core/resources/automation.resource';
+import { boardGroupOptionsResource } from '@core/resources/board-group.resource';
+import { serviceAccountResource } from '@core/resources/service-account.resource';
+import { sprintResource } from '@core/resources/sprint.resource';
+import { statusResource } from '@core/resources/status.resources';
+import { tagResource } from '@core/resources/tag.resource';
+import { userResource } from '@core/resources/user.resource';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -32,13 +37,10 @@ import {
   AutomationActionType,
   AutomationDelayUnit,
   AutomationConditionGroup,
-  AutomationConditionGroupOperator,
-  AutomationConditionOperator,
   AutomationRule,
   AutomationRuleRequest,
   AutomationTrigger,
   AutomationTriggerType,
-  AssigneeChangeMode,
   TaskChangeField,
 } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
@@ -117,6 +119,10 @@ import { AutomationsService } from '../../services/automations.service';
                 <app-automation-actions-editor
                   [actions]="actions()"
                   [statuses]="taskStatuses()"
+                  [users]="workspaceUsers()"
+                  [tags]="workspaceTagsResource.value()"
+                  [sprints]="workspaceSprintsResource.value()"
+                  [boardGroups]="workspaceBoardGroupsResource.value()"
                   [defaultStatusId]="defaultActiveStatusId()"
                   (addAction)="addAction()"
                   (removeAction)="removeAction($event)"
@@ -147,32 +153,54 @@ export class AutomationFormViewComponent {
   readonly automationTriggerType = AutomationTriggerType;
 
   private service = inject(AutomationsService);
-  private statusesService = inject(StatusesService);
-  private serviceAccountsService = inject(ServiceAccountsService);
   private snackbar = inject(SnackbarService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private readonly ruleId = signal(this.readRuleId());
 
-  readonly loading = signal(false);
   readonly saving = signal(false);
   readonly validationError = signal<string | null>(null);
-  readonly taskStatuses = toSignal(this.statusesService.get(), {
-    initialValue: [],
+
+  readonly taskStatusesResource = statusResource();
+  readonly serviceAccountsResource = serviceAccountResource();
+  readonly workspaceUsersResource = userResource();
+  readonly workspaceTagsResource = tagResource();
+  readonly workspaceSprintsResource = sprintResource([]);
+  readonly workspaceBoardGroupsResource = boardGroupOptionsResource();
+  readonly ruleResource = automationRuleResource<AutomationRule>(this.ruleId);
+
+  readonly taskStatuses = this.taskStatusesResource.value;
+  readonly serviceAccounts = this.serviceAccountsResource.value;
+
+  readonly workspaceUsers = computed(() => {
+    return this.workspaceUsersResource.value()?.payload?.items ?? [];
   });
-  readonly serviceAccounts = toSignal(this.serviceAccountsService.getAll(), {
-    initialValue: [],
+
+  readonly loading = computed(() => {
+    return (
+      this.taskStatusesResource.isLoading() ||
+      this.serviceAccountsResource.isLoading() ||
+      this.workspaceUsersResource.isLoading() ||
+      this.workspaceTagsResource.isLoading() ||
+      this.workspaceSprintsResource.isLoading() ||
+      this.workspaceBoardGroupsResource.isLoading() ||
+      this.ruleResource.isLoading()
+    );
   });
-  readonly enabledServiceAccounts = computed(() =>
-    this.serviceAccounts().filter((account) => !account.disabledAt)
-  );
-  readonly defaultActiveStatusId = computed(
-    () =>
+
+  readonly enabledServiceAccounts = computed(() => {
+    return this.serviceAccounts().filter((account) => !account.disabledAt);
+  });
+
+  readonly defaultActiveStatusId = computed(() => {
+    return (
       this.statusIdByKey('in-progress') ??
       this.statusIdByKey('active') ??
       this.taskStatuses()[0]?.id ??
       null
-  );
+    );
+  });
 
   private nextActionId = 1;
 
@@ -190,16 +218,28 @@ export class AutomationFormViewComponent {
 
   constructor() {
     effect(() => {
+      const rule = this.ruleResource.value()?.payload;
+
+      if (rule) {
+        this.populate(rule);
+      }
+    });
+
+    effect(() => {
+      const ruleLoadError = this.ruleResource.error();
+
+      if (ruleLoadError) {
+        this.snackbar.error('Automation could not be loaded');
+      }
+    });
+
+    effect(() => {
       if (!this.executionUserId()) {
         this.executionUserId.set(
           this.enabledServiceAccounts()[0]?.userId ?? null
         );
       }
     });
-
-    if (this.isEdit()) {
-      this.loadRule();
-    }
   }
 
   isEdit(): boolean {
@@ -211,15 +251,21 @@ export class AutomationFormViewComponent {
   }
 
   addAction() {
-    if (this.actions().length >= 10) return;
+    if (this.actions().length >= 10) {
+      return;
+    }
+
     this.actions.update((actions) => [...actions, this.newNotifyAction()]);
   }
 
   removeAction(clientId: number) {
-    if (this.actions().length === 1) return;
-    this.actions.update((actions) =>
-      actions.filter((action) => action.clientId !== clientId)
-    );
+    if (this.actions().length === 1) {
+      return;
+    }
+
+    this.actions.update((actions) => {
+      return actions.filter((action) => action.clientId !== clientId);
+    });
   }
 
   onActionTypeChanged(clientId: number, type: AutomationActionType) {
@@ -234,6 +280,22 @@ export class AutomationFormViewComponent {
           ? this.defaultActiveStatusId()
           : null,
       priority: null,
+      taskName: null,
+      taskDescription: null,
+      clearDescription: false,
+      ownerId: null,
+      clearOwner: false,
+      assigneeIds: null,
+      addTags: [],
+      removeTags: [],
+      startDate: null,
+      dueDate: null,
+      estimateType: null,
+      estimateValue: null,
+      clearEstimate: false,
+      sprintId: null,
+      clearSprint: false,
+      boardGroupId: null,
       delayAmount: type === AutomationActionType.deleteTask ? 0 : null,
       delayUnit:
         type === AutomationActionType.deleteTask
@@ -257,10 +319,7 @@ export class AutomationFormViewComponent {
       return {
         type: AutomationTriggerType.taskChanged,
         fields,
-        conditions: null,
         conditionGroup: this.conditionGroup(),
-        statusId: null,
-        assigneeChangeMode: null,
         durationDays: null,
       };
     }
@@ -269,16 +328,16 @@ export class AutomationFormViewComponent {
       type: this.triggerType(),
       fields: null,
       durationDays: Number(this.durationDays()),
-      conditions: null,
       conditionGroup: null,
-      statusId: null,
-      assigneeChangeMode: null,
     };
   });
 
   onSubmit() {
     const request = this.buildRequest();
-    if (!request) return;
+
+    if (!request) {
+      return;
+    }
 
     const id = this.ruleId();
     const save = id
@@ -303,50 +362,29 @@ export class AutomationFormViewComponent {
       });
   }
 
-  private loadRule() {
-    const id = this.ruleId();
-    if (!id) return;
+  populate(rule: AutomationRule) {
+    const triggerType = rule.trigger.type;
+    const taskFields = rule.trigger.fields ?? [];
+    const conditionGroup = rule.trigger.conditionGroup ?? null;
+    const durationDays = String(rule.trigger.durationDays ?? 3);
+    const actions = rule.actions.length
+      ? rule.actions.map((action) => ({
+          ...action,
+          clientId: this.nextActionId++,
+        }))
+      : [this.newNotifyAction()];
 
-    this.loading.set(true);
-    this.service
-      .getRule(id)
-      .pipe(
-        finalize(() => this.loading.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: (rule) => this.populate(rule),
-        error: () => this.snackbar.error('Automation could not be loaded'),
-      });
-  }
-
-  private populate(rule: AutomationRule) {
     this.name.set(rule.name);
     this.isEnabled.set(rule.isEnabled);
     this.executionUserId.set(rule.executionUserId);
-    this.triggerType.set(
-      rule.trigger.type === AutomationTriggerType.taskStatusChanged
-        ? AutomationTriggerType.taskChanged
-        : rule.trigger.type
-    );
-    this.taskFields.set(
-      rule.trigger.fields?.length
-        ? rule.trigger.fields
-        : [TaskChangeField.status]
-    );
-    this.conditionGroup.set(this.ruleConditionGroup(rule));
-    this.durationDays.set(String(rule.trigger.durationDays ?? 3));
-    this.actions.set(
-      rule.actions.length
-        ? rule.actions.map((action) => ({
-            ...action,
-            clientId: this.nextActionId++,
-          }))
-        : [this.newNotifyAction()]
-    );
+    this.triggerType.set(triggerType);
+    this.taskFields.set(taskFields);
+    this.conditionGroup.set(conditionGroup);
+    this.durationDays.set(durationDays);
+    this.actions.set(actions);
   }
 
-  private buildRequest(): AutomationRuleRequest | null {
+  buildRequest(): AutomationRuleRequest | null {
     const result = buildAutomationRuleRequest({
       name: this.name(),
       isEnabled: this.isEnabled(),
@@ -360,7 +398,7 @@ export class AutomationFormViewComponent {
     return result.request;
   }
 
-  private newNotifyAction(): EditableAutomationAction {
+  newNotifyAction(): EditableAutomationAction {
     return {
       clientId: this.nextActionId++,
       type: AutomationActionType.notifyTaskAssignees,
@@ -370,91 +408,32 @@ export class AutomationFormViewComponent {
       flagDescription: null,
       statusId: null,
       priority: null,
+      taskName: null,
+      taskDescription: null,
+      clearDescription: false,
+      ownerId: null,
+      clearOwner: false,
+      assigneeIds: null,
+      addTags: [],
+      removeTags: [],
+      startDate: null,
+      dueDate: null,
+      estimateType: null,
+      estimateValue: null,
+      clearEstimate: false,
+      sprintId: null,
+      clearSprint: false,
+      boardGroupId: null,
       delayAmount: null,
       delayUnit: null,
     };
   }
 
-  private ruleConditionGroup(
-    rule: AutomationRule
-  ): AutomationConditionGroup | null {
-    if (rule.trigger.conditionGroup) {
-      return rule.trigger.conditionGroup;
-    }
-
-    const conditions = [...(rule.trigger.conditions ?? [])];
-    const configuredFields = new Set(
-      conditions.map((condition) => condition.field)
-    );
-
-    const hasLegacyStatus =
-      rule.trigger.statusId !== null && rule.trigger.statusId !== undefined;
-
-    if (hasLegacyStatus && !configuredFields.has(TaskChangeField.status)) {
-      conditions.push({
-        field: TaskChangeField.status,
-        operator: AutomationConditionOperator.equals,
-        value: String(rule.trigger.statusId),
-      });
-      configuredFields.add(TaskChangeField.status);
-    }
-
-    const hasLegacyAssigneeMode =
-      rule.trigger.assigneeChangeMode !== null &&
-      rule.trigger.assigneeChangeMode !== undefined;
-    const legacyAssigneeMode = rule.trigger.assigneeChangeMode;
-
-    if (
-      hasLegacyAssigneeMode &&
-      legacyAssigneeMode !== null &&
-      legacyAssigneeMode !== undefined &&
-      !configuredFields.has(TaskChangeField.assignees)
-    ) {
-      conditions.push({
-        field: TaskChangeField.assignees,
-        operator: this.assigneeOperator(legacyAssigneeMode),
-        value: null,
-      });
-      configuredFields.add(TaskChangeField.assignees);
-    }
-
-    for (const field of rule.trigger.fields ?? []) {
-      if (!configuredFields.has(field)) {
-        conditions.push({
-          field,
-          operator: AutomationConditionOperator.any,
-          value: null,
-        });
-      }
-    }
-
-    if (!conditions.length) return null;
-
-    return {
-      operator: AutomationConditionGroupOperator.any,
-      conditions,
-      groups: [],
-    };
-  }
-
-  private assigneeOperator(
-    mode: AssigneeChangeMode
-  ): AutomationConditionOperator {
-    switch (mode) {
-      case AssigneeChangeMode.added:
-        return AutomationConditionOperator.added;
-      case AssigneeChangeMode.removed:
-        return AutomationConditionOperator.removed;
-      default:
-        return AutomationConditionOperator.any;
-    }
-  }
-
-  private statusIdByKey(key: string): number | null {
+  statusIdByKey(key: string): number | null {
     return this.taskStatuses().find((status) => status.key === key)?.id ?? null;
   }
 
-  private ruleId(): number | null {
+  readRuleId(): number | null {
     const value = Number(this.route.snapshot.paramMap.get('id'));
     return Number.isFinite(value) && value > 0 ? value : null;
   }

@@ -5,6 +5,7 @@ import {
   AutomationConditionGroup,
   AutomationDelayUnit,
   AutomationConditionOperator,
+  AutomationDateUpdateMode,
   AutomationRuleRequest,
   AutomationTrigger,
   AutomationTriggerType,
@@ -80,11 +81,28 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
     actions.some(
       (action) =>
         action.type === AutomationActionType.updateTask &&
-        action.statusId === null &&
-        action.priority === null
+        !hasTaskUpdate(action)
     )
   ) {
-    return 'Task update actions need a status or priority.';
+    return 'Task update actions need at least one field update.';
+  }
+
+  const invalidDateUpdate = actions.some(
+    (action) =>
+      action.type === AutomationActionType.updateTask &&
+      [action.startDate, action.dueDate].some(
+        (date) =>
+          date !== null &&
+          date !== undefined &&
+          ((date.mode === AutomationDateUpdateMode.absolute && !date.date) ||
+            ((date.mode === AutomationDateUpdateMode.relativeDays ||
+              date.mode === AutomationDateUpdateMode.relativeBusinessDays) &&
+              !Number.isInteger(date.offset)))
+      )
+  );
+
+  if (invalidDateUpdate) {
+    return 'Complete each configured task date update.';
   }
 
   const delayedDeletion = actions.find(
@@ -125,22 +143,6 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
   if (trigger.type === AutomationTriggerType.taskChanged) {
     if (!trigger.fields?.length) {
       return 'Choose at least one task field to watch.';
-    }
-
-    const invalidCondition = trigger.conditions?.find((condition) => {
-      const requiresValue =
-        condition.operator === AutomationConditionOperator.equals ||
-        condition.operator === AutomationConditionOperator.notEquals ||
-        condition.operator === AutomationConditionOperator.contains;
-
-      return (
-        !trigger.fields?.includes(condition.field) ||
-        (requiresValue && !condition.value?.trim())
-      );
-    });
-
-    if (invalidCondition) {
-      return 'Complete each field condition before saving.';
     }
 
     if (trigger.conditionGroup) {
@@ -218,6 +220,8 @@ function isDurationInRange(
 }
 
 function toActionRequest(action: AutomationAction): AutomationActionRequest {
+  const isTaskUpdate = action.type === AutomationActionType.updateTask;
+
   return {
     type: action.type,
     message:
@@ -236,14 +240,30 @@ function toActionRequest(action: AutomationAction): AutomationActionRequest {
       action.type === AutomationActionType.flagTask
         ? action.flagDescription?.trim() || null
         : null,
-    statusId:
-      action.type === AutomationActionType.updateTask
-        ? (action.statusId ?? null)
-        : null,
-    priority:
-      action.type === AutomationActionType.updateTask
-        ? (action.priority ?? null)
-        : null,
+    statusId: isTaskUpdate ? (action.statusId ?? null) : null,
+    priority: isTaskUpdate ? (action.priority ?? null) : null,
+    taskName: isTaskUpdate ? action.taskName?.trim() || null : null,
+    taskDescription: isTaskUpdate
+      ? action.taskDescription?.trim() || null
+      : null,
+    clearDescription: isTaskUpdate && !!action.clearDescription,
+    ownerId: isTaskUpdate ? (action.ownerId ?? null) : null,
+    clearOwner: isTaskUpdate && !!action.clearOwner,
+    assigneeIds: isTaskUpdate
+      ? action.assigneeIds === undefined
+        ? null
+        : action.assigneeIds
+      : null,
+    addTags: isTaskUpdate ? (action.addTags ?? []) : [],
+    removeTags: isTaskUpdate ? (action.removeTags ?? []) : [],
+    startDate: isTaskUpdate ? (action.startDate ?? null) : null,
+    dueDate: isTaskUpdate ? (action.dueDate ?? null) : null,
+    estimateType: isTaskUpdate ? (action.estimateType ?? null) : null,
+    estimateValue: isTaskUpdate ? (action.estimateValue ?? null) : null,
+    clearEstimate: isTaskUpdate && !!action.clearEstimate,
+    sprintId: isTaskUpdate ? (action.sprintId ?? null) : null,
+    clearSprint: isTaskUpdate && !!action.clearSprint,
+    boardGroupId: isTaskUpdate ? (action.boardGroupId ?? null) : null,
     delayAmount:
       action.type === AutomationActionType.deleteTask
         ? (action.delayAmount ?? 0)
@@ -253,4 +273,27 @@ function toActionRequest(action: AutomationAction): AutomationActionRequest {
         ? (action.delayUnit ?? null)
         : null,
   };
+}
+
+function hasTaskUpdate(action: AutomationActionRequest): boolean {
+  return (
+    action.statusId !== null ||
+    action.priority !== null ||
+    action.taskName !== null ||
+    action.taskDescription !== null ||
+    !!action.clearDescription ||
+    action.ownerId !== null ||
+    !!action.clearOwner ||
+    action.assigneeIds !== null ||
+    !!action.addTags?.length ||
+    !!action.removeTags?.length ||
+    action.startDate !== null ||
+    action.dueDate !== null ||
+    action.estimateType !== null ||
+    action.estimateValue !== null ||
+    !!action.clearEstimate ||
+    action.sprintId !== null ||
+    !!action.clearSprint ||
+    action.boardGroupId !== null
+  );
 }

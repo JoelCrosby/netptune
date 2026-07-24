@@ -42,12 +42,14 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     {
         UnitOfWork.InvokeTransaction<BoardGroupTaskTarget>();
         UnitOfWork.BoardGroups.GetTaskTarget(request.NewGroupId, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(
-                request.NewGroupId,
-                AutoFixtures.BoardGroup.Name,
-                7,
-                1,
-                groupStatusId));
+            .Returns(new BoardGroupTaskTarget
+            {
+                Id = request.NewGroupId,
+                Name = AutoFixtures.BoardGroup.Name,
+                MaxSortOrder = 7,
+                WorkspaceId = 1,
+                StatusId = groupStatusId,
+            });
         UnitOfWork.Tasks.GetTaskViewModel(request.TaskId, TestContext.Current.CancellationToken)
             .Returns(new TaskViewModel { Id = request.TaskId, StatusId = 1, WorkspaceId = 1 });
         UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(request.TaskId, request.NewGroupId, TestContext.Current.CancellationToken).Returns(taskInGroup);

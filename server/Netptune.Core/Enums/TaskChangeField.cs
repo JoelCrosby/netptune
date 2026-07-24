@@ -12,4 +12,6 @@ public enum TaskChangeField
     DueDate = 7,
     Tags = 8,
     StartDate = 9,
+    Sprint = 10,
+    BoardGroup = 11,
 }

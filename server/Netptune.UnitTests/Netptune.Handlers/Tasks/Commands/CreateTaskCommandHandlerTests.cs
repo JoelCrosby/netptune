@@ -111,7 +111,12 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Projects.ReserveTaskScopeIds(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
+            .Returns(new BoardGroupTaskTarget
+            {
+                Id = request.BoardGroupId.Value,
+                Name = "Group",
+                MaxSortOrder = 7,
+            });
 
         var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
@@ -147,7 +152,12 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Projects.ReserveTaskScopeIds(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
+            .Returns(new BoardGroupTaskTarget
+            {
+                Id = request.BoardGroupId.Value,
+                Name = "Group",
+                MaxSortOrder = 7,
+            });
 
         await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
@@ -215,7 +225,12 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Projects.ReserveTaskScopeIds(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).ReturnsNull();
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
+            .Returns(new BoardGroupTaskTarget
+            {
+                Id = request.BoardGroupId.Value,
+                Name = "Group",
+                MaxSortOrder = 7,
+            });
 
         var result = await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 
@@ -246,7 +261,12 @@ public class CreateTaskCommandHandlerTests
         UnitOfWork.Projects.ReserveTaskScopeIds(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
-            .Returns(new BoardGroupTaskTarget(request.BoardGroupId!.Value, "Group", 7));
+            .Returns(new BoardGroupTaskTarget
+            {
+                Id = request.BoardGroupId.Value,
+                Name = "Group",
+                MaxSortOrder = 7,
+            });
 
         await Handler.Handle(new CreateTaskCommand(request), TestContext.Current.CancellationToken);
 

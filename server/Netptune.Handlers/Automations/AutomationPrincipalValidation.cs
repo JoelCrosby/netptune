@@ -1,27 +1,18 @@
 using Netptune.Core.Authorization;
-using Netptune.Core.Cache;
-using Netptune.Core.Requests;
 using Netptune.Core.Services.Automations;
-using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Automations;
 
 internal static class AutomationPrincipalValidation
 {
     public static async Task<string?> Validate(
-        AutomationRuleRequest request,
-        int workspaceId,
-        string userId,
-        string workspaceKey,
-        INetptuneUnitOfWork unitOfWork,
-        IWorkspacePermissionCache permissionCache,
-        IAutomationActionRegistry actionRegistry,
+        AutomationValidationContext context,
         CancellationToken cancellationToken)
     {
         var requiredPermissions = AutomationPermissionPolicy.GetRequiredPermissions(
-            request.Actions.Select(action => action.Type),
-            actionRegistry);
-        var author = await permissionCache.GetUserPermissions(userId, workspaceKey);
+            context.Request.Actions,
+            context.ActionRegistry);
+        var author = await context.PermissionCache.GetUserPermissions(context.UserId, context.WorkspaceKey);
 
         if (author is null)
         {
@@ -37,9 +28,9 @@ internal static class AutomationPrincipalValidation
             return "You cannot configure actions that require permissions you do not have.";
         }
 
-        var principal = await unitOfWork.ServiceAccounts.GetAutomationPrincipal(
-            request.ExecutionUserId!,
-            workspaceId,
+        var principal = await context.UnitOfWork.ServiceAccounts.GetAutomationPrincipal(
+            context.Request.ExecutionUserId!,
+            context.WorkspaceId,
             cancellationToken);
 
         if (principal is null)

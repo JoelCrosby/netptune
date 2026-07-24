@@ -20,6 +20,13 @@ WITH filtered_tasks AS (
          , pt.due_date
          , pt.project_id
          , pt.sprint_id
+         , (
+               SELECT ptbg.board_group_id
+               FROM project_task_in_board_groups ptbg
+               WHERE ptbg.project_task_id = pt.id
+               ORDER BY ptbg.id
+               LIMIT 1
+           ) AS board_group_id
          , pt.workspace_id
          , pt.created_at
          , pt.updated_at
@@ -61,7 +68,7 @@ WITH filtered_tasks AS (
              INNER JOIN statuses st ON pt.status_id = st.id
              LEFT JOIN projects p ON pt.project_id = p.id
              LEFT JOIN sprints s ON pt.sprint_id = s.id AND NOT s.is_deleted
-             INNER JOIN users o ON pt.owner_id = o.id
+             LEFT JOIN users o ON pt.owner_id = o.id
              LEFT JOIN users d ON pt.deleted_by_user_id = d.id
     WHERE w.slug = @workspaceKey
       AND pt.is_deleted = @deleted
@@ -130,6 +137,7 @@ SELECT ft.total_count
      , ft.due_date AS task_due_date
      , ft.project_id
      , ft.sprint_id
+     , ft.board_group_id
      , ft.sprint_name
      , ft.sprint_status
      , ft.workspace_id

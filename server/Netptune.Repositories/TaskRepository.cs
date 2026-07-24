@@ -432,13 +432,14 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 DueDate = row.Task_Due_Date,
                 ProjectId = row.Project_Id,
                 SprintId = row.Sprint_Id,
+                BoardGroupId = row.Board_Group_Id,
                 SprintName = row.Sprint_Name,
                 SprintStatus = row.Sprint_Status,
                 WorkspaceId = row.Workspace_Id,
                 WorkspaceKey = row.Workspace_Key,
                 CreatedAt = row.Task_Created_At,
                 UpdatedAt = row.Task_Updated_At,
-                OwnerUsername = row.Owner_Username,
+                OwnerUsername = row.Owner_Username ?? string.Empty,
                 OwnerPictureUrl = row.Owner_Picture_Url,
                 OwnerIsServiceAccount = row.Owner_User_Type == AppUserType.ServiceAccount,
                 DeletedByUsername = row.Deleted_By_Username,
@@ -507,17 +508,23 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             DueDate = x.DueDate,
             ProjectId = x.ProjectId,
             SprintId = x.SprintId,
+            BoardGroupId = Context.ProjectTaskInBoardGroups
+                .Where(taskInGroup => taskInGroup.ProjectTaskId == x.Id)
+                .Select(taskInGroup => (int?)taskInGroup.BoardGroupId)
+                .FirstOrDefault(),
             SprintName = x.Sprint == null ? null : x.Sprint.Name,
             SprintStatus = x.Sprint == null ? null : x.Sprint.Status,
             WorkspaceId = x.WorkspaceId,
             WorkspaceKey = x.Workspace.Slug,
             CreatedAt = x.CreatedAt,
             UpdatedAt = x.UpdatedAt,
-            OwnerUsername = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
-                ? x.Owner.UserName!
-                : x.Owner.Firstname + " " + x.Owner.Lastname,
-            OwnerPictureUrl = x.Owner.PictureUrl,
-            OwnerIsServiceAccount = x.Owner.UserType == AppUserType.ServiceAccount,
+            OwnerUsername = x.Owner == null
+                ? string.Empty
+                : string.IsNullOrEmpty(x.Owner.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
+                    ? x.Owner.UserName!
+                    : x.Owner.Firstname + " " + x.Owner.Lastname,
+            OwnerPictureUrl = x.Owner == null ? null : x.Owner.PictureUrl,
+            OwnerIsServiceAccount = x.Owner != null && x.Owner.UserType == AppUserType.ServiceAccount,
             ProjectName = x.Project == null ? string.Empty : x.Project.Name,
             HasComments = Context.Comments.Any(comment =>
                 comment.EntityType == EntityType.Task &&

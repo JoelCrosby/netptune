@@ -17,6 +17,6 @@ export interface Basemodel {
   deletedByUser?: AppUser;
   deletedByUserId?: string;
 
-  owner?: AppUser;
-  ownerId?: string;
+  owner?: AppUser | null;
+  ownerId?: string | null;
 }

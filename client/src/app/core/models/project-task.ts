@@ -28,14 +28,15 @@ export interface ProjectTask extends Basemodel {
   projectScopeId: number;
 
   sprintId?: number | null;
+  boardGroupId?: number | null;
   sprintName?: string | null;
   sprintStatus?: SprintStatus | null;
 
   workspace: Workspace;
   workspaceId: number;
 
-  owner: AppUser;
-  ownerId: string;
+  owner?: AppUser | null;
+  ownerId?: string | null;
 }
 
 export interface AddProjectTaskRequest {

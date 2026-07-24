@@ -11,11 +11,7 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
 
     Task<List<BoardGroup>> GetBoardGroupsInBoard(int boardId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<List<BoardViewGroup>?> GetBoardViewGroups(
-        int boardId,
-        string? searchTerm = null,
-        int? sprintId = null,
-        CancellationToken cancellationToken = default);
+    Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string? searchTerm = null, int? sprintId = null, CancellationToken cancellationToken = default);
 
     Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
@@ -24,6 +20,8 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
     Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default);
 
     Task<BoardGroupTaskTarget?> GetDefaultTaskTarget(int projectId, CancellationToken cancellationToken = default);
+
+    Task<List<BoardGroupOptionViewModel>> GetOptionsInWorkspace(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<double> GetMaxTaskSortOrder(int groupId, CancellationToken cancellationToken = default);
 

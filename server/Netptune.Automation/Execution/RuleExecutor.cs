@@ -136,6 +136,7 @@ internal sealed class RuleExecutor
                     execution.ExecutionUserId,
                     execution.Rule.WorkspaceId,
                     cancellationToken);
+
                 principals[principalKey] = principal;
             }
 
@@ -153,11 +154,8 @@ internal sealed class RuleExecutor
                 continue;
             }
 
-            var requiredPermissions = AutomationPermissionPolicy.GetRequiredPermissions(
-                execution.Rule.Actions
-                    .Where(action => !action.IsDeleted)
-                    .Select(action => action.Type),
-                ActionRegistry);
+            var activeActions = execution.Rule.Actions.Where(action => !action.IsDeleted);
+            var requiredPermissions = AutomationPermissionPolicy.GetRequiredPermissions(activeActions, ActionRegistry);
 
             if (!AutomationPermissionPolicy.HasRequiredPermissions(principal.Permissions, requiredPermissions))
             {
