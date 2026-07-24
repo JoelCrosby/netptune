@@ -104,6 +104,7 @@ export class AutomationFieldConditionEditorComponent {
   readonly taskChangeField = TaskChangeField;
   readonly field = input.required<TaskChangeField>();
   readonly statuses = input.required<Status[]>();
+  readonly supportsChangeOperators = input(false);
   readonly operatorLabel = input<string | null>(null);
   readonly condition = model.required<AutomationFieldCondition>();
 
@@ -113,7 +114,7 @@ export class AutomationFieldConditionEditorComponent {
 
   operatorOptions(): OperatorOption[] {
     if (this.isCollectionField()) {
-      return [
+      const options = [
         {
           icon: LucideAsterisk,
           label: 'Any change',
@@ -155,6 +156,15 @@ export class AutomationFieldConditionEditorComponent {
           value: AutomationConditionOperator.removed,
         },
       ];
+
+      return this.supportsChangeOperators()
+        ? options
+        : options.filter(
+            (option) =>
+              option.value !== AutomationConditionOperator.any &&
+              option.value !== AutomationConditionOperator.added &&
+              option.value !== AutomationConditionOperator.removed
+          );
     }
 
     const options: OperatorOption[] = [
@@ -196,7 +206,11 @@ export class AutomationFieldConditionEditorComponent {
       }
     );
 
-    return options;
+    return this.supportsChangeOperators()
+      ? options
+      : options.filter(
+          (option) => option.value !== AutomationConditionOperator.any
+        );
   }
 
   valueOptions(): SelectOption[] {

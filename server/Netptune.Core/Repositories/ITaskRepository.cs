@@ -27,6 +27,12 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<List<ProjectTask>> GetDueDateAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateOnly from, DateOnly to, CancellationToken cancellationToken = default);
 
+    Task<List<ProjectTask>> GetOverdueAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateOnly today, CancellationToken cancellationToken = default);
+
+    Task<List<ProjectTask>> GetNoDueDateAutomationCandidates(IReadOnlyCollection<int> workspaceIds, CancellationToken cancellationToken = default);
+
+    Task<List<ProjectTask>> GetInactiveAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateTime cutoff, CancellationToken cancellationToken = default);
+
     Task<ProjectTask?> GetTask(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 
     Task<ProjectTask?> GetTaskInWorkspace(string systemId, int workspaceId, CancellationToken cancellationToken = default);

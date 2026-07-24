@@ -63,6 +63,11 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
       <app-color-select [formField]="detailsForm.color" label="Color" />
 
+      <app-form-input
+        [formField]="detailsForm.timeZone"
+        label="Timezone"
+        hint="Use an IANA timezone, for example Europe/London." />
+
       <div>
         <button app-flat-button type="submit">Save Changes</button>
       </div>
@@ -79,6 +84,7 @@ export class WorkspaceDetailsComponent {
     identifier: '',
     description: '',
     color: '',
+    timeZone: 'UTC',
   });
 
   detailsForm = form(this.detailsFormModel, (schema) => {
@@ -150,6 +156,10 @@ export class WorkspaceDetailsComponent {
         identifier: workspace.slug ?? '',
         description: workspace.description ?? '',
         color: workspace.metaInfo?.color ?? '',
+        timeZone:
+          workspace.metaInfo?.timeZone ??
+          Intl.DateTimeFormat().resolvedOptions().timeZone ??
+          'UTC',
       });
     });
   }
@@ -158,7 +168,8 @@ export class WorkspaceDetailsComponent {
     event.preventDefault();
 
     submit(this.detailsForm, async () => {
-      const { name, identifier, description, color } = this.detailsForm;
+      const { name, identifier, description, color, timeZone } =
+        this.detailsForm;
 
       const request: UpdateWorkspaceRequest = {
         name: name().value().trim(),
@@ -166,6 +177,7 @@ export class WorkspaceDetailsComponent {
         description: description().value().trim(),
         metaInfo: {
           color: color().value(),
+          timeZone: timeZone().value().trim(),
         },
       };
 

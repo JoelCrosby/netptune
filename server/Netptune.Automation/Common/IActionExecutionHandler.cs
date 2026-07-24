@@ -3,7 +3,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.ProjectTasks;
 
-namespace Netptune.Automation.Persistence.Actions;
+namespace Netptune.Automation.Common;
 
 internal sealed record ActionOutcome(AutomationActionResultStatus Status, string? Message = null);
 

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Configuration;
 using Netptune.Automation.Execution.Actions;
 using Netptune.Core.Entities;

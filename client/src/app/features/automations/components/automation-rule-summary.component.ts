@@ -70,38 +70,36 @@ import { AutomationDescriptionComponent } from './automation-description.compone
           </article>
         </div>
 
-        @if (supportsConditions()) {
-          <div class="flex min-w-0 gap-2">
+        <div class="flex min-w-0 gap-2">
+          <div
+            class="relative flex w-8 shrink-0 justify-center"
+            aria-hidden="true">
             <div
-              class="relative flex w-8 shrink-0 justify-center"
-              aria-hidden="true">
-              <div
-                class="bg-primary/30 absolute top-8 -bottom-3 left-1/2 w-px"></div>
-              <app-icon-circle appearance="solid" [icon]="conditionIcon" />
-            </div>
-            <article
-              class="border-border mb-3 min-w-0 flex-1 overflow-hidden rounded-md border">
-              <header
-                class="border-border bg-foreground/3 flex items-center justify-between gap-2 border-b px-3 py-2">
-                <div class="flex items-center gap-2">
-                  <app-icon-circle size="small" [icon]="conditionIcon" />
-                  <h3 class="text-xs font-bold tracking-wider">IF</h3>
-                </div>
-                <app-badge
-                  class="text-foreground/45 bg-transparent text-[0.6rem] tracking-wide">
-                  OPTIONAL
-                </app-badge>
-              </header>
-              <p
-                class="p-3 text-sm leading-relaxed"
-                [class.text-foreground/55]="!hasConditions()">
-                <app-automation-description
-                  [segments]="conditionsSummary()"
-                  [statuses]="statuses()" />
-              </p>
-            </article>
+              class="bg-primary/30 absolute top-8 -bottom-3 left-1/2 w-px"></div>
+            <app-icon-circle appearance="solid" [icon]="conditionIcon" />
           </div>
-        }
+          <article
+            class="border-border mb-3 min-w-0 flex-1 overflow-hidden rounded-md border">
+            <header
+              class="border-border bg-foreground/3 flex items-center justify-between gap-2 border-b px-3 py-2">
+              <div class="flex items-center gap-2">
+                <app-icon-circle size="small" [icon]="conditionIcon" />
+                <h3 class="text-xs font-bold tracking-wider">IF</h3>
+              </div>
+              <app-badge
+                class="text-foreground/45 bg-transparent text-[0.6rem] tracking-wide">
+                OPTIONAL
+              </app-badge>
+            </header>
+            <p
+              class="p-3 text-sm leading-relaxed"
+              [class.text-foreground/55]="!hasConditions()">
+              <app-automation-description
+                [segments]="conditionsSummary()"
+                [statuses]="statuses()" />
+            </p>
+          </article>
+        </div>
 
         <div class="flex min-w-0 gap-2">
           <div class="flex w-8 shrink-0 justify-center" aria-hidden="true">
@@ -140,14 +138,14 @@ import { AutomationDescriptionComponent } from './automation-description.compone
   `,
 })
 export class AutomationRuleSummaryComponent {
-  readonly previewIcon = LucideEye;
-  readonly triggerIcon = LucideZap;
-  readonly conditionIcon = LucideListFilter;
-  readonly actionsIcon = LucideListOrdered;
+  previewIcon = LucideEye;
+  triggerIcon = LucideZap;
+  conditionIcon = LucideListFilter;
+  actionsIcon = LucideListOrdered;
 
-  readonly trigger = input.required<AutomationTrigger>();
-  readonly actions = input.required<AutomationAction[]>();
-  readonly statuses = input<Status[]>([]);
+  trigger = input.required<AutomationTrigger>();
+  actions = input.required<AutomationAction[]>();
+  statuses = input<Status[]>([]);
 
   triggerSummary(): AutomationCopySegment[] {
     const trigger = this.trigger();
@@ -161,10 +159,6 @@ export class AutomationRuleSummaryComponent {
         : trigger,
       this.statuses()
     );
-  }
-
-  supportsConditions(): boolean {
-    return this.trigger().type === AutomationTriggerType.taskChanged;
   }
 
   hasConditions(): boolean {

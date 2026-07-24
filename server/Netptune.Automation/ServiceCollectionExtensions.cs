@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Configuration;
 using Netptune.Automation.Actions;
 using Netptune.Automation.Execution;
@@ -52,9 +53,16 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
 
         services.AddSingleton(Options.Create(options));
-        services.AddScoped<TaskChangedRuleMatcher>();
-        services.AddScoped<UnassignedTaskRuleMatcher>();
-        services.AddScoped<DueDateRuleMatcher>();
+
+        services.AddScoped<IAutomationRuleMatcher, TaskCreatedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, TaskChangedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, UnassignedTaskRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, DueDateRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, OverdueTaskRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, NoDueDateTaskRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, InactiveTaskRuleMatcher>();
+        services.AddScoped<AutomationTriggerRegistry>();
+
         services.AddScoped<RuleExecutor>();
         services.AddScoped<ActionPlanner>();
         services.AddScoped<FlagPlanner>();

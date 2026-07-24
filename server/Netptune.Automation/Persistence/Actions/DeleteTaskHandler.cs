@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;

@@ -1,3 +1,4 @@
+using Netptune.Automation.Common;
 using Netptune.Automation.Models;
 using Netptune.Core.Enums;
 using Netptune.Core.UnitOfWork;

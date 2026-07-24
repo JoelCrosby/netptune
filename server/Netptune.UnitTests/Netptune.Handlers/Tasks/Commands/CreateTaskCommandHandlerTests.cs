@@ -4,6 +4,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
@@ -96,9 +97,11 @@ public class CreateTaskCommandHandlerTests
             Description = request.Description,
             SortOrder = request.SortOrder ?? 8,
         };
+        var createdTask = AutoFixtures.ProjectTask;
+        var currentUser = AutoFixtures.AppUser;
 
         Identity.GetWorkspaceKey().Returns("key");
-        Identity.GetCurrentUser().Returns(AutoFixtures.AppUser);
+        Identity.GetCurrentUser().Returns(currentUser);
         SetupStatusDependencies();
         UnitOfWork.Workspaces.GetIdBySlug("key", TestContext.Current.CancellationToken).Returns(1);
         UnitOfWork.Projects.GetTaskCreationProject(request.ProjectId!.Value, 1, TestContext.Current.CancellationToken)
@@ -107,7 +110,7 @@ public class CreateTaskCommandHandlerTests
                 "Project",
                 1,
                 5));
-        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.ProjectTask);
+        UnitOfWork.Tasks.AddAsync(Arg.Any<ProjectTask>(), TestContext.Current.CancellationToken).Returns(createdTask);
         UnitOfWork.Projects.ReserveTaskScopeIds(Arg.Any<int>(), Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(Fixture.Create<int>());
         UnitOfWork.Tasks.GetTaskViewModel(Arg.Any<int>(), TestContext.Current.CancellationToken).Returns(viewModel);
         UnitOfWork.BoardGroups.GetTaskTarget(request.BoardGroupId!.Value, TestContext.Current.CancellationToken)
@@ -126,6 +129,11 @@ public class CreateTaskCommandHandlerTests
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Description.Should().Be(request.Description);
         result.Payload.SortOrder.Should().Be(request.SortOrder);
+
+        await EventPublisher.Received(1).Dispatch(Arg.Is<TaskCreatedMessage>(message =>
+            message.TaskId == createdTask.Id &&
+            message.WorkspaceId == 1 &&
+            message.ActorUserId == currentUser.Id));
     }
 
     [Fact]

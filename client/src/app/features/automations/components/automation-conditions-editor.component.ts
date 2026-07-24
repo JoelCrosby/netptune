@@ -35,6 +35,7 @@ import { AutomationConditionGroupEditorComponent } from './automation-condition-
         <app-automation-condition-group-editor
           [group]="group"
           [statuses]="statuses()"
+          [supportsChangeOperators]="supportsChangeOperators()"
           [clearable]="true"
           (cleared)="conditionGroup.set(null)"
           (groupChange)="conditionGroup.set($event)" />
@@ -59,8 +60,9 @@ import { AutomationConditionGroupEditorComponent } from './automation-condition-
   styles: ``,
 })
 export class AutomationConditionsEditorComponent {
-  readonly statuses = input.required<Status[]>();
-  readonly conditionGroup = model<AutomationConditionGroup | null>(null);
+  statuses = input.required<Status[]>();
+  supportsChangeOperators = input(false);
+  conditionGroup = model<AutomationConditionGroup | null>(null);
 
   addConditionGroup() {
     this.conditionGroup.set({

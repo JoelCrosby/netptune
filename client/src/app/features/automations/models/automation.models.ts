@@ -6,6 +6,10 @@ export enum AutomationTriggerType {
   taskUnassignedFor = 1,
   taskChanged = 2,
   taskDueDateApproaching = 3,
+  taskCreated = 4,
+  taskOverdue = 5,
+  taskHasNoDueDate = 6,
+  taskInactiveFor = 7,
 }
 
 export enum TaskChangeField {

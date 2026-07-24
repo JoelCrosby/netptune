@@ -8,6 +8,7 @@ using Netptune.Core.Events;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services.Reporting;
+using Netptune.Core.Utilities;
 using Netptune.Entities.Contexts;
 
 namespace Netptune.Repositories;
@@ -77,7 +78,7 @@ public sealed class ReportingRepository : IReportingRepository
             }
         }
 
-        var timeZone = ResolveTimeZone(filter.TimeZone);
+        var timeZone = TimeZones.Find(filter.TimeZone);
 
         var calculation = new FlowCalculationInput
         {
@@ -176,7 +177,7 @@ public sealed class ReportingRepository : IReportingRepository
         }
 
         var end = reportableSprint.CompletedAt ?? DateTime.UtcNow;
-        var zone = ResolveTimeZone(filter.TimeZone);
+        var zone = TimeZones.Find(filter.TimeZone);
 
         var sprintKey = filter.SprintId.ToString();
 
@@ -509,22 +510,6 @@ public sealed class ReportingRepository : IReportingRepository
         }
 
         return (from, to);
-    }
-
-    private static TimeZoneInfo ResolveTimeZone(string value)
-    {
-        try
-        {
-            return TimeZoneInfo.FindSystemTimeZoneById(value);
-        }
-        catch (TimeZoneNotFoundException)
-        {
-            return TimeZoneInfo.Utc;
-        }
-        catch (InvalidTimeZoneException)
-        {
-            return TimeZoneInfo.Utc;
-        }
     }
 
     private static string? ReadString(JsonDocument document, string property)

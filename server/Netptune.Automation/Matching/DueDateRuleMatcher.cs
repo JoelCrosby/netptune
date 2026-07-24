@@ -2,6 +2,7 @@ using System.Diagnostics;
 
 using Microsoft.Extensions.Logging;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
@@ -10,10 +11,12 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
 
-internal sealed class DueDateRuleMatcher
+internal sealed class DueDateRuleMatcher : IScheduledRuleMatcher
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ILogger<DueDateRuleMatcher> Logger;
+
+    public AutomationTriggerType TriggerType => AutomationTriggerType.TaskDueDateApproaching;
 
     public DueDateRuleMatcher(
         INetptuneUnitOfWork unitOfWork,
@@ -23,18 +26,17 @@ internal sealed class DueDateRuleMatcher
         Logger = logger;
     }
 
-    internal async Task<List<PendingAutomationExecution>> Match(CancellationToken cancellationToken)
+    public async Task<List<PendingAutomationExecution>> Match(CancellationToken cancellationToken)
     {
         var activity = Activity.Current;
-        const AutomationTriggerType triggerType = AutomationTriggerType.TaskDueDateApproaching;
 
         Logger.LogInformation("Evaluating scheduled due-date automation rules");
 
         var rules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
-            triggerType,
+            TriggerType,
             cancellationToken: cancellationToken);
 
-        Telemetry.RecordRulesEvaluated(triggerType, rules.Count);
+        Telemetry.RecordRulesEvaluated(TriggerType, rules.Count);
         activity?.SetTag("automation.rules.evaluated", rules.Count);
 
         var rulesWithDurations = rules
@@ -61,21 +63,26 @@ internal sealed class DueDateRuleMatcher
             Logger.LogWarning(
                 "Skipped {InvalidRuleCount} due-date automation rules with missing or invalid durationDays",
                 invalidRuleCount);
-            Telemetry.RecordRulesSkipped(triggerType, invalidRuleCount, "invalid_config");
+            Telemetry.RecordRulesSkipped(TriggerType, invalidRuleCount, "invalid_config");
         }
 
         if (ruleDefinitions.Count == 0)
         {
             Logger.LogDebug("No configured due-date automation rules were eligible for evaluation");
+
             return [];
         }
 
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var now = DateTime.UtcNow;
+        var localDates = ruleDefinitions
+            .Select(rule => AutomationTimeZones.Today(rule.Rule, now))
+            .ToList();
         var workspaceIds = ruleDefinitions.Select(rule => rule.Rule.WorkspaceId).Distinct().ToList();
-        var latestDueDate = today.AddDays(ruleDefinitions.Max(rule => rule.DurationDays));
+        var earliestDueDate = localDates.Min();
+        var latestDueDate = localDates.Max().AddDays(ruleDefinitions.Max(rule => rule.DurationDays));
         var tasks = await UnitOfWork.Tasks.GetDueDateAutomationCandidates(
             workspaceIds,
-            today,
+            earliestDueDate,
             latestDueDate,
             cancellationToken);
 
@@ -99,7 +106,11 @@ internal sealed class DueDateRuleMatcher
 
             foreach (var rule in workspaceRules)
             {
-                if (dueDate != today.AddDays(rule.DurationDays))
+                var localToday = AutomationTimeZones.Today(rule.Rule, now);
+                var matchesDueDate = dueDate == localToday.AddDays(rule.DurationDays);
+                var matchesConditions = AutomationRuleConditions.Match(rule.Rule, task);
+
+                if (!matchesDueDate || !matchesConditions)
                 {
                     continue;
                 }
@@ -110,12 +121,12 @@ internal sealed class DueDateRuleMatcher
                     Task = task,
                     ExecutionUserId = rule.Rule.ExecutionUserId,
                     IdempotencyKey = $"rule:{rule.Rule.Id}:task:{task.Id}:due:{dueDate:yyyy-MM-dd}",
-                    TriggeredAt = DateTime.UtcNow,
+                    TriggeredAt = now,
                 });
             }
         }
 
-        Telemetry.RecordRulesMatched(triggerType, executions.Count);
+        Telemetry.RecordRulesMatched(TriggerType, executions.Count);
         activity?.SetTag("automation.rules.matched", executions.Count);
 
         Logger.LogInformation(

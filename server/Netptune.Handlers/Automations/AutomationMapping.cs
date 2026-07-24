@@ -41,13 +41,18 @@ internal static class AutomationMapping
                 fields = trigger.Fields,
                 conditionGroup = trigger.ConditionGroup,
             }, JsonOptions.Default),
-            AutomationTriggerType.TaskUnassignedFor => JsonSerializer.SerializeToDocument(new
+            AutomationTriggerType.TaskUnassignedFor or
+            AutomationTriggerType.TaskDueDateApproaching or
+            AutomationTriggerType.TaskInactiveFor => JsonSerializer.SerializeToDocument(new
             {
                 durationDays = trigger.DurationDays,
+                conditionGroup = trigger.ConditionGroup,
             }, JsonOptions.Default),
-            AutomationTriggerType.TaskDueDateApproaching => JsonSerializer.SerializeToDocument(new
+            AutomationTriggerType.TaskCreated or
+            AutomationTriggerType.TaskOverdue or
+            AutomationTriggerType.TaskHasNoDueDate => JsonSerializer.SerializeToDocument(new
             {
-                durationDays = trigger.DurationDays,
+                conditionGroup = trigger.ConditionGroup,
             }, JsonOptions.Default),
             _ => null,
         };
@@ -75,20 +80,29 @@ internal static class AutomationMapping
 
         var isDurationTrigger = type is
             AutomationTriggerType.TaskUnassignedFor or
-            AutomationTriggerType.TaskDueDateApproaching;
+            AutomationTriggerType.TaskDueDateApproaching or
+            AutomationTriggerType.TaskInactiveFor;
 
         if (isDurationTrigger)
         {
             var durationDays = JsonUtils.ReadInt(config, "durationDays");
+            var conditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(config, "conditionGroup");
 
             return new AutomationTriggerViewModel
             {
                 Type = type,
                 DurationDays = durationDays,
+                ConditionGroup = conditionGroup,
             };
         }
 
-        return new AutomationTriggerViewModel { Type = type };
+        var scheduledConditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(config, "conditionGroup");
+
+        return new AutomationTriggerViewModel
+        {
+            Type = type,
+            ConditionGroup = scheduledConditionGroup,
+        };
     }
 
     private static AutomationActionViewModel ToViewModel(AutomationAction action, IAutomationActionRegistry actionRegistry)

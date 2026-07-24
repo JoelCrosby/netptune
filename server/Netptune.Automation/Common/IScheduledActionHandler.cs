@@ -1,7 +1,7 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
-namespace Netptune.Automation.Execution.Actions;
+namespace Netptune.Automation.Common;
 
 internal sealed record ScheduledActionOutcome(ScheduledAutomationActionStatus Status, bool RemoveTaskFromSearch = false);
 

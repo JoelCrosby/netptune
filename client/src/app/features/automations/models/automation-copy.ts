@@ -24,6 +24,10 @@ export const triggerTypeLabels: Record<AutomationTriggerType, string> = {
   [AutomationTriggerType.taskUnassignedFor]: 'Task is unassigned',
   [AutomationTriggerType.taskChanged]: 'Task changes',
   [AutomationTriggerType.taskDueDateApproaching]: 'Task due date approaches',
+  [AutomationTriggerType.taskCreated]: 'Task is created',
+  [AutomationTriggerType.taskOverdue]: 'Task becomes overdue',
+  [AutomationTriggerType.taskHasNoDueDate]: 'Task has no due date',
+  [AutomationTriggerType.taskInactiveFor]: 'Task remains inactive',
 };
 
 export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
@@ -261,6 +265,14 @@ export function describeAutomationTrigger(
       return `When a task is unassigned for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
     case AutomationTriggerType.taskDueDateApproaching:
       return describeDueDateTrigger(trigger.durationDays ?? 0);
+    case AutomationTriggerType.taskCreated:
+      return 'When a task is created';
+    case AutomationTriggerType.taskOverdue:
+      return 'When a task becomes overdue';
+    case AutomationTriggerType.taskHasNoDueDate:
+      return 'When a task has no due date';
+    case AutomationTriggerType.taskInactiveFor:
+      return `When a task has no activity for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
   }
 }
 

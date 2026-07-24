@@ -145,11 +145,6 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
       return 'Choose at least one task field to watch.';
     }
 
-    if (trigger.conditionGroup) {
-      const groupError = validateConditionGroup(trigger.conditionGroup);
-
-      if (groupError) return groupError;
-    }
   }
 
   if (
@@ -166,11 +161,30 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     return 'Due-date lead time must be 0 to 365 days.';
   }
 
+  if (
+    trigger.type === AutomationTriggerType.taskInactiveFor &&
+    !isDurationInRange(trigger.durationDays, 1)
+  ) {
+    return 'Inactive duration must be 1 to 365 days.';
+  }
+
+  if (trigger.conditionGroup) {
+    const supportsChangeOperators =
+      trigger.type === AutomationTriggerType.taskChanged;
+    const groupError = validateConditionGroup(
+      trigger.conditionGroup,
+      supportsChangeOperators
+    );
+
+    if (groupError) return groupError;
+  }
+
   return null;
 }
 
 function validateConditionGroup(
   group: AutomationConditionGroup,
+  supportsChangeOperators = true,
   depth = 1,
   count = { value: 0 }
 ): string | null {
@@ -185,12 +199,19 @@ function validateConditionGroup(
   if (count.value > 50) return 'Automations can have up to 50 conditions.';
 
   const invalidCondition = group.conditions.find((condition) => {
+    const isChangeOperator =
+      condition.operator === AutomationConditionOperator.any ||
+      condition.operator === AutomationConditionOperator.added ||
+      condition.operator === AutomationConditionOperator.removed;
     const requiresValue =
       condition.operator === AutomationConditionOperator.equals ||
       condition.operator === AutomationConditionOperator.notEquals ||
       condition.operator === AutomationConditionOperator.contains;
 
-    return requiresValue && !condition.value?.trim();
+    return (
+      (isChangeOperator && !supportsChangeOperators) ||
+      (requiresValue && !condition.value?.trim())
+    );
   });
 
   if (invalidCondition) {
@@ -198,7 +219,12 @@ function validateConditionGroup(
   }
 
   for (const nestedGroup of group.groups) {
-    const error = validateConditionGroup(nestedGroup, depth + 1, count);
+    const error = validateConditionGroup(
+      nestedGroup,
+      supportsChangeOperators,
+      depth + 1,
+      count
+    );
 
     if (error) return error;
   }

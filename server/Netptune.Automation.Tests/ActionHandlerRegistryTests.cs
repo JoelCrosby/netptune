@@ -1,5 +1,6 @@
 using FluentAssertions;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Models;
 using Netptune.Automation.Persistence.Actions;
 using Netptune.Core.Enums;

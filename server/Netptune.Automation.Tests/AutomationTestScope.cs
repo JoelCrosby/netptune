@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.Automation.Execution;
+using Netptune.Automation.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
 

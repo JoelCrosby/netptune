@@ -2,156 +2,86 @@ using System.Diagnostics;
 
 using Microsoft.Extensions.Logging;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Matching;
 using Netptune.Core.Enums;
-using Netptune.Core.Events.Tasks;
+using Netptune.Core.Events;
 
 namespace Netptune.Automation.Execution;
 
-public interface IExecutionService
-{
-    Task ExecuteTaskChangedRules(TaskChangedMessage message, CancellationToken cancellationToken);
-
-    Task ExecuteUnassignedRules(CancellationToken cancellationToken);
-
-    Task ExecuteDueDateRules(CancellationToken cancellationToken);
-
-    Task ExecuteScheduledActions(CancellationToken cancellationToken);
-}
-
 internal sealed class ExecutionService : IExecutionService
 {
-    private readonly TaskChangedRuleMatcher TaskChangedMatcher;
-    private readonly UnassignedTaskRuleMatcher UnassignedTaskMatcher;
-    private readonly DueDateRuleMatcher DueDateMatcher;
+    private readonly AutomationTriggerRegistry TriggerRegistry;
     private readonly RuleExecutor RuleExecutor;
     private readonly ScheduledActionService ScheduledActions;
     private readonly ILogger<ExecutionService> Logger;
 
+    public IReadOnlyList<AutomationTriggerType> ScheduledTriggerTypes => TriggerRegistry.ScheduledTriggerTypes;
+
     public ExecutionService(
-        TaskChangedRuleMatcher taskChangedMatcher,
-        UnassignedTaskRuleMatcher unassignedTaskMatcher,
-        DueDateRuleMatcher dueDateMatcher,
+        AutomationTriggerRegistry triggerRegistry,
         RuleExecutor ruleExecutor,
         ScheduledActionService scheduledActions,
         ILogger<ExecutionService> logger)
     {
-        TaskChangedMatcher = taskChangedMatcher;
-        UnassignedTaskMatcher = unassignedTaskMatcher;
-        DueDateMatcher = dueDateMatcher;
+        TriggerRegistry = triggerRegistry;
         RuleExecutor = ruleExecutor;
         ScheduledActions = scheduledActions;
         Logger = logger;
     }
 
-    public async Task ExecuteTaskChangedRules(TaskChangedMessage message, CancellationToken cancellationToken)
+    public async Task ExecuteEventRules<TMessage>(TMessage message, CancellationToken cancellationToken)
+        where TMessage : IEventMessage
     {
-        using var activity = Telemetry.StartActivity(
-            "automation.execute_task_changed_rules",
-            AutomationTriggerType.TaskChanged);
-        var startedAt = Stopwatch.GetTimestamp();
+        var matcher = TriggerRegistry.GetEventMatcher<TMessage>();
+        var triggerType = matcher.TriggerType;
 
-        activity?.SetTag("task.id", message.TaskId);
-        activity?.SetTag("workspace.id", message.WorkspaceId);
-        activity?.SetTag("automation.event_id", message.EventId.ToString());
-        activity?.SetTag("automation.origin_type", message.OriginType.ToString());
-        activity?.SetTag("automation.correlation_id", message.CorrelationId?.ToString());
-        activity?.SetTag("automation.chain_depth", message.ChainDepth);
-        activity?.SetTag("automation.changed_fields", string.Join(",", message.Changes.Select(change => change.Field)));
+        using var activity = Telemetry.StartActivity("automation.execute_event_rules", triggerType);
+        var startedAt = Stopwatch.GetTimestamp();
 
         try
         {
-            await ScheduledActions.CancelForStatusChange(message, cancellationToken);
+            var executions = await matcher.Match(message, cancellationToken);
 
-            var chainLimitReached = AutomationChainPolicy.HasReachedLimit(message.ChainDepth);
-
-            if (chainLimitReached)
-            {
-                Logger.LogWarning(
-                    "Task-change automation evaluation stopped at chain depth {ChainDepth} for task {TaskId} ({CorrelationId})",
-                    message.ChainDepth,
-                    message.TaskId,
-                    message.CorrelationId);
-                activity?.SetTag("automation.skip_reason", "chain_depth_limit");
-                Telemetry.RecordRulesSkipped(AutomationTriggerType.TaskChanged, 1, "chain_depth_limit");
-
-                return;
-            }
-
-            var executions = await TaskChangedMatcher.Match(message, cancellationToken);
-
-            await RuleExecutor.Execute(AutomationTriggerType.TaskChanged, executions, cancellationToken);
+            await RuleExecutor.Execute(triggerType, executions, cancellationToken);
         }
         catch (Exception ex)
         {
             Telemetry.MarkFailed(activity, ex);
-            Logger.LogError(
-                ex,
-                "Task-change automation execution failed for task {TaskId} in workspace {WorkspaceId}",
-                message.TaskId,
-                message.WorkspaceId);
+            Logger.LogError(ex, "{TriggerType} automation execution failed", triggerType);
+
             throw;
         }
         finally
         {
-            Telemetry.RecordExecutionDuration(
-                AutomationTriggerType.TaskChanged,
-                Stopwatch.GetElapsedTime(startedAt));
+            Telemetry.RecordExecutionDuration(triggerType, Stopwatch.GetElapsedTime(startedAt));
         }
     }
 
-    public async Task ExecuteUnassignedRules(CancellationToken cancellationToken)
+    public async Task ExecuteScheduledRules(AutomationTriggerType triggerType, CancellationToken cancellationToken)
     {
-        using var activity = Telemetry.StartActivity(
-            "automation.execute_unassigned_rules",
-            AutomationTriggerType.TaskUnassignedFor);
+        var matcher = TriggerRegistry.GetScheduledMatcher(triggerType);
+
+        using var activity = Telemetry.StartActivity("automation.execute_scheduled_rules", triggerType);
         var startedAt = Stopwatch.GetTimestamp();
 
         try
         {
-            var executions = await UnassignedTaskMatcher.Match(cancellationToken);
+            var executions = await matcher.Match(cancellationToken);
 
-            await RuleExecutor.Execute(AutomationTriggerType.TaskUnassignedFor, executions, cancellationToken);
+            await RuleExecutor.Execute(triggerType, executions, cancellationToken);
         }
         catch (Exception ex)
         {
             Telemetry.MarkFailed(activity, ex);
-            Logger.LogError(ex, "Scheduled unassigned-task automation execution failed");
+            Logger.LogError(ex, "Scheduled {TriggerType} automation execution failed", triggerType);
+
             throw;
         }
         finally
         {
-            Telemetry.RecordExecutionDuration(
-                AutomationTriggerType.TaskUnassignedFor,
-                Stopwatch.GetElapsedTime(startedAt));
-        }
-    }
-
-    public async Task ExecuteDueDateRules(CancellationToken cancellationToken)
-    {
-        using var activity = Telemetry.StartActivity(
-            "automation.execute_due_date_rules",
-            AutomationTriggerType.TaskDueDateApproaching);
-        var startedAt = Stopwatch.GetTimestamp();
-
-        try
-        {
-            var executions = await DueDateMatcher.Match(cancellationToken);
-
-            await RuleExecutor.Execute(AutomationTriggerType.TaskDueDateApproaching, executions, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            Telemetry.MarkFailed(activity, ex);
-            Logger.LogError(ex, "Scheduled due-date automation execution failed");
-            throw;
-        }
-        finally
-        {
-            Telemetry.RecordExecutionDuration(
-                AutomationTriggerType.TaskDueDateApproaching,
-                Stopwatch.GetElapsedTime(startedAt));
+            Telemetry.RecordExecutionDuration(triggerType, Stopwatch.GetElapsedTime(startedAt));
         }
     }
 

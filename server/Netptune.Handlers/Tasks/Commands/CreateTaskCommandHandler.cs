@@ -3,6 +3,7 @@ using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
@@ -226,6 +227,13 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             EntityType = "task",
             EntityIds = [result.Id],
             WorkspaceSlug = workspaceKey,
+        });
+
+        await EventPublisher.Dispatch(new TaskCreatedMessage
+        {
+            WorkspaceId = task.WorkspaceId,
+            TaskId = result.Id,
+            ActorUserId = user.Id,
         });
 
         return ClientResponse<TaskViewModel>.Success(response!);

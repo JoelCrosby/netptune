@@ -103,15 +103,16 @@ import { AutomationsService } from '../../services/automations.service';
                   [(durationDays)]="durationDays" />
               </app-step>
 
-              @if (triggerType() === automationTriggerType.taskChanged) {
-                <app-step
-                  title="Conditions"
-                  description="Optionally restrict which tasks can continue.">
-                  <app-automation-conditions-editor
-                    [statuses]="taskStatuses()"
-                    [(conditionGroup)]="conditionGroup" />
-                </app-step>
-              }
+              <app-step
+                title="Conditions"
+                description="Optionally restrict which tasks can continue.">
+                <app-automation-conditions-editor
+                  [statuses]="taskStatuses()"
+                  [supportsChangeOperators]="
+                    triggerType() === automationTriggerType.taskChanged
+                  "
+                  [(conditionGroup)]="conditionGroup" />
+              </app-step>
 
               <app-step
                 title="Actions"
@@ -324,11 +325,16 @@ export class AutomationFormViewComponent {
       };
     }
 
+    const usesDuration =
+      this.triggerType() === AutomationTriggerType.taskUnassignedFor ||
+      this.triggerType() === AutomationTriggerType.taskDueDateApproaching ||
+      this.triggerType() === AutomationTriggerType.taskInactiveFor;
+
     return {
       type: this.triggerType(),
       fields: null,
-      durationDays: Number(this.durationDays()),
-      conditionGroup: null,
+      durationDays: usesDuration ? Number(this.durationDays()) : null,
+      conditionGroup: this.conditionGroup(),
     };
   });
 

@@ -31,6 +31,7 @@ public record AutomationTriggerRequest
         var hasWatchedFields = Fields is { Count: > 0 };
         var hasValidUnassignedDuration = DurationDays is >= 1 and <= 365;
         var hasValidDueDateDuration = DurationDays is >= 0 and <= 365;
+        var hasValidInactiveDuration = DurationDays is >= 1 and <= 365;
         var hasSupportedType = Enum.IsDefined(Type);
 
         if (!hasSupportedType)
@@ -46,6 +47,8 @@ public record AutomationTriggerRequest
                 "Task unassigned automations require durationDays between 1 and 365.",
             AutomationTriggerType.TaskDueDateApproaching when !hasValidDueDateDuration =>
                 "Task due-date automations require durationDays between 0 and 365.",
+            AutomationTriggerType.TaskInactiveFor when !hasValidInactiveDuration =>
+                "Task inactivity automations require durationDays between 1 and 365.",
             _ => null,
         };
 
@@ -59,18 +62,11 @@ public record AutomationTriggerRequest
 
     private string? ValidateConditions()
     {
-        var hasConditionGroup = ConditionGroup is not null;
-        var supportsConditions = Type == AutomationTriggerType.TaskChanged;
-        var hasUnsupportedConditions = hasConditionGroup && !supportsConditions;
-
-        if (hasUnsupportedConditions)
-        {
-            return "Field conditions are only supported for task changed automations.";
-        }
-
         if (ConditionGroup is not null)
         {
-            return ConditionGroup.Validate();
+            var supportsChangeOperators = Type == AutomationTriggerType.TaskChanged;
+
+            return ConditionGroup.Validate(supportsChangeOperators);
         }
 
         return null;

@@ -6,6 +6,7 @@ using CsvHelper.Configuration;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Tasks;
 using Netptune.Core.Extensions;
 using Netptune.Core.Import;
 using Netptune.Core.Models.Import;
@@ -26,13 +27,20 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
     private readonly IIdentityService IdentityService;
     private readonly IActivityLogger Activity;
     private readonly IEventRecordWriter EventRecords;
+    private readonly IEventPublisher EventPublisher;
 
-    public TaskImportService(INetptuneUnitOfWork unitOfWork, IIdentityService identityService, IActivityLogger activity, IEventRecordWriter eventRecords)
+    public TaskImportService(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identityService,
+        IActivityLogger activity,
+        IEventRecordWriter eventRecords,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         IdentityService = identityService;
         Activity = activity;
         EventRecords = eventRecords;
+        EventPublisher = eventPublisher;
     }
 
     public async Task<ClientResponse<TaskImportResult>> ImportWorkspaceTasks(string boardId, Stream stream)
@@ -279,6 +287,16 @@ public class TaskImportService : ServiceBase<TaskImportResult>, ITaskImportServi
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.Create;
         });
+
+        foreach (var task in tasks)
+        {
+            await EventPublisher.Dispatch(new TaskCreatedMessage
+            {
+                WorkspaceId = workspaceId,
+                TaskId = task.Id,
+                ActorUserId = userId,
+            });
+        }
 
         return Success();
     }

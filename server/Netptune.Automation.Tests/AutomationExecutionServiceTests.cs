@@ -44,7 +44,7 @@ public sealed class AutomationExecutionServiceTests
             [TaskChangeField.Status],
             conditionGroup);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -98,7 +98,7 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(
+        await scope.AutomationExecution.ExecuteEventRules(
             CreateMessage(),
             TestContext.Current.CancellationToken);
 
@@ -109,7 +109,7 @@ public sealed class AutomationExecutionServiceTests
         firstFlag.ResolvedByUserId = scenario.Owner.Id;
         await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(
+        await scope.AutomationExecution.ExecuteEventRules(
             CreateMessage(),
             TestContext.Current.CancellationToken);
 
@@ -147,7 +147,7 @@ public sealed class AutomationExecutionServiceTests
         membership.Permissions = [];
         await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -202,8 +202,8 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
 
         var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
         var flagCount = await scope.Db.Flags.CountAsync(TestContext.Current.CancellationToken);
@@ -220,7 +220,7 @@ public sealed class AutomationExecutionServiceTests
         var scenario = await AutomationTestData.CreateScenario(scope.Db);
         var rule = await AutomationTestData.CreateTaskChangedRule(scope.Db, scenario, [TaskChangeField.Name]);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -270,7 +270,7 @@ public sealed class AutomationExecutionServiceTests
         configuredAction.StatusId.Should().Be(expectedStatusId);
         scope.Db.ChangeTracker.Clear();
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             EventId = sourceEventId,
             CorrelationId = correlationId,
@@ -455,7 +455,7 @@ public sealed class AutomationExecutionServiceTests
 
         var runDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             EventId = Guid.NewGuid(),
             TaskId = scenario.Task.Id,
@@ -555,7 +555,7 @@ public sealed class AutomationExecutionServiceTests
         await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
         scope.Db.ChangeTracker.Clear();
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             EventId = Guid.NewGuid(),
             TaskId = scenario.Task.Id,
@@ -602,7 +602,7 @@ public sealed class AutomationExecutionServiceTests
             scenario,
             [TaskChangeField.Name]);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             OriginType = EventOriginType.Automation,
             AutomationRuleId = sourceRule.Id,
@@ -634,7 +634,7 @@ public sealed class AutomationExecutionServiceTests
             scenario,
             [TaskChangeField.Name]);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             OriginType = EventOriginType.Automation,
             ChainDepth = AutomationChainPolicy.MaxDepth,
@@ -679,8 +679,8 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
 
         var comment = await scope.Db.Comments.SingleAsync(TestContext.Current.CancellationToken);
         var commentEvent = scope.EventRecords.Events.Single(record => record.EventKey == EventKeys.CommentCreated);
@@ -727,7 +727,7 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
 
         scope.Db.ChangeTracker.Clear();
 
@@ -784,7 +784,7 @@ public sealed class AutomationExecutionServiceTests
         await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
         scope.Db.ChangeTracker.Clear();
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -870,7 +870,7 @@ public sealed class AutomationExecutionServiceTests
         await scope.Db.SaveChangesAsync(TestContext.Current.CancellationToken);
         scope.Db.ChangeTracker.Clear();
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -930,8 +930,8 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
 
         scope.Db.ChangeTracker.Clear();
 
@@ -982,7 +982,7 @@ public sealed class AutomationExecutionServiceTests
 
         await ConfigureDeleteDelay(scope.Db, rule, 1, AutomationDelayUnit.Hours);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -1000,7 +1000,7 @@ public sealed class AutomationExecutionServiceTests
                 setters => setters.SetProperty(task => task.StatusId, inProgressStatusId),
                 TestContext.Current.CancellationToken);
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -1222,7 +1222,7 @@ public sealed class AutomationExecutionServiceTests
 
         var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -1296,7 +1296,9 @@ public sealed class AutomationExecutionServiceTests
             durationDays: 2,
             AutomationActionType.NotifyTaskAssignees);
 
-        await scope.AutomationExecution.ExecuteUnassignedRules(TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskUnassignedFor,
+            TestContext.Current.CancellationToken);
 
         var notification = await scope.Db.Notifications.SingleAsync(TestContext.Current.CancellationToken);
         var activityLog = await scope.Db.EventRecords.SingleAsync(TestContext.Current.CancellationToken);
@@ -1306,6 +1308,117 @@ public sealed class AutomationExecutionServiceTests
         notification.EventRecordId.Should().Be(activityLog.Id);
         notification.Link.Should().Be($"/{scenario.Workspace.Slug}/tasks/{scenario.Project.Key}-{scenario.Task.ProjectScopeId}");
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskCreatedRules_runs_matching_rule_once()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskCreated);
+        var message = new TaskCreatedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+        };
+
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
+
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        run.TriggerType.Should().Be(AutomationTriggerType.TaskCreated);
+        run.EntityId.Should().Be(scenario.Task.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteOverdueRules_rechecks_current_conditions()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(
+            scope.Db,
+            dueDate: DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)));
+        var conditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions =
+            [
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Priority,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = TaskPriority.Critical.ToString(),
+                },
+            ],
+        };
+        await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskOverdue,
+            conditionGroup: conditionGroup);
+
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskOverdue,
+            TestContext.Current.CancellationToken);
+
+        var hasRuns = await scope.Db.AutomationRuns.AnyAsync(TestContext.Current.CancellationToken);
+
+        hasRuns.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExecuteNoDueDateRules_runs_once_for_current_missing_due_date()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskHasNoDueDate);
+
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskHasNoDueDate,
+            TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskHasNoDueDate,
+            TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ExecuteInactiveRules_runs_once_for_each_activity_timestamp()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var lastActivityAt = DateTime.UtcNow.AddDays(-4);
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, taskUpdatedAt: lastActivityAt);
+        await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskInactiveFor,
+            durationDays: 3);
+
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskInactiveFor,
+            TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskInactiveFor,
+            TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(1);
     }
 
     [Fact]
@@ -1336,7 +1449,7 @@ public sealed class AutomationExecutionServiceTests
                 ],
             });
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -1378,7 +1491,7 @@ public sealed class AutomationExecutionServiceTests
                 ],
             });
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -1420,7 +1533,7 @@ public sealed class AutomationExecutionServiceTests
                 ],
             });
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(new TaskChangedMessage
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
         {
             TaskId = scenario.Task.Id,
             WorkspaceId = scenario.Workspace.Id,
@@ -1486,7 +1599,7 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
 
         var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
 
@@ -1537,7 +1650,7 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
 
         var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
 
@@ -1608,7 +1721,7 @@ public sealed class AutomationExecutionServiceTests
             ],
         };
 
-        await scope.AutomationExecution.ExecuteTaskChangedRules(message, TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteEventRules(message, TestContext.Current.CancellationToken);
 
         var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
 
@@ -1624,7 +1737,9 @@ public sealed class AutomationExecutionServiceTests
         var scenario = await AutomationTestData.CreateScenario(scope.Db, dueDate: dueDate);
         var rule = await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 3);
 
-        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskDueDateApproaching,
+            TestContext.Current.CancellationToken);
 
         var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
         var flag = await scope.Db.Flags.SingleAsync(TestContext.Current.CancellationToken);
@@ -1646,8 +1761,12 @@ public sealed class AutomationExecutionServiceTests
 
         await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 0);
 
-        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
-        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskDueDateApproaching,
+            TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskDueDateApproaching,
+            TestContext.Current.CancellationToken);
 
         var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
         var flagCount = await scope.Db.Flags.CountAsync(TestContext.Current.CancellationToken);
@@ -1666,7 +1785,9 @@ public sealed class AutomationExecutionServiceTests
 
         await AutomationTestData.CreateDueDateRule(scope.Db, scenario, durationDays: 3);
 
-        await scope.AutomationExecution.ExecuteDueDateRules(TestContext.Current.CancellationToken);
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskDueDateApproaching,
+            TestContext.Current.CancellationToken);
 
         var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
         var flagCount = await scope.Db.Flags.CountAsync(TestContext.Current.CancellationToken);

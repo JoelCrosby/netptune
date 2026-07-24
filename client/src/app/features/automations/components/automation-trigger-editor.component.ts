@@ -110,7 +110,8 @@ import {
                 </div>
               </div>
             } @else if (
-              triggerType() === automationTriggerType.taskUnassignedFor
+              triggerType() === automationTriggerType.taskUnassignedFor ||
+              triggerType() === automationTriggerType.taskInactiveFor
             ) {
               <div class="border-border bg-foreground/2 rounded-lg border p-3">
                 <p class="mb-3 text-sm font-medium">Wait period</p>
@@ -124,10 +125,18 @@ import {
                       [required]="true"
                       [(value)]="durationDays" />
                   </div>
-                  <span class="pb-2.5 text-sm">days without an assignee</span>
+                  <span class="pb-2.5 text-sm">
+                    {{
+                      triggerType() === automationTriggerType.taskUnassignedFor
+                        ? 'days without an assignee'
+                        : 'days without activity'
+                    }}
+                  </span>
                 </div>
               </div>
-            } @else {
+            } @else if (
+              triggerType() === automationTriggerType.taskDueDateApproaching
+            ) {
               <div class="border-border bg-foreground/2 rounded-lg border p-3">
                 <p class="mb-3 text-sm font-medium">Schedule</p>
                 <div class="flex flex-wrap items-end gap-3">
@@ -143,6 +152,13 @@ import {
                   <span class="pb-2.5 text-sm">days before the due date</span>
                 </div>
               </div>
+            } @else {
+              <div class="border-border bg-foreground/2 rounded-lg border p-3">
+                <p class="text-sm font-medium">Ready to use</p>
+                <p class="text-foreground/60 mt-1 text-sm">
+                  This event does not need additional trigger settings.
+                </p>
+              </div>
             }
           </div>
         </div>
@@ -151,14 +167,20 @@ import {
   `,
 })
 export class AutomationTriggerEditorComponent {
-  readonly triggerIcon = LucideZap;
-  readonly automationTriggerType = AutomationTriggerType;
-  readonly triggerTypes = [
+  triggerIcon = LucideZap;
+  automationTriggerType = AutomationTriggerType;
+
+  triggerTypes = [
     AutomationTriggerType.taskChanged,
+    AutomationTriggerType.taskCreated,
     AutomationTriggerType.taskUnassignedFor,
     AutomationTriggerType.taskDueDateApproaching,
+    AutomationTriggerType.taskOverdue,
+    AutomationTriggerType.taskHasNoDueDate,
+    AutomationTriggerType.taskInactiveFor,
   ];
-  readonly taskFieldOptions = [
+
+  taskFieldOptions = [
     TaskChangeField.name,
     TaskChangeField.description,
     TaskChangeField.status,
@@ -169,11 +191,10 @@ export class AutomationTriggerEditorComponent {
     TaskChangeField.tags,
     TaskChangeField.startDate,
   ];
-  readonly triggerType = model<AutomationTriggerType>(
-    AutomationTriggerType.taskChanged
-  );
-  readonly taskFields = model<TaskChangeField[]>([TaskChangeField.status]);
-  readonly durationDays = model('3');
+
+  triggerType = model<AutomationTriggerType>(AutomationTriggerType.taskChanged);
+  taskFields = model<TaskChangeField[]>([TaskChangeField.status]);
+  durationDays = model('3');
 
   triggerTypeLabel(type: AutomationTriggerType): string {
     return triggerTypeLabels[type];

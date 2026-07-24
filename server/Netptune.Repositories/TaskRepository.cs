@@ -85,6 +85,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return Entities
             .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Tags)
             .Include(task => task.Project)
             .Include(task => task.Workspace)
             .Include(task => task.Status)
@@ -106,6 +107,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return Entities
             .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Tags)
             .Include(task => task.Project)
             .Include(task => task.Workspace)
             .Include(task => task.Status)
@@ -118,6 +120,52 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .AsNoTracking()
             .AsSplitQuery()
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectTask>> GetOverdueAutomationCandidates(
+        IReadOnlyCollection<int> workspaceIds,
+        DateOnly today,
+        CancellationToken cancellationToken = default)
+    {
+        return AutomationCandidates(workspaceIds)
+            .Where(task =>
+                task.Status.Category != StatusCategory.Done &&
+                task.DueDate < today)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectTask>> GetNoDueDateAutomationCandidates(
+        IReadOnlyCollection<int> workspaceIds,
+        CancellationToken cancellationToken = default)
+    {
+        return AutomationCandidates(workspaceIds)
+            .Where(task =>
+                task.Status.Category != StatusCategory.Done &&
+                task.DueDate == null)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectTask>> GetInactiveAutomationCandidates(
+        IReadOnlyCollection<int> workspaceIds,
+        DateTime cutoff,
+        CancellationToken cancellationToken = default)
+    {
+        return AutomationCandidates(workspaceIds)
+            .Where(task => (task.UpdatedAt ?? task.CreatedAt) <= cutoff)
+            .ToListAsync(cancellationToken);
+    }
+
+    private IQueryable<ProjectTask> AutomationCandidates(IReadOnlyCollection<int> workspaceIds)
+    {
+        return Entities
+            .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Tags)
+            .Include(task => task.Project)
+            .Include(task => task.Workspace)
+            .Include(task => task.Status)
+            .Where(task => workspaceIds.Contains(task.WorkspaceId) && !task.IsDeleted)
+            .AsNoTracking()
+            .AsSplitQuery();
     }
 
     public Task<TaskViewModel?> GetTaskViewModel(int taskId, CancellationToken cancellationToken = default)

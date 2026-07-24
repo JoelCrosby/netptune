@@ -12,16 +12,13 @@ namespace Netptune.Automation.Execution;
 
 internal sealed class ScheduledActionEligibilityEvaluator
 {
-    private readonly TaskChangedRuleMatcher TaskChangedMatcher;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IAutomationActionRegistry ActionRegistry;
 
     public ScheduledActionEligibilityEvaluator(
-        TaskChangedRuleMatcher taskChangedMatcher,
         INetptuneUnitOfWork unitOfWork,
         IAutomationActionRegistry actionRegistry)
     {
-        TaskChangedMatcher = taskChangedMatcher;
         UnitOfWork = unitOfWork;
         ActionRegistry = actionRegistry;
     }
@@ -56,6 +53,10 @@ internal sealed class ScheduledActionEligibilityEvaluator
             AutomationTriggerType.TaskChanged => MatchesTaskChangedRule(scheduledAction),
             AutomationTriggerType.TaskUnassignedFor => MatchesUnassignedRule(scheduledAction, now),
             AutomationTriggerType.TaskDueDateApproaching => MatchesDueDateRule(scheduledAction, now),
+            AutomationTriggerType.TaskCreated => MatchesConditions(scheduledAction),
+            AutomationTriggerType.TaskOverdue => MatchesOverdueRule(scheduledAction, now),
+            AutomationTriggerType.TaskHasNoDueDate => MatchesNoDueDateRule(scheduledAction),
+            AutomationTriggerType.TaskInactiveFor => MatchesInactiveRule(scheduledAction, now),
             _ => false,
         };
 
@@ -90,7 +91,7 @@ internal sealed class ScheduledActionEligibilityEvaluator
         return ScheduledEligibility.Eligible;
     }
 
-    private bool MatchesTaskChangedRule(ScheduledAutomationAction scheduledAction)
+    private static bool MatchesTaskChangedRule(ScheduledAutomationAction scheduledAction)
     {
         if (scheduledAction.TriggerContext is null)
         {
@@ -104,7 +105,7 @@ internal sealed class ScheduledActionEligibilityEvaluator
             return false;
         }
 
-        return TaskChangedMatcher.Matches(scheduledAction.AutomationRule, message, scheduledAction.Task);
+        return TaskChangedRuleConditions.Match(scheduledAction.AutomationRule, message, scheduledAction.Task);
     }
 
     private static bool MatchesUnassignedRule(ScheduledAutomationAction scheduledAction, DateTime now)
@@ -123,7 +124,9 @@ internal sealed class ScheduledActionEligibilityEvaluator
         var duration = durationDays.GetValueOrDefault();
         var hasElapsed = taskTimestamp <= now.AddDays(-duration);
 
-        return remainsUnassigned && hasElapsed;
+        var matchesConditions = MatchesConditions(scheduledAction);
+
+        return remainsUnassigned && hasElapsed && matchesConditions;
     }
 
     private static bool MatchesDueDateRule(ScheduledAutomationAction scheduledAction, DateTime now)
@@ -139,7 +142,54 @@ internal sealed class ScheduledActionEligibilityEvaluator
         var duration = durationDays.GetValueOrDefault();
         var expectedDueDate = DateOnly.FromDateTime(now).AddDays(duration);
 
-        return scheduledAction.Task.DueDate == expectedDueDate;
+        var matchesDueDate = scheduledAction.Task.DueDate == expectedDueDate;
+        var matchesConditions = MatchesConditions(scheduledAction);
+
+        return matchesDueDate && matchesConditions;
+    }
+
+    private static bool MatchesOverdueRule(ScheduledAutomationAction scheduledAction, DateTime now)
+    {
+        var task = scheduledAction.Task;
+        var today = AutomationTimeZones.Today(scheduledAction.AutomationRule, now);
+        var isOverdue = task.DueDate < today;
+        var isIncomplete = task.Status.Category != StatusCategory.Done;
+        var matchesConditions = MatchesConditions(scheduledAction);
+
+        return isOverdue && isIncomplete && matchesConditions;
+    }
+
+    private static bool MatchesNoDueDateRule(ScheduledAutomationAction scheduledAction)
+    {
+        var task = scheduledAction.Task;
+        var hasNoDueDate = task.DueDate is null;
+        var isIncomplete = task.Status.Category != StatusCategory.Done;
+        var matchesConditions = MatchesConditions(scheduledAction);
+
+        return hasNoDueDate && isIncomplete && matchesConditions;
+    }
+
+    private static bool MatchesInactiveRule(ScheduledAutomationAction scheduledAction, DateTime now)
+    {
+        var durationDays = JsonUtils.ReadInt(scheduledAction.AutomationRule.TriggerConfig, "durationDays");
+        var hasValidDuration = durationDays is >= 1 and <= 365;
+
+        if (!hasValidDuration)
+        {
+            return false;
+        }
+
+        var task = scheduledAction.Task;
+        var lastActivityAt = task.UpdatedAt ?? task.CreatedAt;
+        var hasReachedDuration = lastActivityAt <= now.AddDays(-durationDays!.Value);
+        var matchesConditions = MatchesConditions(scheduledAction);
+
+        return hasReachedDuration && matchesConditions;
+    }
+
+    private static bool MatchesConditions(ScheduledAutomationAction scheduledAction)
+    {
+        return AutomationRuleConditions.Match(scheduledAction.AutomationRule, scheduledAction.Task);
     }
 }
 

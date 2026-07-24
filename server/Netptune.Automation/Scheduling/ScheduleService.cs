@@ -5,9 +5,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Configuration;
 using Netptune.Automation.Diagnostics;
-using Netptune.Automation.Execution;
+using Netptune.Core.Enums;
 
 namespace Netptune.Automation.Scheduling;
 
@@ -48,16 +49,11 @@ internal sealed class ScheduleService : BackgroundService
                 using var scope = ScopeFactory.CreateScope();
                 var automationExecution = scope.ServiceProvider.GetRequiredService<IExecutionService>();
 
-                await ExecuteScheduledRules(
-                    "unassigned-task",
-                    automationExecution.ExecuteUnassignedRules,
-                    activity,
-                    stoppingToken);
-                await ExecuteScheduledRules(
-                    "due-date",
-                    automationExecution.ExecuteDueDateRules,
-                    activity,
-                    stoppingToken);
+                foreach (var triggerType in automationExecution.ScheduledTriggerTypes)
+                {
+                    await ExecuteScheduledRules(automationExecution, triggerType, activity, stoppingToken);
+                }
+
                 Logger.LogInformation(
                     "Automation schedule cycle completed in {ElapsedMilliseconds}ms",
                     Stopwatch.GetElapsedTime(startedAt).TotalMilliseconds);
@@ -73,19 +69,19 @@ internal sealed class ScheduleService : BackgroundService
     }
 
     private async Task ExecuteScheduledRules(
-        string ruleSet,
-        Func<CancellationToken, Task> execute,
+        IExecutionService automationExecution,
+        AutomationTriggerType triggerType,
         Activity? activity,
         CancellationToken cancellationToken)
     {
         try
         {
-            await execute(cancellationToken);
+            await automationExecution.ExecuteScheduledRules(triggerType, cancellationToken);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             Telemetry.MarkFailed(activity, ex);
-            Logger.LogError(ex, "Scheduled {RuleSet} automation evaluation failed", ruleSet);
+            Logger.LogError(ex, "Scheduled {TriggerType} automation evaluation failed", triggerType);
         }
     }
 }

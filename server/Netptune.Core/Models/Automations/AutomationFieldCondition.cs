@@ -15,18 +15,23 @@ public sealed record AutomationFieldCondition
 
     public bool Matches(ProjectTask task, TaskChangedMessage message)
     {
-        var change = message.Changes.FirstOrDefault(candidate => candidate.Field == Field);
+        return Matches(task, message, true);
+    }
+
+    internal bool Matches(ProjectTask task, TaskChangedMessage? message, bool supportsChangeOperators)
+    {
+        var change = message?.Changes.FirstOrDefault(candidate => candidate.Field == Field);
 
         if (Operator == AutomationConditionOperator.Any)
         {
-            var fieldChanged = change is not null;
+            var fieldChanged = supportsChangeOperators && change is not null;
 
             return fieldChanged;
         }
 
         if (Operator == AutomationConditionOperator.Added)
         {
-            var addedValues = change?.AddedValues ?? [];
+            var addedValues = supportsChangeOperators ? change?.AddedValues ?? [] : [];
             var matchingValueWasAdded = MatchesCollection(addedValues);
 
             return matchingValueWasAdded;
@@ -34,7 +39,7 @@ public sealed record AutomationFieldCondition
 
         if (Operator == AutomationConditionOperator.Removed)
         {
-            var removedValues = change?.RemovedValues ?? [];
+            var removedValues = supportsChangeOperators ? change?.RemovedValues ?? [] : [];
             var matchingValueWasRemoved = MatchesCollection(removedValues);
 
             return matchingValueWasRemoved;
@@ -60,7 +65,7 @@ public sealed record AutomationFieldCondition
         };
     }
 
-    public string? Validate()
+    public string? Validate(bool supportsChangeOperators = true)
     {
         var isDefinedField = Enum.IsDefined(Field);
         var isDefinedOperator = Enum.IsDefined(Operator);
@@ -82,6 +87,12 @@ public sealed record AutomationFieldCondition
         var isChangeCollectionOperator = Operator is
             AutomationConditionOperator.Added or
             AutomationConditionOperator.Removed;
+        var isChangeOperator = isChangeCollectionOperator || Operator == AutomationConditionOperator.Any;
+
+        if (isChangeOperator && !supportsChangeOperators)
+        {
+            return $"Operator '{Operator}' is only supported for task changed automations.";
+        }
 
         var isScalarOperator = Operator is
             AutomationConditionOperator.Equals or

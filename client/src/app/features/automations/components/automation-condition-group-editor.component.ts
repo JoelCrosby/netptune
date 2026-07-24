@@ -134,6 +134,7 @@ import {
                 <app-automation-field-condition-editor
                   [field]="condition.field"
                   [statuses]="statuses()"
+                  [supportsChangeOperators]="supportsChangeOperators()"
                   operatorLabel="Operator"
                   [condition]="condition"
                   (conditionChange)="setCondition(conditionIndex, $event)" />
@@ -161,6 +162,7 @@ import {
               <app-automation-condition-group-editor
                 [group]="nestedGroup"
                 [statuses]="statuses()"
+                [supportsChangeOperators]="supportsChangeOperators()"
                 [depth]="depth() + 1"
                 [removable]="true"
                 (groupChange)="setGroup(groupIndex, $event)"
@@ -206,11 +208,11 @@ import {
   `,
 })
 export class AutomationConditionGroupEditorComponent {
-  readonly conditionIcon = LucideListFilter;
-  readonly maximumDepth = 4;
-  readonly automationConditionGroupOperator = AutomationConditionGroupOperator;
+  conditionIcon = LucideListFilter;
+  maximumDepth = 4;
+  automationConditionGroupOperator = AutomationConditionGroupOperator;
 
-  readonly conditionFieldOptions = [
+  conditionFieldOptions = [
     TaskChangeField.name,
     TaskChangeField.description,
     TaskChangeField.status,
@@ -222,19 +224,20 @@ export class AutomationConditionGroupEditorComponent {
     TaskChangeField.tags,
     TaskChangeField.startDate,
   ];
-  readonly groupOperatorOptions = [
+  groupOperatorOptions = [
     { label: 'All', value: AutomationConditionGroupOperator.all },
     { label: 'Any', value: AutomationConditionGroupOperator.any },
     { label: 'None', value: AutomationConditionGroupOperator.none },
   ];
 
-  readonly group = model.required<AutomationConditionGroup>();
-  readonly statuses = input.required<Status[]>();
-  readonly depth = input(1);
-  readonly removable = input(false);
-  readonly clearable = input(false);
-  readonly removed = output();
-  readonly cleared = output();
+  group = model.required<AutomationConditionGroup>();
+  statuses = input.required<Status[]>();
+  supportsChangeOperators = input(false);
+  depth = input(1);
+  removable = input(false);
+  clearable = input(false);
+  removed = output();
+  cleared = output();
 
   taskFieldLabel(field: TaskChangeField): string {
     return taskChangeFieldLabels[field];

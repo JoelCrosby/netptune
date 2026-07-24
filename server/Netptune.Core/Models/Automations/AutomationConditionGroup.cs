@@ -17,12 +17,24 @@ public sealed record AutomationConditionGroup
 
     public bool Matches(ProjectTask task, TaskChangedMessage message)
     {
+        return Matches(task, message, true);
+    }
+
+    public bool Matches(ProjectTask task)
+    {
+        return Matches(task, null, false);
+    }
+
+    private bool Matches(ProjectTask task, TaskChangedMessage? message, bool supportsChangeOperators)
+    {
         var conditionResults = Conditions
-            .Select(condition => condition.Matches(task, message))
+            .Select(condition => condition.Matches(task, message, supportsChangeOperators))
             .ToList();
+
         var nestedGroupResults = Groups
-            .Select(group => group.Matches(task, message))
+            .Select(group => group.Matches(task, message, supportsChangeOperators))
             .ToList();
+
         var memberResults = conditionResults.Concat(nestedGroupResults).ToList();
 
         if (memberResults.Count == 0)
@@ -43,14 +55,14 @@ public sealed record AutomationConditionGroup
         };
     }
 
-    public string? Validate()
+    public string? Validate(bool supportsChangeOperators = true)
     {
-        var result = Validate(1);
+        var result = Validate(1, supportsChangeOperators);
 
         return result.Error;
     }
 
-    private ConditionGroupValidationResult Validate(int depth)
+    private ConditionGroupValidationResult Validate(int depth, bool supportsChangeOperators)
     {
         if (!Enum.IsDefined(Operator))
         {
@@ -88,7 +100,7 @@ public sealed record AutomationConditionGroup
 
         foreach (var condition in Conditions)
         {
-            var error = condition.Validate();
+            var error = condition.Validate(supportsChangeOperators);
 
             if (error is not null)
             {
@@ -98,7 +110,7 @@ public sealed record AutomationConditionGroup
 
         foreach (var nestedGroup in Groups)
         {
-            var result = nestedGroup.Validate(depth + 1);
+            var result = nestedGroup.Validate(depth + 1, supportsChangeOperators);
 
             if (result.Error is not null)
             {

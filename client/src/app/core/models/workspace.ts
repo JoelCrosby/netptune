@@ -20,4 +20,5 @@ export interface Workspace extends Basemodel {
 
 export interface WorkspaceMeta {
   color?: string;
+  timeZone?: string;
 }

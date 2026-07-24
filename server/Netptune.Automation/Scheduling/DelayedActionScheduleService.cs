@@ -5,9 +5,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Configuration;
 using Netptune.Automation.Diagnostics;
-using Netptune.Automation.Execution;
 
 namespace Netptune.Automation.Scheduling;
 

@@ -5,16 +5,16 @@ using Netptune.Core.Events.Tasks;
 
 namespace Netptune.JobServer.Handlers;
 
-public sealed class AutomationTaskChangedHandler : IRequestHandler<TaskChangedMessage>
+public sealed class AutomationTaskCreatedHandler : IRequestHandler<TaskCreatedMessage>
 {
     private readonly IExecutionService AutomationExecution;
 
-    public AutomationTaskChangedHandler(IExecutionService automationExecution)
+    public AutomationTaskCreatedHandler(IExecutionService automationExecution)
     {
         AutomationExecution = automationExecution;
     }
 
-    public async ValueTask<Unit> Handle(TaskChangedMessage request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(TaskCreatedMessage request, CancellationToken cancellationToken)
     {
         await AutomationExecution.ExecuteEventRules(request, cancellationToken);
 

@@ -159,6 +159,21 @@ internal static class AutomationTestData
         }, actionType);
     }
 
+    public static async Task<AutomationRule> CreateTaskStateRule(
+        DataContext db,
+        AutomationScenario scenario,
+        AutomationTriggerType triggerType,
+        int? durationDays = null,
+        AutomationConditionGroup? conditionGroup = null,
+        AutomationActionType actionType = AutomationActionType.FlagTask)
+    {
+        return await CreateRule(db, scenario, triggerType, new
+        {
+            durationDays,
+            conditionGroup,
+        }, actionType);
+    }
+
     private static async Task<AutomationRule> CreateRule(
         DataContext db,
         AutomationScenario scenario,

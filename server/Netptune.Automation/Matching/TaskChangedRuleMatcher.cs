@@ -2,31 +2,65 @@ using System.Diagnostics;
 
 using Microsoft.Extensions.Logging;
 
+using Netptune.Automation.Common;
 using Netptune.Automation.Diagnostics;
+using Netptune.Automation.Execution;
 using Netptune.Automation.Models;
-using Netptune.Core.Encoding;
-using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
-using Netptune.Core.Models.Automations;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
 
-internal sealed class TaskChangedRuleMatcher
+internal sealed class TaskChangedRuleMatcher : IEventRuleMatcher<TaskChangedMessage>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly ScheduledActionService ScheduledActions;
     private readonly ILogger<TaskChangedRuleMatcher> Logger;
 
-    public TaskChangedRuleMatcher(INetptuneUnitOfWork unitOfWork, ILogger<TaskChangedRuleMatcher> logger)
+    public AutomationTriggerType TriggerType => AutomationTriggerType.TaskChanged;
+
+    public TaskChangedRuleMatcher(
+        INetptuneUnitOfWork unitOfWork,
+        ScheduledActionService scheduledActions,
+        ILogger<TaskChangedRuleMatcher> logger)
     {
         UnitOfWork = unitOfWork;
+        ScheduledActions = scheduledActions;
         Logger = logger;
     }
 
-    internal async Task<List<PendingAutomationExecution>> Match(TaskChangedMessage message, CancellationToken cancellationToken)
+    public async Task<List<PendingAutomationExecution>> Match(
+        TaskChangedMessage message,
+        CancellationToken cancellationToken)
     {
         var activity = Activity.Current;
+        var changedFields = string.Join(",", message.Changes.Select(change => change.Field));
+
+        activity?.SetTag("task.id", message.TaskId);
+        activity?.SetTag("workspace.id", message.WorkspaceId);
+        activity?.SetTag("automation.event_id", message.EventId.ToString());
+        activity?.SetTag("automation.origin_type", message.OriginType.ToString());
+        activity?.SetTag("automation.correlation_id", message.CorrelationId?.ToString());
+        activity?.SetTag("automation.chain_depth", message.ChainDepth);
+        activity?.SetTag("automation.changed_fields", changedFields);
+
+        await ScheduledActions.CancelForStatusChange(message, cancellationToken);
+
+        var chainLimitReached = AutomationChainPolicy.HasReachedLimit(message.ChainDepth);
+
+        if (chainLimitReached)
+        {
+            Logger.LogWarning(
+                "Task-change automation evaluation stopped at chain depth {ChainDepth} for task {TaskId} ({CorrelationId})",
+                message.ChainDepth,
+                message.TaskId,
+                message.CorrelationId);
+            activity?.SetTag("automation.skip_reason", "chain_depth_limit");
+            Telemetry.RecordRulesSkipped(TriggerType, 1, "chain_depth_limit");
+
+            return [];
+        }
 
         Logger.LogInformation(
             "Evaluating task-change automation rules for task {TaskId} in workspace {WorkspaceId} ({EventId})",
@@ -35,11 +69,11 @@ internal sealed class TaskChangedRuleMatcher
             message.EventId);
 
         var rules = await UnitOfWork.Automations.GetEnabledRulesForTrigger(
-            AutomationTriggerType.TaskChanged,
+            TriggerType,
             message.WorkspaceId,
             cancellationToken);
 
-        Telemetry.RecordRulesEvaluated(AutomationTriggerType.TaskChanged, rules.Count);
+        Telemetry.RecordRulesEvaluated(TriggerType, rules.Count);
 
         activity?.SetTag("automation.rules.evaluated", rules.Count);
 
@@ -48,6 +82,7 @@ internal sealed class TaskChangedRuleMatcher
             Logger.LogDebug(
                 "No task-change automation rules found for workspace {WorkspaceId}",
                 message.WorkspaceId);
+
             return [];
         }
 
@@ -59,7 +94,7 @@ internal sealed class TaskChangedRuleMatcher
                 "Task-change automation skipped for missing or deleted task {TaskId}",
                 message.TaskId);
             activity?.SetTag("automation.skip_reason", "task_not_found");
-            Telemetry.RecordRulesSkipped(AutomationTriggerType.TaskChanged, rules.Count, "task_not_found");
+            Telemetry.RecordRulesSkipped(TriggerType, rules.Count, "task_not_found");
 
             return [];
         }
@@ -87,7 +122,7 @@ internal sealed class TaskChangedRuleMatcher
                 continue;
             }
 
-            if (!Matches(rule, message, task))
+            if (!TaskChangedRuleConditions.Match(rule, message, task))
             {
                 continue;
             }
@@ -110,12 +145,12 @@ internal sealed class TaskChangedRuleMatcher
         if (selfTriggerSkippedCount > 0)
         {
             Telemetry.RecordRulesSkipped(
-                AutomationTriggerType.TaskChanged,
+                TriggerType,
                 selfTriggerSkippedCount,
                 "self_trigger");
         }
 
-        Telemetry.RecordRulesMatched(AutomationTriggerType.TaskChanged, executions.Count);
+        Telemetry.RecordRulesMatched(TriggerType, executions.Count);
         activity?.SetTag("automation.rules.matched", executions.Count);
 
         Logger.LogInformation(
@@ -125,43 +160,5 @@ internal sealed class TaskChangedRuleMatcher
             message.TaskId);
 
         return executions;
-    }
-
-    internal bool Matches(AutomationRule rule, TaskChangedMessage message, ProjectTask task)
-    {
-        return rule.TriggerType switch
-        {
-            AutomationTriggerType.TaskChanged => MatchesTaskChangedRule(rule, message, task),
-            _ => false,
-        };
-    }
-
-    private bool MatchesTaskChangedRule(AutomationRule rule, TaskChangedMessage message, ProjectTask task)
-    {
-        var configuredFields = JsonUtils.ReadEnumList<TaskChangeField>(rule.TriggerConfig, "fields");
-        var watchesAllFields = configuredFields.Count == 0;
-        var allTaskFields = Enum.GetValues<TaskChangeField>().ToHashSet();
-        var configuredFieldSet = configuredFields.ToHashSet();
-        var watchedFields = watchesAllFields
-            ? allTaskFields
-            : configuredFieldSet;
-
-        var matchingChanges = message.Changes
-            .Where(change => watchedFields.Contains(change.Field))
-            .ToList();
-
-        if (matchingChanges.Count == 0)
-        {
-            return false;
-        }
-
-        var conditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(rule.TriggerConfig, "conditionGroup");
-
-        if (conditionGroup is null)
-        {
-            return true;
-        }
-
-        return conditionGroup.Matches(task, message);
     }
 }

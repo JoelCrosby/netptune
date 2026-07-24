@@ -53,6 +53,7 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
 
         return query
             .Include(rule => rule.Actions.Where(action => !action.IsDeleted))
+            .Include(rule => rule.Workspace)
             .AsNoTracking()
             .AsSplitQuery()
             .ToListAsync(cancellationToken);
@@ -132,6 +133,7 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
             .Where(action => claimedIdList.Contains(action.Id))
             .Where(action => action.ClaimId == claim.ClaimId)
             .Include(action => action.AutomationRule)
+                .ThenInclude(rule => rule.Workspace)
             .Include(action => action.AutomationAction)
             .Include(action => action.Task)
                 .ThenInclude(task => task.Workspace)
