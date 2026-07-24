@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { forkJoin, map, of, switchMap } from 'rxjs';
@@ -10,7 +10,7 @@ import {
   AutomationRun,
 } from '../models/automation.models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AutomationsService {
   private http = inject(HttpClient);
 

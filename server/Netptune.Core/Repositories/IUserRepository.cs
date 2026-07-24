@@ -42,4 +42,6 @@ public interface IUserRepository : IRepository<AppUser, string>
     Task<List<AppUser>> IsUserInWorkspaceRange(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<UserAvatar>> GetUserAvatars(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<List<string>> GetWorkspaceUserIdsInRoles(int workspaceId, IReadOnlyCollection<WorkspaceRole> roles, CancellationToken cancellationToken = default);
 }

@@ -27,6 +27,7 @@ import {
   AutomationActionType,
   AutomationDelayUnit,
 } from '../models/automation.models';
+import { AutomationNotifyEditorComponent } from './automation-notify-editor.component';
 import { AutomationTaskUpdateEditorComponent } from './automation-task-update-editor.component';
 
 export interface EditableAutomationAction extends AutomationAction {
@@ -61,6 +62,7 @@ export interface AutomationActionUpdate {
     LucideListPlus,
     LucideTrash2,
     AutomationTaskUpdateEditorComponent,
+    AutomationNotifyEditorComponent,
   ],
   template: `
     <app-card-title>Then</app-card-title>
@@ -145,15 +147,13 @@ export interface AutomationActionUpdate {
                 </app-form-select>
 
                 @if (action.type === automationActionType.notifyTaskAssignees) {
-                  <app-form-textarea
-                    label="Message"
-                    rows="3"
-                    [noMargin]="true"
-                    [value]="action.message ?? ''"
-                    (valueChange)="
+                  <app-automation-notify-editor
+                    [action]="action"
+                    [users]="users()"
+                    (patch)="
                       actionUpdated.emit({
                         clientId: action.clientId,
-                        patch: { message: $event },
+                        patch: $event,
                       })
                     " />
                 } @else if (action.type === automationActionType.addComment) {

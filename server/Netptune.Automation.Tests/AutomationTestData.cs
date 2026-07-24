@@ -106,10 +106,25 @@ internal static class AutomationTestData
             ],
         };
 
+        var ownerMembership = new WorkspaceAppUser
+        {
+            UserId = owner.Id,
+            Workspace = workspace,
+            Role = WorkspaceRole.Admin,
+            Permissions = [],
+        };
+        var assigneeMembership = new WorkspaceAppUser
+        {
+            UserId = assignee.Id,
+            Workspace = workspace,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
+        };
+
         db.AppUsers.AddRange(owner, assignee, executionUser);
         db.Workspaces.Add(workspace);
         db.ServiceAccounts.Add(serviceAccount);
-        db.WorkspaceAppUsers.Add(serviceMembership);
+        db.WorkspaceAppUsers.AddRange(serviceMembership, ownerMembership, assigneeMembership);
         db.Statuses.AddRange(statuses);
         db.Projects.Add(project);
         db.ProjectTasks.Add(task);
@@ -172,6 +187,66 @@ internal static class AutomationTestData
             durationDays,
             conditionGroup,
         }, actionType);
+    }
+
+    public static async Task AddProjectMember(DataContext db, AutomationScenario scenario, string userId)
+    {
+        db.ProjectUsers.Add(new ProjectUser
+        {
+            ProjectId = scenario.Project.Id,
+            UserId = userId,
+        });
+
+        await db.SaveChangesAsync();
+    }
+
+    public static async Task<AutomationRule> CreateNotifyRule(
+        DataContext db,
+        AutomationScenario scenario,
+        IReadOnlyCollection<AutomationNotificationRecipient> recipients,
+        string? message = null,
+        IReadOnlyCollection<string>? recipientUserIds = null,
+        IReadOnlyCollection<WorkspaceRole>? recipientRoles = null)
+    {
+        var triggerConfig = new
+        {
+            fields = new[] { TaskChangeField.Status },
+        };
+        var actionConfig = JsonSerializer.SerializeToDocument(new
+        {
+            message,
+            recipients,
+            recipientUserIds = recipientUserIds ?? [],
+            recipientRoles = recipientRoles ?? [],
+        }, JsonOptions.Default);
+
+        var rule = new AutomationRule
+        {
+            Name = "Automation Rule",
+            IsEnabled = true,
+            TriggerType = AutomationTriggerType.TaskChanged,
+            TriggerConfig = JsonSerializer.SerializeToDocument(triggerConfig, JsonOptions.Default),
+            WorkspaceId = scenario.Workspace.Id,
+            ExecutionUserId = scenario.ExecutionUser.Id,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+            Actions =
+            {
+                new AutomationAction
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    SortOrder = 1,
+                    Config = actionConfig,
+                    OwnerId = scenario.Owner.Id,
+                    CreatedByUserId = scenario.Owner.Id,
+                },
+            },
+        };
+
+        db.AutomationRules.Add(rule);
+        await db.SaveChangesAsync();
+
+        return rule;
     }
 
     private static async Task<AutomationRule> CreateRule(

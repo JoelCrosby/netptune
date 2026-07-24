@@ -154,6 +154,16 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         };
     }
 
+    public Task<List<string>> GetProjectMemberIds(int projectId, CancellationToken cancellationToken = default)
+    {
+        return Context.ProjectUsers
+            .Where(member => member.ProjectId == projectId)
+            .Select(member => member.UserId)
+            .Distinct()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<string> GenerateProjectKey(string projectName, int workspaceId, CancellationToken cancellationToken = default)
     {
         const int keyLength = 4;

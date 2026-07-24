@@ -1,3 +1,4 @@
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 
@@ -78,6 +79,12 @@ public record AutomationActionRequest
     public AutomationActionType Type { get; init; }
 
     public string? Message { get; init; }
+
+    public List<AutomationNotificationRecipient> Recipients { get; init; } = [];
+
+    public List<string> RecipientUserIds { get; init; } = [];
+
+    public List<WorkspaceRole> RecipientRoles { get; init; } = [];
 
     public string? Comment { get; init; }
 

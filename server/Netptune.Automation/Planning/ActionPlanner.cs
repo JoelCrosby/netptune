@@ -102,6 +102,7 @@ internal sealed class ActionPlanner
                     Action = action,
                     Task = execution.Task,
                     ActorUserId = execution.ExecutionUserId!,
+                    InitiatingUserId = execution.InitiatingUserId,
                 };
                 var contribution = automationAction.Plan(context);
 

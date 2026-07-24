@@ -1311,6 +1311,125 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_notifies_configured_users_and_owner()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        await AutomationTestData.CreateNotifyRule(
+            scope.Db,
+            scenario,
+            [AutomationNotificationRecipient.TaskOwner, AutomationNotificationRecipient.SpecificUsers],
+            recipientUserIds: [scenario.Assignee.Id]);
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var notifications = await scope.Db.Notifications.ToListAsync(TestContext.Current.CancellationToken);
+
+        notifications.Select(notification => notification.UserId)
+            .Should()
+            .BeEquivalentTo([scenario.Owner.Id, scenario.Assignee.Id]);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_notifies_project_members()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, assignTask: false);
+        await AutomationTestData.AddProjectMember(scope.Db, scenario, scenario.Assignee.Id);
+        await AutomationTestData.CreateNotifyRule(
+            scope.Db,
+            scenario,
+            [AutomationNotificationRecipient.ProjectMembers]);
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var notification = await scope.Db.Notifications.SingleAsync(TestContext.Current.CancellationToken);
+
+        notification.UserId.Should().Be(scenario.Assignee.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_notifies_workspace_roles()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, assignTask: false);
+        await AutomationTestData.CreateNotifyRule(
+            scope.Db,
+            scenario,
+            [AutomationNotificationRecipient.WorkspaceRoles],
+            recipientRoles: [WorkspaceRole.Admin]);
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var notification = await scope.Db.Notifications.SingleAsync(TestContext.Current.CancellationToken);
+
+        notification.UserId.Should().Be(scenario.Owner.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_notifies_the_triggering_user()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, assignTask: false);
+        await AutomationTestData.CreateNotifyRule(
+            scope.Db,
+            scenario,
+            [AutomationNotificationRecipient.TriggeringUser]);
+
+        await ExecuteStatusChange(scope, scenario, actorUserId: scenario.Assignee.Id);
+
+        var notification = await scope.Db.Notifications.SingleAsync(TestContext.Current.CancellationToken);
+
+        notification.UserId.Should().Be(scenario.Assignee.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_renders_message_variables()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        await AutomationTestData.CreateNotifyRule(
+            scope.Db,
+            scenario,
+            [AutomationNotificationRecipient.TaskOwner],
+            message: "{{task.key}} moved by {{rule.name}}");
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var activityLog = await scope.Db.EventRecords
+            .SingleAsync(record => record.EventKey == EventKeys.EntityActivityRecorded, TestContext.Current.CancellationToken);
+        var message = activityLog.Payload!.RootElement.GetProperty("message").GetString();
+
+        message.Should().Be($"{scenario.Project.Key}-{scenario.Task.ProjectScopeId} moved by Automation Rule");
+    }
+
+    private static async Task ExecuteStatusChange(
+        AutomationTestScope scope,
+        AutomationScenario scenario,
+        string? actorUserId = null)
+    {
+        var newStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "new");
+        var inProgressStatusId = await AutomationTestData.GetStatusId(scope.Db, scenario, "in-progress");
+
+        await scope.AutomationExecution.ExecuteEventRules(new TaskChangedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = actorUserId ?? scenario.Owner.Id,
+            EventId = Guid.NewGuid(),
+            Changes =
+            [
+                TaskFieldChange.Create(TaskChangeField.Status, newStatusId, inProgressStatusId),
+            ],
+        }, TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
     public async Task ExecuteTaskCreatedRules_runs_matching_rule_once()
     {
         await using var scope = await Fixture.CreateScope();

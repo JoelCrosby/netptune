@@ -1,3 +1,4 @@
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 
@@ -12,6 +13,8 @@ public sealed record AutomationActionPlanningContext
     public required ProjectTask Task { get; init; }
 
     public required string ActorUserId { get; init; }
+
+    public string? InitiatingUserId { get; init; }
 }
 
 public sealed record AutomationActionPlanContribution
@@ -27,7 +30,16 @@ public sealed record AutomationActionPlanContribution
     public AutomationTaskDeletionContribution? TaskDeletion { get; init; }
 }
 
-public sealed record AutomationNotificationContribution(EventRecord Activity, List<string> RecipientUserIds);
+public sealed record AutomationNotificationContribution
+{
+    public required EventRecord Activity { get; init; }
+
+    public required List<string> RecipientUserIds { get; init; }
+
+    public bool IncludeProjectMembers { get; init; }
+
+    public List<WorkspaceRole> RecipientRoles { get; init; } = [];
+}
 
 public sealed record AutomationFlagContribution(string Name, string Description);
 

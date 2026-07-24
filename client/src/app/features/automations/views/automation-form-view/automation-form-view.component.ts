@@ -4,6 +4,8 @@ import {
   computed,
   effect,
   inject,
+  injectAsync,
+  onIdle,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -32,10 +34,10 @@ import { AutomationConditionsEditorComponent } from '../../components/automation
 import { AutomationFormPreviewComponent } from '../../components/automation-form-preview.component';
 import { AutomationSettingsEditorComponent } from '../../components/automation-settings-editor.component';
 import { AutomationTriggerEditorComponent } from '../../components/automation-trigger-editor.component';
-import { buildAutomationRuleRequest } from '../../models/automation-rule-request-builder';
 import {
   AutomationActionType,
   AutomationDelayUnit,
+  AutomationNotificationRecipient,
   AutomationConditionGroup,
   AutomationRule,
   AutomationRuleRequest,
@@ -158,6 +160,13 @@ export class AutomationFormViewComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private requestBuilder = injectAsync(
+    () =>
+      import('../../services/automation-rule-request-builder.service').then(
+        (m) => m.AutomationRuleRequestBuilder
+      ),
+    { prefetch: onIdle }
+  );
   private readonly ruleId = signal(this.readRuleId());
 
   readonly saving = signal(false);
@@ -273,6 +282,12 @@ export class AutomationFormViewComponent {
     this.updateAction(clientId, {
       type,
       message: type === AutomationActionType.notifyTaskAssignees ? '' : null,
+      recipients:
+        type === AutomationActionType.notifyTaskAssignees
+          ? [AutomationNotificationRecipient.assignees]
+          : [],
+      recipientUserIds: [],
+      recipientRoles: [],
       comment: type === AutomationActionType.addComment ? '' : null,
       flagName: type === AutomationActionType.flagTask ? '' : null,
       flagDescription: type === AutomationActionType.flagTask ? '' : null,
@@ -338,8 +353,8 @@ export class AutomationFormViewComponent {
     };
   });
 
-  onSubmit() {
-    const request = this.buildRequest();
+  async onSubmit() {
+    const request = await this.buildRequest();
 
     if (!request) {
       return;
@@ -390,8 +405,9 @@ export class AutomationFormViewComponent {
     this.actions.set(actions);
   }
 
-  buildRequest(): AutomationRuleRequest | null {
-    const result = buildAutomationRuleRequest({
+  async buildRequest(): Promise<AutomationRuleRequest | null> {
+    const builder = await this.requestBuilder();
+    const result = builder.build({
       name: this.name(),
       isEnabled: this.isEnabled(),
       executionUserId: this.executionUserId(),
@@ -409,6 +425,9 @@ export class AutomationFormViewComponent {
       clientId: this.nextActionId++,
       type: AutomationActionType.notifyTaskAssignees,
       message: '',
+      recipients: [AutomationNotificationRecipient.assignees],
+      recipientUserIds: [],
+      recipientRoles: [],
       comment: null,
       flagName: null,
       flagDescription: null,

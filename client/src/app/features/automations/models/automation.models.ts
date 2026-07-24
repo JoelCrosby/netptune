@@ -1,6 +1,7 @@
 import { TaskPriority } from '@core/enums/task-priority';
 import { EstimateType } from '@core/enums/estimate-type';
 import { EntityType } from '@core/models/entity-type';
+import { WorkspaceRole } from '@core/enums/workspace-role';
 
 export enum AutomationTriggerType {
   taskUnassignedFor = 1,
@@ -77,6 +78,15 @@ export enum AutomationActionType {
   deleteTask = 4,
 }
 
+export enum AutomationNotificationRecipient {
+  assignees = 0,
+  taskOwner = 1,
+  triggeringUser = 2,
+  specificUsers = 3,
+  projectMembers = 4,
+  workspaceRoles = 5,
+}
+
 export enum AutomationDelayUnit {
   minutes = 0,
   hours = 1,
@@ -109,6 +119,9 @@ export interface AutomationAction {
   type: AutomationActionType;
   sortOrder?: number;
   message?: string | null;
+  recipients?: AutomationNotificationRecipient[];
+  recipientUserIds?: string[];
+  recipientRoles?: WorkspaceRole[];
   comment?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;
@@ -183,6 +196,9 @@ export interface AutomationRuleRequest {
 export interface AutomationActionRequest {
   type: AutomationActionType;
   message?: string | null;
+  recipients?: AutomationNotificationRecipient[];
+  recipientUserIds?: string[];
+  recipientRoles?: WorkspaceRole[];
   comment?: string | null;
   flagName?: string | null;
   flagDescription?: string | null;

@@ -56,12 +56,13 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
     {
         var task = action.Execution.Task;
         var actorUserId = action.Execution.ExecutionUserId!;
+        var audience = await ResolveAudience(task, contribution, cancellationToken);
         var recipients = await NotificationRecipientResolver.Resolve(
             UnitOfWork,
             new NotificationRecipientRequest
             {
-                RequestedUserIds = contribution.RecipientUserIds,
-                WorkspaceUserIds = contribution.RecipientUserIds,
+                RequestedUserIds = audience,
+                WorkspaceUserIds = audience,
                 ActorUserId = actorUserId,
                 WorkspaceId = task.WorkspaceId,
                 ActivityType = ActivityType.Modify,
@@ -83,6 +84,33 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
         }).ToList();
 
         return notifications;
+    }
+
+    private async Task<List<string>> ResolveAudience(
+        ProjectTask task,
+        AutomationNotificationContribution contribution,
+        CancellationToken cancellationToken)
+    {
+        var audience = new List<string>(contribution.RecipientUserIds);
+
+        if (contribution.IncludeProjectMembers && task.ProjectId.HasValue)
+        {
+            var memberIds = await UnitOfWork.Projects.GetProjectMemberIds(task.ProjectId.Value, cancellationToken);
+
+            audience.AddRange(memberIds);
+        }
+
+        if (contribution.RecipientRoles.Count > 0)
+        {
+            var roleUserIds = await UnitOfWork.Users.GetWorkspaceUserIdsInRoles(
+                task.WorkspaceId,
+                contribution.RecipientRoles,
+                cancellationToken);
+
+            audience.AddRange(roleUserIds);
+        }
+
+        return audience.Distinct(StringComparer.Ordinal).ToList();
     }
 
     private static string BuildTaskLink(ProjectTask task)

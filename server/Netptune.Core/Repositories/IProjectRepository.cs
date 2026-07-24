@@ -27,4 +27,6 @@ public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
     Task<bool> IsProjectKeyAvailable(string key, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<string> GenerateProjectKey(string projectName, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<List<string>> GetProjectMemberIds(int projectId, CancellationToken cancellationToken = default);
 }

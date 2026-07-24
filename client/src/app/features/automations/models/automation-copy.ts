@@ -1,4 +1,5 @@
 import { taskPriorityLabels } from '@core/enums/task-priority';
+import { workspaceRoleLabels } from '@core/enums/workspace-role';
 import { EntityType } from '@core/models/entity-type';
 import { Status } from '@core/models/status';
 import { entityTypeToString } from '@core/transforms/entity-type';
@@ -13,6 +14,7 @@ import {
   AutomationDateUpdateMode,
   AutomationConditionOperator,
   AutomationFieldCondition,
+  AutomationNotificationRecipient,
   AutomationRunStatus,
   AutomationActionResultStatus,
   AutomationTrigger,
@@ -52,6 +54,30 @@ export const actionTypeLabels: Record<AutomationActionType, string> = {
   [AutomationActionType.addComment]: 'Add comment',
   [AutomationActionType.deleteTask]: 'Delete task',
 };
+
+export const notificationRecipientLabels: Record<
+  AutomationNotificationRecipient,
+  string
+> = {
+  [AutomationNotificationRecipient.assignees]: 'Assignees',
+  [AutomationNotificationRecipient.taskOwner]: 'Task owner',
+  [AutomationNotificationRecipient.triggeringUser]: 'Triggering user',
+  [AutomationNotificationRecipient.specificUsers]: 'Specific users',
+  [AutomationNotificationRecipient.projectMembers]: 'Project members',
+  [AutomationNotificationRecipient.workspaceRoles]: 'Workspace roles',
+};
+
+export const messageVariables = [
+  'task.name',
+  'task.key',
+  'task.status',
+  'task.priority',
+  'task.startDate',
+  'task.dueDate',
+  'project.name',
+  'workspace.name',
+  'rule.name',
+];
 
 export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
   [AutomationRunStatus.succeeded]: 'Succeeded',
@@ -368,9 +394,7 @@ export function describeAutomationAction(
 ): string {
   switch (action.type) {
     case AutomationActionType.notifyTaskAssignees:
-      return action.message
-        ? `Notify assignees: "${action.message}"`
-        : 'Notify task assignees';
+      return describeNotifyAction(action);
     case AutomationActionType.flagTask:
       return action.flagName
         ? `Flag the task as "${action.flagName}"`
@@ -384,6 +408,39 @@ export function describeAutomationAction(
     case AutomationActionType.deleteTask:
       return describeDeleteTaskAction(action);
   }
+}
+
+function describeNotifyAction(action: AutomationAction): string {
+  const audience = describeNotificationAudience(action);
+
+  return action.message
+    ? `Notify ${audience}: "${action.message}"`
+    : `Notify ${audience}`;
+}
+
+export function describeNotificationAudience(action: AutomationAction): string {
+  const recipients = action.recipients?.length
+    ? action.recipients
+    : [AutomationNotificationRecipient.assignees];
+  const parts = recipients.map((recipient) => {
+    if (recipient === AutomationNotificationRecipient.workspaceRoles) {
+      const roles = action.recipientRoles ?? [];
+
+      return roles.length
+        ? joinNaturalList(roles.map((role) => workspaceRoleLabels[role]))
+        : 'workspace roles';
+    }
+
+    if (recipient === AutomationNotificationRecipient.specificUsers) {
+      const count = action.recipientUserIds?.length ?? 0;
+
+      return count === 1 ? '1 chosen user' : `${count} chosen users`;
+    }
+
+    return toLowerText(notificationRecipientLabels[recipient]);
+  });
+
+  return joinNaturalList(parts);
 }
 
 function describeDeleteTaskAction(action: AutomationAction): string {
