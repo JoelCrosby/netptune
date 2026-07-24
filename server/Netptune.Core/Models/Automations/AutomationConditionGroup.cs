@@ -37,6 +37,37 @@ public sealed record AutomationConditionGroup
 
         var memberResults = conditionResults.Concat(nestedGroupResults).ToList();
 
+        return ResolveMatch(memberResults);
+    }
+
+    public AutomationConditionGroupExplanation Explain(
+        ProjectTask task,
+        TaskChangedMessage? message,
+        bool supportsChangeOperators)
+    {
+        var conditions = Conditions
+            .Select(condition => condition.Explain(task, message, supportsChangeOperators))
+            .ToList();
+
+        var groups = Groups
+            .Select(group => group.Explain(task, message, supportsChangeOperators))
+            .ToList();
+
+        var conditionResults = conditions.Select(condition => condition.IsMatch);
+        var nestedGroupResults = groups.Select(group => group.IsMatch);
+        var memberResults = conditionResults.Concat(nestedGroupResults).ToList();
+
+        return new AutomationConditionGroupExplanation
+        {
+            Operator = Operator,
+            IsMatch = ResolveMatch(memberResults),
+            Conditions = conditions,
+            Groups = groups,
+        };
+    }
+
+    private bool ResolveMatch(List<bool> memberResults)
+    {
         if (memberResults.Count == 0)
         {
             return false;

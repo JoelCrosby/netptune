@@ -470,39 +470,82 @@ export function previewNotificationRecipients(
   });
 }
 
+export interface NotificationMessageSegment {
+  text: string;
+  isVariable: boolean;
+  isUnknown: boolean;
+}
+
 export function previewNotificationMessage(
   message: string | null | undefined,
   ruleName: string
-): string {
+): NotificationMessageSegment[] {
   if (!message?.trim()) {
-    return defaultNotificationMessage(ruleName);
+    return defaultNotificationSegments(ruleName);
   }
 
-  return message.replace(/\{\{([^{}]*)\}\}/g, (token, variable: string) => {
-    return resolveSampleVariable(token, variable.trim(), ruleName);
-  });
+  const segments: NotificationMessageSegment[] = [];
+  const pattern = /\{\{([^{}]*)\}\}/g;
+  let lastIndex = 0;
+  let match = pattern.exec(message);
+
+  while (match) {
+    const isPrecededByText = match.index > lastIndex;
+
+    if (isPrecededByText) {
+      segments.push(literalSegment(message.slice(lastIndex, match.index)));
+    }
+
+    segments.push(variableSegment(match[0], match[1].trim(), ruleName));
+    lastIndex = match.index + match[0].length;
+    match = pattern.exec(message);
+  }
+
+  const hasTrailingText = lastIndex < message.length;
+
+  if (hasTrailingText) {
+    segments.push(literalSegment(message.slice(lastIndex)));
+  }
+
+  return segments;
 }
 
-function defaultNotificationMessage(ruleName: string): string {
-  return `Automation '${sampleRuleName(ruleName)}' matched this task.`;
+function defaultNotificationSegments(
+  ruleName: string
+): NotificationMessageSegment[] {
+  return [
+    literalSegment("Automation '"),
+    resolvedSegment(sampleRuleName(ruleName)),
+    literalSegment("' matched this task."),
+  ];
 }
 
-function resolveSampleVariable(
+function variableSegment(
   token: string,
   variable: string,
   ruleName: string
-): string {
+): NotificationMessageSegment {
   if (variable.toLowerCase() === 'rule.name') {
-    return sampleRuleName(ruleName);
+    return resolvedSegment(sampleRuleName(ruleName));
   }
 
   const known = messageVariables.find((candidate) => {
     return candidate.toLowerCase() === variable.toLowerCase();
   });
 
-  if (!known) return token;
+  if (!known) {
+    return { text: token, isVariable: true, isUnknown: true };
+  }
 
-  return messageVariableSampleValues[known];
+  return resolvedSegment(messageVariableSampleValues[known]);
+}
+
+function literalSegment(text: string): NotificationMessageSegment {
+  return { text, isVariable: false, isUnknown: false };
+}
+
+function resolvedSegment(text: string): NotificationMessageSegment {
+  return { text, isVariable: true, isUnknown: false };
 }
 
 function sampleRuleName(ruleName: string): string {

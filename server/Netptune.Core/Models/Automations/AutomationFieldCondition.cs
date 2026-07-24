@@ -65,6 +65,61 @@ public sealed record AutomationFieldCondition
         };
     }
 
+    public AutomationConditionExplanation Explain(
+        ProjectTask task,
+        TaskChangedMessage? message,
+        bool supportsChangeOperators)
+    {
+        var isChangeOperator = Operator is
+            AutomationConditionOperator.Any or
+            AutomationConditionOperator.Added or
+            AutomationConditionOperator.Removed;
+
+        var hasChangeContext = supportsChangeOperators && message is not null;
+        var isEvaluable = !isChangeOperator || hasChangeContext;
+        var isMatch = isEvaluable && Matches(task, message, supportsChangeOperators);
+        var actualValue = DescribeCurrentValues(task, message);
+
+        return new AutomationConditionExplanation
+        {
+            Field = Field,
+            Operator = Operator,
+            Value = Value,
+            ActualValue = actualValue,
+            IsMatch = isMatch,
+            IsEvaluable = isEvaluable,
+        };
+    }
+
+    private string? DescribeCurrentValues(ProjectTask task, TaskChangedMessage? message)
+    {
+        var change = message?.Changes.FirstOrDefault(candidate => candidate.Field == Field);
+
+        if (Operator == AutomationConditionOperator.Added)
+        {
+            return JoinValues(change?.AddedValues ?? []);
+        }
+
+        if (Operator == AutomationConditionOperator.Removed)
+        {
+            return JoinValues(change?.RemovedValues ?? []);
+        }
+
+        return JoinValues(CurrentValues(task));
+    }
+
+    private static string? JoinValues(List<string> values)
+    {
+        var presentValues = values.Where(value => !string.IsNullOrWhiteSpace(value)).ToList();
+
+        if (presentValues.Count == 0)
+        {
+            return null;
+        }
+
+        return string.Join(", ", presentValues);
+    }
+
     public string? Validate(bool supportsChangeOperators = true)
     {
         var isDefinedField = Enum.IsDefined(Field);

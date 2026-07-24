@@ -7,17 +7,17 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 import {
   messageVariables,
   notificationRecipientLabels,
-  previewNotificationMessage,
-  previewNotificationRecipients,
 } from '../models/automation-copy';
 import {
   AutomationAction,
   AutomationNotificationRecipient,
 } from '../models/automation.models';
+import { AutomationNotifyPreviewComponent } from './automation-notify-preview.component';
 
 @Component({
   selector: 'app-automation-notify-editor',
   imports: [
+    AutomationNotifyPreviewComponent,
     FormSelectTagsComponent,
     FormSelectTagsOptionComponent,
     FormTextAreaComponent,
@@ -72,40 +72,10 @@ import {
         [value]="action().message ?? ''"
         (valueChange)="patch.emit({ message: $event })" />
 
-      <section
-        class="border-border rounded-md border"
-        aria-label="Notification preview">
-        <header class="border-border bg-foreground/3 border-b px-3 py-2">
-          <h4 class="text-xs font-bold tracking-wider">PREVIEW</h4>
-        </header>
-
-        <div class="flex flex-col gap-3 p-3 text-sm">
-          <div class="flex flex-col gap-1">
-            <span class="text-foreground/60 text-xs">Notifies</span>
-            <ul class="flex flex-col gap-1">
-              @for (recipient of recipientPreview(); track $index) {
-                <li
-                  class="flex items-start gap-2"
-                  [class.text-warn]="recipient.isIncomplete">
-                  <span aria-hidden="true">&bull;</span>
-                  <span>{{ recipient.text }}</span>
-                </li>
-              }
-            </ul>
-          </div>
-
-          <div class="flex flex-col gap-1">
-            <span class="text-foreground/60 text-xs">Message</span>
-            <p class="leading-relaxed whitespace-pre-wrap">
-              {{ messagePreview() }}
-            </p>
-          </div>
-
-          <p class="text-foreground/60 text-xs">
-            Task values are examples — the rule fills them in when it runs.
-          </p>
-        </div>
-      </section>
+      <app-automation-notify-preview
+        [action]="action()"
+        [users]="users()"
+        [ruleName]="ruleName()" />
     </div>
   `,
 })
@@ -134,14 +104,6 @@ export class AutomationNotifyEditorComponent {
   users = input.required<WorkspaceAppUser[]>();
   ruleName = input('');
   patch = output<Partial<AutomationAction>>();
-
-  recipientPreview = computed(() => {
-    return previewNotificationRecipients(this.action(), this.users());
-  });
-
-  messagePreview = computed(() => {
-    return previewNotificationMessage(this.action().message, this.ruleName());
-  });
 
   selectedRecipients = computed(() => {
     return (
