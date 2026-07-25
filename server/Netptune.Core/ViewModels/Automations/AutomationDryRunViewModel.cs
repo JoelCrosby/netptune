@@ -28,6 +28,12 @@ public sealed record AutomationDryRunActionViewModel
 
     public string? CreatedTaskName { get; init; }
 
+    public AutomationRelationOperation? RelationOperation { get; init; }
+
+    public int? RelationTypeId { get; init; }
+
+    public int? RelatedTaskId { get; init; }
+
     public int? DelayMinutes { get; init; }
 }
 

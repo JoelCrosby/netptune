@@ -11,6 +11,8 @@ import {
   AutomationDateUpdateMode,
   AutomationFieldCondition,
   AutomationNotificationRecipient,
+  AutomationRelationDirection,
+  AutomationRelationOperation,
   AutomationRuleRequest,
   AutomationTrigger,
   AutomationTriggerType,
@@ -167,6 +169,29 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
 
   if (invalidCreateTaskVariables) {
     return `Unknown message variables: ${invalidCreateTaskVariables.join(', ')}.`;
+  }
+
+  const relationActions = actions.filter((action) => {
+    return action.type === AutomationActionType.manageTaskRelation;
+  });
+
+  const hasNoRelationType = relationActions.some((action) => {
+    return !action.relationTypeId;
+  });
+
+  if (hasNoRelationType) {
+    return 'Relation actions need a relation.';
+  }
+
+  const hasNoRelatedTask = relationActions.some((action) => {
+    return (
+      action.relationOperation === AutomationRelationOperation.add &&
+      !action.relatedTaskId
+    );
+  });
+
+  if (hasNoRelatedTask) {
+    return 'Choose a task to link to.';
   }
 
   const hasEmptyTaskUpdate = actions.some((action) => {
@@ -403,6 +428,16 @@ type CreateTaskFields = Required<
   Pick<AutomationActionRequest, 'copyAssignees' | 'linkRelationTypeId'>
 >;
 
+type RelationFields = Required<
+  Pick<
+    AutomationActionRequest,
+    | 'relationOperation'
+    | 'relationDirection'
+    | 'relationTypeId'
+    | 'relatedTaskId'
+  >
+>;
+
 type DeleteFields = Required<
   Pick<AutomationActionRequest, 'delayAmount' | 'delayUnit'>
 >;
@@ -415,6 +450,7 @@ function toActionRequest(action: AutomationAction): AutomationActionRequest {
     ...toFlagFields(action),
     ...toTaskUpdateFields(action),
     ...toCreateTaskFields(action),
+    ...toRelationFields(action),
     ...toDeleteFields(action),
   };
 }
@@ -546,6 +582,29 @@ function toCreateTaskFields(action: AutomationAction): CreateTaskFields {
   return {
     copyAssignees,
     linkRelationTypeId: action.linkRelationTypeId ?? null,
+  };
+}
+
+function toRelationFields(action: AutomationAction): RelationFields {
+  if (action.type !== AutomationActionType.manageTaskRelation) {
+    return {
+      relationOperation: null,
+      relationDirection: null,
+      relationTypeId: null,
+      relatedTaskId: null,
+    };
+  }
+
+  const operation = action.relationOperation ?? AutomationRelationOperation.add;
+  const isAdding = operation === AutomationRelationOperation.add;
+
+  return {
+    relationOperation: operation,
+    relationDirection: isAdding
+      ? (action.relationDirection ?? AutomationRelationDirection.taskIsSource)
+      : null,
+    relationTypeId: action.relationTypeId ?? null,
+    relatedTaskId: action.relatedTaskId ?? null,
   };
 }
 

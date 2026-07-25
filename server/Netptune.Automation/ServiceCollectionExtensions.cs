@@ -93,6 +93,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IActionExecutionHandler, AddCommentHandler>();
         services.AddScoped<IActionExecutionHandler, DeleteTaskHandler>();
         services.AddScoped<IActionExecutionHandler, CreateTaskHandler>();
+        services.AddScoped<IActionExecutionHandler, ManageTaskRelationHandler>();
 
         services.AddHostedService<ScheduleService>();
         services.AddHostedService<DelayedActionScheduleService>();

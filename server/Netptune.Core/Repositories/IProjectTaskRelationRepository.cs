@@ -16,5 +16,7 @@ public interface IProjectTaskRelationRepository : IRepository<ProjectTaskRelatio
 
     Task<bool> WouldCreateCycle(int relationTypeId, int sourceTaskId, int targetTaskId, CancellationToken cancellationToken = default);
 
+    Task<List<ProjectTaskRelation>> GetForTaskAndType(int relationTypeId, int taskId, int? relatedTaskId, CancellationToken cancellationToken = default);
+
     Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
 }

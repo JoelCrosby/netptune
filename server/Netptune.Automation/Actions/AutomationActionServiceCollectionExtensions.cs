@@ -15,6 +15,7 @@ public static class AutomationActionServiceCollectionExtensions
         var commentAction = ServiceDescriptor.Singleton<IAutomationAction, AddCommentAction>();
         var deleteAction = ServiceDescriptor.Singleton<IAutomationAction, DeleteTaskAction>();
         var createAction = ServiceDescriptor.Singleton<IAutomationAction, CreateTaskAction>();
+        var relationAction = ServiceDescriptor.Singleton<IAutomationAction, ManageTaskRelationAction>();
 
         services.TryAddEnumerable(notifyAction);
         services.TryAddEnumerable(flagAction);
@@ -22,6 +23,7 @@ public static class AutomationActionServiceCollectionExtensions
         services.TryAddEnumerable(commentAction);
         services.TryAddEnumerable(deleteAction);
         services.TryAddEnumerable(createAction);
+        services.TryAddEnumerable(relationAction);
         services.TryAddSingleton<IAutomationActionRegistry, AutomationActionRegistry>();
 
         return services;

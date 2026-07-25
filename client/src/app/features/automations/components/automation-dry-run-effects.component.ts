@@ -6,6 +6,7 @@ import { actionTypeLabels } from '../models/automation-copy';
 import {
   AutomationActionType,
   AutomationDryRunAction,
+  AutomationRelationOperation,
 } from '../models/automation.models';
 
 @Component({
@@ -49,6 +50,11 @@ import {
                 @case (automationActionType.createTask) {
                   <span class="text-muted text-xs">
                     Creates "{{ action.createdTaskName }}"
+                  </span>
+                }
+                @case (automationActionType.manageTaskRelation) {
+                  <span class="text-muted text-xs">
+                    {{ describeRelation(action) }}
                   </span>
                 }
                 @case (automationActionType.deleteTask) {
@@ -96,6 +102,17 @@ export class AutomationDryRunEffectsComponent {
     if (!action.updatedFields.length) return 'nothing';
 
     return joinNaturalList(action.updatedFields).toLowerCase();
+  }
+
+  describeRelation(action: AutomationDryRunAction): string {
+    const isRemoval =
+      action.relationOperation === AutomationRelationOperation.remove;
+
+    if (isRemoval) {
+      return 'Removes the configured task links';
+    }
+
+    return 'Links the task to the configured task';
   }
 
   describeDeletion(action: AutomationDryRunAction): string {

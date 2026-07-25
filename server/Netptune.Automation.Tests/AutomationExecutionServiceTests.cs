@@ -1471,6 +1471,83 @@ public sealed class AutomationExecutionServiceTests
     }
 
     [Fact]
+    public async Task ExecuteTaskChangedRules_adds_configured_task_relation()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var relationType = await AutomationTestData.CreateRelationType(scope.Db, scenario);
+        var relatedTask = await AutomationTestData.CreateTask(scope.Db, scenario, "Related Task");
+        await AutomationTestData.CreateRelationRule(scope.Db, scenario, new
+        {
+            relationOperation = AutomationRelationOperation.Add,
+            relationDirection = AutomationRelationDirection.TaskIsSource,
+            relationTypeId = relationType.Id,
+            relatedTaskId = relatedTask.Id,
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var relation = await scope.Db.ProjectTaskRelations.SingleAsync(TestContext.Current.CancellationToken);
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        relation.RelationTypeId.Should().Be(relationType.Id);
+        relation.SourceTaskId.Should().Be(scenario.Task.Id);
+        relation.TargetTaskId.Should().Be(relatedTask.Id);
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_removes_task_relations_of_configured_type()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var relationType = await AutomationTestData.CreateRelationType(scope.Db, scenario);
+        var relatedTask = await AutomationTestData.CreateTask(scope.Db, scenario, "Related Task");
+        await AutomationTestData.CreateRelation(scope.Db, scenario, relationType, scenario.Task.Id, relatedTask.Id);
+        await AutomationTestData.CreateRelationRule(scope.Db, scenario, new
+        {
+            relationOperation = AutomationRelationOperation.Remove,
+            relationTypeId = relationType.Id,
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var hasRelations = await scope.Db.ProjectTaskRelations.AnyAsync(TestContext.Current.CancellationToken);
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        hasRelations.Should().BeFalse();
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_skips_relation_that_already_exists()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var relationType = await AutomationTestData.CreateRelationType(scope.Db, scenario);
+        var relatedTask = await AutomationTestData.CreateTask(scope.Db, scenario, "Related Task");
+        await AutomationTestData.CreateRelation(scope.Db, scenario, relationType, scenario.Task.Id, relatedTask.Id);
+        await AutomationTestData.CreateRelationRule(scope.Db, scenario, new
+        {
+            relationOperation = AutomationRelationOperation.Add,
+            relationDirection = AutomationRelationDirection.TaskIsSource,
+            relationTypeId = relationType.Id,
+            relatedTaskId = relatedTask.Id,
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var relationCount = await scope.Db.ProjectTaskRelations.CountAsync(TestContext.Current.CancellationToken);
+        var actionResult = await scope.Db.AutomationActionResults.SingleAsync(TestContext.Current.CancellationToken);
+
+        relationCount.Should().Be(1);
+        actionResult.Status.Should().Be(AutomationActionResultStatus.Skipped);
+    }
+
+    [Fact]
     public async Task ExecuteTaskCreatedRules_skips_its_own_created_task()
     {
         await using var scope = await Fixture.CreateScope();

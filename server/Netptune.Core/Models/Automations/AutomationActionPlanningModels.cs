@@ -30,6 +30,8 @@ public sealed record AutomationActionPlanContribution
     public AutomationTaskDeletionContribution? TaskDeletion { get; init; }
 
     public AutomationTaskCreationContribution? TaskCreation { get; init; }
+
+    public AutomationRelationContribution? Relation { get; init; }
 }
 
 public sealed record AutomationNotificationContribution
@@ -111,4 +113,15 @@ public sealed record AutomationTaskCreationContribution
     public int? BoardGroupId { get; init; }
 
     public int? LinkRelationTypeId { get; init; }
+}
+
+public sealed record AutomationRelationContribution
+{
+    public AutomationRelationOperation Operation { get; init; }
+
+    public AutomationRelationDirection Direction { get; init; }
+
+    public int RelationTypeId { get; init; }
+
+    public int? RelatedTaskId { get; init; }
 }

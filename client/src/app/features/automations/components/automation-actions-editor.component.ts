@@ -30,6 +30,7 @@ import {
 } from '../models/automation.models';
 import { AutomationCreateTaskEditorComponent } from './automation-create-task-editor.component';
 import { AutomationNotifyEditorComponent } from './automation-notify-editor.component';
+import { AutomationRelationEditorComponent } from './automation-relation-editor.component';
 import { AutomationTaskUpdateEditorComponent } from './automation-task-update-editor.component';
 
 export interface EditableAutomationAction extends AutomationAction {
@@ -66,6 +67,7 @@ export interface AutomationActionUpdate {
     AutomationTaskUpdateEditorComponent,
     AutomationNotifyEditorComponent,
     AutomationCreateTaskEditorComponent,
+    AutomationRelationEditorComponent,
   ],
   template: `
     <app-card-title>Then</app-card-title>
@@ -197,6 +199,18 @@ export interface AutomationActionUpdate {
                         })
                       " />
                   </div>
+                } @else if (
+                  action.type === automationActionType.manageTaskRelation
+                ) {
+                  <app-automation-relation-editor
+                    [action]="action"
+                    [relationTypes]="relationTypes()"
+                    (patch)="
+                      actionUpdated.emit({
+                        clientId: action.clientId,
+                        patch: $event,
+                      })
+                    " />
                 } @else if (action.type === automationActionType.createTask) {
                   <app-automation-create-task-editor
                     [action]="action"
@@ -311,6 +325,7 @@ export class AutomationActionsEditorComponent {
     AutomationActionType.addComment,
     AutomationActionType.deleteTask,
     AutomationActionType.createTask,
+    AutomationActionType.manageTaskRelation,
   ];
   readonly actions = input.required<EditableAutomationAction[]>();
   readonly statuses = input.required<Status[]>();

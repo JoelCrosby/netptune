@@ -39,6 +39,8 @@ import {
   AutomationActionType,
   AutomationDelayUnit,
   AutomationNotificationRecipient,
+  AutomationRelationDirection,
+  AutomationRelationOperation,
   AutomationConditionGroup,
   AutomationRule,
   AutomationRuleRequest,
@@ -308,6 +310,16 @@ export class AutomationFormViewComponent {
       assigneeIds: type === AutomationActionType.createTask ? [] : null,
       copyAssignees: false,
       linkRelationTypeId: null,
+      relationOperation:
+        type === AutomationActionType.manageTaskRelation
+          ? AutomationRelationOperation.add
+          : null,
+      relationDirection:
+        type === AutomationActionType.manageTaskRelation
+          ? AutomationRelationDirection.taskIsSource
+          : null,
+      relationTypeId: null,
+      relatedTaskId: null,
       addTags: [],
       removeTags: [],
       startDate: null,
@@ -436,6 +448,10 @@ export class AutomationFormViewComponent {
       recipientRoles: [],
       copyAssignees: false,
       linkRelationTypeId: null,
+      relationOperation: null,
+      relationDirection: null,
+      relationTypeId: null,
+      relatedTaskId: null,
       comment: null,
       flagName: null,
       flagDescription: null,

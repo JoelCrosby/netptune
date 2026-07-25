@@ -246,9 +246,67 @@ internal static class AutomationTestData
         return relationType;
     }
 
-    public static async Task<AutomationRule> CreateCreateTaskRule(
+    public static async Task<ProjectTask> CreateTask(DataContext db, AutomationScenario scenario, string name)
+    {
+        var project = await db.Projects.SingleAsync(candidate => candidate.Id == scenario.Project.Id);
+        var task = new ProjectTask
+        {
+            Name = name,
+            StatusId = scenario.Task.StatusId,
+            ProjectId = project.Id,
+            ProjectScopeId = project.NextTaskScopeId,
+            WorkspaceId = scenario.Workspace.Id,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+
+        project.NextTaskScopeId++;
+        db.ProjectTasks.Add(task);
+        await db.SaveChangesAsync();
+
+        return task;
+    }
+
+    public static async Task<ProjectTaskRelation> CreateRelation(
         DataContext db,
         AutomationScenario scenario,
+        RelationType relationType,
+        int sourceTaskId,
+        int targetTaskId)
+    {
+        var relation = new ProjectTaskRelation
+        {
+            WorkspaceId = scenario.Workspace.Id,
+            RelationTypeId = relationType.Id,
+            SourceTaskId = sourceTaskId,
+            TargetTaskId = targetTaskId,
+        };
+
+        db.ProjectTaskRelations.Add(relation);
+        await db.SaveChangesAsync();
+
+        return relation;
+    }
+
+    public static async Task<AutomationRule> CreateRelationRule(
+        DataContext db,
+        AutomationScenario scenario,
+        object actionConfig)
+    {
+        return await CreateActionRule(db, scenario, AutomationActionType.ManageTaskRelation, actionConfig);
+    }
+
+    public static async Task<AutomationRule> CreateCreateTaskRule(        DataContext db,
+        AutomationScenario scenario,
+        object actionConfig)
+    {
+        return await CreateActionRule(db, scenario, AutomationActionType.CreateTask, actionConfig);
+    }
+
+    private static async Task<AutomationRule> CreateActionRule(
+        DataContext db,
+        AutomationScenario scenario,
+        AutomationActionType actionType,
         object actionConfig)
     {
         var rule = new AutomationRule
@@ -268,7 +326,7 @@ internal static class AutomationTestData
             {
                 new AutomationAction
                 {
-                    Type = AutomationActionType.CreateTask,
+                    Type = actionType,
                     SortOrder = 1,
                     Config = JsonSerializer.SerializeToDocument(actionConfig, JsonOptions.Default),
                     OwnerId = scenario.Owner.Id,

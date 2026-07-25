@@ -77,6 +77,17 @@ export enum AutomationActionType {
   addComment = 3,
   deleteTask = 4,
   createTask = 5,
+  manageTaskRelation = 6,
+}
+
+export enum AutomationRelationOperation {
+  add = 0,
+  remove = 1,
+}
+
+export enum AutomationRelationDirection {
+  taskIsSource = 0,
+  taskIsTarget = 1,
 }
 
 export enum AutomationNotificationRecipient {
@@ -146,6 +157,10 @@ export interface AutomationAction {
   boardGroupId?: number | null;
   copyAssignees?: boolean;
   linkRelationTypeId?: number | null;
+  relationOperation?: AutomationRelationOperation | null;
+  relationDirection?: AutomationRelationDirection | null;
+  relationTypeId?: number | null;
+  relatedTaskId?: number | null;
   delayAmount?: number | null;
   delayUnit?: AutomationDelayUnit | null;
 }
@@ -225,6 +240,10 @@ export interface AutomationActionRequest {
   boardGroupId?: number | null;
   copyAssignees?: boolean;
   linkRelationTypeId?: number | null;
+  relationOperation?: AutomationRelationOperation | null;
+  relationDirection?: AutomationRelationDirection | null;
+  relationTypeId?: number | null;
+  relatedTaskId?: number | null;
   delayAmount?: number | null;
   delayUnit?: AutomationDelayUnit | null;
 }
@@ -261,6 +280,9 @@ export interface AutomationDryRunAction {
   flagName: string | null;
   updatedFields: string[];
   createdTaskName: string | null;
+  relationOperation: AutomationRelationOperation | null;
+  relationTypeId: number | null;
+  relatedTaskId: number | null;
   delayMinutes: number | null;
 }
 

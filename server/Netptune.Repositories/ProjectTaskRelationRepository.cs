@@ -96,6 +96,21 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
         return await connection.ExecuteScalarAsync<bool>(command);
     }
 
+    public Task<List<ProjectTaskRelation>> GetForTaskAndType(
+        int relationTypeId,
+        int taskId,
+        int? relatedTaskId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(relation => relation.RelationTypeId == relationTypeId)
+            .Where(relation => relation.SourceTaskId == taskId || relation.TargetTaskId == taskId)
+            .Where(relation => relatedTaskId == null
+                || relation.SourceTaskId == relatedTaskId
+                || relation.TargetTaskId == relatedTaskId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
     {
         var taskIdList = taskIds.ToList();

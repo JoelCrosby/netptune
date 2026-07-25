@@ -132,6 +132,14 @@ public record AutomationActionRequest
 
     public int? LinkRelationTypeId { get; init; }
 
+    public AutomationRelationOperation? RelationOperation { get; init; }
+
+    public AutomationRelationDirection? RelationDirection { get; init; }
+
+    public int? RelationTypeId { get; init; }
+
+    public int? RelatedTaskId { get; init; }
+
     public int? DelayAmount { get; init; }
 
     public AutomationDelayUnit? DelayUnit { get; init; }

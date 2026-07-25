@@ -16,6 +16,7 @@ import {
   AutomationConditionOperator,
   AutomationFieldCondition,
   AutomationNotificationRecipient,
+  AutomationRelationOperation,
   AutomationRunStatus,
   AutomationActionResultStatus,
   AutomationTrigger,
@@ -55,6 +56,7 @@ export const actionTypeLabels: Record<AutomationActionType, string> = {
   [AutomationActionType.addComment]: 'Add comment',
   [AutomationActionType.deleteTask]: 'Delete task',
   [AutomationActionType.createTask]: 'Create task',
+  [AutomationActionType.manageTaskRelation]: 'Manage task relation',
 };
 
 export const conditionOperatorLabels: Record<
@@ -460,6 +462,8 @@ export function describeAutomationAction(
       return describeDeleteTaskAction(action);
     case AutomationActionType.createTask:
       return describeCreateTaskAction(action);
+    case AutomationActionType.manageTaskRelation:
+      return describeRelationAction(action);
   }
 }
 
@@ -643,6 +647,17 @@ export function describeNotificationAudience(action: AutomationAction): string {
   });
 
   return joinNaturalList(parts);
+}
+
+function describeRelationAction(action: AutomationAction): string {
+  const isRemoval =
+    action.relationOperation === AutomationRelationOperation.remove;
+
+  if (isRemoval) {
+    return 'Remove the configured task relations';
+  }
+
+  return 'Link the task to the configured task';
 }
 
 function describeCreateTaskAction(action: AutomationAction): string {

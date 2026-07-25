@@ -8,4 +8,5 @@ public enum AutomationActionType
     AddComment = 3,
     DeleteTask = 4,
     CreateTask = 5,
+    ManageTaskRelation = 6,
 }
