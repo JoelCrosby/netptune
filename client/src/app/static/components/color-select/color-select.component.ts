@@ -1,4 +1,10 @@
-import { Component, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  input,
+  viewChildren,
+} from '@angular/core';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import {
   ColorDefinition,
@@ -12,6 +18,7 @@ import {
   FormControlLabelDirective,
 } from '../form-control/form-control.directives';
 import { FormErrorComponent } from '../form-error/form-error.component';
+import { labelIdFor } from '../form-control-a11y';
 
 @Component({
   selector: 'app-color-select',
@@ -24,33 +31,36 @@ import { FormErrorComponent } from '../form-error/form-error.component';
   ],
   template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
     @if (label()) {
-      <label [for]="name()" appFormLabel>
+      <span [id]="labelId()" appFormLabel>
         {{ label() }}
-      </label>
+      </span>
     }
 
-    <div class="flex justify-stretch">
-      @for (color of colorsRowTop; track color.name) {
-        <div
-          class="m-[0.2rem] flex h-9 min-h-9 min-w-9 flex-1 cursor-pointer items-center justify-center rounded-sm text-white"
-          [appTooltip]="color.label"
-          [class]="color.swatchClass"
-          (click)="onOptionClicked(color)">
-          @if (resolveColorName(value()) === color.name) {
-            <svg lucideCheck class="h-6 w-6"></svg>
-          }
-        </div>
-      }
-    </div>
-    <div class="flex justify-stretch">
-      @for (color of colorsRowBottom; track color.name) {
-        <div
-          class="m-[0.2rem] flex h-9 min-h-9 min-w-9 flex-1 cursor-pointer items-center justify-center rounded-sm text-white"
-          [appTooltip]="color.label"
-          [class]="color.swatchClass"
-          (click)="onOptionClicked(color)">
-          @if (resolveColorName(value()) === color.name) {
-            <svg lucideCheck class="h-6 w-6"></svg>
+    <div
+      role="radiogroup"
+      [attr.aria-labelledby]="label() ? labelId() : null"
+      [attr.aria-describedby]="describedBy(!!hint())"
+      [attr.aria-invalid]="ariaInvalid()">
+      @for (row of rows(); track $index) {
+        <div class="flex justify-stretch">
+          @for (color of row; track color.name) {
+            <button
+              #swatch
+              type="button"
+              role="radio"
+              class="focus-visible:ring-primary m-[0.2rem] flex h-9 min-h-9 min-w-9 flex-1 cursor-pointer items-center justify-center rounded-sm text-white focus-visible:ring-2 focus-visible:outline-none"
+              [appTooltip]="color.label"
+              [class]="color.swatchClass"
+              [attr.aria-label]="color.label"
+              [attr.aria-checked]="isSelected(color)"
+              [attr.tabindex]="isTabbable(color) ? 0 : -1"
+              [disabled]="disabled()"
+              (click)="onOptionClicked(color)"
+              (keydown)="onKeydown($event, color)">
+              @if (isSelected(color)) {
+                <svg lucideCheck class="h-6 w-6"></svg>
+              }
+            </button>
           }
         </div>
       }
@@ -75,14 +85,72 @@ export class ColorSelectComponent extends AbstractFormValueControl {
   readonly label = input.required<string>();
   readonly hint = input<string | null>(null);
 
-  colors = colorDictionary();
+  readonly colors = colorDictionary();
+  readonly labelId = computed(() => labelIdFor(this.name()));
 
-  colorsRowTop = this.colors.slice(0, this.colors.length / 2);
-  colorsRowBottom = this.colors.slice(this.colors.length / 2);
+  private readonly swatches =
+    viewChildren<ElementRef<HTMLButtonElement>>('swatch');
+  private readonly rowLength = Math.ceil(this.colors.length / 2);
 
-  readonly resolveColorName = resolveColorName;
+  readonly rows = computed(() => [
+    this.colors.slice(0, this.rowLength),
+    this.colors.slice(this.rowLength),
+  ]);
+
+  private readonly selectedIndex = computed(() => {
+    const selectedName = resolveColorName(this.value());
+
+    return this.colors.findIndex((color) => color.name === selectedName);
+  });
+
+  isSelected(color: ColorDefinition): boolean {
+    return resolveColorName(this.value()) === color.name;
+  }
+
+  isTabbable(color: ColorDefinition): boolean {
+    const selectedIndex = this.selectedIndex();
+    const index = this.colors.indexOf(color);
+
+    return selectedIndex === -1 ? index === 0 : selectedIndex === index;
+  }
 
   onOptionClicked(color: ColorDefinition) {
     this.value.set(color.name);
+    this.touched.set(true);
+  }
+
+  onKeydown(event: KeyboardEvent, color: ColorDefinition) {
+    const nextIndex = this.resolveNextIndex(
+      event.key,
+      this.colors.indexOf(color)
+    );
+
+    if (nextIndex === null) return;
+
+    event.preventDefault();
+
+    const nextColor = this.colors[nextIndex];
+
+    this.onOptionClicked(nextColor);
+    this.swatches()[nextIndex]?.nativeElement.focus();
+  }
+
+  private resolveNextIndex(key: string, currentIndex: number): number | null {
+    const lastIndex = this.colors.length - 1;
+
+    switch (key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        return currentIndex === lastIndex ? 0 : currentIndex + 1;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        return currentIndex === 0 ? lastIndex : currentIndex - 1;
+      case 'Home':
+        return 0;
+      case 'End':
+        return lastIndex;
+      default:
+        return null;
+    }
   }
 }

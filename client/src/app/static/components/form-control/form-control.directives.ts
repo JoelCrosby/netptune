@@ -10,7 +10,7 @@ import { Directive } from '@angular/core';
 export class FormControlInputDirective {}
 
 @Directive({
-  selector: 'label[appFormLabel]',
+  selector: '[appFormLabel]',
   host: {
     class:
       'block mb-[.4rem] w-[inherit] max-w-[inherit] text-[15px] font-medium tracking-[.125px] text-foreground/60',

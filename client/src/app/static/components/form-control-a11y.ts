@@ -4,6 +4,10 @@ export function hintIdFor(controlName: string): string {
   return `${controlName || FALLBACK_CONTROL_ID}-hint`;
 }
 
+export function labelIdFor(controlName: string): string {
+  return `${controlName || FALLBACK_CONTROL_ID}-label`;
+}
+
 export function errorIdFor(controlName: string): string {
   return `${controlName || FALLBACK_CONTROL_ID}-error`;
 }
