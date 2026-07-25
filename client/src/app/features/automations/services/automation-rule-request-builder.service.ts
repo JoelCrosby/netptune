@@ -30,24 +30,34 @@ export interface AutomationRuleDraft {
   actions: AutomationAction[];
 }
 
+export type AutomationFormStep =
+  'settings' | 'trigger' | 'conditions' | 'actions';
+
 export interface AutomationRuleRequestBuildResult {
   request: AutomationRuleRequest | null;
   error: string | null;
+  errorStep: AutomationFormStep | null;
 }
 
 @Service()
 export class AutomationRuleRequestBuilder {
   build(draft: AutomationRuleDraft): AutomationRuleRequestBuildResult {
     const actions = draft.actions.map(toActionRequest);
-    const error =
+    const settingsError =
       validateName(draft.name) ??
       validateExecutionUser(draft.executionUserId) ??
-      validateScope(draft) ??
-      validateActions(actions) ??
-      validateTrigger(draft.trigger);
+      validateScope(draft);
+    const triggerError = validateTrigger(draft.trigger);
+    const conditionsError = validateConditions(draft.trigger);
+    const actionsError = validateActions(actions);
+    const failure =
+      toFailure(settingsError, 'settings') ??
+      toFailure(triggerError, 'trigger') ??
+      toFailure(conditionsError, 'conditions') ??
+      toFailure(actionsError, 'actions');
 
-    if (error) {
-      return { request: null, error };
+    if (failure) {
+      return { request: null, error: failure.error, errorStep: failure.step };
     }
 
     if (!draft.executionUserId) {
@@ -66,6 +76,7 @@ export class AutomationRuleRequestBuilder {
         actions,
       },
       error: null,
+      errorStep: null,
     };
   }
 }
@@ -323,18 +334,26 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     return 'Inactive duration must be 1 to 365 days.';
   }
 
-  if (trigger.conditionGroup) {
-    const supportsChangeOperators =
-      trigger.type === AutomationTriggerType.taskChanged;
-    const groupError = validateConditionGroup(
-      trigger.conditionGroup,
-      supportsChangeOperators
-    );
-
-    if (groupError) return groupError;
-  }
-
   return null;
+}
+
+function validateConditions(trigger: AutomationTrigger): string | null {
+  if (!trigger.conditionGroup) return null;
+
+  const supportsChangeOperators =
+    trigger.type === AutomationTriggerType.taskChanged;
+
+  return validateConditionGroup(
+    trigger.conditionGroup,
+    supportsChangeOperators
+  );
+}
+
+function toFailure(
+  error: string | null,
+  step: AutomationFormStep
+): { error: string; step: AutomationFormStep } | null {
+  return error ? { error, step } : null;
 }
 
 function validateConditionGroup(

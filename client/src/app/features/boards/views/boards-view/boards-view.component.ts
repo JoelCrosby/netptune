@@ -1,5 +1,4 @@
 import { Component, computed, inject } from '@angular/core';
-import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { loadBoards } from '@app/core/store/boards/boards.actions';
@@ -11,6 +10,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { netptunePermissions } from '@core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -20,9 +20,9 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
 
 @Component({
   imports: [
+    SkeletonCardGridComponent,
     PageContainerComponent,
     PageHeaderComponent,
-    PageLoadingComponent,
     BoardsGridComponent,
     EmptyStateComponent,
     FlatButtonComponent,
@@ -45,7 +45,7 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
     }
 
     @if (loading()) {
-      <app-page-loading />
+      <app-skeleton-card-grid [cards]="6" />
     } @else if (boards().length === 0) {
       <app-empty-state
         title="There are currently no boards."

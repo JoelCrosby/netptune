@@ -25,7 +25,6 @@ import {
 } from '@static/components/datatable/datatable.types';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import {
   TabGroupComponent,
   TabItem,
@@ -42,7 +41,6 @@ type StatusFilter = SprintStatus | null;
     RouterLink,
     PageContainerComponent,
     PageHeaderComponent,
-    PageLoadingComponent,
     DatePipe,
     FlatButtonComponent,
     TabGroupComponent,
@@ -67,63 +65,59 @@ type StatusFilter = SprintStatus | null;
         }
       </app-page-header>
 
-      @if (loading()) {
-        <app-page-loading />
-      } @else {
-        <div class="flex flex-col gap-6">
-          <app-tab-group
-            [tabs]="statusTabs()"
-            [value]="selectedStatus()"
-            (changed)="onStatusChanged($event)" />
+      <div class="flex flex-col gap-6">
+        <app-tab-group
+          [tabs]="statusTabs()"
+          [value]="selectedStatus()"
+          (changed)="onStatusChanged($event)" />
 
-          <app-datatable
-            containerClass="h-[calc(100vh-314px)] min-h-160 overflow-auto"
-            tableClass="min-w-[720px]"
-            rowClass="bg-card"
-            [data]="data()"
-            [emptyMessage]="emptyMessage()">
-            <ng-template appDatatableCell="name" let-sprint>
-              <a class="font-medium hover:underline" [routerLink]="[sprint.id]">
-                {{ sprint.name }}
-              </a>
-            </ng-template>
+        <app-datatable
+          containerClass="h-[calc(100vh-314px)] min-h-160 overflow-auto"
+          tableClass="min-w-[720px]"
+          rowClass="bg-card"
+          [data]="data()"
+          [emptyMessage]="emptyMessage()">
+          <ng-template appDatatableCell="name" let-sprint>
+            <a class="font-medium hover:underline" [routerLink]="[sprint.id]">
+              {{ sprint.name }}
+            </a>
+          </ng-template>
 
-            <ng-template appDatatableCell="status" let-sprint>
-              <div class="flex flex-wrap items-center gap-2">
-                <span
-                  class="rounded px-2 py-0.5 text-xs font-semibold"
-                  [class]="sprint.status | sprintStatusClasses">
-                  {{ sprint.status | sprintStatusLabel }}
-                </span>
-                @if (daysChip(sprint); as chip) {
-                  <span
-                    class="rounded px-2 py-0.5 text-xs font-medium"
-                    [class]="chip.classes">
-                    {{ chip.label }}
-                  </span>
-                }
-              </div>
-            </ng-template>
-
-            <ng-template appDatatableCell="dates" let-sprint>
-              <span class="text-muted text-sm whitespace-nowrap">
-                {{ sprint.startDate | date: 'mediumDate' }} &ndash;
-                {{ sprint.endDate | date: 'mediumDate' }}
+          <ng-template appDatatableCell="status" let-sprint>
+            <div class="flex flex-wrap items-center gap-2">
+              <span
+                class="rounded px-2 py-0.5 text-xs font-semibold"
+                [class]="sprint.status | sprintStatusClasses">
+                {{ sprint.status | sprintStatusLabel }}
               </span>
-            </ng-template>
-
-            <ng-template appDatatableCell="goal" let-sprint>
-              @if (sprint.goal) {
-                <span class="block max-w-xs truncate text-sm">
-                  {{ sprint.goal }}
+              @if (daysChip(sprint); as chip) {
+                <span
+                  class="rounded px-2 py-0.5 text-xs font-medium"
+                  [class]="chip.classes">
+                  {{ chip.label }}
                 </span>
-              } @else {
-                <span class="text-muted text-sm">&mdash;</span>
               }
-            </ng-template>
-          </app-datatable>
-        </div>
-      }
+            </div>
+          </ng-template>
+
+          <ng-template appDatatableCell="dates" let-sprint>
+            <span class="text-muted text-sm whitespace-nowrap">
+              {{ sprint.startDate | date: 'mediumDate' }} &ndash;
+              {{ sprint.endDate | date: 'mediumDate' }}
+            </span>
+          </ng-template>
+
+          <ng-template appDatatableCell="goal" let-sprint>
+            @if (sprint.goal) {
+              <span class="block max-w-xs truncate text-sm">
+                {{ sprint.goal }}
+              </span>
+            } @else {
+              <span class="text-muted text-sm">&mdash;</span>
+            }
+          </ng-template>
+        </app-datatable>
+      </div>
     </app-page-container>
   `,
 })

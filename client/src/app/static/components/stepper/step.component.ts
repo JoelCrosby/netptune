@@ -15,7 +15,11 @@ import { Component, input, signal } from '@angular/core';
       @if (!wizard()) {
         <div class="mr-4 flex flex-col items-center">
           <div
-            class="border-border bg-background text-foreground flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm font-medium">
+            class="bg-background flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm font-medium"
+            [class.border-border]="!error()"
+            [class.text-foreground]="!error()"
+            [class.border-warn]="error()"
+            [class.text-warn]="error()">
             {{ index() }}
           </div>
           @if (!last()) {
@@ -28,6 +32,10 @@ import { Component, input, signal } from '@angular/core';
         <div class="mt-4">
           <ng-content />
         </div>
+
+        @if (error()) {
+          <p class="text-warn mt-3 text-sm" role="alert">{{ error() }}</p>
+        }
       </div>
     </div>
   `,
@@ -35,6 +43,7 @@ import { Component, input, signal } from '@angular/core';
 export class StepComponent {
   readonly title = input.required<string>();
   readonly description = input<string>();
+  readonly error = input<string | null>(null);
 
   /** Populated by the parent `app-stepper`. */
   readonly index = signal(1);

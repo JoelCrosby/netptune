@@ -50,6 +50,7 @@ import {
   AutomationTriggerType,
   TaskChangeField,
 } from '../../models/automation.models';
+import type { AutomationFormStep } from '../../services/automation-rule-request-builder.service';
 import { AutomationsService } from '../../services/automations.service';
 
 @Component({
@@ -93,7 +94,8 @@ import { AutomationsService } from '../../services/automations.service';
             <app-stepper>
               <app-step
                 title="Settings"
-                description="Name your automation and set whether it is active.">
+                description="Name your automation and set whether it is active."
+                [error]="stepError('settings')">
                 <app-automation-settings-editor
                   [serviceAccounts]="enabledServiceAccounts()"
                   [projects]="projectsResource.value()"
@@ -109,7 +111,8 @@ import { AutomationsService } from '../../services/automations.service';
 
               <app-step
                 title="Trigger"
-                description="Choose the event that starts this automation.">
+                description="Choose the event that starts this automation."
+                [error]="stepError('trigger')">
                 <app-automation-trigger-editor
                   [(triggerType)]="triggerType"
                   [(taskFields)]="taskFields"
@@ -118,7 +121,8 @@ import { AutomationsService } from '../../services/automations.service';
 
               <app-step
                 title="Conditions"
-                description="Optionally restrict which tasks can continue.">
+                description="Optionally restrict which tasks can continue."
+                [error]="stepError('conditions')">
                 <app-automation-conditions-editor
                   [statuses]="taskStatuses()"
                   [supportsChangeOperators]="
@@ -129,7 +133,8 @@ import { AutomationsService } from '../../services/automations.service';
 
               <app-step
                 title="Actions"
-                description="Define what happens when the automation runs.">
+                description="Define what happens when the automation runs."
+                [error]="stepError('actions')">
                 <app-automation-actions-editor
                   [actions]="actions()"
                   [statuses]="taskStatuses()"
@@ -150,10 +155,6 @@ import { AutomationsService } from '../../services/automations.service';
                   " />
               </app-step>
             </app-stepper>
-
-            @if (validationError()) {
-              <p class="text-sm text-red-500">{{ validationError() }}</p>
-            }
           </div>
 
           <app-automation-form-preview
@@ -184,6 +185,7 @@ export class AutomationFormViewComponent {
 
   readonly saving = signal(false);
   readonly validationError = signal<string | null>(null);
+  readonly validationStep = signal<AutomationFormStep | null>(null);
 
   readonly taskStatusesResource = statusResource();
   readonly serviceAccountsResource = serviceAccountResource();
@@ -459,8 +461,13 @@ export class AutomationFormViewComponent {
     });
 
     this.validationError.set(result.error);
+    this.validationStep.set(result.errorStep);
 
     return result.request;
+  }
+
+  stepError(step: AutomationFormStep): string | null {
+    return this.validationStep() === step ? this.validationError() : null;
   }
 
   newNotifyAction(): EditableAutomationAction {

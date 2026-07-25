@@ -69,8 +69,8 @@ import { Store } from '@ngrx/store';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { SkeletonBoardComponent } from '@static/components/skeleton/skeleton-board.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
 
 @Component({
@@ -97,10 +97,10 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
   ],
   providers: [],
   imports: [
+    SkeletonBoardComponent,
     PageContainerComponent,
     PageHeaderComponent,
     BoardGroupHeaderComponent,
-    PageLoadingComponent,
     CdkDropList,
     ScrollShadowDirective,
     BoardGroupComponent,
@@ -131,7 +131,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     }
 
     @if (loading()) {
-      <app-page-loading />
+      <app-skeleton-board />
     } @else {
       @if (visibleGroups(); as groups) {
         <div
@@ -252,10 +252,12 @@ export class BoardGroupsViewComponent implements OnDestroy {
         tasks: sortBoardViewTasks(group.tasks, sort),
       }));
   });
+
   statuses = statusResource();
-  statusMap = computed(
-    () => new Map(this.statuses.value().map((status) => [status.id, status]))
-  );
+  statusMap = computed(() => {
+    return new Map(this.statuses.value().map((status) => [status.id, status]));
+  });
+
   board = this.store.selectSignal(selectSelectedBoard);
   boardName = linkedSignal(() => this.board()?.name);
   loading = this.store.selectSignal(selectBoardGroupsLoading);
