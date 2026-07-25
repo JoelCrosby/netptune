@@ -15,7 +15,9 @@ import {
   TaskFilterRouteParams,
 } from '@core/router/task-filter-route-params';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
+import { delayedLoading } from '@core/util/delayed-loading';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { SkeletonTimelineComponent } from '@static/components/skeleton/skeleton-timeline.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import {
@@ -43,6 +45,7 @@ const defaultTo = addDays(today, 45);
     PageContainerComponent,
     PageHeaderComponent,
     RoadmapFiltersComponent,
+    SkeletonTimelineComponent,
     RoadmapPlanningTimelineComponent,
     RoadmapUnscheduledComponent,
     TaskViewFiltersComponent,
@@ -92,6 +95,8 @@ const defaultTo = addDays(today, 45);
             role="alert">
             {{ validationError }}
           </div>
+        } @else if (showSkeleton()) {
+          <app-skeleton-timeline />
         } @else if (roadmap.error()) {
           <app-error-state
             compact
@@ -209,6 +214,10 @@ export class RoadmapViewComponent {
   });
 
   readonly roadmap = roadmapResource(this.query);
+
+  readonly showSkeleton = delayedLoading(
+    computed(() => this.roadmap.isLoading() && !this.roadmap.hasValue())
+  );
   readonly realtimeGroup = computed(() => {
     const workspace = this.workspaceIdentifier();
     return workspace ? `tasks:${workspace}` : undefined;

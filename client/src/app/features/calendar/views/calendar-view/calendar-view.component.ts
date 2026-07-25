@@ -22,7 +22,9 @@ import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
+import { delayedLoading } from '@core/util/delayed-loading';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
+import { SkeletonCalendarMonthComponent } from '@static/components/skeleton/skeleton-calendar-month.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
@@ -40,6 +42,7 @@ import {
   selector: 'app-calendar-view',
   imports: [
     ErrorStateComponent,
+    SkeletonCalendarMonthComponent,
     CalendarPlanningMonthComponent,
     CalendarToolbarComponent,
     PageContainerComponent,
@@ -78,7 +81,9 @@ import {
           (statusIdsChanged)="setTaskFilter('statusIds', $event)"
           (cleared)="clearTaskFilters()" />
 
-        @if (calendar.error()) {
+        @if (showSkeleton()) {
+          <app-skeleton-calendar-month />
+        } @else if (calendar.error()) {
           <app-error-state
             compact
             title="The calendar could not be loaded"
@@ -163,6 +168,10 @@ export class CalendarViewComponent {
     return query.toString();
   });
   readonly calendar = calendarResource(this.query);
+
+  readonly showSkeleton = delayedLoading(
+    computed(() => this.calendar.isLoading() && !this.calendar.hasValue())
+  );
   readonly realtimeGroup = computed(() => {
     const workspace = this.workspaceIdentifier();
     return workspace ? `tasks:${workspace}` : undefined;
