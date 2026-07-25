@@ -28,71 +28,25 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 import { StepComponent } from '@static/components/stepper/step.component';
 import { StepperComponent } from '@static/components/stepper/stepper.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { permissionLabel } from './service-account-permissions';
+import {
+  allPermissions,
+  permissionGroups,
+  PermissionGroupOption,
+  permissionLabel,
+} from './service-account-permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
-
-interface ApiPermissionOption {
-  key: Permission;
-  label: string;
-  description: string;
-}
 
 export interface CreateServiceAccountWizardResult {
   account: CreateServiceAccountRequest;
   credential?: CreateApiCredentialRequest;
 }
 
-const apiPermissionOptions: ApiPermissionOption[] = [
-  {
-    key: netptunePermissions.projects.read,
-    label: 'View projects',
-    description: 'Find project IDs and project metadata.',
-  },
-  {
-    key: netptunePermissions.statuses.read,
-    label: 'View statuses',
-    description: 'Resolve workflow status IDs.',
-  },
-  {
-    key: netptunePermissions.sprints.read,
-    label: 'View sprints',
-    description: 'Read sprint details and current scope.',
-  },
-  {
-    key: netptunePermissions.sprints.create,
-    label: 'Create sprints',
-    description: 'Create planning sprints for projects.',
-  },
-  {
-    key: netptunePermissions.sprints.update,
-    label: 'Update sprints',
-    description: 'Edit sprint details and lifecycle state.',
-  },
-  {
-    key: netptunePermissions.sprints.delete,
-    label: 'Delete sprints',
-    description: 'Delete planning or cancelled sprints.',
-  },
-  {
-    key: netptunePermissions.sprints.manageTasks,
-    label: 'Manage sprint tasks',
-    description: 'Add tasks to and remove tasks from sprints.',
-  },
-  {
-    key: netptunePermissions.tasks.read,
-    label: 'View tasks',
-    description: 'Read tasks and their current state.',
-  },
-  {
-    key: netptunePermissions.tasks.create,
-    label: 'Create tasks',
-    description: 'Create new workspace tasks.',
-  },
-  {
-    key: netptunePermissions.tasks.update,
-    label: 'Update tasks',
-    description: 'Change task fields and progress.',
-  },
+const defaultPermissions: Permission[] = [
+  netptunePermissions.projects.read,
+  netptunePermissions.statuses.read,
+  netptunePermissions.tasks.read,
+  netptunePermissions.tasks.create,
+  netptunePermissions.tasks.update,
 ];
 
 @Component({
@@ -149,22 +103,64 @@ const apiPermissionOptions: ApiPermissionOption[] = [
               permissions.
             </p>
 
-            <div class="border-border divide-border divide-y rounded border">
-              @for (permission of permissionOptions; track permission.key) {
-                <div class="px-4 py-3">
-                  <app-checkbox
-                    [checked]="hasPermission(permission.key)"
-                    (changed)="setPermission(permission.key, $event)">
-                    <span class="flex flex-col gap-0.5">
-                      <span class="text-sm font-medium">
-                        {{ permission.label }}
-                      </span>
-                      <span class="text-muted text-xs">
-                        {{ permission.description }}
-                      </span>
-                    </span>
-                  </app-checkbox>
-                </div>
+            <div class="mb-3 flex items-center justify-between gap-3">
+              <span class="text-muted text-xs">
+                {{ selectedPermissions().size }} of
+                {{ totalPermissionCount }} selected
+              </span>
+              <div class="flex gap-2">
+                <button
+                  app-stroked-button
+                  type="button"
+                  class="h-8 text-xs"
+                  (click)="selectAllPermissions()">
+                  Select all
+                </button>
+                <button
+                  app-stroked-button
+                  type="button"
+                  class="h-8 text-xs"
+                  (click)="clearPermissions()">
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="border-border divide-border max-h-96 divide-y overflow-y-auto rounded border">
+              @for (group of permissionGroups; track group.key) {
+                <section>
+                  <header
+                    class="bg-foreground/3 flex items-center justify-between gap-2 px-4 py-2">
+                    <h4 class="text-xs font-semibold tracking-wide uppercase">
+                      {{ group.label }}
+                    </h4>
+                    <button
+                      type="button"
+                      class="text-primary cursor-pointer text-xs"
+                      (click)="toggleGroup(group)">
+                      {{
+                        isGroupSelected(group) ? 'Clear group' : 'Select group'
+                      }}
+                    </button>
+                  </header>
+
+                  <div
+                    class="divide-border grid divide-y sm:grid-cols-2 sm:divide-y-0">
+                    @for (
+                      permission of group.permissions;
+                      track permission.key
+                    ) {
+                      <div class="px-4 py-2">
+                        <app-checkbox
+                          [checked]="hasPermission(permission.key)"
+                          (changed)="setPermission(permission.key, $event)">
+                          <span class="text-sm">{{ permission.label }}</span>
+                        </app-checkbox>
+                      </div>
+                    }
+                  </div>
+                </section>
               }
             </div>
 
@@ -209,12 +205,13 @@ const apiPermissionOptions: ApiPermissionOption[] = [
                 Restrict this credential further than the account if needed.
               </p>
 
-              <div class="border-border divide-border divide-y rounded border">
+              <div
+                class="border-border grid max-h-72 gap-x-4 overflow-y-auto rounded border p-2 sm:grid-cols-2">
                 @for (
                   permission of selectedPermissionOptions();
                   track permission.key
                 ) {
-                  <div class="px-4 py-3">
+                  <div class="px-2 py-2">
                     <app-checkbox
                       [checked]="hasCredentialScope(permission.key)"
                       (changed)="setCredentialScope(permission.key, $event)">
@@ -262,7 +259,7 @@ const apiPermissionOptions: ApiPermissionOption[] = [
                 <svg lucideShieldCheck class="h-4 w-4"></svg>
                 Account permissions
               </h4>
-              <div class="flex flex-wrap gap-2">
+              <div class="flex max-h-40 flex-wrap gap-2 overflow-y-auto">
                 @for (permission of selectedPermissions(); track permission) {
                   <span
                     class="bg-foreground/10 text-foreground rounded px-2 py-1 text-xs">
@@ -335,12 +332,13 @@ export class CreateServiceAccountDialogComponent {
 
   readonly currentStep = signal(0);
   readonly finalStep = 3;
-  readonly permissionOptions = apiPermissionOptions;
+  readonly permissionGroups = permissionGroups;
+  readonly totalPermissionCount = allPermissions.length;
   readonly selectedPermissions = signal<Set<Permission>>(
-    new Set(apiPermissionOptions.map((permission) => permission.key))
+    new Set(defaultPermissions)
   );
   readonly credentialScopes = signal<Set<Permission>>(
-    new Set(apiPermissionOptions.map((permission) => permission.key))
+    new Set(defaultPermissions)
   );
 
   readonly accountFormModel = signal({
@@ -387,9 +385,10 @@ export class CreateServiceAccountDialogComponent {
   );
   readonly selectedPermissionOptions = computed(() => {
     const permissions = this.selectedPermissions();
-    return this.permissionOptions.filter((option) =>
-      permissions.has(option.key)
-    );
+
+    return permissionGroups
+      .flatMap((group) => group.permissions)
+      .filter((option) => permissions.has(option.key));
   });
 
   hasPermission(permission: Permission) {
@@ -403,6 +402,33 @@ export class CreateServiceAccountDialogComponent {
     this.credentialScopes.update((current) =>
       this.updateSelection(current, permission, selected)
     );
+  }
+
+  isGroupSelected(group: PermissionGroupOption) {
+    const selected = this.selectedPermissions();
+
+    return group.permissions.every((permission) =>
+      selected.has(permission.key)
+    );
+  }
+
+  toggleGroup(group: PermissionGroupOption) {
+    const select = !this.isGroupSelected(group);
+
+    for (const permission of group.permissions) {
+      this.setPermission(permission.key, select);
+    }
+  }
+
+  selectAllPermissions() {
+    for (const permission of allPermissions) {
+      this.setPermission(permission, true);
+    }
+  }
+
+  clearPermissions() {
+    this.selectedPermissions.set(new Set());
+    this.credentialScopes.set(new Set());
   }
 
   hasCredentialScope(permission: Permission) {

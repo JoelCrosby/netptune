@@ -3,11 +3,9 @@ import { Component, input, signal } from '@angular/core';
 @Component({
   selector: 'app-step',
   host: {
-    class: 'col-start-1 row-start-1 block w-full min-w-0',
-    '[class.invisible]': 'wizard() && !active()',
-    '[class.pointer-events-none]': 'wizard() && !active()',
-    '[class.z-10]': 'wizard() && active()',
-    '[class.z-0]': 'wizard() && !active()',
+    class: 'col-start-1 row-start-1 w-full min-w-0',
+    '[class.block]': '!wizard() || active()',
+    '[class.hidden]': 'wizard() && !active()',
     '[attr.aria-hidden]': "wizard() && !active() ? 'true' : null",
   },
   template: `
