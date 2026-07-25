@@ -47,6 +47,10 @@ public sealed class NetptuneFixture : IAsyncLifetime
         Environment.SetEnvironmentVariable("REDIS_URL", CacheContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings__nats", NatsContainer.GetConnectionString());
 
+        // The whole suite authenticates as one seeded user, so it shares a single rate-limit
+        // partition. The production limit is not under test here and would fail bursts as flakes.
+        Environment.SetEnvironmentVariable("RateLimiting__ApiPermitLimit", "100000");
+
         WebApplicationFactory = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {

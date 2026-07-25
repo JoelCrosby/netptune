@@ -122,7 +122,7 @@ builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddNetptuneHandlers();
 
-builder.Services.AddNetptuneRateLimiter();
+builder.Services.AddNetptuneRateLimiter(builder.Configuration);
 
 builder.Services.AddValidation();
 builder.Services.AddNetptuneWorkspaceStorage(configuration);

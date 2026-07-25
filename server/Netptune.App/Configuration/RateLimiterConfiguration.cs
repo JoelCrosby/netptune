@@ -6,8 +6,16 @@ namespace Netptune.App.Configuration;
 
 public static class RateLimiterConfiguration
 {
-    public static IServiceCollection AddNetptuneRateLimiter(this IServiceCollection services)
+    private const int DefaultApiPermitLimit = 300;
+
+    public static IServiceCollection AddNetptuneRateLimiter(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
+        // Every request from one user shares a partition. Integration suites drive hundreds of
+        // requests as a single seeded user, so they raise this rather than trip the production limit.
+        var apiPermitLimit = configuration.GetValue("RateLimiting:ApiPermitLimit", DefaultApiPermitLimit);
+
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -41,7 +49,7 @@ public static class RateLimiterConfiguration
                     context.GetRateLimitPartitionKey(),
                     _ => new SlidingWindowRateLimiterOptions
                     {
-                        PermitLimit = 300,
+                        PermitLimit = apiPermitLimit,
                         Window = TimeSpan.FromMinutes(1),
                         SegmentsPerWindow = 6,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
