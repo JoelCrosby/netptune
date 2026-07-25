@@ -69,6 +69,14 @@ export class AutomationsService {
       .pipe(unwrapClientReposne());
   }
 
+  clone(id: number, name: string) {
+    return this.http
+      .post<ClientResponse<AutomationRule>>(`api/automations/${id}/clone`, {
+        name,
+      })
+      .pipe(unwrapClientReposne());
+  }
+
   create(request: AutomationRuleRequest) {
     return this.http
       .post<ClientResponse<AutomationRule>>('api/automations', request)

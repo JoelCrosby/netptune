@@ -220,6 +220,57 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
+    [Fact]
+    public async Task Clone_ShouldCopyRule_AsDisabledDraft()
+    {
+        var rule = await CreateRule(NameContains("clone source"));
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/automations/{rule.Id}/clone",
+            new AutomationCloneRequest());
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+        var clone = result!.Payload!;
+
+        clone.Id.Should().NotBe(rule.Id);
+        clone.Name.Should().Be($"{rule.Name} (copy)");
+        clone.IsEnabled.Should().BeFalse();
+        clone.ExecutionUserId.Should().Be(rule.ExecutionUserId);
+        clone.Trigger.Type.Should().Be(rule.Trigger.Type);
+        clone.Trigger.ConditionGroup.Should().BeEquivalentTo(rule.Trigger.ConditionGroup);
+        clone.Actions.Should().HaveCount(rule.Actions.Count);
+        clone.Actions[0].Type.Should().Be(rule.Actions[0].Type);
+    }
+
+    [Fact]
+    public async Task Clone_ShouldUseTheRequestedName()
+    {
+        var rule = await CreateRule(NameContains("clone naming"));
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/automations/{rule.Id}/clone",
+            new AutomationCloneRequest { Name = "Renamed clone" });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+
+        result!.Payload!.Name.Should().Be("Renamed clone");
+        result.Payload.IsEnabled.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Clone_ShouldReturnNotFound_ForUnknownRule()
+    {
+        var response = await Client.PostAsJsonAsync(
+            "api/automations/999999/clone",
+            new AutomationCloneRequest());
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     private async Task<int> GetTaskIdInWorkspace(string slug)
     {
         using var scope = fixture.CreateScope();

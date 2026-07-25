@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import {
   LucideCirclePause,
   LucideCirclePlay,
+  LucideCopy,
   LucidePencil,
   LucideTrash2,
 } from '@lucide/angular';
@@ -33,6 +34,7 @@ import { AutomationDescriptionComponent } from './automation-description.compone
     AutomationDescriptionComponent,
     LucideCirclePause,
     LucideCirclePlay,
+    LucideCopy,
     LucidePencil,
     LucideTrash2,
   ],
@@ -121,6 +123,14 @@ import { AutomationDescriptionComponent } from './automation-description.compone
                     <button
                       app-icon-button
                       type="button"
+                      title="Clone rule"
+                      [disabled]="busyId() === rule.id"
+                      (click)="cloneRule.emit(rule)">
+                      <svg lucideCopy class="h-4 w-4"></svg>
+                    </button>
+                    <button
+                      app-icon-button
+                      type="button"
                       title="Delete rule"
                       [disabled]="busyId() === rule.id"
                       (click)="deleteRule.emit(rule)">
@@ -144,6 +154,7 @@ export class AutomationRulesTableComponent {
 
   readonly toggleRule = output<AutomationRuleListItem>();
   readonly editRule = output<AutomationRuleListItem>();
+  readonly cloneRule = output<AutomationRuleListItem>();
   readonly deleteRule = output<AutomationRuleListItem>();
 
   triggerSummary(rule: AutomationRuleListItem): AutomationCopySegment[] {

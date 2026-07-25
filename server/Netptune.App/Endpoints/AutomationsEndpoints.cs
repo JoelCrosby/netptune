@@ -20,6 +20,7 @@ public static class AutomationsEndpoints
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapPut("/{id:int}", HandlePut).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapPost("/{id:int}/run", HandleRun).RequireAuthorization(NetptunePermissions.Automations.Manage);
+        group.MapPost("/{id:int}/clone", HandleClone).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapPost("/{id:int}/enable", HandleEnable).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapPost("/{id:int}/disable", HandleDisable).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Automations.Manage);
@@ -62,6 +63,17 @@ public static class AutomationsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new RunAutomationRuleCommand(id, request), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleClone(
+        int id,
+        AutomationCloneRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CloneAutomationRuleCommand(id, request), cancellationToken);
 
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }

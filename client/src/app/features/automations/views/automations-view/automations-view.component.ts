@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { DialogService } from '@core/services/dialog.service';
 import { StatusesService } from '@core/services/statuses.service';
 import { Status } from '@core/models/status';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
@@ -28,6 +29,11 @@ import {
   AutomationRuleListItem,
   AutomationRunStatus,
 } from '../../models/automation.models';
+import {
+  AutomationCloneDialogComponent,
+  AutomationCloneDialogData,
+  AutomationCloneDialogResult,
+} from '../../dialogs/automation-clone-dialog.component';
 import { AutomationsService } from '../../services/automations.service';
 
 @Component({
@@ -76,6 +82,7 @@ import { AutomationsService } from '../../services/automations.service';
             [statuses]="statuses()"
             (toggleRule)="onToggle($event)"
             (editRule)="onEdit($event)"
+            (cloneRule)="onClone($event)"
             (deleteRule)="onDelete($event)" />
         </div>
       } @else {
@@ -106,6 +113,7 @@ export class AutomationsViewComponent {
   private service = inject(AutomationsService);
   private statusesService = inject(StatusesService);
   private confirmation = inject(ConfirmationService);
+  private dialog = inject(DialogService);
   private snackbar = inject(SnackbarService);
   private store = inject(Store);
   private router = inject(Router);
@@ -180,6 +188,43 @@ export class AutomationsViewComponent {
           this.load();
         },
         error: () => this.snackbar.error('Automation could not be updated'),
+      });
+  }
+
+  onClone(rule: AutomationRuleListItem) {
+    const data: AutomationCloneDialogData = {
+      ruleName: rule.name,
+      trigger: rule.trigger,
+      actions: rule.actions,
+      statuses: this.statuses(),
+    };
+
+    this.dialog
+      .open<AutomationCloneDialogResult, AutomationCloneDialogData>(
+        AutomationCloneDialogComponent,
+        { data }
+      )
+      .closed.pipe(
+        switchMap((result) => {
+          if (!result) {
+            return EMPTY;
+          }
+
+          this.busyId.set(rule.id);
+
+          return this.service.clone(rule.id, result.name);
+        }),
+        finalize(() => this.busyId.set(null)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: (clone) => {
+          this.snackbar.open(`Created "${clone.name}" as a disabled copy`);
+          void this.router.navigate([clone.id, 'edit'], {
+            relativeTo: this.route,
+          });
+        },
+        error: () => this.snackbar.error('Automation could not be cloned'),
       });
   }
 

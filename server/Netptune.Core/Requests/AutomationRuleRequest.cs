@@ -149,3 +149,8 @@ public record AutomationManualRunRequestBody
 {
     public List<int> TaskIds { get; init; } = [];
 }
+
+public record AutomationCloneRequest
+{
+    public string? Name { get; init; }
+}
