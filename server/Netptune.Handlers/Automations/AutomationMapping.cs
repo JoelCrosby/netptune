@@ -46,14 +46,20 @@ internal static class AutomationMapping
             }, JsonOptions.Default),
             AutomationTriggerType.TaskUnassignedFor or
             AutomationTriggerType.TaskDueDateApproaching or
-            AutomationTriggerType.TaskInactiveFor => JsonSerializer.SerializeToDocument(new
+            AutomationTriggerType.TaskInactiveFor or
+            AutomationTriggerType.SprintEndingSoon => JsonSerializer.SerializeToDocument(new
             {
                 durationDays = trigger.DurationDays,
                 conditionGroup = trigger.ConditionGroup,
             }, JsonOptions.Default),
             AutomationTriggerType.TaskCreated or
             AutomationTriggerType.TaskOverdue or
-            AutomationTriggerType.TaskHasNoDueDate => JsonSerializer.SerializeToDocument(new
+            AutomationTriggerType.TaskHasNoDueDate or
+            AutomationTriggerType.SprintStarted or
+            AutomationTriggerType.SprintCompleted or
+            AutomationTriggerType.TaskBlocked or
+            AutomationTriggerType.TaskUnblocked or
+            AutomationTriggerType.SubtasksCompleted => JsonSerializer.SerializeToDocument(new
             {
                 conditionGroup = trigger.ConditionGroup,
             }, JsonOptions.Default),
@@ -84,7 +90,8 @@ internal static class AutomationMapping
         var isDurationTrigger = type is
             AutomationTriggerType.TaskUnassignedFor or
             AutomationTriggerType.TaskDueDateApproaching or
-            AutomationTriggerType.TaskInactiveFor;
+            AutomationTriggerType.TaskInactiveFor or
+            AutomationTriggerType.SprintEndingSoon;
 
         if (isDurationTrigger)
         {

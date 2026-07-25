@@ -57,16 +57,16 @@ internal sealed class AutomationTriggerRegistry
         return matcher;
     }
 
-    public IEventRuleMatcher<TMessage> GetEventMatcher<TMessage>() where TMessage : IEventMessage
+    public List<IEventRuleMatcher<TMessage>> GetEventMatchers<TMessage>() where TMessage : IEventMessage
     {
-        var matcher = Matchers.OfType<IEventRuleMatcher<TMessage>>().SingleOrDefault();
+        var matchers = Matchers.OfType<IEventRuleMatcher<TMessage>>().ToList();
 
-        if (matcher is null)
+        if (matchers.Count == 0)
         {
             throw new InvalidOperationException(
                 $"No automation rule matcher is registered for '{typeof(TMessage).Name}'.");
         }
 
-        return matcher;
+        return matchers;
     }
 }

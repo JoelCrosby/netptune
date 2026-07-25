@@ -20,6 +20,7 @@ using Xunit;
 
 namespace Netptune.Automation.Tests;
 
+[Collection("automation-database")]
 public sealed class AutomationExecutionServiceTests
 {
     private readonly AutomationTestFixture Fixture;

@@ -39,6 +39,7 @@ public record AutomationTriggerRequest
         var hasValidUnassignedDuration = DurationDays is >= 1 and <= 365;
         var hasValidDueDateDuration = DurationDays is >= 0 and <= 365;
         var hasValidInactiveDuration = DurationDays is >= 1 and <= 365;
+        var hasValidSprintEndingDuration = DurationDays is >= 0 and <= 365;
         var hasSupportedType = Enum.IsDefined(Type);
 
         if (!hasSupportedType)
@@ -56,6 +57,8 @@ public record AutomationTriggerRequest
                 "Task due-date automations require durationDays between 0 and 365.",
             AutomationTriggerType.TaskInactiveFor when !hasValidInactiveDuration =>
                 "Task inactivity automations require durationDays between 1 and 365.",
+            AutomationTriggerType.SprintEndingSoon when !hasValidSprintEndingDuration =>
+                "Sprint ending automations require durationDays between 0 and 365.",
             _ => null,
         };
 

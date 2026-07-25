@@ -1,3 +1,4 @@
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Relations;
@@ -19,4 +20,12 @@ public interface IProjectTaskRelationRepository : IRepository<ProjectTaskRelatio
     Task<List<ProjectTaskRelation>> GetForTaskAndType(int relationTypeId, int taskId, int? relatedTaskId, CancellationToken cancellationToken = default);
 
     Task<List<int>> DeleteAllByTaskId(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
+
+    Task<List<TaskRelationCounts>> GetBlockerCounts(IReadOnlyCollection<int> taskIds, CancellationToken cancellationToken = default);
+
+    Task<List<TaskRelationCounts>> GetChildCounts(IReadOnlyCollection<int> taskIds, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetDependentTaskIds(IReadOnlyCollection<int> blockingTaskIds, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetParentTaskIds(IReadOnlyCollection<int> childTaskIds, CancellationToken cancellationToken = default);
 }

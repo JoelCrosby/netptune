@@ -69,6 +69,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAutomationRuleMatcher, OverdueTaskRuleMatcher>();
         services.AddScoped<IAutomationRuleMatcher, NoDueDateTaskRuleMatcher>();
         services.AddScoped<IAutomationRuleMatcher, InactiveTaskRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, SprintStartedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, SprintCompletedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, SprintEndingSoonRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, TaskBlockedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, TaskUnblockedRuleMatcher>();
+        services.AddScoped<IAutomationRuleMatcher, SubtasksCompletedRuleMatcher>();
         services.AddScoped<AutomationTriggerRegistry>();
 
         services.AddNetptuneAutomationTriggers();

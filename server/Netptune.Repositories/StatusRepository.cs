@@ -72,6 +72,24 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<Dictionary<int, StatusCategory>> GetCategories(
+        IReadOnlyCollection<int> statusIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (statusIds.Count == 0)
+        {
+            return [];
+        }
+
+        var categories = await Entities
+            .AsNoTracking()
+            .Where(status => statusIds.Contains(status.Id))
+            .Select(status => new { status.Id, status.Category })
+            .ToListAsync(cancellationToken);
+
+        return categories.ToDictionary(status => status.Id, status => status.Category);
+    }
+
     public Task<Status?> GetTaskStatusByKey(int workspaceId, string key, CancellationToken cancellationToken = default)
     {
         return Entities

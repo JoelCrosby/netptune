@@ -20,12 +20,18 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public CreateTaskRelationCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public CreateTaskRelationCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<TaskRelationViewModel>> Handle(CreateTaskRelationCommand request, CancellationToken cancellationToken)
@@ -97,6 +103,24 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
             LogRelation(otherTask.Id, otherView);
 
             return ClientResponse<TaskRelationViewModel>.Success(requestingView);
+        });
+    }
+
+    private async Task PublishRelationChanged(
+        ProjectTaskRelation relation,
+        RelationCategory category,
+        TaskRelationChange change)
+    {
+        var user = await Identity.GetCurrentUser();
+
+        await EventPublisher.Dispatch(new TaskRelationChangedMessage
+        {
+            WorkspaceId = relation.WorkspaceId,
+            SourceTaskId = relation.SourceTaskId,
+            TargetTaskId = relation.TargetTaskId,
+            Category = category,
+            Change = change,
+            ActorUserId = user.Id,
         });
     }
 

@@ -334,6 +334,14 @@ function validateTrigger(trigger: AutomationTrigger): string | null {
     return 'Inactive duration must be 1 to 365 days.';
   }
 
+  const hasInvalidSprintLeadTime =
+    trigger.type === AutomationTriggerType.sprintEndingSoon &&
+    !isDurationInRange(trigger.durationDays, 0);
+
+  if (hasInvalidSprintLeadTime) {
+    return 'Sprint lead time must be 0 to 365 days.';
+  }
+
   return null;
 }
 

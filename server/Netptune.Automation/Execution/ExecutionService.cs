@@ -34,7 +34,20 @@ internal sealed class ExecutionService : IExecutionService
     public async Task ExecuteEventRules<TMessage>(TMessage message, CancellationToken cancellationToken)
         where TMessage : IEventMessage
     {
-        var matcher = TriggerRegistry.GetEventMatcher<TMessage>();
+        var matchers = TriggerRegistry.GetEventMatchers<TMessage>();
+
+        foreach (var matcher in matchers)
+        {
+            await ExecuteEventMatcher(matcher, message, cancellationToken);
+        }
+    }
+
+    private async Task ExecuteEventMatcher<TMessage>(
+        IEventRuleMatcher<TMessage> matcher,
+        TMessage message,
+        CancellationToken cancellationToken)
+        where TMessage : IEventMessage
+    {
         var triggerType = matcher.TriggerType;
 
         using var activity = Telemetry.StartActivity("automation.execute_event_rules", triggerType);

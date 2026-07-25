@@ -31,10 +31,11 @@ public class CreateTaskRelationCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
 
     public CreateTaskRelationCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, Identity, Activity, EventPublisher);
     }
 
     [Fact]
@@ -258,6 +259,7 @@ public class CreateTaskRelationCommandHandlerTests
     {
         Identity.GetWorkspaceKey().Returns("workspace");
         Identity.GetCurrentUserId().Returns("user-id");
+        Identity.GetCurrentUser().Returns(new AppUser { Id = "user-id" });
 
         UnitOfWork.Workspaces
             .GetIdBySlug(Arg.Any<string>(), Arg.Any<CancellationToken>())

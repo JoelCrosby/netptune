@@ -161,6 +161,42 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<ProjectTask>> GetSprintAutomationTasks(int sprintId, CancellationToken cancellationToken = default)
+    {
+        return AutomationTasks()
+            .Where(task => task.SprintId == sprintId)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<ProjectTask>> GetAutomationTasks(
+        IReadOnlyCollection<int> ids,
+        CancellationToken cancellationToken = default)
+    {
+        if (ids.Count == 0)
+        {
+            return Task.FromResult(new List<ProjectTask>());
+        }
+
+        return AutomationTasks()
+            .Where(task => ids.Contains(task.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    private IQueryable<ProjectTask> AutomationTasks()
+    {
+        return Entities
+            .Include(task => task.ProjectTaskAppUsers)
+            .Include(task => task.Tags)
+            .Include(task => task.Project)
+            .Include(task => task.Workspace)
+            .Include(task => task.Status)
+            .Include(task => task.ProjectTaskInBoardGroups)
+                .ThenInclude(link => link.BoardGroup)
+            .Where(task => !task.IsDeleted)
+            .AsNoTracking()
+            .AsSplitQuery();
+    }
+
     private IQueryable<ProjectTask> AutomationCandidates(IReadOnlyCollection<int> workspaceIds)
     {
         return Entities

@@ -32,6 +32,12 @@ export const triggerTypeLabels: Record<AutomationTriggerType, string> = {
   [AutomationTriggerType.taskOverdue]: 'Task becomes overdue',
   [AutomationTriggerType.taskHasNoDueDate]: 'Task has no due date',
   [AutomationTriggerType.taskInactiveFor]: 'Task remains inactive',
+  [AutomationTriggerType.sprintStarted]: 'Sprint starts',
+  [AutomationTriggerType.sprintCompleted]: 'Sprint completes',
+  [AutomationTriggerType.sprintEndingSoon]: 'Sprint end approaches',
+  [AutomationTriggerType.taskBlocked]: 'Task becomes blocked',
+  [AutomationTriggerType.taskUnblocked]: 'Task becomes unblocked',
+  [AutomationTriggerType.subtasksCompleted]: 'All subtasks complete',
 };
 
 export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
@@ -361,7 +367,27 @@ export function describeAutomationTrigger(
       return 'When a task has no due date';
     case AutomationTriggerType.taskInactiveFor:
       return `When a task has no activity for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
+    case AutomationTriggerType.sprintStarted:
+      return 'When a sprint starts, for every task in it';
+    case AutomationTriggerType.sprintCompleted:
+      return 'When a sprint completes, for every task in it';
+    case AutomationTriggerType.sprintEndingSoon:
+      return describeSprintEndingTrigger(trigger.durationDays ?? 0);
+    case AutomationTriggerType.taskBlocked:
+      return 'When a task becomes blocked by an incomplete task';
+    case AutomationTriggerType.taskUnblocked:
+      return 'When a task is no longer blocked';
+    case AutomationTriggerType.subtasksCompleted:
+      return 'When every subtask of a task is complete';
   }
+}
+
+function describeSprintEndingTrigger(durationDays: number): string {
+  if (durationDays === 0) {
+    return 'When a sprint ends today, for every task in it';
+  }
+
+  return `When a sprint ends in ${durationDays} ${pluralizeDays(durationDays)}, for every task in it`;
 }
 
 function describeDueDateTrigger(durationDays: number): string {

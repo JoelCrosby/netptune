@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Events;
+using Netptune.Core.Events.Sprints;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -151,6 +152,14 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
             options.EntityId = sprint.Id;
             options.EntityType = EntityType.Sprint;
             options.Type = ActivityType.ModifyStatus;
+        });
+
+        await EventPublisher.Dispatch(new SprintLifecycleMessage
+        {
+            WorkspaceId = sprint.WorkspaceId,
+            SprintId = sprint.Id,
+            State = SprintLifecycleState.Started,
+            ActorUserId = user.Id,
         });
 
         await EventPublisher.Dispatch(new SearchIndexEvent

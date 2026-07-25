@@ -299,14 +299,18 @@ internal static class AutomationTestData
         return board;
     }
 
-    public static async Task<RelationType> CreateRelationType(DataContext db, AutomationScenario scenario)
+    public static async Task<RelationType> CreateRelationType(
+        DataContext db,
+        AutomationScenario scenario,
+        RelationCategory category = RelationCategory.Hierarchy)
     {
+        var isHierarchy = category == RelationCategory.Hierarchy;
         var relationType = new RelationType
         {
-            Name = "Parent of",
-            InverseName = "Child of",
-            Key = "parent-of",
-            Category = RelationCategory.Hierarchy,
+            Name = isHierarchy ? "Parent of" : "Blocks",
+            InverseName = isHierarchy ? "Child of" : "Is blocked by",
+            Key = isHierarchy ? "parent-of" : "blocks",
+            Category = category,
             IsSystem = true,
             SortOrder = 1,
             WorkspaceId = scenario.Workspace.Id,
@@ -318,6 +322,33 @@ internal static class AutomationTestData
         await db.SaveChangesAsync();
 
         return relationType;
+    }
+
+    public static async Task AssignTaskToSprint(DataContext db, int taskId, int sprintId)
+    {
+        await db.ProjectTasks
+            .Where(candidate => candidate.Id == taskId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(task => task.SprintId, sprintId));
+
+        db.ChangeTracker.Clear();
+    }
+
+    public static async Task SetTaskStatus(DataContext db, int taskId, int statusId)
+    {
+        await db.ProjectTasks
+            .Where(candidate => candidate.Id == taskId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(task => task.StatusId, statusId));
+
+        db.ChangeTracker.Clear();
+    }
+
+    public static async Task SetSprintEndDate(DataContext db, int sprintId, DateTime endDate)
+    {
+        await db.Sprints
+            .Where(candidate => candidate.Id == sprintId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(sprint => sprint.EndDate, endDate));
+
+        db.ChangeTracker.Clear();
     }
 
     public static async Task<ProjectTask> CreateTask(DataContext db, AutomationScenario scenario, string name)

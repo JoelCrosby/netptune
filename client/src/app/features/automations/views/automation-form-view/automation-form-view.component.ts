@@ -382,7 +382,8 @@ export class AutomationFormViewComponent {
     const usesDuration =
       this.triggerType() === AutomationTriggerType.taskUnassignedFor ||
       this.triggerType() === AutomationTriggerType.taskDueDateApproaching ||
-      this.triggerType() === AutomationTriggerType.taskInactiveFor;
+      this.triggerType() === AutomationTriggerType.taskInactiveFor ||
+      this.triggerType() === AutomationTriggerType.sprintEndingSoon;
 
     return {
       type: this.triggerType(),

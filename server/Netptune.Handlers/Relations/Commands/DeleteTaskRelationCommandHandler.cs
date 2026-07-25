@@ -17,12 +17,18 @@ public sealed class DeleteTaskRelationCommandHandler : IRequestHandler<DeleteTas
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
+    private readonly IEventPublisher EventPublisher;
 
-    public DeleteTaskRelationCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public DeleteTaskRelationCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IActivityLogger activity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse> Handle(DeleteTaskRelationCommand request, CancellationToken cancellationToken)
@@ -47,6 +53,27 @@ public sealed class DeleteTaskRelationCommandHandler : IRequestHandler<DeleteTas
 
         if (sourceView is not null) LogRelation(relation.SourceTaskId, sourceView);
         if (targetView is not null) LogRelation(relation.TargetTaskId, targetView);
+
+        var relationType = await UnitOfWork.RelationTypes.GetInWorkspace(
+            relation.RelationTypeId,
+            workspaceId.Value,
+            true,
+            cancellationToken);
+
+        if (relationType is not null)
+        {
+            var user = await Identity.GetCurrentUser();
+
+            await EventPublisher.Dispatch(new TaskRelationChangedMessage
+            {
+                WorkspaceId = relation.WorkspaceId,
+                SourceTaskId = relation.SourceTaskId,
+                TargetTaskId = relation.TargetTaskId,
+                Category = relationType.Category,
+                Change = TaskRelationChange.Removed,
+                ActorUserId = user.Id,
+            });
+        }
 
         return ClientResponse.Success;
     }

@@ -192,6 +192,12 @@ export class AutomationRulesTableComponent {
     AutomationTriggerType.taskOverdue,
     AutomationTriggerType.taskHasNoDueDate,
     AutomationTriggerType.taskInactiveFor,
+    AutomationTriggerType.taskBlocked,
+    AutomationTriggerType.taskUnblocked,
+    AutomationTriggerType.subtasksCompleted,
+    AutomationTriggerType.sprintStarted,
+    AutomationTriggerType.sprintCompleted,
+    AutomationTriggerType.sprintEndingSoon,
   ];
 
   readonly lucideCircleDashed = LucideCircleDashed;

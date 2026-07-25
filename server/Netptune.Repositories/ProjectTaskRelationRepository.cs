@@ -2,6 +2,8 @@ using Dapper;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -123,5 +125,89 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
         await DeletePermanent(ids, cancellationToken);
 
         return ids;
+    }
+
+    public Task<List<TaskRelationCounts>> GetBlockerCounts(
+        IReadOnlyCollection<int> taskIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskIds.Count == 0)
+        {
+            return Task.FromResult(new List<TaskRelationCounts>());
+        }
+
+        return Entities
+            .Where(relation =>
+                taskIds.Contains(relation.TargetTaskId) &&
+                relation.RelationType.Category == RelationCategory.Dependency &&
+                !relation.SourceTask.IsDeleted)
+            .GroupBy(relation => relation.TargetTaskId)
+            .Select(group => new TaskRelationCounts(
+                group.Key,
+                group.Count(),
+                group.Count(relation => relation.SourceTask.Status.Category != StatusCategory.Done)))
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<TaskRelationCounts>> GetChildCounts(
+        IReadOnlyCollection<int> taskIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (taskIds.Count == 0)
+        {
+            return Task.FromResult(new List<TaskRelationCounts>());
+        }
+
+        return Entities
+            .Where(relation =>
+                taskIds.Contains(relation.SourceTaskId) &&
+                relation.RelationType.Category == RelationCategory.Hierarchy &&
+                !relation.TargetTask.IsDeleted)
+            .GroupBy(relation => relation.SourceTaskId)
+            .Select(group => new TaskRelationCounts(
+                group.Key,
+                group.Count(),
+                group.Count(relation => relation.TargetTask.Status.Category != StatusCategory.Done)))
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<int>> GetDependentTaskIds(
+        IReadOnlyCollection<int> blockingTaskIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (blockingTaskIds.Count == 0)
+        {
+            return Task.FromResult(new List<int>());
+        }
+
+        return Entities
+            .Where(relation =>
+                blockingTaskIds.Contains(relation.SourceTaskId) &&
+                relation.RelationType.Category == RelationCategory.Dependency &&
+                !relation.TargetTask.IsDeleted)
+            .Select(relation => relation.TargetTaskId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<int>> GetParentTaskIds(
+        IReadOnlyCollection<int> childTaskIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (childTaskIds.Count == 0)
+        {
+            return Task.FromResult(new List<int>());
+        }
+
+        return Entities
+            .Where(relation =>
+                childTaskIds.Contains(relation.TargetTaskId) &&
+                relation.RelationType.Category == RelationCategory.Hierarchy &&
+                !relation.SourceTask.IsDeleted)
+            .Select(relation => relation.SourceTaskId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
     }
 }

@@ -19,6 +19,8 @@ public interface IStatusRepository : IWorkspaceEntityRepository<Status, int>
 
     Task<Status?> GetFirstTaskStatusByCategory(int workspaceId, StatusCategory category, CancellationToken cancellationToken = default);
 
+    Task<Dictionary<int, StatusCategory>> GetCategories(IReadOnlyCollection<int> statusIds, CancellationToken cancellationToken = default);
+
     Task<bool> KeyExists(int workspaceId, EntityType entityType, string key, int? excludingId = null, CancellationToken cancellationToken = default);
 
     Task<bool> IsInUse(int statusId, CancellationToken cancellationToken = default);

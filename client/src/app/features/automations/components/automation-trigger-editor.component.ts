@@ -135,6 +135,29 @@ import {
                 </div>
               </div>
             } @else if (
+              triggerType() === automationTriggerType.sprintEndingSoon
+            ) {
+              <div class="border-border bg-foreground/2 rounded-lg border p-3">
+                <p class="mb-3 text-sm font-medium">Schedule</p>
+                <div class="flex flex-wrap items-end gap-3">
+                  <div class="w-36">
+                    <app-form-input
+                      label="Lead time"
+                      name="durationDays"
+                      type="number"
+                      [noMargin]="true"
+                      [required]="true"
+                      [(value)]="durationDays" />
+                  </div>
+                  <span class="pb-2.5 text-sm">
+                    days before the sprint end date
+                  </span>
+                </div>
+                <p class="text-foreground/60 mt-3 text-sm">
+                  Actions run once for every task in the sprint.
+                </p>
+              </div>
+            } @else if (
               triggerType() === automationTriggerType.taskDueDateApproaching
             ) {
               <div class="border-border bg-foreground/2 rounded-lg border p-3">
@@ -178,6 +201,12 @@ export class AutomationTriggerEditorComponent {
     AutomationTriggerType.taskOverdue,
     AutomationTriggerType.taskHasNoDueDate,
     AutomationTriggerType.taskInactiveFor,
+    AutomationTriggerType.taskBlocked,
+    AutomationTriggerType.taskUnblocked,
+    AutomationTriggerType.subtasksCompleted,
+    AutomationTriggerType.sprintStarted,
+    AutomationTriggerType.sprintCompleted,
+    AutomationTriggerType.sprintEndingSoon,
   ];
 
   taskFieldOptions = [

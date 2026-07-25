@@ -8,42 +8,21 @@ namespace Netptune.Core.Repositories;
 
 public interface ISprintRepository : IWorkspaceEntityRepository<Sprint, int>
 {
-    Task<List<SprintViewModel>> GetSprintsAsync(
-        string workspaceKey,
-        int? projectId = null,
-        IReadOnlyCollection<SprintStatus>? statuses = null,
-        int? take = null,
-        string? sortBy = null,
-        string? sortDirection = null,
-        CancellationToken cancellationToken = default);
+    Task<List<SprintViewModel>> GetSprintsAsync(string workspaceKey, int? projectId = null, IReadOnlyCollection<SprintStatus>? statuses = null, int? take = null, string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default);
 
     Task<List<SprintViewModel>> GetSprintViewModels(IEnumerable<int> sprintIds, CancellationToken cancellationToken = default);
 
     Task<List<SprintViewModel>> GetAllSprintViewModels(string workspaceKey, CancellationToken cancellationToken = default);
 
-    Task<SprintDetailViewModel?> GetSprintDetailAsync(
-        string workspaceKey,
-        int sprintId,
-        CancellationToken cancellationToken = default);
+    Task<SprintDetailViewModel?> GetSprintDetailAsync(string workspaceKey, int sprintId, CancellationToken cancellationToken = default);
 
-    Task<SprintDetailViewModel?> GetCurrentSprintForUserAsync(
-        string workspaceKey,
-        string userId,
-        CancellationToken cancellationToken = default);
+    Task<SprintDetailViewModel?> GetCurrentSprintForUserAsync(string workspaceKey, string userId, CancellationToken cancellationToken = default);
 
-    Task<Sprint?> GetSprintInWorkspaceAsync(
-        string workspaceKey,
-        int sprintId,
-        bool isReadonly = false,
-        CancellationToken cancellationToken = default);
+    Task<Sprint?> GetSprintInWorkspaceAsync(string workspaceKey, int sprintId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
-    Task<SprintTaskAssignmentTarget?> GetTaskAssignmentTarget(
-        string workspaceKey,
-        int sprintId,
-        CancellationToken cancellationToken = default);
+    Task<SprintTaskAssignmentTarget?> GetTaskAssignmentTarget(string workspaceKey, int sprintId, CancellationToken cancellationToken = default);
 
-    Task<bool> HasActiveSprintAsync(
-        int projectId,
-        int? excludingSprintId = null,
-        CancellationToken cancellationToken = default);
+    Task<bool> HasActiveSprintAsync(int projectId, int? excludingSprintId = null, CancellationToken cancellationToken = default);
+
+    Task<List<Sprint>> GetActiveSprintsEndingBefore(IReadOnlyCollection<int> workspaceIds, DateTime latestEndDate, CancellationToken cancellationToken = default);
 }

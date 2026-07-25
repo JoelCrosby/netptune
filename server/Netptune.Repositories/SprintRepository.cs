@@ -183,6 +183,26 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
                 (!excludingSprintId.HasValue || sprint.Id != excludingSprintId.Value), cancellationToken);
     }
 
+    public Task<List<Sprint>> GetActiveSprintsEndingBefore(
+        IReadOnlyCollection<int> workspaceIds,
+        DateTime latestEndDate,
+        CancellationToken cancellationToken = default)
+    {
+        if (workspaceIds.Count == 0)
+        {
+            return Task.FromResult(new List<Sprint>());
+        }
+
+        return Entities
+            .AsNoTracking()
+            .Where(sprint =>
+                workspaceIds.Contains(sprint.WorkspaceId) &&
+                sprint.Status == SprintStatus.Active &&
+                !sprint.IsDeleted &&
+                sprint.EndDate <= latestEndDate)
+            .ToListAsync(cancellationToken);
+    }
+
     private static Expression<Func<Sprint, SprintDetailViewModel>> SprintToDetailViewModel()
     {
         return sprint => new SprintDetailViewModel
