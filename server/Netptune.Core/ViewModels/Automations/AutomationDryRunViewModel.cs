@@ -1,7 +1,33 @@
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 
 namespace Netptune.Core.ViewModels.Automations;
+
+public sealed record AutomationDryRunActionViewModel
+{
+    public int ActionId { get; init; }
+
+    public AutomationActionType Type { get; init; }
+
+    public bool HasEffect { get; init; }
+
+    public string? Message { get; init; }
+
+    public List<string> RecipientUserIds { get; init; } = [];
+
+    public bool IncludeProjectMembers { get; init; }
+
+    public List<WorkspaceRole> RecipientRoles { get; init; } = [];
+
+    public string? Comment { get; init; }
+
+    public string? FlagName { get; init; }
+
+    public List<string> UpdatedFields { get; init; } = [];
+
+    public int? DelayMinutes { get; init; }
+}
 
 public sealed record AutomationDryRunViewModel
 {
@@ -22,4 +48,6 @@ public sealed record AutomationDryRunViewModel
     public bool HasUnevaluableConditions { get; init; }
 
     public AutomationConditionGroupExplanation? ConditionGroup { get; init; }
+
+    public List<AutomationDryRunActionViewModel> Actions { get; init; } = [];
 }

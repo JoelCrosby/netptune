@@ -34,6 +34,8 @@ public sealed record AutomationNotificationContribution
 {
     public required EventRecord Activity { get; init; }
 
+    public string? Message { get; init; }
+
     public required List<string> RecipientUserIds { get; init; }
 
     public bool IncludeProjectMembers { get; init; }

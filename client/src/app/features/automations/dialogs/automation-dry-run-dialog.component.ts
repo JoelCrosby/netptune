@@ -21,6 +21,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { finalize } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { AutomationConditionExplanationComponent } from '../components/automation-condition-explanation.component';
+import { AutomationDryRunEffectsComponent } from '../components/automation-dry-run-effects.component';
 import { AutomationDryRun } from '../models/automation.models';
 import { AutomationsService } from '../services/automations.service';
 
@@ -33,6 +34,7 @@ export interface AutomationDryRunDialogData {
   selector: 'app-automation-dry-run-dialog',
   imports: [
     AutomationConditionExplanationComponent,
+    AutomationDryRunEffectsComponent,
     DialogTitleComponent,
     DialogActionsDirective,
     StrokedButtonComponent,
@@ -124,6 +126,12 @@ export interface AutomationDryRunDialogData {
             <p class="text-muted text-sm">
               This rule has no conditions, so every triggering task matches.
             </p>
+          }
+
+          @if (dryRun.actions.length) {
+            <app-automation-dry-run-effects
+              [actions]="dryRun.actions"
+              [users]="users()" />
           }
         </div>
       }

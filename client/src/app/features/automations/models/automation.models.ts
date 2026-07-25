@@ -244,6 +244,20 @@ export interface AutomationConditionGroupExplanation {
   groups: AutomationConditionGroupExplanation[];
 }
 
+export interface AutomationDryRunAction {
+  actionId: number;
+  type: AutomationActionType;
+  hasEffect: boolean;
+  message: string | null;
+  recipientUserIds: string[];
+  includeProjectMembers: boolean;
+  recipientRoles: WorkspaceRole[];
+  comment: string | null;
+  flagName: string | null;
+  updatedFields: string[];
+  delayMinutes: number | null;
+}
+
 export interface AutomationDryRun {
   ruleId: number;
   ruleName: string;
@@ -254,4 +268,5 @@ export interface AutomationDryRun {
   conditionsMatch: boolean;
   hasUnevaluableConditions: boolean;
   conditionGroup: AutomationConditionGroupExplanation | null;
+  actions: AutomationDryRunAction[];
 }

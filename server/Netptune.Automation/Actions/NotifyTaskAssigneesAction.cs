@@ -132,6 +132,7 @@ internal sealed class NotifyTaskAssigneesAction : IAutomationAction
             Notification = new AutomationNotificationContribution
             {
                 Activity = activity,
+                Message = notificationMessage,
                 RecipientUserIds = recipientIds,
                 IncludeProjectMembers = includeProjectMembers,
                 RecipientRoles = roles,
