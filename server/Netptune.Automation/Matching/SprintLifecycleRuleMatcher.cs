@@ -54,7 +54,7 @@ internal abstract class SprintLifecycleRuleMatcher : IEventRuleMatcher<SprintLif
             return [];
         }
 
-        var tasks = await UnitOfWork.Tasks.GetSprintAutomationTasks(message.SprintId, cancellationToken);
+        var tasks = await UnitOfWork.Tasks.GetSprintAutomationTasks([message.SprintId], cancellationToken);
 
         activity?.SetTag("automation.tasks.candidate", tasks.Count);
 

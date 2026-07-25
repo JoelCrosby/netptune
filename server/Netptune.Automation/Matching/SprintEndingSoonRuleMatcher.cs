@@ -79,28 +79,53 @@ internal sealed class SprintEndingSoonRuleMatcher : IScheduledRuleMatcher
             return [];
         }
 
+        var dueSprintsByRule = ruleDefinitions
+            .Select(definition => new SprintEndingSoonCandidate(
+                definition,
+                sprints
+                    .Where(sprint => sprint.WorkspaceId == definition.Rule.WorkspaceId)
+                    .Where(sprint => IsEndingSoon(definition, sprint, now))
+                    .ToList()))
+            .Where(candidate => candidate.Sprints.Count > 0)
+            .ToList();
+
+        var dueSprintIds = dueSprintsByRule
+            .SelectMany(candidate => candidate.Sprints.Select(sprint => sprint.Id))
+            .Distinct()
+            .ToList();
+
+        var tasks = await UnitOfWork.Tasks.GetSprintAutomationTasks(dueSprintIds, cancellationToken);
+        var tasksBySprint = tasks
+            .Where(task => task.SprintId.HasValue)
+            .GroupBy(task => task.SprintId!.Value)
+            .ToDictionary(group => group.Key, group => group.ToList());
+
+        activity?.SetTag("automation.tasks.candidate", tasks.Count);
+
         var executions = new List<PendingAutomationExecution>();
 
-        foreach (var definition in ruleDefinitions)
+        foreach (var candidate in dueSprintsByRule)
         {
-            var dueSprints = sprints
-                .Where(sprint => sprint.WorkspaceId == definition.Rule.WorkspaceId)
-                .Where(sprint => IsEndingSoon(definition, sprint, now))
-                .ToList();
-
-            foreach (var sprint in dueSprints)
+            foreach (var sprint in candidate.Sprints)
             {
-                var tasks = await UnitOfWork.Tasks.GetSprintAutomationTasks(sprint.Id, cancellationToken);
-                var matchingTasks = tasks.Where(task => AutomationRuleConditions.Match(definition.Rule, task));
+                var hasTasks = tasksBySprint.TryGetValue(sprint.Id, out var sprintTasks);
+
+                if (!hasTasks)
+                {
+                    continue;
+                }
+
+                var matchingTasks = sprintTasks!
+                    .Where(task => AutomationRuleConditions.Match(candidate.Definition.Rule, task));
 
                 foreach (var task in matchingTasks)
                 {
                     executions.Add(new PendingAutomationExecution
                     {
-                        Rule = definition.Rule,
+                        Rule = candidate.Definition.Rule,
                         Task = task,
-                        ExecutionUserId = definition.Rule.ExecutionUserId,
-                        IdempotencyKey = BuildIdempotencyKey(definition.Rule.Id, task.Id, sprint),
+                        ExecutionUserId = candidate.Definition.Rule.ExecutionUserId,
+                        IdempotencyKey = BuildIdempotencyKey(candidate.Definition.Rule.Id, task.Id, sprint),
                         TriggeredAt = now,
                     });
                 }

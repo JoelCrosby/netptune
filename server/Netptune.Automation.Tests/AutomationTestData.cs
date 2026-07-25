@@ -259,15 +259,20 @@ internal static class AutomationTestData
         return project;
     }
 
-    public static async Task<Sprint> CreateSprint(DataContext db, AutomationScenario scenario, string name)
+    public static async Task<Sprint> CreateSprint(
+        DataContext db,
+        AutomationScenario scenario,
+        string name,
+        int? projectId = null,
+        SprintStatus status = SprintStatus.Active)
     {
         var sprint = new Sprint
         {
             Name = name,
-            Status = SprintStatus.Active,
+            Status = status,
             StartDate = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc),
             EndDate = new DateTime(2026, 7, 14, 0, 0, 0, DateTimeKind.Utc),
-            ProjectId = scenario.Project.Id,
+            ProjectId = projectId ?? scenario.Project.Id,
             WorkspaceId = scenario.Workspace.Id,
             OwnerId = scenario.Owner.Id,
             CreatedByUserId = scenario.Owner.Id,
@@ -351,9 +356,32 @@ internal static class AutomationTestData
         db.ChangeTracker.Clear();
     }
 
-    public static async Task<ProjectTask> CreateTask(DataContext db, AutomationScenario scenario, string name)
+    public static async Task SoftDeleteTask(DataContext db, int taskId)
     {
-        var project = await db.Projects.SingleAsync(candidate => candidate.Id == scenario.Project.Id);
+        await db.ProjectTasks
+            .Where(candidate => candidate.Id == taskId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(task => task.IsDeleted, true));
+
+        db.ChangeTracker.Clear();
+    }
+
+    public static async Task SetSprintStatus(DataContext db, int sprintId, SprintStatus status)
+    {
+        await db.Sprints
+            .Where(candidate => candidate.Id == sprintId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(sprint => sprint.Status, status));
+
+        db.ChangeTracker.Clear();
+    }
+
+    public static async Task<ProjectTask> CreateTask(
+        DataContext db,
+        AutomationScenario scenario,
+        string name,
+        int? projectId = null)
+    {
+        var targetProjectId = projectId ?? scenario.Project.Id;
+        var project = await db.Projects.SingleAsync(candidate => candidate.Id == targetProjectId);
         var task = new ProjectTask
         {
             Name = name,

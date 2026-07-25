@@ -161,10 +161,15 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<ProjectTask>> GetSprintAutomationTasks(int sprintId, CancellationToken cancellationToken = default)
+    public Task<List<ProjectTask>> GetSprintAutomationTasks(IReadOnlyCollection<int> sprintIds, CancellationToken cancellationToken = default)
     {
+        if (sprintIds.Count == 0)
+        {
+            return Task.FromResult(new List<ProjectTask>());
+        }
+
         return AutomationTasks()
-            .Where(task => task.SprintId == sprintId)
+            .Where(task => task.SprintId.HasValue && sprintIds.Contains(task.SprintId.Value))
             .ToListAsync(cancellationToken);
     }
 

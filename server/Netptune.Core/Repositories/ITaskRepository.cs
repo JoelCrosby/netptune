@@ -33,7 +33,7 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<List<ProjectTask>> GetInactiveAutomationCandidates(IReadOnlyCollection<int> workspaceIds, DateTime cutoff, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectTask>> GetSprintAutomationTasks(int sprintId, CancellationToken cancellationToken = default);
+    Task<List<ProjectTask>> GetSprintAutomationTasks(IReadOnlyCollection<int> sprintIds, CancellationToken cancellationToken = default);
 
     Task<List<ProjectTask>> GetAutomationTasks(IReadOnlyCollection<int> ids, CancellationToken cancellationToken = default);
 
