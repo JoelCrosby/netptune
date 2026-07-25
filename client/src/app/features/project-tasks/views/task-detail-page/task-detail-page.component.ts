@@ -4,7 +4,11 @@ import {
   deleteProjectTask,
   loadTaskDetails,
 } from '@app/core/store/tasks/tasks.actions';
-import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
+import {
+  selectDetailTask,
+  selectDetailTaskError,
+  selectDetailTaskLoading,
+} from '@app/core/store/tasks/tasks.selectors';
 import { PageLoadingComponent } from '@app/static/components/page-loading/page-loading.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
@@ -23,6 +27,7 @@ import { TaskDetailTagsComponent } from '@entry/dialogs/task-detail-dialog/task-
 import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-actions.component';
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
 import { PageContainerComponent } from '@app/static/components/page-container/page-container.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { Actions, ofType } from '@ngrx/effects';
@@ -86,6 +91,21 @@ import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task
         <div class="mt-7 flex justify-end">
           <app-task-dates [task]="task" />
         </div>
+      } @else if (loadError(); as error) {
+        <app-error-state
+          [title]="
+            error.status === 404
+              ? 'This task could not be found'
+              : 'This task could not be loaded'
+          "
+          [description]="
+            error.status === 404
+              ? 'It may have been deleted, or you may not have access to it.'
+              : 'Check your connection and try again.'
+          "
+          [retryable]="error.status !== 404"
+          [retrying]="loading()"
+          (retry)="reload()" />
       } @else {
         <app-page-loading diameter="64" />
       }
@@ -93,6 +113,7 @@ import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task
   `,
   imports: [
     LucideCheck,
+    ErrorStateComponent,
     ActivityMenuComponent,
     PageLoadingComponent,
     SprintBadgeComponent,
@@ -119,6 +140,8 @@ export class TaskDetailPageComponent implements OnDestroy {
   entityType = EntityType.task;
   statusCategory = StatusCategory;
   task = this.store.selectSignal(selectDetailTask);
+  loading = this.store.selectSignal(selectDetailTaskLoading);
+  loadError = this.store.selectSignal(selectDetailTaskError);
 
   systemId = input.required<string>();
 
@@ -155,6 +178,10 @@ export class TaskDetailPageComponent implements OnDestroy {
           void this.router.navigate(['/', workspaceId, 'tasks']);
         },
       });
+  }
+
+  reload() {
+    this.store.dispatch(loadTaskDetails.init({ systemId: this.systemId() }));
   }
 
   ngOnDestroy() {

@@ -22,6 +22,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
   template: `
     <button
       app-command-palette-item
+      [optionId]="optionId()"
       [selected]="selected()"
       (click)="activate.emit(result())"
       (mouseenter)="hover.emit()">
@@ -52,6 +53,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
 export class SearchResultItemComponent {
   result = input.required<SearchResult>();
   selected = input(false);
+  optionId = input<string>();
   activate = output<SearchResult>();
   hover = output();
 }

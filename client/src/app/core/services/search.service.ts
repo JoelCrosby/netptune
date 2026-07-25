@@ -1,5 +1,12 @@
 import { HttpParams, httpResource } from '@angular/common/http';
-import { Injectable, computed, debounced, signal } from '@angular/core';
+import {
+  Injectable,
+  ResourceStatus,
+  computed,
+  debounced,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { SearchResponse, SearchResult } from '@core/models/search-result';
 
 export type SearchType = 'tasks' | 'projects' | 'boards' | 'sprints';
@@ -35,17 +42,58 @@ export class SearchService {
     { defaultValue: EMPTY_SEARCH_RESPONSE }
   );
 
+  private readonly resolvedResults = linkedSignal<
+    ResourceStatus,
+    SearchResult[]
+  >({
+    source: () => this.resource.status(),
+    computation: (status, previous) => {
+      if (status === 'error') {
+        return [];
+      }
+
+      if (status === 'loading' || status === 'reloading') {
+        return previous?.value ?? [];
+      }
+
+      return this.resource.value().results;
+    },
+  });
+
   readonly results = computed<SearchResult[]>(() => {
     const request = this.request();
     const settledRequest = this.debouncedRequest.value();
     const scopeChanged = !this.typesMatch(request.types, settledRequest.types);
 
-    if (!request.query.trim() || scopeChanged || !this.resource.hasValue()) {
+    if (!request.query.trim() || scopeChanged) {
       return [];
     }
 
-    return this.resource.value().results;
+    return this.resolvedResults();
   });
+
+  readonly isSearching = computed(() => {
+    const request = this.request();
+
+    if (!request.query.trim()) {
+      return false;
+    }
+
+    if (this.resource.error()) {
+      return false;
+    }
+
+    const settledRequest = this.debouncedRequest.value();
+    const settled =
+      settledRequest.query === request.query &&
+      this.typesMatch(request.types, settledRequest.types);
+
+    return (
+      !settled || this.debouncedRequest.isLoading() || this.resource.isLoading()
+    );
+  });
+
+  readonly error = computed(() => this.resource.error());
 
   setQuery(query: string, types: readonly SearchType[] = []): void {
     this.request.set({ query, types });

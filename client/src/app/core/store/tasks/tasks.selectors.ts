@@ -163,6 +163,16 @@ export const selectDetailTask = createSelector(
   (state: TasksState) => state.detailTask
 );
 
+export const selectDetailTaskLoading = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.detailState.loading
+);
+
+export const selectDetailTaskError = createSelector(
+  selectTasksFeature,
+  (state: TasksState) => state.detailState.error
+);
+
 export const selectDetailTaskIsRedOnly = createSelector(
   selectHasPermission(netptunePermissions.tasks.update),
   (state) => !state

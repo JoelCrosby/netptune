@@ -69,6 +69,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     <app-task-list-filters />
 
     <app-datatable
+      errorMessage="Tasks could not be loaded."
       #datatable
       containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
       tableClass="min-w-[760px] table-fixed"

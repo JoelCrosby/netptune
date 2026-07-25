@@ -43,6 +43,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
   ],
   template: `
     <app-datatable
+      errorMessage="Notifications could not be loaded."
       containerClass="h-[calc(100vh-338px)] min-h-80 overflow-auto"
       tableClass="min-w-[720px] table-fixed"
       rowClass="bg-card"

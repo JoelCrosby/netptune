@@ -1,3 +1,4 @@
+import { DEFAULT_ACTION_STATE } from '@core/types/action-state';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as actions from './tasks.actions';
 import { adapter, initialState, TasksState } from './tasks.model';
@@ -152,9 +153,19 @@ const reducer = createReducer(
 
   // Load Task Details
 
+  on(actions.loadTaskDetails.init, (state): TasksState => ({
+    ...state,
+    detailState: { loading: true },
+  })),
   on(actions.loadTaskDetails.success, (state, { task }): TasksState => ({
     ...state,
     detailTask: task,
+    detailState: { loading: false },
+  })),
+  on(actions.loadTaskDetails.fail, (state, { error }): TasksState => ({
+    ...state,
+    detailTask: undefined,
+    detailState: { loading: false, error },
   })),
 
   // Clear Task Detail
@@ -162,6 +173,7 @@ const reducer = createReducer(
   on(actions.clearTaskDetail, (state): TasksState => ({
     ...state,
     detailTask: undefined,
+    detailState: DEFAULT_ACTION_STATE,
     comments: [],
   })),
 

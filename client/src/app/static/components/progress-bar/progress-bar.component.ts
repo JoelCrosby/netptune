@@ -1,4 +1,4 @@
-import { Component, HostBinding, computed, input } from '@angular/core';
+import { Component, booleanAttribute, computed, input } from '@angular/core';
 
 export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer';
 export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
@@ -64,9 +64,14 @@ export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
       background-size: 10px 100%;
     }
   `,
+  host: {
+    class: 'block h-1 w-full overflow-hidden',
+    '[class.rounded-full]': 'rounded()',
+  },
   template: `
     <div
-      class="relative h-full w-full overflow-hidden rounded-full"
+      class="relative h-full w-full overflow-hidden"
+      [class.rounded-full]="rounded()"
       [style]="{ '--progress-bar-track': 'oklch(var(--primary) / 0.3)' }"
       role="progressbar"
       [attr.aria-valuenow]="mode() !== 'indeterminate' ? clampedValue() : null"
@@ -76,14 +81,16 @@ export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
       @if (mode() === 'buffer') {
         <div class="buffer-bg absolute inset-0"></div>
         <div
-          class="absolute inset-y-0 left-0 rounded-full opacity-30 transition-[width] duration-300"
+          class="absolute inset-y-0 left-0 opacity-30 transition-[width] duration-300"
+          [class.rounded-full]="rounded()"
           [class.bg-primary]="color() === 'primary'"
           [class.bg-warn]="color() === 'warn'"
           [class.bg-destructive]="color() === 'destructive'"
           [style.width]="clampedBufferValue() + '%'"></div>
       } @else {
         <div
-          class="absolute inset-0 rounded-full opacity-20"
+          class="absolute inset-0 opacity-20"
+          [class.rounded-full]="rounded()"
           [class.bg-primary]="color() === 'primary'"
           [class.bg-warn]="color() === 'warn'"
           [class.bg-destructive]="color() === 'destructive'"></div>
@@ -92,18 +99,21 @@ export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
       <!-- Primary bar -->
       @if (mode() === 'indeterminate') {
         <div
-          class="bar-primary-indeterminate absolute inset-y-0 rounded-full"
+          class="bar-primary-indeterminate absolute inset-y-0"
+          [class.rounded-full]="rounded()"
           [class.bg-primary]="color() === 'primary'"
           [class.bg-warn]="color() === 'warn'"
           [class.bg-destructive]="color() === 'destructive'"></div>
         <div
-          class="bar-secondary-indeterminate absolute inset-y-0 rounded-full"
+          class="bar-secondary-indeterminate absolute inset-y-0"
+          [class.rounded-full]="rounded()"
           [class.bg-primary]="color() === 'primary'"
           [class.bg-warn]="color() === 'warn'"
           [class.bg-destructive]="color() === 'destructive'"></div>
       } @else {
         <div
-          class="absolute inset-y-0 left-0 rounded-full transition-[width] duration-300"
+          class="absolute inset-y-0 left-0 transition-[width] duration-300"
+          [class.rounded-full]="rounded()"
           [class.bg-primary]="color() === 'primary'"
           [class.bg-warn]="color() === 'warn'"
           [class.bg-destructive]="color() === 'destructive'"
@@ -117,6 +127,7 @@ export class ProgressBarComponent {
   readonly color = input<ProgressBarColor>('primary');
   readonly value = input(0);
   readonly bufferValue = input(0);
+  readonly rounded = input(true, { transform: booleanAttribute });
 
   readonly clampedValue = computed(() =>
     Math.min(100, Math.max(0, this.value()))
@@ -124,7 +135,4 @@ export class ProgressBarComponent {
   readonly clampedBufferValue = computed(() =>
     Math.min(100, Math.max(0, this.bufferValue()))
   );
-
-  @HostBinding('class') readonly hostClass =
-    'block h-1 w-full overflow-hidden rounded-full';
 }

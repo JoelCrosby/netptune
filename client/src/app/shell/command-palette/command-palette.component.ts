@@ -8,6 +8,7 @@ import {
   computed,
   effect,
   inject,
+  linkedSignal,
   signal,
   viewChild,
 } from '@angular/core';
@@ -22,11 +23,24 @@ import {
 } from '@core/services/command-registry.service';
 import { SearchService } from '@core/services/search.service';
 import { SearchResult } from '@core/models/search-result';
+import { delayedLoading } from '@core/util/delayed-loading';
+import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
 import { CommandPaletteService } from './command-palette.service';
 import { RecentItem, RecentItemsService } from './recent-items.service';
 import { CommandItemComponent } from './command-item.component';
 import { RecentItemComponent } from './recent-item.component';
 import { SearchResultItemComponent } from './search-result-item.component';
+
+const SEARCH_HINT = 'Type to search or use > for commands.';
+const SEARCH_UNAVAILABLE = 'Search is unavailable right now.';
+const NO_RESULTS = 'No results found.';
+
+interface PaletteEmptyState {
+  hasItems: boolean;
+  hasQuery: boolean;
+  searching: boolean;
+  failed: boolean;
+}
 
 type PaletteItem =
   | { kind: 'command'; command: Command }
@@ -39,6 +53,7 @@ type PaletteItem =
     FormsModule,
     LucideSearch,
     CommandItemComponent,
+    ProgressBarComponent,
     RecentItemComponent,
     SearchResultItemComponent,
   ],
@@ -55,6 +70,11 @@ type PaletteItem =
             #searchInput
             type="text"
             class="placeholder:text-muted flex h-11 w-full bg-transparent py-3 outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            role="combobox"
+            aria-expanded="true"
+            aria-autocomplete="list"
+            aria-controls="command-palette-options"
+            [attr.aria-activedescendant]="activeOptionId()"
             [placeholder]="inputPlaceholder()"
             [ngModel]="queryValue()"
             (ngModelChange)="onQueryChange($event)"
@@ -62,37 +82,52 @@ type PaletteItem =
             spellcheck="false" />
         </div>
 
-        <div class="max-h-120 overflow-x-hidden overflow-y-auto p-1">
-          @if (items().length === 0) {
-            <p class="text-muted py-6 text-center text-sm">
-              {{
-                queryValue()
-                  ? 'No results found.'
-                  : 'Type to search or use > for commands.'
-              }}
-            </p>
+        <div
+          class="h-1 shrink-0"
+          [class.invisible]="!delayedSearching()"
+          [attr.aria-hidden]="delayedSearching() ? null : 'true'">
+          <app-progress-bar mode="indeterminate" [rounded]="false" />
+        </div>
+
+        <div
+          id="command-palette-options"
+          role="listbox"
+          aria-label="Results"
+          class="max-h-120 overflow-x-hidden overflow-y-auto p-1">
+          @if (emptyMessage(); as message) {
+            <p class="text-muted py-6 text-center text-sm">{{ message }}</p>
           }
 
           @if (showRecentGroup()) {
-            <div class="overflow-hidden p-1">
-              <p class="text-muted px-2 py-1.5 text-xs font-medium">Recent</p>
+            <div class="overflow-hidden p-1" role="group" aria-label="Recent">
+              <p
+                class="text-muted px-2 py-1.5 text-xs font-medium"
+                aria-hidden="true">
+                Recent
+              </p>
               @for (item of recentItems(); track item.url; let idx = $index) {
                 <app-recent-item
                   [item]="item"
+                  [optionId]="optionId(idx)"
                   [selected]="selectedIndex() === idx"
                   (activate)="activateRecentItem($event)"
                   (hover)="selectedIndex.set(idx)" />
               }
             </div>
-            <div class="bg-border -mx-1 my-1 h-px"></div>
+            <div class="bg-border -mx-1 my-1 h-px" aria-hidden="true"></div>
           }
 
           @if (commandItems().length > 0 && !searchOnlyMode()) {
-            <div class="overflow-hidden p-1">
-              <p class="text-muted px-2 py-1.5 text-xs font-medium">Actions</p>
+            <div class="overflow-hidden p-1" role="group" aria-label="Actions">
+              <p
+                class="text-muted px-2 py-1.5 text-xs font-medium"
+                aria-hidden="true">
+                Actions
+              </p>
               @for (cmd of commandItems(); track cmd.id; let idx = $index) {
                 <app-command-item
                   [command]="cmd"
+                  [optionId]="optionId(commandOffset() + idx)"
                   [selected]="selectedIndex() === commandOffset() + idx"
                   (activate)="activateCommand($event)"
                   (hover)="selectedIndex.set(commandOffset() + idx)" />
@@ -102,10 +137,14 @@ type PaletteItem =
 
           @if (searchResultItems().length > 0 && !commandOnlyMode()) {
             @if (commandItems().length > 0 && !searchOnlyMode()) {
-              <div class="bg-border -mx-1 my-1 h-px"></div>
+              <div class="bg-border -mx-1 my-1 h-px" aria-hidden="true"></div>
             }
-            <div class="overflow-hidden p-1">
-              <p class="text-muted px-2 py-1.5 text-xs font-medium">Results</p>
+            <div class="overflow-hidden p-1" role="group" aria-label="Results">
+              <p
+                class="text-muted px-2 py-1.5 text-xs font-medium"
+                aria-hidden="true">
+                Results
+              </p>
               @for (
                 result of searchResultItems();
                 track result.url;
@@ -113,6 +152,7 @@ type PaletteItem =
               ) {
                 <app-search-result-item
                   [result]="result"
+                  [optionId]="optionId(searchOffset() + idx)"
                   [selected]="selectedIndex() === searchOffset() + idx"
                   (activate)="activateResult($event)"
                   (hover)="selectedIndex.set(searchOffset() + idx)" />
@@ -120,6 +160,8 @@ type PaletteItem =
             </div>
           }
         </div>
+
+        <span class="sr-only" aria-live="polite">{{ announcement() }}</span>
       </div>
     </ng-template>
   `,
@@ -178,6 +220,53 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
       (this.commandOnlyMode() ? 0 : this.commandItems().length)
   );
 
+  activeOptionId = computed(() => {
+    if (!this.items().length) {
+      return null;
+    }
+
+    return this.optionId(this.selectedIndex());
+  });
+
+  delayedSearching = delayedLoading(this.search.isSearching);
+
+  emptyMessage = linkedSignal<PaletteEmptyState, string>({
+    source: () => ({
+      hasItems: this.items().length > 0,
+      hasQuery: Boolean(this.queryValue()),
+      searching: this.search.isSearching(),
+      failed: Boolean(this.search.error()),
+    }),
+    computation: (state, previous) => {
+      if (state.hasItems) return '';
+      if (!state.hasQuery) return SEARCH_HINT;
+      if (state.failed) return SEARCH_UNAVAILABLE;
+      if (state.searching) {
+        return previous?.value === NO_RESULTS ? NO_RESULTS : '';
+      }
+
+      return NO_RESULTS;
+    },
+  });
+
+  announcement = computed(() => {
+    if (!this.queryValue()) {
+      return '';
+    }
+
+    if (this.search.isSearching()) {
+      return this.delayedSearching() ? 'Searching…' : '';
+    }
+
+    if (this.search.error()) {
+      return SEARCH_UNAVAILABLE;
+    }
+
+    const count = this.items().length;
+
+    return count === 0 ? NO_RESULTS : `${count} results available.`;
+  });
+
   items = computed<PaletteItem[]>(() => {
     const recent: PaletteItem[] = this.recentItems().map((item) => ({
       kind: 'recent' as const,
@@ -233,6 +322,10 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.portal = new TemplatePortal(this.dialogTmpl(), this.vcr);
+  }
+
+  optionId(index: number) {
+    return `command-palette-option-${index}`;
   }
 
   ngOnDestroy() {
@@ -299,6 +392,15 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
     const total = this.items().length;
     if (total === 0) return;
     this.selectedIndex.update((i) => (i + delta + total) % total);
+    this.scrollSelectionIntoView();
+  }
+
+  private scrollSelectionIntoView() {
+    setTimeout(() => {
+      this.overlayRef.overlayElement
+        .querySelector<HTMLElement>(`#${this.optionId(this.selectedIndex())}`)
+        ?.scrollIntoView({ block: 'nearest' });
+    });
   }
 
   activateSelected() {

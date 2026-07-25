@@ -29,6 +29,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
   ],
   template: `
     <app-datatable
+      errorMessage="Members could not be loaded."
       containerClass="h-[calc(100vh-253px)] min-h-80 overflow-auto"
       tableClass="min-w-[720px] table-fixed"
       rowClass="bg-card"

@@ -9,6 +9,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
   template: `
     <button
       app-command-palette-item
+      [optionId]="optionId()"
       [selected]="selected()"
       (click)="activate.emit(item())"
       (mouseenter)="hover.emit()">
@@ -20,6 +21,7 @@ import { CommandPaletteItemComponent } from './command-palette-item.component';
 export class RecentItemComponent {
   item = input.required<RecentItem>();
   selected = input(false);
+  optionId = input<string>();
   activate = output<RecentItem>();
   hover = output();
 }

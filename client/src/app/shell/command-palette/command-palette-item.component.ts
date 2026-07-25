@@ -6,11 +6,14 @@ import { Component, input } from '@angular/core';
   template: '<ng-content />',
   host: {
     type: 'button',
+    role: 'option',
+    '[attr.id]': 'optionId()',
     class:
       'aria-selected:bg-accent/10 aria-selected:text-accent-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-2 outline-none select-none',
-    '[attr.aria-selected]': "selected() ? 'true' : null",
+    '[attr.aria-selected]': "selected() ? 'true' : 'false'",
   },
 })
 export class CommandPaletteItemComponent {
   readonly selected = input(false);
+  readonly optionId = input<string>();
 }

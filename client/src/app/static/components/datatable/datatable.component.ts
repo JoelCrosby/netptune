@@ -34,6 +34,7 @@ import { IconButtonComponent } from '../button/icon-button.component';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '../dropdown-menu/menu-item.component';
+import { ErrorStateComponent } from '../error-state/error-state.component';
 import { TablePaginationComponent } from '../table/table.component';
 import { DatatableCellTemplateDirective } from './datatable-cell-template.directive';
 import { classes } from './datatable-classes';
@@ -63,6 +64,7 @@ import {
     NgTemplateOutlet,
     CheckboxComponent,
     DropdownMenuComponent,
+    ErrorStateComponent,
     IconButtonComponent,
     LucideArrowDown,
     LucideArrowUp,
@@ -145,7 +147,20 @@ import {
         </thead>
 
         <tbody>
-          @if (showSkeleton()) {
+          @if (loadFailed()) {
+            <tr>
+              <td
+                [class]="mergedEmptyCellClass()"
+                [attr.colspan]="emptyColumnSpan()">
+                <app-error-state
+                  compact
+                  [title]="errorMessage()"
+                  [description]="errorDescription()"
+                  [retrying]="resourceLoading()"
+                  (retry)="reload()" />
+              </td>
+            </tr>
+          } @else if (showSkeleton()) {
             @for (skeleton of skeletonRowRange(); track $index) {
               <tr [class]="classes.row">
                 @if (showUtilityColumn()) {
@@ -278,6 +293,8 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   rowClass = input<DatatableRowClass<T> | ''>('');
   emptyCellClass = input('');
   emptyMessage = input('No rows to display.');
+  errorMessage = input('This data could not be loaded.');
+  errorDescription = input('Check your connection and try again.');
   itemLabel = input('tasks');
   skeletonRows = input(8);
   stickyHeader = input(false);
@@ -376,6 +393,8 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   });
 
   resourceLoading = computed(() => this.resourceRef?.isLoading() ?? false);
+
+  loadFailed = computed(() => this.resourceRef.error() !== undefined);
 
   delayedResourceLoading = delayedLoading(this.resourceLoading);
 

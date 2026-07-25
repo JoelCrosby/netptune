@@ -27,6 +27,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
   ],
   template: `
     <app-datatable
+      errorMessage="Audit events could not be loaded."
       containerClass="h-[calc(100vh-42rem)] overflow-auto"
       tableClass="min-w-180 table-fixed"
       emptyMessage="No audit events found."

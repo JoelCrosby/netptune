@@ -72,6 +72,7 @@ import {
       (sortChange)="setSort($event)" />
 
     <app-datatable
+      errorMessage="Files could not be loaded."
       containerClass="overflow-x-auto"
       tableClass="min-w-190 table-fixed"
       emptyCellClass="py-12"

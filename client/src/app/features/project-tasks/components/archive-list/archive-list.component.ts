@@ -52,6 +52,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
     </div>
 
     <app-datatable
+      errorMessage="Archived tasks could not be loaded."
       #datatable
       containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
       tableClass="min-w-[760px] table-fixed"
