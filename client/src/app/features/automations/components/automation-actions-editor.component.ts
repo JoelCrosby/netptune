@@ -1,6 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { AutomationBoardGroupOption } from '@core/models/automation-board-group-option';
 import { WorkspaceAppUser } from '@core/models/appuser';
+import { RelationType } from '@core/models/relation-type';
 import { Status } from '@core/models/status';
 import { Tag } from '@core/models/tag';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
@@ -27,6 +28,7 @@ import {
   AutomationActionType,
   AutomationDelayUnit,
 } from '../models/automation.models';
+import { AutomationCreateTaskEditorComponent } from './automation-create-task-editor.component';
 import { AutomationNotifyEditorComponent } from './automation-notify-editor.component';
 import { AutomationTaskUpdateEditorComponent } from './automation-task-update-editor.component';
 
@@ -63,6 +65,7 @@ export interface AutomationActionUpdate {
     LucideTrash2,
     AutomationTaskUpdateEditorComponent,
     AutomationNotifyEditorComponent,
+    AutomationCreateTaskEditorComponent,
   ],
   template: `
     <app-card-title>Then</app-card-title>
@@ -194,6 +197,21 @@ export interface AutomationActionUpdate {
                         })
                       " />
                   </div>
+                } @else if (action.type === automationActionType.createTask) {
+                  <app-automation-create-task-editor
+                    [action]="action"
+                    [statuses]="statuses()"
+                    [users]="users()"
+                    [tags]="tags()"
+                    [sprints]="sprints()"
+                    [boardGroups]="boardGroups()"
+                    [relationTypes]="relationTypes()"
+                    (patch)="
+                      actionUpdated.emit({
+                        clientId: action.clientId,
+                        patch: $event,
+                      })
+                    " />
                 } @else if (action.type === automationActionType.updateTask) {
                   <app-automation-task-update-editor
                     [action]="action"
@@ -292,6 +310,7 @@ export class AutomationActionsEditorComponent {
     AutomationActionType.updateTask,
     AutomationActionType.addComment,
     AutomationActionType.deleteTask,
+    AutomationActionType.createTask,
   ];
   readonly actions = input.required<EditableAutomationAction[]>();
   readonly statuses = input.required<Status[]>();
@@ -300,6 +319,7 @@ export class AutomationActionsEditorComponent {
   readonly tags = input.required<Tag[]>();
   readonly sprints = input.required<SprintViewModel[]>();
   readonly boardGroups = input.required<AutomationBoardGroupOption[]>();
+  readonly relationTypes = input.required<RelationType[]>();
   readonly defaultStatusId = input<number | null>(null);
 
   readonly addAction = output();

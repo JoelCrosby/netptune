@@ -7,4 +7,5 @@ public enum AutomationActionType
     UpdateTask = 2,
     AddComment = 3,
     DeleteTask = 4,
+    CreateTask = 5,
 }

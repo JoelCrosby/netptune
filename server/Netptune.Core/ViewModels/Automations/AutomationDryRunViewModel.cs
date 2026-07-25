@@ -26,6 +26,8 @@ public sealed record AutomationDryRunActionViewModel
 
     public List<string> UpdatedFields { get; init; } = [];
 
+    public string? CreatedTaskName { get; init; }
+
     public int? DelayMinutes { get; init; }
 }
 

@@ -132,6 +132,43 @@ function validateActions(actions: AutomationActionRequest[]): string | null {
     return `Unknown message variables: ${invalidMessageVariables.join(', ')}.`;
   }
 
+  const createTaskActions = actions.filter((action) => {
+    return action.type === AutomationActionType.createTask;
+  });
+
+  const hasUnnamedCreateTask = createTaskActions.some((action) => {
+    return !action.taskName;
+  });
+
+  if (hasUnnamedCreateTask) {
+    return 'Create task actions need a task name.';
+  }
+
+  const hasConflictingAssignees = createTaskActions.some((action) => {
+    return !!action.copyAssignees && !!action.assigneeIds?.length;
+  });
+
+  if (hasConflictingAssignees) {
+    return 'Create task actions cannot copy and set assignees at the same time.';
+  }
+
+  const invalidCreateTaskDate = createTaskActions.some((action) => {
+    return [action.startDate, action.dueDate].some(isIncompleteDateUpdate);
+  });
+
+  if (invalidCreateTaskDate) {
+    return 'Complete each configured task date.';
+  }
+
+  const invalidCreateTaskVariables = createTaskActions
+    .flatMap((action) => [action.taskName, action.taskDescription])
+    .map(unknownMessageVariables)
+    .find((variables) => variables.length);
+
+  if (invalidCreateTaskVariables) {
+    return `Unknown message variables: ${invalidCreateTaskVariables.join(', ')}.`;
+  }
+
   const hasEmptyTaskUpdate = actions.some((action) => {
     return (
       action.type === AutomationActionType.updateTask && !hasTaskUpdate(action)
@@ -362,6 +399,10 @@ type TaskUpdateFields = Required<
   >
 >;
 
+type CreateTaskFields = Required<
+  Pick<AutomationActionRequest, 'copyAssignees' | 'linkRelationTypeId'>
+>;
+
 type DeleteFields = Required<
   Pick<AutomationActionRequest, 'delayAmount' | 'delayUnit'>
 >;
@@ -373,6 +414,7 @@ function toActionRequest(action: AutomationAction): AutomationActionRequest {
     comment: toComment(action),
     ...toFlagFields(action),
     ...toTaskUpdateFields(action),
+    ...toCreateTaskFields(action),
     ...toDeleteFields(action),
   };
 }
@@ -447,6 +489,24 @@ function toFlagFields(action: AutomationAction): FlagFields {
 }
 
 function toTaskUpdateFields(action: AutomationAction): TaskUpdateFields {
+  const isCreateTask = action.type === AutomationActionType.createTask;
+
+  if (isCreateTask) {
+    return {
+      ...emptyTaskUpdateFields(),
+      statusId: action.statusId ?? null,
+      priority: action.priority ?? null,
+      taskName: toTrimmedOrNull(action.taskName),
+      taskDescription: toTrimmedOrNull(action.taskDescription),
+      assigneeIds: action.assigneeIds ?? [],
+      addTags: action.addTags ?? [],
+      startDate: action.startDate ?? null,
+      dueDate: action.dueDate ?? null,
+      sprintId: action.sprintId ?? null,
+      boardGroupId: action.boardGroupId ?? null,
+    };
+  }
+
   if (action.type !== AutomationActionType.updateTask) {
     return emptyTaskUpdateFields();
   }
@@ -470,6 +530,22 @@ function toTaskUpdateFields(action: AutomationAction): TaskUpdateFields {
     sprintId: action.sprintId ?? null,
     clearSprint: !!action.clearSprint,
     boardGroupId: action.boardGroupId ?? null,
+  };
+}
+
+function toCreateTaskFields(action: AutomationAction): CreateTaskFields {
+  if (action.type !== AutomationActionType.createTask) {
+    return {
+      copyAssignees: false,
+      linkRelationTypeId: null,
+    };
+  }
+
+  const copyAssignees = !!action.copyAssignees;
+
+  return {
+    copyAssignees,
+    linkRelationTypeId: action.linkRelationTypeId ?? null,
   };
 }
 

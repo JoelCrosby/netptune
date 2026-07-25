@@ -46,6 +46,11 @@ import {
                     Updates {{ describeUpdatedFields(action) }}
                   </span>
                 }
+                @case (automationActionType.createTask) {
+                  <span class="text-muted text-xs">
+                    Creates "{{ action.createdTaskName }}"
+                  </span>
+                }
                 @case (automationActionType.deleteTask) {
                   <span class="text-warn text-xs">
                     {{ describeDeletion(action) }}

@@ -141,12 +141,14 @@ public sealed class GetAutomationDryRunQueryHandler
         var notification = contribution.Notification;
         var flag = contribution.Flag;
         var deletion = contribution.TaskDeletion;
+        var creation = contribution.TaskCreation;
         var updatedFields = DescribeTaskUpdate(contribution.TaskUpdate);
 
         var hasEffect = notification is not null
             || flag is not null
             || deletion is not null
             || contribution.CommentBody is not null
+            || creation is not null
             || updatedFields.Count > 0;
 
         return new AutomationDryRunActionViewModel
@@ -161,6 +163,7 @@ public sealed class GetAutomationDryRunQueryHandler
             Comment = contribution.CommentBody,
             FlagName = flag?.Name,
             UpdatedFields = updatedFields,
+            CreatedTaskName = creation?.Name,
             DelayMinutes = deletion is null ? null : (int) deletion.Delay.TotalMinutes,
         };
     }

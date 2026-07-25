@@ -28,6 +28,8 @@ public sealed record AutomationActionPlanContribution
     public string? CommentBody { get; init; }
 
     public AutomationTaskDeletionContribution? TaskDeletion { get; init; }
+
+    public AutomationTaskCreationContribution? TaskCreation { get; init; }
 }
 
 public sealed record AutomationNotificationContribution
@@ -85,3 +87,28 @@ public sealed record AutomationTaskUpdateContribution
 }
 
 public sealed record AutomationTaskDeletionContribution(TimeSpan Delay);
+
+public sealed record AutomationTaskCreationContribution
+{
+    public required string Name { get; init; }
+
+    public string? Description { get; init; }
+
+    public int? StatusId { get; init; }
+
+    public TaskPriority? Priority { get; init; }
+
+    public List<string> AssigneeIds { get; init; } = [];
+
+    public List<string> AddTags { get; init; } = [];
+
+    public DateOnly? StartDate { get; init; }
+
+    public DateOnly? DueDate { get; init; }
+
+    public int? SprintId { get; init; }
+
+    public int? BoardGroupId { get; init; }
+
+    public int? LinkRelationTypeId { get; init; }
+}

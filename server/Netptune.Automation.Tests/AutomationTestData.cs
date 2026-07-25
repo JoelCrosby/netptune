@@ -54,6 +54,7 @@ internal static class AutomationTestData
         {
             Name = "Automation Project",
             Key = "AUTO",
+            NextTaskScopeId = 2,
             Workspace = workspace,
             MetaInfo = new ProjectMeta(),
             OwnerId = owner.Id,
@@ -96,6 +97,7 @@ internal static class AutomationTestData
             Permissions =
             [
                 NetptunePermissions.Tasks.Read,
+                NetptunePermissions.Tasks.Create,
                 NetptunePermissions.Tasks.Update,
                 NetptunePermissions.Tasks.Move,
                 NetptunePermissions.Tasks.Reassign,
@@ -121,12 +123,35 @@ internal static class AutomationTestData
             Permissions = [],
         };
 
+        var board = new Board
+        {
+            Name = "Automation Board",
+            Identifier = "automation-default-board",
+            Project = project,
+            BoardType = BoardType.Default,
+            MetaInfo = new BoardMeta(),
+            Workspace = workspace,
+            OwnerId = owner.Id,
+            CreatedByUserId = owner.Id,
+        };
+        var boardGroup = new BoardGroup
+        {
+            Name = "Backlog",
+            Board = board,
+            SortOrder = 1,
+            Workspace = workspace,
+            OwnerId = owner.Id,
+            CreatedByUserId = owner.Id,
+        };
         db.AppUsers.AddRange(owner, assignee, executionUser);
         db.Workspaces.Add(workspace);
         db.ServiceAccounts.Add(serviceAccount);
         db.WorkspaceAppUsers.AddRange(serviceMembership, ownerMembership, assigneeMembership);
         db.Statuses.AddRange(statuses);
+
         db.Projects.Add(project);
+        db.Boards.Add(board);
+        db.BoardGroups.Add(boardGroup);
         db.ProjectTasks.Add(task);
 
         await db.SaveChangesAsync();
@@ -198,6 +223,64 @@ internal static class AutomationTestData
         });
 
         await db.SaveChangesAsync();
+    }
+
+    public static async Task<RelationType> CreateRelationType(DataContext db, AutomationScenario scenario)
+    {
+        var relationType = new RelationType
+        {
+            Name = "Parent of",
+            InverseName = "Child of",
+            Key = "parent-of",
+            Category = RelationCategory.Hierarchy,
+            IsSystem = true,
+            SortOrder = 1,
+            WorkspaceId = scenario.Workspace.Id,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+
+        db.RelationTypes.Add(relationType);
+        await db.SaveChangesAsync();
+
+        return relationType;
+    }
+
+    public static async Task<AutomationRule> CreateCreateTaskRule(
+        DataContext db,
+        AutomationScenario scenario,
+        object actionConfig)
+    {
+        var rule = new AutomationRule
+        {
+            Name = "Automation Rule",
+            IsEnabled = true,
+            TriggerType = AutomationTriggerType.TaskChanged,
+            TriggerConfig = JsonSerializer.SerializeToDocument(new
+            {
+                fields = new[] { TaskChangeField.Status },
+            }, JsonOptions.Default),
+            WorkspaceId = scenario.Workspace.Id,
+            ExecutionUserId = scenario.ExecutionUser.Id,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+            Actions =
+            {
+                new AutomationAction
+                {
+                    Type = AutomationActionType.CreateTask,
+                    SortOrder = 1,
+                    Config = JsonSerializer.SerializeToDocument(actionConfig, JsonOptions.Default),
+                    OwnerId = scenario.Owner.Id,
+                    CreatedByUserId = scenario.Owner.Id,
+                },
+            },
+        };
+
+        db.AutomationRules.Add(rule);
+        await db.SaveChangesAsync();
+
+        return rule;
     }
 
     public static async Task<AutomationRule> CreateNotifyRule(

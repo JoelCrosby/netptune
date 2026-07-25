@@ -138,8 +138,8 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
         }
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var finalStartDate = ResolveFinalDate(task.StartDate, contribution.StartDate, today);
-        var finalDueDate = ResolveFinalDate(task.DueDate, contribution.DueDate, today);
+        var finalStartDate = AutomationDateResolver.ResolveOrKeep(task.StartDate, contribution.StartDate, today);
+        var finalDueDate = AutomationDateResolver.ResolveOrKeep(task.DueDate, contribution.DueDate, today);
         var hasValidSchedule = ProjectTaskSchedule.IsValid(finalStartDate, finalDueDate);
 
         if (!hasValidSchedule)
@@ -427,53 +427,6 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
         var sprint = await UnitOfWork.Sprints.GetAsync(sprintId.Value, true, cancellationToken);
 
         return sprint;
-    }
-
-    private static DateOnly? ResolveFinalDate(
-        DateOnly? currentDate,
-        AutomationDateUpdate? configuredUpdate,
-        DateOnly today)
-    {
-        if (configuredUpdate is null)
-        {
-            return currentDate;
-        }
-
-        var finalDate = ResolveDate(configuredUpdate, today);
-
-        return finalDate;
-    }
-
-    private static DateOnly? ResolveDate(AutomationDateUpdate update, DateOnly today)
-    {
-        return update.Mode switch
-        {
-            AutomationDateUpdateMode.Absolute => update.Date,
-            AutomationDateUpdateMode.RelativeDays => today.AddDays(update.Offset ?? 0),
-            AutomationDateUpdateMode.RelativeBusinessDays => AddBusinessDays(today, update.Offset ?? 0),
-            AutomationDateUpdateMode.Clear => null,
-            _ => null,
-        };
-    }
-
-    private static DateOnly AddBusinessDays(DateOnly date, int offset)
-    {
-        var remaining = Math.Abs(offset);
-        var direction = Math.Sign(offset);
-        var result = date;
-
-        while (remaining > 0)
-        {
-            result = result.AddDays(direction);
-            var isWeekday = result.DayOfWeek is not DayOfWeek.Saturday and not DayOfWeek.Sunday;
-
-            if (isWeekday)
-            {
-                remaining--;
-            }
-        }
-
-        return result;
     }
 
     private static void SynchronizeExecutionTask(ProjectTask executionTask, TaskViewModel current)

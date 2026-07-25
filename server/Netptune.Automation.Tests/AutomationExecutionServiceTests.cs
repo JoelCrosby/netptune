@@ -1408,6 +1408,121 @@ public sealed class AutomationExecutionServiceTests
         message.Should().Be($"{scenario.Project.Key}-{scenario.Task.ProjectScopeId} moved by Automation Rule");
     }
 
+    [Fact]
+    public async Task ExecuteTaskChangedRules_creates_task_from_templated_config()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        await AutomationTestData.CreateCreateTaskRule(scope.Db, scenario, new
+        {
+            name = "Follow up on {{task.key}}",
+            description = "Raised by {{rule.name}}",
+            priority = TaskPriority.High,
+            copyAssignees = true,
+            dueDate = new
+            {
+                mode = AutomationDateUpdateMode.RelativeDays,
+                offset = 3,
+            },
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var createdTask = await scope.Db.ProjectTasks
+            .Include(task => task.ProjectTaskAppUsers)
+            .SingleAsync(task => task.Id != scenario.Task.Id, TestContext.Current.CancellationToken);
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        createdTask.Name.Should().Be($"Follow up on {scenario.Project.Key}-{scenario.Task.ProjectScopeId}");
+        createdTask.Description.Should().Be("Raised by Automation Rule");
+        createdTask.Priority.Should().Be(TaskPriority.High);
+        createdTask.ProjectId.Should().Be(scenario.Project.Id);
+        createdTask.DueDate.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow).AddDays(3));
+        createdTask.ProjectTaskAppUsers.Select(assignee => assignee.UserId)
+            .Should()
+            .BeEquivalentTo([scenario.Assignee.Id]);
+
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_links_created_task_to_the_triggering_task()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var relationType = await AutomationTestData.CreateRelationType(scope.Db, scenario);
+        await AutomationTestData.CreateCreateTaskRule(scope.Db, scenario, new
+        {
+            name = "Subtask",
+            linkRelationTypeId = relationType.Id,
+        });
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var createdTask = await scope.Db.ProjectTasks
+            .SingleAsync(task => task.Id != scenario.Task.Id, TestContext.Current.CancellationToken);
+        var relation = await scope.Db.ProjectTaskRelations.SingleAsync(TestContext.Current.CancellationToken);
+
+        relation.RelationTypeId.Should().Be(relationType.Id);
+        relation.SourceTaskId.Should().Be(scenario.Task.Id);
+        relation.TargetTaskId.Should().Be(createdTask.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskCreatedRules_skips_its_own_created_task()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskCreated);
+
+        await scope.AutomationExecution.ExecuteEventRules(new TaskCreatedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.ExecutionUser.Id,
+            EventId = Guid.NewGuid(),
+            OriginType = EventOriginType.Automation,
+            AutomationRuleId = rule.Id,
+            ChainDepth = 1,
+        }, TestContext.Current.CancellationToken);
+
+        var hasRuns = await scope.Db.AutomationRuns.AnyAsync(TestContext.Current.CancellationToken);
+
+        hasRuns.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExecuteTaskCreatedRules_stops_when_chain_depth_limit_is_reached()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskCreated);
+
+        await scope.AutomationExecution.ExecuteEventRules(new TaskCreatedMessage
+        {
+            TaskId = scenario.Task.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            ActorUserId = scenario.ExecutionUser.Id,
+            EventId = Guid.NewGuid(),
+            OriginType = EventOriginType.Automation,
+            ChainDepth = AutomationChainPolicy.MaxDepth,
+        }, TestContext.Current.CancellationToken);
+
+        var hasRuns = await scope.Db.AutomationRuns.AnyAsync(TestContext.Current.CancellationToken);
+
+        hasRuns.Should().BeFalse();
+    }
+
     private static async Task ExecuteStatusChange(
         AutomationTestScope scope,
         AutomationScenario scenario,

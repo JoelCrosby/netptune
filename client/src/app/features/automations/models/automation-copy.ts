@@ -54,6 +54,7 @@ export const actionTypeLabels: Record<AutomationActionType, string> = {
   [AutomationActionType.updateTask]: 'Update task',
   [AutomationActionType.addComment]: 'Add comment',
   [AutomationActionType.deleteTask]: 'Delete task',
+  [AutomationActionType.createTask]: 'Create task',
 };
 
 export const conditionOperatorLabels: Record<
@@ -457,6 +458,8 @@ export function describeAutomationAction(
         : 'Add a comment';
     case AutomationActionType.deleteTask:
       return describeDeleteTaskAction(action);
+    case AutomationActionType.createTask:
+      return describeCreateTaskAction(action);
   }
 }
 
@@ -640,6 +643,13 @@ export function describeNotificationAudience(action: AutomationAction): string {
   });
 
   return joinNaturalList(parts);
+}
+
+function describeCreateTaskAction(action: AutomationAction): string {
+  const name = action.taskName?.trim();
+  const created = name ? `Create task "${name}"` : 'Create a task';
+
+  return action.linkRelationTypeId ? `${created} and link it` : created;
 }
 
 function describeDeleteTaskAction(action: AutomationAction): string {

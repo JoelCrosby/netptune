@@ -128,6 +128,10 @@ public record AutomationActionRequest
 
     public int? BoardGroupId { get; init; }
 
+    public bool CopyAssignees { get; init; }
+
+    public int? LinkRelationTypeId { get; init; }
+
     public int? DelayAmount { get; init; }
 
     public AutomationDelayUnit? DelayUnit { get; init; }

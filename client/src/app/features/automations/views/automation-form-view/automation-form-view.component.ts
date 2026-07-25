@@ -12,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { automationRuleResource } from '@core/resources/automation.resource';
 import { boardGroupOptionsResource } from '@core/resources/board-group.resource';
+import { relationTypeResource } from '@core/resources/relation-type.resources';
 import { serviceAccountResource } from '@core/resources/service-account.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { statusResource } from '@core/resources/status.resources';
@@ -127,6 +128,7 @@ import { AutomationsService } from '../../services/automations.service';
                   [tags]="workspaceTagsResource.value()"
                   [sprints]="workspaceSprintsResource.value()"
                   [boardGroups]="workspaceBoardGroupsResource.value()"
+                  [relationTypes]="relationTypesResource.value()"
                   [defaultStatusId]="defaultActiveStatusId()"
                   (addAction)="addAction()"
                   (removeAction)="removeAction($event)"
@@ -179,6 +181,7 @@ export class AutomationFormViewComponent {
   readonly workspaceTagsResource = tagResource();
   readonly workspaceSprintsResource = sprintResource([]);
   readonly workspaceBoardGroupsResource = boardGroupOptionsResource();
+  readonly relationTypesResource = relationTypeResource();
   readonly ruleResource = automationRuleResource<AutomationRule>(this.ruleId);
 
   readonly taskStatuses = this.taskStatusesResource.value;
@@ -297,12 +300,14 @@ export class AutomationFormViewComponent {
           ? this.defaultActiveStatusId()
           : null,
       priority: null,
-      taskName: null,
+      taskName: type === AutomationActionType.createTask ? '' : null,
       taskDescription: null,
       clearDescription: false,
       ownerId: null,
       clearOwner: false,
-      assigneeIds: null,
+      assigneeIds: type === AutomationActionType.createTask ? [] : null,
+      copyAssignees: false,
+      linkRelationTypeId: null,
       addTags: [],
       removeTags: [],
       startDate: null,
@@ -429,6 +434,8 @@ export class AutomationFormViewComponent {
       recipients: [AutomationNotificationRecipient.assignees],
       recipientUserIds: [],
       recipientRoles: [],
+      copyAssignees: false,
+      linkRelationTypeId: null,
       comment: null,
       flagName: null,
       flagDescription: null,

@@ -14,12 +14,14 @@ public static class AutomationActionServiceCollectionExtensions
         var updateAction = ServiceDescriptor.Singleton<IAutomationAction, UpdateTaskAction>();
         var commentAction = ServiceDescriptor.Singleton<IAutomationAction, AddCommentAction>();
         var deleteAction = ServiceDescriptor.Singleton<IAutomationAction, DeleteTaskAction>();
+        var createAction = ServiceDescriptor.Singleton<IAutomationAction, CreateTaskAction>();
 
         services.TryAddEnumerable(notifyAction);
         services.TryAddEnumerable(flagAction);
         services.TryAddEnumerable(updateAction);
         services.TryAddEnumerable(commentAction);
         services.TryAddEnumerable(deleteAction);
+        services.TryAddEnumerable(createAction);
         services.TryAddSingleton<IAutomationActionRegistry, AutomationActionRegistry>();
 
         return services;
