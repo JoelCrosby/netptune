@@ -54,14 +54,15 @@ import { AutomationsService } from '../../services/automations.service';
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
-      <app-page-header title="Automations">
-        @if (canManage()) {
-          <a app-flat-button color="primary" [routerLink]="['new']">
-            <svg lucidePlus class="h-4 w-4"></svg>
-            Create Automation
-          </a>
-        }
-      </app-page-header>
+      @if (canManage()) {
+        <app-page-header
+          title="Automations"
+          actionTitle="Create Automation"
+          [count]="count()"
+          (actionClick)="onCreate()" />
+      } @else {
+        <app-page-header title="Automations" [count]="count()" />
+      }
 
       @if (loading()) {
         <app-page-loading />
@@ -127,6 +128,10 @@ export class AutomationsViewComponent {
     selectHasPermission(netptunePermissions.automations.manage)
   );
 
+  readonly count = computed(() =>
+    this.loading() ? null : (this.summary()?.ruleCount ?? 0)
+  );
+
   readonly stats = computed<AutomationStat[]>(() => {
     const summary = this.summary();
 
@@ -139,6 +144,10 @@ export class AutomationsViewComponent {
 
   constructor() {
     this.load();
+  }
+
+  onCreate() {
+    void this.router.navigate(['new'], { relativeTo: this.route });
   }
 
   reloadRules() {
