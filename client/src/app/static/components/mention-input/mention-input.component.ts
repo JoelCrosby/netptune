@@ -65,6 +65,8 @@ export interface MentionSubmitEvent {
           [disabled]="disabled()"
           [attr.autocomplete]="autocomplete()"
           [attr.placeholder]="placeholder()"
+          [attr.aria-invalid]="ariaInvalid()"
+          [attr.aria-describedby]="describedBy(!!hint())"
           [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
           (input)="onInput($event)"
           (keydown)="onKeyDown($event)"
@@ -80,15 +82,17 @@ export interface MentionSubmitEvent {
       </app-form-control-field>
 
       @if (hint()) {
-        <small appFormHint> {{ hint() }} </small>
+        <small [id]="hintId()" appFormHint> {{ hint() }} </small>
       }
 
-      @if (touched() && errors().length > 0) {
-        @for (error of errors(); track error.kind) {
-          <app-form-error>
-            {{ error.message }}
-          </app-form-error>
-        }
+      @if (showErrors()) {
+        <div [id]="errorId()">
+          @for (error of errors(); track error.kind) {
+            <app-form-error>
+              {{ error.message }}
+            </app-form-error>
+          }
+        </div>
       }
 
       <div class="mt-[.4rem]">

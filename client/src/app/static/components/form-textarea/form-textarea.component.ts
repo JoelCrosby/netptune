@@ -48,6 +48,8 @@ import { FormErrorComponent } from '../form-error/form-error.component';
         [attr.maxLength]="maxLength()"
         [attr.minLength]="minLength()"
         [attr.placeholder]="placeholder()"
+        [attr.aria-invalid]="ariaInvalid()"
+        [attr.aria-describedby]="describedBy(!!hint())"
         [style.padding]="prefix() ? '.6rem .8rem 1rem 0' : '.6rem .8rem'"
         [rows]="rows()"
         (input)="onInputchange($event)"
@@ -59,15 +61,17 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     </app-form-control-field>
 
     @if (hint()) {
-      <small appFormHint> {{ hint() }} </small>
+      <small [id]="hintId()" appFormHint> {{ hint() }} </small>
     }
 
-    @if (touched() && errors().length > 0) {
-      @for (error of errors(); track error.kind) {
-        <app-form-error>
-          {{ error.message }}
-        </app-form-error>
-      }
+    @if (showErrors()) {
+      <div [id]="errorId()">
+        @for (error of errors(); track error.kind) {
+          <app-form-error>
+            {{ error.message }}
+          </app-form-error>
+        }
+      </div>
     }
   </div> `,
 })

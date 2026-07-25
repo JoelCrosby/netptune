@@ -57,15 +57,17 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     </div>
 
     @if (hint()) {
-      <small appFormHint> {{ hint() }} </small>
+      <small [id]="hintId()" appFormHint> {{ hint() }} </small>
     }
 
-    @if (touched() && errors().length > 0) {
-      @for (error of errors(); track error.kind) {
-        <app-form-error>
-          {{ error.message }}
-        </app-form-error>
-      }
+    @if (showErrors()) {
+      <div [id]="errorId()">
+        @for (error of errors(); track error.kind) {
+          <app-form-error>
+            {{ error.message }}
+          </app-form-error>
+        }
+      </div>
     }
   </div> `,
 })

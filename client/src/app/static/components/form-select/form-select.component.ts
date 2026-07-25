@@ -30,6 +30,7 @@ import {
   FormControlPrefixDirective,
 } from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from './form-select-dropdown.component';
+import { describedByIds, errorIdFor, hintIdFor } from '../form-control-a11y';
 import { FormSelectOptionComponent } from './form-select-option.component';
 import { FormSelectDropdownStyleDirective } from './form-select.directives';
 import { FormSelectService } from './form-select.service';
@@ -78,6 +79,8 @@ import { FormErrorComponent } from '../form-error/form-error.component';
         [disabled]="disabled()"
         class="grow cursor-pointer selection:bg-transparent"
         [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
+        [attr.aria-invalid]="ariaInvalid()"
+        [attr.aria-describedby]="describedBy()"
         readonly
         (click)="$event.stopPropagation(); showDropdown()"
         (keydown)="onKeyDown($event)"
@@ -112,15 +115,17 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     </app-form-control-field>
 
     @if (hint()) {
-      <small appFormHint> {{ hint() }} </small>
+      <small [id]="hintId()" appFormHint> {{ hint() }} </small>
     }
 
-    @if (touched() && errors().length > 0) {
-      @for (error of errors(); track error.kind) {
-        <app-form-error>
-          {{ error.message }}
-        </app-form-error>
-      }
+    @if (showErrors()) {
+      <div [id]="errorId()">
+        @for (error of errors(); track error.kind) {
+          <app-form-error>
+            {{ error.message }}
+          </app-form-error>
+        }
+      </div>
     }
   </div> `,
 })
@@ -156,6 +161,17 @@ export class FormSelectComponent<
   readonly errors = input<readonly WithOptionalFieldTree<ValidationError>[]>(
     []
   );
+
+  readonly showErrors = computed(
+    () => this.touched() && this.errors().length > 0
+  );
+  readonly hintId = computed(() => hintIdFor(this.name()));
+  readonly errorId = computed(() => errorIdFor(this.name()));
+  readonly ariaInvalid = computed(() => (this.showErrors() ? 'true' : null));
+
+  describedBy(): string | null {
+    return describedByIds(this.name(), !!this.hint(), this.showErrors());
+  }
   readonly pending = input<boolean>(false);
   readonly noMargin = input(false);
 

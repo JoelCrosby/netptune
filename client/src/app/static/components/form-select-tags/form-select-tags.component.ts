@@ -26,6 +26,7 @@ import {
 } from '../form-control/form-control.directives';
 import { FormSelectDropdownComponent } from '../form-select/form-select-dropdown.component';
 import { FormSelectDropdownStyleDirective } from '../form-select/form-select.directives';
+import { hintIdFor } from '../form-control-a11y';
 import { FormSelectTagsOptionComponent } from './form-select-tags-option.component';
 import { FormSelectTagsService } from './form-select-tags.service';
 
@@ -82,6 +83,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
           (input)="onSearchInput($event)"
           (keydown)="onKeyDown($event)"
           (blur)="onBlur()"
+          [attr.aria-describedby]="hint() ? hintId() : null"
           autocomplete="off" />
       </div>
 
@@ -109,7 +111,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
     </app-form-control-field>
 
     @if (hint()) {
-      <small appFormHint>{{ hint() }}</small>
+      <small [id]="hintId()" appFormHint>{{ hint() }}</small>
     }
   </div> `,
 })
@@ -140,6 +142,7 @@ export class FormSelectTagsComponent<TValue>
   readonly isReadonly = input<boolean>(false);
   readonly hidden = input<boolean>(false);
   readonly invalid = input<boolean>(false);
+  readonly hintId = computed(() => hintIdFor(this.name()));
   readonly pending = input<boolean>(false);
 
   readonly searchQuery = signal<string>('');
