@@ -1,9 +1,13 @@
 import { Component, inject } from '@angular/core';
+import { loadUser } from '@core/store/users/users.actions';
 import {
   selectUserDetail,
   selectUserDetailLoading,
+  selectUserDetailLoadingError,
 } from '@core/store/users/users.selectors';
 import { Store } from '@ngrx/store';
+import { ActivatedRoute } from '@angular/router';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
@@ -11,6 +15,7 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
 
 @Component({
   imports: [
+    ErrorStateComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -22,6 +27,11 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
 
       @if (loading()) {
         <app-page-loading />
+      } @else if (loadError()) {
+        <app-error-state
+          title="This member could not be loaded"
+          description="They may have been removed from the workspace, or the request failed."
+          (retry)="reload()" />
       } @else {
         <app-user-detail />
       }
@@ -30,7 +40,17 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
 })
 export class UserDetailViewComponent {
   private store = inject(Store);
+  private route = inject(ActivatedRoute);
 
   loading = this.store.selectSignal(selectUserDetailLoading);
+  loadError = this.store.selectSignal(selectUserDetailLoadingError);
   user = this.store.selectSignal(selectUserDetail);
+
+  reload() {
+    const userId = this.route.snapshot.params['id'] as string | undefined;
+
+    if (!userId) return;
+
+    this.store.dispatch(loadUser.init({ userId }));
+  }
 }

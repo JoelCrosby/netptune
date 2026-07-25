@@ -14,6 +14,11 @@ export const selectProfileLoading = createSelector(
   (state: ProfileState) => state.loadProfileloading && !state.profileloaded
 );
 
+export const selectProfileError = createSelector(
+  selectProfileFeature,
+  (state) => state.loadProfileError
+);
+
 export const selectProfileLoaded = createSelector(
   selectProfileFeature,
   (state: ProfileState) => state.profileloaded

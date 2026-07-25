@@ -20,6 +20,11 @@ export const selectWorkspacesLoading = createSelector(
   (state: WorkspacesState) => state.loading && !state.loaded
 );
 
+export const selectWorkspacesLoadingError = createSelector(
+  selectWorkspacesFeature,
+  (state: WorkspacesState) => state.loadingError
+);
+
 export const selectWorkspacesLoaded = createSelector(
   selectWorkspacesFeature,
   (state: WorkspacesState) => state.loaded

@@ -40,11 +40,13 @@ const reducer = createReducer(
   on(actions.loadUser.init, (state): UsersState => ({
     ...state,
     userDetailLoading: true,
+    userDetailLoadingError: undefined,
   })),
   on(actions.loadUser.success, (state, { user }): UsersState => ({
     ...state,
     userDetail: user,
     userDetailLoading: false,
+    userDetailLoadingError: undefined,
   })),
   on(actions.loadUser.fail, (state, { error }): UsersState => ({
     ...state,

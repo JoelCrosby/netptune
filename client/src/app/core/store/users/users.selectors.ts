@@ -28,6 +28,11 @@ export const selectUserDetailLoading = createSelector(
   (state: UsersState) => state.userDetailLoading
 );
 
+export const selectUserDetailLoadingError = createSelector(
+  selectUsersFeature,
+  (state: UsersState) => state.userDetailLoadingError
+);
+
 export const selectUsersLoaded = createSelector(
   selectUsersFeature,
   (state: UsersState) => state.loaded

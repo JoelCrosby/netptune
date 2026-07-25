@@ -2,19 +2,23 @@ import { Component, effect, inject, untracked } from '@angular/core';
 import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { DialogService } from '@core/services/dialog.service';
+import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
 import {
   selectAllWorkspaces,
   selectWorkspacesLoaded,
   selectWorkspacesLoading,
+  selectWorkspacesLoadingError,
 } from '@core/store/workspaces/workspaces.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
 import { Store } from '@ngrx/store';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 
 @Component({
   imports: [
+    ErrorStateComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -29,6 +33,11 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
 
     @if (loading()) {
       <app-page-loading />
+    } @else if (loadError()) {
+      <app-error-state
+        title="Your workspaces could not be loaded"
+        description="Check your connection and try again."
+        (retry)="reload()" />
     } @else {
       <app-workspace-list />
       <app-build-number />
@@ -40,6 +49,7 @@ export class WorkspacesViewComponent {
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectWorkspacesLoading);
+  loadError = this.store.selectSignal(selectWorkspacesLoadingError);
   private loaded = this.store.selectSignal(selectWorkspacesLoaded);
   private workspaces = this.store.selectSignal(selectAllWorkspaces);
   private initialSetupOpened = false;
@@ -57,6 +67,10 @@ export class WorkspacesViewComponent {
       this.initialSetupOpened = true;
       untracked(() => this.openWorkspaceDialog());
     });
+  }
+
+  reload() {
+    this.store.dispatch(loadWorkspaces.init());
   }
 
   openWorkspaceDialog() {

@@ -6,14 +6,17 @@ import { UpdateProfileComponent } from '@profile/components/update-profile/updat
 import { LinkedProvidersComponent } from '@profile/components/linked-providers/linked-providers.component';
 import { loadProfile } from '@app/core/store/profile/profile.actions';
 import {
+  selectProfileError,
   selectProfileLoading,
   selectUpdateProfileLoading,
 } from '@app/core/store/profile/profile.selectors';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
 @Component({
   imports: [
+    ErrorStateComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -29,6 +32,11 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
     @if (loading()) {
       <app-page-loading />
+    } @else if (loadError()) {
+      <app-error-state
+        title="Your profile could not be loaded"
+        description="Check your connection and try again."
+        (retry)="reload()" />
     } @else {
       <app-update-profile />
       <div class="border-border my-8 border-b-2"></div>
@@ -43,9 +51,14 @@ export class ProfileViewComponent {
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectProfileLoading);
+  loadError = this.store.selectSignal(selectProfileError);
   loadingUpdate = this.store.selectSignal(selectUpdateProfileLoading);
 
   constructor() {
+    this.store.dispatch(loadProfile.init());
+  }
+
+  reload() {
     this.store.dispatch(loadProfile.init());
   }
 }

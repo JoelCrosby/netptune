@@ -41,6 +41,7 @@ export interface SprintsState extends AsyncEntityState<SprintViewModel> {
   selectedSprintFilterId?: number;
   detail?: SprintDetailViewModel;
   detailLoading: boolean;
+  detailError?: HttpErrorResponse;
   filter: SprintFilter;
   createState: ActionState;
   updateState: ActionState;

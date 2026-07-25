@@ -62,6 +62,11 @@ export const selectSprintDetailLoading = createSelector(
   (state: SprintsState) => state.detailLoading
 );
 
+export const selectSprintDetailError = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.detailError
+);
+
 export const selectSprintCreateLoading = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.createState.loading

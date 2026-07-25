@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
@@ -16,6 +16,7 @@ import {
 } from '@core/store/sprints/sprints.actions';
 import {
   selectSprintDetail,
+  selectSprintDetailError,
   selectSprintDetailLoading,
   selectSprintUpdateLoading,
 } from '@core/store/sprints/sprints.selectors';
@@ -31,6 +32,7 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
@@ -45,6 +47,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
 @Component({
   imports: [
     DatePipe,
+    ErrorStateComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
@@ -66,6 +69,20 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
 
       @if (loading()) {
         <app-page-loading />
+      } @else if (loadError(); as error) {
+        <app-error-state
+          [title]="
+            error.status === 404
+              ? 'This sprint could not be found'
+              : 'This sprint could not be loaded'
+          "
+          [description]="
+            error.status === 404
+              ? 'It may have been deleted, or you may not have access to it.'
+              : 'Check your connection and try again.'
+          "
+          [retryable]="error.status !== 404"
+          (retry)="reload()" />
       } @else if (sprint(); as sprint) {
         <section class="flex flex-col gap-4">
           <div class="flex flex-wrap items-start justify-between gap-4">
@@ -181,8 +198,10 @@ export class SprintDetailViewComponent {
   private confirmation = inject(ConfirmationService);
 
   readonly sprintStatus = SprintStatus;
+  readonly sprintId = signal<number | null>(null);
   readonly sprint = this.store.selectSignal(selectSprintDetail);
   readonly loading = this.store.selectSignal(selectSprintDetailLoading);
+  readonly loadError = this.store.selectSignal(selectSprintDetailError);
   readonly updateLoading = this.store.selectSignal(selectSprintUpdateLoading);
   readonly canUpdate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.update)
@@ -200,9 +219,18 @@ export class SprintDetailViewComponent {
       )
       .subscribe((sprintId) => {
         if (Number.isFinite(sprintId) && sprintId > 0) {
+          this.sprintId.set(sprintId);
           this.store.dispatch(loadSprintDetail.init({ sprintId }));
         }
       });
+  }
+
+  reload() {
+    const sprintId = this.sprintId();
+
+    if (!sprintId) return;
+
+    this.store.dispatch(loadSprintDetail.init({ sprintId }));
   }
 
   daysChip(sprint: SprintDetailViewModel) {

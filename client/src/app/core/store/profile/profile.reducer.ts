@@ -10,6 +10,7 @@ const reducer = createReducer(
   on(actions.loadProfile.init, (state): ProfileState => ({
     ...state,
     loadProfileloading: true,
+    loadProfileError: undefined,
   })),
   on(actions.loadProfile.fail, (state, { error }): ProfileState => ({
     ...state,
@@ -19,6 +20,7 @@ const reducer = createReducer(
   on(actions.loadProfile.success, (state, { profile }): ProfileState => ({
     ...state,
     loadProfileloading: false,
+    loadProfileError: undefined,
     profileloaded: true,
     profile,
   })),

@@ -51,19 +51,23 @@ const reducer = createReducer(
   on(actions.loadSprintDetail.init, (state): SprintsState => ({
     ...state,
     detailLoading: true,
+    detailError: undefined,
   })),
   on(actions.loadSprintDetail.success, (state, { sprint }): SprintsState =>
     adapter.upsertOne(sprint, {
       ...state,
       detail: sprint,
       detailLoading: false,
+      detailError: undefined,
       updateState: { loading: false },
     })
   ),
   on(actions.loadSprintDetail.fail, (state, { error }): SprintsState => ({
     ...state,
     loadingError: error,
+    detail: undefined,
     detailLoading: false,
+    detailError: error,
   })),
   on(actions.createSprint.init, (state): SprintsState => ({
     ...state,
