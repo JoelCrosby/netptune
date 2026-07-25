@@ -19,7 +19,10 @@ import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { filterObjectArray } from '@core/util/arrays';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { UserSelectOptionComponent } from './user-select-option.component';
+import {
+  UserSelectOptionComponent,
+  userSelectOptionId,
+} from './user-select-option.component';
 
 type User = AssigneeViewModel | AppUser;
 
@@ -86,12 +89,22 @@ type User = AssigneeViewModel | AppUser;
         @if (options()?.length) {
           <input
             appAutofocus
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="user-select-listbox"
+            aria-autocomplete="list"
             class="border-border bg-secondary text-foreground sticky top-0 m-2 rounded border px-2 py-1.5 text-sm focus:outline-none"
             placeholder="Search.."
+            [attr.aria-activedescendant]="activeDescendantId()"
             [formField]="searchForm.term"
             (click)="$event.stopPropagation()" />
         }
-        <div class="max-h-54 overflow-y-auto p-1">
+        <div
+          id="user-select-listbox"
+          role="listbox"
+          [attr.aria-label]="label()"
+          aria-multiselectable="true"
+          class="max-h-54 overflow-y-auto p-1">
           @for (option of filteredOptions(); track option.id) {
             <app-user-select-option
               [option]="option"
@@ -263,6 +276,12 @@ export class UserSelectComponent implements OnDestroy {
       this.selected.set(null);
     }
   }
+
+  readonly activeDescendantId = computed(() => {
+    const active = this.selected();
+
+    return active ? userSelectOptionId(active.id) : null;
+  });
 
   isActive(option: AppUser) {
     return option.id === this.selected()?.id;

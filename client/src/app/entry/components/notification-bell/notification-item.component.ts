@@ -15,8 +15,9 @@ import { Store } from '@ngrx/store';
   imports: [AvatarComponent, DatePipe, TooltipDirective],
   template: `
     @if (notification(); as notification) {
-      <div
-        class="hover:bg-hover flex min-w-80 cursor-pointer flex-row items-center gap-3 px-3 py-3 text-sm"
+      <button
+        type="button"
+        class="hover:bg-hover focus-visible:ring-primary flex w-full min-w-80 cursor-pointer flex-row items-center gap-3 px-3 py-3 text-left text-sm focus-visible:ring-2 focus-visible:outline-none"
         [class.opacity-50]="notification.isRead"
         (click)="onNotificationClick()">
         @if (!notification.isRead) {
@@ -57,7 +58,7 @@ import { Store } from '@ngrx/store';
             }
           </span>
         </div>
-      </div>
+      </button>
     }
   `,
 })

@@ -40,13 +40,14 @@ import { LucideSearch, LucideX } from '@lucide/angular';
         (keydown.enter)="onSubmit()" />
 
       @if (termForm.term().value()) {
-        <svg
-          lucideX
-          aria-hidden="false"
-          aria-label="Clear Search Icon"
-          class="hover:text-primary! h-4 w-4 cursor-pointer"
+        <button
+          type="button"
+          class="hover:text-primary! focus-visible:ring-primary flex h-4 w-4 cursor-pointer items-center justify-center rounded focus-visible:ring-2 focus-visible:outline-none"
+          aria-label="Clear search term"
           appTooltip="Clear search term"
-          (click)="onClearClicked()"></svg>
+          (click)="onClearClicked()">
+          <svg lucideX class="h-4 w-4" aria-hidden="true"></svg>
+        </button>
       } @else {
         <svg
           lucideSearch
