@@ -1600,6 +1600,120 @@ public sealed class AutomationExecutionServiceTests
         hasRuns.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task ExecuteManualRun_runs_actions_for_selected_tasks()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status]);
+
+        var result = await scope.ManualRuns.Execute(new AutomationManualRunRequest
+        {
+            RuleId = rule.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            TaskIds = [scenario.Task.Id],
+            InitiatingUserId = scenario.Owner.Id,
+        }, TestContext.Current.CancellationToken);
+
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+        var flag = await scope.Db.Flags.SingleAsync(TestContext.Current.CancellationToken);
+
+        result.RuleFound.Should().BeTrue();
+        result.ExecutedCount.Should().Be(1);
+        result.SkippedCount.Should().Be(0);
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+        flag.EntityId.Should().Be(scenario.Task.Id);
+    }
+
+    [Fact]
+    public async Task ExecuteManualRun_runs_again_for_the_same_task()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            actionType: AutomationActionType.AddComment);
+        var request = new AutomationManualRunRequest
+        {
+            RuleId = rule.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            TaskIds = [scenario.Task.Id],
+            InitiatingUserId = scenario.Owner.Id,
+        };
+
+        await scope.ManualRuns.Execute(request, TestContext.Current.CancellationToken);
+        await scope.ManualRuns.Execute(request, TestContext.Current.CancellationToken);
+
+        var runCount = await scope.Db.AutomationRuns.CountAsync(TestContext.Current.CancellationToken);
+
+        runCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task ExecuteManualRun_skips_tasks_that_fail_the_conditions()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var conditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions =
+            [
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Priority,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = TaskPriority.Critical.ToString(),
+                },
+            ],
+        };
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status],
+            conditionGroup);
+
+        var result = await scope.ManualRuns.Execute(new AutomationManualRunRequest
+        {
+            RuleId = rule.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            TaskIds = [scenario.Task.Id],
+            InitiatingUserId = scenario.Owner.Id,
+        }, TestContext.Current.CancellationToken);
+
+        var hasRuns = await scope.Db.AutomationRuns.AnyAsync(TestContext.Current.CancellationToken);
+
+        result.ExecutedCount.Should().Be(0);
+        result.SkippedCount.Should().Be(1);
+        hasRuns.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExecuteManualRun_reports_a_missing_rule()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
+        var result = await scope.ManualRuns.Execute(new AutomationManualRunRequest
+        {
+            RuleId = 9999,
+            WorkspaceId = scenario.Workspace.Id,
+            TaskIds = [scenario.Task.Id],
+            InitiatingUserId = scenario.Owner.Id,
+        }, TestContext.Current.CancellationToken);
+
+        result.RuleFound.Should().BeFalse();
+    }
+
     private static async Task ExecuteStatusChange(
         AutomationTestScope scope,
         AutomationScenario scenario,

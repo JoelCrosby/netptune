@@ -286,6 +286,11 @@ export interface AutomationDryRunAction {
   delayMinutes: number | null;
 }
 
+export interface AutomationManualRun {
+  ruleId: number;
+  taskCount: number;
+}
+
 export interface AutomationDryRun {
   ruleId: number;
   ruleName: string;

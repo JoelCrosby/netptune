@@ -110,3 +110,10 @@ public record AutomationActionViewModel
 
     public AutomationDelayUnit? DelayUnit { get; init; }
 }
+
+public record AutomationManualRunViewModel
+{
+    public int RuleId { get; init; }
+
+    public int TaskCount { get; init; }
+}

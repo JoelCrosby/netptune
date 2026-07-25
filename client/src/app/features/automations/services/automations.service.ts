@@ -5,6 +5,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { forkJoin, map, of, switchMap } from 'rxjs';
 import {
   AutomationDryRun,
+  AutomationManualRun,
   AutomationRule,
   AutomationRuleListItem,
   AutomationRuleRequest,
@@ -57,6 +58,14 @@ export class AutomationsService {
       .get<ClientResponse<AutomationDryRun>>(
         `api/automations/${id}/dry-run/${taskId}`
       )
+      .pipe(unwrapClientReposne());
+  }
+
+  runNow(id: number, taskIds: number[]) {
+    return this.http
+      .post<ClientResponse<AutomationManualRun>>(`api/automations/${id}/run`, {
+        taskIds,
+      })
       .pipe(unwrapClientReposne());
   }
 

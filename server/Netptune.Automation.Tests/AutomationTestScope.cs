@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Automation.Common;
+using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Entities.Contexts;
 
@@ -18,6 +19,8 @@ public sealed class AutomationTestScope : IAsyncDisposable
     public DataContext Db => Scope.ServiceProvider.GetRequiredService<DataContext>();
 
     public IExecutionService AutomationExecution => Scope.ServiceProvider.GetRequiredService<IExecutionService>();
+
+    public IAutomationManualRunService ManualRuns => Scope.ServiceProvider.GetRequiredService<IAutomationManualRunService>();
 
     public INetptuneUnitOfWork UnitOfWork => Scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
 

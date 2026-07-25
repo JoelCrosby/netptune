@@ -19,6 +19,7 @@ public static class AutomationsEndpoints
         group.MapGet("/{id:int}/dry-run/{taskId:int}", HandleGetDryRun).RequireAuthorization(NetptunePermissions.Automations.Read);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapPut("/{id:int}", HandlePut).RequireAuthorization(NetptunePermissions.Automations.Manage);
+        group.MapPost("/{id:int}/run", HandleRun).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapPost("/{id:int}/enable", HandleEnable).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapPost("/{id:int}/disable", HandleDisable).RequireAuthorization(NetptunePermissions.Automations.Manage);
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Automations.Manage);
@@ -51,6 +52,17 @@ public static class AutomationsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAutomationDryRunQuery(id, taskId), cancellationToken);
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleRun(
+        int id,
+        AutomationManualRunRequestBody request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RunAutomationRuleCommand(id, request), cancellationToken);
+
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 

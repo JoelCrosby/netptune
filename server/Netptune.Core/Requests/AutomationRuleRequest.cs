@@ -144,3 +144,8 @@ public record AutomationActionRequest
 
     public AutomationDelayUnit? DelayUnit { get; init; }
 }
+
+public record AutomationManualRunRequestBody
+{
+    public List<int> TaskIds { get; init; } = [];
+}

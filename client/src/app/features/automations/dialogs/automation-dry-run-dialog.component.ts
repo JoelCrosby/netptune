@@ -10,6 +10,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { statusResource } from '@core/resources/status.resources';
 import { userResource } from '@core/resources/user.resource';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -38,6 +39,7 @@ export interface AutomationDryRunDialogData {
     AutomationDryRunEffectsComponent,
     DialogTitleComponent,
     DialogActionsDirective,
+    FlatButtonComponent,
     StrokedButtonComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
@@ -50,7 +52,7 @@ export interface AutomationDryRunDialogData {
     <div class="flex w-220 max-w-full flex-col gap-4">
       <p class="text-muted text-sm">
         Check whether {{ dialogData.ruleName }} would run against a task.
-        Nothing is changed.
+        Testing changes nothing — use Run now to apply the actions.
       </p>
 
       <app-form-input
@@ -151,6 +153,29 @@ export interface AutomationDryRunDialogData {
               [actions]="dryRun.actions"
               [users]="users()" />
           }
+
+          <div class="flex items-center gap-3">
+            <button
+              app-flat-button
+              type="button"
+              [disabled]="running() || queueing()"
+              (click)="onRunNow(dryRun)">
+              Run now
+            </button>
+            <span class="text-muted text-xs">
+              Runs the actions above against {{ dryRun.taskName }}.
+            </span>
+          </div>
+
+          @if (queued()) {
+            <p class="text-xs">
+              Queued. The run appears in this rule's history once it completes.
+            </p>
+          }
+
+          @if (queueFailed()) {
+            <p class="text-warn text-xs">Could not start this run.</p>
+          }
         </div>
       }
     </div>
@@ -182,6 +207,9 @@ export class AutomationDryRunDialogComponent {
   readonly searchInput = signal('');
   readonly running = signal(false);
   readonly failed = signal(false);
+  readonly queueing = signal(false);
+  readonly queued = signal(false);
+  readonly queueFailed = signal(false);
   readonly dryRun = signal<AutomationDryRun | null>(null);
 
   private search = toSignal(
@@ -224,8 +252,27 @@ export class AutomationDryRunDialogComponent {
     return triggerTypeLabels[dryRun.triggerType];
   }
 
+  onRunNow(dryRun: AutomationDryRun) {
+    this.queued.set(false);
+    this.queueFailed.set(false);
+    this.queueing.set(true);
+
+    this.service
+      .runNow(this.dialogData.ruleId, [dryRun.taskId])
+      .pipe(
+        finalize(() => this.queueing.set(false)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: () => this.queued.set(true),
+        error: () => this.queueFailed.set(true),
+      });
+  }
+
   onTest(task: TaskViewModel) {
     this.failed.set(false);
+    this.queued.set(false);
+    this.queueFailed.set(false);
     this.running.set(true);
 
     this.service

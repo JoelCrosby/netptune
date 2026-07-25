@@ -159,6 +159,67 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
+    [Fact]
+    public async Task Run_ShouldQueueRule_ForSelectedTask()
+    {
+        var task = await CreateTask("Automation manual run");
+        var rule = await CreateRule(NameContains("manual run"));
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/automations/{rule.Id}/run",
+            new AutomationManualRunRequestBody { TaskIds = [task.Id] });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationManualRunViewModel>>();
+
+        result!.Payload!.RuleId.Should().Be(rule.Id);
+        result.Payload.TaskCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Run_ShouldFail_ForTaskInAnotherWorkspace()
+    {
+        var rule = await CreateRule(NameContains("manual run isolation"));
+        var foreignTaskId = await GetTaskIdInWorkspace("linux");
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/automations/{rule.Id}/run",
+            new AutomationManualRunRequestBody { TaskIds = [foreignTaskId] });
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationManualRunViewModel>>();
+
+        result!.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Run_ShouldFail_WithoutTasks()
+    {
+        var rule = await CreateRule(NameContains("manual run validation"));
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/automations/{rule.Id}/run",
+            new AutomationManualRunRequestBody());
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationManualRunViewModel>>();
+
+        result!.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Run_ShouldReturnNotFound_ForUnknownRule()
+    {
+        var task = await CreateTask("Automation manual run missing rule");
+
+        var response = await Client.PostAsJsonAsync(
+            "api/automations/999999/run",
+            new AutomationManualRunRequestBody { TaskIds = [task.Id] });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     private async Task<int> GetTaskIdInWorkspace(string slug)
     {
         using var scope = fixture.CreateScope();

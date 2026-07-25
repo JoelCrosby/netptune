@@ -81,6 +81,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<NotificationPublisher>();
         services.AddScoped<ExecutionService>();
         services.AddScoped<ScheduledActionService>();
+        services.AddScoped<IAutomationManualRunService, ManualRunService>();
         services.AddScoped<ScheduledActionEligibilityEvaluator>();
         services.AddScoped<IScheduledActionHandler, ScheduledDeleteTaskHandler>();
         services.AddScoped<ScheduledActionHandlerRegistry>();
