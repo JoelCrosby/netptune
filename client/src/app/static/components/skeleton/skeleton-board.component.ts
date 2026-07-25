@@ -7,7 +7,7 @@ import { SkeletonComponent } from './skeleton.component';
   host: { class: 'contents', role: 'status', 'aria-label': 'Loading board' },
   template: `
     <div
-      class="flex max-h-[calc(100vh-180px)] w-full flex-1 flex-row overflow-hidden rounded-lg pb-4 max-[600px]:max-h-[calc(100vh-154px)]">
+      class="flex max-h-[calc(100vh-180px)] w-full flex-1 flex-row overflow-hidden rounded-lg pb-4">
       @for (column of columnRange(); track $index) {
         <div
           class="mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]">

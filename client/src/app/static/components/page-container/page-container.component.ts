@@ -13,7 +13,8 @@ const progressRevealDelayMs = 200;
     [class.mx-auto]="centerPage()"
     [class.w-full]="centerPage()"
     [class.max-w-[1360px]]="centerPage()"
-    [attr.aria-busy]="showProgress()">
+    [attr.aria-busy]="showProgress()"
+    [class.h-full]="fullHeight()">
     <div
       class="h-[0.8rem] shrink-0"
       [class.invisible]="!progressVisible()"
