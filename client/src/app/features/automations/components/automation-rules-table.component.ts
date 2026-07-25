@@ -1,27 +1,38 @@
 import {
   Component,
   computed,
+  effect,
   input,
   output,
   signal,
   Signal,
+  viewChild,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Params, RouterLink } from '@angular/router';
 import { Status } from '@core/models/status';
 import {
+  LucideCircleDashed,
   LucideCirclePlay,
   LucideCopy,
   LucidePencil,
   LucideTrash2,
+  LucideZap,
 } from '@lucide/angular';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
+import { MenuCheckboxItemComponent } from '@static/components/dropdown-menu/menu-checkbox-item.component';
+import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
+import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+import { debounceTime } from 'rxjs/operators';
 import {
   automationRunStatusLabels,
   AutomationCopySegment,
+  triggerTypeLabels,
   describeAutomationActionsSegments,
   describeAutomationTriggerSegments,
   runStatusClass,
@@ -29,6 +40,7 @@ import {
 import {
   AutomationRuleListItem,
   AutomationRunStatus,
+  AutomationTriggerType,
 } from '../models/automation.models';
 import { AutomationDescriptionComponent } from './automation-description.component';
 import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.component';
@@ -39,14 +51,68 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
     RouterLink,
     DatatableComponent,
     DatatableCellTemplateDirective,
+    DropdownMenuComponent,
     EmptyStateComponent,
+    FilterActionButtonComponent,
+    MenuCheckboxItemComponent,
     PrettyDatePipe,
+    SearchInputComponent,
     AutomationEnabledBadgeComponent,
     AutomationDescriptionComponent,
   ],
   template: `
+    <div class="mb-3 flex flex-row items-center gap-2">
+      <app-search-input
+        [term]="searchInput()"
+        (searchChange)="searchInput.set($event ?? '')" />
+
+      <div #statusAnchor>
+        <app-filter-action-button
+          label="Filter by Status"
+          [icon]="lucideCircleDashed"
+          [color]="enabledFilter().size ? 'primary' : undefined"
+          [count]="enabledFilter().size"
+          (action)="statusMenu.toggle(statusAnchor)" />
+      </div>
+
+      <app-dropdown-menu #statusMenu>
+        <button
+          app-menu-checkbox-item
+          [checked]="enabledFilter().has(true)"
+          (checkedChange)="toggleEnabledFilter(true)">
+          Enabled
+        </button>
+        <button
+          app-menu-checkbox-item
+          [checked]="enabledFilter().has(false)"
+          (checkedChange)="toggleEnabledFilter(false)">
+          Disabled
+        </button>
+      </app-dropdown-menu>
+
+      <div #triggerAnchor>
+        <app-filter-action-button
+          label="Filter by Trigger"
+          [icon]="lucideZap"
+          [color]="triggerFilter().size ? 'primary' : undefined"
+          [count]="triggerFilter().size"
+          (action)="triggerMenu.toggle(triggerAnchor)" />
+      </div>
+
+      <app-dropdown-menu #triggerMenu>
+        @for (trigger of triggerTypes; track trigger) {
+          <button
+            app-menu-checkbox-item
+            [checked]="triggerFilter().has(trigger)"
+            (checkedChange)="toggleTriggerFilter(trigger)">
+            {{ triggerLabel(trigger) }}
+          </button>
+        }
+      </app-dropdown-menu>
+    </div>
+
     <app-datatable
-      containerClass="max-h-[calc(100vh-360px)] min-h-80 overflow-auto"
+      containerClass="max-h-[calc(100vh-420px)] min-h-80 overflow-auto"
       tableClass="min-w-[900px]"
       rowClass="bg-card"
       [data]="data()"
@@ -95,8 +161,14 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
       <app-empty-state
         appDatatableEmpty
         compact
-        title="No automations match this view"
-        description="Create an automation or clear the current filters." />
+        [title]="
+          filtersActive()
+            ? 'No automations match these filters'
+            : 'No automations yet'
+        "
+        [description]="
+          filtersActive() ? 'Try a different search or filter.' : ''
+        " />
     </app-datatable>
   `,
 })
@@ -111,6 +183,54 @@ export class AutomationRulesTableComponent {
   readonly deleteRule = output<AutomationRuleListItem>();
 
   readonly runStatusClass = runStatusClass;
+  readonly triggerTypes = [
+    AutomationTriggerType.taskChanged,
+    AutomationTriggerType.taskCreated,
+    AutomationTriggerType.taskUnassignedFor,
+    AutomationTriggerType.taskDueDateApproaching,
+    AutomationTriggerType.taskOverdue,
+    AutomationTriggerType.taskHasNoDueDate,
+    AutomationTriggerType.taskInactiveFor,
+  ];
+
+  readonly lucideCircleDashed = LucideCircleDashed;
+  readonly lucideZap = LucideZap;
+
+  readonly searchInput = signal('');
+  readonly enabledFilter = signal<ReadonlySet<boolean>>(new Set());
+  readonly triggerFilter = signal<ReadonlySet<AutomationTriggerType>>(
+    new Set()
+  );
+
+  private readonly search = toSignal(
+    toObservable(this.searchInput).pipe(debounceTime(250)),
+    { initialValue: '' }
+  );
+
+  private readonly datatable = viewChild(
+    DatatableComponent<AutomationRuleListItem>
+  );
+
+  readonly filtersActive = computed(() => {
+    return (
+      !!this.search().trim() ||
+      this.enabledFilter().size > 0 ||
+      this.triggerFilter().size > 0
+    );
+  });
+
+  private readonly resourceParams = computed<Params>(() => {
+    const search = this.search().trim();
+    const enabled = [...this.enabledFilter()];
+    const triggers = [...this.triggerFilter()];
+    const isEnabled = enabled.length === 1 ? enabled[0] : null;
+
+    return {
+      ...(search ? { search } : {}),
+      ...(isEnabled === null ? {} : { isEnabled }),
+      ...(triggers.length ? { triggerTypes: triggers.join(',') } : {}),
+    };
+  });
 
   readonly data = computed<DatatableDataSource<AutomationRuleListItem>>(() => ({
     key: 'automation-rules',
@@ -132,13 +252,44 @@ export class AutomationRulesTableComponent {
     ],
     resource: {
       url: 'api/automations',
-      params: signal({}),
+      params: this.resourceParams,
     },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, rule: AutomationRuleListItem) => rule.id,
     menu: this.canManage() ? this.rowMenu() : undefined,
     reloadSignal: this.reloadSignal(),
   }));
+
+  constructor() {
+    let previousSearch = this.search();
+
+    effect(() => {
+      const search = this.search();
+
+      if (search === previousSearch) return;
+
+      previousSearch = search;
+      this.goToFirstPage();
+    });
+  }
+
+  triggerLabel(trigger: AutomationTriggerType): string {
+    return triggerTypeLabels[trigger];
+  }
+
+  toggleEnabledFilter(isEnabled: boolean) {
+    this.enabledFilter.update((current) => toggle(current, isEnabled));
+    this.goToFirstPage();
+  }
+
+  toggleTriggerFilter(triggerType: AutomationTriggerType) {
+    this.triggerFilter.update((current) => toggle(current, triggerType));
+    this.goToFirstPage();
+  }
+
+  private goToFirstPage() {
+    this.datatable()?.goToPage(1);
+  }
 
   triggerSummary(rule: AutomationRuleListItem): AutomationCopySegment[] {
     return describeAutomationTriggerSegments(rule.trigger, this.statuses());
@@ -176,4 +327,14 @@ export class AutomationRulesTableComponent {
       },
     ];
   }
+}
+
+function toggle<T>(current: ReadonlySet<T>, value: T): ReadonlySet<T> {
+  const next = new Set(current);
+
+  if (!next.delete(value)) {
+    next.add(value);
+  }
+
+  return next;
 }

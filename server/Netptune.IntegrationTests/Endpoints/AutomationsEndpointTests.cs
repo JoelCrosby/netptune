@@ -258,6 +258,27 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task GetPaged_ShouldFilterByTriggerTypes()
+    {
+        var uniqueName = $"Trigger filtered rule {Guid.NewGuid():N}";
+        var rule = await CreateNamedRule(uniqueName);
+
+        var matching = await Client.GetAsync(
+            $"api/automations?search={Uri.EscapeDataString(uniqueName)}&triggerTypes={(int)AutomationTriggerType.TaskChanged}");
+        var matchingResult = await matching.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
+
+        matchingResult!.Payload!.Items.Should().ContainSingle(item => item.Id == rule.Id);
+
+        var excluded = await Client.GetAsync(
+            $"api/automations?search={Uri.EscapeDataString(uniqueName)}&triggerTypes={(int)AutomationTriggerType.TaskOverdue}");
+        var excludedResult = await excluded.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
+
+        excludedResult!.Payload!.Items.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task GetSummary_ShouldCountRules()
     {
         await CreateRule(NameContains("summary counting"));

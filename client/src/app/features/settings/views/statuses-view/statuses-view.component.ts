@@ -26,6 +26,7 @@ import {
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import {
   TableComponent,
@@ -40,6 +41,7 @@ import { finalize, first } from 'rxjs';
 @Component({
   selector: 'app-statuses-view',
   imports: [
+    ErrorStateComponent,
     StrokedButtonComponent,
     ColorSwatchComponent,
     SectionHeaderComponent,
@@ -70,84 +72,90 @@ import { finalize, first } from 'rxjs';
     </app-section-header>
 
     @if (error()) {
-      <div class="text-danger mb-3 text-sm">{{ error() }}</div>
-    }
-
-    <app-table tableClass="min-w-[720px] table-fixed">
-      <thead appTableHead>
-        <tr appTableHeaderRow>
-          <th class="w-16 px-4 py-3">Color</th>
-          <th class="px-4 py-3">Name</th>
-          <th class="w-44 px-4 py-3">Category</th>
-          <th class="w-28 px-4 py-3">Order</th>
-          <th class="w-28 px-4 py-3">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (status of orderedStatuses(); track status.id; let i = $index) {
-          <tr appTableRow class="bg-card">
-            <td class="px-4 py-2 align-middle">
-              <app-color-swatch variant="swatch" [color]="status.color" />
-            </td>
-            <td class="px-4 py-2 align-middle">
-              <button
-                type="button"
-                class="block w-full cursor-pointer truncate text-left font-medium"
-                (click)="openEditDialog(status)">
-                {{ status.name }}
-              </button>
-            </td>
-            <td class="px-4 py-2 align-middle">
-              {{ categoryLabel(status.category) }}
-            </td>
-            <td class="px-4 py-2 align-middle">
-              <div class="flex gap-1">
+      <app-error-state
+        compact
+        title="Statuses could not be loaded"
+        [description]="error() ?? ''"
+        (retry)="load()" />
+    } @else {
+      <app-table tableClass="min-w-[720px] table-fixed">
+        <thead appTableHead>
+          <tr appTableHeaderRow>
+            <th class="w-16 px-4 py-3">Color</th>
+            <th class="px-4 py-3">Name</th>
+            <th class="w-44 px-4 py-3">Category</th>
+            <th class="w-28 px-4 py-3">Order</th>
+            <th class="w-28 px-4 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (status of orderedStatuses(); track status.id; let i = $index) {
+            <tr appTableRow class="bg-card">
+              <td class="px-4 py-2 align-middle">
+                <app-color-swatch variant="swatch" [color]="status.color" />
+              </td>
+              <td class="px-4 py-2 align-middle">
                 <button
-                  app-icon-button
-                  appTooltip="Move up"
-                  aria-label="Move status up"
-                  [disabled]="i === 0 || loading()"
-                  (click)="move(status.id, -1)">
-                  <svg lucideArrowUp class="h-4 w-4"></svg>
-                </button>
-                <button
-                  app-icon-button
-                  appTooltip="Move down"
-                  aria-label="Move status down"
-                  [disabled]="i === orderedStatuses().length - 1 || loading()"
-                  (click)="move(status.id, 1)">
-                  <svg lucideArrowDown class="h-4 w-4"></svg>
-                </button>
-              </div>
-            </td>
-            <td class="px-4 py-2 align-middle">
-              <div class="flex gap-1">
-                <button
-                  app-icon-button
-                  appTooltip="Edit"
-                  aria-label="Edit status"
-                  [disabled]="loading()"
+                  type="button"
+                  class="block w-full cursor-pointer truncate text-left font-medium"
                   (click)="openEditDialog(status)">
-                  <svg lucidePencil class="h-4 w-4"></svg>
+                  {{ status.name }}
                 </button>
-                <button
-                  app-icon-button
-                  appTooltip="Delete"
-                  aria-label="Delete status"
-                  [disabled]="status.isSystem || loading()"
-                  (click)="delete(status)">
-                  <svg lucideTrash2 class="h-4 w-4"></svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td appTableEmptyCell colspan="5">No statuses</td>
-          </tr>
-        }
-      </tbody>
-    </app-table>
+              </td>
+              <td class="px-4 py-2 align-middle">
+                {{ categoryLabel(status.category) }}
+              </td>
+              <td class="px-4 py-2 align-middle">
+                <div class="flex gap-1">
+                  <button
+                    app-icon-button
+                    appTooltip="Move up"
+                    aria-label="Move status up"
+                    [disabled]="i === 0 || loading()"
+                    (click)="move(status.id, -1)">
+                    <svg lucideArrowUp class="h-4 w-4"></svg>
+                  </button>
+                  <button
+                    app-icon-button
+                    appTooltip="Move down"
+                    aria-label="Move status down"
+                    [disabled]="i === orderedStatuses().length - 1 || loading()"
+                    (click)="move(status.id, 1)">
+                    <svg lucideArrowDown class="h-4 w-4"></svg>
+                  </button>
+                </div>
+              </td>
+              <td class="px-4 py-2 align-middle">
+                <div class="flex gap-1">
+                  <button
+                    app-icon-button
+                    appTooltip="Edit"
+                    aria-label="Edit status"
+                    [disabled]="loading()"
+                    (click)="openEditDialog(status)">
+                    <svg lucidePencil class="h-4 w-4"></svg>
+                  </button>
+                  <button
+                    app-icon-button
+                    appTooltip="Delete"
+                    aria-label="Delete status"
+                    [disabled]="status.isSystem || loading()"
+                    (click)="delete(status)">
+                    <svg lucideTrash2 class="h-4 w-4"></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td appTableEmptyCell colspan="5">
+                No statuses yet. Create one to describe your workflow.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </app-table>
+    }
   </section>`,
 })
 export class StatusesViewComponent {

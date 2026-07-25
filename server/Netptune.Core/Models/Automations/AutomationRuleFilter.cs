@@ -9,5 +9,23 @@ public class AutomationRuleFilter : PageRequest
 
     public bool? IsEnabled { get; set; }
 
-    public AutomationTriggerType? TriggerType { get; set; }
+    public string? TriggerTypes { get; set; }
+
+    public IReadOnlyList<AutomationTriggerType> GetTriggerTypes()
+    {
+        if (string.IsNullOrWhiteSpace(TriggerTypes))
+        {
+            return [];
+        }
+
+        return TriggerTypes
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(value => Enum.TryParse<AutomationTriggerType>(value, true, out var triggerType)
+                ? triggerType
+                : (AutomationTriggerType?)null)
+            .Where(triggerType => triggerType.HasValue)
+            .Select(triggerType => triggerType!.Value)
+            .Distinct()
+            .ToList();
+    }
 }

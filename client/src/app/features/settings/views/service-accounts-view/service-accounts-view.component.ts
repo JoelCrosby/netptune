@@ -25,6 +25,7 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -41,6 +42,7 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
 @Component({
   selector: 'app-service-accounts-view',
   imports: [
+    ErrorStateComponent,
     LucideBot,
     LucideKeyRound,
     LucidePlus,
@@ -77,12 +79,11 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
     @if (loading()) {
       <app-page-loading class="min-h-48" label="Loading service accounts" />
     } @else if (loadError()) {
-      <div class="border-warn/30 bg-warn/5 rounded border p-5 text-center">
-        <p class="text-warn mb-4 text-sm">{{ loadError() }}</p>
-        <button app-stroked-button type="button" (click)="load()">
-          Try again
-        </button>
-      </div>
+      <app-error-state
+        compact
+        title="Service accounts could not be loaded"
+        [description]="loadError() ?? ''"
+        (retry)="load()" />
     } @else {
       <div class="flex flex-col gap-4">
         @for (account of sortedAccounts(); track account.id) {

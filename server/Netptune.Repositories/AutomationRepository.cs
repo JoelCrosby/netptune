@@ -231,9 +231,11 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
             query = query.Where(rule => rule.IsEnabled == filter.IsEnabled.Value);
         }
 
-        if (filter.TriggerType.HasValue)
+        var triggerTypes = filter.GetTriggerTypes();
+
+        if (triggerTypes.Count > 0)
         {
-            query = query.Where(rule => rule.TriggerType == filter.TriggerType.Value);
+            query = query.Where(rule => triggerTypes.Contains(rule.TriggerType));
         }
 
         var totalCount = await query.CountAsync(cancellationToken);
