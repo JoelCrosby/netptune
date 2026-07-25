@@ -19,6 +19,7 @@ export const routes: Routes = [
       import('./views/automation-form-view/automation-form-view.component').then(
         (m) => m.AutomationFormViewComponent
       ),
+    data: { back: 'Back to Automations' },
   },
   {
     path: ':id/edit',
@@ -27,6 +28,7 @@ export const routes: Routes = [
       import('./views/automation-form-view/automation-form-view.component').then(
         (m) => m.AutomationFormViewComponent
       ),
+    data: { back: 'Back to Automations' },
   },
   {
     path: ':id',
@@ -35,5 +37,6 @@ export const routes: Routes = [
       import('./views/automation-detail-view/automation-detail-view.component').then(
         (m) => m.AutomationDetailViewComponent
       ),
+    data: { back: 'Back to Automations' },
   },
 ];

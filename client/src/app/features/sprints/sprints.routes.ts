@@ -26,5 +26,6 @@ export const routes: Routes = [
         (m) => m.SprintDetailViewComponent
       ),
     canActivate: [sprintsReadGuard],
+    data: { back: 'Back to Sprints' },
   },
 ];
