@@ -6,7 +6,9 @@ using Netptune.Automation.Common;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
@@ -104,11 +106,9 @@ internal sealed class UnassignedTaskRuleMatcher : IScheduledRuleMatcher
                 continue;
             }
 
-            var taskTimestamp = task.UpdatedAt ?? task.CreatedAt;
-
             foreach (var rule in workspaceRules)
             {
-                var hasReachedDuration = taskTimestamp <= now.AddDays(-rule.DurationDays);
+                var hasReachedDuration = AutomationTriggerPredicates.MatchesUnassigned(rule.Rule, task, now);
                 var matchesConditions = AutomationRuleConditions.Match(rule.Rule, task);
 
                 if (!hasReachedDuration || !matchesConditions)

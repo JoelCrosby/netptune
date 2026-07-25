@@ -265,6 +265,8 @@ export interface AutomationDryRun {
   triggerType: AutomationTriggerType;
   taskId: number;
   taskName: string;
+  triggerMatches: boolean;
+  triggerIsEvaluable: boolean;
   conditionsMatch: boolean;
   hasUnevaluableConditions: boolean;
   conditionGroup: AutomationConditionGroupExplanation | null;

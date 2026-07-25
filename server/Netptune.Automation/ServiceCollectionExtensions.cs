@@ -9,6 +9,7 @@ using Netptune.Automation.Actions;
 using Netptune.Automation.Execution;
 using Netptune.Automation.Execution.Actions;
 using Netptune.Automation.Matching;
+using Netptune.Core.Services.Automations;
 using Netptune.Automation.Notifications;
 using Netptune.Automation.Persistence;
 using Netptune.Automation.Persistence.Actions;
@@ -43,6 +44,13 @@ public static class ServiceCollectionExtensions
         });
     }
 
+    public static IServiceCollection AddNetptuneAutomationTriggers(this IServiceCollection services)
+    {
+        services.TryAddScoped<IAutomationTriggerEvaluator, AutomationTriggerEvaluator>();
+
+        return services;
+    }
+
     public static IServiceCollection AddNetptuneAutomation(this IServiceCollection services, Action<ScheduleOptions> configure)
     {
         var options = new ScheduleOptions();
@@ -62,6 +70,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAutomationRuleMatcher, NoDueDateTaskRuleMatcher>();
         services.AddScoped<IAutomationRuleMatcher, InactiveTaskRuleMatcher>();
         services.AddScoped<AutomationTriggerRegistry>();
+
+        services.AddNetptuneAutomationTriggers();
 
         services.AddScoped<RuleExecutor>();
         services.AddScoped<ActionPlanner>();

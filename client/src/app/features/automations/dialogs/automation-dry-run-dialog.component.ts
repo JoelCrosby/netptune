@@ -22,6 +22,7 @@ import { finalize } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { AutomationConditionExplanationComponent } from '../components/automation-condition-explanation.component';
 import { AutomationDryRunEffectsComponent } from '../components/automation-dry-run-effects.component';
+import { triggerTypeLabels } from '../models/automation-copy';
 import { AutomationDryRun } from '../models/automation.models';
 import { AutomationsService } from '../services/automations.service';
 
@@ -90,7 +91,16 @@ export interface AutomationDryRunDialogData {
       } @else if (dryRun(); as dryRun) {
         <div class="border-border flex flex-col gap-3 rounded-md border p-3">
           <div class="flex flex-col gap-1">
-            @if (dryRun.conditionsMatch) {
+            @if (triggerBlocks(dryRun)) {
+              <p class="text-sm font-medium">
+                This rule would not run against
+                <span class="text-primary">{{ dryRun.taskName }}</span>
+              </p>
+              <p class="text-muted text-xs">
+                "{{ triggerLabel(dryRun) }}" does not apply to this task right
+                now, so the rule would never reach its conditions.
+              </p>
+            } @else if (dryRun.conditionsMatch) {
               <p class="text-sm font-medium">
                 This rule would run against
                 <span class="text-primary">{{ dryRun.taskName }}</span>
@@ -99,6 +109,14 @@ export interface AutomationDryRunDialogData {
               <p class="text-sm font-medium">
                 This rule would not run against
                 <span class="text-primary">{{ dryRun.taskName }}</span>
+              </p>
+            }
+
+            @if (!dryRun.triggerIsEvaluable) {
+              <p class="text-muted text-xs">
+                "{{ triggerLabel(dryRun) }}" only fires while a task is
+                changing, so the conditions above are checked against the task
+                as it stands now.
               </p>
             }
 
@@ -166,7 +184,6 @@ export class AutomationDryRunDialogComponent {
   readonly failed = signal(false);
   readonly dryRun = signal<AutomationDryRun | null>(null);
 
-  // Debounce so each keystroke doesn't trigger a server fetch.
   private search = toSignal(
     toObservable(this.searchInput).pipe(debounceTime(250)),
     { initialValue: '' }
@@ -198,6 +215,14 @@ export class AutomationDryRunDialogComponent {
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, task: TaskViewModel) => task.id,
   };
+
+  triggerBlocks(dryRun: AutomationDryRun): boolean {
+    return dryRun.triggerIsEvaluable && !dryRun.triggerMatches;
+  }
+
+  triggerLabel(dryRun: AutomationDryRun): string {
+    return triggerTypeLabels[dryRun.triggerType];
+  }
 
   onTest(task: TaskViewModel) {
     this.failed.set(false);

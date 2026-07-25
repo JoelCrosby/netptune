@@ -30,10 +30,7 @@ internal sealed class OverdueTaskRuleMatcher : TaskStateRuleMatcher
 
     protected override bool MatchesTrigger(AutomationRule rule, ProjectTask task, DateTime now)
     {
-        var today = AutomationTimeZones.Today(rule, now);
-        var isOverdue = task.DueDate < today;
-
-        return isOverdue;
+        return AutomationTriggerPredicates.MatchesOverdue(rule, task, now);
     }
 
     protected override string GetStateKey(ProjectTask task)

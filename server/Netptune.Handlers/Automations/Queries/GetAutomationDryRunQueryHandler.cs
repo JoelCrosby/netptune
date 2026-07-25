@@ -23,17 +23,20 @@ public sealed class GetAutomationDryRunQueryHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAutomationActionRegistry ActionRegistry;
+    private readonly IAutomationTriggerEvaluator TriggerEvaluator;
     private readonly ILogger<GetAutomationDryRunQueryHandler> Logger;
 
     public GetAutomationDryRunQueryHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IAutomationActionRegistry actionRegistry,
+        IAutomationTriggerEvaluator triggerEvaluator,
         ILogger<GetAutomationDryRunQueryHandler> logger)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ActionRegistry = actionRegistry;
+        TriggerEvaluator = triggerEvaluator;
         Logger = logger;
     }
 
@@ -60,6 +63,7 @@ public sealed class GetAutomationDryRunQueryHandler
         var conditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(rule.TriggerConfig, "conditionGroup");
         var supportsChangeOperators = rule.TriggerType == AutomationTriggerType.TaskChanged;
         var explanation = conditionGroup?.Explain(task, null, supportsChangeOperators);
+        var trigger = TriggerEvaluator.Evaluate(rule, task, DateTime.UtcNow);
 
         var dryRun = new AutomationDryRunViewModel
         {
@@ -69,6 +73,8 @@ public sealed class GetAutomationDryRunQueryHandler
             TriggerType = rule.TriggerType,
             TaskId = task.Id,
             TaskName = task.Name,
+            TriggerMatches = trigger.IsMatch,
+            TriggerIsEvaluable = trigger.IsEvaluable,
             ConditionsMatch = explanation?.IsMatch ?? true,
             HasUnevaluableConditions = HasUnevaluableConditions(explanation),
             ConditionGroup = explanation,

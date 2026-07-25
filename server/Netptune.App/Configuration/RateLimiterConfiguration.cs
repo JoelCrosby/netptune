@@ -12,8 +12,6 @@ public static class RateLimiterConfiguration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Every request from one user shares a partition. Integration suites drive hundreds of
-        // requests as a single seeded user, so they raise this rather than trip the production limit.
         var apiPermitLimit = configuration.GetValue("RateLimiting:ApiPermitLimit", DefaultApiPermitLimit);
 
         services.AddRateLimiter(options =>

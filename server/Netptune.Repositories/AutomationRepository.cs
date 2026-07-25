@@ -68,6 +68,7 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         return Entities
             .Where(rule => rule.Id == ruleId && rule.WorkspaceId == workspaceId && !rule.IsDeleted)
             .Include(rule => rule.Actions.Where(action => !action.IsDeleted))
+            .Include(rule => rule.Workspace)
             .AsSplitQuery()
             .IsReadonly(isReadonly)
             .FirstOrDefaultAsync(cancellationToken);

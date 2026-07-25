@@ -25,7 +25,6 @@ namespace Netptune.IntegrationTests.Endpoints;
 
 public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 {
-    // The project and service account never vary between cases, so build them once.
     private static readonly SemaphoreSlim SetupLock = new(1, 1);
 
     private static AutomationTestSetup? Setup;
@@ -88,6 +87,30 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task DryRun_ShouldMarkEventTriggersUnevaluable()
+    {
+        var task = await CreateTask("Automation dry run event trigger");
+        var rule = await CreateRule(NameContains("event trigger"));
+
+        var dryRun = await GetDryRun(rule.Id, task.Id);
+
+        dryRun.TriggerIsEvaluable.Should().BeFalse();
+        dryRun.TriggerMatches.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task DryRun_ShouldReportTriggerState_ForScheduledTriggers()
+    {
+        var task = await CreateTask("Automation dry run overdue trigger");
+        var rule = await CreateOverdueRule();
+
+        var dryRun = await GetDryRun(rule.Id, task.Id);
+
+        dryRun.TriggerIsEvaluable.Should().BeTrue();
+        dryRun.TriggerMatches.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task DryRun_ShouldDescribeProposedEffects()
     {
         var task = await CreateTask("Automation dry run effects");
@@ -126,8 +149,6 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         var task = await CreateTask("Automation dry run isolation");
         var rule = await CreateRule(NameContains("isolation"));
 
-        // The rule can read its own workspace's task, proving the 404 below is isolation
-        // and not a broken rule.
         (await Client.GetAsync($"api/automations/{rule.Id}/dry-run/{task.Id}"))
             .StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -200,7 +221,27 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         }
     }
 
-    private async Task<AutomationRuleViewModel> CreateRule(AutomationConditionGroup conditionGroup)
+    private Task<AutomationRuleViewModel> CreateOverdueRule()
+    {
+        return CreateRule(null, new AutomationTriggerRequest
+        {
+            Type = AutomationTriggerType.TaskOverdue,
+        });
+    }
+
+    private Task<AutomationRuleViewModel> CreateRule(AutomationConditionGroup conditionGroup)
+    {
+        return CreateRule(conditionGroup, new AutomationTriggerRequest
+        {
+            Type = AutomationTriggerType.TaskChanged,
+            Fields = [TaskChangeField.Name],
+            ConditionGroup = conditionGroup,
+        });
+    }
+
+    private async Task<AutomationRuleViewModel> CreateRule(
+        AutomationConditionGroup? conditionGroup,
+        AutomationTriggerRequest trigger)
     {
         var setup = await GetSetup();
         var response = await Client.PostAsJsonAsync("api/automations", new AutomationRuleRequest
@@ -208,12 +249,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
             Name = $"Dry run rule {Guid.NewGuid():N}",
             IsEnabled = true,
             ExecutionUserId = setup.ExecutionUserId,
-            Trigger = new AutomationTriggerRequest
-            {
-                Type = AutomationTriggerType.TaskChanged,
-                Fields = [TaskChangeField.Name],
-                ConditionGroup = conditionGroup,
-            },
+            Trigger = trigger,
             Actions =
             [
                 new AutomationActionRequest

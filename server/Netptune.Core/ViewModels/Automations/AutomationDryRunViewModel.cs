@@ -43,6 +43,10 @@ public sealed record AutomationDryRunViewModel
 
     public required string TaskName { get; init; }
 
+    public bool TriggerMatches { get; init; }
+
+    public bool TriggerIsEvaluable { get; init; }
+
     public bool ConditionsMatch { get; init; }
 
     public bool HasUnevaluableConditions { get; init; }

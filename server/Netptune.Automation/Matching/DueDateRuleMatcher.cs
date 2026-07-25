@@ -6,7 +6,9 @@ using Netptune.Automation.Common;
 using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Models;
 using Netptune.Core.Encoding;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;
@@ -106,8 +108,7 @@ internal sealed class DueDateRuleMatcher : IScheduledRuleMatcher
 
             foreach (var rule in workspaceRules)
             {
-                var localToday = AutomationTimeZones.Today(rule.Rule, now);
-                var matchesDueDate = dueDate == localToday.AddDays(rule.DurationDays);
+                var matchesDueDate = AutomationTriggerPredicates.MatchesDueDateApproaching(rule.Rule, task, now);
                 var matchesConditions = AutomationRuleConditions.Match(rule.Rule, task);
 
                 if (!matchesDueDate || !matchesConditions)

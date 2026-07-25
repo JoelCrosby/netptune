@@ -7,6 +7,7 @@ using Netptune.Automation.Diagnostics;
 using Netptune.Automation.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Matching;

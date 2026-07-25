@@ -40,17 +40,7 @@ internal sealed class InactiveTaskRuleMatcher : TaskStateRuleMatcher
 
     protected override bool MatchesTrigger(AutomationRule rule, ProjectTask task, DateTime now)
     {
-        var durationDays = ReadDurationDays(rule);
-
-        if (durationDays is null)
-        {
-            return false;
-        }
-
-        var lastActivityAt = task.UpdatedAt ?? task.CreatedAt;
-        var inactivityStartedBeforeCutoff = lastActivityAt <= now.AddDays(-durationDays.Value);
-
-        return inactivityStartedBeforeCutoff;
+        return AutomationTriggerPredicates.MatchesInactive(rule, task, now);
     }
 
     protected override string GetStateKey(ProjectTask task)

@@ -26,7 +26,7 @@ internal sealed class NoDueDateTaskRuleMatcher : TaskStateRuleMatcher
 
     protected override bool MatchesTrigger(AutomationRule rule, ProjectTask task, DateTime now)
     {
-        return true;
+        return AutomationTriggerPredicates.MatchesNoDueDate(task);
     }
 
     protected override string GetStateKey(ProjectTask task)
