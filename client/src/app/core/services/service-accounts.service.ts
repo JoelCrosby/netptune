@@ -5,6 +5,7 @@ import {
   CreateApiCredentialRequest,
   CreateServiceAccountRequest,
   ServiceAccount,
+  UpdateServiceAccountRequest,
 } from '@core/models/service-account';
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +18,13 @@ export class ServiceAccountsService {
 
   create(request: CreateServiceAccountRequest) {
     return this.http.post<ServiceAccount>('api/service-accounts', request);
+  }
+
+  update(serviceAccountId: number, request: UpdateServiceAccountRequest) {
+    return this.http.put<ServiceAccount>(
+      `api/service-accounts/${serviceAccountId}`,
+      request
+    );
   }
 
   delete(serviceAccountId: number) {

@@ -19,7 +19,7 @@ import {
 import {
   LucideArrowDown,
   LucideArrowUp,
-  LucidePencil,
+  LucideSettings2,
   LucidePlus,
   LucideTrash2,
 } from '@lucide/angular';
@@ -54,7 +54,7 @@ import { finalize, first } from 'rxjs';
     TooltipDirective,
     LucideArrowDown,
     LucideArrowUp,
-    LucidePencil,
+    LucideSettings2,
     LucidePlus,
     LucideTrash2,
   ],
@@ -133,7 +133,7 @@ import { finalize, first } from 'rxjs';
                     aria-label="Edit status"
                     [disabled]="loading()"
                     (click)="openEditDialog(status)">
-                    <svg lucidePencil class="h-4 w-4"></svg>
+                    <svg lucideSettings2 class="h-4 w-4"></svg>
                   </button>
                   <button
                     app-icon-button

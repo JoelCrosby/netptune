@@ -13,7 +13,7 @@ import {
   selectSprintsLoading,
 } from '@core/store/sprints/sprints.selectors';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
-import { LucidePencil, LucidePlus, LucideTrash2 } from '@lucide/angular';
+import { LucideSettings2, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -194,7 +194,7 @@ export class SprintsViewComponent {
   private readonly menuItems: DatatableMenuItem<SprintViewModel>[] = [
     {
       label: 'Edit',
-      icon: LucidePencil,
+      icon: LucideSettings2,
       onClick: (sprint) => this.onOpenEditDialog(sprint),
     },
     {

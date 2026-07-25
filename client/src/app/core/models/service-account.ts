@@ -30,6 +30,13 @@ export interface CreateServiceAccountRequest {
   ownerUserIds: string[];
 }
 
+export interface UpdateServiceAccountRequest {
+  name: string;
+  description?: string;
+  permissions: Permission[];
+  ownerUserIds: string[];
+}
+
 export interface CreateApiCredentialRequest {
   name: string;
   scopes: Permission[];

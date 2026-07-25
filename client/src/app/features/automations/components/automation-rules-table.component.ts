@@ -15,7 +15,7 @@ import {
   LucideCircleDashed,
   LucideCirclePlay,
   LucideCopy,
-  LucidePencil,
+  LucideSettings2,
   LucideTrash2,
   LucideZap,
 } from '@lucide/angular';
@@ -307,7 +307,7 @@ export class AutomationRulesTableComponent {
     return [
       {
         label: 'Edit rule',
-        icon: LucidePencil,
+        icon: LucideSettings2,
         onClick: (rule: AutomationRuleListItem) => this.editRule.emit(rule),
       },
       {

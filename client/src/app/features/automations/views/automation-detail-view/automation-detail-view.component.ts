@@ -12,7 +12,7 @@ import {
   LucideCirclePause,
   LucideCirclePlay,
   LucideFlaskConical,
-  LucidePencil,
+  LucideSettings2,
 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -46,7 +46,7 @@ import { AutomationsService } from '../../services/automations.service';
     AutomationDetailStatsComponent,
     AutomationRunsTableComponent,
     AutomationRuleSummaryComponent,
-    LucidePencil,
+    LucideSettings2,
     LucideCirclePause,
     LucideCirclePlay,
     LucideFlaskConical,
@@ -76,7 +76,7 @@ import { AutomationsService } from '../../services/automations.service';
             }
           </button>
           <a app-flat-button color="primary" [routerLink]="['edit']">
-            <svg lucidePencil class="h-4 w-4"></svg>
+            <svg lucideSettings2 class="h-4 w-4"></svg>
             Edit
           </a>
         }

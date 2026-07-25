@@ -6,6 +6,7 @@ import {
   ApiCredentialCreated,
   CreateApiCredentialRequest,
   ServiceAccount,
+  UpdateServiceAccountRequest,
 } from '@core/models/service-account';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -15,6 +16,7 @@ import {
   LucideBot,
   LucideKeyRound,
   LucidePlus,
+  LucideSettings2,
   LucideShieldCheck,
   LucideTrash,
   LucideX,
@@ -37,6 +39,10 @@ import {
   CreateServiceAccountDialogComponent,
   CreateServiceAccountWizardResult,
 } from '@settings/components/service-accounts/create-service-account-dialog.component';
+import {
+  EditServiceAccountDialogComponent,
+  EditServiceAccountDialogData,
+} from '@settings/components/service-accounts/edit-service-account-dialog.component';
 import { permissionLabel } from '@settings/components/service-accounts/service-account-permissions';
 
 @Component({
@@ -46,7 +52,7 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
     LucideBot,
     LucideKeyRound,
     LucidePlus,
-    LucideKeyRound,
+    LucideSettings2,
     LucideShieldCheck,
     LucideTrash,
     LucideX,
@@ -124,6 +130,18 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
                       (click)="openCreateCredential(account)">
                       <svg lucideKeyRound class="h-4 w-4"></svg>
                       Create credential
+                    </button>
+                  }
+
+                  @if (canUpdate()) {
+                    <button
+                      app-icon-button
+                      type="button"
+                      appTooltip="Edit service account"
+                      [attr.aria-label]="'Edit ' + account.name"
+                      [disabled]="busy()"
+                      (click)="openEditAccount(account)">
+                      <svg lucideSettings2 class="h-4 w-4"></svg>
                     </button>
                   }
 
@@ -269,6 +287,9 @@ export class ServiceAccountsViewComponent {
   readonly canDelete = this.store.selectSignal(
     selectHasPermission(netptunePermissions.serviceAccounts.delete)
   );
+  readonly canUpdate = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.serviceAccounts.update)
+  );
 
   constructor() {
     this.load();
@@ -288,6 +309,37 @@ export class ServiceAccountsViewComponent {
         next: (accounts) => this.accounts.set(accounts),
         error: () =>
           this.loadError.set('Service accounts could not be loaded.'),
+      });
+  }
+
+  openEditAccount(account: ServiceAccount) {
+    const dialogRef = this.dialog.open<
+      UpdateServiceAccountRequest,
+      EditServiceAccountDialogData
+    >(EditServiceAccountDialogComponent, {
+      data: { account },
+      width: '720px',
+    });
+
+    dialogRef.closed
+      .pipe(
+        first(),
+        switchMap((request) => {
+          if (!request) return EMPTY;
+          this.busy.set(true);
+          return this.service
+            .update(account.id, request)
+            .pipe(finalize(() => this.busy.set(false)));
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: () => {
+          this.snackbar.success('Service account updated');
+          this.load();
+        },
+        error: () =>
+          this.snackbar.error('Service account could not be updated'),
       });
   }
 

@@ -19,3 +19,14 @@ public sealed record CreateApiCredentialRequest
 
     public DateTime? ExpiresAt { get; init; }
 }
+
+public sealed record UpdateServiceAccountRequest
+{
+    public required string Name { get; init; }
+
+    public string? Description { get; init; }
+
+    public IReadOnlyList<string> Permissions { get; init; } = [];
+
+    public IReadOnlyList<string> OwnerUserIds { get; init; } = [];
+}

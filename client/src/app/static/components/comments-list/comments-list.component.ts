@@ -13,7 +13,7 @@ import { AppUser } from '@core/models/appuser';
 
 import {
   LucideEllipsis,
-  LucidePencil,
+  LucideSettings2,
   LucideTrash2,
   LucideMessageSquare,
 } from '@lucide/angular';
@@ -47,7 +47,7 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
     DropdownMenuComponent,
     MenuItemComponent,
     LucideEllipsis,
-    LucidePencil,
+    LucideSettings2,
     LucideTrash2,
     FlatButtonComponent,
     StrokedButtonComponent,
@@ -138,7 +138,7 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
                     <button
                       app-menu-item
                       (click)="startEditing(comment); commentMenu.close()">
-                      <svg lucidePencil class="h-4 w-4"></svg>
+                      <svg lucideSettings2 class="h-4 w-4"></svg>
                       <span>Edit Comment</span>
                     </button>
                   }

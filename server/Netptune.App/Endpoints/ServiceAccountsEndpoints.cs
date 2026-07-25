@@ -19,6 +19,8 @@ public static class ServiceAccountsEndpoints
             .RequireAuthorization(NetptunePermissions.ServiceAccounts.Read);
         group.MapPost("/", CreateServiceAccount)
             .RequireAuthorization(NetptunePermissions.ServiceAccounts.Create);
+        group.MapPut("/{serviceAccountId:int}", UpdateServiceAccount)
+            .RequireAuthorization(NetptunePermissions.ServiceAccounts.Update);
         group.MapDelete("/{serviceAccountId:int}", DeleteServiceAccount)
             .RequireAuthorization(NetptunePermissions.ServiceAccounts.Delete);
         group.MapPost("/{serviceAccountId:int}/credentials", CreateCredential)
@@ -54,6 +56,19 @@ public static class ServiceAccountsEndpoints
         var result = await mediator.Send(
             new CreateApiCredentialCommand(serviceAccountId, request),
             cancellationToken);
+        return ToResult(result);
+    }
+
+    private static async Task<IResult> UpdateServiceAccount(
+        IMediator mediator,
+        int serviceAccountId,
+        UpdateServiceAccountRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(
+            new UpdateServiceAccountCommand(serviceAccountId, request),
+            cancellationToken);
+
         return ToResult(result);
     }
 

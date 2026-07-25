@@ -22,7 +22,7 @@ import {
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
-import { LucidePencil, LucidePlus, LucideX } from '@lucide/angular';
+import { LucideSettings2, LucidePlus, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
 import { tagResource } from '@app/core/resources/tag.resource';
@@ -32,7 +32,7 @@ import { tagResource } from '@app/core/resources/tag.resource';
   imports: [
     IconButtonComponent,
     TooltipDirective,
-    LucidePencil,
+    LucideSettings2,
     LucidePlus,
     LucideX,
     StrokedButtonComponent,
@@ -90,7 +90,7 @@ import { tagResource } from '@app/core/resources/tag.resource';
                     type="button"
                     aria-label="Edit tag"
                     (click)="openEditDialog(tag)">
-                    <svg lucidePencil class="h-4 w-4"></svg>
+                    <svg lucideSettings2 class="h-4 w-4"></svg>
                   </button>
                   <button
                     app-icon-button

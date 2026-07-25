@@ -22,7 +22,7 @@ import {
 import {
   LucideCheck,
   LucideListPlus,
-  LucidePencil,
+  LucideSettings2,
   LucidePlus,
   LucideTrash2,
 } from '@lucide/angular';
@@ -51,7 +51,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
     FlatButtonComponent,
     IconButtonComponent,
     LucideListPlus,
-    LucidePencil,
+    LucideSettings2,
     LucidePlus,
     LucideTrash2,
     LucideCheck,
@@ -100,7 +100,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                   type="button"
                   title="Edit sprint"
                   (click)="onEdit(sprint)">
-                  <svg lucidePencil class="h-4 w-4"></svg>
+                  <svg lucideSettings2 class="h-4 w-4"></svg>
                 </button>
                 <button
                   app-icon-button

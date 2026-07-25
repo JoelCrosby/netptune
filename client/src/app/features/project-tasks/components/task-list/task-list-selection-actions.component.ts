@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { LucidePencil, LucideTrash } from '@lucide/angular';
+import { LucideSettings2, LucideTrash } from '@lucide/angular';
 import { DialogService } from '@core/services/dialog.service';
 import { BulkEditTasksDialogComponent } from '@entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component';
 import { Store } from '@ngrx/store';
@@ -10,7 +10,7 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
 
 @Component({
   selector: 'app-task-list-selection-actions',
-  imports: [StrokedButtonComponent, LucidePencil, LucideTrash],
+  imports: [StrokedButtonComponent, LucideSettings2, LucideTrash],
   template: `
     @if (selectedCount() > 0) {
       <div class="ml-auto flex flex-row items-center gap-4">
@@ -26,7 +26,7 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
           <span>Delete</span>
         </button>
         <button app-stroked-button type="button" (click)="bulkEditClicked()">
-          <svg lucidePencil class="h-4 w-4"></svg>
+          <svg lucideSettings2 class="h-4 w-4"></svg>
           <span>Bulk edit</span>
         </button>
       </div>

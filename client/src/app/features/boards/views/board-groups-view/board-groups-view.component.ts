@@ -62,7 +62,7 @@ import {
   LucideEyeOff,
   LucideFileDown,
   LucideFileUp,
-  LucidePencil,
+  LucideSettings2,
   LucideX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -282,7 +282,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
     {
       label: 'Edit Board',
       click: () => this.onEditBoardClicked(),
-      icon: LucidePencil,
+      icon: LucideSettings2,
     },
     {
       label: 'Manage Groups',
