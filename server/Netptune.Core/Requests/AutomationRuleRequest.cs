@@ -12,6 +12,12 @@ public record AutomationRuleRequest
 
     public string? ExecutionUserId { get; init; }
 
+    public int? ProjectId { get; init; }
+
+    public int? BoardId { get; init; }
+
+    public int? SprintId { get; init; }
+
     public AutomationTriggerRequest Trigger { get; init; } = null!;
 
     public List<AutomationActionRequest> Actions { get; init; } = [];

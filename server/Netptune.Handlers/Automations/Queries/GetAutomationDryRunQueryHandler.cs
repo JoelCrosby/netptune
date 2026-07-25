@@ -73,6 +73,7 @@ public sealed class GetAutomationDryRunQueryHandler
             TriggerType = rule.TriggerType,
             TaskId = task.Id,
             TaskName = task.Name,
+            ScopeMatches = AutomationRuleScope.Contains(rule, task),
             TriggerMatches = trigger.IsMatch,
             TriggerIsEvaluable = trigger.IsEvaluable,
             ConditionsMatch = explanation?.IsMatch ?? true,

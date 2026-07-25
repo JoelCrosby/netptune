@@ -1714,6 +1714,87 @@ public sealed class AutomationExecutionServiceTests
         result.RuleFound.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task ExecuteTaskChangedRules_skips_rules_scoped_to_another_project()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var otherProject = await AutomationTestData.CreateProject(scope.Db, scenario, "OTHR");
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status]);
+        await AutomationTestData.ScopeRule(scope.Db, rule, projectId: otherProject.Id);
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var hasRuns = await scope.Db.AutomationRuns.AnyAsync(TestContext.Current.CancellationToken);
+
+        hasRuns.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_runs_rules_scoped_to_the_task_project()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status]);
+        await AutomationTestData.ScopeRule(scope.Db, rule, projectId: scenario.Project.Id);
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var run = await scope.Db.AutomationRuns.SingleAsync(TestContext.Current.CancellationToken);
+
+        run.Status.Should().Be(AutomationRunStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task ExecuteTaskChangedRules_skips_rules_scoped_to_another_board()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db, "in-progress");
+        var otherBoard = await AutomationTestData.CreateBoard(scope.Db, scenario, "other-board");
+        var rule = await AutomationTestData.CreateTaskChangedRule(
+            scope.Db,
+            scenario,
+            [TaskChangeField.Status]);
+        await AutomationTestData.ScopeRule(scope.Db, rule, boardId: otherBoard.Id);
+
+        await ExecuteStatusChange(scope, scenario);
+
+        var hasRuns = await scope.Db.AutomationRuns.AnyAsync(TestContext.Current.CancellationToken);
+
+        hasRuns.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ExecuteScheduledRules_skips_rules_scoped_to_another_sprint()
+    {
+        await using var scope = await Fixture.CreateScope();
+
+        var scenario = await AutomationTestData.CreateScenario(scope.Db);
+        var otherSprint = await AutomationTestData.CreateSprint(scope.Db, scenario, "Other Sprint");
+        var rule = await AutomationTestData.CreateTaskStateRule(
+            scope.Db,
+            scenario,
+            AutomationTriggerType.TaskHasNoDueDate);
+        await AutomationTestData.ScopeRule(scope.Db, rule, sprintId: otherSprint.Id);
+
+        await scope.AutomationExecution.ExecuteScheduledRules(
+            AutomationTriggerType.TaskHasNoDueDate,
+            TestContext.Current.CancellationToken);
+
+        var hasRuns = await scope.Db.AutomationRuns.AnyAsync(TestContext.Current.CancellationToken);
+
+        hasRuns.Should().BeFalse();
+    }
+
     private static async Task ExecuteStatusChange(
         AutomationTestScope scope,
         AutomationScenario scenario,

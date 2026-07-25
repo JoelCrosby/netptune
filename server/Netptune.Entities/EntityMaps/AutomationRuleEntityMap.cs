@@ -39,6 +39,24 @@ public class AutomationRuleEntityMap : WorkspaceEntityMap<AutomationRule, int>
             .IsRequired(false);
 
         builder
+            .HasOne(rule => rule.Project)
+            .WithMany()
+            .HasForeignKey(rule => rule.ProjectId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .HasOne(rule => rule.Board)
+            .WithMany()
+            .HasForeignKey(rule => rule.BoardId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
+            .HasOne(rule => rule.Sprint)
+            .WithMany()
+            .HasForeignKey(rule => rule.SprintId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
             .HasIndex(rule => new { rule.WorkspaceId, rule.IsEnabled });
     }
 }

@@ -132,6 +132,15 @@ export const notificationRecipientPreviewLabels: Record<
   [AutomationNotificationRecipient.workspaceRoles]: 'Chosen workspace roles',
 };
 
+export type AutomationScopeKind = 'workspace' | 'project' | 'board' | 'sprint';
+
+export const scopeKindLabels: Record<AutomationScopeKind, string> = {
+  workspace: 'Whole workspace',
+  project: 'A single project',
+  board: 'A single board',
+  sprint: 'A single sprint',
+};
+
 export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
   [AutomationRunStatus.succeeded]: 'Succeeded',
   [AutomationRunStatus.failed]: 'Failed',

@@ -12,6 +12,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { automationRuleResource } from '@core/resources/automation.resource';
 import { boardGroupOptionsResource } from '@core/resources/board-group.resource';
+import { workspaceBoardsResource } from '@core/resources/board.resource';
+import { projectResource } from '@core/resources/project.resource';
 import { relationTypeResource } from '@core/resources/relation-type.resources';
 import { serviceAccountResource } from '@core/resources/service-account.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
@@ -94,9 +96,15 @@ import { AutomationsService } from '../../services/automations.service';
                 description="Name your automation and set whether it is active.">
                 <app-automation-settings-editor
                   [serviceAccounts]="enabledServiceAccounts()"
+                  [projects]="projectsResource.value()"
+                  [boards]="workspaceBoards()"
+                  [sprints]="workspaceSprintsResource.value()"
                   [(name)]="name"
                   [(isEnabled)]="isEnabled"
-                  [(executionUserId)]="executionUserId" />
+                  [(executionUserId)]="executionUserId"
+                  [(projectId)]="projectId"
+                  [(boardId)]="boardId"
+                  [(sprintId)]="sprintId" />
               </app-step>
 
               <app-step
@@ -184,6 +192,14 @@ export class AutomationFormViewComponent {
   readonly workspaceSprintsResource = sprintResource([]);
   readonly workspaceBoardGroupsResource = boardGroupOptionsResource();
   readonly relationTypesResource = relationTypeResource();
+  readonly projectsResource = projectResource();
+  readonly workspaceBoardsResource = workspaceBoardsResource();
+
+  readonly workspaceBoards = computed(() => {
+    return this.workspaceBoardsResource
+      .value()
+      .flatMap((project) => project.boards);
+  });
   readonly ruleResource = automationRuleResource<AutomationRule>(this.ruleId);
 
   readonly taskStatuses = this.taskStatusesResource.value;
@@ -231,6 +247,9 @@ export class AutomationFormViewComponent {
   readonly taskFields = signal<TaskChangeField[]>([TaskChangeField.status]);
   readonly conditionGroup = signal<AutomationConditionGroup | null>(null);
   readonly durationDays = signal('3');
+  readonly projectId = signal<number | null>(null);
+  readonly boardId = signal<number | null>(null);
+  readonly sprintId = signal<number | null>(null);
 
   constructor() {
     effect(() => {
@@ -421,6 +440,9 @@ export class AutomationFormViewComponent {
     this.conditionGroup.set(conditionGroup);
     this.durationDays.set(durationDays);
     this.actions.set(actions);
+    this.projectId.set(rule.projectId ?? null);
+    this.boardId.set(rule.boardId ?? null);
+    this.sprintId.set(rule.sprintId ?? null);
   }
 
   async buildRequest(): Promise<AutomationRuleRequest | null> {
@@ -431,6 +453,9 @@ export class AutomationFormViewComponent {
       executionUserId: this.executionUserId(),
       trigger: this.triggerPreview(),
       actions: this.actions(),
+      projectId: this.projectId(),
+      boardId: this.boardId(),
+      sprintId: this.sprintId(),
     });
 
     this.validationError.set(result.error);

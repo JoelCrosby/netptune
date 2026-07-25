@@ -17,6 +17,13 @@ internal static class TaskChangedRuleConditions
             return false;
         }
 
+        var isInScope = AutomationRuleScope.Contains(rule, task);
+
+        if (!isInScope)
+        {
+            return false;
+        }
+
         var configuredFields = JsonUtils.ReadEnumList<TaskChangeField>(rule.TriggerConfig, "fields");
         var watchesAllFields = configuredFields.Count == 0;
         var allTaskFields = Enum.GetValues<TaskChangeField>().ToHashSet();

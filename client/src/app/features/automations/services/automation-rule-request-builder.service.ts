@@ -20,6 +20,9 @@ import {
 import { messageVariables } from '../models/automation-copy';
 
 export interface AutomationRuleDraft {
+  projectId: number | null;
+  boardId: number | null;
+  sprintId: number | null;
   name: string;
   isEnabled: boolean;
   executionUserId: string | null;
@@ -39,6 +42,7 @@ export class AutomationRuleRequestBuilder {
     const error =
       validateName(draft.name) ??
       validateExecutionUser(draft.executionUserId) ??
+      validateScope(draft) ??
       validateActions(actions) ??
       validateTrigger(draft.trigger);
 
@@ -52,6 +56,9 @@ export class AutomationRuleRequestBuilder {
 
     return {
       request: {
+        projectId: draft.projectId,
+        boardId: draft.boardId,
+        sprintId: draft.sprintId,
         name: draft.name.trim(),
         isEnabled: draft.isEnabled,
         executionUserId: draft.executionUserId,
@@ -61,6 +68,17 @@ export class AutomationRuleRequestBuilder {
       error: null,
     };
   }
+}
+
+function validateScope(draft: AutomationRuleDraft): string | null {
+  const scopes = [draft.projectId, draft.boardId, draft.sprintId];
+  const scopeCount = scopes.filter((scope) => scope !== null).length;
+
+  if (scopeCount > 1) {
+    return 'Choose a single project, board or sprint scope.';
+  }
+
+  return null;
 }
 
 function validateExecutionUser(executionUserId: string | null): string | null {

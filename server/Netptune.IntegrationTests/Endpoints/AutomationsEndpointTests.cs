@@ -221,6 +221,77 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task Create_ShouldPersistProjectScope()
+    {
+        var setup = await GetSetup();
+        var response = await Client.PostAsJsonAsync("api/automations", new AutomationRuleRequest
+        {
+            Name = $"Scoped rule {Guid.NewGuid():N}",
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            ProjectId = setup.ProjectId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Status],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+        var created = result!.Payload!;
+
+        created.ProjectId.Should().Be(setup.ProjectId);
+        created.BoardId.Should().BeNull();
+        created.SprintId.Should().BeNull();
+
+        var reloaded = await Client.GetFromJsonAsync<ClientResponse<AutomationRuleViewModel>>(
+            $"api/automations/{created.Id}");
+
+        reloaded!.Payload!.ProjectId.Should().Be(setup.ProjectId);
+    }
+
+    [Fact]
+    public async Task Create_ShouldFail_WithMoreThanOneScope()
+    {
+        var setup = await GetSetup();
+        var response = await Client.PostAsJsonAsync("api/automations", new AutomationRuleRequest
+        {
+            Name = $"Over scoped rule {Guid.NewGuid():N}",
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            ProjectId = setup.ProjectId,
+            SprintId = 1,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Status],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        });
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+
+        result!.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Clone_ShouldCopyRule_AsDisabledDraft()
     {
         var rule = await CreateRule(NameContains("clone source"));

@@ -82,6 +82,9 @@ public sealed class UpdateAutomationRuleCommandHandler
         rule.Name = ruleRequest.Name.Trim();
         rule.IsEnabled = ruleRequest.IsEnabled;
         rule.ExecutionUserId = ruleRequest.ExecutionUserId;
+        rule.ProjectId = ruleRequest.ProjectId;
+        rule.BoardId = ruleRequest.BoardId;
+        rule.SprintId = ruleRequest.SprintId;
         rule.TriggerType = ruleRequest.Trigger.Type;
         rule.TriggerConfig = AutomationMapping.ToTriggerConfig(ruleRequest.Trigger);
         rule.ModifiedByUserId = userId;

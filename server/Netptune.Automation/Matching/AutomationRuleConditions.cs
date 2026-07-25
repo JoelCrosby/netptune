@@ -8,6 +8,13 @@ internal static class AutomationRuleConditions
 {
     public static bool Match(AutomationRule rule, ProjectTask task)
     {
+        var isInScope = AutomationRuleScope.Contains(rule, task);
+
+        if (!isInScope)
+        {
+            return false;
+        }
+
         var conditionGroup = JsonUtils.ReadObject<AutomationConditionGroup>(rule.TriggerConfig, "conditionGroup");
 
         return conditionGroup?.Matches(task) ?? true;

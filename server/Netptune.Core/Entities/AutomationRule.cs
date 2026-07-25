@@ -18,6 +18,21 @@ public record AutomationRule : WorkspaceEntity<int>
 
     public JsonDocument? TriggerConfig { get; set; }
 
+    public int? ProjectId { get; set; }
+
+    public int? BoardId { get; set; }
+
+    public int? SprintId { get; set; }
+
+    [JsonIgnore]
+    public Project? Project { get; set; }
+
+    [JsonIgnore]
+    public Board? Board { get; set; }
+
+    [JsonIgnore]
+    public Sprint? Sprint { get; set; }
+
     [JsonIgnore]
     public ICollection<AutomationAction> Actions { get; set; } = new HashSet<AutomationAction>();
 

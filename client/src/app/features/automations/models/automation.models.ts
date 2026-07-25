@@ -168,6 +168,9 @@ export interface AutomationAction {
 export interface AutomationRule {
   id: number;
   workspaceId: number;
+  projectId?: number | null;
+  boardId?: number | null;
+  sprintId?: number | null;
   name: string;
   isEnabled: boolean;
   executionUserId: string | null;
@@ -204,6 +207,9 @@ export interface AutomationActionResult {
 }
 
 export interface AutomationRuleRequest {
+  projectId?: number | null;
+  boardId?: number | null;
+  sprintId?: number | null;
   name: string;
   isEnabled: boolean;
   executionUserId: string;
@@ -298,6 +304,7 @@ export interface AutomationDryRun {
   triggerType: AutomationTriggerType;
   taskId: number;
   taskName: string;
+  scopeMatches: boolean;
   triggerMatches: boolean;
   triggerIsEvaluable: boolean;
   conditionsMatch: boolean;

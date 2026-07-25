@@ -225,6 +225,80 @@ internal static class AutomationTestData
         await db.SaveChangesAsync();
     }
 
+    public static async Task ScopeRule(
+        DataContext db,
+        AutomationRule rule,
+        int? projectId = null,
+        int? boardId = null,
+        int? sprintId = null)
+    {
+        var tracked = await db.AutomationRules.SingleAsync(candidate => candidate.Id == rule.Id);
+
+        tracked.ProjectId = projectId;
+        tracked.BoardId = boardId;
+        tracked.SprintId = sprintId;
+
+        await db.SaveChangesAsync();
+    }
+
+    public static async Task<Project> CreateProject(DataContext db, AutomationScenario scenario, string key)
+    {
+        var project = new Project
+        {
+            Name = $"Project {key}",
+            Key = key,
+            WorkspaceId = scenario.Workspace.Id,
+            MetaInfo = new ProjectMeta(),
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+
+        db.Projects.Add(project);
+        await db.SaveChangesAsync();
+
+        return project;
+    }
+
+    public static async Task<Sprint> CreateSprint(DataContext db, AutomationScenario scenario, string name)
+    {
+        var sprint = new Sprint
+        {
+            Name = name,
+            Status = SprintStatus.Active,
+            StartDate = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc),
+            EndDate = new DateTime(2026, 7, 14, 0, 0, 0, DateTimeKind.Utc),
+            ProjectId = scenario.Project.Id,
+            WorkspaceId = scenario.Workspace.Id,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+
+        db.Sprints.Add(sprint);
+        await db.SaveChangesAsync();
+
+        return sprint;
+    }
+
+    public static async Task<Board> CreateBoard(DataContext db, AutomationScenario scenario, string identifier)
+    {
+        var board = new Board
+        {
+            Name = $"Board {identifier}",
+            Identifier = identifier,
+            ProjectId = scenario.Project.Id,
+            BoardType = BoardType.UserDefined,
+            MetaInfo = new BoardMeta(),
+            WorkspaceId = scenario.Workspace.Id,
+            OwnerId = scenario.Owner.Id,
+            CreatedByUserId = scenario.Owner.Id,
+        };
+
+        db.Boards.Add(board);
+        await db.SaveChangesAsync();
+
+        return board;
+    }
+
     public static async Task<RelationType> CreateRelationType(DataContext db, AutomationScenario scenario)
     {
         var relationType = new RelationType

@@ -93,7 +93,16 @@ export interface AutomationDryRunDialogData {
       } @else if (dryRun(); as dryRun) {
         <div class="border-border flex flex-col gap-3 rounded-md border p-3">
           <div class="flex flex-col gap-1">
-            @if (triggerBlocks(dryRun)) {
+            @if (!dryRun.scopeMatches) {
+              <p class="text-sm font-medium">
+                This rule would not run against
+                <span class="text-primary">{{ dryRun.taskName }}</span>
+              </p>
+              <p class="text-muted text-xs">
+                The rule is limited to a project, board or sprint that does not
+                contain this task.
+              </p>
+            } @else if (triggerBlocks(dryRun)) {
               <p class="text-sm font-medium">
                 This rule would not run against
                 <span class="text-primary">{{ dryRun.taskName }}</span>

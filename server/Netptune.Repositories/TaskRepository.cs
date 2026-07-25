@@ -73,6 +73,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(task => task.Project)
             .Include(task => task.Workspace)
             .Include(task => task.Status)
+            .Include(task => task.ProjectTaskInBoardGroups)
+                .ThenInclude(link => link.BoardGroup)
             .AsSplitQuery()
             .AsNoTracking()
             .FirstOrDefaultAsync(task => task.Id == id && !task.IsDeleted, cancellationToken);
@@ -89,6 +91,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(task => task.Project)
             .Include(task => task.Workspace)
             .Include(task => task.Status)
+            .Include(task => task.ProjectTaskInBoardGroups)
+                .ThenInclude(link => link.BoardGroup)
             .Where(task =>
                 workspaceIds.Contains(task.WorkspaceId) &&
                 !task.IsDeleted &&
@@ -111,6 +115,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(task => task.Project)
             .Include(task => task.Workspace)
             .Include(task => task.Status)
+            .Include(task => task.ProjectTaskInBoardGroups)
+                .ThenInclude(link => link.BoardGroup)
             .Where(task =>
                 workspaceIds.Contains(task.WorkspaceId) &&
                 !task.IsDeleted &&
@@ -163,6 +169,8 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Include(task => task.Project)
             .Include(task => task.Workspace)
             .Include(task => task.Status)
+            .Include(task => task.ProjectTaskInBoardGroups)
+                .ThenInclude(link => link.BoardGroup)
             .Where(task => workspaceIds.Contains(task.WorkspaceId) && !task.IsDeleted)
             .AsNoTracking()
             .AsSplitQuery();

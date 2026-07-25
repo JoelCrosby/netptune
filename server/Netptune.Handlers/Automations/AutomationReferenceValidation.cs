@@ -7,6 +7,13 @@ internal static class AutomationReferenceValidation
 {
     public static async Task<string?> Validate(AutomationValidationContext context, CancellationToken cancellationToken)
     {
+        var scopeError = await ValidateScope(context, cancellationToken);
+
+        if (scopeError is not null)
+        {
+            return scopeError;
+        }
+
         var updates = context.Request.Actions
             .Where(action => action.Type == AutomationActionType.UpdateTask)
             .ToList();
@@ -18,6 +25,55 @@ internal static class AutomationReferenceValidation
             if (error is not null)
             {
                 return error;
+            }
+        }
+
+        return null;
+    }
+
+    private static async Task<string?> ValidateScope(
+        AutomationValidationContext context,
+        CancellationToken cancellationToken)
+    {
+        var request = context.Request;
+        var scopeCount = new bool?[] { request.ProjectId.HasValue, request.BoardId.HasValue, request.SprintId.HasValue }
+            .Count(hasScope => hasScope == true);
+
+        if (scopeCount > 1)
+        {
+            return "An automation can be scoped to a project, a board or a sprint, but not more than one.";
+        }
+
+        if (request.ProjectId.HasValue)
+        {
+            var project = await context.UnitOfWork.Projects.GetAsync(request.ProjectId.Value, true, cancellationToken);
+            var projectIsInvalid = project is null || project.WorkspaceId != context.WorkspaceId;
+
+            if (projectIsInvalid)
+            {
+                return $"Project with id {request.ProjectId.Value} was not found in the workspace.";
+            }
+        }
+
+        if (request.BoardId.HasValue)
+        {
+            var board = await context.UnitOfWork.Boards.GetAsync(request.BoardId.Value, true, cancellationToken);
+            var boardIsInvalid = board is null || board.WorkspaceId != context.WorkspaceId;
+
+            if (boardIsInvalid)
+            {
+                return $"Board with id {request.BoardId.Value} was not found in the workspace.";
+            }
+        }
+
+        if (request.SprintId.HasValue)
+        {
+            var sprint = await context.UnitOfWork.Sprints.GetAsync(request.SprintId.Value, true, cancellationToken);
+            var sprintIsInvalid = sprint is null || sprint.WorkspaceId != context.WorkspaceId;
+
+            if (sprintIsInvalid)
+            {
+                return $"Sprint with id {request.SprintId.Value} was not found in the workspace.";
             }
         }
 
