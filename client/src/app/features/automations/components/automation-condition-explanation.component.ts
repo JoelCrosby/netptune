@@ -1,5 +1,7 @@
 import { Component, computed, forwardRef, input } from '@angular/core';
+import { WorkspaceAppUser } from '@core/models/appuser';
 import { Status, StatusCategory } from '@core/models/status';
+import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
 import {
   conditionGroupOperatorLabels,
@@ -52,7 +54,7 @@ interface ConditionStatus {
                     [color]="expectedStatus.color"
                     [category]="expectedStatus.category" />
                 } @else if (condition.value) {
-                  <span>"{{ condition.value }}"</span>
+                  <span>"{{ displayValue(condition, condition.value) }}"</span>
                 }
               </span>
 
@@ -73,7 +75,9 @@ interface ConditionStatus {
                       [color]="actualStatus.color"
                       [category]="actualStatus.category" />
                   } @else {
-                    <span>{{ condition.actualValue ?? 'empty' }}</span>
+                    <span>
+                      {{ displayValue(condition, condition.actualValue) }}
+                    </span>
                   }
                 </span>
               }
@@ -85,7 +89,9 @@ interface ConditionStatus {
       @for (nested of group().groups; track $index) {
         <app-automation-condition-explanation
           [group]="nested"
-          [statuses]="statuses()" />
+          [statuses]="statuses()"
+          [sprints]="sprints()"
+          [users]="users()" />
       }
     </div>
   `,
@@ -93,6 +99,8 @@ interface ConditionStatus {
 export class AutomationConditionExplanationComponent {
   readonly group = input.required<AutomationConditionGroupExplanation>();
   readonly statuses = input<Status[]>([]);
+  readonly sprints = input<SprintViewModel[]>([]);
+  readonly users = input<WorkspaceAppUser[]>([]);
 
   readonly groupLabel = computed(() => {
     return conditionGroupOperatorLabels[this.group().operator];
@@ -103,6 +111,43 @@ export class AutomationConditionExplanationComponent {
     const operator = conditionOperatorLabels[condition.operator];
 
     return `${field} ${operator}`;
+  }
+
+  displayValue(
+    condition: AutomationConditionExplanation,
+    value: string | null
+  ): string {
+    if (!value) return 'empty';
+
+    if (condition.field === TaskChangeField.sprint) {
+      return this.sprintName(value);
+    }
+
+    if (condition.field === TaskChangeField.assignees) {
+      return this.userNames(value);
+    }
+
+    return value;
+  }
+
+  private sprintName(value: string): string {
+    const sprintId = Number(value);
+    const sprint = this.sprints().find((candidate) => {
+      return candidate.id === sprintId;
+    });
+
+    return sprint?.name ?? value;
+  }
+
+  private userNames(value: string): string {
+    const userIds = value.split(',').map((userId) => userId.trim());
+    const names = userIds.map((userId) => {
+      const user = this.users().find((candidate) => candidate.id === userId);
+
+      return user?.displayName ?? userId;
+    });
+
+    return names.join(', ');
   }
 
   conditionStatus(

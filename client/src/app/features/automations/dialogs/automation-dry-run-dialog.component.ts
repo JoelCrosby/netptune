@@ -7,7 +7,9 @@ import {
 } from '@angular/core/rxjs-interop';
 import { Params } from '@angular/router';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { sprintResource } from '@core/resources/sprint.resource';
 import { statusResource } from '@core/resources/status.resources';
+import { userResource } from '@core/resources/user.resource';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -115,7 +117,9 @@ export interface AutomationDryRunDialogData {
           @if (dryRun.conditionGroup; as conditionGroup) {
             <app-automation-condition-explanation
               [group]="conditionGroup"
-              [statuses]="statuses()" />
+              [statuses]="statuses()"
+              [sprints]="sprints()"
+              [users]="users()" />
           } @else {
             <p class="text-muted text-sm">
               This rule has no conditions, so every triggering task matches.
@@ -139,8 +143,16 @@ export class AutomationDryRunDialogComponent {
   readonly dialogData = inject<AutomationDryRunDialogData>(DIALOG_DATA);
 
   private readonly statusesResource = statusResource();
+  private readonly sprintsResource = sprintResource([]);
+  private readonly usersResource = userResource();
 
   readonly statuses = this.statusesResource.value;
+  readonly sprints = this.sprintsResource.value;
+
+  readonly users = computed(() => {
+    return this.usersResource.value()?.payload?.items ?? [];
+  });
+
   readonly searchInput = signal('');
   readonly running = signal(false);
   readonly failed = signal(false);
