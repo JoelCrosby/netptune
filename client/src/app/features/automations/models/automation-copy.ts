@@ -56,6 +56,29 @@ export const actionTypeLabels: Record<AutomationActionType, string> = {
   [AutomationActionType.deleteTask]: 'Delete task',
 };
 
+export const conditionOperatorLabels: Record<
+  AutomationConditionOperator,
+  string
+> = {
+  [AutomationConditionOperator.any]: 'changed',
+  [AutomationConditionOperator.equals]: 'equals',
+  [AutomationConditionOperator.notEquals]: 'does not equal',
+  [AutomationConditionOperator.contains]: 'contains',
+  [AutomationConditionOperator.isEmpty]: 'is empty',
+  [AutomationConditionOperator.isNotEmpty]: 'is not empty',
+  [AutomationConditionOperator.added]: 'added',
+  [AutomationConditionOperator.removed]: 'removed',
+};
+
+export const conditionGroupOperatorLabels: Record<
+  AutomationConditionGroupOperator,
+  string
+> = {
+  [AutomationConditionGroupOperator.all]: 'All of',
+  [AutomationConditionGroupOperator.any]: 'Any of',
+  [AutomationConditionGroupOperator.none]: 'None of',
+};
+
 export const notificationRecipientLabels: Record<
   AutomationNotificationRecipient,
   string

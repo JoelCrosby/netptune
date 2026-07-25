@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { DialogService } from '@core/services/dialog.service';
 import { StatusesService } from '@core/services/statuses.service';
 import { Status } from '@core/models/status';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
@@ -10,6 +11,7 @@ import { Store } from '@ngrx/store';
 import {
   LucideCirclePause,
   LucideCirclePlay,
+  LucideFlaskConical,
   LucidePencil,
 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -22,6 +24,10 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
 import { EMPTY, finalize, forkJoin, switchMap } from 'rxjs';
 import { AutomationDetailHeadingComponent } from '../../components/automation-detail-heading.component';
 import { AutomationDetailStatsComponent } from '../../components/automation-detail-stats.component';
+import {
+  AutomationDryRunDialogComponent,
+  AutomationDryRunDialogData,
+} from '../../dialogs/automation-dry-run-dialog.component';
 import { AutomationRunsTableComponent } from '../../components/automation-runs-table.component';
 import { AutomationRuleSummaryComponent } from '../../components/automation-rule-summary.component';
 import { AutomationRule, AutomationRun } from '../../models/automation.models';
@@ -43,11 +49,18 @@ import { AutomationsService } from '../../services/automations.service';
     LucidePencil,
     LucideCirclePause,
     LucideCirclePlay,
+    LucideFlaskConical,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
       <app-page-header title="Automation">
         <a app-stroked-button [routerLink]="['../']">Back</a>
+        @if (rule(); as rule) {
+          <button app-stroked-button type="button" (click)="onDryRun(rule)">
+            <svg lucideFlaskConical class="h-4 w-4"></svg>
+            Test
+          </button>
+        }
         @if (canManage() && rule(); as rule) {
           <button
             app-stroked-button
@@ -111,6 +124,7 @@ export class AutomationDetailViewComponent {
   private service = inject(AutomationsService);
   private statusesService = inject(StatusesService);
   private confirmation = inject(ConfirmationService);
+  private dialog = inject(DialogService);
   private snackbar = inject(SnackbarService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -159,6 +173,15 @@ export class AutomationDetailViewComponent {
         },
         error: () => this.error.set(true),
       });
+  }
+
+  onDryRun(rule: AutomationRule) {
+    const data: AutomationDryRunDialogData = {
+      ruleId: rule.id,
+      ruleName: rule.name,
+    };
+
+    this.dialog.open(AutomationDryRunDialogComponent, { data });
   }
 
   onToggle(rule: AutomationRule) {

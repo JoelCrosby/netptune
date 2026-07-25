@@ -4,6 +4,7 @@ import { ClientResponse } from '@core/models/client-response';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { forkJoin, map, of, switchMap } from 'rxjs';
 import {
+  AutomationDryRun,
   AutomationRule,
   AutomationRuleListItem,
   AutomationRuleRequest,
@@ -48,6 +49,14 @@ export class AutomationsService {
   getRuns(id: number) {
     return this.http
       .get<ClientResponse<AutomationRun[]>>(`api/automations/${id}/runs`)
+      .pipe(unwrapClientReposne());
+  }
+
+  dryRun(id: number, taskId: number) {
+    return this.http
+      .get<ClientResponse<AutomationDryRun>>(
+        `api/automations/${id}/dry-run/${taskId}`
+      )
       .pipe(unwrapClientReposne());
   }
 

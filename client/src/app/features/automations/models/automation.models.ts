@@ -227,3 +227,31 @@ export interface AutomationActionRequest {
 export interface AutomationRuleListItem extends AutomationRule {
   lastRun?: AutomationRun | null;
 }
+
+export interface AutomationConditionExplanation {
+  field: TaskChangeField;
+  operator: AutomationConditionOperator;
+  value: string | null;
+  actualValue: string | null;
+  isMatch: boolean;
+  isEvaluable: boolean;
+}
+
+export interface AutomationConditionGroupExplanation {
+  operator: AutomationConditionGroupOperator;
+  isMatch: boolean;
+  conditions: AutomationConditionExplanation[];
+  groups: AutomationConditionGroupExplanation[];
+}
+
+export interface AutomationDryRun {
+  ruleId: number;
+  ruleName: string;
+  isEnabled: boolean;
+  triggerType: AutomationTriggerType;
+  taskId: number;
+  taskName: string;
+  conditionsMatch: boolean;
+  hasUnevaluableConditions: boolean;
+  conditionGroup: AutomationConditionGroupExplanation | null;
+}
