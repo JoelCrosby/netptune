@@ -105,6 +105,9 @@ import { AutomationDescriptionComponent } from './automation-description.compone
                       app-icon-button
                       type="button"
                       [title]="rule.isEnabled ? 'Disable rule' : 'Enable rule'"
+                      [ariaLabel]="
+                        rule.isEnabled ? 'Disable rule' : 'Enable rule'
+                      "
                       [disabled]="busyId() === rule.id"
                       (click)="toggleRule.emit(rule)">
                       @if (rule.isEnabled) {

@@ -22,6 +22,7 @@ import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
@@ -38,6 +39,7 @@ import {
 @Component({
   selector: 'app-calendar-view',
   imports: [
+    ErrorStateComponent,
     CalendarPlanningMonthComponent,
     CalendarToolbarComponent,
     PageContainerComponent,
@@ -77,11 +79,11 @@ import {
           (cleared)="clearTaskFilters()" />
 
         @if (calendar.error()) {
-          <div
-            class="border-danger/30 bg-danger/5 text-danger m-4 rounded border p-4"
-            role="alert">
-            The calendar could not be loaded. Try refreshing the view.
-          </div>
+          <app-error-state
+            compact
+            title="The calendar could not be loaded"
+            description="Check the selected filters and try again."
+            (retry)="calendar.reload()" />
         } @else if (calendar.value(); as view) {
           @if (view.truncated) {
             <div class="border-border border-b bg-amber-500/10 p-3 text-sm">

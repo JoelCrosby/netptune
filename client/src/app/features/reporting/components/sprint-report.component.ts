@@ -5,7 +5,7 @@ import {
   SprintBurndownReport,
   VelocityReport,
 } from '@core/models/reporting';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { CardContentComponent } from '@static/components/card/card-content.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
@@ -29,6 +29,7 @@ import { formatReportValue } from '../utils/report-chart-theme';
 @Component({
   selector: 'app-sprint-report',
   imports: [
+    ErrorStateComponent,
     CardComponent,
     CardContentComponent,
     CardHeaderComponent,
@@ -41,7 +42,6 @@ import { formatReportValue } from '../utils/report-chart-theme';
     SprintBurndownChartComponent,
     SprintVelocityChartComponent,
     StatComponent,
-    StrokedButtonComponent,
     TableComponent,
     TableHeaderRowDirective,
     TableHeadDirective,
@@ -63,18 +63,11 @@ import { formatReportValue } from '../utils/report-chart-theme';
           <app-page-loading label="Loading burndown" />
         </div>
       } @else if (burndown.error()) {
-        <app-empty-state
+        <app-error-state
           compact
           title="Burndown is unavailable"
-          description="No reliable baseline is available for this sprint. Pre-coverage sprints are not approximated.">
-          <button
-            emptyStateAction
-            app-stroked-button
-            type="button"
-            (click)="burndown.reload()">
-            Retry
-          </button>
-        </app-empty-state>
+          description="No reliable baseline is available for this sprint. Pre-coverage sprints are not approximated."
+          (retry)="burndown.reload()" />
       } @else if (burndown.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
         <div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
@@ -146,18 +139,11 @@ import { formatReportValue } from '../utils/report-chart-theme';
             <app-page-loading label="Loading velocity" />
           </div>
         } @else if (velocity.error()) {
-          <app-empty-state
+          <app-error-state
             compact
             title="Velocity could not be loaded"
-            description="Retry the request to load sprint velocity.">
-            <button
-              emptyStateAction
-              app-stroked-button
-              type="button"
-              (click)="velocity.reload()">
-              Retry
-            </button>
-          </app-empty-state>
+            description="Retry the request to load sprint velocity."
+            (retry)="velocity.reload()" />
         } @else if (velocity.value(); as report) {
           <app-report-coverage-notice [coverage]="report.coverage" />
 

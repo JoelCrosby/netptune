@@ -9,6 +9,7 @@ import {
   EditTagDialogResult,
 } from '@entry/dialogs/edit-tag-dialog/edit-tag-dialog.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import {
@@ -35,6 +36,7 @@ import { tagResource } from '@app/core/resources/tag.resource';
     LucidePlus,
     LucideX,
     StrokedButtonComponent,
+    ErrorStateComponent,
     SectionHeaderComponent,
     TableComponent,
     TableEmptyCellDirective,
@@ -53,54 +55,64 @@ import { tagResource } from '@app/core/resources/tag.resource';
       </button>
     </app-section-header>
 
-    <app-table
-      containerClass="max-w-xl overflow-hidden"
-      tableClass="table-fixed">
-      <thead appTableHead>
-        <tr appTableHeaderRow>
-          <th class="px-4 py-3">Name</th>
-          <th class="w-24 px-2 py-3"></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (tag of tags.value(); track tag.id) {
-          <tr appTableRow class="group bg-card">
-            <td class="px-4 py-2 align-middle">
-              <button
-                type="button"
-                class="block w-full cursor-pointer truncate text-left font-medium"
-                (click)="openEditDialog(tag)">
-                {{ tag.name }}
-              </button>
-            </td>
-            <td class="px-2 py-2 align-middle">
-              <div class="flex gap-1">
+    @if (tags.error()) {
+      <app-error-state
+        compact
+        title="Tags could not be loaded"
+        description="Check your connection and try again."
+        (retry)="tags.reload()" />
+    } @else {
+      <app-table
+        containerClass="max-w-xl overflow-hidden"
+        tableClass="table-fixed">
+        <thead appTableHead>
+          <tr appTableHeaderRow>
+            <th class="px-4 py-3">Name</th>
+            <th class="w-24 px-2 py-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (tag of tags.value(); track tag.id) {
+            <tr appTableRow class="group bg-card">
+              <td class="px-4 py-2 align-middle">
                 <button
-                  app-icon-button
-                  appTooltip="Edit tag"
                   type="button"
-                  aria-label="Edit tag"
+                  class="block w-full cursor-pointer truncate text-left font-medium"
                   (click)="openEditDialog(tag)">
-                  <svg lucidePencil class="h-4 w-4"></svg>
+                  {{ tag.name }}
                 </button>
-                <button
-                  app-icon-button
-                  appTooltip="Delete tag"
-                  type="button"
-                  aria-label="Delete tag"
-                  (click)="onDeleteClicked(tag)">
-                  <svg lucideX class="h-4 w-4"></svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td appTableEmptyCell colspan="2">No tags</td>
-          </tr>
-        }
-      </tbody>
-    </app-table> `,
+              </td>
+              <td class="px-2 py-2 align-middle">
+                <div class="flex gap-1">
+                  <button
+                    app-icon-button
+                    appTooltip="Edit tag"
+                    type="button"
+                    aria-label="Edit tag"
+                    (click)="openEditDialog(tag)">
+                    <svg lucidePencil class="h-4 w-4"></svg>
+                  </button>
+                  <button
+                    app-icon-button
+                    appTooltip="Delete tag"
+                    type="button"
+                    aria-label="Delete tag"
+                    (click)="onDeleteClicked(tag)">
+                    <svg lucideX class="h-4 w-4"></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td appTableEmptyCell colspan="2">
+                No tags yet. Create one to group tasks across projects.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </app-table>
+    } `,
 })
 export class TagsViewComponent {
   private store = inject(Store);

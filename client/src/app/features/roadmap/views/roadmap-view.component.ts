@@ -15,6 +15,7 @@ import {
   TaskFilterRouteParams,
 } from '@core/router/task-filter-route-params';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import {
@@ -38,6 +39,7 @@ const defaultTo = addDays(today, 45);
 @Component({
   selector: 'app-roadmap-view',
   imports: [
+    ErrorStateComponent,
     PageContainerComponent,
     PageHeaderComponent,
     RoadmapFiltersComponent,
@@ -91,11 +93,11 @@ const defaultTo = addDays(today, 45);
             {{ validationError }}
           </div>
         } @else if (roadmap.error()) {
-          <div
-            class="border-danger/30 bg-danger/5 text-danger m-4 rounded border p-4">
-            The roadmap could not be loaded. Check the selected date range and
-            try again.
-          </div>
+          <app-error-state
+            compact
+            title="The roadmap could not be loaded"
+            description="Check the selected date range and try again."
+            (retry)="roadmap.reload()" />
         } @else if (roadmap.value(); as view) {
           @if (view.truncated) {
             <div class="border-border border-b bg-amber-500/10 p-3 text-sm">

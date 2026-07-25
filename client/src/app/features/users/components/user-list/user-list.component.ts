@@ -11,6 +11,7 @@ import { LucideTrash2, LucideSend } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
@@ -24,6 +25,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
     BadgeComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
+    EmptyStateComponent,
   ],
   template: `
     <app-datatable
@@ -69,6 +71,12 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
           <app-badge shape="rounded">{{ roleLabel(user.role) }}</app-badge>
         }
       </ng-template>
+
+      <app-empty-state
+        appDatatableEmpty
+        compact
+        title="No users to show"
+        description="Invite people to this workspace to see them here." />
     </app-datatable>
   `,
 })

@@ -10,8 +10,8 @@ import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CardComponent } from '@static/components/card/card.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { CardHeaderComponent } from '@static/components/card/card-header.component';
 import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
 import { CardTitleComponent } from '@static/components/card/card-title.component';
@@ -38,6 +38,7 @@ import { AutomationsService } from '../../services/automations.service';
 
 @Component({
   imports: [
+    ErrorStateComponent,
     RouterLink,
     PageContainerComponent,
     PageHeaderComponent,
@@ -47,7 +48,6 @@ import { AutomationsService } from '../../services/automations.service';
     CardSubtitleComponent,
     CardTitleComponent,
     FlatButtonComponent,
-    StrokedButtonComponent,
     AutomationStatGridComponent,
     AutomationRulesTableComponent,
     LucidePlus,
@@ -66,12 +66,10 @@ import { AutomationsService } from '../../services/automations.service';
       @if (loading()) {
         <app-page-loading />
       } @else if (error()) {
-        <app-card class="text-center">
-          <p class="mb-4 text-sm text-red-500">Failed to load automations.</p>
-          <button app-stroked-button type="button" (click)="load()">
-            Try Again
-          </button>
-        </app-card>
+        <app-error-state
+          title="Automations could not be loaded"
+          description="Check your connection and try again."
+          (retry)="load()" />
       } @else if (rules().length) {
         <div class="flex flex-col gap-4">
           <app-automation-stat-grid [stats]="stats()" />

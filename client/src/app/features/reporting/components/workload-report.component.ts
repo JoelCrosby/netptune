@@ -1,7 +1,7 @@
 import { httpResource } from '@angular/common/http';
 import { Component, input } from '@angular/core';
 import { WorkloadReport } from '@core/models/reporting';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
@@ -16,11 +16,11 @@ import {
 @Component({
   selector: 'app-workload-report',
   imports: [
+    ErrorStateComponent,
     EmptyStateComponent,
     PageLoadingComponent,
     SectionHeaderComponent,
     StatComponent,
-    StrokedButtonComponent,
     TableComponent,
     TableHeaderRowDirective,
     TableHeadDirective,
@@ -37,18 +37,11 @@ import {
           <app-page-loading label="Loading workload" />
         </div>
       } @else if (resource.error()) {
-        <app-empty-state
+        <app-error-state
           compact
           title="Workload could not be loaded"
-          description="Retry the request to load workload reporting.">
-          <button
-            emptyStateAction
-            app-stroked-button
-            type="button"
-            (click)="resource.reload()">
-            Retry
-          </button>
-        </app-empty-state>
+          description="Retry the request to load workload reporting."
+          (retry)="resource.reload()" />
       } @else if (resource.value(); as report) {
         <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <app-stat

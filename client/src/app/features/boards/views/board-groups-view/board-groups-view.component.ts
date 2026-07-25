@@ -181,6 +181,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                 @if (isAuthenticated()) {
                   <button
                     app-icon-button
+                    title="Edit group"
                     class="invisible mx-[.2rem] group-hover/header:visible"
                     (click)="onEditGroupClicked(group)">
                     <svg
@@ -189,6 +190,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
                   </button>
                   <button
                     app-icon-button
+                    title="Delete group"
                     class="invisible mx-[.2rem] group-hover/header:visible"
                     (click)="onDeleteGroupClicked(group)">
                     <svg lucideX class="text-foreground/40 h-4 w-4"></svg>

@@ -24,6 +24,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
@@ -38,6 +39,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
     TooltipDirective,
     DatatableComponent,
     DatatableCellTemplateDirective,
+    EmptyStateComponent,
   ],
   template: `
     <app-datatable
@@ -99,7 +101,11 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         }
       </ng-template>
 
-      <div appDatatableEmpty>You're all caught up — no notifications.</div>
+      <app-empty-state
+        appDatatableEmpty
+        compact
+        title="You're all caught up"
+        description="New notifications show up here." />
     </app-datatable>
   `,
 })

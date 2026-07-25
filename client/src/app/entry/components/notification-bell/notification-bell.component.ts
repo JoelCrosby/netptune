@@ -34,11 +34,12 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
   template: `
     <button
       app-icon-button
+      aria-label="Notifications"
       appTooltip="Notifications"
       appTooltipPosition="bottom"
       class="text-foreground/80 relative mr-2"
       (click)="toggleMenu()">
-      <svg lucideBell aria-hidden="false" aria-label="Notifications"></svg>
+      <svg lucideBell aria-hidden="true"></svg>
       @if (unreadCount() > 0) {
         <span
           class="bg-primary absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white dark:text-black">

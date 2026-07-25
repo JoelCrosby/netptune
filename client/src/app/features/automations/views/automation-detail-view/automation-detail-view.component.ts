@@ -16,7 +16,7 @@ import {
 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { CardComponent } from '@static/components/card/card.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -35,11 +35,11 @@ import { AutomationsService } from '../../services/automations.service';
 
 @Component({
   imports: [
+    ErrorStateComponent,
     RouterLink,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
-    CardComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     AutomationDetailHeadingComponent,
@@ -85,12 +85,10 @@ import { AutomationsService } from '../../services/automations.service';
       @if (loading()) {
         <app-page-loading />
       } @else if (error()) {
-        <app-card class="min-h-0! p-6! text-center">
-          <p class="mb-4 text-sm text-red-500">Failed to load automation.</p>
-          <button app-stroked-button type="button" (click)="load()">
-            Try Again
-          </button>
-        </app-card>
+        <app-error-state
+          title="Automation could not be loaded"
+          description="Check your connection and try again."
+          (retry)="load()" />
       } @else if (rule(); as rule) {
         <section class="flex flex-col gap-5">
           <app-automation-detail-heading
