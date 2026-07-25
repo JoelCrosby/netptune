@@ -16,14 +16,13 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { delayedLoading } from '@core/util/delayed-loading';
 import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 import { DialogService } from '@app/core/services/dialog.service';
 import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
-import { map, of, startWith, switchMap, timer } from 'rxjs';
 import {
   LucideArrowDown,
   LucideArrowUp,
@@ -378,21 +377,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
   resourceLoading = computed(() => this.resourceRef?.isLoading() ?? false);
 
-  delayedResourceLoading = toSignal(
-    toObservable(this.resourceLoading).pipe(
-      switchMap((isLoading) => {
-        if (!isLoading) {
-          return of(false);
-        }
-
-        return timer(100).pipe(
-          map(() => true),
-          startWith(false)
-        );
-      })
-    ),
-    { initialValue: false }
-  );
+  delayedResourceLoading = delayedLoading(this.resourceLoading);
 
   showSkeleton = computed(() => {
     return (

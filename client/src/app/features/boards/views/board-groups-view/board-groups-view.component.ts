@@ -66,6 +66,7 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
+import { delayedLoading } from '@core/util/delayed-loading';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -131,7 +132,9 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     }
 
     @if (loading()) {
-      <app-skeleton-board />
+      @if (showSkeleton()) {
+        <app-skeleton-board />
+      }
     } @else {
       @if (visibleGroups(); as groups) {
         <div
@@ -261,6 +264,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   board = this.store.selectSignal(selectSelectedBoard);
   boardName = linkedSignal(() => this.board()?.name);
   loading = this.store.selectSignal(selectBoardGroupsLoading);
+  showSkeleton = delayedLoading(this.loading);
   boardGroupsLoaded = this.store.selectSignal(selectBoardGroupsLoaded);
   boardIdentifier = this.store.selectSignal(selectBoardIdentifier);
 

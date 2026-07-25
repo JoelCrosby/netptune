@@ -9,6 +9,7 @@ import {
 import { DialogService } from '@core/services/dialog.service';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
+import { delayedLoading } from '@core/util/delayed-loading';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -45,7 +46,9 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
     }
 
     @if (loading()) {
-      <app-skeleton-card-grid [cards]="6" />
+      @if (showSkeleton()) {
+        <app-skeleton-card-grid [cards]="6" />
+      }
     } @else if (boards().length === 0) {
       <app-empty-state
         title="There are currently no boards."
@@ -73,6 +76,7 @@ export class BoardsViewComponent {
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectBoardsLoading);
+  showSkeleton = delayedLoading(this.loading);
   boards = this.store.selectSignal(selectAllBoards);
   count = computed(() => (this.loading() ? null : this.boards().length));
 

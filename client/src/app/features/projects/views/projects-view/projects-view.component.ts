@@ -8,6 +8,7 @@ import {
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { ProjectDialogComponent } from '@entry/dialogs/project-dialog/project-dialog.component';
 import { Store } from '@ngrx/store';
+import { delayedLoading } from '@core/util/delayed-loading';
 import { ProjectListComponent } from '@projects/components/project-list/project-list.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
@@ -42,7 +43,9 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
       }
 
       @if (loading()) {
-        <app-skeleton-card-grid [cards]="6" />
+        @if (showSkeleton()) {
+          <app-skeleton-card-grid [cards]="6" />
+        }
       } @else if (projects().length === 0) {
         <app-empty-state
           title="There are currently no projects."
@@ -71,6 +74,7 @@ export class ProjectsViewComponent {
   store = inject(Store);
 
   loading = this.store.selectSignal(selectProjectsLoading);
+  showSkeleton = delayedLoading(this.loading);
   projects = this.store.selectSignal(selectAllProjects);
   count = computed(() => (this.loading() ? null : this.projects().length));
   canCreateProjects = this.store.selectSignal(
