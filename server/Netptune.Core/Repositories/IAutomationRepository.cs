@@ -2,6 +2,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Automations;
 
 namespace Netptune.Core.Repositories;
@@ -29,6 +30,12 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
     Task<int> RetryClaimedScheduledAction(ScheduledActionRetry retry, CancellationToken cancellationToken = default);
 
     Task<int> CancelPendingTaskActions(int taskId, Guid currentEventId, string actorUserId, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<AutomationRule>> GetRulesPaged(int workspaceId, AutomationRuleFilter filter, CancellationToken cancellationToken = default);
+
+    Task<Dictionary<int, AutomationRunViewModel>> GetLatestRuns(IReadOnlyCollection<int> ruleIds, CancellationToken cancellationToken = default);
+
+    Task<AutomationRuleSummaryViewModel> GetRuleSummary(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<AutomationRunViewModel>> GetRuns(int ruleId, int workspaceId, int take = 50, CancellationToken cancellationToken = default);
 }

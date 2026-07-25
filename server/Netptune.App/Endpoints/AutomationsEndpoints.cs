@@ -1,6 +1,7 @@
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Models.Automations;
 using Netptune.Core.Requests;
 using Netptune.Handlers.Automations.Commands;
 using Netptune.Handlers.Automations.Queries;
@@ -14,6 +15,7 @@ public static class AutomationsEndpoints
         var group = builder.MapGroup("automations");
 
         group.MapGet("/", HandleGet).RequireAuthorization(NetptunePermissions.Automations.Read);
+        group.MapGet("/summary", HandleGetSummary).RequireAuthorization(NetptunePermissions.Automations.Read);
         group.MapGet("/{id:int}", HandleGetById).RequireAuthorization(NetptunePermissions.Automations.Read);
         group.MapGet("/{id:int}/runs", HandleGetRuns).RequireAuthorization(NetptunePermissions.Automations.Read);
         group.MapGet("/{id:int}/dry-run/{taskId:int}", HandleGetDryRun).RequireAuthorization(NetptunePermissions.Automations.Read);
@@ -28,9 +30,20 @@ public static class AutomationsEndpoints
         return group;
     }
 
-    private static async Task<IResult> HandleGet(IMediator mediator, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleGet(
+        IMediator mediator,
+        [AsParameters] AutomationRuleFilter filter,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAutomationRulesQuery(), cancellationToken);
+        var result = await mediator.Send(new GetAutomationRulesPagedQuery(filter), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetSummary(IMediator mediator, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAutomationRuleSummaryQuery(), cancellationToken);
+
         return Results.Ok(result);
     }
 

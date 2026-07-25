@@ -27,7 +27,7 @@ import {
 import { AutomationRulesTableComponent } from '../../components/automation-rules-table.component';
 import {
   AutomationRuleListItem,
-  AutomationRunStatus,
+  AutomationRuleSummary,
 } from '../../models/automation.models';
 import {
   AutomationCloneDialogComponent,
@@ -70,14 +70,13 @@ import { AutomationsService } from '../../services/automations.service';
           title="Automations could not be loaded"
           description="Check your connection and try again."
           (retry)="load()" />
-      } @else if (rules().length) {
+      } @else if (summary()?.ruleCount) {
         <div class="flex flex-col gap-4">
           <app-automation-stat-grid [stats]="stats()" />
           <app-automation-rules-table
-            [rules]="rules()"
             [canManage]="canManage()"
-            [busyId]="busyId()"
             [statuses]="statuses()"
+            [reloadSignal]="reloadToken"
             (toggleRule)="onToggle($event)"
             (editRule)="onEdit($event)"
             (cloneRule)="onClone($event)"
@@ -118,8 +117,9 @@ export class AutomationsViewComponent {
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
 
-  readonly rules = signal<AutomationRuleListItem[]>([]);
+  readonly summary = signal<AutomationRuleSummary | null>(null);
   readonly statuses = signal<Status[]>([]);
+  readonly reloadToken = signal(0);
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly busyId = signal<number | null>(null);
@@ -127,23 +127,33 @@ export class AutomationsViewComponent {
     selectHasPermission(netptunePermissions.automations.manage)
   );
 
-  readonly enabledCount = computed(
-    () => this.rules().filter((rule) => rule.isEnabled).length
-  );
-  readonly recentFailureCount = computed(
-    () =>
-      this.rules().filter(
-        (rule) => rule.lastRun?.status === AutomationRunStatus.failed
-      ).length
-  );
-  readonly stats = computed<AutomationStat[]>(() => [
-    { label: 'Rules', value: this.rules().length },
-    { label: 'Enabled', value: this.enabledCount() },
-    { label: 'Recent failures', value: this.recentFailureCount() },
-  ]);
+  readonly stats = computed<AutomationStat[]>(() => {
+    const summary = this.summary();
+
+    return [
+      { label: 'Rules', value: summary?.ruleCount ?? 0 },
+      { label: 'Enabled', value: summary?.enabledCount ?? 0 },
+      { label: 'Recent failures', value: summary?.recentFailureCount ?? 0 },
+    ];
+  });
 
   constructor() {
     this.load();
+  }
+
+  reloadRules() {
+    this.reloadToken.update((token) => token + 1);
+  }
+
+  refresh() {
+    this.reloadRules();
+
+    this.service
+      .getSummary()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (summary) => this.summary.set(summary),
+      });
   }
 
   load() {
@@ -151,7 +161,7 @@ export class AutomationsViewComponent {
     this.error.set(false);
 
     forkJoin({
-      rules: this.service.getRulesWithLastRun(),
+      summary: this.service.getSummary(),
       statuses: this.statusesService.get(),
     })
       .pipe(
@@ -159,9 +169,10 @@ export class AutomationsViewComponent {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: ({ rules, statuses }) => {
-          this.rules.set(rules);
+        next: ({ summary, statuses }) => {
+          this.summary.set(summary);
           this.statuses.set(statuses);
+          this.reloadRules();
         },
         error: () => this.error.set(true),
       });
@@ -183,7 +194,7 @@ export class AutomationsViewComponent {
           this.snackbar.open(
             rule.isEnabled ? 'Automation disabled' : 'Automation enabled'
           );
-          this.load();
+          this.refresh();
         },
         error: () => this.snackbar.error('Automation could not be updated'),
       });
@@ -254,7 +265,7 @@ export class AutomationsViewComponent {
       .subscribe({
         next: () => {
           this.snackbar.open('Automation deleted');
-          this.load();
+          this.refresh();
         },
         error: () => this.snackbar.error('Automation could not be deleted'),
       });

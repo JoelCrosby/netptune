@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Automations;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -207,6 +208,120 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
                 .SetProperty(action => action.LeaseExpiresAt, (DateTime?)null)
                 .SetProperty(action => action.ModifiedByUserId, actorUserId)
                 .SetProperty(action => action.UpdatedAt, now), cancellationToken);
+    }
+
+    public async Task<PagedResponse<AutomationRule>> GetRulesPaged(
+        int workspaceId,
+        AutomationRuleFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        var pagination = filter.GetPagination();
+        var query = Entities
+            .Where(rule => rule.WorkspaceId == workspaceId && !rule.IsDeleted);
+
+        if (!string.IsNullOrWhiteSpace(filter.Search))
+        {
+            var search = filter.Search.Trim();
+
+            query = query.Where(rule => EF.Functions.ILike(rule.Name, $"%{search}%"));
+        }
+
+        if (filter.IsEnabled.HasValue)
+        {
+            query = query.Where(rule => rule.IsEnabled == filter.IsEnabled.Value);
+        }
+
+        if (filter.TriggerType.HasValue)
+        {
+            query = query.Where(rule => rule.TriggerType == filter.TriggerType.Value);
+        }
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var rules = await Sort(query, filter)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .Include(rule => rule.Actions.Where(action => !action.IsDeleted))
+            .AsSplitQuery()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<AutomationRule>(rules, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    public async Task<Dictionary<int, AutomationRunViewModel>> GetLatestRuns(
+        IReadOnlyCollection<int> ruleIds,
+        CancellationToken cancellationToken = default)
+    {
+        if (ruleIds.Count == 0)
+        {
+            return [];
+        }
+
+        var runs = await Entities
+            .Where(rule => ruleIds.Contains(rule.Id))
+            .SelectMany(rule => Context.Set<AutomationRun>()
+                .Where(run => run.AutomationRuleId == rule.Id)
+                .OrderByDescending(run => run.CreatedAt)
+                .Take(1))
+            .Select(run => new AutomationRunViewModel
+            {
+                Id = run.Id,
+                AutomationRuleId = run.AutomationRuleId,
+                EntityId = run.EntityId,
+                EntityType = run.EntityType,
+                TriggerType = run.TriggerType,
+                Status = run.Status,
+                IdempotencyKey = run.IdempotencyKey,
+                Message = run.Message,
+                CreatedAt = run.CreatedAt,
+            })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return runs.ToDictionary(run => run.AutomationRuleId);
+    }
+
+    public async Task<AutomationRuleSummaryViewModel> GetRuleSummary(
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        var rules = await Entities
+            .Where(rule => rule.WorkspaceId == workspaceId && !rule.IsDeleted)
+            .Select(rule => new { rule.Id, rule.IsEnabled })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+        var ruleIds = rules.Select(rule => rule.Id).ToList();
+        var latestRuns = await GetLatestRuns(ruleIds, cancellationToken);
+        var recentFailureCount = latestRuns.Values
+            .Count(run => run.Status == AutomationRunStatus.Failed);
+
+        return new AutomationRuleSummaryViewModel
+        {
+            RuleCount = rules.Count,
+            EnabledCount = rules.Count(rule => rule.IsEnabled),
+            RecentFailureCount = recentFailureCount,
+        };
+    }
+
+    private static IQueryable<AutomationRule> Sort(IQueryable<AutomationRule> query, AutomationRuleFilter filter)
+    {
+        var isDescending = string.Equals(filter.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        return filter.SortBy?.ToLowerInvariant() switch
+        {
+            "isenabled" => isDescending
+                ? query.OrderByDescending(rule => rule.IsEnabled).ThenBy(rule => rule.Name)
+                : query.OrderBy(rule => rule.IsEnabled).ThenBy(rule => rule.Name),
+            "triggertype" => isDescending
+                ? query.OrderByDescending(rule => rule.TriggerType).ThenBy(rule => rule.Name)
+                : query.OrderBy(rule => rule.TriggerType).ThenBy(rule => rule.Name),
+            "createdat" => isDescending
+                ? query.OrderByDescending(rule => rule.CreatedAt)
+                : query.OrderBy(rule => rule.CreatedAt),
+            _ => isDescending
+                ? query.OrderByDescending(rule => rule.Name)
+                : query.OrderBy(rule => rule.Name),
+        };
     }
 
     public Task<List<AutomationRunViewModel>> GetRuns(

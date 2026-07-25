@@ -221,6 +221,61 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task GetPaged_ShouldReturnRulesWithPaging()
+    {
+        var rule = await CreateRule(NameContains("paged listing"));
+
+        var response = await Client.GetAsync("api/automations?page=1&pageSize=1");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
+        var page = result!.Payload!;
+
+        page.Page.Should().Be(1);
+        page.PageSize.Should().Be(1);
+        page.Items.Should().ContainSingle();
+        page.TotalCount.Should().BeGreaterThanOrEqualTo(1);
+        rule.Id.Should().BePositive();
+    }
+
+    [Fact]
+    public async Task GetPaged_ShouldFilterBySearch()
+    {
+        var uniqueName = $"Searchable rule {Guid.NewGuid():N}";
+        var rule = await CreateNamedRule(uniqueName);
+
+        var response = await Client.GetAsync($"api/automations?search={Uri.EscapeDataString(uniqueName)}");
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
+        var page = result!.Payload!;
+
+        page.Items.Should().ContainSingle();
+        page.Items[0].Id.Should().Be(rule.Id);
+        page.Items[0].Name.Should().Be(uniqueName);
+    }
+
+    [Fact]
+    public async Task GetSummary_ShouldCountRules()
+    {
+        await CreateRule(NameContains("summary counting"));
+
+        var response = await Client.GetAsync("api/automations/summary");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<AutomationRuleSummaryViewModel>>();
+        var summary = result!.Payload!;
+
+        summary.RuleCount.Should().BeGreaterThanOrEqualTo(1);
+        summary.EnabledCount.Should().BeGreaterThanOrEqualTo(1);
+        summary.RecentFailureCount.Should().BeGreaterThanOrEqualTo(0);
+    }
+
+    [Fact]
     public async Task Create_ShouldPersistProjectScope()
     {
         var setup = await GetSetup();
@@ -340,6 +395,36 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
             new AutomationCloneRequest());
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    private async Task<AutomationRuleViewModel> CreateNamedRule(string name)
+    {
+        var setup = await GetSetup();
+        var response = await Client.PostAsJsonAsync("api/automations", new AutomationRuleRequest
+        {
+            Name = name,
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskChanged,
+                Fields = [TaskChangeField.Status],
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+
+        return result!.Payload!;
     }
 
     private async Task<int> GetTaskIdInWorkspace(string slug)

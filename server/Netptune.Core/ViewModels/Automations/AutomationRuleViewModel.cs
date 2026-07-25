@@ -123,3 +123,17 @@ public record AutomationManualRunViewModel
 
     public int TaskCount { get; init; }
 }
+
+public record AutomationRuleListItemViewModel : AutomationRuleViewModel
+{
+    public AutomationRunViewModel? LastRun { get; init; }
+}
+
+public record AutomationRuleSummaryViewModel
+{
+    public int RuleCount { get; init; }
+
+    public int EnabledCount { get; init; }
+
+    public int RecentFailureCount { get; init; }
+}

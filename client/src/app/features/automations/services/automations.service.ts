@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
-import { forkJoin, map, of, switchMap } from 'rxjs';
 import {
   AutomationDryRun,
   AutomationManualRun,
+  AutomationRuleSummary,
   AutomationRule,
   AutomationRuleListItem,
   AutomationRuleRequest,
@@ -16,29 +16,10 @@ import {
 export class AutomationsService {
   private http = inject(HttpClient);
 
-  getRules() {
+  getSummary() {
     return this.http
-      .get<ClientResponse<AutomationRule[]>>('api/automations')
+      .get<ClientResponse<AutomationRuleSummary>>('api/automations/summary')
       .pipe(unwrapClientReposne());
-  }
-
-  getRulesWithLastRun() {
-    return this.getRules().pipe(
-      switchMap((rules) => {
-        if (!rules.length) return of([]);
-
-        return forkJoin(
-          rules.map((rule) =>
-            this.getRuns(rule.id).pipe(
-              map((runs) => ({
-                ...rule,
-                lastRun: runs[0] ?? null,
-              }))
-            )
-          )
-        );
-      })
-    );
   }
 
   getRule(id: number) {

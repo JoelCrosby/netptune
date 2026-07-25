@@ -254,6 +254,12 @@ export interface AutomationActionRequest {
   delayUnit?: AutomationDelayUnit | null;
 }
 
+export interface AutomationRuleSummary {
+  ruleCount: number;
+  enabledCount: number;
+  recentFailureCount: number;
+}
+
 export interface AutomationRuleListItem extends AutomationRule {
   lastRun?: AutomationRun | null;
 }
