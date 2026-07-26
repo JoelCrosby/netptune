@@ -148,39 +148,12 @@ export class ShellSidebarComponent {
   );
 
   links = computed(() => {
-    const links = [];
-
-    if (this.canReadMembers()) {
-      links.push({ label: 'Users', value: ['./users'], icon: LucideUsers });
-    }
-
-    const primaryLinks: ShellMenuLink[] = [
+    const links: ShellMenuLink[] = [
       {
         label: 'Dashboard',
         value: ['./dashboard'],
         icon: LucideLayoutDashboard,
       },
-      {
-        label: 'Projects',
-        value: ['./projects'],
-        icon: LucideChartNoAxesColumn,
-      },
-      {
-        label: 'Reports',
-        value: ['./reports'],
-        icon: LucideChartSpline,
-      },
-      {
-        label: 'Roadmap',
-        value: ['./roadmap'],
-        icon: LucideChartGantt,
-      },
-      {
-        label: 'Calendar',
-        value: ['./calendar'],
-        icon: LucideCalendarDays,
-      },
-      { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
       {
         label: 'Tasks',
         value: ['./tasks'],
@@ -195,15 +168,8 @@ export class ShellSidebarComponent {
             ]
           : undefined,
       },
+      { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
     ];
-
-    if (this.canReadAutomations()) {
-      primaryLinks.push({
-        label: 'Automations',
-        value: ['./automations'],
-        icon: LucideWorkflow,
-      });
-    }
 
     if (this.canReadSprints()) {
       const activeSprints = this.currentSprints()
@@ -214,10 +180,10 @@ export class ShellSidebarComponent {
           icon: LucideCalendarRange,
         }));
 
-      primaryLinks.splice(2, 0, {
+      links.push({
         label: 'Sprints',
         value: ['./sprints'],
-        icon: LucideCalendarDays,
+        icon: LucideCalendarRange,
         children: [
           {
             label: 'Backlog',
@@ -229,25 +195,66 @@ export class ShellSidebarComponent {
       });
     }
 
-    return [...primaryLinks, ...links];
+    links.push(
+      {
+        label: 'Projects',
+        value: ['./projects'],
+        icon: LucideChartNoAxesColumn,
+      },
+      {
+        label: 'Roadmap',
+        value: ['./roadmap'],
+        icon: LucideChartGantt,
+      },
+      {
+        label: 'Calendar',
+        value: ['./calendar'],
+        icon: LucideCalendarDays,
+      },
+      {
+        label: 'Reports',
+        value: ['./reports'],
+        icon: LucideChartSpline,
+      }
+    );
+
+    if (this.canReadMembers()) {
+      links.push({ label: 'Users', value: ['./users'], icon: LucideUsers });
+    }
+
+    if (this.canReadAutomations()) {
+      links.push({
+        label: 'Automations',
+        value: ['./automations'],
+        icon: LucideWorkflow,
+      });
+    }
+
+    return links;
   });
 
   bottomLinks = computed(() => {
-    const links: ShellMenuLink[] = [];
-
-    if (this.canReadAudit()) {
-      links.push({
-        label: 'Audit Log',
-        value: ['./audit'],
-        icon: LucideShield,
-      });
-    }
+    const links: ShellMenuLink[] = [
+      {
+        label: 'Notifications',
+        value: ['./notifications'],
+        icon: LucideBell,
+      },
+    ];
 
     if (this.canReadStorage()) {
       links.push({
         label: 'Storage',
         value: ['./storage'],
         icon: LucideHardDrive,
+      });
+    }
+
+    if (this.canReadAudit()) {
+      links.push({
+        label: 'Audit Log',
+        value: ['./audit'],
+        icon: LucideShield,
       });
     }
 
@@ -311,12 +318,6 @@ export class ShellSidebarComponent {
       label: 'Settings',
       value: ['./settings/personal'],
       icon: LucideSettings,
-    });
-
-    links.push({
-      label: 'Notifications',
-      value: ['./notifications'],
-      icon: LucideBell,
     });
 
     return links;
