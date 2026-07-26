@@ -38,8 +38,15 @@ public sealed class GetAutomationRulesPagedQueryHandler
         var ruleIds = page.Items.Select(rule => rule.Id).ToList();
         var latestRuns = await UnitOfWork.Automations.GetLatestRuns(ruleIds, cancellationToken);
 
-        var items = page.Items
-            .Select(rule => ToListItem(rule.ToViewModel(ActionRegistry), latestRuns))
+        var viewModels = page.Items.Select(rule => rule.ToViewModel(ActionRegistry)).ToList();
+        var warnings = await AutomationRuleReferenceAnalyzer.Analyze(
+            UnitOfWork,
+            viewModels,
+            workspaceId,
+            cancellationToken);
+
+        var items = viewModels
+            .Select(rule => ToListItem(rule, latestRuns, warnings))
             .ToList();
 
         var result = new PagedResponse<AutomationRuleListItemViewModel>(
@@ -53,7 +60,8 @@ public sealed class GetAutomationRulesPagedQueryHandler
 
     private static AutomationRuleListItemViewModel ToListItem(
         AutomationRuleViewModel rule,
-        Dictionary<int, AutomationRunViewModel> latestRuns)
+        Dictionary<int, AutomationRunViewModel> latestRuns,
+        Dictionary<int, List<AutomationRuleWarning>> warnings)
     {
         return new AutomationRuleListItemViewModel
         {
@@ -61,6 +69,8 @@ public sealed class GetAutomationRulesPagedQueryHandler
             WorkspaceId = rule.WorkspaceId,
             Name = rule.Name,
             IsEnabled = rule.IsEnabled,
+            AutoDisabledAt = rule.AutoDisabledAt,
+            AutoDisabledReason = rule.AutoDisabledReason,
             ExecutionUserId = rule.ExecutionUserId,
             ProjectId = rule.ProjectId,
             BoardId = rule.BoardId,
@@ -70,6 +80,7 @@ public sealed class GetAutomationRulesPagedQueryHandler
             CreatedAt = rule.CreatedAt,
             UpdatedAt = rule.UpdatedAt,
             LastRun = latestRuns.GetValueOrDefault(rule.Id),
+            Warnings = warnings.GetValueOrDefault(rule.Id) ?? [],
         };
     }
 }

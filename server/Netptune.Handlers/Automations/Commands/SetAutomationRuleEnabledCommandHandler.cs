@@ -27,6 +27,13 @@ public sealed class SetAutomationRuleEnabledCommandHandler : IRequestHandler<Set
         if (rule is null) return ClientResponse.NotFound;
 
         rule.IsEnabled = request.IsEnabled;
+
+        if (request.IsEnabled)
+        {
+            rule.AutoDisabledAt = null;
+            rule.AutoDisabledReason = null;
+        }
+
         rule.ModifiedByUserId = Identity.GetCurrentUserId();
 
         await UnitOfWork.CompleteAsync(cancellationToken);

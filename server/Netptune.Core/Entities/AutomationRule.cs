@@ -12,6 +12,10 @@ public record AutomationRule : WorkspaceEntity<int>
 
     public bool IsEnabled { get; set; }
 
+    public DateTime? AutoDisabledAt { get; set; }
+
+    public string? AutoDisabledReason { get; set; }
+
     public string? ExecutionUserId { get; set; }
 
     public AutomationTriggerType TriggerType { get; set; }

@@ -30,6 +30,18 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddNetptuneAutomation(this IServiceCollection services, IConfiguration configuration)
     {
+        var limits = new LimitsOptions();
+        var limitsSection = configuration.GetSection(LimitsOptions.SectionName);
+
+        limits.CircuitBreakerEnabled = limitsSection.GetValue(nameof(LimitsOptions.CircuitBreakerEnabled), limits.CircuitBreakerEnabled);
+        limits.Window = limitsSection.ReadTimeSpan(nameof(LimitsOptions.Window), limits.Window);
+        limits.FailureThreshold = limitsSection.GetValue(nameof(LimitsOptions.FailureThreshold), limits.FailureThreshold);
+        limits.RunThreshold = limitsSection.GetValue(nameof(LimitsOptions.RunThreshold), limits.RunThreshold);
+        limits.WorkspaceRunQuota = limitsSection.GetValue(nameof(LimitsOptions.WorkspaceRunQuota), limits.WorkspaceRunQuota);
+        limits.Validate();
+
+        services.AddSingleton(Options.Create(limits));
+
         return services.AddNetptuneAutomation(options =>
         {
             var section = configuration.GetSection(ScheduleOptions.SectionName);
@@ -61,6 +73,7 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
 
         services.AddSingleton(Options.Create(options));
+        services.TryAddSingleton(Options.Create(new LimitsOptions()));
 
         services.AddScoped<IAutomationRuleMatcher, TaskCreatedRuleMatcher>();
         services.AddScoped<IAutomationRuleMatcher, TaskChangedRuleMatcher>();
@@ -79,6 +92,7 @@ public static class ServiceCollectionExtensions
 
         services.AddNetptuneAutomationTriggers();
 
+        services.AddScoped<AutomationLimitGuard>();
         services.AddScoped<RuleExecutor>();
         services.AddScoped<ActionPlanner>();
         services.AddScoped<FlagPlanner>();

@@ -21,6 +21,7 @@ internal sealed class RuleExecutor
     private readonly ActionPlanner ActionPlanner;
     private readonly FlagPlanner FlagPlanner;
     private readonly RunPersistenceService Persistence;
+    private readonly AutomationLimitGuard LimitGuard;
     private readonly NotificationPublisher NotificationPublisher;
     private readonly ILogger<RuleExecutor> Logger;
 
@@ -30,6 +31,7 @@ internal sealed class RuleExecutor
         ActionPlanner actionPlanner,
         FlagPlanner flagPlanner,
         RunPersistenceService persistence,
+        AutomationLimitGuard limitGuard,
         NotificationPublisher notificationPublisher,
         ILogger<RuleExecutor> logger)
     {
@@ -38,6 +40,7 @@ internal sealed class RuleExecutor
         ActionPlanner = actionPlanner;
         FlagPlanner = flagPlanner;
         Persistence = persistence;
+        LimitGuard = limitGuard;
         NotificationPublisher = notificationPublisher;
         Logger = logger;
     }
@@ -65,9 +68,16 @@ internal sealed class RuleExecutor
             return;
         }
 
-        await AuthorizeExecutions(pending, cancellationToken);
+        var allowed = await LimitGuard.Filter(triggerType, pending, cancellationToken);
 
-        var plan = ActionPlanner.Plan(pending);
+        if (allowed.Count == 0)
+        {
+            return;
+        }
+
+        await AuthorizeExecutions(allowed, cancellationToken);
+
+        var plan = ActionPlanner.Plan(allowed);
 
         RecordRunResults(triggerType, plan.Runs);
 

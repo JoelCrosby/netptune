@@ -17,6 +17,7 @@ using Netptune.Core.ViewModels.Automations;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.ServiceAccounts;
+using Netptune.Core.ViewModels.Statuses;
 using Netptune.Entities.Contexts;
 
 using Xunit;
@@ -459,6 +460,140 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
             .FirstAsync();
     }
 
+    [Fact]
+    public async Task GetRule_ShouldReportNoWarnings_WhenReferencesResolve()
+    {
+        var rule = await CreateRule(NameContains("healthy rule"));
+
+        var fetched = await GetRule(rule.Id);
+
+        fetched.Warnings.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetRule_ShouldWarn_WhenActionStatusWasDeleted()
+    {
+        var statusId = await CreateStatus($"Automation warning {Guid.NewGuid():N}");
+        var rule = await CreateStatusRule(statusId);
+
+        await DeleteStatus(statusId);
+
+        var fetched = await GetRule(rule.Id);
+
+        fetched.Warnings.Should().ContainSingle(warning => warning.Code == AutomationWarningCode.MissingStatus);
+        fetched.Warnings[0].ActionId.Should().Be(fetched.Actions[0].Id);
+    }
+
+    [Fact]
+    public async Task GetRule_ShouldWarn_WhenConditionChecksDeletedStatus()
+    {
+        var statusId = await CreateStatus($"Automation condition warning {Guid.NewGuid():N}");
+        var conditionGroup = new AutomationConditionGroup
+        {
+            Operator = AutomationConditionGroupOperator.All,
+            Conditions =
+            [
+                new AutomationFieldCondition
+                {
+                    Field = TaskChangeField.Status,
+                    Operator = AutomationConditionOperator.Equals,
+                    Value = statusId.ToString(),
+                },
+            ],
+        };
+
+        var rule = await CreateRule(conditionGroup);
+
+        await DeleteStatus(statusId);
+
+        var fetched = await GetRule(rule.Id);
+
+        fetched.Warnings.Should().ContainSingle(warning => warning.Code == AutomationWarningCode.MissingStatus);
+        fetched.Warnings[0].ActionId.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetRules_ShouldIncludeWarnings_ForListedRules()
+    {
+        var statusId = await CreateStatus($"Automation list warning {Guid.NewGuid():N}");
+        var rule = await CreateStatusRule(statusId);
+
+        await DeleteStatus(statusId);
+
+        var response = await Client.GetAsync($"api/automations?search={Uri.EscapeDataString(rule.Name)}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
+        var listed = result!.Payload!.Items.Single(item => item.Id == rule.Id);
+
+        listed.Warnings.Should().ContainSingle(warning => warning.Code == AutomationWarningCode.MissingStatus);
+    }
+
+    private async Task<AutomationRuleViewModel> GetRule(int ruleId)
+    {
+        var response = await Client.GetAsync($"api/automations/{ruleId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+
+        return result!.Payload!;
+    }
+
+    private async Task<int> CreateStatus(string name)
+    {
+        var response = await Client.PostAsJsonAsync("api/statuses", new CreateStatusRequest
+        {
+            EntityType = EntityType.Task,
+            Name = name,
+            Category = StatusCategory.Backlog,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<StatusViewModel>>();
+
+        return result!.Payload!.Id;
+    }
+
+    private async Task DeleteStatus(int statusId)
+    {
+        var response = await Client.DeleteAsync($"api/statuses/{statusId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task<AutomationRuleViewModel> CreateStatusRule(int statusId)
+    {
+        var setup = await GetSetup();
+        var response = await Client.PostAsJsonAsync("api/automations", new AutomationRuleRequest
+        {
+            Name = $"Warning rule {Guid.NewGuid():N}",
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskCreated,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.UpdateTask,
+                    StatusId = statusId,
+                },
+            ],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+
+        return result!.Payload!;
+    }
+
     private static AutomationConditionGroup NameContains(string value)
     {
         return new AutomationConditionGroup
@@ -564,7 +699,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         {
             Name = $"Dry run agent {Guid.NewGuid():N}",
             Description = "Created by the automation dry run integration test.",
-            Permissions = [NetptunePermissions.Tasks.Read],
+            Permissions = [NetptunePermissions.Tasks.Read, NetptunePermissions.Tasks.Update],
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());

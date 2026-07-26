@@ -171,6 +171,25 @@ export interface AutomationAction {
   delayUnit?: AutomationDelayUnit | null;
 }
 
+export enum AutomationWarningCode {
+  missingProject = 0,
+  missingBoard = 1,
+  missingSprint = 2,
+  missingExecutionUser = 3,
+  missingStatus = 4,
+  missingBoardGroup = 5,
+  missingRelationType = 6,
+  missingUser = 7,
+  missingTag = 8,
+  missingTask = 9,
+}
+
+export interface AutomationRuleWarning {
+  code: AutomationWarningCode;
+  message: string;
+  actionId?: number | null;
+}
+
 export interface AutomationRule {
   id: number;
   workspaceId: number;
@@ -179,11 +198,14 @@ export interface AutomationRule {
   sprintId?: number | null;
   name: string;
   isEnabled: boolean;
+  autoDisabledAt?: string | null;
+  autoDisabledReason?: string | null;
   executionUserId: string | null;
   trigger: AutomationTrigger;
   actions: AutomationAction[];
   createdAt: Date;
   updatedAt?: Date | null;
+  warnings: AutomationRuleWarning[];
 }
 
 export interface AutomationRun {

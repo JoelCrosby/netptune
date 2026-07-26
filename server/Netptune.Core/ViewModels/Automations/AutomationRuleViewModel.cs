@@ -14,6 +14,10 @@ public record AutomationRuleViewModel
 
     public bool IsEnabled { get; init; }
 
+    public DateTime? AutoDisabledAt { get; init; }
+
+    public string? AutoDisabledReason { get; init; }
+
     public string? ExecutionUserId { get; init; }
 
     public int? ProjectId { get; init; }
@@ -29,6 +33,8 @@ public record AutomationRuleViewModel
     public DateTime CreatedAt { get; init; }
 
     public DateTime? UpdatedAt { get; init; }
+
+    public List<AutomationRuleWarning> Warnings { get; init; } = [];
 }
 
 public record AutomationTriggerViewModel

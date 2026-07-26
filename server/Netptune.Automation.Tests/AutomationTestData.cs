@@ -356,6 +356,29 @@ internal static class AutomationTestData
         db.ChangeTracker.Clear();
     }
 
+    public static async Task CreateRuns(
+        DataContext db,
+        AutomationRule rule,
+        int count,
+        AutomationRunStatus status)
+    {
+        var runs = Enumerable.Range(0, count).Select(index => new AutomationRun
+        {
+            AutomationRuleId = rule.Id,
+            TriggerType = rule.TriggerType,
+            Status = status,
+            IdempotencyKey = $"seed:{rule.Id}:{status}:{index}:{Guid.NewGuid():N}",
+            EntityType = EntityType.Task,
+            OwnerId = rule.OwnerId,
+            CreatedByUserId = rule.CreatedByUserId,
+        });
+
+        db.AutomationRuns.AddRange(runs);
+
+        await db.SaveChangesAsync();
+        db.ChangeTracker.Clear();
+    }
+
     public static async Task SoftDeleteTask(DataContext db, int taskId)
     {
         await db.ProjectTasks

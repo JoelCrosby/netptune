@@ -36,4 +36,21 @@ public abstract class WorkspaceEntityRepository<TContext, TEntity, TId>
 
         await DeletePermanent(entityIds, cancellationToken);
     }
+
+    public Task<List<TId>> GetExistingIds(
+        IReadOnlyCollection<TId> ids,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        if (ids.Count == 0)
+        {
+            return Task.FromResult(new List<TId>());
+        }
+
+        return Entities
+            .AsNoTracking()
+            .Where(entity => ids.Contains(entity.Id) && entity.WorkspaceId == workspaceId && !entity.IsDeleted)
+            .Select(entity => entity.Id)
+            .ToListAsync(cancellationToken);
+    }
 }

@@ -34,10 +34,23 @@ public sealed class GetAutomationRuleQueryHandler
         var workspaceId = await Identity.GetWorkspaceId();
         var rule = await UnitOfWork.Automations.GetRuleInWorkspace(request.Id, workspaceId, true, cancellationToken);
 
-        var response = rule is null
-            ? ClientResponse<AutomationRuleViewModel>.NotFound
-            : ClientResponse<AutomationRuleViewModel>.Success(rule.ToViewModel(ActionRegistry));
+        if (rule is null)
+        {
+            return ClientResponse<AutomationRuleViewModel>.NotFound;
+        }
 
-        return response;
+        var viewModel = rule.ToViewModel(ActionRegistry);
+        var warnings = await AutomationRuleReferenceAnalyzer.Analyze(
+            UnitOfWork,
+            [viewModel],
+            workspaceId,
+            cancellationToken);
+
+        var ruleWithWarnings = viewModel with
+        {
+            Warnings = warnings.GetValueOrDefault(viewModel.Id) ?? [],
+        };
+
+        return ClientResponse<AutomationRuleViewModel>.Success(ruleWithWarnings);
     }
 }

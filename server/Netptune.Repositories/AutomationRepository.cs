@@ -369,4 +369,57 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<List<AutomationRunStats>> GetRunStats(
+        IReadOnlyCollection<int> ruleIds,
+        DateTime since,
+        CancellationToken cancellationToken = default)
+    {
+        if (ruleIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await Context.Set<AutomationRun>()
+            .AsNoTracking()
+            .Where(run => ruleIds.Contains(run.AutomationRuleId) && run.CreatedAt >= since)
+            .GroupBy(run => run.AutomationRuleId)
+            .Select(group => new AutomationRunStats(
+                group.Key,
+                group.Count(),
+                group.Count(run => run.Status == AutomationRunStatus.Failed)))
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> AutoDisableRules(
+        IReadOnlyCollection<int> ruleIds,
+        string reason,
+        DateTime disabledAt,
+        CancellationToken cancellationToken = default)
+    {
+        if (ruleIds.Count == 0)
+        {
+            return Task.FromResult(0);
+        }
+
+        return Entities
+            .Where(rule => ruleIds.Contains(rule.Id))
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(rule => rule.IsEnabled, false)
+                    .SetProperty(rule => rule.AutoDisabledAt, disabledAt)
+                    .SetProperty(rule => rule.AutoDisabledReason, reason),
+                cancellationToken);
+    }
+
+    public Task<int> GetWorkspaceRunCount(
+        int workspaceId,
+        DateTime since,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.Set<AutomationRun>()
+            .AsNoTracking()
+            .Where(run => run.AutomationRule.WorkspaceId == workspaceId && run.CreatedAt >= since)
+            .CountAsync(cancellationToken);
+    }
 }

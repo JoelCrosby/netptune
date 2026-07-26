@@ -38,4 +38,10 @@ public interface IAutomationRepository : IWorkspaceEntityRepository<AutomationRu
     Task<AutomationRuleSummaryViewModel> GetRuleSummary(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<AutomationRunViewModel>> GetRuns(int ruleId, int workspaceId, int take = 50, CancellationToken cancellationToken = default);
+
+    Task<List<AutomationRunStats>> GetRunStats(IReadOnlyCollection<int> ruleIds, DateTime since, CancellationToken cancellationToken = default);
+
+    Task<int> AutoDisableRules(IReadOnlyCollection<int> ruleIds, string reason, DateTime disabledAt, CancellationToken cancellationToken = default);
+
+    Task<int> GetWorkspaceRunCount(int workspaceId, DateTime since, CancellationToken cancellationToken = default);
 }

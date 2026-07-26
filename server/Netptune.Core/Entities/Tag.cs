@@ -6,7 +6,7 @@ using Netptune.Core.ViewModels.Tags;
 
 namespace Netptune.Core.Entities;
 
-public record Tag : WorkspaceEntity<int>
+public record Tag : WorkspaceEntity<int>, INamedEntity
 {
     public string Name { get; set; } = null!;
 

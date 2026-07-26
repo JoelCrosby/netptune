@@ -17,6 +17,7 @@ import {
   LucideCopy,
   LucideSettings2,
   LucideTrash2,
+  LucideTriangleAlert,
   LucideZap,
 } from '@lucide/angular';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -42,6 +43,7 @@ import {
   AutomationRunStatus,
   AutomationTriggerType,
 } from '../models/automation.models';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { AutomationDescriptionComponent } from './automation-description.component';
 import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.component';
 
@@ -59,6 +61,8 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
     SearchInputComponent,
     AutomationEnabledBadgeComponent,
     AutomationDescriptionComponent,
+    LucideTriangleAlert,
+    TooltipDirective,
   ],
   template: `
     <div class="mb-3 flex flex-row items-center gap-2">
@@ -119,11 +123,19 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
       [data]="data()"
       [stickyHeader]="true">
       <ng-template appDatatableCell="name" let-rule>
-        <a
-          class="block truncate font-semibold hover:underline"
-          [routerLink]="[rule.id]">
-          {{ rule.name }}
-        </a>
+        <div class="flex min-w-0 items-center gap-2">
+          <a
+            class="min-w-0 truncate font-semibold hover:underline"
+            [routerLink]="[rule.id]">
+            {{ rule.name }}
+          </a>
+          @if (rule.warnings.length) {
+            <svg
+              lucideTriangleAlert
+              class="text-warn h-4 w-4 shrink-0"
+              [appTooltip]="warningTooltip(rule)"></svg>
+          }
+        </div>
       </ng-template>
 
       <ng-template appDatatableCell="isEnabled" let-rule>
@@ -304,6 +316,10 @@ export class AutomationRulesTableComponent {
 
   actionsSummary(rule: AutomationRuleListItem): AutomationCopySegment[] {
     return describeAutomationActionsSegments(rule.actions, this.statuses());
+  }
+
+  warningTooltip(rule: AutomationRuleListItem): string {
+    return rule.warnings.map((warning) => warning.message).join('\n');
   }
 
   runStatusLabel(status: AutomationRunStatus): string {

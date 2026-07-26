@@ -10,7 +10,7 @@ using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories;
 
-public class TagRepository : WorkspaceEntityRepository<DataContext, Tag, int>, ITagRepository
+public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, int>, ITagRepository
 {
     public TagRepository(DataContext context, IDbConnectionFactory connectionFactory)
         : base(context, connectionFactory)

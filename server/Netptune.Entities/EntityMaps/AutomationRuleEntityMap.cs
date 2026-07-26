@@ -23,6 +23,10 @@ public class AutomationRuleEntityMap : WorkspaceEntityMap<AutomationRule, int>
             .IsRequired();
 
         builder
+            .Property(rule => rule.AutoDisabledReason)
+            .HasMaxLength(512);
+
+        builder
             .HasOne<AppUser>()
             .WithMany()
             .HasForeignKey(rule => rule.ExecutionUserId)

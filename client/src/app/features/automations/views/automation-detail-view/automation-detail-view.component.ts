@@ -13,6 +13,7 @@ import {
   LucideCirclePlay,
   LucideFlaskConical,
   LucideSettings2,
+  LucideTriangleAlert,
 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -50,6 +51,7 @@ import { AutomationsService } from '../../services/automations.service';
     LucideCirclePause,
     LucideCirclePlay,
     LucideFlaskConical,
+    LucideTriangleAlert,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -96,6 +98,42 @@ import { AutomationsService } from '../../services/automations.service';
             [canManage]="canManage()"
             [saving]="saving()"
             (deleteRule)="onDelete($event)" />
+
+          @if (rule.autoDisabledReason) {
+            <section
+              class="border-warn/40 bg-warn/5 flex flex-col gap-2 rounded-lg border p-4"
+              role="alert">
+              <h2 class="flex items-center gap-2 text-sm font-semibold">
+                <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
+                This automation was disabled automatically
+              </h2>
+              <p class="text-sm">{{ rule.autoDisabledReason }}</p>
+              <p class="text-foreground/60 text-sm">
+                Fix the underlying problem before enabling it again, or it will
+                be disabled once more.
+              </p>
+            </section>
+          }
+
+          @if (rule.warnings.length) {
+            <section
+              class="border-warn/40 bg-warn/5 flex flex-col gap-2 rounded-lg border p-4"
+              role="alert">
+              <h2 class="flex items-center gap-2 text-sm font-semibold">
+                <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
+                This automation references items that no longer exist
+              </h2>
+              <ul class="ml-6 list-disc text-sm">
+                @for (warning of rule.warnings; track $index) {
+                  <li>{{ warning.message }}</li>
+                }
+              </ul>
+              <p class="text-foreground/60 text-sm">
+                Edit the automation to point these at something that still
+                exists, otherwise its runs will fail.
+              </p>
+            </section>
+          }
 
           <app-automation-rule-summary
             [trigger]="rule.trigger"

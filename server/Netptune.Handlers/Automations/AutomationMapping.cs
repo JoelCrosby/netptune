@@ -20,6 +20,8 @@ internal static class AutomationMapping
             WorkspaceId = rule.WorkspaceId,
             Name = rule.Name,
             IsEnabled = rule.IsEnabled,
+            AutoDisabledAt = rule.AutoDisabledAt,
+            AutoDisabledReason = rule.AutoDisabledReason,
             ExecutionUserId = rule.ExecutionUserId,
             ProjectId = rule.ProjectId,
             BoardId = rule.BoardId,
