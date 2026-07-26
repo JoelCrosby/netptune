@@ -64,7 +64,9 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
         var (source, target) = Orient(relationType.Category, requestingTask.Id, otherTask.Id);
         var requestingIsSource = source == requestingTask.Id;
 
-        return await UnitOfWork.Transaction(async () =>
+        ProjectTaskRelation? committedRelation = null;
+
+        var response = await UnitOfWork.Transaction(async () =>
         {
             if (await UnitOfWork.ProjectTaskRelations.Exists(relationType.Id, source, target, cancellationToken))
             {
@@ -96,6 +98,8 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
             await UnitOfWork.ProjectTaskRelations.AddAsync(relation, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
+            committedRelation = relation;
+
             var requestingView = TaskRelationViewModel.BuildView(relation.Id, relationType, requestingIsSource, otherTask);
             var otherView = TaskRelationViewModel.BuildView(relation.Id, relationType, !requestingIsSource, requestingTask);
 
@@ -104,6 +108,13 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
 
             return ClientResponse<TaskRelationViewModel>.Success(requestingView);
         });
+
+        if (committedRelation is not null)
+        {
+            await PublishRelationChanged(committedRelation, relationType.Category, TaskRelationChange.Added);
+        }
+
+        return response;
     }
 
     private async Task PublishRelationChanged(

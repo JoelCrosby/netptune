@@ -243,6 +243,54 @@ public class CreateTaskRelationCommandHandlerTests
         Activity.Received(2).LogWith(Arg.Any<Action<ActivityOptions<TaskRelationActivityMeta>>>());
     }
 
+    [Fact]
+    public async Task Create_ShouldPublishRelationChanged_WhenRelationCreated()
+    {
+        Arrange(RelationCategory.Dependency);
+
+        await Handle("SOURCE-1", "TARGET-2");
+
+        await EventPublisher
+            .Received(1)
+            .Dispatch(Arg.Is<TaskRelationChangedMessage>(message =>
+                message.WorkspaceId == WorkspaceId &&
+                message.SourceTaskId == SourceTaskId &&
+                message.TargetTaskId == TargetTaskId &&
+                message.Category == RelationCategory.Dependency &&
+                message.Change == TaskRelationChange.Added &&
+                message.ActorUserId == "user-id"));
+    }
+
+    [Fact]
+    public async Task Create_ShouldPublishRelationChanged_AfterTheRelationIsCommitted()
+    {
+        Arrange(RelationCategory.Dependency);
+
+        await Handle("SOURCE-1", "TARGET-2");
+
+        Received.InOrder(() =>
+        {
+            UnitOfWork.CompleteAsync(Arg.Any<CancellationToken>());
+            EventPublisher.Dispatch(Arg.Any<TaskRelationChangedMessage>());
+        });
+    }
+
+    [Fact]
+    public async Task Create_ShouldNotPublishRelationChanged_WhenRelationAlreadyExists()
+    {
+        Arrange(RelationCategory.Dependency);
+
+        UnitOfWork.ProjectTaskRelations
+            .Exists(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(true);
+
+        await Handle("SOURCE-1", "TARGET-2");
+
+        await EventPublisher
+            .DidNotReceive()
+            .Dispatch(Arg.Any<TaskRelationChangedMessage>());
+    }
+
     private ValueTask<ClientResponse<TaskRelationViewModel>> Handle(string sourceSystemId, string targetSystemId)
     {
         var request = new CreateTaskRelationRequest
