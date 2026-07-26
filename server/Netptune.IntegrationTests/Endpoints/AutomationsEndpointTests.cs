@@ -140,7 +140,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         var reloaded = await Client.GetFromJsonAsync<TaskViewModel>($"api/tasks/{task.Id}");
 
         reloaded.Should().NotBeNull();
-        reloaded!.Name.Should().Be(task.Name);
+        reloaded.Name.Should().Be(task.Name);
         reloaded.StatusId.Should().Be(task.StatusId);
     }
 
@@ -174,7 +174,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationManualRunViewModel>>();
 
-        result!.Payload!.RuleId.Should().Be(rule.Id);
+        result.Payload!.RuleId.Should().Be(rule.Id);
         result.Payload.TaskCount.Should().Be(1);
     }
 
@@ -190,7 +190,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationManualRunViewModel>>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
@@ -206,7 +206,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationManualRunViewModel>>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
@@ -232,7 +232,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content
             .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
-        var page = result!.Payload!;
+        var page = result.Payload!;
 
         page.Page.Should().Be(1);
         page.PageSize.Should().Be(1);
@@ -251,7 +251,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content
             .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
-        var page = result!.Payload!;
+        var page = result.Payload!;
 
         page.Items.Should().ContainSingle();
         page.Items[0].Id.Should().Be(rule.Id);
@@ -269,14 +269,14 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         var matchingResult = await matching.Content
             .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
 
-        matchingResult!.Payload!.Items.Should().ContainSingle(item => item.Id == rule.Id);
+        matchingResult.Payload!.Items.Should().ContainSingle(item => item.Id == rule.Id);
 
         var excluded = await Client.GetAsync(
             $"api/automations?search={Uri.EscapeDataString(uniqueName)}&triggerTypes={(int)AutomationTriggerType.TaskOverdue}");
         var excludedResult = await excluded.Content
             .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
 
-        excludedResult!.Payload!.Items.Should().BeEmpty();
+        excludedResult.Payload!.Items.Should().BeEmpty();
     }
 
     [Fact]
@@ -290,7 +290,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content
             .ReadFromJsonAsync<ClientResponse<AutomationRuleSummaryViewModel>>();
-        var summary = result!.Payload!;
+        var summary = result.Payload!;
 
         summary.RuleCount.Should().BeGreaterThanOrEqualTo(1);
         summary.EnabledCount.Should().BeGreaterThanOrEqualTo(1);
@@ -325,7 +325,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
-        var created = result!.Payload!;
+        var created = result.Payload!;
 
         created.ProjectId.Should().Be(setup.ProjectId);
         created.BoardId.Should().BeNull();
@@ -334,7 +334,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         var reloaded = await Client.GetFromJsonAsync<ClientResponse<AutomationRuleViewModel>>(
             $"api/automations/{created.Id}");
 
-        reloaded!.Payload!.ProjectId.Should().Be(setup.ProjectId);
+        reloaded.Payload!.ProjectId.Should().Be(setup.ProjectId);
     }
 
     [Fact]
@@ -365,7 +365,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
 
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
@@ -380,7 +380,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
-        var clone = result!.Payload!;
+        var clone = result.Payload!;
 
         clone.Id.Should().NotBe(rule.Id);
         clone.Name.Should().Be($"{rule.Name} (copy)");
@@ -405,7 +405,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
 
-        result!.Payload!.Name.Should().Be("Renamed clone");
+        result.Payload!.Name.Should().Be("Renamed clone");
         result.Payload.IsEnabled.Should().BeFalse();
     }
 
@@ -446,7 +446,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<int> GetTaskIdInWorkspace(string slug)
@@ -526,7 +526,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content
             .ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRuleListItemViewModel>>>();
-        var listed = result!.Payload!.Items.Single(item => item.Id == rule.Id);
+        var listed = result.Payload!.Items.Single(item => item.Id == rule.Id);
 
         listed.Warnings.Should().ContainSingle(warning => warning.Code == AutomationWarningCode.MissingStatus);
     }
@@ -539,7 +539,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<int> CreateStatus(string name)
@@ -555,7 +555,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<StatusViewModel>>();
 
-        return result!.Payload!.Id;
+        return result.Payload!.Id;
     }
 
     private async Task DeleteStatus(int statusId)
@@ -591,7 +591,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private static AutomationConditionGroup NameContains(string value)
@@ -619,7 +619,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationDryRunViewModel>>();
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<AutomationTestSetup> GetSetup()
@@ -690,7 +690,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<string> CreateServiceAccountUserId()
@@ -723,7 +723,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>();
 
-        return result!.Payload!.Id;
+        return result.Payload!.Id;
     }
 
     private async Task<TaskViewModel> CreateTask(string name)
@@ -740,6 +740,6 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 }

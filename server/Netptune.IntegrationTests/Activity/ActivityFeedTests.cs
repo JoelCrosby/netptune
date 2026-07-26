@@ -228,7 +228,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
 
         page.Items.Should().Contain(item => item.Id == log.Id && item.Summary == "Status: To do → In progress");
         detail.Should().NotBeNull();
-        detail!.EventId.Should().Be(log.EventId);
+        detail.EventId.Should().Be(log.EventId);
         detail.EventKey.Should().Be(EventKeys.EntityFieldTransitioned);
         detail.Meta!.RootElement.GetProperty("newValue").GetString().Should().Be(newStatus.Id.ToString());
         detail.References.Should().ContainSingle(reference =>

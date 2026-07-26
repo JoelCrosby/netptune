@@ -7,7 +7,6 @@ using Netptune.Core.Events;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
-using Netptune.Handlers.Comments;
 
 namespace Netptune.Handlers.Comments.Commands;
 

@@ -1,10 +1,8 @@
 using System.Text.Json.Serialization;
-using Netptune.Core.Authorization;
+
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Enums;
 using Netptune.Core.Relationships;
-using Netptune.Core.ViewModels.ProjectTasks;
-using Netptune.Core.ViewModels.Users;
 
 namespace Netptune.Core.Entities;
 
@@ -61,58 +59,6 @@ public record ProjectTask : WorkspaceEntity<int>
 
     [JsonIgnore]
     public ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
-
-    #endregion
-
-    #region Methods
-
-    public TaskViewModel ToViewModel()
-    {
-        // TODO: Implement Assignee View models
-
-        return new()
-        {
-            Id = Id,
-            OwnerId = OwnerId!,
-            Name = Name,
-            Description = Description,
-            StatusId = StatusId,
-            StatusName = Status.Name,
-            StatusKey = Status.Key,
-            StatusColor = Status.Color,
-            StatusCategory = Status.Category,
-            ProjectScopeId = ProjectScopeId,
-            SystemId = Project is null ? $"{ProjectScopeId}" : $"{Project.Key}-{ProjectScopeId}",
-            ProjectId = ProjectId,
-            SprintId = SprintId,
-            SprintName = Sprint?.Name,
-            SprintStatus = Sprint?.Status,
-            WorkspaceId = WorkspaceId,
-            WorkspaceKey = Workspace.Slug,
-            CreatedAt = CreatedAt,
-            UpdatedAt = UpdatedAt,
-            OwnerUsername = Owner?.DisplayName ?? string.Empty,
-            OwnerPictureUrl = Owner?.PictureUrl ?? string.Empty,
-            OwnerIsServiceAccount = Owner?.UserType == AppUserType.ServiceAccount,
-            ProjectName = Project?.Name ?? string.Empty,
-            Priority = Priority,
-            EstimateType = EstimateType,
-            EstimateValue = EstimateValue,
-            StartDate = StartDate,
-            DueDate = DueDate,
-            Tags = Tags.Select(x => x.Name).OrderBy(x => x).ToList(),
-            Assignees = ProjectTaskAppUsers
-                .Select(u => u.User)
-                .Select(u => new AssigneeViewModel
-                {
-                    Id = u.Id,
-                    DisplayName = $"{u.Firstname} {u.Lastname}",
-                    PictureUrl = u.PictureUrl,
-                    IsServiceAccount = u.UserType == AppUserType.ServiceAccount,
-                })
-                .ToList(),
-        };
-    }
 
     #endregion
 }

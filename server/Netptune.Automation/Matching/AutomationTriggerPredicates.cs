@@ -92,7 +92,7 @@ internal static class AutomationTriggerPredicates
 
     private static bool IsOpen(ProjectTask task)
     {
-        return task.Status?.Category != StatusCategory.Done;
+        return task.Status.Category != StatusCategory.Done;
     }
 
     private static DateTime LastActivityAt(ProjectTask task)

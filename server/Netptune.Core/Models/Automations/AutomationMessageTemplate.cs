@@ -62,12 +62,12 @@ public static partial class AutomationMessageTemplate
         {
             "task.name" => task.Name,
             "task.key" => BuildTaskKey(task),
-            "task.status" => task.Status?.Name ?? string.Empty,
+            "task.status" => task.Status.Name,
             "task.priority" => task.Priority?.ToString() ?? string.Empty,
             "task.startdate" => FormatDate(task.StartDate),
             "task.duedate" => FormatDate(task.DueDate),
             "project.name" => task.Project?.Name ?? string.Empty,
-            "workspace.name" => task.Workspace?.Name ?? string.Empty,
+            "workspace.name" => task.Workspace.Name,
             "rule.name" => rule.Name,
             _ => string.Empty,
         };

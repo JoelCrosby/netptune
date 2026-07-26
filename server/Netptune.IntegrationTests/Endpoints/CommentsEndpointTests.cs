@@ -70,7 +70,7 @@ public sealed class CommentsEndpointTests
         var eventRecord = await GetCommentEvent(EventKeys.CommentCreated, result.Payload.Id);
 
         eventRecord.Should().NotBeNull();
-        eventRecord!.SubjectType.Should().Be(EventEntityTypes.From(EntityType.Task));
+        eventRecord.SubjectType.Should().Be(EventEntityTypes.From(EntityType.Task));
 
         (await HasOutboxRecord(eventRecord.Id)).Should().BeTrue();
         (await GetNotificationCount(eventRecord.Id)).Should().Be(0);
@@ -115,8 +115,8 @@ public sealed class CommentsEndpointTests
 
         eventRecord.Should().NotBeNull();
 
-        (await HasOutboxRecord(eventRecord!.Id)).Should().BeTrue();
-        (await GetNotificationCount(eventRecord!.Id)).Should().Be(0);
+        (await HasOutboxRecord(eventRecord.Id)).Should().BeTrue();
+        (await GetNotificationCount(eventRecord.Id)).Should().Be(0);
     }
 
     [Fact]
@@ -151,8 +151,8 @@ public sealed class CommentsEndpointTests
 
         eventRecord.Should().NotBeNull();
 
-        (await HasOutboxRecord(eventRecord!.Id)).Should().BeTrue();
-        (await GetNotificationCount(eventRecord!.Id)).Should().Be(0);
+        (await HasOutboxRecord(eventRecord.Id)).Should().BeTrue();
+        (await GetNotificationCount(eventRecord.Id)).Should().Be(0);
     }
 
     [Fact]

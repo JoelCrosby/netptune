@@ -584,7 +584,7 @@ public sealed class AutomationExecutionServiceTests
         task.DueDate.Should().BeNull();
         task.SprintId.Should().BeNull();
         taskView.Should().NotBeNull();
-        taskView!.OwnerId.Should().BeNull();
+        taskView.OwnerId.Should().BeNull();
         taskView.OwnerUsername.Should().BeEmpty();
     }
 
@@ -1404,7 +1404,7 @@ public sealed class AutomationExecutionServiceTests
 
         var activityLog = await scope.Db.EventRecords
             .SingleAsync(record => record.EventKey == EventKeys.EntityActivityRecorded, TestContext.Current.CancellationToken);
-        var message = activityLog.Payload!.RootElement.GetProperty("message").GetString();
+        var message = activityLog.Payload.RootElement.GetProperty("message").GetString();
 
         message.Should().Be($"{scenario.Project.Key}-{scenario.Task.ProjectScopeId} moved by Automation Rule");
     }

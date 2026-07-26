@@ -11,7 +11,6 @@ public static class AutomationDateResolver
             AutomationDateUpdateMode.Absolute => update.Date,
             AutomationDateUpdateMode.RelativeDays => today.AddDays(update.Offset ?? 0),
             AutomationDateUpdateMode.RelativeBusinessDays => AddBusinessDays(today, update.Offset ?? 0),
-            AutomationDateUpdateMode.Clear => null,
             _ => null,
         };
     }

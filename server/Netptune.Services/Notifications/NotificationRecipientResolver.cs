@@ -41,7 +41,7 @@ public static class NotificationRecipientResolver
         }
 
         var key = PreferenceKeys.NotificationEvent(request.ActivityType);
-        var values = await unitOfWork.UserPreferences.GetValues(candidates, key, request.WorkspaceId, cancellationToken) ?? [];
+        var values = await unitOfWork.UserPreferences.GetValues(candidates, key, request.WorkspaceId, cancellationToken);
         var valuesByUser = values.ToLookup(value => value.UserId);
 
         return candidates

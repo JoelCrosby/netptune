@@ -70,7 +70,7 @@ public class CreateAutomationRuleCommandHandlerTests
             Name = "Unsupported trigger",
             Trigger = new AutomationTriggerRequest
             {
-                Type = (AutomationTriggerType)0,
+                Type = 0,
             },
             Actions =
             [

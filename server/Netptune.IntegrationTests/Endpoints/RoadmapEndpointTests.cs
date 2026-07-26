@@ -52,7 +52,7 @@ public sealed class RoadmapEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
-        roadmap!.Tasks.Should().Contain(task => task.Id == created.Payload!.Id);
+        roadmap.Tasks.Should().Contain(task => task.Id == created.Payload!.Id);
         roadmap.Truncated.Should().BeFalse();
     }
 
@@ -68,7 +68,7 @@ public sealed class RoadmapEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
-        roadmap!.Tasks.Should().Contain(task => task.StartDate.HasValue && task.DueDate.HasValue);
+        roadmap.Tasks.Should().Contain(task => task.StartDate.HasValue && task.DueDate.HasValue);
         roadmap.Tasks.Should().Contain(task => !task.StartDate.HasValue && task.DueDate.HasValue);
         roadmap.Tasks.Should().Contain(task => task.StartDate.HasValue && !task.DueDate.HasValue);
     }
@@ -96,7 +96,7 @@ public sealed class RoadmapEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
-        roadmap!.Tasks.Should().ContainSingle(task => task.Id == created!.Payload!.Id);
+        roadmap.Tasks.Should().ContainSingle(task => task.Id == created.Payload!.Id);
         roadmap.Tasks.Should().OnlyContain(task =>
             task.StatusId == status.Id &&
             task.Assignees.Any(assignee => assignee.Id == user.Id));
@@ -122,9 +122,9 @@ public sealed class RoadmapEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         roadmap.Should().NotBeNull();
-        roadmap!.Tasks.Should().Contain(task => task.Id == blocked.Id);
+        roadmap.Tasks.Should().Contain(task => task.Id == blocked.Id);
         roadmap.Tasks.Should().NotContain(task => task.Id == blocker.Id);
-        roadmap.Relations.Should().Contain(item => item.Id == relation!.Payload!.Id);
+        roadmap.Relations.Should().Contain(item => item.Id == relation.Payload!.Id);
     }
 
     [Fact]
@@ -163,7 +163,7 @@ public sealed class RoadmapEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         result.Should().NotBeNull();
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
         result.Payload!.Page.Should().Be(1);
         result.Payload.PageSize.Should().Be(1);
@@ -198,7 +198,7 @@ public sealed class RoadmapEndpointTests
         });
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
 
-        return result!.Payload!;
+        return result.Payload!;
     }
 
     private async Task<int> GetRelationTypeId(string key)

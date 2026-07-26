@@ -53,11 +53,11 @@ public sealed class CalendarEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         result.Should().NotBeNull();
-        result!.IsSuccess.Should().BeTrue();
+        result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
         result.Payload!.Page.Should().Be(1);
         result.Payload.PageSize.Should().Be(25);
-        result.Payload.Items.Should().Contain(task => task.Id == created!.Payload!.Id);
+        result.Payload.Items.Should().Contain(task => task.Id == created.Payload!.Id);
         result.Payload.Items.Should().OnlyContain(task =>
             (task.StartDate ?? task.DueDate) <= new DateOnly(2026, 7, 11) &&
             (task.DueDate ?? task.StartDate) >= new DateOnly(2026, 7, 11));
@@ -72,7 +72,7 @@ public sealed class CalendarEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         result.Should().NotBeNull();
-        result!.IsSuccess.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
@@ -99,8 +99,8 @@ public sealed class CalendarEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         result.Should().NotBeNull();
-        result!.Payload.Should().NotBeNull();
-        result.Payload!.Items.Should().ContainSingle(task => task.Id == created!.Payload!.Id);
+        result.Payload.Should().NotBeNull();
+        result.Payload!.Items.Should().ContainSingle(task => task.Id == created.Payload!.Id);
         result.Payload.Items.Should().OnlyContain(task =>
             task.StatusId == status.Id &&
             task.Assignees.Any(assignee => assignee.Id == user.Id));

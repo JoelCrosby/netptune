@@ -464,7 +464,7 @@ public sealed class TasksEndpointTests
 
         var results = await Task.WhenAll(responses.Select(response =>
             response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>()));
-        var tasks = results.Select(result => result!.Payload!).ToList();
+        var tasks = results.Select(result => result.Payload!).ToList();
 
         tasks.Should().HaveCount(requestCount);
         tasks.Select(task => task.ProjectScopeId).Should().OnlyHaveUniqueItems();
@@ -488,7 +488,7 @@ public sealed class TasksEndpointTests
         var createResponses = await Task.WhenAll(createRequests);
         var createResults = await Task.WhenAll(createResponses.Select(response =>
             response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>()));
-        var taskIds = createResults.Select(result => result!.Payload!.Id).ToList();
+        var taskIds = createResults.Select(result => result.Payload!.Id).ToList();
 
         var moveResponse = await Client.PostAsJsonAsync("api/tasks/bulk-update", new BulkUpdateTasksRequest
         {
