@@ -8,13 +8,10 @@ import { StatusesService } from '@core/services/statuses.service';
 import { Status } from '@core/models/status';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
-import { LucidePlus } from '@lucide/angular';
+import { LucidePlus, LucideWorkflow } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { CardComponent } from '@static/components/card/card.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
-import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -43,14 +40,12 @@ import { AutomationsService } from '../../services/automations.service';
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
-    CardComponent,
-    CardHeaderComponent,
-    CardSubtitleComponent,
-    CardTitleComponent,
+    EmptyStateComponent,
     FlatButtonComponent,
     AutomationStatGridComponent,
     AutomationRulesTableComponent,
     LucidePlus,
+    LucideWorkflow,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -84,25 +79,23 @@ import { AutomationsService } from '../../services/automations.service';
             (deleteRule)="onDelete($event)" />
         </div>
       } @else {
-        <app-card class="text-center">
-          <app-card-header>
-            <app-card-title>No automations yet</app-card-title>
-            <app-card-subtitle>
-              Workspace automations can watch task workflow events and apply the
-              same follow-up every time.
-            </app-card-subtitle>
-          </app-card-header>
-          @if (canManage()) {
-            <a
-              app-flat-button
-              color="primary"
-              class="mt-5"
-              [routerLink]="['new']">
-              <svg lucidePlus class="h-4 w-4"></svg>
-              Create Automation
-            </a>
-          }
-        </app-card>
+        <div class="border-border bg-card rounded border">
+          <app-empty-state
+            title="No automations yet"
+            description="Workspace automations can watch task workflow events and apply the same follow-up every time.">
+            <svg emptyStateIcon lucideWorkflow class="h-8 w-8"></svg>
+            @if (canManage()) {
+              <a
+                emptyStateAction
+                app-flat-button
+                color="primary"
+                [routerLink]="['new']">
+                <svg lucidePlus class="h-4 w-4"></svg>
+                Create Automation
+              </a>
+            }
+          </app-empty-state>
+        </div>
       }
     </app-page-container>
   `,
