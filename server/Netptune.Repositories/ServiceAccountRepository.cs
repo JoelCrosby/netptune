@@ -50,6 +50,7 @@ public sealed class ServiceAccountRepository : Repository<DataContext, ServiceAc
         CancellationToken cancellationToken = default)
     {
         return Entities
+            .AsSplitQuery()
             .Include(account => account.User)
             .Include(account => account.Owners)
             .Include(account => account.Credentials)
@@ -64,6 +65,7 @@ public sealed class ServiceAccountRepository : Repository<DataContext, ServiceAc
     {
         return Entities
             .AsNoTracking()
+            .AsSplitQuery()
             .Where(account => account.WorkspaceId == workspaceId)
             .OrderBy(account => account.User.Firstname)
             .Select(account => new ServiceAccountViewModel
