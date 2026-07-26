@@ -49,7 +49,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
             First = Base,
             Last = Base.AddMinutes(4),
             Revisions = 12,
-            Meta = Meta(("description", "before", "after"), ("priority", "None", "High")),
+            Meta = BuildMeta(("description", "before", "after"), ("priority", "None", "High")),
         }));
 
         await db.SaveChangesAsync(CancellationToken);
@@ -85,7 +85,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
             First = Base,
             Last = Base,
             Revisions = 1,
-            Meta = Meta(("description", "a", "b")),
+            Meta = BuildMeta(("description", "a", "b")),
         }));
 
         await db.SaveChangesAsync(CancellationToken);
@@ -124,7 +124,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
             First = Base,
             Last = Base.AddSeconds(11 * 20),
             Revisions = 12,
-            Meta = Meta(("description", "before", "after")),
+            Meta = BuildMeta(("description", "before", "after")),
         }));
 
         await db.SaveChangesAsync(CancellationToken);
@@ -523,7 +523,7 @@ public class ActivityFeedTests(ActivityFeedFixture fixture) : IClassFixture<Acti
         public JsonDocument? Meta { get; init; }
     }
 
-    private static JsonDocument Meta(params (string Field, string Old, string New)[] fields)
+    private static JsonDocument BuildMeta(params (string Field, string Old, string New)[] fields)
     {
         var payload = new Dictionary<string, object>
         {

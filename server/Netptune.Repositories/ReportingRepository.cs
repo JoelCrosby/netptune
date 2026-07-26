@@ -122,7 +122,7 @@ public sealed class ReportingRepository : IReportingRepository
             })
             .ToListAsync(cancellationToken);
 
-        var missing = tasks.Count(task => filter.Unit != ReportingUnit.Tasks && Value(task.EstimateType, task.EstimateValue, filter.Unit) is null);
+        var missing = tasks.Count(task => filter.Unit != ReportingUnit.Tasks && UnitValue(task.EstimateType, task.EstimateValue, filter.Unit) is null);
 
         var rows = tasks
             .SelectMany(task => task.Assignees.Count == 0
@@ -134,7 +134,7 @@ public sealed class ReportingRepository : IReportingRepository
                 UserId = group.Key.UserId,
                 DisplayName = group.Key.DisplayName,
                 TaskCount = group.Count(),
-                Value = group.Sum(item => Value(item.Task.EstimateType, item.Task.EstimateValue, filter.Unit) ?? 0),
+                Value = group.Sum(item => UnitValue(item.Task.EstimateType, item.Task.EstimateValue, filter.Unit) ?? 0),
             })
             .OrderByDescending(row => row.Value)
             .ThenBy(row => row.DisplayName)
@@ -207,7 +207,7 @@ public sealed class ReportingRepository : IReportingRepository
         var committed = members.Count;
         var added = 0;
         var removed = 0;
-        var startingCommitment = members.Values.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
+        var startingCommitment = members.Values.Sum(member => UnitValue(member.Unit, member.Value, filter.Unit) ?? 0);
 
         var points = new List<BurndownPoint>();
         var processed = new HashSet<long>();
@@ -267,8 +267,8 @@ public sealed class ReportingRepository : IReportingRepository
                 }
             }
 
-            var total = members.Values.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
-            var remaining = members.Values.Where(member => !member.Done).Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
+            var total = members.Values.Sum(member => UnitValue(member.Unit, member.Value, filter.Unit) ?? 0);
+            var remaining = members.Values.Where(member => !member.Done).Sum(member => UnitValue(member.Unit, member.Value, filter.Unit) ?? 0);
             var elapsed = Math.Max(0, date.DayNumber - localStart.DayNumber);
             var duration = Math.Max(1, plannedEnd.DayNumber - localStart.DayNumber);
 
@@ -286,7 +286,7 @@ public sealed class ReportingRepository : IReportingRepository
             ? 0
             : decimal.Round((decimal)completedCount / members.Count * 100, 1);
         var missing = members.Values.Count(
-            member => filter.Unit != ReportingUnit.Tasks && Value(member.Unit, member.Value, filter.Unit) is null);
+            member => filter.Unit != ReportingUnit.Tasks && UnitValue(member.Unit, member.Value, filter.Unit) is null);
 
         return new SprintBurndownReport
         {
@@ -355,8 +355,8 @@ public sealed class ReportingRepository : IReportingRepository
                 .Where(pair => completedTaskIds.Contains(pair.Key))
                 .Select(pair => pair.Value)
                 .ToList();
-            var committedValue = commitment.Values.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
-            var completedValue = finalCompletedMembers.Sum(member => Value(member.Unit, member.Value, filter.Unit) ?? 0);
+            var committedValue = commitment.Values.Sum(member => UnitValue(member.Unit, member.Value, filter.Unit) ?? 0);
+            var completedValue = finalCompletedMembers.Sum(member => UnitValue(member.Unit, member.Value, filter.Unit) ?? 0);
             var missingEstimateCount = filter.Unit == ReportingUnit.Tasks
                 ? 0
                 : finalCompletedMembers.Count(member => member.Unit is null || member.Value is null);
@@ -521,7 +521,7 @@ public sealed class ReportingRepository : IReportingRepository
     }
 
 
-    private static decimal? Value(EstimateType? type, decimal? value, ReportingUnit unit) => unit switch
+    private static decimal? UnitValue(EstimateType? type, decimal? value, ReportingUnit unit) => unit switch
     {
         ReportingUnit.Tasks => 1,
         ReportingUnit.StoryPoints when type == EstimateType.StoryPoints => value,
@@ -529,13 +529,13 @@ public sealed class ReportingRepository : IReportingRepository
         _ => null,
     };
 
-    private static decimal? Value(string? type, decimal? value, ReportingUnit unit)
+    private static decimal? UnitValue(string? type, decimal? value, ReportingUnit unit)
     {
         var hasEstimateType = Enum.TryParse<EstimateType>(type, out var parsed);
 
         if (hasEstimateType)
         {
-            return Value(parsed, value, unit);
+            return UnitValue(parsed, value, unit);
         }
 
         var usesTaskCount = unit == ReportingUnit.Tasks;
