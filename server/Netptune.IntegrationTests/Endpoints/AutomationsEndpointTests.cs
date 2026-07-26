@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Meta;
 using Netptune.Core.Models.Automations;
@@ -529,6 +530,179 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         var listed = result.Payload!.Items.Single(item => item.Id == rule.Id);
 
         listed.Warnings.Should().ContainSingle(warning => warning.Code == AutomationWarningCode.MissingStatus);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReplaceTheRule_WhenInputValid()
+    {
+        var setup = await GetSetup();
+        var rule = await CreateRule(NameContains("update source"));
+        var name = $"Updated rule {Guid.NewGuid():N}";
+
+        var response = await Client.PutAsJsonAsync($"api/automations/{rule.Id}", new AutomationRuleRequest
+        {
+            Name = name,
+            IsEnabled = false,
+            ExecutionUserId = setup.ExecutionUserId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskCreated,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<AutomationRuleViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(name);
+        result.Payload.IsEnabled.Should().BeFalse();
+        result.Payload.Trigger.Type.Should().Be(AutomationTriggerType.TaskCreated);
+
+        (await GetRule(rule.Id)).Name.Should().Be(name);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnNotFound_WhenRuleDoesNotExist()
+    {
+        var setup = await GetSetup();
+
+        var response = await Client.PutAsJsonAsync("api/automations/999999", new AutomationRuleRequest
+        {
+            Name = "Missing rule",
+            IsEnabled = true,
+            ExecutionUserId = setup.ExecutionUserId,
+            Trigger = new AutomationTriggerRequest
+            {
+                Type = AutomationTriggerType.TaskCreated,
+            },
+            Actions =
+            [
+                new AutomationActionRequest
+                {
+                    Type = AutomationActionType.NotifyTaskAssignees,
+                    Recipients = [AutomationNotificationRecipient.Assignees],
+                },
+            ],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetRuns_ShouldReturnTheRunLog_ForTheRule()
+    {
+        var task = await CreateTask("Automation run log");
+        var rule = await CreateRule(NameContains("run log"));
+
+        // A manual run only dispatches a message; the run row is written by the automation worker,
+        // which this host does not run. Seed the row the worker would have written instead.
+        var run = await SeedRun(rule.Id, task.Id);
+
+        var response = await Client.GetAsync($"api/automations/{rule.Id}/runs");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<AutomationRunViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Should().ContainSingle(item => item.Id == run);
+    }
+
+    [Fact]
+    public async Task GetRuns_ShouldReturnNotFound_WhenRuleDoesNotExist()
+    {
+        var response = await Client.GetAsync("api/automations/999999/runs");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DisableThenEnable_ShouldToggleTheRule()
+    {
+        var rule = await CreateRule(NameContains("toggle source"));
+
+        rule.IsEnabled.Should().BeTrue();
+
+        var disable = await Client.PostAsync($"api/automations/{rule.Id}/disable", null);
+
+        disable.StatusCode.Should().Be(HttpStatusCode.OK, await disable.Content.ReadAsStringAsync());
+        (await GetRule(rule.Id)).IsEnabled.Should().BeFalse();
+
+        var enable = await Client.PostAsync($"api/automations/{rule.Id}/enable", null);
+
+        enable.StatusCode.Should().Be(HttpStatusCode.OK, await enable.Content.ReadAsStringAsync());
+        (await GetRule(rule.Id)).IsEnabled.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Enable_ShouldReturnNotFound_WhenRuleDoesNotExist()
+    {
+        var response = await Client.PostAsync("api/automations/999999/enable", null);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Disable_ShouldReturnNotFound_WhenRuleDoesNotExist()
+    {
+        var response = await Client.PostAsync("api/automations/999999/disable", null);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldRemoveTheRule_WhenInputValid()
+    {
+        var rule = await CreateRule(NameContains("delete source"));
+
+        var response = await Client.DeleteAsync($"api/automations/{rule.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        (await Client.GetAsync($"api/automations/{rule.Id}")).StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnNotFound_WhenRuleDoesNotExist()
+    {
+        var response = await Client.DeleteAsync("api/automations/999999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    private async Task<int> SeedRun(int ruleId, int taskId)
+    {
+        using var scope = fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var run = new AutomationRun
+        {
+            AutomationRuleId = ruleId,
+            EntityId = taskId,
+            EntityType = EntityType.Task,
+            TriggerType = AutomationTriggerType.TaskChanged,
+            Status = AutomationRunStatus.Succeeded,
+            IdempotencyKey = Guid.NewGuid().ToString("N"),
+        };
+
+        context.Add(run);
+
+        await context.SaveChangesAsync();
+
+        return run.Id;
     }
 
     private async Task<AutomationRuleViewModel> GetRule(int ruleId)

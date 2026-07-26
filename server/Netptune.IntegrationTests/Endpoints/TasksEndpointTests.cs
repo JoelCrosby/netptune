@@ -36,6 +36,20 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task GetStatusBreakdown_ShouldTotalTheWorkspaceTasksByStatus()
+    {
+        var response = await Client.GetAsync("api/tasks/status-breakdown");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskStatusBreakdownViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Statuses.Should().NotBeEmpty();
+        result.Payload.Total.Should().Be(result.Payload.Statuses.Sum(status => status.Count));
+    }
+
+    [Fact]
     public async Task Get_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/tasks");

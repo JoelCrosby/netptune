@@ -112,6 +112,59 @@ public sealed class StorageEndpointTests
     }
 
     [Fact]
+    public async Task GetFiles_ShouldListWorkspaceFiles_AndFilterByTask()
+    {
+        var tasksResponse = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>("api/tasks?pageSize=1");
+        var systemId = tasksResponse.Payload!.Items.Single().SystemId;
+        var file = await UploadTaskFile(systemId, "listed.pdf");
+
+        var response = await Client.GetAsync("api/storage/files?page=1&pageSize=100");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<WorkspaceFileViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().Contain(item => item.Id == file.Id);
+
+        var filtered = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<WorkspaceFileViewModel>>>(
+            $"api/storage/files?taskSystemId={systemId}&pageSize=100");
+
+        filtered.Payload!.Items.Should().Contain(item => item.Id == file.Id);
+        filtered.Payload.Items.Should().OnlyContain(item => item.TaskSystemId == systemId);
+    }
+
+    [Fact]
+    public async Task DeleteFile_ShouldReleaseQuota_AndRemoveTheFileFromTheListing()
+    {
+        var tasksResponse = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>("api/tasks?pageSize=1");
+        var systemId = tasksResponse.Payload!.Items.Single().SystemId;
+        var before = await Client.GetFromJsonAsync<ClientResponse<WorkspaceStorageUsageViewModel>>("api/storage/usage");
+        var file = await UploadTaskFile(systemId, "deleted.pdf");
+
+        var response = await Client.DeleteAsync($"api/storage/files/{file.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var listing = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<WorkspaceFileViewModel>>>(
+            "api/storage/files?page=1&pageSize=100");
+
+        listing.Payload!.Items.Should().NotContain(item => item.Id == file.Id);
+
+        var after = await Client.GetFromJsonAsync<ClientResponse<WorkspaceStorageUsageViewModel>>("api/storage/usage");
+
+        after.Payload!.UsedBytes.Should().Be(before.Payload!.UsedBytes);
+    }
+
+    [Fact]
+    public async Task DeleteFile_ShouldReturnNotFound_WhenFileDoesNotExist()
+    {
+        var response = await Client.DeleteAsync("api/storage/files/999999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task TaskFile_ShouldReturnPerFileQuotaFailure_WithoutIncreasingUsage()
     {
         using var scope = Fixture.CreateScope();
@@ -177,5 +230,23 @@ public sealed class StorageEndpointTests
 
         command.CommandText = "SELECT count(*) FROM pg_type WHERE typtype = 'e' AND typname IN ('workspace_file_purpose', 'workspace_file_status')";
         Convert.ToInt32(await command.ExecuteScalarAsync()).Should().Be(2);
+    }
+
+    private async Task<WorkspaceFileViewModel> UploadTaskFile(string systemId, string fileName)
+    {
+        using var content = new MultipartFormDataContent();
+
+        content.Add(new ByteArrayContent([10, 20, 30, 40]), "files", fileName);
+        content.First().Headers.ContentType = new("application/pdf");
+
+        var response = await Client.PostAsync($"api/tasks/{systemId}/files", content);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<FileUploadResult>>();
+
+        result.Payload!.IsSuccess.Should().BeTrue();
+
+        return result.Payload.File!;
     }
 }

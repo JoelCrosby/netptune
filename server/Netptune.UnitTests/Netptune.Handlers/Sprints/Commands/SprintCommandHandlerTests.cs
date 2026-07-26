@@ -414,7 +414,10 @@ public class SprintCommandHandlerTests
         var result = await handler.Handle(new RemoveTaskFromSprintCommand(sprint.Id, task.Id), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
-        task.SprintId.Should().BeNull();
+
+        await UnitOfWork.Tasks.Received(1).RemoveTasksFromSprint(
+            Arg.Is<IEnumerable<int>>(ids => ids.Single() == task.Id),
+            TestContext.Current.CancellationToken);
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
         CaptureLoggedActivityType().Should().Be(ActivityType.Unassign);
     }

@@ -861,6 +861,22 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
     }
 
+    public async Task RemoveTasksFromSprint(IEnumerable<int> taskIds, CancellationToken cancellationToken = default)
+    {
+        var taskIdList = taskIds.ToList();
+
+        if (taskIdList.Count == 0)
+        {
+            return;
+        }
+
+        await Entities
+            .Where(task => taskIdList.Contains(task.Id))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(task => task.SprintId, (int?)null)
+                .SetProperty(task => task.UpdatedAt, DateTime.UtcNow), cancellationToken);
+    }
+
     public async Task AssignTasksToUser(IEnumerable<int> taskIds, string assigneeId, CancellationToken cancellationToken = default)
     {
         var taskIdList = taskIds.ToList();

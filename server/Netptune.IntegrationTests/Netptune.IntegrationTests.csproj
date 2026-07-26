@@ -28,6 +28,7 @@
     <ProjectReference Include="..\Netptune.Activity\Netptune.Activity.csproj" />
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
+    <ProjectReference Include="..\Netptune.PublicApi\Netptune.PublicApi.csproj" />
     <ProjectReference Include="..\Netptune.TestData\Netptune.TestData.csproj" />
   </ItemGroup>
 

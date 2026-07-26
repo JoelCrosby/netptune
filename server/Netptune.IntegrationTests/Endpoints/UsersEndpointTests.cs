@@ -84,6 +84,37 @@ public sealed class UsersEndpointTests
     }
 
     [Fact]
+    public async Task TogglePermission_ShouldGrantThenRevokeTheSamePermission()
+    {
+        var userId = SeedData.Users.ElementAt(1).Id;
+        var request = new ToggleUserPermissionRequest
+        {
+            UserId = userId,
+            Permission = NetptunePermissions.Automations.Manage,
+        };
+
+        var granted = await TogglePermission(request);
+
+        granted.Should().Contain(NetptunePermissions.Automations.Manage);
+
+        var revoked = await TogglePermission(request);
+
+        revoked.Should().NotContain(NetptunePermissions.Automations.Manage);
+    }
+
+    [Fact]
+    public async Task TogglePermission_ShouldReturnBadRequest_WhenUserIsNotAMember()
+    {
+        var response = await Client.PostAsJsonAsync("api/users/toggle-permission", new ToggleUserPermissionRequest
+        {
+            UserId = "not-a-user-id",
+            Permission = NetptunePermissions.Automations.Manage,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task GetById_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
         var response = await Client.GetAsync("api/users/not-a-user-id");
@@ -276,5 +307,18 @@ public sealed class UsersEndpointTests
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Emails.Should().ContainSingle(request.EmailAddresses.First());
+    }
+
+    private async Task<List<string>> TogglePermission(ToggleUserPermissionRequest request)
+    {
+        var response = await Client.PostAsJsonAsync("api/users/toggle-permission", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<string>>>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        return result.Payload!;
     }
 }

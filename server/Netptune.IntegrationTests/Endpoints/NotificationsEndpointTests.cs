@@ -3,8 +3,15 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+using Netptune.Core.Authentication.Models;
+using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Notifications;
+using Netptune.Entities.Contexts;
 
 using Xunit;
 
@@ -152,6 +159,107 @@ public sealed class NotificationsEndpointTests(NetptuneFixture fixture)
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task MarkReadMany_ShouldMarkOnlyTheRequestedNotifications()
+    {
+        var seeded = await SeedNotifications(2);
+        var target = seeded[0];
+        var untouched = seeded[1];
+
+        var response = await fixture.Client.PutAsJsonAsync("api/notifications/read", new[] { target });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        // Other tests in this class mark the whole list read, so the assertion reads back only the
+        // two rows this test owns.
+        (await ReadFlags(target)).IsRead.Should().BeTrue();
+        (await ReadFlags(untouched)).IsRead.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Delete_ShouldRemoveOnlyTheRequestedNotifications()
+    {
+        var seeded = await SeedNotifications(2);
+        var removed = seeded[0];
+        var kept = seeded[1];
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = new("api/notifications", UriKind.RelativeOrAbsolute),
+            Content = JsonContent.Create(new[] { removed }),
+        };
+
+        var response = await fixture.Client.SendAsync(request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        (await ReadFlags(removed)).IsDeleted.Should().BeTrue();
+        (await ReadFlags(kept)).IsDeleted.Should().BeFalse();
+    }
+
+    private sealed record NotificationFlags(bool IsRead, bool IsDeleted);
+
+    private async Task<NotificationFlags> ReadFlags(int notificationId)
+    {
+        using var scope = fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+        return await context.Notifications
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .Where(item => item.Id == notificationId)
+            .Select(item => new NotificationFlags(item.IsRead, item.IsDeleted))
+            .SingleAsync();
+    }
+
+    // The seeded notifications are shared state that other tests here mark read wholesale, so the
+    // read-many and delete assertions get their own rows to act on.
+    private async Task<IReadOnlyList<int>> SeedNotifications(int count)
+    {
+        using var scope = fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var workspace = await context.Workspaces.SingleAsync(item => item.Slug == "netptune");
+
+        // The commands are scoped to the calling user, so the rows have to belong to whoever the
+        // test client authenticates as rather than to any member of the workspace.
+        var currentUser = await fixture.Client.GetFromJsonAsync<CurrentUserResponse>("api/auth/current-user");
+        var userId = currentUser!.UserId;
+        var eventRecordId = await context.EventRecords
+            .Where(item => item.WorkspaceId == workspace.Id)
+            .Select(item => item.Id)
+            .FirstAsync();
+
+        var notifications = Enumerable.Range(0, count).Select(_ => new Notification
+        {
+            UserId = userId,
+            EventRecordId = eventRecordId,
+            WorkspaceId = workspace.Id,
+            IsRead = false,
+            Link = $"/{workspace.Slug}/tasks",
+            EntityType = EntityType.Task,
+            ActivityType = ActivityType.Modify,
+            CreatedByUserId = userId,
+            OwnerId = userId,
+        }).ToList();
+
+        context.Notifications.AddRange(notifications);
+
+        await context.SaveChangesAsync();
+
+        return notifications.Select(item => item.Id).ToList();
     }
 
     private async Task<IReadOnlyList<NotificationViewModel>> GetNotificationsAsync()

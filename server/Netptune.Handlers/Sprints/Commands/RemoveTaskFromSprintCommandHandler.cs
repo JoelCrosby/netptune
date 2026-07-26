@@ -54,16 +54,12 @@ public sealed class RemoveTaskFromSprintCommandHandler : IRequestHandler<RemoveT
             return ClientResponse<SprintDetailViewModel>.NotFound;
         }
 
-        var taskEntity = await UnitOfWork.Tasks.GetAsync(request.TaskId, cancellationToken: cancellationToken);
-
-        if (taskEntity is null)
-        {
-            return ClientResponse<SprintDetailViewModel>.NotFound;
-        }
-
         await UnitOfWork.Transaction(async () =>
         {
-            taskEntity.SprintId = null;
+            // The sprint above is tracked with its tasks included, so clearing the foreign key on a
+            // tracked task is fixed straight back up from that collection and the removal is
+            // silently lost. Write it the same way assignment does instead.
+            await UnitOfWork.Tasks.RemoveTasksFromSprint([request.TaskId], cancellationToken);
 
             if (sprint.Status == SprintStatus.Active)
             {

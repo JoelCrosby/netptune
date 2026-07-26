@@ -41,6 +41,13 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
 
     private const string TerminatedAdvisorySubject = "$JS.EVENT.ADVISORY.CONSUMER.MSG_TERMINATED.>";
 
+    // Delivery timestamps are taken inside the handler, so a measured gap is the server's interval plus
+    // the difference in client dispatch latency between the two deliveries. The first delivery pays to
+    // warm the deserialize-to-mediator path, which puts the gap tens of milliseconds under the configured
+    // backoff when this class runs on its own. The slack absorbs that; it is still far enough from zero
+    // that a client-side redelivery could not pass.
+    private static readonly TimeSpan RedeliverySlack = TimeSpan.FromMilliseconds(250);
+
     private readonly ConcurrentBag<object> Handled = [];
 
     private readonly ConcurrentBag<DateTime> Deliveries = [];
@@ -128,7 +135,7 @@ public class EventMessagingTests(NatsEventsFixture fixture) : IClassFixture<Nats
 
         var ordered = Deliveries.OrderBy(delivery => delivery).ToList();
 
-        (ordered[1] - ordered[0]).Should().BeGreaterThanOrEqualTo(policy.Backoff[0]);
+        (ordered[1] - ordered[0]).Should().BeGreaterThanOrEqualTo(policy.Backoff[0] - RedeliverySlack);
 
         info.Config.Backoff.Should().BeEquivalentTo(policy.Backoff);
         info.Config.MaxDeliver.Should().Be(TestMaxDeliver);

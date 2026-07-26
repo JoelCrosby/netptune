@@ -155,6 +155,40 @@ public sealed class WorkspacesEndpointTests
     }
 
     [Fact]
+    public async Task Delete_ShouldSoftDeleteTheWorkspace_WhenInputValid()
+    {
+        var slug = $"soft-delete-{Guid.NewGuid():N}"[..24];
+
+        await Client.PostAsJsonAsync("api/workspaces", new AddWorkspaceRequest
+        {
+            Name = slug,
+            Description = $"{slug} description",
+            Slug = slug,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        var response = await Client.DeleteAsync($"api/workspaces/{slug}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        (await Client.GetAsync($"api/workspaces/{slug}")).StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnForbidden_WhenCallerHasNoPermissionsInTheTargetWorkspace()
+    {
+        // Deletion authorises against the route key rather than the workspace header, so an
+        // unknown key resolves to no permissions and never reaches the command.
+        var response = await Client.DeleteAsync("api/workspaces/not-a-workspace-key");
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
     public async Task IsSlugUnique_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/workspaces/is-unique/unique-workspace");

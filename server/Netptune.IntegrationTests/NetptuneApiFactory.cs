@@ -1,4 +1,6 @@
 using System.Net;
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -7,7 +9,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Netptune.Core.Authorization;
+using Netptune.App.Utility;
 using Netptune.Core.Services;
+using Netptune.PublicApi.Configuration;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.Identity.Authorization.Requirements;
@@ -25,13 +29,26 @@ namespace Netptune.IntegrationTests;
 
 public sealed class NetptuneFixture : IAsyncLifetime
 {
+    private const ushort SearchPort = 7700;
+
+    private const string SearchMasterKey = "netptune-integration-test-master-key";
+
     private readonly PostgreSqlContainer DbContainer = new PostgreSqlBuilder("postgres:18.3").Build();
     private readonly RedisContainer CacheContainer = new RedisBuilder("valkey/valkey:9.0-alpine").Build();
     private readonly NatsContainer NatsContainer = new NatsBuilder("nats:alpine")
         .WithCommand("-js")
         .Build();
 
-    private WebApplicationFactory<Program> WebApplicationFactory { get; }
+    private readonly IContainer SearchContainer = new ContainerBuilder("getmeili/meilisearch:v1.22")
+        .WithEnvironment("MEILI_MASTER_KEY", SearchMasterKey)
+        .WithEnvironment("MEILI_NO_ANALYTICS", "true")
+        .WithPortBinding(SearchPort, true)
+        .WithWaitStrategy(Wait.ForUnixContainer()
+            .UntilHttpRequestIsSucceeded(request => request.ForPort(SearchPort).ForPath("/health")))
+        .Build();
+
+    private WebApplicationFactory<BuildInfo> WebApplicationFactory { get; }
+    private WebApplicationFactory<PreAuthenticationRateLimiter> PublicApiApplicationFactory { get; }
 
     public HttpClient Client { get; }
 
@@ -40,16 +57,20 @@ public sealed class NetptuneFixture : IAsyncLifetime
         CacheContainer.StartAsync().Wait();
         DbContainer.StartAsync().Wait();
         NatsContainer.StartAsync().Wait();
+        SearchContainer.StartAsync().Wait();
 
         LoadEnvironmentVariables();
 
         Environment.SetEnvironmentVariable("DATABASE_URL", DbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("REDIS_URL", CacheContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings__nats", NatsContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__meilisearch", GetSearchConnectionString());
 
         Environment.SetEnvironmentVariable("RateLimiting__ApiPermitLimit", "100000");
 
-        WebApplicationFactory = new WebApplicationFactory<Program>()
+        PublicApiApplicationFactory = new WebApplicationFactory<PreAuthenticationRateLimiter>();
+
+        WebApplicationFactory = new WebApplicationFactory<BuildInfo>()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
@@ -61,6 +82,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
                         ActivatorUtilities.CreateInstance<PolicyEvaluator>(serviceProvider)));
 
                     services.Replace<IStorageService, TestStorageService>();
+                    services.Replace<ITurnstileService, TestTurnstileService>();
 
                     services.AddAuthorization(options =>
                     {
@@ -104,6 +126,16 @@ public sealed class NetptuneFixture : IAsyncLifetime
         Client = CreateNetptuneClient();
     }
 
+    private string GetSearchConnectionString()
+    {
+        var endpoint = new UriBuilder(
+            Uri.UriSchemeHttp,
+            SearchContainer.Hostname,
+            SearchContainer.GetMappedPublicPort(SearchPort)).Uri;
+
+        return $"Endpoint={endpoint};MasterKey={SearchMasterKey}";
+    }
+
     private static void LoadEnvironmentVariables()
     {
         Environment.SetEnvironmentVariable("NETPTUNE_SIGNING_KEY", "test-signing-key-that-is-long-enough-for-hmac-sha256");
@@ -131,8 +163,10 @@ public sealed class NetptuneFixture : IAsyncLifetime
         await CacheContainer.DisposeAsync().ConfigureAwait(false);
         await DbContainer.DisposeAsync().ConfigureAwait(false);
         await NatsContainer.DisposeAsync().ConfigureAwait(false);
+        await SearchContainer.DisposeAsync().ConfigureAwait(false);
 
         await WebApplicationFactory.DisposeAsync().ConfigureAwait(false);
+        await PublicApiApplicationFactory.DisposeAsync().ConfigureAwait(false);
     }
 
     public ValueTask InitializeAsync()
@@ -150,6 +184,20 @@ public sealed class NetptuneFixture : IAsyncLifetime
         client.DefaultRequestHeaders.Add("workspace", "netptune");
 
         return client;
+    }
+
+    public HttpClient CreatePublicApiClient(string apiKey)
+    {
+        var client = PublicApiApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
+
+        client.DefaultRequestHeaders.Authorization = new("ApiKey", apiKey);
+
+        return client;
+    }
+
+    public HttpClient CreateUnauthenticatedPublicApiClient()
+    {
+        return PublicApiApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
     }
 
     public IServiceScope CreateScope() => WebApplicationFactory.Services.CreateScope();

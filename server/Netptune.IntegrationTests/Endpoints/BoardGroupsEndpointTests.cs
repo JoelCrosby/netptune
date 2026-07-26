@@ -19,6 +19,20 @@ public sealed class BoardGroupsEndpointTests
     }
 
     [Fact]
+    public async Task GetOptions_ShouldReturnEveryGroupInTheWorkspace()
+    {
+        var response = await Client.GetAsync("api/boardgroups/options");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<List<BoardGroupOptionViewModel>>();
+
+        result!.Should().NotBeEmpty();
+        result.Should().OnlyContain(option =>
+            option.Name.Length > 0 && option.BoardName.Length > 0 && option.ProjectName.Length > 0);
+    }
+
+    [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/boardgroups/1");

@@ -136,6 +136,172 @@ public sealed class SprintsEndpointTests
         result.Payload.Tasks.Should().Contain(item => item.Id == task.Id);
     }
 
+    [Fact]
+    public async Task Get_ShouldReturnSprintsForProject_WhenProjectIdSupplied()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+
+        var response = await Client.GetAsync($"api/sprints?projectId={project.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<List<SprintViewModel>>();
+
+        result!.Should().ContainSingle(item => item.Id == sprint.Id);
+        result.Should().OnlyContain(item => item.ProjectId == project.Id);
+    }
+
+    [Fact]
+    public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+
+        await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/tasks",
+            new AddTasksToSprintRequest { TaskIds = [task.Id] });
+
+        var response = await Client.GetAsync($"api/sprints/{sprint.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintDetailViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Id.Should().Be(sprint.Id);
+        result.Payload.Tasks.Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task GetById_ShouldReturnNotFound_WhenSprintDoesNotExist()
+    {
+        var response = await Client.GetAsync("api/sprints/999999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetBacklog_ShouldReturnTasksWithoutASprint()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var backlogTask = await CreateTask(project.Id);
+        var sprintTask = await CreateTask(project.Id);
+
+        await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/tasks",
+            new AddTasksToSprintRequest { TaskIds = [sprintTask.Id] });
+
+        var response = await Client.GetAsync($"api/sprints/backlog?projectId={project.Id}&pageSize=100");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().Contain(item => item.Id == backlogTask.Id);
+        result.Payload.Items.Should().NotContain(item => item.Id == sprintTask.Id);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var name = $"Renamed sprint {Guid.NewGuid():N}";
+
+        var response = await Client.PutAsJsonAsync("api/sprints", new UpdateSprintRequest
+        {
+            Id = sprint.Id,
+            Name = name,
+            Goal = "Updated goal",
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Name.Should().Be(name);
+        result.Payload.Goal.Should().Be("Updated goal");
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnNotFound_WhenSprintDoesNotExist()
+    {
+        var response = await Client.PutAsJsonAsync("api/sprints", new UpdateSprintRequest
+        {
+            Id = 999999,
+            Name = "Missing sprint",
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task RemoveTask_ShouldDetachTaskFromSprint_WhenInputValid()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+        var task = await CreateTask(project.Id);
+
+        await Client.PostAsJsonAsync(
+            $"api/sprints/{sprint.Id}/tasks",
+            new AddTasksToSprintRequest { TaskIds = [task.Id] });
+
+        var response = await Client.DeleteAsync($"api/sprints/{sprint.Id}/tasks/{task.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintDetailViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        var reloaded = await Client.GetFromJsonAsync<ClientResponse<SprintDetailViewModel>>($"api/sprints/{sprint.Id}");
+
+        reloaded.Payload!.Tasks.Should().NotContain(item => item.Id == task.Id);
+
+        var backlog = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(
+            $"api/sprints/backlog?projectId={project.Id}&pageSize=100");
+
+        backlog.Payload!.Items.Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task RemoveTask_ShouldReturnNotFound_WhenSprintDoesNotExist()
+    {
+        var response = await Client.DeleteAsync("api/sprints/999999/tasks/999999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+
+        var response = await Client.DeleteAsync($"api/sprints/{sprint.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
+
+        result.IsSuccess.Should().BeTrue();
+
+        (await Client.GetAsync($"api/sprints/{sprint.Id}")).StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnNotFound_WhenSprintDoesNotExist()
+    {
+        var response = await Client.DeleteAsync("api/sprints/999999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
     private async Task<ProjectViewModel> CreateProject()
     {
         var request = new AddProjectRequest

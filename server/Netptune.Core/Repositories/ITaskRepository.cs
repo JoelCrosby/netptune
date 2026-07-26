@@ -67,5 +67,7 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task AssignTasksToSprint(IEnumerable<int> taskIds, int sprintId, CancellationToken cancellationToken = default);
 
+    Task RemoveTasksFromSprint(IEnumerable<int> taskIds, CancellationToken cancellationToken = default);
+
     Task AssignTasksToUser(IEnumerable<int> taskIds, string assigneeId, CancellationToken cancellationToken = default);
 }
