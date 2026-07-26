@@ -96,6 +96,10 @@ public class ActivityHandlerTests
                 [WorkspaceId] = [ActorUserId, OtherUserId1, OtherUserId2],
             });
 
+        UnitOfWork.UserPreferences
+            .GetValues(Arg.Any<IEnumerable<string>>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+
         UnitOfWork.Notifications
             .AddRangeAsync(Arg.Any<IEnumerable<Notification>>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);

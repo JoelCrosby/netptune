@@ -36,6 +36,9 @@ public class GetUserPreferenceValuesQueryHandlerTests
         Identity.TryGetWorkspaceKey().Returns("workspace");
         Identity.GetWorkspaceId().Returns(WorkspaceId);
         UnitOfWork.UserPreferences
+            .GetValues(UserId, Arg.Any<string>(), WorkspaceId, TestContext.Current.CancellationToken)
+            .Returns([]);
+        UnitOfWork.UserPreferences
             .GetValues(UserId, PreferenceKeys.AppearanceTheme, WorkspaceId, TestContext.Current.CancellationToken)
             .Returns([
                 CreatePreference(PreferenceKeys.AppearanceTheme, null, "dark"),
@@ -46,15 +49,6 @@ public class GetUserPreferenceValuesQueryHandlerTests
                 CreatePreference(PreferenceKeys.CommandPaletteRecentItemsScope, null, "global"),
                 CreatePreference(PreferenceKeys.CommandPaletteRecentItemsScope, WorkspaceId, "workspace"),
             ]);
-        UnitOfWork.UserPreferences
-            .GetValues(UserId, PreferenceKeys.BoardHiddenGroupIds, WorkspaceId, TestContext.Current.CancellationToken)
-            .Returns([]);
-        UnitOfWork.UserPreferences
-            .GetValues(UserId, PreferenceKeys.BoardTaskSort, WorkspaceId, TestContext.Current.CancellationToken)
-            .Returns([]);
-        UnitOfWork.UserPreferences
-            .GetValues(UserId, PreferenceKeys.WorkspaceLastVisited, WorkspaceId, TestContext.Current.CancellationToken)
-            .Returns([]);
 
         var result = await Handler.Handle(new GetUserPreferenceValuesQuery(), TestContext.Current.CancellationToken);
 

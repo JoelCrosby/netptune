@@ -73,6 +73,10 @@ public class ActivityHandlerMergeTests
             .GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
             .Returns(new Dictionary<int, List<string>> { [WorkspaceId] = [ActorUserId, OtherUserId] });
 
+        UnitOfWork.UserPreferences
+            .GetValues(Arg.Any<IEnumerable<string>>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns([]);
+
         UnitOfWork.InvokeTransaction();
     }
 
