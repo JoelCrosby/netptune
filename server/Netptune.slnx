@@ -9,7 +9,10 @@
     <File Path="../.gitignore" />
     <File Path="../LICENSE.txt" />
     <File Path="../README.md" />
+    <File Path="Directory.Packages.props" />
     <File Path="global.json" />
+    <File Path="Netptune.sln.DotSettings" />
+    <File Path="Netptune.sln.DotSettings.user" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Netptune.Automation.Tests/Netptune.Automation.Tests.csproj" />
