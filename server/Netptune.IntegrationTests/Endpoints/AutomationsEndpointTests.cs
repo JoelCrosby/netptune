@@ -647,7 +647,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
     private Task<AutomationRuleViewModel> CreateOverdueRule()
     {
-        return CreateRule(null, new AutomationTriggerRequest
+        return CreateRule(new AutomationTriggerRequest
         {
             Type = AutomationTriggerType.TaskOverdue,
         });
@@ -655,7 +655,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
     private Task<AutomationRuleViewModel> CreateRule(AutomationConditionGroup conditionGroup)
     {
-        return CreateRule(conditionGroup, new AutomationTriggerRequest
+        return CreateRule(new AutomationTriggerRequest
         {
             Type = AutomationTriggerType.TaskChanged,
             Fields = [TaskChangeField.Name],
@@ -663,9 +663,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         });
     }
 
-    private async Task<AutomationRuleViewModel> CreateRule(
-        AutomationConditionGroup? conditionGroup,
-        AutomationTriggerRequest trigger)
+    private async Task<AutomationRuleViewModel> CreateRule(AutomationTriggerRequest trigger)
     {
         var setup = await GetSetup();
         var response = await Client.PostAsJsonAsync("api/automations", new AutomationRuleRequest

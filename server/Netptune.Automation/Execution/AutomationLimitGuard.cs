@@ -163,14 +163,19 @@ internal sealed class AutomationLimitGuard
     {
         var window = Options.Window;
 
-        if (window.TotalHours >= 1)
+        if (window.TotalHours < 1)
         {
-            var hours = Math.Round(window.TotalHours, 1);
-
-            return hours == 1 ? "an hour" : $"{hours} hours";
+            return $"{Math.Round(window.TotalMinutes)} minutes";
         }
 
-        return $"{Math.Round(window.TotalMinutes)} minutes";
+        var tenthsOfAnHour = (int)Math.Round(window.TotalHours * 10);
+
+        if (tenthsOfAnHour == 10)
+        {
+            return "an hour";
+        }
+
+        return $"{tenthsOfAnHour / 10d} hours";
     }
 }
 
