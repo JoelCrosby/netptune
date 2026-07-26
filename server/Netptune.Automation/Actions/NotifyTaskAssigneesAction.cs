@@ -208,7 +208,7 @@ internal sealed class NotifyTaskAssigneesAction : IAutomationAction
             Payload = JsonSerializer.SerializeToDocument(new
             {
                 activityType = (int)ActivityType.Modify,
-                workspaceSlug = task.Workspace.Slug,
+                workspaceSlug = task.Workspace!.Slug,
                 projectSlug = task.Project?.Key,
                 automationRuleId = rule.Id,
                 automationRuleName = rule.Name,

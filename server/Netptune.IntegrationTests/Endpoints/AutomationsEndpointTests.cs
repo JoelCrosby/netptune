@@ -455,7 +455,7 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         return await context.ProjectTasks
-            .Where(task => task.Workspace.Slug == slug && !task.IsDeleted)
+            .Where(task => task.Workspace!.Slug == slug && !task.IsDeleted)
             .Select(task => task.Id)
             .FirstAsync();
     }

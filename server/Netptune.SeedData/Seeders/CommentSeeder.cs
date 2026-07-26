@@ -37,7 +37,7 @@ public sealed class CommentSeeder : ISeeder
         context.Comments.AddRange(Enumerable.Range(0, Bodies.Length).Select(i =>
         {
             var task = context.Tasks[i % context.Tasks.Count];
-            var workspaceUsers = context.UsersFor(task.Workspace);
+            var workspaceUsers = context.UsersFor(task.Workspace!);
 
             return new Comment
             {

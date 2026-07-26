@@ -144,7 +144,7 @@ internal sealed class RunPersistenceService
 
     private async Task RemoveDeletedTasksFromSearch(List<PlannedAutomationAction> taskDeletions)
     {
-        var workspaceGroups = taskDeletions.GroupBy(action => action.Execution.Task.Workspace.Slug);
+        var workspaceGroups = taskDeletions.GroupBy(action => action.Execution.Task.Workspace!.Slug);
 
         foreach (var workspaceGroup in workspaceGroups)
         {

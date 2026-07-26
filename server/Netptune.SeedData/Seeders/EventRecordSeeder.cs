@@ -26,7 +26,7 @@ public sealed class EventRecordSeeder : ISeeder
         context.EventRecords.AddRange(
             context.Tasks.SelectMany((task, ti) =>
             {
-                var workspaceUsers = context.UsersFor(task.Workspace);
+                var workspaceUsers = context.UsersFor(task.Workspace!);
 
                 return Enumerable.Range(0, 4).Select(i =>
                 {

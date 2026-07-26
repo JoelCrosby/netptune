@@ -358,7 +358,7 @@ public sealed class TasksEndpointTests
             var context = scope.ServiceProvider.GetRequiredService<DataContext>();
             var task = await context.ProjectTasks
                 .Include(item => item.Workspace)
-                .FirstAsync(item => item.Workspace.Slug == "netptune" && !item.IsDeleted, cancellationToken);
+                .FirstAsync(item => item.Workspace!.Slug == "netptune" && !item.IsDeleted, cancellationToken);
             var flag = new Flag
             {
                 WorkspaceId = task.WorkspaceId,
@@ -769,7 +769,7 @@ public sealed class TasksEndpointTests
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         return await context.Statuses
-            .Where(status => status.Workspace.Slug == "netptune" && status.EntityType == EntityType.Task && status.Key == key)
+            .Where(status => status.Workspace!.Slug == "netptune" && status.EntityType == EntityType.Task && status.Key == key)
             .Select(status => new StatusViewModel
             {
                 Id = status.Id,

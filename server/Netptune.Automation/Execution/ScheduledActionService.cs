@@ -292,7 +292,7 @@ internal sealed class ScheduledActionService
 
     private async Task RemoveDeletedTasksFromSearch(List<ScheduledAutomationAction> completedActions)
     {
-        foreach (var workspaceGroup in completedActions.GroupBy(action => action.Task.Workspace.Slug))
+        foreach (var workspaceGroup in completedActions.GroupBy(action => action.Task.Workspace!.Slug))
         {
             var taskIds = workspaceGroup.Select(action => action.TaskId).Distinct().ToList();
 

@@ -180,7 +180,7 @@ public sealed class RoadmapEndpointTests
         return await context.Statuses
             .Include(status => status.Workspace)
             .FirstAsync(status =>
-                status.Workspace.Slug == "netptune" &&
+                status.Workspace!.Slug == "netptune" &&
                 status.EntityType == EntityType.Task &&
                 status.Key == "in-progress");
     }
@@ -207,7 +207,7 @@ public sealed class RoadmapEndpointTests
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
         var relationType = await context.RelationTypes
             .Include(type => type.Workspace)
-            .FirstAsync(type => type.Workspace.Slug == "netptune" && type.Key == key);
+            .FirstAsync(type => type.Workspace!.Slug == "netptune" && type.Key == key);
 
         return relationType.Id;
     }

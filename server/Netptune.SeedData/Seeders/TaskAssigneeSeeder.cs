@@ -11,7 +11,7 @@ public sealed class TaskAssigneeSeeder : ISeeder
     {
         var assignees = context.Tasks.SelectMany((task, i) =>
         {
-            var workspaceUsers = context.UsersFor(task.Workspace);
+            var workspaceUsers = context.UsersFor(task.Workspace!);
             var count = (i % 2) + 1;
 
             return Enumerable.Range(0, count).Select(j => new ProjectTaskAppUser

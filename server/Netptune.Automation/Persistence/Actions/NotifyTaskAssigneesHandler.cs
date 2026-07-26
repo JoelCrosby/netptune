@@ -119,6 +119,6 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
             ? task.Id.ToString()
             : $"{task.Project.Key}-{task.ProjectScopeId}";
 
-        return $"/{task.Workspace.Slug}/tasks/{identifier}";
+        return $"/{task.Workspace!.Slug}/tasks/{identifier}";
     }
 }

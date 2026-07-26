@@ -36,7 +36,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         var statusList = statuses?.ToArray() ?? [];
 
         var filtered = Entities
-            .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .Where(sprint => !projectId.HasValue || sprint.ProjectId == projectId.Value)
             .Where(sprint => statusList.Length == 0 || statusList.Contains(sprint.Status))
             .AsNoTracking();
@@ -70,7 +70,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
     public Task<List<SprintViewModel>> GetAllSprintViewModels(string workspaceKey, CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .AsNoTracking()
             .Select(SprintToViewModel())
             .ToListAsync(cancellationToken);
@@ -111,7 +111,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(sprint => sprint.Id == sprintId && sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => sprint.Id == sprintId && sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .AsNoTracking()
             .AsSplitQuery()
             .Select(SprintToDetailViewModel())
@@ -124,7 +124,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(sprint => sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .Where(sprint => sprint.Status == SprintStatus.Active)
             .Where(sprint => sprint.ProjectTasks.Any(task =>
                 !task.IsDeleted && task.ProjectTaskAppUsers.Any(assignee => assignee.UserId == userId)))
@@ -147,7 +147,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             .Include(sprint => sprint.ProjectTasks)
             .ThenInclude(task => task.Status)
             .Include(sprint => sprint.Workspace)
-            .Where(sprint => sprint.Id == sprintId && sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => sprint.Id == sprintId && sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .AsSplitQuery();
 
         return query.IsReadonly(isReadonly).FirstOrDefaultAsync(cancellationToken);
@@ -159,7 +159,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
         CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(sprint => sprint.Id == sprintId && sprint.Workspace.Slug == workspaceKey && !sprint.IsDeleted)
+            .Where(sprint => sprint.Id == sprintId && sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .AsNoTracking()
             .Select(sprint => new SprintTaskAssignmentTarget(
                 sprint.Id,
@@ -290,7 +290,7 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             SprintName = task.Sprint == null ? null : task.Sprint.Name,
             SprintStatus = task.Sprint == null ? null : task.Sprint.Status,
             WorkspaceId = task.WorkspaceId,
-            WorkspaceKey = task.Workspace.Slug,
+            WorkspaceKey = task.Workspace!.Slug,
             CreatedAt = task.CreatedAt,
             UpdatedAt = task.UpdatedAt,
             OwnerUsername = string.IsNullOrEmpty(task.Owner!.Firstname) && string.IsNullOrEmpty(task.Owner.Lastname)

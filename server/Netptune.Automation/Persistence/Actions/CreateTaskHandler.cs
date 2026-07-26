@@ -401,7 +401,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
             Operation = SearchIndexOperation.Index,
             EntityType = "task",
             EntityIds = [task.Id],
-            WorkspaceSlug = execution.Task.Workspace.Slug,
+            WorkspaceSlug = execution.Task.Workspace!.Slug,
         });
 
         await EventPublisher.Dispatch(new TaskCreatedMessage

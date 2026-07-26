@@ -67,7 +67,7 @@ public static partial class AutomationMessageTemplate
             "task.startdate" => FormatDate(task.StartDate),
             "task.duedate" => FormatDate(task.DueDate),
             "project.name" => task.Project?.Name ?? string.Empty,
-            "workspace.name" => task.Workspace.Name,
+            "workspace.name" => task.Workspace?.Name ?? string.Empty,
             "rule.name" => rule.Name,
             _ => string.Empty,
         };

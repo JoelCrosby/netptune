@@ -114,7 +114,7 @@ public sealed class CalendarEndpointTests
         return await context.Statuses
             .Include(status => status.Workspace)
             .FirstAsync(status =>
-                status.Workspace.Slug == "netptune" &&
+                status.Workspace!.Slug == "netptune" &&
                 status.EntityType == EntityType.Task &&
                 status.Key == "in-progress");
     }

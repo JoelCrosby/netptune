@@ -88,7 +88,7 @@ public sealed class SprintSeeder : ISeeder
         foreach (var (project, projectIndex) in context.Projects.Select((project, index) => (project, index)))
         {
             var plan = ProjectSprints[project.Key];
-            var workspaceUsers = context.UsersFor(project.Workspace);
+            var workspaceUsers = context.UsersFor(project.Workspace!);
             var completedSprint = new Sprint
             {
                 Name = plan.Completed.Name,
@@ -213,7 +213,7 @@ public sealed class SprintSeeder : ISeeder
     private static void EnsureSprintNamesAreUnique(IReadOnlyCollection<Sprint> sprints)
     {
         var duplicate = sprints
-            .GroupBy(sprint => $"{sprint.Workspace.Slug}:{sprint.Name}", StringComparer.OrdinalIgnoreCase)
+            .GroupBy(sprint => $"{sprint.Workspace!.Slug}:{sprint.Name}", StringComparer.OrdinalIgnoreCase)
             .FirstOrDefault(group => group.Count() > 1);
 
         if (duplicate is not null)

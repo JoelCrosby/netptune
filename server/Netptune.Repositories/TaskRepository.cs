@@ -254,7 +254,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         return Entities
             .AsNoTracking()
             .Where(task => idList.Contains(task.Id))
-            .Where(task => task.Workspace.Slug == workspaceKey && !task.IsDeleted)
+            .Where(task => task.Workspace!.Slug == workspaceKey && !task.IsDeleted)
             .Select(task => new TaskSearchReference(
                 task.Id,
                 task.Project == null
@@ -344,7 +344,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
 
         var queryable = Entities
             .Where(x =>
-                x.Workspace.Slug == workspaceKey &&
+                x.Workspace!.Slug == workspaceKey &&
                 x.Project!.Key == projectKey &&
                 x.ProjectScopeId == projectScopeId)
             .Include(x => x.ProjectTaskAppUsers).ThenInclude(x => x.User)
@@ -612,7 +612,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             SprintName = x.Sprint == null ? null : x.Sprint.Name,
             SprintStatus = x.Sprint == null ? null : x.Sprint.Status,
             WorkspaceId = x.WorkspaceId,
-            WorkspaceKey = x.Workspace.Slug,
+            WorkspaceKey = x.Workspace!.Slug,
             CreatedAt = x.CreatedAt,
             UpdatedAt = x.UpdatedAt,
             OwnerUsername = x.Owner == null

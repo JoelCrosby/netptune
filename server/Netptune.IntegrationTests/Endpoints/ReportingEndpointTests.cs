@@ -191,7 +191,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
         return await context.Projects
-            .Where(project => project.Workspace.Slug == slug && !project.IsDeleted)
+            .Where(project => project.Workspace!.Slug == slug && !project.IsDeleted)
             .Select(project => project.Id)
             .FirstAsync();
     }
@@ -257,7 +257,7 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
 
         return await context.Statuses
             .Where(status =>
-                status.Workspace.Slug == "netptune" &&
+                status.Workspace!.Slug == "netptune" &&
                 status.EntityType == EntityType.Task &&
                 status.Key == key)
             .Select(status => new StatusViewModel

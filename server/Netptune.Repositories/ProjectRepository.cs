@@ -40,7 +40,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
         var pagination = pageRequest.GetPagination();
 
         return Entities
-            .Where(project => project.Workspace.Slug == workspaceKey && !project.IsDeleted)
+            .Where(project => project.Workspace!.Slug == workspaceKey && !project.IsDeleted)
             .OrderByDescending(project => project.UpdatedAt ?? project.CreatedAt)
             .ThenByDescending(project => project.Id)
             .Skip(pagination.Skip)
@@ -66,7 +66,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
     public Task<List<ProjectViewModel>> GetAllProjectViewModels(string workspaceKey, CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(project => project.Workspace.Slug == workspaceKey && !project.IsDeleted)
+            .Where(project => project.Workspace!.Slug == workspaceKey && !project.IsDeleted)
             .AsNoTracking()
             .Select(ProjectToViewModel())
             .ToListAsync(cancellationToken);

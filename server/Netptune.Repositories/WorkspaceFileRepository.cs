@@ -227,7 +227,7 @@ public sealed class WorkspaceFileRepository : WorkspaceEntityRepository<DataCont
                 ? link.ProjectTask.ProjectScopeId.ToString()
                 : link.ProjectTask.Project.Key + "-" + link.ProjectTask.ProjectScopeId).FirstOrDefault(),
             TaskName = file.TaskFiles.Select(link => link.ProjectTask.Name).FirstOrDefault(),
-            ContentUrl = "/api/workspaces/" + file.Workspace.Slug + "/files/" + file.ContentId + "/content",
+            ContentUrl = "/api/workspaces/" + file.Workspace!.Slug + "/files/" + file.ContentId + "/content",
             CanDelete = canDeleteAny || file.CreatedByUserId == currentUserId,
         });
     }

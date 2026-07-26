@@ -32,7 +32,7 @@ public sealed class ProjectSeeder : ISeeder
             Owner = context.Users[i % context.Users.Count],
             Workspace = context.Workspaces.First(w => w.Slug == p.WorkspaceSlug),
             DefaultStatus = context.Statuses.First(status =>
-                status.Workspace.Slug == p.WorkspaceSlug &&
+                status.Workspace!.Slug == p.WorkspaceSlug &&
                 status.EntityType == EntityType.Task &&
                 status.Key == "new"),
         }));
