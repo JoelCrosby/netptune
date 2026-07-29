@@ -52,7 +52,7 @@ const maxSprintLinks = 2;
   selector: 'app-shell-sidebar',
   template: `
     <div
-      class="border-side-bar-border bg-side-bar z-10 flex h-full flex-col justify-between border-r [transition:width_.2s_ease-in-out]">
+      class="border-side-bar-border bg-side-bar z-10 flex h-full flex-col justify-between overflow-y-auto border-r [transition:width_.2s_ease-in-out]">
       <app-workspace-select
         idKey="id"
         labelKey="name"

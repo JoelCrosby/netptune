@@ -34,7 +34,7 @@ import { LucideChevronsUpDown } from '@lucide/angular';
 @Component({
   selector: 'app-workspace-select',
   host: {
-    class: 'block w-full border-side-bar-border border-b h-15 py-2 px-2',
+    class: 'block w-full h-15 py-2 px-2',
   },
   template: `
     <button
