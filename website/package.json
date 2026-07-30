@@ -12,8 +12,8 @@
     "prettier:check": "prettier --check src"
   },
   "dependencies": {
-    "@solidjs/router": "^0.16.1",
-    "@solidjs/start": "2.0.0-alpha.3",
+    "@solidjs/router": "^1.0.0",
+    "@solidjs/start": "2.0.0-rc.9",
     "@solidjs/vite-plugin-nitro-2": "^0.3.0",
     "lucide-solid": "^1.8.0",
     "remark-directive": "^4.0.0",
