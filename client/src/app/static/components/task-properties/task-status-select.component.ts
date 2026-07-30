@@ -20,8 +20,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     <app-chip-listbox>
       <button
         app-chip-option
-        [showChevron]="!loading()"
-        [disabled]="loading()"
+        [showChevron]="!loading() && !disabled()"
+        [disabled]="loading() || disabled()"
         [loading]="loading()"
         (click)="statusMenu.toggle($any($event.currentTarget))">
         {{ label() }}
@@ -48,6 +48,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 export class TaskStatusSelectComponent {
   readonly value = model<number | null>(null);
   readonly loading = input(false);
+  readonly disabled = input(false);
   readonly fallbackLabel = input('Default');
 
   readonly statuses = statusResource();

@@ -1,8 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
+import { WorkspaceRole } from '@core/enums/workspace-role';
+import { WorkspaceAppUser } from '@core/models/appuser';
+import { Page } from '@core/models/pagination';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { selectIsPublicViewer } from '@core/store/auth/auth.selectors';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
@@ -13,6 +18,21 @@ import * as actions from './users.actions';
 import { UsersService } from './users.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { selectUsersPage, selectUsersPageSize } from './users.selectors';
+
+const emptyWorkspaceAppUser: WorkspaceAppUser = {
+  id: '',
+  firstname: '',
+  lastname: '',
+  email: '',
+  userName: '',
+  displayName: '',
+  lastLoginTime: new Date(0),
+  registrationDate: new Date(0),
+  token: '',
+  tasks: [],
+  permissions: [],
+  role: WorkspaceRole.viewer,
+};
 
 @Injectable()
 export class UsersEffects {
@@ -28,10 +48,18 @@ export class UsersEffects {
       concatLatestFrom(() => [
         this.store.select(selectUsersPage),
         this.store.select(selectUsersPageSize),
+        this.store.select(selectIsPublicViewer),
+        this.store.select(selectCurrentWorkspaceIdentifier),
       ]),
-      switchMap(([_, page, pageSize]) =>
-        this.usersService.getUsersInWorkspace({ page, pageSize }).pipe(
-          unwrapClientReposne(),
+      switchMap(([_, page, pageSize, isPublicViewer, workspaceKey]) => {
+        const users$ =
+          isPublicViewer && workspaceKey
+            ? this.publicMembers(workspaceKey, page, pageSize)
+            : this.usersService
+                .getUsersInWorkspace({ page, pageSize })
+                .pipe(unwrapClientReposne());
+
+        return users$.pipe(
           map((usersPage) =>
             actions.loadUsers.success({
               users: usersPage.items,
@@ -44,10 +72,29 @@ export class UsersEffects {
           catchError((error: HttpErrorResponse) =>
             of(actions.loadUsers.fail({ error }))
           )
-        )
-      )
+        );
+      })
     );
   });
+
+  private publicMembers(workspaceKey: string, page: number, pageSize: number) {
+    return this.usersService
+      .getPublicMembersInWorkspace(workspaceKey, { page, pageSize })
+      .pipe(
+        map((membersPage): Page<WorkspaceAppUser> => {
+          return {
+            ...membersPage,
+            items: membersPage.items.map((member) => ({
+              ...emptyWorkspaceAppUser,
+              id: member.id,
+              displayName: member.displayName,
+              pictureUrl: member.pictureUrl,
+              isServiceAccount: member.isServiceAccount,
+            })),
+          };
+        })
+      );
+  }
 
   reloadUsersOnPaginationChange$ = createEffect(() => {
     return this.actions$.pipe(

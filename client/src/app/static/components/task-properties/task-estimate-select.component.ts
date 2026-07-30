@@ -27,10 +27,13 @@ export interface TaskEstimate {
     <div class="flex items-center gap-2">
       <button
         type="button"
-        class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+        class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 disabled:cursor-default disabled:hover:bg-transparent dark:hover:bg-neutral-800 dark:disabled:hover:bg-transparent"
+        [disabled]="disabled()"
         (click)="typeMenu.toggle($any($event.currentTarget))">
         {{ estimateTypeLabels[estimateType() ?? EstimateType.storyPoints] }}
-        <svg lucideChevronDown class="h-3 w-3 opacity-50"></svg>
+        @if (!disabled()) {
+          <svg lucideChevronDown class="h-3 w-3 opacity-50"></svg>
+        }
       </button>
       <app-dropdown-menu #typeMenu>
         <small class="block px-3 py-1 text-xs text-neutral-500">
@@ -48,10 +51,13 @@ export interface TaskEstimate {
       @if (estimateType() === EstimateType.tShirt) {
         <button
           type="button"
-          class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          class="flex cursor-pointer items-center gap-1 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 disabled:cursor-default disabled:hover:bg-transparent dark:hover:bg-neutral-800 dark:disabled:hover:bg-transparent"
+          [disabled]="disabled()"
           (click)="sizeMenu.toggle($any($event.currentTarget))">
           {{ tShirtLabel() }}
-          <svg lucideChevronDown class="h-3 w-3 opacity-50"></svg>
+          @if (!disabled()) {
+            <svg lucideChevronDown class="h-3 w-3 opacity-50"></svg>
+          }
         </button>
         <app-dropdown-menu #sizeMenu>
           <small class="block px-3 py-1 text-xs text-neutral-500">Size</small>
@@ -67,8 +73,9 @@ export interface TaskEstimate {
         <input
           type="number"
           min="0"
-          class="w-20 rounded-sm border border-neutral-200 bg-transparent px-4 py-2 text-sm dark:border-neutral-700"
+          class="w-20 rounded-sm border border-neutral-200 bg-transparent px-4 py-2 text-sm disabled:border-transparent dark:border-neutral-700"
           placeholder="—"
+          [disabled]="disabled()"
           [ngModel]="estimateValue()"
           (ngModelChange)="selectEstimateValue($event)" />
       }
@@ -78,6 +85,7 @@ export interface TaskEstimate {
 export class TaskEstimateSelectComponent {
   readonly estimateType = input<EstimateType | null>(null);
   readonly estimateValue = input<number | null>(null);
+  readonly disabled = input(false);
 
   readonly estimateChange = output<TaskEstimate>();
 

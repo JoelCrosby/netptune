@@ -3,6 +3,7 @@ import { TaskPriority } from '@app/core/enums/task-priority';
 import { AppUser } from '@app/core/models/appuser';
 import { AssigneeViewModel } from '@app/core/models/view-models/board-view';
 import {
+  selectDetailTaskIsRedOnly,
   selectRequiredDetailTask,
   selectTaskEditLoading,
 } from '@app/core/store/tasks/tasks.selectors';
@@ -32,6 +33,7 @@ import { TaskDetailService } from './task-detail.service';
       [assignees]="task().assignees"
       [reporter]="reporter()"
       [loading]="updateLoading()"
+      [editable]="!isReadOnly()"
       (statusIdChange)="selectStatus($event)"
       (priorityChange)="selectPriority($event)"
       (estimateChange)="selectEstimate($event)"
@@ -47,6 +49,7 @@ export class TaskDetailPropertiesComponent {
   readonly taskDetailService = inject(TaskDetailService);
   readonly task = this.store.selectSignal(selectRequiredDetailTask);
   readonly updateLoading = this.store.selectSignal(selectTaskEditLoading);
+  readonly isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
 
   readonly reporter = computed<TaskReporter>(() => ({
     displayName: this.task().ownerUsername,

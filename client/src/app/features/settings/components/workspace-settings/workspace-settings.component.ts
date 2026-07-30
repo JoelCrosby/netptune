@@ -15,6 +15,7 @@ import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { WorkspacePublicAccessComponent } from '../workspace-public-access/workspace-public-access.component';
 import { DialogService } from '@core/services/dialog.service';
 import { DeleteWorkspaceDialogComponent } from '../delete-workspace-dialog/delete-workspace-dialog.component';
 import { take } from 'rxjs/operators';
@@ -25,6 +26,7 @@ import { take } from 'rxjs/operators';
     FlatButtonComponent,
     StrokedButtonComponent,
     SectionHeaderComponent,
+    WorkspacePublicAccessComponent,
   ],
   template: `<app-section-header heading="Visibility and access" />
 
@@ -33,8 +35,8 @@ import { take } from 'rxjs/operators';
         <p class="text-foreground/80 mb-2 text-sm">
           @if (workspace()?.isPublic) {
             This workspace is currently <strong>Public</strong>. This means that
-            anyone with the link to this workspace can view it. However, only
-            members of the workspace can edit it.
+            anyone with the link can view whatever is shared below. However,
+            only members of the workspace can edit it.
           } @else {
             This workspace is currently <strong>Private</strong>. This means
             that only members of the workspace can view and edit it.
@@ -53,6 +55,8 @@ import { take } from 'rxjs/operators';
           }}
         </button>
       }
+
+      <app-workspace-public-access />
 
       @if (canLeave()) {
         <p class="text-foreground/80 mt-4 mb-2 text-sm">

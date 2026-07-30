@@ -19,6 +19,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       <button
         app-chip-option
         [loading]="loading()"
+        [showChevron]="!loading() && !disabled()"
+        [disabled]="loading() || disabled()"
         (click)="sprintsMenu.toggle($any($event.currentTarget))">
         {{ label() }}
       </button>
@@ -50,6 +52,7 @@ export class TaskSprintSelectComponent {
   readonly value = model<number | null>(null);
   readonly projectId = input<number | null>(null);
   readonly loading = input(false);
+  readonly disabled = input(false);
   readonly fallbackLabel = input('No Sprint');
 
   readonly sprintStatusLabels = sprintStatusLabels;

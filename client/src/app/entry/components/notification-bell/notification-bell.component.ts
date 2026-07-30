@@ -12,6 +12,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
+import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
 import * as notificationActions from '@core/store/notifications/notifications.actions';
 import { loadNotifications } from '@core/store/notifications/notifications.actions';
 import {
@@ -66,6 +67,7 @@ export class NotificationBellComponent implements OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  readonly authenticated = this.store.selectSignal(selectIsAuthenticated);
   readonly notifications = this.store.selectSignal(selectNotifications);
   readonly unreadCount = this.store.selectSignal(selectUnreadCount);
   readonly loaded = this.store.selectSignal(selectNotificationsLoaded);
@@ -75,7 +77,9 @@ export class NotificationBellComponent implements OnDestroy {
   private overlayRef?: OverlayRef;
 
   constructor() {
-    this.store.dispatch(loadNotifications.init());
+    if (this.authenticated()) {
+      this.store.dispatch(loadNotifications.init());
+    }
   }
 
   toggleMenu() {

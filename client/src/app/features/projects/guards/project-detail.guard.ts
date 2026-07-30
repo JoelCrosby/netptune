@@ -1,17 +1,38 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
+import { netptunePermissions } from '@core/auth/permissions';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { loadProjectDetail } from '@core/store/projects/projects.actions';
 import { Store } from '@ngrx/store';
+import { first, map } from 'rxjs/operators';
 
 export const projectDetailGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot
 ) => {
   const store = inject(Store);
+  const router = inject(Router);
   const projectKey = route.params?.['id'];
 
   if (!projectKey) return false;
 
-  store.dispatch(loadProjectDetail.init({ projectKey }));
+  const workspace = route.pathFromRoot
+    .map((snapshot) => snapshot.params['workspace'])
+    .find(Boolean);
 
-  return true;
+  return store
+    .select(selectHasPermission(netptunePermissions.projects.update))
+    .pipe(
+      first(),
+      map((canUpdate) => {
+        if (!canUpdate) {
+          return router.createUrlTree(
+            workspace ? ['/', workspace, 'projects'] : ['/']
+          );
+        }
+
+        store.dispatch(loadProjectDetail.init({ projectKey }));
+
+        return true;
+      })
+    );
 };

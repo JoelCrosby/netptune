@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, output } from '@angular/core';
 import {
   selectCurrentUser,
   selectHasPermission,
+  selectIsAuthenticated,
 } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { loadCurrentSprints } from '@core/store/sprints/sprints.actions';
@@ -103,6 +104,8 @@ export class ShellSidebarComponent {
   currentSprints = this.store.selectSignal(selectCurrentSprints);
   currentSprintsLoaded = this.store.selectSignal(selectCurrentSprintsLoaded);
 
+  authenticated = this.store.selectSignal(selectIsAuthenticated);
+
   canReadMembers = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.read)
   );
@@ -148,12 +151,17 @@ export class ShellSidebarComponent {
   );
 
   links = computed(() => {
-    const links: ShellMenuLink[] = [
-      {
+    const links: ShellMenuLink[] = [];
+
+    if (this.authenticated()) {
+      links.push({
         label: 'Dashboard',
         value: ['./dashboard'],
         icon: LucideLayoutDashboard,
-      },
+      });
+    }
+
+    links.push(
       {
         label: 'Tasks',
         value: ['./tasks'],
@@ -168,8 +176,8 @@ export class ShellSidebarComponent {
             ]
           : undefined,
       },
-      { label: 'Boards', value: ['./boards'], icon: LucideTable2 },
-    ];
+      { label: 'Boards', value: ['./boards'], icon: LucideTable2 }
+    );
 
     if (this.canReadSprints()) {
       const activeSprints = this.currentSprints()
@@ -233,14 +241,64 @@ export class ShellSidebarComponent {
     return links;
   });
 
+  private workspaceSettingsLinks = computed(() => {
+    if (!this.authenticated()) return [];
+
+    const links: ShellMenuLink[] = [];
+
+    if (this.canReadWorkspace()) {
+      links.push({
+        label: 'General',
+        value: ['./settings/workspace/general'],
+        icon: LucideLayoutGrid,
+      });
+    }
+
+    if (this.canReadTags()) {
+      links.push({
+        label: 'Tags',
+        value: ['./settings/workspace/tags'],
+        icon: LucideTag,
+      });
+    }
+
+    if (this.canReadStatuses()) {
+      links.push({
+        label: 'Statuses',
+        value: ['./settings/workspace/statuses'],
+        icon: LucideListChecks,
+      });
+    }
+
+    if (this.canReadRelationTypes()) {
+      links.push({
+        label: 'Relations',
+        value: ['./settings/workspace/relations'],
+        icon: LucideGitFork,
+      });
+    }
+
+    if (this.canReadServiceAccounts()) {
+      links.push({
+        label: 'Service Accounts',
+        value: ['./settings/workspace/service-accounts'],
+        icon: LucideBot,
+      });
+    }
+
+    return links;
+  });
+
   bottomLinks = computed(() => {
-    const links: ShellMenuLink[] = [
-      {
+    const links: ShellMenuLink[] = [];
+
+    if (this.authenticated()) {
+      links.push({
         label: 'Notifications',
         value: ['./notifications'],
         icon: LucideBell,
-      },
-    ];
+      });
+    }
 
     if (this.canReadStorage()) {
       links.push({
@@ -258,50 +316,8 @@ export class ShellSidebarComponent {
       });
     }
 
-    const workspaceSettingsLinks: ShellMenuLink[] = [];
-
-    if (this.canReadWorkspace()) {
-      workspaceSettingsLinks.push({
-        label: 'General',
-        value: ['./settings/workspace/general'],
-        icon: LucideLayoutGrid,
-      });
-    }
-
-    if (this.canReadTags()) {
-      workspaceSettingsLinks.push({
-        label: 'Tags',
-        value: ['./settings/workspace/tags'],
-        icon: LucideTag,
-      });
-    }
-
-    if (this.canReadStatuses()) {
-      workspaceSettingsLinks.push({
-        label: 'Statuses',
-        value: ['./settings/workspace/statuses'],
-        icon: LucideListChecks,
-      });
-    }
-
-    if (this.canReadRelationTypes()) {
-      workspaceSettingsLinks.push({
-        label: 'Relations',
-        value: ['./settings/workspace/relations'],
-        icon: LucideGitFork,
-      });
-    }
-
-    if (this.canReadServiceAccounts()) {
-      workspaceSettingsLinks.push({
-        label: 'Service Accounts',
-        value: ['./settings/workspace/service-accounts'],
-        icon: LucideBot,
-      });
-    }
-
     const [defaultWorkspaceSettingsLink, ...workspaceSettingsChildren] =
-      workspaceSettingsLinks;
+      this.workspaceSettingsLinks();
 
     if (defaultWorkspaceSettingsLink) {
       links.push({
@@ -314,11 +330,13 @@ export class ShellSidebarComponent {
       });
     }
 
-    links.push({
-      label: 'Settings',
-      value: ['./settings/personal'],
-      icon: LucideSettings,
-    });
+    if (this.authenticated()) {
+      links.push({
+        label: 'Settings',
+        value: ['./settings/personal'],
+        icon: LucideSettings,
+      });
+    }
 
     return links;
   });

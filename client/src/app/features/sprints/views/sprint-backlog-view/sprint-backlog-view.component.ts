@@ -1,9 +1,11 @@
 import { Component, computed, inject, viewChildren } from '@angular/core';
 import { Params } from '@angular/router';
+import { netptunePermissions } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { initBacklogView } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import {
@@ -43,7 +45,7 @@ interface BacklogGroupConfig {
       <div class="flex flex-col gap-6">
         <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
 
-        @if (assignableSprints().length === 0) {
+        @if (canManageTasks() && assignableSprints().length === 0) {
           <div
             class="text-muted border-border rounded border-2 border-dashed p-4 text-sm">
             No planning or active sprints found. Create a sprint first to assign
@@ -84,6 +86,9 @@ export class SprintBacklogViewComponent {
   );
   readonly selectedAssignees = this.store.selectSignal(selectSelectedAssignees);
   readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
+  readonly canManageTasks = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.sprints.manageTasks)
+  );
 
   private backlogGroups = viewChildren(SprintBacklogGroupComponent);
 

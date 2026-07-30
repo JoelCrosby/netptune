@@ -13,7 +13,10 @@ import { FlatButtonComponent } from '@app/static/components/button/flat-button.c
 import { DatatableCellTemplateDirective } from '@app/static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
 import { DatatableComponent } from '@app/static/components/datatable/datatable.component';
-import { DatatableDataSource } from '@app/static/components/datatable/datatable.types';
+import {
+  DatatableDataSource,
+  DatatableMenuItem,
+} from '@app/static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
@@ -74,7 +77,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
       containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
       tableClass="min-w-[760px] table-fixed"
       rowClass="bg-card"
-      [data]="taskData"
+      [data]="taskData()"
       [selection]="canDelete()"
       [customizableColumns]="true"
       [stickyHeader]="true"
@@ -236,7 +239,13 @@ export class TaskListComponent {
     return task.flags.map((flag) => flag.name);
   }
 
-  taskData: DatatableDataSource<TaskViewModel> = {
+  private readonly deleteMenuItem: DatatableMenuItem<TaskViewModel> = {
+    label: 'Delete',
+    icon: LucideTrash2,
+    onClick: (task) => this.deleteClicked(task),
+  };
+
+  readonly taskData = computed<DatatableDataSource<TaskViewModel>>(() => ({
     key: 'task-list',
     columns: [
       {
@@ -284,15 +293,9 @@ export class TaskListComponent {
     },
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, task: TaskViewModel) => task.id,
-    menu: [
-      {
-        label: 'Delete',
-        icon: LucideTrash2,
-        onClick: (task) => this.deleteClicked(task),
-      },
-    ],
+    menu: this.canDelete() ? [this.deleteMenuItem] : [],
     reloadSignal: this.projectTasksHubService.updateVersion,
-  };
+  }));
 
   constructor() {
     // Start each visit to the list with a clean selection; the datatable's

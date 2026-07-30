@@ -4,6 +4,7 @@ import { WorkspaceAppUser } from '@core/models/appuser';
 import { ClientResponse } from '@core/models/client-response';
 import { WorkspaceRole } from '@core/enums/workspace-role';
 import { appendPageParams, Page, PageQuery } from '@core/models/pagination';
+import { AssigneeViewModel } from '@core/models/view-models/board-view';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,13 @@ export class UsersService {
     return this.http.get<ClientResponse<Page<WorkspaceAppUser>>>(`api/users`, {
       params: appendPageParams(new HttpParams(), query),
     });
+  }
+
+  getPublicMembersInWorkspace(workspaceKey: string, query?: PageQuery) {
+    return this.http.get<Page<AssigneeViewModel>>(
+      `api/public/workspaces/${workspaceKey}/members`,
+      { params: appendPageParams(new HttpParams(), query) }
+    );
   }
 
   inviteUsersToWorkspace(emailAddresses: string[]) {

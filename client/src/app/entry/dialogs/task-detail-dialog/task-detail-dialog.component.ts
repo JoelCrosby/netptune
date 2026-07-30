@@ -55,7 +55,11 @@ export interface TaskDetailDialogData {
               <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
             }
             <app-task-scope-id [id]="task.systemId" />
-            <app-activity-menu [entityType]="entityType" [entityId]="task.id" />
+            @if (readActivity()) {
+              <app-activity-menu
+                [entityType]="entityType"
+                [entityId]="task.id" />
+            }
           </div>
         </div>
 
@@ -74,7 +78,9 @@ export interface TaskDetailDialogData {
               <app-task-detail-files [systemId]="task.systemId" />
             }
             <app-task-detail-relations />
-            <app-task-detail-comments />
+            @if (readComments()) {
+              <app-task-detail-comments />
+            }
           </div>
 
           <div class="bg-card/40 mt-4 flex flex-col gap-6 rounded px-6 pb-6">
@@ -136,6 +142,14 @@ export class TaskDetailDialogComponent implements OnDestroy {
 
   readFlags = this.store.selectSignal(
     selectHasPermission(netptunePermissions.flags.read)
+  );
+
+  readComments = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.comments.read)
+  );
+
+  readActivity = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.activity.read)
   );
 
   constructor() {

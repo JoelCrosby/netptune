@@ -1,3 +1,4 @@
+import { Permission } from '@core/auth/permissions';
 import { WorkspaceMeta } from '../workspace';
 
 export interface UpdateWorkspaceRequest {
@@ -6,4 +7,5 @@ export interface UpdateWorkspaceRequest {
   description?: string;
   metaInfo: WorkspaceMeta;
   isPublic?: boolean;
+  publicPermissions?: Permission[];
 }

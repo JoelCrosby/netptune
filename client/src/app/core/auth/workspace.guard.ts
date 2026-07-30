@@ -54,8 +54,14 @@ export const workspaceGuard: CanActivateFn = (
 
       return workspaces.getPublicBySlug(workspaceKey).pipe(
         map((workspace) => {
-          if (workspace?.isPublic) return true;
-          return router.createUrlTree(['/auth/login']);
+          if (!workspace?.isPublic) {
+            return router.createUrlTree(['/auth/login']);
+          }
+
+          workspaceService.setWorkspace(workspaceKey);
+          store.dispatch(setCurrentWorkspace({ workspace }));
+
+          return true;
         }),
         catchError(() => of(router.createUrlTree(['/auth/login'])))
       );

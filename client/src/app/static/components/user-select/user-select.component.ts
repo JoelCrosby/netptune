@@ -57,8 +57,9 @@ type User = AssigneeViewModel | AppUser;
   template: `
     <button
       type="button"
-      class="text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none"
+      class="text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none disabled:cursor-default disabled:hover:bg-transparent"
       [class.flex-col]="compact()"
+      [disabled]="disabled()"
       #origin
       (click)="toggle(origin)">
       @for (user of value(); track user.id) {
@@ -128,6 +129,7 @@ export class UserSelectComponent implements OnDestroy {
   readonly options = input<AppUser[] | null>([]);
   readonly value = model<User[]>([]);
   readonly compact = input(false);
+  readonly disabled = input(false);
   readonly label = input('Select Users');
   readonly noResults = input('No results found...');
 

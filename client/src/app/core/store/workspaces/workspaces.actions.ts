@@ -1,3 +1,4 @@
+import { Permission } from '@core/auth/permissions';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
@@ -79,4 +80,9 @@ export const isSlugUniue = createAsyncAction('[Workspaces] Is Slug Unique', {
 export const toggleWorkspaceIsPublic = createAction(
   '[Workspaces] Toggle Workspace IsPublic',
   props<{ isPublic: boolean }>()
+);
+
+export const setWorkspacePublicPermissions = createAction(
+  '[Workspaces] Set Workspace Public Permissions',
+  props<{ permissions: Permission[] }>()
 );

@@ -2,7 +2,9 @@ import { selectAuthFeature } from '@core/core.state';
 import { createSelector } from '@ngrx/store';
 import { AuthState, UserResponse } from './auth.models';
 import { Permission } from '../../auth/permissions';
+import { UserPermissions } from '@app/core/models/user-permissions';
 import { WorkspaceRole } from '@app/core/enums/workspace-role';
+import { selectCurrentWorkspace } from '../workspaces/workspaces.selectors';
 
 const sessionRefreshBufferMs = 60_000;
 
@@ -53,6 +55,11 @@ export const selectIsAuthenticated = createSelector(
   }
 );
 
+export const selectHasAuthSession = createSelector(
+  selectAuthFeature,
+  (state: AuthState) => state.isAuthenticated
+);
+
 export const selectShouldRefreshSession = createSelector(
   selectAuthFeature,
   (state: AuthState) => {
@@ -92,9 +99,33 @@ export const selectShowLoginError = createSelector(
   (state: AuthState) => !!state.loginError
 );
 
+export const selectIsPublicViewer = createSelector(
+  selectIsAuthenticated,
+  selectCurrentWorkspace,
+  (isAuthenticated, workspace) =>
+    !isAuthenticated && workspace?.isPublic === true
+);
+
+export const selectPublicViewerPermissions = createSelector(
+  selectIsPublicViewer,
+  selectCurrentWorkspace,
+  (isPublicViewer, workspace): UserPermissions | undefined => {
+    if (!isPublicViewer || !workspace) return undefined;
+
+    return {
+      userId: '',
+      workspaceKey: workspace.slug,
+      role: WorkspaceRole.viewer,
+      permissions: workspace.publicPermissions ?? [],
+    };
+  }
+);
+
 export const selectCurrentUserPermissions = createSelector(
   selectCurrentUser,
-  (user?: UserResponse) => user?.userPermissions
+  selectPublicViewerPermissions,
+  (user: UserResponse | undefined, publicPermissions) =>
+    user?.userPermissions ?? publicPermissions
 );
 
 export const selectHasPermission = (permission: Permission) =>

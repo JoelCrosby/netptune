@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, model } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 import {
   TaskPriority,
   taskPriorityColors,
@@ -16,7 +16,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   template: `
     <button
       type="button"
-      class="flex cursor-pointer items-center gap-2 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+      class="flex cursor-pointer items-center gap-2 rounded-sm px-4 py-2 text-sm transition-colors hover:bg-neutral-100 disabled:cursor-default disabled:hover:bg-transparent dark:hover:bg-neutral-800 dark:disabled:hover:bg-transparent"
+      [disabled]="disabled()"
       (click)="menu.toggle($any($event.currentTarget))">
       <svg lucideFlag class="h-4 w-4" [ngClass]="colorFor(priority())"></svg>
       <span [ngClass]="colorFor(priority())">{{ label() }}</span>
@@ -40,6 +41,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 })
 export class TaskPrioritySelectComponent {
   readonly value = model<TaskPriority | null>(null);
+  readonly disabled = input(false);
 
   readonly options = taskPriorityOptions;
 

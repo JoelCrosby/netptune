@@ -17,6 +17,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     <app-chip-listbox>
       <button
         app-chip-option
+        [showChevron]="!disabled()"
+        [disabled]="disabled()"
         (click)="projectsMenu.toggle($any($event.currentTarget))">
         {{ label() }}
       </button>
@@ -38,6 +40,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 })
 export class TaskProjectSelectComponent {
   readonly value = model<number | null>(null);
+  readonly disabled = input(false);
   readonly fallbackLabel = input('Select Project');
 
   readonly projects = projectResource();

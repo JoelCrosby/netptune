@@ -81,7 +81,9 @@ export class ShellComponent {
   readonly chunkLoading = signal(false);
 
   constructor() {
-    this.preferences.load();
+    if (this.authenticated()) {
+      this.preferences.load();
+    }
 
     this.router.events
       .pipe(

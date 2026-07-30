@@ -48,6 +48,7 @@ export interface TaskReporter {
             label="Unassigned"
             [value]="assignees()"
             [options]="users()"
+            [disabled]="!editable()"
             (selectChange)="toggleAssignee($event)" />
         </div>
       }
@@ -74,13 +75,16 @@ export interface TaskReporter {
           <app-task-status-select
             [(value)]="statusId"
             [loading]="loading()"
+            [disabled]="!editable()"
             [fallbackLabel]="statusLabel()" />
         </div>
       }
 
       <div>
         <h4 class="font-sm mt-4 mb-2 font-semibold">Priority</h4>
-        <app-task-priority-select [(value)]="priority" />
+        <app-task-priority-select
+          [(value)]="priority"
+          [disabled]="!editable()" />
       </div>
 
       <div>
@@ -88,6 +92,7 @@ export interface TaskReporter {
         <app-task-estimate-select
           [estimateType]="estimateType()"
           [estimateValue]="estimateValue()"
+          [disabled]="!editable()"
           (estimateChange)="estimateChange.emit($event)" />
       </div>
 
@@ -98,6 +103,7 @@ export interface TaskReporter {
           color="ghost"
           ariaLabel="Start date"
           buttonClass="justify-between"
+          [disabled]="!editable()"
           [(value)]="startDate" />
       </div>
 
@@ -108,13 +114,16 @@ export interface TaskReporter {
           color="ghost"
           ariaLabel="Due date"
           buttonClass="justify-between"
+          [disabled]="!editable()"
           [(value)]="dueDate" />
       </div>
 
       @if (readProjects() && showProject()) {
         <div>
           <h4 class="font-sm mt-4 mb-2 font-semibold">Project</h4>
-          <app-task-project-select [(value)]="projectId" />
+          <app-task-project-select
+            [(value)]="projectId"
+            [disabled]="!editable()" />
         </div>
       }
 
@@ -125,6 +134,7 @@ export interface TaskReporter {
             [(value)]="sprintId"
             [projectId]="projectId()"
             [loading]="loading()"
+            [disabled]="!editable()"
             [fallbackLabel]="sprintLabel()" />
         </div>
       }
@@ -146,6 +156,7 @@ export class TaskPropertiesComponent {
 
   readonly reporter = input<TaskReporter | null>(null);
   readonly loading = input(false);
+  readonly editable = input(true);
   readonly showProject = input(true);
   readonly showSprint = input(true);
   readonly multiple = input(true);

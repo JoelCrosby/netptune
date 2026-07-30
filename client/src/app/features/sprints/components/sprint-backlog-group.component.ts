@@ -1,7 +1,9 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
+import { netptunePermissions } from '@core/auth/permissions';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
 import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
@@ -10,7 +12,10 @@ import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-sta
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
-import { DatatableDataSource } from '@static/components/datatable/datatable.types';
+import {
+  DatatableColumn,
+  DatatableDataSource,
+} from '@static/components/datatable/datatable.types';
 import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
@@ -49,7 +54,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
           containerClass="h-[calc(100vh-912px)] min-h-80 overflow-auto"
           tableClass="min-w-[1040px] table-fixed"
           rowClass="bg-card"
-          [data]="data"
+          [data]="data()"
           [stickyHeader]="true"
           (loaded)="onLoaded($event)">
           <ng-template appDatatableCell="name" let-task>
@@ -147,6 +152,9 @@ export class SprintBacklogGroupComponent {
   readonly sprints = input.required<SprintViewModel[]>();
 
   readonly loading = this.store.selectSignal(selectSprintUpdateLoading);
+  readonly canManageTasks = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.sprints.manageTasks)
+  );
 
   // Total backlog tasks for this group and whether its fetch has resolved,
   // pushed up from the datatable's own paginated fetch via its (loaded) output.
@@ -168,37 +176,46 @@ export class SprintBacklogGroupComponent {
     ...this.filterParams(),
   }));
 
-  readonly data: DatatableDataSource<TaskViewModel> = {
+  private readonly baseColumns: DatatableColumn<TaskViewModel>[] = [
+    {
+      id: 'name',
+      header: 'Task',
+      accessor: 'name',
+      sortable: true,
+      cellClass: 'min-w-0',
+    },
+    { id: 'status', header: 'Status', sortable: true, widthClass: 'w-32' },
+    {
+      id: 'priority',
+      header: 'Priority',
+      sortable: true,
+      widthClass: 'w-20',
+    },
+    {
+      id: 'projectName',
+      header: 'Project',
+      sortable: true,
+      widthClass: 'w-32',
+    },
+    {
+      id: 'assignees',
+      header: 'Assignees',
+      sortable: true,
+      widthClass: 'w-28',
+    },
+  ];
+
+  private readonly assignColumn: DatatableColumn<TaskViewModel> = {
+    id: 'assign',
+    header: 'Assign',
+    widthClass: 'w-58',
+  };
+
+  readonly data = computed<DatatableDataSource<TaskViewModel>>(() => ({
     key: 'sprint-backlog',
-    columns: [
-      {
-        id: 'name',
-        header: 'Task',
-        accessor: 'name',
-        sortable: true,
-        cellClass: 'min-w-0',
-      },
-      { id: 'status', header: 'Status', sortable: true, widthClass: 'w-32' },
-      {
-        id: 'priority',
-        header: 'Priority',
-        sortable: true,
-        widthClass: 'w-20',
-      },
-      {
-        id: 'projectName',
-        header: 'Project',
-        sortable: true,
-        widthClass: 'w-32',
-      },
-      {
-        id: 'assignees',
-        header: 'Assignees',
-        sortable: true,
-        widthClass: 'w-28',
-      },
-      { id: 'assign', header: 'Assign', widthClass: 'w-58' },
-    ],
+    columns: this.canManageTasks()
+      ? [...this.baseColumns, this.assignColumn]
+      : this.baseColumns,
     resource: {
       url: 'api/sprints/backlog',
       params: this.params,
@@ -206,7 +223,7 @@ export class SprintBacklogGroupComponent {
     rows: (response) => response?.payload?.items ?? [],
     trackBy: (_: number, task: TaskViewModel) => task.id,
     reloadSignal: this.hub.updateVersion,
-  };
+  }));
 
   onAssign(task: TaskViewModel, sprintId: number) {
     if (!task.id || !sprintId) return;

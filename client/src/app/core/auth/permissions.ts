@@ -118,3 +118,14 @@ export type Permission = Values<{
     (typeof netptunePermissions)[K]
   >;
 }>;
+
+export const publicReadablePermissions: Permission[] = [
+  netptunePermissions.projects.read,
+  netptunePermissions.tasks.read,
+  netptunePermissions.boards.read,
+  netptunePermissions.boardGroups.read,
+  netptunePermissions.sprints.read,
+  netptunePermissions.tags.read,
+  netptunePermissions.statuses.read,
+  netptunePermissions.relationTypes.read,
+];

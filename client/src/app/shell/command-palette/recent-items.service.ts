@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
+import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
+import { Store } from '@ngrx/store';
 import { catchError, finalize, of, tap } from 'rxjs';
 
 export interface RecentItem {
@@ -21,6 +23,11 @@ type RecentItemsClientResponse = ClientResponse<RecentItemsResponse>;
 @Injectable({ providedIn: 'root' })
 export class RecentItemsService {
   private http = inject(HttpClient);
+  private store = inject(Store);
+
+  private readonly authenticated = this.store.selectSignal(
+    selectIsAuthenticated
+  );
 
   readonly items = signal<RecentItem[]>([]);
   readonly scope = signal<'workspace' | 'global'>('workspace');
@@ -28,6 +35,7 @@ export class RecentItemsService {
   readonly loading = signal(false);
 
   ensureLoaded() {
+    if (!this.authenticated()) return;
     if (this.loaded() || this.loading()) return;
 
     this.loading.set(true);
@@ -43,6 +51,8 @@ export class RecentItemsService {
   }
 
   addRecent(item: RecentItem) {
+    if (!this.authenticated()) return;
+
     this.http
       .post<RecentItemsClientResponse>('api/command-palette/recent', item)
       .pipe(

@@ -10,6 +10,7 @@ import {
   logoutSuccess,
   refreshTokenSuccess,
 } from '@app/core/store/auth/auth.actions';
+import { selectHasAuthSession } from '@app/core/store/auth/auth.selectors';
 import { AuthService } from '@core/auth/auth.service';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
@@ -84,10 +85,7 @@ export const authInterceptor = (
     first(),
     switchMap((workspaceId) => {
       req = req.clone({
-        headers: req.headers.set(
-          'X-Realtime-Client',
-          realtimeClientId.value
-        ),
+        headers: req.headers.set('X-Realtime-Client', realtimeClientId.value),
         url: environment.apiEndpoint + req.url,
         withCredentials: true,
       });
@@ -108,7 +106,12 @@ export const authInterceptor = (
         catchError((err: unknown) => {
           if (err instanceof HttpErrorResponse) {
             if (err.status === 401 && !isAuthManagementRequest(req)) {
-              return handle401(req);
+              return store.select(selectHasAuthSession).pipe(
+                first(),
+                switchMap((hasSession) =>
+                  hasSession ? handle401(req) : throwError(() => err)
+                )
+              );
             }
           }
 

@@ -9,7 +9,10 @@ import { Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { CommandRegistry } from '@core/services/command-registry.service';
 import { WorkspaceService } from '@core/services/workspace.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
+import {
+  selectHasPermission,
+  selectIsAuthenticated,
+} from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 
 @Injectable()
@@ -26,6 +29,8 @@ export class GlobalCommandsService implements OnDestroy {
     selectHasPermission(netptunePermissions.storage.read)
   );
   private storageCommandRegistered = false;
+  private authenticated = this.store.selectSignal(selectIsAuthenticated);
+  private userCommandsRegistered = false;
 
   private readonly commandIds = [
     'nav.dashboard',
@@ -41,15 +46,6 @@ export class GlobalCommandsService implements OnDestroy {
 
   constructor() {
     this.registry.register([
-      {
-        id: 'nav.dashboard',
-        label: 'Go to Dashboard',
-        group: 'navigation',
-        icon: 'layout-dashboard',
-        shortcut: ['g', 'd'],
-        keywords: ['dashboard', 'home', 'assigned to me', 'navigate'],
-        execute: () => this.navigate('dashboard'),
-      },
       {
         id: 'nav.projects',
         label: 'Go to Projects',
@@ -86,23 +82,57 @@ export class GlobalCommandsService implements OnDestroy {
         keywords: ['sprints', 'navigate'],
         execute: () => this.navigate('sprints'),
       },
-      {
-        id: 'nav.users',
-        label: 'Go to Users',
-        group: 'navigation',
-        icon: 'users',
-        keywords: ['users', 'members', 'navigate'],
-        execute: () => this.navigate('users'),
-      },
-      {
-        id: 'nav.settings',
-        label: 'Go to Settings',
-        group: 'settings',
-        icon: 'settings',
-        keywords: ['settings', 'preferences'],
-        execute: () => this.navigate('settings'),
-      },
     ]);
+
+    effect(() => {
+      const authenticated = this.authenticated();
+
+      if (authenticated && !this.userCommandsRegistered) {
+        untracked(() =>
+          this.registry.register([
+            {
+              id: 'nav.dashboard',
+              label: 'Go to Dashboard',
+              group: 'navigation',
+              icon: 'layout-dashboard',
+              shortcut: ['g', 'd'],
+              keywords: ['dashboard', 'home', 'assigned to me', 'navigate'],
+              execute: () => this.navigate('dashboard'),
+            },
+            {
+              id: 'nav.users',
+              label: 'Go to Users',
+              group: 'navigation',
+              icon: 'users',
+              keywords: ['users', 'members', 'navigate'],
+              execute: () => this.navigate('users'),
+            },
+            {
+              id: 'nav.settings',
+              label: 'Go to Settings',
+              group: 'settings',
+              icon: 'settings',
+              keywords: ['settings', 'preferences'],
+              execute: () => this.navigate('settings'),
+            },
+          ])
+        );
+
+        this.userCommandsRegistered = true;
+      }
+
+      if (!authenticated && this.userCommandsRegistered) {
+        untracked(() =>
+          this.registry.unregister([
+            'nav.dashboard',
+            'nav.users',
+            'nav.settings',
+          ])
+        );
+
+        this.userCommandsRegistered = false;
+      }
+    });
 
     effect(() => {
       const canRead = this.canReadAutomations();

@@ -28,6 +28,7 @@ import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
 import { SseService } from '@core/sse/sse.service';
 import { Workspace } from '@core/models/workspace';
+import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 
 @Injectable()
 export class WorkspacesEffects implements OnInitEffects {
@@ -220,6 +221,33 @@ export class WorkspacesEffects implements OnInitEffects {
                 of(actions.editWorkspace.fail({ error }))
               )
             );
+          })
+        );
+      })
+    );
+  });
+
+  setWorkspacePublicPermissions$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.setWorkspacePublicPermissions),
+      concatLatestFrom(() => this.store.select(selectCurrentWorkspace)),
+      filter(([_, workspace]) => !!workspace?.slug),
+      switchMap(([action, workspace]) => {
+        const request: UpdateWorkspaceRequest = {
+          /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+          slug: workspace!.slug,
+          /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+          metaInfo: workspace!.metaInfo ?? {},
+          publicPermissions: action.permissions,
+        };
+
+        return this.workspacesService.put(request).pipe(
+          unwrapClientReposne(),
+          map((workspace) => actions.editWorkspace.success({ workspace })),
+          catchError((error: HttpErrorResponse) => {
+            this.snackbar.error('Failed to update public access');
+
+            return of(actions.editWorkspace.fail({ error }));
           })
         );
       })
