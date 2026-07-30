@@ -74,11 +74,18 @@ public sealed class MeilisearchService : IMeilisearchService
     {
         try
         {
-            await Client.CreateIndexAsync(indexName, "id", ct);
+            var creation = await Client.CreateIndexAsync(indexName, "id", ct);
+
+            await WaitForCompletionAsync(creation, ct);
         }
         catch (MeilisearchApiError ex) when (ex.Code == "index_already_exists")
         {
         }
+    }
+
+    private Task WaitForCompletionAsync(TaskInfo task, CancellationToken ct)
+    {
+        return Client.WaitForTaskAsync(task.TaskUid, cancellationToken: ct);
     }
 
     public async Task<SearchResponse> SearchAsync(GlobalSearchQuery query, CancellationToken cancellationToken = default)
@@ -207,44 +214,52 @@ public sealed class MeilisearchService : IMeilisearchService
     private async Task EnsureTasksIndexAsync(CancellationToken ct)
     {
         var index = Client.Index("tasks");
-        await index.UpdateSettingsAsync(new Settings
+        var update = await index.UpdateSettingsAsync(new Settings
         {
             SearchableAttributes = ["title", "description"],
             FilterableAttributes = ["workspaceSlug", "status", "priority", "assigneeIds", "tagIds", "projectId"],
             SortableAttributes = ["updatedAt"],
         }, ct);
+
+        await WaitForCompletionAsync(update, ct);
     }
 
     private async Task EnsureProjectsIndexAsync(CancellationToken ct)
     {
         var index = Client.Index("projects");
-        await index.UpdateSettingsAsync(new Settings
+        var update = await index.UpdateSettingsAsync(new Settings
         {
             SearchableAttributes = ["name", "description", "key"],
             FilterableAttributes = ["workspaceSlug"],
             SortableAttributes = ["updatedAt"],
         }, ct);
+
+        await WaitForCompletionAsync(update, ct);
     }
 
     private async Task EnsureBoardsIndexAsync(CancellationToken ct)
     {
         var index = Client.Index("boards");
-        await index.UpdateSettingsAsync(new Settings
+        var update = await index.UpdateSettingsAsync(new Settings
         {
             SearchableAttributes = ["name"],
             FilterableAttributes = ["workspaceSlug", "projectId"],
             SortableAttributes = ["updatedAt"],
         }, ct);
+
+        await WaitForCompletionAsync(update, ct);
     }
 
     private async Task EnsureSprintsIndexAsync(CancellationToken ct)
     {
         var index = Client.Index("sprints");
-        await index.UpdateSettingsAsync(new Settings
+        var update = await index.UpdateSettingsAsync(new Settings
         {
             SearchableAttributes = ["name", "goal"],
             FilterableAttributes = ["workspaceSlug", "projectId", "status"],
             SortableAttributes = ["updatedAt"],
         }, ct);
+
+        await WaitForCompletionAsync(update, ct);
     }
 }
