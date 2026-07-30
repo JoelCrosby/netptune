@@ -13,7 +13,7 @@ import {
   selectSprintsLoading,
 } from '@core/store/sprints/sprints.selectors';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
-import { LucideSettings2, LucidePlus, LucideTrash2 } from '@lucide/angular';
+import { LucideSettings2, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -44,7 +44,6 @@ type StatusFilter = SprintStatus | null;
     DatePipe,
     FlatButtonComponent,
     TabGroupComponent,
-    LucidePlus,
     DatatableComponent,
     DatatableCellTemplateDirective,
     SprintStatusClassesPipe,
@@ -52,17 +51,12 @@ type StatusFilter = SprintStatus | null;
   ],
   template: `
     <app-page-container [centerPage]="true">
-      <app-page-header title="Sprints">
+      <app-page-header
+        title="Sprints"
+        [count]="count()"
+        [actionTitle]="canCreate() ? 'Create Sprint' : null"
+        (actionClick)="onOpenCreateDialog()">
         <a app-flat-button [routerLink]="['backlog']">Backlog</a>
-        @if (canCreate()) {
-          <button
-            app-flat-button
-            color="primary"
-            (click)="onOpenCreateDialog()">
-            <svg lucidePlus class="h-4 w-4"></svg>
-            New Sprint
-          </button>
-        }
       </app-page-header>
 
       <div class="flex flex-col gap-6">
@@ -145,31 +139,31 @@ export class SprintsViewComponent {
   });
 
   readonly statusTabs = computed((): TabItem[] => {
-    const sprints = this.sprints();
     return [
       {
         label: 'Active',
         value: SprintStatus.active,
-        badge: sprints.filter((s) => s.status === SprintStatus.active).length,
+        badge: this.countForStatus(SprintStatus.active),
       },
       {
         label: 'Planning',
         value: SprintStatus.planning,
-        badge: sprints.filter((s) => s.status === SprintStatus.planning).length,
+        badge: this.countForStatus(SprintStatus.planning),
       },
       {
         label: 'Completed',
         value: SprintStatus.completed,
-        badge: sprints.filter((s) => s.status === SprintStatus.completed)
-          .length,
+        badge: this.countForStatus(SprintStatus.completed),
       },
       {
         label: 'All',
         value: null,
-        badge: sprints.length,
+        badge: this.countForStatus(null),
       },
     ];
   });
+
+  readonly count = computed(() => this.countForStatus(this.selectedStatus()));
 
   private readonly params = computed<Params>(() => {
     const status = this.selectedStatus();
@@ -221,6 +215,14 @@ export class SprintsViewComponent {
 
   onStatusChanged(value: string | number | null) {
     this.selectedStatus.set(value as StatusFilter);
+  }
+
+  private countForStatus(status: StatusFilter) {
+    const sprints = this.sprints();
+
+    if (status === null) return sprints.length;
+
+    return sprints.filter((sprint) => sprint.status === status).length;
   }
 
   daysChip(sprint: SprintViewModel): { label: string; classes: string } | null {

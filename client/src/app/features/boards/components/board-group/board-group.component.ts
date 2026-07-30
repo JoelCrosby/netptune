@@ -105,7 +105,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
               color="primary"
               class="block w-full"
               (click)="onAddTaskClicked()">
-              ADD TASK
+              CREATE TASK
             </button>
           </div>
         } @else {

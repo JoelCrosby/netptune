@@ -37,7 +37,7 @@ export interface BoardGroupDialogData {
     DialogCloseDirective,
   ],
   template: `<app-dialog-title>{{
-      isEdit ? 'Edit Group' : 'Add Group'
+      isEdit ? 'Edit Group' : 'Create Group'
     }}</app-dialog-title>
 
     <div app-dialog-content>
@@ -66,7 +66,7 @@ export interface BoardGroupDialogData {
     <div app-dialog-actions align="end">
       <button app-stroked-button app-dialog-close type="button">Close</button>
       <button app-flat-button type="button" (click)="onSubmit($event)">
-        {{ isEdit ? 'Save' : 'Add Group' }}
+        {{ isEdit ? 'Save' : 'Create Group' }}
       </button>
     </div> `,
 })
