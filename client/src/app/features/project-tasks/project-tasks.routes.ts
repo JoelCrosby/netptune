@@ -10,7 +10,7 @@ export const routes: Routes = [
         (m) => m.ArchiveViewComponent
       ),
     data: {
-      title: 'Archive',
+      title: $localize`:Page title for the archived task list:Archive`,
     },
   },
   {
@@ -20,8 +20,8 @@ export const routes: Routes = [
         (m) => m.TaskDetailPageComponent
       ),
     data: {
-      title: 'Task Detail',
-      back: 'Back to Tasks',
+      title: $localize`:Page title for a single task detail view:Task Detail`,
+      back: $localize`:Link back to the task list from a single task:Back to Tasks`,
     },
   },
   {

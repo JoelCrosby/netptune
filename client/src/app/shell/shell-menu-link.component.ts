@@ -38,9 +38,7 @@ export interface ShellMenuLink {
           type="button"
           class="flex min-w-0 flex-1 cursor-pointer items-center gap-4 overflow-hidden py-2 pl-4 text-left"
           [attr.aria-expanded]="subMenuExpanded()"
-          [attr.aria-label]="
-            (subMenuExpanded() ? 'Collapse ' : 'Expand ') + link.label + ' menu'
-          "
+          [attr.aria-label]="subMenuLabel()"
           (click)="toggleSubMenu()">
           @if (link.icon) {
             <svg
@@ -118,7 +116,9 @@ export class ShellMenuLinkComponent {
     const overview = link.value
       ? [
           {
-            label: link.overviewLabel ?? 'Overview',
+            label:
+              link.overviewLabel ??
+              $localize`:Sub-menu entry linking to the parent section's own page:Overview`,
             value: link.value,
             icon: link.overviewIcon ?? this.lucideLayoutGrid,
           },
@@ -131,6 +131,14 @@ export class ShellMenuLinkComponent {
   readonly expandable = computed(
     () => this.shell.sideNavExpanded() && this.childLinks().length > 0
   );
+
+  readonly subMenuLabel = computed(() => {
+    const section = this.link().label;
+
+    return this.subMenuExpanded()
+      ? $localize`:Accessible label for the control that collapses a sidebar sub-menu. SECTION is the section name, e.g. Sprints:Collapse ${section}:SECTION: menu`
+      : $localize`:Accessible label for the control that expands a sidebar sub-menu. SECTION is the section name, e.g. Sprints:Expand ${section}:SECTION: menu`;
+  });
 
   toggleSubMenu() {
     this.subMenuExpanded.update((expanded) => !expanded);

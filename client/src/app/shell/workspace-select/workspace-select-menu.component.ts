@@ -15,13 +15,16 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
       <app-popover-surface size="compact" enterFrom="top">
         @if (!workspaces().length) {
           <div class="flex h-9.5 items-center px-2 font-[inherit] text-sm">
-            No results found...
+            <span i18n="Shown when no workspace matches the search term"
+              >No results found...</span
+            >
           </div>
         }
         @if (workspaces().length) {
           <input
             appAutofocus
             class="border-border text-foreground bg-card sticky top-0 m-2 appearance-none border-2 p-2 font-[inherit] text-sm focus:outline-none"
+            i18n-placeholder="Placeholder in the workspace search box"
             placeholder="Search.."
             [formField]="searchField()"
             (click)="$event.stopPropagation()"
@@ -44,14 +47,19 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
         </div>
         <div
           class="border-foreground/10 bg-card flex flex-col justify-start border-t p-[.4rem]">
-          <a app-workspace-menu-action [routerLink]="['/workspaces']">
-            Workspaces
-          </a>
+          <a
+            app-workspace-menu-action
+            [routerLink]="['/workspaces']"
+            i18n="Workspace menu action that opens the workspace picker"
+            >Workspaces</a
+          >
           <button
             app-workspace-menu-action
             type="button"
             (click)="logout.emit()">
-            Logout
+            <span i18n="Workspace menu action that signs the user out"
+              >Logout</span
+            >
           </button>
         </div>
       </app-popover-surface>

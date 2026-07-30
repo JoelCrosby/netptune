@@ -73,8 +73,7 @@ const maxSprintLinks = 2;
         }
 
         @if (user(); as user) {
-          <app-shell-menu-link
-            [link]="{ label: 'Profile', value: ['./profile'] }">
+          <app-shell-menu-link [link]="profileLink">
             <app-avatar
               class="app-menu-link-profile"
               [name]="user.displayName"
@@ -100,6 +99,12 @@ export class ShellSidebarComponent {
   private store = inject(Store);
 
   shell = inject(ShellService);
+
+  /** Built here because an object literal in a template cannot be marked with i18n. */
+  readonly profileLink: ShellMenuLink = {
+    label: $localize`:Sidebar link to the signed-in user's profile:Profile`,
+    value: ['./profile'],
+  };
 
   currentSprints = this.store.selectSignal(selectCurrentSprints);
   currentSprintsLoaded = this.store.selectSignal(selectCurrentSprintsLoaded);
@@ -155,7 +160,7 @@ export class ShellSidebarComponent {
 
     if (this.authenticated()) {
       links.push({
-        label: 'Dashboard',
+        label: $localize`:Sidebar link to the workspace dashboard:Dashboard`,
         value: ['./dashboard'],
         icon: LucideLayoutDashboard,
       });
@@ -163,20 +168,24 @@ export class ShellSidebarComponent {
 
     links.push(
       {
-        label: 'Tasks',
+        label: $localize`:Sidebar link to the task list:Tasks`,
         value: ['./tasks'],
         icon: LucideSquareCheckBig,
         children: this.canRestoreTasks()
           ? [
               {
-                label: 'Archive',
+                label: $localize`:Sidebar link to the archived task list:Archive`,
                 value: ['./tasks/archive'],
                 icon: LucideArchive,
               },
             ]
           : undefined,
       },
-      { label: 'Boards', value: ['./boards'], icon: LucideTable2 }
+      {
+        label: $localize`:Sidebar link to the kanban board list:Boards`,
+        value: ['./boards'],
+        icon: LucideTable2,
+      }
     );
 
     if (this.canReadSprints()) {
@@ -189,12 +198,12 @@ export class ShellSidebarComponent {
         }));
 
       links.push({
-        label: 'Sprints',
+        label: $localize`:Sidebar link to the sprint list:Sprints`,
         value: ['./sprints'],
         icon: LucideCalendarRange,
         children: [
           {
-            label: 'Backlog',
+            label: $localize`:Sidebar link to the sprint backlog:Backlog`,
             value: ['./sprints/backlog'],
             icon: LucideLogs,
           },
@@ -205,34 +214,38 @@ export class ShellSidebarComponent {
 
     links.push(
       {
-        label: 'Projects',
+        label: $localize`:Sidebar link to the project list:Projects`,
         value: ['./projects'],
         icon: LucideChartNoAxesColumn,
       },
       {
-        label: 'Roadmap',
+        label: $localize`:Sidebar link to the roadmap timeline:Roadmap`,
         value: ['./roadmap'],
         icon: LucideChartGantt,
       },
       {
-        label: 'Calendar',
+        label: $localize`:Sidebar link to the calendar:Calendar`,
         value: ['./calendar'],
         icon: LucideCalendarDays,
       },
       {
-        label: 'Reports',
+        label: $localize`:Sidebar link to the reporting views:Reports`,
         value: ['./reports'],
         icon: LucideChartSpline,
       }
     );
 
     if (this.canReadMembers()) {
-      links.push({ label: 'Users', value: ['./users'], icon: LucideUsers });
+      links.push({
+        label: $localize`:Sidebar link to the workspace member list:Users`,
+        value: ['./users'],
+        icon: LucideUsers,
+      });
     }
 
     if (this.canReadAutomations()) {
       links.push({
-        label: 'Automations',
+        label: $localize`:Sidebar link to the workspace automation rules:Automations`,
         value: ['./automations'],
         icon: LucideWorkflow,
       });
@@ -248,7 +261,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadWorkspace()) {
       links.push({
-        label: 'General',
+        label: $localize`:Sidebar link to general workspace settings:General`,
         value: ['./settings/workspace/general'],
         icon: LucideLayoutGrid,
       });
@@ -256,7 +269,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadTags()) {
       links.push({
-        label: 'Tags',
+        label: $localize`:Sidebar link to workspace tag settings:Tags`,
         value: ['./settings/workspace/tags'],
         icon: LucideTag,
       });
@@ -264,7 +277,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadStatuses()) {
       links.push({
-        label: 'Statuses',
+        label: $localize`:Sidebar link to workspace task status settings:Statuses`,
         value: ['./settings/workspace/statuses'],
         icon: LucideListChecks,
       });
@@ -272,7 +285,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadRelationTypes()) {
       links.push({
-        label: 'Relations',
+        label: $localize`:Sidebar link to workspace task relation type settings:Relations`,
         value: ['./settings/workspace/relations'],
         icon: LucideGitFork,
       });
@@ -280,7 +293,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadServiceAccounts()) {
       links.push({
-        label: 'Service Accounts',
+        label: $localize`:Sidebar link to workspace service account settings:Service Accounts`,
         value: ['./settings/workspace/service-accounts'],
         icon: LucideBot,
       });
@@ -294,7 +307,7 @@ export class ShellSidebarComponent {
 
     if (this.authenticated()) {
       links.push({
-        label: 'Notifications',
+        label: $localize`:Sidebar link to the notification list:Notifications`,
         value: ['./notifications'],
         icon: LucideBell,
       });
@@ -302,7 +315,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadStorage()) {
       links.push({
-        label: 'Storage',
+        label: $localize`:Sidebar link to uploaded file storage:Storage`,
         value: ['./storage'],
         icon: LucideHardDrive,
       });
@@ -310,7 +323,7 @@ export class ShellSidebarComponent {
 
     if (this.canReadAudit()) {
       links.push({
-        label: 'Audit Log',
+        label: $localize`:Sidebar link to the workspace audit log:Audit Log`,
         value: ['./audit'],
         icon: LucideShield,
       });
@@ -321,7 +334,7 @@ export class ShellSidebarComponent {
 
     if (defaultWorkspaceSettingsLink) {
       links.push({
-        label: 'Workspace',
+        label: $localize`:Sidebar link to workspace settings:Workspace`,
         value: defaultWorkspaceSettingsLink.value,
         icon: LucideSettings2,
         overviewLabel: defaultWorkspaceSettingsLink.label,
@@ -332,7 +345,7 @@ export class ShellSidebarComponent {
 
     if (this.authenticated()) {
       links.push({
-        label: 'Settings',
+        label: $localize`:Sidebar link to personal settings:Settings`,
         value: ['./settings/personal'],
         icon: LucideSettings,
       });

@@ -13,7 +13,7 @@ import { ShellService } from './shell.service';
       class="hover:bg-side-bar-active/60 transition:background-color flex w-full cursor-pointer items-center justify-center gap-4 overflow-hidden rounded px-4 py-2 text-sm font-medium text-white/70 select-none"
       [class.justify-start]="shell.sideNavExpanded()"
       (click)="shell.toggleSidebar()"
-      [appTooltip]="shell.sideNavExpanded() ? '' : 'Expand'"
+      [appTooltip]="shell.sideNavExpanded() ? '' : expandTooltip"
       appTooltipPosition="right"
       role="button">
       @if (shell.sideNavExpanded()) {
@@ -22,7 +22,7 @@ import { ShellService } from './shell.service';
         <svg lucidePanelLeftOpen class="h-5 w-5"></svg>
       }
       @if (shell.sideNavExpanded()) {
-        <p>Collapse</p>
+        <p i18n="Label on the control that collapses the sidebar">Collapse</p>
       }
     </div>
   `,
@@ -30,4 +30,6 @@ import { ShellService } from './shell.service';
 })
 export class ShellSidebarCollapseComponent {
   shell = inject(ShellService);
+
+  readonly expandTooltip = $localize`:Tooltip on the control that expands the collapsed sidebar:Expand`;
 }

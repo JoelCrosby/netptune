@@ -8,6 +8,8 @@ export const routes: Routes = [
         (m) => m.NotificationsViewComponent
       ),
     pathMatch: 'full',
-    data: { title: 'Notifications' },
+    data: {
+      title: $localize`:Page title for the notification list:Notifications`,
+    },
   },
 ];

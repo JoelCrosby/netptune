@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
   EnvironmentProviders,
@@ -23,8 +24,9 @@ export function provideAuthRefresh(): EnvironmentProviders {
   return provideAppInitializer(() => {
     const authService = inject(AuthService);
     const store = inject(Store);
+    const location = inject(Location);
 
-    if (window.location.pathname === '/auth/auth-provider-login') {
+    if (location.path().split('?')[0] === '/auth/auth-provider-login') {
       return firstValueFrom(of(null));
     }
 

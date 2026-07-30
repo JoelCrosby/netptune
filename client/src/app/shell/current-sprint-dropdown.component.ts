@@ -69,7 +69,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
         <app-dropdown-menu #sprintMenu xPosition="before">
           <div class="text-muted px-3 py-2 text-xs font-semibold uppercase">
-            Current sprint
+            <span i18n="Heading above the list of currently active sprints"
+              >Current sprint</span
+            >
           </div>
 
           @for (sprint of currentSprints(); track sprint.id) {
@@ -103,9 +105,17 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
               type="button"
               (click)="onSprintOpened(selectedSprint.id, sprintMenu)">
               <svg lucideExternalLink class="h-4 w-4 shrink-0"></svg>
-              <span class="max-w-64 truncate">
-                Open {{ selectedSprint.name }}
-              </span>
+              <span
+                class="max-w-64 truncate"
+                i18n="
+                  Menu item that opens the sprint currently being filtered on.
+                  SPRINT_NAME is the sprint's name
+                "
+                >Open
+                {{
+                  selectedSprint.name // i18n(ph="SPRINT_NAME")
+                }}</span
+              >
             </button>
 
             <button
@@ -113,7 +123,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
               type="button"
               (click)="onSprintFilterRemoved(sprintMenu)">
               <svg lucideFilterX class="h-4 w-4 shrink-0"></svg>
-              Remove sprint filter
+              <span i18n="Menu item that clears the active sprint filter"
+                >Remove sprint filter</span
+              >
             </button>
           }
 
@@ -123,7 +135,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
             app-menu-item
             type="button"
             (click)="onSprintsSelected(sprintMenu)">
-            View all sprints
+            <span i18n="Menu item that navigates to the full sprint list"
+              >View all sprints</span
+            >
           </button>
         </app-dropdown-menu>
       } @else {
@@ -134,7 +148,12 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           class="tems-center mr-2 flex h-4 justify-center"
           [routerLink]="['./sprints']">
           <svg lucideCalendarFold class="w-4"></svg>
-          Start Sprint
+          <span
+            i18n="
+              Navbar link shown when no sprint is active, opens the sprint list
+            "
+            >Start Sprint</span
+          >
         </a>
       }
     }
@@ -173,8 +192,15 @@ export class CurrentSprintDropdownComponent {
       return selectedSprint.name;
     }
 
-    const sprints = this.currentSprints();
-    return `${sprints.length} active sprints`;
+    const count = this.currentSprints().length;
+    const isSingle = count === 1;
+
+    // $localize does not evaluate ICU, so this is a ternary rather than a plural
+    // expression. fr/de/es share English's one/other split; a locale with more
+    // plural categories (ru, pl, ar) means moving this into a template ICU.
+    return isSingle
+      ? $localize`:Sprint dropdown label when exactly one sprint is active:1 active sprint`
+      : $localize`:Sprint dropdown label showing how many sprints are active. COUNT is never 1:${count}:COUNT: active sprints`;
   });
 
   constructor() {

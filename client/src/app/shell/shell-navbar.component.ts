@@ -35,9 +35,15 @@ import { CommandPaletteButtonComponent } from './command-palette/command-palette
           <app-notification-bell />
           <app-profile-menu />
         } @else {
-          <a app-button-link variant="filled" routerLink="/auth/login">
-            Sign in
-          </a>
+          <a
+            app-button-link
+            variant="filled"
+            routerLink="/auth/login"
+            i18n="
+              Navbar button that takes a signed-out visitor to the login page
+            "
+            >Sign in</a
+          >
         }
       </div>
     </div>

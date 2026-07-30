@@ -5,6 +5,20 @@
   "projects": {
     "netptune": {
       "projectType": "application",
+      "i18n": {
+        "sourceLocale": "en-GB",
+        "locales": {
+          "fr": {
+            "translation": "src/locale/messages.fr.xlf"
+          },
+          "de": {
+            "translation": "src/locale/messages.de.xlf"
+          },
+          "es": {
+            "translation": "src/locale/messages.es.xlf"
+          }
+        }
+      },
       "schematics": {
         "@schematics/angular:component": {
           "style": "css"
@@ -34,10 +48,16 @@
             ],
             "styles": [
               "src/styles.css"
+            ],
+            "polyfills": [
+              "@angular/localize/init"
             ]
           },
           "configurations": {
             "production": {
+              "localize": true,
+              "i18nMissingTranslation": "warning",
+              "i18nDuplicateTranslation": "error",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -62,6 +82,15 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "development-fr": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": [
+                "fr"
+              ],
+              "i18nMissingTranslation": "warning"
             }
           },
           "defaultConfiguration": "production"
@@ -79,6 +108,9 @@
             },
             "development": {
               "buildTarget": "netptune:build:development"
+            },
+            "development-fr": {
+              "buildTarget": "netptune:build:development-fr"
             }
           },
           "defaultConfiguration": "development"
@@ -86,7 +118,11 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "netptune:build"
+            "buildTarget": "netptune:build:development",
+            "format": "xlf2",
+            "outputPath": "src/locale",
+            "outFile": "messages.xlf",
+            "i18nDuplicateTranslation": "error"
           }
         },
         "lint": {

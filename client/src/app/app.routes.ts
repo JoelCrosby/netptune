@@ -20,7 +20,7 @@ export const routes: Routes = [
     path: 'workspaces',
     loadChildren: () => import('./features/workspaces/workspaces.routes').then((m) => m.routes),
     canActivate: [authGuard],
-    data: { title: 'Workspaces', transparentSidebar: true, },
+    data: { title: $localize`:Page title for the workspace picker:Workspaces`, transparentSidebar: true, },
   },
   {
     path: ':workspace',

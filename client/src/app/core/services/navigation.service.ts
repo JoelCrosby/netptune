@@ -45,7 +45,9 @@ export class NavigationService {
       )
       .subscribe((title: string) => {
         if (title) {
-          this.title.setTitle(`Netptune - ${title}`);
+          this.title.setTitle(
+            $localize`:Browser tab title. PAGE is the name of the current page:Netptune - ${title}:PAGE:`
+          );
         }
       });
   }

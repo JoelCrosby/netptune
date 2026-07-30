@@ -1,9 +1,11 @@
-import { Injectable, signal } from '@angular/core';
+import { Location } from '@angular/common';
+import { inject, Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WorkspaceService {
+  private readonly location = inject(Location);
   private readonly nonWorkspaceRoutes = new Set(['auth', 'workspaces']);
 
   currentWorkspace = signal<string | null>(null);
@@ -13,7 +15,7 @@ export class WorkspaceService {
   }
 
   getWorkspaceRoute(): string | null {
-    const url = window.location.pathname;
+    const url = this.location.path().split('?')[0];
     const parts = url.split('/').filter((p) => !!p);
 
     if (parts.length >= 1) {
@@ -24,10 +26,6 @@ export class WorkspaceService {
       }
     }
 
-    if (this.currentWorkspace()) {
-      return this.currentWorkspace();
-    }
-
-    return null;
+    return this.currentWorkspace();
   }
 }

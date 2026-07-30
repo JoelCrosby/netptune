@@ -31,9 +31,9 @@ import { CommandItemComponent } from './command-item.component';
 import { RecentItemComponent } from './recent-item.component';
 import { SearchResultItemComponent } from './search-result-item.component';
 
-const SEARCH_HINT = 'Type to search or use > for commands.';
-const SEARCH_UNAVAILABLE = 'Search is unavailable right now.';
-const NO_RESULTS = 'No results found.';
+const SEARCH_HINT = $localize`:Command palette hint shown before the user types. The > character is a literal prefix and must not be translated:Type to search or use > for commands.`;
+const SEARCH_UNAVAILABLE = $localize`:Shown when the command palette search backend cannot be reached:Search is unavailable right now.`;
+const NO_RESULTS = $localize`:Shown when a command palette search matches nothing:No results found.`;
 
 interface PaletteEmptyState {
   hasItems: boolean;
@@ -63,6 +63,7 @@ type PaletteItem =
         class="bg-board-group text-popover-foreground border-border flex w-full flex-col overflow-hidden rounded-md border shadow-md"
         role="dialog"
         aria-modal="true"
+        i18n-aria-label="Accessible name of the command palette dialog"
         aria-label="Command Palette">
         <div class="border-border flex items-center border-b px-3">
           <svg lucideSearch class="mr-2 h-4 w-4 shrink-0 opacity-50"></svg>
@@ -92,6 +93,7 @@ type PaletteItem =
         <div
           id="command-palette-options"
           role="listbox"
+          i18n-aria-label="Accessible name of the command palette result list"
           aria-label="Results"
           class="max-h-120 overflow-x-hidden overflow-y-auto p-1">
           @if (emptyMessage(); as message) {
@@ -99,11 +101,20 @@ type PaletteItem =
           }
 
           @if (showRecentGroup()) {
-            <div class="overflow-hidden p-1" role="group" aria-label="Recent">
+            <div
+              class="overflow-hidden p-1"
+              role="group"
+              i18n-aria-label="Accessible name of the recently-visited group"
+              aria-label="Recent">
               <p
                 class="text-muted px-2 py-1.5 text-xs font-medium"
                 aria-hidden="true">
-                Recent
+                <span
+                  i18n="
+                    Heading above recently-visited items in the command palette
+                  "
+                  >Recent</span
+                >
               </p>
               @for (item of recentItems(); track item.url; let idx = $index) {
                 <app-recent-item
@@ -118,11 +129,18 @@ type PaletteItem =
           }
 
           @if (commandItems().length > 0 && !searchOnlyMode()) {
-            <div class="overflow-hidden p-1" role="group" aria-label="Actions">
+            <div
+              class="overflow-hidden p-1"
+              role="group"
+              i18n-aria-label="Accessible name of the available-commands group"
+              aria-label="Actions">
               <p
                 class="text-muted px-2 py-1.5 text-xs font-medium"
                 aria-hidden="true">
-                Actions
+                <span
+                  i18n="Heading above runnable commands in the command palette"
+                  >Actions</span
+                >
               </p>
               @for (cmd of commandItems(); track cmd.id; let idx = $index) {
                 <app-command-item
@@ -139,11 +157,17 @@ type PaletteItem =
             @if (commandItems().length > 0 && !searchOnlyMode()) {
               <div class="bg-border -mx-1 my-1 h-px" aria-hidden="true"></div>
             }
-            <div class="overflow-hidden p-1" role="group" aria-label="Results">
+            <div
+              class="overflow-hidden p-1"
+              role="group"
+              i18n-aria-label="Accessible name of the search-results group"
+              aria-label="Results">
               <p
                 class="text-muted px-2 py-1.5 text-xs font-medium"
                 aria-hidden="true">
-                Results
+                <span i18n="Heading above search results in the command palette"
+                  >Results</span
+                >
               </p>
               @for (
                 result of searchResultItems();
@@ -191,10 +215,13 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
 
   inputPlaceholder = computed(() => {
     const q = this.queryValue();
-    if (q.startsWith('>')) return 'Search commands…';
-    if (q.startsWith('#')) return 'Search tasks…';
-    if (q.startsWith('@')) return 'Search projects…';
-    return 'Search or type > for commands…';
+    if (q.startsWith('>'))
+      return $localize`:Command palette input placeholder while in command mode:Search commands…`;
+    if (q.startsWith('#'))
+      return $localize`:Command palette input placeholder while in task-search mode:Search tasks…`;
+    if (q.startsWith('@'))
+      return $localize`:Command palette input placeholder while in project-search mode:Search projects…`;
+    return $localize`:Default command palette input placeholder. The > character is a literal prefix and must not be translated:Search or type > for commands…`;
   });
 
   recentItems = computed(() =>
@@ -255,7 +282,9 @@ export class CommandPaletteComponent implements AfterViewInit, OnDestroy {
     }
 
     if (this.search.isSearching()) {
-      return this.delayedSearching() ? 'Searching…' : '';
+      return this.delayedSearching()
+        ? $localize`:Shown while a command palette search is in flight:Searching…`
+        : '';
     }
 
     if (this.search.error()) {

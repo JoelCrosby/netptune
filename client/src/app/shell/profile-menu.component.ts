@@ -53,7 +53,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       <app-dropdown-menu #profileMenu xPosition="before">
         <div class="min-w-56 px-3 py-2">
           <div class="max-w-48 truncate text-sm font-semibold">
-            {{ user.displayName || 'Profile' }}
+            {{ user.displayName || profileFallbackName }}
           </div>
           @if (user.email) {
             <div class="text-muted max-w-48 truncate text-xs">
@@ -69,7 +69,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           type="button"
           (click)="navigateToProfile(profileMenu)">
           <svg lucideUser class="h-4 w-4 shrink-0"></svg>
-          Profile
+          <span i18n="Profile menu item that opens the signed-in user's profile"
+            >Profile</span
+          >
         </button>
 
         @if (canReadWorkspace()) {
@@ -78,7 +80,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
             type="button"
             (click)="navigateToWorkspaceSettings(profileMenu)">
             <svg lucideSettings class="h-4 w-4 shrink-0"></svg>
-            Workspace settings
+            <span i18n="Profile menu item that opens workspace settings"
+              >Workspace settings</span
+            >
           </button>
         }
 
@@ -95,7 +99,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
         <button app-menu-item type="button" (click)="logOut(profileMenu)">
           <svg lucideLogOut class="h-4 w-4 shrink-0"></svg>
-          Logout
+          <span i18n="Profile menu item that signs the user out">Logout</span>
         </button>
       </app-dropdown-menu>
     }
@@ -113,15 +117,22 @@ export class ProfileMenuComponent {
     selectHasPermission(netptunePermissions.workspace.read)
   );
 
+  readonly profileFallbackName = $localize`:profile menu heading|Heading of the profile menu when the account has no display name:Profile`;
+
   readonly isDarkTheme = computed(() => this.effectiveTheme() === 'dark');
-  readonly themeActionLabel = computed(() =>
-    this.isDarkTheme() ? 'Use light theme' : 'Use dark theme'
-  );
+  readonly themeActionLabel = computed(() => {
+    return this.isDarkTheme()
+      ? $localize`:Profile menu item that switches from the dark theme to the light one:Use light theme`
+      : $localize`:Profile menu item that switches from the light theme to the dark one:Use dark theme`;
+  });
   readonly profileMenuLabel = computed(() => {
     const user = this.user();
-    const name = user?.displayName || user?.email || 'user';
+    const name =
+      user?.displayName ||
+      user?.email ||
+      $localize`:Stands in for the user's name in the profile menu label when the account has neither a display name nor an e-mail address:user`;
 
-    return `Open ${name} menu`;
+    return $localize`:Accessible label for the button that opens the profile menu. USER_NAME is the display name, e-mail address, or a generic fallback:Open ${name}:USER_NAME: menu`;
   });
 
   navigateToProfile(menu: DropdownMenuComponent) {

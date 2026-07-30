@@ -21,7 +21,7 @@
     "noUnusedParameters": true,
     "target": "ES2022",
     "module": "ES2022",
-    "types": ["turnstile-types"],
+    "types": ["turnstile-types", "@angular/localize"],
     "paths": {
       "@app/*": ["./src/app/*"],
       "@core/*": ["./src/app/core/*"],

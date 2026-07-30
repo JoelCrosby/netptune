@@ -17,7 +17,7 @@ export const routes: Routes = [
       ),
     runGuardsAndResolvers: 'always',
     data: {
-      back: 'Back to Boards',
+      back: $localize`:Link back to the board list from a single board:Back to Boards`,
     },
   },
   {

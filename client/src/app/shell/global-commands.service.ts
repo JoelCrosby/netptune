@@ -48,7 +48,7 @@ export class GlobalCommandsService implements OnDestroy {
     this.registry.register([
       {
         id: 'nav.projects',
-        label: 'Go to Projects',
+        label: $localize`:Command palette action that navigates to the project list:Go to Projects`,
         group: 'navigation',
         icon: 'folder-open',
         shortcut: ['g', 'p'],
@@ -57,7 +57,7 @@ export class GlobalCommandsService implements OnDestroy {
       },
       {
         id: 'nav.tasks',
-        label: 'Go to Tasks',
+        label: $localize`:Command palette action that navigates to the task list:Go to Tasks`,
         group: 'navigation',
         icon: 'hash',
         shortcut: ['g', 't'],
@@ -66,7 +66,7 @@ export class GlobalCommandsService implements OnDestroy {
       },
       {
         id: 'nav.boards',
-        label: 'Go to Boards',
+        label: $localize`:Command palette action that navigates to the board list:Go to Boards`,
         group: 'navigation',
         icon: 'kanban',
         shortcut: ['g', 'b'],
@@ -75,7 +75,7 @@ export class GlobalCommandsService implements OnDestroy {
       },
       {
         id: 'nav.sprints',
-        label: 'Go to Sprints',
+        label: $localize`:Command palette action that navigates to the sprint list:Go to Sprints`,
         group: 'navigation',
         icon: 'layers',
         shortcut: ['g', 's'],
@@ -92,7 +92,7 @@ export class GlobalCommandsService implements OnDestroy {
           this.registry.register([
             {
               id: 'nav.dashboard',
-              label: 'Go to Dashboard',
+              label: $localize`:Command palette action that navigates to the dashboard:Go to Dashboard`,
               group: 'navigation',
               icon: 'layout-dashboard',
               shortcut: ['g', 'd'],
@@ -101,7 +101,7 @@ export class GlobalCommandsService implements OnDestroy {
             },
             {
               id: 'nav.users',
-              label: 'Go to Users',
+              label: $localize`:Command palette action that navigates to the member list:Go to Users`,
               group: 'navigation',
               icon: 'users',
               keywords: ['users', 'members', 'navigate'],
@@ -109,7 +109,7 @@ export class GlobalCommandsService implements OnDestroy {
             },
             {
               id: 'nav.settings',
-              label: 'Go to Settings',
+              label: $localize`:Command palette action that navigates to settings:Go to Settings`,
               group: 'settings',
               icon: 'settings',
               keywords: ['settings', 'preferences'],
@@ -142,7 +142,7 @@ export class GlobalCommandsService implements OnDestroy {
           this.registry.register([
             {
               id: 'nav.automations',
-              label: 'Go to Automations',
+              label: $localize`:Command palette action that navigates to the automation list:Go to Automations`,
               group: 'navigation',
               icon: 'workflow',
               shortcut: ['g', 'a'],
@@ -168,7 +168,7 @@ export class GlobalCommandsService implements OnDestroy {
           this.registry.register([
             {
               id: 'nav.storage',
-              label: 'Go to Storage',
+              label: $localize`:Command palette action that navigates to file storage:Go to Storage`,
               group: 'navigation',
               icon: 'hard-drive',
               keywords: ['storage', 'files', 'uploads', 'navigate'],
