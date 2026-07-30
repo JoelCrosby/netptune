@@ -172,7 +172,7 @@ export class CreateTaskDialogComponent {
 
   taskFormModel = signal<CreateTaskForm>({
     name: '',
-    description: $localize`:Explanatory text:`,
+    description: '',
   });
 
   taskForm = form(this.taskFormModel, (schema) => {

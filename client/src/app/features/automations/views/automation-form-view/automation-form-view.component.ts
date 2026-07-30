@@ -493,7 +493,7 @@ export class AutomationFormViewComponent {
     return {
       clientId: this.nextActionId++,
       type: AutomationActionType.notifyTaskAssignees,
-      message: $localize`:Body of a dialog or validation message:`,
+      message: '',
       recipients: [AutomationNotificationRecipient.assignees],
       recipientUserIds: [],
       recipientRoles: [],

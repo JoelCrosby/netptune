@@ -140,7 +140,7 @@ export class ProjectDialogComponent {
   projectFormModel = signal({
     name: '',
     repositoryUrl: '',
-    description: $localize`:Explanatory text:`,
+    description: '',
     workspace: '',
     color: '',
     templateKey: 'software',

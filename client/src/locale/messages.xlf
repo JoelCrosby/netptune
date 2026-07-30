@@ -2249,19 +2249,6 @@
         <source>Save Task</source>
       </segment>
     </unit>
-    <unit id="4416290763660062288">
-      <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:175</note>
-        <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:143</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:496</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:466</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:108</note>
-        <note category="description">Explanatory text</note>
-      </notes>
-      <segment>
-        <source/>
-      </segment>
-    </unit>
     <unit id="8547576940529836596">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:180</note>

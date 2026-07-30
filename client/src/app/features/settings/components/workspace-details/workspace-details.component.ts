@@ -105,7 +105,7 @@ export class WorkspaceDetailsComponent {
   detailsFormModel = signal({
     name: '',
     identifier: '',
-    description: $localize`:Explanatory text:`,
+    description: '',
     color: '',
     timeZone: 'UTC',
   });

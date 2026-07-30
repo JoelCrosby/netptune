@@ -463,7 +463,7 @@ export class CreateServiceAccountDialogComponent {
 
   readonly accountFormModel = signal({
     name: '',
-    description: $localize`:Explanatory text:`,
+    description: '',
     createCredential: true,
     credentialName: 'Default credential',
   });
