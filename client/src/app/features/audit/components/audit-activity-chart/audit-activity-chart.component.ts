@@ -1,6 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { Store } from '@ngrx/store';
 import { AuditStore } from '@audit/audit-state.service';
+import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 
 @Component({
   selector: 'app-audit-activity-chart',
@@ -22,24 +24,27 @@ import { AuditStore } from '@audit/audit-state.service';
         [fill]="fill"
         [dataLabels]="dataLabels"
         [grid]="grid"
-        [tooltip]="tooltip" />
+        [tooltip]="tooltip()" />
     </div>
   `,
 })
 export class AuditActivityChartComponent {
-  private store = inject(AuditStore);
+  private auditStore = inject(AuditStore);
+  private store = inject(Store);
+
+  private effectiveTheme = this.store.selectSignal(selectEffectiveTheme);
 
   series = computed(() => [
     {
       name: 'Events',
-      data: this.store
+      data: this.auditStore
         .summary()
         .map((p) => [new Date(p.date).getTime(), p.count]),
     },
   ]);
 
   xaxis = computed(() => {
-    const points = this.store.summary();
+    const points = this.auditStore.summary();
     return {
       type: 'datetime' as const,
       min: points[0] ? new Date(points[0].date).getTime() : undefined,
@@ -47,7 +52,7 @@ export class AuditActivityChartComponent {
         ? new Date(points[points.length - 1].date).getTime()
         : undefined,
       labels: {
-        style: { colors: 'hsl(var(--foreground) / 0.5)', fontSize: '11px' },
+        style: { colors: 'rgba(var(--foreground-rgb), 0.5)', fontSize: '11px' },
         datetimeUTC: false,
       },
       axisBorder: { show: false },
@@ -69,7 +74,7 @@ export class AuditActivityChartComponent {
     min: 0,
     tickAmount: 4,
     labels: {
-      style: { colors: 'hsl(var(--foreground) / 0.5)', fontSize: '11px' },
+      style: { colors: 'rgba(var(--foreground-rgb), 0.5)', fontSize: '11px' },
       formatter: (v: number) => Math.floor(v).toString(),
     },
   };
@@ -89,13 +94,15 @@ export class AuditActivityChartComponent {
   readonly dataLabels = { enabled: false };
 
   readonly grid = {
-    borderColor: 'hsl(var(--border))',
+    borderColor: 'var(--border)',
     strokeDashArray: 4,
     xaxis: { lines: { show: false } },
   };
 
-  readonly tooltip = {
-    x: { format: 'dd MMM yyyy' },
-    theme: 'dark',
-  };
+  readonly tooltip = computed(() => {
+    return {
+      x: { format: 'dd MMM yyyy' },
+      theme: this.effectiveTheme(),
+    };
+  });
 }

@@ -34,7 +34,11 @@ import { BurndownPoint } from '@core/models/reporting';
       </div>
       <span
         class="shrink-0 text-xs font-semibold"
-        [class]="onTrack() ? 'text-green-600' : 'text-amber-600'">
+        [class]="
+          onTrack()
+            ? 'text-green-600 dark:text-green-400'
+            : 'text-amber-600 dark:text-amber-400'
+        ">
         {{ caption() }}
       </span>
     </div>

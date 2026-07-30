@@ -26,7 +26,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
       </button>
     </app-chip-listbox>
     <app-dropdown-menu #sprintsMenu>
-      <small class="block px-3 py-1 text-xs text-neutral-500">
+      <small class="text-muted block px-3 py-1 text-xs">
         <span i18n="Heading above the sprint options">Change Sprint</span>
       </small>
       @if (value()) {

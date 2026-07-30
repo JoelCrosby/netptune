@@ -9,7 +9,7 @@
   border-radius: 4px;
   margin-bottom: 1rem;
   --fill-background: transparent;
-  background-color: var(fill-background);
+  background-color: var(--fill-background);
   color: var(--foreground);
 }
 
@@ -80,7 +80,7 @@
 }
 
 .ce-popover__item:hover:not(.ce-popover__item--no-visible-hover) {
-  background-color: var(--hover) -background-color;
+  background-color: var(--hover);
 }
 
 .ce-popover__item--focused:not(.ce-popover__item--no-visible-focus) {
@@ -100,7 +100,7 @@
 }
 
 .cdx-search-field {
-  background-color: var(--hover) -background-color;
+  background-color: var(--hover);
   border: 0;
 }
 

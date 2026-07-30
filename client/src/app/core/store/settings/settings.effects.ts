@@ -11,6 +11,7 @@ const themes = new Set(['light', 'dark']);
 const INIT = of('app-init-effect-trigger');
 
 export const SETTINGS_KEY = 'SETTINGS';
+export const THEME_STORAGE_KEY = 'Netptune-settings.theme';
 
 @Injectable()
 export class SettingsEffects {
@@ -30,6 +31,16 @@ export class SettingsEffects {
             classList.remove(...toRemove);
           }
           classList.add(effectiveTheme);
+
+          try {
+            localStorage.setItem(
+              THEME_STORAGE_KEY,
+              JSON.stringify(effectiveTheme)
+            );
+          } catch {
+            // Storage can be unavailable (private mode, quota). The theme is
+            // already applied; only the pre-paint cache is lost.
+          }
         })
       );
     },

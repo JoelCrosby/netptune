@@ -13,6 +13,12 @@
   --border-radius-small: 3px;
 
   --editor-code-color: var(--primary);
+
+  --muted-foreground: var(--muted);
+  --destructive: var(--warn);
+  --popover-foreground: var(--foreground);
+  --accent-foreground: var(--primary);
+  --ring: var(--primary);
 }
 
 
@@ -45,6 +51,19 @@
   --color-app-bar: var(--app-bar);
   --color-status-bar: var(--status-bar);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+
+  /* Card-level elevation tracks the theme instead of Tailwind's fixed black.
+     Overlay scales (lg and up) keep the framework defaults. */
+  --shadow-xs: 0 1px 2px 0 var(--card-shadow);
+  --shadow-sm:
+    0 1px 3px 0 var(--card-shadow), 0 1px 2px -1px var(--card-shadow);
+  --shadow-md:
+    0 4px 6px -1px var(--card-shadow), 0 2px 4px -2px var(--card-shadow);
 
   --radius: var(--border-radius);
   --radius-sm: var(--border-radius-small);
@@ -64,20 +83,21 @@
   }
 }
 
+:root,
 .light {
   color-scheme: light;
 
-  --background-rgb: 255, 255, 255;
+  --background-rgb: 250, 250, 251;
   --background: rgba(var(--background-rgb));
   --foreground-rgb: 0, 0, 0;
   --foreground: rgba(var(--foreground-rgb), 0.87);
 
-  --muted: rgba(var(--foreground-rgb), 0.76);
+  --muted: rgba(var(--foreground-rgb), 0.6);
 
   --form-field-background: rgba(255, 255, 255, 1);
 
-  --secondary-background: rgba(240, 240, 240, 1);
-  --secondary-background-hover: rgba(232, 232, 232, 1);
+  --secondary-background: rgba(235, 235, 239, 1);
+  --secondary-background-hover: rgba(227, 227, 232, 1);
 
   --dialog-background: rgba(255, 255, 255);
 
@@ -100,30 +120,27 @@
   --side-bar-active: rgba(var(--side-bar-active-rgb));
   --side-bar-active-foreground: rgba(255, 255, 255, 1);
 
-  --board-group-rgb: 248, 248, 248;
+  --board-group-rgb: 242, 242, 246;
   --board-group: rgba(var(--board-group-rgb));
 
-  --border: rgb(226, 226, 226);
+  --border: rgb(214, 214, 219);
   --status-bar: #fff;
   --app-bar: #fff;
   --hover: rgba(0, 0, 0, .06);
 
-  --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
-  --toolbar-btn-background-hover: rgba(var(--board-group-rgb), .8);
+  --tooltip-bg: #000;
 
   --card: #fff;
-  --card-header: #fafafa;
+  --card-header: rgb(244, 244, 246);
   --board-group-card: #fff;
   --card-warn: #ffe5e5;
   --card-warn-hover: #fad0d0;
   --card-selected: var(--primary);
   --card-shadow: rgba(0, 0, 0, .1);
 
-  --dialog: #fff;
-
   --editor-code-background: #fbfbfb;
   --editor-link-border: #c9c9cc7a;
-  --editor-link-background-color: #fff;
+  --editor-link-background: #fff;
 }
 
 .dark {
@@ -150,8 +167,6 @@
   --primary-foreground: rgba(0, 0, 0, 0.87);
   --primary-selected: rgba(var(--primary-rgb), 0.6);
   --primary-selected-hover: rgba(var(--primary-rgb), 0.8);
-  --primary-hover-rgb: 220, 207, 242;
-  --primary-hover: rgba(var(--primary-hover-rgb));
 
   --warn-rgb: 255, 82, 82;
   --warn: rgba(var(--warn-rgb));
@@ -164,13 +179,15 @@
   --side-bar-active: rgba(var(--side-bar-active-rgb));
   --side-bar-active-foreground: rgba(255, 255, 255, 1);
 
-  --board-group-rgb: 10 10 10;
+  --board-group-rgb: 10, 10, 10;
   --board-group: rgba(var(--board-group-rgb));
 
   --border: rgba(41, 41, 41, 1);
   --status-bar: #000;
   --app-bar: #272727;
   --hover: rgba(255, 255, 255, .06);
+
+  --tooltip-bg: #fff;
 
   --card: rgb(10, 10, 10);
   --card-header: rgb(4, 4, 4);
@@ -182,9 +199,7 @@
 
   --editor-code-background: #060606;
   --editor-link-border: #3e3e3e;
-  --editor-link-background-color: #2f2f2f;
-
-  --toolbar-btn-background: rgba(var(--board-group-rgb), .8);
+  --editor-link-background: #2f2f2f;
 }
 
 html {

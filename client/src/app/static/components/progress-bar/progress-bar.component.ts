@@ -72,7 +72,7 @@ export type ProgressBarColor = 'primary' | 'warn' | 'destructive';
     <div
       class="relative h-full w-full overflow-hidden"
       [class.rounded-full]="rounded()"
-      [style]="{ '--progress-bar-track': 'oklch(var(--primary) / 0.3)' }"
+      [style]="{ '--progress-bar-track': 'rgba(var(--primary-rgb), 0.3)' }"
       role="progressbar"
       [attr.aria-valuenow]="mode() !== 'indeterminate' ? clampedValue() : null"
       aria-valuemin="0"

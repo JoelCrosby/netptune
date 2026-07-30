@@ -20,17 +20,26 @@ export function sprintDaysChip(
   if (diff < 0) {
     return {
       label: `${Math.abs(diff)}d overdue`,
-      classes: 'bg-red-100 text-red-700',
+      classes: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300',
     };
   }
   if (diff === 0) {
     return {
       label: $localize`:Chip shown when a sprint ends today:Due today`,
-      classes: 'bg-orange-100 text-orange-700',
+      classes:
+        'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300',
     };
   }
   if (diff <= 3) {
-    return { label: `${diff}d left`, classes: 'bg-orange-100 text-orange-700' };
+    return {
+      label: `${diff}d left`,
+      classes:
+        'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300',
+    };
   }
-  return { label: `${diff}d left`, classes: 'bg-neutral-100 text-neutral-600' };
+  return {
+    label: `${diff}d left`,
+    classes:
+      'bg-neutral-100 text-neutral-600 dark:bg-neutral-500/15 dark:text-neutral-300',
+  };
 }

@@ -7,6 +7,24 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <script>
+      (function () {
+        var theme = 'light';
+
+        try {
+          var cached = JSON.parse(
+            localStorage.getItem('Netptune-settings.theme')
+          );
+          if (cached === 'light' || cached === 'dark') {
+            theme = cached;
+          }
+        } catch (e) {
+        }
+
+        document.documentElement.classList.add(theme);
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       rel="preconnect"

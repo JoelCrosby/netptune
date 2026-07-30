@@ -29,7 +29,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
           class="h-[180px] w-[180px] rounded-full object-cover" />
       } @else {
         <div
-          class="flex h-[180px] w-[180px] items-center justify-center rounded-full bg-[var(--background-two)] text-[var(--text-two)]">
+          class="bg-secondary-background text-muted flex h-[180px] w-[180px] items-center justify-center rounded-full">
           <span i18n="Shown before a profile picture has been chosen">
             No image selected
           </span>
