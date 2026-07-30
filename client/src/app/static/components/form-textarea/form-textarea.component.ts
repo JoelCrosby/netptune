@@ -21,59 +21,61 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     FormControlPrefixDirective,
     FormErrorComponent,
   ],
-  template: `<div
-    class="nept-form-control mb-[1.4rem] w-[inherit]"
-    [class.mb-0!]="noMargin()">
-    @if (label()) {
-      <label [for]="name()" appFormLabel>
-        {{ label() }}
-      </label>
-    }
-
-    <app-form-control-field
-      [invalid]="touched() && invalid()"
-      [active]="!!value() && touched()">
-      @if (prefix()) {
-        <div appFormPrefix>{{ prefix() }}</div>
+  template: `
+    <div
+      class="nept-form-control mb-[1.4rem] w-[inherit]"
+      [class.mb-0!]="noMargin()">
+      @if (label()) {
+        <label [for]="name()" appFormLabel>
+          {{ label() }}
+        </label>
       }
 
-      <textarea
-        #input
-        appFormInput
-        class="leading-[1.6rem]!"
-        [id]="name()"
-        [value]="value()"
-        [disabled]="disabled()"
-        [required]="required()"
-        [attr.maxLength]="maxLength()"
-        [attr.minLength]="minLength()"
-        [attr.placeholder]="placeholder()"
-        [attr.aria-invalid]="ariaInvalid()"
-        [attr.aria-describedby]="describedBy(!!hint())"
-        [style.padding]="prefix() ? '.6rem .8rem 1rem 0' : '.6rem .8rem'"
-        [rows]="rows()"
-        (input)="onInputchange($event)"
-        (blur)="touched.set(true)"></textarea>
-
-      @if (icon()) {
-        <svg [lucideIcon]="icon()!" size="20" aria-hidden="true"></svg>
-      }
-    </app-form-control-field>
-
-    @if (hint()) {
-      <small [id]="hintId()" appFormHint> {{ hint() }} </small>
-    }
-
-    @if (showErrors()) {
-      <div [id]="errorId()">
-        @for (error of errors(); track error.kind) {
-          <app-form-error>
-            {{ error.message }}
-          </app-form-error>
+      <app-form-control-field
+        [invalid]="touched() && invalid()"
+        [active]="!!value() && touched()">
+        @if (prefix()) {
+          <div appFormPrefix>{{ prefix() }}</div>
         }
-      </div>
-    }
-  </div> `,
+
+        <textarea
+          #input
+          appFormInput
+          class="leading-[1.6rem]!"
+          [id]="name()"
+          [value]="value()"
+          [disabled]="disabled()"
+          [required]="required()"
+          [attr.maxLength]="maxLength()"
+          [attr.minLength]="minLength()"
+          [attr.placeholder]="placeholder()"
+          [attr.aria-invalid]="ariaInvalid()"
+          [attr.aria-describedby]="describedBy(!!hint())"
+          [style.padding]="prefix() ? '.6rem .8rem 1rem 0' : '.6rem .8rem'"
+          [rows]="rows()"
+          (input)="onInputchange($event)"
+          (blur)="touched.set(true)"></textarea>
+
+        @if (icon()) {
+          <svg [lucideIcon]="icon()!" size="20" aria-hidden="true"></svg>
+        }
+      </app-form-control-field>
+
+      @if (hint()) {
+        <small [id]="hintId()" appFormHint>{{ hint() }}</small>
+      }
+
+      @if (showErrors()) {
+        <div [id]="errorId()">
+          @for (error of errors(); track error.kind) {
+            <app-form-error>
+              {{ error.message }}
+            </app-form-error>
+          }
+        </div>
+      }
+    </div>
+  `,
 })
 export class FormTextAreaComponent extends AbstractFormValueControl {
   readonly label = input<string>();

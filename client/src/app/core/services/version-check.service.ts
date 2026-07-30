@@ -35,8 +35,7 @@ export class VersionCheckService {
 
   exposeDevTrigger(): void {
     const view = this.document.defaultView as
-      | (Window & { triggerVersionBanner?: () => void })
-      | null;
+      (Window & { triggerVersionBanner?: () => void }) | null;
 
     if (view == null) {
       return;

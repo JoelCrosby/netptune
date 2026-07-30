@@ -43,15 +43,21 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
         <button
           class="hover:bg-primary/20 flex h-8 cursor-pointer appearance-none flex-row items-center gap-2 rounded-sm px-4 transition-[background-color,color] duration-140 ease-in-out outline-none"
           (click)="onClearClicked()"
+          i18n-appTooltip="Tooltip on the button that clears the task selection"
           appTooltip="Clear Task Selection">
-          <strong>{{ count + ' ' }}</strong>
-          <span>tasks selected</span>
+          <ng-container i18n="Count of selected tasks shown above the board">
+            {count, plural,
+              =1 {<strong>1</strong> task selected}
+              other {<strong>{{ count }}</strong> tasks selected}
+            }
+          </ng-container>
           <svg lucideListX size="18" class="close-btn"></svg>
         </button>
 
         @if (actions().length) {
           <span #trigger>
             <app-filter-action-button
+              i18n-label="Button that opens actions for the selected tasks"
               label="Task actions"
               [icon]="lucideEllipsis"
               (action)="menu.toggle(trigger)" />
@@ -86,21 +92,21 @@ export class BoardGroupsSelectionComponent {
 
     if (permissions.has(netptunePermissions.tasks.delete)) {
       actions.push({
-        label: 'Delete tasks',
+        label: $localize`:Action that deletes the selected tasks:Delete tasks`,
         action: this.onDeleteClicked.bind(this),
         icon: LucideTrash2,
       });
     }
     if (permissions.has(netptunePermissions.tasks.move)) {
       actions.push({
-        label: 'Move to group',
+        label: $localize`:Action that moves the selected tasks to another board group:Move to group`,
         action: this.onMoveTasksClicked.bind(this),
         icon: LucideCombine,
       });
     }
     if (permissions.has(netptunePermissions.tasks.reassign)) {
       actions.push({
-        label: 'Reassign',
+        label: $localize`:Action that reassigns the selected tasks to another person:Reassign`,
         action: this.onReassignTasksClicked.bind(this),
         icon: LucideUsers,
       });

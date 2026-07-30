@@ -5,11 +5,16 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
 @Component({
   imports: [PageContainerComponent, PageHeaderComponent, ArchiveListComponent],
-  template: `<app-page-container>
-    <app-page-header title="Archive" [count]="count()" />
+  template: `
+    <app-page-container>
+      <app-page-header
+        i18n-title="Page title for the archived task list"
+        title="Archive"
+        [count]="count()" />
 
-    <app-archive-list (countChange)="count.set($event)" />
-  </app-page-container>`,
+      <app-archive-list (countChange)="count.set($event)" />
+    </app-page-container>
+  `,
 })
 export class ArchiveViewComponent {
   readonly count = signal<number | null>(null);

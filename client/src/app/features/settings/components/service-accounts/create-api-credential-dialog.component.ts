@@ -33,25 +33,48 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Create API Credential</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the create-API-credential dialog">
+      Create API Credential
+    </app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
       <p class="text-muted mb-5 text-sm">
-        Create a credential for <strong>{{ account.name }}</strong
-        >. The secret is displayed once and expires automatically after 90 days.
+        <span
+          i18n="
+            Explains credential creation. NAME is the service account name and
+            the 90 day expiry is fixed by the server
+          ">
+          Create a credential for <strong>{{ account.name }}</strong
+          >. The secret is displayed once and expires automatically after 90
+          days.
+        </span>
       </p>
 
       <app-form-input
         [formField]="credentialForm.name"
+        i18n-label="Label of the credential name field"
         label="Credential name"
+        i18n-placeholder="Example credential name shown as placeholder text"
         placeholder="Local Codex"
+        i18n-hint="Hint under the credential name field"
         hint="Describe where this credential will be used."
         maxLength="128" />
 
       <fieldset class="mt-2">
-        <legend class="mb-1 text-sm font-medium">Credential scopes</legend>
+        <legend class="mb-1 text-sm font-medium">
+          <span i18n="Heading above the permission scopes for a credential">
+            Credential scopes
+          </span>
+        </legend>
         <p class="text-muted mb-3 text-xs">
-          Scopes can restrict this credential further than the service account.
+          <span
+            i18n="
+              Explains that credential scopes narrow the account permissions
+            ">
+            Scopes can restrict this credential further than the service
+            account.
+          </span>
         </p>
 
         <div class="border-border divide-border divide-y rounded border">
@@ -60,14 +83,17 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
               <app-checkbox
                 [checked]="hasScope(permission)"
                 (changed)="setScope(permission, $event)">
-                <span class="text-sm">{{
-                  getPermissionLabel(permission)
-                }}</span>
+                <span class="text-sm">
+                  {{ getPermissionLabel(permission) }}
+                </span>
               </app-checkbox>
             </div>
           } @empty {
             <p class="text-muted px-4 py-3 text-sm">
-              This service account has no API permissions.
+              <span
+                i18n="Shown when a service account has no permissions to scope">
+                This service account has no API permissions.
+              </span>
             </p>
           }
         </div>
@@ -75,15 +101,20 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Cancel</button>
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button
         app-flat-button
         type="button"
         [disabled]="selectedScopes().size === 0"
         (click)="submit($event)">
-        Create Credential
+        <span i18n="Button that creates the API credential">
+          Create Credential
+        </span>
       </button>
-    </div>`,
+    </div>
+  `,
 })
 export class CreateApiCredentialDialogComponent {
   private readonly dialogRef =
@@ -101,7 +132,7 @@ export class CreateApiCredentialDialogComponent {
     apply(
       schema.name,
       requiredTextSchema({
-        label: 'Credential name',
+        label: $localize`:Field name used inside validation messages, e.g. "Credential name is required.":Credential name`,
         minLength: 2,
         maxLength: 128,
       })

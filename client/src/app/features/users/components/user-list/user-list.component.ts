@@ -29,6 +29,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
   ],
   template: `
     <app-datatable
+      i18n-errorMessage="Shown when the member list fails to load"
       errorMessage="Members could not be loaded."
       containerClass="h-[calc(100vh-253px)] min-h-80 overflow-auto"
       tableClass="min-w-[720px] table-fixed"
@@ -65,9 +66,19 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 
       <ng-template appDatatableCell="status" let-user>
         @if (user.isPending) {
-          <app-badge color="pending" shape="rounded">Pending</app-badge>
+          <app-badge
+            color="pending"
+            shape="rounded"
+            i18n="Badge marking an invited member who has not joined">
+            Pending
+          </app-badge>
         } @else if (user.role === workspaceRole.owner) {
-          <app-badge color="info" shape="rounded">Owner</app-badge>
+          <app-badge
+            color="info"
+            shape="rounded"
+            i18n="Badge marking the workspace owner">
+            Owner
+          </app-badge>
         } @else {
           <app-badge shape="rounded">{{ roleLabel(user.role) }}</app-badge>
         }
@@ -76,7 +87,9 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
       <app-empty-state
         appDatatableEmpty
         compact
+        i18n-title="Empty state for the member list"
         title="No users to show"
+        i18n-description="Advice on the empty member list"
         description="Invite people to this workspace to see them here." />
     </app-datatable>
   `,
@@ -106,12 +119,12 @@ export class UserListComponent {
     trackBy: (_: number, user: WorkspaceAppUser) => user.id,
     menu: [
       {
-        label: 'Resend invite',
+        label: $localize`:Label shown in the interface:Resend invite`,
         icon: LucideSend,
         onClick: (user) => this.onResendClicked(user),
       },
       {
-        label: 'Remove user from workspace',
+        label: $localize`:Label shown in the interface:Remove user from workspace`,
         icon: LucideTrash2,
         onClick: (user) => this.onRemoveClicked(user),
       },

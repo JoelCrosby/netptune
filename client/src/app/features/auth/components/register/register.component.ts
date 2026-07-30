@@ -47,73 +47,85 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FormErrorsComponent,
     TurnstileComponent,
   ],
-  template: `<app-auth-page-container>
-    <app-auth-form-panel
-      showLogo
-      heading="Create new Account"
-      [loading]="loading()"
-      (submitted)="register()">
-      <app-form-input
-        [formField]="registerForm.firstname"
-        label="Firstname"
-        maxLength="128"
-        id="firstname"
-        autocomplete="given-name">
-      </app-form-input>
+  template: `
+    <app-auth-page-container>
+      <app-auth-form-panel
+        showLogo
+        i18n-heading="Heading of the account registration form"
+        heading="Create new Account"
+        [loading]="loading()"
+        (submitted)="register()">
+        <app-form-input
+          [formField]="registerForm.firstname"
+          i18n-label="Label of the given-name field on the registration form"
+          label="Firstname"
+          maxLength="128"
+          id="firstname"
+          autocomplete="given-name"></app-form-input>
 
-      <app-form-input
-        [formField]="registerForm.lastname"
-        label="Lastname"
-        maxLength="128"
-        id="lastname"
-        autocomplete="family-name">
-      </app-form-input>
+        <app-form-input
+          [formField]="registerForm.lastname"
+          i18n-label="Label of the family-name field on the registration form"
+          label="Lastname"
+          maxLength="128"
+          id="lastname"
+          autocomplete="family-name"></app-form-input>
 
-      <app-form-input
-        [formField]="registerForm.email"
-        label="Email"
-        maxLength="128"
-        id="email"
-        type="email"
-        autocomplete="username">
-      </app-form-input>
+        <app-form-input
+          [formField]="registerForm.email"
+          i18n-label="
+            Label of the e-mail address field on the registration form
+          "
+          label="Email"
+          maxLength="128"
+          id="email"
+          type="email"
+          autocomplete="username"></app-form-input>
 
-      <app-form-input
-        [formField]="registerForm.password0"
-        label="Password"
-        maxLength="1024"
-        id="new-password"
-        autocomplete="new-password"
-        type="password">
-      </app-form-input>
+        <app-form-input
+          [formField]="registerForm.password0"
+          i18n-label="Label of the password field on the registration form"
+          label="Password"
+          maxLength="1024"
+          id="new-password"
+          autocomplete="new-password"
+          type="password"></app-form-input>
 
-      <app-form-input
-        [formField]="registerForm.password1"
-        label="Confirm Password"
-        maxLength="1024"
-        id="confirm-new-password"
-        autocomplete="new-password"
-        type="password">
-        <app-form-errors [formField]="registerForm.password1" />
-      </app-form-input>
+        <app-form-input
+          [formField]="registerForm.password1"
+          i18n-label="
+            Label of the password confirmation field on the registration form
+          "
+          label="Confirm Password"
+          maxLength="1024"
+          id="confirm-new-password"
+          autocomplete="new-password"
+          type="password">
+          <app-form-errors [formField]="registerForm.password1" />
+        </app-form-input>
 
-      <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
+        <app-turnstile (tokenGenerated)="onTurnstileResult($event)" />
 
-      <div class="flex flex-row items-center justify-between gap-4">
-        <a
-          app-stroked-button
-          color="primary"
-          type="button"
-          [routerLink]="['/auth/login']">
-          Back to Log in
-        </a>
+        <div class="flex flex-row items-center justify-between gap-4">
+          <a
+            app-stroked-button
+            color="primary"
+            type="button"
+            [routerLink]="['/auth/login']">
+            <span i18n="Link from the registration form back to the login form">
+              Back to Log in
+            </span>
+          </a>
 
-        <button app-flat-button color="primary" type="submit">
-          Create Account
-        </button>
-      </div>
-    </app-auth-form-panel>
-  </app-auth-page-container> `,
+          <button app-flat-button color="primary" type="submit">
+            <span i18n="Submit button on the account registration form">
+              Create Account
+            </span>
+          </button>
+        </div>
+      </app-auth-form-panel>
+    </app-auth-page-container>
+  `,
 })
 export class RegisterComponent implements OnDestroy {
   private store = inject(Store);
@@ -144,19 +156,33 @@ export class RegisterComponent implements OnDestroy {
   registerForm = form(this.registerFormModel, (schema) => {
     apply(
       schema.firstname,
-      requiredTextSchema({ label: 'First name', maxLength: 128 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside registration validation messages, e.g. "First name is required.":First name`,
+        maxLength: 128,
+      })
     );
     apply(
       schema.lastname,
-      requiredTextSchema({ label: 'Last name', maxLength: 128 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside registration validation messages, e.g. "Last name is required.":Last name`,
+        maxLength: 128,
+      })
     );
-    required(schema.email, { message: 'Email is required.' });
-    email(schema.email, { message: 'Enter a valid email address.' });
+    required(schema.email, {
+      message: $localize`:Validation error when the e-mail field is empty:Email is required.`,
+    });
+    email(schema.email, {
+      message: $localize`:Validation error when the e-mail field is not a valid address:Enter a valid email address.`,
+    });
     maxLength(schema.email, 128);
-    required(schema.password0, { message: 'Password is required.' });
+    required(schema.password0, {
+      message: $localize`:Validation error when the password field is empty:Password is required.`,
+    });
     minLength(schema.password0, 4);
     maxLength(schema.password0, 1024);
-    required(schema.password1, { message: 'Confirm your password.' });
+    required(schema.password1, {
+      message: $localize`:Validation error when the password confirmation field is empty:Confirm your password.`,
+    });
     minLength(schema.password1, 4);
     maxLength(schema.password1, 1024);
     disabled(schema, () => this.loading());
@@ -166,7 +192,7 @@ export class RegisterComponent implements OnDestroy {
       if (context.valueOf(schema.password0) !== context.value()) {
         return {
           kind: 'noMatch',
-          message: 'Passwords do not match',
+          message: $localize`:Validation error when the two password fields differ:Passwords do not match`,
         };
       }
 

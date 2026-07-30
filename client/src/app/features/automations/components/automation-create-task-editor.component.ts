@@ -34,6 +34,7 @@ import {
   template: `
     <div class="flex flex-col gap-4">
       <app-form-input
+        i18n-label="Label of the task name field"
         label="Task name"
         placeholder="Follow up on {{ '{{task.key}}' }}"
         [required]="true"
@@ -43,6 +44,7 @@ import {
         (valueChange)="patch.emit({ taskName: $event })" />
 
       <app-form-textarea
+        i18n-label="Label of the description field"
         label="Description"
         rows="3"
         [noMargin]="true"
@@ -51,12 +53,15 @@ import {
 
       <div class="grid gap-3 md:grid-cols-2">
         <app-form-select
+          i18n-label="Label of the status field"
           label="Status"
           [noMargin]="true"
           [value]="action().statusId ?? null"
           (changed)="patch.emit({ statusId: $event })">
           <app-form-select-option [value]="null">
-            Project default
+            <span i18n="Option that uses the project default">
+              Project default
+            </span>
           </app-form-select-option>
           @for (status of statuses(); track status.id) {
             <app-form-select-option [value]="status.id">
@@ -66,11 +71,16 @@ import {
         </app-form-select>
 
         <app-form-select
+          i18n-label="Label of the priority field"
           label="Priority"
           [noMargin]="true"
           [value]="action().priority ?? null"
           (changed)="patch.emit({ priority: $event })">
-          <app-form-select-option [value]="null">None</app-form-select-option>
+          <app-form-select-option
+            [value]="null"
+            i18n="Shown in place of an empty value">
+            None
+          </app-form-select-option>
           @for (priority of taskPriorities; track priority.value) {
             <app-form-select-option [value]="priority.value">
               {{ priority.label }}
@@ -83,11 +93,20 @@ import {
         <app-checkbox
           [checked]="copiesAssignees()"
           (changed)="setCopyAssignees($event)">
-          Copy assignees from the triggering task
+          <span
+            i18n="
+              Option that copies assignees from the task that triggered the rule
+            ">
+            Copy assignees from the triggering task
+          </span>
         </app-checkbox>
         @if (!copiesAssignees()) {
           <app-form-select-tags
+            i18n-label="Label of the assignees field"
             label="Assignees"
+            i18n-placeholder="
+              Placeholder text: Choose assignees; leave empty to unassign
+            "
             placeholder="Choose assignees; leave empty to unassign"
             [value]="action().assigneeIds ?? []"
             (changed)="patch.emit({ assigneeIds: $event })">
@@ -101,7 +120,9 @@ import {
       </div>
 
       <app-form-select-tags
+        i18n-label="Label of the tags field"
         label="Tags"
+        i18n-placeholder="Placeholder text: Choose tags to add"
         placeholder="Choose tags to add"
         [value]="action().addTags ?? []"
         (changed)="patch.emit({ addTags: $event })">
@@ -114,26 +135,35 @@ import {
 
       <div class="grid gap-3 md:grid-cols-2">
         <app-form-select
+          i18n-label="Label of the due date field"
           label="Due date"
           [noMargin]="true"
           [value]="dueDateMode()"
           (changed)="setDueDateMode($event)">
           <app-form-select-option [value]="null">
-            No due date
+            <span i18n="Option that leaves the created task without a due date">
+              No due date
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="dateMode.relativeDays">
-            Days after creation
+            <span
+              i18n="Due date mode: a number of calendar days after creation">
+              Days after creation
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="dateMode.relativeBusinessDays">
-            Business days after creation
+            <span i18n="Due date mode: a number of working days after creation">
+              Business days after creation
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="dateMode.absolute">
-            On a fixed date
+            <span i18n="Due date mode: a specific date">On a fixed date</span>
           </app-form-select-option>
         </app-form-select>
 
         @if (usesDueDateOffset()) {
           <app-form-input
+            i18n-label="Label of the days field"
             label="Days"
             type="number"
             [noMargin]="true"
@@ -141,6 +171,7 @@ import {
             (valueChange)="setDueDateOffset($event)" />
         } @else if (usesDueDateValue()) {
           <app-form-input
+            i18n-label="Label of the date field"
             label="Date"
             type="date"
             [noMargin]="true"
@@ -151,13 +182,16 @@ import {
 
       <div class="grid gap-3 md:grid-cols-2">
         <app-form-select
+          i18n-label="Label of the sprint field"
           label="Sprint"
           [noMargin]="true"
           [value]="action().sprintId ?? null"
           (changed)="patch.emit({ sprintId: $event })">
-          <app-form-select-option [value]="null"
-            >Backlog</app-form-select-option
-          >
+          <app-form-select-option [value]="null">
+            <span i18n="Option placing the created task outside any sprint">
+              Backlog
+            </span>
+          </app-form-select-option>
           @for (sprint of sprints(); track sprint.id) {
             <app-form-select-option [value]="sprint.id">
               {{ sprint.name }}
@@ -166,12 +200,15 @@ import {
         </app-form-select>
 
         <app-form-select
+          i18n-label="Label of the board group field"
           label="Board group"
           [noMargin]="true"
           [value]="action().boardGroupId ?? null"
           (changed)="patch.emit({ boardGroupId: $event })">
           <app-form-select-option [value]="null">
-            Project default
+            <span i18n="Option that uses the project default">
+              Project default
+            </span>
           </app-form-select-option>
           @for (boardGroup of boardGroups(); track boardGroup.id) {
             <app-form-select-option [value]="boardGroup.id">
@@ -182,12 +219,15 @@ import {
       </div>
 
       <app-form-select
+        i18n-label="Label of the option that links a notification to its task"
         label="Link to the triggering task"
         [noMargin]="true"
         [value]="action().linkRelationTypeId ?? null"
         (changed)="patch.emit({ linkRelationTypeId: $event })">
         <app-form-select-option [value]="null">
-          Do not link
+          <span i18n="Option that creates the task without linking it">
+            Do not link
+          </span>
         </app-form-select-option>
         @for (relationType of relationTypes(); track relationType.id) {
           <app-form-select-option [value]="relationType.id">

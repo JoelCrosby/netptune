@@ -35,16 +35,28 @@ type MoveMode = 'backlog' | 'sprint';
     BadgeComponent,
   ],
   template: `
-    <app-dialog-title>Complete Sprint</app-dialog-title>
+    <app-dialog-title i18n="Title of the dialog for completing a sprint">
+      Complete Sprint
+    </app-dialog-title>
 
     <div class="flex flex-col gap-4">
       @if (incompleteTasks().length > 0) {
         <p class="text-muted text-sm">
-          <strong class="text-foreground">{{
-            incompleteTasks().length
-          }}</strong>
-          incomplete {{ incompleteTasks().length === 1 ? 'task' : 'tasks' }} in
-          this sprint.
+          <ng-container
+            i18n="Count of unfinished tasks when completing a sprint">
+            {incompleteTasks().length, plural,
+              =1 {
+                <strong class="text-foreground">1</strong>
+                incomplete task in this sprint.
+              }
+              other {
+                <strong class="text-foreground">
+                  {{ incompleteTasks().length }}
+                </strong>
+                incomplete tasks in this sprint.
+              }
+            }
+          </ng-container>
         </p>
 
         <div class="border-border max-h-48 overflow-y-auto rounded-md border">
@@ -67,34 +79,73 @@ type MoveMode = 'backlog' | 'sprint';
         </div>
 
         <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium">What should happen to these tasks?</p>
+          <p class="text-sm font-medium">
+            <span
+              i18n="
+                Asks what to do with unfinished tasks when completing a sprint
+              ">
+              What should happen to these tasks?
+            </span>
+          </p>
 
           <app-selectable-card
             groupName="sprint-completion-task-destination"
+            i18n-accessibleLabel="
+              Accessible label for the option that returns unfinished tasks to
+              the backlog
+            "
             accessibleLabel="Move incomplete tasks to backlog"
             [selected]="moveMode() === 'backlog'"
             (selectionChange)="moveMode.set('backlog')">
             <div>
-              <p class="text-sm font-medium">Move to backlog</p>
-              <p class="text-muted text-xs">Unassign tasks from this sprint</p>
+              <p class="text-sm font-medium">
+                <span
+                  i18n="Option that returns unfinished tasks to the backlog">
+                  Move to backlog
+                </span>
+              </p>
+              <p class="text-muted text-xs">
+                <span i18n="Explains the move-to-backlog option">
+                  Unassign tasks from this sprint
+                </span>
+              </p>
             </div>
           </app-selectable-card>
 
           <app-selectable-card
             groupName="sprint-completion-task-destination"
+            i18n-accessibleLabel="
+              Accessible label for the option that moves unfinished tasks to
+              another sprint
+            "
             accessibleLabel="Move incomplete tasks to another sprint"
             [selected]="moveMode() === 'sprint'"
             (selectionChange)="moveMode.set('sprint')">
             <div>
-              <p class="text-sm font-medium">Move to another sprint</p>
-              <p class="text-muted text-xs">Add tasks to an upcoming sprint</p>
+              <p class="text-sm font-medium">
+                <span
+                  i18n="
+                    Option that moves unfinished tasks into a different sprint
+                  ">
+                  Move to another sprint
+                </span>
+              </p>
+              <p class="text-muted text-xs">
+                <span i18n="Explains the move-to-another-sprint option">
+                  Add tasks to an upcoming sprint
+                </span>
+              </p>
             </div>
           </app-selectable-card>
 
           @if (moveMode() === 'sprint') {
             @if (planningSprints().length > 0) {
               <app-form-select
+                i18n-label="
+                  Label of the field choosing which sprint to move tasks into
+                "
                 label="Target sprint"
+                i18n-placeholder="Placeholder in the target sprint picker"
                 placeholder="Select sprint"
                 [value]="targetSprintId() ?? null"
                 (changed)="targetSprintId.set($event)">
@@ -105,20 +156,30 @@ type MoveMode = 'backlog' | 'sprint';
                 }
               </app-form-select>
             } @else {
-              <p class="text-muted text-sm">No upcoming sprints available.</p>
+              <p class="text-muted text-sm">
+                <span
+                  i18n="
+                    Shown when there is no future sprint to move tasks into
+                  ">
+                  No upcoming sprints available.
+                </span>
+              </p>
             }
           }
         </div>
       } @else {
         <p class="text-muted text-sm">
-          All tasks in this sprint are complete. Ready to close out the sprint.
+          <span i18n="Shown when a sprint has no unfinished tasks left">
+            All tasks in this sprint are complete. Ready to close out the
+            sprint.
+          </span>
         </p>
       }
     </div>
 
     <div app-dialog-actions align="end">
       <button app-stroked-button type="button" (click)="dialogRef.close()">
-        Cancel
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
       </button>
       <button
         app-flat-button
@@ -126,7 +187,7 @@ type MoveMode = 'backlog' | 'sprint';
         type="button"
         [disabled]="confirmDisabled()"
         (click)="onConfirm()">
-        Complete Sprint
+        <span i18n="Button that completes the sprint">Complete Sprint</span>
       </button>
     </div>
   `,

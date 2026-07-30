@@ -21,14 +21,14 @@ import {
         <div class="min-w-0">
           <p
             class="text-primary m-0 text-xs font-semibold tracking-wider uppercase">
-            Ready to create
+            <span i18n="Eyebrow heading above the creation summary">
+              Ready to create
+            </span>
           </p>
           <h4 class="text-foreground mt-1 mb-0 truncate text-lg font-semibold">
-            {{ name() || 'Untitled ' + entityType().toLowerCase() }}
+            {{ displayName() }}
           </h4>
-          <p class="text-muted mt-1 mb-0 text-sm">
-            {{ entityType() }} using the {{ templateName() }} workflow
-          </p>
+          <p class="text-muted mt-1 mb-0 text-sm">{{ summaryLine() }}</p>
         </div>
       </header>
 
@@ -48,6 +48,32 @@ export class SetupCreationSummaryComponent {
   readonly templateName = computed(
     () => this.template()?.name ?? this.templateKey()
   );
+
+  /**
+   * entityType is a discriminant, so it needs localised display copy rather than
+   * being rendered raw. Concatenating it in the template would be untranslatable.
+   */
+  readonly entityTypeLabel = computed(() => {
+    return this.entityType() === 'Workspace'
+      ? $localize`:The workspace entity, shown in setup copy:Workspace`
+      : $localize`:The project entity, shown in setup copy:Project`;
+  });
+
+  readonly displayName = computed(() => {
+    const name = this.name();
+
+    if (name) {
+      return name;
+    }
+
+    return this.entityType() === 'Workspace'
+      ? $localize`:Placeholder name for a workspace that has not been named yet:Untitled workspace`
+      : $localize`:Placeholder name for a project that has not been named yet:Untitled project`;
+  });
+
+  readonly summaryLine = computed(() => {
+    return $localize`:Summary line under the name being created. ENTITY is the localised entity name and TEMPLATE is the chosen workflow template:${this.entityTypeLabel()}:ENTITY: using the ${this.templateName()}:TEMPLATE: workflow`;
+  });
   readonly boardFlow = computed(() =>
     (this.template()?.boardGroups ?? []).join(' → ')
   );
@@ -69,13 +95,13 @@ export class SetupCreationSummaryComponent {
           ]
         : []),
       {
-        label: 'Board flow',
+        label: $localize`:Label shown in the interface:Board flow`,
         value: this.boardFlow() || 'Default board',
       },
       ...(this.showWorkspaceDefaults() && workspaceDefaults
         ? [
             {
-              label: 'Workspace defaults',
+              label: $localize`:Label shown in the interface:Workspace defaults`,
               value: workspaceDefaults,
               muted: true,
             },

@@ -30,7 +30,9 @@ import { ConfirmDialogOptions } from '../confirm-dialog/confirm-dialog.component
 @Component({
   selector: 'app-task-detail-comments',
   template: `
-    <h4 class="font-sm mt-4 mb-2 font-semibold">Comments</h4>
+    <h4 class="font-sm mt-4 mb-2 font-semibold">
+      <span i18n="Section heading for a task's comments">Comments</span>
+    </h4>
     <app-comments-list
       [user]="user()"
       [comments]="comments.value()"
@@ -40,8 +42,7 @@ import { ConfirmDialogOptions } from '../confirm-dialog/confirm-dialog.component
       (deleteComment)="onDeleteCommentClicked($event)"
       [canDelete]="canDeleteComment()"
       [canEdit]="canCreateComment()"
-      [canCreate]="canCreateComment()">
-    </app-comments-list>
+      [canCreate]="canCreateComment()"></app-comments-list>
   `,
   imports: [CommentsListComponent],
 })
@@ -109,7 +110,9 @@ export class TaskDetailCommentsComponent {
         switchMap(() => this.commentsService.delete(comment.id)),
         unwrapClientReposne(),
         tap(() => {
-          this.snackbar.open('Comment deleted');
+          this.snackbar.open(
+            $localize`:Confirmation shown after an action succeeds:Comment deleted`
+          );
           this.comments.reload();
         }),
         catchError(() => EMPTY)
@@ -128,7 +131,9 @@ export class TaskDetailCommentsComponent {
       .pipe(
         unwrapClientReposne(),
         tap(() => {
-          this.snackbar.open('Comment updated');
+          this.snackbar.open(
+            $localize`:Confirmation shown after an action succeeds:Comment updated`
+          );
           this.comments.reload();
         }),
         catchError(() => EMPTY)
@@ -138,9 +143,9 @@ export class TaskDetailCommentsComponent {
 }
 
 const DELETE_COMMENT_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to delete this comment?',
-  title: 'Delete Comment',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a dialog or validation message:Are you sure you want to delete this comment?`,
+  title: $localize`:Title of a dialog or section:Delete Comment`,
   color: 'warn',
 };

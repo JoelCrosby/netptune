@@ -32,7 +32,9 @@ import { LoginProviderButtonComponent } from './login-provider-button.component'
           d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" />
       </svg>
 
-      Continue with Google
+      <span i18n="Button that starts sign-in via Google">
+        Continue with Google
+      </span>
     </button>
   `,
 })

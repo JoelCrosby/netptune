@@ -41,36 +41,60 @@ export interface EditRelationTypeDialogResult {
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Edit Relation Type</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the edit-relation-type dialog">
+      Edit Relation Type
+    </app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
       <p class="text-muted mb-4 text-sm">
-        Category: {{ categoryLabel }}. A relation type's category is fixed once
-        it exists, because changing it would hold existing links to rules they
-        were never checked against.
+        <span
+          i18n="
+            Explains that a relation type's category cannot be changed. CATEGORY
+            is the category name
+          ">
+          Category:
+          {{
+            categoryLabel  // i18n(ph="CATEGORY")
+          }}. A relation type's category is fixed once it exists, because
+          changing it would hold existing links to rules they were never checked
+          against.
+        </span>
       </p>
 
       <app-form-input
         [formField]="relationTypeForm.name"
+        i18n-label="Label of the name field"
         label="Name"
         maxLength="128" />
 
       @if (!isSymmetric) {
         <app-form-input
           [formField]="relationTypeForm.inverseName"
+          i18n-label="
+            Label of the field for the reverse direction of a relation
+          "
           label="Inverse name"
           maxLength="128" />
       }
 
-      <app-color-select [formField]="relationTypeForm.color" label="Color" />
+      <app-color-select
+        [formField]="relationTypeForm.color"
+        i18n-label="Label of the colour picker field"
+        label="Color" />
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Close</button>
-      <button app-flat-button type="button" (click)="submit($event)">
-        Save Relation Type
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
-    </div>`,
+      <button app-flat-button type="button" (click)="submit($event)">
+        <span i18n="Button that saves changes to the relation type">
+          Save Relation Type
+        </span>
+      </button>
+    </div>
+  `,
 })
 export class EditRelationTypeDialogComponent {
   private readonly dialogRef =
@@ -90,7 +114,13 @@ export class EditRelationTypeDialogComponent {
   });
 
   readonly relationTypeForm = form(this.relationTypeFormModel, (schema) => {
-    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 128,
+      })
+    );
     maxLength(schema.inverseName, 128);
     maxLength(schema.color, 32);
     required(schema.color);

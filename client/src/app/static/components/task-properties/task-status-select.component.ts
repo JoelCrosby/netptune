@@ -29,7 +29,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     </app-chip-listbox>
     <app-dropdown-menu #statusMenu>
       <small class="block px-3 py-1 text-xs text-neutral-500">
-        Change Status
+        <span i18n="Heading above the task status options">Change Status</span>
       </small>
       @for (status of statuses.value(); track status.id) {
         <button

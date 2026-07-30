@@ -12,6 +12,7 @@ import {
   host: { class: 'block' },
   template: `
     <apx-chart
+      i18n-aria-label="Accessible name of the throughput chart"
       aria-label="Completed tasks over time"
       [series]="series()"
       [chart]="chart"

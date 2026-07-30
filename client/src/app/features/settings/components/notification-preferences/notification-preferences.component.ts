@@ -25,10 +25,26 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
         <thead
           class="bg-background text-muted sticky top-0 z-10 text-sm shadow-sm">
           <tr>
-            <th class="px-3 py-2 font-medium" scope="col">Event</th>
-            <th class="w-24 px-3 py-2 font-medium" scope="col">Enabled</th>
-            <th class="w-40 px-3 py-2 font-medium" scope="col">Scope</th>
-            <th class="w-24 px-3 py-2 font-medium" scope="col">Override</th>
+            <th class="px-3 py-2 font-medium" scope="col">
+              <span i18n="Column heading for the notification event">
+                Event
+              </span>
+            </th>
+            <th class="w-24 px-3 py-2 font-medium" scope="col">
+              <span i18n="Column heading for whether a notification is on">
+                Enabled
+              </span>
+            </th>
+            <th class="w-40 px-3 py-2 font-medium" scope="col">
+              <span i18n="Column heading for the notification scope">
+                Scope
+              </span>
+            </th>
+            <th class="w-24 px-3 py-2 font-medium" scope="col">
+              <span i18n="Column heading for the per-workspace override">
+                Override
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody class="divide-border divide-y">
@@ -42,7 +58,17 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
                   [checked]="currentValue(preference)"
                   (changed)="updateValue(preference, $event)">
                   <span class="sr-only">
-                    Receive {{ preference.definition.label }} notifications
+                    <span
+                      i18n="
+                        Screen-reader label for a notification toggle. EVENT is
+                        the already-localised event name
+                      ">
+                      Receive
+                      {{
+                        preference.definition.label // i18n(ph="EVENT")
+                      }}
+                      notifications
+                    </span>
                   </span>
                 </app-checkbox>
               </td>
@@ -73,7 +99,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
                         }
                       </span>
                       <span>
-                        {{ scope === 'workspace' ? 'Workspace' : 'Global' }}
+                        {{ scopeOptionLabel(scope) }}
                       </span>
                     </button>
                   }
@@ -86,7 +112,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
                   color="contrast"
                   class="h-7 px-3 text-xs"
                   (click)="clearValue(preference)">
-                  Clear
+                  <span i18n="Button that removes a preference override">
+                    Clear
+                  </span>
                 </button>
               </td>
             </tr>
@@ -97,6 +125,12 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
   `,
 })
 export class NotificationPreferencesComponent {
+  /** Ternaries in a template expression cannot be marked, so build the copy here. */
+  protected scopeOptionLabel(scope: string): string {
+    return scope === 'workspace'
+      ? $localize`:Preference scope limited to the current workspace:Workspace`
+      : $localize`:Preference scope applying everywhere:Global`;
+  }
   readonly values = input.required<ResolvedPreferenceValue[]>();
 
   readonly userPreferences = inject(UserPreferencesService);

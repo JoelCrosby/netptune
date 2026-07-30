@@ -7,6 +7,9 @@ export const routes: Routes = [
     path: '',
     canActivate: [workspaceSettingsGuard],
     data: { permission: netptunePermissions.storage.read },
-    loadComponent: () => import('./views/storage-view.component').then((m) => m.StorageViewComponent),
+    loadComponent: () =>
+      import('./views/storage-view.component').then(
+        (m) => m.StorageViewComponent
+      ),
   },
 ];

@@ -73,7 +73,12 @@ import { AutomationsService } from '../../services/automations.service';
     <app-page-container [centerPage]="true" [marginBottom]="true">
       <app-page-header
         [title]="isEdit() ? 'Edit Automation' : 'Create Automation'">
-        <a app-stroked-button [routerLink]="cancelLink()">Cancel</a>
+        <a
+          app-stroked-button
+          [routerLink]="cancelLink()"
+          i18n="Dismisses a dialog without acting">
+          Cancel
+        </a>
         <button
           app-flat-button
           color="primary"
@@ -93,7 +98,9 @@ import { AutomationsService } from '../../services/automations.service';
           <div class="flex w-full max-w-3xl flex-col gap-5">
             <app-stepper>
               <app-step
+                i18n-title="Title of the settings step"
                 title="Settings"
+                i18n-description="Description of the settings step"
                 description="Name your automation and set whether it is active."
                 [error]="stepError('settings')">
                 <app-automation-settings-editor
@@ -110,7 +117,9 @@ import { AutomationsService } from '../../services/automations.service';
               </app-step>
 
               <app-step
+                i18n-title="Title of the trigger step"
                 title="Trigger"
+                i18n-description="Description of the trigger step"
                 description="Choose the event that starts this automation."
                 [error]="stepError('trigger')">
                 <app-automation-trigger-editor
@@ -120,7 +129,9 @@ import { AutomationsService } from '../../services/automations.service';
               </app-step>
 
               <app-step
+                i18n-title="Title of the conditions step"
                 title="Conditions"
+                i18n-description="Description of the conditions step"
                 description="Optionally restrict which tasks can continue."
                 [error]="stepError('conditions')">
                 <app-automation-conditions-editor
@@ -132,7 +143,9 @@ import { AutomationsService } from '../../services/automations.service';
               </app-step>
 
               <app-step
+                i18n-title="Title of the actions step"
                 title="Actions"
+                i18n-description="Description of the actions step"
                 description="Define what happens when the automation runs."
                 [error]="stepError('actions')">
                 <app-automation-actions-editor
@@ -266,7 +279,9 @@ export class AutomationFormViewComponent {
       const ruleLoadError = this.ruleResource.error();
 
       if (ruleLoadError) {
-        this.snackbar.error('Automation could not be loaded');
+        this.snackbar.error(
+          $localize`:Error after failing to load an automation:Automation could not be loaded`
+        );
       }
     });
 
@@ -419,7 +434,10 @@ export class AutomationFormViewComponent {
             relativeTo: this.route,
           });
         },
-        error: () => this.snackbar.error('Automation could not be saved'),
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error after failing to save an automation:Automation could not be saved`
+          ),
       });
   }
 
@@ -475,7 +493,7 @@ export class AutomationFormViewComponent {
     return {
       clientId: this.nextActionId++,
       type: AutomationActionType.notifyTaskAssignees,
-      message: '',
+      message: $localize`:Body of a dialog or validation message:`,
       recipients: [AutomationNotificationRecipient.assignees],
       recipientUserIds: [],
       recipientRoles: [],

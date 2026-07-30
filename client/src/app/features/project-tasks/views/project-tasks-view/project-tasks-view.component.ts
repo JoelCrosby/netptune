@@ -15,23 +15,28 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
 @Component({
   imports: [PageContainerComponent, PageHeaderComponent, TaskListComponent],
-  template: `<app-page-container>
-    @if (canCreateTasks()) {
-      <app-page-header
-        title="Tasks"
-        actionTitle="Create Task"
-        (actionClick)="showAddModal()"
-        [count]="count()"
-        [overflowActions]="secondaryActions" />
-    } @else {
-      <app-page-header
-        title="Tasks"
-        [count]="count()"
-        [overflowActions]="secondaryActions" />
-    }
+  template: `
+    <app-page-container>
+      @if (canCreateTasks()) {
+        <app-page-header
+          i18n-title="Page title for the task list"
+          title="Tasks"
+          i18n-actionTitle="Button that opens the create-task dialog"
+          actionTitle="Create Task"
+          (actionClick)="showAddModal()"
+          [count]="count()"
+          [overflowActions]="secondaryActions" />
+      } @else {
+        <app-page-header
+          i18n-title="Page title for the task list"
+          title="Tasks"
+          [count]="count()"
+          [overflowActions]="secondaryActions" />
+      }
 
-    <app-task-list (countChange)="count.set($event)" />
-  </app-page-container> `,
+      <app-task-list (countChange)="count.set($event)" />
+    </app-page-container>
+  `,
 })
 export class ProjectTasksViewComponent implements OnDestroy {
   dialog = inject(DialogService);
@@ -47,7 +52,7 @@ export class ProjectTasksViewComponent implements OnDestroy {
 
   secondaryActions: HeaderAction[] = [
     {
-      label: 'Export Tasks',
+      label: $localize`:Overflow action that downloads the task list as CSV:Export Tasks`,
       click: () => this.onExportTasksClicked(),
       icon: LucideFolderDown,
     },

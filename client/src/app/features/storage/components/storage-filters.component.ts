@@ -27,6 +27,7 @@ export type StorageSort = 'createdAt' | 'name' | 'sizeBytes';
       <app-dropdown-button
         #originMenu
         [label]="originLabel()"
+        i18n-ariaLabel="Accessible label for the file origin filter"
         ariaLabel="Filter by origin"
         buttonClass="w-44 justify-between">
         @for (option of originOptions; track option.label) {
@@ -49,6 +50,7 @@ export type StorageSort = 'createdAt' | 'name' | 'sizeBytes';
       <app-dropdown-button
         #sortMenu
         [label]="sortLabel()"
+        i18n-ariaLabel="Accessible label for the file sort control"
         ariaLabel="Sort files"
         buttonClass="w-44 justify-between">
         @for (option of sortOptions; track option.value) {
@@ -81,18 +83,33 @@ export class StorageFiltersComponent {
     label: string;
     value: WorkspaceFilePurpose | undefined;
   }[] = [
-    { label: 'All origins', value: undefined },
-    { label: 'Task files', value: WorkspaceFilePurpose.taskFile },
-    { label: 'Inline media', value: WorkspaceFilePurpose.inlineMedia },
+    {
+      label: $localize`:Label shown in the interface:All origins`,
+      value: undefined,
+    },
+    {
+      label: $localize`:Label shown in the interface:Task files`,
+      value: WorkspaceFilePurpose.taskFile,
+    },
+    {
+      label: $localize`:Label shown in the interface:Inline media`,
+      value: WorkspaceFilePurpose.inlineMedia,
+    },
   ];
 
   protected readonly sortOptions: readonly {
     label: string;
     value: StorageSort;
   }[] = [
-    { label: 'Newest', value: 'createdAt' },
-    { label: 'Name', value: 'name' },
-    { label: 'Size', value: 'sizeBytes' },
+    {
+      label: $localize`:Label shown in the interface:Newest`,
+      value: 'createdAt',
+    },
+    { label: $localize`:Label shown in the interface:Name`, value: 'name' },
+    {
+      label: $localize`:Label shown in the interface:Size`,
+      value: 'sizeBytes',
+    },
   ];
 
   protected originLabel(): string {

@@ -18,6 +18,7 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
   ],
   template: `
     <app-filter-action-button
+      i18n-label="Label on the control that filters tasks by tag"
       label="Filter by Tag"
       [icon]="lucideTag"
       [color]="selectedCount() ? 'primary' : undefined"
@@ -39,9 +40,15 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
           <div
             class="flex flex-col items-center gap-1 px-4 py-3 text-sm opacity-60 select-none">
             <svg lucideTag class="mb-1 h-5 w-5 opacity-60"></svg>
-            <span class="font-medium">No tags</span>
+            <span
+              class="font-medium"
+              i18n="Heading of the empty state in the tag filter">
+              No tags
+            </span>
             <p class="text-center text-xs">
-              Tags assigned to tasks will show here
+              <span i18n="Explains why the tag filter is empty">
+                Tags assigned to tasks will show here
+              </span>
             </p>
           </div>
         }

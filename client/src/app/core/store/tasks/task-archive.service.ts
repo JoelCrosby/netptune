@@ -40,8 +40,8 @@ export class TaskArchiveService {
 }
 
 const buildRestoreConfirmation = (count: number): ConfirmDialogOptions => ({
-  acceptLabel: 'Restore',
-  cancelLabel: 'Cancel',
+  acceptLabel: $localize`:Confirms the action in a dialog:Restore`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
   message:
     count === 1
       ? 'Are you sure you want to restore this task?'

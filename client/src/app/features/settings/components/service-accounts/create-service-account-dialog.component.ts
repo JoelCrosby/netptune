@@ -66,27 +66,42 @@ const defaultPermissions: Permission[] = [
     LucideKeyRound,
     LucideShieldCheck,
   ],
-  template: `<form app-dialog-content class="min-w-0">
+  template: `
+    <form app-dialog-content class="min-w-0">
       <app-stepper mode="wizard" [(activeIndex)]="currentStep">
         <app-step
+          i18n-title="Title of the account details wizard step"
           title="Account details"
+          i18n-description="Description of the account details wizard step"
           description="Name and describe the service account.">
           <div class="form-auth">
             <p class="text-muted mb-5 text-sm">
-              Service accounts are non-interactive identities owned by workspace
-              users. They cannot sign in through the normal login flow.
+              <span i18n="Explains what a service account is">
+                Service accounts are non-interactive identities owned by
+                workspace users. They cannot sign in through the normal login
+                flow.
+              </span>
             </p>
 
             <app-form-input
               [formField]="accountForm.name"
+              i18n-label="Label of the name field"
               label="Name"
+              i18n-placeholder="
+                Example service account name shown as placeholder text
+              "
               placeholder="Codex"
+              i18n-hint="Hint under the service account name field"
               hint="Use a name that identifies the agent or integration."
               maxLength="128" />
 
             <app-form-textarea
               [formField]="accountForm.description"
+              i18n-label="Label of the description field"
               label="Description"
+              i18n-placeholder="
+                Example service account description shown as placeholder text
+              "
               placeholder="Tracks implementation work in Netptune"
               rows="3"
               maxLength="2048" />
@@ -94,19 +109,44 @@ const defaultPermissions: Permission[] = [
         </app-step>
 
         <app-step
+          i18n-title="Title of the permissions wizard step"
           title="Permissions"
+          i18n-description="Description of the permissions wizard step"
           description="Choose what this identity is allowed to do.">
           <fieldset>
-            <legend class="mb-1 text-sm font-medium">API permissions</legend>
+            <legend class="mb-1 text-sm font-medium">
+              <span
+                i18n="Heading above the API permissions for a service account">
+                API permissions
+              </span>
+            </legend>
             <p class="text-muted mb-3 text-xs">
-              Every credential is restricted to a subset of these account
-              permissions.
+              <span
+                i18n="
+                  Explains that credential scopes are a subset of account
+                  permissions
+                ">
+                Every credential is restricted to a subset of these account
+                permissions.
+              </span>
             </p>
 
             <div class="mb-3 flex items-center justify-between gap-3">
               <span class="text-muted text-xs">
-                {{ selectedPermissions().size }} of
-                {{ totalPermissionCount }} selected
+                <span
+                  i18n="
+                    How many permissions are selected. SELECTED is the chosen
+                    count and TOTAL the number available
+                  ">
+                  {{
+                    selectedPermissions().size // i18n(ph="SELECTED")
+                  }}
+                  of
+                  {{
+                    totalPermissionCount // i18n(ph="TOTAL")
+                  }}
+                  selected
+                </span>
               </span>
               <div class="flex gap-2">
                 <button
@@ -114,14 +154,18 @@ const defaultPermissions: Permission[] = [
                   type="button"
                   class="h-8 text-xs"
                   (click)="selectAllPermissions()">
-                  Select all
+                  <span i18n="Button that selects every permission">
+                    Select all
+                  </span>
                 </button>
                 <button
                   app-stroked-button
                   type="button"
                   class="h-8 text-xs"
                   (click)="clearPermissions()">
-                  Clear
+                  <span i18n="Button that deselects every permission">
+                    Clear
+                  </span>
                 </button>
               </div>
             </div>
@@ -139,9 +183,7 @@ const defaultPermissions: Permission[] = [
                       type="button"
                       class="text-primary cursor-pointer text-xs"
                       (click)="toggleGroup(group)">
-                      {{
-                        isGroupSelected(group) ? 'Clear group' : 'Select group'
-                      }}
+                      {{ groupToggleLabel(group) }}
                     </button>
                   </header>
 
@@ -166,24 +208,37 @@ const defaultPermissions: Permission[] = [
 
             @if (selectedPermissions().size === 0) {
               <p class="text-warn mt-2 text-sm">
-                Select at least one permission to continue.
+                <span i18n="Validation message when no permission is selected">
+                  Select at least one permission to continue.
+                </span>
               </p>
             }
           </fieldset>
         </app-step>
 
         <app-step
+          i18n-title="Title of the first-credential wizard step"
           title="First credential"
+          i18n-description="Description of the first-credential wizard step"
           description="Optionally issue the first API credential.">
           <div class="border-border mb-5 rounded border px-4 py-3">
             <app-checkbox
               [checked]="createCredential()"
               (changed)="setCreateCredential($event)">
               <span class="flex flex-col gap-0.5">
-                <span class="text-sm font-medium">Create a credential now</span>
+                <span
+                  class="text-sm font-medium"
+                  i18n="
+                    Option to issue a credential while creating the account
+                  ">
+                  Create a credential now
+                </span>
                 <span class="text-muted text-xs">
-                  You can skip this and create one from the service-account page
-                  later.
+                  <span
+                    i18n="Explains that issuing a credential can be deferred">
+                    You can skip this and create one from the service-account
+                    page later.
+                  </span>
                 </span>
               </span>
             </app-checkbox>
@@ -192,17 +247,30 @@ const defaultPermissions: Permission[] = [
           @if (createCredential()) {
             <app-form-input
               [formField]="accountForm.credentialName"
+              i18n-label="Label of the credential name field"
               label="Credential name"
+              i18n-placeholder="
+                Example credential name shown as placeholder text
+              "
               placeholder="Local Codex"
+              i18n-hint="Hint under the credential name field"
               hint="Describe where this credential will be used."
               maxLength="128" />
 
             <fieldset>
               <legend class="mb-1 text-sm font-medium">
-                Credential scopes
+                <span
+                  i18n="Heading above the permission scopes for a credential">
+                  Credential scopes
+                </span>
               </legend>
               <p class="text-muted mb-3 text-xs">
-                Restrict this credential further than the account if needed.
+                <span
+                  i18n="
+                    Explains that a credential can be narrower than the account
+                  ">
+                  Restrict this credential further than the account if needed.
+                </span>
               </p>
 
               <div
@@ -223,8 +291,14 @@ const defaultPermissions: Permission[] = [
 
               @if (credentialScopes().size === 0) {
                 <p class="text-warn mt-2 text-sm">
-                  Select at least one credential scope or skip credential
-                  creation.
+                  <span
+                    i18n="
+                      Validation message when a credential has no scopes
+                      selected
+                    ">
+                    Select at least one credential scope or skip credential
+                    creation.
+                  </span>
                 </p>
               }
             </fieldset>
@@ -232,16 +306,29 @@ const defaultPermissions: Permission[] = [
             <div
               class="border-border bg-background flex min-h-40 flex-col items-center justify-center rounded border p-6 text-center">
               <svg lucideKeyRound class="text-muted mb-3 h-8 w-8"></svg>
-              <p class="font-medium">No credential will be created</p>
+              <p class="font-medium">
+                <span
+                  i18n="
+                    Shown when the user opts out of issuing a first credential
+                  ">
+                  No credential will be created
+                </span>
+              </p>
               <p class="text-muted mt-1 text-sm">
-                The service account will be ready for a credential whenever you
-                need one.
+                <span i18n="Reassures that a credential can be issued later">
+                  The service account will be ready for a credential whenever
+                  you need one.
+                </span>
               </p>
             </div>
           }
         </app-step>
 
-        <app-step title="Review" description="Review what will be created.">
+        <app-step
+          i18n-title="Title of the review wizard step"
+          title="Review"
+          i18n-description="Description of the review wizard step"
+          description="Review what will be created.">
           <div class="flex flex-col gap-4">
             <div class="border-border rounded border p-4">
               <h3 class="font-overpass text-lg font-medium">
@@ -257,7 +344,12 @@ const defaultPermissions: Permission[] = [
             <div class="border-border rounded border p-4">
               <h4 class="mb-3 flex items-center gap-2 text-sm font-medium">
                 <svg lucideShieldCheck class="h-4 w-4"></svg>
-                Account permissions
+                <span
+                  i18n="
+                    Heading above the permissions granted to a service account
+                  ">
+                  Account permissions
+                </span>
               </h4>
               <div class="flex max-h-40 flex-wrap gap-2 overflow-y-auto">
                 @for (permission of selectedPermissions(); track permission) {
@@ -272,19 +364,36 @@ const defaultPermissions: Permission[] = [
             <div class="border-border rounded border p-4">
               <h4 class="mb-2 flex items-center gap-2 text-sm font-medium">
                 <svg lucideKeyRound class="h-4 w-4"></svg>
-                First credential
+                <span
+                  i18n="Heading above the first credential in the review step">
+                  First credential
+                </span>
               </h4>
               @if (createCredential()) {
                 <p class="text-sm font-medium">
                   {{ accountForm.credentialName().value() }}
                 </p>
                 <p class="text-muted mt-1 text-xs">
-                  {{ credentialScopes().size }} scoped permissions · expires
-                  after 90 days
+                  <span
+                    i18n="
+                      Credential summary in the review step. COUNT is the number
+                      of scoped permissions; the 90 day expiry is fixed by the
+                      server
+                    ">
+                    {{
+                      credentialScopes().size // i18n(ph="COUNT")
+                    }}
+                    scoped permissions · expires after 90 days
+                  </span>
                 </p>
               } @else {
                 <p class="text-muted text-sm">
-                  Credential creation will be skipped.
+                  <span
+                    i18n="
+                      Shown in the review step when no credential will be issued
+                    ">
+                    Credential creation will be skipped.
+                  </span>
                 </p>
               }
             </div>
@@ -297,7 +406,9 @@ const defaultPermissions: Permission[] = [
       @if (currentStep() > 0) {
         <button app-stroked-button type="button" (click)="previousStep()">
           <svg lucideChevronLeft class="h-4 w-4" aria-hidden="true"></svg>
-          Back
+          <span i18n="Button that returns to the previous wizard step">
+            Back
+          </span>
         </button>
       }
 
@@ -307,7 +418,7 @@ const defaultPermissions: Permission[] = [
           class="ml-auto"
           type="button"
           (click)="nextStep()">
-          Next
+          <span i18n="Button that advances to the next wizard step">Next</span>
           <svg lucideChevronRight class="h-4 w-4" aria-hidden="true"></svg>
         </button>
       } @else {
@@ -316,12 +427,21 @@ const defaultPermissions: Permission[] = [
           class="ml-auto"
           type="button"
           (click)="submit()">
-          Create Service Account
+          <span i18n="Button that creates the service account">
+            Create Service Account
+          </span>
         </button>
       }
-    </div>`,
+    </div>
+  `,
 })
 export class CreateServiceAccountDialogComponent {
+  /** Ternaries in a template expression cannot be marked, so build the copy here. */
+  protected groupToggleLabel(group: PermissionGroupOption): string {
+    return this.isGroupSelected(group)
+      ? $localize`:Button that deselects every permission in a group:Clear group`
+      : $localize`:Button that selects every permission in a group:Select group`;
+  }
   private readonly dialogRef =
     inject<
       DialogRef<
@@ -343,7 +463,7 @@ export class CreateServiceAccountDialogComponent {
 
   readonly accountFormModel = signal({
     name: '',
-    description: '',
+    description: $localize`:Explanatory text:`,
     createCredential: true,
     credentialName: 'Default credential',
   });
@@ -351,11 +471,15 @@ export class CreateServiceAccountDialogComponent {
   readonly accountForm = form(this.accountFormModel, (schema) => {
     apply(
       schema.name,
-      requiredTextSchema({ label: 'Name', minLength: 2, maxLength: 128 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        minLength: 2,
+        maxLength: 128,
+      })
     );
     maxLength(schema.description, 2048);
     required(schema.credentialName, {
-      message: 'Credential name is required.',
+      message: $localize`:Validation error when the credential name is empty:Credential name is required.`,
       when: (context) => context.valueOf(schema.createCredential),
     });
     validate(schema.credentialName, (context) => {
@@ -366,7 +490,7 @@ export class CreateServiceAccountDialogComponent {
       if (!name) {
         return {
           kind: 'whitespace',
-          message: 'Credential name is required.',
+          message: $localize`:Validation error when the credential name is empty:Credential name is required.`,
         };
       }
 
@@ -374,7 +498,7 @@ export class CreateServiceAccountDialogComponent {
 
       return {
         kind: 'minLength',
-        message: 'Credential name must have at least 2 characters.',
+        message: $localize`:Validation error when the credential name is too short:Credential name must have at least 2 characters.`,
       };
     });
     maxLength(schema.credentialName, 128);

@@ -114,102 +114,111 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     IconButtonComponent,
     CreateBoardGroupComponent,
   ],
-  template: `<app-page-container
-    [marginBottom]="false"
-    [verticalPadding]="false"
-    [fullHeight]="true"
-    [centerPage]="false">
-    @if (boardGroupsLoaded()) {
-      <app-page-header
-        [title]="boardName()"
-        [titleEditable]="isAuthenticated()"
-        [overflowActions]="isAuthenticated() ? secondaryActions : []"
-        (titleSubmitted)="onTitleSubmitted($event)">
-        <div class="flex flex-wrap items-center gap-3">
-          <app-board-group-header />
-        </div>
-      </app-page-header>
-    }
+  template: `
+    <app-page-container
+      [marginBottom]="false"
+      [verticalPadding]="false"
+      [fullHeight]="true"
+      [centerPage]="false">
+      @if (boardGroupsLoaded()) {
+        <app-page-header
+          [title]="boardName()"
+          [titleEditable]="isAuthenticated()"
+          [overflowActions]="isAuthenticated() ? secondaryActions : []"
+          (titleSubmitted)="onTitleSubmitted($event)">
+          <div class="flex flex-wrap items-center gap-3">
+            <app-board-group-header />
+          </div>
+        </app-page-header>
+      }
 
-    @if (loading()) {
-      @if (showSkeleton()) {
-        <app-skeleton-board />
-      }
-    } @else {
-      @if (visibleGroups(); as groups) {
-        <div
-          cdkDropList
-          appScrollShadow
-          class="board-groups custom-scroll flex max-h-[calc(100vh-180px)] w-full flex-1 flex-row overflow-hidden overflow-x-scroll rounded-lg pb-4 max-[600px]:max-h-[calc(100vh-154px)]"
-          cdkDropListOrientation="horizontal"
-          (cdkDropListDropped)="drop($event)"
-          [cdkDropListData]="groups">
-          @for (group of groups; track trackBoardGroup($index, group)) {
-            <app-board-group
-              cdkDrag
-              [cdkDragDisabled]="!isAuthenticated()"
-              class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]"
-              [cdkDragData]="group"
-              [group]="group"
-              [assignedStatus]="
-                group.statusId
-                  ? (statusMap().get(group.statusId) ?? null)
-                  : null
-              "
-              [siblingIds]="siblingIdMap().get(group.id) ?? []"
-              [reorderDisabled]="reorderDisabled()"
-              [dragListId]="group.id.toString()">
-              <span
-                cdkDragHandle
-                class="group/header flex cursor-pointer flex-row items-center justify-between uppercase">
-                <div
-                  class="text-foreground/60 flex h-12.5 w-full flex-row-reverse items-center justify-end pl-4 text-sm font-medium tracking-[.1px]">
-                  @if (
-                    group.statusId && statusMap().get(group.statusId);
-                    as status
-                  ) {
-                    <app-board-group-status-dot [status]="status" />
+      @if (loading()) {
+        @if (showSkeleton()) {
+          <app-skeleton-board />
+        }
+      } @else {
+        @if (visibleGroups(); as groups) {
+          <div
+            cdkDropList
+            appScrollShadow
+            class="board-groups custom-scroll flex max-h-[calc(100vh-180px)] w-full flex-1 flex-row overflow-hidden overflow-x-scroll rounded-lg pb-4 max-[600px]:max-h-[calc(100vh-154px)]"
+            cdkDropListOrientation="horizontal"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDropListData]="groups">
+            @for (group of groups; track trackBoardGroup($index, group)) {
+              <app-board-group
+                cdkDrag
+                [cdkDragDisabled]="!isAuthenticated()"
+                class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]"
+                [cdkDragData]="group"
+                [group]="group"
+                [assignedStatus]="
+                  group.statusId
+                    ? (statusMap().get(group.statusId) ?? null)
+                    : null
+                "
+                [siblingIds]="siblingIdMap().get(group.id) ?? []"
+                [reorderDisabled]="reorderDisabled()"
+                [dragListId]="group.id.toString()">
+                <span
+                  cdkDragHandle
+                  class="group/header flex cursor-pointer flex-row items-center justify-between uppercase">
+                  <div
+                    class="text-foreground/60 flex h-12.5 w-full flex-row-reverse items-center justify-end pl-4 text-sm font-medium tracking-[.1px]">
+                    @if (
+                      group.statusId && statusMap().get(group.statusId);
+                      as status
+                    ) {
+                      <app-board-group-status-dot [status]="status" />
+                    }
+                    <app-inline-edit-input
+                      class="hover:bg-primary/6 ml-2 w-full rounded px-1.5 py-1 transition-colors duration-200"
+                      [size]="group.name.length"
+                      [value]="group.name"
+                      [disabled]="!isAuthenticated()"
+                      (submitted)="
+                        onGroupNameSubmitted($event, group)
+                      "></app-inline-edit-input>
+                    <span class="text-foreground/30 ml-[.2rem] font-bold">
+                      {{ group.tasks.length }}
+                    </span>
+                  </div>
+                  @if (isAuthenticated()) {
+                    <button
+                      app-icon-button
+                      i18n-title="
+                        Tooltip on the button that edits a board group
+                      "
+                      title="Edit group"
+                      class="invisible mx-[.2rem] group-hover/header:visible"
+                      (click)="onEditGroupClicked(group)">
+                      <svg
+                        lucideEllipsisVertical
+                        class="text-foreground/40 h-4 w-4"></svg>
+                    </button>
+                    <button
+                      app-icon-button
+                      i18n-title="
+                        Tooltip on the button that deletes a board group
+                      "
+                      title="Delete group"
+                      class="invisible mx-[.2rem] group-hover/header:visible"
+                      (click)="onDeleteGroupClicked(group)">
+                      <svg lucideX class="text-foreground/40 h-4 w-4"></svg>
+                    </button>
                   }
-                  <app-inline-edit-input
-                    class="hover:bg-primary/6 ml-2 w-full rounded px-1.5 py-1 transition-colors duration-200"
-                    [size]="group.name.length"
-                    [value]="group.name"
-                    [disabled]="!isAuthenticated()"
-                    (submitted)="onGroupNameSubmitted($event, group)">
-                  </app-inline-edit-input>
-                  <span class="text-foreground/30 ml-[.2rem] font-bold">{{
-                    group.tasks.length
-                  }}</span>
-                </div>
-                @if (isAuthenticated()) {
-                  <button
-                    app-icon-button
-                    title="Edit group"
-                    class="invisible mx-[.2rem] group-hover/header:visible"
-                    (click)="onEditGroupClicked(group)">
-                    <svg
-                      lucideEllipsisVertical
-                      class="text-foreground/40 h-4 w-4"></svg>
-                  </button>
-                  <button
-                    app-icon-button
-                    title="Delete group"
-                    class="invisible mx-[.2rem] group-hover/header:visible"
-                    (click)="onDeleteGroupClicked(group)">
-                    <svg lucideX class="text-foreground/40 h-4 w-4"></svg>
-                  </button>
-                }
-              </span>
-            </app-board-group>
-          }
-          @if (isAuthenticated()) {
-            <app-create-board-group
-              class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]" />
-          }
-        </div>
+                </span>
+              </app-board-group>
+            }
+            @if (isAuthenticated()) {
+              <app-create-board-group
+                class="board-group mr-4 flex w-75 flex-none flex-col overflow-hidden rounded-[.4rem]" />
+            }
+          </div>
+        }
       }
-    }
-  </app-page-container> `,
+    </app-page-container>
+  `,
 })
 export class BoardGroupsViewComponent implements OnDestroy {
   private store = inject(Store);
@@ -280,27 +289,27 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   secondaryActions: HeaderAction[] = [
     {
-      label: 'Edit Board',
+      label: $localize`:Overflow action that edits the board:Edit Board`,
       click: () => this.onEditBoardClicked(),
       icon: LucideSettings2,
     },
     {
-      label: 'Manage Groups',
+      label: $localize`:Overflow action that opens the manage-groups dialog:Manage Groups`,
       click: () => this.onManageGroupsClicked(),
       icon: LucideEyeOff,
     },
     {
-      label: 'Import Tasks',
+      label: $localize`:Overflow action that opens the CSV task import dialog:Import Tasks`,
       click: () => this.onImportTasksClicked(),
       icon: LucideFileUp,
     },
     {
-      label: 'Export Board Tasks',
+      label: $localize`:Overflow action that downloads the board tasks as CSV:Export Board Tasks`,
       click: () => this.onExportTasksClicked(),
       icon: LucideFileDown,
     },
     {
-      label: 'Delete Board',
+      label: $localize`:Overflow action that deletes the board:Delete Board`,
       click: () => this.onDeleteBoardClicked(),
       icon: LucideDelete,
     },

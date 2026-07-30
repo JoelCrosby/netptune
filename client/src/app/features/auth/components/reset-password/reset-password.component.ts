@@ -37,20 +37,27 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
   template: `
     <app-auth-page-container>
       <app-auth-form-panel
+        i18n-heading="Heading of the form for choosing a new password"
         heading="Reset your password"
         [loading]="loading()"
         (submitted)="resetPassword()">
         <app-form-input
           [formField]="resetForm.password0"
+          i18n-label="
+            Label of the new password field on the password reset form
+          "
           label="New Password"
           maxLength="1024"
           id="new-password"
           type="password"
-          autocomplete="new-password">
-        </app-form-input>
+          autocomplete="new-password"></app-form-input>
 
         <app-form-input
           [formField]="resetForm.password1"
+          i18n-label="
+            Label of the new password confirmation field on the password reset
+            form
+          "
           label="Confirm New Password"
           maxLength="1024"
           id="confirm-new-password"
@@ -66,7 +73,9 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
             type="button"
             class="form-action-button"
             [routerLink]="['/auth/login']">
-            Back to Log in
+            <span i18n="Link from the registration form back to the login form">
+              Back to Log in
+            </span>
           </a>
 
           <button
@@ -74,7 +83,9 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
             color="primary"
             type="submit"
             class="form-action-button">
-            Reset Password
+            <span i18n="Submit button on the password reset form">
+              Reset Password
+            </span>
           </button>
         </div>
       </app-auth-form-panel>
@@ -98,8 +109,12 @@ export class ResetPasswordComponent {
   });
 
   resetForm = form(this.resetFormModel, (schema) => {
-    required(schema.password0, { message: 'Password is required.' });
-    required(schema.password1, { message: 'Confirm your password.' });
+    required(schema.password0, {
+      message: $localize`:Validation error when the password field is empty:Password is required.`,
+    });
+    required(schema.password1, {
+      message: $localize`:Validation error when the password confirmation field is empty:Confirm your password.`,
+    });
     minLength(schema.password0, 4);
     minLength(schema.password1, 4);
     maxLength(schema.password0, 1024);
@@ -109,7 +124,7 @@ export class ResetPasswordComponent {
       if (context.valueOf(schema.password0) !== context.value()) {
         return {
           kind: 'noMatch',
-          message: 'Passwords do not match',
+          message: $localize`:Validation error when the two password fields differ:Passwords do not match`,
         };
       }
 

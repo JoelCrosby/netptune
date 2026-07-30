@@ -3,6 +3,7 @@ import {
   todayDate,
 } from '@static/components/timeline/timeline-date-geometry';
 import { CalendarDay } from '../models/calendar.models';
+import { dateTimeFormat } from '@core/util/locale';
 
 const monthPattern = /^(\d{4})-(0[1-9]|1[0-2])$/;
 
@@ -29,7 +30,7 @@ export const calendarMonthRange = (month: string): CalendarMonthRange => {
     month: safeMonth,
     from,
     to,
-    label: new Intl.DateTimeFormat(undefined, {
+    label: dateTimeFormat({
       month: 'long',
       year: 'numeric',
       timeZone: 'UTC',
@@ -53,7 +54,7 @@ export const addCalendarMonths = (month: string, amount: number): string => {
 };
 
 export const calendarDayLabel = (date: string): string =>
-  new Intl.DateTimeFormat(undefined, {
+  dateTimeFormat({
     weekday: 'long',
     day: 'numeric',
     month: 'long',

@@ -89,7 +89,11 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
                 {{ task.priority | sprintBacklogPriorityLabel }}
               </span>
             } @else {
-              <span class="text-muted text-xs">None</span>
+              <span
+                class="text-muted text-xs"
+                i18n="Shown in place of an empty value">
+                None
+              </span>
             }
           </ng-template>
 
@@ -103,7 +107,11 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
             @if (task.assignees.length) {
               <app-avatar-stack [avatars]="task.assignees" />
             } @else {
-              <span class="text-muted text-sm">Unassigned</span>
+              <span
+                class="text-muted text-sm"
+                i18n="Shown when a task has nobody assigned">
+                Unassigned
+              </span>
             }
           </ng-template>
 
@@ -111,6 +119,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
             @if (sprints().length > 0) {
               <app-dropdown-button
                 #assignMenu
+                i18n-label="Button that assigns the task to a sprint"
                 label="Assign to sprint"
                 buttonClass="w-42 h-7 text-xs justify-between"
                 color="neutral"
@@ -134,7 +143,11 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
                 }
               </app-dropdown-button>
             } @else {
-              <span class="text-muted text-sm">No sprints available</span>
+              <span
+                class="text-muted text-sm"
+                i18n="Shown when there is no sprint to assign a task to">
+                No sprints available
+              </span>
             }
           </ng-template>
         </app-datatable>

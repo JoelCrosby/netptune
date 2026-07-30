@@ -35,8 +35,7 @@ export interface AvatarFilterOption {
             @if (option.online) {
               <span
                 class="border-background pointer-events-none absolute right-0.5 bottom-0.5 h-3 w-3 rounded-full border-2 bg-green-500"
-                [appTooltip]="option.displayName + ' ' + onlineLabel()">
-              </span>
+                [appTooltip]="presenceTooltip(option.displayName)"></span>
             }
           </div>
         }
@@ -54,7 +53,22 @@ export interface AvatarFilterOption {
 export class AvatarFilterComponent {
   readonly options = input<AvatarFilterOption[]>([]);
   readonly emptyLabel = input<string | null>(null);
-  readonly onlineLabel = input('is online');
+  readonly onlineLabel = input(
+    $localize`:Presence state appended after a person's name, e.g. "Ada is online":is online`
+  );
 
   readonly optionClicked = output<AvatarFilterOption>();
+
+  /**
+   * One message with both parts as placeholders rather than concatenating in the
+   * template, so translators can reorder the name and the state.
+   *
+   * The state itself is a caller-supplied fragment, which limits how far it can
+   * be reworded — acceptable while every caller passes a short presence phrase.
+   */
+  protected presenceTooltip(displayName: string | null | undefined): string {
+    const state = this.onlineLabel();
+
+    return $localize`:Tooltip on a presence dot. NAME is the person's display name and STATE is their presence, e.g. "is online":${displayName ?? ''}:NAME: ${state}:STATE:`;
+  }
 }

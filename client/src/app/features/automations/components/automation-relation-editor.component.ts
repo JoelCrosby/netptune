@@ -26,26 +26,34 @@ interface TaskSearchResponse {
     <div class="flex flex-col gap-4">
       <div class="grid gap-3 md:grid-cols-2">
         <app-form-select
+          i18n-label="Label of the operation field"
           label="Operation"
           [noMargin]="true"
           [value]="operation()"
           (changed)="setOperation($event)">
           <app-form-select-option [value]="relationOperation.add">
-            Link tasks
+            <span i18n="Relation operation that creates a link">
+              Link tasks
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="relationOperation.remove">
-            Remove links
+            <span i18n="Relation operation that removes a link">
+              Remove links
+            </span>
           </app-form-select-option>
         </app-form-select>
 
         <app-form-select
+          i18n-label="Label of the relation field"
           label="Relation"
           [required]="true"
           [noMargin]="true"
           [value]="action().relationTypeId ?? null"
           (changed)="patch.emit({ relationTypeId: $event })">
           <app-form-select-option [value]="null">
-            Choose a relation
+            <span i18n="Placeholder option in the relation picker">
+              Choose a relation
+            </span>
           </app-form-select-option>
           @for (relationType of relationTypes(); track relationType.id) {
             <app-form-select-option [value]="relationType.id">
@@ -57,21 +65,28 @@ interface TaskSearchResponse {
 
       @if (isAdding()) {
         <app-form-select
+          i18n-label="Label of the direction field"
           label="Direction"
           [noMargin]="true"
           [value]="direction()"
           (changed)="patch.emit({ relationDirection: $event })">
           <app-form-select-option [value]="relationDirection.taskIsSource">
-            The triggering task is the source
+            <span i18n="Relation direction: the triggering task is the source">
+              The triggering task is the source
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="relationDirection.taskIsTarget">
-            The triggering task is the target
+            <span i18n="Relation direction: the triggering task is the target">
+              The triggering task is the target
+            </span>
           </app-form-select-option>
         </app-form-select>
       }
 
       <app-form-input
+        i18n-label="Label of the task search field in the dry-run dialog"
         label="Find a task"
+        i18n-placeholder="Placeholder text: Search by key or name"
         placeholder="Search by key or name"
         [noMargin]="true"
         [value]="taskSearch()"
@@ -87,7 +102,14 @@ interface TaskSearchResponse {
         </app-form-select-option>
         @if (hasUnlistedSelection()) {
           <app-form-select-option [value]="action().relatedTaskId">
-            Task #{{ action().relatedTaskId }}
+            <span
+              i18n="
+                Fallback label for a task shown only by id. ID is the task id
+              ">
+              Task #{{
+                action().relatedTaskId // i18n(ph="ID")
+              }}
+            </span>
           </app-form-select-option>
         }
         @for (task of tasks(); track task.id) {
@@ -140,10 +162,14 @@ export class AutomationRelationEditorComponent {
     return this.operation() === AutomationRelationOperation.add;
   });
   readonly taskSelectLabel = computed(() => {
-    return this.isAdding() ? 'Task to link' : 'Limit to one task';
+    return this.isAdding()
+      ? $localize`:Label of the field choosing which task to link:Task to link`
+      : $localize`:Label of the field narrowing a relation removal to one task:Limit to one task`;
   });
   readonly emptyTaskOptionLabel = computed(() => {
-    return this.isAdding() ? 'Choose a task' : 'Every linked task';
+    return this.isAdding()
+      ? $localize`:Placeholder in the task picker:Choose a task`
+      : $localize`:Option that applies to every linked task:Every linked task`;
   });
   readonly hasUnlistedSelection = computed(() => {
     const relatedTaskId = this.action().relatedTaskId;

@@ -64,6 +64,7 @@ interface OperatorOption {
       @if (requiresValue()) {
         @if (field() === taskChangeField.status) {
           <app-form-select
+            i18n-label="Label of the value field"
             label="Value"
             [noMargin]="true"
             [value]="condition().value ?? null"
@@ -76,6 +77,7 @@ interface OperatorOption {
           </app-form-select>
         } @else if (valueOptions().length) {
           <app-form-select
+            i18n-label="Label of the value field"
             label="Value"
             [noMargin]="true"
             [value]="condition().value ?? null"
@@ -88,6 +90,7 @@ interface OperatorOption {
           </app-form-select>
         } @else {
           <app-form-input
+            i18n-label="Label of the value field"
             label="Value"
             [name]="'condition-' + field()"
             [type]="isDateField() ? 'date' : 'text'"
@@ -117,42 +120,42 @@ export class AutomationFieldConditionEditorComponent {
       const options = [
         {
           icon: LucideAsterisk,
-          label: 'Any change',
+          label: $localize`:Condition operator matching any change:Any change`,
           value: AutomationConditionOperator.any,
         },
         {
           icon: LucideEqual,
-          label: 'Includes',
+          label: $localize`:Condition operator matching when a value is present:Includes`,
           value: AutomationConditionOperator.equals,
         },
         {
           icon: LucideEqualNot,
-          label: 'Does not include',
+          label: $localize`:Condition operator matching when a value is absent:Does not include`,
           value: AutomationConditionOperator.notEquals,
         },
         {
           icon: LucideTextSearch,
-          label: 'Contains text',
+          label: $localize`:Condition operator matching a substring:Contains text`,
           value: AutomationConditionOperator.contains,
         },
         {
           icon: LucideCircleDashed,
-          label: 'Is empty',
+          label: $localize`:Condition operator matching an empty field:Is empty`,
           value: AutomationConditionOperator.isEmpty,
         },
         {
           icon: LucideCircleDot,
-          label: 'Is not empty',
+          label: $localize`:Condition operator matching a non-empty field:Is not empty`,
           value: AutomationConditionOperator.isNotEmpty,
         },
         {
           icon: LucidePlus,
-          label: 'Added',
+          label: $localize`:Condition operator matching an added value:Added`,
           value: AutomationConditionOperator.added,
         },
         {
           icon: LucideMinus,
-          label: 'Removed',
+          label: $localize`:Condition operator matching a removed value:Removed`,
           value: AutomationConditionOperator.removed,
         },
       ];
@@ -170,17 +173,17 @@ export class AutomationFieldConditionEditorComponent {
     const options: OperatorOption[] = [
       {
         icon: LucideAsterisk,
-        label: 'Any change',
+        label: $localize`:Condition operator matching any change:Any change`,
         value: AutomationConditionOperator.any,
       },
       {
         icon: LucideEqual,
-        label: 'Equals',
+        label: $localize`:Condition operator matching an exact value:Equals`,
         value: AutomationConditionOperator.equals,
       },
       {
         icon: LucideEqualNot,
-        label: 'Does not equal',
+        label: $localize`:Condition operator matching anything but a value:Does not equal`,
         value: AutomationConditionOperator.notEquals,
       },
     ];
@@ -188,7 +191,7 @@ export class AutomationFieldConditionEditorComponent {
     if (this.isTextField()) {
       options.push({
         icon: LucideTextSearch,
-        label: 'Contains',
+        label: $localize`:Condition operator matching a substring:Contains`,
         value: AutomationConditionOperator.contains,
       });
     }
@@ -196,12 +199,12 @@ export class AutomationFieldConditionEditorComponent {
     options.push(
       {
         icon: LucideCircleDashed,
-        label: 'Is empty',
+        label: $localize`:Condition operator matching an empty field:Is empty`,
         value: AutomationConditionOperator.isEmpty,
       },
       {
         icon: LucideCircleDot,
-        label: 'Is not empty',
+        label: $localize`:Condition operator matching a non-empty field:Is not empty`,
         value: AutomationConditionOperator.isNotEmpty,
       }
     );
@@ -216,19 +219,31 @@ export class AutomationFieldConditionEditorComponent {
   valueOptions(): SelectOption[] {
     if (this.field() === TaskChangeField.priority) {
       return [
-        { label: 'None', value: 'None' },
-        { label: 'Low', value: 'Low' },
-        { label: 'Medium', value: 'Medium' },
-        { label: 'High', value: 'High' },
-        { label: 'Critical', value: 'Critical' },
+        { label: $localize`:Task priority level, none:None`, value: 'None' },
+        { label: $localize`:Task priority level, low:Low`, value: 'Low' },
+        {
+          label: $localize`:Task priority level, medium:Medium`,
+          value: 'Medium',
+        },
+        { label: $localize`:Task priority level, high:High`, value: 'High' },
+        {
+          label: $localize`:Task priority level, critical:Critical`,
+          value: 'Critical',
+        },
       ];
     }
 
     if (this.field() === TaskChangeField.estimate) {
       return [
-        { label: 'Story points', value: 'StoryPoints' },
-        { label: 'Hours', value: 'Hours' },
-        { label: 'T-shirt', value: 'TShirt' },
+        {
+          label: $localize`:Estimation unit, story points:Story points`,
+          value: 'StoryPoints',
+        },
+        { label: $localize`:Estimation unit, hours:Hours`, value: 'Hours' },
+        {
+          label: $localize`:Estimation unit, t-shirt sizes:T-shirt`,
+          value: 'TShirt',
+        },
       ];
     }
 

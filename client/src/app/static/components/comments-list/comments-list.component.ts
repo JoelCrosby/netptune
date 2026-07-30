@@ -60,14 +60,12 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
           <app-avatar
             size="lg"
             [name]="user.displayName"
-            [imageUrl]="user.pictureUrl">
-          </app-avatar>
+            [imageUrl]="user.pictureUrl"></app-avatar>
           <app-mention-input
             class="flex-1"
             [users]="workspaceUsers()"
             (mentionSubmit)="onMentionSubmit($event)"
-            [icon]="lucideMessageSquare">
-          </app-mention-input>
+            [icon]="lucideMessageSquare"></app-mention-input>
         </div>
       }
       <div class="mb-4 flex flex-col" [class.ml-12]="canCreate()">
@@ -78,8 +76,9 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
               size="md"
               [name]="comment.userDisplayName"
               [imageUrl]="comment.userDisplayImage"
-              [isServiceAccount]="comment.userIsServiceAccount ?? false">
-            </app-avatar>
+              [isServiceAccount]="
+                comment.userIsServiceAccount ?? false
+              "></app-avatar>
 
             <div class="flex flex-1 flex-col">
               <span class="mb-1 flex flex-row items-center font-medium">
@@ -87,7 +86,15 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
                 <small class="ml-[0.6rem] flex-1 opacity-60">
                   {{ comment.createdAt | fromNow }}
                   @if (comment.isEdited) {
-                    <span> · edited</span>
+                    <span
+                      i18n="
+                        Marker appended after a comment's timestamp when the
+                        comment has been edited. The leading space is part of
+                        the message and separates it from the timestamp — keep
+                        it, along with the middle dot
+                      ">
+                      · edited
+                    </span>
                   }
                 </small>
               </span>
@@ -99,6 +106,10 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
                   [users]="workspaceUsers()"
                   [initialMentionIds]="editMentionIds()"
                   [clearOnSubmit]="false"
+                  i18n-placeholder="
+                    Placeholder in the comment edit box. The @ character
+                    triggers the mention picker and must be kept
+                  "
                   placeholder="Edit comment — type @ to mention"
                   (mentionSubmit)="onEditSubmit(comment, $event)">
                   <div class="flex justify-end gap-2">
@@ -106,22 +117,23 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
                       app-stroked-button
                       type="button"
                       (click)="cancelEditing()">
-                      Cancel
+                      <span i18n="Dismisses a dialog or form without acting">
+                        Cancel
+                      </span>
                     </button>
                     <button
                       app-flat-button
                       type="button"
                       [disabled]="!editText().trim()"
                       (click)="editInput.submit()">
-                      Save
+                      <span i18n="Confirms and stores an edit">Save</span>
                     </button>
                   </div>
                 </app-mention-input>
               } @else {
                 <span
                   class="text-sm font-normal"
-                  [innerHTML]="renderBody(comment.body)">
-                </span>
+                  [innerHTML]="renderBody(comment.body)"></span>
               }
             </div>
 
@@ -129,6 +141,10 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
               <div class="hidden w-10 group-hover:block">
                 <button
                   app-icon-button
+                  i18n-aria-label="
+                    Accessible label for the button that opens a comment's
+                    action menu
+                  "
                   aria-label="Comment Actions"
                   (click)="commentMenu.toggle($any($event.currentTarget))">
                   <svg lucideEllipsis class="h-4 w-4"></svg>
@@ -139,7 +155,9 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
                       app-menu-item
                       (click)="startEditing(comment); commentMenu.close()">
                       <svg lucideSettings2 class="h-4 w-4"></svg>
-                      <span>Edit Comment</span>
+                      <span i18n="Menu item that starts editing a comment">
+                        Edit Comment
+                      </span>
                     </button>
                   }
                   @if (canDeleteComment(comment)) {
@@ -149,7 +167,9 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
                         deleteComment.emit(comment); commentMenu.close()
                       ">
                       <svg lucideTrash2 class="h-4 w-4"></svg>
-                      <span>Delete Comment</span>
+                      <span i18n="Menu item that deletes a comment">
+                        Delete Comment
+                      </span>
                     </button>
                   }
                 </app-dropdown-menu>

@@ -51,83 +51,85 @@ import { FormErrorComponent } from '../form-error/form-error.component';
     FormControlPrefixDirective,
     FormErrorComponent,
   ],
-  template: `<div
-    class="nept-form-control mb-[1.4rem] w-[inherit]"
-    [class.mb-0!]="noMargin()">
-    @if (label()) {
-      <label [for]="name()" appFormLabel>
-        {{ label() }}
-      </label>
-    }
-
-    <app-form-control-field
-      #dropreference
-      class="w-full cursor-pointer"
-      [invalid]="touched() && invalid()"
-      [active]="!!value() && pending()"
-      (click)="onDropMenuIconClick($event)">
-      @if (prefix()) {
-        <div appFormPrefix>{{ prefix() }}</div>
+  template: `
+    <div
+      class="nept-form-control mb-[1.4rem] w-[inherit]"
+      [class.mb-0!]="noMargin()">
+      @if (label()) {
+        <label [for]="name()" appFormLabel>
+          {{ label() }}
+        </label>
       }
 
-      <input
-        #input
-        appFormInput
-        [placeholder]="placeholder()"
-        [id]="name()"
-        [value]="displayValue()"
-        [disabled]="disabled()"
-        class="grow cursor-pointer selection:bg-transparent"
-        [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
-        [attr.aria-invalid]="ariaInvalid()"
-        [attr.aria-describedby]="describedBy()"
-        readonly
-        (click)="$event.stopPropagation(); showDropdown()"
-        (keydown)="onKeyDown($event)"
-        (blur)="touched.set(true)"
-        autocomplete="off" />
-
-      <div
-        class="hidden"
-        [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"></div>
-
-      <ng-content />
-
-      @if (icon()) {
-        <svg
-          class="mr-3"
-          [lucideIcon]="icon()!"
-          size="20"
-          aria-hidden="true"></svg>
-      }
-
-      <svg
-        lucideChevronDown
-        size="28"
-        aria-hidden="true"
-        class="text-foreground/70 mr-4 flex items-center justify-center"></svg>
-
-      <app-form-select-dropdown [reference]="dropreference.el">
-        <div appFormSelectDropdown class="menu-scale-in">
-          <ng-content select="app-form-select-option" />
-        </div>
-      </app-form-select-dropdown>
-    </app-form-control-field>
-
-    @if (hint()) {
-      <small [id]="hintId()" appFormHint> {{ hint() }} </small>
-    }
-
-    @if (showErrors()) {
-      <div [id]="errorId()">
-        @for (error of errors(); track error.kind) {
-          <app-form-error>
-            {{ error.message }}
-          </app-form-error>
+      <app-form-control-field
+        #dropreference
+        class="w-full cursor-pointer"
+        [invalid]="touched() && invalid()"
+        [active]="!!value() && pending()"
+        (click)="onDropMenuIconClick($event)">
+        @if (prefix()) {
+          <div appFormPrefix>{{ prefix() }}</div>
         }
-      </div>
-    }
-  </div> `,
+
+        <input
+          #input
+          appFormInput
+          [placeholder]="placeholder()"
+          [id]="name()"
+          [value]="displayValue()"
+          [disabled]="disabled()"
+          class="grow cursor-pointer selection:bg-transparent"
+          [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
+          [attr.aria-invalid]="ariaInvalid()"
+          [attr.aria-describedby]="describedBy()"
+          readonly
+          (click)="$event.stopPropagation(); showDropdown()"
+          (keydown)="onKeyDown($event)"
+          (blur)="touched.set(true)"
+          autocomplete="off" />
+
+        <div
+          class="hidden"
+          [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"></div>
+
+        <ng-content />
+
+        @if (icon()) {
+          <svg
+            class="mr-3"
+            [lucideIcon]="icon()!"
+            size="20"
+            aria-hidden="true"></svg>
+        }
+
+        <svg
+          lucideChevronDown
+          size="28"
+          aria-hidden="true"
+          class="text-foreground/70 mr-4 flex items-center justify-center"></svg>
+
+        <app-form-select-dropdown [reference]="dropreference.el">
+          <div appFormSelectDropdown class="menu-scale-in">
+            <ng-content select="app-form-select-option" />
+          </div>
+        </app-form-select-dropdown>
+      </app-form-control-field>
+
+      @if (hint()) {
+        <small [id]="hintId()" appFormHint>{{ hint() }}</small>
+      }
+
+      @if (showErrors()) {
+        <div [id]="errorId()">
+          @for (error of errors(); track error.kind) {
+            <app-form-error>
+              {{ error.message }}
+            </app-form-error>
+          }
+        </div>
+      }
+    </div>
+  `,
 })
 export class FormSelectComponent<
   TValue,

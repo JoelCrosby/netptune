@@ -11,7 +11,12 @@ import { StepComponent } from './step.component';
   selector: 'app-stepper',
   template: `
     @if (mode() === 'wizard') {
-      <ol class="m-0 flex list-none items-start p-0" aria-label="Form progress">
+      <ol
+        class="m-0 flex list-none items-start p-0"
+        i18n-aria-label="
+          Accessible label for the multi-step form progress indicator
+        "
+        aria-label="Form progress">
         @for (step of steps(); track step; let index = $index, last = $last) {
           <li class="flex min-w-0 items-center" [class.flex-1]="!last">
             <div class="flex min-w-0 flex-col items-center gap-2 text-center">

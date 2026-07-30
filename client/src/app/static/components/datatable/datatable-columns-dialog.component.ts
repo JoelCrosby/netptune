@@ -40,10 +40,14 @@ export interface DatatableColumnsDialogData {
     LucideGripVertical,
   ],
   template: `
-    <app-dialog-title>Customize Columns</app-dialog-title>
+    <app-dialog-title i18n="Title of the dialog for choosing table columns">
+      Customize Columns
+    </app-dialog-title>
 
     <p class="text-foreground/60 mb-4 text-sm">
-      Toggle which columns are shown and drag to reorder them.
+      <span i18n="Instructions in the table column customisation dialog">
+        Toggle which columns are shown and drag to reorder them.
+      </span>
     </p>
 
     <div
@@ -57,6 +61,9 @@ export interface DatatableColumnsDialogData {
           <button
             type="button"
             class="text-foreground/40 hover:text-foreground cursor-grab active:cursor-grabbing"
+            i18n-aria-label="
+              Accessible label for the handle that reorders a column
+            "
             aria-label="Drag to reorder"
             cdkDragHandle>
             <svg lucideGripVertical class="h-4 w-4"></svg>
@@ -74,9 +81,11 @@ export interface DatatableColumnsDialogData {
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close>Cancel</button>
+      <button app-stroked-button app-dialog-close>
+        <span i18n="Dismisses a dialog or form without acting">Cancel</span>
+      </button>
       <button app-flat-button color="primary" type="button" (click)="save()">
-        Save
+        <span i18n="Confirms and stores an edit">Save</span>
       </button>
     </div>
   `,

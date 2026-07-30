@@ -9,7 +9,9 @@ import { AuditStore } from '@audit/audit-state.service';
     <div class="border-border mb-6 rounded border p-4">
       <p
         class="text-foreground/60 mb-3 text-xs font-medium tracking-wide uppercase">
-        Activity Over Time
+        <span i18n="Heading of the audit activity chart">
+          Activity Over Time
+        </span>
       </p>
       <apx-chart
         [series]="series()"

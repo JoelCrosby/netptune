@@ -1,12 +1,10 @@
+import { hostTimeZone } from '@core/util/dates';
 import { httpResource } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ClientResponse } from '@core/models/client-response';
-import {
-  EstimateType,
-  estimateTypeUnits,
-} from '@core/enums/estimate-type';
+import { EstimateType, estimateTypeUnits } from '@core/enums/estimate-type';
 import { SprintBurndownReport } from '@core/models/reporting';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { LucideCalendarClock } from '@lucide/angular';
@@ -22,9 +20,6 @@ interface SprintStat {
   label: string;
   value: string | number;
 }
-
-const browserTimeZone =
-  Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
 @Component({
   selector: 'app-dashboard-current-sprint-card',
@@ -53,7 +48,9 @@ const browserTimeZone =
             <p
               class="text-muted mb-1 flex items-center gap-1.5 text-xs font-semibold tracking-wide uppercase">
               <svg lucideCalendarClock class="h-3.5 w-3.5"></svg>
-              Current sprint
+              <span i18n="Heading of the dashboard current-sprint card">
+                Current sprint
+              </span>
             </p>
             <div class="mb-1 flex flex-wrap items-center gap-2">
               <a
@@ -85,7 +82,7 @@ const browserTimeZone =
           <a
             class="text-primary shrink-0 text-sm font-medium hover:underline"
             [routerLink]="['../sprints', sprint.id]">
-            View sprint
+            <span i18n="Link to the current sprint">View sprint</span>
           </a>
         </div>
 
@@ -97,10 +94,27 @@ const browserTimeZone =
           <div>
             <div class="mb-2 flex items-baseline justify-between">
               <span class="text-foreground text-sm font-semibold">
-                {{ progressPercent() }}% complete
+                <span i18n="Sprint completion. PERCENT is a whole number">
+                  {{
+                    progressPercent()  // i18n(ph="PERCENT")
+                  }}% complete
+                </span>
               </span>
               <span class="text-muted text-sm">
-                {{ sprint.doneTaskCount }} / {{ sprint.taskCount }} tasks
+                <span
+                  i18n="
+                    Sprint task progress. DONE is finished tasks and TOTAL the
+                    total
+                  ">
+                  {{
+                    sprint.doneTaskCount // i18n(ph="DONE")
+                  }}
+                  /
+                  {{
+                    sprint.taskCount // i18n(ph="TOTAL")
+                  }}
+                  tasks
+                </span>
               </span>
             </div>
             <app-progress-bar [value]="progressPercent()" />
@@ -120,7 +134,9 @@ const browserTimeZone =
               class="text-primary self-end text-xs font-medium hover:underline"
               [routerLink]="['../reports']"
               [queryParams]="{ sprintId: sprint.id }">
-              View report →
+              <span i18n="Link to the sprint burndown report">
+                View report →
+              </span>
             </a>
           </div>
         }
@@ -144,7 +160,7 @@ export class DashboardCurrentSprintCardComponent {
   private readonly burndown = httpResource<SprintBurndownReport>(() => {
     const sprint = this.sprint();
     return sprint
-      ? `api/reports/sprints/${sprint.id}/burndown?unit=Tasks&timeZone=${encodeURIComponent(browserTimeZone)}`
+      ? `api/reports/sprints/${sprint.id}/burndown?unit=Tasks&timeZone=${encodeURIComponent(hostTimeZone())}`
       : undefined;
   });
 
@@ -161,12 +177,18 @@ export class DashboardCurrentSprintCardComponent {
     if (!sprint) return [];
 
     const tiles: SprintStat[] = [
-      { label: 'Remaining', value: sprint.taskCount - sprint.doneTaskCount },
+      {
+        label: $localize`:Label shown in the interface:Remaining`,
+        value: sprint.taskCount - sprint.doneTaskCount,
+      },
     ];
 
     const report = this.burndown.value();
     if (report) {
-      tiles.push({ label: 'Scope', value: scopeLabel(report) });
+      tiles.push({
+        label: $localize`:Label shown in the interface:Scope`,
+        value: scopeLabel(report),
+      });
     }
 
     const estimate = estimateStat(sprint);
@@ -175,7 +197,10 @@ export class DashboardCurrentSprintCardComponent {
     }
 
     if (tiles.length < 2) {
-      tiles.push({ label: 'Completed', value: sprint.doneTaskCount });
+      tiles.push({
+        label: $localize`:Label shown in the interface:Completed`,
+        value: sprint.doneTaskCount,
+      });
     }
 
     return tiles;
@@ -204,5 +229,8 @@ function estimateStat(sprint: SprintDetailViewModel): SprintStat | null {
 
   if (!isNumericUnit || value == null) return null;
 
-  return { label: 'Estimate', value: `${value}${estimateTypeUnits[type]}` };
+  return {
+    label: $localize`:Label shown in the interface:Estimate`,
+    value: `${value}${estimateTypeUnits[type]}`,
+  };
 }

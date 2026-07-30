@@ -49,8 +49,11 @@ interface CreateTaskForm {
     FormErrorsComponent,
     TaskPropertiesComponent,
   ],
-  template: `<app-dialog-title>
-      <div class="px-6">Create Task</div>
+  template: `
+    <app-dialog-title>
+      <div class="px-6">
+        <span i18n="Title of the create-task dialog">Create Task</span>
+      </div>
     </app-dialog-title>
 
     <form
@@ -62,6 +65,7 @@ interface CreateTaskForm {
         <div class="flex w-92 grow flex-col">
           <app-form-input
             [formField]="taskForm.name"
+            i18n-label="Label of the task title field"
             label="Summary"
             maxLength="256" />
 
@@ -69,11 +73,12 @@ interface CreateTaskForm {
             id="description-label"
             class="font-sm mb-2 font-semibold"
             for="description">
-            Description
+            <span i18n="Label of the task description editor">Description</span>
           </label>
           <app-editor
             id="description"
             aria-labelledby="description-label"
+            i18n-placeholder="Placeholder in the empty task description editor"
             placeholder="Add a Description..."
             [formField]="taskForm.description"
             [isReadonly]="false" />
@@ -99,13 +104,22 @@ interface CreateTaskForm {
 
           @if (scheduleInvalid()) {
             <p class="mt-3 text-sm text-red-600" role="alert">
-              Start date must be on or before due date.
+              <span
+                i18n="
+                  Validation error when a task's start date is after its due
+                  date
+                ">
+                Start date must be on or before due date.
+              </span>
             </p>
           }
 
           @if (projectInvalid()) {
             <p class="mt-3 text-sm text-red-600" role="alert">
-              Project is required.
+              <span
+                i18n="Validation error when no project is selected for a task">
+                Project is required.
+              </span>
             </p>
           }
         </div>
@@ -113,11 +127,14 @@ interface CreateTaskForm {
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="close()">Close</button>
-      <button app-flat-button type="submit" form="create-task-form">
-        Save Task
+      <button app-stroked-button type="button" (click)="close()">
+        <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
-    </div> `,
+      <button app-flat-button type="submit" form="create-task-form">
+        <span i18n="Button that saves the new task">Save Task</span>
+      </button>
+    </div>
+  `,
 })
 export class CreateTaskDialogComponent {
   static readonly width = '972px';
@@ -155,11 +172,13 @@ export class CreateTaskDialogComponent {
 
   taskFormModel = signal<CreateTaskForm>({
     name: '',
-    description: '',
+    description: $localize`:Explanatory text:`,
   });
 
   taskForm = form(this.taskFormModel, (schema) => {
-    required(schema.name, { message: 'Summary is required.' });
+    required(schema.name, {
+      message: $localize`:Body of a dialog or validation message:Summary is required.`,
+    });
     validate(schema.name, ({ value }) => {
       const valueToValidate = value();
 
@@ -168,27 +187,30 @@ export class CreateTaskDialogComponent {
       const name = valueToValidate.trim();
 
       if (!name) {
-        return { kind: 'whitespace', message: 'Summary is required.' };
+        return {
+          kind: 'whitespace',
+          message: $localize`:Body of a dialog or validation message:Summary is required.`,
+        };
       }
 
       if (name.length < 4) {
         return {
           kind: 'minLength',
-          message: 'Summary must have at least 4 characters.',
+          message: $localize`:Body of a dialog or validation message:Summary must have at least 4 characters.`,
         };
       }
 
       if (name.length > 256) {
         return {
           kind: 'maxLength',
-          message: 'Summary cannot exceed 256 characters.',
+          message: $localize`:Body of a dialog or validation message:Summary cannot exceed 256 characters.`,
         };
       }
 
       return undefined;
     });
     maxLength(schema.description, 4096, {
-      message: 'Description cannot exceed 4096 characters.',
+      message: $localize`:Body of a dialog or validation message:Description cannot exceed 4096 characters.`,
     });
   });
 

@@ -1,3 +1,5 @@
+import { numberFormat } from '@core/util/locale';
+
 export interface ReportChartTheme {
   primary: string;
   foreground: string;
@@ -10,7 +12,7 @@ export const REPORT_CHART_LABEL_STYLE = {
   fontSize: '11px',
 };
 
-const REPORT_VALUE_FORMATTER = new Intl.NumberFormat(undefined, {
+const REPORT_VALUE_FORMATTER = numberFormat({
   maximumFractionDigits: 1,
 });
 

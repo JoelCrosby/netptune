@@ -82,46 +82,49 @@ export default defineConfig([
     },
   },
   {
-    // i18n enforcement, expanded one area at a time as the rollout progresses.
+    // i18n enforcement, now covering the whole app.
     //
     // The processInlineTemplates processor above surfaces inline templates to
-    // template rules as virtual .html files, so this reaches all components and
-    // not just the three that use templateUrl. Scoping it to finished areas keeps
-    // `pnpm lint` green while making a regression in a finished area a hard error.
+    // template rules as virtual .html files, so this reaches all 300+ components
+    // and not just the three that use templateUrl. Unmarked text or a translatable
+    // attribute in any new component is a lint error.
     //
-    // When an area is fully marked up, add it here. See src/locale/CONVENTIONS.md.
-    files: ['src/app/shell/**/*.html'],
+    // It cannot see $localize in TypeScript — that part is on the author and the
+    // reviewer. See src/locale/CONVENTIONS.md.
+    // src/index.html is the host page, not an Angular template.
+    files: ['src/app/**/*.html'],
     rules: {
       '@angular-eslint/template/i18n': [
         'error',
         {
           // Message IDs are generated, not hand-authored — see CONVENTIONS.md.
           checkId: false,
-          // Appended to the rule's own 34 defaults, which this replaces. Only
+          // Every <title> here is an SVG accessible name holding a brand name
+          // (github, google, microsoft, Netptune), which must not be translated.
+          // Angular's template AST prefixes SVG tags, hence ':svg:' — plain
+          // 'title' silently does nothing. Revisit if a <title> carries prose.
+          ignoreTags: [':svg:title'],
+          // Merged with the rule's own defaults, so only additions go here. Only
           // attributes whose values are a fixed vocabulary, a CSS class, an SVG
           // primitive, or an element reference belong here — when in doubt leave
           // it out, so the rule asks rather than silently skipping real copy.
           ignoreAttributes: [
-            // rule defaults
-            'autocomplete', 'charset', 'class', 'color', 'colspan', 'dir',
-            'fill', 'for', 'formArrayName', 'formControlName', 'formGroupName',
-            'height', 'href', 'id', 'lang', 'list', 'name', 'ngClass',
-            'ngProjectAs', 'role', 'routerLink', 'routerLinkActive', 'src',
-            'stroke', 'stroke-width', 'style', 'svgIcon', 'tabindex', 'target',
-            'type', 'value', 'viewBox', 'width', 'xmlns',
             // SVG primitives
-            'd', 'points', 'vector-effect',
+            'd', 'points', 'vector-effect', 'orient', 'markerUnits',
+            'marker-end', 'marker-start',
             // CSS class inputs on this repo's design-system components
             'buttonClass', 'containerClass', 'emptyCellClass', 'rowClass',
             'tableClass',
             // fixed-vocabulary inputs (enum-like), not prose
-            'align', 'appearance', 'appTooltipPosition', 'entityType',
+            'align', 'appearance', 'appTooltipPosition', 'cdkDropListOrientation',
+            'colWrap', 'focusMode', 'preserveAspectRatio', 'rowWrap',
+            'entityType',
             'enterFrom', 'enterTo', 'leaveFrom', 'leaveTo', 'mode', 'provider',
             'shape', 'size', 'variant', 'xPosition', 'yPosition',
             // ARIA wiring and element references, not user-visible text
             'accept', 'aria-autocomplete', 'aria-controls', 'aria-describedby',
-            'aria-haspopup', 'aria-labelledby', 'aria-live', 'controlId',
-            'groupName', 'property', 'rel', 'scope',
+            'aria-haspopup', 'aria-labelledby', 'aria-live', 'aria-orientation',
+            'controlId', 'form', 'groupName', 'property', 'rel', 'scope',
             // property-name references (which field of a data object to read)
             'idKey', 'labelKey',
           ],

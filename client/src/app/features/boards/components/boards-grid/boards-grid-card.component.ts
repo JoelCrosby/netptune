@@ -16,33 +16,35 @@ import { FromNowPipe } from '@static/pipes/from-now.pipe';
     CardHeaderComponent,
     CardTitleComponent,
   ],
-  template: ` <div
-    class="bg-card-header border-border flex min-h-38 min-w-72 flex-col overflow-hidden rounded border">
-    <div class="flex p-6">
-      <app-card-header-image
-        [class]="colorBackgroundClass(board().metaInfo.color)">
-        <svg lucideChartColumnBig></svg>
-      </app-card-header-image>
-      <app-card-header>
-        <app-card-title>{{ board().name }}</app-card-title>
-      </app-card-header>
-    </div>
+  template: `
     <div
-      class="bg-card border-border mt-auto flex items-center justify-stretch gap-4 rounded border-t px-4 py-3 text-sm">
-      @for (stat of stats(); track $index) {
-        <div class="flex w-full flex-col items-baseline justify-center gap-1">
-          <span
-            class="text-muted/60 flex items-center gap-1.5 text-xs tracking-wider uppercase">
-            {{ stat.label }}
-          </span>
-          <span
-            class="text-foreground flex items-center gap-1.5 font-semibold tracking-wide">
-            {{ stat.value }}
-          </span>
-        </div>
-      }
+      class="bg-card-header border-border flex min-h-38 min-w-72 flex-col overflow-hidden rounded border">
+      <div class="flex p-6">
+        <app-card-header-image
+          [class]="colorBackgroundClass(board().metaInfo.color)">
+          <svg lucideChartColumnBig></svg>
+        </app-card-header-image>
+        <app-card-header>
+          <app-card-title>{{ board().name }}</app-card-title>
+        </app-card-header>
+      </div>
+      <div
+        class="bg-card border-border mt-auto flex items-center justify-stretch gap-4 rounded border-t px-4 py-3 text-sm">
+        @for (stat of stats(); track $index) {
+          <div class="flex w-full flex-col items-baseline justify-center gap-1">
+            <span
+              class="text-muted/60 flex items-center gap-1.5 text-xs tracking-wider uppercase">
+              {{ stat.label }}
+            </span>
+            <span
+              class="text-foreground flex items-center gap-1.5 font-semibold tracking-wide">
+              {{ stat.value }}
+            </span>
+          </div>
+        }
+      </div>
     </div>
-  </div>`,
+  `,
 })
 export class BoardsGridCardComponent {
   readonly colorBackgroundClass = colorBackgroundClass;
@@ -54,11 +56,11 @@ export class BoardsGridCardComponent {
 
     return [
       {
-        label: 'Tasks',
+        label: $localize`:Stat label for the number of tasks on a board:Tasks`,
         value: data.taskCount,
       },
       {
-        label: 'Modified',
+        label: $localize`:Stat label for when a board was last changed:Modified`,
         value: this.fromNow.transform(data.lastUpdated),
       },
     ];

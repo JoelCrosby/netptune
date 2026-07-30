@@ -32,7 +32,8 @@ export interface ConfirmDialogOptions {
     FormField,
     DialogContentComponent,
   ],
-  template: `<h1 class="mb-6 text-xl font-semibold">{{ data.title }}</h1>
+  template: `
+    <h1 class="mb-6 text-xl font-semibold">{{ data.title }}</h1>
 
     @if (data.message || data.confirmationCheckboxLabel) {
       <app-dialog-content>
@@ -67,7 +68,7 @@ export interface ConfirmDialogOptions {
           app-stroked-button
           cdkFocusInitial
           (click)="dialogRef.close(false)">
-          Ok
+          <span i18n="Acknowledges an informational dialog">Ok</span>
         </button>
       } @else {
         @if (data.cancelLabel) {
@@ -89,7 +90,8 @@ export interface ConfirmDialogOptions {
           {{ data.acceptLabel }}
         </button>
       }
-    </div> `,
+    </div>
+  `,
 })
 export class ConfirmDialogComponent {
   dialogRef = inject<DialogRef<boolean, ConfirmDialogComponent>>(DialogRef);

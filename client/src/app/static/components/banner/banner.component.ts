@@ -9,10 +9,12 @@ import { BannerService } from './banner.service';
   template: `
     @if (service.banner(); as banner) {
       <div
-        class="mx-4 my-4 rounded bg-primary h-16 text-background fixed bottom-0 left-0 z-9999 flex w-[calc(100vw-32px)] items-center justify-center gap-3 px-4 py-2.5 text-sm leading-tight font-medium shadow-lg"
+        class="bg-primary text-background fixed bottom-0 left-0 z-9999 mx-4 my-4 flex h-16 w-[calc(100vw-32px)] items-center justify-center gap-3 rounded px-4 py-2.5 text-sm leading-tight font-medium shadow-lg"
         role="alert"
         aria-live="assertive">
-        <svg lucideInfo class="h-[1.1rem] w-[1.1rem] shrink-0 leading-none"></svg>
+        <svg
+          lucideInfo
+          class="h-[1.1rem] w-[1.1rem] shrink-0 leading-none"></svg>
 
         <span>{{ banner.message }}</span>
 
@@ -27,6 +29,9 @@ import { BannerService } from './banner.service';
         @if (banner.dismissible) {
           <button
             class="absolute right-4 shrink-0 leading-none opacity-70 transition-opacity hover:opacity-100"
+            i18n-aria-label="
+              Accessible label for the button that dismisses the banner
+            "
             aria-label="Dismiss"
             (click)="service.dismiss()">
             <svg lucideX class="h-4 w-4 leading-none"></svg>

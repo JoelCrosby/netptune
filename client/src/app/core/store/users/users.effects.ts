@@ -126,7 +126,11 @@ export class UsersEffects {
       ofType(actions.inviteUsersToWorkspace.init),
       switchMap(({ emailAddresses }) =>
         this.usersService.inviteUsersToWorkspace(emailAddresses).pipe(
-          tap(() => this.snackbar.open('Invite(s) Sent')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Invite(s) Sent`
+            )
+          ),
           mergeMap(() => [
             actions.inviteUsersToWorkspace.success({ emailAddresses }),
             actions.loadUsers.init(),
@@ -144,7 +148,11 @@ export class UsersEffects {
       ofType(actions.toggleUserPermission.init),
       switchMap(({ userId, permission }) =>
         this.usersService.toggleUserPermission(userId, permission).pipe(
-          tap(() => this.snackbar.open('Permission updated')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Permission updated`
+            )
+          ),
           map(() =>
             actions.toggleUserPermission.success({ userId, permission })
           ),
@@ -162,7 +170,11 @@ export class UsersEffects {
       switchMap(({ userId, role }) =>
         this.usersService.updateWorkspaceRole(userId, role).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Workspace role updated')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Workspace role updated`
+            )
+          ),
           map((result) =>
             actions.updateWorkspaceRole.success({
               userId,
@@ -181,7 +193,11 @@ export class UsersEffects {
       ofType(actions.resendInvite.init),
       switchMap(({ email }) =>
         this.usersService.resendInvite(email).pipe(
-          tap(() => this.snackbar.open('Invite resent')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Invite resent`
+            )
+          ),
           map(() => actions.resendInvite.success()),
           catchError((error) => of(actions.resendInvite.fail({ error })))
         )
@@ -199,7 +215,11 @@ export class UsersEffects {
             return this.usersService
               .removeUsersFromWorkspace(emailAddresses)
               .pipe(
-                tap(() => this.snackbar.open('User(s) removed')),
+                tap(() =>
+                  this.snackbar.open(
+                    $localize`:Confirmation shown after an action succeeds:User(s) removed`
+                  )
+                ),
                 map(() =>
                   actions.removeUsersFromWorkspace.success({ emailAddresses })
                 ),
@@ -215,9 +235,9 @@ export class UsersEffects {
 }
 
 const REMOVE_USERS_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Remove User(s)',
+  acceptLabel: $localize`:Confirms the action in a dialog:Remove User(s)`,
   color: 'warn',
-  title: 'Remove users from workspace',
+  title: $localize`:Title of a confirmation dialog:Remove users from workspace`,
   message:
     'This will remove the user(s) from the workspace, but will not remove thier accounts.',
 };

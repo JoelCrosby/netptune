@@ -52,11 +52,14 @@ type StatusFilter = SprintStatus | null;
   template: `
     <app-page-container [centerPage]="true">
       <app-page-header
+        i18n-title="Page title for the sprint list"
         title="Sprints"
         [count]="count()"
         [actionTitle]="canCreate() ? 'Create Sprint' : null"
         (actionClick)="onOpenCreateDialog()">
-        <a app-flat-button [routerLink]="['backlog']">Backlog</a>
+        <a app-flat-button [routerLink]="['backlog']">
+          <span i18n="Link to the sprint backlog">Backlog</span>
+        </a>
       </app-page-header>
 
       <div class="flex flex-col gap-6">
@@ -141,22 +144,22 @@ export class SprintsViewComponent {
   readonly statusTabs = computed((): TabItem[] => {
     return [
       {
-        label: 'Active',
+        label: $localize`:Filter showing sprints currently running:Active`,
         value: SprintStatus.active,
         badge: this.countForStatus(SprintStatus.active),
       },
       {
-        label: 'Planning',
+        label: $localize`:Filter showing sprints not started yet:Planning`,
         value: SprintStatus.planning,
         badge: this.countForStatus(SprintStatus.planning),
       },
       {
-        label: 'Completed',
+        label: $localize`:Filter showing finished sprints:Completed`,
         value: SprintStatus.completed,
         badge: this.countForStatus(SprintStatus.completed),
       },
       {
-        label: 'All',
+        label: $localize`:Filter showing sprints in any state:All`,
         value: null,
         badge: this.countForStatus(null),
       },
@@ -187,12 +190,12 @@ export class SprintsViewComponent {
 
   private readonly menuItems: DatatableMenuItem<SprintViewModel>[] = [
     {
-      label: 'Edit',
+      label: $localize`:Row action that edits the sprint:Edit`,
       icon: LucideSettings2,
       onClick: (sprint) => this.onOpenEditDialog(sprint),
     },
     {
-      label: 'Delete',
+      label: $localize`:Row action that deletes the sprint:Delete`,
       icon: LucideTrash2,
       onClick: (sprint) => this.onDelete(sprint),
     },
@@ -241,7 +244,10 @@ export class SprintsViewComponent {
       };
     }
     if (diff === 0) {
-      return { label: 'Due today', classes: 'bg-orange-100 text-orange-700' };
+      return {
+        label: $localize`:Chip shown when a sprint ends today:Due today`,
+        classes: 'bg-orange-100 text-orange-700',
+      };
     }
     if (diff <= 3) {
       return {
@@ -271,10 +277,10 @@ export class SprintsViewComponent {
 
     this.confirmation
       .open({
-        title: 'Delete Sprint',
+        title: $localize`:Title of the confirmation dialog for deleting a sprint:Delete Sprint`,
         message: `Delete "${sprint.name}"? This cannot be undone.`,
-        acceptLabel: 'Delete',
-        cancelLabel: 'Cancel',
+        acceptLabel: $localize`:Confirms a destructive action:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
       })
       .subscribe((confirmed) => {

@@ -15,7 +15,7 @@ import { LucideArrowLeft } from '@lucide/angular';
           lucideArrowLeft
           class="mr-[0.4rem] h-4 w-4"
           aria-hidden="true"></svg>
-        <span> {{ show() || 'Go back' }} </span>
+        <span>{{ show() || 'Go back' }}</span>
       </button>
     }
   `,

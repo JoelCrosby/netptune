@@ -26,8 +26,11 @@ const fallbackPalette: NamedColor[] = [
   imports: [DonutStatCardComponent],
   template: `
     <app-donut-stat-card
+      i18n-title="Heading of the dashboard status breakdown card"
       title="Tasks by status"
+      i18n-totalLabel="Centre label showing the total task count"
       totalLabel="Total"
+      i18n-emptyMessage="Empty state for the status breakdown card"
       emptyMessage="No tasks to display."
       [items]="statusItems()"
       [total]="statusTotal()" />

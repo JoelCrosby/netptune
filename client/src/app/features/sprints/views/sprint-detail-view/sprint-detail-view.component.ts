@@ -65,7 +65,9 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
-      <app-page-header title="Sprint" />
+      <app-page-header
+        i18n-title="Page title for a single sprint"
+        title="Sprint" />
 
       @if (loading()) {
         <app-page-loading />
@@ -115,6 +117,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                 <button
                   app-icon-button
                   type="button"
+                  i18n-title="Tooltip on the button that edits the sprint"
                   title="Edit sprint"
                   (click)="onEdit(sprint)">
                   <svg lucideSettings2 class="h-4 w-4"></svg>
@@ -122,6 +125,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                 <button
                   app-icon-button
                   type="button"
+                  i18n-title="Tooltip on the button that deletes the sprint"
                   title="Delete sprint"
                   (click)="onDelete(sprint)">
                   <svg lucideTrash2 class="h-4 w-4"></svg>
@@ -135,19 +139,33 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                   app-flat-button
                   color="neutral"
                   type="button"
+                  i18n-title="
+                    Tooltip on the button that adds existing tasks to the sprint
+                  "
                   title="Add existing tasks to this sprint"
                   (click)="onAddTasks(sprint)">
                   <svg lucideListPlus class="h-4 w-4"></svg>
-                  Assign Existing Tasks
+                  <span
+                    i18n="
+                      Button that opens the dialog for adding existing tasks to
+                      the sprint
+                    ">
+                    Assign Existing Tasks
+                  </span>
                 </button>
                 <button
                   app-flat-button
                   color="neutral"
                   type="button"
+                  i18n-title="
+                    Tooltip on the button that creates a task in the sprint
+                  "
                   title="Create a new task in this sprint"
                   (click)="onCreateTask(sprint)">
                   <svg lucidePlus class="h-4 w-4"></svg>
-                  Create Sprint Task
+                  <span i18n="Button that creates a new task in the sprint">
+                    Create Sprint Task
+                  </span>
                 </button>
               }
 
@@ -158,7 +176,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                   type="button"
                   [disabled]="updateLoading()"
                   (click)="onStart(sprint.id)">
-                  Start Sprint
+                  <span i18n="Button that starts the sprint">Start Sprint</span>
                 </button>
               }
 
@@ -170,7 +188,9 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
                   [disabled]="updateLoading()"
                   (click)="onComplete(sprint)">
                   <svg lucideCheck class="h-4 w-4"></svg>
-                  Complete Sprint
+                  <span i18n="Button that completes the sprint">
+                    Complete Sprint
+                  </span>
                 </button>
               }
             </div>
@@ -277,10 +297,10 @@ export class SprintDetailViewComponent {
 
     this.confirmation
       .open({
-        title: 'Delete Sprint',
+        title: $localize`:Title of the confirmation dialog for deleting a sprint:Delete Sprint`,
         message: `Delete "${sprint.name}"? This cannot be undone.`,
-        acceptLabel: 'Delete',
-        cancelLabel: 'Cancel',
+        acceptLabel: $localize`:Confirms a destructive action:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
       })
       .subscribe((confirmed) => {

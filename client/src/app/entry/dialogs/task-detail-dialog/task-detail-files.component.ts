@@ -33,16 +33,25 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
   template: `
     <section class="mt-6" aria-labelledby="task-files-heading">
       <div class="mb-2 flex items-center justify-between">
-        <h3 id="task-files-heading" class="font-medium">Files</h3>
+        <h3 id="task-files-heading" class="font-medium">
+          <span i18n="Section heading for files attached to a task">Files</span>
+        </h3>
         @if (uploading()) {
           <button
             type="button"
             class="text-muted inline-flex items-center gap-1 text-xs hover:underline"
             (click)="cancelUploads()">
-            <svg lucideX class="h-3 w-3"></svg> Cancel uploads
+            <svg lucideX class="h-3 w-3"></svg>
+            <span i18n="Button that stops in-progress file uploads">
+              Cancel uploads
+            </span>
           </button>
         } @else if (loading()) {
-          <span class="text-muted text-xs">Loading…</span>
+          <span
+            class="text-muted text-xs"
+            i18n="Shown while a task's files are loading">
+            Loading…
+          </span>
         }
       </div>
 
@@ -64,7 +73,10 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
                   class="text-primary inline-flex items-center gap-1 hover:underline disabled:opacity-50"
                   [disabled]="uploading()"
                   (click)="retry(upload)">
-                  <svg lucideRotateCcw class="h-3 w-3"></svg> Retry
+                  <svg lucideRotateCcw class="h-3 w-3"></svg>
+                  <span i18n="Button that retries a failed file upload">
+                    Retry
+                  </span>
                 </button>
               } @else {
                 <span>{{ upload.progress }}%</span>
@@ -85,17 +97,20 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
                 class="block truncate font-medium hover:underline"
                 [href]="file.contentUrl"
                 target="_blank"
-                rel="noopener"
-                >{{ file.originalName }}</a
-              >
-              <span class="text-muted text-xs"
-                >{{ formatBytes(file.sizeBytes) }} ·
-                {{ file.uploadedByDisplayName || 'Unknown user' }}</span
-              >
+                rel="noopener">
+                {{ file.originalName }}
+              </a>
+              <span class="text-muted text-xs">
+                {{ formatBytes(file.sizeBytes) }} ·
+                {{ file.uploadedByDisplayName || 'Unknown user' }}
+              </span>
             </div>
             <a
               class="rounded p-2"
               [href]="file.contentUrl"
+              i18n-aria-label="
+                Accessible label for the button that downloads an attached file
+              "
               aria-label="Download file">
               <svg lucideDownload class="h-4 w-4"></svg>
             </a>
@@ -104,6 +119,9 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
                 type="button"
                 class="text-destructive rounded p-2"
                 (click)="remove(file)"
+                i18n-aria-label="
+                  Accessible label for the button that deletes an attached file
+                "
                 aria-label="Delete file">
                 <svg lucideTrash2 class="h-4 w-4"></svg>
               </button>
@@ -112,7 +130,9 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
         } @empty {
           @if (!loading()) {
             <p class="text-muted py-3 text-sm">
-              No files have been added to this task.
+              <span i18n="Empty state when a task has no attached files">
+                No files have been added to this task.
+              </span>
             </p>
           }
         }

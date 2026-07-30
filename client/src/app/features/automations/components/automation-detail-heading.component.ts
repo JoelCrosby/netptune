@@ -21,9 +21,23 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
           <app-automation-enabled-badge [enabled]="rule().isEnabled" />
         </div>
         <p class="text-muted mt-1 text-sm">
-          Created {{ rule().createdAt | prettyDate }}
+          <span i18n="When an automation was created. DATE is a formatted date">
+            Created
+            {{
+              rule().createdAt | prettyDate // i18n(ph="DATE")
+            }}
+          </span>
           @if (rule().updatedAt) {
-            · Updated {{ rule().updatedAt | prettyDate }}
+            <span
+              i18n="
+                When an automation was last changed, shown after the creation
+                date. Keep the leading separator. DATE is a formatted date
+              ">
+              · Updated
+              {{
+                rule().updatedAt | prettyDate // i18n(ph="DATE")
+              }}
+            </span>
           }
         </p>
       </div>
@@ -32,6 +46,7 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
         <button
           app-icon-button
           type="button"
+          i18n-title="Tooltip on the button that deletes an automation rule"
           title="Delete rule"
           [disabled]="saving()"
           (click)="deleteRule.emit(rule())">

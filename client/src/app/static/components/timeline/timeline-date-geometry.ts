@@ -1,4 +1,5 @@
 import { TimelineZoom } from './timeline.models';
+import { dateTimeFormat } from '@core/util/locale';
 
 const millisecondsPerDay = 86_400_000;
 
@@ -43,11 +44,11 @@ export const dateLabel = (date: string, zoom: TimelineZoom): string => {
       ? { month: 'short', year: 'numeric', timeZone: 'UTC' }
       : { day: 'numeric', month: 'short', timeZone: 'UTC' };
 
-  return new Intl.DateTimeFormat(undefined, options).format(value);
+  return dateTimeFormat(options).format(value);
 };
 
 export const monthLabel = (date: string): string =>
-  new Intl.DateTimeFormat(undefined, {
+  dateTimeFormat({
     month: 'long',
     year: 'numeric',
     timeZone: 'UTC',

@@ -103,7 +103,11 @@ export class SprintsEffects {
       switchMap(({ request }) =>
         this.sprintsService.post(request).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Sprint created')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Sprint created`
+            )
+          ),
           map((sprint) => actions.createSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.createSprint.fail({ error }))
@@ -119,7 +123,11 @@ export class SprintsEffects {
       switchMap(({ request }) =>
         this.sprintsService.put(request).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Sprint updated')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Sprint updated`
+            )
+          ),
           map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.updateSprint.fail({ error }))
@@ -135,7 +143,11 @@ export class SprintsEffects {
       switchMap(({ sprintId }) =>
         this.sprintsService.delete(sprintId).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Sprint deleted')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Sprint deleted`
+            )
+          ),
           map(() => actions.deleteSprint.success({ sprintId })),
           catchError((error: HttpErrorResponse) =>
             of(actions.deleteSprint.fail({ error }))
@@ -151,11 +163,15 @@ export class SprintsEffects {
       switchMap(({ sprintId }) =>
         this.sprintsService.start(sprintId).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Sprint started')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Sprint started`
+            )
+          ),
           map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) => {
             void this.confirmation.open({
-              title: 'Unable to Start Sprint',
+              title: $localize`:Title of a confirmation dialog:Unable to Start Sprint`,
               message: getErrorMessage(error, START_SPRINT_ERROR_FALLBACK),
               isInfoMessage: true,
             });
@@ -173,7 +189,11 @@ export class SprintsEffects {
       switchMap(({ sprintId }) =>
         this.sprintsService.complete(sprintId).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Sprint completed')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Sprint completed`
+            )
+          ),
           map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.updateSprint.fail({ error }))
@@ -195,7 +215,11 @@ export class SprintsEffects {
           switchMap(() =>
             this.sprintsService.complete(sprintId).pipe(unwrapClientReposne())
           ),
-          tap(() => this.snackbar.open('Sprint completed')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Sprint completed`
+            )
+          ),
           map((sprint) => actions.updateSprint.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
             of(actions.updateSprint.fail({ error }))
@@ -351,7 +375,11 @@ export class SprintsEffects {
       switchMap(({ taskId, sprintId }) =>
         this.sprintsService.addTasks(sprintId, { taskIds: [taskId] }).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Task added to sprint')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Task added to sprint`
+            )
+          ),
           // The task has left the backlog, so refresh the backlog datatables.
           tap(() => this.tasksHub.reloadTaskList()),
           map((sprint) => actions.loadSprintDetail.success({ sprint })),
@@ -385,7 +413,11 @@ export class SprintsEffects {
       switchMap(({ sprintId, request }) =>
         this.sprintsService.addTasks(sprintId, request).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Tasks added to sprint')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Tasks added to sprint`
+            )
+          ),
           tap(() => this.tasksHub.reloadTaskList()),
           map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>
@@ -402,7 +434,11 @@ export class SprintsEffects {
       switchMap(({ sprintId, taskId }) =>
         this.sprintsService.removeTask(sprintId, taskId).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Task removed from sprint')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Task removed from sprint`
+            )
+          ),
           tap(() => this.tasksHub.reloadTaskList()),
           map((sprint) => actions.loadSprintDetail.success({ sprint })),
           catchError((error: HttpErrorResponse) =>

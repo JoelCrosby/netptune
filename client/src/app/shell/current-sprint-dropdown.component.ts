@@ -69,9 +69,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
         <app-dropdown-menu #sprintMenu xPosition="before">
           <div class="text-muted px-3 py-2 text-xs font-semibold uppercase">
-            <span i18n="Heading above the list of currently active sprints"
-              >Current sprint</span
-            >
+            <span i18n="Heading above the list of currently active sprints">
+              Current sprint
+            </span>
           </div>
 
           @for (sprint of currentSprints(); track sprint.id) {
@@ -110,12 +110,12 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
                 i18n="
                   Menu item that opens the sprint currently being filtered on.
                   SPRINT_NAME is the sprint's name
-                "
-                >Open
+                ">
+                Open
                 {{
                   selectedSprint.name // i18n(ph="SPRINT_NAME")
-                }}</span
-              >
+                }}
+              </span>
             </button>
 
             <button
@@ -123,9 +123,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
               type="button"
               (click)="onSprintFilterRemoved(sprintMenu)">
               <svg lucideFilterX class="h-4 w-4 shrink-0"></svg>
-              <span i18n="Menu item that clears the active sprint filter"
-                >Remove sprint filter</span
-              >
+              <span i18n="Menu item that clears the active sprint filter">
+                Remove sprint filter
+              </span>
             </button>
           }
 
@@ -135,9 +135,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
             app-menu-item
             type="button"
             (click)="onSprintsSelected(sprintMenu)">
-            <span i18n="Menu item that navigates to the full sprint list"
-              >View all sprints</span
-            >
+            <span i18n="Menu item that navigates to the full sprint list">
+              View all sprints
+            </span>
           </button>
         </app-dropdown-menu>
       } @else {
@@ -151,9 +151,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           <span
             i18n="
               Navbar link shown when no sprint is active, opens the sprint list
-            "
-            >Start Sprint</span
-          >
+            ">
+            Start Sprint
+          </span>
         </a>
       }
     }

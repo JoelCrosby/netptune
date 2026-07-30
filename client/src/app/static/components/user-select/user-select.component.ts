@@ -71,16 +71,16 @@ type User = AssigneeViewModel | AppUser;
             [isServiceAccount]="user.isServiceAccount ?? false"
             size="sm" />
           @if (!compact()) {
-            <small class="text-sm font-medium tracking-tight">{{
-              user.displayName
-            }}</small>
+            <small class="text-sm font-medium tracking-tight">
+              {{ user.displayName }}
+            </small>
           }
         </div>
       }
       @if (!value().length) {
-        <span class="truncate text-sm font-medium tracking-tight">{{
-          label()
-        }}</span>
+        <span class="truncate text-sm font-medium tracking-tight">
+          {{ label() }}
+        </span>
       }
     </button>
 
@@ -95,6 +95,9 @@ type User = AssigneeViewModel | AppUser;
             aria-controls="user-select-listbox"
             aria-autocomplete="list"
             class="border-border bg-secondary text-foreground sticky top-0 m-2 rounded border px-2 py-1.5 text-sm focus:outline-none"
+            i18n-placeholder="
+              Placeholder in the box for searching workspace members
+            "
             placeholder="Search.."
             [attr.aria-activedescendant]="activeDescendantId()"
             [formField]="searchForm.term"

@@ -47,16 +47,29 @@ export interface AutomationDryRunDialogData {
     TaskScopeIdComponent,
   ],
   template: `
-    <app-dialog-title>Test Automation</app-dialog-title>
+    <app-dialog-title i18n="Title of the dialog that tests an automation">
+      Test Automation
+    </app-dialog-title>
 
     <div class="flex w-220 max-w-full flex-col gap-4">
       <p class="text-muted text-sm">
-        Check whether {{ dialogData.ruleName }} would run against a task.
-        Testing changes nothing — use Run now to apply the actions.
+        <span
+          i18n="
+            Explains what testing an automation does. NAME is the rule name and
+            'Run now' is the button label
+          ">
+          Check whether
+          {{
+            dialogData.ruleName // i18n(ph="NAME")
+          }}
+          would run against a task. Testing changes nothing — use Run now to
+          apply the actions.
+        </span>
       </p>
 
       <app-form-input
         name="dry-run-search"
+        i18n-placeholder="Placeholder text: Search tasks by name, key or tag"
         placeholder="Search tasks by name, key or tag"
         [noMargin]="true"
         [value]="searchInput()"
@@ -66,6 +79,7 @@ export interface AutomationDryRunDialogData {
         containerClass="h-[320px] overflow-y-auto overflow-x-hidden"
         tableClass="table-fixed"
         rowClass="bg-card"
+        i18n-emptyMessage="Empty state for the dry-run task picker"
         emptyMessage="No tasks available to test."
         [data]="data"
         [stickyHeader]="true">
@@ -83,64 +97,99 @@ export interface AutomationDryRunDialogData {
             type="button"
             [disabled]="running()"
             (click)="onTest(task)">
-            Test
+            <span i18n="Button that tests the automation against a task">
+              Test
+            </span>
           </button>
         </ng-template>
       </app-datatable>
 
       @if (failed()) {
-        <p class="text-warn text-sm">Could not test this task.</p>
+        <p class="text-warn text-sm">
+          <span i18n="Shown when a test run fails">
+            Could not test this task.
+          </span>
+        </p>
       } @else if (dryRun(); as dryRun) {
         <div class="border-border flex flex-col gap-3 rounded-md border p-3">
           <div class="flex flex-col gap-1">
             @if (!dryRun.scopeMatches) {
               <p class="text-sm font-medium">
-                This rule would not run against
+                <span i18n="Prefix before the task a rule would not act on">
+                  This rule would not run against
+                </span>
                 <span class="text-primary">{{ dryRun.taskName }}</span>
               </p>
               <p class="text-muted text-xs">
-                The rule is limited to a project, board or sprint that does not
-                contain this task.
+                <span i18n="Explains why a rule would not run">
+                  The rule is limited to a project, board or sprint that does
+                  not contain this task.
+                </span>
               </p>
             } @else if (triggerBlocks(dryRun)) {
               <p class="text-sm font-medium">
-                This rule would not run against
+                <span i18n="Prefix before the task a rule would not act on">
+                  This rule would not run against
+                </span>
                 <span class="text-primary">{{ dryRun.taskName }}</span>
               </p>
               <p class="text-muted text-xs">
-                "{{ triggerLabel(dryRun) }}" does not apply to this task right
-                now, so the rule would never reach its conditions.
+                <span
+                  i18n="
+                    Explains that the trigger does not currently apply. TRIGGER
+                    is the trigger name
+                  ">
+                  "{{
+                    triggerLabel(dryRun)  // i18n(ph="TRIGGER")
+                  }}" does not apply to this task right now, so the rule would
+                  never reach its conditions.
+                </span>
               </p>
             } @else if (dryRun.conditionsMatch) {
               <p class="text-sm font-medium">
-                This rule would run against
+                <span i18n="Prefix before the task a rule would act on">
+                  This rule would run against
+                </span>
                 <span class="text-primary">{{ dryRun.taskName }}</span>
               </p>
             } @else {
               <p class="text-sm font-medium">
-                This rule would not run against
+                <span i18n="Prefix before the task a rule would not act on">
+                  This rule would not run against
+                </span>
                 <span class="text-primary">{{ dryRun.taskName }}</span>
               </p>
             }
 
             @if (!dryRun.triggerIsEvaluable) {
               <p class="text-muted text-xs">
-                "{{ triggerLabel(dryRun) }}" only fires while a task is
-                changing, so the conditions above are checked against the task
-                as it stands now.
+                <span
+                  i18n="
+                    Explains that the trigger only fires on change. TRIGGER is
+                    the trigger name
+                  ">
+                  "{{
+                    triggerLabel(dryRun)  // i18n(ph="TRIGGER")
+                  }}" only fires while a task is changing, so the conditions
+                  above are checked against the task as it stands now.
+                </span>
               </p>
             }
 
             @if (!dryRun.isEnabled) {
               <p class="text-warn text-xs">
-                The rule is disabled, so it will not run until you enable it.
+                <span i18n="Explains that a disabled rule never runs">
+                  The rule is disabled, so it will not run until you enable it.
+                </span>
               </p>
             }
 
             @if (dryRun.hasUnevaluableConditions) {
               <p class="text-muted text-xs">
-                Some conditions only apply while a task is changing, so they
-                cannot be checked here.
+                <span i18n="Explains conditions that need a change event">
+                  Some conditions only apply while a task is changing, so they
+                  cannot be checked here.
+                </span>
               </p>
             }
           </div>
@@ -153,7 +202,9 @@ export interface AutomationDryRunDialogData {
               [users]="users()" />
           } @else {
             <p class="text-muted text-sm">
-              This rule has no conditions, so every triggering task matches.
+              <span i18n="Explains a rule without conditions">
+                This rule has no conditions, so every triggering task matches.
+              </span>
             </p>
           }
 
@@ -169,28 +220,44 @@ export interface AutomationDryRunDialogData {
               type="button"
               [disabled]="running() || queueing()"
               (click)="onRunNow(dryRun)">
-              Run now
+              <span i18n="Button that runs the automation immediately">
+                Run now
+              </span>
             </button>
             <span class="text-muted text-xs">
-              Runs the actions above against {{ dryRun.taskName }}.
+              <span i18n="Explains what Run now does. TASK is the task name">
+                Runs the actions above against
+                {{
+                  dryRun.taskName  // i18n(ph="TASK")
+                }}.
+              </span>
             </span>
           </div>
 
           @if (queued()) {
             <p class="text-xs">
-              Queued. The run appears in this rule's history once it completes.
+              <span i18n="Confirms a run was queued">
+                Queued. The run appears in this rule's history once it
+                completes.
+              </span>
             </p>
           }
 
           @if (queueFailed()) {
-            <p class="text-warn text-xs">Could not start this run.</p>
+            <p class="text-warn text-xs">
+              <span i18n="Shown when starting a run fails">
+                Could not start this run.
+              </span>
+            </p>
           }
         </div>
       }
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="close()">Close</button>
+      <button app-stroked-button type="button" (click)="close()">
+        <span i18n="Dismisses a dialog without saving">Close</span>
+      </button>
     </div>
   `,
 })

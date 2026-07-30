@@ -24,7 +24,10 @@ export function sprintDaysChip(
     };
   }
   if (diff === 0) {
-    return { label: 'Due today', classes: 'bg-orange-100 text-orange-700' };
+    return {
+      label: $localize`:Chip shown when a sprint ends today:Due today`,
+      classes: 'bg-orange-100 text-orange-700',
+    };
   }
   if (diff <= 3) {
     return { label: `${diff}d left`, classes: 'bg-orange-100 text-orange-700' };

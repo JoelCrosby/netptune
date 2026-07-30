@@ -41,9 +41,9 @@ import { CommandPaletteButtonComponent } from './command-palette/command-palette
             routerLink="/auth/login"
             i18n="
               Navbar button that takes a signed-out visitor to the login page
-            "
-            >Sign in</a
-          >
+            ">
+            Sign in
+          </a>
         }
       </div>
     </div>

@@ -72,6 +72,7 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
 
       <div #statusAnchor>
         <app-filter-action-button
+          i18n-label="Label on the control that filters automations by status"
           label="Filter by Status"
           [icon]="lucideCircleDashed"
           [color]="enabledFilter().size ? 'primary' : undefined"
@@ -84,18 +85,19 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
           app-menu-checkbox-item
           [checked]="enabledFilter().has(true)"
           (checkedChange)="toggleEnabledFilter(true)">
-          Enabled
+          <span i18n="Marks an automation that is switched on">Enabled</span>
         </button>
         <button
           app-menu-checkbox-item
           [checked]="enabledFilter().has(false)"
           (checkedChange)="toggleEnabledFilter(false)">
-          Disabled
+          <span i18n="Marks an automation that is switched off">Disabled</span>
         </button>
       </app-dropdown-menu>
 
       <div #triggerAnchor>
         <app-filter-action-button
+          i18n-label="Label on the control that filters automations by trigger"
           label="Filter by Trigger"
           [icon]="lucideZap"
           [color]="triggerFilter().size ? 'primary' : undefined"
@@ -116,6 +118,7 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
     </div>
 
     <app-datatable
+      i18n-errorMessage="Shown when the automation list fails to load"
       errorMessage="Automation rules could not be loaded."
       containerClass="max-h-[calc(100vh-420px)] min-h-80 overflow-auto"
       tableClass="min-w-[900px]"
@@ -167,7 +170,11 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
             </span>
           </div>
         } @else {
-          <span class="text-muted text-xs">Not run yet</span>
+          <span
+            class="text-muted text-xs"
+            i18n="Shown when an automation has never run">
+            Not run yet
+          </span>
         }
       </ng-template>
 
@@ -329,22 +336,22 @@ export class AutomationRulesTableComponent {
   private rowMenu() {
     return [
       {
-        label: 'Edit rule',
+        label: $localize`:Row action that edits an automation:Edit rule`,
         icon: LucideSettings2,
         onClick: (rule: AutomationRuleListItem) => this.editRule.emit(rule),
       },
       {
-        label: 'Enable or disable rule',
+        label: $localize`:Row action that toggles an automation on or off:Enable or disable rule`,
         icon: LucideCirclePlay,
         onClick: (rule: AutomationRuleListItem) => this.toggleRule.emit(rule),
       },
       {
-        label: 'Clone rule',
+        label: $localize`:Row action that duplicates an automation:Clone rule`,
         icon: LucideCopy,
         onClick: (rule: AutomationRuleListItem) => this.cloneRule.emit(rule),
       },
       {
-        label: 'Delete rule',
+        label: $localize`:Row action that deletes an automation:Delete rule`,
         icon: LucideTrash2,
         onClick: (rule: AutomationRuleListItem) => this.deleteRule.emit(rule),
       },

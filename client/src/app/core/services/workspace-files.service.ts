@@ -8,7 +8,10 @@ import { firstValueFrom, Observable } from 'rxjs';
 export class WorkspaceFilesService {
   private readonly http = inject(HttpClient);
 
-  uploadTaskFile(systemId: string, file: File): Observable<HttpEvent<ClientResponse<FileUploadResult>>> {
+  uploadTaskFile(
+    systemId: string,
+    file: File
+  ): Observable<HttpEvent<ClientResponse<FileUploadResult>>> {
     const form = new FormData();
 
     form.append('files', file, file.name);

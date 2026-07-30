@@ -5,10 +5,14 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
 @Component({
   imports: [PageContainerComponent, PageHeaderComponent, SettingsComponent],
-  template: `<app-page-container [centerPage]="true" [marginBottom]="true">
-    <app-page-header title="Personal" />
+  template: `
+    <app-page-container [centerPage]="true" [marginBottom]="true">
+      <app-page-header
+        i18n-title="Page title for personal settings"
+        title="Personal" />
 
-    <app-settings />
-  </app-page-container> `,
+      <app-settings />
+    </app-page-container>
+  `,
 })
 export class PersonalSettingsViewComponent {}

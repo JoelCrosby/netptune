@@ -6,7 +6,11 @@ import { BurndownPoint } from '@core/models/reporting';
   template: `
     <div class="flex items-center justify-between gap-4">
       <div class="min-w-0 flex-1">
-        <p class="text-muted mb-1 text-xs font-medium uppercase">Burndown</p>
+        <p class="text-muted mb-1 text-xs font-medium uppercase">
+          <span i18n="Heading above the sprint burndown sparkline">
+            Burndown
+          </span>
+        </p>
         <svg
           class="h-10 w-full"
           viewBox="0 0 100 32"

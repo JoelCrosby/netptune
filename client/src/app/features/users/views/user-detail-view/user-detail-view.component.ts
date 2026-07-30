@@ -29,7 +29,9 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
         <app-page-loading />
       } @else if (loadError()) {
         <app-error-state
+          i18n-title="Shown when a member fails to load"
           title="This member could not be loaded"
+          i18n-description="Explains why a member may fail to load"
           description="They may have been removed from the workspace, or the request failed."
           (retry)="reload()" />
       } @else {

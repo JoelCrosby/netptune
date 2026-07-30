@@ -72,6 +72,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     <app-task-list-filters />
 
     <app-datatable
+      i18n-errorMessage="Shown when the task list fails to load"
       errorMessage="Tasks could not be loaded."
       #datatable
       containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
@@ -97,7 +98,13 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
             <svg
               lucideMessageSquareText
               class="text-muted h-4 w-4"
+              i18n-aria-label="
+                Accessible label for the icon marking a task that has comments
+              "
               aria-label="Has comments"
+              i18n-appTooltip="
+                Tooltip on the icon marking a task that has comments
+              "
               appTooltip="Has comments"></svg>
           }
           @if (readFlags()) {
@@ -115,7 +122,11 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
             [name]="task.sprintName"
             [status]="task.sprintStatus" />
         } @else {
-          <span class="text-muted text-sm">Backlog</span>
+          <span
+            class="text-muted text-sm"
+            i18n="Shown when a task is not in any sprint">
+            Backlog
+          </span>
         }
       </ng-template>
 
@@ -130,16 +141,20 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
         @if (task.assignees.length) {
           <app-avatar-stack [avatars]="task.assignees" />
         } @else {
-          <span class="text-muted text-sm">Unassigned</span>
+          <span
+            class="text-muted text-sm"
+            i18n="Shown when a task has nobody assigned">
+            Unassigned
+          </span>
         }
       </ng-template>
 
       <ng-template appDatatableCell="updatedAt" let-task>
         <span
           class="text-muted text-sm"
-          [appTooltip]="task.updatedAt | date: 'medium'"
-          >{{ task.updatedAt | date }}</span
-        >
+          [appTooltip]="task.updatedAt | date: 'medium'">
+          {{ task.updatedAt | date }}
+        </span>
       </ng-template>
 
       <app-empty-state
@@ -163,7 +178,9 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
             type="button"
             (click)="createTaskClicked()">
             <svg size="20" lucidePlus></svg>
-            <span>Create Task</span>
+            <span i18n="Button that opens the create-task dialog">
+              Create Task
+            </span>
           </button>
         }
       </app-empty-state>
@@ -240,7 +257,7 @@ export class TaskListComponent {
   }
 
   private readonly deleteMenuItem: DatatableMenuItem<TaskViewModel> = {
-    label: 'Delete',
+    label: $localize`:Row action that deletes a task:Delete`,
     icon: LucideTrash2,
     onClick: (task) => this.deleteClicked(task),
   };

@@ -1,3 +1,4 @@
+import { hostTimeZone } from '@core/util/dates';
 import {
   Component,
   computed,
@@ -40,38 +41,60 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FlatButtonComponent,
     SectionHeaderComponent,
   ],
-  template: `<app-section-header heading="Workspace Details" />
+  template: `
+    <app-section-header
+      i18n-heading="Section heading for the workspace detail form"
+      heading="Workspace Details" />
 
     <form class="grid max-w-2xl gap-4" (submit)="save($event)">
       <app-form-input
         [formField]="detailsForm.name"
+        i18n-label="Label of the name field"
         label="Name"
         maxLength="1024" />
 
       <app-form-input
         [formField]="detailsForm.identifier"
+        i18n-label="Label of the workspace URL identifier field"
         label="Identifier"
         maxLength="1024"
         [icon]="identifierIcon()"
         [loading]="detailsForm.identifier().pending()"
+        i18n-hint="
+          Warns that changing the workspace identifier breaks existing links
+        "
         hint="Changing the identifier changes the workspace URL and will break existing shared links." />
 
       <app-form-textarea
         [formField]="detailsForm.description"
+        i18n-label="Label of the description field"
         label="Description"
         maxLength="4096" />
 
-      <app-color-select [formField]="detailsForm.color" label="Color" />
+      <app-color-select
+        [formField]="detailsForm.color"
+        i18n-label="Label of the colour picker field"
+        label="Color" />
 
       <app-form-input
         [formField]="detailsForm.timeZone"
+        i18n-label="Label of the workspace time zone field"
         label="Timezone"
+        i18n-hint="
+          Hint under the time zone field. Europe/London is a literal IANA zone
+          name
+        "
         hint="Use an IANA timezone, for example Europe/London." />
 
       <div>
-        <button app-flat-button type="submit">Save Changes</button>
+        <button app-flat-button type="submit">
+          <span i18n="Button that saves the workspace details">
+            Save Changes
+          </span>
+        </button>
       </div>
-    </form>`,
+    </form>
+  `,
 })
 export class WorkspaceDetailsComponent {
   private store = inject(Store);
@@ -82,17 +105,23 @@ export class WorkspaceDetailsComponent {
   detailsFormModel = signal({
     name: '',
     identifier: '',
-    description: '',
+    description: $localize`:Explanatory text:`,
     color: '',
     timeZone: 'UTC',
   });
 
   detailsForm = form(this.detailsFormModel, (schema) => {
-    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 1024 }));
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 1024,
+      })
+    );
     apply(
       schema.identifier,
       requiredTextSchema({
-        label: 'Identifier',
+        label: $localize`:Field name used inside validation messages, e.g. "Identifier is required.":Identifier`,
         minLength: 4,
         maxLength: 1024,
       })
@@ -126,12 +155,12 @@ export class WorkspaceDetailsComponent {
 
         return {
           kind: 'identifierTaken',
-          message: 'Identifier is already taken',
+          message: $localize`:Validation error when a workspace identifier is already in use:Identifier is already taken`,
         };
       },
       onError: () => ({
         kind: 'networkError',
-        message: 'Could not verify Identifier availability',
+        message: $localize`:Shown when the workspace identifier availability check fails:Could not verify Identifier availability`,
       }),
     });
   });
@@ -156,10 +185,7 @@ export class WorkspaceDetailsComponent {
         identifier: workspace.slug ?? '',
         description: workspace.description ?? '',
         color: workspace.metaInfo?.color ?? '',
-        timeZone:
-          workspace.metaInfo?.timeZone ??
-          Intl.DateTimeFormat().resolvedOptions().timeZone ??
-          'UTC',
+        timeZone: workspace.metaInfo?.timeZone ?? hostTimeZone(),
       });
     });
   }

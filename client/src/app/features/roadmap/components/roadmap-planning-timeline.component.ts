@@ -105,7 +105,9 @@ export class RoadmapPlanningTimelineComponent {
       .subscribe({
         next: () => {
           this.setTaskPending(change.task.id, false);
-          this.snackbar.success('Task schedule updated');
+          this.snackbar.success(
+            $localize`:Confirmation shown after an action succeeds:Task schedule updated`
+          );
           this.requestRefresh();
         },
         error: () => {
@@ -116,7 +118,9 @@ export class RoadmapPlanningTimelineComponent {
           }
 
           this.setTaskPending(change.task.id, false);
-          this.snackbar.error('Task schedule could not be updated');
+          this.snackbar.error(
+            $localize`:Error shown after an action fails:Task schedule could not be updated`
+          );
 
           if (this.refreshQueued) {
             this.requestRefresh();

@@ -28,10 +28,12 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
     <div
       class="border-border flex flex-wrap items-center gap-2 border-b p-3"
       role="toolbar"
+      i18n-aria-label="Accessible name of the calendar toolbar"
       aria-label="Calendar controls">
       <app-dropdown-button
         #projectMenu
         [label]="projectLabel()"
+        i18n-ariaLabel="Accessible label for the calendar project filter"
         ariaLabel="Filter calendar by project"
         buttonClass="min-w-44 max-w-64 justify-between">
         <button
@@ -45,7 +47,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
               <svg lucideCheck class="h-4 w-4"></svg>
             }
           </span>
-          <span>All projects</span>
+          <span i18n="Filter option including every project">All projects</span>
         </button>
         @for (project of projects(); track project.id) {
           <button
@@ -67,6 +69,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
       <app-dropdown-button
         #sprintMenu
         [label]="sprintLabel()"
+        i18n-ariaLabel="Accessible label for the calendar sprint filter"
         ariaLabel="Filter calendar by sprint"
         buttonClass="min-w-44 max-w-64 justify-between">
         <button
@@ -80,7 +83,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
               <svg lucideCheck class="h-4 w-4"></svg>
             }
           </span>
-          <span>All sprints</span>
+          <span i18n="Filter option including every sprint">All sprints</span>
         </button>
         @for (sprint of filteredSprints(); track sprint.id) {
           <button
@@ -104,7 +107,11 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
           app-stroked-button
           color="neutral"
           type="button"
+          i18n-aria-label="
+            Accessible label for the button that moves back one month
+          "
           aria-label="Previous month"
+          i18n-title="Tooltip on the button that moves back one month"
           title="Previous month"
           (click)="monthNavigationRequested.emit(-1)">
           <svg lucideChevronLeft class="h-4 w-4"></svg>
@@ -114,7 +121,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
           color="neutral"
           type="button"
           (click)="todayRequested.emit()">
-          Today
+          <span i18n="Button that jumps the calendar to today">Today</span>
         </button>
         <span
           class="text-primary min-w-32 text-center text-sm font-semibold"
@@ -125,7 +132,11 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
           app-stroked-button
           color="neutral"
           type="button"
+          i18n-aria-label="
+            Accessible label for the button that moves forward one month
+          "
           aria-label="Next month"
+          i18n-title="Tooltip on the button that moves forward one month"
           title="Next month"
           (click)="monthNavigationRequested.emit(1)">
           <svg lucideChevronRight class="h-4 w-4"></svg>
@@ -134,7 +145,11 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
           app-stroked-button
           color="neutral"
           type="button"
+          i18n-aria-label="
+            Accessible label for the button that reloads the calendar
+          "
           aria-label="Refresh calendar"
+          i18n-title="Tooltip on the button that reloads the calendar"
           title="Refresh calendar"
           (click)="refreshRequested.emit()">
           <svg lucideRefreshCw class="h-4 w-4"></svg>

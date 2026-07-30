@@ -12,11 +12,13 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm build
+ARG NG_CONFIGURATION=production
+RUN pnpm ng build --configuration "$NG_CONFIGURATION"
 RUN node scripts/embed-build-meta.js
 
 FROM nginx:stable-alpine AS final
 RUN apk upgrade --no-cache
 COPY --from=build /client/dist/netptune/browser /usr/share/nginx/html
+ENV NGINX_PORT=80
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 EXPOSE 80

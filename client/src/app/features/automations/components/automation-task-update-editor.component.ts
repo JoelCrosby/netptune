@@ -40,10 +40,11 @@ import {
               statusId: $event ? defaultStatusId() : null,
             })
           ">
-          Set status
+          <span i18n="Action that changes the task status">Set status</span>
         </app-checkbox>
         @if (hasStatusUpdate()) {
           <app-form-select
+            i18n-label="Label of the status field"
             label="Status"
             [noMargin]="true"
             [value]="action().statusId ?? null"
@@ -65,10 +66,11 @@ import {
               priority: $event ? defaultTaskPriority : null,
             })
           ">
-          Set priority
+          <span i18n="Action that changes the task priority">Set priority</span>
         </app-checkbox>
         @if (hasPriorityUpdate()) {
           <app-form-select
+            i18n-label="Label of the priority field"
             label="Priority"
             [noMargin]="true"
             [value]="action().priority ?? null"
@@ -83,7 +85,11 @@ import {
       </div>
 
       <app-form-input
+        i18n-label="Label of the set name field"
         label="Set name"
+        i18n-placeholder="
+          Placeholder text: Leave empty to keep the current name
+        "
         placeholder="Leave empty to keep the current name"
         [noMargin]="true"
         [value]="action().taskName ?? ''"
@@ -91,7 +97,11 @@ import {
 
       <div class="flex flex-col gap-2">
         <app-form-input
+          i18n-label="Label of the set description field"
           label="Set description"
+          i18n-placeholder="
+            Placeholder text: Leave empty to keep the current description
+          "
           placeholder="Leave empty to keep the current description"
           [noMargin]="true"
           [disabled]="shouldClearDescription()"
@@ -105,19 +115,24 @@ import {
               taskDescription: $event ? null : action().taskDescription,
             })
           ">
-          Clear description
+          <span i18n="Action that empties the task description">
+            Clear description
+          </span>
         </app-checkbox>
       </div>
 
       <div class="flex flex-col gap-2">
         <app-form-select
+          i18n-label="Label of the set owner field"
           label="Set owner"
           [noMargin]="true"
           [disabled]="shouldClearOwner()"
           [value]="action().ownerId ?? null"
           (changed)="patch.emit({ ownerId: $event })">
           <app-form-select-option [value]="null">
-            Keep current owner
+            <span i18n="Option that leaves the task owner unchanged">
+              Keep current owner
+            </span>
           </app-form-select-option>
           @for (user of users(); track user.id) {
             <app-form-select-option [value]="user.id">
@@ -133,7 +148,7 @@ import {
               ownerId: $event ? null : action().ownerId,
             })
           ">
-          Clear owner
+          <span i18n="Action that removes the task owner">Clear owner</span>
         </app-checkbox>
       </div>
 
@@ -141,11 +156,17 @@ import {
         <app-checkbox
           [checked]="isReplacingAssignees()"
           (changed)="patch.emit({ assigneeIds: $event ? [] : null })">
-          Replace assignees
+          <span i18n="Action that replaces the task assignees">
+            Replace assignees
+          </span>
         </app-checkbox>
         @if (isReplacingAssignees()) {
           <app-form-select-tags
+            i18n-label="Label of the assignees field"
             label="Assignees"
+            i18n-placeholder="
+              Placeholder text: Choose assignees; leave empty to unassign all
+            "
             placeholder="Choose assignees; leave empty to unassign all"
             [value]="action().assigneeIds ?? []"
             (changed)="patch.emit({ assigneeIds: $event })">
@@ -159,7 +180,9 @@ import {
       </div>
 
       <app-form-select-tags
+        i18n-label="Label of the add tags field"
         label="Add tags"
+        i18n-placeholder="Placeholder text: Choose tags to add"
         placeholder="Choose tags to add"
         [value]="action().addTags ?? []"
         (changed)="patch.emit({ addTags: $event })">
@@ -171,7 +194,9 @@ import {
       </app-form-select-tags>
 
       <app-form-select-tags
+        i18n-label="Label of the remove tags field"
         label="Remove tags"
+        i18n-placeholder="Placeholder text: Choose tags to remove"
         placeholder="Choose tags to remove"
         [value]="action().removeTags ?? []"
         (changed)="patch.emit({ removeTags: $event })">
@@ -186,7 +211,7 @@ import {
         *ngTemplateOutlet="
           dateEditor;
           context: {
-            label: 'Start date',
+            label: startDateLabel,
             value: action().startDate,
             field: 'startDate',
           }
@@ -196,7 +221,7 @@ import {
         *ngTemplateOutlet="
           dateEditor;
           context: {
-            label: 'Due date',
+            label: dueDateLabel,
             value: action().dueDate,
             field: 'dueDate',
           }
@@ -206,11 +231,12 @@ import {
         <app-checkbox
           [checked]="isEstimateUpdateEnabled()"
           (changed)="toggleEstimate($event)">
-          Set estimate
+          <span i18n="Action that sets the task estimate">Set estimate</span>
         </app-checkbox>
         @if (isEstimateUpdateEnabled()) {
           <div class="flex flex-col gap-2">
             <app-form-select
+              i18n-label="Label of the estimate type field"
               label="Estimate type"
               [noMargin]="true"
               [disabled]="shouldClearEstimate()"
@@ -223,6 +249,7 @@ import {
               }
             </app-form-select>
             <app-form-input
+              i18n-label="Label of the value field"
               label="Value"
               type="number"
               min="0"
@@ -244,20 +271,25 @@ import {
                 estimateValue: $event ? null : action().estimateValue,
               })
             ">
-            Clear estimate
+            <span i18n="Action that removes the task estimate">
+              Clear estimate
+            </span>
           </app-checkbox>
         }
       </div>
 
       <div class="flex flex-col gap-2">
         <app-form-select
+          i18n-label="Label of the move to sprint field"
           label="Move to sprint"
           [noMargin]="true"
           [disabled]="shouldMoveToBacklog()"
           [value]="action().sprintId ?? null"
           (changed)="patch.emit({ sprintId: $event })">
           <app-form-select-option [value]="null">
-            Keep current sprint
+            <span i18n="Option that leaves the task sprint unchanged">
+              Keep current sprint
+            </span>
           </app-form-select-option>
           @for (sprint of sprints(); track sprint.id) {
             <app-form-select-option [value]="sprint.id">
@@ -273,17 +305,22 @@ import {
               sprintId: $event ? null : action().sprintId,
             })
           ">
-          Move to backlog
+          <span i18n="Action that removes the task from its sprint">
+            Move to backlog
+          </span>
         </app-checkbox>
       </div>
 
       <app-form-select
+        i18n-label="Label of the move to board group field"
         label="Move to board group"
         [noMargin]="true"
         [value]="action().boardGroupId ?? null"
         (changed)="patch.emit({ boardGroupId: $event })">
         <app-form-select-option [value]="null">
-          Keep current board group
+          <span i18n="Option that leaves the board group unchanged">
+            Keep current board group
+          </span>
         </app-form-select-option>
         @for (group of boardGroups(); track group.id) {
           <app-form-select-option [value]="group.id">
@@ -306,19 +343,25 @@ import {
           [value]="selectedDateMode ?? null"
           (changed)="setDateMode(field, $event)">
           <app-form-select-option [value]="null">
-            Keep current date
+            <span i18n="Option that leaves the date unchanged">
+              Keep current date
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="dateMode.absolute">
-            Set date
+            <span i18n="Action that sets a specific date">Set date</span>
           </app-form-select-option>
           <app-form-select-option [value]="dateMode.relativeDays">
-            Relative calendar days
+            <span i18n="Date mode: a number of calendar days from the run date">
+              Relative calendar days
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="dateMode.relativeBusinessDays">
-            Relative business days
+            <span i18n="Date mode: a number of working days from the run date">
+              Relative business days
+            </span>
           </app-form-select-option>
           <app-form-select-option [value]="dateMode.clear">
-            Clear date
+            <span i18n="Action that removes the date">Clear date</span>
           </app-form-select-option>
         </app-form-select>
 
@@ -337,7 +380,9 @@ import {
             type="number"
             min="-3650"
             max="3650"
+            i18n-label="Label of the days from run date field"
             label="Days from run date"
+            i18n-hint="Explains how to set a date before the run date"
             hint="Use a negative number for a date before the run date."
             [noMargin]="true"
             [value]="numberValue(value?.offset)"
@@ -348,6 +393,10 @@ import {
   `,
 })
 export class AutomationTaskUpdateEditorComponent {
+  /** $localize is a TS tag and cannot appear inside a component template. */
+  protected readonly startDateLabel = $localize`:Label of the task start date field:Start date`;
+  protected readonly dueDateLabel = $localize`:Label of the task due date field:Due date`;
+
   readonly defaultTaskPriority = TaskPriority.none;
   readonly taskPriorities = taskPriorityOptions;
   readonly estimateType = EstimateType;

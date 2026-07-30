@@ -21,13 +21,24 @@ import { AutomationConditionGroupEditorComponent } from './automation-condition-
     <div class="flex flex-col gap-4">
       <div>
         <div class="flex items-center gap-2">
-          <h2 class="font-overpass text-xl font-medium">If</h2>
+          <h2 class="font-overpass text-xl font-medium">
+            <span
+              i18n="
+                Heading of the conditions section — the 'if' part of the rule
+              ">
+              If
+            </span>
+          </h2>
           <app-badge class="text-[0.65rem] tracking-wide uppercase">
-            Optional
+            <span i18n="Marks the conditions section as not required">
+              Optional
+            </span>
           </app-badge>
         </div>
         <p class="text-foreground/60 text-sm">
-          Restrict which tasks can continue to the follow-up actions.
+          <span i18n="Explains what conditions do">
+            Restrict which tasks can continue to the follow-up actions.
+          </span>
         </p>
       </div>
 
@@ -42,16 +53,24 @@ import { AutomationConditionGroupEditorComponent } from './automation-condition-
       } @else {
         <div
           class="border-border bg-foreground/2 rounded-lg border border-dashed p-4">
-          <p class="mb-1 text-sm font-medium">Every matching task will run</p>
+          <p class="mb-1 text-sm font-medium">
+            <span i18n="Shown when a rule has no conditions">
+              Every matching task will run
+            </span>
+          </p>
           <p class="text-foreground/60 mb-3 text-sm">
-            Add conditions only when this automation should apply to a smaller
-            set of tasks.
+            <span i18n="Advises when conditions are needed">
+              Add conditions only when this automation should apply to a smaller
+              set of tasks.
+            </span>
           </p>
           <button
             app-stroked-button
             type="button"
             (click)="addConditionGroup()">
-            Add conditions
+            <span i18n="Button that starts adding conditions">
+              Add conditions
+            </span>
           </button>
         </div>
       }

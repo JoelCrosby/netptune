@@ -22,7 +22,11 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
         (delete)="onDeleteClicked()">
         <div class="flex flex-col">
           @if (project().repositoryUrl) {
-            <h5 class="mt-4 mb-[0.4rem]">Repository</h5>
+            <h5 class="mt-4 mb-[0.4rem]">
+              <span i18n="Heading above a project's source repository link">
+                Repository
+              </span>
+            </h5>
 
             <a
               [href]="project().repositoryUrl"
@@ -56,7 +60,7 @@ export class ProjectListItemComponent {
 
     return [
       {
-        label: 'Go To Board',
+        label: $localize`:Label shown in the interface:Go To Board`,
         isLink: true,
         icon: LucidePanelsTopLeft,
         routerLink: [

@@ -14,20 +14,33 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
   template: `
     @if (selectedCount() > 0) {
       <div class="ml-auto flex flex-row items-center gap-4">
-        <span class="text-muted px-2 text-sm"
-          >{{ selectedCount() }} selected</span
-        >
+        <span class="text-muted px-2 text-sm">
+          <span
+            i18n="
+              Count of selected rows above a table. COUNT is the number selected
+            ">
+            {{
+              selectedCount() // i18n(ph="COUNT")
+            }}
+            selected
+          </span>
+        </span>
         <button
           app-stroked-button
           color="warn"
           type="button"
           (click)="deleteClicked()">
           <svg lucideTrash class="h-4 w-4"></svg>
-          <span>Delete</span>
+          <span i18n="Button that deletes the selected tasks">Delete</span>
         </button>
         <button app-stroked-button type="button" (click)="bulkEditClicked()">
           <svg lucideSettings2 class="h-4 w-4"></svg>
-          <span>Bulk edit</span>
+          <span
+            i18n="
+              Button that opens the bulk edit dialog for the selected tasks
+            ">
+            Bulk edit
+          </span>
         </button>
       </div>
     }

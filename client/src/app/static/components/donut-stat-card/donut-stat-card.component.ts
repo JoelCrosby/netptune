@@ -1,3 +1,4 @@
+import { numberFormat } from '@core/util/locale';
 import { Component, computed, input } from '@angular/core';
 import { colorHex } from '@core/util/colors/colors';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -43,7 +44,7 @@ export interface DonutStatItem {
                   {{ item.label }}
                 </span>
                 <span class="text-foreground text-sm font-semibold">
-                  {{ item.value.toLocaleString() }}
+                  {{ formatValue(item.value) }}
                 </span>
               </li>
             }
@@ -59,6 +60,12 @@ export interface DonutStatItem {
   `,
 })
 export class DonutStatCardComponent {
+  /**
+   * Bare toLocaleString() follows the browser locale, not the app locale, so all
+   * four call sites share one app-locale formatter.
+   */
+  private readonly valueFormat = numberFormat();
+
   readonly title = input.required<string>();
   readonly items = input<DonutStatItem[]>([]);
   /** Centre figure. Defaults to the sum of all item values when not provided. */
@@ -103,7 +110,7 @@ export class DonutStatCardComponent {
               fontSize: '28px',
               fontWeight: 700,
               font: 'var(--default-font-family)',
-              formatter: (value: string) => Number(value).toLocaleString(),
+              formatter: (value: string) => this.formatValue(Number(value)),
             },
             // Resting state (nothing hovered) shows the grand total in the
             // centre; hovering a slice swaps in that slice's name and value.
@@ -114,7 +121,7 @@ export class DonutStatCardComponent {
               color: 'var(--foreground)',
               fontSize: '13px',
               font: 'var(--default-font-family)',
-              formatter: () => total.toLocaleString(),
+              formatter: () => this.formatValue(total),
             },
           },
         },
@@ -135,6 +142,10 @@ export class DonutStatCardComponent {
   readonly dataLabels = { enabled: false };
   readonly tooltip = {
     theme: 'dark',
-    y: { formatter: (value: number) => value.toLocaleString() },
+    y: { formatter: (value: number) => this.formatValue(value) },
   };
+
+  protected formatValue(value: number): string {
+    return this.valueFormat.format(value);
+  }
 }

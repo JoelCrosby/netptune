@@ -20,8 +20,8 @@ const buildDeleteConfirmation = (count: number): ConfirmDialogOptions => ({
     count === 1
       ? 'This notification will be permanently removed.'
       : `These ${count} notifications will be permanently removed.`,
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
   color: 'warn',
 });
 

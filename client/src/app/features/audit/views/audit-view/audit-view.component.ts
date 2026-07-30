@@ -18,7 +18,9 @@ import { AuditStore } from '@audit/audit-state.service';
   ],
   template: `
     <app-page-container>
-      <app-page-header title="Audit Log" />
+      <app-page-header
+        i18n-title="Page title for the workspace audit log"
+        title="Audit Log" />
       <app-audit-filters (filterChange)="auditTable.goToFirstPage()" />
       <app-audit-activity-chart />
       <app-audit-table #auditTable />

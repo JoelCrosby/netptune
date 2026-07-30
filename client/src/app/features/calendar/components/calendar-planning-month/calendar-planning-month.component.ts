@@ -173,7 +173,9 @@ export class CalendarPlanningMonthComponent {
           this.announcement.set(
             `${change.task.systemId} moved to ${change.toDate}`
           );
-          this.snackbar.success('Task schedule updated');
+          this.snackbar.success(
+            $localize`:Confirmation shown after an action succeeds:Task schedule updated`
+          );
           this.requestRefresh();
         },
         error: () => {
@@ -184,7 +186,9 @@ export class CalendarPlanningMonthComponent {
           );
           this.setPending(change.task.id, false);
           this.announcement.set(`${change.task.systemId} could not be moved`);
-          this.snackbar.error('Task schedule could not be updated');
+          this.snackbar.error(
+            $localize`:Error shown after an action fails:Task schedule could not be updated`
+          );
           if (this.refreshQueued) {
             this.requestRefresh();
           }

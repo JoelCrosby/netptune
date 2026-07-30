@@ -26,42 +26,60 @@ export interface AuditLogDetailDialogData {
     PropertyListComponent,
   ],
   template: `
-    <app-dialog-title showCloseButton>Audit log details</app-dialog-title>
+    <app-dialog-title
+      showCloseButton
+      i18n="Title of the audit entry detail dialog">
+      Audit log details
+    </app-dialog-title>
 
     <app-dialog-content>
       @if (detail.isLoading()) {
-        <p class="text-muted py-12 text-center text-sm">Loading details…</p>
+        <p class="text-muted py-12 text-center text-sm">
+          <span i18n="Shown while audit entry details load">
+            Loading details…
+          </span>
+        </p>
       } @else if (detail.error()) {
         <p class="py-12 text-center text-sm text-red-500">
-          Failed to load audit log details.
+          <span i18n="Shown when audit entry details fail to load">
+            Failed to load audit log details.
+          </span>
         </p>
       } @else if (detail.value()?.payload; as log) {
         <div class="max-h-[70vh] space-y-6 overflow-y-auto pr-2">
           <section>
             <h2 class="text-muted mb-2 text-xs font-medium uppercase">
-              Summary
+              <span i18n="Heading above the audit entry summary">Summary</span>
             </h2>
             <p class="text-sm">{{ log.summary }}</p>
           </section>
 
-          <app-property-list heading="Event" [items]="eventProperties(log)" />
+          <app-property-list
+            i18n-heading="Heading above the audit event properties"
+            heading="Event"
+            [items]="eventProperties(log)" />
 
           <app-property-list
+            i18n-heading="Heading above the audited subject properties"
             heading="Subject"
             [items]="subjectProperties(log)" />
 
           <app-property-list
+            i18n-heading="Heading above the audit context properties"
             heading="Context"
             [items]="contextProperties(log)" />
 
           <app-property-list
+            i18n-heading="Heading above the audit request properties"
             heading="Request"
             [items]="requestProperties(log)" />
 
           @if (log.references.length > 0) {
             <section>
               <h2 class="text-muted mb-2 text-xs font-medium uppercase">
-                References
+                <span i18n="Heading above related records in an audit entry">
+                  References
+                </span>
               </h2>
               <div class="border-border overflow-hidden rounded border">
                 @for (
@@ -84,7 +102,9 @@ export interface AuditLogDetailDialogData {
 
           <section>
             <h2 class="text-muted mb-2 text-xs font-medium uppercase">
-              Payload
+              <span i18n="Heading above the raw audit event payload">
+                Payload
+              </span>
             </h2>
             <pre
               class="bg-foreground/5 max-w-full overflow-x-auto rounded p-4 text-xs leading-5"><code>{{ log.meta | json }}</code></pre>
@@ -108,25 +128,50 @@ export class AuditLogDetailDialogComponent {
   ): readonly PropertyListItem[] {
     return [
       {
-        label: 'Event key',
+        label: $localize`:Label shown in the interface:Event key`,
         value: log.eventKey,
         monospace: true,
         breakAll: true,
       },
-      { label: 'Log ID', value: log.id },
+      { label: $localize`:Label shown in the interface:Log ID`, value: log.id },
       {
-        label: 'Event ID',
+        label: $localize`:Label shown in the interface:Event ID`,
         value: log.eventId,
         monospace: true,
         breakAll: true,
       },
-      { label: 'Schema version', value: log.schemaVersion },
-      { label: 'Occurred', value: log.occurredAt, format: 'date' },
-      { label: 'Recorded', value: log.recordedAt, format: 'date' },
-      { label: 'Actor', value: log.userDisplayName },
-      { label: 'Actor ID', value: log.userId, monospace: true, breakAll: true },
-      { label: 'Action', value: activityTypeToString(log.type) },
-      { label: 'Retention', value: log.retentionClass },
+      {
+        label: $localize`:Label shown in the interface:Schema version`,
+        value: log.schemaVersion,
+      },
+      {
+        label: $localize`:Label shown in the interface:Occurred`,
+        value: log.occurredAt,
+        format: 'date',
+      },
+      {
+        label: $localize`:Label shown in the interface:Recorded`,
+        value: log.recordedAt,
+        format: 'date',
+      },
+      {
+        label: $localize`:Label shown in the interface:Actor`,
+        value: log.userDisplayName,
+      },
+      {
+        label: $localize`:Label shown in the interface:Actor ID`,
+        value: log.userId,
+        monospace: true,
+        breakAll: true,
+      },
+      {
+        label: $localize`:Label shown in the interface:Action`,
+        value: activityTypeToString(log.type),
+      },
+      {
+        label: $localize`:Label shown in the interface:Retention`,
+        value: log.retentionClass,
+      },
     ];
   }
 
@@ -134,18 +179,32 @@ export class AuditLogDetailDialogComponent {
     log: AuditLogDetailViewModel
   ): readonly PropertyListItem[] {
     return [
-      { label: 'Type', value: log.subjectType },
-      { label: 'Entity type', value: entityTypeToString(log.entityType) },
-      { label: 'ID', value: log.subjectId, monospace: true, breakAll: true },
-      { label: 'Sequence', value: log.subjectSequence },
       {
-        label: 'Correlation ID',
+        label: $localize`:Label shown in the interface:Type`,
+        value: log.subjectType,
+      },
+      {
+        label: $localize`:Label shown in the interface:Entity type`,
+        value: entityTypeToString(log.entityType),
+      },
+      {
+        label: $localize`:Label shown in the interface:ID`,
+        value: log.subjectId,
+        monospace: true,
+        breakAll: true,
+      },
+      {
+        label: $localize`:Label shown in the interface:Sequence`,
+        value: log.subjectSequence,
+      },
+      {
+        label: $localize`:Label shown in the interface:Correlation ID`,
         value: log.correlationId,
         monospace: true,
         breakAll: true,
       },
       {
-        label: 'Causation event ID',
+        label: $localize`:Label shown in the interface:Causation event ID`,
         value: log.causationEventId,
         monospace: true,
         breakAll: true,
@@ -157,9 +216,18 @@ export class AuditLogDetailDialogComponent {
     log: AuditLogDetailViewModel
   ): readonly PropertyListItem[] {
     return [
-      { label: 'Workspace', value: log.workspaceSlug },
-      { label: 'Project', value: log.projectSlug },
-      { label: 'Board', value: log.boardSlug },
+      {
+        label: $localize`:Label shown in the interface:Workspace`,
+        value: log.workspaceSlug,
+      },
+      {
+        label: $localize`:Label shown in the interface:Project`,
+        value: log.projectSlug,
+      },
+      {
+        label: $localize`:Label shown in the interface:Board`,
+        value: log.boardSlug,
+      },
     ];
   }
 
@@ -167,8 +235,15 @@ export class AuditLogDetailDialogComponent {
     log: AuditLogDetailViewModel
   ): readonly PropertyListItem[] {
     return [
-      { label: 'IP address', value: log.ipAddress },
-      { label: 'User agent', value: log.userAgent, breakAll: true },
+      {
+        label: $localize`:Label shown in the interface:IP address`,
+        value: log.ipAddress,
+      },
+      {
+        label: $localize`:Label shown in the interface:User agent`,
+        value: log.userAgent,
+        breakAll: true,
+      },
     ];
   }
 }

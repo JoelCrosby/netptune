@@ -112,9 +112,9 @@ type PaletteItem =
                 <span
                   i18n="
                     Heading above recently-visited items in the command palette
-                  "
-                  >Recent</span
-                >
+                  ">
+                  Recent
+                </span>
               </p>
               @for (item of recentItems(); track item.url; let idx = $index) {
                 <app-recent-item
@@ -138,9 +138,9 @@ type PaletteItem =
                 class="text-muted px-2 py-1.5 text-xs font-medium"
                 aria-hidden="true">
                 <span
-                  i18n="Heading above runnable commands in the command palette"
-                  >Actions</span
-                >
+                  i18n="Heading above runnable commands in the command palette">
+                  Actions
+                </span>
               </p>
               @for (cmd of commandItems(); track cmd.id; let idx = $index) {
                 <app-command-item
@@ -165,9 +165,10 @@ type PaletteItem =
               <p
                 class="text-muted px-2 py-1.5 text-xs font-medium"
                 aria-hidden="true">
-                <span i18n="Heading above search results in the command palette"
-                  >Results</span
-                >
+                <span
+                  i18n="Heading above search results in the command palette">
+                  Results
+                </span>
               </p>
               @for (
                 result of searchResultItems();

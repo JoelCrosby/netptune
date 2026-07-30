@@ -43,43 +43,47 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 @Component({
   selector: 'app-board-group-task-inline',
   imports: [TooltipDirective, SpinnerComponent, FormField, A11yModule],
-  template: `<div
-    class="border-border bg-card overflow-hidden rounded-sm border-2 p-[0.4rem]"
-    [class.opacity-60]="loading()"
-    [class.border-primary]="!loading()"
-    #taskInlineContainer>
-    <textarea
-      class="text-foreground bg-card w-full resize-none border-0 font-[inherit] text-sm tracking-[0.1px] outline-none"
-      #textarea
-      [formField]="taskForm.name"
-      (keydown.enter)="onSubmit($event)"
-      (keydown.escape)="onEscape()"
-      [cdkTrapFocusAutoCapture]="true"
-      [cdkTrapFocus]="true"
-      placeholder="What do you need to get done?">
-    </textarea>
+  template: `
+    <div
+      class="border-border bg-card overflow-hidden rounded-sm border-2 p-[0.4rem]"
+      [class.opacity-60]="loading()"
+      [class.border-primary]="!loading()"
+      #taskInlineContainer>
+      <textarea
+        class="text-foreground bg-card w-full resize-none border-0 font-[inherit] text-sm tracking-[0.1px] outline-none"
+        #textarea
+        [formField]="taskForm.name"
+        (keydown.enter)="onSubmit($event)"
+        (keydown.escape)="onEscape()"
+        [cdkTrapFocusAutoCapture]="true"
+        [cdkTrapFocus]="true"
+        i18n-placeholder="
+          Placeholder in the inline box for adding a task to a board group
+        "
+        placeholder="What do you need to get done?"></textarea>
 
-    <div>
-      @if (message(); as message) {
-        <div
-          class="bg-primary h-6 w-6 rounded-full text-center leading-6 text-white"
-          [appTooltip]="message">
-          !
-        </div>
-      }
+      <div>
+        @if (message(); as message) {
+          <div
+            class="bg-primary h-6 w-6 rounded-full text-center leading-6 text-white"
+            [appTooltip]="message">
+            !
+          </div>
+        }
 
-      @if (selectedSprint()) {
-        <div
-          class="bg-primary/12 inline-flex h-6 rounded-sm px-2 text-center text-xs leading-6 text-white">
-          {{ selectedSprint()?.name }}
-        </div>
-      }
+        @if (selectedSprint()) {
+          <div
+            class="bg-primary/12 inline-flex h-6 rounded-sm px-2 text-center text-xs leading-6 text-white">
+            {{ selectedSprint()?.name }}
+          </div>
+        }
 
-      @if (loading()) {
-        <app-spinner diameter="1.4rem"> </app-spinner>
-      }
+        @if (loading()) {
+          <app-spinner diameter="1.4rem"></app-spinner>
+        }
+      </div>
     </div>
-  </div> `,
+  `,
 })
 export class BoardGroupTaskInlineComponent implements AfterViewInit {
   private document = inject(DocumentService);
@@ -106,7 +110,10 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   taskForm = form(this.taskFormModel, (schema) => {
     apply(
       schema.name,
-      requiredTextSchema({ label: 'Task summary', maxLength: 256 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Task summary is required.":Task summary`,
+        maxLength: 256,
+      })
     );
     disabled(schema.name, { when: () => !this.isEditActive() });
     debounce(schema.name, 240);

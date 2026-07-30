@@ -12,16 +12,18 @@ import { FormControlInputDirective } from '@app/static/components/form-control/f
 @Component({
   selector: 'app-tags-input',
   imports: [FormControlFieldComponent, FormControlInputDirective],
-  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
-    <app-form-control-field>
-      <input
-        #input
-        appFormInput
-        type="text"
-        [(value)]="value"
-        (keydown.enter)="onSubmit($event)" />
-    </app-form-control-field>
-  </div> `,
+  template: `
+    <div class="nept-form-control mb-[1.4rem] w-[inherit]">
+      <app-form-control-field>
+        <input
+          #input
+          appFormInput
+          type="text"
+          [(value)]="value"
+          (keydown.enter)="onSubmit($event)" />
+      </app-form-control-field>
+    </div>
+  `,
 })
 export class TagsInputComponent implements AfterViewInit {
   readonly value = model<string | null>(null);

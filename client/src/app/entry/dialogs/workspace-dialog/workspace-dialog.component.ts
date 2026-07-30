@@ -78,76 +78,109 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   ],
   template: `
     @if (isEditMode) {
-      <app-dialog-title>Edit Workspace</app-dialog-title>
+      <app-dialog-title i18n="Title of the edit-workspace dialog">
+        Edit Workspace
+      </app-dialog-title>
 
       <form app-dialog-content class="form-auth min-w-0">
         <app-form-input
           [formField]="dialogForm.name"
+          i18n-label="Label of the name field"
           label="Name"
           maxLength="1024" />
 
         <app-form-input
           [formField]="dialogForm.identifier"
+          i18n-label="Label of the workspace URL identifier field"
           label="Identifier"
           maxLength="1024"
           [icon]="identifierIcon()"
           [loading]="dialogForm.identifier().pending()"
+          i18n-hint="Hint explaining what the workspace identifier is used for"
           hint="Used in workspace URLs." />
 
         <app-form-textarea
           [formField]="dialogForm.description"
+          i18n-label="Label of the description field"
           label="Description"
           maxLength="4096" />
 
-        <app-color-select [formField]="dialogForm.color" label="Color" />
+        <app-color-select
+          [formField]="dialogForm.color"
+          i18n-label="Label of the colour picker field"
+          label="Color" />
       </form>
 
       <div app-dialog-actions align="end">
-        <button app-stroked-button app-dialog-close type="button">Close</button>
+        <button app-stroked-button app-dialog-close type="button">
+          <span i18n="Dismisses a dialog without saving">Close</span>
+        </button>
         <button app-flat-button type="button" (click)="getResult()">
-          Save Changes
+          <span i18n="Button that saves edits to the workspace">
+            Save Changes
+          </span>
         </button>
       </div>
     } @else {
       <form app-dialog-content class="min-w-0">
         <app-stepper mode="wizard" [(activeIndex)]="currentStep">
           <app-step
+            i18n-title="Title of the workspace details wizard step"
             title="Workspace details"
+            i18n-description="Description of the workspace details wizard step"
             description="Name and identify the workspace.">
             <div class="form-auth">
               <app-form-input
                 [formField]="dialogForm.name"
+                i18n-label="Label of the name field"
                 label="Name"
                 maxLength="1024" />
 
               <app-form-input
                 [formField]="dialogForm.identifier"
+                i18n-label="Label of the workspace URL identifier field"
                 label="Identifier"
                 maxLength="1024"
                 [icon]="identifierIcon()"
                 [loading]="dialogForm.identifier().pending()"
+                i18n-hint="
+                  Hint explaining what the workspace identifier is used for
+                "
                 hint="Used in workspace URLs." />
 
               <app-form-textarea
                 [formField]="dialogForm.description"
+                i18n-label="Label of the description field"
                 label="Description"
                 maxLength="4096" />
 
-              <app-color-select [formField]="dialogForm.color" label="Color" />
+              <app-color-select
+                [formField]="dialogForm.color"
+                i18n-label="Label of the colour picker field"
+                label="Color" />
             </div>
           </app-step>
 
           <app-step
+            i18n-title="Title of the workflow setup wizard step"
             title="Workflow setup"
+            i18n-description="Description of the workflow setup wizard step"
             description="Choose the statuses, tags, relations, and board layout to start with.">
             <app-setup-template-picker
               [selectedKey]="dialogForm.templateKey().value()"
               (selectedKeyChange)="setTemplate($event)" />
           </app-step>
 
-          <app-step title="Summary" description="Review what will be created.">
+          <app-step
+            i18n-title="Title of the summary wizard step"
+            title="Summary"
+            i18n-description="Description of the summary wizard step"
+            description="Review what will be created.">
             <app-setup-creation-summary
               entityType="Workspace"
+              i18n-secondaryLabel="
+                Label for the workspace identifier in the creation summary
+              "
               secondaryLabel="Identifier"
               [name]="dialogForm.name().value()"
               [secondaryValue]="dialogForm.identifier().value()"
@@ -162,7 +195,9 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         @if (currentStep() > 0) {
           <button app-stroked-button type="button" (click)="previousStep()">
             <svg lucideChevronLeft class="h-4 w-4" aria-hidden="true"></svg>
-            Back
+            <span i18n="Button that returns to the previous wizard step">
+              Back
+            </span>
           </button>
         }
         @if (currentStep() < finalStep) {
@@ -172,7 +207,9 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
             type="button"
             [disabled]="dialogForm().pending()"
             (click)="nextStep()">
-            Next
+            <span i18n="Button that advances to the next wizard step">
+              Next
+            </span>
             <svg lucideChevronRight class="h-4 w-4" aria-hidden="true"></svg>
           </button>
         } @else {
@@ -181,7 +218,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
             class="ml-auto"
             type="button"
             (click)="getResult()">
-            Save Workspace
+            <span i18n="Button that creates the workspace">Save Workspace</span>
           </button>
         }
       </div>
@@ -208,11 +245,17 @@ export class WorkspaceDialogComponent {
   });
 
   dialogForm = form(this.dialogFormModel, (schema) => {
-    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 1024 }));
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: $localize`:Label shown in the interface:Name`,
+        maxLength: 1024,
+      })
+    );
     apply(
       schema.identifier,
       requiredTextSchema({
-        label: 'Identifier',
+        label: $localize`:Label shown in the interface:Identifier`,
         minLength: 4,
         maxLength: 1024,
       })
@@ -245,12 +288,12 @@ export class WorkspaceDialogComponent {
 
         return {
           kind: 'identifierTaken',
-          message: 'Identifier is already taken',
+          message: $localize`:Body of a dialog or validation message:Identifier is already taken`,
         };
       },
       onError: () => ({
         kind: 'networkError',
-        message: 'Could not veify Identifier availability',
+        message: $localize`:Body of a dialog or validation message:Could not veify Identifier availability`,
       }),
     });
   });

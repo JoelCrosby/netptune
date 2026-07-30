@@ -40,7 +40,10 @@ interface BacklogGroupConfig {
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
-      <app-page-header title="Backlog" [count]="totalCount()" />
+      <app-page-header
+        i18n-title="Page title for the sprint backlog"
+        title="Backlog"
+        [count]="totalCount()" />
 
       <div class="flex flex-col gap-6">
         <app-task-list-filters [assigneeOptions]="assigneeOptions()" />
@@ -48,8 +51,14 @@ interface BacklogGroupConfig {
         @if (canManageTasks() && assignableSprints().length === 0) {
           <div
             class="text-muted border-border rounded border-2 border-dashed p-4 text-sm">
-            No planning or active sprints found. Create a sprint first to assign
-            tasks to it.
+            <span
+              i18n="
+                Shown when there is no sprint available to assign backlog tasks
+                to
+              ">
+              No planning or active sprints found. Create a sprint first to
+              assign tasks to it.
+            </span>
           </div>
         }
 
@@ -93,10 +102,16 @@ export class SprintBacklogViewComponent {
   private backlogGroups = viewChildren(SprintBacklogGroupComponent);
 
   readonly groups: BacklogGroupConfig[] = [
-    { label: 'New', categories: [StatusCategory.todo] },
-    { label: 'In Progress', categories: [StatusCategory.active] },
     {
-      label: 'Other',
+      label: $localize`:Backlog group heading for tasks not started:New`,
+      categories: [StatusCategory.todo],
+    },
+    {
+      label: $localize`:Backlog group heading for tasks being worked on:In Progress`,
+      categories: [StatusCategory.active],
+    },
+    {
+      label: $localize`:Backlog group heading for tasks in any other status:Other`,
       categories: [
         StatusCategory.backlog,
         StatusCategory.done,

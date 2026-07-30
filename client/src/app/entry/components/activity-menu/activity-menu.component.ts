@@ -42,12 +42,18 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
     ActivityPipe,
     ActivityTimeRangePipe,
   ],
-  template: `<button
+  template: `
+    <button
       app-flat-button
+      i18n-appTooltip="Tooltip on the button that opens the activity feed"
       appTooltip="Show activity"
       color="ghost"
       (click)="toggleMenu()">
-      <svg lucideHistory aria-hidden="false" aria-label="Show activity"></svg>
+      <svg
+        lucideHistory
+        aria-hidden="false"
+        i18n-aria-label="Accessible label for the activity feed icon"
+        aria-label="Show activity"></svg>
     </button>
 
     <ng-template #menuTemplate>
@@ -62,8 +68,7 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
                   [imageUrl]="activity.userPictureUrl"
                   [name]="activity.userUsername"
                   [isServiceAccount]="activity.userIsServiceAccount ?? false"
-                  size="sm">
-                </app-avatar>
+                  size="sm"></app-avatar>
                 <span class="font-medium tracking-[0.225px] whitespace-nowrap">
                   {{ activity.userUsername }}
                 </span>
@@ -80,7 +85,9 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
             } @empty {
               <app-empty-state
                 compact
+                i18n-title="Heading of the empty activity feed"
                 title="There is no activity"
+                i18n-description="Explains why the activity feed is empty"
                 description="Activity on the item will appear here">
                 <svg emptyStateIcon lucideActivity></svg>
               </app-empty-state>
@@ -89,7 +96,9 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
             @if (canLoadMore()) {
               <div class="flex justify-center px-3 pt-3">
                 <button app-ghost-button (click)="loadMore()">
-                  <span>Load more</span>
+                  <span i18n="Button that loads the next page of activity">
+                    Load more
+                  </span>
                 </button>
               </div>
             }
@@ -100,7 +109,8 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
           }
         </div>
       </app-popover-surface>
-    </ng-template> `,
+    </ng-template>
+  `,
 })
 export class ActivityMenuComponent implements OnDestroy {
   private store = inject(Store);

@@ -25,30 +25,47 @@ export interface CalendarMoveTaskDialogResult {
     StrokedButtonComponent,
   ],
   template: `
-    <app-dialog-title>Move {{ data.task.systemId }}</app-dialog-title>
+    <app-dialog-title
+      i18n="
+        Title of the dialog for moving a task to another date. TASK_ID is the
+        task key
+      ">
+      Move
+      {{
+        data.task.systemId // i18n(ph="TASK_ID")
+      }}
+    </app-dialog-title>
 
     <form (submit)="submitMove($event)">
       <p class="text-muted mb-5 max-w-96 text-sm">
-        Choose where to move {{ data.task.name }}. Its duration will be
-        preserved.
+        <span
+          i18n="
+            Instructions in the move-task dialog. TASK_NAME is the task name
+          ">
+          Choose where to move
+          {{
+            data.task.name  // i18n(ph="TASK_NAME")
+          }}. Its duration will be preserved.
+        </span>
       </p>
 
       <app-form-input
         [formField]="moveForm.date"
+        i18n-label="Label of the destination date field"
         label="Move to"
         type="date"
         [noMargin]="true" />
 
       <div app-dialog-actions align="end">
         <button app-stroked-button app-dialog-close type="button">
-          Cancel
+          <span i18n="Dismisses a dialog without acting">Cancel</span>
         </button>
         <button
           app-flat-button
           color="primary"
           type="submit"
           [disabled]="moveForm().invalid()">
-          Move
+          <span i18n="Button that moves the task to the chosen date">Move</span>
         </button>
       </div>
     </form>

@@ -6,7 +6,10 @@
     "netptune": {
       "projectType": "application",
       "i18n": {
-        "sourceLocale": "en-GB",
+        "sourceLocale": {
+          "code": "en-GB",
+          "subPath": ""
+        },
         "locales": {
           "fr": {
             "translation": "src/locale/messages.fr.xlf"
@@ -83,6 +86,19 @@
               "extractLicenses": false,
               "sourceMap": true
             },
+            "docker-dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.container.ts"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": true,
+              "i18nMissingTranslation": "warning"
+            },
             "development-fr": {
               "optimization": false,
               "extractLicenses": false,
@@ -116,13 +132,22 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular/build:extract-i18n",
+          "builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
           "options": {
             "buildTarget": "netptune:build:development",
             "format": "xlf2",
             "outputPath": "src/locale",
-            "outFile": "messages.xlf",
-            "i18nDuplicateTranslation": "error"
+            "sourceFile": "messages.xlf",
+            "targetFiles": [
+              "messages.fr.xlf",
+              "messages.de.xlf",
+              "messages.es.xlf"
+            ],
+            "trim": false,
+            "collapseWhitespace": true,
+            "fuzzyMatch": true,
+            "includeContext": true,
+            "newTranslationTargetsBlank": "omit"
           }
         },
         "lint": {

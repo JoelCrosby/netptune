@@ -7,6 +7,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class SprintBacklogStatusLabelPipe implements PipeTransform {
   transform(status: string | null | undefined): string {
-    return status ?? 'Unknown';
+    return (
+      status ?? $localize`:Shown in place of a value that is not known:Unknown`
+    );
   }
 }

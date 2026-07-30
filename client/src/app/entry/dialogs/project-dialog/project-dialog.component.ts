@@ -44,40 +44,51 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     <form app-dialog-content class="min-w-0">
       <app-stepper mode="wizard" [(activeIndex)]="currentStep">
         <app-step
+          i18n-title="Title of the project details wizard step"
           title="Project details"
+          i18n-description="Description of the project details wizard step"
           description="Describe the project and optionally link its repository.">
           <div class="form-auth">
             <app-form-input
               [formField]="projectForm.name"
+              i18n-label="Label of the name field"
               label="Name"
-              maxLength="1024">
-            </app-form-input>
+              maxLength="1024"></app-form-input>
 
             <app-form-input
               [formField]="projectForm.repositoryUrl"
+              i18n-label="Label of the source repository URL field"
               label="Repository URL"
-              maxLength="1024">
-            </app-form-input>
+              maxLength="1024"></app-form-input>
 
             <app-form-textarea
               [formField]="projectForm.description"
+              i18n-label="Label of the description field"
               label="Description"
-              maxLength="4096">
-            </app-form-textarea>
+              maxLength="4096"></app-form-textarea>
           </div>
         </app-step>
 
         <app-step
+          i18n-title="Title of the workflow setup wizard step"
           title="Workflow setup"
+          i18n-description="Description of the workflow setup wizard step"
           description="Choose the layout for the project's default board.">
           <app-setup-template-picker
             [selectedKey]="projectForm.templateKey().value()"
             (selectedKeyChange)="setTemplate($event)" />
         </app-step>
 
-        <app-step title="Summary" description="Review what will be created.">
+        <app-step
+          i18n-title="Title of the summary wizard step"
+          title="Summary"
+          i18n-description="Description of the summary wizard step"
+          description="Review what will be created.">
           <app-setup-creation-summary
             entityType="Project"
+            i18n-secondaryLabel="
+              Label for the repository URL in the creation summary
+            "
             secondaryLabel="Repository"
             [name]="projectForm.name().value()"
             [secondaryValue]="projectForm.repositoryUrl().value()"
@@ -91,7 +102,9 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
       @if (currentStep() > 0) {
         <button app-stroked-button type="button" (click)="previousStep()">
           <svg lucideChevronLeft class="h-4 w-4" aria-hidden="true"></svg>
-          Back
+          <span i18n="Button that returns to the previous wizard step">
+            Back
+          </span>
         </button>
       }
       @if (currentStep() < finalStep) {
@@ -100,7 +113,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           class="ml-auto"
           type="button"
           (click)="nextStep()">
-          Next
+          <span i18n="Button that advances to the next wizard step">Next</span>
           <svg lucideChevronRight class="h-4 w-4" aria-hidden="true"></svg>
         </button>
       } @else {
@@ -109,7 +122,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           class="ml-auto"
           type="button"
           (click)="getResult()">
-          Create Project
+          <span i18n="Button that creates the project">Create Project</span>
         </button>
       }
     </div>
@@ -127,7 +140,7 @@ export class ProjectDialogComponent {
   projectFormModel = signal({
     name: '',
     repositoryUrl: '',
-    description: '',
+    description: $localize`:Explanatory text:`,
     workspace: '',
     color: '',
     templateKey: 'software',
@@ -136,7 +149,11 @@ export class ProjectDialogComponent {
   projectForm = form(this.projectFormModel, (schema) => {
     apply(
       schema.name,
-      requiredTextSchema({ label: 'Name', minLength: 4, maxLength: 1024 })
+      requiredTextSchema({
+        label: $localize`:Label shown in the interface:Name`,
+        minLength: 4,
+        maxLength: 1024,
+      })
     );
     maxLength(schema.repositoryUrl, 1024);
     maxLength(schema.description, 4096);

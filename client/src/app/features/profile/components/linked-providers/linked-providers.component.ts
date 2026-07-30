@@ -7,11 +7,17 @@ import { selectLoginProviders } from '@app/core/store/profile/profile.selectors'
   template: `
     <div class="max-w-120">
       <p class="text-foreground/60 mb-4 text-sm">
-        These external accounts are linked to your profile and can be used to
-        sign in.
+        <span i18n="Explains what linked external sign-in accounts are for">
+          These external accounts are linked to your profile and can be used to
+          sign in.
+        </span>
       </p>
       @if (providers().length === 0) {
-        <p class="text-foreground/40 text-sm">No external accounts linked.</p>
+        <p class="text-foreground/40 text-sm">
+          <span i18n="Shown when no external sign-in accounts are linked">
+            No external accounts linked.
+          </span>
+        </p>
       } @else {
         <div class="flex flex-wrap gap-2">
           @for (provider of providers(); track provider) {

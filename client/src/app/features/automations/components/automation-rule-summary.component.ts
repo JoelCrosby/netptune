@@ -33,16 +33,20 @@ import { AutomationDescriptionComponent } from './automation-description.compone
     PanelHeaderComponent,
   ],
   template: `
-    <app-panel aria-label="Rule preview">
+    <app-panel
+      i18n-aria-label="Accessible name of the rule preview panel"
+      aria-label="Rule preview">
       <app-panel-header
+        i18n-heading="Heading above the plain-language rule preview"
         heading="Rule preview"
+        i18n-description="Shorthand for the automation rule structure"
         description="When → If → Then"
         [icon]="previewIcon">
         <app-badge
           panelHeaderActions
           color="primary"
           class="text-[0.65rem] font-bold tracking-wider">
-          LIVE
+          <span i18n="Badge marking an enabled automation">LIVE</span>
         </app-badge>
       </app-panel-header>
 
@@ -60,7 +64,9 @@ import { AutomationDescriptionComponent } from './automation-description.compone
             <header
               class="border-border bg-foreground/3 flex items-center gap-2 border-b px-3 py-2">
               <app-icon-circle size="small" [icon]="triggerIcon" />
-              <h3 class="text-xs font-bold tracking-wider">WHEN</h3>
+              <h3 class="text-xs font-bold tracking-wider">
+                <span i18n="Heading of the trigger part of the rule">WHEN</span>
+              </h3>
             </header>
             <p class="p-3 text-sm leading-relaxed">
               <app-automation-description
@@ -84,11 +90,17 @@ import { AutomationDescriptionComponent } from './automation-description.compone
               class="border-border bg-foreground/3 flex items-center justify-between gap-2 border-b px-3 py-2">
               <div class="flex items-center gap-2">
                 <app-icon-circle size="small" [icon]="conditionIcon" />
-                <h3 class="text-xs font-bold tracking-wider">IF</h3>
+                <h3 class="text-xs font-bold tracking-wider">
+                  <span i18n="Heading of the conditions part of the rule">
+                    IF
+                  </span>
+                </h3>
               </div>
               <app-badge
                 class="text-foreground/45 bg-transparent text-[0.6rem] tracking-wide">
-                OPTIONAL
+                <span i18n="Marks the conditions part as not required">
+                  OPTIONAL
+                </span>
               </app-badge>
             </header>
             <p
@@ -110,7 +122,9 @@ import { AutomationDescriptionComponent } from './automation-description.compone
             <header
               class="border-border bg-foreground/3 flex items-center gap-2 border-b px-3 py-2">
               <app-icon-circle size="small" [icon]="actionsIcon" />
-              <h3 class="text-xs font-bold tracking-wider">THEN</h3>
+              <h3 class="text-xs font-bold tracking-wider">
+                <span i18n="Heading of the actions part of the rule">THEN</span>
+              </h3>
             </header>
             <ol class="flex list-none flex-col gap-2 p-3">
               @for (

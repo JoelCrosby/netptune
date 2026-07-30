@@ -9,7 +9,7 @@ import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
 export class SprintBacklogPriorityLabelPipe implements PipeTransform {
   transform(priority: TaskPriority | null | undefined): string {
     return priority === null || priority === undefined
-      ? 'None'
+      ? $localize`:Shown in place of an empty value:None`
       : taskPriorityLabels[priority];
   }
 }

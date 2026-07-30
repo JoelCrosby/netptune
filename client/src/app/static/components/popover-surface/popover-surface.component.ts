@@ -59,16 +59,18 @@ export type PopoverSurfaceEnterFrom =
       transform-origin: top left;
     }
   `,
-  template: `<div
-    class="menu-scale-in custom-scroll border-border bg-background flex flex-col overflow-x-hidden border text-left shadow-xl dark:shadow-black/60"
-    [attr.data-enter-from]="enterFrom()"
-    [class]="
-      size() === 'compact'
-        ? 'h-full w-61.5 rounded-sm'
-        : 'max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded'
-    ">
-    <ng-content />
-  </div>`,
+  template: `
+    <div
+      class="menu-scale-in custom-scroll border-border bg-background flex flex-col overflow-x-hidden border text-left shadow-xl dark:shadow-black/60"
+      [attr.data-enter-from]="enterFrom()"
+      [class]="
+        size() === 'compact'
+          ? 'h-full w-61.5 rounded-sm'
+          : 'max-h-[80vh] max-w-120 min-w-100 overflow-y-auto rounded'
+      ">
+      <ng-content />
+    </div>
+  `,
 })
 export class PopoverSurfaceComponent {
   readonly size = input<PopoverSurfaceSize>('wide');

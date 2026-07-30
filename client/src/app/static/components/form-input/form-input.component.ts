@@ -24,84 +24,86 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
     FormControlPrefixDirective,
     DatePickerComponent,
   ],
-  template: `<div
-    class="nept-form-control mb-[1.4rem] w-[inherit]"
-    [class.mb-0!]="noMargin()">
-    @if (label()) {
-      <label [for]="name()" appFormLabel>
-        {{ label() }}
-      </label>
-    }
-
-    <app-form-control-field
-      [invalid]="touched() && invalid()"
-      [active]="pending()">
-      @if (prefix()) {
-        <div appFormPrefix>{{ prefix() }}</div>
+  template: `
+    <div
+      class="nept-form-control mb-[1.4rem] w-[inherit]"
+      [class.mb-0!]="noMargin()">
+      @if (label()) {
+        <label [for]="name()" appFormLabel>
+          {{ label() }}
+        </label>
       }
 
-      @if (type() === 'date') {
-        <app-date-picker
-          class="min-w-0 flex-1"
-          appearance="bare"
-          [controlId]="name()"
-          [value]="value()"
-          [placeholder]="placeholder() || 'Select date'"
-          [ariaLabel]="label() || 'Choose date'"
-          [min]="min()"
-          [max]="max()"
-          [disabled]="disabled()"
-          [required]="required()"
-          [buttonClass]="prefix() ? 'px-0 pr-3' : 'px-3'"
-          (valueChange)="value.set($event)"
-          (touched)="touched.set(true)" />
-      } @else {
-        <input
-          #input
-          appFormInput
-          [id]="name()"
-          [value]="value()"
-          [disabled]="disabled()"
-          [required]="required()"
-          [attr.minLength]="minLength()"
-          [attr.maxLength]="maxLength()"
-          [attr.type]="type()"
-          [attr.autocomplete]="autocomplete()"
-          [attr.placeholder]="placeholder()"
-          [attr.aria-invalid]="ariaInvalid()"
-          [attr.aria-describedby]="describedBy(!!hint())"
-          [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
-          (input)="onInputchange($event)"
-          (blur)="touched.set(true)" />
-      }
-
-      @if (icon()) {
-        <svg
-          class="mr-3"
-          [lucideIcon]="icon()!"
-          size="20"
-          aria-hidden="true"></svg>
-      }
-    </app-form-control-field>
-
-    @if (hint()) {
-      <small [id]="hintId()" appFormHint> {{ hint() }} </small>
-    }
-
-    @if (showErrors()) {
-      <div [id]="errorId()">
-        @for (error of errors(); track error.kind) {
-          <app-form-error>
-            {{ error.message }}
-          </app-form-error>
+      <app-form-control-field
+        [invalid]="touched() && invalid()"
+        [active]="pending()">
+        @if (prefix()) {
+          <div appFormPrefix>{{ prefix() }}</div>
         }
-      </div>
-    }
 
-    <div class="mt-[.4rem]">
-      <ng-content />
+        @if (type() === 'date') {
+          <app-date-picker
+            class="min-w-0 flex-1"
+            appearance="bare"
+            [controlId]="name()"
+            [value]="value()"
+            [placeholder]="placeholder() || 'Select date'"
+            [ariaLabel]="label() || 'Choose date'"
+            [min]="min()"
+            [max]="max()"
+            [disabled]="disabled()"
+            [required]="required()"
+            [buttonClass]="prefix() ? 'px-0 pr-3' : 'px-3'"
+            (valueChange)="value.set($event)"
+            (touched)="touched.set(true)" />
+        } @else {
+          <input
+            #input
+            appFormInput
+            [id]="name()"
+            [value]="value()"
+            [disabled]="disabled()"
+            [required]="required()"
+            [attr.minLength]="minLength()"
+            [attr.maxLength]="maxLength()"
+            [attr.type]="type()"
+            [attr.autocomplete]="autocomplete()"
+            [attr.placeholder]="placeholder()"
+            [attr.aria-invalid]="ariaInvalid()"
+            [attr.aria-describedby]="describedBy(!!hint())"
+            [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
+            (input)="onInputchange($event)"
+            (blur)="touched.set(true)" />
+        }
+
+        @if (icon()) {
+          <svg
+            class="mr-3"
+            [lucideIcon]="icon()!"
+            size="20"
+            aria-hidden="true"></svg>
+        }
+      </app-form-control-field>
+
+      @if (hint()) {
+        <small [id]="hintId()" appFormHint>{{ hint() }}</small>
+      }
+
+      @if (showErrors()) {
+        <div [id]="errorId()">
+          @for (error of errors(); track error.kind) {
+            <app-form-error>
+              {{ error.message }}
+            </app-form-error>
+          }
+        </div>
+      }
+
+      <div class="mt-[.4rem]">
+        <ng-content />
+      </div>
     </div>
-  </div> `,
+  `,
 })
 export class FormInputComponent extends AbstractFormValueControl {
   readonly label = input<string>();

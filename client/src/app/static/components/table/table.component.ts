@@ -69,8 +69,24 @@ export class TableComponent {
       class="flex flex-col gap-3 px-2 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       @if (selectedItems() !== null) {
         <div class="text-muted">
-          {{ selectedItems() }} of {{ totalItems() }}
-          {{ itemLabel() }} selected.
+          <span
+            i18n="
+              Selection summary below a table. SELECTED and TOTAL are counts and
+              ITEM_LABEL is an already-localised plural noun supplied by the
+              call site, for example 'tasks'
+            ">
+            {{
+              selectedItems() // i18n(ph="SELECTED")
+            }}
+            of
+            {{
+              totalItems() // i18n(ph="TOTAL")
+            }}
+            {{
+              itemLabel() // i18n(ph="ITEM_LABEL")
+            }}
+            selected.
+          </span>
         </div>
       } @else {
         <div class="hidden sm:block"></div>
@@ -79,13 +95,16 @@ export class TableComponent {
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
         <div class="flex items-center gap-2">
           <span class="text-foreground font-medium whitespace-nowrap">
-            Rows per page
+            <span i18n="Label beside the table page-size selector">
+              Rows per page
+            </span>
           </span>
           <button
             #pageSizeTrigger
             class="border-border bg-background text-foreground focus:ring-foreground/30 hover:bg-foreground/5 inline-flex h-8 min-w-18 items-center justify-between gap-2 rounded border px-2 text-sm font-medium transition-colors focus:ring-2 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
             type="button"
             aria-haspopup="menu"
+            i18n-aria-label="Accessible label for the table page-size selector"
             aria-label="Rows per page"
             (click)="pageSizeMenu.toggle(pageSizeTrigger)">
             <span>{{ pageSize() }}</span>
@@ -115,7 +134,20 @@ export class TableComponent {
 
         <div class="text-foreground flex items-center justify-between gap-4">
           <span class="font-medium whitespace-nowrap">
-            Page {{ page() }} of {{ resolvedTotalPages() }}
+            <span
+              i18n="
+                Table pagination position. PAGE is the current page number and
+                TOTAL_PAGES the number of pages
+              ">
+              Page
+              {{
+                page() // i18n(ph="PAGE")
+              }}
+              of
+              {{
+                resolvedTotalPages() // i18n(ph="TOTAL_PAGES")
+              }}
+            </span>
           </span>
 
           <div class="flex items-center gap-1">
@@ -124,6 +156,9 @@ export class TableComponent {
                 app-icon-button
                 class="border-border hidden h-8 w-8 rounded border sm:inline-flex"
                 type="button"
+                i18n-aria-label="
+                  Accessible label for the button that jumps to the first page
+                "
                 aria-label="Go to first page"
                 [disabled]="isFirstPage()"
                 (click)="goToPage(1)">
@@ -134,6 +169,9 @@ export class TableComponent {
               app-icon-button
               class="border-border h-8 w-8 rounded border"
               type="button"
+              i18n-aria-label="
+                Accessible label for the button that goes back one page
+              "
               aria-label="Go to previous page"
               [disabled]="isFirstPage()"
               (click)="goToPage(page() - 1)">
@@ -143,6 +181,9 @@ export class TableComponent {
               app-icon-button
               class="border-border h-8 w-8 rounded border"
               type="button"
+              i18n-aria-label="
+                Accessible label for the button that goes forward one page
+              "
               aria-label="Go to next page"
               [disabled]="isLastPage()"
               (click)="goToPage(page() + 1)">
@@ -153,6 +194,9 @@ export class TableComponent {
                 app-icon-button
                 class="border-border hidden h-8 w-8 rounded border sm:inline-flex"
                 type="button"
+                i18n-aria-label="
+                  Accessible label for the button that jumps to the last page
+                "
                 aria-label="Go to last page"
                 [disabled]="isLastPage()"
                 (click)="goToPage(resolvedTotalPages())">

@@ -10,21 +10,23 @@ import { TimelineWeekendShadingComponent } from './timeline-weekend-shading.comp
   selector: 'app-timeline-lane',
   imports: [TimelineDateMarkerComponent, TimelineWeekendShadingComponent],
   host: { class: 'block relative h-full' },
-  template: `<div
-    class="relative h-full"
-    [style.width.px]="canvasWidth()"
-    [style.background-image]="gridBackground"
-    [style.background-size]="gridBackgroundSize()">
-    <app-timeline-weekend-shading [from]="from()" [dayWidth]="dayWidth()" />
-    @if (highlightDate(); as date) {
-      <app-timeline-date-marker
-        [date]="date"
-        [from]="from()"
-        [to]="to()"
-        [dayWidth]="dayWidth()" />
-    }
-    <ng-content />
-  </div>`,
+  template: `
+    <div
+      class="relative h-full"
+      [style.width.px]="canvasWidth()"
+      [style.background-image]="gridBackground"
+      [style.background-size]="gridBackgroundSize()">
+      <app-timeline-weekend-shading [from]="from()" [dayWidth]="dayWidth()" />
+      @if (highlightDate(); as date) {
+        <app-timeline-date-marker
+          [date]="date"
+          [from]="from()"
+          [to]="to()"
+          [dayWidth]="dayWidth()" />
+      }
+      <ng-content />
+    </div>
+  `,
 })
 export class TimelineLaneComponent {
   readonly canvasWidth = input.required<number>();

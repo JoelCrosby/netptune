@@ -31,6 +31,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         class="min-w-44"
         [options]="users()"
         [value]="selectedUsers()"
+        i18n-label="Filter option including every member"
         label="All users"
         (selectChange)="userFilter.emit($event)" />
 
@@ -38,7 +39,11 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         <button
           app-icon-button
           type="button"
+          i18n-aria-label="
+            Accessible label for the button that clears the member filter
+          "
           aria-label="Clear user filter"
+          i18n-appTooltip="Tooltip on the button that clears the member filter"
           appTooltip="Clear user filter"
           (click)="clearUserFilter.emit()">
           <svg lucideX class="text-foreground/50 h-4 w-4"></svg>
@@ -48,14 +53,21 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       @if (selectedCount()) {
         <div class="ml-auto flex items-center gap-2">
           <span class="text-sm font-medium">
-            {{ selectedCount() }} selected
+            <span i18n="Count of selected rows. COUNT is the number selected">
+              {{
+                selectedCount() // i18n(ph="COUNT")
+              }}
+              selected
+            </span>
           </span>
           <button
             app-stroked-button
             type="button"
             (click)="markSelectedAsRead.emit()">
             <svg lucideCheck class="mr-1.5 inline h-4 w-4"></svg>
-            Mark as read
+            <span i18n="Button that marks the selected notifications as read">
+              Mark as read
+            </span>
           </button>
           <button
             app-flat-button
@@ -63,7 +75,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
             type="button"
             (click)="deleteSelected.emit()">
             <svg lucideTrash2 class="mr-1.5 inline h-4 w-4"></svg>
-            Delete
+            <span i18n="Button that deletes the selected notifications">
+              Delete
+            </span>
           </button>
         </div>
       }

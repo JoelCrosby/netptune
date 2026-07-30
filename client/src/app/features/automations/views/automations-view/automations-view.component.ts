@@ -51,19 +51,26 @@ import { AutomationsService } from '../../services/automations.service';
     <app-page-container [centerPage]="true" [marginBottom]="true">
       @if (canManage()) {
         <app-page-header
+          i18n-title="Page title for the automation list"
           title="Automations"
+          i18n-actionTitle="Button that opens the create-automation form"
           actionTitle="Create Automation"
           [count]="count()"
           (actionClick)="onCreate()" />
       } @else {
-        <app-page-header title="Automations" [count]="count()" />
+        <app-page-header
+          i18n-title="Page title for the automation list"
+          title="Automations"
+          [count]="count()" />
       }
 
       @if (loading()) {
         <app-page-loading />
       } @else if (error()) {
         <app-error-state
+          i18n-title="Shown when the automation list fails to load"
           title="Automations could not be loaded"
+          i18n-description="Advice shown when a page fails to load"
           description="Check your connection and try again."
           (retry)="load()" />
       } @else if (summary()?.ruleCount) {
@@ -81,7 +88,11 @@ import { AutomationsService } from '../../services/automations.service';
       } @else {
         <div class="border-border bg-card rounded border">
           <app-empty-state
+            i18n-title="Heading of the empty automation list"
             title="No automations yet"
+            i18n-description="
+              Explains what workspace automations do, on the empty state
+            "
             description="Workspace automations can watch task workflow events and apply the same follow-up every time.">
             <svg emptyStateIcon lucideWorkflow class="h-8 w-8"></svg>
             @if (canManage()) {
@@ -91,7 +102,9 @@ import { AutomationsService } from '../../services/automations.service';
                 color="primary"
                 [routerLink]="['new']">
                 <svg lucidePlus class="h-4 w-4"></svg>
-                Create Automation
+                <span i18n="Button that opens the create-automation form">
+                  Create Automation
+                </span>
               </a>
             }
           </app-empty-state>
@@ -129,9 +142,18 @@ export class AutomationsViewComponent {
     const summary = this.summary();
 
     return [
-      { label: 'Rules', value: summary?.ruleCount ?? 0 },
-      { label: 'Enabled', value: summary?.enabledCount ?? 0 },
-      { label: 'Recent failures', value: summary?.recentFailureCount ?? 0 },
+      {
+        label: $localize`:Stat label for how many automation rules exist:Rules`,
+        value: summary?.ruleCount ?? 0,
+      },
+      {
+        label: $localize`:Stat label for how many automations are switched on:Enabled`,
+        value: summary?.enabledCount ?? 0,
+      },
+      {
+        label: $localize`:Stat label for recent failed automation runs:Recent failures`,
+        value: summary?.recentFailureCount ?? 0,
+      },
     ];
   });
 
@@ -198,7 +220,10 @@ export class AutomationsViewComponent {
           );
           this.refresh();
         },
-        error: () => this.snackbar.error('Automation could not be updated'),
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error after failing to update an automation:Automation could not be updated`
+          ),
       });
   }
 
@@ -235,7 +260,10 @@ export class AutomationsViewComponent {
             relativeTo: this.route,
           });
         },
-        error: () => this.snackbar.error('Automation could not be cloned'),
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error after failing to clone an automation:Automation could not be cloned`
+          ),
       });
   }
 
@@ -246,10 +274,10 @@ export class AutomationsViewComponent {
   onDelete(rule: AutomationRuleListItem) {
     this.confirmation
       .open({
-        title: 'Delete Automation',
+        title: $localize`:Title of the confirmation dialog for deleting an automation:Delete Automation`,
         message: `Delete "${rule.name}"? This cannot be undone.`,
-        acceptLabel: 'Delete',
-        cancelLabel: 'Cancel',
+        acceptLabel: $localize`:Confirms a destructive action:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
       })
       .pipe(
@@ -266,10 +294,15 @@ export class AutomationsViewComponent {
       )
       .subscribe({
         next: () => {
-          this.snackbar.open('Automation deleted');
+          this.snackbar.open(
+            $localize`:Confirmation after deleting an automation:Automation deleted`
+          );
           this.refresh();
         },
-        error: () => this.snackbar.error('Automation could not be deleted'),
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error after failing to delete an automation:Automation could not be deleted`
+          ),
       });
   }
 }

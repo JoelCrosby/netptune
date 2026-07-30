@@ -1,3 +1,33 @@
+import { firstDayOfWeek, monthNames, weekdayNames } from '@core/util/locale';
+
+export interface CalendarWeekday {
+  narrow: string;
+  long: string;
+}
+
+export interface CalendarMonth {
+  index: number;
+  long: string;
+  short: string;
+}
+
+/**
+ * Weekday column headers, rotated so index 0 is the locale's first day of the
+ * week. en-GB, fr, de and es all start on Monday — only en-US starts on Sunday —
+ * so a hardcoded Sunday-first list is wrong even for the source locale.
+ *
+ * Narrow names are single letters and ambiguous (M T W T F S S), so `long` is
+ * carried alongside for assistive tech and hover.
+ */
+export const calendarWeekdays: CalendarWeekday[] = weekdayNames('narrow').map(
+  (narrow, index) => ({ narrow, long: weekdayNames('long')[index] })
+);
+
+/** Month options for the month picker, in calendar order. */
+export const calendarMonths: CalendarMonth[] = monthNames('long').map(
+  (long, index) => ({ index, long, short: monthNames('short')[index] })
+);
+
 export interface CalendarDay {
   date: Date;
   value: string;
@@ -69,7 +99,10 @@ export const calendarDays = (
   maxDate: Date | null
 ): CalendarDay[] => {
   const first = startOfCalendarMonth(viewDate);
-  const start = addCalendarDays(first, -first.getDay());
+  // Back up to the locale's first day of the week, not unconditionally to Sunday.
+  // getDay() is 0-based on Sunday, as is firstDayOfWeek().
+  const leadingDays = (first.getDay() - firstDayOfWeek() + 7) % 7;
+  const start = addCalendarDays(first, -leadingDays);
   const now = new Date();
   const today = makeDate(now.getFullYear(), now.getMonth(), now.getDate());
 

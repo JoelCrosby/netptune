@@ -41,7 +41,7 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
 
   loadError = signal(false);
   errorMessage = signal(
-    'We could not load the security check. Allow challenges.cloudflare.com in your content blocker, then refresh.'
+    $localize`:Shown when the bot-protection widget is blocked by a content blocker. challenges.cloudflare.com is a hostname and must not be translated@@auth.turnstile.blockedByContentBlocker:We could not load the security check. Allow challenges.cloudflare.com in your content blocker, then refresh.`
   );
 
   tokenGenerated = output<string>();
@@ -76,14 +76,14 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
           },
           'timeout-callback': () => {
             this.errorMessage.set(
-              'The security check timed out. Refresh the page, then try again.'
+              $localize`:Shown when the bot-protection check times out@@auth.turnstile.timedOut:The security check timed out. Refresh the page, then try again.`
             );
             this.loadError.set(true);
             this.tokenGenerated.emit('');
           },
           'unsupported-callback': () => {
             this.errorMessage.set(
-              'This browser cannot complete the security check. Try updating your browser or using a different one.'
+              $localize`:Shown when the browser cannot run the bot-protection check@@auth.turnstile.unsupportedBrowser:This browser cannot complete the security check. Try updating your browser or using a different one.`
             );
             this.loadError.set(true);
             this.tokenGenerated.emit('');
@@ -110,13 +110,13 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
 
   private getErrorMessage(errorCode: string) {
     if (errorCode.startsWith('200')) {
-      return 'The security check could not load. Allow challenges.cloudflare.com in your content blocker, then refresh.';
+      return $localize`:Shown when the bot-protection widget fails to load. challenges.cloudflare.com is a hostname and must not be translated@@auth.turnstile.loadFailed:The security check could not load. Allow challenges.cloudflare.com in your content blocker, then refresh.`;
     }
 
     if (errorCode.startsWith('110')) {
-      return 'The security check configuration failed. Refresh the page, then try again.';
+      return $localize`:Shown when the bot-protection widget is misconfigured@@auth.turnstile.configFailed:The security check configuration failed. Refresh the page, then try again.`;
     }
 
-    return 'The security check failed. Refresh the page or try a different browser.';
+    return $localize`:Generic bot-protection failure message@@auth.turnstile.genericFailure:The security check failed. Refresh the page or try a different browser.`;
   }
 }

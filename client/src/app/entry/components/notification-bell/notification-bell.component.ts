@@ -35,7 +35,9 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
   template: `
     <button
       app-icon-button
+      i18n-aria-label="Accessible label for the notifications button"
       aria-label="Notifications"
+      i18n-appTooltip="Tooltip on the notifications button"
       appTooltip="Notifications"
       appTooltipPosition="bottom"
       class="text-foreground/80 relative mr-2"

@@ -28,14 +28,28 @@ const maxFileSize = 50 * 1024 * 1024;
         [disabled]="disabled()"
         (click)="picker.click()">
         <svg lucideUpload class="h-4 w-4"></svg>
-        Choose files
+        <span i18n="Button that opens the file picker">Choose files</span>
       </button>
       <p class="text-muted text-xs">
-        or drag and drop · 50 MiB maximum per file
+        <span
+          i18n="
+            Hint under the file picker. The 50 MiB limit is a fixed server limit
+          ">
+          or drag and drop · 50 MiB maximum per file
+        </span>
       </p>
       @if (remainingBytes() !== undefined) {
         <p class="text-muted mt-1 text-xs">
-          {{ formatBytes(remainingBytes()!) }} remaining
+          <span
+            i18n="
+              Remaining upload allowance. SIZE is a formatted byte count such as
+              1.2 MB
+            ">
+            {{
+              formatBytes(remainingBytes()!) // i18n(ph="SIZE")
+            }}
+            remaining
+          </span>
         </p>
       }
       <p class="text-destructive mt-2 text-sm" aria-live="polite">

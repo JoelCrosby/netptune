@@ -30,46 +30,59 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
     LucideKanban,
     LucidePlus,
   ],
-  template: `<app-page-container
-    [verticalPadding]="false"
-    [fullHeight]="true"
-    [centerPage]="true"
-    [marginBottom]="true">
-    @if (canCreateBoards()) {
-      <app-page-header
-        title="Boards"
-        actionTitle="Create Board"
-        [count]="count()"
-        (actionClick)="onCreateBoardClicked()" />
-    } @else {
-      <app-page-header title="Boards" [count]="count()" />
-    }
-
-    @if (loading()) {
-      @if (showSkeleton()) {
-        <app-skeleton-card-grid [cards]="6" />
+  template: `
+    <app-page-container
+      [verticalPadding]="false"
+      [fullHeight]="true"
+      [centerPage]="true"
+      [marginBottom]="true">
+      @if (canCreateBoards()) {
+        <app-page-header
+          i18n-title="Page title for the board list"
+          title="Boards"
+          i18n-actionTitle="Button that opens the create-board dialog"
+          actionTitle="Create Board"
+          [count]="count()"
+          (actionClick)="onCreateBoardClicked()" />
+      } @else {
+        <app-page-header
+          i18n-title="Page title for the board list"
+          title="Boards"
+          [count]="count()" />
       }
-    } @else if (boards().length === 0) {
-      <app-empty-state
-        title="There are currently no boards."
-        description="Create your first board to organise and track work for a project.">
-        <svg emptyStateIcon size="38" lucideKanban></svg>
 
-        @if (canCreateBoards()) {
-          <button
-            emptyStateAction
-            app-flat-button
-            type="button"
-            (click)="onCreateBoardClicked()">
-            <svg size="20" lucidePlus></svg>
-            <span>Create Board</span>
-          </button>
+      @if (loading()) {
+        @if (showSkeleton()) {
+          <app-skeleton-card-grid [cards]="6" />
         }
-      </app-empty-state>
-    } @else {
-      <app-boards-grid />
-    }
-  </app-page-container> `,
+      } @else if (boards().length === 0) {
+        <app-empty-state
+          i18n-title="Heading of the empty board list"
+          title="There are currently no boards."
+          i18n-description="
+            Explains what a board is for, on the empty board list
+          "
+          description="Create your first board to organise and track work for a project.">
+          <svg emptyStateIcon size="38" lucideKanban></svg>
+
+          @if (canCreateBoards()) {
+            <button
+              emptyStateAction
+              app-flat-button
+              type="button"
+              (click)="onCreateBoardClicked()">
+              <svg size="20" lucidePlus></svg>
+              <span i18n="Button that opens the create-board dialog">
+                Create Board
+              </span>
+            </button>
+          }
+        </app-empty-state>
+      } @else {
+        <app-boards-grid />
+      }
+    </app-page-container>
+  `,
 })
 export class BoardsViewComponent {
   private dialog = inject(DialogService);

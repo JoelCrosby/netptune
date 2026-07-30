@@ -35,9 +35,18 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
       class="flex flex-row justify-start gap-24 px-0 max-[1036px]:flex-col-reverse"
       (submit)="updateClicked($event)">
       <div class="w-full max-w-120">
-        <app-form-input [formField]="profileForm.firstname" label="Firstname" />
-        <app-form-input [formField]="profileForm.lastname" label="Lastname" />
-        <app-form-input [formField]="profileForm.email" label="Email Address" />
+        <app-form-input
+          [formField]="profileForm.firstname"
+          i18n-label="Label of the given-name field"
+          label="Firstname" />
+        <app-form-input
+          [formField]="profileForm.lastname"
+          i18n-label="Label of the family-name field"
+          label="Lastname" />
+        <app-form-input
+          [formField]="profileForm.email"
+          i18n-label="Label of the e-mail address field"
+          label="Email Address" />
 
         <input type="hidden" [formField]="profileForm.pictureUrl" />
 
@@ -46,7 +55,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           app-stroked-button
           type="submit"
           [disabled]="loadingUpdate()">
-          Update Profile
+          <span i18n="Button that saves profile changes">Update Profile</span>
         </button>
       </div>
 
@@ -70,15 +79,25 @@ export class UpdateProfileComponent {
   profileForm = form(this.profileFormModel, (schema) => {
     apply(
       schema.firstname,
-      requiredTextSchema({ label: 'First name', maxLength: 128 })
+      requiredTextSchema({
+        label: $localize`:Label shown in the interface:First name`,
+        maxLength: 128,
+      })
     );
     apply(
       schema.lastname,
-      requiredTextSchema({ label: 'Last name', maxLength: 128 })
+      requiredTextSchema({
+        label: $localize`:Label shown in the interface:Last name`,
+        maxLength: 128,
+      })
     );
-    required(schema.email, { message: 'Email is required.' });
+    required(schema.email, {
+      message: $localize`:Body of a dialog or validation message:Email is required.`,
+    });
     maxLength(schema.email, 128);
-    email(schema.email, { message: 'Enter a valid email address.' });
+    email(schema.email, {
+      message: $localize`:Body of a dialog or validation message:Enter a valid email address.`,
+    });
     disabled(schema, () => this.loadingUpdate());
   });
 

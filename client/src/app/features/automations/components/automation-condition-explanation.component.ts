@@ -32,9 +32,17 @@ interface ConditionStatus {
       <div class="flex items-center gap-2">
         <h5 class="text-xs font-bold tracking-wider">{{ groupLabel() }}</h5>
         @if (group().isMatch) {
-          <span class="text-primary text-xs font-medium">matched</span>
+          <span
+            class="text-primary text-xs font-medium"
+            i18n="Marks a condition that the task satisfied">
+            matched
+          </span>
         } @else {
-          <span class="text-muted text-xs font-medium">not matched</span>
+          <span
+            class="text-muted text-xs font-medium"
+            i18n="Marks a condition that the task did not satisfy">
+            not matched
+          </span>
         }
       </div>
 
@@ -60,13 +68,25 @@ interface ConditionStatus {
 
               @if (!condition.isEvaluable) {
                 <span class="text-muted text-xs">
-                  needs a task change to evaluate
+                  <span
+                    i18n="
+                      Marks a condition that only applies while a task is
+                      changing
+                    ">
+                    needs a task change to evaluate
+                  </span>
                 </span>
               } @else if (condition.isMatch) {
-                <span class="text-primary text-xs">matched</span>
+                <span
+                  class="text-primary text-xs"
+                  i18n="Marks a condition that the task satisfied">
+                  matched
+                </span>
               } @else {
                 <span class="text-warn flex items-center gap-1 text-xs">
-                  <span>actual:</span>
+                  <span i18n="Label before the value a condition actually saw">
+                    actual:
+                  </span>
                   @let actualStatus =
                     conditionStatus(condition, condition.actualValue);
                   @if (actualStatus) {

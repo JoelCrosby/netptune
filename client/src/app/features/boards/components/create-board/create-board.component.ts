@@ -46,27 +46,28 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 @Component({
   selector: 'app-create-board',
   template: `
-    <app-dialog-title>{{
-      isEditMode ? 'Edit Board' : 'Create Board'
-    }}</app-dialog-title>
+    <app-dialog-title>{{ titleLabel }}</app-dialog-title>
 
     <form app-dialog-content class="form-auth">
       <app-form-input
         [formField]="boardForm.name"
+        i18n-label="Label of the board name field"
         label="Board Name"
-        maxLength="1024">
-      </app-form-input>
+        maxLength="1024"></app-form-input>
 
       <app-form-input
         [formField]="boardForm.identifier"
+        i18n-label="Label of the board URL identifier field"
         label="Board Identifier"
         maxLength="1024"
         [icon]="identifierIcon()"
-        [loading]="boardForm.identifier().pending()">
-      </app-form-input>
+        [loading]="boardForm.identifier().pending()"></app-form-input>
 
       @if (!isEditMode) {
-        <app-form-select [formField]="boardForm.projectId" label="Project">
+        <app-form-select
+          [formField]="boardForm.projectId"
+          i18n-label="Label of the project field"
+          label="Project">
           @for (project of projects(); track project.id) {
             <app-form-select-option [value]="project.id">
               {{ project.name }}
@@ -77,6 +78,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
       <app-color-select
         [formField]="boardForm.color"
+        i18n-label="Label of the colour picker field"
         label="Color"></app-color-select>
 
       @if (!isEditMode) {
@@ -87,9 +89,11 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Close</button>
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without saving">Close</span>
+      </button>
       <button app-flat-button type="button" (click)="getResult()">
-        {{ isEditMode ? 'Save Changes' : 'Create Board' }}
+        {{ submitLabel }}
       </button>
     </div>
   `,
@@ -115,6 +119,15 @@ export class CreateBoardComponent {
   data = inject<Board>(DIALOG_DATA, { optional: true });
   isEditMode = !!this.data;
 
+  /** Ternaries in a template expression cannot be marked, so build the copy here. */
+  readonly titleLabel = this.isEditMode
+    ? $localize`:Title of the edit-board dialog:Edit Board`
+    : $localize`:Title of the create-board dialog:Create Board`;
+
+  readonly submitLabel = this.isEditMode
+    ? $localize`:Button that saves edits to the board:Save Changes`
+    : $localize`:Button that creates the board:Create Board`;
+
   boardFormModel = signal({
     name: this.data?.name ?? '',
     identifier: this.data?.identifier ?? '',
@@ -126,12 +139,15 @@ export class CreateBoardComponent {
   boardForm = form(this.boardFormModel, (schema) => {
     apply(
       schema.name,
-      requiredTextSchema({ label: 'Board name', maxLength: 1024 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Board name is required.":Board name`,
+        maxLength: 1024,
+      })
     );
     apply(
       schema.identifier,
       requiredTextSchema({
-        label: 'Board identifier',
+        label: $localize`:Field name used inside validation messages, e.g. "Board identifier is required.":Board identifier`,
         minLength: 4,
         maxLength: 1024,
       })
@@ -165,12 +181,12 @@ export class CreateBoardComponent {
 
         return {
           kind: 'identifierTaken',
-          message: 'Identifier is already taken',
+          message: $localize`:Validation error when a board identifier is already in use:Identifier is already taken`,
         };
       },
       onError: () => ({
         kind: 'networkError',
-        message: 'Could not veify Identifier availability',
+        message: $localize`:Shown when the board identifier availability check fails:Could not veify Identifier availability`,
       }),
     });
   });

@@ -142,7 +142,9 @@ export class WorkspacesEffects implements OnInitEffects {
       switchMap(({ workspace }) =>
         this.workspacesService.delete(workspace).pipe(
           tap(() => {
-            this.snackbar.open('Workspace deleted');
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Workspace deleted`
+            );
             void this.router.navigate(['/workspaces']);
           }),
           map(() => actions.deleteWorkspace.success({ workspace })),
@@ -245,7 +247,9 @@ export class WorkspacesEffects implements OnInitEffects {
           unwrapClientReposne(),
           map((workspace) => actions.editWorkspace.success({ workspace })),
           catchError((error: HttpErrorResponse) => {
-            this.snackbar.error('Failed to update public access');
+            this.snackbar.error(
+              $localize`:Error shown after an action fails:Failed to update public access`
+            );
 
             return of(actions.editWorkspace.fail({ error }));
           })
@@ -287,30 +291,30 @@ const getWorkspaceSlug = (url: string): string | null => {
 };
 
 const LEAVE_WORKSPACE_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Leave',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to leave this Workspace?',
-  title: 'Leave Workspace',
+  acceptLabel: $localize`:Confirms the action in a dialog:Leave`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to leave this Workspace?`,
+  title: $localize`:Title of a confirmation dialog:Leave Workspace`,
   color: 'warn',
   confirmationCheckboxLabel:
     'I understand that I will lose access to this Workspace and will need to be re-invited to rejoin.',
 };
 
 const MARK_WORKSPACE_AS_PUBLIC_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Mark as Public',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to mark this Workspace as public?',
-  title: 'Mark Workspace as Public',
+  acceptLabel: $localize`:Confirms the action in a dialog:Mark as Public`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to mark this Workspace as public?`,
+  title: $localize`:Title of a confirmation dialog:Mark Workspace as Public`,
   color: 'warn',
   confirmationCheckboxLabel:
     'I understand that this action will make all the content of the Workspace visible to everyone.',
 };
 
 const MARK_WORKSPACE_AS_PRIVATE_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Mark as Private',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to mark this Workspace as private?',
-  title: 'Mark Workspace as Private',
+  acceptLabel: $localize`:Confirms the action in a dialog:Mark as Private`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to mark this Workspace as private?`,
+  title: $localize`:Title of a confirmation dialog:Mark Workspace as Private`,
   color: 'warn',
   confirmationCheckboxLabel:
     'I understand that this action will make all the content of the Workspace only visible to its members.',

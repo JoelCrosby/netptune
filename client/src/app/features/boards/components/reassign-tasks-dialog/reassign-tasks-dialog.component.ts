@@ -21,9 +21,16 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     DialogCloseDirective,
   ],
   template: `
-    <app-dialog-title>Re-assign Tasks</app-dialog-title>
+    <app-dialog-title
+      i18n="Title of the dialog for reassigning tasks to another person">
+      Re-assign Tasks
+    </app-dialog-title>
 
-    <p>Select the user you wish to assign the selected tasks to</p>
+    <p>
+      <span i18n="Instructions in the reassign-tasks dialog">
+        Select the user you wish to assign the selected tasks to
+      </span>
+    </p>
 
     <div app-dialog-content>
       <div class="m-8 flex flex-row flex-wrap justify-center">
@@ -41,8 +48,9 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
                 size="sm"
                 [name]="user.displayName"
                 [imageUrl]="user.pictureUrl"
-                [isServiceAccount]="user.isServiceAccount ?? false">
-              </app-avatar>
+                [isServiceAccount]="
+                  user.isServiceAccount ?? false
+                "></app-avatar>
               <span>{{ user.displayName }}</span>
             </div>
           </button>
@@ -51,13 +59,17 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close>Cancel</button>
+      <button app-stroked-button app-dialog-close>
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button
         app-flat-button
         class="bg-primary"
         (click)="onReassignTasksClicked()"
         type="button">
-        Re-assign Tasks
+        <span i18n="Button that reassigns the selected tasks">
+          Re-assign Tasks
+        </span>
       </button>
     </div>
   `,

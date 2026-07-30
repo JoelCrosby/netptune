@@ -1,3 +1,4 @@
+import { hostTimeZone } from '@core/util/dates';
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,9 +32,6 @@ import {
 const defaultRange = defaultReportingRange();
 const defaultTo = defaultRange.to;
 const defaultFrom = defaultRange.from;
-const browserTimeZone =
-  Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-
 @Component({
   selector: 'app-reporting-view',
   imports: [
@@ -56,27 +54,37 @@ const browserTimeZone =
       [centerPage]="true"
       [marginBottom]="true"
       [fullHeight]="false">
-      <app-page-header title="Reports" />
+      <app-page-header
+        i18n-title="Page title for the reporting views"
+        title="Reports" />
 
       <app-card class="sticky top-10 z-12 mb-8 block">
         <app-card-header>
-          <app-card-title>Report filters</app-card-title>
+          <app-card-title i18n="Heading of the report filter card">
+            Report filters
+          </app-card-title>
           <app-card-subtitle>
-            Choose the scope, period, and estimation unit used by the reports.
+            <span i18n="Explains what the report filters control">
+              Choose the scope, period, and estimation unit used by the reports.
+            </span>
           </app-card-subtitle>
         </app-card-header>
 
         <app-card-content>
           <div
             class="grid grid-cols-1 gap-x-4 sm:grid-cols-2 lg:grid-cols-6"
+            i18n-aria-label="Accessible name of the report filter form"
             aria-label="Report filters">
             <app-form-select
               class="[&>div]:mb-0!"
+              i18n-label="Label of the project filter"
               label="Project"
               [value]="projectId() ?? null"
               (valueChange)="setProject($event)">
               <app-form-select-option [value]="null">
-                All projects
+                <span i18n="Filter option including every project">
+                  All projects
+                </span>
               </app-form-select-option>
               @for (project of projects(); track project.id) {
                 <app-form-select-option [value]="project.id">
@@ -86,6 +94,7 @@ const browserTimeZone =
             </app-form-select>
 
             <app-form-input
+              i18n-label="Label of the start-date filter"
               label="From"
               type="date"
               [noMargin]="true"
@@ -93,6 +102,7 @@ const browserTimeZone =
               (valueChange)="setParam('from', $event)" />
 
             <app-form-input
+              i18n-label="Label of the end-date filter"
               label="To"
               type="date"
               [noMargin]="true"
@@ -101,39 +111,46 @@ const browserTimeZone =
 
             <app-form-select
               class="[&>div]:mb-0!"
+              i18n-label="Label of the estimation unit filter"
               label="Unit"
               [value]="unit()"
               (valueChange)="setUnit($event)">
               <app-form-select-option value="Tasks">
-                Tasks
+                <span i18n="Estimation unit: whole tasks">Tasks</span>
               </app-form-select-option>
               <app-form-select-option value="StoryPoints">
-                Story points
+                <span i18n="Estimation unit: story points">Story points</span>
               </app-form-select-option>
               <app-form-select-option value="Hours">
-                Hours
+                <span i18n="Estimation unit: hours">Hours</span>
               </app-form-select-option>
             </app-form-select>
 
             <app-form-select
               class="[&>div]:mb-0!"
+              i18n-label="Label of the report grouping filter"
               label="Grouping"
               [value]="grouping()"
               (valueChange)="setGrouping($event)">
-              <app-form-select-option value="Day">Daily</app-form-select-option>
-              <app-form-select-option value="Week"
-                >Weekly</app-form-select-option
-              >
+              <app-form-select-option value="Day">
+                <span i18n="Report grouping by day">Daily</span>
+              </app-form-select-option>
+              <app-form-select-option value="Week">
+                <span i18n="Report grouping by week">Weekly</span>
+              </app-form-select-option>
             </app-form-select>
 
             @if (canReadSprints()) {
               <app-form-select
                 class="[&>div]:mb-0!"
+                i18n-label="Label of the sprint filter"
                 label="Sprint"
                 [value]="selectedSprintId() ?? null"
                 (valueChange)="setSprint($event)">
                 <app-form-select-option [value]="null">
-                  Select sprint
+                  <span i18n="Placeholder option in the sprint filter">
+                    Select sprint
+                  </span>
                 </app-form-select-option>
                 @for (sprint of filteredSprints(); track sprint.id) {
                   <app-form-select-option [value]="sprint.id">
@@ -183,7 +200,7 @@ export class ReportingViewComponent {
   readonly from = computed(() => this.params().get('from') ?? defaultFrom);
   readonly to = computed(() => this.params().get('to') ?? defaultTo);
   readonly timeZone = computed(
-    () => this.params().get('timeZone') ?? browserTimeZone
+    () => this.params().get('timeZone') ?? hostTimeZone()
   );
   readonly grouping = computed<ReportingGrouping>(() =>
     reportingGrouping(this.params().get('grouping'))
@@ -304,7 +321,7 @@ export class ReportingViewComponent {
         from: queryParams.get('from') ?? defaultFrom,
         to: queryParams.get('to') ?? defaultTo,
         unit: queryParams.get('unit') ?? 'Tasks',
-        timeZone: queryParams.get('timeZone') ?? browserTimeZone,
+        timeZone: queryParams.get('timeZone') ?? hostTimeZone(),
         grouping: queryParams.get('grouping') ?? 'Day',
       },
       queryParamsHandling: 'merge',

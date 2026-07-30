@@ -25,7 +25,9 @@ import { AutomationNotifyPreviewComponent } from './automation-notify-preview.co
   template: `
     <div class="flex flex-col gap-4">
       <app-form-select-tags
+        i18n-label="Label of the recipients field"
         label="Recipients"
+        i18n-placeholder="Placeholder text: Choose who to notify"
         placeholder="Choose who to notify"
         [value]="selectedRecipients()"
         (changed)="setRecipients($event)">
@@ -38,7 +40,9 @@ import { AutomationNotifyPreviewComponent } from './automation-notify-preview.co
 
       @if (targetsSpecificUsers()) {
         <app-form-select-tags
+          i18n-label="Label of the users field"
           label="Users"
+          i18n-placeholder="Placeholder text: Choose the users to notify"
           placeholder="Choose the users to notify"
           [value]="action().recipientUserIds ?? []"
           (changed)="patch.emit({ recipientUserIds: $event })">
@@ -52,7 +56,9 @@ import { AutomationNotifyPreviewComponent } from './automation-notify-preview.co
 
       @if (targetsRoles()) {
         <app-form-select-tags
+          i18n-label="Label of the workspace roles field"
           label="Workspace roles"
+          i18n-placeholder="Placeholder text: Choose the roles to notify"
           placeholder="Choose the roles to notify"
           [value]="action().recipientRoles ?? []"
           (changed)="patch.emit({ recipientRoles: $event })">
@@ -65,6 +71,7 @@ import { AutomationNotifyPreviewComponent } from './automation-notify-preview.co
       }
 
       <app-form-textarea
+        i18n-label="Label of the message field"
         label="Message"
         rows="3"
         [noMargin]="true"

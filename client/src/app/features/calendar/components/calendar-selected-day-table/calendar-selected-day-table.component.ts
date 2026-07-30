@@ -30,7 +30,9 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
         containerClass="max-h-44 overflow-auto border-0 rounded-none"
         tableClass="text-xs"
         emptyCellClass="py-5"
+        i18n-emptyMessage="Empty state for the selected calendar day"
         emptyMessage="No scheduled tasks for this day."
+        i18n-itemLabel="Plural noun for tasks, used in the selection summary"
         itemLabel="tasks"
         [stickyHeader]="true"
         [data]="data()">
@@ -45,9 +47,9 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
         </ng-template>
 
         <ng-template appDatatableCell="systemId" let-task>
-          <span class="text-muted-foreground font-mono">{{
-            task.systemId
-          }}</span>
+          <span class="text-muted-foreground font-mono">
+            {{ task.systemId }}
+          </span>
         </ng-template>
 
         <ng-template appDatatableCell="statusName" let-task>
@@ -64,7 +66,11 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
           @if (task.assignees.length > 0) {
             <app-avatar-stack [avatars]="task.assignees" />
           } @else {
-            <span class="text-muted-foreground">Unassigned</span>
+            <span
+              class="text-muted-foreground"
+              i18n="Shown when a task has nobody assigned">
+              Unassigned
+            </span>
           }
         </ng-template>
       </app-datatable>

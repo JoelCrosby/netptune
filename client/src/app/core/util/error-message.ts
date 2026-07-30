@@ -4,7 +4,7 @@ const SERVER_FAILURE_PREFIX = /^Server responded with failure(?::\s*)?/;
 
 export function getErrorMessage(
   error: unknown,
-  fallback = 'Something went wrong. Please try again.'
+  fallback = $localize`:Generic error shown when a request fails and the server gave no usable message:Something went wrong. Please try again.`
 ): string {
   if (error instanceof HttpErrorResponse) {
     return getResponseMessage(error.error) ?? fallback;

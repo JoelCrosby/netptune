@@ -44,10 +44,16 @@ export interface CreateRelationTypeDialogResult {
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Create Relation Type</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the create-relation-type dialog">
+      Create Relation Type
+    </app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
-      <app-form-select [formField]="relationTypeForm.category" label="Category">
+      <app-form-select
+        [formField]="relationTypeForm.category"
+        i18n-label="Label of the relation category field"
+        label="Category">
         @for (category of categories; track category) {
           <app-form-select-option [value]="category">
             {{ categoryLabel(category) }}
@@ -56,30 +62,52 @@ export interface CreateRelationTypeDialogResult {
       </app-form-select>
 
       <p class="text-muted mb-4 text-sm">
-        {{ categoryDescription() }} The category cannot be changed later.
+        <span
+          i18n="
+            Explains the selected relation category and that it is permanent.
+            CATEGORY_DESCRIPTION is a sentence describing the chosen category
+          ">
+          {{
+            categoryDescription() // i18n(ph="CATEGORY_DESCRIPTION")
+          }}
+          The category cannot be changed later.
+        </span>
       </p>
 
       <app-form-input
         [formField]="relationTypeForm.name"
+        i18n-label="Label of the name field"
         label="Name"
+        i18n-placeholder="Example relation type name shown as placeholder text"
         placeholder="Blocks"
         maxLength="128" />
 
       @if (!isSymmetric()) {
         <app-form-input
           [formField]="relationTypeForm.inverseName"
+          i18n-label="
+            Label of the field for the reverse direction of a relation
+          "
           label="Inverse name"
+          i18n-placeholder="
+            Example inverse relation type name shown as placeholder text
+          "
           placeholder="Is Blocked By"
           maxLength="128" />
       }
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Close</button>
-      <button app-flat-button type="button" (click)="submit($event)">
-        Create Relation Type
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
-    </div>`,
+      <button app-flat-button type="button" (click)="submit($event)">
+        <span i18n="Button that creates the relation type">
+          Create Relation Type
+        </span>
+      </button>
+    </div>
+  `,
 })
 export class CreateRelationTypeDialogComponent {
   private readonly dialogRef =
@@ -99,7 +127,13 @@ export class CreateRelationTypeDialogComponent {
   });
 
   readonly relationTypeForm = form(this.relationTypeFormModel, (schema) => {
-    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 128,
+      })
+    );
     maxLength(schema.inverseName, 128);
     required(schema.category);
   });

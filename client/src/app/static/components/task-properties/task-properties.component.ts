@@ -45,6 +45,9 @@ export interface TaskReporter {
             {{ multiple() ? 'Assignees' : 'Assignee' }}
           </h4>
           <app-user-select
+            i18n-label="
+              Shown in the assignee picker when a task has nobody assigned
+            "
             label="Unassigned"
             [value]="assignees()"
             [options]="users()"
@@ -55,7 +58,11 @@ export interface TaskReporter {
 
       @if (reporter(); as reporter) {
         <div>
-          <h4 class="font-sm mt-4 mb-2 font-semibold">Reporter</h4>
+          <h4 class="font-sm mt-4 mb-2 font-semibold">
+            <span i18n="Field heading for the person who raised the task">
+              Reporter
+            </span>
+          </h4>
           <div class="flex flex-row items-center rounded pl-2">
             <app-avatar
               size="sm"
@@ -71,7 +78,9 @@ export interface TaskReporter {
 
       @if (readStatus()) {
         <div>
-          <h4 class="font-sm mt-4 mb-2 font-semibold">Status</h4>
+          <h4 class="font-sm mt-4 mb-2 font-semibold">
+            <span i18n="Field heading for the task status">Status</span>
+          </h4>
           <app-task-status-select
             [(value)]="statusId"
             [loading]="loading()"
@@ -81,14 +90,20 @@ export interface TaskReporter {
       }
 
       <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Priority</h4>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">
+          <span i18n="Field heading for the task priority">Priority</span>
+        </h4>
         <app-task-priority-select
           [(value)]="priority"
           [disabled]="!editable()" />
       </div>
 
       <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Estimate</h4>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">
+          <span i18n="Field heading for the task effort estimate">
+            Estimate
+          </span>
+        </h4>
         <app-task-estimate-select
           [estimateType]="estimateType()"
           [estimateValue]="estimateValue()"
@@ -97,10 +112,13 @@ export interface TaskReporter {
       </div>
 
       <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Start date</h4>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">
+          <span i18n="Field heading for the task start date">Start date</span>
+        </h4>
         <app-date-picker
           appearance="flat"
           color="ghost"
+          i18n-ariaLabel="Accessible label for the task start date picker"
           ariaLabel="Start date"
           buttonClass="justify-between"
           [disabled]="!editable()"
@@ -108,10 +126,13 @@ export interface TaskReporter {
       </div>
 
       <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Due date</h4>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">
+          <span i18n="Field heading for the task due date">Due date</span>
+        </h4>
         <app-date-picker
           appearance="flat"
           color="ghost"
+          i18n-ariaLabel="Accessible label for the task due date picker"
           ariaLabel="Due date"
           buttonClass="justify-between"
           [disabled]="!editable()"
@@ -120,7 +141,9 @@ export interface TaskReporter {
 
       @if (readProjects() && showProject()) {
         <div>
-          <h4 class="font-sm mt-4 mb-2 font-semibold">Project</h4>
+          <h4 class="font-sm mt-4 mb-2 font-semibold">
+            <span i18n="Field heading for the task's project">Project</span>
+          </h4>
           <app-task-project-select
             [(value)]="projectId"
             [disabled]="!editable()" />
@@ -129,7 +152,9 @@ export interface TaskReporter {
 
       @if (readSprints() && showSprint()) {
         <div>
-          <h4 class="font-sm mt-4 mb-2 font-semibold">Sprint</h4>
+          <h4 class="font-sm mt-4 mb-2 font-semibold">
+            <span i18n="Field heading for the task's sprint">Sprint</span>
+          </h4>
           <app-task-sprint-select
             [(value)]="sprintId"
             [projectId]="projectId()"

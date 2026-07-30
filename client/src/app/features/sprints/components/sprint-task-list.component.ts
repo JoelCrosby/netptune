@@ -40,6 +40,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
       containerClass="overflow-auto"
       tableClass="min-w-[820px] table-fixed"
       rowClass="bg-card"
+      i18n-emptyMessage="Empty state for the sprint task list"
       emptyMessage="No tasks in this sprint."
       [data]="data()"
       [stickyHeader]="true">
@@ -77,7 +78,11 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
             {{ task.priority | sprintBacklogPriorityLabel }}
           </span>
         } @else {
-          <span class="text-muted text-sm">None</span>
+          <span
+            class="text-muted text-sm"
+            i18n="Shown in place of an empty value">
+            None
+          </span>
         }
       </ng-template>
 
@@ -89,7 +94,9 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
           class="h-6 text-xs"
           [disabled]="updateLoading()"
           (click)="onRemoveTask(task.id)">
-          Remove
+          <span i18n="Button that removes the task from the sprint">
+            Remove
+          </span>
         </button>
       </ng-template>
     </app-datatable>

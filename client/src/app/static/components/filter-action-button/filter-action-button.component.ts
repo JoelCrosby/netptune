@@ -15,8 +15,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         </app-badge>
       } @else if (dot()) {
         <span
-          class="bg-primary absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full">
-        </span>
+          class="bg-primary absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full"></span>
       }
     </button>
   `,

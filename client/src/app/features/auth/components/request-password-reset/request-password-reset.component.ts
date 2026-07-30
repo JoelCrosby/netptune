@@ -31,36 +31,46 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
     StrokedButtonComponent,
     FormField,
   ],
-  template: `<app-auth-page-container>
-    <app-auth-form-panel
-      heading="Request Password Reset"
-      [loading]="loading()"
-      (submitted)="requestPasswordReset()">
-      <app-form-input
-        [formField]="requestForm.email"
-        label="Email"
-        maxLength="128"
-        id="email"
-        type="email"
-        autocomplete="username">
-        <app-form-errors [formField]="requestForm.email" />
-      </app-form-input>
+  template: `
+    <app-auth-page-container>
+      <app-auth-form-panel
+        i18n-heading="Heading of the password reset request form"
+        heading="Request Password Reset"
+        [loading]="loading()"
+        (submitted)="requestPasswordReset()">
+        <app-form-input
+          [formField]="requestForm.email"
+          i18n-label="
+            Label of the e-mail address field on the password reset request form
+          "
+          label="Email"
+          maxLength="128"
+          id="email"
+          type="email"
+          autocomplete="username">
+          <app-form-errors [formField]="requestForm.email" />
+        </app-form-input>
 
-      <div class="mt-2 flex flex-row items-center gap-4">
-        <a
-          app-stroked-button
-          color="primary"
-          type="button"
-          [routerLink]="['/auth/login']">
-          Back to Log in
-        </a>
+        <div class="mt-2 flex flex-row items-center gap-4">
+          <a
+            app-stroked-button
+            color="primary"
+            type="button"
+            [routerLink]="['/auth/login']">
+            <span i18n="Link from the registration form back to the login form">
+              Back to Log in
+            </span>
+          </a>
 
-        <button app-flat-button color="primary" type="submit">
-          Send Password Reset Email
-        </button>
-      </div>
-    </app-auth-form-panel>
-  </app-auth-page-container> `,
+          <button app-flat-button color="primary" type="submit">
+            <span i18n="Submit button on the password reset request form">
+              Send Password Reset Email
+            </span>
+          </button>
+        </div>
+      </app-auth-form-panel>
+    </app-auth-page-container>
+  `,
 })
 export class RequestPasswordResetComponent {
   private store = inject(Store);
@@ -72,8 +82,12 @@ export class RequestPasswordResetComponent {
   });
 
   requestForm = form(this.requestFormModel, (schema) => {
-    required(schema.email, { message: 'Email is required.' });
-    email(schema.email, { message: 'Enter a valid email address.' });
+    required(schema.email, {
+      message: $localize`:Validation error when the e-mail field is empty:Email is required.`,
+    });
+    email(schema.email, {
+      message: $localize`:Validation error when the e-mail field is not a valid address:Enter a valid email address.`,
+    });
     maxLength(schema.email, 128);
     disabled(schema, () => this.loading());
   });

@@ -14,24 +14,30 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
     PageLoadingComponent,
     ProjectDetailComponent,
   ],
-  template: `<app-page-container
-    [verticalPadding]="false"
-    [fullHeight]="true"
-    [centerPage]="true"
-    [marginBottom]="true">
-    <app-page-header title="Project" />
+  template: `
+    <app-page-container
+      [verticalPadding]="false"
+      [fullHeight]="true"
+      [centerPage]="true"
+      [marginBottom]="true">
+      <app-page-header
+        i18n-title="Page title for a single project"
+        title="Project" />
 
-    @if (project.isLoading()) {
-      <app-page-loading />
-    } @else if (project.error()) {
-      <app-error-state
-        title="This project could not be loaded"
-        description="Check your connection and try again."
-        (retry)="project.reload()" />
-    } @else {
-      <app-project-detail [project]="project.value()" />
-    }
-  </app-page-container> `,
+      @if (project.isLoading()) {
+        <app-page-loading />
+      } @else if (project.error()) {
+        <app-error-state
+          i18n-title="Shown when a project fails to load"
+          title="This project could not be loaded"
+          i18n-description="Advice shown when a page fails to load"
+          description="Check your connection and try again."
+          (retry)="project.reload()" />
+      } @else {
+        <app-project-detail [project]="project.value()" />
+      }
+    </app-page-container>
+  `,
 })
 export class ProjectDetailViewComponent {
   id = input.required<string>();

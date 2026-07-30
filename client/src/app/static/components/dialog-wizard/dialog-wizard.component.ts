@@ -30,6 +30,7 @@ export const DIALOG_WIZARD_TITLE = new InjectionToken<string>(
         app-icon-button
         app-dialog-close
         class="shrink-0"
+        i18n-aria-label="Accessible label for the button that closes a dialog"
         aria-label="Close dialog">
         <svg lucideX class="h-5 w-5" aria-hidden="true"></svg>
       </button>

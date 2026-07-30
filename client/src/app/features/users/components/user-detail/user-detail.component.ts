@@ -18,7 +18,8 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
     FormSelectComponent,
     FormSelectOptionComponent,
   ],
-  template: ` @if (user(); as user) {
+  template: `
+    @if (user(); as user) {
       <div class="flex flex-col items-baseline gap-8 pb-96">
         <app-avatar
           [name]="user.displayName"
@@ -32,6 +33,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 
         <div class="w-full max-w-sm">
           <app-form-select
+            i18n-label="Label of the member role field"
             label="Workspace role"
             name="workspaceRole"
             [value]="user.role"
@@ -44,21 +46,26 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
             }
             @if (user.role === workspaceRole.owner) {
               <app-form-select-option [value]="workspaceRole.owner">
-                Owner
+                <span i18n="Badge marking the workspace owner">Owner</span>
               </app-form-select-option>
             }
           </app-form-select>
         </div>
 
-        <h2 class="text-foreground pl-1 text-2xl">Permissions</h2>
+        <h2 class="text-foreground pl-1 text-2xl">
+          <span i18n="Heading above a member's permissions">Permissions</span>
+        </h2>
 
         <div class="w-full">
           <app-permission-list />
         </div>
       </div>
     } @else {
-      <p>User not found</p>
-    }`,
+      <p>
+        <span i18n="Shown when a member cannot be found">User not found</span>
+      </p>
+    }
+  `,
 })
 export class UserDetailComponent {
   readonly store = inject(Store);

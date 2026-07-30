@@ -45,40 +45,45 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
       <form class="w-full max-w-lg" (submit)="updateClicked($event)">
         <app-form-input
           [formField]="projectForm.name"
+          i18n-label="Label of the name field"
           label="Name"
-          maxLength="1024">
-        </app-form-input>
+          maxLength="1024"></app-form-input>
         <app-form-textarea
           [formField]="projectForm.description"
+          i18n-label="Label of the description field"
           label="Description"
-          rows="6">
-        </app-form-textarea>
+          rows="6"></app-form-textarea>
         <div class="border-border my-8 border-b-2"></div>
         <div class="flex items-center">
           <app-form-input
             [formField]="projectForm.key"
+            i18n-label="Label of the project key field"
             label="Project ID"
             class="w-30"
-            maxLength="6">
-          </app-form-input>
+            maxLength="6"></app-form-input>
           <div>
             <small class="block px-[1.4rem] opacity-60">
-              The Project ID is displayed as the first part of task's ID
+              <span i18n="Explains where the project key appears">
+                The Project ID is displayed as the first part of task's ID
+              </span>
             </small>
             <small class="block px-[1.4rem] opacity-60">
-              max 6 characters. should be unique to workspace
+              <span i18n="Constraints on the project key">
+                max 6 characters. should be unique to workspace
+              </span>
             </small>
           </div>
         </div>
         <app-form-input
           [formField]="projectForm.repositoryUrl"
+          i18n-label="Label of the source repository URL field"
           label="Repository URL"
-          maxLength="1024">
-        </app-form-input>
+          maxLength="1024"></app-form-input>
 
         @if (statuses.value()) {
           <app-form-select
             [formField]="projectForm.defaultStatusId"
+            i18n-label="Label of the default task status field"
             label="Default task status">
             @for (status of statuses.value(); track status.id) {
               <app-form-select-option [value]="status.id">
@@ -92,7 +97,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           app-flat-button
           color="primary"
           [disabled]="projectForm().disabled()">
-          Save Changes
+          <span i18n="Button that saves the project details">Save Changes</span>
         </button>
       </form>
     </div>
@@ -118,9 +123,18 @@ export class ProjectDetailComponent implements OnDestroy {
     required(schema.id);
     apply(
       schema.key,
-      requiredTextSchema({ label: 'Project ID', maxLength: 6 })
+      requiredTextSchema({
+        label: $localize`:Label shown in the interface:Project ID`,
+        maxLength: 6,
+      })
     );
-    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: $localize`:Label shown in the interface:Name`,
+        maxLength: 128,
+      })
+    );
     required(schema.defaultStatusId);
     maxLength(schema.description, 4096);
     maxLength(schema.repositoryUrl, 1024);

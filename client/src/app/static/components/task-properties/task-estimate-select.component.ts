@@ -37,7 +37,9 @@ export interface TaskEstimate {
       </button>
       <app-dropdown-menu #typeMenu>
         <small class="block px-3 py-1 text-xs text-neutral-500">
-          Estimate Type
+          <span i18n="Heading above the estimate-unit options">
+            Estimate Type
+          </span>
         </small>
         @for (opt of estimateTypeOptions; track opt.value) {
           <button
@@ -60,7 +62,11 @@ export interface TaskEstimate {
           }
         </button>
         <app-dropdown-menu #sizeMenu>
-          <small class="block px-3 py-1 text-xs text-neutral-500">Size</small>
+          <small class="block px-3 py-1 text-xs text-neutral-500">
+            <span i18n="Heading above the t-shirt-size estimate options">
+              Size
+            </span>
+          </small>
           @for (size of tShirtSizes; track size.value) {
             <button
               app-menu-item

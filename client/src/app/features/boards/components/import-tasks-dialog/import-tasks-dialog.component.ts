@@ -33,13 +33,17 @@ interface ImportTasksDialogData {
     LucideCheckCircle,
   ],
   template: `
-    <app-dialog-title>Import Tasks</app-dialog-title>
+    <app-dialog-title i18n="Title of the CSV task import dialog">
+      Import Tasks
+    </app-dialog-title>
 
     <app-dialog-content>
       <div class="flex w-full min-w-100 flex-col gap-5 max-sm:min-w-0">
         <app-form-file-upload
           name="file"
+          i18n-placeholder="Placeholder in the CSV file picker"
           placeholder="Choose a CSV file"
+          i18n-hint="Hint under the CSV file picker"
           hint="CSV files only"
           accept=".csv,text/csv"
           [disabled]="loading()"
@@ -49,7 +53,9 @@ interface ImportTasksDialogData {
         @if (loading()) {
           <div class="flex items-center gap-3 text-sm">
             <app-spinner diameter="20px" />
-            <span>Validating import file...</span>
+            <span i18n="Shown while the import file is being validated">
+              Validating import file...
+            </span>
           </div>
         }
 
@@ -63,10 +69,14 @@ interface ImportTasksDialogData {
             <div class="mb-3 flex items-center gap-2 font-medium">
               @if (result.isSuccess) {
                 <svg lucideCheckCircle class="h-5 w-5 text-green-500"></svg>
-                <span>Validation passed</span>
+                <span i18n="Shown when the import file passes validation">
+                  Validation passed
+                </span>
               } @else {
                 <svg lucideTriangleAlert class="text-warn h-5 w-5"></svg>
-                <span>Validation failed</span>
+                <span i18n="Shown when the import file fails validation">
+                  Validation failed
+                </span>
               }
             </div>
 
@@ -76,7 +86,11 @@ interface ImportTasksDialogData {
 
             @if (missingHeaders().length) {
               <div class="mt-4">
-                <h2 class="text-sm font-medium">Missing headers</h2>
+                <h2 class="text-sm font-medium">
+                  <span i18n="Heading listing CSV columns that are absent">
+                    Missing headers
+                  </span>
+                </h2>
                 <ul class="mt-2 list-disc pl-5 text-sm">
                   @for (header of missingHeaders(); track header) {
                     <li>{{ header }}</li>
@@ -87,7 +101,12 @@ interface ImportTasksDialogData {
 
             @if (invalidHeaders().length) {
               <div class="mt-4">
-                <h2 class="text-sm font-medium">Invalid headers</h2>
+                <h2 class="text-sm font-medium">
+                  <span
+                    i18n="Heading listing CSV columns that are not recognised">
+                    Invalid headers
+                  </span>
+                </h2>
                 <ul class="mt-2 list-disc pl-5 text-sm">
                   @for (header of invalidHeaders(); track header) {
                     <li>{{ header }}</li>
@@ -98,7 +117,14 @@ interface ImportTasksDialogData {
 
             @if (missingEmails().length) {
               <div class="mt-4">
-                <h2 class="text-sm font-medium">Unknown email addresses</h2>
+                <h2 class="text-sm font-medium">
+                  <span
+                    i18n="
+                      Heading listing CSV e-mail addresses with no matching user
+                    ">
+                    Unknown email addresses
+                  </span>
+                </h2>
                 <ul class="mt-2 list-disc pl-5 text-sm">
                   @for (email of missingEmails(); track email) {
                     <li>{{ email }}</li>
@@ -112,13 +138,15 @@ interface ImportTasksDialogData {
     </app-dialog-content>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button (click)="close()">Close</button>
+      <button app-stroked-button (click)="close()">
+        <span i18n="Dismisses a dialog without saving">Close</span>
+      </button>
       <button
         app-flat-button
         color="primary"
         [disabled]="!selectedFile() || loading() || response()?.isSuccess"
         (click)="importSelectedFile()">
-        Import
+        <span i18n="Button that starts the CSV task import">Import</span>
       </button>
     </div>
   `,
@@ -181,7 +209,7 @@ export class ImportTasksDialogComponent {
     } catch {
       this.response.set({
         isSuccess: false,
-        message: 'Import failed before validation completed.',
+        message: $localize`:Shown when a CSV import fails before validation could run:Import failed before validation completed.`,
       });
     } finally {
       this.loading.set(false);

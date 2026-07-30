@@ -1,7 +1,9 @@
 import {
   Component,
   ElementRef,
+  LOCALE_ID,
   computed,
+  inject,
   input,
   linkedSignal,
   output,
@@ -19,23 +21,14 @@ import {
   addCalendarDays,
   addCalendarMonths,
   calendarDays,
+  calendarMonths,
+  calendarWeekdays,
   dateValue,
   makeDate,
   parseDateValue,
   sameCalendarDay,
   startOfCalendarMonth,
 } from './date-picker.utils';
-
-const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-const months = Array.from({ length: 12 }, (_, month) => ({
-  index: month,
-  long: new Intl.DateTimeFormat(undefined, { month: 'long' }).format(
-    makeDate(2024, month, 1)
-  ),
-  short: new Intl.DateTimeFormat(undefined, { month: 'short' }).format(
-    makeDate(2024, month, 1)
-  ),
-}));
 
 @Component({
   selector: 'app-calendar',
@@ -53,6 +46,10 @@ const months = Array.from({ length: 12 }, (_, month) => ({
           app-icon-button
           type="button"
           class="h-8 w-8"
+          i18n-aria-label="
+            Accessible label for the button that moves the calendar back one
+            month
+          "
           aria-label="Previous month"
           [disabled]="previousDisabled()"
           (click)="changeMonth(-1)">
@@ -66,6 +63,9 @@ const months = Array.from({ length: 12 }, (_, month) => ({
               type="button"
               class="hover:bg-muted/60 focus-visible:ring-foreground/30 flex h-8 min-w-26 cursor-pointer items-center justify-center gap-1 rounded-sm px-2 outline-none focus-visible:ring-2"
               aria-haspopup="listbox"
+              i18n-aria-label="
+                Accessible label for the control that opens the month picker
+              "
               aria-label="Choose month"
               [attr.aria-expanded]="monthMenuOpen()"
               (click)="toggleMonthMenu()">
@@ -83,6 +83,7 @@ const months = Array.from({ length: 12 }, (_, month) => ({
               <div
                 class="border-border bg-background absolute top-full left-1/2 z-20 mt-1 grid w-52 -translate-x-1/2 grid-cols-3 gap-1 rounded-md border p-1 shadow-xl"
                 role="listbox"
+                i18n-aria-label="Accessible name of the month picker list"
                 aria-label="Month"
                 (keydown.escape.prevent.stop)="closeMonthMenu()">
                 @for (month of months; track month.index) {
@@ -108,6 +109,10 @@ const months = Array.from({ length: 12 }, (_, month) => ({
           app-icon-button
           type="button"
           class="h-8 w-8"
+          i18n-aria-label="
+            Accessible label for the button that moves the calendar forward one
+            month
+          "
           aria-label="Next month"
           [disabled]="nextDisabled()"
           (click)="changeMonth(1)">
@@ -120,11 +125,13 @@ const months = Array.from({ length: 12 }, (_, month) => ({
         class="grid grid-cols-7 gap-1"
         role="grid"
         [attr.aria-label]="monthLabel()">
-        @for (weekday of weekdays; track weekday) {
+        @for (weekday of weekdays; track weekday.long) {
           <div
             class="text-muted-foreground flex h-8 items-center justify-center text-xs font-medium"
-            role="columnheader">
-            {{ weekday }}
+            role="columnheader"
+            [attr.aria-label]="weekday.long"
+            [attr.title]="weekday.long">
+            {{ weekday.narrow }}
           </div>
         }
 
@@ -156,6 +163,8 @@ export class CalendarComponent {
   readonly value = input('');
   readonly min = input<string>();
   readonly max = input<string>();
+  private readonly locale = inject(LOCALE_ID);
+
   readonly dateSelected = output<string>();
 
   private readonly grid = viewChild.required<ElementRef<HTMLElement>>('grid');
@@ -173,8 +182,8 @@ export class CalendarComponent {
   private readonly activeDate = linkedSignal(() => this.initialDate());
   protected readonly monthMenuOpen = signal(false);
 
-  protected readonly weekdays = weekdays;
-  protected readonly months = months;
+  protected readonly weekdays = calendarWeekdays;
+  protected readonly months = calendarMonths;
   protected readonly days = computed(() =>
     calendarDays(
       this.viewDate(),
@@ -184,14 +193,14 @@ export class CalendarComponent {
     )
   );
   protected readonly monthLabel = computed(() =>
-    new Intl.DateTimeFormat(undefined, {
+    new Intl.DateTimeFormat(this.locale, {
       month: 'long',
       year: 'numeric',
     }).format(this.viewDate())
   );
   protected readonly currentMonth = computed(() => this.viewDate().getMonth());
   protected readonly currentMonthName = computed(
-    () => months[this.currentMonth()].long
+    () => calendarMonths[this.currentMonth()].long
   );
   protected readonly currentYear = computed(() =>
     this.viewDate().getFullYear()
@@ -272,15 +281,19 @@ export class CalendarComponent {
   }
 
   protected dayAriaLabel(day: CalendarDay): string {
-    const label = new Intl.DateTimeFormat(undefined, {
+    const label = new Intl.DateTimeFormat(this.locale, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     }).format(day.date);
     const states = [
-      day.today ? 'Today' : '',
-      day.selected ? 'Selected' : '',
+      day.today
+        ? $localize`:Marks the current date in a date picker, read out after the date itself:Today`
+        : '',
+      day.selected
+        ? $localize`:Marks the chosen date in a date picker, read out after the date itself:Selected`
+        : '',
     ].filter(Boolean);
 
     return states.length > 0 ? `${label}, ${states.join(', ')}` : label;

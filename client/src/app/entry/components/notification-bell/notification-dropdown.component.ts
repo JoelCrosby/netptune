@@ -20,12 +20,18 @@ const DROPDOWN_LIMIT = 10;
   template: `
     <app-popover-surface class="mt-[0.4rem] mr-4 block" enterFrom="top-right">
       <div class="flex items-center justify-between px-[1.2rem] py-3">
-        <span class="text-sm font-semibold">Notifications</span>
+        <span
+          class="text-sm font-semibold"
+          i18n="Heading of the notifications dropdown">
+          Notifications
+        </span>
         @if (unreadCount() > 0) {
           <button
             class="text-muted hover:text-primary cursor-pointer text-xs underline transition-colors"
             (click)="markAllAsRead.emit()">
-            Mark all as read
+            <span i18n="Button that marks every notification as read">
+              Mark all as read
+            </span>
           </button>
         }
       </div>
@@ -47,7 +53,11 @@ const DROPDOWN_LIMIT = 10;
           } @empty {
             <app-empty-state
               compact
+              i18n-title="Heading of the empty notifications list"
               title="No notifications"
+              i18n-description="
+                Reassurance shown when there are no notifications
+              "
               description="You're all caught up!">
               <svg emptyStateIcon lucideBell></svg>
             </app-empty-state>
@@ -59,7 +69,9 @@ const DROPDOWN_LIMIT = 10;
             <button
               class="hover:text-primary text-muted w-full cursor-pointer px-[1.2rem] py-3 text-center text-sm font-medium transition-colors"
               (click)="viewAll.emit()">
-              View all notifications
+              <span i18n="Link to the full notifications page">
+                View all notifications
+              </span>
             </button>
           </div>
         }

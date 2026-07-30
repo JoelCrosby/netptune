@@ -4,22 +4,27 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 @Component({
   selector: 'app-update-profile-image',
   imports: [StrokedButtonComponent],
-  template: `<div class="w-full max-[1036px]:mb-16 max-[1036px]:max-w-120">
-    <div class="mx-auto my-[1.4rem] flex w-45 flex-col items-center">
-      <img
-        class="mx-auto h-45 w-45 rounded-full object-cover"
-        [src]="displayPicture()"
-        alt="Profile Image"
-        height="180"
-        width="180" />
-      <button
-        class="mx-auto my-[1.4rem]"
-        app-stroked-button
-        (click)="$event.preventDefault(); changePictureClicked.emit()">
-        Change Picture
-      </button>
+  template: `
+    <div class="w-full max-[1036px]:mb-16 max-[1036px]:max-w-120">
+      <div class="mx-auto my-[1.4rem] flex w-45 flex-col items-center">
+        <img
+          class="mx-auto h-45 w-45 rounded-full object-cover"
+          [src]="displayPicture()"
+          i18n-alt="Alt text for the current profile picture"
+          alt="Profile Image"
+          height="180"
+          width="180" />
+        <button
+          class="mx-auto my-[1.4rem]"
+          app-stroked-button
+          (click)="$event.preventDefault(); changePictureClicked.emit()">
+          <span i18n="Button that opens the change-profile-picture dialog">
+            Change Picture
+          </span>
+        </button>
+      </div>
     </div>
-  </div> `,
+  `,
 })
 export class UpdateProfileImageComponent {
   pictureUrl = input<string>('');

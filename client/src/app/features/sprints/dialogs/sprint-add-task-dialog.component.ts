@@ -41,11 +41,15 @@ export interface SprintAddTaskDialogData {
     SprintBacklogStatusLabelPipe,
   ],
   template: `
-    <app-dialog-title>Add Tasks to Sprint</app-dialog-title>
+    <app-dialog-title
+      i18n="Title of the dialog for adding existing tasks to a sprint">
+      Add Tasks to Sprint
+    </app-dialog-title>
 
     <div class="flex w-220 max-w-full flex-col gap-4">
       <app-form-input
         name="sprint-add-task-search"
+        i18n-placeholder="Placeholder in the box for finding tasks to add"
         placeholder="Search tasks by name, key or tag"
         [noMargin]="true"
         [value]="searchInput()"
@@ -55,6 +59,7 @@ export interface SprintAddTaskDialogData {
         containerClass="h-[420px] overflow-y-auto overflow-x-hidden"
         tableClass="table-fixed"
         rowClass="bg-card"
+        i18n-emptyMessage="Shown when no tasks match the add-to-sprint search"
         emptyMessage="No tasks available to add."
         [data]="data"
         [selection]="true"
@@ -79,16 +84,22 @@ export interface SprintAddTaskDialogData {
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="close()">Cancel</button>
+      <button app-stroked-button type="button" (click)="close()">
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button
         app-flat-button
         color="primary"
         type="button"
         [disabled]="selected().length === 0 || loading()"
         (click)="add()">
-        Add
-        {{ selected().length }}
-        {{ selected().length === 1 ? 'task' : 'tasks' }}
+        <ng-container i18n="Button that adds the selected tasks to the sprint">
+          {selected().length, plural,
+            =0 {Add tasks}
+            =1 {Add 1 task}
+            other {Add {{ selected().length }} tasks}
+          }
+        </ng-container>
       </button>
     </div>
   `,

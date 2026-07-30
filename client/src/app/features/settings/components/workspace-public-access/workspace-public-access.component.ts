@@ -20,16 +20,36 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
   },
   template: `
     @if (editable()) {
-      <h4 class="mb-1 text-sm font-medium">Public access</h4>
+      <h4 class="mb-1 text-sm font-medium">
+        <span i18n="Heading for the public visibility settings">
+          Public access
+        </span>
+      </h4>
       <p class="text-muted mb-3 text-xs">
-        Choose what visitors without an account can see. Everything else —
-        members, comments, activity, files and workspace settings — stays
-        private to members regardless.
+        <span
+          i18n="Explains which parts of a workspace public visitors can see">
+          Choose what visitors without an account can see. Everything else —
+          members, comments, activity, files and workspace settings — stays
+          private to members regardless.
+        </span>
       </p>
 
       <div class="mb-3 flex items-center justify-between gap-3">
         <span class="text-muted text-xs">
-          {{ selected().size }} of {{ options.length }} shared
+          <span
+            i18n="
+              How many areas are shared publicly. SHARED is the shared count and
+              TOTAL the number of shareable areas
+            ">
+            {{
+              selected().size // i18n(ph="SHARED")
+            }}
+            of
+            {{
+              options.length // i18n(ph="TOTAL")
+            }}
+            shared
+          </span>
         </span>
         <div class="flex gap-2">
           <button
@@ -37,14 +57,14 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
             type="button"
             class="h-8 text-xs"
             (click)="shareAll()">
-            Share all
+            <span i18n="Button that shares every area publicly">Share all</span>
           </button>
           <button
             app-stroked-button
             type="button"
             class="h-8 text-xs"
             (click)="shareNone()">
-            Share none
+            <span i18n="Button that makes every area private">Share none</span>
           </button>
         </div>
       </div>
@@ -63,7 +83,9 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
 
       @if (selected().size === 0) {
         <p class="text-muted mt-2 text-xs">
-          Visitors can open the workspace but will not see any of its content.
+          <span i18n="Shown when nothing in the workspace is shared publicly">
+            Visitors can open the workspace but will not see any of its content.
+          </span>
         </p>
       }
     }

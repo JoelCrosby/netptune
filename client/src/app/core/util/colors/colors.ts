@@ -51,7 +51,7 @@ interface ColorOptions {
 const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   slate: color({
     name: fallbackColor,
-    label: 'Slate',
+    label: $localize`:Name of a colour in the colour picker:Slate`,
     shades: { 100: '#f1f5f9', 500: '#64748b', 700: '#334155' },
     classes: {
       background: 'bg-slate-500',
@@ -61,7 +61,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   red: color({
     name: 'red',
-    label: 'Red',
+    label: $localize`:Name of a colour in the colour picker:Red`,
     shades: { 100: '#fee2e2', 500: '#ef4444', 700: '#b91c1c' },
     classes: {
       background: 'bg-red-500',
@@ -71,7 +71,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   rose: color({
     name: 'rose',
-    label: 'Rose',
+    label: $localize`:Name of a colour in the colour picker:Rose`,
     shades: { 100: '#ffe4e6', 500: '#f43f5e', 700: '#be123c' },
     classes: {
       background: 'bg-rose-500',
@@ -81,7 +81,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   pink: color({
     name: 'pink',
-    label: 'Pink',
+    label: $localize`:Name of a colour in the colour picker:Pink`,
     shades: { 100: '#fce7f3', 500: '#ec4899', 700: '#be185d' },
     classes: {
       background: 'bg-pink-500',
@@ -91,7 +91,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   fuchsia: color({
     name: 'fuchsia',
-    label: 'Fuchsia',
+    label: $localize`:Name of a colour in the colour picker:Fuchsia`,
     shades: { 100: '#fae8ff', 500: '#d946ef', 700: '#a21caf' },
     classes: {
       background: 'bg-fuchsia-500',
@@ -101,7 +101,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   purple: color({
     name: 'purple',
-    label: 'Purple',
+    label: $localize`:Name of a colour in the colour picker:Purple`,
     shades: { 100: '#f3e8ff', 500: '#a855f7', 700: '#7e22ce' },
     classes: {
       background: 'bg-purple-500',
@@ -111,7 +111,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   violet: color({
     name: 'violet',
-    label: 'Violet',
+    label: $localize`:Name of a colour in the colour picker:Violet`,
     shades: { 100: '#ede9fe', 500: '#8b5cf6', 700: '#6d28d9' },
     classes: {
       background: 'bg-violet-500',
@@ -121,7 +121,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   indigo: color({
     name: 'indigo',
-    label: 'Indigo',
+    label: $localize`:Name of a colour in the colour picker:Indigo`,
     shades: { 100: '#e0e7ff', 500: '#6366f1', 700: '#4338ca' },
     classes: {
       background: 'bg-indigo-500',
@@ -131,7 +131,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   blue: color({
     name: 'blue',
-    label: 'Blue',
+    label: $localize`:Name of a colour in the colour picker:Blue`,
     shades: { 100: '#dbeafe', 500: '#3b82f6', 700: '#1d4ed8' },
     classes: {
       background: 'bg-blue-500',
@@ -141,7 +141,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   sky: color({
     name: 'sky',
-    label: 'Sky',
+    label: $localize`:Name of a colour in the colour picker:Sky`,
     shades: { 100: '#e0f2fe', 500: '#0ea5e9', 700: '#0369a1' },
     classes: {
       background: 'bg-sky-500',
@@ -151,7 +151,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   cyan: color({
     name: 'cyan',
-    label: 'Cyan',
+    label: $localize`:Name of a colour in the colour picker:Cyan`,
     shades: { 100: '#cffafe', 500: '#06b6d4', 700: '#0e7490' },
     classes: {
       background: 'bg-cyan-500',
@@ -161,7 +161,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   teal: color({
     name: 'teal',
-    label: 'Teal',
+    label: $localize`:Name of a colour in the colour picker:Teal`,
     shades: { 100: '#ccfbf1', 500: '#14b8a6', 700: '#0f766e' },
     classes: {
       background: 'bg-teal-500',
@@ -171,7 +171,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   emerald: color({
     name: 'emerald',
-    label: 'Emerald',
+    label: $localize`:Name of a colour in the colour picker:Emerald`,
     shades: { 100: '#d1fae5', 500: '#10b981', 700: '#047857' },
     classes: {
       background: 'bg-emerald-500',
@@ -181,7 +181,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   green: color({
     name: 'green',
-    label: 'Green',
+    label: $localize`:Name of a colour in the colour picker:Green`,
     shades: { 100: '#dcfce7', 500: '#22c55e', 700: '#15803d' },
     classes: {
       background: 'bg-green-500',
@@ -191,7 +191,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   lime: color({
     name: 'lime',
-    label: 'Lime',
+    label: $localize`:Name of a colour in the colour picker:Lime`,
     shades: { 100: '#ecfccb', 500: '#84cc16', 700: '#4d7c0f' },
     classes: {
       background: 'bg-lime-500',
@@ -201,7 +201,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   yellow: color({
     name: 'yellow',
-    label: 'Yellow',
+    label: $localize`:Name of a colour in the colour picker:Yellow`,
     shades: { 100: '#fef9c3', 500: '#eab308', 700: '#a16207' },
     classes: {
       background: 'bg-yellow-500',
@@ -211,7 +211,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   amber: color({
     name: 'amber',
-    label: 'Amber',
+    label: $localize`:Name of a colour in the colour picker:Amber`,
     shades: { 100: '#fef3c7', 500: '#f59e0b', 700: '#b45309' },
     classes: {
       background: 'bg-amber-500',
@@ -221,7 +221,7 @@ const colorPalette: Record<NamedColor, ColorPaletteEntry> = {
   }),
   orange: color({
     name: 'orange',
-    label: 'Orange',
+    label: $localize`:Name of a colour in the colour picker:Orange`,
     shades: { 100: '#ffedd5', 500: '#f97316', 700: '#c2410c' },
     classes: {
       background: 'bg-orange-500',

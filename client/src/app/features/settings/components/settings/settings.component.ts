@@ -7,7 +7,9 @@ import { PreferenceListComponent } from '../preference-list/preference-list.comp
 @Component({
   selector: 'app-settings',
   template: `
-    <app-section-header heading="User Preferences" />
+    <app-section-header
+      i18n-heading="Section heading for the user preference list"
+      heading="User Preferences" />
 
     @for (group of visibleGroups(); track group.key) {
       <section class="mt-6">

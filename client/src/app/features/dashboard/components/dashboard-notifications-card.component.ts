@@ -24,7 +24,11 @@ const PAGE_SIZE = 20;
     <div
       class="border-border bg-card flex h-full min-h-24 flex-col overflow-hidden rounded border p-6 shadow-sm lg:absolute lg:inset-0">
       <div class="mb-2 flex items-center justify-between">
-        <h3 class="text-foreground text-base font-semibold">Notifications</h3>
+        <h3 class="text-foreground text-base font-semibold">
+          <span i18n="Heading of the dashboard notifications card">
+            Notifications
+          </span>
+        </h3>
       </div>
 
       @if (isInitialLoad()) {
@@ -40,7 +44,10 @@ const PAGE_SIZE = 20;
               </li>
             } @empty {
               <li>
-                <app-empty-state compact title="You're all caught up!">
+                <app-empty-state
+                  compact
+                  i18n-title="Empty state when there are no notifications"
+                  title="You're all caught up!">
                   <svg emptyStateIcon lucideBell></svg>
                 </app-empty-state>
               </li>
@@ -56,7 +63,7 @@ const PAGE_SIZE = 20;
             class="mt-4 w-full shrink-0"
             [disabled]="resource.isLoading()"
             (click)="loadMore()">
-            Load more
+            <span i18n="Button that loads more notifications">Load more</span>
           </button>
         }
       }

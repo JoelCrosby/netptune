@@ -31,16 +31,28 @@ export interface MoveMatchingTasksDialogData {
     TaskScopeIdComponent,
   ],
   template: `
-    <app-dialog-title>Move matching tasks</app-dialog-title>
+    <app-dialog-title
+      i18n="Title of the dialog for moving tasks that share a status">
+      Move matching tasks
+    </app-dialog-title>
 
     <div class="flex w-full max-w-full min-w-0 flex-col gap-4">
       <p class="text-muted text-sm">
-        {{ data.tasks.length }}
-        {{ data.tasks.length === 1 ? 'task has' : 'tasks have' }} the status
-        <span class="font-medium">{{ data.statusName }}</span>
-        . Choose which to move into
-        <span class="font-medium">{{ data.groupName }}</span>
-        .
+        <span
+          i18n="
+            Explains how many tasks share a status and asks which to move.
+            STATUS is the current status name and GROUP is the destination board
+            group
+          ">
+          {data.tasks.length, plural,
+            =1 {1 task has}
+            other {{{ data.tasks.length }} tasks have}
+          }
+          the status <span class="font-medium">{{ data.statusName }}</span
+          >. Choose which to move into
+          <span class="font-medium">{{ data.groupName }}</span
+          >.
+        </span>
       </p>
 
       <div
@@ -48,10 +60,25 @@ export interface MoveMatchingTasksDialogData {
         <app-checkbox
           [checked]="allSelected()"
           (changed)="toggleAll($event)"
-          [attr.aria-label]="'Select all tasks'" />
-        <span class="text-muted text-xs font-semibold">Key</span>
-        <span class="text-muted text-xs font-semibold">Task</span>
-        <span class="text-muted text-xs font-semibold">Current group</span>
+          i18n-aria-label="
+            Accessible label for the checkbox that selects every listed task
+          "
+          aria-label="Select all tasks" />
+        <span
+          class="text-muted text-xs font-semibold"
+          i18n="Column heading for the task key">
+          Key
+        </span>
+        <span
+          class="text-muted text-xs font-semibold"
+          i18n="Column heading for the task name">
+          Task
+        </span>
+        <span
+          class="text-muted text-xs font-semibold"
+          i18n="Column heading for the board group a task is currently in">
+          Current group
+        </span>
       </div>
 
       <div class="flex max-h-96 flex-col gap-2 overflow-y-auto">
@@ -81,16 +108,24 @@ export interface MoveMatchingTasksDialogData {
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="close()">Cancel</button>
+      <button app-stroked-button type="button" (click)="close()">
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button
         app-flat-button
         color="primary"
         type="button"
         [disabled]="selectedIds().size === 0"
         (click)="move()">
-        Move
-        {{ selectedIds().size }}
-        {{ selectedIds().size === 1 ? 'task' : 'tasks' }}
+        <ng-container
+          i18n="
+            Button that moves the selected tasks into the chosen board group
+          ">
+          {selectedIds().size, plural,
+            =1 {Move 1 task}
+            other {Move {{ selectedIds().size }} tasks}
+          }
+        </ng-container>
       </button>
     </div>
   `,

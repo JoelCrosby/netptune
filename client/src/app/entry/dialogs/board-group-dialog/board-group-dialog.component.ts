@@ -36,22 +36,26 @@ export interface BoardGroupDialogData {
     StrokedButtonComponent,
     DialogCloseDirective,
   ],
-  template: `<app-dialog-title>{{
-      isEdit ? 'Edit Group' : 'Create Group'
-    }}</app-dialog-title>
+  template: `
+    <app-dialog-title>{{ titleLabel }}</app-dialog-title>
 
     <div app-dialog-content>
       <form (submit)="onSubmit($event)">
         <app-form-input
           [formField]="groupForm.group"
+          i18n-label="Label of the board group name field"
           label="Group Name"
-          maxLength="128">
-        </app-form-input>
+          maxLength="128"></app-form-input>
 
         @if (statuses.canRead()) {
-          <app-form-select [formField]="groupForm.statusId" label="Status">
+          <app-form-select
+            [formField]="groupForm.statusId"
+            i18n-label="Label of the status field"
+            label="Status">
             <app-form-select-option [value]="null">
-              No status
+              <span i18n="Option that leaves a board group without a status">
+                No status
+              </span>
             </app-form-select-option>
             @for (status of statuses.value(); track status.id) {
               <app-form-select-option [value]="status.id">
@@ -64,11 +68,14 @@ export interface BoardGroupDialogData {
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Close</button>
-      <button app-flat-button type="button" (click)="onSubmit($event)">
-        {{ isEdit ? 'Save' : 'Create Group' }}
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
-    </div> `,
+      <button app-flat-button type="button" (click)="onSubmit($event)">
+        {{ submitLabel }}
+      </button>
+    </div>
+  `,
 })
 export class BoardGroupDialogComponent {
   private store = inject(Store);
@@ -79,6 +86,15 @@ export class BoardGroupDialogComponent {
 
   isEdit = this.data.boardGroupId !== undefined;
 
+  /** Ternaries in a template expression cannot be marked, so build the copy here. */
+  readonly titleLabel = this.isEdit
+    ? $localize`:Title of the dialog for editing a board group:Edit Group`
+    : $localize`:Title of the dialog for creating a board group:Create Group`;
+
+  readonly submitLabel = this.isEdit
+    ? $localize`:Confirms and stores an edit:Save`
+    : $localize`:Button that creates the board group:Create Group`;
+
   groupFormModel = signal({
     group: this.data.name ?? '',
     statusId: this.data.statusId ?? null,
@@ -87,7 +103,10 @@ export class BoardGroupDialogComponent {
   groupForm = form(this.groupFormModel, (schema) => {
     apply(
       schema.group,
-      requiredTextSchema({ label: 'Group name', maxLength: 128 })
+      requiredTextSchema({
+        label: $localize`:Label shown in the interface:Group name`,
+        maxLength: 128,
+      })
     );
   });
 

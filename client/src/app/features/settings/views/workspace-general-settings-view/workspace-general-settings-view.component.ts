@@ -5,10 +5,12 @@ import { WorkspaceSettings } from '@settings/components/workspace-settings/works
 @Component({
   selector: 'app-workspace-general-settings-view',
   imports: [WorkspaceDetailsComponent, WorkspaceSettings],
-  template: `<app-workspace-details />
+  template: `
+    <app-workspace-details />
 
     <div class="border-border my-8 border-b-2"></div>
 
-    <app-workspace-settings />`,
+    <app-workspace-settings />
+  `,
 })
 export class WorkspaceGeneralSettingsViewComponent {}

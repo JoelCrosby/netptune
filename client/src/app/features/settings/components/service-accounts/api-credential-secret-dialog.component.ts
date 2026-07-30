@@ -18,15 +18,23 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Save API Credential</app-dialog-title>
+  template: `
+    <app-dialog-title
+      i18n="Title of the dialog showing a newly created API secret">
+      Save API Credential
+    </app-dialog-title>
 
     <div app-dialog-content>
       <div
         class="border-warn/40 bg-warn/5 mb-5 flex gap-3 rounded border px-4 py-3">
-        <svg lucideTriangleAlert class="text-warn mt-0.5 h-5 w-5 shrink-0"></svg>
+        <svg
+          lucideTriangleAlert
+          class="text-warn mt-0.5 h-5 w-5 shrink-0"></svg>
         <p class="text-sm">
-          This secret is shown once. Copy it now and store it in a secret
-          manager. Netptune cannot recover it later.
+          <span i18n="Warns that an API secret cannot be retrieved again">
+            This secret is shown once. Copy it now and store it in a secret
+            manager. Netptune cannot recover it later.
+          </span>
         </p>
       </div>
 
@@ -42,8 +50,10 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 
       @if (copyError()) {
         <p class="text-warn mt-2 text-sm">
-          The browser could not copy the secret automatically. Select it above
-          and copy it manually.
+          <span i18n="Shown when copying the secret to the clipboard fails">
+            The browser could not copy the secret automatically. Select it above
+            and copy it manually.
+          </span>
         </p>
       }
     </div>
@@ -52,16 +62,23 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
       <button app-stroked-button type="button" (click)="copy()">
         @if (copied()) {
           <svg lucideCheck class="h-4 w-4"></svg>
-          Copied
+          <span i18n="Confirms the secret was copied to the clipboard">
+            Copied
+          </span>
         } @else {
           <svg lucideCopy class="h-4 w-4"></svg>
-          Copy Secret
+          <span i18n="Button that copies the API secret to the clipboard">
+            Copy Secret
+          </span>
         }
       </button>
       <button app-flat-button type="button" (click)="close()">
-        I Have Saved It
+        <span i18n="Button acknowledging the secret has been stored safely">
+          I Have Saved It
+        </span>
       </button>
-    </div>`,
+    </div>
+  `,
 })
 export class ApiCredentialSecretDialogComponent {
   private readonly dialogRef =

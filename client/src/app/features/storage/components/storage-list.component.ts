@@ -72,10 +72,12 @@ import {
       (sortChange)="setSort($event)" />
 
     <app-datatable
+      i18n-errorMessage="Shown when the file list fails to load"
       errorMessage="Files could not be loaded."
       containerClass="overflow-x-auto"
       tableClass="min-w-190 table-fixed"
       emptyCellClass="py-12"
+      i18n-itemLabel="Plural noun for files, used in the selection summary"
       itemLabel="files"
       [data]="data"
       [sort]="sort()"
@@ -100,7 +102,11 @@ import {
             <span class="truncate">{{ file.taskName }}</span>
           </a>
         } @else {
-          <span class="text-muted">Inline media</span>
+          <span
+            class="text-muted"
+            i18n="File origin: embedded in a description or comment">
+            Inline media
+          </span>
         }
       </ng-template>
 
@@ -114,7 +120,11 @@ import {
             <span class="truncate">{{ file.uploadedByDisplayName }}</span>
           </div>
         } @else {
-          <span class="text-muted">Unknown</span>
+          <span
+            class="text-muted"
+            i18n="Shown in place of a value that is not known">
+            Unknown
+          </span>
         }
       </ng-template>
 
@@ -138,6 +148,7 @@ import {
             [href]="file.contentUrl"
             target="_blank"
             rel="noopener"
+            i18n-aria-label="Accessible label for the button that opens a file"
             aria-label="Open file">
             <svg lucideExternalLink class="h-4 w-4"></svg>
           </a>
@@ -145,6 +156,9 @@ import {
             app-button-link
             class="h-8 min-h-8 w-8 px-0"
             [href]="file.contentUrl"
+            i18n-aria-label="
+              Accessible label for the button that downloads a file
+            "
             aria-label="Download file">
             <svg lucideDownload class="h-4 w-4"></svg>
           </a>
@@ -156,6 +170,9 @@ import {
               type="button"
               [disabled]="deletingId() === file.id"
               (click)="deleteFile(file.id)"
+              i18n-aria-label="
+                Accessible label for the button that deletes a file
+              "
               aria-label="Delete file">
               <svg lucideTrash2 class="h-4 w-4"></svg>
             </button>
@@ -166,7 +183,9 @@ import {
       <app-empty-state
         appDatatableEmpty
         compact
+        i18n-title="Empty state for the file list"
         title="No files match the current filters."
+        i18n-description="Advice on the empty file list"
         description="Try changing or clearing the filters.">
         <svg emptyStateIcon lucideFiles class="h-8 w-8"></svg>
       </app-empty-state>

@@ -11,11 +11,19 @@ import { TaskDetailService } from './task-detail.service';
   template: `
     @if (canDeleteTask()) {
       <div>
-        <h4 class="font-sm mt-4 mb-2 font-semibold">Actions</h4>
+        <h4 class="font-sm mt-4 mb-2 font-semibold">
+          <span i18n="Section heading for actions available on a task">
+            Actions
+          </span>
+        </h4>
         <div class="flex gap-2">
           <button
             app-stroked-button
+            i18n-aria-label="
+              Accessible label for the button that deletes the task
+            "
             aria-label="Delete Task"
+            i18n-appTooltip="Tooltip on the button that deletes the task"
             appTooltip="Delete Task"
             (click)="deleteClicked()">
             <svg lucideTrash2 class="h-4 w-4"></svg>

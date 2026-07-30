@@ -12,6 +12,7 @@ import {
   host: { class: 'block' },
   template: `
     <apx-chart
+      i18n-aria-label="Accessible name of the cycle-time chart"
       aria-label="Weekly median and 85th-percentile cycle time"
       [series]="series()"
       [chart]="chart"

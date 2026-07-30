@@ -43,9 +43,11 @@ import { Component } from '@angular/core';
       }
     `,
   ],
-  template: `<div class="dialog-inner custom-scroll">
-    <ng-template cdkPortalOutlet></ng-template>
-  </div>`,
+  template: `
+    <div class="dialog-inner custom-scroll">
+      <ng-template cdkPortalOutlet></ng-template>
+    </div>
+  `,
   imports: [ɵɵCdkPortalOutlet],
 })
 export class DialogContainerComponent extends CdkDialogContainer {}

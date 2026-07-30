@@ -14,6 +14,7 @@ import { FilterActionButtonComponent } from '@static/components/filter-action-bu
   ],
   template: `
     <app-filter-action-button
+      i18n-label="Label on the control that filters tasks by status"
       label="Filter by Status"
       [icon]="lucideCircleDashed"
       [color]="selectedCount() ? 'primary' : undefined"

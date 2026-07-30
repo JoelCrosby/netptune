@@ -28,17 +28,21 @@ import { LucideUserRoundPlus } from '@lucide/angular';
     StrokedButtonComponent,
     FormField,
   ],
-  template: `<app-dialog-title>Invite Users to Workspace</app-dialog-title>
+  template: `
+    <app-dialog-title
+      i18n="Title of the dialog for inviting people to a workspace">
+      Invite Users to Workspace
+    </app-dialog-title>
 
     <app-dialog-content>
       <form (submit)="add($event)">
         <app-form-input
           [formField]="inviteForm.email"
+          i18n-label="Label of the field for an invitee's e-mail address"
           label="Invitee Email"
           maxLength="128"
           type="email"
-          [icon]="lucideUserRoundPlus">
-        </app-form-input>
+          [icon]="lucideUserRoundPlus"></app-form-input>
 
         <div class="max-h-124 min-h-32 overflow-y-auto">
           @for (user of users(); track user) {
@@ -47,7 +51,9 @@ import { LucideUserRoundPlus } from '@lucide/angular';
             </div>
           } @empty {
             <div class="app-list-message">
-              Email addresses entered below will show here.
+              <span i18n="Empty state of the pending invitee list">
+                Email addresses entered below will show here.
+              </span>
             </div>
           }
         </div>
@@ -55,15 +61,20 @@ import { LucideUserRoundPlus } from '@lucide/angular';
     </app-dialog-content>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="close()">Close</button>
+      <button app-stroked-button type="button" (click)="close()">
+        <span i18n="Dismisses a dialog without saving">Close</span>
+      </button>
       <button
         app-flat-button
         type="button"
         [disabled]="users().length === 0"
         (click)="getResult()">
-        Invite Users
+        <span i18n="Button that sends the workspace invitations">
+          Invite Users
+        </span>
       </button>
-    </div> `,
+    </div>
+  `,
 })
 export class InviteDialogComponent {
   lucideUserRoundPlus = LucideUserRoundPlus;
@@ -78,8 +89,12 @@ export class InviteDialogComponent {
   });
 
   inviteForm = form(this.inviteFormModel, (schema) => {
-    required(schema.email, { message: 'Email is required.' });
-    email(schema.email, { message: 'Enter a valid email address.' });
+    required(schema.email, {
+      message: $localize`:Body of a dialog or validation message:Email is required.`,
+    });
+    email(schema.email, {
+      message: $localize`:Body of a dialog or validation message:Enter a valid email address.`,
+    });
     maxLength(schema.email, 128);
   });
 

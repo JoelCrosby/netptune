@@ -55,12 +55,21 @@ import { AutomationsService } from '../../services/automations.service';
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
-      <app-page-header title="Automation">
-        <a app-stroked-button [routerLink]="['../']">Back</a>
+      <app-page-header
+        i18n-title="Page title for a single automation"
+        title="Automation">
+        <a
+          app-stroked-button
+          [routerLink]="['../']"
+          i18n="Link back to the automation list">
+          Back
+        </a>
         @if (rule(); as rule) {
           <button app-stroked-button type="button" (click)="onDryRun(rule)">
             <svg lucideFlaskConical class="h-4 w-4"></svg>
-            Test
+            <span i18n="Button that tests the automation against a task">
+              Test
+            </span>
           </button>
         }
         @if (canManage() && rule(); as rule) {
@@ -71,15 +80,15 @@ import { AutomationsService } from '../../services/automations.service';
             (click)="onToggle(rule)">
             @if (rule.isEnabled) {
               <svg lucideCirclePause class="h-4 w-4"></svg>
-              Disable
+              <span i18n="Button that switches an automation off">Disable</span>
             } @else {
               <svg lucideCirclePlay class="h-4 w-4"></svg>
-              Enable
+              <span i18n="Button that switches an automation on">Enable</span>
             }
           </button>
           <a app-flat-button color="primary" [routerLink]="['edit']">
             <svg lucideSettings2 class="h-4 w-4"></svg>
-            Edit
+            <span i18n="Button that edits the automation">Edit</span>
           </a>
         }
       </app-page-header>
@@ -88,7 +97,9 @@ import { AutomationsService } from '../../services/automations.service';
         <app-page-loading />
       } @else if (error()) {
         <app-error-state
+          i18n-title="Shown when a single automation fails to load"
           title="Automation could not be loaded"
+          i18n-description="Advice shown when a page fails to load"
           description="Check your connection and try again."
           (retry)="load()" />
       } @else if (rule(); as rule) {
@@ -105,12 +116,16 @@ import { AutomationsService } from '../../services/automations.service';
               role="alert">
               <h2 class="flex items-center gap-2 text-sm font-semibold">
                 <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
-                This automation was disabled automatically
+                <span i18n="Heading of the auto-disabled warning">
+                  This automation was disabled automatically
+                </span>
               </h2>
               <p class="text-sm">{{ rule.autoDisabledReason }}</p>
               <p class="text-foreground/60 text-sm">
-                Fix the underlying problem before enabling it again, or it will
-                be disabled once more.
+                <span i18n="Advice on the auto-disabled warning">
+                  Fix the underlying problem before enabling it again, or it
+                  will be disabled once more.
+                </span>
               </p>
             </section>
           }
@@ -121,7 +136,9 @@ import { AutomationsService } from '../../services/automations.service';
               role="alert">
               <h2 class="flex items-center gap-2 text-sm font-semibold">
                 <svg lucideTriangleAlert class="text-warn h-4 w-4"></svg>
-                This automation references items that no longer exist
+                <span i18n="Heading of the broken-reference warning">
+                  This automation references items that no longer exist
+                </span>
               </h2>
               <ul class="ml-6 list-disc text-sm">
                 @for (warning of rule.warnings; track $index) {
@@ -129,8 +146,10 @@ import { AutomationsService } from '../../services/automations.service';
                 }
               </ul>
               <p class="text-foreground/60 text-sm">
-                Edit the automation to point these at something that still
-                exists, otherwise its runs will fail.
+                <span i18n="Advice on the broken-reference warning">
+                  Edit the automation to point these at something that still
+                  exists, otherwise its runs will fail.
+                </span>
               </p>
             </section>
           }
@@ -144,9 +163,13 @@ import { AutomationsService } from '../../services/automations.service';
 
           <section class="flex flex-col gap-3">
             <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Run History</h2>
+              <h2 class="text-lg font-semibold">
+                <span i18n="Heading above the automation run history">
+                  Run History
+                </span>
+              </h2>
               <button app-stroked-button type="button" (click)="load()">
-                Refresh
+                <span i18n="Button that reloads the run history">Refresh</span>
               </button>
             </div>
             <app-automation-runs-table [runs]="runs()" />
@@ -234,21 +257,26 @@ export class AutomationDetailViewComponent {
       .subscribe({
         next: () => {
           this.snackbar.open(
-            rule.isEnabled ? 'Automation disabled' : 'Automation enabled'
+            rule.isEnabled
+              ? $localize`:Confirmation after switching an automation off:Automation disabled`
+              : $localize`:Confirmation after switching an automation on:Automation enabled`
           );
           this.load();
         },
-        error: () => this.snackbar.error('Automation could not be updated'),
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error after failing to update an automation:Automation could not be updated`
+          ),
       });
   }
 
   onDelete(rule: AutomationRule) {
     this.confirmation
       .open({
-        title: 'Delete Automation',
+        title: $localize`:Title of the confirmation dialog for deleting an automation:Delete Automation`,
         message: `Delete "${rule.name}"? This cannot be undone.`,
-        acceptLabel: 'Delete',
-        cancelLabel: 'Cancel',
+        acceptLabel: $localize`:Confirms a destructive action:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
         color: 'warn',
       })
       .pipe(
@@ -263,10 +291,15 @@ export class AutomationDetailViewComponent {
       )
       .subscribe({
         next: () => {
-          this.snackbar.open('Automation deleted');
+          this.snackbar.open(
+            $localize`:Confirmation after deleting an automation:Automation deleted`
+          );
           void this.router.navigate(['../'], { relativeTo: this.route });
         },
-        error: () => this.snackbar.error('Automation could not be deleted'),
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error after failing to delete an automation:Automation could not be deleted`
+          ),
       });
   }
 

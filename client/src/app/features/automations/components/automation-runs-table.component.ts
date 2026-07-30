@@ -35,11 +35,21 @@ import {
     <app-table>
       <thead appTableHead>
         <tr appTableHeaderRow>
-          <th class="px-4 py-3">Time</th>
-          <th class="px-4 py-3">Trigger</th>
-          <th class="px-4 py-3">Target</th>
-          <th class="px-4 py-3">Status</th>
-          <th class="px-4 py-3">Result</th>
+          <th class="px-4 py-3" i18n="Column heading for the run time">Time</th>
+          <th class="px-4 py-3">
+            <span i18n="Column heading for the trigger">Trigger</span>
+          </th>
+          <th class="px-4 py-3">
+            <span i18n="Column heading for the task a run acted on">
+              Target
+            </span>
+          </th>
+          <th class="px-4 py-3">
+            <span i18n="Column heading for the run status">Status</span>
+          </th>
+          <th class="px-4 py-3">
+            <span i18n="Column heading for the run result">Result</span>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -69,7 +79,10 @@ import {
                 <p class="mb-2 text-xs">{{ run.message }}</p>
               }
               @if (run.actionResults.length) {
-                <ol class="space-y-1.5" aria-label="Action results">
+                <ol
+                  class="space-y-1.5"
+                  i18n-aria-label="Accessible name of the action result list"
+                  aria-label="Action results">
                   @for (result of run.actionResults; track result.id) {
                     <li class="flex items-start gap-2 text-xs">
                       <span
@@ -98,14 +111,20 @@ import {
                   }
                 </ol>
               } @else {
-                <span class="text-xs">No action results recorded</span>
+                <span
+                  class="text-xs"
+                  i18n="Shown when a run recorded no action results">
+                  No action results recorded
+                </span>
               }
             </td>
           </tr>
         } @empty {
           <tr>
             <td appTableEmptyCell colspan="5">
-              No automation runs recorded yet.
+              <span i18n="Empty state for the run history">
+                No automation runs recorded yet.
+              </span>
             </td>
           </tr>
         }

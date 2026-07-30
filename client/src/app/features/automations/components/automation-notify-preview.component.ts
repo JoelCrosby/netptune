@@ -11,14 +11,21 @@ import { AutomationAction } from '../models/automation.models';
   template: `
     <section
       class="border-border rounded-md border"
+      i18n-aria-label="Accessible name of the notification preview"
       aria-label="Notification preview">
       <header class="border-border bg-foreground/3 border-b px-3 py-2">
-        <h4 class="text-xs font-bold tracking-wider">PREVIEW</h4>
+        <h4 class="text-xs font-bold tracking-wider">
+          <span i18n="Heading above the notification preview">PREVIEW</span>
+        </h4>
       </header>
 
       <div class="flex flex-col gap-3 p-3 text-sm">
         <div class="flex flex-col gap-1">
-          <span class="text-foreground/60 text-xs">Notifies</span>
+          <span
+            class="text-foreground/60 text-xs"
+            i18n="Label before the notification recipients">
+            Notifies
+          </span>
           <ul class="flex flex-col gap-1">
             @for (recipient of recipients(); track $index) {
               <li
@@ -32,16 +39,20 @@ import { AutomationAction } from '../models/automation.models';
         </div>
 
         <div class="flex flex-col gap-1">
-          <span class="text-foreground/60 text-xs">Message</span>
+          <span
+            class="text-foreground/60 text-xs"
+            i18n="Label before the notification message">
+            Message
+          </span>
           <p class="leading-relaxed whitespace-pre-wrap">
             @for (segment of message(); track $index) {
               @if (segment.isUnknown) {
                 <span class="text-warn font-medium">{{ segment.text }}</span>
               } @else if (segment.isVariable) {
                 <span
-                  class="text-primary bg-primary/10 rounded px-1 font-medium"
-                  >{{ segment.text }}</span
-                >
+                  class="text-primary bg-primary/10 rounded px-1 font-medium">
+                  {{ segment.text }}
+                </span>
               } @else {
                 <span>{{ segment.text }}</span>
               }
@@ -50,8 +61,10 @@ import { AutomationAction } from '../models/automation.models';
         </div>
 
         <p class="text-foreground/60 text-xs">
-          Highlighted values come from variables — the rule fills them in when
-          it runs.
+          <span i18n="Explains highlighted variables in the preview">
+            Highlighted values come from variables — the rule fills them in when
+            it runs.
+          </span>
         </p>
       </div>
     </section>

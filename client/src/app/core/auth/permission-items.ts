@@ -49,341 +49,405 @@ export type PermissionLabels = {
 
 export const netptunePermissionLabels: PermissionLabels = {
   workspace: {
-    read: { key: 'workspace.read', label: 'View Workspace', icon: LucideEye },
+    read: {
+      key: 'workspace.read',
+      label: $localize`:Name of a workspace permission:View Workspace`,
+      icon: LucideEye,
+    },
     create: {
       key: 'workspace.create',
-      label: 'Create Workspace',
+      label: $localize`:Name of a workspace permission:Create Workspace`,
       icon: LucideCirclePlus,
     },
     update: {
       key: 'workspace.update',
-      label: 'Edit Workspace',
+      label: $localize`:Name of a workspace permission:Edit Workspace`,
       icon: LucidePencil,
     },
     delete: {
       key: 'workspace.delete',
-      label: 'Delete Workspace',
+      label: $localize`:Name of a workspace permission:Delete Workspace`,
       icon: LucideTrash2,
     },
     deletePermanent: {
       key: 'workspace.delete_permanent',
-      label: 'Permanently Delete Workspace',
+      label: $localize`:Name of a workspace permission:Permanently Delete Workspace`,
       icon: LucideShieldX,
     },
   },
   members: {
-    read: { key: 'members.read', label: 'View Members', icon: LucideUsers },
+    read: {
+      key: 'members.read',
+      label: $localize`:Name of a workspace permission:View Members`,
+      icon: LucideUsers,
+    },
     invite: {
       key: 'members.invite',
-      label: 'Invite Members',
+      label: $localize`:Name of a workspace permission:Invite Members`,
       icon: LucideUserPlus,
     },
     remove: {
       key: 'members.remove',
-      label: 'Remove Members',
+      label: $localize`:Name of a workspace permission:Remove Members`,
       icon: LucideUserMinus,
     },
     updateProfile: {
       key: 'members.update_profile',
-      label: 'Edit Member Profiles',
+      label: $localize`:Name of a workspace permission:Edit Member Profiles`,
       icon: LucideUserX,
     },
     updatePermissions: {
       key: 'members.update_permission',
-      label: 'Update Member Permissions',
+      label: $localize`:Name of a workspace permission:Update Member Permissions`,
       icon: LucideUserLock,
     },
     updateRole: {
       key: 'members.update_role',
-      label: 'Update Member Roles',
+      label: $localize`:Name of a workspace permission:Update Member Roles`,
       icon: LucideUserLock,
     },
   },
   projects: {
-    read: { key: 'projects.read', label: 'View Projects', icon: LucideEye },
+    read: {
+      key: 'projects.read',
+      label: $localize`:Name of a workspace permission:View Projects`,
+      icon: LucideEye,
+    },
     create: {
       key: 'projects.create',
-      label: 'Create Projects',
+      label: $localize`:Name of a workspace permission:Create Projects`,
       icon: LucideCirclePlus,
     },
     update: {
       key: 'projects.update',
-      label: 'Edit Projects',
+      label: $localize`:Name of a workspace permission:Edit Projects`,
       icon: LucidePencil,
     },
     delete: {
       key: 'projects.delete',
-      label: 'Delete Projects',
+      label: $localize`:Name of a workspace permission:Delete Projects`,
       icon: LucideTrash2,
     },
   },
   boards: {
-    read: { key: 'boards.read', label: 'View Boards', icon: LucideEye },
+    read: {
+      key: 'boards.read',
+      label: $localize`:Name of a workspace permission:View Boards`,
+      icon: LucideEye,
+    },
     create: {
       key: 'boards.create',
-      label: 'Create Boards',
+      label: $localize`:Name of a workspace permission:Create Boards`,
       icon: LucideLayoutDashboard,
     },
-    update: { key: 'boards.update', label: 'Edit Boards', icon: LucidePencil },
+    update: {
+      key: 'boards.update',
+      label: $localize`:Name of a workspace permission:Edit Boards`,
+      icon: LucidePencil,
+    },
     delete: {
       key: 'boards.delete',
-      label: 'Delete Boards',
+      label: $localize`:Name of a workspace permission:Delete Boards`,
       icon: LucideTrash2,
     },
   },
   boardGroups: {
     read: {
       key: 'board_groups.read',
-      label: 'View Board Groups',
+      label: $localize`:Name of a workspace permission:View Board Groups`,
       icon: LucideEye,
     },
     create: {
       key: 'board_groups.create',
-      label: 'Create Board Groups',
+      label: $localize`:Name of a workspace permission:Create Board Groups`,
       icon: LucideCirclePlus,
     },
     update: {
       key: 'board_groups.update',
-      label: 'Edit Board Groups',
+      label: $localize`:Name of a workspace permission:Edit Board Groups`,
       icon: LucidePencil,
     },
     delete: {
       key: 'board_groups.delete',
-      label: 'Delete Board Groups',
+      label: $localize`:Name of a workspace permission:Delete Board Groups`,
       icon: LucideTrash2,
     },
   },
   tasks: {
-    read: { key: 'tasks.read', label: 'View Tasks', icon: LucideClipboardList },
+    read: {
+      key: 'tasks.read',
+      label: $localize`:Name of a workspace permission:View Tasks`,
+      icon: LucideClipboardList,
+    },
     create: {
       key: 'tasks.create',
-      label: 'Create Tasks',
+      label: $localize`:Name of a workspace permission:Create Tasks`,
       icon: LucideCirclePlus,
     },
-    update: { key: 'tasks.update', label: 'Edit Tasks', icon: LucideFilePen },
+    update: {
+      key: 'tasks.update',
+      label: $localize`:Name of a workspace permission:Edit Tasks`,
+      icon: LucideFilePen,
+    },
     delete: {
       key: 'tasks.delete',
-      label: 'Delete Own Tasks',
+      label: $localize`:Name of a workspace permission:Delete Own Tasks`,
       icon: LucideTrash2,
     },
     deleteAny: {
       key: 'tasks.delete_any',
-      label: 'Delete Any Task',
+      label: $localize`:Name of a workspace permission:Delete Any Task`,
       icon: LucideSquareX,
     },
     restore: {
       key: 'tasks.restore',
-      label: 'Restore Tasks',
+      label: $localize`:Name of a workspace permission:Restore Tasks`,
       icon: LucideArchiveRestore,
     },
-    move: { key: 'tasks.move', label: 'Move Tasks', icon: LucideMoveRight },
+    move: {
+      key: 'tasks.move',
+      label: $localize`:Name of a workspace permission:Move Tasks`,
+      icon: LucideMoveRight,
+    },
     reassign: {
       key: 'tasks.reassign',
-      label: 'Reassign Tasks',
+      label: $localize`:Name of a workspace permission:Reassign Tasks`,
       icon: LucideArrowRightLeft,
     },
     export: {
       key: 'tasks.export',
-      label: 'Export Tasks',
+      label: $localize`:Name of a workspace permission:Export Tasks`,
       icon: LucideDownload,
     },
     import: {
       key: 'tasks.import',
-      label: 'Import Tasks',
+      label: $localize`:Name of a workspace permission:Import Tasks`,
       icon: LucideUpload,
     },
   },
   sprints: {
     read: {
       key: 'sprints.read',
-      label: 'View Sprints',
+      label: $localize`:Name of a workspace permission:View Sprints`,
       icon: LucideCalendarDays,
     },
     create: {
       key: 'sprints.create',
-      label: 'Create Sprints',
+      label: $localize`:Name of a workspace permission:Create Sprints`,
       icon: LucideCirclePlus,
     },
     update: {
       key: 'sprints.update',
-      label: 'Edit Sprints',
+      label: $localize`:Name of a workspace permission:Edit Sprints`,
       icon: LucidePencil,
     },
     delete: {
       key: 'sprints.delete',
-      label: 'Delete Sprints',
+      label: $localize`:Name of a workspace permission:Delete Sprints`,
       icon: LucideTrash2,
     },
     manageTasks: {
       key: 'sprints.manage_tasks',
-      label: 'Manage Sprint Tasks',
+      label: $localize`:Name of a workspace permission:Manage Sprint Tasks`,
       icon: LucideClipboardList,
     },
   },
   comments: {
     read: {
       key: 'comments.read',
-      label: 'View Comments',
+      label: $localize`:Name of a workspace permission:View Comments`,
       icon: LucideMessageCircle,
     },
     create: {
       key: 'comments.create',
-      label: 'Post Comments',
+      label: $localize`:Name of a workspace permission:Post Comments`,
       icon: LucideMessageCirclePlus,
     },
     deleteOwn: {
       key: 'comments.delete_own',
-      label: 'Delete Own Comments',
+      label: $localize`:Name of a workspace permission:Delete Own Comments`,
       icon: LucideMessageCircleX,
     },
     deleteAny: {
       key: 'comments.delete_any',
-      label: 'Delete Any Comment',
+      label: $localize`:Name of a workspace permission:Delete Any Comment`,
       icon: LucideMessageCircleX,
     },
   },
   tags: {
-    read: { key: 'tags.read', label: 'View Tags', icon: LucideTag },
+    read: {
+      key: 'tags.read',
+      label: $localize`:Name of a workspace permission:View Tags`,
+      icon: LucideTag,
+    },
     create: {
       key: 'tags.create',
-      label: 'Create Tags',
+      label: $localize`:Name of a workspace permission:Create Tags`,
       icon: LucideCirclePlus,
     },
-    update: { key: 'tags.update', label: 'Edit Tags', icon: LucidePencil },
-    delete: { key: 'tags.delete', label: 'Delete Tags', icon: LucideTrash2 },
-    assign: { key: 'tags.assign', label: 'Assign Tags', icon: LucideTags },
+    update: {
+      key: 'tags.update',
+      label: $localize`:Name of a workspace permission:Edit Tags`,
+      icon: LucidePencil,
+    },
+    delete: {
+      key: 'tags.delete',
+      label: $localize`:Name of a workspace permission:Delete Tags`,
+      icon: LucideTrash2,
+    },
+    assign: {
+      key: 'tags.assign',
+      label: $localize`:Name of a workspace permission:Assign Tags`,
+      icon: LucideTags,
+    },
   },
   statuses: {
-    read: { key: 'statuses.read', label: 'View Statuses', icon: LucideEye },
+    read: {
+      key: 'statuses.read',
+      label: $localize`:Name of a workspace permission:View Statuses`,
+      icon: LucideEye,
+    },
     manage: {
       key: 'statuses.manage',
-      label: 'Manage Statuses',
+      label: $localize`:Name of a workspace permission:Manage Statuses`,
       icon: LucidePencil,
     },
   },
   relationTypes: {
     read: {
       key: 'relation_types.read',
-      label: 'View Relation Types',
+      label: $localize`:Name of a workspace permission:View Relation Types`,
       icon: LucideEye,
     },
     manage: {
       key: 'relation_types.manage',
-      label: 'Manage Relation Types',
+      label: $localize`:Name of a workspace permission:Manage Relation Types`,
       icon: LucidePencil,
     },
   },
   activity: {
     read: {
       key: 'activity.read',
-      label: 'View Activity',
+      label: $localize`:Name of a workspace permission:View Activity`,
       icon: LucideActivity,
     },
   },
   audit: {
-    read: { key: 'audit.read', label: 'View Audit Log', icon: LucideShield },
+    read: {
+      key: 'audit.read',
+      label: $localize`:Name of a workspace permission:View Audit Log`,
+      icon: LucideShield,
+    },
     export: {
       key: 'audit.export',
-      label: 'Export Audit Log',
+      label: $localize`:Name of a workspace permission:Export Audit Log`,
       icon: LucideDownload,
     },
   },
   notifications: {
     read: {
       key: 'notifications.read',
-      label: 'View Notifications',
+      label: $localize`:Name of a workspace permission:View Notifications`,
       icon: LucideBell,
     },
     update: {
       key: 'notifications.update',
-      label: 'Manage Notifications',
+      label: $localize`:Name of a workspace permission:Manage Notifications`,
       icon: LucideBellDot,
     },
   },
   automations: {
     read: {
       key: 'automations.read',
-      label: 'View Automations',
+      label: $localize`:Name of a workspace permission:View Automations`,
       icon: LucideWorkflow,
     },
     manage: {
       key: 'automations.manage',
-      label: 'Manage Automations',
+      label: $localize`:Name of a workspace permission:Manage Automations`,
       icon: LucideWorkflow,
     },
   },
   flags: {
     read: {
       key: 'flags.read',
-      label: 'View Task Flags',
+      label: $localize`:Name of a workspace permission:View Task Flags`,
       icon: LucideFlag,
     },
     resolve: {
       key: 'flags.resolve',
-      label: 'Resolve Task Flags',
+      label: $localize`:Name of a workspace permission:Resolve Task Flags`,
       icon: LucideFlag,
     },
   },
   serviceAccounts: {
     read: {
       key: 'service_accounts.read',
-      label: 'View Service Accounts',
+      label: $localize`:Name of a workspace permission:View Service Accounts`,
       icon: LucideShield,
     },
     create: {
       key: 'service_accounts.create',
-      label: 'Create Service Accounts',
+      label: $localize`:Name of a workspace permission:Create Service Accounts`,
       icon: LucideCirclePlus,
     },
     update: {
       key: 'service_accounts.update',
-      label: 'Edit Service Accounts',
+      label: $localize`:Name of a workspace permission:Edit Service Accounts`,
       icon: LucidePencil,
     },
     delete: {
       key: 'service_accounts.delete',
-      label: 'Delete Service Accounts',
+      label: $localize`:Name of a workspace permission:Delete Service Accounts`,
       icon: LucideTrash2,
     },
     manageCredentials: {
       key: 'service_accounts.manage_credentials',
-      label: 'Manage API Credentials',
+      label: $localize`:Name of a workspace permission:Manage API Credentials`,
       icon: LucideUserLock,
     },
   },
   storage: {
     uploadProfilePicture: {
       key: 'storage.upload_profile_picture',
-      label: 'Upload Profile Picture',
+      label: $localize`:Name of a workspace permission:Upload Profile Picture`,
       icon: LucideImage,
     },
     uploadMedia: {
       key: 'storage.upload_media',
-      label: 'Upload Media',
+      label: $localize`:Name of a workspace permission:Upload Media`,
       icon: LucideUpload,
     },
     read: {
       key: 'storage.read',
-      label: 'View Workspace Storage',
+      label: $localize`:Name of a workspace permission:View Workspace Storage`,
       icon: LucideEye,
     },
     manage: {
       key: 'storage.manage',
-      label: 'Manage Workspace Storage',
+      label: $localize`:Name of a workspace permission:Manage Workspace Storage`,
       icon: LucideTrash2,
     },
   },
   files: {
-    read: { key: 'files.read', label: 'View Files', icon: LucideEye },
-    upload: { key: 'files.upload', label: 'Upload Files', icon: LucideUpload },
+    read: {
+      key: 'files.read',
+      label: $localize`:Name of a workspace permission:View Files`,
+      icon: LucideEye,
+    },
+    upload: {
+      key: 'files.upload',
+      label: $localize`:Name of a workspace permission:Upload Files`,
+      icon: LucideUpload,
+    },
     deleteOwn: {
       key: 'files.delete_own',
-      label: 'Delete Own Files',
+      label: $localize`:Name of a workspace permission:Delete Own Files`,
       icon: LucideTrash2,
     },
     deleteAny: {
       key: 'files.delete_any',
-      label: 'Delete Any File',
+      label: $localize`:Name of a workspace permission:Delete Any File`,
       icon: LucideTrash2,
     },
   },

@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@core/util/error-message';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ProfileState } from './profile.model';
 
@@ -36,7 +37,13 @@ export const selectChangePasswordLoading = createSelector(
 
 export const selectChangePasswordError = createSelector(
   selectProfileFeature,
-  (state: ProfileState) => state.changePasswordError?.message
+  (state: ProfileState) => {
+    const error = state.changePasswordError;
+
+    // Not the raw Error.message: unwrapClientReposne prefixes it with
+    // "Server responded with failure: ", which getErrorMessage strips.
+    return error ? getErrorMessage(error) : undefined;
+  }
 );
 
 export const selectLoginProviders = createSelector(

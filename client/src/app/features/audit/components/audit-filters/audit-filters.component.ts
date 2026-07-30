@@ -18,19 +18,27 @@ import { AuditDateFilterComponent } from './audit-date-filter.component';
     <div class="mb-8 flex flex-wrap items-end gap-3">
       <app-audit-date-filter
         controlId="from-date"
+        i18n-label="Label of the start-date filter"
         label="From"
         [(value)]="fromDate" />
 
       <app-audit-date-filter
         controlId="to-date"
+        i18n-label="Label of the end-date filter"
         label="To"
         [(value)]="toDate" />
 
-      <button app-stroked-button (click)="onApply()">Filter</button>
-      <button app-stroked-button (click)="onReset()">Reset</button>
+      <button app-stroked-button (click)="onApply()">
+        <span i18n="Button that applies the filters">Filter</span>
+      </button>
+      <button app-stroked-button (click)="onReset()">
+        <span i18n="Button that clears the filters">Reset</span>
+      </button>
 
       <button app-flat-button (click)="onExport()" class="ml-auto">
-        Export CSV
+        <span i18n="Button that downloads the audit log as CSV">
+          Export CSV
+        </span>
       </button>
     </div>
   `,

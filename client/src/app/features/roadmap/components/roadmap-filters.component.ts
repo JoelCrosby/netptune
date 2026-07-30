@@ -35,16 +35,21 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
   template: `
     <div
       class="border-border flex flex-wrap items-center gap-2 border-b p-3"
+      i18n-aria-label="Accessible name of the roadmap filter bar"
       aria-label="Roadmap filters">
       <app-date-dropdown-button
+        i18n-label="Label of the start-date filter"
         label="From"
+        i18n-ariaLabel="Accessible label for the roadmap start date"
         ariaLabel="Roadmap start date"
         buttonClass="min-w-44 justify-between"
         [value]="from()"
         (valueChanged)="fromChanged.emit($event)" />
 
       <app-date-dropdown-button
+        i18n-label="Label of the end-date filter"
         label="To"
+        i18n-ariaLabel="Accessible label for the roadmap end date"
         ariaLabel="Roadmap end date"
         buttonClass="min-w-44 justify-between"
         [value]="to()"
@@ -53,6 +58,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
       <app-dropdown-button
         #zoomMenu
         [label]="zoomLabel()"
+        i18n-ariaLabel="Accessible label for the roadmap zoom control"
         ariaLabel="Roadmap zoom"
         buttonClass="min-w-32 justify-between">
         @for (option of zoomOptions; track option.value) {
@@ -75,6 +81,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
       <app-dropdown-button
         #sprintMenu
         [label]="sprintLabel()"
+        i18n-ariaLabel="Accessible label for the roadmap sprint filter"
         ariaLabel="Filter roadmap by sprint"
         buttonClass="min-w-44 max-w-64 justify-between">
         <button
@@ -88,7 +95,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
               <svg lucideCheck class="h-4 w-4"></svg>
             }
           </span>
-          <span>All sprints</span>
+          <span i18n="Filter option including every sprint">All sprints</span>
         </button>
         @for (sprint of filteredSprints(); track sprint.id) {
           <button
@@ -110,6 +117,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
       <app-dropdown-button
         #projectMenu
         [label]="projectLabel()"
+        i18n-ariaLabel="Accessible label for the roadmap project filter"
         ariaLabel="Filter roadmap by project"
         buttonClass="min-w-44 max-w-64 justify-between">
         <button
@@ -123,7 +131,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
               <svg lucideCheck class="h-4 w-4"></svg>
             }
           </span>
-          <span>All projects</span>
+          <span i18n="Filter option including every project">All projects</span>
         </button>
         @for (project of projects(); track project.id) {
           <button
@@ -146,7 +154,9 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
         class="px-2 text-sm"
         [checked]="includeUnscheduled()"
         (changed)="includeUnscheduledChanged.emit($event)">
-        Show unscheduled
+        <span i18n="Toggle that reveals tasks without dates">
+          Show unscheduled
+        </span>
       </app-checkbox>
 
       <div class="ml-auto flex items-center gap-2">
@@ -154,7 +164,11 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
           app-stroked-button
           color="neutral"
           type="button"
+          i18n-aria-label="
+            Accessible label for the button that moves back one range
+          "
           aria-label="Previous date range"
+          i18n-title="Tooltip on the button that moves back one range"
           title="Previous date range"
           (click)="rangeNavigationRequested.emit(-1)">
           <svg lucideChevronLeft class="h-4 w-4"></svg>
@@ -164,13 +178,17 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
           color="neutral"
           type="button"
           (click)="todayRequested.emit()">
-          Today
+          <span i18n="Button that jumps the roadmap to today">Today</span>
         </button>
         <button
           app-stroked-button
           color="neutral"
           type="button"
+          i18n-aria-label="
+            Accessible label for the button that moves forward one range
+          "
           aria-label="Next date range"
+          i18n-title="Tooltip on the button that moves forward one range"
           title="Next date range"
           (click)="rangeNavigationRequested.emit(1)">
           <svg lucideChevronRight class="h-4 w-4"></svg>
@@ -179,7 +197,7 @@ type SprintOption = Pick<SprintViewModel, 'id' | 'name' | 'projectId'>;
           app-stroked-button
           type="button"
           (click)="refreshRequested.emit()">
-          Refresh
+          <span i18n="Button that reloads the roadmap">Refresh</span>
         </button>
       </div>
     </div>
@@ -206,9 +224,9 @@ export class RoadmapFiltersComponent {
   readonly refreshRequested = output();
 
   protected readonly zoomOptions: readonly ZoomOption[] = [
-    { label: 'Day', value: 'day' },
-    { label: 'Week', value: 'week' },
-    { label: 'Month', value: 'month' },
+    { label: $localize`:Label shown in the interface:Day`, value: 'day' },
+    { label: $localize`:Label shown in the interface:Week`, value: 'week' },
+    { label: $localize`:Label shown in the interface:Month`, value: 'month' },
   ];
 
   protected zoomLabel(): string {

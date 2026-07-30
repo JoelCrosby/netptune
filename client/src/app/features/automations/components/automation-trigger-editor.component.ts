@@ -32,16 +32,20 @@ import {
   ],
   template: `
     <div class="flex flex-col gap-4">
-      <app-panel aria-label="Automation trigger">
+      <app-panel
+        i18n-aria-label="Accessible name of the trigger panel"
+        aria-label="Automation trigger">
         <app-panel-header
+          i18n-heading="Heading above the trigger event"
           heading="Trigger event"
+          i18n-description="Description of the trigger section"
           description="Choose what starts this automation."
           [icon]="triggerIcon">
           <app-badge
             panelHeaderActions
             color="primary"
             class="text-[0.65rem] font-bold tracking-wider">
-            WHEN
+            <span i18n="Heading of the trigger part of the rule">WHEN</span>
           </app-badge>
         </app-panel-header>
 
@@ -59,6 +63,7 @@ import {
 
           <div class="flex min-w-0 flex-1 flex-col gap-4 p-3 sm:pl-0">
             <app-form-select
+              i18n-label="Label of the event field"
               label="Event"
               [noMargin]="true"
               [(value)]="triggerType">
@@ -80,15 +85,34 @@ import {
                       class="text-primary h-4 w-4"
                       aria-hidden="true"></svg>
                     <div>
-                      <p class="text-sm font-medium">Watched fields</p>
+                      <p class="text-sm font-medium">
+                        <span
+                          i18n="
+                            Heading above the fields whose changes trigger the
+                            rule
+                          ">
+                          Watched fields
+                        </span>
+                      </p>
                       <p class="text-foreground/60 text-xs">
-                        Run when any selected field changes.
+                        <span i18n="Explains the watched fields">
+                          Run when any selected field changes.
+                        </span>
                       </p>
                     </div>
                   </div>
                   <span
                     class="bg-primary/10 text-primary rounded-full px-2 py-1 text-xs font-semibold">
-                    {{ taskFields().length }} selected
+                    <span
+                      i18n="
+                        How many watched fields are selected. COUNT is that
+                        number
+                      ">
+                      {{
+                        taskFields().length // i18n(ph="COUNT")
+                      }}
+                      selected
+                    </span>
                   </span>
                 </div>
 
@@ -114,10 +138,15 @@ import {
               triggerType() === automationTriggerType.taskInactiveFor
             ) {
               <div class="border-border bg-foreground/2 rounded-lg border p-3">
-                <p class="mb-3 text-sm font-medium">Wait period</p>
+                <p class="mb-3 text-sm font-medium">
+                  <span i18n="Heading above the delay before a rule runs">
+                    Wait period
+                  </span>
+                </p>
                 <div class="flex flex-wrap items-end gap-3">
                   <div class="w-36">
                     <app-form-input
+                      i18n-label="Label of the duration field"
                       label="Duration"
                       name="durationDays"
                       type="number"
@@ -138,10 +167,15 @@ import {
               triggerType() === automationTriggerType.sprintEndingSoon
             ) {
               <div class="border-border bg-foreground/2 rounded-lg border p-3">
-                <p class="mb-3 text-sm font-medium">Schedule</p>
+                <p class="mb-3 text-sm font-medium">
+                  <span i18n="Heading above the schedule settings">
+                    Schedule
+                  </span>
+                </p>
                 <div class="flex flex-wrap items-end gap-3">
                   <div class="w-36">
                     <app-form-input
+                      i18n-label="Label of the lead time field"
                       label="Lead time"
                       name="durationDays"
                       type="number"
@@ -150,21 +184,33 @@ import {
                       [(value)]="durationDays" />
                   </div>
                   <span class="pb-2.5 text-sm">
-                    days before the sprint end date
+                    <span
+                      i18n="
+                        Suffix after a number of days, relative to sprint end
+                      ">
+                      days before the sprint end date
+                    </span>
                   </span>
                 </div>
                 <p class="text-foreground/60 mt-3 text-sm">
-                  Actions run once for every task in the sprint.
+                  <span i18n="Explains sprint-scoped rule behaviour">
+                    Actions run once for every task in the sprint.
+                  </span>
                 </p>
               </div>
             } @else if (
               triggerType() === automationTriggerType.taskDueDateApproaching
             ) {
               <div class="border-border bg-foreground/2 rounded-lg border p-3">
-                <p class="mb-3 text-sm font-medium">Schedule</p>
+                <p class="mb-3 text-sm font-medium">
+                  <span i18n="Heading above the schedule settings">
+                    Schedule
+                  </span>
+                </p>
                 <div class="flex flex-wrap items-end gap-3">
                   <div class="w-36">
                     <app-form-input
+                      i18n-label="Label of the lead time field"
                       label="Lead time"
                       name="durationDays"
                       type="number"
@@ -172,14 +218,26 @@ import {
                       [required]="true"
                       [(value)]="durationDays" />
                   </div>
-                  <span class="pb-2.5 text-sm">days before the due date</span>
+                  <span
+                    class="pb-2.5 text-sm"
+                    i18n="
+                      Suffix after a number of days, relative to the due date
+                    ">
+                    days before the due date
+                  </span>
                 </div>
               </div>
             } @else {
               <div class="border-border bg-foreground/2 rounded-lg border p-3">
-                <p class="text-sm font-medium">Ready to use</p>
+                <p class="text-sm font-medium">
+                  <span i18n="Shown when a trigger needs no further settings">
+                    Ready to use
+                  </span>
+                </p>
                 <p class="text-foreground/60 mt-1 text-sm">
-                  This event does not need additional trigger settings.
+                  <span i18n="Explains that no trigger settings are needed">
+                    This event does not need additional trigger settings.
+                  </span>
                 </p>
               </div>
             }

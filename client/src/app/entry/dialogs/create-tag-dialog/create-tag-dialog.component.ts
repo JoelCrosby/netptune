@@ -24,18 +24,28 @@ export interface CreateTagDialogResult {
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Create Tag</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the create-tag dialog">
+      Create Tag
+    </app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
-      <app-form-input [formField]="tagForm.name" label="Name" maxLength="128" />
+      <app-form-input
+        [formField]="tagForm.name"
+        i18n-label="Label of the name field"
+        label="Name"
+        maxLength="128" />
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Close</button>
-      <button app-flat-button type="button" (click)="submit($event)">
-        Create Tag
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
-    </div>`,
+      <button app-flat-button type="button" (click)="submit($event)">
+        <span i18n="Button that creates the tag">Create Tag</span>
+      </button>
+    </div>
+  `,
 })
 export class CreateTagDialogComponent {
   private readonly dialogRef =
@@ -50,7 +60,11 @@ export class CreateTagDialogComponent {
   readonly tagForm = form(this.tagFormModel, (schema) => {
     apply(
       schema.name,
-      requiredTextSchema({ label: 'Name', maxLength: 128, minLength: 2 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 128,
+        minLength: 2,
+      })
     );
   });
 

@@ -45,30 +45,41 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
   template: `
     <section class="flex flex-col gap-4">
       <app-section-header
+        i18n-heading="Section heading for flow metrics"
         heading="Flow"
+        i18n-description="Explains what flow metrics show"
         description="Completed work and elapsed cycle time." />
 
       @if (resource.isLoading()) {
         <div class="h-40">
-          <app-page-loading label="Loading flow metrics" />
+          <app-page-loading
+            i18n-label="Shown while flow metrics load"
+            label="Loading flow metrics" />
         </div>
       } @else if (resource.error()) {
         <app-error-state
           compact
+          i18n-title="Shown when flow metrics fail to load"
           title="Flow metrics could not be loaded"
+          i18n-description="Advice when flow metrics fail to load"
           description="Retry the request to load flow reporting."
           (retry)="resource.reload()" />
       } @else if (resource.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
         <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <app-stat label="Completed" [value]="report.throughput" />
           <app-stat
+            i18n-label="Stat label for completed tasks"
+            label="Completed"
+            [value]="report.throughput" />
+          <app-stat
+            i18n-label="Stat label for the median cycle time"
             label="Median cycle"
             [value]="hours(report.medianCycleTimeHours)" />
           <app-stat
             label="85th percentile"
             [value]="hours(report.p85CycleTimeHours)" />
           <app-stat
+            i18n-label="Stat label for tasks still open"
             label="Current open tasks"
             [value]="report.currentOpenTaskCount" />
         </div>
@@ -76,8 +87,12 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
         @if (report.buckets.length) {
           <app-card>
             <app-card-header>
-              <app-card-title>Throughput</app-card-title>
-              <app-card-subtitle>Completed tasks over time</app-card-subtitle>
+              <app-card-title i18n="Heading of the throughput chart card">
+                Throughput
+              </app-card-title>
+              <app-card-subtitle i18n="Subheading of the throughput chart card">
+                Completed tasks over time
+              </app-card-subtitle>
             </app-card-header>
             <app-card-content>
               <app-flow-throughput-chart [buckets]="report.buckets" />
@@ -87,8 +102,14 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
           <app-table containerClass="overflow-x-auto">
             <thead appTableHead>
               <tr appTableHeaderRow>
-                <th class="px-4 py-3">Date</th>
-                <th class="px-4 py-3">Completed</th>
+                <th class="px-4 py-3">
+                  <span i18n="Column heading for the date">Date</span>
+                </th>
+                <th class="px-4 py-3">
+                  <span i18n="Column heading for the completed count">
+                    Completed
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -104,10 +125,21 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
           @if (report.cycleTimeBuckets.length) {
             <app-card>
               <app-card-header>
-                <app-card-title>Cycle-time trend</app-card-title>
+                <app-card-title i18n="Heading of the cycle-time chart card">
+                  Cycle-time trend
+                </app-card-title>
                 <app-card-subtitle>
-                  Weekly median and 85th percentile from
-                  {{ report.cycleTimeSampleSize }} completed cycle samples
+                  <span
+                    i18n="
+                      Subheading of the cycle-time chart card. COUNT is how many
+                      completed cycles the figures are based on
+                    ">
+                    Weekly median and 85th percentile from
+                    {{
+                      report.cycleTimeSampleSize // i18n(ph="COUNT")
+                    }}
+                    completed cycle samples
+                  </span>
                 </app-card-subtitle>
               </app-card-header>
               <app-card-content>
@@ -119,10 +151,27 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
             <app-table containerClass="overflow-x-auto">
               <thead appTableHead>
                 <tr appTableHeaderRow>
-                  <th class="px-4 py-3">Week starting</th>
-                  <th class="px-4 py-3">Median</th>
-                  <th class="px-4 py-3">85th percentile</th>
-                  <th class="px-4 py-3">Samples</th>
+                  <th class="px-4 py-3">
+                    <span i18n="Column heading for the week start date">
+                      Week starting
+                    </span>
+                  </th>
+                  <th class="px-4 py-3">
+                    <span i18n="Column heading for the median cycle time">
+                      Median
+                    </span>
+                  </th>
+                  <th class="px-4 py-3">
+                    <span
+                      i18n="Column heading for the 85th percentile cycle time">
+                      85th percentile
+                    </span>
+                  </th>
+                  <th class="px-4 py-3">
+                    <span i18n="Column heading for the number of samples">
+                      Samples
+                    </span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -147,7 +196,9 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
         } @else {
           <app-empty-state
             compact
+            i18n-title="Empty state for flow metrics"
             title="No completed work"
+            i18n-description="Explains the empty flow metrics state"
             description="No completions were recorded in this period." />
         }
       }

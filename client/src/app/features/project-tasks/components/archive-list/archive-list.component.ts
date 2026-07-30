@@ -41,17 +41,29 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
       @if (selectedCount() > 0) {
         <div class="ml-auto flex flex-row items-center gap-4">
           <span class="text-muted px-2 text-sm">
-            {{ selectedCount() }} selected
+            <span
+              i18n="
+                Count of selected rows above a table. COUNT is the number
+                selected
+              ">
+              {{
+                selectedCount() // i18n(ph="COUNT")
+              }}
+              selected
+            </span>
           </span>
           <button app-stroked-button type="button" (click)="restoreSelected()">
             <svg lucideArchiveRestore class="h-4 w-4"></svg>
-            <span>Restore</span>
+            <span i18n="Button that restores the selected archived tasks">
+              Restore
+            </span>
           </button>
         </div>
       }
     </div>
 
     <app-datatable
+      i18n-errorMessage="Shown when the archived task list fails to load"
       errorMessage="Archived tasks could not be loaded."
       #datatable
       containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
@@ -82,7 +94,11 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
             <span class="truncate text-sm">{{ task.deletedByUsername }}</span>
           </div>
         } @else {
-          <span class="text-muted text-sm">Unknown</span>
+          <span
+            class="text-muted text-sm"
+            i18n="Shown in place of a value that is not known">
+            Unknown
+          </span>
         }
       </ng-template>
 
@@ -96,7 +112,9 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 
       <app-empty-state
         appDatatableEmpty
+        i18n-title="Heading of the empty archive list"
         title="There are currently no deleted tasks."
+        i18n-description="Explains what the archive list will contain"
         description="Deleted tasks show up here, where they can be restored.">
         <svg emptyStateIcon size="38" lucideArchiveRestore></svg>
       </app-empty-state>
@@ -164,7 +182,7 @@ export class ArchiveListComponent {
     trackBy: (_: number, task: TaskViewModel) => task.id,
     menu: [
       {
-        label: 'Restore',
+        label: $localize`:Row action that restores an archived task:Restore`,
         icon: LucideArchiveRestore,
         onClick: (task) => this.restore([task.id]),
       },

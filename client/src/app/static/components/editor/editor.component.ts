@@ -31,7 +31,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
 
 @Component({
   selector: 'app-editor',
-  template: `<div class="editor w-full rounded" #editorJs></div>`,
+  template: ` <div class="editor w-full rounded" #editorJs></div> `,
   host: {
     class:
       'bg-background mb-4 dark:bg-secondary-background border-foreground/30 mt-2 flex rounded-sm border-2 px-4 py-1 overflow-y-auto max-h-[600px]',

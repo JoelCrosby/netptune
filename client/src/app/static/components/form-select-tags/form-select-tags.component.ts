@@ -43,77 +43,82 @@ import { FormSelectTagsService } from './form-select-tags.service';
     FormControlLabelDirective,
     FormControlHintDirective,
   ],
-  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
-    @if (label()) {
-      <!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
-      <label appFormLabel>{{ label() }}</label>
-    }
+  template: `
+    <div class="nept-form-control mb-[1.4rem] w-[inherit]">
+      @if (label()) {
+        <!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+        <label appFormLabel>{{ label() }}</label>
+      }
 
-    <app-form-control-field
-      #dropreference
-      class="cursor-text! flex-wrap!"
-      [invalid]="touched() && invalid()"
-      [active]="value().length > 0 && pending()"
-      (click)="!isReadonly() && onTriggerClick($event)">
-      <div class="flex min-w-0 flex-1 flex-wrap items-center gap-1 px-3 py-1">
-        @for (option of selectedOptions(); track option.value()) {
-          <span
-            class="bg-primary-selected/40 inline-flex items-center gap-2 rounded-sm px-1.5 py-0.5 font-medium whitespace-nowrap">
-            {{ option.viewValue }}
+      <app-form-control-field
+        #dropreference
+        class="cursor-text! flex-wrap!"
+        [invalid]="touched() && invalid()"
+        [active]="value().length > 0 && pending()"
+        (click)="!isReadonly() && onTriggerClick($event)">
+        <div class="flex min-w-0 flex-1 flex-wrap items-center gap-1 px-3 py-1">
+          @for (option of selectedOptions(); track option.value()) {
+            <span
+              class="bg-primary-selected/40 inline-flex items-center gap-2 rounded-sm px-1.5 py-0.5 font-medium whitespace-nowrap">
+              {{ option.viewValue }}
 
-            @if (!isReadonly()) {
-              <button
-                type="button"
-                class="cursor-pointer border-0! bg-transparent! p-0! text-sm leading-none text-inherit opacity-70 hover:opacity-100"
-                (click)="removeValue(option.value(), $event)"
-                aria-label="Remove">
-                &times;
-              </button>
-            }
-          </span>
+              @if (!isReadonly()) {
+                <button
+                  type="button"
+                  class="cursor-pointer border-0! bg-transparent! p-0! text-sm leading-none text-inherit opacity-70 hover:opacity-100"
+                  (click)="removeValue(option.value(), $event)"
+                  i18n-aria-label="
+                    Accessible label for the button that removes a selected tag
+                  "
+                  aria-label="Remove">
+                  &times;
+                </button>
+              }
+            </span>
+          }
+
+          <input
+            #searchInput
+            appFormInput
+            class="w-auto! min-w-15 flex-1"
+            [placeholder]="selectedOptions().length === 0 ? placeholder() : ''"
+            [disabled]="disabled()"
+            [readOnly]="isReadonly()"
+            (input)="onSearchInput($event)"
+            (keydown)="onKeyDown($event)"
+            (blur)="onBlur()"
+            [attr.aria-describedby]="hint() ? hintId() : null"
+            autocomplete="off" />
+        </div>
+
+        @if (icon()) {
+          <svg
+            [lucideIcon]="icon()!"
+            class="mr-3"
+            size="20"
+            aria-hidden="true"></svg>
         }
 
-        <input
-          #searchInput
-          appFormInput
-          class="w-auto! min-w-15 flex-1"
-          [placeholder]="selectedOptions().length === 0 ? placeholder() : ''"
-          [disabled]="disabled()"
-          [readOnly]="isReadonly()"
-          (input)="onSearchInput($event)"
-          (keydown)="onKeyDown($event)"
-          (blur)="onBlur()"
-          [attr.aria-describedby]="hint() ? hintId() : null"
-          autocomplete="off" />
-      </div>
+        @if (!isReadonly()) {
+          <svg
+            lucideChevronDown
+            size="20"
+            aria-hidden="true"
+            class="mr-3 flex! items-center justify-center"></svg>
+        }
 
-      @if (icon()) {
-        <svg
-          [lucideIcon]="icon()!"
-          class="mr-3"
-          size="20"
-          aria-hidden="true"></svg>
+        <app-form-select-dropdown [reference]="dropreference.el">
+          <div appFormSelectDropdown class="menu-scale-in">
+            <ng-content select="app-form-select-tags-option" />
+          </div>
+        </app-form-select-dropdown>
+      </app-form-control-field>
+
+      @if (hint()) {
+        <small [id]="hintId()" appFormHint>{{ hint() }}</small>
       }
-
-      @if (!isReadonly()) {
-        <svg
-          lucideChevronDown
-          size="20"
-          aria-hidden="true"
-          class="mr-3 flex! items-center justify-center"></svg>
-      }
-
-      <app-form-select-dropdown [reference]="dropreference.el">
-        <div appFormSelectDropdown class="menu-scale-in">
-          <ng-content select="app-form-select-tags-option" />
-        </div>
-      </app-form-select-dropdown>
-    </app-form-control-field>
-
-    @if (hint()) {
-      <small [id]="hintId()" appFormHint>{{ hint() }}</small>
-    }
-  </div> `,
+    </div>
+  `,
 })
 export class FormSelectTagsComponent<TValue>
   implements AfterViewInit, FormValueControl<TValue[]>

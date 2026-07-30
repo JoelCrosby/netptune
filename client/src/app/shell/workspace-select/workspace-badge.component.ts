@@ -6,7 +6,7 @@ import { colorBackgroundClass } from '@core/util/colors/colors';
   host: {
     '[class]': 'className()',
   },
-  template: `{{ letter() }}`,
+  template: ` {{ letter() }} `,
 })
 export class WorkspaceBadgeComponent {
   readonly color = input<string | null | undefined>(null);

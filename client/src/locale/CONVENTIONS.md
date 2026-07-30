@@ -10,21 +10,81 @@ build time, so changing locale is a full page load, not a runtime toggle.
 ## Workflow
 
 ```bash
-pnpm i18n:extract                 # rewrites src/locale/messages.xlf
-node scripts/merge-catalogs.js    # merges it into messages.{fr,de,es}.xlf
+pnpm i18n:extract
 ```
 
-Always run both. `ng extract-i18n` only writes the source catalog — it does **not**
-merge into the locale catalogs, so extraction alone leaves them stale. The merge
-script reports `N kept, N untranslated, N removed`; a non-zero "untranslated" count
-is your worklist.
+One command does everything: it rewrites `src/locale/messages.xlf` from the code and
+merges the result into `messages.{fr,de,es}.xlf`, preserving existing `<target>`s.
+This uses the `ng-extract-i18n-merge` builder rather than Angular's own
+`extract-i18n`, because the stock builder writes *only* the source catalogue —
+running it alone leaves the locale catalogues stale, and hand-editing four XLIFF
+files after every extraction is not viable.
 
-Missing translations are a build **warning** and fall back to the English source, so
-an incomplete rollout still ships. Track progress with:
+Two of its defaults are load-bearing, both configured in `angular.json`:
+
+- **`fuzzyMatch`** re-matches a unit by its source text when its id no longer
+  resolves. Message ids are hashes of the message text *including* surrounding
+  whitespace, so reformatting alone can change an id; this is what stops that from
+  orphaning the translation.
+- **`collapseWhitespace`** normalises whitespace in sources and targets. Note
+  `trim` is deliberately left `false` — trimming would strip the leading space from
+  `" · edited"` and break that separator's rendering.
+
+Untranslated messages fall back to the English source, so an incomplete rollout
+still ships.
+
+**Do not measure progress with `grep -c 'No translation found'`.** That warning only
+fires for a message id absent from the catalogue entirely. A unit written with a
+`<source>` but no `<target>` is *not* reported — the build says zero missing while
+still shipping English. Verified: 598 untranslated units produced 0 warnings.
+
+The reliable count is untranslated segments in the catalogues:
 
 ```bash
-pnpm build 2>&1 | grep -c 'No translation found'
+grep -c '<segment>' src/locale/messages.fr.xlf   # untranslated
+grep -c '<segment state="translated">' src/locale/messages.fr.xlf
 ```
+
+## Seeing another language locally
+
+The Angular CLI has no multi-locale serve or preview command, so there is no native
+way to exercise the language switcher locally.
+
+`ng serve` is limited to a single locale and forces flat output, so `/fr/` there
+returns the *English* bundle with `<base href="/">` — and because `:workspace` is a
+top-level route, the router reads `fr` as a workspace slug and drops you into a
+workspace that does not exist. Do not use it to check translations at a prefixed URL.
+
+```bash
+pnpm start:fr     # French dev server: HMR, one locale, no switcher
+```
+
+To exercise the switcher — and `nginx.conf` with it — build the container in dev mode
+and point it at a running Aspire stack:
+
+```bash
+pnpm docker:dev        # build + run; app on http://localhost:8080
+```
+
+That builds with the `docker-dev` Angular configuration: the same multi-locale,
+production-shaped output, but unoptimised and with source maps. It swaps in
+`environment.container.ts`, whose `apiEndpoint` is `/` so requests go through the
+nginx `/api/` proxy rather than straight at the API — which is the point, since it
+exercises the proxy too. It keeps the always-passes Turnstile test key, because the
+production sitekey only validates on the real domain.
+
+Use `pnpm docker:dev:build` and `pnpm docker:dev:run` separately to re-run without
+rebuilding.
+
+### Why host networking and NGINX_PORT
+
+Aspire binds the API to `127.0.0.1` only, so a bridged container cannot reach it —
+`host.containers.internal` / `host.docker.internal` resolve to the pasta gateway and
+the connection is refused. Host networking fixes that, but under rootless Podman
+nginx cannot bind port 80, so `NGINX_PORT=8080` moves it to an unprivileged port.
+
+`NGINX_PORT` defaults to `80` via `ENV` in the Dockerfile, so the production image,
+Helm chart and container port are all unchanged.
 
 ## Lint enforcement
 
@@ -36,7 +96,32 @@ configured as an **error**, scoped by directory to areas that are already done.
 When you finish an area, add its glob to the i18n block in `eslint.config.mjs`. That
 keeps `pnpm lint` green and makes a regression in a finished area fail the build.
 
-The rule cannot see `$localize` in TypeScript. TS strings are on you and the reviewer.
+### Lint-clean does NOT mean the area is done
+
+The rule only sees **text nodes and static attributes in templates**. It cannot see
+`$localize`-able strings in TypeScript, nor English inside template *expressions*
+(`{{ a ? 'Yes' : 'No' }}`, `'Untitled ' + kind`). Several areas passed lint while
+still shipping English from label tables, `ConfirmDialogOptions`, validation
+messages and row/overflow actions.
+
+So before declaring an area finished, sweep its TypeScript too:
+
+```bash
+AREA=src/app/features/boards
+grep -rnE "(label|title|message|actionTitle|acceptLabel|cancelLabel|placeholder|emptyMessage|description|hint):\s*'[^']+'|\?\s*'[^']+'\s*:\s*'[^']+'|snackbar\.(open|error|success|warn|info)\('" \
+  --include='*.ts' "$AREA" | grep -v '\$localize'
+```
+
+Then confirm nothing English survives in a translated bundle:
+
+```bash
+grep -rl "Some English String" dist/netptune/browser/fr --include='*.js'
+```
+
+Expect legitimate hits from NgRx action types (`'[Boards] Create Board'`) and other
+do-not-mark strings — those are compiled in identically for every locale. Anything
+else is a miss. Note that **non-ASCII translations are escaped in minified output**,
+so grep for an ASCII-only substring of the translation.
 
 ## Message IDs
 
@@ -106,33 +191,49 @@ text in a `<span>` so the `<svg>` does not become a translation placeholder:
 Use `<ng-container i18n>` where an extra `<span>` would change layout (flex/grid
 children, `gap`, table cells).
 
-### Put `i18n` on an inline element, never a block one
+### Whitespace, formatting, and message ids
 
-Leading and trailing whitespace inside an `i18n` block becomes **part of the message**,
-and Prettier re-indents the contents of block elements (`<div>`, `<p>`, `<button>`,
-`<h1>`…) onto their own line. Marking a block element therefore yields `" Logout "`,
-which is a *different* message from `"Logout"` — so it will not dedupe, and the
-translator sees a padded string.
-
-Prettier leaves inline elements (`<span>`, `<kbd>`, `<a>`) hugging their tags, so the
-rule is: **wrap the text in a `<span i18n>` inside the block element.**
+Write the markup the readable way. Prettier's default `htmlWhitespaceSensitivity`
+(`css`) leaves the natural form alone for block elements and `<ng-container>`:
 
 ```html
-<!-- no: extracts as " Logout ", a separate unit from "Logout" -->
-<button app-workspace-menu-action i18n="...">Logout</button>
-
-<!-- yes: extracts as "Logout" and dedupes with every other Logout -->
-<button app-workspace-menu-action>
-  <span i18n="Workspace menu action that signs the user out">Logout</span>
-</button>
+<td appTableEmptyCell colspan="2" i18n="Empty state for the tag list">
+  No tags yet. Create one to group tasks across projects.
+</td>
 ```
 
-Do not fight Prettier on this — run `pnpm prettier` after each batch and check the
-extracted sources are unpadded:
+That message extracts with surrounding whitespace (`" No tags yet. … "`), which used
+to matter because a message id is a hash of the message text *including* that
+whitespace — so reformatting could change an id and orphan its translation without
+anyone touching the words. **The merge builder handles this**: `fuzzyMatch` (on by
+default) re-matches units by source text when the id no longer resolves, and
+`collapseWhitespace` normalises the rest. You do not have to hand-hug tags to
+protect ids.
 
-```bash
-pnpm i18n:extract && grep -n '<source> \|  </source>' src/locale/messages.xlf
+Prettier will still hug inline elements itself when it has to break one:
+
+```html
+<span i18n="…"
+  >No tags yet. Create one to group tasks across projects.</span
+>
 ```
+
+Let it. That is Prettier guaranteeing the reformat does not change what renders, and
+it is why `<ng-container>` is usually the nicer wrapper when you need one — it is not
+an inline element, so it never gets hugged.
+
+**Do not set `htmlWhitespaceSensitivity: "ignore"`.** It was tried and reverted. It
+tells Prettier that whitespace between inline elements is insignificant, which is
+false: it inserted a rendered space before punctuation in five places
+(`<strong>Public</strong> . This means …`) and would do so again on any long sentence
+containing inline markup. It also made 380 messages padded and split 69 into
+whitespace-only duplicate units (they share a translation via `fuzzyMatch`, but
+still cost catalogue noise). Note that it is a one-way door — once it rewrites
+the whitespace, switching back to `css` preserves the new whitespace rather than
+undoing it.
+
+When a sentence ends with an inline element, keep the punctuation against the closing
+tag (`<strong>Public</strong>.`) so a line break can never separate them.
 
 - **Never split one sentence across two `i18n` blocks** — word order differs by
   locale. If it spans inline markup, mark the parent and let the markup become a
@@ -148,12 +249,25 @@ Mark static attributes with `i18n-<attr>`: `label`, `placeholder`, `title`, `alt
 `cancelLabel`, `appTooltip`, `subheading`). Static component inputs work — the
 runtime applies translated values to inputs, not just DOM attributes.
 
-Two hard limits:
+Three hard limits:
 
 1. **You cannot mark a binding.** `[attr.aria-label]="expr"` and `[label]="expr"`
    have no `i18n-` form. Localize at the TS source instead.
 2. **ICU is forbidden in attributes** — it throws at runtime. Build such labels in TS
    with a ternary over two messages.
+3. **You cannot mark any attribute whose name starts with `on`.** The compiler
+   rejects it with `NG5002: Translating attribute '…' is disallowed for security
+   reasons`, because `name.toLowerCase().startsWith('on')` classifies it as an event
+   property. This catches innocent input names — `onlineLabel` is blocked purely by
+   its prefix. Localize in the component and pass it as a binding:
+
+   ```html
+   <!-- no: NG5002 at build time -->
+   <app-avatar-filter i18n-onlineLabel onlineLabel="is viewing this board" />
+
+   <!-- yes -->
+   <app-avatar-filter [onlineLabel]="viewingLabel" />
+   ```
 
 ### ICU plural / select
 
@@ -259,6 +373,6 @@ from the call site rather than composing inside the component.
 5. Template `count === 1` is ICU; TS is a ternary with the plural note.
 6. Placeholders named; sub-3-word strings have descriptions; homonyms have meanings.
 7. Nothing from the do-not-mark list was marked.
-8. `pnpm i18n:extract && node scripts/merge-catalogs.js` runs clean, and the new
+8. `pnpm i18n:extract` runs clean, and the new
    entries read sensibly out of context.
 9. `npx eslint <area>` is clean if the area is in the enforced glob.

@@ -37,7 +37,9 @@ spec:
           imagePullPolicy: "Always"
           readinessProbe:
             httpGet:
-              path: "/"
+              # "/" now 302s to the negotiated locale; /healthz is a plain 200 so
+              # the probe does not depend on locale routing.
+              path: "/healthz"
               port: "http"
             initialDelaySeconds: 5
             periodSeconds: 10

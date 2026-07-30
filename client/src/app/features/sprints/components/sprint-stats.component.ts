@@ -9,17 +9,42 @@ import { StatComponent } from '@static/components/stat/stat.component';
   template: `
     <div class="flex flex-col gap-6">
       <div class="grid gap-3 md:grid-cols-4">
-        <app-stat label="Total" [value]="sprint().taskCount" />
-        <app-stat label="New" [value]="sprint().newTaskCount" />
-        <app-stat label="In Progress" [value]="sprint().activeTaskCount" />
-        <app-stat label="Complete" [value]="sprint().doneTaskCount" />
+        <app-stat
+          i18n-label="Stat label for the total number of tasks in a sprint"
+          label="Total"
+          [value]="sprint().taskCount" />
+        <app-stat
+          i18n-label="Stat label for tasks not started yet"
+          label="New"
+          [value]="sprint().newTaskCount" />
+        <app-stat
+          i18n-label="Stat label for tasks being worked on"
+          label="In Progress"
+          [value]="sprint().activeTaskCount" />
+        <app-stat
+          i18n-label="Stat label for finished tasks"
+          label="Complete"
+          [value]="sprint().doneTaskCount" />
       </div>
 
       @if (sprint().taskCount > 0) {
         <div>
           <app-progress-bar [value]="progressPercent()" />
           <p class="text-foreground mt-2">
-            {{ sprint().doneTaskCount }} / {{ sprint().taskCount }} complete
+            <span
+              i18n="
+                Sprint progress. DONE is the finished task count and TOTAL the
+                total
+              ">
+              {{
+                sprint().doneTaskCount // i18n(ph="DONE")
+              }}
+              /
+              {{
+                sprint().taskCount // i18n(ph="TOTAL")
+              }}
+              complete
+            </span>
           </p>
         </div>
       }

@@ -24,7 +24,9 @@ import { LoginProviderButtonComponent } from './login-provider-button.component'
         <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
       </svg>
 
-      Continue with Microsoft
+      <span i18n="Button that starts sign-in via Microsoft">
+        Continue with Microsoft
+      </span>
     </button>
   `,
 })

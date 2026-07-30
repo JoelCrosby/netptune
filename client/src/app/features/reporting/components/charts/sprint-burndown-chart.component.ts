@@ -13,6 +13,7 @@ import {
   host: { class: 'block' },
   template: `
     <apx-chart
+      i18n-aria-label="Accessible name of the sprint burndown chart"
       aria-label="Sprint remaining work and ideal burndown"
       [series]="series()"
       [chart]="chart"

@@ -86,7 +86,11 @@ export class ProjectsEffects {
               return this.projectsService.delete(project).pipe(
                 debounceTime(debounce, scheduler),
                 unwrapClientReposne(),
-                tap(() => this.snackbar.open('Project deleted')),
+                tap(() =>
+                  this.snackbar.open(
+                    $localize`:Confirmation shown after an action succeeds:Project deleted`
+                  )
+                ),
                 map(() =>
                   actions.deleteProject.success({
                     projectId: project.id,
@@ -111,7 +115,11 @@ export class ProjectsEffects {
         switchMap((action) =>
           this.projectsService.put(action.project).pipe(
             unwrapClientReposne(),
-            tap(() => this.snackbar.open('Project updated')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Project updated`
+              )
+            ),
             map((project) => actions.updateProject.success({ project })),
             catchError((error: HttpErrorResponse) =>
               of(actions.updateProject.fail({ error }))
@@ -142,9 +150,9 @@ export class ProjectsEffects {
 }
 
 const DELETE_PROJECT_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete Project',
-  cancelLabel: 'Cancel',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete Project`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
   color: 'warn',
-  title: 'Delete Project',
-  message: 'Are you sure you wish to delete this project',
+  title: $localize`:Title of a confirmation dialog:Delete Project`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you wish to delete this project`,
 };

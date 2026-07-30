@@ -142,7 +142,11 @@ export class AuthEffects implements OnInitEffects {
           this.authService.confirmEmail(action.request).pipe(
             map((user) => actions.confirmEmail.success({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
-            tap(() => this.snackbar.open('Email confirmed successfully')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Email confirmed successfully`
+              )
+            ),
             catchError((error: HttpErrorResponse) =>
               of(actions.confirmEmail.fail({ error }))
             )
@@ -159,7 +163,9 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(debounce, scheduler),
         tap(() => void this.router.navigate(['/auth/login'])),
         tap(() =>
-          this.snackbar.open('Email confirmation code is invalid or expired')
+          this.snackbar.open(
+            $localize`:Confirmation shown after an action succeeds:Email confirmation code is invalid or expired`
+          )
         ),
         map(() => actions.logoutSuccess())
       );
@@ -174,7 +180,11 @@ export class AuthEffects implements OnInitEffects {
         switchMap((action) =>
           this.authService.requestPasswordReset(action.email).pipe(
             unwrapClientReposne(),
-            tap(() => this.snackbar.open('Password reset email has been sent')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Password reset email has been sent`
+              )
+            ),
             tap(() => void this.router.navigate(['/auth/login'])),
             map(() => actions.requestPasswordReset.success()),
             catchError((error) =>
@@ -195,7 +205,11 @@ export class AuthEffects implements OnInitEffects {
           this.authService.resetPassword(action.request).pipe(
             map((user) => actions.resetPassword.success({ user })),
             tap(() => void this.router.navigate(['/workspaces'])),
-            tap(() => this.snackbar.open('Password has been reset')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Password has been reset`
+              )
+            ),
             catchError((error: HttpErrorResponse) =>
               of(actions.resetPassword.fail({ error }))
             )
@@ -212,7 +226,9 @@ export class AuthEffects implements OnInitEffects {
         debounceTime(debounce, scheduler),
         tap(() => void this.router.navigate(['/auth/login'])),
         tap(() =>
-          this.snackbar.open('Reset password request is invalid or expired')
+          this.snackbar.open(
+            $localize`:Confirmation shown after an action succeeds:Reset password request is invalid or expired`
+          )
         ),
         map(() => actions.logoutSuccess())
       );
@@ -239,8 +255,8 @@ export class AuthEffects implements OnInitEffects {
 }
 
 const LOGOUT_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Logout',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to logout?',
-  title: 'Logout',
+  acceptLabel: $localize`:Confirms the action in a dialog:Logout`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to logout?`,
+  title: $localize`:Title of a confirmation dialog:Logout`,
 };

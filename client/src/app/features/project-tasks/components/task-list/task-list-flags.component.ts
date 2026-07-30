@@ -17,7 +17,9 @@ import { LucideFlag } from '@lucide/angular';
       [attr.aria-pressed]="selected()"
       (click)="toggle()">
       <svg lucideFlag size="16" aria-hidden="true"></svg>
-      Flagged
+      <span i18n="Indicates a task has one or more flags raised against it">
+        Flagged
+      </span>
     </button>
   `,
 })

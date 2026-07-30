@@ -12,13 +12,21 @@ import { PrettyDatePipe } from '../../pipes/pretty-date.pipe';
       <div
         class="mr-2 cursor-pointer text-sm"
         [appTooltip]="task().createdAt | prettyDate">
-        <span class="mr-1 text-xs font-normal opacity-60">Created</span>
+        <span
+          class="mr-1 text-xs font-normal opacity-60"
+          i18n="Label before the date a task was created">
+          Created
+        </span>
         <span class="font-medium">{{ task().createdAt | fromNow }}</span>
       </div>
       <div
         class="mr-2 cursor-pointer text-sm"
         [appTooltip]="task().updatedAt | prettyDate">
-        <span class="mr-1 text-xs font-normal opacity-60">Updated</span>
+        <span
+          class="mr-1 text-xs font-normal opacity-60"
+          i18n="Label before the date a task was last changed">
+          Updated
+        </span>
         <span class="mr-2 font-medium">{{ task().updatedAt | fromNow }}</span>
       </div>
     </div>

@@ -78,7 +78,11 @@ export class BoardsEffects {
 
             return this.boardsService.delete(action.boardId).pipe(
               unwrapClientReposne(),
-              tap(() => this.snackbar.open('Board Deleted')),
+              tap(() =>
+                this.snackbar.open(
+                  $localize`:Confirmation shown after an action succeeds:Board Deleted`
+                )
+              ),
               map(() =>
                 actions.deleteBoard.success({
                   boardId: action.boardId,
@@ -123,9 +127,9 @@ export class BoardsEffects {
 }
 
 const DELETE_BOARD_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to delete this Board?',
-  title: 'Delete Board',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to delete this Board?`,
+  title: $localize`:Title of a confirmation dialog:Delete Board`,
   color: 'warn',
 };

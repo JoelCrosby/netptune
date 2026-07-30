@@ -160,7 +160,11 @@ export class BoardGroupsEffects {
           })
           .pipe(
             unwrapClientReposne(),
-            tap(() => this.snackbar.open('Task created')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Task created`
+              )
+            ),
             map((task) => actions.createProjectTask.success({ task })),
             catchError((error: HttpErrorResponse) =>
               of(actions.createProjectTask.fail({ error }))
@@ -216,7 +220,11 @@ export class BoardGroupsEffects {
             return this.tasksHubService
               .deleteBoardGroup(identifier, action.boardGroup.id)
               .pipe(
-                tap(() => this.snackbar.open('Board Group Deleted')),
+                tap(() =>
+                  this.snackbar.open(
+                    $localize`:Confirmation shown after an action succeeds:Board Group Deleted`
+                  )
+                ),
                 map(() =>
                   actions.deleteBoardGroup.success({
                     boardGroupId: action.boardGroup.id,
@@ -332,7 +340,11 @@ export class BoardGroupsEffects {
           })
           .pipe(
             unwrapClientReposne(),
-            tap(() => this.snackbar.open('Tasks Moved')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Tasks Moved`
+              )
+            ),
             map(() => actions.moveMatchingTasks.success()),
             catchError((error: HttpErrorResponse) =>
               of(actions.moveMatchingTasks.fail({ error }))
@@ -396,7 +408,11 @@ export class BoardGroupsEffects {
 
         return this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Tasks Deleted')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Tasks Deleted`
+            )
+          ),
           map(() => actions.deleteTaskMultiple.success()),
           catchError((error: HttpErrorResponse) =>
             of(actions.deleteTaskMultiple.fail({ error }))
@@ -433,7 +449,11 @@ export class BoardGroupsEffects {
           })
           .pipe(
             unwrapClientReposne(),
-            tap(() => this.snackbar.open('Tasks Moved')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Tasks Moved`
+              )
+            ),
             map(() => actions.moveSelectedTasks.success()),
             catchError((error: HttpErrorResponse) =>
               of(actions.moveSelectedTasks.fail({ error }))
@@ -537,7 +557,11 @@ export class BoardGroupsEffects {
           })
           .pipe(
             unwrapClientReposne(),
-            tap(() => this.snackbar.open('Tasks Re-assigned')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Tasks Re-assigned`
+              )
+            ),
             map(() => actions.reassignTasks.success()),
             catchError((error: HttpErrorResponse) =>
               of(actions.reassignTasks.fail({ error }))
@@ -571,15 +595,15 @@ export class BoardGroupsEffects {
 }
 
 const DELETE_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to delete this group?',
-  title: 'Delete Group',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to delete this group?`,
+  title: $localize`:Title of a confirmation dialog:Delete Group`,
 };
 
 const DELETE_SELECTED_TASKS_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete Selcted Tasks',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to delete the selected tasks?',
-  title: 'Delete Selected Tasks',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete Selcted Tasks`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to delete the selected tasks?`,
+  title: $localize`:Title of a confirmation dialog:Delete Selected Tasks`,
 };

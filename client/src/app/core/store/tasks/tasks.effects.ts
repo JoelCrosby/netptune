@@ -192,7 +192,11 @@ export class ProjectTasksEffects {
       switchMap((action) =>
         this.projectTasksHubService.post(action.identifier, action.task).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Task created')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Task created`
+            )
+          ),
           map((task) => actions.createProjectTask.success({ task })),
           catchError((error: HttpErrorResponse) =>
             of(actions.createProjectTask.fail({ error }))
@@ -208,7 +212,13 @@ export class ProjectTasksEffects {
       concatMap((action) =>
         this.projectTasksHubService.put(action.identifier, action.task).pipe(
           unwrapClientReposne(),
-          tap(() => !!action.silent && this.snackbar.open('Task updated')),
+          tap(
+            () =>
+              !!action.silent &&
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Task updated`
+              )
+          ),
           map((task) => actions.editProjectTask.success({ task })),
           catchError((error: HttpErrorResponse) =>
             of(actions.editProjectTask.fail({ error }))
@@ -227,7 +237,9 @@ export class ProjectTasksEffects {
           .pipe(
             unwrapClientReposne(),
             tap(() => {
-              this.snackbar.open('Tasks updated');
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Tasks updated`
+              );
               this.projectTasksHubService.reloadTaskList();
             }),
             map(() => actions.bulkUpdateTasks.success()),
@@ -251,7 +263,11 @@ export class ProjectTasksEffects {
               .delete(action.identifier, action.task)
               .pipe(
                 unwrapClientReposne(),
-                tap(() => this.snackbar.open('Task deleted')),
+                tap(() =>
+                  this.snackbar.open(
+                    $localize`:Confirmation shown after an action succeeds:Task deleted`
+                  )
+                ),
                 map(() => {
                   const taskId = action.task.id;
                   const identifier = action.identifier;
@@ -363,10 +379,16 @@ export class ProjectTasksEffects {
           .import(action.boardIdentifier, action.file)
           .pipe(
             unwrapClientReposne(),
-            tap(() => this.snackbar.open('Import Successful')),
+            tap(() =>
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Import Successful`
+              )
+            ),
             map(() => actions.importTasks.success()),
             catchError((error) => {
-              this.snackbar.open('Import Failed');
+              this.snackbar.open(
+                $localize`:Confirmation shown after an action succeeds:Import Failed`
+              );
               return of(actions.importTasks.fail({ error }));
             })
           )
@@ -412,16 +434,16 @@ export class ProjectTasksEffects {
 }
 
 const DELETE_TASK_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
-  message: 'Are you sure you want to delete this task?',
-  title: 'Delete Task',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to delete this task?`,
+  title: $localize`:Title of a confirmation dialog:Delete Task`,
   color: 'warn',
 };
 
 const buildDeleteTasksConfirmation = (count: number): ConfirmDialogOptions => ({
-  acceptLabel: 'Delete',
-  cancelLabel: 'Cancel',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
   message:
     count === 1
       ? 'Are you sure you want to delete this task?'

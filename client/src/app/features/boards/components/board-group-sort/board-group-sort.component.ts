@@ -33,6 +33,7 @@ import {
   ],
   template: `
     <app-filter-action-button
+      i18n-label="Button that opens the task sort options"
       label="Sort tasks"
       [icon]="lucideArrowUpDown"
       [color]="isDefault() ? undefined : 'primary'"
@@ -56,7 +57,11 @@ import {
 
           <button app-menu-item (click)="onDirectionClicked('asc')">
             <svg lucideArrowUp class="h-4 w-4 shrink-0"></svg>
-            <span class="flex-1">Ascending</span>
+            <span
+              class="flex-1"
+              i18n="Sort direction, smallest or earliest first">
+              Ascending
+            </span>
             <svg
               lucideCheck
               class="h-4 w-4 shrink-0"
@@ -65,7 +70,9 @@ import {
 
           <button app-menu-item (click)="onDirectionClicked('desc')">
             <svg lucideArrowDown class="h-4 w-4 shrink-0"></svg>
-            <span class="flex-1">Descending</span>
+            <span class="flex-1" i18n="Sort direction, largest or latest first">
+              Descending
+            </span>
             <svg
               lucideCheck
               class="h-4 w-4 shrink-0"

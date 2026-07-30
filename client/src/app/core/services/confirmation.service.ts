@@ -8,9 +8,9 @@ import { map } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
 
 const DEFAULT_CONFIG: ConfirmDialogOptions = {
-  acceptLabel: 'Accept',
-  cancelLabel: 'Cancel',
-  title: 'Confirm ?',
+  acceptLabel: $localize`:Confirms the action in a dialog:Accept`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  title: $localize`:Title of a confirmation dialog:Confirm?`,
   color: 'primary',
 };
 

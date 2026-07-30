@@ -54,7 +54,9 @@ import {
       [centerPage]="false"
       [fullHeight]="true"
       [showProgress]="calendar.isLoading()">
-      <app-page-header title="Calendar" />
+      <app-page-header
+        i18n-title="Page title for the calendar"
+        title="Calendar" />
 
       <section
         class="border-border bg-card flex h-[calc(100vh-180px)] min-h-0 flex-none flex-col overflow-hidden rounded-lg border max-[600px]:h-[calc(100vh-154px)]">
@@ -86,14 +88,22 @@ import {
         } @else if (calendar.error()) {
           <app-error-state
             compact
+            i18n-title="Shown when the calendar fails to load"
             title="The calendar could not be loaded"
+            i18n-description="Advice when the calendar fails to load"
             description="Check the selected filters and try again."
             (retry)="calendar.reload()" />
         } @else if (calendar.value(); as view) {
           @if (view.truncated) {
             <div class="border-border border-b bg-amber-500/10 p-3 text-sm">
-              This calendar contains more than 2,000 scheduled tasks. Narrow the
-              project or sprint filter to see the complete result.
+              <span
+                i18n="
+                  Warning that the calendar result was truncated. The 2,000
+                  limit is fixed by the server
+                ">
+                This calendar contains more than 2,000 scheduled tasks. Narrow
+                the project or sprint filter to see the complete result.
+              </span>
             </div>
           }
 

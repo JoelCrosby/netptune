@@ -15,6 +15,7 @@ import {
   template: `
     <app-avatar-filter
       [options]="assignees()"
+      i18n-emptyLabel="Shown when a task has nobody assigned"
       emptyLabel="No assignees"
       (optionClicked)="onAssigneeClicked($event)" />
   `,

@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     class:
       'block overflow-hidden rounded-lg border border-border bg-background shadow-sm',
   },
-  template: `<ng-content />`,
+  template: ` <ng-content /> `,
   styles: ``,
 })
 export class PanelComponent {}

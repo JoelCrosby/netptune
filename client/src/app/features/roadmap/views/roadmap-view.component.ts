@@ -55,7 +55,9 @@ const defaultTo = addDays(today, 45);
       [centerPage]="false"
       [fullHeight]="true"
       [showProgress]="roadmap.isLoading()">
-      <app-page-header title="Roadmap" />
+      <app-page-header
+        i18n-title="Page title for the roadmap"
+        title="Roadmap" />
 
       <section
         class="border-border bg-card flex h-[calc(100vh-180px)] min-h-0 flex-none flex-col overflow-hidden rounded-lg border max-[600px]:h-[calc(100vh-154px)]">
@@ -100,14 +102,22 @@ const defaultTo = addDays(today, 45);
         } @else if (roadmap.error()) {
           <app-error-state
             compact
+            i18n-title="Shown when the roadmap fails to load"
             title="The roadmap could not be loaded"
+            i18n-description="Advice when the roadmap fails to load"
             description="Check the selected date range and try again."
             (retry)="roadmap.reload()" />
         } @else if (roadmap.value(); as view) {
           @if (view.truncated) {
             <div class="border-border border-b bg-amber-500/10 p-3 text-sm">
-              This roadmap contains more than 2,000 scheduled tasks. Narrow the
-              project or date filters to see the complete result.
+              <span
+                i18n="
+                  Warning that the roadmap result was truncated. The 2,000 limit
+                  is fixed by the server
+                ">
+                This roadmap contains more than 2,000 scheduled tasks. Narrow
+                the project or date filters to see the complete result.
+              </span>
             </div>
           }
 

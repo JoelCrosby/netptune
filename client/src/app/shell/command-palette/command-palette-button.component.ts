@@ -17,17 +17,17 @@ import { CommandPaletteService } from './command-palette.service';
       <svg lucideSearch class="h-3.5 w-3.5"></svg>
       <span
         class="hidden sm:inline"
-        i18n="Label on the button that opens the command palette"
-        >Search</span
-      >
+        i18n="Label on the button that opens the command palette">
+        Search
+      </span>
       <kbd
         class="bg-muted/10 ml-auto hidden rounded px-1 py-0.5 font-mono text-xs sm:inline"
         i18n="
           Keyboard shortcut hint for the command palette. Translate the modifier
           key to its local name (for example Strg in German); leave the K as-is
-        "
-        >Ctrl K</kbd
-      >
+        ">
+        Ctrl K
+      </kbd>
     </button>
   `,
 })

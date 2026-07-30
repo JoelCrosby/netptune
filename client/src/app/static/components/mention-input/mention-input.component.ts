@@ -82,7 +82,7 @@ export interface MentionSubmitEvent {
       </app-form-control-field>
 
       @if (hint()) {
-        <small [id]="hintId()" appFormHint> {{ hint() }} </small>
+        <small [id]="hintId()" appFormHint>{{ hint() }}</small>
       }
 
       @if (showErrors()) {
@@ -116,7 +116,11 @@ export interface MentionSubmitEvent {
             <span class="truncate">{{ user.displayName }}</span>
           </button>
         } @empty {
-          <div class="text-muted px-3 py-2 text-sm">No results</div>
+          <div class="text-muted px-3 py-2 text-sm">
+            <span i18n="Shown when a mention search matches nobody">
+              No results
+            </span>
+          </div>
         }
       </div>
     </ng-template>

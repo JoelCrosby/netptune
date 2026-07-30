@@ -13,6 +13,7 @@ import {
   host: { class: 'block' },
   template: `
     <apx-chart
+      i18n-aria-label="Accessible name of the sprint velocity chart"
       aria-label="Committed and completed sprint velocity"
       [series]="series()"
       [chart]="chart"

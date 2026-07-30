@@ -29,34 +29,47 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     FormInputComponent,
     FormField,
   ],
-  template: `<app-dialog-title>Delete Workspace</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the delete-workspace dialog">
+      Delete Workspace
+    </app-dialog-title>
 
     <form (submit)="confirmDelete($event)">
       <app-dialog-content>
         <p class="text-foreground/80 mb-4 text-sm">
-          This will delete <strong>{{ workspace.name }}</strong> for every
-          member. To confirm, type the workspace name below.
+          <span
+            i18n="
+              Warning before deleting a workspace. NAME is the workspace name
+            ">
+            This will delete
+            <strong>{{ workspace.name }}</strong>
+            for every member. To confirm, type the workspace name below.
+          </span>
         </p>
 
         <app-form-input
           [formField]="confirmationForm.workspaceName"
+          i18n-label="Label of the field confirming the workspace name"
           label="Workspace name"
           autocomplete="off" />
       </app-dialog-content>
 
       <div app-dialog-actions align="end">
         <button app-stroked-button app-dialog-close type="button">
-          Cancel
+          <span i18n="Dismisses a dialog without acting">Cancel</span>
         </button>
         <button
           app-flat-button
           color="warn"
           type="submit"
           [disabled]="confirmationForm().invalid()">
-          Delete Workspace
+          <span i18n="Button that permanently deletes the workspace">
+            Delete Workspace
+          </span>
         </button>
       </div>
-    </form>`,
+    </form>
+  `,
 })
 export class DeleteWorkspaceDialogComponent {
   private readonly dialogRef =
@@ -66,7 +79,7 @@ export class DeleteWorkspaceDialogComponent {
   readonly confirmationModel = signal({ workspaceName: '' });
   readonly confirmationForm = form(this.confirmationModel, (schema) => {
     required(schema.workspaceName, {
-      message: 'Enter the workspace name to continue.',
+      message: $localize`:Validation error when the workspace name confirmation is empty:Enter the workspace name to continue.`,
     });
     maxLength(schema.workspaceName, 1024);
     validate(schema.workspaceName, ({ value }) => {

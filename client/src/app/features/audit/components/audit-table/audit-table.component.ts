@@ -27,10 +27,15 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
   ],
   template: `
     <app-datatable
+      i18n-errorMessage="Shown when the audit log fails to load"
       errorMessage="Audit events could not be loaded."
       containerClass="h-[calc(100vh-42rem)] overflow-auto"
       tableClass="min-w-180 table-fixed"
+      i18n-emptyMessage="Empty state for the audit log"
       emptyMessage="No audit events found."
+      i18n-itemLabel="
+        Plural noun for audit entries, used in the selection summary
+      "
       itemLabel="events"
       [data]="data"
       [stickyHeader]="true">
@@ -57,7 +62,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
         <span class="text-foreground/80">
           {{ row.entityType | entityType }}
           @if (row.entityId) {
-            <span class="text-foreground/50"> #{{ row.entityId }}</span>
+            <span class="text-foreground/50">#{{ row.entityId }}</span>
           }
         </span>
       </ng-template>
@@ -71,6 +76,9 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
           <button
             app-icon-button
             type="button"
+            i18n-aria-label="
+              Accessible label for the button that opens an audit entry
+            "
             aria-label="View full audit log details"
             (click)="openDetails(row)">
             <svg lucideExternalLink class="h-4 w-4"></svg>

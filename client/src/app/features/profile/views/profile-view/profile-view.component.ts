@@ -24,28 +24,38 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     ChangePasswordComponent,
     LinkedProvidersComponent,
   ],
-  template: `<app-page-container
-    [showProgress]="loadingUpdate()"
-    [centerPage]="true"
-    [marginBottom]="true">
-    <app-page-header title="Profile" />
+  template: `
+    <app-page-container
+      [showProgress]="loadingUpdate()"
+      [centerPage]="true"
+      [marginBottom]="true">
+      <app-page-header
+        i18n-title="Page title for the user profile"
+        title="Profile" />
 
-    @if (loading()) {
-      <app-page-loading />
-    } @else if (loadError()) {
-      <app-error-state
-        title="Your profile could not be loaded"
-        description="Check your connection and try again."
-        (retry)="reload()" />
-    } @else {
-      <app-update-profile />
-      <div class="border-border my-8 border-b-2"></div>
-      <app-change-password />
-      <div class="border-border my-8 border-b-2"></div>
-      <h2 class="mb-4 text-lg font-semibold">Linked Accounts</h2>
-      <app-linked-providers />
-    }
-  </app-page-container> `,
+      @if (loading()) {
+        <app-page-loading />
+      } @else if (loadError()) {
+        <app-error-state
+          i18n-title="Shown when the profile fails to load"
+          title="Your profile could not be loaded"
+          i18n-description="Advice shown when a page fails to load"
+          description="Check your connection and try again."
+          (retry)="reload()" />
+      } @else {
+        <app-update-profile />
+        <div class="border-border my-8 border-b-2"></div>
+        <app-change-password />
+        <div class="border-border my-8 border-b-2"></div>
+        <h2 class="mb-4 text-lg font-semibold">
+          <span i18n="Heading above linked external sign-in accounts">
+            Linked Accounts
+          </span>
+        </h2>
+        <app-linked-providers />
+      }
+    </app-page-container>
+  `,
 })
 export class ProfileViewComponent {
   private store = inject(Store);

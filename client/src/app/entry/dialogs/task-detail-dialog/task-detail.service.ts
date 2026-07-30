@@ -55,7 +55,9 @@ export class TaskDetailService {
       .pipe(
         unwrapClientReposne(),
         tap(() => {
-          this.snackbar.open('Task added to sprint');
+          this.snackbar.open(
+            $localize`:Confirmation shown after an action succeeds:Task added to sprint`
+          );
           this.reloadTaskDetail();
         }),
         catchError(() => EMPTY)
@@ -73,7 +75,9 @@ export class TaskDetailService {
       .pipe(
         unwrapClientReposne(),
         tap(() => {
-          this.snackbar.open('Task removed from sprint');
+          this.snackbar.open(
+            $localize`:Confirmation shown after an action succeeds:Task removed from sprint`
+          );
           this.reloadTaskDetail();
         }),
         catchError(() => EMPTY)

@@ -20,11 +20,7 @@ export interface PreferenceDefinition {
   label: string;
   controlType: 'select' | 'toggle' | 'hidden';
   valueType:
-    | 'string'
-    | 'boolean'
-    | 'number-array'
-    | 'number-array-map'
-    | 'string-map';
+    'string' | 'boolean' | 'number-array' | 'number-array-map' | 'string-map';
   defaultValue: unknown;
   allowedScopes: PreferenceScope[];
   options: PreferenceOption[];

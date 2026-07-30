@@ -10,18 +10,20 @@ import { EditorComponent } from '@static/components/editor/editor.component';
 
 @Component({
   selector: 'app-task-detail-description',
-  template: ` <label class="font-sm font-semibold" for="description">
-      Description
+  template: `
+    <label class="font-sm font-semibold" for="description">
+      <span i18n="Label of the task description editor">Description</span>
     </label>
 
     <app-editor
       aria-labelledby="description"
+      i18n-placeholder="Placeholder in the empty task description editor"
       placeholder="Add a Description..."
       (saved)="updateTask($event)"
       [(value)]="description"
       [isReadOnly]="isReadOnly()"
-      class="@xl:px-16">
-    </app-editor>`,
+      class="@xl:px-16"></app-editor>
+  `,
   host: { class: '@container' },
   imports: [EditorComponent],
 })

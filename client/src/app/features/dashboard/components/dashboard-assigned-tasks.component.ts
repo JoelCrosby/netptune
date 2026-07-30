@@ -32,7 +32,9 @@ import { TaskStatusPillComponent } from '@static/components/task-status-pill.com
   template: `
     <section class="flex flex-col gap-3">
       <h2 class="text-foreground flex items-center gap-2 text-lg font-semibold">
-        Assigned to me
+        <span i18n="Heading of the dashboard card listing your tasks">
+          Assigned to me
+        </span>
         <span class="text-muted text-sm font-normal">{{ totalCount() }}</span>
       </h2>
 
@@ -40,6 +42,7 @@ import { TaskStatusPillComponent } from '@static/components/task-status-pill.com
         containerClass="h-[calc(100vh-612px)] min-h-80 overflow-auto"
         tableClass="min-w-[820px] table-fixed"
         rowClass="bg-card"
+        i18n-emptyMessage="Empty state for the assigned-tasks card"
         emptyMessage="You have no tasks assigned to you."
         [data]="data()"
         [stickyHeader]="true"
@@ -69,7 +72,11 @@ import { TaskStatusPillComponent } from '@static/components/task-status-pill.com
               [name]="task.sprintName"
               [status]="task.sprintStatus" />
           } @else {
-            <span class="text-muted text-sm">Backlog</span>
+            <span
+              class="text-muted text-sm"
+              i18n="Shown when a task is not in any sprint">
+              Backlog
+            </span>
           }
         </ng-template>
 
@@ -88,7 +95,11 @@ import { TaskStatusPillComponent } from '@static/components/task-status-pill.com
               {{ priorityLabel(task.priority) }}
             </span>
           } @else {
-            <span class="text-muted text-sm">None</span>
+            <span
+              class="text-muted text-sm"
+              i18n="Shown in place of an empty value">
+              None
+            </span>
           }
         </ng-template>
       </app-datatable>

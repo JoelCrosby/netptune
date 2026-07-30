@@ -18,7 +18,9 @@ import { DashboardAssignedTasksComponent } from '../../components/dashboard-assi
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
-      <app-page-header title="Dashboard" />
+      <app-page-header
+        i18n-title="Page title for the dashboard"
+        title="Dashboard" />
 
       <div class="flex flex-col gap-8">
         <app-dashboard-current-sprint-card />

@@ -38,6 +38,7 @@ const visibleTaskCount = 3;
       focusMode="roving"
       rowWrap="continuous"
       colWrap="continuous"
+      i18n-aria-label="Accessible name of the task calendar grid"
       aria-label="Task calendar"
       (dragleave)="leaveGrid($event)"
       (dragend)="endTaskDrag()">
@@ -71,7 +72,12 @@ const visibleTaskCount = 3;
                   <span
                     class="bg-primary text-primary-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold"
                     aria-hidden="true">
-                    Drop here
+                    <span
+                      i18n="
+                        Shown on a calendar day while dragging a task over it
+                      ">
+                      Drop here
+                    </span>
                   </span>
                 }
               </div>
@@ -104,7 +110,16 @@ const visibleTaskCount = 3;
                     class="text-muted-foreground hover:text-foreground focus-visible:ring-ring w-full rounded px-1 text-left text-xs font-medium focus-visible:ring-2 focus-visible:outline-none"
                     [attr.aria-label]="showMoreLabel(day.date, overflow)"
                     (click)="selectDay(day.date); $event.stopPropagation()">
-                    +{{ overflow }} more
+                    <span
+                      i18n="
+                        How many further tasks a calendar day holds. COUNT is
+                        that number
+                      ">
+                      +{{
+                        overflow // i18n(ph="COUNT")
+                      }}
+                      more
+                    </span>
                   </button>
                 }
               </div>

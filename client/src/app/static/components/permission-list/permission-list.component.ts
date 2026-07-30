@@ -43,11 +43,9 @@ interface PermissionGroup {
                   [lucideIcon]="item.icon"
                   class="h-4 w-4 shrink-0"
                   [class.opacity-40]="!item.granted"></svg>
-                <span
-                  class="flex-1 text-sm"
-                  [class.opacity-40]="!item.granted"
-                  >{{ item.label }}</span
-                >
+                <span class="flex-1 text-sm" [class.opacity-40]="!item.granted">
+                  {{ item.label }}
+                </span>
 
                 <app-checkbox
                   #check

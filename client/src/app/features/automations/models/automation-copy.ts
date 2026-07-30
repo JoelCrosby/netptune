@@ -25,79 +25,79 @@ import {
 } from './automation.models';
 
 export const triggerTypeLabels: Record<AutomationTriggerType, string> = {
-  [AutomationTriggerType.taskUnassignedFor]: 'Task is unassigned',
-  [AutomationTriggerType.taskChanged]: 'Task changes',
-  [AutomationTriggerType.taskDueDateApproaching]: 'Task due date approaches',
-  [AutomationTriggerType.taskCreated]: 'Task is created',
-  [AutomationTriggerType.taskOverdue]: 'Task becomes overdue',
-  [AutomationTriggerType.taskHasNoDueDate]: 'Task has no due date',
-  [AutomationTriggerType.taskInactiveFor]: 'Task remains inactive',
-  [AutomationTriggerType.sprintStarted]: 'Sprint starts',
-  [AutomationTriggerType.sprintCompleted]: 'Sprint completes',
-  [AutomationTriggerType.sprintEndingSoon]: 'Sprint end approaches',
-  [AutomationTriggerType.taskBlocked]: 'Task becomes blocked',
-  [AutomationTriggerType.taskUnblocked]: 'Task becomes unblocked',
-  [AutomationTriggerType.subtasksCompleted]: 'All subtasks complete',
+  [AutomationTriggerType.taskUnassignedFor]: $localize`:Name of an automation trigger event:Task is unassigned`,
+  [AutomationTriggerType.taskChanged]: $localize`:Name of an automation trigger event:Task changes`,
+  [AutomationTriggerType.taskDueDateApproaching]: $localize`:Name of an automation trigger event:Task due date approaches`,
+  [AutomationTriggerType.taskCreated]: $localize`:Name of an automation trigger event:Task is created`,
+  [AutomationTriggerType.taskOverdue]: $localize`:Name of an automation trigger event:Task becomes overdue`,
+  [AutomationTriggerType.taskHasNoDueDate]: $localize`:Name of an automation trigger event:Task has no due date`,
+  [AutomationTriggerType.taskInactiveFor]: $localize`:Name of an automation trigger event:Task remains inactive`,
+  [AutomationTriggerType.sprintStarted]: $localize`:Name of an automation trigger event:Sprint starts`,
+  [AutomationTriggerType.sprintCompleted]: $localize`:Name of an automation trigger event:Sprint completes`,
+  [AutomationTriggerType.sprintEndingSoon]: $localize`:Name of an automation trigger event:Sprint end approaches`,
+  [AutomationTriggerType.taskBlocked]: $localize`:Name of an automation trigger event:Task becomes blocked`,
+  [AutomationTriggerType.taskUnblocked]: $localize`:Name of an automation trigger event:Task becomes unblocked`,
+  [AutomationTriggerType.subtasksCompleted]: $localize`:Name of an automation trigger event:All subtasks complete`,
 };
 
 export const taskChangeFieldLabels: Record<TaskChangeField, string> = {
-  [TaskChangeField.name]: 'Name',
-  [TaskChangeField.description]: 'Description',
-  [TaskChangeField.status]: 'Status',
-  [TaskChangeField.assignees]: 'Assignees',
-  [TaskChangeField.owner]: 'Owner',
-  [TaskChangeField.priority]: 'Priority',
-  [TaskChangeField.estimate]: 'Estimate',
-  [TaskChangeField.dueDate]: 'Due date',
-  [TaskChangeField.tags]: 'Tags',
-  [TaskChangeField.startDate]: 'Start date',
-  [TaskChangeField.sprint]: 'Sprint',
-  [TaskChangeField.boardGroup]: 'Board group',
+  [TaskChangeField.name]: $localize`:Task field that an automation can watch for changes:Name`,
+  [TaskChangeField.description]: $localize`:Task field that an automation can watch for changes:Description`,
+  [TaskChangeField.status]: $localize`:Task field that an automation can watch for changes:Status`,
+  [TaskChangeField.assignees]: $localize`:Task field that an automation can watch for changes:Assignees`,
+  [TaskChangeField.owner]: $localize`:Task field that an automation can watch for changes:Owner`,
+  [TaskChangeField.priority]: $localize`:Task field that an automation can watch for changes:Priority`,
+  [TaskChangeField.estimate]: $localize`:Task field that an automation can watch for changes:Estimate`,
+  [TaskChangeField.dueDate]: $localize`:Task field that an automation can watch for changes:Due date`,
+  [TaskChangeField.tags]: $localize`:Task field that an automation can watch for changes:Tags`,
+  [TaskChangeField.startDate]: $localize`:Task field that an automation can watch for changes:Start date`,
+  [TaskChangeField.sprint]: $localize`:Task field that an automation can watch for changes:Sprint`,
+  [TaskChangeField.boardGroup]: $localize`:Task field that an automation can watch for changes:Board group`,
 };
 
 export const actionTypeLabels: Record<AutomationActionType, string> = {
-  [AutomationActionType.notifyTaskAssignees]: 'Notify task assignees',
-  [AutomationActionType.flagTask]: 'Flag task',
-  [AutomationActionType.updateTask]: 'Update task',
-  [AutomationActionType.addComment]: 'Add comment',
-  [AutomationActionType.deleteTask]: 'Delete task',
-  [AutomationActionType.createTask]: 'Create task',
-  [AutomationActionType.manageTaskRelation]: 'Manage task relation',
+  [AutomationActionType.notifyTaskAssignees]: $localize`:Name of an automation action:Notify task assignees`,
+  [AutomationActionType.flagTask]: $localize`:Name of an automation action:Flag task`,
+  [AutomationActionType.updateTask]: $localize`:Name of an automation action:Update task`,
+  [AutomationActionType.addComment]: $localize`:Name of an automation action:Add comment`,
+  [AutomationActionType.deleteTask]: $localize`:Name of an automation action:Delete task`,
+  [AutomationActionType.createTask]: $localize`:Name of an automation action:Create task`,
+  [AutomationActionType.manageTaskRelation]: $localize`:Name of an automation action:Manage task relation`,
 };
 
 export const conditionOperatorLabels: Record<
   AutomationConditionOperator,
   string
 > = {
-  [AutomationConditionOperator.any]: 'changed',
-  [AutomationConditionOperator.equals]: 'equals',
-  [AutomationConditionOperator.notEquals]: 'does not equal',
-  [AutomationConditionOperator.contains]: 'contains',
-  [AutomationConditionOperator.isEmpty]: 'is empty',
-  [AutomationConditionOperator.isNotEmpty]: 'is not empty',
-  [AutomationConditionOperator.added]: 'added',
-  [AutomationConditionOperator.removed]: 'removed',
+  [AutomationConditionOperator.any]: $localize`:Operator used in an automation condition:changed`,
+  [AutomationConditionOperator.equals]: $localize`:Operator used in an automation condition:equals`,
+  [AutomationConditionOperator.notEquals]: $localize`:Operator used in an automation condition:does not equal`,
+  [AutomationConditionOperator.contains]: $localize`:Operator used in an automation condition:contains`,
+  [AutomationConditionOperator.isEmpty]: $localize`:Operator used in an automation condition:is empty`,
+  [AutomationConditionOperator.isNotEmpty]: $localize`:Operator used in an automation condition:is not empty`,
+  [AutomationConditionOperator.added]: $localize`:Operator used in an automation condition:added`,
+  [AutomationConditionOperator.removed]: $localize`:Operator used in an automation condition:removed`,
 };
 
 export const conditionGroupOperatorLabels: Record<
   AutomationConditionGroupOperator,
   string
 > = {
-  [AutomationConditionGroupOperator.all]: 'All of',
-  [AutomationConditionGroupOperator.any]: 'Any of',
-  [AutomationConditionGroupOperator.none]: 'None of',
+  [AutomationConditionGroupOperator.all]: $localize`:Operator combining conditions in a group:All of`,
+  [AutomationConditionGroupOperator.any]: $localize`:Operator combining conditions in a group:Any of`,
+  [AutomationConditionGroupOperator.none]: $localize`:Operator combining conditions in a group:None of`,
 };
 
 export const notificationRecipientLabels: Record<
   AutomationNotificationRecipient,
   string
 > = {
-  [AutomationNotificationRecipient.assignees]: 'Assignees',
-  [AutomationNotificationRecipient.taskOwner]: 'Task owner',
-  [AutomationNotificationRecipient.triggeringUser]: 'Triggering user',
-  [AutomationNotificationRecipient.specificUsers]: 'Specific users',
-  [AutomationNotificationRecipient.projectMembers]: 'Project members',
-  [AutomationNotificationRecipient.workspaceRoles]: 'Workspace roles',
+  [AutomationNotificationRecipient.assignees]: $localize`:Who an automation notifies:Assignees`,
+  [AutomationNotificationRecipient.taskOwner]: $localize`:Who an automation notifies:Task owner`,
+  [AutomationNotificationRecipient.triggeringUser]: $localize`:Who an automation notifies:Triggering user`,
+  [AutomationNotificationRecipient.specificUsers]: $localize`:Who an automation notifies:Specific users`,
+  [AutomationNotificationRecipient.projectMembers]: $localize`:Who an automation notifies:Project members`,
+  [AutomationNotificationRecipient.workspaceRoles]: $localize`:Who an automation notifies:Workspace roles`,
 };
 
 export const messageVariables = [
@@ -113,55 +113,54 @@ export const messageVariables = [
 ];
 
 export const messageVariableSampleValues: Record<string, string> = {
-  'task.name': 'Fix login redirect',
+  'task.name': $localize`:Example value shown in the notification preview:Fix login redirect`,
   'task.key': 'NETP-128',
-  'task.status': 'In Progress',
-  'task.priority': 'High',
+  'task.status': $localize`:Example value shown in the notification preview:In Progress`,
+  'task.priority': $localize`:Example value shown in the notification preview:High`,
   'task.startDate': '2026-08-03',
   'task.dueDate': '2026-08-10',
-  'project.name': 'Website Redesign',
-  'workspace.name': 'Acme',
-  'rule.name': 'Untitled automation',
+  'project.name': $localize`:Example value shown in the notification preview:Website Redesign`,
+  'workspace.name': $localize`:Example value shown in the notification preview:Acme`,
+  'rule.name': $localize`:Example value shown in the notification preview:Untitled automation`,
 };
 
 export const notificationRecipientPreviewLabels: Record<
   AutomationNotificationRecipient,
   string
 > = {
-  [AutomationNotificationRecipient.assignees]: 'Everyone assigned to the task',
-  [AutomationNotificationRecipient.taskOwner]: 'The task owner',
-  [AutomationNotificationRecipient.triggeringUser]:
-    'The user whose change ran the rule',
-  [AutomationNotificationRecipient.specificUsers]: 'Chosen users',
+  [AutomationNotificationRecipient.assignees]: $localize`:Who an automation notifies, shown in the preview:Everyone assigned to the task`,
+  [AutomationNotificationRecipient.taskOwner]: $localize`:Who an automation notifies, shown in the preview:The task owner`,
+  [AutomationNotificationRecipient.triggeringUser]: $localize`:Who an automation notifies, shown in the preview:The user whose change ran the rule`,
+  [AutomationNotificationRecipient.specificUsers]: $localize`:Who an automation notifies, shown in the preview:Chosen users`,
   [AutomationNotificationRecipient.projectMembers]:
     "Everyone in the task's project",
-  [AutomationNotificationRecipient.workspaceRoles]: 'Chosen workspace roles',
+  [AutomationNotificationRecipient.workspaceRoles]: $localize`:Who an automation notifies, shown in the preview:Chosen workspace roles`,
 };
 
 export type AutomationScopeKind = 'workspace' | 'project' | 'board' | 'sprint';
 
 export const scopeKindLabels: Record<AutomationScopeKind, string> = {
-  workspace: 'Whole workspace',
-  project: 'A single project',
-  board: 'A single board',
-  sprint: 'A single sprint',
+  workspace: $localize`:Scope an automation can be limited to:Whole workspace`,
+  project: $localize`:Scope an automation can be limited to:A single project`,
+  board: $localize`:Scope an automation can be limited to:A single board`,
+  sprint: $localize`:Scope an automation can be limited to:A single sprint`,
 };
 
 export const automationRunStatusLabels: Record<AutomationRunStatus, string> = {
-  [AutomationRunStatus.succeeded]: 'Succeeded',
-  [AutomationRunStatus.failed]: 'Failed',
-  [AutomationRunStatus.skipped]: 'Skipped',
+  [AutomationRunStatus.succeeded]: $localize`:Outcome status of an automation run:Succeeded`,
+  [AutomationRunStatus.failed]: $localize`:Outcome status of an automation run:Failed`,
+  [AutomationRunStatus.skipped]: $localize`:Outcome status of an automation run:Skipped`,
 };
 
 export const automationActionResultStatusLabels: Record<
   AutomationActionResultStatus,
   string
 > = {
-  [AutomationActionResultStatus.pending]: 'Pending',
-  [AutomationActionResultStatus.succeeded]: 'Succeeded',
-  [AutomationActionResultStatus.failed]: 'Failed',
-  [AutomationActionResultStatus.skipped]: 'Skipped',
-  [AutomationActionResultStatus.scheduled]: 'Scheduled',
+  [AutomationActionResultStatus.pending]: $localize`:Outcome status of a single automation action:Pending`,
+  [AutomationActionResultStatus.succeeded]: $localize`:Outcome status of a single automation action:Succeeded`,
+  [AutomationActionResultStatus.failed]: $localize`:Outcome status of a single automation action:Failed`,
+  [AutomationActionResultStatus.skipped]: $localize`:Outcome status of a single automation action:Skipped`,
+  [AutomationActionResultStatus.scheduled]: $localize`:Outcome status of a single automation action:Scheduled`,
 };
 
 export type AutomationCopySegment =
@@ -177,7 +176,9 @@ export function describeAutomationTriggerSegments(
 
   const fields = trigger.fields?.length
     ? trigger.fields.map((field) => taskChangeFieldLabels[field])
-    : ['selected fields'];
+    : [
+        $localize`:Stands in for the watched fields when none are chosen:selected fields`,
+      ];
   const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
 
   if (trigger.conditionGroup) {
@@ -356,44 +357,65 @@ export function describeAutomationTrigger(
     case AutomationTriggerType.taskChanged:
       return describeTaskChangedTrigger(trigger, statuses);
     case AutomationTriggerType.taskUnassignedFor:
-      return `When a task is unassigned for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
+      return describeUnassignedForTrigger(trigger.durationDays ?? 1);
     case AutomationTriggerType.taskDueDateApproaching:
       return describeDueDateTrigger(trigger.durationDays ?? 0);
     case AutomationTriggerType.taskCreated:
-      return 'When a task is created';
+      return $localize`:Automation trigger description:When a task is created`;
     case AutomationTriggerType.taskOverdue:
-      return 'When a task becomes overdue';
+      return $localize`:Automation trigger description:When a task becomes overdue`;
     case AutomationTriggerType.taskHasNoDueDate:
-      return 'When a task has no due date';
+      return $localize`:Automation trigger description:When a task has no due date`;
     case AutomationTriggerType.taskInactiveFor:
-      return `When a task has no activity for ${trigger.durationDays ?? 1} ${pluralizeDays(trigger.durationDays ?? 1)}`;
+      return describeInactiveForTrigger(trigger.durationDays ?? 1);
     case AutomationTriggerType.sprintStarted:
-      return 'When a sprint starts, for every task in it';
+      return $localize`:Automation trigger description:When a sprint starts, for every task in it`;
     case AutomationTriggerType.sprintCompleted:
-      return 'When a sprint completes, for every task in it';
+      return $localize`:Automation trigger description:When a sprint completes, for every task in it`;
     case AutomationTriggerType.sprintEndingSoon:
       return describeSprintEndingTrigger(trigger.durationDays ?? 0);
     case AutomationTriggerType.taskBlocked:
-      return 'When a task becomes blocked by an incomplete task';
+      return $localize`:Automation trigger description:When a task becomes blocked by an incomplete task`;
     case AutomationTriggerType.taskUnblocked:
-      return 'When a task is no longer blocked';
+      return $localize`:Automation trigger description:When a task is no longer blocked`;
     case AutomationTriggerType.subtasksCompleted:
-      return 'When every subtask of a task is complete';
+      return $localize`:Automation trigger description:When every subtask of a task is complete`;
   }
+}
+
+// Each whole sentence is one message. $localize cannot evaluate ICU, so the
+// plural is a ternary; fr/de/es share English's one/other split, and a locale
+// with more plural categories would need these moved into a template ICU.
+function describeUnassignedForTrigger(durationDays: number): string {
+  return durationDays === 1
+    ? $localize`:Automation trigger description:When a task is unassigned for 1 day`
+    : $localize`:Automation trigger description. DAYS is a count greater than one:When a task is unassigned for ${durationDays}:DAYS: days`;
+}
+
+function describeInactiveForTrigger(durationDays: number): string {
+  return durationDays === 1
+    ? $localize`:Automation trigger description:When a task has no activity for 1 day`
+    : $localize`:Automation trigger description. DAYS is a count greater than one:When a task has no activity for ${durationDays}:DAYS: days`;
 }
 
 function describeSprintEndingTrigger(durationDays: number): string {
   if (durationDays === 0) {
-    return 'When a sprint ends today, for every task in it';
+    return $localize`:Automation trigger description:When a sprint ends today, for every task in it`;
   }
 
-  return `When a sprint ends in ${durationDays} ${pluralizeDays(durationDays)}, for every task in it`;
+  return durationDays === 1
+    ? $localize`:Automation trigger description:When a sprint ends in 1 day, for every task in it`
+    : $localize`:Automation trigger description. DAYS is a count greater than one:When a sprint ends in ${durationDays}:DAYS: days, for every task in it`;
 }
 
 function describeDueDateTrigger(durationDays: number): string {
-  if (durationDays === 0) return 'When a task is due today';
+  if (durationDays === 0) {
+    return $localize`:Automation trigger description:When a task is due today`;
+  }
 
-  return `When a task is due in ${durationDays} ${pluralizeDays(durationDays)}`;
+  return durationDays === 1
+    ? $localize`:Automation trigger description:When a task is due in 1 day`
+    : $localize`:Automation trigger description. DAYS is a count greater than one:When a task is due in ${durationDays}:DAYS: days`;
 }
 
 function describeTaskChangedTrigger(
@@ -402,14 +424,16 @@ function describeTaskChangedTrigger(
 ): string {
   const fields = trigger.fields?.length
     ? trigger.fields.map((field) => taskChangeFieldLabels[field])
-    : ['selected fields'];
+    : [
+        $localize`:Stands in for the watched fields when none are chosen:selected fields`,
+      ];
   const fieldText = joinNaturalList(fields.map(toLowerText), 'or');
 
   if (trigger.conditionGroup) {
-    return `When a task's ${fieldText} changes, if ${describeConditionGroup(trigger.conditionGroup, statuses)}`;
+    return $localize`:Automation trigger description. FIELDS is a list of field names and CONDITIONS a condition summary:When a task's ${fieldText}:FIELDS: changes, if ${describeConditionGroup(trigger.conditionGroup, statuses)}:CONDITIONS:`;
   }
 
-  return `When a task's ${fieldText} changes`;
+  return $localize`:Automation trigger description. FIELDS is a list of field names:When a task's ${fieldText}:FIELDS: changes`;
 }
 
 function describeConditionGroup(
@@ -443,21 +467,21 @@ function describeFieldCondition(
 
   switch (condition.operator) {
     case AutomationConditionOperator.any:
-      return `${field} has any change`;
+      return $localize`:Automation condition summary. FIELD is a field name:${field}:FIELD: has any change`;
     case AutomationConditionOperator.equals:
-      return `${field} equals${value}`;
+      return $localize`:Automation condition summary. FIELD is a field name and VALUE the compared value:${field}:FIELD: equals${value}:VALUE:`;
     case AutomationConditionOperator.notEquals:
-      return `${field} does not equal${value}`;
+      return $localize`:Automation condition summary. FIELD is a field name and VALUE the compared value:${field}:FIELD: does not equal${value}:VALUE:`;
     case AutomationConditionOperator.contains:
-      return `${field} contains${value}`;
+      return $localize`:Automation condition summary. FIELD is a field name and VALUE the compared value:${field}:FIELD: contains${value}:VALUE:`;
     case AutomationConditionOperator.isEmpty:
-      return `${field} is empty`;
+      return $localize`:Automation condition summary. FIELD is a field name:${field}:FIELD: is empty`;
     case AutomationConditionOperator.isNotEmpty:
-      return `${field} is not empty`;
+      return $localize`:Automation condition summary. FIELD is a field name:${field}:FIELD: is not empty`;
     case AutomationConditionOperator.added:
-      return `${value.trim() || field} is added`;
+      return $localize`:Automation condition summary. SUBJECT is the compared value, or the field name when there is none:${value.trim() || field}:SUBJECT: is added`;
     case AutomationConditionOperator.removed:
-      return `${value.trim() || field} is removed`;
+      return $localize`:Automation condition summary. SUBJECT is the compared value, or the field name when there is none:${value.trim() || field}:SUBJECT: is removed`;
   }
 }
 
@@ -485,14 +509,14 @@ export function describeAutomationAction(
       return describeNotifyAction(action);
     case AutomationActionType.flagTask:
       return action.flagName
-        ? `Flag the task as "${action.flagName}"`
-        : 'Flag the task';
+        ? $localize`:Automation action summary. FLAG is the flag name:Flag the task as "${action.flagName}:FLAG:"`
+        : $localize`:Automation action summary when the flag has no name:Flag the task`;
     case AutomationActionType.updateTask:
       return describeUpdateTaskAction(action, statuses);
     case AutomationActionType.addComment:
       return action.comment
-        ? `Add comment: "${action.comment}"`
-        : 'Add a comment';
+        ? $localize`:Automation action summary. COMMENT is the comment text:Add comment: "${action.comment}:COMMENT:"`
+        : $localize`:Automation action summary when the comment is empty:Add a comment`;
     case AutomationActionType.deleteTask:
       return describeDeleteTaskAction(action);
     case AutomationActionType.createTask:
@@ -624,7 +648,10 @@ function previewChosenUsers(
   const chosenIds = action.recipientUserIds ?? [];
 
   if (!chosenIds.length) {
-    return { text: 'No users chosen yet', isIncomplete: true };
+    return {
+      text: $localize`:Shown when no notification recipients have been chosen:No users chosen yet`,
+      isIncomplete: true,
+    };
   }
 
   const names = chosenIds.map((id) => {
@@ -642,11 +669,14 @@ function previewChosenRoles(
   const roles = action.recipientRoles ?? [];
 
   if (!roles.length) {
-    return { text: 'No workspace roles chosen yet', isIncomplete: true };
+    return {
+      text: $localize`:Shown when no workspace roles have been chosen:No workspace roles chosen yet`,
+      isIncomplete: true,
+    };
   }
 
   const labels = roles.map((role) => {
-    return `Everyone with the ${workspaceRoleLabels[role]} role`;
+    return $localize`:Notification recipients. ROLE is a workspace role name:Everyone with the ${workspaceRoleLabels[role]}:ROLE: role`;
   });
 
   return { text: joinNaturalList(labels), isIncomplete: false };
@@ -675,7 +705,9 @@ export function describeNotificationAudience(action: AutomationAction): string {
     if (recipient === AutomationNotificationRecipient.specificUsers) {
       const count = action.recipientUserIds?.length ?? 0;
 
-      return count === 1 ? '1 chosen user' : `${count} chosen users`;
+      return count === 1
+        ? $localize`:Notification recipients, exactly one chosen user:1 chosen user`
+        : $localize`:Notification recipients. COUNT is a number greater than one:${count}:COUNT: chosen users`;
     }
 
     return toLowerText(notificationRecipientLabels[recipient]);
@@ -689,29 +721,51 @@ function describeRelationAction(action: AutomationAction): string {
     action.relationOperation === AutomationRelationOperation.remove;
 
   if (isRemoval) {
-    return 'Remove the configured task relations';
+    return $localize`:Automation action summary:Remove the configured task relations`;
   }
 
-  return 'Link the task to the configured task';
+  return $localize`:Automation action summary:Link the task to the configured task`;
 }
 
 function describeCreateTaskAction(action: AutomationAction): string {
   const name = action.taskName?.trim();
-  const created = name ? `Create task "${name}"` : 'Create a task';
+  const created = name
+    ? $localize`:Automation action summary. NAME is the task name:Create task "${name}:NAME:"`
+    : $localize`:Automation action summary when the new task has no name:Create a task`;
 
-  return action.linkRelationTypeId ? `${created} and link it` : created;
+  return action.linkRelationTypeId
+    ? $localize`:Automation action summary. ACTION is a create-task phrase such as 'Create task "Fix bug"':${created}:ACTION: and link it`
+    : created;
 }
 
 function describeDeleteTaskAction(action: AutomationAction): string {
   const amount = action.delayAmount ?? 0;
 
-  if (amount <= 0) return 'Delete the task';
+  if (amount <= 0) {
+    return $localize`:Automation action summary:Delete the task`;
+  }
 
+  // The previous version stripped a trailing "s" from the enum key to make the
+  // singular, which only works in English. Each unit and plurality is now its own
+  // message. fr/de/es share English's one/other split.
   const unit = action.delayUnit ?? AutomationDelayUnit.minutes;
-  const label = AutomationDelayUnit[unit];
-  const unitLabel = amount === 1 ? label.replace(/s$/, '') : label;
+  const isSingle = amount === 1;
 
-  return `Delete the task after ${amount} ${unitLabel}`;
+  if (unit === AutomationDelayUnit.hours) {
+    return isSingle
+      ? $localize`:Automation action summary:Delete the task after 1 hour`
+      : $localize`:Automation action summary. COUNT is greater than one:Delete the task after ${amount}:COUNT: hours`;
+  }
+
+  if (unit === AutomationDelayUnit.days) {
+    return isSingle
+      ? $localize`:Automation action summary:Delete the task after 1 day`
+      : $localize`:Automation action summary. COUNT is greater than one:Delete the task after ${amount}:COUNT: days`;
+  }
+
+  return isSingle
+    ? $localize`:Automation action summary:Delete the task after 1 minute`
+    : $localize`:Automation action summary. COUNT is greater than one:Delete the task after ${amount}:COUNT: minutes`;
 }
 
 function describeUpdateTaskAction(
@@ -789,7 +843,7 @@ function describeUpdateTaskAction(
 
   return updates.length
     ? `Update the task's ${joinNaturalList(updates)}`
-    : 'Update the task';
+    : $localize`:Automation action summary when no fields are set:Update the task`;
 }
 
 function describeDateUpdate(
@@ -797,13 +851,16 @@ function describeDateUpdate(
 ): string {
   switch (update.mode) {
     case AutomationDateUpdateMode.absolute:
-      return update.date || 'selected date';
+      return (
+        update.date ||
+        $localize`:Stands in for a date that has not been chosen yet:selected date`
+      );
     case AutomationDateUpdateMode.relativeDays:
-      return `${update.offset ?? 0} calendar days from the run date`;
+      return $localize`:Date offset in an automation summary. OFFSET is a number of days, which may be negative:${update.offset ?? 0}:OFFSET: calendar days from the run date`;
     case AutomationDateUpdateMode.relativeBusinessDays:
-      return `${update.offset ?? 0} business days from the run date`;
+      return $localize`:Date offset in an automation summary. OFFSET is a number of working days, which may be negative:${update.offset ?? 0}:OFFSET: business days from the run date`;
     case AutomationDateUpdateMode.clear:
-      return 'clear';
+      return $localize`:Automation date update that empties the field:clear`;
   }
 }
 
@@ -811,7 +868,9 @@ export function describeAutomationActions(
   actions: AutomationAction[],
   statuses: Status[] = []
 ): string {
-  if (!actions.length) return 'No actions configured';
+  if (!actions.length) {
+    return $localize`:Shown when an automation has no actions:No actions configured`;
+  }
 
   return actions
     .map((action) => describeAutomationAction(action, statuses))
@@ -823,14 +882,16 @@ export function describeAutomationRule(
   actions: AutomationAction[],
   statuses: Status[] = []
 ): string {
-  return `${describeAutomationTrigger(trigger, statuses)}, ${describeAutomationActions(actions, statuses)}.`;
+  return $localize`:Whole automation rule summary. TRIGGER is the trigger sentence and ACTIONS the action sentence:${describeAutomationTrigger(trigger, statuses)}:TRIGGER:, ${describeAutomationActions(actions, statuses)}:ACTIONS:.`;
 }
 
 export function statusLabel(
   statusId: number | null | undefined,
   statuses: Status[] = []
 ): string {
-  if (!isNotNullOrUndefined(statusId)) return 'a selected status';
+  if (!isNotNullOrUndefined(statusId)) {
+    return $localize`:Stands in for a status that has not been chosen:a selected status`;
+  }
 
   return (
     statuses.find((status) => status.id === statusId)?.name ??
@@ -853,12 +914,10 @@ export function entityTargetLabel(
   entityType: EntityType | null | undefined,
   entityId: number | null | undefined
 ): string {
-  if (!isNotNullOrUndefined(entityType)) return 'Workspace';
+  if (!isNotNullOrUndefined(entityType)) {
+    return $localize`:The workspace entity, used when no narrower scope applies:Workspace`;
+  }
 
   const label = entityTypeToString(entityType);
   return entityId ? `${label} #${entityId}` : label;
-}
-
-function pluralizeDays(days: number): string {
-  return days === 1 ? 'day' : 'days';
 }

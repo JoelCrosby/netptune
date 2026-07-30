@@ -25,18 +25,28 @@ export interface EditTagDialogResult {
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Edit Tag</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the edit-tag dialog">
+      Edit Tag
+    </app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
-      <app-form-input [formField]="tagForm.name" label="Name" maxLength="128" />
+      <app-form-input
+        [formField]="tagForm.name"
+        i18n-label="Label of the name field"
+        label="Name"
+        maxLength="128" />
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Close</button>
-      <button app-flat-button type="button" (click)="submit($event)">
-        Save Tag
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
-    </div>`,
+      <button app-flat-button type="button" (click)="submit($event)">
+        <span i18n="Button that saves changes to the tag">Save Tag</span>
+      </button>
+    </div>
+  `,
 })
 export class EditTagDialogComponent {
   private readonly dialogRef =
@@ -51,7 +61,11 @@ export class EditTagDialogComponent {
   readonly tagForm = form(this.tagFormModel, (schema) => {
     apply(
       schema.name,
-      requiredTextSchema({ label: 'Name', maxLength: 128, minLength: 2 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 128,
+        minLength: 2,
+      })
     );
   });
 

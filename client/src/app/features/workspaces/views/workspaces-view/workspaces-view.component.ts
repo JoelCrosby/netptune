@@ -25,24 +25,30 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
     WorkspaceListComponent,
     BuildNumberComponent,
   ],
-  template: `<app-page-container [marginBottom]="true" [centerPage]="true">
-    <app-page-header
-      title="Workspaces"
-      actionTitle="Create Workspace"
-      (actionClick)="openWorkspaceDialog()" />
+  template: `
+    <app-page-container [marginBottom]="true" [centerPage]="true">
+      <app-page-header
+        i18n-title="Page title for the workspace picker"
+        title="Workspaces"
+        i18n-actionTitle="Button that opens the create-workspace dialog"
+        actionTitle="Create Workspace"
+        (actionClick)="openWorkspaceDialog()" />
 
-    @if (loading()) {
-      <app-page-loading />
-    } @else if (loadError()) {
-      <app-error-state
-        title="Your workspaces could not be loaded"
-        description="Check your connection and try again."
-        (retry)="reload()" />
-    } @else {
-      <app-workspace-list />
-      <app-build-number />
-    }
-  </app-page-container> `,
+      @if (loading()) {
+        <app-page-loading />
+      } @else if (loadError()) {
+        <app-error-state
+          i18n-title="Shown when the workspace list fails to load"
+          title="Your workspaces could not be loaded"
+          i18n-description="Advice shown when a page fails to load"
+          description="Check your connection and try again."
+          (retry)="reload()" />
+      } @else {
+        <app-workspace-list />
+        <app-build-number />
+      }
+    </app-page-container>
+  `,
 })
 export class WorkspacesViewComponent {
   private dialog = inject(DialogService);
@@ -75,7 +81,7 @@ export class WorkspacesViewComponent {
 
   openWorkspaceDialog() {
     this.dialog.openWizard(WorkspaceDialogComponent, {
-      title: 'Create Workspace',
+      title: $localize`:Title of a dialog or section:Create Workspace`,
       data: null,
       width: '720px',
     });

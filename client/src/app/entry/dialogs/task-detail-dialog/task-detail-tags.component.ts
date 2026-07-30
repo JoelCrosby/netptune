@@ -16,9 +16,12 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'app-task-detail-tags',
   template: `
-    <h4 class="font-sm mt-4 mb-2 font-semibold">Tags</h4>
+    <h4 class="font-sm mt-4 mb-2 font-semibold">
+      <span i18n="Section heading for a task's tags">Tags</span>
+    </h4>
     <app-form-select-tags
       class="tags-autocomplete"
+      i18n-placeholder="Placeholder in the box for adding a tag to a task"
       placeholder="Add a Tag..."
       [value]="selectedTags()"
       (changed)="onTagsSelectionChanged($event)"

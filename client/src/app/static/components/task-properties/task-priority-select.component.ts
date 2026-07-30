@@ -25,7 +25,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
 
     <app-dropdown-menu #menu>
       <small class="block px-3 py-1 text-xs text-neutral-500">
-        Set Priority
+        <span i18n="Heading above the task priority options">Set Priority</span>
       </small>
       @for (option of options; track option.value) {
         <button app-menu-item (click)="value.set(option.value); menu.close()">

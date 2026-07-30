@@ -14,7 +14,9 @@ import { Store } from '@ngrx/store';
       class="bg-background border-border/5 hover:bg-primary/8 hover:text-primary/80 m-[0.9rem] flex h-full flex-1 cursor-pointer flex-col items-center justify-center rounded border-4 border-dashed p-[0.6rem] text-sm font-medium tracking-[0.125px] text-[rgba(var(--foreground-rgb),.4)] transition-[background-color,margin,color] duration-200 ease-in-out hover:m-[0.4rem] hover:border-solid"
       (click)="onClick()">
       <svg lucidePlus class="h-4 w-4"></svg>
-      <span class="ml-[0.4rem]">Create Group</span>
+      <span class="ml-[0.4rem]" i18n="Button that creates a board group">
+        Create Group
+      </span>
     </div>
   `,
   imports: [LucidePlus],

@@ -92,6 +92,10 @@ import {
                     class="h-5 rounded"
                     app-icon-button
                     type="button"
+                    i18n-aria-label="
+                      Accessible label for the button that opens the column
+                      customisation dialog
+                    "
                     aria-label="Customize columns"
                     (click)="openColumnsDialog()">
                     <svg
@@ -99,7 +103,13 @@ import {
                       class="text-foreground/50 h-4 w-4"></svg>
                   </button>
                 } @else {
-                  <span class="sr-only">Actions</span>
+                  <span
+                    class="sr-only"
+                    i18n="
+                      Screen-reader heading for the table row action column
+                    ">
+                    Actions
+                  </span>
                 }
               </th>
             }
@@ -108,7 +118,14 @@ import {
                 <app-checkbox
                   [checked]="allSelected()"
                   (changed)="toggleAll($event)">
-                  <span class="sr-only">Select all rows</span>
+                  <span
+                    class="sr-only"
+                    i18n="
+                      Screen-reader label for the checkbox that selects every
+                      table row
+                    ">
+                    Select all rows
+                  </span>
                 </app-checkbox>
               </th>
             }
@@ -194,6 +211,10 @@ import {
                         class="w-8"
                         app-icon-button
                         type="button"
+                        i18n-aria-label="
+                          Accessible label for the button that opens a table
+                          row's action menu
+                        "
                         aria-label="Row actions"
                         (click)="
                           dropdownmenu.toggle($any($event.currentTarget))
@@ -228,7 +249,14 @@ import {
                     <app-checkbox
                       [checked]="isSelected(row)"
                       (changed)="toggleRow(row, $event, $index)">
-                      <span class="sr-only">Select row</span>
+                      <span
+                        class="sr-only"
+                        i18n="
+                          Screen-reader label for the checkbox that selects one
+                          table row
+                        ">
+                        Select row
+                      </span>
                     </app-checkbox>
                   </td>
                 }

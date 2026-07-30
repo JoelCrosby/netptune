@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-auth-page-container',
-  template: `<ng-content />`,
+  template: ` <ng-content /> `,
   host: {
     class:
       'h-screen    flex flex-col items-center justify-center grid place-items-center',

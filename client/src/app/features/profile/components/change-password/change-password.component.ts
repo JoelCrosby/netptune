@@ -22,42 +22,44 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 @Component({
   selector: 'app-change-password',
   imports: [FormField, FormInputComponent, StrokedButtonComponent],
-  template: `<form
-    class="max-w-120 px-0"
-    (submit)="changePasswordClicked($event)">
-    <app-form-input
-      type="password"
-      [formField]="passwordForm.currentPassword"
-      autocomplete="current-password"
-      label="Current Password">
-    </app-form-input>
+  template: `
+    <form class="max-w-120 px-0" (submit)="changePasswordClicked($event)">
+      <app-form-input
+        type="password"
+        [formField]="passwordForm.currentPassword"
+        autocomplete="current-password"
+        i18n-label="Label of the existing password field"
+        label="Current Password"></app-form-input>
 
-    <app-form-input
-      type="password"
-      [formField]="passwordForm.newPassword"
-      autocomplete="new-password"
-      label="New Password">
-    </app-form-input>
+      <app-form-input
+        type="password"
+        [formField]="passwordForm.newPassword"
+        autocomplete="new-password"
+        i18n-label="Label of the new password field"
+        label="New Password"></app-form-input>
 
-    <app-form-input
-      type="password"
-      [formField]="passwordForm.confirmPassword"
-      autocomplete="new-password"
-      label="Confirm Password">
-    </app-form-input>
+      <app-form-input
+        type="password"
+        [formField]="passwordForm.confirmPassword"
+        autocomplete="new-password"
+        i18n-label="Label of the password confirmation field"
+        label="Confirm Password"></app-form-input>
 
-    @if (error()) {
-      <div class="text-warn my-1 mb-3 text-sm font-medium">{{ error() }}</div>
-    }
+      @if (error()) {
+        <div class="text-warn my-1 mb-3 text-sm font-medium">{{ error() }}</div>
+      }
 
-    <button
-      class="mt-3 ml-auto block"
-      app-stroked-button
-      type="submit"
-      [disabled]="loading()">
-      Change Password
-    </button>
-  </form> `,
+      <button
+        class="mt-3 ml-auto block"
+        app-stroked-button
+        type="submit"
+        [disabled]="loading()">
+        <span i18n="Button that changes the account password">
+          Change Password
+        </span>
+      </button>
+    </form>
+  `,
 })
 export class ChangePasswordComponent {
   private store = inject(Store);
@@ -82,7 +84,10 @@ export class ChangePasswordComponent {
         return undefined;
       }
 
-      return { kind: 'passwordMismatch', message: 'Passwords do not match.' };
+      return {
+        kind: 'passwordMismatch',
+        message: $localize`:Body of a dialog or validation message:Passwords do not match.`,
+      };
     });
     disabled(schema, () => this.loading());
   });

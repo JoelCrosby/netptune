@@ -70,14 +70,24 @@ export interface AutomationActionUpdate {
     AutomationRelationEditorComponent,
   ],
   template: `
-    <app-card-title>Then</app-card-title>
+    <app-card-title
+      i18n="Heading of the actions section — the 'then' part of the rule">
+      Then
+    </app-card-title>
     <app-card-subtitle>
-      Add the follow-up actions in the order they should run.
+      <span i18n="Explains that actions run in order">
+        Add the follow-up actions in the order they should run.
+      </span>
     </app-card-subtitle>
 
-    <app-panel class="mt-4" aria-label="Follow-up actions">
+    <app-panel
+      class="mt-4"
+      i18n-aria-label="Accessible name of the follow-up actions panel"
+      aria-label="Follow-up actions">
       <app-panel-header
+        i18n-heading="Heading above the ordered list of actions"
         heading="Action sequence"
+        i18n-description="Explains that automation actions run in order"
         description="Actions run from top to bottom."
         [icon]="actionSequenceIcon">
         <app-badge panelHeaderActions color="primary">
@@ -116,7 +126,16 @@ export interface AutomationActionUpdate {
                     class="text-foreground/35 h-4 w-4 shrink-0"
                     aria-hidden="true"></svg>
                   <span class="truncate text-sm font-semibold">
-                    Action {{ actionIndex + 1 }}
+                    <span
+                      i18n="
+                        Heading of one action in the list. NUMBER is its
+                        position
+                      ">
+                      Action
+                      {{
+                        actionIndex + 1 // i18n(ph="NUMBER")
+                      }}
+                    </span>
                   </span>
                 </div>
 
@@ -125,7 +144,11 @@ export interface AutomationActionUpdate {
                   class="shrink-0"
                   color="warn"
                   type="button"
+                  i18n-aria-label="
+                    Accessible label for the button that removes an action
+                  "
                   aria-label="Remove action"
+                  i18n-title="Tooltip on the button that removes an action"
                   title="Remove action"
                   [disabled]="actions().length === 1"
                   (click)="removeAction.emit(action.clientId)">
@@ -135,6 +158,7 @@ export interface AutomationActionUpdate {
 
               <div class="flex min-w-0 flex-col gap-3 p-3">
                 <app-form-select
+                  i18n-label="Label of the action field"
                   label="Action"
                   [noMargin]="true"
                   [value]="action.type"
@@ -164,6 +188,7 @@ export interface AutomationActionUpdate {
                     " />
                 } @else if (action.type === automationActionType.addComment) {
                   <app-form-textarea
+                    i18n-label="Label of the comment field"
                     label="Comment"
                     rows="3"
                     [noMargin]="true"
@@ -178,6 +203,7 @@ export interface AutomationActionUpdate {
                 } @else if (action.type === automationActionType.flagTask) {
                   <div class="grid gap-3 md:grid-cols-2">
                     <app-form-input
+                      i18n-label="Label of the flag name field"
                       label="Flag name"
                       [required]="true"
                       [noMargin]="true"
@@ -189,6 +215,7 @@ export interface AutomationActionUpdate {
                         })
                       " />
                     <app-form-input
+                      i18n-label="Label of the flag description field"
                       label="Flag description"
                       [noMargin]="true"
                       [value]="action.flagDescription ?? ''"
@@ -244,6 +271,7 @@ export interface AutomationActionUpdate {
                 } @else if (action.type === automationActionType.deleteTask) {
                   <div class="grid gap-3 md:grid-cols-2">
                     <app-form-input
+                      i18n-label="Label of the delay field"
                       label="Delay"
                       type="number"
                       min="0"
@@ -257,6 +285,7 @@ export interface AutomationActionUpdate {
                         })
                       " />
                     <app-form-select
+                      i18n-label="Label of the unit field"
                       label="Unit"
                       [noMargin]="true"
                       [value]="action.delayUnit ?? automationDelayUnit.minutes"
@@ -268,22 +297,24 @@ export interface AutomationActionUpdate {
                       ">
                       <app-form-select-option
                         [value]="automationDelayUnit.minutes">
-                        Minutes
+                        <span i18n="Delay unit: minutes">Minutes</span>
                       </app-form-select-option>
                       <app-form-select-option
                         [value]="automationDelayUnit.hours">
-                        Hours
+                        <span i18n="Delay unit: hours">Hours</span>
                       </app-form-select-option>
                       <app-form-select-option
                         [value]="automationDelayUnit.days">
-                        Days
+                        <span i18n="Delay unit: days">Days</span>
                       </app-form-select-option>
                     </app-form-select>
                   </div>
                   <p class="text-sm text-red-600 dark:text-red-400">
-                    The task will only be deleted if its status has not changed
-                    during the delay. Deleted tasks can be restored from the
-                    archive.
+                    <span i18n="Caveat on the delete-task action">
+                      The task will only be deleted if its status has not
+                      changed during the delay. Deleted tasks can be restored
+                      from the archive.
+                    </span>
                   </p>
                 }
               </div>
@@ -305,7 +336,9 @@ export interface AutomationActionUpdate {
                 [disabled]="actions().length >= 10"
                 (click)="addAction.emit()">
                 <svg lucideListPlus class="h-4 w-4"></svg>
-                Add action
+                <span i18n="Button that adds another automation action">
+                  Add action
+                </span>
               </button>
             </div>
           }

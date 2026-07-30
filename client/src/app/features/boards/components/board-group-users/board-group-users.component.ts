@@ -13,12 +13,19 @@ import {
   template: `
     <app-avatar-filter
       [options]="users()"
-      onlineLabel="is viewing this board"
+      [onlineLabel]="viewingLabel"
       (optionClicked)="onUserClicked($event)" />
   `,
 })
 export class BoardGroupUsersComponent {
   private store = inject(Store);
+
+  /**
+   * Angular disallows `i18n-onlineLabel` because the attribute name starts with
+   * "on" and is treated as an event property, so the copy is localised here and
+   * passed as a binding.
+   */
+  readonly viewingLabel = $localize`:Presence state appended after a person's name on a board:is viewing this board`;
 
   users = this.store.selectSignal(selectBoardGroupsUsersModel);
 

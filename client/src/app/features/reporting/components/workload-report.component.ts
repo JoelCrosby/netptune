@@ -29,29 +29,41 @@ import {
   template: `
     <section class="flex flex-col gap-4">
       <app-section-header
+        i18n-heading="Section heading for the workload report"
         heading="Current workload"
+        i18n-description="Explains what the workload report shows"
         description="Open work by assignee. Multi-assigned tasks appear for every assignee." />
 
       @if (resource.isLoading()) {
         <div class="h-40">
-          <app-page-loading label="Loading workload" />
+          <app-page-loading
+            i18n-label="Shown while the workload report loads"
+            label="Loading workload" />
         </div>
       } @else if (resource.error()) {
         <app-error-state
           compact
+          i18n-title="Shown when the workload report fails to load"
           title="Workload could not be loaded"
+          i18n-description="Advice when the workload report fails to load"
           description="Retry the request to load workload reporting."
           (retry)="resource.reload()" />
       } @else if (resource.value(); as report) {
         <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <app-stat
+            i18n-label="Stat label for distinct open tasks"
             label="Unique open tasks"
             [value]="report.uniqueTaskCount" />
-          <app-stat label="Unassigned" [value]="report.unassignedTaskCount" />
           <app-stat
+            i18n-label="Stat label for open tasks with nobody assigned"
+            label="Unassigned"
+            [value]="report.unassignedTaskCount" />
+          <app-stat
+            i18n-label="Stat label for tasks with several assignees"
             label="Multi-assigned"
             [value]="report.multiAssignedTaskCount" />
           <app-stat
+            i18n-label="Stat label for tasks without an estimate"
             label="Missing estimate"
             [value]="report.missingEstimateCount" />
         </div>
@@ -60,9 +72,19 @@ import {
           <app-table>
             <thead appTableHead>
               <tr appTableHeaderRow>
-                <th class="px-4 py-3">Assignee</th>
-                <th class="px-4 py-3">Tasks</th>
-                <th class="px-4 py-3">Selected unit</th>
+                <th class="px-4 py-3">
+                  <span i18n="Column heading for the assigned person">
+                    Assignee
+                  </span>
+                </th>
+                <th class="px-4 py-3">
+                  <span i18n="Column heading for the task count">Tasks</span>
+                </th>
+                <th class="px-4 py-3">
+                  <span i18n="Column heading for the chosen estimation unit">
+                    Selected unit
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -80,7 +102,9 @@ import {
         } @else {
           <app-empty-state
             compact
+            i18n-title="Empty state for the workload report"
             title="No open assigned work"
+            i18n-description="Explains the empty workload state"
             description="There is no open assigned work for this selection." />
         }
       }

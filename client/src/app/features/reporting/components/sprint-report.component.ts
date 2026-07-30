@@ -50,49 +50,84 @@ import { formatReportValue } from '../utils/report-chart-theme';
   template: `
     <section class="flex flex-col gap-4">
       <app-section-header
+        i18n-heading="Section heading for sprint reports"
         heading="Sprint reporting"
+        i18n-description="Explains what sprint reports show"
         description="Committed scope, burndown, and completed velocity." />
 
       @if (!sprintId()) {
         <app-empty-state
           compact
+          i18n-title="Shown before a sprint is chosen"
           title="No sprint selected"
+          i18n-description="Prompts the user to choose a sprint"
           description="Select a sprint to view its burndown." />
       } @else if (burndown.isLoading()) {
         <div class="h-40">
-          <app-page-loading label="Loading burndown" />
+          <app-page-loading
+            i18n-label="Shown while the burndown loads"
+            label="Loading burndown" />
         </div>
       } @else if (burndown.error()) {
         <app-error-state
           compact
+          i18n-title="Shown when a sprint has no burndown baseline"
           title="Burndown is unavailable"
+          i18n-description="Explains why a burndown is unavailable"
           description="No reliable baseline is available for this sprint. Pre-coverage sprints are not approximated."
           (retry)="burndown.reload()" />
       } @else if (burndown.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
         <div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
-          <app-stat label="Committed" [value]="report.committedCount" />
-          <app-stat label="Added" [value]="report.addedCount" />
-          <app-stat label="Removed" [value]="report.removedCount" />
-          <app-stat label="Completed" [value]="report.completedCount" />
           <app-stat
+            i18n-label="Stat label for scope committed at sprint start"
+            label="Committed"
+            [value]="report.committedCount" />
+          <app-stat
+            i18n-label="Stat label for scope added mid-sprint"
+            label="Added"
+            [value]="report.addedCount" />
+          <app-stat
+            i18n-label="Stat label for scope removed mid-sprint"
+            label="Removed"
+            [value]="report.removedCount" />
+          <app-stat
+            i18n-label="Stat label for completed scope"
+            label="Completed"
+            [value]="report.completedCount" />
+          <app-stat
+            i18n-label="Stat label for the completion percentage"
             label="Completion"
             [value]="report.completionPercentage + '%'" />
         </div>
 
         @if (shouldShowMissingEstimateWarning(report)) {
           <p class="text-muted text-sm">
-            {{ report.missingEstimateCount }} current scope
-            {{ report.missingEstimateCount === 1 ? 'item has' : 'items have' }}
-            no compatible estimate and are excluded from numeric totals.
+            <ng-container
+              i18n="Warns how many in-scope items lack a compatible estimate">
+              {report.missingEstimateCount, plural,
+                =1 {
+                  1 current scope item has no compatible estimate and is
+                  excluded from numeric totals.
+                }
+                other {
+                  {{ report.missingEstimateCount }} current scope items have no
+                  compatible estimate and are excluded from numeric totals.
+                }
+              }
+            </ng-container>
           </p>
         }
 
         <app-card>
           <app-card-header>
-            <app-card-title>Burndown</app-card-title>
+            <app-card-title i18n="Heading of the burndown chart card">
+              Burndown
+            </app-card-title>
             <app-card-subtitle>
-              Remaining scope compared with the ideal trajectory
+              <span i18n="Subheading of the burndown chart card">
+                Remaining scope compared with the ideal trajectory
+              </span>
             </app-card-subtitle>
           </app-card-header>
           <app-card-content>
@@ -103,10 +138,20 @@ import { formatReportValue } from '../utils/report-chart-theme';
         <app-table containerClass="overflow-x-auto">
           <thead appTableHead>
             <tr appTableHeaderRow>
-              <th class="px-4 py-3">Date</th>
-              <th class="px-4 py-3">Remaining</th>
-              <th class="px-4 py-3">Total scope</th>
-              <th class="px-4 py-3">Ideal</th>
+              <th class="px-4 py-3">
+                <span i18n="Column heading for the date">Date</span>
+              </th>
+              <th class="px-4 py-3">
+                <span i18n="Column heading for remaining scope">Remaining</span>
+              </th>
+              <th class="px-4 py-3">
+                <span i18n="Column heading for total scope">Total scope</span>
+              </th>
+              <th class="px-4 py-3">
+                <span i18n="Column heading for the ideal burndown value">
+                  Ideal
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -131,17 +176,23 @@ import { formatReportValue } from '../utils/report-chart-theme';
       @if (projectId()) {
         <app-section-header
           class="mt-6"
+          i18n-heading="Section heading for sprint velocity"
           heading="Velocity"
+          i18n-description="Explains what velocity shows"
           description="Committed and completed scope across recent sprints." />
 
         @if (velocity.isLoading()) {
           <div class="h-40">
-            <app-page-loading label="Loading velocity" />
+            <app-page-loading
+              i18n-label="Shown while velocity loads"
+              label="Loading velocity" />
           </div>
         } @else if (velocity.error()) {
           <app-error-state
             compact
+            i18n-title="Shown when velocity fails to load"
             title="Velocity could not be loaded"
+            i18n-description="Advice when velocity fails to load"
             description="Retry the request to load sprint velocity."
             (retry)="velocity.reload()" />
         } @else if (velocity.value(); as report) {
@@ -150,9 +201,13 @@ import { formatReportValue } from '../utils/report-chart-theme';
           @if (report.sprints.length) {
             <app-card>
               <app-card-header>
-                <app-card-title>Recent velocity</app-card-title>
+                <app-card-title i18n="Heading of the velocity chart card">
+                  Recent velocity
+                </app-card-title>
                 <app-card-subtitle>
-                  Committed and completed sprint scope
+                  <span i18n="Subheading of the velocity chart card">
+                    Committed and completed sprint scope
+                  </span>
                 </app-card-subtitle>
               </app-card-header>
               <app-card-content>
@@ -163,11 +218,32 @@ import { formatReportValue } from '../utils/report-chart-theme';
             <app-table containerClass="overflow-x-auto">
               <thead appTableHead>
                 <tr appTableHeaderRow>
-                  <th class="px-4 py-3">Sprint</th>
-                  <th class="px-4 py-3">Committed</th>
-                  <th class="px-4 py-3">Completed</th>
-                  <th class="px-4 py-3">Missing estimate</th>
-                  <th class="px-4 py-3">Different unit</th>
+                  <th class="px-4 py-3">
+                    <span i18n="Column heading for the sprint name">
+                      Sprint
+                    </span>
+                  </th>
+                  <th class="px-4 py-3">
+                    <span i18n="Column heading for committed scope">
+                      Committed
+                    </span>
+                  </th>
+                  <th class="px-4 py-3">
+                    <span i18n="Column heading for completed scope">
+                      Completed
+                    </span>
+                  </th>
+                  <th class="px-4 py-3">
+                    <span i18n="Column heading for tasks without an estimate">
+                      Missing estimate
+                    </span>
+                  </th>
+                  <th class="px-4 py-3">
+                    <span
+                      i18n="Column heading for tasks estimated in another unit">
+                      Different unit
+                    </span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -195,7 +271,9 @@ import { formatReportValue } from '../utils/report-chart-theme';
           } @else {
             <app-empty-state
               compact
+              i18n-title="Empty state for sprint velocity"
               title="No velocity data"
+              i18n-description="Explains the empty velocity state"
               description="No completed, post-coverage sprints are available." />
           }
         }

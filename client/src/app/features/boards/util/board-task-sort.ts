@@ -26,11 +26,11 @@ const SORT_FIELDS: readonly BoardTaskSortField[] = [
 ];
 
 export const boardTaskSortFieldLabels: Record<BoardTaskSortField, string> = {
-  custom: 'Manual',
-  status: 'Status',
-  priority: 'Priority',
-  createdAt: 'Created',
-  updatedAt: 'Updated',
+  custom: $localize`:Sort option preserving the user-defined order:Manual`,
+  status: $localize`:Sort option ordering by task status:Status`,
+  priority: $localize`:Sort option ordering by task priority:Priority`,
+  createdAt: $localize`:Sort option ordering by creation date:Created`,
+  updatedAt: $localize`:Sort option ordering by last-changed date:Updated`,
 };
 
 export const boardTaskSortFieldOptions = SORT_FIELDS.map((value) => ({

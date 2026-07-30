@@ -25,18 +25,41 @@ import { FileSizePipe } from '../pipes/file-size.pipe';
     ProgressBarComponent,
   ],
   template: `
-    <app-page-header title="Storage" />
+    <app-page-header
+      i18n-title="Page title for workspace file storage"
+      title="Storage" />
 
     @if (usage(); as usage) {
       <app-card class="mb-6 block">
         <app-card-header>
           <app-card-title>
-            {{ usage.usedBytes | fileSize }} of
-            {{ usage.limitBytes | fileSize }} used
+            <span
+              i18n="Storage usage. USED and LIMIT are formatted byte counts">
+              {{
+                usage.usedBytes | fileSize // i18n(ph="USED")
+              }}
+              of
+              {{
+                usage.limitBytes | fileSize // i18n(ph="LIMIT")
+              }}
+              used
+            </span>
           </app-card-title>
           <app-card-subtitle>
-            {{ usage.fileCount }} tracked files ·
-            {{ usage.availableBytes | fileSize }} available
+            <span
+              i18n="
+                File count and remaining storage. COUNT is the number of files
+                and AVAILABLE a formatted byte count
+              ">
+              {{
+                usage.fileCount // i18n(ph="COUNT")
+              }}
+              tracked files ·
+              {{
+                usage.availableBytes | fileSize // i18n(ph="AVAILABLE")
+              }}
+              available
+            </span>
           </app-card-subtitle>
         </app-card-header>
 
@@ -46,8 +69,10 @@ import { FileSizePipe } from '../pipes/file-size.pipe';
             [value]="percentage()"
             [color]="progressColor()" />
           <p class="text-muted text-xs">
-            Profile pictures and audit archives are excluded from workspace
-            usage.
+            <span i18n="Explains what is excluded from the storage total">
+              Profile pictures and audit archives are excluded from workspace
+              usage.
+            </span>
           </p>
         </app-card-content>
       </app-card>

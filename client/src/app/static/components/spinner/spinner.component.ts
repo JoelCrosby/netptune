@@ -32,9 +32,11 @@ import { Component, input } from '@angular/core';
       }
     }
   `,
-  template: `<div
-    class="loader relative translate-z-0 rounded-full before:absolute before:top-0 before:left-0 before:h-1/2 before:w-1/2 after:absolute after:inset-0 after:m-auto after:h-3/4 after:w-3/4 after:rounded-full"
-    [style]="{ height: diameter(), width: diameter() }"></div>`,
+  template: `
+    <div
+      class="loader relative translate-z-0 rounded-full before:absolute before:top-0 before:left-0 before:h-1/2 before:w-1/2 after:absolute after:inset-0 after:m-auto after:h-3/4 after:w-3/4 after:rounded-full"
+      [style]="{ height: diameter(), width: diameter() }"></div>
+  `,
 })
 export class SpinnerComponent {
   readonly diameter = input('2rem');

@@ -21,11 +21,11 @@ export const estimateTypeOptions = Object.values(EstimateType)
   .map((value) => ({ value, label: estimateTypeLabels[value] }));
 
 export const tShirtSizes: { value: number; label: string }[] = [
-  { value: 1, label: 'XS' },
-  { value: 2, label: 'S' },
-  { value: 3, label: 'M' },
-  { value: 4, label: 'L' },
-  { value: 5, label: 'XL' },
+  { value: 1, label: $localize`:Label shown in the interface:XS` },
+  { value: 2, label: $localize`:Label shown in the interface:S` },
+  { value: 3, label: $localize`:Label shown in the interface:M` },
+  { value: 4, label: $localize`:Label shown in the interface:L` },
+  { value: 5, label: $localize`:Label shown in the interface:XL` },
 ];
 
 export function formatEstimate(type: EstimateType, value: number): string {

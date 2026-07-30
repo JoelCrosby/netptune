@@ -43,6 +43,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
   ],
   template: `
     <app-datatable
+      i18n-errorMessage="Shown when the notification list fails to load"
       errorMessage="Notifications could not be loaded."
       containerClass="h-[calc(100vh-338px)] min-h-80 overflow-auto"
       tableClass="min-w-[720px] table-fixed"
@@ -79,9 +80,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
             <span class="font-medium">{{ notification.entityIdentifier }}</span>
           }
           @if (notification.entityName) {
-            <span class="text-foreground/60 ml-2">{{
-              notification.entityName
-            }}</span>
+            <span class="text-foreground/60 ml-2">
+              {{ notification.entityName }}
+            </span>
           }
         </button>
       </ng-template>
@@ -96,16 +97,27 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 
       <ng-template appDatatableCell="status" let-notification>
         @if (notification.isRead) {
-          <app-badge shape="rounded">Read</app-badge>
+          <app-badge
+            shape="rounded"
+            i18n="Badge marking a notification that has been read">
+            Read
+          </app-badge>
         } @else {
-          <app-badge color="primary" shape="rounded">Unread</app-badge>
+          <app-badge
+            color="primary"
+            shape="rounded"
+            i18n="Badge marking an unread notification">
+            Unread
+          </app-badge>
         }
       </ng-template>
 
       <app-empty-state
         appDatatableEmpty
         compact
+        i18n-title="Empty state when there are no notifications"
         title="You're all caught up"
+        i18n-description="Explains what the notification list will contain"
         description="New notifications show up here." />
     </app-datatable>
   `,
@@ -149,17 +161,17 @@ export class NotificationsTableComponent {
     reloadSignal: this.reload,
     menu: [
       {
-        label: 'Mark as read',
+        label: $localize`:Label shown in the interface:Mark as read`,
         icon: LucideCheck,
         onClick: (notification) => this.onMarkRead(notification),
       },
       {
-        label: 'Open',
+        label: $localize`:Label shown in the interface:Open`,
         icon: LucideExternalLink,
         onClick: (notification) => this.onOpen(notification),
       },
       {
-        label: 'Delete',
+        label: $localize`:Label shown in the interface:Delete`,
         icon: LucideTrash2,
         onClick: (notification) => this.onDelete(notification),
       },

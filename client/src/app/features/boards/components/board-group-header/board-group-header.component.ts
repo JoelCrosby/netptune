@@ -29,30 +29,32 @@ import { Store } from '@ngrx/store';
     BoardGroupHeaderSeperatorComponent,
     BoardGroupHiddenNoticeComponent,
   ],
-  template: `<div class="flex flex-row items-center gap-2">
-    <app-board-group-header-seperator />
-    <app-board-groups-search />
-    <app-board-group-header-seperator />
-    <app-board-group-users />
+  template: `
+    <div class="flex flex-row items-center gap-2">
+      <app-board-group-header-seperator />
+      <app-board-groups-search />
+      <app-board-group-header-seperator />
+      <app-board-group-users />
 
-    <app-board-group-header-seperator />
+      <app-board-group-header-seperator />
 
-    @if (readTags()) {
-      <app-tag-filter-container />
-    }
+      @if (readTags()) {
+        <app-tag-filter-container />
+      }
 
-    @if (readStatus()) {
-      <app-board-group-status />
-    }
+      @if (readStatus()) {
+        <app-board-group-status />
+      }
 
-    <app-board-group-sort />
+      <app-board-group-sort />
 
-    <app-board-group-hidden-notice
-      [count]="hiddenCount()"
-      (manage)="onManageGroupsClicked()" />
+      <app-board-group-hidden-notice
+        [count]="hiddenCount()"
+        (manage)="onManageGroupsClicked()" />
 
-    <app-board-groups-selection />
-  </div> `,
+      <app-board-groups-selection />
+    </div>
+  `,
 })
 export class BoardGroupHeaderComponent {
   readonly store = inject(Store);

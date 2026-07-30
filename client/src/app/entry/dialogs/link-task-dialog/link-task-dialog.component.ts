@@ -45,13 +45,16 @@ export interface LinkTaskDialogResult {
     TaskScopeIdComponent,
   ],
   template: `
-    <app-dialog-title>Link Tasks</app-dialog-title>
+    <app-dialog-title i18n="Title of the dialog for linking tasks together">
+      Link Tasks
+    </app-dialog-title>
 
     <div class="flex w-220 max-w-full flex-col gap-4">
       <div class="flex gap-4">
         <app-form-select
           class="flex-1"
           [formField]="linkForm.relationTypeId"
+          i18n-label="Label of the relation type field"
           label="Relation">
           @for (relationType of relationTypes(); track relationType.id) {
             <app-form-select-option [value]="relationType.id">
@@ -64,6 +67,7 @@ export interface LinkTaskDialogResult {
           <app-form-select
             class="flex-1"
             [formField]="linkForm.isForward"
+            i18n-label="Label of the field choosing which way a relation points"
             label="Direction">
             <app-form-select-option [value]="true">
               {{ forwardLabel() }}
@@ -81,6 +85,7 @@ export interface LinkTaskDialogResult {
 
       <app-form-input
         name="link-task-search"
+        i18n-placeholder="Placeholder in the box for finding tasks to link"
         placeholder="Search tasks by name, key or tag"
         [noMargin]="true"
         [value]="searchInput()"
@@ -90,6 +95,7 @@ export interface LinkTaskDialogResult {
         containerClass="h-[380px] overflow-y-auto overflow-x-hidden"
         tableClass="table-fixed"
         rowClass="bg-card"
+        i18n-emptyMessage="Shown when no tasks match the link search"
         emptyMessage="No tasks available to link."
         [data]="data"
         [selection]="true"
@@ -112,14 +118,16 @@ export interface LinkTaskDialogResult {
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="close()">Cancel</button>
+      <button app-stroked-button type="button" (click)="close()">
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button
         app-flat-button
         color="primary"
         type="button"
         [disabled]="selected().length === 0 || !selectedRelationType()"
         (click)="submit()">
-        Link
+        <span i18n="Button that creates the task link">Link</span>
         {{ selected().length }}
         {{ selected().length === 1 ? 'task' : 'tasks' }}
       </button>

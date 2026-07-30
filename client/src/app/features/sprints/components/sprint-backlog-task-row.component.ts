@@ -67,6 +67,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
         <app-form-select
           class="w-52 text-sm [&_.nept-form-control]:mb-0"
           label=""
+          i18n-placeholder="Placeholder in the sprint picker on a backlog row"
           placeholder="Assign to sprint..."
           [value]="selectedSprintId() ?? null"
           (changed)="onSprintSelected($event)">
@@ -82,7 +83,7 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
           type="button"
           [disabled]="loading() || !selectedSprintId()"
           (click)="onAssign()">
-          Add
+          <span i18n="Button that adds the task to the chosen sprint">Add</span>
         </button>
       </div>
     }

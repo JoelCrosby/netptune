@@ -128,9 +128,9 @@ export class TagsEffects {
 }
 
 const DELETE_TAG_CONFIRMATION: ConfirmDialogOptions = {
-  acceptLabel: 'Delete Tag',
-  cancelLabel: 'Cancel',
+  acceptLabel: $localize`:Confirms the action in a dialog:Delete Tag`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
   color: 'warn',
-  title: 'Delete Tag',
-  message: 'Are you sure you wish to delete this tag',
+  title: $localize`:Title of a confirmation dialog:Delete Tag`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you wish to delete this tag`,
 };

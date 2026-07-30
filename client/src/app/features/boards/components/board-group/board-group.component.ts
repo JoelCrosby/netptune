@@ -63,57 +63,61 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
     BoardGroupTaskInlineComponent,
     StrokedButtonComponent,
   ],
-  template: `<div
-    class="border-border bg-board-group relative flex h-full flex-1 flex-col rounded border">
-    <ng-content />
+  template: `
+    <div
+      class="border-border bg-board-group relative flex h-full flex-1 flex-col rounded border">
+      <ng-content />
 
-    <div #container class="h-full flex-1">
-      <div
-        cdkDropList
-        appScrollShadowVertical
-        class="custom-scroll board-task-list flex h-[calc(100vh-267px)] flex-col overflow-y-auto p-[.6rem]"
-        [id]="dragListId()"
-        [cdkDropListConnectedTo]="siblingIds()"
-        (cdkDropListDropped)="drop($event)"
-        [cdkDropListData]="group().tasks">
-        @for (task of group().tasks; track trackGroupTask($index, task)) {
-          <app-board-group-card
-            cdkDrag
-            [cdkDragDisabled]="dragDisabled()"
-            class="board-group-task-card cursor-pointer"
-            [class.cursor-default!]="dragDisabled()"
-            [cdkDragData]="task"
-            [task]="task"
-            [groupId]="group().id"
-            (cdkDragStarted)="onDragStarted()"
-            (cdkDragReleased)="onDragRelease()"
-            (click)="onTaskClicked($event, task, group().id)">
-          </app-board-group-card>
-        }
+      <div #container class="h-full flex-1">
+        <div
+          cdkDropList
+          appScrollShadowVertical
+          class="custom-scroll board-task-list flex h-[calc(100vh-267px)] flex-col overflow-y-auto p-[.6rem]"
+          [id]="dragListId()"
+          [cdkDropListConnectedTo]="siblingIds()"
+          (cdkDropListDropped)="drop($event)"
+          [cdkDropListData]="group().tasks">
+          @for (task of group().tasks; track trackGroupTask($index, task)) {
+            <app-board-group-card
+              cdkDrag
+              [cdkDragDisabled]="dragDisabled()"
+              class="board-group-task-card cursor-pointer"
+              [class.cursor-default!]="dragDisabled()"
+              [cdkDragData]="task"
+              [task]="task"
+              [groupId]="group().id"
+              (cdkDragStarted)="onDragStarted()"
+              (cdkDragReleased)="onDragRelease()"
+              (click)="
+                onTaskClicked($event, task, group().id)
+              "></app-board-group-card>
+          }
 
-        @if (isInlineActive()) {
-          <app-board-group-task-inline
-            (canceled)="onInlineCanceled()"
-            [boardGroupId]="group().id">
-          </app-board-group-task-inline>
-        }
+          @if (isInlineActive()) {
+            <app-board-group-task-inline
+              (canceled)="onInlineCanceled()"
+              [boardGroupId]="group().id"></app-board-group-task-inline>
+          }
 
-        @if (showAddButton()) {
-          <div class="h-11.5 p-[.3rem]">
-            <button
-              app-stroked-button
-              color="primary"
-              class="block w-full"
-              (click)="onAddTaskClicked()">
-              CREATE TASK
-            </button>
-          </div>
-        } @else {
-          <div class="h-11.5 min-h-11.5 w-full">{{ ' ' }}</div>
-        }
+          @if (showAddButton()) {
+            <div class="h-11.5 p-[.3rem]">
+              <button
+                app-stroked-button
+                color="primary"
+                class="block w-full"
+                (click)="onAddTaskClicked()">
+                <span i18n="Button that adds a task to this board group">
+                  CREATE TASK
+                </span>
+              </button>
+            </div>
+          } @else {
+            <div class="h-11.5 min-h-11.5 w-full">{{ ' ' }}</div>
+          }
+        </div>
       </div>
     </div>
-  </div> `,
+  `,
 })
 export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private store = inject(Store);

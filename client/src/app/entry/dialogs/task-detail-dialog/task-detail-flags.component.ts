@@ -29,7 +29,9 @@ import { finalize } from 'rxjs';
             <h3
               id="task-flags-heading"
               class="text-foreground text-sm font-semibold">
-              Flags
+              <span i18n="Section heading for flags raised against a task">
+                Flags
+              </span>
             </h3>
             <span class="text-muted text-xs">{{ task.flags.length }}</span>
           </div>
@@ -50,7 +52,16 @@ import { finalize } from 'rxjs';
                     }
                     @if (flag.automationRuleId) {
                       <p class="text-muted mt-1 text-xs">
-                        Added by automation rule #{{ flag.automationRuleId }}
+                        <span
+                          i18n="
+                            Notes that a flag came from an automation rather
+                            than a person. RULE_ID is the numeric rule
+                            identifier
+                          ">
+                          Added by automation rule #{{
+                            flag.automationRuleId // i18n(ph="RULE_ID")
+                          }}
+                        </span>
                       </p>
                     }
                   </div>
@@ -70,7 +81,9 @@ import { finalize } from 'rxjs';
                           )
                         ">
                         <svg lucideCheck size="14" aria-hidden="true"></svg>
-                        Resolve
+                        <span i18n="Button that marks a task flag as resolved">
+                          Resolve
+                        </span>
                       </button>
                       <button
                         type="button"
@@ -85,7 +98,13 @@ import { finalize } from 'rxjs';
                           )
                         ">
                         <svg lucideX size="14" aria-hidden="true"></svg>
-                        Dismiss
+                        <span
+                          i18n="
+                            Button that dismisses a task flag without resolving
+                            it
+                          ">
+                          Dismiss
+                        </span>
                       </button>
                     </div>
                   }
@@ -133,7 +152,10 @@ export class TaskDetailFlagsComponent {
           this.snackbar.open(message);
           this.store.dispatch(loadTaskDetails.init({ systemId }));
         },
-        error: () => this.snackbar.error('Flag could not be updated'),
+        error: () =>
+          this.snackbar.error(
+            $localize`:Error shown after an action fails:Flag could not be updated`
+          ),
       });
   }
 }

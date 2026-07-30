@@ -34,12 +34,17 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
     <app-page-container [centerPage]="true" [marginBottom]="true">
       @if (canCreateProjects()) {
         <app-page-header
+          i18n-title="Page title for the project list"
           title="Projects"
+          i18n-actionTitle="Button that opens the create-project dialog"
           actionTitle="Create Project"
           [count]="count()"
           (actionClick)="showAddModal()" />
       } @else {
-        <app-page-header title="Projects" [count]="count()" />
+        <app-page-header
+          i18n-title="Page title for the project list"
+          title="Projects"
+          [count]="count()" />
       }
 
       @if (loading()) {
@@ -48,7 +53,11 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
         }
       } @else if (projects().length === 0) {
         <app-empty-state
+          i18n-title="Heading of the empty project list"
           title="There are currently no projects."
+          i18n-description="
+            Explains what a project is for, on the empty project list
+          "
           description="Create your first project to organise related boards and tasks.">
           <svg emptyStateIcon size="38" lucideFolderOpen></svg>
 
@@ -59,7 +68,9 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
               type="button"
               (click)="showAddModal()">
               <svg size="20" lucidePlus></svg>
-              <span>Create Project</span>
+              <span i18n="Button that opens the create-project dialog">
+                Create Project
+              </span>
             </button>
           }
         </app-empty-state>
@@ -87,7 +98,7 @@ export class ProjectsViewComponent {
 
   showAddModal() {
     this.dialog.openWizard(ProjectDialogComponent, {
-      title: 'Create Project',
+      title: $localize`:Title of a dialog or section:Create Project`,
       width: '720px',
     });
   }

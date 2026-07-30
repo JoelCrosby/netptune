@@ -43,7 +43,9 @@ interface RelationGroup {
   ],
   template: `
     <div class="mt-4 mb-2 flex items-center justify-between">
-      <h4 class="font-sm font-semibold">Relations</h4>
+      <h4 class="font-sm font-semibold">
+        <span i18n="Section heading for links between tasks">Relations</span>
+      </h4>
       @if (canUpdate()) {
         <button
           app-stroked-button
@@ -51,7 +53,7 @@ interface RelationGroup {
           size="sm"
           (click)="openLinkDialog()">
           <svg lucidePlus class="h-4 w-4"></svg>
-          <span>Link task</span>
+          <span i18n="Button that links this task to another">Link task</span>
         </button>
       }
     </div>
@@ -93,7 +95,13 @@ interface RelationGroup {
               @if (canUpdate()) {
                 <button
                   app-icon-button
+                  i18n-appTooltip="
+                    Tooltip on the button that removes a task link
+                  "
                   appTooltip="Remove link"
+                  i18n-aria-label="
+                    Accessible label for the button that removes a task link
+                  "
                   aria-label="Remove link"
                   [disabled]="busy()"
                   (click)="unlink(relation)">
@@ -107,7 +115,9 @@ interface RelationGroup {
     } @empty {
       <div class="text-muted flex items-center gap-2 text-sm">
         <svg lucideLink2 class="h-4 w-4"></svg>
-        <span>No linked tasks</span>
+        <span i18n="Empty state when a task has no links to other tasks">
+          No linked tasks
+        </span>
       </div>
     }
   `,
@@ -268,7 +278,9 @@ export class TaskDetailRelationsComponent {
         tap(() => {
           this.busy.set(false);
           this.relations.reload();
-          this.snackbar.open('Link removed');
+          this.snackbar.open(
+            $localize`:Confirmation shown after an action succeeds:Link removed`
+          );
         }),
         catchError(() => {
           this.busy.set(false);

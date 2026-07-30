@@ -14,6 +14,9 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
       @if (count() !== null && count() !== undefined) {
         <span
           class="bg-foreground/10 text-foreground/70 ml-3 rounded-full px-2.5 py-0.5 text-lg font-medium tabular-nums"
+          i18n-aria-label="
+            Accessible label for the badge showing how many items the page lists
+          "
           aria-label="Total count">
           {{ count() }}
         </span>
@@ -24,8 +27,7 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
           activeBorder="true"
           [value]="title()"
           [size]="title()?.length"
-          (submitted)="titleSubmitted.emit($event)">
-        </app-inline-edit-input>
+          (submitted)="titleSubmitted.emit($event)"></app-inline-edit-input>
       }
 
       <div class="ml-[1.4rem] flex flex-row items-center gap-3">

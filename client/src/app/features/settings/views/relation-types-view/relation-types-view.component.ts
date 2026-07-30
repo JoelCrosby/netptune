@@ -58,127 +58,187 @@ import { finalize, first } from 'rxjs';
     LucidePlus,
     LucideTrash2,
   ],
-  template: `<section>
-    <app-section-header
-      heading="Task relations"
-      description='How tasks can be linked to one another. A relation reads one way from the source task and the other way from the target — "Blocks" one way, "Is Blocked By" the other.'>
-      <button
-        sectionHeaderActions
-        app-stroked-button
-        type="button"
-        [disabled]="loading()"
-        (click)="openCreateDialog()">
-        <svg lucidePlus class="h-4 w-4"></svg>
-        <span>Create relation type</span>
-      </button>
-    </app-section-header>
+  template: `
+    <section>
+      <app-section-header
+        i18n-heading="Section heading for task relation types"
+        heading="Task relations"
+        i18n-description="
+          Explains how relation direction works. The quoted example names are
+          the default relation type and its inverse
+        "
+        description='How tasks can be linked to one another. A relation reads one way from the source task and the other way from the target — "Blocks" one way, "Is Blocked By" the other.'>
+        <button
+          sectionHeaderActions
+          app-stroked-button
+          type="button"
+          [disabled]="loading()"
+          (click)="openCreateDialog()">
+          <svg lucidePlus class="h-4 w-4"></svg>
+          <span i18n="Button that opens the create-relation-type dialog">
+            Create relation type
+          </span>
+        </button>
+      </app-section-header>
 
-    @if (error()) {
-      <app-error-state
-        compact
-        title="Relation types could not be loaded"
-        [description]="error() ?? ''"
-        (retry)="load()" />
-    } @else {
-      <app-table tableClass="min-w-[820px] table-fixed">
-        <thead appTableHead>
-          <tr appTableHeaderRow>
-            <th class="w-16 px-4 py-3">Color</th>
-            <th class="px-4 py-3">Name</th>
-            <th class="px-4 py-3">Inverse</th>
-            <th class="w-36 px-4 py-3">Category</th>
-            <th class="w-28 px-4 py-3">Order</th>
-            <th class="w-28 px-4 py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (
-            relationType of orderedRelationTypes();
-            track relationType.id;
-            let i = $index
-          ) {
-            <tr appTableRow class="bg-card">
-              <td class="px-4 py-2 align-middle">
-                <app-color-swatch
-                  variant="swatch"
-                  [color]="relationType.color" />
-              </td>
-              <td class="px-4 py-2 align-middle">
-                <button
-                  type="button"
-                  class="block w-full cursor-pointer truncate text-left font-medium"
-                  (click)="openEditDialog(relationType)">
-                  {{ relationType.name }}
-                </button>
-              </td>
-              <td class="text-muted truncate px-4 py-2 align-middle">
-                @if (isSymmetric(relationType)) {
-                  <span class="italic">Same both ways</span>
-                } @else {
-                  {{ relationType.inverseName }}
-                }
-              </td>
-              <td class="px-4 py-2 align-middle">
-                {{ categoryLabel(relationType.category) }}
-              </td>
-              <td class="px-4 py-2 align-middle">
-                <div class="flex gap-1">
+      @if (error()) {
+        <app-error-state
+          compact
+          i18n-title="Shown when the relation type list fails to load"
+          title="Relation types could not be loaded"
+          [description]="error() ?? ''"
+          (retry)="load()" />
+      } @else {
+        <app-table tableClass="min-w-[820px] table-fixed">
+          <thead appTableHead>
+            <tr appTableHeaderRow>
+              <th class="w-16 px-4 py-3">
+                <span i18n="Column heading for the colour swatch">Color</span>
+              </th>
+              <th class="px-4 py-3">
+                <span i18n="Column heading for the name">Name</span>
+              </th>
+              <th class="px-4 py-3">
+                <span
+                  i18n="Column heading for the reverse direction of a relation">
+                  Inverse
+                </span>
+              </th>
+              <th class="w-36 px-4 py-3">
+                <span i18n="Column heading for the relation category">
+                  Category
+                </span>
+              </th>
+              <th class="w-28 px-4 py-3">
+                <span i18n="Column heading for the sort order">Order</span>
+              </th>
+              <th class="w-28 px-4 py-3">
+                <span i18n="Column heading for the row action buttons">
+                  Actions
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (
+              relationType of orderedRelationTypes();
+              track relationType.id;
+              let i = $index
+            ) {
+              <tr appTableRow class="bg-card">
+                <td class="px-4 py-2 align-middle">
+                  <app-color-swatch
+                    variant="swatch"
+                    [color]="relationType.color" />
+                </td>
+                <td class="px-4 py-2 align-middle">
                   <button
-                    app-icon-button
-                    appTooltip="Move up"
-                    aria-label="Move relation type up"
-                    [disabled]="i === 0 || loading()"
-                    (click)="move(relationType.id, -1)">
-                    <svg lucideArrowUp class="h-4 w-4"></svg>
-                  </button>
-                  <button
-                    app-icon-button
-                    appTooltip="Move down"
-                    aria-label="Move relation type down"
-                    [disabled]="
-                      i === orderedRelationTypes().length - 1 || loading()
-                    "
-                    (click)="move(relationType.id, 1)">
-                    <svg lucideArrowDown class="h-4 w-4"></svg>
-                  </button>
-                </div>
-              </td>
-              <td class="px-4 py-2 align-middle">
-                <div class="flex gap-1">
-                  <button
-                    app-icon-button
-                    appTooltip="Edit"
-                    aria-label="Edit relation type"
-                    [disabled]="loading()"
+                    type="button"
+                    class="block w-full cursor-pointer truncate text-left font-medium"
                     (click)="openEditDialog(relationType)">
-                    <svg lucideSettings2 class="h-4 w-4"></svg>
+                    {{ relationType.name }}
                   </button>
-                  <button
-                    app-icon-button
-                    [appTooltip]="
-                      relationType.isSystem
-                        ? 'Built-in relation types cannot be deleted'
-                        : 'Delete'
-                    "
-                    aria-label="Delete relation type"
-                    [disabled]="relationType.isSystem || loading()"
-                    (click)="delete(relationType)">
-                    <svg lucideTrash2 class="h-4 w-4"></svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td appTableEmptyCell colspan="6">
-                No relation types yet. Create one to link related tasks.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </app-table>
-    }
-  </section>`,
+                </td>
+                <td class="text-muted truncate px-4 py-2 align-middle">
+                  @if (isSymmetric(relationType)) {
+                    <span
+                      class="italic"
+                      i18n="
+                        Shown when a relation reads the same in both directions
+                      ">
+                      Same both ways
+                    </span>
+                  } @else {
+                    {{ relationType.inverseName }}
+                  }
+                </td>
+                <td class="px-4 py-2 align-middle">
+                  {{ categoryLabel(relationType.category) }}
+                </td>
+                <td class="px-4 py-2 align-middle">
+                  <div class="flex gap-1">
+                    <button
+                      app-icon-button
+                      i18n-appTooltip="
+                        Tooltip on the button that moves a row up
+                      "
+                      appTooltip="Move up"
+                      i18n-aria-label="
+                        Accessible label for the button that moves a relation
+                        type up
+                      "
+                      aria-label="Move relation type up"
+                      [disabled]="i === 0 || loading()"
+                      (click)="move(relationType.id, -1)">
+                      <svg lucideArrowUp class="h-4 w-4"></svg>
+                    </button>
+                    <button
+                      app-icon-button
+                      i18n-appTooltip="
+                        Tooltip on the button that moves a row down
+                      "
+                      appTooltip="Move down"
+                      i18n-aria-label="
+                        Accessible label for the button that moves a relation
+                        type down
+                      "
+                      aria-label="Move relation type down"
+                      [disabled]="
+                        i === orderedRelationTypes().length - 1 || loading()
+                      "
+                      (click)="move(relationType.id, 1)">
+                      <svg lucideArrowDown class="h-4 w-4"></svg>
+                    </button>
+                  </div>
+                </td>
+                <td class="px-4 py-2 align-middle">
+                  <div class="flex gap-1">
+                    <button
+                      app-icon-button
+                      i18n-appTooltip="Tooltip on the button that edits a row"
+                      appTooltip="Edit"
+                      i18n-aria-label="
+                        Accessible label for the button that edits a relation
+                        type
+                      "
+                      aria-label="Edit relation type"
+                      [disabled]="loading()"
+                      (click)="openEditDialog(relationType)">
+                      <svg lucideSettings2 class="h-4 w-4"></svg>
+                    </button>
+                    <button
+                      app-icon-button
+                      [appTooltip]="
+                        relationType.isSystem
+                          ? 'Built-in relation types cannot be deleted'
+                          : 'Delete'
+                      "
+                      i18n-aria-label="
+                        Accessible label for the button that deletes a relation
+                        type
+                      "
+                      aria-label="Delete relation type"
+                      [disabled]="relationType.isSystem || loading()"
+                      (click)="delete(relationType)">
+                      <svg lucideTrash2 class="h-4 w-4"></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td appTableEmptyCell colspan="6">
+                  <span i18n="Empty state for the relation type list">
+                    No relation types yet. Create one to link related tasks.
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </app-table>
+      }
+    </section>
+  `,
 })
 export class RelationTypesViewComponent {
   private readonly relationTypesService = inject(RelationTypesService);

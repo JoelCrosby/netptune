@@ -1,9 +1,4 @@
-import {
-  maxLength,
-  required,
-  schema,
-  validate,
-} from '@angular/forms/signals';
+import { maxLength, required, schema, validate } from '@angular/forms/signals';
 
 export interface RequiredTextSchemaOptions {
   label: string;
@@ -29,10 +24,7 @@ export function requiredTextSchema({
         return { kind: 'whitespace', message: `${label} is required.` };
       }
 
-      if (
-        minimumLength !== undefined &&
-        trimmedText.length < minimumLength
-      ) {
+      if (minimumLength !== undefined && trimmedText.length < minimumLength) {
         return {
           kind: 'minLength',
           message: `${label} must have at least ${minimumLength} characters.`,

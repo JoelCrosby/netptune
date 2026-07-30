@@ -1,15 +1,14 @@
 import { HttpEventType } from '@angular/common/http';
-import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
+import {
+  computed,
+  DestroyRef,
+  inject,
+  Injectable,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WorkspaceFileViewModel } from '@core/models/view-models/workspace-file-view-model';
-import {
-  catchError,
-  from,
-  map,
-  mergeMap,
-  of,
-  Subscription,
-} from 'rxjs';
+import { catchError, from, map, mergeMap, of, Subscription } from 'rxjs';
 import { WorkspaceFilesService } from './workspace-files.service';
 
 export interface TaskFileUploadItem {

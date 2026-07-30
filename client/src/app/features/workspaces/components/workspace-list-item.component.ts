@@ -39,7 +39,9 @@ import { FromNowPipe } from '@static/pipes/from-now.pipe';
         [actions]="actions">
         @if (workspace().isLastVisited) {
           <app-badge color="primary" shape="rounded" class="mt-2 w-fit">
-            Last visited
+            <span i18n="Label before the date a workspace was last opened">
+              Last visited
+            </span>
           </app-badge>
         }
       </app-card-list-item>
@@ -62,7 +64,7 @@ export class WorkspaceListItemComponent {
 
   readonly actions: HeaderAction[] = [
     {
-      label: 'Go To Projects',
+      label: $localize`:Label shown in the interface:Go To Projects`,
       click: () => this.onGotToClicked(),
       icon: LucidePanelsTopLeft,
     },

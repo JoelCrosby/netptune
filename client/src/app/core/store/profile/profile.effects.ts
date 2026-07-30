@@ -51,7 +51,11 @@ export class ProfileEffects {
 
         return this.profileService.put(profile).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Profile Updated')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Profile Updated`
+            )
+          ),
           map((response) =>
             actions.updateProfile.success({ profile: response })
           ),
@@ -80,7 +84,11 @@ export class ProfileEffects {
       switchMap((action) =>
         this.profileService.changePassword(action.request).pipe(
           unwrapClientReposne(),
-          tap(() => this.snackbar.open('Password Changed')),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Password Changed`
+            )
+          ),
           map(() => actions.changePassword.success()),
           catchError((error) => of(actions.changePassword.fail({ error })))
         )

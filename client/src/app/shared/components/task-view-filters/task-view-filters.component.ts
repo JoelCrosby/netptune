@@ -30,6 +30,7 @@ import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.com
       @if (users.canRead()) {
         <div class="border-border border-l pl-3">
           <app-avatar-filter
+            i18n-emptyLabel="Shown when there are no members to filter by"
             emptyLabel="No members"
             [options]="assigneeOptions()"
             (optionClicked)="toggleAssignee($event)" />
@@ -61,7 +62,9 @@ import { TagFilterComponent } from '@static/components/tag-filter/tag-filter.com
           type="button"
           class="text-muted-foreground hover:bg-muted hover:text-foreground ml-auto cursor-pointer rounded px-3 py-2 text-sm font-medium transition-colors"
           (click)="cleared.emit()">
-          Clear filters
+          <span i18n="Button that clears every active filter">
+            Clear filters
+          </span>
         </button>
       }
     </div>

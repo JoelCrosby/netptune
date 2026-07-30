@@ -27,11 +27,11 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     </app-chip-listbox>
     <app-dropdown-menu #sprintsMenu>
       <small class="block px-3 py-1 text-xs text-neutral-500">
-        Change Sprint
+        <span i18n="Heading above the sprint options">Change Sprint</span>
       </small>
       @if (value()) {
         <button app-menu-item (click)="selectSprint(null); sprintsMenu.close()">
-          No Sprint
+          <span i18n="Option that clears the task's sprint">No Sprint</span>
         </button>
       }
       @for (sprint of sprints(); track sprint.id) {
@@ -53,7 +53,9 @@ export class TaskSprintSelectComponent {
   readonly projectId = input<number | null>(null);
   readonly loading = input(false);
   readonly disabled = input(false);
-  readonly fallbackLabel = input('No Sprint');
+  readonly fallbackLabel = input(
+    $localize`:Shown in place of a sprint name when a task has no sprint:No Sprint`
+  );
 
   readonly sprintStatusLabels = sprintStatusLabels;
 

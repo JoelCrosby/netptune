@@ -15,9 +15,9 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
       <app-popover-surface size="compact" enterFrom="top">
         @if (!workspaces().length) {
           <div class="flex h-9.5 items-center px-2 font-[inherit] text-sm">
-            <span i18n="Shown when no workspace matches the search term"
-              >No results found...</span
-            >
+            <span i18n="Shown when no workspace matches the search term">
+              No results found...
+            </span>
           </div>
         }
         @if (workspaces().length) {
@@ -50,16 +50,16 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
           <a
             app-workspace-menu-action
             [routerLink]="['/workspaces']"
-            i18n="Workspace menu action that opens the workspace picker"
-            >Workspaces</a
-          >
+            i18n="Workspace menu action that opens the workspace picker">
+            Workspaces
+          </a>
           <button
             app-workspace-menu-action
             type="button"
             (click)="logout.emit()">
-            <span i18n="Workspace menu action that signs the user out"
-              >Logout</span
-            >
+            <span i18n="Workspace menu action that signs the user out">
+              Logout
+            </span>
           </button>
         </div>
       </app-popover-surface>

@@ -21,6 +21,9 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
       @if (overflowActions().length) {
         <button
           app-stroked-button
+          i18n-aria-label="
+            Accessible label for the button that opens the page action menu
+          "
           aria-label="Actions"
           (click)="menu.toggle($any($event.currentTarget))">
           <svg lucideEllipsis></svg>

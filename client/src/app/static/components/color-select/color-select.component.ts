@@ -29,57 +29,59 @@ import { labelIdFor } from '../form-control-a11y';
     FormControlHintDirective,
     FormErrorComponent,
   ],
-  template: `<div class="nept-form-control mb-[1.4rem] w-[inherit]">
-    @if (label()) {
-      <span [id]="labelId()" appFormLabel>
-        {{ label() }}
-      </span>
-    }
+  template: `
+    <div class="nept-form-control mb-[1.4rem] w-[inherit]">
+      @if (label()) {
+        <span [id]="labelId()" appFormLabel>
+          {{ label() }}
+        </span>
+      }
 
-    <div
-      role="radiogroup"
-      [attr.aria-labelledby]="label() ? labelId() : null"
-      [attr.aria-describedby]="describedBy(!!hint())"
-      [attr.aria-invalid]="ariaInvalid()">
-      @for (row of rows(); track $index) {
-        <div class="flex justify-stretch">
-          @for (color of row; track color.name) {
-            <button
-              #swatch
-              type="button"
-              role="radio"
-              class="focus-visible:ring-primary m-[0.2rem] flex h-9 min-h-9 min-w-9 flex-1 cursor-pointer items-center justify-center rounded-sm text-white focus-visible:ring-2 focus-visible:outline-none"
-              [appTooltip]="color.label"
-              [class]="color.swatchClass"
-              [attr.aria-label]="color.label"
-              [attr.aria-checked]="isSelected(color)"
-              [attr.tabindex]="isTabbable(color) ? 0 : -1"
-              [disabled]="disabled()"
-              (click)="onOptionClicked(color)"
-              (keydown)="onKeydown($event, color)">
-              @if (isSelected(color)) {
-                <svg lucideCheck class="h-6 w-6"></svg>
-              }
-            </button>
+      <div
+        role="radiogroup"
+        [attr.aria-labelledby]="label() ? labelId() : null"
+        [attr.aria-describedby]="describedBy(!!hint())"
+        [attr.aria-invalid]="ariaInvalid()">
+        @for (row of rows(); track $index) {
+          <div class="flex justify-stretch">
+            @for (color of row; track color.name) {
+              <button
+                #swatch
+                type="button"
+                role="radio"
+                class="focus-visible:ring-primary m-[0.2rem] flex h-9 min-h-9 min-w-9 flex-1 cursor-pointer items-center justify-center rounded-sm text-white focus-visible:ring-2 focus-visible:outline-none"
+                [appTooltip]="color.label"
+                [class]="color.swatchClass"
+                [attr.aria-label]="color.label"
+                [attr.aria-checked]="isSelected(color)"
+                [attr.tabindex]="isTabbable(color) ? 0 : -1"
+                [disabled]="disabled()"
+                (click)="onOptionClicked(color)"
+                (keydown)="onKeydown($event, color)">
+                @if (isSelected(color)) {
+                  <svg lucideCheck class="h-6 w-6"></svg>
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      @if (hint()) {
+        <small [id]="hintId()" appFormHint>{{ hint() }}</small>
+      }
+
+      @if (showErrors()) {
+        <div [id]="errorId()">
+          @for (error of errors(); track error.kind) {
+            <app-form-error>
+              {{ error.message }}
+            </app-form-error>
           }
         </div>
       }
     </div>
-
-    @if (hint()) {
-      <small [id]="hintId()" appFormHint> {{ hint() }} </small>
-    }
-
-    @if (showErrors()) {
-      <div [id]="errorId()">
-        @for (error of errors(); track error.kind) {
-          <app-form-error>
-            {{ error.message }}
-          </app-form-error>
-        }
-      </div>
-    }
-  </div> `,
+  `,
 })
 export class ColorSelectComponent extends AbstractFormValueControl {
   readonly label = input.required<string>();

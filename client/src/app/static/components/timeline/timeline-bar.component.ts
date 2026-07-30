@@ -61,6 +61,7 @@ interface PointerInteraction {
       <span
         class="bg-primary-foreground/35 hover:bg-primary-foreground/60 absolute top-2 z-10 h-7 w-1.5 cursor-ew-resize touch-none rounded-l"
         [style.left.px]="left() - 3"
+        i18n-title="Tooltip on the handle that drags a task's start date"
         title="Resize start date"
         aria-hidden="true"
         (pointerdown)="startPointerInteraction($event, 'resize-start')"
@@ -70,6 +71,7 @@ interface PointerInteraction {
       <span
         class="bg-primary-foreground/35 hover:bg-primary-foreground/60 absolute top-2 z-10 h-7 w-1.5 cursor-ew-resize touch-none rounded-r"
         [style.left.px]="left() + width() - 3"
+        i18n-title="Tooltip on the handle that drags a task's due date"
         title="Resize due date"
         aria-hidden="true"
         (pointerdown)="startPointerInteraction($event, 'resize-end')"

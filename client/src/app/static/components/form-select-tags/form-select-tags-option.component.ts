@@ -14,7 +14,7 @@ import { FormSelectTagsService } from './form-select-tags.service';
 @Component({
   selector: 'app-form-select-tags-option',
   hostDirectives: [FormSelectOptionDirective],
-  template: `<ng-content />`,
+  template: ` <ng-content /> `,
 })
 export class FormSelectTagsOptionComponent<TValue> implements Highlightable {
   private service = inject<FormSelectTagsService<TValue>>(

@@ -24,6 +24,7 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
           <app-form-select
             class="block max-w-86"
             [label]="preference.definition.label"
+            i18n-placeholder="Placeholder in a preference value picker"
             placeholder="Select value"
             [value]="currentValue(preference)"
             (changed)="updateValue(preference, $event)">
@@ -36,13 +37,15 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
 
           <app-form-select
             class="block w-46"
+            i18n-label="Label of the preference scope field"
             label="Scope"
+            i18n-placeholder="Placeholder in the preference scope picker"
             placeholder="Select scope"
             [value]="selectedScope(preference)"
             (changed)="selectScope(preference, $event)">
             @for (scope of preference.definition.allowedScopes; track scope) {
               <app-form-select-option [value]="scope">
-                {{ scope === 'workspace' ? 'Workspace' : 'Global' }}
+                {{ scopeLabel(scope) }}
               </app-form-select-option>
             }
           </app-form-select>
@@ -54,7 +57,9 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
               color="contrast"
               class="mb-6 h-10 px-4"
               (click)="clearValue(preference)">
-              Clear
+              <span i18n="Button that removes a preference override">
+                Clear
+              </span>
             </button>
           </div>
         </div>
@@ -63,6 +68,12 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
   `,
 })
 export class PreferenceListComponent {
+  /** Ternaries in a template expression cannot be marked, so build the copy here. */
+  protected scopeLabel(scope: string): string {
+    return scope === 'workspace'
+      ? $localize`:Preference scope limited to the current workspace:Workspace`
+      : $localize`:Preference scope applying everywhere:Global`;
+  }
   readonly values = input.required<ResolvedPreferenceValue[]>();
 
   private readonly userPreferences = inject(UserPreferencesService);

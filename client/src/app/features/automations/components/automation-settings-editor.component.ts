@@ -24,14 +24,20 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
     <div class="flex flex-col justify-baseline gap-4">
       <app-form-input
         name="name"
+        i18n-label="Label of the name field"
         label="Name"
         [required]="true"
         [(value)]="name" />
 
       <app-form-select
         name="execution-user"
+        i18n-label="
+          Label of the field choosing which service account runs the actions
+        "
         label="Run as"
+        i18n-hint="Explains whose permissions automation actions run with"
         hint="Actions use this service account's workspace permissions and appear as automation activity."
+        i18n-placeholder="Placeholder text: Choose a service account"
         placeholder="Choose a service account"
         [required]="true"
         [disabled]="!serviceAccounts().length"
@@ -45,14 +51,18 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
 
       @if (!serviceAccounts().length) {
         <p class="text-muted -mt-3 text-sm">
-          Create an enabled service account before saving this automation.
+          <span i18n="Warns that a service account is required">
+            Create an enabled service account before saving this automation.
+          </span>
         </p>
       }
 
       <div class="flex flex-col gap-3">
         <app-form-select
           name="scope-kind"
+          i18n-label="Label of the scope field"
           label="Scope"
+          i18n-hint="Explains what conditions do"
           hint="Limit which tasks this automation can act on."
           [value]="scopeKind()"
           (valueChange)="setScopeKind($event)">
@@ -67,7 +77,9 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
           @case ('project') {
             <app-form-select
               name="scope-project"
+              i18n-label="Label of the project field"
               label="Project"
+              i18n-placeholder="Placeholder text: Choose a project"
               placeholder="Choose a project"
               [required]="true"
               [(value)]="projectId">
@@ -81,7 +93,9 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
           @case ('board') {
             <app-form-select
               name="scope-board"
+              i18n-label="Label of the board field"
               label="Board"
+              i18n-placeholder="Placeholder text: Choose a board"
               placeholder="Choose a board"
               [required]="true"
               [(value)]="boardId">
@@ -95,7 +109,9 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
           @case ('sprint') {
             <app-form-select
               name="scope-sprint"
+              i18n-label="Label of the sprint field"
               label="Sprint"
+              i18n-placeholder="Placeholder text: Choose a sprint"
               placeholder="Choose a sprint"
               [required]="true"
               [(value)]="sprintId">
@@ -112,9 +128,15 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
       <div class="border-border bg-foreground/5 rounded-lg border p-4">
         <app-checkbox [(checked)]="isEnabled">
           <span class="flex flex-col">
-            <span class="text-foreground text-sm font-medium">Enabled</span>
+            <span
+              class="text-foreground text-sm font-medium"
+              i18n="Marks an automation that is switched on">
+              Enabled
+            </span>
             <span class="text-muted text-sm">
-              Turn this automation on so it runs automatically.
+              <span i18n="Explains the enabled toggle">
+                Turn this automation on so it runs automatically.
+              </span>
             </span>
           </span>
         </app-checkbox>

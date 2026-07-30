@@ -37,11 +37,15 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FormField,
   ],
   template: `
-    <app-dialog-title>Create Sprint</app-dialog-title>
+    <app-dialog-title i18n="Title of the create-sprint dialog">
+      Create Sprint
+    </app-dialog-title>
 
     <form class="flex flex-col gap-3" (submit)="onSubmit($event)">
       <app-form-select
+        i18n-label="Label of the project field"
         label="Project"
+        i18n-placeholder="Placeholder in the project picker"
         placeholder="Select project"
         [formField]="sprintForm.projectId">
         @for (project of projects(); track project.id) {
@@ -52,11 +56,13 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
       </app-form-select>
 
       <app-form-input
+        i18n-label="Label of the name field"
         label="Name"
         maxLength="256"
         [formField]="sprintForm.name" />
 
       <app-form-textarea
+        i18n-label="Label of the sprint goal field"
         label="Goal"
         rows="3"
         maxLength="32768"
@@ -64,11 +70,13 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
       <div class="grid grid-cols-2 gap-3">
         <app-form-input
+          i18n-label="Label of the sprint start date field"
           label="Start"
           type="date"
           [formField]="sprintForm.startDate" />
 
         <app-form-input
+          i18n-label="Label of the sprint end date field"
           label="End"
           type="date"
           [formField]="sprintForm.endDate" />
@@ -77,7 +85,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
     <div app-dialog-actions align="end">
       <button app-stroked-button type="button" (click)="dialogRef.close()">
-        Cancel
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
       </button>
       <button
         app-flat-button
@@ -85,7 +93,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         type="button"
         [disabled]="createLoading()"
         (click)="onSubmit($event)">
-        Create
+        <span i18n="Button that creates the sprint">Create</span>
       </button>
     </div>
   `,
@@ -116,11 +124,23 @@ export class CreateSprintDialogComponent {
   });
 
   readonly sprintForm = form(this.sprintFormModel, (schema) => {
-    required(schema.projectId, { message: 'Project is required.' });
-    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 256 }));
+    required(schema.projectId, {
+      message: $localize`:Validation error when no project is selected:Project is required.`,
+    });
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 256,
+      })
+    );
     maxLength(schema.goal, 32768);
-    required(schema.startDate, { message: 'Start date is required.' });
-    required(schema.endDate, { message: 'End date is required.' });
+    required(schema.startDate, {
+      message: $localize`:Validation error when the sprint start date is empty:Start date is required.`,
+    });
+    required(schema.endDate, {
+      message: $localize`:Validation error when the sprint end date is empty:End date is required.`,
+    });
     validate(schema.endDate, (context) => {
       const startDate = context.valueOf(schema.startDate);
       const endDate = context.value();
@@ -129,7 +149,7 @@ export class CreateSprintDialogComponent {
 
       return {
         kind: 'dateOrder',
-        message: 'End date must be on or after the start date.',
+        message: $localize`:Validation error when a sprint ends before it starts:End date must be on or after the start date.`,
       };
     });
   });

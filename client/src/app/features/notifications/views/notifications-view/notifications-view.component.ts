@@ -26,6 +26,7 @@ import { NotificationsTableComponent } from '../../components/notifications-tabl
   template: `
     <app-page-container>
       <app-page-header
+        i18n-title="Page title for the notification list"
         title="Notifications"
         [count]="count()"
         [actionTitle]="count() ? 'Mark all as read' : null"

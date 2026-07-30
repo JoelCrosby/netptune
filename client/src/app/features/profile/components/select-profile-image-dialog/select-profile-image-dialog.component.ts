@@ -16,18 +16,23 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     StrokedButtonComponent,
   ],
   template: `
-    <app-dialog-title>Change Profile Picture</app-dialog-title>
+    <app-dialog-title i18n="Title of the change-profile-picture dialog">
+      Change Profile Picture
+    </app-dialog-title>
 
     <div class="flex flex-col items-center gap-4">
       @if (previewUrl()) {
         <img
           [src]="previewUrl()"
+          i18n-alt="Alt text for the chosen profile picture preview"
           alt="Preview"
           class="h-[180px] w-[180px] rounded-full object-cover" />
       } @else {
         <div
           class="flex h-[180px] w-[180px] items-center justify-center rounded-full bg-[var(--background-two)] text-[var(--text-two)]">
-          No image selected
+          <span i18n="Shown before a profile picture has been chosen">
+            No image selected
+          </span>
         </div>
       }
 
@@ -39,14 +44,20 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
         (change)="onFileSelected($event)" />
 
       <button app-stroked-button (click)="fileInput.click()">
-        Select Image
+        <span i18n="Button that opens the file picker for a profile picture">
+          Select Image
+        </span>
       </button>
     </div>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button (click)="dialogRef.close()">Cancel</button>
+      <button app-stroked-button (click)="dialogRef.close()">
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button app-flat-button [disabled]="!selectedFile()" (click)="onUpload()">
-        Upload
+        <span i18n="Button that uploads the chosen profile picture">
+          Upload
+        </span>
       </button>
     </div>
   `,

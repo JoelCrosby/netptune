@@ -46,17 +46,27 @@ export interface EditStatusDialogResult {
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Edit Status</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the edit-status dialog">
+      Edit Status
+    </app-dialog-title>
 
     <form app-dialog-content (submit)="submit($event)">
       <app-form-input
         [formField]="statusForm.name"
+        i18n-label="Label of the name field"
         label="Name"
         maxLength="128" />
 
-      <app-color-select [formField]="statusForm.color" label="Color" />
+      <app-color-select
+        [formField]="statusForm.color"
+        i18n-label="Label of the colour picker field"
+        label="Color" />
 
-      <app-form-select [formField]="statusForm.category" label="Category">
+      <app-form-select
+        [formField]="statusForm.category"
+        i18n-label="Label of the status category field"
+        label="Category">
         @for (category of categories; track category) {
           <app-form-select-option [value]="category">
             {{ categoryLabel(category) }}
@@ -66,11 +76,14 @@ export interface EditStatusDialogResult {
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Close</button>
-      <button app-flat-button type="button" (click)="submit($event)">
-        Save Status
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without saving">Close</span>
       </button>
-    </div>`,
+      <button app-flat-button type="button" (click)="submit($event)">
+        <span i18n="Button that saves changes to the status">Save Status</span>
+      </button>
+    </div>
+  `,
 })
 export class EditStatusDialogComponent {
   private readonly dialogRef =
@@ -88,7 +101,13 @@ export class EditStatusDialogComponent {
   });
 
   readonly statusForm = form(this.statusFormModel, (schema) => {
-    apply(schema.name, requiredTextSchema({ label: 'Name', maxLength: 128 }));
+    apply(
+      schema.name,
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 128,
+      })
+    );
     maxLength(schema.color, 32);
     required(schema.color);
     required(schema.category);

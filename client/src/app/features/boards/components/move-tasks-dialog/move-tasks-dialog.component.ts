@@ -29,11 +29,16 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
   template: `
     @let status = statusMap();
 
-    <app-dialog-title>Move Tasks To Group</app-dialog-title>
+    <app-dialog-title
+      i18n="Title of the dialog for moving tasks between board groups">
+      Move Tasks To Group
+    </app-dialog-title>
 
     <app-dialog-content>
       <p class="text-foreground/60 mb-4 text-sm">
-        Select the group you wish to move the selected tasks to.
+        <span i18n="Instructions in the move-tasks dialog">
+          Select the group you wish to move the selected tasks to.
+        </span>
       </p>
 
       <div
@@ -48,29 +53,38 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
               <app-board-group-status-dot [status]="status" />
             }
 
-            <span class="flex-1 truncate text-sm font-medium">{{
-              group.name
-            }}</span>
+            <span class="flex-1 truncate text-sm font-medium">
+              {{ group.name }}
+            </span>
 
             <app-badge color="neutral">{{ group.tasks.length }}</app-badge>
           </app-selectable-card>
         } @empty {
           <p class="text-foreground/50 py-6 text-center text-sm">
-            No groups available.
+            <span
+              i18n="
+                Empty state when there is no board group to move tasks into
+              ">
+              No groups available.
+            </span>
           </p>
         }
       </div>
     </app-dialog-content>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close>Cancel</button>
+      <button app-stroked-button app-dialog-close>
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button
         app-flat-button
         color="primary"
         type="button"
         [disabled]="selected() === null"
         (click)="onMoveTasksClicked()">
-        Move Tasks
+        <span i18n="Button that moves the selected tasks into the chosen group">
+          Move Tasks
+        </span>
       </button>
     </div>
   `,

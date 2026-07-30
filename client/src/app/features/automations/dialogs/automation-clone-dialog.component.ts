@@ -38,23 +38,33 @@ export interface AutomationCloneDialogResult {
     FlatButtonComponent,
     StrokedButtonComponent,
   ],
-  template: `<app-dialog-title>Clone Automation</app-dialog-title>
+  template: `
+    <app-dialog-title i18n="Title of the clone-automation dialog">
+      Clone Automation
+    </app-dialog-title>
 
     <form
       app-dialog-content
       class="flex w-160 max-w-full flex-col gap-4"
       (submit)="submit($event)">
       <p class="text-muted text-sm">
-        Cloning
-        <span class="text-foreground font-medium">{{
-          dialogData.ruleName
-        }}</span
-        >. The copy keeps the same trigger and actions, and starts disabled so
-        you can review it before it runs.
+        <span
+          i18n="
+            Explains what cloning an automation does. NAME is the rule being
+            cloned
+          ">
+          Cloning
+          <span class="text-foreground font-medium">{{
+            dialogData.ruleName // i18n(ph="NAME")
+          }}</span
+          >. The copy keeps the same trigger and actions, and starts disabled so
+          you can review it before it runs.
+        </span>
       </p>
 
       <app-form-input
         [formField]="cloneForm.name"
+        i18n-label="Label of the name field"
         label="Name"
         [noMargin]="true"
         maxLength="256" />
@@ -66,11 +76,16 @@ export interface AutomationCloneDialogResult {
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close type="button">Cancel</button>
-      <button app-flat-button type="button" (click)="submit($event)">
-        Clone Automation
+      <button app-stroked-button app-dialog-close type="button">
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
       </button>
-    </div>`,
+      <button app-flat-button type="button" (click)="submit($event)">
+        <span i18n="Button that creates the cloned automation">
+          Clone Automation
+        </span>
+      </button>
+    </div>
+  `,
 })
 export class AutomationCloneDialogComponent {
   private readonly dialogRef =
@@ -87,7 +102,11 @@ export class AutomationCloneDialogComponent {
   readonly cloneForm = form(this.cloneFormModel, (schema) => {
     apply(
       schema.name,
-      requiredTextSchema({ label: 'Name', maxLength: 256, minLength: 2 })
+      requiredTextSchema({
+        label: $localize`:Field name used inside validation messages, e.g. "Name is required.":Name`,
+        maxLength: 256,
+        minLength: 2,
+      })
     );
   });
 

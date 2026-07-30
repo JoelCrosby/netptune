@@ -35,13 +35,22 @@ import {
   host: { class: 'block' },
   template: `
     <section class="mt-4 flex flex-col gap-3">
-      <h2 class="font-semibold">Unscheduled tasks ({{ totalCount() }})</h2>
+      <h2 class="font-semibold">
+        <span
+          i18n="Heading above tasks without dates. COUNT is how many there are">
+          Unscheduled tasks ({{
+            totalCount()  // i18n(ph="COUNT")
+          }})
+        </span>
+      </h2>
 
       <app-datatable
         containerClass="max-h-[32rem] overflow-auto"
         tableClass="min-w-[820px] table-fixed"
         rowClass="bg-card"
+        i18n-emptyMessage="Empty state for the unscheduled task list"
         emptyMessage="No unscheduled tasks match the current filters."
+        i18n-itemLabel="Plural noun for tasks, used in the selection summary"
         itemLabel="tasks"
         [data]="data()"
         [stickyHeader]="true"
@@ -70,7 +79,9 @@ import {
             [attr.aria-label]="scheduleLabel(task)"
             [title]="scheduleLabel(task)"
             (click)="scheduleAtRangeStart(task)">
-            Schedule
+            <span i18n="Button that gives an unscheduled task dates">
+              Schedule
+            </span>
           </button>
         </ng-template>
 
@@ -93,7 +104,11 @@ import {
               {{ priorityLabel(task.priority) }}
             </span>
           } @else {
-            <span class="text-muted text-sm">None</span>
+            <span
+              class="text-muted text-sm"
+              i18n="Shown in place of an empty value">
+              None
+            </span>
           }
         </ng-template>
 
@@ -101,7 +116,11 @@ import {
           @if (task.assignees.length > 0) {
             <app-avatar-stack [avatars]="task.assignees" />
           } @else {
-            <span class="text-muted text-sm">Unassigned</span>
+            <span
+              class="text-muted text-sm"
+              i18n="Shown when a task has nobody assigned">
+              Unassigned
+            </span>
           }
         </ng-template>
       </app-datatable>

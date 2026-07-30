@@ -44,21 +44,27 @@ import { tagResource } from '@app/core/resources/tag.resource';
     TableHeadDirective,
     TableRowDirective,
   ],
-  template: `<app-section-header class="max-w-xl" heading="Tags">
+  template: `
+    <app-section-header
+      class="max-w-xl"
+      i18n-heading="Section heading for workspace tags"
+      heading="Tags">
       <button
         sectionHeaderActions
         app-stroked-button
         type="button"
         (click)="openCreateDialog()">
         <svg lucidePlus class="h-4 w-4"></svg>
-        <span>Create tag</span>
+        <span i18n="Button that opens the create-tag dialog">Create tag</span>
       </button>
     </app-section-header>
 
     @if (tags.error()) {
       <app-error-state
         compact
+        i18n-title="Shown when the tag list fails to load"
         title="Tags could not be loaded"
+        i18n-description="Advice shown when a list fails to load"
         description="Check your connection and try again."
         (retry)="tags.reload()" />
     } @else {
@@ -67,7 +73,7 @@ import { tagResource } from '@app/core/resources/tag.resource';
         tableClass="table-fixed">
         <thead appTableHead>
           <tr appTableHeaderRow>
-            <th class="px-4 py-3">Name</th>
+            <th class="px-4 py-3" i18n="Column heading for the name">Name</th>
             <th class="w-24 px-2 py-3"></th>
           </tr>
         </thead>
@@ -86,16 +92,24 @@ import { tagResource } from '@app/core/resources/tag.resource';
                 <div class="flex gap-1">
                   <button
                     app-icon-button
+                    i18n-appTooltip="Tooltip on the button that edits a tag"
                     appTooltip="Edit tag"
                     type="button"
+                    i18n-aria-label="
+                      Accessible label for the button that edits a tag
+                    "
                     aria-label="Edit tag"
                     (click)="openEditDialog(tag)">
                     <svg lucideSettings2 class="h-4 w-4"></svg>
                   </button>
                   <button
                     app-icon-button
+                    i18n-appTooltip="Tooltip on the button that deletes a tag"
                     appTooltip="Delete tag"
                     type="button"
+                    i18n-aria-label="
+                      Accessible label for the button that deletes a tag
+                    "
                     aria-label="Delete tag"
                     (click)="onDeleteClicked(tag)">
                     <svg lucideX class="h-4 w-4"></svg>
@@ -106,13 +120,16 @@ import { tagResource } from '@app/core/resources/tag.resource';
           } @empty {
             <tr>
               <td appTableEmptyCell colspan="2">
-                No tags yet. Create one to group tasks across projects.
+                <span i18n="Empty state for the tag list">
+                  No tags yet. Create one to group tasks across projects.
+                </span>
               </td>
             </tr>
           }
         </tbody>
       </app-table>
-    } `,
+    }
+  `,
 })
 export class TagsViewComponent {
   private store = inject(Store);

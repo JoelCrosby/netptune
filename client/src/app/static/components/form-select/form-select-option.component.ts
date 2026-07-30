@@ -14,7 +14,7 @@ import { FormSelectService } from './form-select.service';
 @Component({
   selector: 'app-form-select-option',
   hostDirectives: [FormSelectOptionDirective],
-  template: `<ng-content />`,
+  template: ` <ng-content /> `,
 })
 export class FormSelectOptionComponent<TValue> implements Highlightable {
   private service = inject<FormSelectService<TValue>>(FormSelectService);

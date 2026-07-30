@@ -58,6 +58,7 @@ const taskRowHeight = 44;
       [class.ring-2]="taskDragActive()"
       [class.ring-primary]="taskDragActive()"
       role="region"
+      i18n-aria-label="Accessible name of the roadmap timeline"
       aria-label="Task timeline"
       (dragenter)="showTaskDropTarget($event)"
       (dragover)="allowTaskDrop($event)"
@@ -65,6 +66,7 @@ const taskRowHeight = 44;
       (drop)="scheduleDroppedTask($event)">
       <div [style.width.px]="totalWidth()" class="relative min-h-full">
         <app-timeline-header
+          i18n-itemLabel="Noun for a roadmap row, used in the selection summary"
           itemLabel="Task"
           [itemColumnWidth]="taskColumnWidth()"
           [itemColumnResizable]="true"
@@ -123,7 +125,12 @@ const taskRowHeight = 44;
           }
         } @empty {
           <div class="text-muted-foreground p-12 text-center text-sm">
-            No scheduled tasks overlap this range.
+            <span
+              i18n="
+                Empty state when no roadmap tasks fall in the selected range
+              ">
+              No scheduled tasks overlap this range.
+            </span>
           </div>
         }
 

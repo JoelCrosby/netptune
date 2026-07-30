@@ -30,18 +30,37 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
     StrokedButtonComponent,
   ],
   template: `
-    <app-dialog-title>Manage Groups</app-dialog-title>
+    <app-dialog-title
+      i18n="Title of the dialog for showing and hiding board groups">
+      Manage Groups
+    </app-dialog-title>
 
     <app-dialog-content>
       <p class="text-foreground/60 mb-4 text-sm">
-        Uncheck a group to hide it from this board. This only affects your view.
+        <span i18n="Explains that hiding a board group is per-user">
+          Uncheck a group to hide it from this board. This only affects your
+          view.
+        </span>
       </p>
 
       @if (groups().length) {
         <div
           class="border-border mb-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b pb-3">
           <span class="text-foreground/50 text-xs font-medium tracking-wide">
-            {{ visibleCount() }} of {{ groups().length }} visible
+            <span
+              i18n="
+                How many board groups are visible. VISIBLE is the visible count
+                and TOTAL the total number of groups
+              ">
+              {{
+                visibleCount() // i18n(ph="VISIBLE")
+              }}
+              of
+              {{
+                groups().length // i18n(ph="TOTAL")
+              }}
+              visible
+            </span>
           </span>
 
           <div class="flex items-center gap-1">
@@ -52,7 +71,9 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
               type="button"
               [disabled]="!canShowAll()"
               (click)="showAll()">
-              Show all
+              <span i18n="Button that makes every board group visible">
+                Show all
+              </span>
             </button>
             <button
               class="h-8 min-w-0 px-2.5 text-xs"
@@ -61,7 +82,7 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
               type="button"
               [disabled]="!canHideAll()"
               (click)="hideAll()">
-              Hide all
+              <span i18n="Button that hides every board group">Hide all</span>
             </button>
             <button
               class="h-8 min-w-0 px-2.5 text-xs"
@@ -70,7 +91,9 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
               type="button"
               [disabled]="!canHideEmpty()"
               (click)="hideEmpty()">
-              Hide empty
+              <span i18n="Button that hides board groups containing no tasks">
+                Hide empty
+              </span>
             </button>
           </div>
         </div>
@@ -107,12 +130,18 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
           }
         </div>
       } @else {
-        <p class="text-foreground/60 text-sm">This board has no groups.</p>
+        <p class="text-foreground/60 text-sm">
+          <span i18n="Empty state when a board has no groups">
+            This board has no groups.
+          </span>
+        </p>
       }
     </app-dialog-content>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button app-dialog-close>Done</button>
+      <button app-stroked-button app-dialog-close>
+        <span i18n="Closes a dialog once the user has finished">Done</span>
+      </button>
     </div>
   `,
 })

@@ -54,6 +54,9 @@ const TYPE_ICONS: Record<SnackbarType, LucideIconInput | null> = {
 
       <button
         class="shrink-0 leading-none opacity-50 transition-opacity hover:opacity-100"
+        i18n-aria-label="
+          Accessible label for the button that dismisses a notification toast
+        "
         aria-label="Dismiss"
         (click)="snackbarService.dismiss(item().id)">
         <svg lucideX class="h-4 w-4 leading-none"></svg>

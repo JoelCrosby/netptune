@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'app-form-control-field',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content />`,
+  template: ` <ng-content /> `,
   host: {
     class:
       'flex w-[inherit] max-w-[inherit] flex-row items-center rounded-sm border-2 bg-form-field-background transition-colors duration-200 ease-out',

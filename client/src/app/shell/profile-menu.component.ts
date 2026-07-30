@@ -20,12 +20,14 @@ import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import { LocaleSwitcherComponent } from './locale-switcher.component';
 
 @Component({
   selector: 'app-profile-menu',
   imports: [
     AvatarComponent,
     DropdownMenuComponent,
+    LocaleSwitcherComponent,
     MenuItemComponent,
     LucideLogOut,
     LucideMoon,
@@ -69,9 +71,10 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           type="button"
           (click)="navigateToProfile(profileMenu)">
           <svg lucideUser class="h-4 w-4 shrink-0"></svg>
-          <span i18n="Profile menu item that opens the signed-in user's profile"
-            >Profile</span
-          >
+          <span
+            i18n="Profile menu item that opens the signed-in user's profile">
+            Profile
+          </span>
         </button>
 
         @if (canReadWorkspace()) {
@@ -80,9 +83,9 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
             type="button"
             (click)="navigateToWorkspaceSettings(profileMenu)">
             <svg lucideSettings class="h-4 w-4 shrink-0"></svg>
-            <span i18n="Profile menu item that opens workspace settings"
-              >Workspace settings</span
-            >
+            <span i18n="Profile menu item that opens workspace settings">
+              Workspace settings
+            </span>
           </button>
         }
 
@@ -94,6 +97,8 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           }
           {{ themeActionLabel() }}
         </button>
+
+        <app-locale-switcher />
 
         <div class="border-border/50 my-1 border-t"></div>
 

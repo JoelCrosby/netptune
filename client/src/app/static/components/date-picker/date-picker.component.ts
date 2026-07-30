@@ -5,6 +5,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  LOCALE_ID,
   OnDestroy,
   computed,
   inject,
@@ -73,6 +74,8 @@ export type DatePickerAppearance = 'field' | 'flat' | 'bare';
   `,
 })
 export class DatePickerComponent implements OnDestroy {
+  private readonly locale = inject(LOCALE_ID);
+
   readonly value = model('');
   readonly controlId = input('');
   readonly label = input('');
@@ -108,7 +111,7 @@ export class DatePickerComponent implements OnDestroy {
   protected readonly displayText = computed(() => {
     const date = parseDateValue(this.value());
     const value = date
-      ? new Intl.DateTimeFormat(undefined, {
+      ? new Intl.DateTimeFormat(this.locale, {
           day: 'numeric',
           month: 'short',
           year: 'numeric',

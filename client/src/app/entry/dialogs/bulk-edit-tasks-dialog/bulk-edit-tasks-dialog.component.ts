@@ -48,20 +48,39 @@ interface BulkEditTasksForm {
     FormInputComponent,
   ],
   template: `
-    <app-dialog-title>Bulk edit tasks</app-dialog-title>
+    <app-dialog-title
+      i18n="Title of the dialog for editing several tasks at once">
+      Bulk edit tasks
+    </app-dialog-title>
 
     <form app-dialog-content (submit)="apply($event)">
       <p class="text-muted mb-4 text-sm">
-        Applying to {{ taskCount() }}
-        {{ taskCount() === 1 ? 'task' : 'tasks' }}. Fields left on
-        <span class="font-medium">Keep current</span> are not changed.
+        <span
+          i18n="
+            Explains how many tasks a bulk edit affects. KEEP_CURRENT is the
+            styled name of the no-change option
+          ">
+          {taskCount(), plural,
+            =1 {Applying to 1 task.}
+            other {Applying to {{ taskCount() }} tasks.}
+          }
+          Fields left on
+          <span class="font-medium">Keep current</span>
+          are not changed.
+        </span>
       </p>
 
       <div class="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
         @if (statuses.canRead()) {
-          <app-form-select [formField]="editForm.statusId" label="Status">
+          <app-form-select
+            [formField]="editForm.statusId"
+            i18n-label="Label of the status field"
+            label="Status">
             <app-form-select-option [value]="null">
-              Keep current
+              <span
+                i18n="Option that leaves a field unchanged during a bulk edit">
+                Keep current
+              </span>
             </app-form-select-option>
             @for (status of statuses.value(); track status.id) {
               <app-form-select-option [value]="status.id">
@@ -71,9 +90,15 @@ interface BulkEditTasksForm {
           </app-form-select>
         }
 
-        <app-form-select [formField]="editForm.priority" label="Priority">
+        <app-form-select
+          [formField]="editForm.priority"
+          i18n-label="Label of the priority field"
+          label="Priority">
           <app-form-select-option [value]="null">
-            Keep current
+            <span
+              i18n="Option that leaves a field unchanged during a bulk edit">
+              Keep current
+            </span>
           </app-form-select-option>
           @for (option of priorityOptions; track option.value) {
             <app-form-select-option [value]="option.value">
@@ -83,9 +108,15 @@ interface BulkEditTasksForm {
         </app-form-select>
 
         @if (projects.canRead()) {
-          <app-form-select [formField]="editForm.projectId" label="Project">
+          <app-form-select
+            [formField]="editForm.projectId"
+            i18n-label="Label of the project field"
+            label="Project">
             <app-form-select-option [value]="null">
-              Keep current
+              <span
+                i18n="Option that leaves a field unchanged during a bulk edit">
+                Keep current
+              </span>
             </app-form-select-option>
             @for (project of projects.value(); track project.id) {
               <app-form-select-option [value]="project.id">
@@ -96,12 +127,18 @@ interface BulkEditTasksForm {
         }
 
         @if (sprints.canRead()) {
-          <app-form-select [formField]="editForm.sprintId" label="Sprint">
+          <app-form-select
+            [formField]="editForm.sprintId"
+            i18n-label="Label of the sprint field"
+            label="Sprint">
             <app-form-select-option [value]="null">
-              Keep current
+              <span
+                i18n="Option that leaves a field unchanged during a bulk edit">
+                Keep current
+              </span>
             </app-form-select-option>
             <app-form-select-option [value]="noSprint">
-              No sprint
+              <span i18n="Option that clears the task's sprint">No sprint</span>
             </app-form-select-option>
             @for (sprint of sprints.value(); track sprint.id) {
               <app-form-select-option [value]="sprint.id">
@@ -113,9 +150,13 @@ interface BulkEditTasksForm {
 
         <app-form-select
           [formField]="editForm.estimateType"
+          i18n-label="Label of the estimate-unit field"
           label="Estimate type">
           <app-form-select-option [value]="null">
-            Keep current
+            <span
+              i18n="Option that leaves a field unchanged during a bulk edit">
+              Keep current
+            </span>
           </app-form-select-option>
           @for (option of estimateOptions; track option.value) {
             <app-form-select-option [value]="option.value">
@@ -127,12 +168,14 @@ interface BulkEditTasksForm {
         <app-form-input
           [formField]="editForm.estimateValue"
           type="number"
+          i18n-label="Label of the story points field"
           label="Story points" />
       </div>
 
       @if (users.canRead()) {
         <app-form-select-tags
           [formField]="editForm.assigneeIds"
+          i18n-label="Label of the assignees field"
           label="Assignees">
           @for (user of assignableUsers(); track user.id) {
             <app-form-select-tags-option [value]="user.id">
@@ -144,9 +187,17 @@ interface BulkEditTasksForm {
     </form>
 
     <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="close()">Cancel</button>
+      <button app-stroked-button type="button" (click)="close()">
+        <span i18n="Dismisses a dialog without acting">Cancel</span>
+      </button>
       <button app-flat-button type="button" (click)="apply($event)">
-        Apply to {{ taskCount() }} {{ taskCount() === 1 ? 'task' : 'tasks' }}
+        <ng-container
+          i18n="Button that applies the bulk edit to the selected tasks">
+          {taskCount(), plural,
+            =1 {Apply to 1 task}
+            other {Apply to {{ taskCount() }} tasks}
+          }
+        </ng-container>
       </button>
     </div>
   `,
@@ -193,7 +244,10 @@ export class BulkEditTasksDialogComponent {
 
       if (!estimate || Number.isFinite(Number(estimate))) return undefined;
 
-      return { kind: 'number', message: 'Enter a valid story point value.' };
+      return {
+        kind: 'number',
+        message: $localize`:Body of a dialog or validation message:Enter a valid story point value.`,
+      };
     });
   });
 
