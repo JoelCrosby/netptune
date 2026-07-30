@@ -4,6 +4,7 @@ import {
   apply,
   FormField,
   form,
+  maxLength,
   required,
   submit,
 } from '@angular/forms/signals';
@@ -12,8 +13,10 @@ import {
   statusCategoryLabels,
   statusCategoryOptions,
 } from '@core/models/status';
+import { fallbackColor } from '@core/util/colors/colors';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -24,6 +27,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface CreateStatusDialogResult {
   name: string;
+  color: string;
   category: StatusCategory;
 }
 
@@ -33,6 +37,7 @@ export interface CreateStatusDialogResult {
     DialogTitleComponent,
     FormField,
     FormInputComponent,
+    ColorSelectComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
     DialogActionsDirective,
@@ -51,6 +56,11 @@ export interface CreateStatusDialogResult {
         i18n-label="Label of the name field"
         label="Name"
         maxLength="128" />
+
+      <app-color-select
+        [formField]="statusForm.color"
+        i18n-label="Label of the colour picker field"
+        label="Color" />
 
       <app-form-select
         [formField]="statusForm.category"
@@ -84,6 +94,7 @@ export class CreateStatusDialogComponent {
 
   readonly statusFormModel = signal({
     name: '',
+    color: fallbackColor,
     category: StatusCategory.backlog,
   });
 
@@ -95,6 +106,8 @@ export class CreateStatusDialogComponent {
         maxLength: 128,
       })
     );
+    maxLength(schema.color, 32);
+    required(schema.color);
     required(schema.category);
   });
 
@@ -103,9 +116,10 @@ export class CreateStatusDialogComponent {
 
     submit(this.statusForm, async () => {
       const name = this.statusForm.name().value().trim();
+      const color = this.statusForm.color().value();
       const category = this.statusForm.category().value();
 
-      this.dialogRef.close({ name, category });
+      this.dialogRef.close({ name, color, category });
     });
   }
 

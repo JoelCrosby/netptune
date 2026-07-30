@@ -843,7 +843,7 @@
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:88,91</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:182,185</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:303</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:283</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:286</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
@@ -968,10 +968,10 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:34,36</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:260</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:564</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:184,185</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:183,184</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:302</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:198</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:282</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:285</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -2015,7 +2015,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:72,74</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
-        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:69,71</note>
+        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:79,81</note>
         <note category="location">src/app/entry/dialogs/create-tag-dialog/create-tag-dialog.component.ts:42,44</note>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:131,133</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
@@ -2256,7 +2256,7 @@
     <unit id="1806667489382256324">
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:56,57</note>
-        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:58,59</note>
+        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:68,69</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:69,70</note>
         <note category="description">Label of the relation category field</note>
       </notes>
@@ -2279,8 +2279,8 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:81</note>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:133</note>
-        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:53,55</note>
-        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:94</note>
+        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:58,60</note>
+        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:105</note>
         <note category="location">src/app/entry/dialogs/create-tag-dialog/create-tag-dialog.component.ts:37,38</note>
         <note category="location">src/app/entry/dialogs/create-tag-dialog/create-tag-dialog.component.ts:64</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:69,71</note>
@@ -2307,7 +2307,7 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:117</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:99,101</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:94,96</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:93,95</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:76,77</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:61,62</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:133</note>
@@ -2354,7 +2354,7 @@
     </unit>
     <unit id="1381483460665750099">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:45,48</note>
+        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:50,53</note>
         <note category="description">Title of the create-status dialog</note>
       </notes>
       <segment state="translated">
@@ -2364,7 +2364,7 @@
     </unit>
     <unit id="4246498607630718538">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:72,77</note>
+        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:82,87</note>
         <note category="description">Button that creates the status</note>
       </notes>
       <segment state="translated">
@@ -2540,6 +2540,7 @@
     </unit>
     <unit id="9011959596901584887">
       <notes>
+        <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:63,66</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:84,87</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:64,67</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:111,114</note>
@@ -2547,7 +2548,7 @@
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:82,84</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:77,80</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:96,98</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:91,93</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:90,92</note>
         <note category="description">Label of the colour picker field</note>
       </notes>
       <segment state="translated">
@@ -2929,7 +2930,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:16,19</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:117,119</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:106,108</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:105,107</note>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:142,145</note>
         <note category="location">src/app/static/components/datatable/datatable.component.ts:111,114</note>
         <note category="description">Section heading for actions available on a task</note>
@@ -3310,7 +3311,7 @@
     </unit>
     <unit id="7805009499865793594">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:13,16</note>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:15,18</note>
         <note category="description">Heading of the audit activity chart</note>
       </notes>
       <segment state="translated">
@@ -7475,7 +7476,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:91,94</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:200,201</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:172,173</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:171,172</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:193</note>
         <note category="description">Button that edits the automation</note>
       </notes>
@@ -11293,7 +11294,7 @@
     <unit id="5186038954367142316">
       <notes>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:109,111</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:98,100</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:97,99</note>
         <note category="description">Column heading for the relation category</note>
       </notes>
       <segment state="translated">
@@ -11304,7 +11305,7 @@
     <unit id="220550782947016929">
       <notes>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:113,115</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:102,104</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:101,103</note>
         <note category="description">Column heading for the sort order</note>
       </notes>
       <segment state="translated">
@@ -11325,7 +11326,7 @@
     <unit id="8502065112576581103">
       <notes>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:166,167</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:140,141</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:139,140</note>
         <note category="description">Tooltip on the button that moves a row up</note>
       </notes>
       <segment state="translated">
@@ -11346,7 +11347,7 @@
     <unit id="2207764482815871800">
       <notes>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:180,182</note>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:153,155</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:152,154</note>
         <note category="description">Tooltip on the button that moves a row down</note>
       </notes>
       <segment state="translated">
@@ -11798,7 +11799,7 @@
     </unit>
     <unit id="4174638627768569804">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:65,67</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:64,66</note>
         <note category="description">Section heading for task statuses</note>
       </notes>
       <segment state="translated">
@@ -11808,7 +11809,7 @@
     </unit>
     <unit id="2742899703340315596">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:74,77</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:73,76</note>
         <note category="description">Button that opens the create-status dialog</note>
       </notes>
       <segment state="translated">
@@ -11818,7 +11819,7 @@
     </unit>
     <unit id="6921212790296305179">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:83,85</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:82,84</note>
         <note category="description">Shown when the status list fails to load</note>
       </notes>
       <segment state="translated">
@@ -11828,7 +11829,7 @@
     </unit>
     <unit id="1708099605109308306">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:143,145</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:142,144</note>
         <note category="description">Accessible label for the button that moves a status up</note>
       </notes>
       <segment state="translated">
@@ -11838,7 +11839,7 @@
     </unit>
     <unit id="4091516827227305622">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:157,159</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:156,158</note>
         <note category="description">Accessible label for the button that moves a status down</note>
       </notes>
       <segment state="translated">
@@ -11848,7 +11849,7 @@
     </unit>
     <unit id="1089483749452026915">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:175,177</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:174,176</note>
         <note category="description">Accessible label for the button that edits a status</note>
       </notes>
       <segment state="translated">
@@ -11858,7 +11859,7 @@
     </unit>
     <unit id="7610567889677077342">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:187,189</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:186,188</note>
         <note category="description">Accessible label for the button that deletes a status</note>
       </notes>
       <segment state="translated">
@@ -11868,7 +11869,7 @@
     </unit>
     <unit id="5787941146389836768">
       <notes>
-        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:199,200</note>
+        <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:198,199</note>
         <note category="description">Empty state for the status list</note>
       </notes>
       <segment state="translated">
@@ -12410,7 +12411,7 @@
     <unit id="1152778269115350205">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:300</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:280</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:283</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
       <segment state="translated">

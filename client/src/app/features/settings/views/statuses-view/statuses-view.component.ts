@@ -7,7 +7,6 @@ import {
 } from '@core/models/status';
 import { StatusesService } from '@core/services/statuses.service';
 import { DialogService } from '@core/services/dialog.service';
-import { fallbackColor } from '@core/util/colors/colors';
 import {
   CreateStatusDialogComponent,
   CreateStatusDialogResult,
@@ -268,7 +267,7 @@ export class StatusesViewComponent {
         entityType: EntityType.task,
         name,
         category: result.category,
-        color: fallbackColor,
+        color: result.color,
       })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
