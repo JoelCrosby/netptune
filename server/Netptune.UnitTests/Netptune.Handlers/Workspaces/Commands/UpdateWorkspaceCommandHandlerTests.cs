@@ -2,6 +2,7 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
@@ -91,6 +92,107 @@ public class UpdateWorkspaceCommandHandlerTests
                 eventRequest.EventKey == EventKeys.WorkspaceSettingsChanged &&
                 eventRequest.WorkspaceId == workspace.Id &&
                 eventRequest.Payload.Fields.SequenceEqual(new[] { "name", "visibility" })),
+            TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldDropPublicPermissionsOutsideTheCeiling()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            PublicPermissions =
+            [
+                NetptunePermissions.Tasks.Read,
+                NetptunePermissions.Members.Read,
+                NetptunePermissions.Tasks.Delete,
+            ],
+        };
+        var workspace = AutoFixtures.Workspace with { IsPublic = true };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.Payload!.PublicPermissions.Should().BeEquivalentTo([NetptunePermissions.Tasks.Read]);
+    }
+
+    [Fact]
+    public async Task Update_ShouldStoreTheDefaultSelection_WhenAWorkspaceFirstBecomesPublic()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            IsPublic = true,
+        };
+        var workspace = AutoFixtures.Workspace with { IsPublic = false };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.Payload!.PublicPermissions.Should().BeEquivalentTo(NetptunePermissions.PublicReadable);
+    }
+
+    [Fact]
+    public async Task Update_ShouldKeepTheStoredSelection_WhenTheRequestOmitsIt()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            Name = "Renamed workspace",
+        };
+        var workspace = AutoFixtures.Workspace with
+        {
+            IsPublic = true,
+            PublicPermissions = [NetptunePermissions.Tasks.Read],
+        };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.Payload!.PublicPermissions.Should().BeEquivalentTo([NetptunePermissions.Tasks.Read]);
+    }
+
+    [Fact]
+    public async Task Update_ShouldEmitPublicAccessChange_WhenTheSelectionChanges()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            PublicPermissions = [NetptunePermissions.Tasks.Read],
+        };
+        var workspace = AutoFixtures.Workspace with
+        {
+            Id = 42,
+            IsPublic = true,
+            PublicPermissions = [NetptunePermissions.Tasks.Read, NetptunePermissions.Sprints.Read],
+        };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<WorkspaceSettingsChangedPayload>>(eventRequest =>
+                eventRequest.Payload.Fields.SequenceEqual(new[] { "public_access" })),
             TestContext.Current.CancellationToken);
     }
 

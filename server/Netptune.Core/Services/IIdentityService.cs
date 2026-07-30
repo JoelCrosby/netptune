@@ -8,6 +8,8 @@ public interface IIdentityService
 
     string GetCurrentUserId();
 
+    string? TryGetCurrentUserId();
+
     string GetCurrentUserEmail();
 
     string GetUserName();

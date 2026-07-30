@@ -21,6 +21,8 @@ public record Workspace : AuditableEntity<int>
 
     public bool IsPublic { get; set; }
 
+    public List<string>? PublicPermissions { get; set; }
+
     public long StorageUsedBytes { get; set; }
 
     public long StorageLimitBytes { get; set; } = DefaultStorageLimitBytes;

@@ -25,6 +25,13 @@ public class IdentityService : IIdentityService
 
     public string GetCurrentUserId() => GetClaimValue(ClaimTypes.NameIdentifier);
 
+    public string? TryGetCurrentUserId()
+    {
+        var hasUserId = TryGetClaimValue(ClaimTypes.NameIdentifier, out var userId);
+
+        return hasUserId ? userId : null;
+    }
+
     public string GetCurrentUserEmail() => GetClaimValue(ClaimTypes.Email);
 
     public string GetUserName()

@@ -36,6 +36,11 @@ public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
             .IsRequired();
 
         builder
+            .Property(workspace => workspace.PublicPermissions)
+            .HasColumnType("jsonb")
+            .HasMaxLength(4096);
+
+        builder
             .Property(workspace => workspace.StorageUsedBytes)
             .HasDefaultValue(0L)
             .IsRequired();

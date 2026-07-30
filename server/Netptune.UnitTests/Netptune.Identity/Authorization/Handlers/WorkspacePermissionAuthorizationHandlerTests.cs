@@ -211,6 +211,90 @@ public class WorkspacePermissionAuthorizationHandlerTests
     }
 
     [Fact]
+    public async Task HandleRequirement_ShouldSucceed_ForAnonymousReadTheWorkspaceShares()
+    {
+        var user = AnonymousUser();
+        var requirement = new WorkspacePermissionRequirement(NetptunePermissions.Tasks.Read);
+
+        var workspace = AutoFixtures.Workspace with
+        {
+            IsPublic = true,
+            PublicPermissions = [NetptunePermissions.Tasks.Read],
+        };
+
+        Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: Arg.Any<CancellationToken>()).Returns(workspace);
+
+        var context = CreateContext(user, requirement);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task HandleRequirement_ShouldFail_ForAnonymousReadTheWorkspaceDoesNotShare()
+    {
+        var user = AnonymousUser();
+        var requirement = new WorkspacePermissionRequirement(NetptunePermissions.Sprints.Read);
+
+        var workspace = AutoFixtures.Workspace with
+        {
+            IsPublic = true,
+            PublicPermissions = [NetptunePermissions.Tasks.Read],
+        };
+
+        Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: Arg.Any<CancellationToken>()).Returns(workspace);
+
+        var context = CreateContext(user, requirement);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task HandleRequirement_ShouldFail_WhenTheWorkspaceSharesNothing()
+    {
+        var user = AnonymousUser();
+        var requirement = new WorkspacePermissionRequirement(NetptunePermissions.Tasks.Read);
+
+        var workspace = AutoFixtures.Workspace with
+        {
+            IsPublic = true,
+            PublicPermissions = [],
+        };
+
+        Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: Arg.Any<CancellationToken>()).Returns(workspace);
+
+        var context = CreateContext(user, requirement);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task HandleRequirement_ShouldFail_WhenAStoredPermissionIsOutsideTheCeiling()
+    {
+        var user = AnonymousUser();
+        var requirement = new WorkspacePermissionRequirement(NetptunePermissions.Audit.Read);
+
+        var workspace = AutoFixtures.Workspace with
+        {
+            IsPublic = true,
+            PublicPermissions = [NetptunePermissions.Audit.Read],
+        };
+
+        Identity.TryGetWorkspaceKey().Returns(WorkspaceKey);
+        UnitOfWork.Workspaces.GetBySlug(WorkspaceKey, isReadonly: true, cancellationToken: Arg.Any<CancellationToken>()).Returns(workspace);
+
+        var context = CreateContext(user, requirement);
+        await Handler.HandleAsync(context);
+
+        context.HasSucceeded.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task HandleRequirement_ShouldFail_ForAnonymousReadOnPrivateWorkspace()
     {
         var user = AnonymousUser();

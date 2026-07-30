@@ -176,6 +176,7 @@ public static class AutoFixtures
         .Without(p => p.Tasks)
         .Without(p => p.Users)
         .Without(p => p.Files)
+        .Without(p => p.PublicPermissions)
         .WithoutAuditable()
         .Create();
 

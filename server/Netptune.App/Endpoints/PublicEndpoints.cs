@@ -1,3 +1,4 @@
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 
 namespace Netptune.App.Endpoints;
@@ -9,18 +10,39 @@ public static class PublicEndpoints
         var group = builder.MapGroup("public");
 
         group.MapGet("/workspaces/{workspaceKey}", HandleGetWorkspace);
+        group.MapGet("/workspaces/{workspaceKey}/members", HandleGetWorkspaceMembers);
 
         return group;
     }
 
     public static async Task<IResult> HandleGetWorkspace(
         IPublicWorkspaceService publicWorkspaceService,
-        string workspaceKey)
+        string workspaceKey,
+        CancellationToken cancellationToken)
     {
-        var result = await publicWorkspaceService.GetPublicWorkspace(workspaceKey);
+        var workspace = await publicWorkspaceService.GetPublicWorkspace(workspaceKey, cancellationToken);
 
-        if (result is null) return Results.NotFound();
+        if (workspace is null)
+        {
+            return Results.NotFound();
+        }
 
-        return Results.Ok(result.ToViewModel());
+        return Results.Ok(workspace);
+    }
+
+    public static async Task<IResult> HandleGetWorkspaceMembers(
+        IPublicWorkspaceService publicWorkspaceService,
+        string workspaceKey,
+        [AsParameters] AssigneeFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var members = await publicWorkspaceService.GetPublicWorkspaceMembers(workspaceKey, filter, cancellationToken);
+
+        if (members is null)
+        {
+            return Results.NotFound();
+        }
+
+        return Results.Ok(members);
     }
 }

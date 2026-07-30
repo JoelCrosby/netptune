@@ -12,7 +12,7 @@ public static class SearchEndpoints
         var group = builder.MapGroup("search");
 
         group.MapGet("/", HandleSearch).RequireAuthorization(NetptunePermissions.Projects.Read);
-        group.MapPost("/reindex", HandleReindex).RequireAuthorization(NetptunePermissions.Projects.Read);
+        group.MapPost("/reindex", HandleReindex).RequireAuthorization(NetptunePermissions.Workspace.Update);
 
         return group;
     }

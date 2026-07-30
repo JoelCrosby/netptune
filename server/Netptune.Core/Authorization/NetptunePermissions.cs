@@ -12,6 +12,28 @@ public static class NetptunePermissions
         .Select(field => (string)field.GetRawConstantValue()!)
         .ToFrozenSet();
 
+    public static IReadOnlySet<string> PublicReadable { get; } = new[]
+    {
+        Projects.Read,
+        Tasks.Read,
+        Boards.Read,
+        BoardGroups.Read,
+        Sprints.Read,
+        Tags.Read,
+        Statuses.Read,
+        RelationTypes.Read,
+    }.ToFrozenSet();
+
+    public static IReadOnlySet<string> ResolvePublicPermissions(IEnumerable<string>? configured)
+    {
+        if (configured is null)
+        {
+            return PublicReadable;
+        }
+
+        return configured.Where(PublicReadable.Contains).ToFrozenSet();
+    }
+
     public static class Workspace
     {
         public const string Read = "workspace.read";

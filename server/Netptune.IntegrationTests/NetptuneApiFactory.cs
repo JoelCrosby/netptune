@@ -186,6 +186,16 @@ public sealed class NetptuneFixture : IAsyncLifetime
         return client;
     }
 
+    public HttpClient CreateAnonymousNetptuneClient(string workspaceKey)
+    {
+        var client = WebApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
+
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AnonymousHeader, "true");
+        client.DefaultRequestHeaders.Add("workspace", workspaceKey);
+
+        return client;
+    }
+
     public HttpClient CreatePublicApiClient(string apiKey)
     {
         var client = PublicApiApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());

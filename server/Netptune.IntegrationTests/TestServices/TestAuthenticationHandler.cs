@@ -27,8 +27,17 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
         DataContext = context;
     }
 
+    public const string AnonymousHeader = "x-test-anonymous";
+
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        var isAnonymousRequest = Request.Headers.ContainsKey(AnonymousHeader);
+
+        if (isAnonymousRequest)
+        {
+            return AuthenticateResult.NoResult();
+        }
+
         var user = await DataContext.WorkspaceAppUsers
             .Include(u => u.Workspace)
             .Include(u => u.User)

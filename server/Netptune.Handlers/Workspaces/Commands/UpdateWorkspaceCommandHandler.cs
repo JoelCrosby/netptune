@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
@@ -45,6 +46,7 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         result.ModifiedByUserId = userId;
         result.MetaInfo = request.Request.MetaInfo ?? result.MetaInfo;
         result.IsPublic = request.Request.IsPublic ?? result.IsPublic;
+        result.PublicPermissions = ResolvePublicPermissions(result, request.Request);
         result.UpdatedAt = DateTime.UtcNow;
 
         if (changedFields.Count > 0)
@@ -65,6 +67,25 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         return ClientResponse<Workspace>.Success(result);
+    }
+
+    private static List<string>? ResolvePublicPermissions(Workspace workspace, UpdateWorkspaceRequest request)
+    {
+        if (request.PublicPermissions is not null)
+        {
+            var requestedSelection = NetptunePermissions.ResolvePublicPermissions(request.PublicPermissions);
+
+            return [.. requestedSelection];
+        }
+
+        var needsDefaultSelection = workspace.IsPublic && workspace.PublicPermissions is null;
+
+        if (needsDefaultSelection)
+        {
+            return [.. NetptunePermissions.PublicReadable];
+        }
+
+        return workspace.PublicPermissions;
     }
 
     private static List<string> GetChangedFields(Workspace workspace, UpdateWorkspaceRequest request)
@@ -89,6 +110,18 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         if (request.IsPublic.HasValue && request.IsPublic.Value != workspace.IsPublic)
         {
             fields.Add("visibility");
+        }
+
+        if (request.PublicPermissions is not null)
+        {
+            var requestedSelection = NetptunePermissions.ResolvePublicPermissions(request.PublicPermissions);
+            var currentSelection = NetptunePermissions.ResolvePublicPermissions(workspace.PublicPermissions);
+            var publicAccessChanged = !requestedSelection.SetEquals(currentSelection);
+
+            if (publicAccessChanged)
+            {
+                fields.Add("public_access");
+            }
         }
 
         return fields;

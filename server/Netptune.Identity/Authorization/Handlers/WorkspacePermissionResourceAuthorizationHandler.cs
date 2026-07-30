@@ -66,25 +66,32 @@ public class WorkspacePermissionResourceAuthorizationHandler : AuthorizationHand
             return;
         }
 
-        // Unauthenticated — only allow read permissions on public workspaces.
-        if (!IsReadPermission(requirement.Permission))
+        var canEverBePublic = NetptunePermissions.PublicReadable.Contains(requirement.Permission);
+
+        if (!canEverBePublic)
         {
             context.Fail();
             return;
         }
 
-        if (workspaceKey is null) return;
+        if (workspaceKey is null)
+        {
+            return;
+        }
 
         var workspace = await UnitOfWork.Workspaces.GetBySlug(workspaceKey, isReadonly: true, cancellationToken: CancellationToken.None);
 
-        if (workspace?.IsPublic == true)
+        if (workspace?.IsPublic != true)
+        {
+            return;
+        }
+
+        var publicPermissions = NetptunePermissions.ResolvePublicPermissions(workspace.PublicPermissions);
+        var workspaceSharesPermission = publicPermissions.Contains(requirement.Permission);
+
+        if (workspaceSharesPermission)
         {
             context.Succeed(requirement);
         }
-    }
-
-    private static bool IsReadPermission(string permission)
-    {
-        return permission.EndsWith(".read", StringComparison.OrdinalIgnoreCase);
     }
 }

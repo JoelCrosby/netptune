@@ -120,13 +120,13 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
 
     public Task<SprintDetailViewModel?> GetCurrentSprintForUserAsync(
         string workspaceKey,
-        string userId,
+        string? userId,
         CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(sprint => sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .Where(sprint => sprint.Status == SprintStatus.Active)
-            .Where(sprint => sprint.ProjectTasks.Any(task =>
+            .Where(sprint => userId == null || sprint.ProjectTasks.Any(task =>
                 !task.IsDeleted && task.ProjectTaskAppUsers.Any(assignee => assignee.UserId == userId)))
             .OrderByDescending(sprint => sprint.StartDate)
             .ThenByDescending(sprint => sprint.Id)
