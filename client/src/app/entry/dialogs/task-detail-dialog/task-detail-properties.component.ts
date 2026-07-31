@@ -1,7 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { TaskPriority } from '@app/core/enums/task-priority';
-import { AppUser } from '@app/core/models/appuser';
-import { AssigneeViewModel } from '@app/core/models/view-models/board-view';
+import { UserSelectValue } from '@app/core/models/view-models/user-select-option';
 import {
   selectDetailTaskIsRedOnly,
   selectRequiredDetailTask,
@@ -92,7 +91,7 @@ export class TaskDetailPropertiesComponent {
     this.taskDetailService.assignSprint(sprintId);
   }
 
-  selectAssignees(assignees: (AppUser | AssigneeViewModel)[]) {
+  selectAssignees(assignees: UserSelectValue[]) {
     this.taskDetailService.updateTask({
       assigneeIds: assignees.map((assignee) => assignee.id),
     });

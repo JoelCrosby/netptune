@@ -2,9 +2,10 @@ import { Component, inject, input, model, output } from '@angular/core';
 import { netptunePermissions } from '@core/auth/permissions';
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
-import { AppUser } from '@core/models/appuser';
-import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { userResource } from '@core/resources/user.resource';
+import {
+  UserSelectOption,
+  UserSelectValue,
+} from '@core/models/view-models/user-select-option';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -50,7 +51,6 @@ export interface TaskReporter {
             "
             label="Unassigned"
             [value]="assignees()"
-            [options]="users()"
             [disabled]="!editable()"
             (selectChange)="toggleAssignee($event)" />
         </div>
@@ -177,7 +177,7 @@ export class TaskPropertiesComponent {
   readonly dueDate = model('');
   readonly projectId = model<number | null>(null);
   readonly sprintId = model<number | null>(null);
-  readonly assignees = model<(AppUser | AssigneeViewModel)[]>([]);
+  readonly assignees = model<UserSelectValue[]>([]);
 
   readonly reporter = input<TaskReporter | null>(null);
   readonly loading = input(false);
@@ -189,8 +189,6 @@ export class TaskPropertiesComponent {
   readonly sprintLabel = input('No Sprint');
 
   readonly estimateChange = output<TaskEstimate>();
-
-  readonly usersResource = userResource();
 
   readonly readStatus = this.store.selectSignal(
     selectHasPermission(netptunePermissions.statuses.read)
@@ -205,13 +203,7 @@ export class TaskPropertiesComponent {
     selectHasPermission(netptunePermissions.members.read)
   );
 
-  users() {
-    return (this.usersResource.value()?.payload?.items ?? []).filter(
-      (user) => !user.isPending
-    );
-  }
-
-  toggleAssignee(user: AppUser) {
+  toggleAssignee(user: UserSelectOption) {
     const assignees = this.assignees();
     const selected = assignees.some((assignee) => assignee.id === user.id);
 

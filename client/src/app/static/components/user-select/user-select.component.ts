@@ -1,63 +1,51 @@
-import { CdkPortal } from '@angular/cdk/portal';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import {
+  afterNextRender,
   Component,
   computed,
-  effect,
+  ElementRef,
   inject,
+  Injector,
   input,
+  linkedSignal,
   model,
-  OnDestroy,
   output,
   signal,
-  untracked,
   viewChild,
 } from '@angular/core';
 import { debounce, form, FormField } from '@angular/forms/signals';
-import { AppUser } from '@core/models/appuser';
-import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { filterObjectArray } from '@core/util/arrays';
-import { AutofocusDirective } from '../../directives/autofocus.directive';
+import {
+  UserSelectOption,
+  UserSelectValue,
+} from '@core/models/view-models/user-select-option';
+import {
+  userSelectResource,
+  UserSelectQuery,
+} from '@core/resources/user-select.resource';
+import { LucideSearch } from '@lucide/angular';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import {
   UserSelectOptionComponent,
   userSelectOptionId,
 } from './user-select-option.component';
 
-type User = AssigneeViewModel | AppUser;
-
 @Component({
   selector: 'app-user-select',
   imports: [
     AvatarComponent,
-    AutofocusDirective,
     FormField,
-    CdkPortal,
+    DropdownMenuComponent,
     UserSelectOptionComponent,
-  ],
-  styles: [
-    `
-      @keyframes menu-in {
-        from {
-          opacity: 0;
-          transform: scale(0.95) translateY(-4px);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-      }
-
-      .menu-panel {
-        animation: menu-in 120ms ease-out;
-        transform-origin: top;
-      }
-    `,
+    SpinnerComponent,
+    LucideSearch,
   ],
   template: `
     <button
       type="button"
       class="text-foreground hover:bg-hover flex w-full cursor-pointer flex-row flex-wrap items-center justify-start gap-2 rounded border-0 bg-transparent p-2 text-left text-sm transition-colors focus:outline-none disabled:cursor-default disabled:hover:bg-transparent"
+      aria-haspopup="listbox"
+      [attr.aria-expanded]="menu.showing()"
       [class.flex-col]="compact()"
       [disabled]="disabled()"
       #origin
@@ -84,83 +72,117 @@ type User = AssigneeViewModel | AppUser;
       }
     </button>
 
-    <ng-template cdkPortal>
+    <app-dropdown-menu #menu panelRole="none" (closed)="onClosed()">
       <div
-        class="menu-panel bg-card border-border flex flex-col overflow-hidden rounded border shadow-lg">
-        @if (options()?.length) {
+        class="flex flex-col"
+        [class]="compact() ? 'w-56' : 'w-72'"
+        (keydown)="handleKeyDown($event)">
+        <div
+          class="relative -mx-1 -mt-1 border-b border-neutral-200 dark:border-neutral-700">
+          <svg
+            lucideSearch
+            class="text-muted pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"></svg>
           <input
-            appAutofocus
+            #searchInput
             role="combobox"
             aria-expanded="true"
-            aria-controls="user-select-listbox"
             aria-autocomplete="list"
-            class="border-border bg-secondary text-foreground sticky top-0 m-2 rounded border px-2 py-1.5 text-sm focus:outline-none"
+            [attr.aria-controls]="listboxId"
+            class="w-full bg-transparent py-2.5 pr-3 pl-9 text-sm focus:outline-none"
             i18n-placeholder="
               Placeholder in the box for searching workspace members
             "
             placeholder="Search.."
             [attr.aria-activedescendant]="activeDescendantId()"
-            [formField]="searchForm.term"
-            (click)="$event.stopPropagation()" />
-        }
+            [formField]="searchForm.term" />
+        </div>
+
         <div
-          id="user-select-listbox"
+          [id]="listboxId"
           role="listbox"
           [attr.aria-label]="label()"
           aria-multiselectable="true"
-          class="max-h-54 overflow-y-auto p-1">
-          @for (option of filteredOptions(); track option.id) {
+          class="max-h-64 overflow-y-auto pt-1">
+          @for (option of options(); track option.id) {
             <app-user-select-option
               [option]="option"
               [active]="isActive(option)"
               [selected]="isSelected(option)"
               (clicked)="select($event)" />
           } @empty {
-            <div class="text-muted flex h-9 items-center px-2 text-sm">
-              {{ noResults() }}
+            <div class="text-muted flex h-9 items-center gap-2 px-3 text-sm">
+              @if (loading()) {
+                <app-spinner diameter="1rem" />
+                <span i18n="Shown while workspace members are being searched">
+                  Searching...
+                </span>
+              } @else {
+                {{ noResults() }}
+              }
             </div>
           }
         </div>
       </div>
-    </ng-template>
+    </app-dropdown-menu>
   `,
 })
-export class UserSelectComponent implements OnDestroy {
-  private overlay = inject(Overlay);
-  private readonly portal = viewChild.required(CdkPortal);
-
-  readonly options = input<AppUser[] | null>([]);
-  readonly value = model<User[]>([]);
+export class UserSelectComponent {
+  readonly value = model<UserSelectValue[]>([]);
   readonly compact = input(false);
   readonly disabled = input(false);
   readonly label = input('Select Users');
   readonly noResults = input('No results found...');
 
-  readonly selectChange = output<AppUser>();
+  readonly selectChange = output<UserSelectOption>();
   readonly closed = output();
 
-  isOpen = signal(false);
-  selected = signal<AppUser | null>(null);
-  filteredOptions = signal<AppUser[]>(this.options() ?? []);
+  readonly listboxId = `user-select-listbox-${crypto.randomUUID()}`;
 
-  valueIdSet = computed(() => new Set<string>(this.value().map((v) => v.id)));
+  private readonly injector = inject(Injector);
+  private readonly menu = viewChild.required(DropdownMenuComponent);
+  private readonly searchInput =
+    viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  private readonly hasOpened = signal(false);
 
-  searchFormModel = signal({ term: '' });
-  searchForm = form(this.searchFormModel, (schema) => {
+  readonly searchFormModel = signal({ term: '' });
+  readonly searchForm = form(this.searchFormModel, (schema) => {
     debounce(schema.term, 300);
   });
 
-  private overlayRef?: OverlayRef;
+  private readonly query = computed<UserSelectQuery>(() => ({
+    search: this.searchForm.term().value(),
+    enabled: this.hasOpened(),
+  }));
 
-  constructor() {
-    effect(() => {
-      const term = this.searchForm.term().value();
-      untracked(() => this.search(term));
-    });
-  }
+  private readonly usersResource = userSelectResource(this.query);
+
+  readonly options = computed(
+    () => this.usersResource.value()?.payload?.items ?? []
+  );
+
+  readonly loading = this.usersResource.isLoading;
+
+  readonly activeIndex = linkedSignal({
+    source: this.options,
+    computation: () => 0,
+  });
+
+  private readonly valueIdSet = computed(
+    () => new Set(this.value().map((user) => user.id))
+  );
+
+  private readonly activeOption = computed(
+    () => this.options()[this.activeIndex()] ?? null
+  );
+
+  readonly activeDescendantId = computed(() => {
+    const active = this.activeOption();
+
+    return active ? userSelectOptionId(active.id) : null;
+  });
 
   toggle(origin: HTMLElement) {
-    if (this.overlayRef?.hasAttached()) {
+    if (this.menu().showing()) {
       this.close();
     } else {
       this.open(origin);
@@ -168,145 +190,101 @@ export class UserSelectComponent implements OnDestroy {
   }
 
   open(origin: HTMLElement) {
-    this.isOpen.set(true);
-
-    this.overlayRef = this.overlay.create({
-      positionStrategy: this.overlay
-        .position()
-        .flexibleConnectedTo(origin)
-        .withPush(false)
-        .withPositions([
-          {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top',
-            offsetY: 4,
-          },
-          {
-            originX: 'start',
-            originY: 'top',
-            overlayX: 'start',
-            overlayY: 'bottom',
-            offsetY: -4,
-          },
-        ]),
-      width: this.compact() ? '200px' : `${origin.offsetWidth}px`,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-    });
-
-    this.overlayRef.attach(this.portal());
-    this.overlayRef.backdropClick().subscribe(() => this.close());
-    this.overlayRef
-      .keydownEvents()
-      .subscribe((event) => this.handleKeyDown(event));
+    this.hasOpened.set(true);
+    this.menu().open(origin);
+    this.focusSearchInput();
   }
 
   close() {
-    this.searchForm.term().value.set('');
-    this.isOpen.set(false);
-    this.overlayRef?.dispose();
-    this.overlayRef = undefined;
+    this.menu().close();
+  }
+
+  onClosed() {
+    this.searchFormModel.set({ term: '' });
     this.closed.emit();
   }
 
-  ngOnDestroy() {
-    this.overlayRef?.dispose();
+  select(option: UserSelectOption) {
+    this.selectChange.emit(option);
   }
 
-  select(option: AppUser) {
-    this.selected.set(option);
+  isActive(option: UserSelectOption) {
+    return option.id === this.activeOption()?.id;
+  }
 
-    if (this.isOpen()) {
-      this.selectChange.emit(option);
-    }
-
-    this.selected.set(null);
+  isSelected(option: UserSelectOption) {
+    return this.valueIdSet().has(option.id);
   }
 
   handleKeyDown(event: KeyboardEvent) {
     switch (event.key) {
-      case 'ArrowUp':
-        this.selectPreviousOption();
-        break;
       case 'ArrowDown':
-        this.selectNextOption();
+        event.preventDefault();
+        this.moveActiveIndex(1);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.moveActiveIndex(-1);
+        break;
+      case 'Home':
+        event.preventDefault();
+        this.setActiveIndex(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        this.setActiveIndex(this.options().length - 1);
         break;
       case 'Enter':
-        this.confirmKeyboardSelection();
+        event.preventDefault();
+        this.selectActiveOption();
         break;
       case 'Escape':
+        event.preventDefault();
         this.close();
         break;
     }
   }
 
-  selectNextOption() {
-    const options = this.filteredOptions();
+  private selectActiveOption() {
+    const active = this.activeOption();
 
-    if (!this.selected()) {
-      this.selected.set((options.length && options[0]) || null);
-    } else {
-      const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected()?.id
-      );
-      if (options.length !== currentIndex + 1) {
-        this.selected.set(options[currentIndex + 1]);
-      }
-    }
+    if (!active) return;
+
+    this.select(active);
   }
 
-  selectPreviousOption() {
-    const options = this.filteredOptions();
-    const optionsValue = this.options();
-    if (!optionsValue) return;
+  private moveActiveIndex(delta: number) {
+    const count = this.options().length;
 
-    if (!this.selected()) {
-      this.selected.set((options.length && options[0]) || null);
-    } else {
-      const currentIndex = options.findIndex(
-        (opt) => opt.id === this.selected()?.id
-      );
-      if (currentIndex !== 0) {
-        this.selected.set(optionsValue[currentIndex - 1]);
-      }
-    }
+    if (!count) return;
+
+    this.setActiveIndex((this.activeIndex() + delta + count) % count);
   }
 
-  confirmKeyboardSelection() {
-    const selected = this.selected();
-    if (this.isOpen() && selected) {
-      this.selectChange.emit(selected);
-      this.selected.set(null);
-    }
+  private setActiveIndex(index: number) {
+    const maxIndex = this.options().length - 1;
+
+    if (maxIndex < 0) return;
+
+    this.activeIndex.set(Math.max(0, Math.min(index, maxIndex)));
+    this.scrollActiveOptionIntoView();
   }
 
-  readonly activeDescendantId = computed(() => {
-    const active = this.selected();
-
-    return active ? userSelectOptionId(active.id) : null;
-  });
-
-  isActive(option: AppUser) {
-    return option.id === this.selected()?.id;
+  private focusSearchInput() {
+    afterNextRender(() => this.searchInput()?.nativeElement.focus(), {
+      injector: this.injector,
+    });
   }
 
-  isSelected(option: AppUser) {
-    return this.valueIdSet().has(option.id);
-  }
+  private scrollActiveOptionIntoView() {
+    const active = this.activeOption();
 
-  search(value?: string | null) {
-    const options = this.options();
-    if (!options) return;
+    if (!active) return;
 
-    if (!value) {
-      this.filteredOptions.set(options);
-    } else {
-      this.filteredOptions.set(
-        filterObjectArray(options, 'displayName', value)
-      );
-      this.selectNextOption();
-    }
+    queueMicrotask(() => {
+      const element = document.getElementById(userSelectOptionId(active.id));
+
+      element?.scrollIntoView({ block: 'nearest' });
+    });
   }
 }

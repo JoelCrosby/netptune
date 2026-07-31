@@ -265,6 +265,15 @@
         <source>Create Tasks</source>
       </segment>
     </unit>
+    <unit id="6970305243947070538">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:12,15</note>
+        <note category="description">Heading above the sprint burndown sparkline</note>
+      </notes>
+      <segment>
+        <source>Burndown</source>
+      </segment>
+    </unit>
     <unit id="6985320992724229617">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:189</note>
@@ -1341,6 +1350,15 @@
         <source>Invite resent</source>
       </segment>
     </unit>
+    <unit id="4139152446081980203">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:41</note>
+        <note category="description">Sprint burndown status. GAP is the amount behind the ideal line</note>
+      </notes>
+      <segment>
+        <source>Behind by <ph id="0" equiv="gap" disp="Math.round(this.latestGap())"/></source>
+      </segment>
+    </unit>
     <unit id="414708731564173967">
       <notes>
         <note category="location">src/app/core/store/users/users.effects.ts:220</note>
@@ -1682,7 +1700,7 @@
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:39,40</note>
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:41,43</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
-        <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:30,32</note>
+        <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:31,33</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:310</note>
         <note category="location">src/app/workspace.routes.ts:125</note>
         <note category="description">Accessible label for the notifications button</note>
@@ -1903,7 +1921,7 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:79,81</note>
         <note category="location">src/app/entry/dialogs/create-tag-dialog/create-tag-dialog.component.ts:42,44</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:131,133</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:130,132</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:80,82</note>
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
@@ -2260,7 +2278,7 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:55,57</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:54,56</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:25,27</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
@@ -2270,7 +2288,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:70,72</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:69,71</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:85</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:177</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
@@ -2282,7 +2300,7 @@
     </unit>
     <unit id="4902817035128594900">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:76,79</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:75,78</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:67,68</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:15,19</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:105,108</note>
@@ -2303,7 +2321,7 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:82,84</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:81,83</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:21,23</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
@@ -2313,7 +2331,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:112,117</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:111,116</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment>
@@ -2322,7 +2340,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:121,125</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:120,124</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment>
@@ -2331,7 +2349,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:134,139</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:133,138</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment>
@@ -2340,8 +2358,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:180</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:192</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:179</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:191</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -2350,7 +2368,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:199</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:198</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -2359,7 +2377,7 @@
     </unit>
     <unit id="704019817450663548">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:206</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:205</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -2368,7 +2386,7 @@
     </unit>
     <unit id="633922115206256018">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:213</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:212</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -2431,6 +2449,15 @@
       </notes>
       <segment>
         <source> Save Relation Type </source>
+      </segment>
+    </unit>
+    <unit id="5634840284625052531">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:40</note>
+        <note category="description">Sprint burndown status</note>
+      </notes>
+      <segment>
+        <source>On track</source>
       </segment>
     </unit>
     <unit id="5636036184610601345">
@@ -5668,7 +5695,7 @@
     <unit id="7128285372981708185">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:111,114</note>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:57,60</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:59,62</note>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:49,52</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:22,25</note>
         <note category="description">How many watched fields are selected. COUNT is that number</note>
@@ -8238,6 +8265,7 @@
     <unit id="991066160113599649">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:181</note>
+        <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:45</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:145,147</note>
         <note category="description">Label shown in the interface</note>
       </notes>
@@ -8264,6 +8292,15 @@
       </notes>
       <segment>
         <source>Load more</source>
+      </segment>
+    </unit>
+    <unit id="3317512444570805026">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:20,23</note>
+        <note category="description">Accessible name of the sprint burndown sparkline</note>
+      </notes>
+      <segment>
+        <source>Sprint remaining work against the ideal burndown</source>
       </segment>
     </unit>
     <unit id="3867445261912406579">
@@ -8296,9 +8333,8 @@
     </unit>
     <unit id="3374252422239352638">
       <notes>
-        <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:11,15</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:125,127</note>
-        <note category="description">Heading above the sprint burndown sparkline</note>
+        <note category="description">Heading of the burndown chart card</note>
       </notes>
       <segment>
         <source> Burndown </source>
@@ -8317,7 +8353,7 @@
     </unit>
     <unit id="8156602685712437139">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:35,36</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:37,38</note>
         <note category="description">Filter option including every member</note>
       </notes>
       <segment>
@@ -8326,8 +8362,8 @@
     </unit>
     <unit id="8619019435015178930">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:45,46</note>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:47,49</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:47,48</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:49,51</note>
         <note category="description">Accessible label for the button that clears the member filter</note>
       </notes>
       <segment>
@@ -8336,7 +8372,7 @@
     </unit>
     <unit id="6173403717413698596">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:69,72</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:71,74</note>
         <note category="description">Button that marks the selected notifications as read</note>
       </notes>
       <segment>
@@ -8345,7 +8381,7 @@
     </unit>
     <unit id="6660925946511264619">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:79,82</note>
+        <note category="location">src/app/features/notifications/components/notifications-filters/notifications-filters.component.ts:81,84</note>
         <note category="description">Button that deletes the selected notifications</note>
       </notes>
       <segment>
@@ -8859,6 +8895,15 @@
         <source>Sprint remaining work and ideal burndown</source>
       </segment>
     </unit>
+    <unit id="318764327084091382">
+      <notes>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:114,116</note>
+        <note category="description">Shown while workspace members are being searched</note>
+      </notes>
+      <segment>
+        <source> Searching... </source>
+      </segment>
+    </unit>
     <unit id="318795849436263935">
       <notes>
         <note category="location">src/app/features/reporting/components/charts/sprint-velocity-chart.component.ts:17,20</note>
@@ -9348,7 +9393,7 @@
     <unit id="8406787523492971076">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:59,61</note>
-        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:51,54</note>
+        <note category="location">src/app/static/components/task-properties/task-properties.component.ts:52,55</note>
         <note category="description">Stat label for open tasks with nobody assigned</note>
       </notes>
       <segment>
@@ -11694,6 +11739,15 @@
         <source>Newest</source>
       </segment>
     </unit>
+    <unit id="5424415261711939344">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:51</note>
+        <note category="description">Label shown in the interface</note>
+      </notes>
+      <segment>
+        <source>Ideal</source>
+      </segment>
+    </unit>
     <unit id="45739481977493163">
       <notes>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:110</note>
@@ -12478,7 +12532,7 @@
     <unit id="4192963686165639179">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:28,30</note>
-        <note category="location">src/app/static/components/user-select/user-select.component.ts:101,103</note>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:92,94</note>
         <note category="description">Placeholder in the workspace search box</note>
       </notes>
       <segment>

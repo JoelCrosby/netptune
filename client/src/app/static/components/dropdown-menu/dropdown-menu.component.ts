@@ -6,6 +6,8 @@ import {
   inject,
   input,
   OnDestroy,
+  output,
+  signal,
   viewChild,
 } from '@angular/core';
 
@@ -17,7 +19,7 @@ export type DropdownMenuXPosition = 'before' | 'after';
     <ng-template cdkPortal>
       <div
         class="dropdown-menu min-w-40 rounded-md border border-neutral-200 bg-white p-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-900"
-        role="menu">
+        [attr.role]="panelRole()">
         <ng-content />
       </div>
     </ng-template>
@@ -47,6 +49,11 @@ export class DropdownMenuComponent implements OnDestroy {
   private overlay = inject(Overlay);
 
   readonly xPosition = input<DropdownMenuXPosition>('after');
+  readonly panelRole = input('menu');
+
+  readonly closed = output();
+
+  readonly showing = signal(false);
 
   private readonly portal = viewChild.required(CdkPortal);
   private overlayRef?: OverlayRef;
@@ -65,11 +72,19 @@ export class DropdownMenuComponent implements OnDestroy {
     this.overlayRef = this.overlay.create(this.getOverlayConfig(origin));
     this.overlayRef.attach(this.portal());
     this.overlayRef.backdropClick().subscribe(() => this.close());
+    this.showing.set(true);
   }
 
   close() {
+    const wasShowing = this.showing();
+
     this.overlayRef?.dispose();
     this.overlayRef = undefined;
+    this.showing.set(false);
+
+    if (wasShowing) {
+      this.closed.emit();
+    }
   }
 
   ngOnDestroy() {

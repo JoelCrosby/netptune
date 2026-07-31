@@ -41,6 +41,83 @@ public sealed class UsersEndpointTests
     }
 
     [Fact]
+    public async Task GetSelectOptions_ShouldReturnWorkspaceMembers_WhenNoSearchProvided()
+    {
+        var response = await Client.GetAsync("api/users/select");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<UserSelectOptionViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().NotBeEmpty();
+        result.Payload.Items.Should().OnlyContain(item => !string.IsNullOrWhiteSpace(item.DisplayName));
+        result.Payload.Page.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetSelectOptions_ShouldOnlyReturnMatches_WhenSearchProvided()
+    {
+        var target = SeedData.Users.Last();
+
+        var response = await Client.GetAsync($"api/users/select?search={target.Lastname}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<UserSelectOptionViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().ContainSingle(item => item.Id == target.Id);
+        result.Payload.Items.Should().OnlyContain(item => item.DisplayName.Contains(target.Lastname));
+    }
+
+    [Fact]
+    public async Task GetSelectOptions_ShouldMatchOnEmail_WhenSearchIsAnEmailFragment()
+    {
+        var target = SeedData.Users.First();
+
+        var response = await Client.GetAsync($"api/users/select?search={target.Email}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<UserSelectOptionViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().ContainSingle(item => item.Id == target.Id);
+    }
+
+    [Fact]
+    public async Task GetSelectOptions_ShouldReturnEmpty_WhenSearchMatchesNobody()
+    {
+        var response = await Client.GetAsync("api/users/select?search=no-such-person-here");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<UserSelectOptionViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().BeEmpty();
+        result.Payload.TotalCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task GetSelectOptions_ShouldExcludePendingInvites()
+    {
+        const string inviteEmail = "select-pending-user@gmail.com";
+
+        await Client.PostAsJsonAsync("api/users/invite", new InviteUsersRequest
+        {
+            EmailAddresses = [inviteEmail],
+        });
+
+        var response = await Client.GetAsync("api/users/select");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<UserSelectOptionViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().NotContain(item => item.Email == inviteEmail);
+    }
+
+    [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync($"api/users/{SeedData.Users.First().Id}");

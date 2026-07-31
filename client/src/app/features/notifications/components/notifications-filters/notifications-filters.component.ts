@@ -1,5 +1,8 @@
 import { Component, input, output } from '@angular/core';
-import { AppUser } from '@core/models/appuser';
+import {
+  UserSelectOption,
+  UserSelectValue,
+} from '@core/models/view-models/user-select-option';
 import { LucideCheck, LucideTrash2, LucideX } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -29,7 +32,6 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 
       <app-user-select
         class="min-w-44"
-        [options]="users()"
         [value]="selectedUsers()"
         i18n-label="Filter option including every member"
         label="All users"
@@ -86,12 +88,11 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
 })
 export class NotificationsFiltersComponent {
   readonly searchTerm = input<string | null>(null);
-  readonly users = input<AppUser[] | null>([]);
-  readonly selectedUsers = input<AppUser[]>([]);
+  readonly selectedUsers = input<UserSelectValue[]>([]);
   readonly selectedCount = input(0);
 
   readonly searchChange = output<string | null>();
-  readonly userFilter = output<AppUser>();
+  readonly userFilter = output<UserSelectOption>();
   readonly clearUserFilter = output();
   readonly markSelectedAsRead = output();
   readonly deleteSelected = output();

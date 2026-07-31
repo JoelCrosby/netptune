@@ -11,9 +11,8 @@ import {
 import { EditorComponent } from '@app/static/components/editor/editor.component';
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
-import { AppUser } from '@core/models/appuser';
 import { AddProjectTaskRequest } from '@core/models/project-task';
-import { AssigneeViewModel } from '@core/models/view-models/board-view';
+import { UserSelectValue } from '@core/models/view-models/user-select-option';
 import { selectCurrentProjectId } from '@core/store/projects/projects.selectors';
 import { createProjectTask } from '@core/store/tasks/tasks.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -158,7 +157,7 @@ export class CreateTaskDialogComponent {
   readonly projectId = signal<number | null>(
     this.data?.projectId ?? this.currentProjectId() ?? null
   );
-  readonly assignees = signal<(AppUser | AssigneeViewModel)[]>([]);
+  readonly assignees = signal<UserSelectValue[]>([]);
   readonly submissionAttempted = signal(false);
   readonly scheduleInvalid = computed(() => {
     const startDate = this.startDate();

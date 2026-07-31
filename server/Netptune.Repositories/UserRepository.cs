@@ -129,6 +129,61 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         };
     }
 
+    public async Task<IPagedResult<UserSelectOptionViewModel>> GetUserSelectOptionsPaged(
+        int workspaceId,
+        UserSelectFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        var pagination = filter.GetPagination();
+        var query = Context.WorkspaceAppUsers
+            .Where(workspaceUser => workspaceUser.WorkspaceId == workspaceId)
+            .Select(workspaceUser => workspaceUser.User);
+
+        var search = filter.Search?.Trim();
+        var hasSearch = !string.IsNullOrWhiteSpace(search);
+
+        if (hasSearch)
+        {
+            var pattern = $"%{search}%";
+
+            query = query.Where(user =>
+                EF.Functions.ILike(user.Firstname, pattern)
+                || EF.Functions.ILike(user.Lastname, pattern)
+                || EF.Functions.ILike(user.Firstname + " " + user.Lastname, pattern)
+                || EF.Functions.ILike(user.UserName!, pattern)
+                || EF.Functions.ILike(user.Email!, pattern));
+        }
+
+        var rowCount = await query.CountAsync(cancellationToken);
+        var results = await query
+            .OrderBy(user => user.Firstname)
+            .ThenBy(user => user.Lastname)
+            .ThenBy(user => user.Id)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .Select(user => new UserSelectOptionViewModel
+            {
+                Id = user.Id,
+                DisplayName = string.IsNullOrEmpty(user.Firstname) && string.IsNullOrEmpty(user.Lastname)
+                    ? user.UserName!
+                    : user.Firstname + " " + user.Lastname,
+                Email = user.Email,
+                PictureUrl = user.PictureUrl,
+                IsServiceAccount = user.UserType == AppUserType.ServiceAccount,
+            })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<UserSelectOptionViewModel>
+        {
+            Results = results,
+            CurrentPage = pagination.Page,
+            PageSize = pagination.PageSize,
+            RowCount = rowCount,
+            PageCount = rowCount == 0 ? 0 : (rowCount + pagination.PageSize - 1) / pagination.PageSize,
+        };
+    }
+
     public Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();

@@ -13,6 +13,7 @@ public static class UsersEndpoints
         var group = builder.MapGroup("users");
 
         group.MapGet("/", HandleGetWorkspaceUsers).RequireAuthorization(NetptunePermissions.Members.Read);
+        group.MapGet("/select", HandleGetUserSelectOptions).RequireAuthorization(NetptunePermissions.Members.Read);
         group.MapGet("/{id}", HandleGetUser);
         group.MapPut("/{id}", HandleUpdateUser).RequireAuthorization(NetptunePermissions.Members.UpdateProfile);
         group.MapPost("/invite", HandleInvite).RequireAuthorization(NetptunePermissions.Members.Invite);
@@ -32,6 +33,16 @@ public static class UsersEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetWorkspaceUsersQuery(page), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleGetUserSelectOptions(
+        IMediator mediator,
+        [AsParameters] UserSelectFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetUserSelectOptionsQuery(filter), cancellationToken);
 
         return Results.Ok(result);
     }

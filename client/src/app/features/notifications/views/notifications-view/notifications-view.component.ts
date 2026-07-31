@@ -1,14 +1,15 @@
 import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { Params } from '@angular/router';
-import { AppUser } from '@core/models/appuser';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
+import {
+  UserSelectOption,
+  UserSelectValue,
+} from '@core/models/view-models/user-select-option';
 import {
   deleteNotifications,
   markAllAsRead,
   markAsReadMany,
 } from '@core/store/notifications/notifications.actions';
-import { loadUsers } from '@core/store/users/users.actions';
-import { selectAllUsers } from '@core/store/users/users.selectors';
 import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -34,7 +35,6 @@ import { NotificationsTableComponent } from '../../components/notifications-tabl
 
       <app-notifications-filters
         [searchTerm]="searchTerm()"
-        [users]="users()"
         [selectedUsers]="selectedUsers()"
         [selectedCount]="selected().length"
         (searchChange)="onSearch($event)"
@@ -56,8 +56,7 @@ export class NotificationsViewComponent {
   readonly count = signal<number | null>(null);
   readonly selected = signal<NotificationViewModel[]>([]);
   readonly searchTerm = signal<string | null>(null);
-  readonly selectedUsers = signal<AppUser[]>([]);
-  readonly users = this.store.selectSignal(selectAllUsers);
+  readonly selectedUsers = signal<UserSelectValue[]>([]);
 
   private readonly table = viewChild.required(NotificationsTableComponent);
 
@@ -72,10 +71,6 @@ export class NotificationsViewComponent {
     return params;
   });
 
-  constructor() {
-    this.store.dispatch(loadUsers.init());
-  }
-
   onMarkAllAsRead() {
     this.store.dispatch(markAllAsRead.init());
   }
@@ -85,7 +80,7 @@ export class NotificationsViewComponent {
     this.table().goToFirstPage();
   }
 
-  onUserFilter(user: AppUser) {
+  onUserFilter(user: UserSelectOption) {
     const current = this.selectedUsers()[0];
 
     this.selectedUsers.set(current?.id === user.id ? [] : [user]);

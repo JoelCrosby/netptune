@@ -124,7 +124,8 @@ export default defineConfig([
             // ARIA wiring and element references, not user-visible text
             'accept', 'aria-autocomplete', 'aria-controls', 'aria-describedby',
             'aria-haspopup', 'aria-labelledby', 'aria-live', 'aria-orientation',
-            'controlId', 'form', 'groupName', 'property', 'rel', 'scope',
+            'controlId', 'form', 'groupName', 'panelRole', 'property', 'rel',
+            'scope',
             // property-name references (which field of a data object to read)
             'idKey', 'labelKey',
           ],
