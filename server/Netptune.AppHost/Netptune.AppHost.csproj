@@ -22,6 +22,7 @@
     <PackageReference Include="Aspire.Hosting.Valkey" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Meilisearch" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.DbGate" />
   </ItemGroup>
 
 </Project>

@@ -33,4 +33,47 @@ public static class ResourceBuilderExtensions
                 .WithReference(jobs);
         }
     }
+
+    extension(IResourceBuilder<DbGateContainerResource> builder)
+    {
+        public IResourceBuilder<DbGateContainerResource> WithValkey(IResourceBuilder<ValkeyResource> valkey)
+        {
+            var resource = valkey.Resource;
+            var id = DbGateBuilderExtensions.SanitizeConnectionId(resource.Name);
+
+            return builder
+                .WaitFor(valkey)
+                .WithEnvironment(context =>
+                {
+                    context.EnvironmentVariables[$"LABEL_{id}"] = resource.Name;
+                    context.EnvironmentVariables[$"ENGINE_{id}"] = "redis@dbgate-plugin-redis";
+                    context.EnvironmentVariables[$"SERVER_{id}"] = resource.Name;
+                    context.EnvironmentVariables[$"PORT_{id}"] = resource.PrimaryEndpoint.Property(EndpointProperty.TargetPort);
+
+                    if (resource.PasswordParameter is { } password)
+                    {
+                        context.EnvironmentVariables[$"PASSWORD_{id}"] = password;
+                    }
+
+                    context.EnvironmentVariables["CONNECTIONS"] = AppendConnection(context, id);
+                });
+        }
+    }
+
+    private static string AppendConnection(EnvironmentCallbackContext context, string id)
+    {
+        if (!context.EnvironmentVariables.TryGetValue("CONNECTIONS", out var existing))
+        {
+            return id;
+        }
+
+        var connections = existing as string;
+
+        if (string.IsNullOrEmpty(connections))
+        {
+            return id;
+        }
+
+        return $"{connections},{id}";
+    }
 }

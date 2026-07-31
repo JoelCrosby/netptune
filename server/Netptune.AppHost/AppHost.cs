@@ -4,11 +4,15 @@ using Netptune.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+var cache = builder
+    .AddValkey("cache")
+    .WithLifetime(ContainerLifetime.Persistent);
+
 var postgres = builder
     .AddPostgres("postgres")
     .WithDataVolume()
     .WithPgWeb()
-    .WithDbGate()
+    .WithDbGate(dbGate => dbGate.WithValkey(cache))
 
     .WithHostPort(5432)
     .WithExternalHttpEndpoints()
@@ -20,10 +24,6 @@ var nats = builder
     .AddNats("nats")
     .WithJetStream()
     .WithDataVolume()
-    .WithLifetime(ContainerLifetime.Persistent);
-
-var cache = builder
-    .AddValkey("cache")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var meilisearch = builder
