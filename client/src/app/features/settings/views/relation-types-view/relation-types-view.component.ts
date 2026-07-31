@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   RelationCategory,
   RelationType,
@@ -20,14 +21,13 @@ import {
   LucideArrowDown,
   LucideArrowUp,
   LucideSettings2,
-  LucidePlus,
   LucideTrash2,
 } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
-import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import {
   TableComponent,
   TableEmptyCellDirective,
@@ -42,9 +42,9 @@ import { finalize, first } from 'rxjs';
   selector: 'app-relation-types-view',
   imports: [
     ErrorStateComponent,
-    StrokedButtonComponent,
     ColorSwatchComponent,
-    SectionHeaderComponent,
+    PageContainerComponent,
+    PageHeaderComponent,
     IconButtonComponent,
     TableComponent,
     TableEmptyCellDirective,
@@ -52,34 +52,31 @@ import { finalize, first } from 'rxjs';
     TableHeadDirective,
     TableRowDirective,
     TooltipDirective,
+    RouterLink,
     LucideArrowDown,
     LucideArrowUp,
     LucideSettings2,
-    LucidePlus,
     LucideTrash2,
   ],
   template: `
-    <section>
-      <app-section-header
-        i18n-heading="Section heading for task relation types"
-        heading="Task relations"
-        i18n-description="
+    <app-page-container [centerPage]="true" [marginBottom]="true">
+      <app-page-header
+        i18n-title="Page title for workspace task relation types"
+        title="Relations"
+        i18n-actionTitle="Button that opens the create-relation-type dialog"
+        actionTitle="Create relation type"
+        (actionClick)="openCreateDialog()" />
+
+      <p
+        class="text-muted mb-4 max-w-3xl text-sm"
+        i18n="
           Explains how relation direction works. The quoted example names are
           the default relation type and its inverse
-        "
-        description='How tasks can be linked to one another. A relation reads one way from the source task and the other way from the target — "Blocks" one way, "Is Blocked By" the other.'>
-        <button
-          sectionHeaderActions
-          app-stroked-button
-          type="button"
-          [disabled]="loading()"
-          (click)="openCreateDialog()">
-          <svg lucidePlus class="h-4 w-4"></svg>
-          <span i18n="Button that opens the create-relation-type dialog">
-            Create relation type
-          </span>
-        </button>
-      </app-section-header>
+        ">
+        How tasks can be linked to one another. A relation reads one way from
+        the source task and the other way from the target — "Blocks" one way,
+        "Is Blocked By" the other.
+      </p>
 
       @if (error()) {
         <app-error-state
@@ -110,6 +107,14 @@ import { finalize, first } from 'rxjs';
                 </span>
               </th>
               <th class="w-28 px-4 py-3">
+                <span
+                  i18n="
+                    Column heading for the number of task links using a row
+                  ">
+                  Relations
+                </span>
+              </th>
+              <th class="w-28 px-4 py-3">
                 <span i18n="Column heading for the sort order">Order</span>
               </th>
               <th class="w-28 px-4 py-3">
@@ -132,12 +137,11 @@ import { finalize, first } from 'rxjs';
                     [color]="relationType.color" />
                 </td>
                 <td class="px-4 py-2 align-middle">
-                  <button
-                    type="button"
-                    class="block w-full cursor-pointer truncate text-left font-medium"
-                    (click)="openEditDialog(relationType)">
+                  <a
+                    class="block w-full truncate text-left font-medium hover:underline"
+                    [routerLink]="[relationType.id]">
                     {{ relationType.name }}
-                  </button>
+                  </a>
                 </td>
                 <td class="text-muted truncate px-4 py-2 align-middle">
                   @if (isSymmetric(relationType)) {
@@ -154,6 +158,9 @@ import { finalize, first } from 'rxjs';
                 </td>
                 <td class="px-4 py-2 align-middle">
                   {{ categoryLabel(relationType.category) }}
+                </td>
+                <td class="text-muted px-4 py-2 align-middle">
+                  {{ relationType.relationCount }}
                 </td>
                 <td class="px-4 py-2 align-middle">
                   <div class="flex gap-1">
@@ -227,7 +234,7 @@ import { finalize, first } from 'rxjs';
               </tr>
             } @empty {
               <tr>
-                <td appTableEmptyCell colspan="6">
+                <td appTableEmptyCell colspan="7">
                   <span i18n="Empty state for the relation type list">
                     No relation types yet. Create one to link related tasks.
                   </span>
@@ -237,7 +244,7 @@ import { finalize, first } from 'rxjs';
           </tbody>
         </app-table>
       }
-    </section>
+    </app-page-container>
   `,
 })
 export class RelationTypesViewComponent {

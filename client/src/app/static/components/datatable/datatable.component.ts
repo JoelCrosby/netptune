@@ -316,6 +316,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });
   containerClass = input('');
+  rounded = input(true, { transform: booleanAttribute });
   tableClass = input('');
   headerClass = input('');
   rowClass = input<DatatableRowClass<T> | ''>('');
@@ -352,7 +353,9 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   emptyState = contentChild<DatatableEmptyDirective>(DatatableEmptyDirective);
 
   mergedContainerClass = computed(() => {
-    return twMerge(classes.container, this.containerClass());
+    const corners = this.rounded() ? '' : 'rounded-none';
+
+    return twMerge(classes.container, corners, this.containerClass());
   });
 
   mergedTableClass = computed(() => {
@@ -360,7 +363,9 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   });
 
   mergedHeaderClass = computed(() => {
-    return twMerge(classes.header, this.headerClass());
+    const corners = this.rounded() ? '' : 'rounded-none';
+
+    return twMerge(classes.header, corners, this.headerClass());
   });
 
   mergedEmptyCellClass = computed(() => {

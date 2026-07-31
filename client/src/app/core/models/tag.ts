@@ -3,4 +3,5 @@ export interface Tag {
   name: string;
   ownerName: string;
   ownerId: string;
+  taskCount: number;
 }

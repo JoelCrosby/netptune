@@ -38,6 +38,7 @@ export interface Status {
   sortOrder: number;
   category: StatusCategory;
   isSystem: boolean;
+  taskCount: number;
 }
 
 export interface CreateStatusRequest {

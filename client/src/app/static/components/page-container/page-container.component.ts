@@ -15,7 +15,8 @@ const progressRevealDelayMs = 200;
       [class.w-full]="centerPage()"
       [class.max-w-[1360px]]="centerPage()"
       [attr.aria-busy]="showProgress()"
-      [class.h-full]="fullHeight()">
+      [class.h-full]="fullHeight() && !marginBottom()"
+      [class.pb-[20vh]]="marginBottom()">
       <div
         class="h-[0.8rem] shrink-0"
         [class.invisible]="!progressVisible()"
@@ -25,7 +26,6 @@ const progressRevealDelayMs = 200;
       <div
         class="flex flex-1 flex-col px-8 max-[600px]:px-3"
         [class.py-16]="verticalPadding()"
-        [class.pb-[20vh]]="marginBottom()"
         [class.h-[calc(100vh-56px)]]="fullHeight()">
         <ng-content />
       </div>

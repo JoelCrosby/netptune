@@ -8,6 +8,13 @@ export interface RelatedTask {
   statusName: string;
   statusColor?: string | null;
   statusCategory: StatusCategory;
+  isArchived: boolean;
+}
+
+export interface RelationTypeRelation {
+  id: number;
+  sourceTask: RelatedTask;
+  targetTask: RelatedTask;
 }
 
 export interface TaskRelation {

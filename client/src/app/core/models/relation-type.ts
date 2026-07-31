@@ -44,6 +44,7 @@ export interface RelationType {
   sortOrder: number;
   category: RelationCategory;
   isSystem: boolean;
+  relationCount: number;
 }
 
 export interface CreateRelationTypeRequest {

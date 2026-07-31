@@ -36,7 +36,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
-import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { PageContainerComponent } from '@static/components/page-container/page-container.component';
+import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { EMPTY, catchError, finalize, first, map, of, switchMap } from 'rxjs';
@@ -69,30 +70,31 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
     StrokedButtonComponent,
     EmptyStateComponent,
     PageLoadingComponent,
-    SectionHeaderComponent,
+    PageContainerComponent,
+    PageHeaderComponent,
     TooltipDirective,
   ],
   template: `
-    <section>
-      <app-section-header
-        i18n-heading="Section heading for service accounts"
-        heading="Service accounts"
-        i18n-description="Explains what service accounts are for"
-        description="Create workspace identities for agents and integrations without sharing a user login.">
-        @if (canCreate()) {
-          <button
-            sectionHeaderActions
-            app-flat-button
-            type="button"
-            [disabled]="busy()"
-            (click)="openCreateAccount()">
-            <svg lucidePlus class="h-4 w-4"></svg>
-            <span i18n="Button that opens the create-service-account dialog">
-              Create service account
-            </span>
-          </button>
-        }
-      </app-section-header>
+    <app-page-container [centerPage]="true" [marginBottom]="true">
+      @if (canCreate()) {
+        <app-page-header
+          i18n-title="Page title for workspace service accounts"
+          title="Service accounts"
+          i18n-actionTitle="Button that opens the create-service-account dialog"
+          actionTitle="Create service account"
+          (actionClick)="openCreateAccount()" />
+      } @else {
+        <app-page-header
+          i18n-title="Page title for workspace service accounts"
+          title="Service accounts" />
+      }
+
+      <p
+        class="text-muted mb-4 max-w-3xl text-sm"
+        i18n="Explains what service accounts are for">
+        Create workspace identities for agents and integrations without sharing
+        a user login.
+      </p>
 
       @if (loading()) {
         <app-page-loading
@@ -351,7 +353,7 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
           }
         </div>
       }
-    </section>
+    </app-page-container>
   `,
 })
 export class ServiceAccountsViewComponent {

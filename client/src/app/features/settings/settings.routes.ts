@@ -33,6 +33,13 @@ export const routes: Routes = [
         loadComponent: () => import('./views/tags-view/tags-view.component').then((m) => m.TagsViewComponent),
       },
       {
+        path: 'tags/:id',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.tags.read, back: $localize`:Link back to the tag list from a single tag:Back to Tags` },
+        title: $localize`:Page title for a single workspace tag:Tag`,
+        loadComponent: () => import('./views/tag-detail-view/tag-detail-view.component').then((m) => m.TagDetailViewComponent),
+      },
+      {
         path: 'statuses',
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.statuses.read },
@@ -40,11 +47,25 @@ export const routes: Routes = [
         loadComponent: () => import('./views/statuses-view/statuses-view.component').then((m) => m.StatusesViewComponent),
       },
       {
+        path: 'statuses/:id',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.statuses.read, back: $localize`:Link back to the status list from a single status:Back to Statuses` },
+        title: $localize`:Page title for a single workspace status:Status`,
+        loadComponent: () => import('./views/status-detail-view/status-detail-view.component').then((m) => m.StatusDetailViewComponent),
+      },
+      {
         path: 'relations',
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.relationTypes.read },
         title: $localize`:Page title for workspace task relation type settings:Workspace Relations`,
         loadComponent: () => import('./views/relation-types-view/relation-types-view.component').then((m) => m.RelationTypesViewComponent),
+      },
+      {
+        path: 'relations/:id',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.relationTypes.read, back: $localize`:Link back to the relation type list from a single relation type:Back to Relations` },
+        title: $localize`:Page title for a single workspace relation type:Relation Type`,
+        loadComponent: () => import('./views/relation-type-detail-view/relation-type-detail-view.component').then((m) => m.RelationTypeDetailViewComponent),
       },
       {
         path: 'service-accounts',
