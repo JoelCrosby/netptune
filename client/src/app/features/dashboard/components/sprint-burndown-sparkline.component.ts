@@ -1,37 +1,16 @@
 import { Component, computed, input } from '@angular/core';
 import { BurndownPoint } from '@core/models/reporting';
+import { SprintBurndownMiniChartComponent } from './sprint-burndown-mini-chart.component';
 
 @Component({
   selector: 'app-sprint-burndown-sparkline',
+  imports: [SprintBurndownMiniChartComponent],
+  host: { class: 'block' },
   template: `
-    <div class="flex items-center justify-between gap-4">
-      <div class="min-w-0 flex-1">
-        <p class="text-muted mb-1 text-xs font-medium uppercase">
-          <span i18n="Heading above the sprint burndown sparkline">
-            Burndown
-          </span>
-        </p>
-        <svg
-          class="h-10 w-full"
-          viewBox="0 0 100 32"
-          preserveAspectRatio="none"
-          aria-hidden="true">
-          <polyline
-            [attr.points]="idealPath()"
-            fill="none"
-            stroke="var(--muted-foreground)"
-            stroke-width="1"
-            stroke-dasharray="3 2"
-            opacity="0.6"
-            vector-effect="non-scaling-stroke" />
-          <polyline
-            [attr.points]="remainingPath()"
-            fill="none"
-            stroke="var(--primary)"
-            stroke-width="1.5"
-            vector-effect="non-scaling-stroke" />
-        </svg>
-      </div>
+    <div class="mb-1 flex items-center justify-between gap-4">
+      <p class="text-muted text-xs font-medium uppercase">
+        <span i18n="Heading above the sprint burndown sparkline">Burndown</span>
+      </p>
       <span
         class="shrink-0 text-xs font-semibold"
         [class]="
@@ -42,26 +21,11 @@ import { BurndownPoint } from '@core/models/reporting';
         {{ caption() }}
       </span>
     </div>
+    <app-sprint-burndown-mini-chart [points]="points()" />
   `,
 })
 export class SprintBurndownSparklineComponent {
   readonly points = input.required<BurndownPoint[]>();
-
-  private readonly max = computed(() =>
-    Math.max(
-      1,
-      ...this.points().flatMap((point) => [
-        point.remaining,
-        point.ideal,
-        point.totalScope,
-      ])
-    )
-  );
-
-  readonly remainingPath = computed(() =>
-    this.toPolyline((point) => point.remaining)
-  );
-  readonly idealPath = computed(() => this.toPolyline((point) => point.ideal));
 
   private readonly latestGap = computed(() => {
     const points = this.points();
@@ -71,21 +35,9 @@ export class SprintBurndownSparklineComponent {
 
   readonly onTrack = computed(() => this.latestGap() <= 0.5);
 
-  readonly caption = computed(() =>
-    this.onTrack() ? 'On track' : `Behind by ${Math.round(this.latestGap())}`
-  );
-
-  private toPolyline(selector: (point: BurndownPoint) => number): string {
-    const points = this.points();
-    const max = this.max();
-    const lastIndex = Math.max(1, points.length - 1);
-
-    return points
-      .map((point, index) => {
-        const x = (index / lastIndex) * 100;
-        const y = 32 - (Math.max(0, selector(point)) / max) * 32;
-        return `${x.toFixed(2)},${y.toFixed(2)}`;
-      })
-      .join(' ');
-  }
+  readonly caption = computed(() => {
+    return this.onTrack()
+      ? $localize`:Sprint burndown status:On track`
+      : $localize`:Sprint burndown status. GAP is the amount behind the ideal line:Behind by ${Math.round(this.latestGap())}:gap:`;
+  });
 }
