@@ -46,4 +46,6 @@ public interface IUserRepository : IRepository<AppUser, string>
     Task<List<UserAvatar>> GetUserAvatars(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<string>> GetWorkspaceUserIdsInRoles(int workspaceId, IReadOnlyCollection<WorkspaceRole> roles, CancellationToken cancellationToken = default);
+
+    Task<List<string>> GetWorkspaceUserIds(int workspaceId, CancellationToken cancellationToken = default);
 }

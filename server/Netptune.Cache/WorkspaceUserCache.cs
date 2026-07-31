@@ -27,6 +27,11 @@ public class WorkspaceUserCache : EntityCache<bool, WorkspaceUserKey>, IWorkspac
         return $"workspace:{key.WorkspaceKey}:{key.UserId}";
     }
 
+    protected override bool ShouldCache(bool entity)
+    {
+        return entity;
+    }
+
     public Task<bool> IsUserInWorkspace(string userId, string workspaceKey)
     {
         return Get(new WorkspaceUserKey

@@ -3,6 +3,7 @@ using AutoFixture;
 using FluentAssertions;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Cache;
 using Netptune.Core.Requests;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
@@ -23,16 +24,21 @@ public class UpdateWorkspaceCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
+    private readonly IWorkspaceUserCache WorkspaceUsers = Substitute.For<IWorkspaceUserCache>();
+    private readonly IWorkspacePermissionCache WorkspacePermissions = Substitute.For<IWorkspacePermissionCache>();
+    private readonly IWorkspaceCache WorkspaceCache = Substitute.For<IWorkspaceCache>();
 
     public UpdateWorkspaceCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Identity, EventRecords);
+        Handler = new(UnitOfWork, Identity, EventRecords, WorkspaceUsers, WorkspacePermissions, WorkspaceCache);
+
+        UnitOfWork.Users.GetWorkspaceUserIds(Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns([]);
     }
 
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var request = Fixture.Build<UpdateWorkspaceRequest>().Create();
+        var request = Fixture.Build<UpdateWorkspaceRequest>().Without(item => item.NewSlug).Create();
         var workspace = AutoFixtures.Workspace;
 
         Identity.GetWorkspaceKey().Returns("key");
@@ -44,15 +50,15 @@ public class UpdateWorkspaceCommandHandlerTests
         result.Should().NotBeNull();
         result.Payload.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
-        result.Payload!.Name.Should().Be(request.Name);
-        result.Payload.Description.Should().Be(request.Description);
-        result.Payload.Slug.Should().NotBeNull();
+        result.Payload!.Workspace.Name.Should().Be(request.Name);
+        result.Payload.Workspace.Description.Should().Be(request.Description);
+        result.Payload.Workspace.Slug.Should().NotBeNull();
     }
 
     [Fact]
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
-        var request = Fixture.Build<UpdateWorkspaceRequest>().Create();
+        var request = Fixture.Build<UpdateWorkspaceRequest>().Without(item => item.NewSlug).Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
@@ -61,6 +67,180 @@ public class UpdateWorkspaceCommandHandlerTests
         await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
         await UnitOfWork.Received(1).CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldRenameTheWorkspace_WhenNewSlugIsAvailable()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            NewSlug = "New Workspace",
+        };
+        var workspace = AutoFixtures.Workspace with { Slug = "workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+        UnitOfWork.Workspaces.Exists("new-workspace", TestContext.Current.CancellationToken).Returns(false);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Workspace.Slug.Should().Be("new-workspace");
+        result.Payload.PreviousSlug.Should().Be("workspace");
+    }
+
+    [Fact]
+    public async Task Update_ShouldNotReportAPreviousSlug_WhenTheSlugIsUnchanged()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            Name = "Updated workspace",
+        };
+        var workspace = AutoFixtures.Workspace with { Slug = "workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.PreviousSlug.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Update_ShouldEmitIdentifierChange_WhenTheSlugChanges()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            NewSlug = "renamed-workspace",
+        };
+        var workspace = AutoFixtures.Workspace with { Id = 42, Slug = "workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<WorkspaceSettingsChangedPayload>>(eventRequest =>
+                eventRequest.Payload.Fields.SequenceEqual(new[] { "identifier" })),
+            TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldForgetCachedMembershipUnderTheOldSlug_WhenTheSlugChanges()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            NewSlug = "renamed-workspace",
+        };
+        var workspace = AutoFixtures.Workspace with { Id = 42, Slug = "workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+        UnitOfWork.Users.GetWorkspaceUserIds(workspace.Id, TestContext.Current.CancellationToken)
+            .Returns(["user-one", "user-two"]);
+
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        WorkspaceUsers.Received(1).Remove(
+            Arg.Is<WorkspaceUserKey>(key => key.WorkspaceKey == "workspace" && key.UserId == "user-one"));
+        WorkspaceUsers.Received(1).Remove(
+            Arg.Is<WorkspaceUserKey>(key => key.WorkspaceKey == "workspace" && key.UserId == "user-two"));
+        WorkspacePermissions.Received(1).Remove(
+            Arg.Is<WorkspaceUserKey>(key => key.WorkspaceKey == "workspace" && key.UserId == "user-one"));
+        WorkspacePermissions.Received(1).Remove(
+            Arg.Is<WorkspaceUserKey>(key => key.WorkspaceKey == "workspace" && key.UserId == "user-two"));
+        WorkspaceCache.Received(1).Remove("workspace");
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnFailure_WhenTheNewSlugIsTaken()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            NewSlug = "taken-workspace",
+        };
+        var workspace = AutoFixtures.Workspace with { Slug = "workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+        UnitOfWork.Workspaces.Exists("taken-workspace", TestContext.Current.CancellationToken).Returns(true);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        result.IsNotFound.Should().BeFalse();
+        workspace.Slug.Should().Be("workspace");
+        await UnitOfWork.DidNotReceive().CompleteAsync(TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnFailure_WhenTheNewSlugNormalisesTooShort()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            NewSlug = "!!!",
+        };
+        var workspace = AutoFixtures.Workspace with { Slug = "workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.IsSuccess.Should().BeFalse();
+        workspace.Slug.Should().Be("workspace");
+    }
+
+    [Fact]
+    public async Task Update_ShouldNotTreatAnUnchangedSlugAsARename()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            NewSlug = "workspace",
+            Name = "Updated workspace",
+        };
+        var workspace = AutoFixtures.Workspace with { Id = 42, Slug = "workspace", Name = "Original workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<WorkspaceSettingsChangedPayload>>(eventRequest =>
+                eventRequest.Payload.Fields.SequenceEqual(new[] { "name" })),
+            TestContext.Current.CancellationToken);
+        WorkspaceUsers.DidNotReceive().Remove(Arg.Any<WorkspaceUserKey>());
     }
 
     [Fact]
@@ -118,7 +298,7 @@ public class UpdateWorkspaceCommandHandlerTests
 
         var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
-        result.Payload!.PublicPermissions.Should().BeEquivalentTo([NetptunePermissions.Tasks.Read]);
+        result.Payload!.Workspace.PublicPermissions.Should().BeEquivalentTo([NetptunePermissions.Tasks.Read]);
     }
 
     [Fact]
@@ -139,7 +319,7 @@ public class UpdateWorkspaceCommandHandlerTests
 
         var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
-        result.Payload!.PublicPermissions.Should().BeEquivalentTo(NetptunePermissions.PublicReadable);
+        result.Payload!.Workspace.PublicPermissions.Should().BeEquivalentTo(NetptunePermissions.PublicReadable);
     }
 
     [Fact]
@@ -164,7 +344,7 @@ public class UpdateWorkspaceCommandHandlerTests
 
         var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
 
-        result.Payload!.PublicPermissions.Should().BeEquivalentTo([NetptunePermissions.Tasks.Read]);
+        result.Payload!.Workspace.PublicPermissions.Should().BeEquivalentTo([NetptunePermissions.Tasks.Read]);
     }
 
     [Fact]
@@ -199,7 +379,7 @@ public class UpdateWorkspaceCommandHandlerTests
     [Fact]
     public async Task Update_ShouldReturnFailure_WhenWorkspaceNotFound()
     {
-        var request = Fixture.Build<UpdateWorkspaceRequest>().Create();
+        var request = Fixture.Build<UpdateWorkspaceRequest>().Without(item => item.NewSlug).Create();
 
         Identity.GetWorkspaceKey().Returns("key");
         Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);

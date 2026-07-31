@@ -9,6 +9,8 @@ public record UpdateWorkspaceRequest
     [Required]
     public string? Slug { get; init; }
 
+    public string? NewSlug { get; init; }
+
     public string? Name { get; init; }
 
     public string? Description { get; init; }

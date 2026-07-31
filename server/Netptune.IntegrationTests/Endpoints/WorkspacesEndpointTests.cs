@@ -128,12 +128,12 @@ public sealed class WorkspacesEndpointTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<WorkspaceViewModel>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UpdateWorkspaceResponse>>();
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
-        result.Payload!.Name.Should().Be(request.Name);
-        result.Payload.Description.Should().Be(request.Description);
+        result.Payload!.Workspace.Name.Should().Be(request.Name);
+        result.Payload.Workspace.Description.Should().Be(request.Description);
     }
 
     [Fact]
@@ -149,9 +149,157 @@ public sealed class WorkspacesEndpointTests
             },
         };
 
-        var response = await Client.PostAsJsonAsync("api/workspaces", request);
+        var response = await Client.PutAsJsonAsync("api/workspaces", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnNotFound_WhenTheWorkspaceDoesNotExist()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "not-a-workspace-key",
+            Name = "test workspace",
+            MetaInfo = new () { Color = NamedColors.FallbackColor },
+        };
+
+        var response = await Client.PutAsJsonAsync("api/workspaces", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Update_ShouldRenameTheWorkspace_WhenNewSlugProvided()
+    {
+        var slug = $"rename-{Guid.NewGuid():N}"[..20];
+        var renamed = $"{slug}-x";
+
+        await Client.PostAsJsonAsync("api/workspaces", new AddWorkspaceRequest
+        {
+            Name = slug,
+            Description = $"{slug} description",
+            Slug = slug,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        var response = await Client.PutAsJsonAsync("api/workspaces", new UpdateWorkspaceRequest
+        {
+            Slug = slug,
+            NewSlug = renamed,
+            Name = "Renamed Workspace",
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UpdateWorkspaceResponse>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Workspace.Slug.Should().Be(renamed);
+        result.Payload.PreviousSlug.Should().Be(slug);
+        result.Payload.Workspace.Name.Should().Be("Renamed Workspace");
+
+        (await Client.GetAsync($"api/workspaces/{renamed}")).StatusCode.Should().Be(HttpStatusCode.OK);
+        (await Client.GetAsync($"api/workspaces/{slug}")).StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Update_ShouldAuthoriseUnderTheNewSlugImmediately_AfterARename()
+    {
+        var slug = $"authz-{Guid.NewGuid():N}"[..20];
+        var renamed = $"{slug}-x";
+
+        await Client.PostAsJsonAsync("api/workspaces", new AddWorkspaceRequest
+        {
+            Name = slug,
+            Description = $"{slug} description",
+            Slug = slug,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        var beforeRename = await SendWithWorkspaceHeader("api/users", slug);
+
+        beforeRename.Should().Be(HttpStatusCode.OK);
+
+        await Client.PutAsJsonAsync("api/workspaces", new UpdateWorkspaceRequest
+        {
+            Slug = slug,
+            NewSlug = renamed,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        var underNewSlug = await SendWithWorkspaceHeader("api/users", renamed);
+        var underOldSlug = await SendWithWorkspaceHeader("api/users", slug);
+
+        underNewSlug.Should().Be(HttpStatusCode.OK);
+        underOldSlug.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    private async Task<HttpStatusCode> SendWithWorkspaceHeader(string url, string workspaceKey)
+    {
+        var message = new HttpRequestMessage(HttpMethod.Get, url);
+
+        message.Headers.Add("workspace", workspaceKey);
+
+        var response = await Client.SendAsync(message);
+
+        return response.StatusCode;
+    }
+
+    [Fact]
+    public async Task Update_ShouldAuthoriseUnderTheNewSlug_WhenItWasProbedBeforeTheRename()
+    {
+        var slug = $"probe-{Guid.NewGuid():N}"[..20];
+        var renamed = $"{slug}-x";
+
+        await Client.PostAsJsonAsync("api/workspaces", new AddWorkspaceRequest
+        {
+            Name = slug,
+            Description = $"{slug} description",
+            Slug = slug,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        var beforeRename = await SendWithWorkspaceHeader("api/users", renamed);
+
+        beforeRename.Should().Be(HttpStatusCode.Forbidden);
+
+        await Client.PutAsJsonAsync("api/workspaces", new UpdateWorkspaceRequest
+        {
+            Slug = slug,
+            NewSlug = renamed,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        var afterRename = await SendWithWorkspaceHeader("api/users", renamed);
+
+        afterRename.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnBadRequest_WhenNewSlugIsAlreadyTaken()
+    {
+        var slug = $"taken-{Guid.NewGuid():N}"[..20];
+
+        await Client.PostAsJsonAsync("api/workspaces", new AddWorkspaceRequest
+        {
+            Name = slug,
+            Description = $"{slug} description",
+            Slug = slug,
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        var response = await Client.PutAsJsonAsync("api/workspaces", new UpdateWorkspaceRequest
+        {
+            Slug = slug,
+            NewSlug = "netptune",
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        (await Client.GetAsync($"api/workspaces/{slug}")).StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]

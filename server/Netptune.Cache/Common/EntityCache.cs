@@ -11,6 +11,14 @@ public abstract class EntityCache<TEntity, TKey> : IEntityCache<TEntity, TKey>
     protected abstract Task<TEntity?> GetEntity(TKey key);
     protected abstract string GetCacheKey(TKey key);
 
+    // A missing entity is a state that turns into a present one - a workspace gets renamed,
+    // a member gets invited, a permission gets granted. Storing the absence would hold the
+    // stale answer for the whole time to live, so only resolved entities are cached.
+    protected virtual bool ShouldCache(TEntity? entity)
+    {
+        return entity is not null;
+    }
+
     private readonly TimeSpan TimeToLive;
 
     protected EntityCache(ICacheProvider cache, TimeSpan timeToLive)
@@ -39,6 +47,11 @@ public abstract class EntityCache<TEntity, TKey> : IEntityCache<TEntity, TKey>
         }
 
         var entity = await factory();
+
+        if (!ShouldCache(entity))
+        {
+            return entity;
+        }
 
         await Cache.SetAsync(key, entity, new DistributedCacheEntryOptions
         {

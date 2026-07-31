@@ -350,6 +350,16 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<string>> GetWorkspaceUserIds(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Context.WorkspaceAppUsers
+            .Where(user => user.WorkspaceId == workspaceId)
+            .Select(user => user.UserId)
+            .Distinct()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<List<UserAvatar>> GetUserAvatars(IEnumerable<string> userIds, int workspaceId, CancellationToken cancellationToken = default)
     {
         return Context.WorkspaceAppUsers

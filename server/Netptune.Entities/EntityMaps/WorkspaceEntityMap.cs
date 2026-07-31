@@ -14,7 +14,8 @@ public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
         base.Configure(builder);
 
         builder
-            .HasAlternateKey(workspace => workspace.Slug);
+            .HasIndex(workspace => workspace.Slug)
+            .IsUnique();
 
         builder
             .Property(workspace => workspace.Name)
