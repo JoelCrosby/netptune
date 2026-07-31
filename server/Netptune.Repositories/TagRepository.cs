@@ -79,12 +79,12 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
             .AnyAsync(x => !x.IsDeleted && x.WorkspaceId == workspaceId && x.Name == trimmed, cancellationToken);
     }
 
-    public Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
+    public async Task<List<TagViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
     {
         pageRequest ??= new PageRequest();
         var pagination = pageRequest.GetPagination();
 
-        return Entities
+        var tags = await Entities
             .Where(tag => !tag.IsDeleted && tag.WorkspaceId == workspaceId)
             .OrderBy(x => x.CreatedAt)
             .ThenBy(x => x.Id)
@@ -101,6 +101,25 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
                     : x.Owner.Firstname + " " + x.Owner.Lastname,
             })
             .ToListAsync(cancellationToken);
+
+        var taskCounts = await GetTaskCounts(workspaceId, cancellationToken);
+
+        foreach (var tag in tags)
+        {
+            tag.TaskCount = taskCounts.GetValueOrDefault(tag.Id);
+        }
+
+        return tags;
+    }
+
+    public Task<Dictionary<int, int>> GetTaskCounts(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Context.ProjectTaskTags
+            .AsNoTracking()
+            .Where(taskTag => taskTag.ProjectTask.WorkspaceId == workspaceId && !taskTag.ProjectTask.IsDeleted)
+            .GroupBy(taskTag => taskTag.TagId)
+            .Select(group => new { TagId = group.Key, Count = group.Count() })
+            .ToDictionaryAsync(row => row.TagId, row => row.Count, cancellationToken);
     }
 
     public Task<Tag?> GetByValue(string value, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
@@ -130,6 +149,13 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
             .Where(x => !x.IsDeleted && x.WorkspaceId == workspaceId && tagsList.Contains(x.Name))
             .IsReadonly(isReadonly)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> GetTaskCount(int tagId, CancellationToken cancellationToken = default)
+    {
+        return Context.ProjectTaskTags
+            .AsNoTracking()
+            .CountAsync(taskTag => taskTag.TagId == tagId && !taskTag.ProjectTask.IsDeleted, cancellationToken);
     }
 
     public Task<bool> ExistsForTask(int tagId, int taskId, CancellationToken cancellationToken = default)

@@ -15,6 +15,8 @@ public interface ITagRepository : INamedWorkspaceEntityRepository<Tag, int>
 
     Task<TagViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default);
 
+    Task<Dictionary<int, int>> GetTaskCounts(int workspaceId, CancellationToken cancellationToken = default);
+
     Task<Tag?> GetByValue(string value, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<bool> Exists(string value, int workspaceId, CancellationToken cancellationToken = default);
@@ -22,6 +24,8 @@ public interface ITagRepository : INamedWorkspaceEntityRepository<Tag, int>
     Task<List<Tag>> GetTagsInWorkspace(int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<List<Tag>> GetTagsByValueInWorkspace(int workspaceId, IEnumerable<string> tags, bool isReadonly = false, CancellationToken cancellationToken = default);
+
+    Task<int> GetTaskCount(int tagId, CancellationToken cancellationToken = default);
 
     Task<bool> ExistsForTask(int tagId, int taskId, CancellationToken cancellationToken = default);
 

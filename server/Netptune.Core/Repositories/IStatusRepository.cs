@@ -1,5 +1,6 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Usage;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Statuses;
 
@@ -10,6 +11,8 @@ public interface IStatusRepository : IWorkspaceEntityRepository<Status, int>
     Task<List<StatusViewModel>> GetViewModelsForWorkspace(int workspaceId, EntityType entityType, CancellationToken cancellationToken = default);
 
     Task<StatusViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default);
+
+    Task<Dictionary<int, int>> GetTaskCounts(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<Status?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
@@ -22,6 +25,8 @@ public interface IStatusRepository : IWorkspaceEntityRepository<Status, int>
     Task<Dictionary<int, StatusCategory>> GetCategories(IReadOnlyCollection<int> statusIds, CancellationToken cancellationToken = default);
 
     Task<bool> KeyExists(int workspaceId, EntityType entityType, string key, int? excludingId = null, CancellationToken cancellationToken = default);
+
+    Task<StatusUsage> GetUsage(int statusId, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<bool> IsInUse(int statusId, CancellationToken cancellationToken = default);
 

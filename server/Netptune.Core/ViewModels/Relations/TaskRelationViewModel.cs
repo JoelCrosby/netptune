@@ -62,4 +62,15 @@ public sealed record RelatedTaskViewModel
     public string? StatusColor { get; init; }
 
     public StatusCategory StatusCategory { get; init; }
+
+    public bool IsArchived { get; init; }
+}
+
+public sealed record RelationTypeRelationViewModel
+{
+    public int Id { get; init; }
+
+    public RelatedTaskViewModel SourceTask { get; init; } = null!;
+
+    public RelatedTaskViewModel TargetTask { get; init; } = null!;
 }

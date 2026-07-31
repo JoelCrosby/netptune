@@ -14,6 +14,8 @@ public static class RelationTypesEndpoints
         var group = builder.MapGroup("relation-types");
 
         group.MapGet("/", HandleGet).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
+        group.MapGet("/{id:int}/usage", HandleGetUsage).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
+        group.MapGet("/{id:int}/relations", HandleGetRelations).RequireAuthorization(NetptunePermissions.RelationTypes.Read);
         group.MapPost("/", HandlePost).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
         group.MapPut("/", HandlePut).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
@@ -27,6 +29,27 @@ public static class RelationTypesEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetRelationTypesQuery(), cancellationToken);
+
+        return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetUsage(
+        IMediator mediator,
+        int id,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetRelationTypeUsageQuery(id), cancellationToken);
+
+        return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetRelations(
+        IMediator mediator,
+        int id,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetRelationsForTypeQuery(id, page), cancellationToken);
 
         return result is null ? Results.NotFound() : Results.Ok(result);
     }

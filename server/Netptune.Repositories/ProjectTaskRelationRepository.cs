@@ -7,6 +7,8 @@ using Netptune.Core.Models.Automations;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Relations;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
@@ -58,6 +60,64 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
                 StatusCategory = row.Other_Task_Status_Category,
             },
         }).ToList();
+    }
+
+    public async Task<PagedResponse<RelationTypeRelationViewModel>> GetRelationsForType(
+        int relationTypeId,
+        int workspaceId,
+        PageRequest pageRequest,
+        CancellationToken cancellationToken = default)
+    {
+        var pagination = pageRequest.GetPagination();
+
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(
+            SqlScripts.GetRelationsForType,
+            new
+            {
+                RelationTypeId = relationTypeId,
+                WorkspaceId = workspaceId,
+                Limit = pagination.PageSize,
+                Offset = pagination.Skip,
+            },
+            cancellationToken: cancellationToken);
+
+        var rows = await connection.QueryAsync<RelationTypeRelationRowMap>(command);
+        var rowList = rows.ToList();
+        var totalCount = rowList.Count == 0 ? 0 : rowList[0].Total_Count;
+
+        var items = rowList.ConvertAll(row => new RelationTypeRelationViewModel
+        {
+            Id = row.Relation_Id,
+            SourceTask = new RelatedTaskViewModel
+            {
+                Id = row.Source_Task_Id,
+                SystemId = BuildSystemId(row.Source_Task_Project_Key, row.Source_Task_Scope_Id),
+                Name = row.Source_Task_Name,
+                StatusName = row.Source_Task_Status_Name,
+                StatusColor = row.Source_Task_Status_Color,
+                StatusCategory = row.Source_Task_Status_Category,
+                IsArchived = row.Source_Task_Is_Archived,
+            },
+            TargetTask = new RelatedTaskViewModel
+            {
+                Id = row.Target_Task_Id,
+                SystemId = BuildSystemId(row.Target_Task_Project_Key, row.Target_Task_Scope_Id),
+                Name = row.Target_Task_Name,
+                StatusName = row.Target_Task_Status_Name,
+                StatusColor = row.Target_Task_Status_Color,
+                StatusCategory = row.Target_Task_Status_Category,
+                IsArchived = row.Target_Task_Is_Archived,
+            },
+        });
+
+        return new PagedResponse<RelationTypeRelationViewModel>(items, pagination.Page, pagination.PageSize, totalCount);
+    }
+
+    private static string BuildSystemId(string? projectKey, int scopeId)
+    {
+        return projectKey is null ? $"{scopeId}" : $"{projectKey}-{scopeId}";
     }
 
     public Task<ProjectTaskRelation?> GetInWorkspace(int id, int workspaceId, CancellationToken cancellationToken = default)

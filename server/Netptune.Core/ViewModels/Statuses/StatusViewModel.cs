@@ -23,4 +23,6 @@ public sealed record StatusViewModel
     public StatusCategory Category { get; init; }
 
     public bool IsSystem { get; init; }
+
+    public int TaskCount { get; init; }
 }

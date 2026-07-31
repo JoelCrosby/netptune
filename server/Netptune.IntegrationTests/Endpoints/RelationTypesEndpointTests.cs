@@ -7,7 +7,9 @@ using Netptune.Core.Colors;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Relations;
 using Netptune.Core.ViewModels.RelationTypes;
+using Netptune.Core.ViewModels.Usage;
 
 using Xunit;
 
@@ -186,6 +188,60 @@ public sealed class RelationTypesEndpointTests
         var client = await CreateClient();
 
         var response = await client.DeleteAsync("api/relation-types/999999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetUsage_ShouldReturnUnusedRelationType_WhenRelationTypeIsNew()
+    {
+        var client = await CreateClient();
+        var relationType = await CreateRelationType();
+
+        var response = await client.GetAsync($"api/relation-types/{relationType.Id}/usage");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<EntityUsageViewModel>();
+
+        result!.Id.Should().Be(relationType.Id);
+        result.Kind.Should().Be(UsageSubjectKind.RelationType);
+        result.UsageCount.Should().Be(0);
+        result.CanDelete.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetUsage_ShouldReturnNotFound_WhenRelationTypeDoesNotExist()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/relation-types/999999/usage");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetRelations_ShouldReturnEmptyPage_WhenRelationTypeIsUnused()
+    {
+        var client = await CreateClient();
+        var relationType = await CreateRelationType();
+
+        var response = await client.GetAsync($"api/relation-types/{relationType.Id}/relations");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<PagedResponse<RelationTypeRelationViewModel>>();
+
+        result!.Items.Should().BeEmpty();
+        result.TotalCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task GetRelations_ShouldReturnNotFound_WhenRelationTypeDoesNotExist()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/relation-types/999999/relations");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

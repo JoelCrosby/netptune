@@ -35,8 +35,14 @@ public sealed class DeleteRelationTypeCommandHandler : IRequestHandler<DeleteRel
         if (relationType is null) return ClientResponse.NotFound;
         if (relationType.IsSystem) return ClientResponse.Failed("System relation types cannot be deleted.");
 
-        var isInUse = await UnitOfWork.RelationTypes.IsInUse(relationType.Id, cancellationToken);
-        if (isInUse) return ClientResponse.Failed("Relation type is in use and cannot be deleted.");
+        var relationCount = await UnitOfWork.RelationTypes.GetRelationCount(relationType.Id, cancellationToken);
+
+        if (relationCount > 0)
+        {
+            var relationLabel = relationCount == 1 ? "relation" : "relations";
+
+            return ClientResponse.Failed($"Relation type is used by {relationCount} {relationLabel} and cannot be deleted.");
+        }
 
         relationType.Delete(Identity.GetCurrentUserId());
         await UnitOfWork.CompleteAsync(cancellationToken);

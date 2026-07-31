@@ -3,7 +3,9 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Enums;
 using Netptune.Core.ViewModels.Tags;
+using Netptune.Core.ViewModels.Usage;
 using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
@@ -108,6 +110,32 @@ public sealed class TagsEndpointTests
         var response = await Client.PostAsJsonAsync("api/tags", new {});
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task GetUsage_ShouldReturnTaskCount_WhenTagExists()
+    {
+        var created = await Client.PostAsJsonAsync("api/tags", new AddTagRequest { Tag = $"Usage {Guid.NewGuid():N}" });
+        var tag = await created.Content.ReadFromJsonAsync<ClientResponse<TagViewModel>>();
+
+        var response = await Client.GetAsync($"api/tags/{tag.Payload!.Id}/usage");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<EntityUsageViewModel>();
+
+        result!.Id.Should().Be(tag.Payload.Id);
+        result.Kind.Should().Be(UsageSubjectKind.Tag);
+        result.UsageCount.Should().Be(0);
+        result.CanDelete.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetUsage_ShouldReturnNotFound_WhenTagDoesNotExist()
+    {
+        var response = await Client.GetAsync("api/tags/999999/usage");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]

@@ -9,4 +9,6 @@ public class TagViewModel
     public string OwnerName { get; set; } = null!;
 
     public string OwnerId { get; set; } = null!;
+
+    public int TaskCount { get; set; }
 }

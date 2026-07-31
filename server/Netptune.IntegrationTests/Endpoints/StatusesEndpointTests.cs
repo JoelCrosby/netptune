@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Statuses;
+using Netptune.Core.ViewModels.Usage;
 
 using Xunit;
 
@@ -147,6 +148,49 @@ public sealed class StatusesEndpointTests
     public async Task Delete_ShouldReturnNotFound_WhenStatusDoesNotExist()
     {
         var response = await Client.DeleteAsync("api/statuses/999999");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetUsage_ShouldReturnUnusedStatus_WhenStatusIsNew()
+    {
+        var status = await CreateStatus();
+
+        var response = await Client.GetAsync($"api/statuses/{status.Id}/usage");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<EntityUsageViewModel>();
+
+        result!.Id.Should().Be(status.Id);
+        result.Kind.Should().Be(UsageSubjectKind.Status);
+        result.UsageCount.Should().Be(0);
+        result.References.Should().BeEmpty();
+        result.CanDelete.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetUsage_ShouldCountTasks_WhenStatusIsUsed()
+    {
+        var statuses = await Client.GetFromJsonAsync<List<StatusViewModel>>("api/statuses?entityType=Task");
+        var used = statuses!.First(status => status.TaskCount > 0);
+
+        var response = await Client.GetAsync($"api/statuses/{used.Id}/usage");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<EntityUsageViewModel>();
+
+        result!.UsageCount.Should().Be(used.TaskCount);
+        result.CanDelete.Should().BeFalse();
+        result.BlockedReason.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetUsage_ShouldReturnNotFound_WhenStatusDoesNotExist()
+    {
+        var response = await Client.GetAsync("api/statuses/999999/usage");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

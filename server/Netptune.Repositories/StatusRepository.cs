@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Usage;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Statuses;
@@ -20,9 +21,9 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
     {
     }
 
-    public Task<List<StatusViewModel>> GetViewModelsForWorkspace(int workspaceId, EntityType entityType, CancellationToken cancellationToken = default)
+    public async Task<List<StatusViewModel>> GetViewModelsForWorkspace(int workspaceId, EntityType entityType, CancellationToken cancellationToken = default)
     {
-        return Entities
+        var statuses = await Entities
             .Where(status => status.WorkspaceId == workspaceId && status.EntityType == entityType && !status.IsDeleted)
             .OrderBy(status => status.SortOrder)
             .ThenBy(status => status.Id)
@@ -41,6 +42,25 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
                 IsSystem = status.IsSystem,
             })
             .ToListAsync(cancellationToken);
+
+        if (entityType != EntityType.Task)
+        {
+            return statuses;
+        }
+
+        var taskCounts = await GetTaskCounts(workspaceId, cancellationToken);
+
+        return statuses.ConvertAll(status => status with { TaskCount = taskCounts.GetValueOrDefault(status.Id) });
+    }
+
+    public Task<Dictionary<int, int>> GetTaskCounts(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Context.ProjectTasks
+            .AsNoTracking()
+            .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
+            .GroupBy(task => task.StatusId)
+            .Select(group => new { StatusId = group.Key, Count = group.Count() })
+            .ToDictionaryAsync(row => row.StatusId, row => row.Count, cancellationToken);
     }
 
     public Task<StatusViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default)
@@ -132,6 +152,43 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
             status.Key == key &&
             !status.IsDeleted &&
             (!excludingId.HasValue || status.Id != excludingId.Value), cancellationToken);
+    }
+
+    public async Task<StatusUsage> GetUsage(int statusId, int workspaceId, CancellationToken cancellationToken = default)
+    {
+        var taskCount = await Context.ProjectTasks
+            .AsNoTracking()
+            .CountAsync(task => task.StatusId == statusId && !task.IsDeleted, cancellationToken);
+
+        var projects = await Context.Projects
+            .AsNoTracking()
+            .Where(project => project.DefaultStatusId == statusId && !project.IsDeleted)
+            .OrderBy(project => project.Name)
+            .Select(project => new UsageReference
+            {
+                Id = project.Id,
+                Name = project.Name,
+            })
+            .ToListAsync(cancellationToken);
+
+        var boardGroups = await Context.BoardGroups
+            .AsNoTracking()
+            .Where(boardGroup => boardGroup.StatusId == statusId && !boardGroup.IsDeleted)
+            .OrderBy(boardGroup => boardGroup.Name)
+            .Select(boardGroup => new UsageReference
+            {
+                Id = boardGroup.Id,
+                Name = boardGroup.Name,
+                Context = boardGroup.Board!.Name,
+            })
+            .ToListAsync(cancellationToken);
+
+        return new StatusUsage
+        {
+            TaskCount = taskCount,
+            Projects = projects,
+            BoardGroups = boardGroups,
+        };
     }
 
     public async Task<bool> IsInUse(int statusId, CancellationToken cancellationToken = default)

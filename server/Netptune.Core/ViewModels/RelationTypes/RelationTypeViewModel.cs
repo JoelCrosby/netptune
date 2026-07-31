@@ -23,4 +23,6 @@ public sealed record RelationTypeViewModel
     public RelationCategory Category { get; init; }
 
     public bool IsSystem { get; init; }
+
+    public int RelationCount { get; init; }
 }

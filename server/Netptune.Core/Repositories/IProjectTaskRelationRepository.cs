@@ -1,6 +1,8 @@
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Relations;
 
 namespace Netptune.Core.Repositories;
@@ -8,6 +10,8 @@ namespace Netptune.Core.Repositories;
 public interface IProjectTaskRelationRepository : IRepository<ProjectTaskRelation, int>
 {
     Task<List<TaskRelationViewModel>> GetRelationsForTask(int taskId, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<PagedResponse<RelationTypeRelationViewModel>> GetRelationsForType(int relationTypeId, int workspaceId, PageRequest pageRequest, CancellationToken cancellationToken = default);
 
     Task<ProjectTaskRelation?> GetInWorkspace(int id, int workspaceId, CancellationToken cancellationToken = default);
 

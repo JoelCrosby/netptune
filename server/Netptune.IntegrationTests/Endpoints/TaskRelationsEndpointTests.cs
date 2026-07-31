@@ -9,6 +9,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.RelationTypes;
 using Netptune.Core.ViewModels.Relations;
+using Netptune.Core.ViewModels.Usage;
 
 using Xunit;
 
@@ -157,6 +158,36 @@ public sealed class TaskRelationsEndpointTests
 
         (await GetRelations(tasks[0].SystemId)).Should().NotContain(relation => relation.Id == created.Payload.Id);
         (await GetRelations(tasks[1].SystemId)).Should().NotContain(relation => relation.Id == created.Payload.Id);
+    }
+
+    [Fact]
+    public async Task GetRelationsForType_ShouldReturnBothEnds_AndCountTheTypeUsage()
+    {
+        var blocks = await GetRelationType("blocks");
+        var tasks = await GetTasks(2);
+
+        var created = await Link(tasks[0].SystemId, tasks[1].SystemId, blocks.Id);
+
+        created.IsSuccess.Should().BeTrue();
+
+        var response = await Client.GetAsync($"api/relation-types/{blocks.Id}/relations");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var page = await response.Content.ReadFromJsonAsync<PagedResponse<RelationTypeRelationViewModel>>();
+        var relation = page!.Items.Single(item => item.Id == created.Payload!.Id);
+
+        relation.SourceTask.SystemId.Should().Be(tasks[0].SystemId);
+        relation.TargetTask.SystemId.Should().Be(tasks[1].SystemId);
+        relation.SourceTask.IsArchived.Should().BeFalse();
+        page.TotalCount.Should().BeGreaterThanOrEqualTo(1);
+
+        var usage = await Client.GetFromJsonAsync<EntityUsageViewModel>($"api/relation-types/{blocks.Id}/usage");
+
+        usage!.UsageCount.Should().Be(page.TotalCount);
+        usage.CanDelete.Should().BeFalse();
+
+        await Unlink(created.Payload!.Id);
     }
 
     private async Task<ClientResponse<TaskRelationViewModel>> Link(string sourceSystemId, string targetSystemId, int relationTypeId)

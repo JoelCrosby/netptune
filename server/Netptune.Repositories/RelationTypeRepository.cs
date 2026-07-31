@@ -18,9 +18,9 @@ public sealed class RelationTypeRepository : WorkspaceEntityRepository<DataConte
     {
     }
 
-    public Task<List<RelationTypeViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default)
+    public async Task<List<RelationTypeViewModel>> GetViewModelsForWorkspace(int workspaceId, CancellationToken cancellationToken = default)
     {
-        return Entities
+        var relationTypes = await Entities
             .Where(relationType => relationType.WorkspaceId == workspaceId && !relationType.IsDeleted)
             .OrderBy(relationType => relationType.SortOrder)
             .ThenBy(relationType => relationType.Id)
@@ -39,6 +39,23 @@ public sealed class RelationTypeRepository : WorkspaceEntityRepository<DataConte
                 IsSystem = relationType.IsSystem,
             })
             .ToListAsync(cancellationToken);
+
+        var relationCounts = await GetRelationCounts(workspaceId, cancellationToken);
+
+        return relationTypes.ConvertAll(relationType => relationType with
+        {
+            RelationCount = relationCounts.GetValueOrDefault(relationType.Id),
+        });
+    }
+
+    public Task<Dictionary<int, int>> GetRelationCounts(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Context.ProjectTaskRelations
+            .AsNoTracking()
+            .Where(relation => relation.WorkspaceId == workspaceId)
+            .GroupBy(relation => relation.RelationTypeId)
+            .Select(group => new { RelationTypeId = group.Key, Count = group.Count() })
+            .ToDictionaryAsync(row => row.RelationTypeId, row => row.Count, cancellationToken);
     }
 
     public Task<RelationTypeViewModel?> GetViewModel(int id, CancellationToken cancellationToken = default)
@@ -77,6 +94,13 @@ public sealed class RelationTypeRepository : WorkspaceEntityRepository<DataConte
             relationType.Key == key &&
             !relationType.IsDeleted &&
             (!excludingId.HasValue || relationType.Id != excludingId.Value), cancellationToken);
+    }
+
+    public Task<int> GetRelationCount(int relationTypeId, CancellationToken cancellationToken = default)
+    {
+        return Context.ProjectTaskRelations
+            .AsNoTracking()
+            .CountAsync(relation => relation.RelationTypeId == relationTypeId, cancellationToken);
     }
 
     public Task<bool> IsInUse(int relationTypeId, CancellationToken cancellationToken = default)
