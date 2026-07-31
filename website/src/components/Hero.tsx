@@ -1,15 +1,36 @@
 import { ArrowRight, GitBranch } from 'lucide-solid';
 import Button from './Button';
 
+function PlanetRing(props: { half: 'back' | 'front' }) {
+  return (
+    <div class={`hero-ring hero-ring--${props.half}`}>
+      <div class="hero-ring-band" />
+      <div class="hero-ring-band hero-ring-band--inner" />
+    </div>
+  );
+}
+
 export default function Hero() {
   return (
     <section class="relative overflow-hidden bg-white px-6 pt-24 pb-28 dark:bg-black">
-      <div class="hero-grid absolute inset-0" />
+      <div class="hero-stars absolute inset-0" />
+
+      <div class="hero-planet-stage" aria-hidden="true">
+        <div class="hero-planet-glow" />
+        <PlanetRing half="back" />
+        <div class="hero-planet">
+          <div class="hero-planet-surface" />
+          <div class="hero-planet-shade" />
+          <div class="hero-planet-rim" />
+        </div>
+        <PlanetRing half="front" />
+      </div>
+
       <div class="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-brand/25 blur-[120px] dark:bg-brand/35" />
       <div class="absolute top-48 -right-32 h-80 w-80 rounded-full bg-fuchsia-300/20 blur-[120px] dark:bg-fuchsia-700/15" />
 
       <div class="relative mx-auto max-w-5xl text-center">
-        <h1 class="mb-6 text-5xl leading-[1.08] font-bold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl dark:text-white">
+        <h1 class="mb-6 text-5xl leading-[1.08] font-bold tracking-tight text-slate-900 [text-shadow:0_2px_40px_rgb(255_255_255/0.45)] sm:text-6xl lg:text-7xl dark:text-white dark:[text-shadow:0_2px_40px_rgb(0_0_0_/_0.55)]">
           The project workspace
           <br />
           <span class="bg-gradient-to-r from-brand via-violet-500 to-fuchsia-500 bg-clip-text text-transparent dark:from-violet-400 dark:via-brand dark:to-fuchsia-400">
@@ -33,7 +54,7 @@ export default function Hero() {
           </Button>
         </div>
 
-        <div class="mt-16 rounded-2xl bg-gradient-to-br from-brand/40 via-fuchsia-300/30 to-sky-300/30 p-px shadow-2xl shadow-brand/30 dark:from-violet-400/35 dark:via-fuchsia-500/20 dark:to-sky-500/20">
+        <div class="bg-linear-to-brr mt-16 rounded-2xl from-brand/40 via-fuchsia-300/30 to-sky-300/30 p-px shadow-2xl shadow-brand/30 dark:from-violet-400/35 dark:via-fuchsia-500/20 dark:to-sky-500/20">
           <div class="overflow-hidden rounded-[calc(1rem-1px)] bg-white/80 p-2 backdrop-blur sm:p-3 dark:bg-white/5">
             <img
               width={896}
