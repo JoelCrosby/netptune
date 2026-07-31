@@ -1,4 +1,5 @@
 import { A11yModule } from '@angular/cdk/a11y';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   AfterViewInit,
   Component,
@@ -42,7 +43,13 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
   selector: 'app-board-group-task-inline',
-  imports: [TooltipDirective, SpinnerComponent, FormField, A11yModule],
+  imports: [
+    TooltipDirective,
+    SpinnerComponent,
+    FormField,
+    A11yModule,
+    CdkTextareaAutosize,
+  ],
   template: `
     <div
       class="border-border bg-card overflow-hidden rounded-sm border-2 p-[0.4rem]"
@@ -52,6 +59,9 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
       <textarea
         class="text-foreground bg-card w-full resize-none border-0 font-[inherit] text-sm tracking-[0.1px] outline-none"
         #textarea
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="2"
+        cdkAutosizeMaxRows="8"
         [formField]="taskForm.name"
         (keydown.enter)="onSubmit($event)"
         (keydown.escape)="onEscape()"
