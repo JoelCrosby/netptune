@@ -14,6 +14,9 @@ import {
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiAssistantPanelComponent } from './ai-assistant-panel.component';
 
+const NAVBAR_HEIGHT = '60px';
+const PANEL_MARGIN = '1rem';
+
 @Component({
   selector: 'app-ai-assistant',
   imports: [AiAssistantPanelComponent],
@@ -41,11 +44,11 @@ export class AiAssistantComponent implements AfterViewInit, OnDestroy {
       positionStrategy: this.overlay
         .position()
         .global()
-        .right('1rem')
-        .top('1rem'),
+        .right(PANEL_MARGIN)
+        .top(`calc(${NAVBAR_HEIGHT} + ${PANEL_MARGIN})`),
       scrollStrategy: this.overlay.scrollStrategies.noop(),
-      width: 'min(calc(100vw - 2rem), 26rem)',
-      height: 'calc(100% - 2rem)',
+      width: `min(calc(100vw - 2 * ${PANEL_MARGIN}), 26rem)`,
+      height: `calc(100% - ${NAVBAR_HEIGHT} - 2 * ${PANEL_MARGIN})`,
     });
 
     effect(() => {
