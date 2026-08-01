@@ -79,6 +79,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.ServiceAccounts.Update,
         NetptunePermissions.ServiceAccounts.Delete,
         NetptunePermissions.ServiceAccounts.ManageCredentials,
+        NetptunePermissions.Assistant.ReadAllConversations,
     };
 
     private static readonly IReadOnlySet<string> OwnerPermissions = NetptunePermissions.All;

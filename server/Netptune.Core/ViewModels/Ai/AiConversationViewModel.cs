@@ -32,6 +32,25 @@ public sealed record AiMessageViewModel
     public DateTime CreatedAt { get; init; }
 }
 
+public sealed record AiWorkspaceConversationViewModel
+{
+    public Guid Id { get; init; }
+
+    public required string Title { get; init; }
+
+    public required string UserId { get; init; }
+
+    public required string UserDisplayName { get; init; }
+
+    public AiProvider Provider { get; init; }
+
+    public required string Model { get; init; }
+
+    public DateTime LastMessageAt { get; init; }
+
+    public int MessageCount { get; init; }
+}
+
 public sealed record AiConversationDetailViewModel
 {
     public required AiConversationViewModel Conversation { get; init; }

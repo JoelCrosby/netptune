@@ -125,6 +125,25 @@ public sealed class AiEndpointTests : IClassFixture<NetptuneFixture>
     }
 
     [Fact]
+    public async Task AdminConversations_ShouldListForAWorkspaceAdministrator()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var conversations = await client
+            .GetFromJsonAsync<List<AiWorkspaceConversationViewModel>>("api/ai/admin/conversations");
+
+        conversations.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task AdminConversations_ShouldReturnNotFound_WhenTheConversationDoesNotExist()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var response = await client.GetAsync($"api/ai/admin/conversations/{Guid.NewGuid()}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Conversations_ShouldListWithoutError()
     {
         var client = Fixture.CreateNetptuneClient();

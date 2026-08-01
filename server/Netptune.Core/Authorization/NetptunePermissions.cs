@@ -152,6 +152,11 @@ public static class NetptunePermissions
         public const string Manage = "automations.manage";
     }
 
+    public static class Assistant
+    {
+        public const string ReadAllConversations = "assistant.read_all_conversations";
+    }
+
     public static class Flags
     {
         public const string Read = "flags.read";

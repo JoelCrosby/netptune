@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.App.Configuration;
+using Netptune.Core.Authorization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Services.Ai;
@@ -37,6 +38,11 @@ public static class AiEndpoints
         group
             .MapPost("/conversations/messages", HandleSendMessage)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
+        group.MapGet("/admin/conversations", HandleGetWorkspaceConversations)
+            .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
+        group.MapGet("/admin/conversations/{conversationId:guid}", HandleGetWorkspaceConversation)
+            .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
 
         group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
         group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
@@ -98,6 +104,25 @@ public static class AiEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteAiConversationCommand(conversationId), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetWorkspaceConversations(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetWorkspaceAiConversationsQuery(), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetWorkspaceConversation(
+        Guid conversationId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetWorkspaceAiConversationQuery(conversationId), cancellationToken);
 
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.ViewModels.Ai;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 
@@ -39,6 +40,44 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
                 conversation.WorkspaceId == workspaceId &&
                 !conversation.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<AiConversation?> GetInWorkspace(
+        Guid conversationId,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(conversation =>
+                conversation.Id == conversationId &&
+                conversation.WorkspaceId == workspaceId &&
+                !conversation.IsDeleted)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<List<AiWorkspaceConversationViewModel>> GetForWorkspace(
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(conversation => conversation.WorkspaceId == workspaceId && !conversation.IsDeleted)
+            .OrderByDescending(conversation => conversation.LastMessageAt)
+            .Select(conversation => new AiWorkspaceConversationViewModel
+            {
+                Id = conversation.Id,
+                Title = conversation.Title,
+                UserId = conversation.UserId,
+                UserDisplayName = string.IsNullOrEmpty(conversation.User.Firstname) && string.IsNullOrEmpty(conversation.User.Lastname)
+                    ? conversation.User.UserName!
+                    : conversation.User.Firstname + " " + conversation.User.Lastname,
+                Provider = conversation.Provider,
+                Model = conversation.Model,
+                LastMessageAt = conversation.LastMessageAt,
+                MessageCount = conversation.MessageCount,
+            })
+            .ToListAsync(cancellationToken);
     }
 
     public Task<List<AiMessage>> GetMessages(Guid conversationId, CancellationToken cancellationToken = default)
