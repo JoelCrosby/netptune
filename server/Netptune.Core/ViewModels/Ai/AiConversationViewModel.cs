@@ -24,6 +24,8 @@ public sealed record AiConversationViewModel
 
     public required string Model { get; init; }
 
+    public string? RequestedModel { get; init; }
+
     public DateTime LastMessageAt { get; init; }
 
     public int MessageCount { get; init; }

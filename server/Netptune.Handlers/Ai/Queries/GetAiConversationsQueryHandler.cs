@@ -40,6 +40,7 @@ public sealed class GetAiConversationsQueryHandler
             Title = conversation.Title,
             Provider = conversation.Provider,
             Model = conversation.Model,
+            RequestedModel = conversation.RequestedModel,
             LastMessageAt = conversation.LastMessageAt,
             MessageCount = conversation.MessageCount,
             Usage = new AiTokenUsageViewModel

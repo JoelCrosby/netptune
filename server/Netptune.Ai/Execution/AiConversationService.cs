@@ -109,7 +109,8 @@ public sealed class AiConversationService : IAiConversationService
             yield break;
         }
 
-        var requestedModel = request.Model?.Trim();
+        var trimmedModel = request.Model?.Trim();
+        var requestedModel = string.IsNullOrWhiteSpace(trimmedModel) ? null : trimmedModel;
         var requestedProvider = request.Provider ?? AiModels.ProviderFor(requestedModel);
         var provider = ResolveProvider(requestedProvider, existing, credentials);
         var credential = credentials.FirstOrDefault(item => item.Provider == provider);
@@ -134,6 +135,8 @@ public sealed class AiConversationService : IAiConversationService
             conversation.Provider = provider;
             conversation.Model = model;
         }
+
+        conversation.RequestedModel = requestedModel;
 
         yield return AiStreamEvent.ConversationStarted(conversation.Id);
 

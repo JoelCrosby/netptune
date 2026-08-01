@@ -39,6 +39,7 @@ export interface AiConversation {
   title: string;
   provider: AiProvider;
   model: string;
+  requestedModel?: string | null;
   lastMessageAt: string;
   messageCount: number;
   usage: AiTokenUsage;

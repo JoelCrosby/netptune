@@ -40,6 +40,7 @@ type AiStoredSessions = Record<string, AiWorkspaceSession>;
 
 const STREAM_PREFIX = 'data: ';
 const MODE_STORAGE_KEY = 'ai-assistant.mode';
+const MODEL_STORAGE_KEY = 'ai-assistant.model';
 const SESSION_STORAGE_KEY = 'ai-assistant.sessions';
 const LEGACY_SESSION_STORAGE_KEY = 'ai-assistant.session';
 const DRAFT_STORAGE_KEY = 'ai-assistant.drafts';
@@ -96,7 +97,8 @@ export class AiAssistantService {
   readonly references = signal<Map<string, AiEntityReference>>(new Map());
   readonly transcriptVersion = signal(0);
   readonly hasCredentials = signal<boolean | null>(null);
-  readonly selectedModel = signal<string | null>(null);
+  /** The model the user picked, where null means automatic — not the model a conversation resolved to. */
+  readonly selectedModel = signal<string | null>(this.readModelPreference());
 
   readonly selectedModelLabel = computed(() => {
     const selected = this.selectedModel();
@@ -199,6 +201,11 @@ export class AiAssistantService {
 
   selectModel(modelId: string | null) {
     this.selectedModel.set(modelId);
+    this.storage.setItem(MODEL_STORAGE_KEY, modelId);
+  }
+
+  private readModelPreference(): string | null {
+    return this.storage.getItem<string | null>(MODEL_STORAGE_KEY) ?? null;
   }
 
   setDraft(text: string) {
@@ -352,6 +359,20 @@ export class AiAssistantService {
 
     this.hasCredentials.set(providers.size > 0);
     this.models.set(available);
+    this.dropUnavailableModel(available);
+  }
+
+  /** A key can be removed after its model was picked, leaving a preference the server would reject. */
+  private dropUnavailableModel(available: AiModelOption[]) {
+    const selected = this.selectedModel();
+    const isMissing =
+      selected !== null && !available.some((model) => model.id === selected);
+
+    if (!isMissing) {
+      return;
+    }
+
+    this.selectModel(null);
   }
 
   async toggleHistory() {
@@ -405,7 +426,7 @@ export class AiAssistantService {
 
     this.conversationId.set(detail.conversation.id);
     this.conversationTitle.set(detail.conversation.title);
-    this.selectedModel.set(detail.conversation.model);
+    this.selectedModel.set(detail.conversation.requestedModel ?? null);
     this.entries.set(messages.map((message) => this.toEntry(message)));
     this.addReferences(messages.flatMap((message) => message.references));
     this.changeSet.set(detail.pendingChangeSet ?? null);
@@ -654,6 +675,7 @@ export class AiAssistantService {
     this.transcriptVersion.update((version) => version + 1);
     this.pendingSince = null;
     this.forgetDraft(`${this.workspaceKey() ?? ''}:${NEW_CONVERSATION_KEY}`);
+    this.selectedModel.set(this.readModelPreference());
     this.conversationId.set(null);
     this.conversationTitle.set(null);
     this.references.set(new Map());
