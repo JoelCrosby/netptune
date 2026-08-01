@@ -2,6 +2,15 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.ViewModels.Ai;
 
+public sealed record AiTokenUsageViewModel
+{
+    public int InputTokens { get; init; }
+
+    public int OutputTokens { get; init; }
+
+    public int CacheReadTokens { get; init; }
+}
+
 public sealed record AiConversationViewModel
 {
     public Guid Id { get; init; }
@@ -15,6 +24,8 @@ public sealed record AiConversationViewModel
     public DateTime LastMessageAt { get; init; }
 
     public int MessageCount { get; init; }
+
+    public AiTokenUsageViewModel Usage { get; init; } = new();
 }
 
 public sealed record AiMessageViewModel
@@ -49,6 +60,8 @@ public sealed record AiWorkspaceConversationViewModel
     public DateTime LastMessageAt { get; init; }
 
     public int MessageCount { get; init; }
+
+    public AiTokenUsageViewModel Usage { get; init; } = new();
 }
 
 public sealed record AiConversationDetailViewModel

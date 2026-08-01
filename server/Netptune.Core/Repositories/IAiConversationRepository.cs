@@ -6,7 +6,7 @@ namespace Netptune.Core.Repositories;
 
 public interface IAiConversationRepository : IRepository<AiConversation, Guid>
 {
-    Task<List<AiConversation>> GetForUser(string userId, int workspaceId, CancellationToken cancellationToken = default);
+    Task<List<AiConversationViewModel>> GetForUser(string userId, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<AiConversation?> GetOwned(Guid conversationId, string userId, int workspaceId, CancellationToken cancellationToken = default);
 

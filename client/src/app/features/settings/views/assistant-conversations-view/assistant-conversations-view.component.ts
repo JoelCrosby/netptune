@@ -13,6 +13,7 @@ import {
 } from '@core/models/ai-conversation';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
+import { formatTokens } from '@core/util/ai-usage';
 import { LucideArrowLeft } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -69,9 +70,22 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
           <button app-icon-button type="button" (click)="clearSelection()">
             <svg lucideArrowLeft class="h-4 w-4"></svg>
           </button>
-          <h3 class="font-overpass text-[1.05rem] font-normal">
-            {{ detail.conversation.title }}
-          </h3>
+          <div class="min-w-0">
+            <h3 class="font-overpass truncate text-[1.05rem] font-normal">
+              {{ detail.conversation.title }}
+            </h3>
+            <p class="text-muted text-xs">
+              {{ detail.conversation.model }} ·
+              {{ detail.conversation.usage.inputTokens }}
+              <span i18n="Counts tokens sent to the model">in</span> ·
+              {{ detail.conversation.usage.outputTokens }}
+              <span i18n="Counts tokens returned by the model">out</span> ·
+              {{ detail.conversation.usage.cacheReadTokens }}
+              <span i18n="Counts tokens read from the provider prompt cache"
+                >cached</span
+              >
+            </p>
+          </div>
         </div>
 
         <div class="flex flex-col gap-4">
@@ -112,6 +126,10 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
                   {{ conversation.messageCount }}
                   <span i18n="Counts messages in a stored conversation"
                     >messages</span
+                  >
+                  · {{ tokenLabel(conversation) }}
+                  <span i18n="Counts tokens a conversation has cost"
+                    >tokens</span
                   >
                 </span>
               </span>
@@ -167,6 +185,10 @@ export class AssistantConversationsViewComponent {
         },
       })
     );
+  }
+
+  protected tokenLabel(conversation: AiWorkspaceConversation): string {
+    return formatTokens(conversation.usage);
   }
 
   protected select(conversation: AiWorkspaceConversation) {

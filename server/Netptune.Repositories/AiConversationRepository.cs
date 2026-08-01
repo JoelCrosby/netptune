@@ -12,7 +12,7 @@ namespace Netptune.Repositories;
 public class AiConversationRepository(DataContext context, IDbConnectionFactory connectionFactory)
     : Repository<DataContext, AiConversation, Guid>(context, connectionFactory), IAiConversationRepository
 {
-    public Task<List<AiConversation>> GetForUser(
+    public Task<List<AiConversationViewModel>> GetForUser(
         string userId,
         int workspaceId,
         CancellationToken cancellationToken = default)
@@ -24,6 +24,21 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
                 conversation.WorkspaceId == workspaceId &&
                 !conversation.IsDeleted)
             .OrderByDescending(conversation => conversation.LastMessageAt)
+            .Select(conversation => new AiConversationViewModel
+            {
+                Id = conversation.Id,
+                Title = conversation.Title,
+                Provider = conversation.Provider,
+                Model = conversation.Model,
+                LastMessageAt = conversation.LastMessageAt,
+                MessageCount = conversation.MessageCount,
+                Usage = new AiTokenUsageViewModel
+                {
+                    InputTokens = conversation.Messages.Sum(message => message.InputTokens),
+                    OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
+                    CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
+                },
+            })
             .ToListAsync(cancellationToken);
     }
 
@@ -76,6 +91,12 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
                 Model = conversation.Model,
                 LastMessageAt = conversation.LastMessageAt,
                 MessageCount = conversation.MessageCount,
+                Usage = new AiTokenUsageViewModel
+                {
+                    InputTokens = conversation.Messages.Sum(message => message.InputTokens),
+                    OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
+                    CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
+                },
             })
             .ToListAsync(cancellationToken);
     }

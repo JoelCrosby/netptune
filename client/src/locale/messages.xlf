@@ -60,7 +60,7 @@
     </unit>
     <unit id="8571899148771106217">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:236,238</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:244,246</note>
         <note category="description">Shown after changes were applied</note>
       </notes>
       <segment>
@@ -97,7 +97,7 @@
     <unit id="810888510148304696">
       <notes>
         <note category="location">src/app/core/services/ai-assistant.service.ts:68</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:274,277</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:282,285</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
       <segment>
@@ -414,7 +414,7 @@
     </unit>
     <unit id="4391289919356861627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:223,226</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:231,234</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment>
@@ -473,6 +473,16 @@
       </notes>
       <segment>
         <source>Post Comments</source>
+      </segment>
+    </unit>
+    <unit id="8821114980467455667">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:132,134</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:120,122</note>
+        <note category="description">Counts tokens a conversation has cost</note>
+      </notes>
+      <segment>
+        <source>tokens</source>
       </segment>
     </unit>
     <unit id="8823075031689391120">
@@ -649,7 +659,7 @@
     <unit id="7546969606032903393">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:137,139</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:260,262</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:268,270</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
       <segment>
@@ -1455,7 +1465,7 @@
     </unit>
     <unit id="145156830164118">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:66,68</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:70,72</note>
         <note category="description">Title of the AI assistant panel</note>
       </notes>
       <segment>
@@ -1500,7 +1510,7 @@
     </unit>
     <unit id="413961075487889368">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:393</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:401</note>
         <note category="description">Placeholder while the assistant is replying</note>
       </notes>
       <segment>
@@ -3645,7 +3655,7 @@
     </unit>
     <unit id="7629072322253412501">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:127,130</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:135,138</note>
         <note category="description">Empty state for stored conversations</note>
       </notes>
       <segment>
@@ -4219,8 +4229,8 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:114,117</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:112,114</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:128,130</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:116,118</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
       <segment>
@@ -5550,7 +5560,7 @@
     </unit>
     <unit id="180305693599254202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:38,42</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:39,43</note>
         <note category="description">Page title for the workspace assistant conversations</note>
       </notes>
       <segment>
@@ -5840,7 +5850,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:87,90</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:101,104</note>
         <note category="description">Label for a message sent by the member whose conversation an admin is reading</note>
       </notes>
       <segment>
@@ -6113,7 +6123,7 @@
     </unit>
     <unit id="5211609068551558044">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:78,80</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:82,84</note>
         <note category="description">Tooltip on the button that lists past conversations</note>
       </notes>
       <segment>
@@ -6459,7 +6469,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:88,91</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:92,95</note>
         <note category="description">Button that clears the assistant conversation</note>
       </notes>
       <segment>
@@ -6495,7 +6505,7 @@
     </unit>
     <unit id="5325449899721653637">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:43,48</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:44,49</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment>
@@ -6779,7 +6789,7 @@
     </unit>
     <unit id="7258010665968228997">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:182,185</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:190,193</note>
         <note category="description">Heading above the list of proposed workspace changes</note>
       </notes>
       <segment>
@@ -7321,7 +7331,7 @@
     </unit>
     <unit id="3525807365202276561">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:396</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:404</note>
         <note category="description">Placeholder for the assistant message input</note>
       </notes>
       <segment>
@@ -7659,7 +7669,7 @@
     </unit>
     <unit id="7329865395750709453">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:61,65</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:62,66</note>
         <note category="description">Explains what turning the assistant off does</note>
       </notes>
       <segment>
@@ -8325,7 +8335,7 @@
     </unit>
     <unit id="3427257823783553545">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:137,140</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:145,148</note>
         <note category="description">Empty state inside the AI assistant panel</note>
       </notes>
       <segment>
@@ -8538,7 +8548,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:228,231</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:236,239</note>
         <note category="description">Button that discards the proposed changes</note>
       </notes>
       <segment>
@@ -8558,7 +8568,7 @@
     </unit>
     <unit id="3826808809713952311">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:55,58</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:56,59</note>
         <note category="description">Toggle that enables the assistant for a workspace</note>
       </notes>
       <segment>
@@ -9213,6 +9223,15 @@
         <source>Back to Projects</source>
       </segment>
     </unit>
+    <unit id="4435645098786961170">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:82,83</note>
+        <note category="description">Counts tokens returned by the model</note>
+      </notes>
+      <segment>
+        <source>out</source>
+      </segment>
+    </unit>
     <unit id="3953140809261219704">
       <notes>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:32,33</note>
@@ -9408,7 +9427,7 @@
     </unit>
     <unit id="6490688569532630280">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:303,306</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:311,314</note>
         <note category="description">Button that sends a message to the assistant</note>
       </notes>
       <segment>
@@ -10219,6 +10238,15 @@
         <source>Workspace name</source>
       </segment>
     </unit>
+    <unit id="4797214229335185452">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:85,89</note>
+        <note category="description">Counts tokens read from the provider prompt cache</note>
+      </notes>
+      <segment>
+        <source>cached</source>
+      </segment>
+    </unit>
     <unit id="5996034691240231656">
       <notes>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:82</note>
@@ -10342,8 +10370,8 @@
     </unit>
     <unit id="4361487192183535591">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:91,94</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:151,153</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:105,108</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:159,161</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
         <note category="description">Label for a message the assistant sent</note>
       </notes>
@@ -10753,7 +10781,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:126,128</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:144,146</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -11943,7 +11971,7 @@
     </unit>
     <unit id="720557322859638078">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:148,150</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:156,158</note>
         <note category="description">Label for a message the user sent</note>
       </notes>
       <segment>
@@ -12572,7 +12600,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:58,60</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:62,64</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment>
@@ -13143,6 +13171,15 @@
         <source><ph id="0" equiv="NAME" disp="displayName ?? &apos;&apos;"/> <ph id="1" equiv="STATE" disp="state"/></source>
       </segment>
     </unit>
+    <unit id="7136018875175606726">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:80,81</note>
+        <note category="description">Counts tokens sent to the model</note>
+      </notes>
+      <segment>
+        <source>in</source>
+      </segment>
+    </unit>
     <unit id="1536087519743707362">
       <notes>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
@@ -13618,7 +13655,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:130,135</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:148,153</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>

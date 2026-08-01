@@ -224,6 +224,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 Id = group.Id,
                 Name = group.Name,
                 BoardName = group.Board!.Name,
+                BoardIdentifier = group.Board.Identifier,
                 ProjectName = group.Board.Project!.Name,
             })
             .ToListAsync(cancellationToken);

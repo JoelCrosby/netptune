@@ -14,8 +14,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AiChangeSetStatus } from '@core/models/ai-conversation';
+import {
+  AiChangeSetStatus,
+  AiConversation,
+} from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { formatTokens } from '@core/util/ai-usage';
 import {
   LucideCheck,
   LucideHistory,
@@ -110,6 +114,10 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
                     {{ conversation.messageCount }}
                     <span i18n="Counts messages in a stored conversation"
                       >messages</span
+                    >
+                    · {{ tokenLabel(conversation) }}
+                    <span i18n="Counts tokens a conversation has cost"
+                      >tokens</span
                     >
                   </span>
                 </button>
@@ -417,6 +425,10 @@ export class AiAssistantComponent implements AfterViewInit, OnDestroy {
 
   protected deleteConversation(conversationId: string) {
     void this.assistant.deleteConversation(conversationId);
+  }
+
+  protected tokenLabel(conversation: AiConversation): string {
+    return formatTokens(conversation.usage);
   }
 
   protected selectModel(modelId: string | null) {

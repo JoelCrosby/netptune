@@ -32,6 +32,7 @@ public sealed class GetBoardGroupOptionsQueryHandlerTests
                 Id = 12,
                 Name = "In progress",
                 BoardName = "Delivery",
+                BoardIdentifier = "delivery",
                 ProjectName = "Website",
             },
         };

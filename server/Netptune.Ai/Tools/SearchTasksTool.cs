@@ -65,6 +65,7 @@ public sealed class SearchTasksTool : IAiTool
         var summaries = tasks.Select(task => new
         {
             id = task.Id,
+            systemId = task.SystemId,
             name = task.Name,
             status = task.StatusName,
             assignees = task.Assignees.Select(assignee => assignee.DisplayName),

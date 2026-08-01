@@ -31,6 +31,14 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ListTagsTool>();
         services.AddScoped<IAiTool, SetTaskTagsTool>();
         services.AddScoped<IAiTool, AddTaskCommentTool>();
+        services.AddScoped<IAiTool, ListBoardsTool>();
+        services.AddScoped<IAiTool, ListBoardGroupsTool>();
+        services.AddScoped<IAiTool, ListRelationTypesTool>();
+        services.AddScoped<IAiTool, CreateProjectTool>();
+        services.AddScoped<IAiTool, CreateBoardTool>();
+        services.AddScoped<IAiTool, CreateStatusTool>();
+        services.AddScoped<IAiTool, MoveTaskToBoardGroupTool>();
+        services.AddScoped<IAiTool, LinkTasksTool>();
 
         services.AddScoped<IAiChangeHandler, CreateTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateTaskChangeHandler>();
@@ -38,6 +46,11 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, MoveTaskToSprintChangeHandler>();
         services.AddScoped<IAiChangeHandler, SetTaskTagsChangeHandler>();
         services.AddScoped<IAiChangeHandler, AddTaskCommentChangeHandler>();
+        services.AddScoped<IAiChangeHandler, CreateProjectChangeHandler>();
+        services.AddScoped<IAiChangeHandler, CreateBoardChangeHandler>();
+        services.AddScoped<IAiChangeHandler, CreateStatusChangeHandler>();
+        services.AddScoped<IAiChangeHandler, MoveTaskToBoardGroupChangeHandler>();
+        services.AddScoped<IAiChangeHandler, LinkTasksChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();
 

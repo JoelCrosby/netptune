@@ -5,52 +5,55 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
+using Netptune.Handlers.Boards.Queries;
 using Netptune.Handlers.Projects.Queries;
 
 namespace Netptune.Ai.Tools;
 
-public sealed class CreateTaskTool : IAiTool
+public sealed class CreateBoardTool : IAiTool
 {
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
-    public CreateTaskTool(IMediator mediator, IAiChangeSetBuilder changeSet)
+    public CreateBoardTool(IMediator mediator, IAiChangeSetBuilder changeSet)
     {
         Mediator = mediator;
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_create_task";
+    public string Name => "propose_create_board";
 
     public string Description =>
-        "Propose creating a task. The task is not created until the user reviews and applies the change.";
+        "Propose creating a board in a project. The board is not created until the user reviews and applies the change.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
-        new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Tasks.Create };
+        new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Boards.Create };
 
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
         {
-          "name": { "type": "string", "description": "The task name." },
-          "projectId": { "type": "integer", "description": "The project the task belongs to." },
-          "description": { "type": "string", "description": "Optional task description." },
-          "dueDate": { "type": "string", "description": "Optional due date as YYYY-MM-DD." }
+          "name": { "type": "string", "description": "The board name." },
+          "projectId": { "type": "integer", "description": "The project the board belongs to, from list_projects." },
+          "identifier": { "type": "string", "description": "Url identifier for the board, lowercase with dashes." }
         }
         """,
         "name",
-        "projectId");
+        "projectId",
+        "identifier");
 
     public async Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken)
     {
         var name = AiToolSchema.GetString(arguments, "name")?.Trim();
+        var identifier = AiToolSchema.GetString(arguments, "identifier")?.Trim();
         var projectId = AiToolSchema.GetInt(arguments, "projectId");
         var hasName = !string.IsNullOrWhiteSpace(name);
+        var hasIdentifier = !string.IsNullOrWhiteSpace(identifier);
 
-        if (!hasName || !projectId.HasValue)
+        if (!hasName || !hasIdentifier || !projectId.HasValue)
         {
-            return AiToolExecution.Failed("A task name and projectId are required.");
+            return AiToolExecution.Failed("A board name, identifier and projectId are required.");
         }
 
         var projects = await Mediator.Send(new GetProjectsQuery(), cancellationToken);
@@ -61,30 +64,33 @@ public sealed class CreateTaskTool : IAiTool
             return AiToolExecution.Failed($"Project {projectId} is not in this workspace.");
         }
 
-        var description = AiToolSchema.GetString(arguments, "description");
-        var dueDate = AiToolSchema.GetString(arguments, "dueDate");
-        var refKey = ChangeSet.CreateRefKey();
+        var uniqueness = await Mediator.Send(new IsBoardIdentifierUniqueQuery(identifier!), cancellationToken);
+        var isTaken = uniqueness.Payload?.IsUnique == false;
+
+        if (isTaken)
+        {
+            return AiToolExecution.Failed($"The board identifier \"{identifier}\" is already in use.");
+        }
+
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = name },
+            new() { Name = "identifier", After = identifier },
             new() { Name = "project", After = project.Name },
         };
-
-        AiToolSchema.AddOptionalField(fields, "description", description);
-        AiToolSchema.AddOptionalField(fields, "dueDate", dueDate);
 
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = Name,
-            EntityType = "task",
-            RefKey = refKey,
-            Summary = $"Create task “{name}” in {project.Name}",
+            EntityType = "board",
+            RefKey = ChangeSet.CreateRefKey(),
+            Summary = $"Create board “{name}” in {project.Name}",
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
 
         return AiToolExecution.Success(
-            $"Proposed creating task \"{name}\" as {refKey}. Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed creating board \"{name}\". Nothing has been applied yet — the user must review and apply the change.");
     }
 }

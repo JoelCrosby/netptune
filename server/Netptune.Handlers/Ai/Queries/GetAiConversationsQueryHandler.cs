@@ -29,10 +29,10 @@ public sealed class GetAiConversationsQueryHandler
         var workspaceId = await Identity.GetWorkspaceId();
         var conversations = await UnitOfWork.AiConversations.GetForUser(userId, workspaceId, cancellationToken);
 
-        return conversations.Select(ToViewModel).ToList();
+        return conversations;
     }
 
-    public static AiConversationViewModel ToViewModel(AiConversation conversation)
+    public static AiConversationViewModel ToViewModel(AiConversation conversation, IReadOnlyList<AiMessage> messages)
     {
         return new AiConversationViewModel
         {
@@ -42,6 +42,12 @@ public sealed class GetAiConversationsQueryHandler
             Model = conversation.Model,
             LastMessageAt = conversation.LastMessageAt,
             MessageCount = conversation.MessageCount,
+            Usage = new AiTokenUsageViewModel
+            {
+                InputTokens = messages.Sum(message => message.InputTokens),
+                OutputTokens = messages.Sum(message => message.OutputTokens),
+                CacheReadTokens = messages.Sum(message => message.CacheReadTokens),
+            },
         };
     }
 }

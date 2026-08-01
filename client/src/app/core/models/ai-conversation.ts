@@ -25,6 +25,12 @@ export interface AiStreamEvent {
   changeSetId?: string;
 }
 
+export interface AiTokenUsage {
+  inputTokens: number;
+  outputTokens: number;
+  cacheReadTokens: number;
+}
+
 export interface AiConversation {
   id: string;
   title: string;
@@ -32,6 +38,7 @@ export interface AiConversation {
   model: string;
   lastMessageAt: string;
   messageCount: number;
+  usage: AiTokenUsage;
 }
 
 export interface AiMessage {

@@ -42,7 +42,7 @@ public sealed class GetWorkspaceAiConversationQueryHandler
         var messages = await UnitOfWork.AiConversations.GetMessages(conversation.Id, cancellationToken);
         var detail = new AiConversationDetailViewModel
         {
-            Conversation = GetAiConversationsQueryHandler.ToViewModel(conversation),
+            Conversation = GetAiConversationsQueryHandler.ToViewModel(conversation, messages),
             Messages = messages.Select(ToViewModel).ToList(),
         };
 

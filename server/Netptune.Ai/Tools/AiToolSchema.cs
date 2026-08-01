@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using Netptune.Core.Services.Ai;
+
 namespace Netptune.Ai.Tools;
 
 public static class AiToolSchema
@@ -57,5 +59,17 @@ public static class AiToolSchema
         var isNumber = value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var parsed);
 
         return isNumber ? value.GetInt32() : null;
+    }
+
+    public static void AddOptionalField(List<AiChangeField> fields, string name, string? value)
+    {
+        var hasValue = !string.IsNullOrWhiteSpace(value);
+
+        if (!hasValue)
+        {
+            return;
+        }
+
+        fields.Add(new AiChangeField { Name = name, After = value });
     }
 }

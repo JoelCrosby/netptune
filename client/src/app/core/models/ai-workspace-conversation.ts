@@ -1,4 +1,5 @@
 import { AiProvider } from './ai-credential';
+import { AiTokenUsage } from './ai-conversation';
 
 export interface AiWorkspaceConversation {
   id: string;
@@ -9,4 +10,5 @@ export interface AiWorkspaceConversation {
   model: string;
   lastMessageAt: string;
   messageCount: number;
+  usage: AiTokenUsage;
 }
