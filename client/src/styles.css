@@ -73,6 +73,7 @@
 
   --animate-loading-bar: loading-bar 2s ease-in-out infinite;
   --animate-globe-meridian: globe-meridian 2.4s ease-in-out infinite;
+  --animate-thinking-dots: thinking-dots 1.8s step-end infinite;
 }
 
 @keyframes loading-bar {
@@ -92,6 +93,31 @@
   }
   50% {
     transform: scaleX(0.06);
+  }
+}
+
+/* Clips three dots away one at a time and back, holding the box at full width. */
+@keyframes thinking-dots {
+  0% {
+    clip-path: inset(0 0 0 0);
+  }
+  16.67% {
+    clip-path: inset(0 33.34% 0 0);
+  }
+  33.33% {
+    clip-path: inset(0 66.67% 0 0);
+  }
+  50% {
+    clip-path: inset(0 100% 0 0);
+  }
+  66.67% {
+    clip-path: inset(0 66.67% 0 0);
+  }
+  83.33% {
+    clip-path: inset(0 33.34% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
   }
 }
 

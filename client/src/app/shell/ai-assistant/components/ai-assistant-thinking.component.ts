@@ -20,8 +20,10 @@ import { Component } from '@angular/core';
         ry="17.5"></ellipse>
     </svg>
 
-    <span i18n="Shown while the assistant is preparing its reply"
-      >Thinking…</span
+    <span
+      class="after:animate-thinking-dots after:inline-block after:content-['...'] motion-reduce:after:animate-none"
+      i18n="Shown while the assistant is preparing its reply"
+      >Thinking</span
     >
   `,
 })
