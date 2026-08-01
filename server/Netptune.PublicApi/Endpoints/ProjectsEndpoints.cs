@@ -1,7 +1,10 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.ViewModels.Projects;
 using Netptune.Handlers.Projects.Queries;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -18,11 +21,12 @@ public static class ProjectsEndpoints
         return group;
     }
 
-    private static async Task<IResult> GetProjects(
+    private static async Task<Ok<List<ProjectViewModel>>> GetProjects(
         IMediator mediator,
         [AsParameters] PageRequest page,
         CancellationToken cancellationToken)
     {
-        return Results.Ok(await mediator.Send(new GetProjectsQuery(page), cancellationToken));
+        var result = await mediator.Send(new GetProjectsQuery(page), cancellationToken);
+        return TypedResults.Ok(result);
     }
 }

@@ -1,7 +1,11 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Handlers.Users.Queries;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -18,13 +22,13 @@ public static class AssigneesEndpoints
         return group;
     }
 
-    private static async Task<IResult> GetAssignees(
+    private static async Task<Ok<PagedResponse<AssigneeViewModel>>> GetAssignees(
         IMediator mediator,
         [AsParameters] AssigneeFilter filter,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAssigneesQuery(filter), cancellationToken);
 
-        return Results.Ok(result.Payload);
+        return TypedResults.Ok(result.Payload);
     }
 }

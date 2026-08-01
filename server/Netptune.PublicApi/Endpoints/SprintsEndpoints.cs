@@ -1,7 +1,11 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Sprints;
 using Netptune.Handlers.Sprints.Commands;
 using Netptune.Handlers.Sprints.Queries;
 
@@ -49,7 +53,7 @@ public static class SprintsEndpoints
         return group;
     }
 
-    private static async Task<IResult> GetSprints(
+    private static async Task<Ok<List<SprintViewModel>>> GetSprints(
         IMediator mediator,
         [AsParameters] SprintFilter filter,
         CancellationToken cancellationToken)
@@ -69,32 +73,32 @@ public static class SprintsEndpoints
                 filter.SortDirection),
             cancellationToken);
 
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
     }
 
-    private static async Task<IResult> GetSprint(
+    private static async Task<Results<Ok<SprintDetailViewModel>, NotFound>> GetSprint(
         IMediator mediator,
         int id,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetSprintQuery(id), cancellationToken);
-        return result.IsNotFound ? Results.NotFound() : Results.Ok(result.Payload);
+        return result.IsNotFound ? TypedResults.NotFound() : TypedResults.Ok(result.Payload);
     }
 
-    private static async Task<IResult> CreateSprint(
+    private static async Task<Results<Created<SprintViewModel>, NotFound, BadRequest<ClientResponse<SprintViewModel>>>> CreateSprint(
         IMediator mediator,
         AddSprintRequest request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateSprintCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
+        if (result.IsNotFound) return TypedResults.NotFound();
         return result.IsSuccess
-            ? Results.Created($"/api/v1/sprints/{result.Payload!.Id}", result.Payload)
-            : Results.BadRequest(result);
+            ? TypedResults.Created($"/api/v1/sprints/{result.Payload!.Id}", result.Payload)
+            : TypedResults.BadRequest(result);
     }
 
-    private static async Task<IResult> UpdateSprint(
+    private static async Task<Results<Ok<SprintViewModel>, NotFound, BadRequest<ClientResponse<SprintViewModel>>>> UpdateSprint(
         IMediator mediator,
         int id,
         UpdateSprintRequest request,
@@ -103,22 +107,22 @@ public static class SprintsEndpoints
         request = request with { Id = id };
         var result = await mediator.Send(new UpdateSprintCommand(request), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-        return result.IsSuccess ? Results.Ok(result.Payload) : Results.BadRequest(result);
+        if (result.IsNotFound) return TypedResults.NotFound();
+        return result.IsSuccess ? TypedResults.Ok(result.Payload) : TypedResults.BadRequest(result);
     }
 
-    private static async Task<IResult> DeleteSprint(
+    private static async Task<Results<NoContent, NotFound, BadRequest<ClientResponse>>> DeleteSprint(
         IMediator mediator,
         int id,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteSprintCommand(id), cancellationToken);
 
-        if (result.IsNotFound) return Results.NotFound();
-        return result.IsSuccess ? Results.NoContent() : Results.BadRequest(result);
+        if (result.IsNotFound) return TypedResults.NotFound();
+        return result.IsSuccess ? TypedResults.NoContent() : TypedResults.BadRequest(result);
     }
 
-    private static async Task<IResult> AddTasks(
+    private static async Task<Results<Ok<SprintDetailViewModel>, NotFound<ClientResponse<SprintDetailViewModel>>, BadRequest<ClientResponse<SprintDetailViewModel>>>> AddTasks(
         IMediator mediator,
         int id,
         AddTasksToSprintRequest request,
@@ -130,13 +134,13 @@ public static class SprintsEndpoints
 
         if (result.IsNotFound)
         {
-            return Results.NotFound(result);
+            return TypedResults.NotFound(result);
         }
 
-        return result.IsSuccess ? Results.Ok(result.Payload) : Results.BadRequest(result);
+        return result.IsSuccess ? TypedResults.Ok(result.Payload) : TypedResults.BadRequest(result);
     }
 
-    private static async Task<IResult> RemoveTask(
+    private static async Task<Results<Ok<SprintDetailViewModel>, NotFound<ClientResponse<SprintDetailViewModel>>, BadRequest<ClientResponse<SprintDetailViewModel>>>> RemoveTask(
         IMediator mediator,
         int id,
         int taskId,
@@ -148,9 +152,9 @@ public static class SprintsEndpoints
 
         if (result.IsNotFound)
         {
-            return Results.NotFound(result);
+            return TypedResults.NotFound(result);
         }
 
-        return result.IsSuccess ? Results.Ok(result.Payload) : Results.BadRequest(result);
+        return result.IsSuccess ? TypedResults.Ok(result.Payload) : TypedResults.BadRequest(result);
     }
 }

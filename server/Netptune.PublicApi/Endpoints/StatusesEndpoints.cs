@@ -1,7 +1,10 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.ViewModels.Statuses;
 using Netptune.Handlers.Statuses.Queries;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -18,12 +21,12 @@ public static class StatusesEndpoints
         return group;
     }
 
-    private static async Task<IResult> GetStatuses(
+    private static async Task<Results<Ok<List<StatusViewModel>>, NotFound>> GetStatuses(
         IMediator mediator,
         [AsParameters] StatusFilter filter,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetStatusesQuery(filter), cancellationToken);
-        return result is null ? Results.NotFound() : Results.Ok(result);
+        return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
     }
 }
