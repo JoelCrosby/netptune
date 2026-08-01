@@ -96,6 +96,8 @@ export const updateTask = (
 
   if (!group) return state;
 
+  const { sortOrder, ...changes } = task as BoardViewTask;
+
   const tasks = group.tasks.map((item) => {
     if (item.id !== task.id) {
       return item;
@@ -103,7 +105,7 @@ export const updateTask = (
 
     return {
       ...item,
-      ...(task as BoardViewTask),
+      ...changes,
     };
   });
 

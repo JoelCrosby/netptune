@@ -45,6 +45,8 @@ public sealed class TaskViewRowMap
 
     public int? Board_Group_Id { get; init; }
 
+    public double Task_Sort_Order { get; init; }
+
     public string? Sprint_Name { get; init; }
 
     public SprintStatus? Sprint_Status { get; init; }

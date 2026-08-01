@@ -27,6 +27,13 @@ WITH filtered_tasks AS (
                ORDER BY ptbg.id
                LIMIT 1
            ) AS board_group_id
+         , COALESCE((
+               SELECT ptbg.sort_order
+               FROM project_task_in_board_groups ptbg
+               WHERE ptbg.project_task_id = pt.id
+               ORDER BY ptbg.id
+               LIMIT 1
+           ), 0) AS task_sort_order
          , pt.workspace_id
          , pt.created_at
          , pt.updated_at
@@ -138,6 +145,7 @@ SELECT ft.total_count
      , ft.project_id
      , ft.sprint_id
      , ft.board_group_id
+     , ft.task_sort_order
      , ft.sprint_name
      , ft.sprint_status
      , ft.workspace_id

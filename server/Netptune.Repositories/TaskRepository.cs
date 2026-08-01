@@ -530,6 +530,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 ProjectId = row.Project_Id,
                 SprintId = row.Sprint_Id,
                 BoardGroupId = row.Board_Group_Id,
+                SortOrder = row.Task_Sort_Order,
                 SprintName = row.Sprint_Name,
                 SprintStatus = row.Sprint_Status,
                 WorkspaceId = row.Workspace_Id,
@@ -609,6 +610,10 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 .Where(taskInGroup => taskInGroup.ProjectTaskId == x.Id)
                 .Select(taskInGroup => (int?)taskInGroup.BoardGroupId)
                 .FirstOrDefault(),
+            SortOrder = Context.ProjectTaskInBoardGroups
+                .Where(taskInGroup => taskInGroup.ProjectTaskId == x.Id)
+                .Select(taskInGroup => (double?)taskInGroup.SortOrder)
+                .FirstOrDefault() ?? 0D,
             SprintName = x.Sprint == null ? null : x.Sprint.Name,
             SprintStatus = x.Sprint == null ? null : x.Sprint.Status,
             WorkspaceId = x.WorkspaceId,

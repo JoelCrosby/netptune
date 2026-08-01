@@ -303,6 +303,45 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Update_ShouldPreserveBoardGroupSortOrder()
+    {
+        var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Sort order preservation",
+            Description = "Task used to verify sort order survives an update",
+            ProjectId = 1,
+            BoardGroupId = 1,
+        });
+        var created = await createResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+        var taskId = created.Payload!.Id;
+
+        created.Payload.SortOrder.Should().BeGreaterThan(0);
+
+        var boardView = await GetBoardView("neovim");
+        var boardTask = boardView.Groups
+            .Single(group => group.Id == 1)
+            .Tasks.Single(task => task.Id == taskId);
+
+        created.Payload.SortOrder.Should().Be(boardTask.SortOrder);
+
+        var updateResponse = await Client.PutAsJsonAsync("api/tasks", new UpdateProjectTaskRequest
+        {
+            Id = taskId,
+            Name = "Sort order preservation updated",
+        });
+        var updated = await updateResponse.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        updated.IsSuccess.Should().BeTrue();
+        updated.Payload!.SortOrder.Should().Be(created.Payload.SortOrder);
+
+        var tasks = await GetTasks();
+        var listed = tasks.Single(task => task.Id == taskId);
+
+        listed.SortOrder.Should().Be(created.Payload.SortOrder);
+    }
+
+    [Fact]
     public async Task Update_ShouldReturnNotFound_WhenInputDoesNotExist()
     {
         var request = new UpdateProjectTaskRequest
