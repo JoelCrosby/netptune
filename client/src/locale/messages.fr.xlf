@@ -154,6 +154,16 @@
         <target>Voir les projets</target>
       </segment>
     </unit>
+    <unit id="6077676238123249584">
+      <notes>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:98</note>
+        <note category="description">Explains why a member cannot edit their own role</note>
+      </notes>
+      <segment state="translated">
+        <source>You cannot change your own workspace role</source>
+        <target>Vous ne pouvez pas modifier votre propre rôle dans l&apos;espace de travail</target>
+      </segment>
+    </unit>
     <unit id="1726548551961127827">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:118</note>
@@ -696,6 +706,16 @@
         <target>Créer les comptes de service</target>
       </segment>
     </unit>
+    <unit id="3662745975342424755">
+      <notes>
+        <note category="location">src/app/core/store/users/users.effects.ts:262</note>
+        <note category="description">Error shown after an action fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The workspace role could not be updated. Please try again.</source>
+        <target>Le rôle dans l&apos;espace de travail n&apos;a pas pu être mis à jour. Veuillez réessayer.</target>
+      </segment>
+    </unit>
     <unit id="3664214651312931514">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:396</note>
@@ -804,6 +824,16 @@
       <segment state="translated">
         <source>Delete Any File</source>
         <target>Supprimer n&apos;importe quel fichier</target>
+      </segment>
+    </unit>
+    <unit id="7349773737371985580">
+      <notes>
+        <note category="location">src/app/core/store/users/users.effects.ts:260</note>
+        <note category="description">Error shown after an action fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The permission could not be updated. Please try again.</source>
+        <target>L&apos;autorisation n&apos;a pas pu être mise à jour. Veuillez réessayer.</target>
       </segment>
     </unit>
     <unit id="7729368131710513135">
@@ -1072,7 +1102,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:146</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:278</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:279</note>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:174</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:173</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:34,36</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:260</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
@@ -1474,7 +1504,7 @@
     </unit>
     <unit id="6669247952835732315">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:131</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:132</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1484,7 +1514,7 @@
     </unit>
     <unit id="146031208309512340">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:153</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:154</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1494,7 +1524,7 @@
     </unit>
     <unit id="5317928950061943875">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:175</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:176</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1504,7 +1534,7 @@
     </unit>
     <unit id="6798662151758949681">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:198</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:199</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1524,7 +1554,7 @@
     </unit>
     <unit id="414708731564173967">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:220</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:221</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1534,7 +1564,7 @@
     </unit>
     <unit id="5407874423943418786">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:238</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:270</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1544,7 +1574,7 @@
     </unit>
     <unit id="8992660517762852123">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:240</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:272</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -6757,7 +6787,7 @@
     <unit id="3715596725146409911">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:48</note>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:49,50</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:55,56</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
       <segment state="translated">
@@ -7601,6 +7631,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="COUNT" disp="count"/> chosen users</source>
         <target><ph id="0" equiv="COUNT" disp="count"/> utilisateurs choisis</target>
+      </segment>
+    </unit>
+    <unit id="2826309495913375988">
+      <notes>
+        <note category="location">src/app/core/store/users/users.effects.ts:266</note>
+        <note category="description">Error shown after an action fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The user(s) could not be removed. Please try again.</source>
+        <target>Les utilisateurs n&apos;ont pas pu être supprimés. Veuillez réessayer.</target>
       </segment>
     </unit>
     <unit id="1653304208405766934">
@@ -8950,6 +8990,16 @@
         <target>Tous les projets</target>
       </segment>
     </unit>
+    <unit id="6425790240382566513">
+      <notes>
+        <note category="location">src/app/core/store/users/users.effects.ts:264</note>
+        <note category="description">Error shown after an action fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The invite could not be resent. Please try again.</source>
+        <target>L&apos;invitation n&apos;a pas pu être renvoyée. Veuillez réessayer.</target>
+      </segment>
+    </unit>
     <unit id="8190126395120193208">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:73,75</note>
@@ -9322,7 +9372,7 @@
     </unit>
     <unit id="2014313920164588286">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:103,106</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:102,105</note>
         <note category="description">Badge marking a notification that has been read</note>
       </notes>
       <segment state="translated">
@@ -9332,7 +9382,7 @@
     </unit>
     <unit id="7795403436492031020">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:110,113</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:109,112</note>
         <note category="description">Badge marking an unread notification</note>
       </notes>
       <segment state="translated">
@@ -9342,7 +9392,7 @@
     </unit>
     <unit id="3512672071226814404">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:119,120</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:118,119</note>
         <note category="description">Empty state when there are no notifications</note>
       </notes>
       <segment state="translated">
@@ -9352,7 +9402,7 @@
     </unit>
     <unit id="3408295258641264159">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:121,125</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:120,124</note>
         <note category="description">Explains what the notification list will contain</note>
       </notes>
       <segment state="translated">
@@ -9362,7 +9412,7 @@
     </unit>
     <unit id="1616968388083998795">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:164</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:163</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -9372,7 +9422,7 @@
     </unit>
     <unit id="7593555694782789615">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:169</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:168</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -11207,7 +11257,7 @@
     <unit id="7314814725704332646">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:115,116</note>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:56,59</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:62,65</note>
         <note category="description">Title of the permissions wizard step</note>
       </notes>
       <segment state="translated">
@@ -11423,7 +11473,7 @@
     <unit id="3108295184226330469">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:182</note>
-        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:143</note>
+        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:142</note>
         <note category="description">Button that deselects every permission in a group</note>
       </notes>
       <segment state="translated">
@@ -11434,7 +11484,7 @@
     <unit id="3235487491166357848">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:183</note>
-        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:144</note>
+        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:143</note>
         <note category="description">Button that selects every permission in a group</note>
       </notes>
       <segment state="translated">
@@ -11792,6 +11842,16 @@
       <segment state="translated">
         <source> Inverse </source>
         <target>Inverse</target>
+      </segment>
+    </unit>
+    <unit id="5183297199669717683">
+      <notes>
+        <note category="location">src/app/core/store/users/users.effects.ts:258</note>
+        <note category="description">Error shown after an action fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The invite(s) could not be sent. Please try again.</source>
+        <target>Les invitations n&apos;ont pas pu être envoyées. Veuillez réessayer.</target>
       </segment>
     </unit>
     <unit id="5186038954367142316">
@@ -13170,7 +13230,7 @@
     </unit>
     <unit id="2304081999211595609">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:37,39</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:40,42</note>
         <note category="description">Label of the member role field</note>
       </notes>
       <segment state="translated">
@@ -13180,7 +13240,7 @@
     </unit>
     <unit id="5250569740790418380">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:65,70</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:71,76</note>
         <note category="description">Shown when a member cannot be found</note>
       </notes>
       <segment state="translated">

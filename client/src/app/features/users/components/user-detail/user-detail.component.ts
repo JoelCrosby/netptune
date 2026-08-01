@@ -1,10 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { PermissionListComponent } from '@app/static/components/permission-list/permission-list.component';
 import { selectUserDetail } from '@core/store/users/users.selectors';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import {
+  selectCurrentUserId,
+  selectHasPermission,
+} from '@app/core/store/auth/auth.selectors';
 import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 import { updateWorkspaceRole } from '@core/store/users/users.actions';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -37,7 +40,10 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
             label="Workspace role"
             name="workspaceRole"
             [value]="user.role"
-            [disabled]="!canUpdateRole() || user.role === workspaceRole.owner"
+            [disabled]="
+              !canUpdateRole() || isSelf() || user.role === workspaceRole.owner
+            "
+            [hint]="roleHint()"
             (changed)="onRoleChanged($event)">
             @for (role of editableRoles; track role) {
               <app-form-select-option [value]="role">
@@ -79,6 +85,18 @@ export class UserDetailComponent {
   readonly canUpdateRole = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.updateRole)
   );
+  readonly currentUserId = this.store.selectSignal(selectCurrentUserId);
+
+  readonly isSelf = computed(() => {
+    const user = this.user();
+    return !!user && user.id === this.currentUserId();
+  });
+
+  readonly roleHint = computed(() => {
+    if (!this.isSelf()) return undefined;
+
+    return $localize`:Explains why a member cannot edit their own role:You cannot change your own workspace role`;
+  });
 
   roleLabel(role: WorkspaceRole) {
     return workspaceRoleLabels[role];

@@ -17,6 +17,7 @@ import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as actions from './users.actions';
 import { UsersService } from './users.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { getErrorMessage } from '@core/util/error-message';
 import { selectUsersPage, selectUsersPageSize } from './users.selectors';
 
 const emptyWorkspaceAppUser: WorkspaceAppUser = {
@@ -232,7 +233,38 @@ export class UsersEffects {
       )
     );
   });
+
+  userActionFailed$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(
+          actions.inviteUsersToWorkspace.fail,
+          actions.toggleUserPermission.fail,
+          actions.updateWorkspaceRole.fail,
+          actions.resendInvite.fail,
+          actions.removeUsersFromWorkspace.fail
+        ),
+        tap(({ type, error }) =>
+          this.snackbar.error(getErrorMessage(error, ERROR_FALLBACKS[type]))
+        )
+      );
+    },
+    { dispatch: false }
+  );
 }
+
+const ERROR_FALLBACKS: Record<string, string> = {
+  [actions.inviteUsersToWorkspace.fail.type]:
+    $localize`:Error shown after an action fails:The invite(s) could not be sent. Please try again.`,
+  [actions.toggleUserPermission.fail.type]:
+    $localize`:Error shown after an action fails:The permission could not be updated. Please try again.`,
+  [actions.updateWorkspaceRole.fail.type]:
+    $localize`:Error shown after an action fails:The workspace role could not be updated. Please try again.`,
+  [actions.resendInvite.fail.type]:
+    $localize`:Error shown after an action fails:The invite could not be resent. Please try again.`,
+  [actions.removeUsersFromWorkspace.fail.type]:
+    $localize`:Error shown after an action fails:The user(s) could not be removed. Please try again.`,
+};
 
 const REMOVE_USERS_CONFIRMATION: ConfirmDialogOptions = {
   acceptLabel: $localize`:Confirms the action in a dialog:Remove User(s)`,
