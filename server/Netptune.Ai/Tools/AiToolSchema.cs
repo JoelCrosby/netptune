@@ -61,6 +61,27 @@ public static class AiToolSchema
         return isNumber ? value.GetInt32() : null;
     }
 
+    public static bool? GetBool(JsonElement arguments, string name)
+    {
+        var isObject = arguments.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            return null;
+        }
+
+        var hasProperty = arguments.TryGetProperty(name, out var value);
+
+        if (!hasProperty)
+        {
+            return null;
+        }
+
+        var isBoolean = value.ValueKind is JsonValueKind.True or JsonValueKind.False;
+
+        return isBoolean ? value.GetBoolean() : null;
+    }
+
     public static void AddOptionalField(List<AiChangeField> fields, string name, string? value)
     {
         var hasValue = !string.IsNullOrWhiteSpace(value);

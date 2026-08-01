@@ -37,6 +37,10 @@ public sealed class SearchTasksTool : IAiTool
           "search": { "type": "string", "description": "Free text to match against task name and description." },
           "projectId": { "type": "integer", "description": "Restrict results to a single project." },
           "sprintId": { "type": "integer", "description": "Restrict results to a single sprint." },
+          "statusId": { "type": "integer", "description": "Restrict results to a single status, from list_statuses." },
+          "assigneeId": { "type": "string", "description": "Restrict results to one assignee, using a userId from list_members." },
+          "noSprint": { "type": "boolean", "description": "Only tasks that are not in any sprint." },
+          "hasFlags": { "type": "boolean", "description": "Only tasks carrying a flag." },
           "pageSize": { "type": "integer", "description": "How many tasks to return, up to 100." }
         }
         """);
@@ -45,11 +49,18 @@ public sealed class SearchTasksTool : IAiTool
     {
         var requestedPageSize = AiToolSchema.GetInt(arguments, "pageSize") ?? DefaultPageSize;
         var pageSize = Math.Clamp(requestedPageSize, 1, MaximumPageSize);
+        var statusId = AiToolSchema.GetInt(arguments, "statusId");
+        var assigneeId = AiToolSchema.GetString(arguments, "assigneeId")?.Trim();
+        var hasAssignee = !string.IsNullOrWhiteSpace(assigneeId);
         var filter = new TaskFilter
         {
             Search = AiToolSchema.GetString(arguments, "search"),
             ProjectId = AiToolSchema.GetInt(arguments, "projectId"),
             SprintId = AiToolSchema.GetInt(arguments, "sprintId"),
+            StatusIds = statusId.HasValue ? [statusId.Value] : [],
+            Assignees = hasAssignee ? [assigneeId!] : [],
+            NoSprint = AiToolSchema.GetBool(arguments, "noSprint"),
+            HasFlags = AiToolSchema.GetBool(arguments, "hasFlags"),
             Page = 1,
             PageSize = pageSize,
         };
