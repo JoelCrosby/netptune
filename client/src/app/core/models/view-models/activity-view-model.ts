@@ -8,6 +8,7 @@ export interface ActivityViewModel {
   userUsername: string;
   userPictureUrl: string;
   userIsServiceAccount?: boolean;
+  agent?: string | null;
   type: ActivityType;
   entityId: number;
   time: Date;

@@ -49,7 +49,8 @@ public class ActivityEntryRepositoryTests
             nameof(ActivityEntry.WorkspaceId),
             nameof(ActivityEntry.EntityType),
             nameof(ActivityEntry.EntityId),
-            nameof(ActivityEntry.UserId));
+            nameof(ActivityEntry.UserId),
+            nameof(ActivityEntry.Agent));
     }
 
     [Fact]
@@ -121,7 +122,7 @@ public class ActivityEntryRepositoryTests
 
         ActivityEntryScripts.UpsertActivityEntry
             .Should().Contain(
-                $"ON CONFLICT (workspace_id, entity_type, entity_id, user_id) WHERE {ActivityEntryEntityMap.OpenEntryIndexFilter}",
+                $"ON CONFLICT (workspace_id, entity_type, entity_id, user_id, agent) WHERE {ActivityEntryEntityMap.OpenEntryIndexFilter}",
                 "Postgres infers the arbiter index by proving the supplied predicate implies the index's");
 
         SqlScripts.UpsertActivityEntry

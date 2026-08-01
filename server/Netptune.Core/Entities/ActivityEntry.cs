@@ -16,6 +16,8 @@ public record ActivityEntry : WorkspaceEntity<int>
 
     public string UserId { get; init; } = null!;
 
+    public string Agent { get; init; } = string.Empty;
+
     public ActivityType ActivityType { get; set; }
 
     public List<string> ChangedFields { get; set; } = [];

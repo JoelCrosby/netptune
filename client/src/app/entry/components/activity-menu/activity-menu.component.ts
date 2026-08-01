@@ -72,6 +72,16 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
                 <span class="font-medium tracking-[0.225px] whitespace-nowrap">
                   {{ activity.userUsername }}
                 </span>
+                @if (activity.agent) {
+                  <span
+                    class="text-foreground/60 text-xs whitespace-nowrap"
+                    i18n="
+                      Precedes the assistant that made a change on the user's
+                      behalf
+                    ">
+                    via {{ activity.agent }}
+                  </span>
+                }
                 <span
                   class="text-foreground/90 ml-[0.3rem] text-xs whitespace-nowrap"
                   [appTooltip]="activity | activityTimeRange">

@@ -1978,7 +1978,7 @@
     </unit>
     <unit id="2080668244235875808">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:89,90</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:99,100</note>
         <note category="description">Heading of the empty activity feed</note>
       </notes>
       <segment state="translated">
@@ -1988,7 +1988,7 @@
     </unit>
     <unit id="2335067641977437350">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:91,92</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:101,102</note>
         <note category="description">Explains why the activity feed is empty</note>
       </notes>
       <segment state="translated">
@@ -1998,7 +1998,7 @@
     </unit>
     <unit id="5688462374174490321">
       <notes>
-        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:100,102</note>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:110,112</note>
         <note category="description">Button that loads the next page of activity</note>
       </notes>
       <segment state="translated">
@@ -12571,6 +12571,16 @@
       <segment state="translated">
         <source>Delete &quot;<ph id="0" equiv="NAME" disp="account.name"/>&quot;? All of its credentials will immediately stop working. The account will remain in history as disabled.</source>
         <target>¿Eliminar «<ph id="0" equiv="NAME" disp="account.name"/>»? Todas sus credenciales dejarán de funcionar de inmediato. La cuenta permanecerá en el historial como desactivada.</target>
+      </segment>
+    </unit>
+    <unit id="4274276168705525822">
+      <notes>
+        <note category="location">src/app/entry/components/activity-menu/activity-menu.component.ts:82,83</note>
+        <note category="description">Precedes the assistant that made a change on the user&apos;s behalf</note>
+      </notes>
+      <segment state="translated">
+        <source> via <ph id="0" equiv="INTERPOLATION" disp="{{ activity.agent }}"/> </source>
+        <target> mediante <ph id="0" equiv="INTERPOLATION" disp="{{ activity.agent }}"/> </target>
       </segment>
     </unit>
     <unit id="8601029512667360957">

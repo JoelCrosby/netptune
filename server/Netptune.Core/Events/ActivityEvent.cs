@@ -32,6 +32,8 @@ public class ActivityEvent
 
     public string UserId { get; init; } = null!;
 
+    public string? Agent { get; init; }
+
     public ActivityType Type { get; init; }
 
     public int? EntityId { get; init; }

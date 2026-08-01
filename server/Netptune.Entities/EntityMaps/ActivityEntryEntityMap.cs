@@ -18,11 +18,21 @@ public class ActivityEntryEntityMap : WorkspaceEntityMap<ActivityEntry, int>
     {
         base.Configure(builder);
 
+        // Agent joins the merge key so an assistant-applied change never merges into the same entry as
+        // the user's own edit — the feed would otherwise attribute both to whichever arrived first. It is
+        // non-null with an empty default because Postgres treats NULLs as distinct, which would stop
+        // ordinary user entries from ever conflicting and so from ever merging.
         builder
-            .HasIndex(entry => new { entry.WorkspaceId, entry.EntityType, entry.EntityId, entry.UserId })
+            .HasIndex(entry => new { entry.WorkspaceId, entry.EntityType, entry.EntityId, entry.UserId, entry.Agent })
             .IsUnique()
             .HasFilter(OpenEntryIndexFilter)
             .HasDatabaseName(OpenEntryIndexName);
+
+        builder
+            .Property(entry => entry.Agent)
+            .HasMaxLength(64)
+            .HasDefaultValue(string.Empty)
+            .IsRequired();
 
         // The sweeper's claim (close_expired_activity_entries.sql) filters on notified_at, not is_open: an
         // entry closed early by the handler to free the unique-index slot above is still owed its

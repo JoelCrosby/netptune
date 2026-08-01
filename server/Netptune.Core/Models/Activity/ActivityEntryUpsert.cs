@@ -12,6 +12,8 @@ public sealed record ActivityEntryUpsert
 
     public required string UserId { get; init; }
 
+    public required string Agent { get; init; }
+
     public required ActivityType ActivityType { get; init; }
 
     public required List<string> ChangedFields { get; init; }

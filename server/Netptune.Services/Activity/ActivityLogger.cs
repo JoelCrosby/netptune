@@ -8,6 +8,7 @@ using Netptune.Core.Events;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.Ai;
 
 namespace Netptune.Services.Activity;
 
@@ -17,17 +18,27 @@ public class ActivityLogger : IActivityLogger
     private readonly IIdentityService Identity;
     private readonly IHttpContextAccessor HttpContextAccessor;
     private readonly ICanonicalEventCapture? Capture;
+    private readonly IAiExecutionContext? AiExecution;
 
     public ActivityLogger(
         IEventPublisher eventPublisher,
         IIdentityService identity,
         IHttpContextAccessor httpContextAccessor,
-        ICanonicalEventCapture? capture = null)
+        ICanonicalEventCapture? capture = null,
+        IAiExecutionContext? aiExecution = null)
     {
         EventPublisher = eventPublisher;
         Identity = identity;
         HttpContextAccessor = httpContextAccessor;
         Capture = capture;
+        AiExecution = aiExecution;
+    }
+
+    private string? GetAgent()
+    {
+        var isAssistantExecution = AiExecution?.IsActive == true;
+
+        return isAssistantExecution ? AiExecution!.Agent : null;
     }
 
     private string? GetIpAddress()
@@ -83,6 +94,7 @@ public class ActivityLogger : IActivityLogger
             Type = activityOptions.Type,
             EntityType = activityOptions.EntityType,
             UserId = activityOptions.UserId,
+            Agent = GetAgent(),
             EntityId = activityOptions.EntityId.Value,
             WorkspaceId = workspaceId,
             OccurredAt = DateTime.UtcNow,
@@ -129,6 +141,7 @@ public class ActivityLogger : IActivityLogger
                 Type = change.Type,
                 EntityType = changeSetOptions.EntityType,
                 UserId = changeSetOptions.UserId,
+                Agent = GetAgent(),
                 EntityId = changeSetOptions.EntityId.Value,
                 WorkspaceId = workspaceId,
                 OccurredAt = occurredAt,
@@ -169,6 +182,7 @@ public class ActivityLogger : IActivityLogger
                 Type = activityOptions.Type,
                 EntityType = activityOptions.EntityType,
                 UserId = activityOptions.UserId,
+                Agent = GetAgent(),
                 EntityId = entityId,
                 WorkspaceId = workspaceId,
                 OccurredAt = DateTime.UtcNow,
@@ -209,6 +223,7 @@ public class ActivityLogger : IActivityLogger
             Type = activityOptions.Type,
             EntityType = activityOptions.EntityType,
             UserId = activityOptions.UserId,
+            Agent = GetAgent(),
             EntityId = activityOptions.EntityId.Value,
             WorkspaceId = workspaceId,
             OccurredAt = DateTime.UtcNow,

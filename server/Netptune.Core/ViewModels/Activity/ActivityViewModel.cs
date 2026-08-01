@@ -19,6 +19,8 @@ public class ActivityViewModel
 
     public bool UserIsServiceAccount { get; set; }
 
+    public string? Agent { get; set; }
+
     public ActivityType Type { get; set; }
 
     public int? EntityId { get; set; }

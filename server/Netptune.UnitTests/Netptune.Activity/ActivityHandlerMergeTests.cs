@@ -186,6 +186,7 @@ public class ActivityHandlerMergeTests
             EntityType.Task,
             EntityId,
             ActorUserId,
+            Arg.Any<string>(),
             Arg.Any<DateTime>(),
             Arg.Any<CancellationToken>());
 
@@ -214,7 +215,8 @@ public class ActivityHandlerMergeTests
         TaskChangeField field,
         string? oldValue,
         string? newValue,
-        ActivityType type = ActivityType.ModifyDescription) =>
+        ActivityType type = ActivityType.ModifyDescription,
+        string? agent = null) =>
         new()
         {
             EventId = Guid.NewGuid(),
@@ -223,11 +225,35 @@ public class ActivityHandlerMergeTests
             EntityId = EntityId,
             WorkspaceId = WorkspaceId,
             UserId = ActorUserId,
+            Agent = agent,
             OccurredAt = DateTime.UtcNow,
             Field = field,
             OldValue = oldValue,
             NewValue = newValue,
         };
+
+    [Fact]
+    public async Task Handle_ShouldNotMergeAssistantChangesIntoTheUsersOwnEntry()
+    {
+        await Handler().Handle(new ActivityMessage([
+            Change(TaskChangeField.Description, "a", "b"),
+            Change(TaskChangeField.Name, "c", "d", agent: "claude-opus-5"),
+        ]), CancellationToken);
+
+        await UnitOfWork.ActivityEntries.Received(1).UpsertEntry(
+            Arg.Is<ActivityEntryUpsert>(upsert => upsert.Agent == string.Empty),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>());
+
+        await UnitOfWork.ActivityEntries.Received(1).UpsertEntry(
+            Arg.Is<ActivityEntryUpsert>(upsert => upsert.Agent == "claude-opus-5"),
+            Arg.Any<DateTime>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<TimeSpan>(),
+            Arg.Any<CancellationToken>());
+    }
 
     private static ActivityEvent Discrete(ActivityType type) =>
         new()

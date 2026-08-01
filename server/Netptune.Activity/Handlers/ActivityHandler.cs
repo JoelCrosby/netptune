@@ -58,6 +58,8 @@ public sealed class ActivityHandler :
         public int EntityId => Event.EntityId!.Value;
 
         public string UserId => Event.UserId;
+
+        public string Agent => Event.Agent ?? string.Empty;
     }
 
     private sealed record ActivityReferenceInput(string Role, EntityType EntityType, int? EntityId);
@@ -97,6 +99,8 @@ public sealed class ActivityHandler :
                 OccurredAt = activity.OccurredAt,
                 RecordedAt = DateTime.UtcNow,
                 ActorUserId = activity.UserId,
+                OriginType = activity.Agent is null ? EventOriginType.User : EventOriginType.Assistant,
+                Agent = activity.Agent,
                 IpAddress = IPAddress.TryParse(activity.IpAddress, out var ipAddress) ? ipAddress : null,
                 UserAgent = activity.UserAgent,
                 RetentionClass = EventRetentionClasses.Audit,
@@ -289,11 +293,12 @@ public sealed class ActivityHandler :
     {
         var now = DateTime.UtcNow;
 
-        var groups = records.GroupBy(record => (record.WorkspaceId, record.EntityType, record.EntityId, record.UserId));
+        var groups = records.GroupBy(record =>
+            (record.WorkspaceId, record.EntityType, record.EntityId, record.UserId, record.Agent));
 
         foreach (var group in groups)
         {
-            var (workspaceId, entityType, entityId, userId) = group.Key;
+            var (workspaceId, entityType, entityId, userId, agent) = group.Key;
 
             await UnitOfWork.ActivityEntries.ExpireEntriesForOtherUsers(
                 workspaceId,
@@ -344,6 +349,7 @@ public sealed class ActivityHandler :
                 upsert.EntityType,
                 upsert.EntityId,
                 upsert.UserId,
+                upsert.Agent,
                 now,
                 cancellationToken);
         }
@@ -365,6 +371,7 @@ public sealed class ActivityHandler :
             EntityType = last.EntityType,
             EntityId = last.EntityId,
             UserId = last.UserId,
+            Agent = last.Agent,
 
             ActivityType = types.Count == 1 ? types[0] : ActivityType.Modify,
 

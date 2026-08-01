@@ -109,6 +109,7 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
             Value("entity_type", (int)upsert.EntityType),
             Value("entity_id", upsert.EntityId),
             Value("user_id", upsert.UserId),
+            Value("agent", upsert.Agent),
             Value("activity_type", (int)upsert.ActivityType),
             Value("changed_fields", upsert.ChangedFields),
             Value("meta", upsert.MetaJson),
@@ -168,6 +169,7 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
         EntityType entityType,
         int entityId,
         string userId,
+        string agent,
         DateTime now,
         CancellationToken cancellationToken = default)
     {
@@ -177,6 +179,7 @@ public class ActivityEntryRepository : WorkspaceEntityRepository<DataContext, Ac
                 && entry.EntityType == entityType
                 && entry.EntityId == entityId
                 && entry.UserId == userId
+                && entry.Agent == agent
                 && entry.IsOpen
                 && !entry.IsDeleted
                 && entry.WindowExpiresAt <= now)

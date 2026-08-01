@@ -4,6 +4,7 @@ INSERT INTO activity_entries (
     , entity_type
     , entity_id
     , user_id
+    , agent
     , activity_type
     , changed_fields
     , meta
@@ -32,6 +33,7 @@ VALUES (
     , @entity_type
     , @entity_id
     , @user_id::text
+    , @agent::text
     , @activity_type
     , @changed_fields::text[]
     , @meta::jsonb
@@ -56,7 +58,7 @@ VALUES (
     , @user_id::text
     , @user_id::text
 )
-ON CONFLICT (workspace_id, entity_type, entity_id, user_id) WHERE $open_entry_index_filter$
+ON CONFLICT (workspace_id, entity_type, entity_id, user_id, agent) WHERE $open_entry_index_filter$
 DO UPDATE SET
       activity_type = CASE
           WHEN activity_entries.activity_type = EXCLUDED.activity_type THEN activity_entries.activity_type
