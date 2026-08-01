@@ -18,10 +18,12 @@ import {
   validateAsync,
 } from '@angular/forms/signals';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
+import { ConfirmationService } from '@core/services/confirmation.service';
+import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
-import { LucideCheck } from '@lucide/angular';
+import { LucideCheck, LucideTriangleAlert } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
@@ -99,6 +101,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 export class WorkspaceDetailsComponent {
   private store = inject(Store);
   private workspaceService = inject(WorkspacesService);
+  private confirmation = inject(ConfirmationService);
 
   workspace = this.store.selectSignal(selectCurrentWorkspace);
 
@@ -193,13 +196,30 @@ export class WorkspaceDetailsComponent {
   save(event: Event) {
     event.preventDefault();
 
+    const currentSlug = this.workspace()?.slug;
+
+    if (!currentSlug) return;
+
     submit(this.detailsForm, async () => {
       const { name, identifier, description, color, timeZone } =
         this.detailsForm;
 
+      const nextSlug = identifier().value().trim();
+      const isRename = nextSlug !== currentSlug;
+
+      if (isRename) {
+        const confirmation = this.confirmation.open(
+          identifierChangeConfirmation(currentSlug, nextSlug)
+        );
+        const confirmed = await firstValueFrom(confirmation);
+
+        if (!confirmed) return;
+      }
+
       const request: UpdateWorkspaceRequest = {
         name: name().value().trim(),
-        slug: identifier().value().trim(),
+        slug: currentSlug,
+        newSlug: isRename ? nextSlug : undefined,
         description: description().value().trim(),
         metaInfo: {
           color: color().value(),
@@ -211,3 +231,19 @@ export class WorkspaceDetailsComponent {
     });
   }
 }
+
+const identifierChangeConfirmation = (
+  currentSlug: string,
+  nextSlug: string
+): ConfirmDialogOptions => {
+  return {
+    title: $localize`:Title of a confirmation dialog:Change workspace identifier?`,
+    message: $localize`:Body of a confirmation dialog. CURRENT and NEXT are the old and new workspace identifiers:This workspace moves from /${currentSlug}:CURRENT: to /${nextSlug}:NEXT:.`,
+    messageExtended: $localize`:Body of a confirmation dialog listing what breaks when a workspace identifier changes:Links that have already been shared or bookmarked will stop working, and any integration calling the API with the old identifier will start failing. The old identifier is released immediately and can be claimed by another workspace.`,
+    confirmationCheckboxLabel: $localize`:Checkbox a user must tick to confirm a dangerous action:I understand that existing links to this workspace will break.`,
+    acceptLabel: $localize`:Confirms the action in a dialog:Change identifier`,
+    cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+    color: 'warn',
+    icon: LucideTriangleAlert,
+  };
+};

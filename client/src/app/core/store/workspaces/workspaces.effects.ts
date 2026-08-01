@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
+import { WorkspaceService } from '@core/services/workspace.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
@@ -39,6 +40,7 @@ export class WorkspacesEffects implements OnInitEffects {
   private snackbar = inject(SnackbarService);
   private sse = inject(SseService);
   private router = inject(Router);
+  private workspace = inject(WorkspaceService);
 
   init$ = createEffect(() => {
     return this.actions$.pipe(
@@ -186,7 +188,9 @@ export class WorkspacesEffects implements OnInitEffects {
       switchMap((action) =>
         this.workspacesService.put(action.request).pipe(
           unwrapClientReposne(),
-          map((workspace) => actions.editWorkspace.success({ workspace })),
+          map(({ workspace, previousSlug }) =>
+            actions.editWorkspace.success({ workspace, previousSlug })
+          ),
           catchError((error: HttpErrorResponse) =>
             of(actions.editWorkspace.fail({ error }))
           )
@@ -194,6 +198,40 @@ export class WorkspacesEffects implements OnInitEffects {
       )
     );
   });
+
+  navigateAfterRename$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(actions.editWorkspace.success),
+        tap(({ workspace, previousSlug }) => {
+          if (!previousSlug) return;
+
+          const routeSlug = getWorkspaceSlug(this.router.url);
+
+          if (routeSlug !== previousSlug) return;
+
+          this.workspace.registerRename(previousSlug, workspace.slug);
+
+          const url = replaceWorkspaceSlug(this.router.url, workspace.slug);
+
+          void this.router.navigateByUrl(url, { replaceUrl: true });
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  editWorkspaceFailed$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(actions.editWorkspace.fail),
+        tap(({ error }) =>
+          this.snackbar.error(editWorkspaceFailureMessage(error))
+        )
+      );
+    },
+    { dispatch: false }
+  );
 
   toggleWorkspaceIsPublic$ = createEffect(() => {
     return this.actions$.pipe(
@@ -218,7 +256,9 @@ export class WorkspacesEffects implements OnInitEffects {
 
             return this.workspacesService.put(request).pipe(
               unwrapClientReposne(),
-              map((workspace) => actions.editWorkspace.success({ workspace })),
+              map(({ workspace, previousSlug }) =>
+                actions.editWorkspace.success({ workspace, previousSlug })
+              ),
               catchError((error: HttpErrorResponse) =>
                 of(actions.editWorkspace.fail({ error }))
               )
@@ -245,14 +285,12 @@ export class WorkspacesEffects implements OnInitEffects {
 
         return this.workspacesService.put(request).pipe(
           unwrapClientReposne(),
-          map((workspace) => actions.editWorkspace.success({ workspace })),
-          catchError((error: HttpErrorResponse) => {
-            this.snackbar.error(
-              $localize`:Error shown after an action fails:Failed to update public access`
-            );
-
-            return of(actions.editWorkspace.fail({ error }));
-          })
+          map(({ workspace, previousSlug }) =>
+            actions.editWorkspace.success({ workspace, previousSlug })
+          ),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.editWorkspace.fail({ error }))
+          )
         );
       })
     );
@@ -279,6 +317,31 @@ export class WorkspacesEffects implements OnInitEffects {
 }
 
 const NON_WORKSPACE_ROUTES = new Set(['auth', 'workspaces']);
+
+const replaceWorkspaceSlug = (url: string, slug: string): string => {
+  const [path, query] = url.split('?');
+  const segments = path.split('/').filter(Boolean);
+
+  if (!segments.length) return url;
+
+  segments[0] = encodeURIComponent(slug);
+
+  const nextPath = `/${segments.join('/')}`;
+
+  return query ? `${nextPath}?${query}` : nextPath;
+};
+
+const editWorkspaceFailureMessage = (
+  error: HttpErrorResponse | Error
+): string => {
+  const message =
+    error instanceof HttpErrorResponse ? error.error?.message : null;
+
+  return (
+    message ??
+    $localize`:Error shown after an action fails:Failed to update workspace`
+  );
+};
 
 const getWorkspaceSlug = (url: string): string | null => {
   const [segment] = url.split('?')[0].split('/').filter(Boolean);

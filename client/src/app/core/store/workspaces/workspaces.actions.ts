@@ -31,7 +31,7 @@ export const createWorkspace = createAsyncAction(
 
 export const editWorkspace = createAsyncAction('[Workspaces] Edit Workspace', {
   init: props<{ request: UpdateWorkspaceRequest }>(),
-  success: props<{ workspace: Workspace }>(),
+  success: props<{ workspace: Workspace; previousSlug?: string | null }>(),
 });
 
 // Delete Workspace

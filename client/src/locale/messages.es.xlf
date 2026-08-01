@@ -234,6 +234,16 @@
         <target>Eliminar los tableros</target>
       </segment>
     </unit>
+    <unit id="551825878782946048">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:242</note>
+        <note category="description">Body of a confirmation dialog listing what breaks when a workspace identifier changes</note>
+      </notes>
+      <segment state="translated">
+        <source>Links that have already been shared or bookmarked will stop working, and any integration calling the API with the old identifier will start failing. The old identifier is released immediately and can be claimed by another workspace.</source>
+        <target>Los enlaces que ya se han compartido o guardado en marcadores dejarán de funcionar, y cualquier integración que llame a la API con el identificador antiguo empezará a fallar. El identificador antiguo se libera de inmediato y otro espacio de trabajo puede reclamarlo.</target>
+      </segment>
+    </unit>
     <unit id="2819959485156980302">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:157</note>
@@ -891,9 +901,9 @@
         <note category="location">src/app/core/store/tasks/task-archive.service.ts:44</note>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:438</note>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:446</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:295</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:305</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:315</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:363</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:373</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:383</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:191,193</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:122,125</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:112,115</note>
@@ -908,6 +918,7 @@
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:105,108</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:245</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:495</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:567</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:611</note>
@@ -967,6 +978,16 @@
       <segment state="translated">
         <source>Email confirmed successfully</source>
         <target>Correo electrónico confirmado</target>
+      </segment>
+    </unit>
+    <unit id="6404445332132473818">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:240</note>
+        <note category="description">Title of a confirmation dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Change workspace identifier?</source>
+        <target>¿Cambiar el identificador del espacio de trabajo?</target>
       </segment>
     </unit>
     <unit id="8258064795690932112">
@@ -1533,7 +1554,7 @@
     </unit>
     <unit id="5589864608128781435">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:146</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:148</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1541,19 +1562,9 @@
         <target>Espacio de trabajo eliminado</target>
       </segment>
     </unit>
-    <unit id="5344866917628165176">
-      <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:251</note>
-        <note category="description">Error shown after an action fails</note>
-      </notes>
-      <segment state="translated">
-        <source>Failed to update public access</source>
-        <target>No se pudo actualizar el acceso público</target>
-      </segment>
-    </unit>
     <unit id="2273088133016853024">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:294</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:362</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1563,7 +1574,7 @@
     </unit>
     <unit id="141527660815930501">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:296</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:364</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1573,7 +1584,7 @@
     </unit>
     <unit id="4854172748547351453">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:297</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:365</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1583,7 +1594,7 @@
     </unit>
     <unit id="1293575230061580250">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:304</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:372</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1593,7 +1604,7 @@
     </unit>
     <unit id="8763068601818287275">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:306</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:374</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1603,7 +1614,7 @@
     </unit>
     <unit id="950348144194379022">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:307</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:375</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:108</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -1614,7 +1625,7 @@
     </unit>
     <unit id="8871304628791267226">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:314</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:382</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1624,7 +1635,7 @@
     </unit>
     <unit id="4501389782873056968">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:316</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:384</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1634,7 +1645,7 @@
     </unit>
     <unit id="5832945231912845990">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:317</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:385</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:107</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -1898,6 +1909,16 @@
       <segment state="translated">
         <source> Notifications </source>
         <target>Notificaciones</target>
+      </segment>
+    </unit>
+    <unit id="4064937437199233155">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:244</note>
+        <note category="description">Confirms the action in a dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Change identifier</source>
+        <target>Cambiar identificador</target>
       </segment>
     </unit>
     <unit id="4040806670191010035">
@@ -2411,8 +2432,8 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:475</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:55,57</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:208</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:54,56</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:117</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:56,58</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:120</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:146</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:377</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:96,98</note>
@@ -2542,7 +2563,7 @@
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:101,103</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:60,62</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:71,74</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:73,76</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:169,172</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:142,145</note>
         <note category="description">Label of the task description editor</note>
@@ -2674,7 +2695,7 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:111,114</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:160,162</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:82,84</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:77,80</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:79,82</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:175,178</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:93,95</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:148,151</note>
@@ -3389,8 +3410,8 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:142,144</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:184,186</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:258</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:59,61</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:124</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:61,63</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:127</note>
         <note category="description">Label of the workspace URL identifier field</note>
       </notes>
       <segment state="translated">
@@ -3413,7 +3434,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:120,123</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:172,177</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:92,95</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:94,97</note>
         <note category="description">Button that saves edits to the workspace</note>
       </notes>
       <segment state="translated">
@@ -3475,7 +3496,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:291</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:184</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:158</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:161</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -5776,6 +5797,16 @@
         <target>Resultado</target>
       </segment>
     </unit>
+    <unit id="2527613524061523304">
+      <notes>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:347</note>
+        <note category="description">Error shown after an action fails</note>
+      </notes>
+      <segment state="translated">
+        <source>Failed to update workspace</source>
+        <target>No se pudo actualizar el espacio de trabajo</target>
+      </segment>
+    </unit>
     <unit id="7285206740824251940">
       <notes>
         <note category="location">src/app/features/automations/components/automation-runs-table.component.ts:85,86</note>
@@ -5997,6 +6028,16 @@
       <segment state="translated">
         <source>Set owner</source>
         <target>Establecer propietario</target>
+      </segment>
+    </unit>
+    <unit id="1267184118353244642">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:241</note>
+        <note category="description">Body of a confirmation dialog. CURRENT and NEXT are the old and new workspace identifiers</note>
+      </notes>
+      <segment state="translated">
+        <source>This workspace moves from /<ph id="0" equiv="CURRENT" disp="currentSlug"/> to /<ph id="1" equiv="NEXT" disp="nextSlug"/>.</source>
+        <target>Este espacio de trabajo pasa de /<ph id="0" equiv="CURRENT" disp="currentSlug"/> a /<ph id="1" equiv="NEXT" disp="nextSlug"/>.</target>
       </segment>
     </unit>
     <unit id="2962980188258061625">
@@ -8190,7 +8231,7 @@
     </unit>
     <unit id="6623551442527699684">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:63,67</note>
+        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:73,77</note>
         <note category="description">Placeholder in the inline box for adding a task to a board group</note>
       </notes>
       <segment state="translated">
@@ -8200,7 +8241,7 @@
     </unit>
     <unit id="8761140310272472389">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:114</note>
+        <note category="location">src/app/features/boards/components/board-group-task-inline/board-group-task-inline.component.ts:124</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Task summary is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -9833,7 +9874,7 @@
     </unit>
     <unit id="318764327084091382">
       <notes>
-        <note category="location">src/app/static/components/user-select/user-select.component.ts:114,116</note>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:117,119</note>
         <note category="description">Shown while workspace members are being searched</note>
       </notes>
       <segment state="translated">
@@ -10542,6 +10583,16 @@
       <segment state="translated">
         <source> Select sprint </source>
         <target>Seleccionar un sprint</target>
+      </segment>
+    </unit>
+    <unit id="7501850844985876036">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:243</note>
+        <note category="description">Checkbox a user must tick to confirm a dangerous action</note>
+      </notes>
+      <segment state="translated">
+        <source>I understand that existing links to this workspace will break.</source>
+        <target>Entiendo que los enlaces existentes a este espacio de trabajo dejarán de funcionar.</target>
       </segment>
     </unit>
     <unit id="7504698115177073591">
@@ -11455,7 +11506,7 @@
     </unit>
     <unit id="646654293203551809">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:47,49</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:49,51</note>
         <note category="description">Section heading for the workspace detail form</note>
       </notes>
       <segment state="translated">
@@ -11475,7 +11526,7 @@
     </unit>
     <unit id="7333095346036961883">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:66,70</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:68,72</note>
         <note category="description">Warns that changing the workspace identifier breaks existing links</note>
       </notes>
       <segment state="translated">
@@ -11485,7 +11536,7 @@
     </unit>
     <unit id="3894039560161506093">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:82,84</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:84,86</note>
         <note category="description">Label of the workspace time zone field</note>
       </notes>
       <segment state="translated">
@@ -11495,7 +11546,7 @@
     </unit>
     <unit id="8921855151408700743">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:87,91</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:89,93</note>
         <note category="description">Hint under the time zone field. Europe/London is a literal IANA zone name</note>
       </notes>
       <segment state="translated">
@@ -11505,7 +11556,7 @@
     </unit>
     <unit id="9052706340903358762">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:163</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:166</note>
         <note category="description">Shown when the workspace identifier availability check fails</note>
       </notes>
       <segment state="translated">
@@ -13865,7 +13916,7 @@
     <unit id="4192963686165639179">
       <notes>
         <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:28,30</note>
-        <note category="location">src/app/static/components/user-select/user-select.component.ts:92,94</note>
+        <note category="location">src/app/static/components/user-select/user-select.component.ts:95,97</note>
         <note category="description">Placeholder in the workspace search box</note>
       </notes>
       <segment state="translated">

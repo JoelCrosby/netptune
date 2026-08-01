@@ -58,7 +58,7 @@ const reducer = createReducer(
       ...state,
       loadingEdit: false,
       currentWorkspace:
-        state.currentWorkspace?.slug === workspace.slug
+        state.currentWorkspace?.id === workspace.id
           ? workspace
           : state.currentWorkspace,
     })

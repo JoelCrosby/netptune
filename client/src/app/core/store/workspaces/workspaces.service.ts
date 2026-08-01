@@ -5,6 +5,7 @@ import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
+import { UpdateWorkspaceResponse } from '@core/models/update-workspace-response';
 import { Workspace } from '@core/models/workspace';
 import { throwError } from 'rxjs';
 
@@ -31,7 +32,10 @@ export class WorkspacesService {
   }
 
   put(request: UpdateWorkspaceRequest) {
-    return this.http.put<ClientResponse<Workspace>>('api/workspaces', request);
+    return this.http.put<ClientResponse<UpdateWorkspaceResponse>>(
+      'api/workspaces',
+      request
+    );
   }
 
   delete(workspace: Workspace) {
