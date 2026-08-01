@@ -110,6 +110,17 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             .ToListAsync(cancellationToken);
     }
 
+    public Task<List<AiToolInvocation>> GetToolInvocations(
+        Guid conversationId,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.AiToolInvocations
+            .AsNoTracking()
+            .Where(invocation => invocation.ConversationId == conversationId)
+            .OrderBy(invocation => invocation.Id)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<int> GetNextSequence(Guid conversationId, CancellationToken cancellationToken = default)
     {
         var messages = Context.AiMessages.Where(message => message.ConversationId == conversationId);

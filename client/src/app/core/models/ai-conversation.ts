@@ -14,6 +14,7 @@ export enum AiStreamEventType {
   error = 4,
   conversationStarted = 5,
   changeSetProposed = 6,
+  entitiesReferenced = 7,
 }
 
 export interface AiStreamEvent {
@@ -23,6 +24,7 @@ export interface AiStreamEvent {
   message?: string;
   conversationId?: string;
   changeSetId?: string;
+  references?: AiEntityReference[];
 }
 
 export interface AiTokenUsage {
@@ -41,12 +43,19 @@ export interface AiConversation {
   usage: AiTokenUsage;
 }
 
+export interface AiEntityReference {
+  type: string;
+  id: string;
+  name: string;
+}
+
 export interface AiMessage {
   id: number;
   sequence: number;
   role: AiMessageRole;
   text?: string;
   toolNames: string[];
+  references: AiEntityReference[];
   createdAt: string;
 }
 

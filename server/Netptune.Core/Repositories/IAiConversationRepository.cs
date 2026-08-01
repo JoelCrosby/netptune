@@ -16,6 +16,8 @@ public interface IAiConversationRepository : IRepository<AiConversation, Guid>
 
     Task<List<AiMessage>> GetMessages(Guid conversationId, CancellationToken cancellationToken = default);
 
+    Task<List<AiToolInvocation>> GetToolInvocations(Guid conversationId, CancellationToken cancellationToken = default);
+
     Task<int> GetNextSequence(Guid conversationId, CancellationToken cancellationToken = default);
 
     Task AddMessage(AiMessage message, CancellationToken cancellationToken = default);

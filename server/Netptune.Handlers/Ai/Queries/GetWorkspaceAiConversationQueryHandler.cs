@@ -40,18 +40,23 @@ public sealed class GetWorkspaceAiConversationQueryHandler
         }
 
         var messages = await UnitOfWork.AiConversations.GetMessages(conversation.Id, cancellationToken);
+        var invocations = await UnitOfWork.AiConversations.GetToolInvocations(conversation.Id, cancellationToken);
+        var referencesByMessage = AiMessageReferences.Group(invocations);
         var detail = new AiConversationDetailViewModel
         {
             Conversation = GetAiConversationsQueryHandler.ToViewModel(conversation, messages),
-            Messages = messages.Select(ToViewModel).ToList(),
+            Messages = messages.Select(message => ToViewModel(message, referencesByMessage)).ToList(),
         };
 
         return ClientResponse<AiConversationDetailViewModel>.Success(detail);
     }
 
-    private static AiMessageViewModel ToViewModel(AiMessage message)
+    private static AiMessageViewModel ToViewModel(
+        AiMessage message,
+        IReadOnlyDictionary<long, List<AiEntityReference>> referencesByMessage)
     {
         var content = AiMessageContent.FromJsonDocument(message.Content);
+        var hasReferences = referencesByMessage.TryGetValue(message.Id, out var references);
 
         return new AiMessageViewModel
         {
@@ -60,6 +65,7 @@ public sealed class GetWorkspaceAiConversationQueryHandler
             Role = message.Role,
             Text = content.Text,
             ToolNames = content.ToolCalls.Select(call => call.Name).ToList(),
+            References = hasReferences ? references! : [],
             CreatedAt = message.CreatedAt,
         };
     }

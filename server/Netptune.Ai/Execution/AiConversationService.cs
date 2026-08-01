@@ -179,6 +179,17 @@ public sealed class AiConversationService : IAiConversationService
         }
 
         var reply = assistantText.ToString();
+        var references = AiEntityReferenceReader.Read(context.Invocations.Select(invocation => new AiToolResultText
+        {
+            ToolName = invocation.ToolName,
+            Content = invocation.Result,
+        }));
+
+        if (references.Count > 0)
+        {
+            yield return AiStreamEvent.EntitiesReferenced(references);
+        }
+
         var titleRequest = new AiTitleRequest
         {
             Provider = provider,

@@ -50,7 +50,11 @@ import { AiAssistantMessageComponent } from './components/ai-assistant-message.c
           } @else {
             <div class="flex flex-col gap-5">
               @for (entry of entries(); track $index) {
-                <app-ai-assistant-message [entry]="entry" />
+                <app-ai-assistant-message
+                  [entry]="entry"
+                  [references]="assistant.references()"
+                  [workspace]="assistant.workspaceKey()"
+                  [isStreaming]="assistant.isStreaming() && $last" />
               }
             </div>
           }

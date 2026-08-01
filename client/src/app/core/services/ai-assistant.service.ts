@@ -10,6 +10,7 @@ import {
   AiChangeSet,
   AiConversation,
   AiConversationDetail,
+  AiEntityReference,
   AiMessageRole,
   AiStreamEvent,
   AiStreamEventType,
@@ -17,6 +18,7 @@ import {
 import { WorkspaceService } from '@core/services/workspace.service';
 import { selectIsAssistantAvailable } from '@core/store/auth/auth.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { referenceKey } from '@core/util/ai-references';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 
@@ -38,6 +40,8 @@ export class AiAssistantService {
   private readonly workspaceId = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier
   );
+
+  readonly workspaceKey = computed(() => this.workspaceId() ?? null);
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly storage = inject(LocalStorageService);
@@ -70,6 +74,7 @@ export class AiAssistantService {
   readonly conversations = signal<AiConversation[]>([]);
   readonly showHistory = signal(false);
   readonly models = signal<AiModelOption[]>([]);
+  readonly references = signal<Map<string, AiEntityReference>>(new Map());
   readonly selectedModel = signal<string | null>(null);
 
   readonly selectedModelLabel = computed(() => {
@@ -146,6 +151,9 @@ export class AiAssistantService {
     this.conversationTitle.set(detail.conversation.title);
     this.selectedModel.set(detail.conversation.model);
     this.entries.set(detail.messages.map((message) => this.toEntry(message)));
+    this.addReferences(
+      detail.messages.flatMap((message) => message.references)
+    );
     this.changeSet.set(null);
     this.excludedChangeIds.set(new Set());
     this.showHistory.set(false);
@@ -279,9 +287,26 @@ export class AiAssistantService {
     await this.router.navigate(['/', workspace]);
   }
 
+  addReferences(references: AiEntityReference[]) {
+    if (references.length === 0) {
+      return;
+    }
+
+    this.references.update((current) => {
+      const next = new Map(current);
+
+      for (const reference of references) {
+        next.set(referenceKey(reference.type, reference.id), reference);
+      }
+
+      return next;
+    });
+  }
+
   startNewConversation() {
     this.conversationId.set(null);
     this.conversationTitle.set(null);
+    this.references.set(new Map());
     this.entries.set([]);
     this.changeSet.set(null);
     this.excludedChangeIds.set(new Set());
@@ -486,6 +511,15 @@ export class AiAssistantService {
 
     if (event.type === AiStreamEventType.toolStarted && event.toolName) {
       this.appendTool(event.toolName);
+
+      return;
+    }
+
+    if (
+      event.type === AiStreamEventType.entitiesReferenced &&
+      event.references
+    ) {
+      this.addReferences(event.references);
 
       return;
     }

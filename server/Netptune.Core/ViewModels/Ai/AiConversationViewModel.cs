@@ -1,4 +1,5 @@
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Ai;
 
 namespace Netptune.Core.ViewModels.Ai;
 
@@ -39,6 +40,8 @@ public sealed record AiMessageViewModel
     public string? Text { get; init; }
 
     public List<string> ToolNames { get; init; } = [];
+
+    public List<AiEntityReference> References { get; init; } = [];
 
     public DateTime CreatedAt { get; init; }
 }

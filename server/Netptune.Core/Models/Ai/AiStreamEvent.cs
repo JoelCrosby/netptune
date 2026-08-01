@@ -9,6 +9,7 @@ public enum AiStreamEventType
     Error = 4,
     ConversationStarted = 5,
     ChangeSetProposed = 6,
+    EntitiesReferenced = 7,
 }
 
 public sealed record AiStreamEvent
@@ -25,12 +26,23 @@ public sealed record AiStreamEvent
 
     public Guid? ChangeSetId { get; init; }
 
+    public List<AiEntityReference>? References { get; init; }
+
     public static AiStreamEvent ChangeSetProposed(Guid changeSetId)
     {
         return new AiStreamEvent
         {
             Type = AiStreamEventType.ChangeSetProposed,
             ChangeSetId = changeSetId,
+        };
+    }
+
+    public static AiStreamEvent EntitiesReferenced(List<AiEntityReference> references)
+    {
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.EntitiesReferenced,
+            References = references,
         };
     }
 
