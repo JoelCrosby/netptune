@@ -26,10 +26,13 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, CreateTaskTool>();
         services.AddScoped<IAiTool, UpdateTaskTool>();
         services.AddScoped<IAiTool, AssignTaskTool>();
+        services.AddScoped<IAiTool, ListSprintsTool>();
+        services.AddScoped<IAiTool, MoveTaskToSprintTool>();
 
         services.AddScoped<IAiChangeHandler, CreateTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, AssignTaskChangeHandler>();
+        services.AddScoped<IAiChangeHandler, MoveTaskToSprintChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();
 
