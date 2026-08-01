@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Mediator;
 
+using Netptune.App.Configuration;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Services.Ai;
@@ -32,11 +33,17 @@ public static class AiEndpoints
         group.MapGet("/conversations", HandleGetConversations);
         group.MapGet("/conversations/{conversationId:guid}", HandleGetConversation);
         group.MapDelete("/conversations/{conversationId:guid}", HandleDeleteConversation);
-        group.MapPost("/conversations/messages", HandleSendMessage);
+
+        group
+            .MapPost("/conversations/messages", HandleSendMessage)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
         group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
         group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
-        group.MapPost("/change-sets/{changeSetId:guid}/apply", HandleApplyChangeSet);
+
+        group
+            .MapPost("/change-sets/{changeSetId:guid}/apply", HandleApplyChangeSet)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
         return group;
     }

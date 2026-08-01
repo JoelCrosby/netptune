@@ -15,4 +15,6 @@ public sealed class AiOptions
     public int MaxOutputTokens { get; set; } = 16000;
 
     public int MaxToolResultCharacters { get; set; } = 32000;
+
+    public int MaxHistoryCharacters { get; set; } = 120000;
 }

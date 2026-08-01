@@ -223,10 +223,57 @@ public sealed class AiConversationService : IAiConversationService
     private async Task<List<AiChatMessage>> LoadHistory(Guid conversationId, CancellationToken cancellationToken)
     {
         var messages = await UnitOfWork.AiConversations.GetMessages(conversationId, cancellationToken);
-
-        return messages
+        var history = messages
             .Select(message => AiMessageContent.FromJsonDocument(message.Content).ToChatMessage(message.Role))
             .ToList();
+
+        return TrimHistory(history, Options.MaxHistoryCharacters);
+    }
+
+    public static List<AiChatMessage> TrimHistory(List<AiChatMessage> history, int maxCharacters)
+    {
+        var kept = new List<AiChatMessage>();
+        var used = 0;
+
+        for (var index = history.Count - 1; index >= 0; index--)
+        {
+            var message = history[index];
+            var cost = MeasureMessage(message);
+            var exceedsBudget = used + cost > maxCharacters && kept.Count > 0;
+
+            if (exceedsBudget)
+            {
+                break;
+            }
+
+            used += cost;
+            kept.Add(message);
+        }
+
+        kept.Reverse();
+
+        return DropOrphanedToolResults(kept);
+    }
+
+    private static List<AiChatMessage> DropOrphanedToolResults(List<AiChatMessage> history)
+    {
+        var firstUserIndex = history.FindIndex(message => message.Role == AiMessageRole.User);
+
+        if (firstUserIndex <= 0)
+        {
+            return firstUserIndex == 0 ? history : [];
+        }
+
+        return history[firstUserIndex..];
+    }
+
+    private static int MeasureMessage(AiChatMessage message)
+    {
+        var textLength = message.Text?.Length ?? 0;
+        var toolCallLength = message.ToolCalls.Sum(call => call.Arguments.RootElement.GetRawText().Length);
+        var toolResultLength = message.ToolResults.Sum(result => result.Content.Length);
+
+        return textLength + toolCallLength + toolResultLength;
     }
 
     private async Task<long> PersistMessage(

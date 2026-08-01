@@ -6,13 +6,18 @@ namespace Netptune.App.Configuration;
 
 public static class RateLimiterConfiguration
 {
+    public const string AiPolicyName = "ai";
+
     private const int DefaultApiPermitLimit = 300;
+
+    private const int DefaultAiPermitLimit = 20;
 
     public static IServiceCollection AddNetptuneRateLimiter(
         this IServiceCollection services,
         IConfiguration configuration)
     {
         var apiPermitLimit = configuration.GetValue("RateLimiting:ApiPermitLimit", DefaultApiPermitLimit);
+        var aiPermitLimit = configuration.GetValue("RateLimiting:AiPermitLimit", DefaultAiPermitLimit);
 
         services.AddRateLimiter(options =>
         {
@@ -64,6 +69,18 @@ public static class RateLimiterConfiguration
                         SegmentsPerWindow = 2,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 2,
+                    }));
+
+            options.AddPolicy(AiPolicyName, context =>
+                RateLimitPartition.GetSlidingWindowLimiter(
+                    context.GetRateLimitPartitionKey(),
+                    _ => new SlidingWindowRateLimiterOptions
+                    {
+                        PermitLimit = aiPermitLimit,
+                        Window = TimeSpan.FromMinutes(1),
+                        SegmentsPerWindow = 6,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0,
                     }));
         });
 
