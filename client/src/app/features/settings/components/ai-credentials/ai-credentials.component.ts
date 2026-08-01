@@ -5,12 +5,16 @@ import {
   AiProvider,
   SaveAiCredentialRequest,
 } from '@core/models/ai-credential';
+import { AiModelOption } from '@core/models/ai-model';
 import { aiCredentialResource } from '@core/resources/ai-credential.resource';
+import { aiModelResource } from '@core/resources/ai-model.resource';
 import { AiCredentialsService } from '@core/services/ai-credentials.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { LucideKeyRound, LucideTrash } from '@lucide/angular';
+import { LucideCheck, LucideKeyRound, LucideTrash } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
@@ -39,10 +43,13 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
   selector: 'app-ai-credentials',
   imports: [
     FormsModule,
+    LucideCheck,
     LucideKeyRound,
     LucideTrash,
+    DropdownButtonComponent,
     FlatButtonComponent,
     IconButtonComponent,
+    MenuItemComponent,
     SectionHeaderComponent,
     TooltipDirective,
   ],
@@ -117,6 +124,53 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
                 [name]="'secret-' + option.provider" />
             </label>
 
+            <div class="flex min-w-56 flex-col gap-1">
+              <span class="text-muted text-xs" i18n="Label for the model input">
+                Model
+              </span>
+              <app-dropdown-button
+                #modelMenu
+                [label]="modelLabel(option.provider)"
+                i18n-ariaLabel="
+                  Accessible label for the assistant model selector
+                "
+                ariaLabel="Assistant model"
+                buttonClass="h-9 min-w-56 justify-between">
+                <button
+                  app-menu-item
+                  type="button"
+                  role="menuitemradio"
+                  [attr.aria-checked]="modelFor(option.provider) === ''"
+                  (click)="setModel(option.provider, ''); modelMenu.close()">
+                  <span class="flex h-4 w-4 items-center justify-center">
+                    @if (modelFor(option.provider) === '') {
+                      <svg lucideCheck class="h-4 w-4"></svg>
+                    }
+                  </span>
+                  <span i18n="Model option that defers to the server default"
+                    >Default</span
+                  >
+                </button>
+                @for (model of modelsFor(option.provider); track model.id) {
+                  <button
+                    app-menu-item
+                    type="button"
+                    role="menuitemradio"
+                    [attr.aria-checked]="modelFor(option.provider) === model.id"
+                    (click)="
+                      setModel(option.provider, model.id); modelMenu.close()
+                    ">
+                    <span class="flex h-4 w-4 items-center justify-center">
+                      @if (modelFor(option.provider) === model.id) {
+                        <svg lucideCheck class="h-4 w-4"></svg>
+                      }
+                    </span>
+                    <span>{{ model.label }}</span>
+                  </button>
+                }
+              </app-dropdown-button>
+            </div>
+
             <button
               app-flat-button
               type="button"
@@ -138,11 +192,13 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
 })
 export class AiCredentialsComponent {
   private readonly credentials = aiCredentialResource();
+  private readonly catalog = aiModelResource();
   private readonly service = inject(AiCredentialsService);
   private readonly snackbar = inject(SnackbarService);
   private readonly confirmation = inject(ConfirmationService);
 
   private readonly secrets = signal<Record<number, string>>({});
+  private readonly models = signal<Record<number, string>>({});
   private readonly saving = signal<AiProvider | null>(null);
 
   protected readonly providerOptions = computed(() => PROVIDER_OPTIONS);
@@ -157,6 +213,47 @@ export class AiCredentialsComponent {
 
   protected setSecret(provider: AiProvider, secret: string) {
     this.secrets.update((current) => ({ ...current, [provider]: secret }));
+  }
+
+  protected modelFor(provider: AiProvider): string {
+    const pending = this.models()[provider];
+
+    if (pending !== undefined) {
+      return pending;
+    }
+
+    return this.credentialFor(provider)?.model ?? '';
+  }
+
+  protected setModel(provider: AiProvider, model: string) {
+    this.models.update((current) => ({ ...current, [provider]: model }));
+  }
+
+  protected modelsFor(provider: AiProvider): AiModelOption[] {
+    return this.catalog.value().filter((model) => model.provider === provider);
+  }
+
+  protected modelLabel(provider: AiProvider): string {
+    const selected = this.modelFor(provider);
+    const model = this.modelsFor(provider).find(
+      (option) => option.id === selected
+    );
+
+    if (model) {
+      return model.label;
+    }
+
+    return $localize`:Model option that defers to the server default:Default`;
+  }
+
+  private clearPendingModel(provider: AiProvider) {
+    this.models.update((current) => {
+      const entries = Object.entries(current).filter(([key]) => {
+        return Number(key) !== provider;
+      });
+
+      return Object.fromEntries(entries);
+    });
   }
 
   protected secretPlaceholder(provider: AiProvider): string {
@@ -182,10 +279,12 @@ export class AiCredentialsComponent {
       return;
     }
 
+    const model = this.modelFor(option.provider).trim();
     const request: SaveAiCredentialRequest = {
       provider: option.provider,
       label: option.label,
       secret,
+      model: model.length > 0 ? model : null,
     };
 
     this.saving.set(option.provider);
@@ -207,6 +306,7 @@ export class AiCredentialsComponent {
           }
 
           this.setSecret(option.provider, '');
+          this.clearPendingModel(option.provider);
           this.credentials.reload();
           this.snackbar.success(
             $localize`:Shown after an API key is stored:Key saved.`

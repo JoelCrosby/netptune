@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { AiCredential } from '@core/models/ai-credential';
+import { AiModelOption } from '@core/models/ai-model';
 import { ClientResponse } from '@core/models/client-response';
 import {
   AiChangeSet,
@@ -48,6 +50,47 @@ export class AiAssistantService {
   readonly isApplying = signal(false);
   readonly conversations = signal<AiConversation[]>([]);
   readonly showHistory = signal(false);
+  readonly models = signal<AiModelOption[]>([]);
+  readonly selectedModel = signal<string | null>(null);
+
+  readonly selectedModelLabel = computed(() => {
+    const selected = this.selectedModel();
+    const model = this.models().find((option) => option.id === selected);
+
+    if (model) {
+      return model.label;
+    }
+
+    if (selected) {
+      return selected;
+    }
+
+    return $localize`:Model option that lets the server choose:Automatic`;
+  });
+
+  selectModel(modelId: string | null) {
+    this.selectedModel.set(modelId);
+  }
+
+  private async loadModels() {
+    const hasModels = this.models().length > 0;
+
+    if (hasModels) {
+      return;
+    }
+
+    const [catalog, credentials] = await Promise.all([
+      this.http.get<AiModelOption[]>('api/ai/models').toPromise(),
+      this.http.get<AiCredential[]>('api/ai/credentials').toPromise(),
+    ]);
+
+    const providers = new Set((credentials ?? []).map((item) => item.provider));
+    const available = (catalog ?? []).filter((model) => {
+      return providers.has(model.provider);
+    });
+
+    this.models.set(available);
+  }
 
   async toggleHistory() {
     const next = !this.showHistory();
@@ -81,6 +124,7 @@ export class AiAssistantService {
     }
 
     this.conversationId.set(detail.conversation.id);
+    this.selectedModel.set(detail.conversation.model);
     this.entries.set(detail.messages.map((message) => this.toEntry(message)));
     this.changeSet.set(null);
     this.excludedChangeIds.set(new Set());
@@ -123,6 +167,8 @@ export class AiAssistantService {
     }
 
     this.isOpen.set(true);
+
+    void this.loadModels();
   }
 
   close() {
@@ -135,6 +181,10 @@ export class AiAssistantService {
     }
 
     this.isOpen.update((value) => !value);
+
+    if (this.isOpen()) {
+      void this.loadModels();
+    }
   }
 
   startNewConversation() {
@@ -243,6 +293,7 @@ export class AiAssistantService {
         body: JSON.stringify({
           conversationId: this.conversationId(),
           text,
+          model: this.selectedModel(),
         }),
       }
     );

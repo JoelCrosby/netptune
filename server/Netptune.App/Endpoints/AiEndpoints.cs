@@ -27,6 +27,8 @@ public static class AiEndpoints
             .WithTags("AI assistant")
             .RequireAuthorization();
 
+        group.MapGet("/models", () => Results.Ok(AiModels.Catalog));
+
         group.MapGet("/credentials", HandleGetCredentials);
         group.MapPut("/credentials", HandleSaveCredential);
         group.MapDelete("/credentials/{credentialId:guid}", HandleDeleteCredential);

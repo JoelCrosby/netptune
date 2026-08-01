@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using FluentAssertions;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Ai;
 
@@ -80,6 +81,68 @@ public sealed class AiEndpointTests : IClassFixture<NetptuneFixture>
         listed[0].SecretHint.Should().Be("bbbb");
 
         await DeleteExistingCredentials(client);
+    }
+
+    [Fact]
+    public async Task Credentials_ShouldStoreThePerKeyModelOverride()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        await DeleteExistingCredentials(client);
+
+        await client.PutAsJsonAsync("api/ai/credentials", new
+        {
+            provider = AiProvider.Anthropic,
+            label = "Anthropic",
+            secret = "sk-ant-model-override-secret",
+            model = "claude-sonnet-5",
+        });
+
+        var listed = await client.GetFromJsonAsync<List<AiCredentialViewModel>>("api/ai/credentials");
+
+        listed.Should().ContainSingle();
+        listed![0].Model.Should().Be("claude-sonnet-5");
+
+        await client.PutAsJsonAsync("api/ai/credentials", new
+        {
+            provider = AiProvider.Anthropic,
+            label = "Anthropic",
+            secret = "sk-ant-model-override-secret",
+            model = (string?)null,
+        });
+
+        var cleared = await client.GetFromJsonAsync<List<AiCredentialViewModel>>("api/ai/credentials");
+
+        cleared![0].Model.Should().BeNull("clearing the field must fall back to the configured default");
+
+        await DeleteExistingCredentials(client);
+    }
+
+    [Fact]
+    public async Task Credentials_ShouldRejectAModelThatIsNotInTheCatalogue()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        var response = await client.PutAsJsonAsync("api/ai/credentials", new
+        {
+            provider = AiProvider.Anthropic,
+            label = "Anthropic",
+            secret = "sk-ant-catalogue-check-secret",
+            model = "gpt-5.2",
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Models_ShouldListTheCatalogue()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var models = await client.GetFromJsonAsync<List<AiModelOption>>("api/ai/models");
+
+        models.Should().NotBeNullOrEmpty();
+        models.Should().Contain(model => model.Id == AiModels.AnthropicDefault && model.IsDefault);
+        models.Should().Contain(model => model.Provider == AiProvider.OpenAi);
     }
 
     [Fact]

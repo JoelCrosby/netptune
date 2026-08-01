@@ -37,6 +37,10 @@ public sealed class UserAiCredentialEntityMap : KeyedEntityMap<UserAiCredential,
             .IsRequired();
 
         builder
+            .Property(credential => credential.Model)
+            .HasMaxLength(128);
+
+        builder
             .Property(credential => credential.CreatedAt)
             .IsRequired();
 

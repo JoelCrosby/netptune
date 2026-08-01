@@ -10,6 +10,8 @@ public sealed record AiSendMessageRequest
     public required string Text { get; init; }
 
     public AiProvider? Provider { get; init; }
+
+    public string? Model { get; init; }
 }
 
 public interface IAiConversationService

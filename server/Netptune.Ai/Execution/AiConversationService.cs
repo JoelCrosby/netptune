@@ -101,7 +101,9 @@ public sealed class AiConversationService : IAiConversationService
             yield break;
         }
 
-        var provider = ResolveProvider(request.Provider, existing, credentials);
+        var requestedModel = request.Model?.Trim();
+        var requestedProvider = request.Provider ?? AiModels.ProviderFor(requestedModel);
+        var provider = ResolveProvider(requestedProvider, existing, credentials);
         var credential = credentials.FirstOrDefault(item => item.Provider == provider);
 
         if (credential is null)
@@ -111,7 +113,19 @@ public sealed class AiConversationService : IAiConversationService
             yield break;
         }
 
-        var conversation = existing ?? await CreateConversation(userId, workspaceId, provider, text, cancellationToken);
+        var model = ResolveModel(provider, requestedModel, credential.Model);
+        var conversation = existing ?? await CreateConversation(
+            new AiConversationSeed(userId, workspaceId, provider, model),
+            text,
+            cancellationToken);
+
+        var switchesModel = existing is not null && AiModels.IsSupported(provider, requestedModel);
+
+        if (switchesModel)
+        {
+            conversation.Provider = provider;
+            conversation.Model = model;
+        }
 
         yield return AiStreamEvent.ConversationStarted(conversation.Id);
 
@@ -191,22 +205,44 @@ public sealed class AiConversationService : IAiConversationService
         return hasAnthropic ? AiProvider.Anthropic : credentials[0].Provider;
     }
 
+    private string ResolveModel(AiProvider provider, string? requestedModel, string? credentialModel)
+    {
+        var isRequestedSupported = AiModels.IsSupported(provider, requestedModel);
+
+        if (isRequestedSupported)
+        {
+            return requestedModel!;
+        }
+
+        var isCredentialSupported = AiModels.IsSupported(provider, credentialModel);
+
+        if (isCredentialSupported)
+        {
+            return credentialModel!;
+        }
+
+        return ProviderFactory.Resolve(provider).DefaultModel;
+    }
+
+    private sealed record AiConversationSeed(
+        string UserId,
+        int WorkspaceId,
+        AiProvider Provider,
+        string Model);
+
     private async Task<AiConversation> CreateConversation(
-        string userId,
-        int workspaceId,
-        AiProvider provider,
+        AiConversationSeed seed,
         string firstMessage,
         CancellationToken cancellationToken)
     {
-        var model = ProviderFactory.Resolve(provider).DefaultModel;
         var conversation = new AiConversation
         {
             Id = Guid.NewGuid(),
-            WorkspaceId = workspaceId,
-            UserId = userId,
+            WorkspaceId = seed.WorkspaceId,
+            UserId = seed.UserId,
             Title = CreateTitle(firstMessage),
-            Provider = provider,
-            Model = model,
+            Provider = seed.Provider,
+            Model = seed.Model,
             LastMessageAt = DateTime.UtcNow,
         };
 

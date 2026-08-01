@@ -17,6 +17,8 @@ public sealed record UserAiCredential : KeyedEntity<Guid>
 
     public required string SecretHint { get; set; }
 
+    public string? Model { get; set; }
+
     public DateTime CreatedAt { get; init; }
 
     public DateTime? LastUsedAt { get; set; }

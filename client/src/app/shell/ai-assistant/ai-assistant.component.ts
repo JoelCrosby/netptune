@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { AiChangeSetStatus } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import {
+  LucideCheck,
   LucideHistory,
   LucideSparkles,
   LucideTrash,
@@ -26,19 +27,24 @@ import {
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
+import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-ai-assistant',
   imports: [
     FormsModule,
+    LucideCheck,
     LucideHistory,
     LucideSparkles,
     LucideTrash,
     LucideWrench,
     LucideX,
+    DropdownButtonComponent,
     FlatButtonComponent,
     IconButtonComponent,
+    MenuItemComponent,
     StrokedButtonComponent,
     TooltipDirective,
   ],
@@ -234,15 +240,60 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         }
 
         <footer class="border-border border-t p-3">
-          <div class="flex items-end gap-2">
-            <textarea
-              rows="2"
-              class="border-border bg-background placeholder:text-muted w-full resize-none rounded border px-3 py-2 text-sm outline-none"
-              [ngModel]="draft()"
-              (ngModelChange)="draft.set($event)"
-              (keydown)="onKeydown($event)"
-              [placeholder]="inputPlaceholder()"
-              [disabled]="assistant.isStreaming()"></textarea>
+          <textarea
+            rows="2"
+            class="border-border bg-background placeholder:text-muted w-full resize-none rounded border px-3 py-2 text-sm outline-none"
+            [ngModel]="draft()"
+            (ngModelChange)="draft.set($event)"
+            (keydown)="onKeydown($event)"
+            [placeholder]="inputPlaceholder()"
+            [disabled]="assistant.isStreaming()"></textarea>
+
+          <div class="mt-2 flex items-center justify-between gap-2">
+            @if (assistant.models().length > 0) {
+              <app-dropdown-button
+                #modelMenu
+                [label]="assistant.selectedModelLabel()"
+                i18n-ariaLabel="
+                  Accessible label for the assistant model selector
+                "
+                ariaLabel="Assistant model"
+                buttonClass="h-8 max-w-52 px-2 text-xs">
+                <button
+                  app-menu-item
+                  type="button"
+                  role="menuitemradio"
+                  [attr.aria-checked]="assistant.selectedModel() === null"
+                  (click)="selectModel(null); modelMenu.close()">
+                  <span class="flex h-4 w-4 items-center justify-center">
+                    @if (assistant.selectedModel() === null) {
+                      <svg lucideCheck class="h-4 w-4"></svg>
+                    }
+                  </span>
+                  <span i18n="Model option that lets the server choose"
+                    >Automatic</span
+                  >
+                </button>
+                @for (model of assistant.models(); track model.id) {
+                  <button
+                    app-menu-item
+                    type="button"
+                    role="menuitemradio"
+                    [attr.aria-checked]="assistant.selectedModel() === model.id"
+                    (click)="selectModel(model.id); modelMenu.close()">
+                    <span class="flex h-4 w-4 items-center justify-center">
+                      @if (assistant.selectedModel() === model.id) {
+                        <svg lucideCheck class="h-4 w-4"></svg>
+                      }
+                    </span>
+                    <span>{{ model.label }}</span>
+                  </button>
+                }
+              </app-dropdown-button>
+            } @else {
+              <span></span>
+            }
+
             <button
               app-stroked-button
               type="button"
@@ -366,6 +417,10 @@ export class AiAssistantComponent implements AfterViewInit, OnDestroy {
 
   protected deleteConversation(conversationId: string) {
     void this.assistant.deleteConversation(conversationId);
+  }
+
+  protected selectModel(modelId: string | null) {
+    this.assistant.selectModel(modelId);
   }
 
   protected startNew() {

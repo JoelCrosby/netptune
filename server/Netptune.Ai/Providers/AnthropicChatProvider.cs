@@ -5,6 +5,9 @@ using System.Text.Json;
 using Anthropic;
 using Anthropic.Models.Messages;
 
+using Microsoft.Extensions.Options;
+
+using Netptune.Ai.Configuration;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
@@ -15,9 +18,16 @@ namespace Netptune.Ai.Providers;
 
 public sealed class AnthropicChatProvider : IAiChatProvider
 {
+    private readonly AiOptions Options;
+
+    public AnthropicChatProvider(IOptions<AiOptions> options)
+    {
+        Options = options.Value;
+    }
+
     public AiProviderKind Provider => AiProviderKind.Anthropic;
 
-    public string DefaultModel => AiModels.AnthropicDefault;
+    public string DefaultModel => Options.AnthropicModel;
 
     public async IAsyncEnumerable<AiProviderStreamEvent> Stream(
         AiChatRequest request,

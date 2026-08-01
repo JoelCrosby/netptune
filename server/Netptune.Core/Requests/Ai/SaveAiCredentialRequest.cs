@@ -9,4 +9,6 @@ public sealed record SaveAiCredentialRequest
     public required string Label { get; init; }
 
     public required string Secret { get; init; }
+
+    public string? Model { get; init; }
 }

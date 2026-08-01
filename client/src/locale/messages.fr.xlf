@@ -66,7 +66,7 @@
     </unit>
     <unit id="8571899148771106217">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:230,232</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:236,238</note>
         <note category="description">Shown after changes were applied</note>
       </notes>
       <segment state="translated">
@@ -102,6 +102,17 @@
       <segment state="translated">
         <source>View Members</source>
         <target>Voir les membres</target>
+      </segment>
+    </unit>
+    <unit id="810888510148304696">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:68</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:274,277</note>
+        <note category="description">Model option that lets the server choose</note>
+      </notes>
+      <segment state="translated">
+        <source>Automatic</source>
+        <target>Automatique</target>
       </segment>
     </unit>
     <unit id="8109676390252768717">
@@ -448,7 +459,7 @@
     </unit>
     <unit id="4391289919356861627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:217,220</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:223,226</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -704,6 +715,17 @@
       <segment state="translated">
         <source>View Task Flags</source>
         <target>Voir les signalements de tâches</target>
+      </segment>
+    </unit>
+    <unit id="7546969606032903393">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:137,139</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:260,262</note>
+        <note category="description">Accessible label for the assistant model selector</note>
+      </notes>
+      <segment state="translated">
+        <source>Assistant model</source>
+        <target>Modèle de l&apos;assistant</target>
       </segment>
     </unit>
     <unit id="9018075259180774811">
@@ -975,7 +997,7 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:63,66</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:55,57</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:230</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:330</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
@@ -1306,7 +1328,7 @@
     </unit>
     <unit id="3118592863000722717">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:127,130</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:181,184</note>
         <note category="description">Button that replaces a stored API key</note>
       </notes>
       <segment state="translated">
@@ -1316,7 +1338,7 @@
     </unit>
     <unit id="3127417567733728943">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:28</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:32</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
       <segment state="translated">
@@ -1523,7 +1545,7 @@
     </unit>
     <unit id="7198631316779176054">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:169</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:266</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
       <segment state="translated">
@@ -1585,7 +1607,7 @@
     </unit>
     <unit id="145156830164118">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:60,62</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:66,68</note>
         <note category="description">Title of the AI assistant panel</note>
       </notes>
       <segment state="translated">
@@ -1635,7 +1657,7 @@
     </unit>
     <unit id="413961075487889368">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:342</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:393</note>
         <note category="description">Placeholder while the assistant is replying</note>
       </notes>
       <segment state="translated">
@@ -1735,7 +1757,7 @@
     </unit>
     <unit id="8768927723338869419">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:77,79</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:84,86</note>
         <note category="description">Label preceding the masked API key</note>
       </notes>
       <segment state="translated">
@@ -2085,7 +2107,7 @@
     </unit>
     <unit id="6707264088417972826">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:57,61</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:64,68</note>
         <note category="description">Explains why a key is needed</note>
       </notes>
       <segment state="translated">
@@ -2429,7 +2451,7 @@
     </unit>
     <unit id="5504590309962934202">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:107,109</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:114,116</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment state="translated">
@@ -2788,7 +2810,7 @@
     </unit>
     <unit id="8550125178086238714">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:227</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:327</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment state="translated">
@@ -3854,7 +3876,7 @@
     </unit>
     <unit id="5988988986257041887">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:247</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:347</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment state="translated">
@@ -3995,7 +4017,7 @@
     </unit>
     <unit id="7629072322253412501">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:121,124</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:127,130</note>
         <note category="description">Empty state for stored conversations</note>
       </notes>
       <segment state="translated">
@@ -4631,7 +4653,7 @@
     <unit id="4101852533995361725">
       <notes>
         <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:114,117</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:106,108</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:112,114</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
       <segment state="translated">
@@ -6665,8 +6687,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:229</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:252</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:279</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:303</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -6727,7 +6749,7 @@
     </unit>
     <unit id="5211609068551558044">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:72,74</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:78,80</note>
         <note category="description">Tooltip on the button that lists past conversations</note>
       </notes>
       <segment state="translated">
@@ -7111,7 +7133,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:82,85</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:88,91</note>
         <note category="description">Button that clears the assistant conversation</note>
       </notes>
       <segment state="translated">
@@ -7181,7 +7203,7 @@
     </unit>
     <unit id="6168573387818230011">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:212</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:312</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment state="translated">
@@ -7466,7 +7488,7 @@
     </unit>
     <unit id="7258010665968228997">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:176,179</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:182,185</note>
         <note category="description">Heading above the list of proposed workspace changes</note>
       </notes>
       <segment state="translated">
@@ -8068,7 +8090,7 @@
     </unit>
     <unit id="3525807365202276561">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:345</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:396</note>
         <note category="description">Placeholder for the assistant message input</note>
       </notes>
       <segment state="translated">
@@ -8285,7 +8307,7 @@
     </unit>
     <unit id="3477141043479115606">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:166</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:263</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
       <segment state="translated">
@@ -9168,8 +9190,8 @@
     </unit>
     <unit id="3423740992676752364">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:203</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:218</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:302</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:318</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment state="translated">
@@ -9179,7 +9201,7 @@
     </unit>
     <unit id="3427257823783553545">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:131,134</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:137,140</note>
         <note category="description">Empty state inside the AI assistant panel</note>
       </notes>
       <segment state="translated">
@@ -9414,7 +9436,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:222,225</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:228,231</note>
         <note category="description">Button that discards the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -9507,7 +9529,7 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:339</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:390</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -10174,7 +10196,7 @@
     </unit>
     <unit id="395357454003185588">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:29</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:33</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
       <segment state="translated">
@@ -10308,7 +10330,7 @@
     </unit>
     <unit id="3959473004188974816">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:252</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:352</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment state="translated">
@@ -10378,7 +10400,7 @@
     </unit>
     <unit id="6490688569532630280">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:252,255</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:303,306</note>
         <note category="description">Button that sends a message to the assistant</note>
       </notes>
       <segment state="translated">
@@ -11166,7 +11188,7 @@
     </unit>
     <unit id="6406732480689038024">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:95,97</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:102,104</note>
         <note category="description">Tooltip on the button that removes a stored API key</note>
       </notes>
       <segment state="translated">
@@ -11415,7 +11437,7 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:91,94</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:145,147</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:151,153</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
         <note category="description">Label for a message the assistant sent</note>
       </notes>
@@ -12002,7 +12024,7 @@
     </unit>
     <unit id="8927455770711141149">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:34</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:38</note>
         <note category="description">Where to find an OpenAI API key</note>
       </notes>
       <segment state="translated">
@@ -12012,7 +12034,7 @@
     </unit>
     <unit id="9050138848550192211">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:33</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:37</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
       <segment state="translated">
@@ -12504,6 +12526,17 @@
       <segment state="translated">
         <source> No permissions granted </source>
         <target>Aucune autorisation accordée</target>
+      </segment>
+    </unit>
+    <unit id="5607669932062416162">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:151,154</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:246</note>
+        <note category="description">Model option that defers to the server default</note>
+      </notes>
+      <segment state="translated">
+        <source>Default</source>
+        <target>Par défaut</target>
       </segment>
     </unit>
     <unit id="328621173789640026">
@@ -13159,7 +13192,7 @@
     </unit>
     <unit id="7203070746919732368">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:228</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:328</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment state="translated">
@@ -13178,7 +13211,7 @@
     </unit>
     <unit id="720557322859638078">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:142,144</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:148,150</note>
         <note category="description">Label for a message the user sent</note>
       </notes>
       <segment state="translated">
@@ -13626,7 +13659,7 @@
     </unit>
     <unit id="774353184448576161">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:52,55</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:59,62</note>
         <note category="description">Section heading for the AI assistant API keys</note>
       </notes>
       <segment state="translated">
@@ -13876,7 +13909,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:52,54</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:58,60</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment state="translated">
@@ -14224,6 +14257,16 @@
       <segment state="translated">
         <source>Go to Storage</source>
         <target>Aller au stockage</target>
+      </segment>
+    </unit>
+    <unit id="5388692830516022173">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:129,131</note>
+        <note category="description">Label for the model input</note>
+      </notes>
+      <segment state="translated">
+        <source> Model </source>
+        <target> Modèle </target>
       </segment>
     </unit>
     <unit id="6607728160061723306">
@@ -14714,7 +14757,7 @@
     </unit>
     <unit id="4814285799071780083">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:229</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:329</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="description">Confirms removing an API key</note>
       </notes>
@@ -14896,7 +14939,7 @@
     </unit>
     <unit id="4442108733606169287">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:130,132</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:184,186</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment state="translated">

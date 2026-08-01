@@ -12,6 +12,8 @@ public sealed record AiCredentialViewModel
 
     public required string SecretHint { get; init; }
 
+    public string? Model { get; init; }
+
     public DateTime CreatedAt { get; init; }
 
     public DateTime? LastUsedAt { get; init; }

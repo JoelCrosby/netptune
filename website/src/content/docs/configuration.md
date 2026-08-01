@@ -86,19 +86,20 @@ The assistant runs on API keys supplied by each user, so no provider key is conf
 | `Ai__MaxHistoryCharacters`    | `120000`        | Conversation replay budget. Older turns are dropped once a conversation exceeds it.   |
 | `RateLimiting__AiPermitLimit` | `20`            | Assistant messages and change-set applies allowed per user per minute.                |
 
-Set `Ai__OpenAiModel` to a model your account can actually reach before enabling that provider; the default is a placeholder and requests will fail at the provider if it is wrong.
+The two model settings are only fallbacks. The models users can actually pick come from a fixed catalogue served by `GET /api/ai/models` and defined in `AiModels.Catalog` (`server/Netptune.Core/Models/Ai/AiModels.cs`) — edit that list to offer different models. Users choose one per API key in personal settings, and can switch models mid-conversation from the assistant panel; switching to a model from the other provider moves the conversation to that provider, which needs a key for it. A conversation otherwise keeps the model it started with, so changing these settings affects new conversations only.
 
 Users supply their own provider keys from personal settings. Keys are encrypted with ASP.NET Data Protection under the purpose `netptune.ai-credentials`, so the data-protection keyring in Valkey/Redis must be stable — losing it makes stored keys unreadable and users must re-enter them.
 
 Workspace admins can turn the assistant off for a whole workspace from workspace settings, and the `assistant.read_all_conversations` permission (granted to Admin and Owner) exposes every member's conversations there.
 
-New databases pick up the assistant schema automatically. An existing database needs three scripts from `server/scripts/`, in any order:
+New databases pick up the assistant schema automatically. An existing database needs four scripts from `server/scripts/`, in any order:
 
 | Script                                | Adds                                                                     |
 | ------------------------------------- | ------------------------------------------------------------------------ |
 | `add-event-record-origin.sql`         | `origin_type` and `agent` on `event_records`, for assistant attribution. |
 | `add-activity-entry-agent.sql`        | `agent` on `activity_entries` and rebuilds the open-entry unique index.  |
 | `add-workspace-assistant-enabled.sql` | `assistant_enabled` on `workspaces`, defaulting to true.                 |
+| `add-ai-credential-model.sql`         | `model` on `user_ai_credentials`, for the per-key model override.        |
 
 The assistant's own tables are created by the same path that creates every other table, so no script is needed for them.
 
