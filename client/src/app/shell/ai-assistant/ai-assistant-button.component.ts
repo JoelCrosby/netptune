@@ -20,6 +20,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         "
         aria-label="Assistant"
         appTooltip
+        appTooltipPosition="bottom"
         i18n-appTooltip="
           Tooltip on the button that opens the assistant. Translate the modifier
           key to its local name (for example Strg in German); leave the I as-is
