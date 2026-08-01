@@ -15,10 +15,8 @@ import {
   AiStreamEventType,
 } from '@core/models/ai-conversation';
 import { WorkspaceService } from '@core/services/workspace.service';
-import {
-  selectCurrentWorkspace,
-  selectCurrentWorkspaceIdentifier,
-} from '@core/store/workspaces/workspaces.selectors';
+import { selectIsAssistantAvailable } from '@core/store/auth/auth.selectors';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 
@@ -40,25 +38,26 @@ export class AiAssistantService {
   private readonly workspaceId = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier
   );
-  private readonly currentWorkspace = this.store.selectSignal(
-    selectCurrentWorkspace
-  );
-
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly storage = inject(LocalStorageService);
 
   readonly isOpen = signal(false);
+  readonly isAvailable = this.store.selectSignal(selectIsAssistantAvailable);
   readonly mode = signal<AiDisplayMode>(
     this.storage.getItem<AiDisplayMode>(MODE_STORAGE_KEY) ?? 'overlay'
   );
 
+  readonly isVisible = computed(() => {
+    return this.isOpen() && this.isAvailable();
+  });
+
   readonly isOverlayOpen = computed(() => {
-    return this.isOpen() && this.mode() === 'overlay';
+    return this.isVisible() && this.mode() === 'overlay';
   });
 
   readonly isDocked = computed(() => {
-    return this.isOpen() && this.mode() === 'docked';
+    return this.isVisible() && this.mode() === 'docked';
   });
 
   readonly entries = signal<AiChatEntry[]>([]);
@@ -177,10 +176,6 @@ export class AiAssistantService {
       tools: message.toolNames,
     };
   }
-
-  readonly isAvailable = computed(() => {
-    return this.currentWorkspace()?.assistantEnabled !== false;
-  });
 
   open() {
     if (!this.isAvailable()) {

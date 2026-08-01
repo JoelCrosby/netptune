@@ -106,6 +106,19 @@ export const selectIsPublicViewer = createSelector(
     !isAuthenticated && workspace?.isPublic === true
 );
 
+export const selectIsAssistantAvailable = createSelector(
+  selectIsAuthenticated,
+  selectIsPublicViewer,
+  selectCurrentWorkspace,
+  (isAuthenticated, isPublicViewer, workspace) => {
+    if (!isAuthenticated || isPublicViewer) {
+      return false;
+    }
+
+    return workspace?.assistantEnabled !== false;
+  }
+);
+
 export const selectPublicViewerPermissions = createSelector(
   selectIsPublicViewer,
   selectCurrentWorkspace,

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
+import { assistantGuard } from './core/auth/assistant.guard';
 import { authGuard } from './core/auth/auth.guard';
 import { workspaceGuard } from './core/auth/workspace.guard';
 import { workspaceResovler } from './core/resolvers/workspace-resolver';
@@ -121,7 +122,7 @@ export const routes: Routes = [
       {
         path: 'assistant',
         loadChildren: () => import('./features/assistant/assistant.routes').then((m) => m.routes),
-        canActivate: [authGuard],
+        canActivate: [authGuard, assistantGuard],
         data: { title: $localize`:Page title for the assistant chat page:Assistant` },
       },
       {

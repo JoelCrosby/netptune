@@ -31,6 +31,7 @@ export class GlobalCommandsService implements OnDestroy {
     selectHasPermission(netptunePermissions.storage.read)
   );
   private storageCommandRegistered = false;
+  private assistantCommandRegistered = false;
   private authenticated = this.store.selectSignal(selectIsAuthenticated);
   private userCommandsRegistered = false;
 
@@ -118,14 +119,6 @@ export class GlobalCommandsService implements OnDestroy {
               keywords: ['settings', 'preferences'],
               execute: () => this.navigate('settings'),
             },
-            {
-              id: 'actions.assistant',
-              label: $localize`:Command palette action that opens the AI assistant:Open Assistant`,
-              group: 'actions',
-              icon: 'sparkles',
-              keywords: ['assistant', 'ai', 'chat'],
-              execute: () => this.assistant.open(),
-            },
           ])
         );
 
@@ -142,6 +135,33 @@ export class GlobalCommandsService implements OnDestroy {
         );
 
         this.userCommandsRegistered = false;
+      }
+    });
+
+    effect(() => {
+      const isAvailable = this.assistant.isAvailable();
+
+      if (isAvailable && !this.assistantCommandRegistered) {
+        untracked(() =>
+          this.registry.register([
+            {
+              id: 'actions.assistant',
+              label: $localize`:Command palette action that opens the AI assistant:Open Assistant`,
+              group: 'actions',
+              icon: 'sparkles',
+              keywords: ['assistant', 'ai', 'chat'],
+              execute: () => this.assistant.open(),
+            },
+          ])
+        );
+
+        this.assistantCommandRegistered = true;
+      }
+
+      if (!isAvailable && this.assistantCommandRegistered) {
+        untracked(() => this.registry.unregister(['actions.assistant']));
+
+        this.assistantCommandRegistered = false;
       }
     });
 

@@ -96,7 +96,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:88</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:87</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -1860,7 +1860,7 @@
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:31,33</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:323</note>
-        <note category="location">src/app/workspace.routes.ts:131</note>
+        <note category="location">src/app/workspace.routes.ts:132</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
       <segment>
@@ -2048,7 +2048,7 @@
     </unit>
     <unit id="7480444655465895778">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:123</note>
+        <note category="location">src/app/shell/global-commands.service.ts:149</note>
         <note category="description">Command palette action that opens the AI assistant</note>
       </notes>
       <segment>
@@ -3786,7 +3786,7 @@
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:339</note>
-        <note category="location">src/app/workspace.routes.ts:143</note>
+        <note category="location">src/app/workspace.routes.ts:144</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
       <segment>
@@ -5094,7 +5094,7 @@
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:5</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:245</note>
-        <note category="location">src/app/workspace.routes.ts:137</note>
+        <note category="location">src/app/workspace.routes.ts:138</note>
         <note category="description">Label of the users field</note>
       </notes>
       <segment>
@@ -6095,8 +6095,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:379</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:423</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:374</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:418</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -7587,7 +7587,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:102,103</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:361</note>
-        <note category="location">src/app/workspace.routes.ts:155</note>
+        <note category="location">src/app/workspace.routes.ts:156</note>
         <note category="description">Title of the settings step</note>
       </notes>
       <segment>
@@ -7653,7 +7653,7 @@
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:55,56</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:63,67</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:253</note>
-        <note category="location">src/app/workspace.routes.ts:89</note>
+        <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Page title for the automation list</note>
       </notes>
       <segment>
@@ -7913,7 +7913,7 @@
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:81,83</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:176</note>
-        <note category="location">src/app/workspace.routes.ts:83</note>
+        <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Stat label for the number of tasks on a board</note>
       </notes>
       <segment>
@@ -8309,7 +8309,7 @@
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:43</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:51,54</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:190</note>
-        <note category="location">src/app/workspace.routes.ts:95</note>
+        <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Page title for the board list</note>
       </notes>
       <segment>
@@ -8615,7 +8615,7 @@
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:59,62</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:232</note>
-        <note category="location">src/app/workspace.routes.ts:119</note>
+        <note category="location">src/app/workspace.routes.ts:120</note>
         <note category="description">Page title for the calendar</note>
       </notes>
       <segment>
@@ -8688,7 +8688,7 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:510</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:505</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -8813,7 +8813,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:23,25</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:168</note>
-        <note category="location">src/app/workspace.routes.ts:72</note>
+        <note category="location">src/app/workspace.routes.ts:73</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
       <segment>
@@ -9059,7 +9059,7 @@
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:34,37</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:106</note>
-        <note category="location">src/app/workspace.routes.ts:161</note>
+        <note category="location">src/app/workspace.routes.ts:162</note>
         <note category="description">Page title for the user profile</note>
       </notes>
       <segment>
@@ -9311,7 +9311,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:38,39</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:46,50</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:222</note>
-        <note category="location">src/app/workspace.routes.ts:77</note>
+        <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Page title for the project list</note>
       </notes>
       <segment>
@@ -9954,7 +9954,7 @@
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:59,61</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:237</note>
-        <note category="location">src/app/workspace.routes.ts:107</note>
+        <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
       <segment>
@@ -10213,7 +10213,7 @@
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:60,63</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:227</note>
-        <note category="location">src/app/workspace.routes.ts:113</note>
+        <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
       <segment>
@@ -10421,7 +10421,7 @@
         <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:105,108</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
-        <note category="location">src/app/workspace.routes.ts:125</note>
+        <note category="location">src/app/workspace.routes.ts:126</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
       <segment>
@@ -12305,7 +12305,7 @@
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:57,58</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:206</note>
-        <note category="location">src/app/workspace.routes.ts:101</note>
+        <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
       <segment>
@@ -12397,7 +12397,7 @@
       <notes>
         <note category="location">src/app/features/storage/components/storage-header.component.ts:30,33</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:331</note>
-        <note category="location">src/app/workspace.routes.ts:149</note>
+        <note category="location">src/app/workspace.routes.ts:150</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
       <segment>
@@ -12903,7 +12903,7 @@
     </unit>
     <unit id="2547653457651632153">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:54</note>
+        <note category="location">src/app/shell/global-commands.service.ts:55</note>
         <note category="description">Command palette action that navigates to the project list</note>
       </notes>
       <segment>
@@ -12912,7 +12912,7 @@
     </unit>
     <unit id="5123189455675344637">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:63</note>
+        <note category="location">src/app/shell/global-commands.service.ts:64</note>
         <note category="description">Command palette action that navigates to the task list</note>
       </notes>
       <segment>
@@ -12921,7 +12921,7 @@
     </unit>
     <unit id="5086261568382990197">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:72</note>
+        <note category="location">src/app/shell/global-commands.service.ts:73</note>
         <note category="description">Command palette action that navigates to the board list</note>
       </notes>
       <segment>
@@ -12930,7 +12930,7 @@
     </unit>
     <unit id="2627358752486456707">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:81</note>
+        <note category="location">src/app/shell/global-commands.service.ts:82</note>
         <note category="description">Command palette action that navigates to the sprint list</note>
       </notes>
       <segment>
@@ -12939,7 +12939,7 @@
     </unit>
     <unit id="178520337056147266">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:98</note>
+        <note category="location">src/app/shell/global-commands.service.ts:99</note>
         <note category="description">Command palette action that navigates to the dashboard</note>
       </notes>
       <segment>
@@ -12948,7 +12948,7 @@
     </unit>
     <unit id="2117590223216089367">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:107</note>
+        <note category="location">src/app/shell/global-commands.service.ts:108</note>
         <note category="description">Command palette action that navigates to the member list</note>
       </notes>
       <segment>
@@ -12957,7 +12957,7 @@
     </unit>
     <unit id="7783914774924915188">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:115</note>
+        <note category="location">src/app/shell/global-commands.service.ts:116</note>
         <note category="description">Command palette action that navigates to settings</note>
       </notes>
       <segment>
@@ -12966,7 +12966,7 @@
     </unit>
     <unit id="5354615118655779282">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:156</note>
+        <note category="location">src/app/shell/global-commands.service.ts:176</note>
         <note category="description">Command palette action that navigates to the automation list</note>
       </notes>
       <segment>
@@ -12984,7 +12984,7 @@
     </unit>
     <unit id="5387282719521675016">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:182</note>
+        <note category="location">src/app/shell/global-commands.service.ts:202</note>
         <note category="description">Command palette action that navigates to file storage</note>
       </notes>
       <segment>
