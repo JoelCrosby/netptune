@@ -95,16 +95,7 @@ Users supply their own provider keys from personal settings. Keys are encrypted 
 
 Workspace admins can turn the assistant off for a whole workspace from workspace settings, and the `assistant.read_all_conversations` permission (granted to Admin and Owner) exposes every member's conversations there.
 
-New databases pick up the assistant schema automatically. An existing database needs four scripts from `server/scripts/`, in any order:
-
-| Script                                | Adds                                                                     |
-| ------------------------------------- | ------------------------------------------------------------------------ |
-| `add-event-record-origin.sql`         | `origin_type` and `agent` on `event_records`, for assistant attribution. |
-| `add-activity-entry-agent.sql`        | `agent` on `activity_entries` and rebuilds the open-entry unique index.  |
-| `add-workspace-assistant-enabled.sql` | `assistant_enabled` on `workspaces`, defaulting to true.                 |
-| `add-ai-credential-model.sql`         | `model` on `user_ai_credentials`, for the per-key model override.        |
-
-The assistant's own tables are created by the same path that creates every other table, so no script is needed for them.
+The assistant's tables are created with the rest of the schema when the API first starts, so there is nothing to run by hand.
 
 ### Hosting
 
