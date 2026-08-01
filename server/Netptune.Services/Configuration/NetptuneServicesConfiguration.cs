@@ -4,12 +4,14 @@ using Netptune.Core.Http;
 using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.Ai;
 using Netptune.Core.Services.Export;
 using Netptune.Core.Services.Import;
 using Netptune.Core.Services.Integration;
 using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.Services.Reporting;
 using Netptune.Services.Activity;
+using Netptune.Services.Ai;
 using Netptune.Services.Export;
 using Netptune.Services.Import;
 using Netptune.Services.Integration;
@@ -46,6 +48,7 @@ public static class NetptuneServicesConfiguration
         services.AddTransient<ITurnstileService, TurnstileService>();
 
         services.AddScoped<IAncestorService, AncestorService>();
+        services.AddSingleton<IAiCredentialProtector, AiCredentialProtector>();
     }
 
     public static IServiceCollection AddNetptuneEventRecording(this IServiceCollection services)

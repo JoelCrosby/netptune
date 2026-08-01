@@ -39,6 +39,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public ITaskFileRepository TaskFiles { get; }
     public IReportingRepository Reports { get; }
     public IRoadmapRepository Roadmaps { get; }
+    public IAiCredentialRepository AiCredentials { get; }
 
     public NetptuneUnitOfWork(
         DataContext context,
@@ -75,5 +76,6 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         TaskFiles = new TaskFileRepository(context, connectionFactory);
         Reports = new ReportingRepository(context);
         Roadmaps = new RoadmapRepository(connectionFactory);
+        AiCredentials = new AiCredentialRepository(context, connectionFactory);
     }
 }

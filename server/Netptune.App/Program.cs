@@ -178,6 +178,7 @@ apiGroup.MapSetupTemplatesEndpoints();
 apiGroup.MapUserPreferencesEndpoints();
 apiGroup.MapCommandPaletteEndpoints();
 apiGroup.MapServiceAccountsEndpoints();
+apiGroup.MapAiEndpoints();
 
 apiGroup.MapExportEndpoints()
     .RequireRateLimiting("import-export");

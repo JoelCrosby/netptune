@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { AiCredentialsComponent } from '../ai-credentials/ai-credentials.component';
 import { NotificationPreferencesComponent } from '../notification-preferences/notification-preferences.component';
 import { PreferenceListComponent } from '../preference-list/preference-list.component';
 
@@ -24,8 +25,13 @@ import { PreferenceListComponent } from '../preference-list/preference-list.comp
         }
       </section>
     }
+
+    <section class="mt-10">
+      <app-ai-credentials />
+    </section>
   `,
   imports: [
+    AiCredentialsComponent,
     NotificationPreferencesComponent,
     PreferenceListComponent,
     SectionHeaderComponent,

@@ -945,6 +945,7 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:63,66</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:55,57</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:230</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
@@ -1273,6 +1274,26 @@
         <target>Projekt gelöscht</target>
       </segment>
     </unit>
+    <unit id="3118592863000722717">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:127,130</note>
+        <note category="description">Button that replaces a stored API key</note>
+      </notes>
+      <segment state="translated">
+        <source>Replace key</source>
+        <target>Schlüssel ersetzen</target>
+      </segment>
+    </unit>
+    <unit id="3127417567733728943">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:28</note>
+        <note category="description">Name of the Anthropic AI provider</note>
+      </notes>
+      <segment state="translated">
+        <source>Anthropic</source>
+        <target>Anthropic</target>
+      </segment>
+    </unit>
     <unit id="3128372319311336157">
       <notes>
         <note category="location">src/app/core/store/projects/projects.effects.ts:120</note>
@@ -1460,6 +1481,16 @@
         <target>Aufgabe gelöscht</target>
       </segment>
     </unit>
+    <unit id="7198631316779176054">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:169</note>
+        <note category="description">Placeholder shown when no key is stored</note>
+      </notes>
+      <segment state="translated">
+        <source>Paste your API key</source>
+        <target>Fügen Sie Ihren API-Schlüssel ein</target>
+      </segment>
+    </unit>
     <unit id="2733818832464911318">
       <notes>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:384</note>
@@ -1640,6 +1671,16 @@
       <segment state="translated">
         <source>Are you sure you want to mark this Workspace as public?</source>
         <target>Möchten Sie diesen Arbeitsbereich wirklich als öffentlich markieren?</target>
+      </segment>
+    </unit>
+    <unit id="8768927723338869419">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:77,79</note>
+        <note category="description">Label preceding the masked API key</note>
+      </notes>
+      <segment state="translated">
+        <source>Key ending</source>
+        <target>Schlüssel endet auf</target>
       </segment>
     </unit>
     <unit id="950348144194379022">
@@ -1982,6 +2023,16 @@
         <target>Sie sind auf dem neuesten Stand!</target>
       </segment>
     </unit>
+    <unit id="6707264088417972826">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:57,61</note>
+        <note category="description">Explains why a key is needed</note>
+      </notes>
+      <segment state="translated">
+        <source> The assistant uses your own provider API key. Keys are encrypted, are never shown again after saving, and are only used for requests you start. </source>
+        <target> Der Assistent verwendet Ihren eigenen API-Schlüssel des Anbieters. Schlüssel werden verschlüsselt, nach dem Speichern nie wieder angezeigt und nur für von Ihnen gestartete Anfragen verwendet. </target>
+      </segment>
+    </unit>
     <unit id="6711113068963618455">
       <notes>
         <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:73,75</note>
@@ -2304,6 +2355,16 @@
       <segment state="translated">
         <source>Sprint</source>
         <target>Sprint</target>
+      </segment>
+    </unit>
+    <unit id="5504590309962934202">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:107,109</note>
+        <note category="description">Label for the API key input</note>
+      </notes>
+      <segment state="translated">
+        <source> API key </source>
+        <target> API-Schlüssel </target>
       </segment>
     </unit>
     <unit id="5514074948771652820">
@@ -2653,6 +2714,16 @@
       <segment state="translated">
         <source>Summary is required.</source>
         <target>Die Zusammenfassung ist erforderlich.</target>
+      </segment>
+    </unit>
+    <unit id="8550125178086238714">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:227</note>
+        <note category="description">Title of the remove API key confirmation</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove key?</source>
+        <target>Schlüssel entfernen?</target>
       </segment>
     </unit>
     <unit id="9021131006692744653">
@@ -3626,7 +3697,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:38</note>
         <note category="description">Link back to the tag list from a single tag</note>
       </notes>
-      <segment state="initial">
+      <segment state="translated">
         <source>Back to Tags</source>
         <target>Zurück zu den Tags</target>
       </segment>
@@ -3709,6 +3780,16 @@
       <segment state="translated">
         <source> Delete status </source>
         <target>Status löschen</target>
+      </segment>
+    </unit>
+    <unit id="5988988986257041887">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:247</note>
+        <note category="description">Shown after an API key is removed</note>
+      </notes>
+      <segment state="initial">
+        <source>Key removed.</source>
+        <target>Zurück zu den Tags</target>
       </segment>
     </unit>
     <unit id="3304972143698843178">
@@ -6946,6 +7027,16 @@
         <target>ist nicht leer</target>
       </segment>
     </unit>
+    <unit id="6168573387818230011">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:212</note>
+        <note category="description">Shown after an API key is stored</note>
+      </notes>
+      <segment state="translated">
+        <source>Key saved.</source>
+        <target>Schlüssel gespeichert.</target>
+      </segment>
+    </unit>
     <unit id="3436764882054516506">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:78</note>
@@ -8020,6 +8111,16 @@
         <target>Die Automatisierung konnte nicht gelöscht werden</target>
       </segment>
     </unit>
+    <unit id="3477141043479115606">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:166</note>
+        <note category="description">Placeholder shown when a key is already stored</note>
+      </notes>
+      <segment state="translated">
+        <source>Enter a new key to replace the stored one</source>
+        <target>Geben Sie einen neuen Schlüssel ein, um den gespeicherten zu ersetzen</target>
+      </segment>
+    </unit>
     <unit id="2330577642930707695">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:80,83</note>
@@ -8883,6 +8984,17 @@
         <target> Hier ablegen </target>
       </segment>
     </unit>
+    <unit id="3423740992676752364">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:203</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:218</note>
+        <note category="description">Shown when saving an API key fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The key could not be saved.</source>
+        <target>Der Schlüssel konnte nicht gespeichert werden.</target>
+      </segment>
+    </unit>
     <unit id="1417235149864963026">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-month-grid/calendar-month-grid.component.ts:118,121</note>
@@ -9742,7 +9854,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:52</note>
         <note category="description">Link back to the status list from a single status</note>
       </notes>
-      <segment state="initial">
+      <segment state="translated">
         <source>Back to Statuses</source>
         <target>Zurück zu den Status</target>
       </segment>
@@ -9836,6 +9948,16 @@
       <segment state="translated">
         <source>This project could not be loaded</source>
         <target>Dieses Projekt konnte nicht geladen werden</target>
+      </segment>
+    </unit>
+    <unit id="395357454003185588">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:29</note>
+        <note category="description">Where to find an Anthropic API key</note>
+      </notes>
+      <segment state="initial">
+        <source>Create a key at console.anthropic.com</source>
+        <target>Zurück zu den Status</target>
       </segment>
     </unit>
     <unit id="7091571651222742304">
@@ -9960,6 +10082,16 @@
       <segment state="translated">
         <source>Completed work and elapsed cycle time.</source>
         <target>Abgeschlossene Arbeit und verstrichene Zykluszeit.</target>
+      </segment>
+    </unit>
+    <unit id="3959473004188974816">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:252</note>
+        <note category="description">Shown when removing an API key fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The key could not be removed.</source>
+        <target>Der Schlüssel konnte nicht entfernt werden.</target>
       </segment>
     </unit>
     <unit id="6715882737092090306">
@@ -10800,6 +10932,16 @@
         <target> Keine geplanten Aufgaben überschneiden sich mit diesem Zeitraum. </target>
       </segment>
     </unit>
+    <unit id="6406732480689038024">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:95,97</note>
+        <note category="description">Tooltip on the button that removes a stored API key</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove key</source>
+        <target>Schlüssel entfernen</target>
+      </segment>
+    </unit>
     <unit id="6408167238390594727">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:41,44</note>
@@ -11546,7 +11688,7 @@
     </unit>
     <unit id="8228970721606012757">
       <notes>
-        <note category="location">src/app/features/settings/components/settings/settings.component.ts:12,14</note>
+        <note category="location">src/app/features/settings/components/settings/settings.component.ts:13,15</note>
         <note category="description">Section heading for the user preference list</note>
       </notes>
       <segment state="translated">
@@ -11602,6 +11744,26 @@
       <segment state="translated">
         <source>Use an IANA timezone, for example Europe/London.</source>
         <target>Verwenden Sie eine IANA-Zeitzone, zum Beispiel Europe/London.</target>
+      </segment>
+    </unit>
+    <unit id="8927455770711141149">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:34</note>
+        <note category="description">Where to find an OpenAI API key</note>
+      </notes>
+      <segment state="translated">
+        <source>Create a key at platform.openai.com</source>
+        <target>Erstellen Sie einen Schlüssel auf platform.openai.com</target>
+      </segment>
+    </unit>
+    <unit id="9050138848550192211">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:33</note>
+        <note category="description">Name of the OpenAI provider</note>
+      </notes>
+      <segment state="translated">
+        <source>OpenAI</source>
+        <target>OpenAI</target>
       </segment>
     </unit>
     <unit id="9052706340903358762">
@@ -12731,6 +12893,16 @@
         <target>Keine Aufgaben zum Hinzufügen verfügbar.</target>
       </segment>
     </unit>
+    <unit id="7203070746919732368">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:228</note>
+        <note category="description">Explains what removing an API key does</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant will stop working for this provider until you add a new key.</source>
+        <target>Der Assistent funktioniert für diesen Anbieter nicht mehr, bis Sie einen neuen Schlüssel hinzufügen.</target>
+      </segment>
+    </unit>
     <unit id="7203499214337934700">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:97,100</note>
@@ -13176,6 +13348,16 @@
       <segment state="translated">
         <source>files</source>
         <target>Dateien</target>
+      </segment>
+    </unit>
+    <unit id="774353184448576161">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:52,55</note>
+        <note category="description">Section heading for the AI assistant API keys</note>
+      </notes>
+      <segment state="translated">
+        <source>AI Assistant</source>
+        <target>KI-Assistent</target>
       </segment>
     </unit>
     <unit id="7751731903769510184">
@@ -13866,7 +14048,7 @@
         <note category="location">src/app/features/settings/settings.routes.ts:66</note>
         <note category="description">Link back to the relation type list from a single relation type</note>
       </notes>
-      <segment state="initial">
+      <segment state="translated">
         <source>Back to Relations</source>
         <target>Zurück zu den Beziehungen</target>
       </segment>
@@ -14238,8 +14420,9 @@
     </unit>
     <unit id="4814285799071780083">
       <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:229</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
-        <note category="description">Accessible label for the button that removes a selected tag</note>
+        <note category="description">Confirms removing an API key</note>
       </notes>
       <segment state="translated">
         <source>Remove</source>
@@ -14415,6 +14598,16 @@
       <segment state="translated">
         <source> No tags </source>
         <target>Keine Tags</target>
+      </segment>
+    </unit>
+    <unit id="4442108733606169287">
+      <notes>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:130,132</note>
+        <note category="description">Button that stores an API key</note>
+      </notes>
+      <segment state="initial">
+        <source>Save key</source>
+        <target>Zurück zu den Beziehungen</target>
       </segment>
     </unit>
     <unit id="4447140464620115564">

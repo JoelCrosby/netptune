@@ -48,6 +48,12 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<ScheduledAutomationAction> ScheduledAutomationActions { get; set; } = null!;
     public DbSet<WorkspaceFile> WorkspaceFiles { get; set; } = null!;
 
+    // AI assistant
+    public DbSet<UserAiCredential> UserAiCredentials { get; set; } = null!;
+    public DbSet<AiConversation> AiConversations { get; set; } = null!;
+    public DbSet<AiMessage> AiMessages { get; set; } = null!;
+    public DbSet<AiToolInvocation> AiToolInvocations { get; set; } = null!;
+
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<UserPreferenceValue> UserPreferenceValues { get; set; } = null!;
     public DbSet<CommandPaletteRecentItem> CommandPaletteRecentItems { get; set; } = null!;
@@ -139,8 +145,13 @@ public class DataContext : IdentityDbContext<AppUser>
             .Entries<IAuditableEntity<string>>()
             .Where(entry => entry.State is EntityState.Added or EntityState.Modified);
 
+        var entitiesGuid = ChangeTracker
+            .Entries<IAuditableEntity<Guid>>()
+            .Where(entry => entry.State is EntityState.Added or EntityState.Modified);
+
         AddTimeStamps(entities);
         AddTimeStamps(entitiesString);
+        AddTimeStamps(entitiesGuid);
     }
 
     private static void AddTimeStamps<T>(IEnumerable<EntityEntry<IAuditableEntity<T>>> entities)
