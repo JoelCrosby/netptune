@@ -20,7 +20,6 @@ internal static class NotificationSeeder
             EventRecord = log,
             Workspace = workspace,
             IsRead = i % 3 == 0,
-            Link = $"/{workspace.Slug}/tasks",
             EntityType = Enum.Parse<EntityType>(log.SubjectType!, true),
             ActivityType = (ActivityType)log.Payload.RootElement.GetProperty("activityType").GetInt32(),
             CreatedByUserId = log.ActorUserId!,

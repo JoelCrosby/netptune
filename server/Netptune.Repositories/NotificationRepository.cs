@@ -41,9 +41,20 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
             boardType = EntityType.Board,
             boardGroupType = EntityType.BoardGroup,
             statusType = EntityType.Status,
+            sprintType = EntityType.Sprint,
         }, cancellationToken: cancellationToken));
 
-        return results.AsList();
+        var notifications = results.AsList();
+
+        foreach (var notification in notifications)
+        {
+            notification.Link = NotificationLink.Build(
+                notification.WorkspaceSlug,
+                notification.EntityType,
+                notification.LinkIdentifier);
+        }
+
+        return notifications;
     }
 
     public async Task<int> GetUserNotificationsCount(string userId, int workspaceId, string? search = null, string? actorId = null, CancellationToken cancellationToken = default)

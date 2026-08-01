@@ -4,7 +4,7 @@ import { EntityType } from '../entity-type';
 export interface NotificationViewModel {
   id: number;
   isRead: boolean;
-  link: string | null;
+  link: string;
   entityType: EntityType;
   activityType: ActivityType;
   createdAt: Date;

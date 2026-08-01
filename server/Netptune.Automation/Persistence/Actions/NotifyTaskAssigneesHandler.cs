@@ -69,13 +69,11 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
                 ExcludeActor = false,
             },
             cancellationToken);
-        var link = BuildTaskLink(task);
         var notifications = recipients.Select(userId => new Notification
         {
             UserId = userId,
             EventRecordId = contribution.Activity.Id,
             IsRead = false,
-            Link = link,
             WorkspaceId = task.WorkspaceId,
             EntityType = EntityType.Task,
             ActivityType = ActivityType.Modify,
@@ -111,14 +109,5 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
         }
 
         return audience.Distinct(StringComparer.Ordinal).ToList();
-    }
-
-    private static string BuildTaskLink(ProjectTask task)
-    {
-        var identifier = task.Project is null
-            ? task.Id.ToString()
-            : $"{task.Project.Key}-{task.ProjectScopeId}";
-
-        return $"/{task.Workspace!.Slug}/tasks/{identifier}";
     }
 }

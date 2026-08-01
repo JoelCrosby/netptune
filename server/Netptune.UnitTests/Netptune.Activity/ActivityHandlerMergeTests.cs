@@ -65,10 +65,6 @@ public class ActivityHandlerMergeTests
             Arg.Any<CancellationToken>())
             .Returns(new UpsertEntryResult.Upserted(new()));
 
-        UnitOfWork.Workspaces
-            .GetSlugsByIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
-            .Returns(new Dictionary<int, string> { [WorkspaceId] = "test-workspace" });
-
         UnitOfWork.WorkspaceUsers
             .GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
             .Returns(new Dictionary<int, List<string>> { [WorkspaceId] = [ActorUserId, OtherUserId] });

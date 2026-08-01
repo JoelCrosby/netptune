@@ -85,10 +85,6 @@ public class ActivityHandlerTests
             .GetExistingEventIds(Arg.Any<IEnumerable<Guid>>(), Arg.Any<CancellationToken>())
             .Returns(x => x.Arg<IEnumerable<Guid>>().Where(PersistedEventIds.Contains).ToHashSet());
 
-        UnitOfWork.Workspaces
-            .GetSlugsByIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
-            .Returns(new Dictionary<int, string> { [WorkspaceId] = "test-workspace" });
-
         UnitOfWork.WorkspaceUsers
             .GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
             .Returns(new Dictionary<int, List<string>>
@@ -276,35 +272,7 @@ public class ActivityHandlerTests
                 n.EntityType == EntityType.Task &&
                 n.ActivityType == @event.Type &&
                 n.IsRead == false &&
-                n.Link == "/test-workspace/tasks/PROJ-42" &&
                 n.CreatedByUserId == ActorUserId)), TestContext.Current.CancellationToken);
-    }
-
-    [Theory]
-    [InlineData(EntityType.Task, "/test-workspace/tasks/PROJ-42")]
-    [InlineData(EntityType.Board, "/test-workspace/boards/board-1")]
-    [InlineData(EntityType.Project, "/test-workspace/projects/99")]
-    [InlineData(EntityType.Sprint, "/test-workspace/sprints/99")]
-    [InlineData(EntityType.Status, "/test-workspace/settings")]
-    [InlineData(EntityType.Workspace, "/test-workspace")]
-    public async Task Handle_ShouldBuildCorrectLink_ForEntityType(EntityType entityType, string expectedLink)
-    {
-        var @event = Fixture.Build<ActivityEvent>()
-            .With(e => e.Type, ActivityType.Mention)
-            .With(e => e.UserId, ActorUserId)
-            .With(e => e.WorkspaceId, WorkspaceId)
-            .With(e => e.EntityId, EntityId)
-            .With(e => e.EntityType, entityType)
-            .With(e => e.RecipientUserIds, [OtherUserId1, OtherUserId2])
-            .Without(e => e.Meta)
-            .Create();
-
-        var message = new ActivityMessage(@event);
-
-        await Handler.Handle(message, TestContext.Current.CancellationToken);
-
-        await UnitOfWork.Notifications.Received(1).AddRangeAsync(Arg.Is<IEnumerable<Notification>>(notifications =>
-                notifications.All(n => n.Link == expectedLink)), TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -324,21 +292,21 @@ public class ActivityHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldQueryWorkspacesOnce_ForMultipleEventsInSameWorkspace()
+    public async Task Handle_ShouldQueryWorkspaceUsersOnce_ForMultipleEventsInSameWorkspace()
     {
         var message = new ActivityMessage([BuildEvent(), BuildEvent(), BuildEvent()]);
 
         await Handler.Handle(message, TestContext.Current.CancellationToken);
 
-        await UnitOfWork.Workspaces.Received(1).GetSlugsByIds(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken);
         await UnitOfWork.WorkspaceUsers.Received(1).GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken);
     }
 
     [Fact]
-    public async Task Handle_ShouldSkipWorkspace_WhenSlugNotFound()
+    public async Task Handle_ShouldSkipWorkspace_WhenWorkspaceHasNoMembers()
     {
-        UnitOfWork.Workspaces
-            .GetSlugsByIds(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken).Returns(new Dictionary<int, string>());
+        UnitOfWork.WorkspaceUsers
+            .GetWorkspaceUserIdsByWorkspaceIds(Arg.Any<IEnumerable<int>>(), TestContext.Current.CancellationToken)
+            .Returns(new Dictionary<int, List<string>>());
 
         var message = new ActivityMessage(BuildEvent());
 

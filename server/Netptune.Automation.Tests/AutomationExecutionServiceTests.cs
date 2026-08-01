@@ -1307,7 +1307,7 @@ public sealed class AutomationExecutionServiceTests
 
         notification.UserId.Should().Be(scenario.Owner.Id);
         notification.EventRecordId.Should().Be(activityLog.Id);
-        notification.Link.Should().Be($"/{scenario.Workspace.Slug}/tasks/{scenario.Project.Key}-{scenario.Task.ProjectScopeId}");
+        notification.EntityType.Should().Be(EntityType.Task);
         run.Status.Should().Be(AutomationRunStatus.Succeeded);
     }
 

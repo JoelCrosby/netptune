@@ -47,6 +47,19 @@ public sealed class NotificationsEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task Get_ShouldBuildLinksFromCurrentWorkspaceSlug()
+    {
+        using var scope = fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var workspace = await context.Workspaces.SingleAsync(item => item.Slug == "netptune");
+        var notifications = await GetNotificationsAsync();
+
+        notifications.Should().NotBeEmpty();
+        notifications.Should().OnlyContain(item => item.Link.StartsWith($"/{workspace.Slug}"));
+    }
+
+    [Fact]
     public async Task Get_ShouldReturnMixOfReadAndUnread()
     {
         var notifications = await GetNotificationsAsync();
@@ -248,7 +261,6 @@ public sealed class NotificationsEndpointTests(NetptuneFixture fixture)
             EventRecordId = eventRecordId,
             WorkspaceId = workspace.Id,
             IsRead = false,
-            Link = $"/{workspace.Slug}/tasks",
             EntityType = EntityType.Task,
             ActivityType = ActivityType.Modify,
             CreatedByUserId = userId,

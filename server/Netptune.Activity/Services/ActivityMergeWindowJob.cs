@@ -157,18 +157,10 @@ public sealed class ActivityMergeWindowJob : BackgroundService
 
         var workspaceIds = entries.Select(entry => entry.WorkspaceId).Distinct().ToList();
 
-        var slugsByWorkspace = await unitOfWork.Workspaces.GetSlugsByIds(workspaceIds, cancellationToken);
         var usersByWorkspace = await unitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds, cancellationToken);
-
-        var ancestorsByEntity = new Dictionary<(Core.Enums.EntityType, int), ActivityAncestors>();
 
         foreach (var entry in entries)
         {
-
-            if (!slugsByWorkspace.TryGetValue(entry.WorkspaceId, out var slug))
-            {
-                continue;
-            }
 
             if (!usersByWorkspace.TryGetValue(entry.WorkspaceId, out var allUserIds))
             {
@@ -200,29 +192,12 @@ public sealed class ActivityMergeWindowJob : BackgroundService
                 continue;
             }
 
-            if (!ancestorsByEntity.TryGetValue((entry.EntityType, entry.EntityId), out var ancestors))
-            {
-                ancestors = await ActivityLinks.Resolve(
-                    unitOfWork,
-                    entry.EntityType,
-                    entry.EntityId,
-                    cancellationToken);
-                ancestorsByEntity[(entry.EntityType, entry.EntityId)] = ancestors;
-            }
-
-            var link = ActivityLinks.Build(
-                slug,
-                entry.EntityType,
-                entry.EntityId,
-                ancestors);
-
             notifications.AddRange(recipients.Select(userId => new Notification
             {
                 UserId = userId,
                 EventRecordId = entry.LastEventRecordId,
                 ActivityEntryId = entry.Id,
                 IsRead = false,
-                Link = link,
                 WorkspaceId = entry.WorkspaceId,
                 EntityType = entry.EntityType,
                 ActivityType = entry.ActivityType,

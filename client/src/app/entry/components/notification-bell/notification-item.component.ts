@@ -78,8 +78,6 @@ export class NotificationItemComponent {
       this.store.dispatch(markAsRead.init({ id: notification.id }));
     }
 
-    if (notification.link) {
-      void this.router.navigateByUrl(notification.link);
-    }
+    void this.router.navigateByUrl(notification.link);
   }
 }

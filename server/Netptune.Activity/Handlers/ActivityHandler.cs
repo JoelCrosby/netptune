@@ -80,7 +80,7 @@ public sealed class ActivityHandler :
                 throw new Exception("IActivityEvent EntityId cannot be null.");
             }
 
-            var ancestors = await ActivityLinks.Resolve(
+            var ancestors = await ActivityAncestorResolver.Resolve(
                 UnitOfWork,
                 activity.EntityType,
                 activity.EntityId.Value,
@@ -163,7 +163,7 @@ public sealed class ActivityHandler :
                 $"Canonical event record {request.EventRecordId} could not be loaded for projection.");
         }
 
-        var ancestors = await ActivityLinks.Resolve(
+        var ancestors = await ActivityAncestorResolver.Resolve(
             UnitOfWork,
             activity.EntityType,
             activity.EntityId!.Value,
@@ -432,20 +432,14 @@ public sealed class ActivityHandler :
 
         var workspaceIds = records.Select(record => record.WorkspaceId).Distinct().ToList();
 
-        var slugsByWorkspace = await UnitOfWork.Workspaces.GetSlugsByIds(workspaceIds, cancellationToken);
         var usersByWorkspace = await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIdsByWorkspaceIds(workspaceIds, cancellationToken);
 
         var allNotifications = new List<Notification>();
 
-        foreach (var (activity, log, ancestors) in records)
+        foreach (var (activity, log, _) in records)
         {
 
             if (AuditOnlyTypes.Contains(activity.Type))
-            {
-                continue;
-            }
-
-            if (!slugsByWorkspace.TryGetValue(activity.WorkspaceId, out var slug))
             {
                 continue;
             }
@@ -472,18 +466,11 @@ public sealed class ActivityHandler :
                 continue;
             }
 
-            var link = ActivityLinks.Build(
-                slug,
-                activity.EntityType,
-                activity.EntityId,
-                ancestors);
-
             var activityNotifications = recipients.Select(userId => new Notification
             {
                 UserId = userId,
                 EventRecordId = log.Id,
                 IsRead = false,
-                Link = link,
                 WorkspaceId = activity.WorkspaceId,
                 EntityType = activity.EntityType,
                 ActivityType = activity.Type,

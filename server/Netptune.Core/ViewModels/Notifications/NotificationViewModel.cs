@@ -10,7 +10,13 @@ public class NotificationViewModel
 
     public bool IsRead { get; set; }
 
-    public string? Link { get; set; }
+    [JsonIgnore]
+    public string WorkspaceSlug { get; set; } = null!;
+
+    [JsonIgnore]
+    public string? LinkIdentifier { get; set; }
+
+    public string Link { get; set; } = null!;
 
     public EntityType EntityType { get; set; }
 

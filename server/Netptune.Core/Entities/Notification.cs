@@ -15,8 +15,6 @@ public record Notification : AuditableEntity<int>
 
     public bool IsRead { get; set; }
 
-    public string? Link { get; init; }
-
     public int WorkspaceId { get; init; }
 
     public EntityType EntityType { get; init; }

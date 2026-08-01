@@ -37,10 +37,6 @@ public class NotificationEntityMap : AuditableEntityMap<Notification, int>
             .HasDefaultValue(false);
 
         builder
-            .Property(n => n.Link)
-            .IsRequired(false);
-
-        builder
             .Property(n => n.ActivityEntryId)
             .IsRequired(false);
 

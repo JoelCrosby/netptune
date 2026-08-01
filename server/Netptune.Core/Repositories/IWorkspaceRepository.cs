@@ -21,7 +21,6 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
 
     Task DeleteWorkspacePermanent(int workspaceId, CancellationToken cancellationToken = default);
 
-    Task<Dictionary<int, string>> GetSlugsByIds(IEnumerable<int> ids, CancellationToken cancellationToken = default);
 
     Task<WorkspaceStorageUsageViewModel?> GetStorageUsage(int workspaceId, CancellationToken cancellationToken = default);
 

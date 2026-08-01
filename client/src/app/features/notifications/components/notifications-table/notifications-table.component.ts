@@ -70,8 +70,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       <ng-template appDatatableCell="notification" let-notification>
         <button
           type="button"
-          class="flex min-w-0 items-center truncate text-left text-sm"
-          [class.cursor-pointer]="notification.link"
+          class="flex min-w-0 cursor-pointer items-center truncate text-left text-sm"
           [class.opacity-60]="notification.isRead"
           (click)="onOpen(notification)">
           {{ notificationSummary(notification) }}
@@ -218,8 +217,6 @@ export class NotificationsTableComponent {
       this.store.dispatch(markAsRead.init({ id: notification.id }));
     }
 
-    if (notification.link) {
-      void this.router.navigateByUrl(notification.link);
-    }
+    void this.router.navigateByUrl(notification.link);
   }
 }

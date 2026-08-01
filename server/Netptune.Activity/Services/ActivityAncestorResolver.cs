@@ -4,7 +4,7 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Activity.Services;
 
-internal static class ActivityLinks
+internal static class ActivityAncestorResolver
 {
     public static async Task<ActivityAncestors> Resolve(
         INetptuneUnitOfWork unitOfWork,
@@ -20,25 +20,6 @@ internal static class ActivityLinks
             EntityType.Project => await unitOfWork.Ancestors.GetProjectAncestors(entityId, cancellationToken),
             EntityType.Sprint => await unitOfWork.Ancestors.GetSprintAncestors(entityId, cancellationToken),
             _ => new ActivityAncestors(),
-        };
-    }
-
-    public static string Build(
-        string workspaceSlug,
-        EntityType entityType,
-        int? entityId,
-        ActivityAncestors ancestors)
-    {
-        return entityType switch
-        {
-            EntityType.Task when ancestors.ProjectKey is not null => $"/{workspaceSlug}/tasks/{ancestors.ProjectKey}-{ancestors.TaskScopeId}",
-            EntityType.Task => $"/{workspaceSlug}/tasks/{ancestors.TaskId}",
-            EntityType.Board => $"/{workspaceSlug}/boards/{ancestors.BoardKey}",
-            EntityType.Project => $"/{workspaceSlug}/projects/{entityId}",
-            EntityType.Sprint => $"/{workspaceSlug}/sprints/{entityId}",
-            EntityType.Status => $"/{workspaceSlug}/settings",
-            EntityType.RelationType => $"/{workspaceSlug}/settings",
-            _ => $"/{workspaceSlug}",
         };
     }
 }
