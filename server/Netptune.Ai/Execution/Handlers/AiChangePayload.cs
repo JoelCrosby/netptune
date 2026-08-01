@@ -54,6 +54,28 @@ public static class AiChangePayload
             .ToList();
     }
 
+    public static List<int> ReadIntArray(JsonElement payload, string name)
+    {
+        var isObject = payload.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            return [];
+        }
+
+        var hasProperty = payload.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.Array;
+
+        if (!hasProperty)
+        {
+            return [];
+        }
+
+        return value.EnumerateArray()
+            .Where(item => item.ValueKind == JsonValueKind.Number)
+            .Select(item => item.GetInt32())
+            .ToList();
+    }
+
     public static DateOnly? ReadDate(JsonElement payload, string name)
     {
         var raw = ReadString(payload, name);
