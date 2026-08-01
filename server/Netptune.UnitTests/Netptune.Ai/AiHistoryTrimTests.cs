@@ -86,6 +86,44 @@ public class AiHistoryTrimTests
         trimmed[0].Text.Should().Be("follow up");
     }
 
+    [Fact]
+    public void TrimHistory_ShouldStubOldToolResults_BeforeDroppingWholeTurns()
+    {
+        var history = new List<AiChatMessage>
+        {
+            User("what is in the sprint"),
+            AssistantWithToolCall("call-1"),
+            ToolResult("call-1", new string('r', 400)),
+            Assistant("here is the list"),
+            User("move the first one"),
+        };
+
+        var trimmed = AiConversationService.TrimHistory(history, 200);
+
+        trimmed.Should().HaveCount(5, "the intent of every turn is worth more than an old tool result body");
+        trimmed[0].Text.Should().Be("what is in the sprint");
+        trimmed[2].ToolResults.Single().Content.Should().NotContain("rrrr");
+        trimmed[2].ToolResults.Single().ToolCallId.Should().Be("call-1");
+    }
+
+    [Fact]
+    public void TrimHistory_ShouldKeepToolResultsFromTheNewestTurn()
+    {
+        var history = new List<AiChatMessage>
+        {
+            User("older question"),
+            Assistant(new string('a', 300)),
+            User("newest question"),
+            AssistantWithToolCall("call-1"),
+            ToolResult("call-1", new string('r', 300)),
+        };
+
+        var trimmed = AiConversationService.TrimHistory(history, 400);
+
+        trimmed.Last().ToolResults.Single().Content.Should().Be(new string('r', 300));
+        trimmed[0].Text.Should().Be("newest question", "older turns go before the live one is touched");
+    }
+
     private static AiChatMessage User(string text)
     {
         return new AiChatMessage { Role = AiMessageRole.User, Text = text };
@@ -113,12 +151,12 @@ public class AiHistoryTrimTests
         };
     }
 
-    private static AiChatMessage ToolResult(string callId)
+    private static AiChatMessage ToolResult(string callId, string content = "result")
     {
         return new AiChatMessage
         {
             Role = AiMessageRole.Tool,
-            ToolResults = [new AiToolResult { ToolCallId = callId, Content = "result" }],
+            ToolResults = [new AiToolResult { ToolCallId = callId, Content = content }],
         };
     }
 }

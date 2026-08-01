@@ -18,6 +18,9 @@ public sealed class AiConversationService : IAiConversationService
 {
     private const int MaximumTitleLength = 80;
 
+    private const string StubbedToolResult =
+        "[Result omitted to make room in the context window. Call the tool again if you still need it.]";
+
     private static readonly JsonSerializerOptions FieldSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -333,12 +336,13 @@ public sealed class AiConversationService : IAiConversationService
 
     public static List<AiChatMessage> TrimHistory(List<AiChatMessage> history, int maxCharacters)
     {
+        var compacted = CompactToolResults(history, maxCharacters);
         var kept = new List<AiChatMessage>();
         var used = 0;
 
-        for (var index = history.Count - 1; index >= 0; index--)
+        for (var index = compacted.Count - 1; index >= 0; index--)
         {
-            var message = history[index];
+            var message = compacted[index];
             var cost = MeasureMessage(message);
             var exceedsBudget = used + cost > maxCharacters && kept.Count > 0;
 
@@ -354,6 +358,50 @@ public sealed class AiConversationService : IAiConversationService
         kept.Reverse();
 
         return DropOrphanedToolResults(kept);
+    }
+
+    private static List<AiChatMessage> CompactToolResults(List<AiChatMessage> history, int maxCharacters)
+    {
+        var total = history.Sum(MeasureMessage);
+        var isWithinBudget = total <= maxCharacters;
+
+        if (isWithinBudget)
+        {
+            return history;
+        }
+
+        var currentTurn = history.FindLastIndex(message => message.Role == AiMessageRole.User);
+        var compacted = new List<AiChatMessage>(history);
+
+        for (var index = 0; index < currentTurn; index++)
+        {
+            var isOverBudget = total > maxCharacters;
+
+            if (!isOverBudget)
+            {
+                break;
+            }
+
+            var message = compacted[index];
+            var hasResults = message.ToolResults.Count > 0;
+
+            if (!hasResults)
+            {
+                continue;
+            }
+
+            var stubbed = message with { ToolResults = message.ToolResults.Select(Stub).ToList() };
+
+            total -= MeasureMessage(message) - MeasureMessage(stubbed);
+            compacted[index] = stubbed;
+        }
+
+        return compacted;
+    }
+
+    private static AiToolResult Stub(AiToolResult result)
+    {
+        return result with { Content = StubbedToolResult };
     }
 
     private static List<AiChatMessage> DropOrphanedToolResults(List<AiChatMessage> history)
