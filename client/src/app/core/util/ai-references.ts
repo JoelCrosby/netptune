@@ -46,7 +46,7 @@ export const referenceRoute = (
  * A reference the model has only half-written is dropped so a partly streamed
  * token never flashes as literal text before it closes.
  */
-const dropTrailingFragment = (text: string): string => {
+export const dropPartialReference = (text: string): string => {
   const opened = text.lastIndexOf('[[');
 
   if (opened < 0) {
@@ -62,7 +62,7 @@ export const parseAssistantText = (
   text: string,
   isStreaming = false
 ): AiTextSegment[] => {
-  const source = isStreaming ? dropTrailingFragment(text) : text;
+  const source = isStreaming ? dropPartialReference(text) : text;
   const segments: AiTextSegment[] = [];
   let index = 0;
 
