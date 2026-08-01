@@ -19,7 +19,9 @@ public sealed class CompleteSprintTool : IAiTool
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_complete_sprint";
+    public const string ToolName = "propose_complete_sprint";
+
+    public string Name => ToolName;
 
     public string Description =>
         "Propose completing the active sprint. Unfinished tasks stay where they are, and a completed sprint can no longer be edited. "

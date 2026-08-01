@@ -8,6 +8,7 @@ using Netptune.Ai.Execution;
 using Netptune.Ai.Tools;
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Ai;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Handlers.Sprints.Queries;
@@ -88,6 +89,7 @@ public class SprintToolTests
     public async Task StartSprint_ShouldProposeTheStatusChange()
     {
         GivenSprint(CreateSprint());
+        GivenActiveSprints([]);
 
         var tool = new StartSprintTool(Mediator, ChangeSet);
         var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
@@ -107,6 +109,36 @@ public class SprintToolTests
 
         result.IsError.Should().BeTrue();
         ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task StartSprint_ShouldFail_WhenTheProjectIsAlreadyRunningASprint()
+    {
+        GivenSprint(CreateSprint());
+        GivenActiveSprints([CreateActiveSprint()]);
+
+        var tool = new StartSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeTrue();
+        result.Content.Should().Contain("Sprint 3");
+        ChangeSet.Changes.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task StartSprint_ShouldPropose_WhenTheChangeSetCompletesTheRunningSprintFirst()
+    {
+        var active = CreateActiveSprint();
+
+        GivenSprint(CreateSprint());
+        GivenActiveSprints([active]);
+        GivenProposedClosure(active.Id, CompleteSprintTool.ToolName);
+
+        var tool = new StartSprintTool(Mediator, ChangeSet);
+        var result = await tool.Execute(Arguments($$"""{"sprintId":{{SprintId}}}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+        ChangeSet.Changes.Should().HaveCount(2);
     }
 
     [Fact]
@@ -212,6 +244,25 @@ public class SprintToolTests
             .Returns(response);
     }
 
+    private void GivenActiveSprints(List<SprintViewModel> sprints)
+    {
+        Mediator
+            .Send(Arg.Any<GetSprintsQuery>(), Arg.Any<CancellationToken>())
+            .Returns(sprints);
+    }
+
+    private void GivenProposedClosure(int sprintId, string toolName)
+    {
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = toolName,
+            EntityType = "sprint",
+            EntityId = sprintId,
+            Summary = "Complete the running sprint",
+            Payload = JsonDocument.Parse($$"""{"sprintId":{{sprintId}}}"""),
+        });
+    }
+
     private void GivenTask(TaskViewModel task)
     {
         Mediator
@@ -234,6 +285,22 @@ public class SprintToolTests
             ProjectKey = "NPT",
             WorkspaceId = 1,
             TaskCount = 4,
+        };
+    }
+
+    private static SprintViewModel CreateActiveSprint()
+    {
+        return new SprintViewModel
+        {
+            Id = SprintId + 1,
+            Name = "Sprint 3",
+            Status = SprintStatus.Active,
+            StartDate = new DateTime(2026, 6, 17, 0, 0, 0, DateTimeKind.Utc),
+            EndDate = new DateTime(2026, 6, 30, 0, 0, 0, DateTimeKind.Utc),
+            ProjectId = ProjectId,
+            ProjectName = "Netptune",
+            ProjectKey = "NPT",
+            WorkspaceId = 1,
         };
     }
 

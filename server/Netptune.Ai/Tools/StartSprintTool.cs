@@ -5,11 +5,18 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.Sprints;
+using Netptune.Handlers.Sprints.Queries;
 
 namespace Netptune.Ai.Tools;
 
 public sealed class StartSprintTool : IAiTool
 {
+    private const int ActiveSprintLookupTake = 1;
+
+    private static readonly string[] ClosingTools =
+        [CompleteSprintTool.ToolName, CancelSprintTool.ToolName];
+
     private readonly IMediator Mediator;
     private readonly IAiChangeSetBuilder ChangeSet;
 
@@ -23,6 +30,7 @@ public sealed class StartSprintTool : IAiTool
 
     public string Description =>
         "Propose starting a sprint that is still in planning, making it the project's active sprint. "
+        + "A project can only have one active sprint, so the sprint running now must be completed or cancelled first. "
         + "The sprint is not started until the user reviews and applies the change.";
 
     public AiToolKind Kind => AiToolKind.Write;
@@ -62,6 +70,16 @@ public sealed class StartSprintTool : IAiTool
                 $"Sprint “{sprint.Name}” is {sprint.Status.ToString().ToLowerInvariant()} — only planning sprints can be started.");
         }
 
+        var activeSprint = await FindActiveSprint(sprint.ProjectId, cancellationToken);
+        var isBlocked = activeSprint is not null && !IsBeingClosed(activeSprint.Id);
+
+        if (isBlocked)
+        {
+            return AiToolExecution.Failed(
+                $"Project {sprint.ProjectName} is already running sprint “{activeSprint!.Name}” ({activeSprint.Id}). "
+                + "A project can only have one active sprint — propose completing or cancelling that one first.");
+        }
+
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = Name,
@@ -83,5 +101,19 @@ public sealed class StartSprintTool : IAiTool
 
         return AiToolExecution.Success(
             $"Proposed starting sprint “{sprint.Name}”. Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private async Task<SprintViewModel?> FindActiveSprint(int projectId, CancellationToken cancellationToken)
+    {
+        var query = new GetSprintsQuery(projectId, [SprintStatus.Active], ActiveSprintLookupTake);
+        var sprints = await Mediator.Send(query, cancellationToken);
+
+        return sprints.FirstOrDefault();
+    }
+
+    private bool IsBeingClosed(int sprintId)
+    {
+        return ChangeSet.Changes.Any(change =>
+            change.EntityId == sprintId && ClosingTools.Contains(change.ToolName));
     }
 }

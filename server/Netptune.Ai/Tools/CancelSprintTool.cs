@@ -19,7 +19,9 @@ public sealed class CancelSprintTool : IAiTool
         ChangeSet = changeSet;
     }
 
-    public string Name => "propose_cancel_sprint";
+    public const string ToolName = "propose_cancel_sprint";
+
+    public string Name => ToolName;
 
     public string Description =>
         "Propose cancelling a sprint. Its tasks stay attached to it, and a cancelled sprint can be deleted afterwards. "
