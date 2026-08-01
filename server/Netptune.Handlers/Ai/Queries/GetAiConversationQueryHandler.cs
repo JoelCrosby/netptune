@@ -43,13 +43,37 @@ public sealed class GetAiConversationQueryHandler
         var messages = await UnitOfWork.AiConversations.GetMessages(conversation.Id, cancellationToken);
         var invocations = await UnitOfWork.AiConversations.GetToolInvocations(conversation.Id, cancellationToken);
         var referencesByMessage = AiMessageReferences.Group(invocations);
+        var pendingChangeSet = await ReadPendingChangeSet(conversation.Id, userId, workspaceId, cancellationToken);
         var detail = new AiConversationDetailViewModel
         {
             Conversation = GetAiConversationsQueryHandler.ToViewModel(conversation, messages),
             Messages = messages.Select(message => ToViewModel(message, referencesByMessage)).ToList(),
+            PendingChangeSet = pendingChangeSet,
         };
 
         return ClientResponse<AiConversationDetailViewModel>.Success(detail);
+    }
+
+    private async Task<AiChangeSetViewModel?> ReadPendingChangeSet(
+        Guid conversationId,
+        string userId,
+        int workspaceId,
+        CancellationToken cancellationToken)
+    {
+        var changeSet = await UnitOfWork.AiChangeSets.GetPending(
+            conversationId,
+            userId,
+            workspaceId,
+            cancellationToken);
+
+        if (changeSet is null)
+        {
+            return null;
+        }
+
+        var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
+
+        return AiChangeSetMapper.ToViewModel(changeSet, changes);
     }
 
     private static AiMessageViewModel ToViewModel(

@@ -9,5 +9,7 @@ public interface IAiChangeSetRepository : IRepository<AiChangeSet, Guid>
 
     Task<AiChangeSet?> GetOwned(Guid changeSetId, string userId, int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<AiChangeSet?> GetPending(Guid conversationId, string userId, int workspaceId, CancellationToken cancellationToken = default);
+
     Task<List<AiProposedChange>> GetChanges(Guid changeSetId, CancellationToken cancellationToken = default);
 }

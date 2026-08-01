@@ -72,4 +72,6 @@ public sealed record AiConversationDetailViewModel
     public required AiConversationViewModel Conversation { get; init; }
 
     public List<AiMessageViewModel> Messages { get; init; } = [];
+
+    public AiChangeSetViewModel? PendingChangeSet { get; init; }
 }

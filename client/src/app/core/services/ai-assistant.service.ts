@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AiCredential } from '@core/models/ai-credential';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
@@ -29,9 +29,23 @@ export interface AiChatEntry {
   failed?: boolean;
 }
 
+interface AiStoredSession {
+  workspace: string;
+  conversationId: string | null;
+  isOpen: boolean;
+}
+
 const STREAM_PREFIX = 'data: ';
 const MODE_STORAGE_KEY = 'ai-assistant.mode';
+const SESSION_STORAGE_KEY = 'ai-assistant.session';
+const DRAFT_STORAGE_KEY = 'ai-assistant.drafts';
+const DRAFT_PERSIST_DELAY = 400;
+const NEW_CONVERSATION_KEY = 'new';
 const ASSISTANT_PAGE_PATTERN = /^\/[^/]+\/assistant$/;
+
+/** Matches the server's turn timeout — a reply cannot arrive after it. */
+const RESUME_TIMEOUT = 5 * 60 * 1000;
+const RESUME_POLL_INTERVAL = 2000;
 
 @Injectable({ providedIn: 'root' })
 export class AiAssistantService {
@@ -95,8 +109,134 @@ export class AiAssistantService {
     return $localize`:Model option that lets the server choose:Automatic`;
   });
 
+  readonly draft = signal('');
+
+  private hasRestoredSession = false;
+  private pendingSince: number | null = null;
+  private drafts: Record<string, string> =
+    this.storage.getItem<Record<string, string>>(DRAFT_STORAGE_KEY) ?? {};
+
+  private draftTimer: ReturnType<typeof setTimeout> | null = null;
+
+  /** Drafts follow the chat they were typed in, so switching chats swaps them. */
+  private readonly draftKey = computed(() => {
+    const workspace = this.workspaceKey() ?? '';
+    const conversationId = this.conversationId() ?? NEW_CONVERSATION_KEY;
+
+    return `${workspace}:${conversationId}`;
+  });
+
+  constructor() {
+    effect(() => {
+      const key = this.draftKey();
+
+      this.draft.set(this.drafts[key] ?? '');
+    });
+
+    effect(() => {
+      const workspace = this.workspaceKey();
+      const isAvailable = this.isAvailable();
+      const canRestore =
+        isAvailable && workspace !== null && !this.hasRestoredSession;
+
+      if (!canRestore) {
+        return;
+      }
+
+      this.hasRestoredSession = true;
+
+      void this.restoreSession(workspace);
+    });
+
+    effect(() => {
+      const session: AiStoredSession = {
+        workspace: this.workspaceKey() ?? '',
+        conversationId: this.conversationId(),
+        isOpen: this.isOpen(),
+      };
+
+      const canRemember = session.workspace !== '' && this.hasRestoredSession;
+
+      if (!canRemember) {
+        return;
+      }
+
+      this.storage.setItem(SESSION_STORAGE_KEY, session);
+    });
+  }
+
   selectModel(modelId: string | null) {
     this.selectedModel.set(modelId);
+  }
+
+  setDraft(text: string) {
+    const key = this.draftKey();
+
+    this.draft.set(text);
+    this.rememberDraft(key, text);
+  }
+
+  private rememberDraft(key: string, text: string) {
+    this.drafts = this.withDraft(key, text);
+
+    if (this.draftTimer !== null) {
+      clearTimeout(this.draftTimer);
+    }
+
+    this.draftTimer = setTimeout(() => {
+      this.draftTimer = null;
+      this.storage.setItem(DRAFT_STORAGE_KEY, this.drafts);
+    }, DRAFT_PERSIST_DELAY);
+  }
+
+  private withDraft(key: string, text: string): Record<string, string> {
+    const hasText = text.trim().length > 0;
+
+    if (hasText) {
+      return { ...this.drafts, [key]: text };
+    }
+
+    const remaining = Object.entries(this.drafts).filter(([stored]) => {
+      return stored !== key;
+    });
+
+    return Object.fromEntries(remaining);
+  }
+
+  private forgetDraft(key: string) {
+    this.draft.set('');
+    this.rememberDraft(key, '');
+  }
+
+  private async restoreSession(workspace: string) {
+    const session = this.storage.getItem<AiStoredSession>(SESSION_STORAGE_KEY);
+    const isSameWorkspace = session?.workspace === workspace;
+
+    if (!session || !isSameWorkspace) {
+      return;
+    }
+
+    const shouldOpen = session.isOpen && this.mode() !== 'dedicated';
+
+    if (shouldOpen) {
+      this.isOpen.set(true);
+    }
+
+    if (!session.conversationId) {
+      return;
+    }
+
+    await this.loadModels();
+
+    const detail = await this.readConversation(session.conversationId);
+
+    if (!detail) {
+      return;
+    }
+
+    this.applyConversation(detail);
+
+    await this.resumeTurn();
   }
 
   async ensureLoaded() {
@@ -143,34 +283,129 @@ export class AiAssistantService {
   }
 
   async openConversation(conversationId: string) {
-    const response = await this.http
-      .get<ClientResponse<AiConversationDetail>>(
-        `api/ai/conversations/${conversationId}`
-      )
-      .toPromise();
-
-    const detail = response?.payload;
+    const detail = await this.readConversation(conversationId);
 
     if (!detail) {
       return;
     }
 
+    this.applyConversation(detail);
+  }
+
+  private async readConversation(
+    conversationId: string
+  ): Promise<AiConversationDetail | null> {
+    try {
+      const response = await this.http
+        .get<ClientResponse<AiConversationDetail>>(
+          `api/ai/conversations/${conversationId}`
+        )
+        .toPromise();
+
+      return response?.payload ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private applyConversation(detail: AiConversationDetail) {
+    const messages = detail.messages;
+    const last = messages[messages.length - 1];
+    const isAwaitingReply = last?.role === AiMessageRole.user;
+
     this.conversationId.set(detail.conversation.id);
     this.conversationTitle.set(detail.conversation.title);
     this.selectedModel.set(detail.conversation.model);
-    this.entries.set(detail.messages.map((message) => this.toEntry(message)));
-    this.addReferences(
-      detail.messages.flatMap((message) => message.references)
-    );
-    this.changeSet.set(null);
+    this.entries.set(messages.map((message) => this.toEntry(message)));
+    this.addReferences(messages.flatMap((message) => message.references));
+    this.changeSet.set(detail.pendingChangeSet ?? null);
     this.excludedChangeIds.set(new Set());
     this.showHistory.set(false);
+    this.pendingSince = isAwaitingReply ? Date.parse(last.createdAt) : null;
+  }
+
+  /**
+   * A reload drops the event stream, but the server finishes and stores the turn
+   * regardless, so wait for the reply to land instead of losing it.
+   */
+  private async resumeTurn() {
+    const conversationId = this.conversationId();
+    const startedAt = this.pendingSince;
+
+    if (conversationId === null || startedAt === null) {
+      return;
+    }
+
+    const isExpired = Date.now() - startedAt >= RESUME_TIMEOUT;
+
+    if (isExpired) {
+      return;
+    }
+
+    this.appendEntry({ role: 'assistant', text: '', tools: [] });
+    this.isStreaming.set(true);
+    this.isThinking.set(true);
+
+    try {
+      await this.awaitReply(conversationId, startedAt);
+    } finally {
+      this.isStreaming.set(false);
+      this.isThinking.set(false);
+      this.pendingSince = null;
+    }
+  }
+
+  private async awaitReply(conversationId: string, startedAt: number) {
+    for (;;) {
+      await this.wait(RESUME_POLL_INTERVAL);
+
+      const isCurrent = this.conversationId() === conversationId;
+
+      if (!isCurrent) {
+        return;
+      }
+
+      const detail = await this.readReply(conversationId);
+
+      if (detail) {
+        this.applyConversation(detail);
+
+        return;
+      }
+
+      const isExpired = Date.now() - startedAt >= RESUME_TIMEOUT;
+
+      if (isExpired) {
+        this.failLastEntry(
+          $localize`:Shown when the assistant reports a failure:The assistant stopped unexpectedly.`
+        );
+
+        return;
+      }
+    }
+  }
+
+  private async readReply(
+    conversationId: string
+  ): Promise<AiConversationDetail | null> {
+    const detail = await this.readConversation(conversationId);
+    const messages = detail?.messages ?? [];
+    const last = messages[messages.length - 1];
+    const hasReply = last !== undefined && last.role !== AiMessageRole.user;
+
+    return hasReply ? detail : null;
+  }
+
+  private wait(duration: number) {
+    return new Promise<void>((resolve) => setTimeout(resolve, duration));
   }
 
   async deleteConversation(conversationId: string) {
     await this.http
       .delete(`api/ai/conversations/${conversationId}`)
       .toPromise();
+
+    this.rememberDraft(`${this.workspaceKey() ?? ''}:${conversationId}`, '');
 
     const isCurrent = this.conversationId() === conversationId;
 
@@ -313,6 +548,8 @@ export class AiAssistantService {
 
   startNewConversation() {
     this.transcriptVersion.update((version) => version + 1);
+    this.pendingSince = null;
+    this.forgetDraft(`${this.workspaceKey() ?? ''}:${NEW_CONVERSATION_KEY}`);
     this.conversationId.set(null);
     this.conversationTitle.set(null);
     this.references.set(new Map());
@@ -397,6 +634,7 @@ export class AiAssistantService {
 
     const wasNewConversation = this.conversationId() === null;
 
+    this.forgetDraft(this.draftKey());
     this.appendEntry({ role: 'user', text: trimmed, tools: [] });
     this.appendEntry({ role: 'assistant', text: '', tools: [] });
     this.isStreaming.set(true);

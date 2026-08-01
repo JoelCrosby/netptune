@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AiModelOption } from '@core/models/ai-model';
 import { LucideArrowUp } from '@lucide/angular';
@@ -16,7 +16,7 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
           rows="3"
           class="placeholder:text-muted w-full resize-none bg-transparent px-2 py-1.5 text-sm outline-none"
           [ngModel]="draft()"
-          (ngModelChange)="draft.set($event)"
+          (ngModelChange)="draftChanged.emit($event)"
           (keydown)="onKeydown($event)"
           [placeholder]="placeholder()"
           [disabled]="isStreaming() || disabled()"></textarea>
@@ -55,21 +55,17 @@ export class AiAssistantComposerComponent {
   readonly isStreaming = input(false);
   readonly disabled = input(false);
   readonly contentWidth = input('');
+  readonly draft = input('');
 
   readonly messageSent = output<string>();
   readonly modelSelected = output<string | null>();
-
-  protected readonly draft = signal('');
+  readonly draftChanged = output<string>();
 
   protected readonly canSend = computed(() => {
     const hasDraft = this.draft().trim().length > 0;
 
     return hasDraft && !this.isStreaming() && !this.disabled();
   });
-
-  clear() {
-    this.draft.set('');
-  }
 
   protected placeholder(): string {
     if (this.isStreaming()) {
@@ -95,9 +91,6 @@ export class AiAssistantComposerComponent {
       return;
     }
 
-    const text = this.draft();
-
-    this.draft.set('');
-    this.messageSent.emit(text);
+    this.messageSent.emit(this.draft());
   }
 }

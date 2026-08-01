@@ -134,7 +134,9 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
         [modelLabel]="assistant.selectedModelLabel()"
         [isStreaming]="assistant.isStreaming()"
         [contentWidth]="contentWidth()"
+        [draft]="assistant.draft()"
         (messageSent)="send($event)"
+        (draftChanged)="assistant.setDraft($event)"
         (modelSelected)="assistant.selectModel($event)" />
     </div>
   `,
@@ -142,7 +144,6 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
 export class AiAssistantPanelComponent {
   readonly variant = input<'drawer' | 'page'>('drawer');
 
-  private readonly composer = viewChild.required(AiAssistantComposerComponent);
   private readonly scroller = viewChild.required(MessageScrollerDirective);
   private readonly injector = inject(Injector);
 
@@ -245,7 +246,6 @@ export class AiAssistantPanelComponent {
 
   protected startNew() {
     this.assistant.startNewConversation();
-    this.composer().clear();
   }
 
   protected send(text: string) {

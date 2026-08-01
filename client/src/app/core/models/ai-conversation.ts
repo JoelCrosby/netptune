@@ -62,6 +62,7 @@ export interface AiMessage {
 export interface AiConversationDetail {
   conversation: AiConversation;
   messages: AiMessage[];
+  pendingChangeSet?: AiChangeSet | null;
 }
 
 export enum AiChangeSetStatus {

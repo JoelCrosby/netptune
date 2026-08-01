@@ -3,10 +3,16 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Ai;
+using Netptune.Entities.Contexts;
 
 using Xunit;
 
@@ -213,6 +219,132 @@ public sealed class AiEndpointTests
         var conversations = await client.GetFromJsonAsync<List<AiConversationViewModel>>("api/ai/conversations");
 
         conversations.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task Conversations_ShouldReturnThePendingChangeSet_SoAReloadCanRestoreIt()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedPendingChangeSet();
+
+        try
+        {
+            var detail = await client.GetFromJsonAsync<ClientResponse<AiConversationDetailViewModel>>(
+                $"api/ai/conversations/{seed.ConversationId}");
+
+            detail.IsSuccess.Should().BeTrue();
+
+            var pending = detail.Payload!.PendingChangeSet;
+
+            pending.Should().NotBeNull("a reload has no other way to recover an unapplied proposal");
+            pending!.Id.Should().Be(seed.ChangeSetId);
+            pending.Status.Should().Be(AiChangeSetStatus.Pending);
+            pending.Changes.Should().ContainSingle(change => change.ToolName == "propose_update_sprint");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    private sealed record PendingChangeSetSeed(Guid ConversationId, Guid ChangeSetId);
+
+    private async Task<PendingChangeSetSeed> SeedPendingChangeSet()
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var membership = await context.WorkspaceAppUsers
+            .Include(workspaceUser => workspaceUser.Workspace)
+            .Include(workspaceUser => workspaceUser.User)
+            .Where(workspaceUser =>
+                workspaceUser.Workspace.Slug == "netptune" &&
+                workspaceUser.User.UserType == AppUserType.User)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        var conversation = new AiConversation
+        {
+            Id = Guid.NewGuid(),
+            WorkspaceId = membership.WorkspaceId,
+            UserId = membership.UserId,
+            Title = "Reload safety",
+            Provider = AiProvider.Anthropic,
+            Model = "claude-opus-5",
+            LastMessageAt = DateTime.UtcNow,
+        };
+
+        var message = new AiMessage
+        {
+            ConversationId = conversation.Id,
+            Sequence = 0,
+            Role = AiMessageRole.Assistant,
+            Model = conversation.Model,
+            Provider = conversation.Provider,
+            Content = new AiMessageContent { Text = "Here is what I propose." }.ToJsonDocument(),
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        await context.AiConversations.AddAsync(conversation, TestContext.Current.CancellationToken);
+        await context.AiMessages.AddAsync(message, TestContext.Current.CancellationToken);
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var changeSet = new AiChangeSet
+        {
+            Id = Guid.NewGuid(),
+            WorkspaceId = membership.WorkspaceId,
+            ConversationId = conversation.Id,
+            MessageId = message.Id,
+            UserId = membership.UserId,
+            Status = AiChangeSetStatus.Pending,
+            CorrelationId = Guid.NewGuid(),
+        };
+
+        var change = new AiProposedChange
+        {
+            ChangeSetId = changeSet.Id,
+            Sequence = 0,
+            ToolName = "propose_update_sprint",
+            EntityType = "sprint",
+            Summary = "Update name on sprint “Sprint 4”",
+        };
+
+        await context.AiChangeSets.AddAsync(changeSet, TestContext.Current.CancellationToken);
+        await context.AiProposedChanges.AddAsync(change, TestContext.Current.CancellationToken);
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        return new PendingChangeSetSeed(conversation.Id, changeSet.Id);
+    }
+
+    private async Task RemoveSeed(Guid conversationId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var conversation = await context.AiConversations
+            .FirstOrDefaultAsync(item => item.Id == conversationId, TestContext.Current.CancellationToken);
+
+        if (conversation is null)
+        {
+            return;
+        }
+
+        var changeSets = await context.AiChangeSets
+            .Where(item => item.ConversationId == conversationId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        var changeSetIds = changeSets.Select(item => item.Id).ToList();
+        var changes = await context.AiProposedChanges
+            .Where(item => changeSetIds.Contains(item.ChangeSetId))
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        var messages = await context.AiMessages
+            .Where(item => item.ConversationId == conversationId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        context.AiProposedChanges.RemoveRange(changes);
+        context.AiChangeSets.RemoveRange(changeSets);
+        context.AiMessages.RemoveRange(messages);
+        context.AiConversations.Remove(conversation);
+
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
     }
 
     private static async Task DeleteExistingCredentials(HttpClient client)

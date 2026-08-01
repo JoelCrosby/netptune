@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
@@ -31,6 +32,22 @@ public class AiChangeSetRepository(DataContext context, IDbConnectionFactory con
                 changeSet.Id == changeSetId &&
                 changeSet.UserId == userId &&
                 changeSet.WorkspaceId == workspaceId)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<AiChangeSet?> GetPending(
+        Guid conversationId,
+        string userId,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(changeSet =>
+                changeSet.ConversationId == conversationId &&
+                changeSet.UserId == userId &&
+                changeSet.WorkspaceId == workspaceId &&
+                changeSet.Status == AiChangeSetStatus.Pending)
+            .OrderByDescending(changeSet => changeSet.MessageId)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
