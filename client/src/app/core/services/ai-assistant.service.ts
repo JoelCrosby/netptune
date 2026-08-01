@@ -75,6 +75,7 @@ export class AiAssistantService {
   readonly showHistory = signal(false);
   readonly models = signal<AiModelOption[]>([]);
   readonly references = signal<Map<string, AiEntityReference>>(new Map());
+  readonly hasCredentials = signal<boolean | null>(null);
   readonly selectedModel = signal<string | null>(null);
 
   readonly selectedModelLabel = computed(() => {
@@ -96,6 +97,10 @@ export class AiAssistantService {
     this.selectedModel.set(modelId);
   }
 
+  async ensureLoaded() {
+    await this.loadModels();
+  }
+
   private async loadModels() {
     const hasModels = this.models().length > 0;
 
@@ -113,6 +118,7 @@ export class AiAssistantService {
       return providers.has(model.provider);
     });
 
+    this.hasCredentials.set(providers.size > 0);
     this.models.set(available);
   }
 

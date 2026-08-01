@@ -7,6 +7,7 @@ import { AiAssistantEmptyStateComponent } from './components/ai-assistant-empty-
 import { AiAssistantHeaderComponent } from './components/ai-assistant-header.component';
 import { AiAssistantHistoryComponent } from './components/ai-assistant-history.component';
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
+import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
 
 @Component({
   selector: 'app-ai-assistant-panel',
@@ -18,6 +19,7 @@ import { AiAssistantMessageComponent } from './components/ai-assistant-message.c
     AiAssistantHeaderComponent,
     AiAssistantHistoryComponent,
     AiAssistantMessageComponent,
+    AiAssistantMissingKeyComponent,
   ],
   template: `
     <div
@@ -40,6 +42,12 @@ import { AiAssistantMessageComponent } from './components/ai-assistant-message.c
         <div
           class="mx-auto flex w-full flex-1 flex-col px-4 py-4"
           [class]="contentWidth()">
+          @if (isMissingKey()) {
+            <app-ai-assistant-missing-key
+              class="mb-4"
+              [workspace]="assistant.workspaceKey()" />
+          }
+
           @if (assistant.showHistory()) {
             <app-ai-assistant-history
               [conversations]="assistant.conversations()"
@@ -73,6 +81,7 @@ import { AiAssistantMessageComponent } from './components/ai-assistant-message.c
       }
 
       <app-ai-assistant-composer
+        [disabled]="isMissingKey()"
         [models]="assistant.models()"
         [selectedModel]="assistant.selectedModel()"
         [modelLabel]="assistant.selectedModelLabel()"
@@ -92,6 +101,10 @@ export class AiAssistantPanelComponent {
   protected readonly entries = computed(() => this.assistant.entries());
 
   protected readonly isDrawer = computed(() => this.variant() === 'drawer');
+
+  protected readonly isMissingKey = computed(() => {
+    return this.assistant.hasCredentials() === false;
+  });
 
   protected readonly contentWidth = computed(() => {
     return this.isDrawer() ? '' : 'max-w-3xl';

@@ -19,7 +19,7 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
           (ngModelChange)="draft.set($event)"
           (keydown)="onKeydown($event)"
           [placeholder]="placeholder()"
-          [disabled]="isStreaming()"></textarea>
+          [disabled]="isStreaming() || disabled()"></textarea>
 
         <div class="flex items-center justify-between gap-2 pt-1">
           @if (models().length > 0) {
@@ -53,6 +53,7 @@ export class AiAssistantComposerComponent {
   readonly selectedModel = input.required<string | null>();
   readonly modelLabel = input.required<string>();
   readonly isStreaming = input(false);
+  readonly disabled = input(false);
   readonly contentWidth = input('');
 
   readonly messageSent = output<string>();
@@ -63,7 +64,7 @@ export class AiAssistantComposerComponent {
   protected readonly canSend = computed(() => {
     const hasDraft = this.draft().trim().length > 0;
 
-    return hasDraft && !this.isStreaming();
+    return hasDraft && !this.isStreaming() && !this.disabled();
   });
 
   clear() {

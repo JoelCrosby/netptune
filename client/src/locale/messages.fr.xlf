@@ -106,7 +106,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:92</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:93</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -1668,7 +1668,7 @@
     </unit>
     <unit id="413961075487889368">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:75</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:76</note>
         <note category="description">Placeholder while the assistant is replying</note>
       </notes>
       <segment state="translated">
@@ -6147,7 +6147,7 @@
     </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:115</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:128</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment state="translated">
@@ -6729,8 +6729,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:399</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:443</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:405</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:449</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -7185,7 +7185,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:107</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:120</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:52,54</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -8143,7 +8143,7 @@
     </unit>
     <unit id="3525807365202276561">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:78</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:79</note>
         <note category="description">Placeholder for the assistant message input</note>
       </notes>
       <segment state="translated">
@@ -9602,7 +9602,7 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:539</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:545</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -10620,6 +10620,16 @@
       <segment state="translated">
         <source>Sprint reporting</source>
         <target>Rapports de sprint</target>
+      </segment>
+    </unit>
+    <unit id="7598361329589282488">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-missing-key.component.ts:17,21</note>
+        <note category="description">Shown in the assistant when the user has no provider API key</note>
+      </notes>
+      <segment state="translated">
+        <source> The assistant needs your own provider API key before it can answer. </source>
+        <target> L&apos;assistant a besoin de votre propre clé API de fournisseur pour pouvoir répondre. </target>
       </segment>
     </unit>
     <unit id="9129776216937058001">
@@ -12418,6 +12428,16 @@
         <target>Catégorie</target>
       </segment>
     </unit>
+    <unit id="2201411529066364907">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-missing-key.component.ts:25,30</note>
+        <note category="description">Link to the settings page where an API key is added</note>
+      </notes>
+      <segment state="translated">
+        <source> Add a key in personal settings </source>
+        <target> Ajouter une clé dans les paramètres personnels </target>
+      </segment>
+    </unit>
     <unit id="220550782947016929">
       <notes>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:118,120</note>
@@ -13569,7 +13589,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:112</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:125</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment state="translated">
@@ -14024,7 +14044,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:27,29</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:29,31</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment state="translated">

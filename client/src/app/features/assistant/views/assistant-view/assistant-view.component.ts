@@ -13,5 +13,7 @@ export class AssistantViewComponent {
 
   constructor() {
     this.assistant.close();
+
+    void this.assistant.ensureLoaded();
   }
 }
