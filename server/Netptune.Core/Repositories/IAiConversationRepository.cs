@@ -1,0 +1,19 @@
+using Netptune.Core.Entities;
+using Netptune.Core.Repositories.Common;
+
+namespace Netptune.Core.Repositories;
+
+public interface IAiConversationRepository : IRepository<AiConversation, Guid>
+{
+    Task<List<AiConversation>> GetForUser(string userId, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<AiConversation?> GetOwned(Guid conversationId, string userId, int workspaceId, CancellationToken cancellationToken = default);
+
+    Task<List<AiMessage>> GetMessages(Guid conversationId, CancellationToken cancellationToken = default);
+
+    Task<int> GetNextSequence(Guid conversationId, CancellationToken cancellationToken = default);
+
+    Task AddMessage(AiMessage message, CancellationToken cancellationToken = default);
+
+    Task AddToolInvocations(IEnumerable<AiToolInvocation> invocations, CancellationToken cancellationToken = default);
+}

@@ -17,6 +17,7 @@ import { Store } from '@ngrx/store';
 import { ShellSidebarComponent } from './shell-sidebar.component';
 import { ShellService } from './shell.service';
 import { ShellNavbarComponent } from './shell-navbar.component';
+import { AiAssistantComponent } from './ai-assistant/ai-assistant.component';
 import { CommandPaletteComponent } from './command-palette/command-palette.component';
 import { GlobalCommandsService } from './global-commands.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
@@ -30,6 +31,7 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
     ShellSidebarComponent,
     ShellNavbarComponent,
     CommandPaletteComponent,
+    AiAssistantComponent,
   ],
   styles: `
     .expanded {
@@ -63,6 +65,7 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
     </div>
 
     <app-command-palette></app-command-palette>
+    <app-ai-assistant></app-ai-assistant>
   `,
 })
 export class ShellComponent {

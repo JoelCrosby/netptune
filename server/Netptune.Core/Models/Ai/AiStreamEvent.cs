@@ -7,6 +7,7 @@ public enum AiStreamEventType
     ToolCompleted = 2,
     TurnCompleted = 3,
     Error = 4,
+    ConversationStarted = 5,
 }
 
 public sealed record AiStreamEvent
@@ -18,6 +19,17 @@ public sealed record AiStreamEvent
     public string? ToolName { get; init; }
 
     public string? Message { get; init; }
+
+    public Guid? ConversationId { get; init; }
+
+    public static AiStreamEvent ConversationStarted(Guid conversationId)
+    {
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.ConversationStarted,
+            ConversationId = conversationId,
+        };
+    }
 
     public static AiStreamEvent Delta(string text)
     {

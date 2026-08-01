@@ -24,6 +24,8 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();
 
         services.AddScoped<IAiConversationRunner, AiConversationRunner>();
+        services.AddScoped<IAiSystemPromptBuilder, AiSystemPromptBuilder>();
+        services.AddScoped<IAiConversationService, AiConversationService>();
 
         return services;
     }

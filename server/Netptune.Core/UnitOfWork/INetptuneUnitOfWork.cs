@@ -68,4 +68,6 @@ public interface INetptuneUnitOfWork : IUnitOfWork
     IRoadmapRepository Roadmaps { get; }
 
     IAiCredentialRepository AiCredentials { get; }
+
+    IAiConversationRepository AiConversations { get; }
 }

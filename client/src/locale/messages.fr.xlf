@@ -1543,6 +1543,16 @@
         <target>Invitation(s) envoyée(s)</target>
       </segment>
     </unit>
+    <unit id="145156830164118">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:47,49</note>
+        <note category="description">Title of the AI assistant panel</note>
+      </notes>
+      <segment state="translated">
+        <source> Assistant </source>
+        <target> Assistant </target>
+      </segment>
+    </unit>
     <unit id="146031208309512340">
       <notes>
         <note category="location">src/app/core/store/users/users.effects.ts:154</note>
@@ -1581,6 +1591,16 @@
       <segment state="translated">
         <source>Behind by <ph id="0" equiv="gap" disp="Math.round(this.latestGap())"/></source>
         <target>En retard de <ph id="0" equiv="gap" disp="Math.round(this.latestGap())"/></target>
+      </segment>
+    </unit>
+    <unit id="413961075487889368">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:198</note>
+        <note category="description">Placeholder while the assistant is replying</note>
+      </notes>
+      <segment state="translated">
+        <source>Waiting for the assistant…</source>
+        <target>En attente de l&apos;assistant…</target>
       </segment>
     </unit>
     <unit id="414708731564173967">
@@ -2166,6 +2186,16 @@
       <segment state="translated">
         <source> You can go back and retry, or continue with the recommended template. </source>
         <target>Vous pouvez revenir en arrière et réessayer, ou continuer avec le modèle recommandé.</target>
+      </segment>
+    </unit>
+    <unit id="7480444655465895778">
+      <notes>
+        <note category="location">src/app/shell/global-commands.service.ts:123</note>
+        <note category="description">Command palette action that opens the AI assistant</note>
+      </notes>
+      <segment state="translated">
+        <source>Open Assistant</source>
+        <target>Ouvrir l&apos;assistant</target>
       </segment>
     </unit>
     <unit id="748535619305677205">
@@ -3787,9 +3817,9 @@
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:247</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
-      <segment state="initial">
+      <segment state="translated">
         <source>Key removed.</source>
-        <target>Retour aux étiquettes</target>
+        <target>Clé supprimée.</target>
       </segment>
     </unit>
     <unit id="3304972143698843178">
@@ -5513,6 +5543,16 @@
         <target>Choisissez les rôles à notifier</target>
       </segment>
     </unit>
+    <unit id="4949608430646968432">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:72,75</note>
+        <note category="description">Empty state inside the AI assistant panel</note>
+      </notes>
+      <segment state="translated">
+        <source> Ask about your workspace — projects, tasks, statuses. The assistant can read your workspace but cannot change anything yet. </source>
+        <target> Posez des questions sur votre espace de travail — projets, tâches, statuts. L&apos;assistant peut lire votre espace de travail mais ne peut encore rien modifier. </target>
+      </segment>
+    </unit>
     <unit id="8066608938393600549">
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:76,77</note>
@@ -6552,6 +6592,17 @@
         <target> Dupliquer l&apos;automatisation </target>
       </segment>
     </unit>
+    <unit id="6189233648220583946">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:62</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:85</note>
+        <note category="description">Shown when the assistant request fails</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant could not be reached.</source>
+        <target>L&apos;assistant est injoignable.</target>
+      </segment>
+    </unit>
     <unit id="6189504046652172662">
       <notes>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:56,62</note>
@@ -6975,6 +7026,16 @@
       <segment state="translated">
         <source>equals</source>
         <target>est égal à</target>
+      </segment>
+    </unit>
+    <unit id="7151632936989469818">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:58,61</note>
+        <note category="description">Button that clears the assistant conversation</note>
+      </notes>
+      <segment state="translated">
+        <source>New chat</source>
+        <target>Nouvelle discussion</target>
       </segment>
     </unit>
     <unit id="7159357242310835356">
@@ -7902,6 +7963,16 @@
       <segment state="translated">
         <source>clear</source>
         <target>effacer</target>
+      </segment>
+    </unit>
+    <unit id="3525807365202276561">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:201</note>
+        <note category="description">Placeholder for the assistant message input</note>
+      </notes>
+      <segment state="translated">
+        <source>Ask about your workspace</source>
+        <target>Posez une question sur votre espace de travail</target>
       </segment>
     </unit>
     <unit id="3527168416064159731">
@@ -9293,6 +9364,16 @@
         <target>Sprint en cours</target>
       </segment>
     </unit>
+    <unit id="3154294923374510663">
+      <notes>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:163</note>
+        <note category="description">Shown when the assistant reports a failure</note>
+      </notes>
+      <segment state="translated">
+        <source>The assistant stopped unexpectedly.</source>
+        <target>L&apos;assistant s&apos;est arrêté de façon inattendue.</target>
+      </segment>
+    </unit>
     <unit id="3154469957623598339">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:85,89</note>
@@ -9955,9 +10036,9 @@
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:29</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
-      <segment state="initial">
+      <segment state="translated">
         <source>Create a key at console.anthropic.com</source>
-        <target>Retour aux statuts</target>
+        <target>Créez une clé sur console.anthropic.com</target>
       </segment>
     </unit>
     <unit id="7091571651222742304">
@@ -10152,6 +10233,16 @@
       <segment state="translated">
         <source> Throughput </source>
         <target> Débit </target>
+      </segment>
+    </unit>
+    <unit id="6490688569532630280">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:126,129</note>
+        <note category="description">Button that sends a message to the assistant</note>
+      </notes>
+      <segment state="translated">
+        <source>Send</source>
+        <target>Envoyer</target>
       </segment>
     </unit>
     <unit id="6495174717954477239">
@@ -11178,6 +11269,16 @@
       <segment state="translated">
         <source> Save API Credential </source>
         <target>Enregistrer l&apos;identifiant d&apos;API</target>
+      </segment>
+    </unit>
+    <unit id="4361487192183535591">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:85,88</note>
+        <note category="description">Label for a message the assistant sent</note>
+      </notes>
+      <segment state="translated">
+        <source>Assistant</source>
+        <target>Assistant</target>
       </segment>
     </unit>
     <unit id="3078203495278068534">
@@ -12912,6 +13013,16 @@
         <target>{VAR_PLURAL, plural, =0 {Ajouter des tâches} =1 {Ajouter 1 tâche} other {Ajouter <ph id="0" equiv="INTERPOLATION"/> tâches}}</target>
       </segment>
     </unit>
+    <unit id="720557322859638078">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:82,84</note>
+        <note category="description">Label for a message the user sent</note>
+      </notes>
+      <segment state="translated">
+        <source>You</source>
+        <target>Vous</target>
+      </segment>
+    </unit>
     <unit id="763816024488593537">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:39,42</note>
@@ -13600,6 +13711,16 @@
         <target> Effacer les filtres </target>
       </segment>
     </unit>
+    <unit id="8426796922329733141">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:39,41</note>
+        <note category="description">Accessible name of the AI assistant panel</note>
+      </notes>
+      <segment state="translated">
+        <source>AI assistant</source>
+        <target>Assistant IA</target>
+      </segment>
+    </unit>
     <unit id="8431630160711052087">
       <notes>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:116,118</note>
@@ -13844,7 +13965,7 @@
     </unit>
     <unit id="2547653457651632153">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:51</note>
+        <note category="location">src/app/shell/global-commands.service.ts:54</note>
         <note category="description">Command palette action that navigates to the project list</note>
       </notes>
       <segment state="translated">
@@ -13854,7 +13975,7 @@
     </unit>
     <unit id="5123189455675344637">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:60</note>
+        <note category="location">src/app/shell/global-commands.service.ts:63</note>
         <note category="description">Command palette action that navigates to the task list</note>
       </notes>
       <segment state="translated">
@@ -13864,7 +13985,7 @@
     </unit>
     <unit id="5086261568382990197">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:69</note>
+        <note category="location">src/app/shell/global-commands.service.ts:72</note>
         <note category="description">Command palette action that navigates to the board list</note>
       </notes>
       <segment state="translated">
@@ -13874,7 +13995,7 @@
     </unit>
     <unit id="2627358752486456707">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:78</note>
+        <note category="location">src/app/shell/global-commands.service.ts:81</note>
         <note category="description">Command palette action that navigates to the sprint list</note>
       </notes>
       <segment state="translated">
@@ -13884,7 +14005,7 @@
     </unit>
     <unit id="178520337056147266">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:95</note>
+        <note category="location">src/app/shell/global-commands.service.ts:98</note>
         <note category="description">Command palette action that navigates to the dashboard</note>
       </notes>
       <segment state="translated">
@@ -13894,7 +14015,7 @@
     </unit>
     <unit id="2117590223216089367">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:104</note>
+        <note category="location">src/app/shell/global-commands.service.ts:107</note>
         <note category="description">Command palette action that navigates to the member list</note>
       </notes>
       <segment state="translated">
@@ -13904,7 +14025,7 @@
     </unit>
     <unit id="7783914774924915188">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:112</note>
+        <note category="location">src/app/shell/global-commands.service.ts:115</note>
         <note category="description">Command palette action that navigates to settings</note>
       </notes>
       <segment state="translated">
@@ -13914,7 +14035,7 @@
     </unit>
     <unit id="5354615118655779282">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:145</note>
+        <note category="location">src/app/shell/global-commands.service.ts:156</note>
         <note category="description">Command palette action that navigates to the automation list</note>
       </notes>
       <segment state="translated">
@@ -13924,7 +14045,7 @@
     </unit>
     <unit id="5387282719521675016">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:171</note>
+        <note category="location">src/app/shell/global-commands.service.ts:182</note>
         <note category="description">Command palette action that navigates to file storage</note>
       </notes>
       <segment state="translated">
@@ -14605,9 +14726,9 @@
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:130,132</note>
         <note category="description">Button that stores an API key</note>
       </notes>
-      <segment state="initial">
+      <segment state="translated">
         <source>Save key</source>
-        <target>Retour aux relations</target>
+        <target>Enregistrer la clé</target>
       </segment>
     </unit>
     <unit id="4447140464620115564">

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
+import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { CommandRegistry } from '@core/services/command-registry.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 import {
@@ -20,6 +21,7 @@ export class GlobalCommandsService implements OnDestroy {
   private router = inject(Router);
   private registry = inject(CommandRegistry);
   private workspace = inject(WorkspaceService);
+  private assistant = inject(AiAssistantService);
   private store = inject(Store);
   private canReadAutomations = this.store.selectSignal(
     selectHasPermission(netptunePermissions.automations.read)
@@ -42,6 +44,7 @@ export class GlobalCommandsService implements OnDestroy {
     'nav.users',
     'nav.settings',
     'nav.storage',
+    'actions.assistant',
   ];
 
   constructor() {
@@ -114,6 +117,14 @@ export class GlobalCommandsService implements OnDestroy {
               icon: 'settings',
               keywords: ['settings', 'preferences'],
               execute: () => this.navigate('settings'),
+            },
+            {
+              id: 'actions.assistant',
+              label: $localize`:Command palette action that opens the AI assistant:Open Assistant`,
+              group: 'actions',
+              icon: 'sparkles',
+              keywords: ['assistant', 'ai', 'chat'],
+              execute: () => this.assistant.open(),
             },
           ])
         );
