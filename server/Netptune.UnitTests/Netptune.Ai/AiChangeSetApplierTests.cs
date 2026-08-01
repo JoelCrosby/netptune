@@ -5,6 +5,7 @@ using FluentAssertions;
 using Mediator;
 
 using Netptune.Ai.Execution;
+using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Tools;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
@@ -124,11 +125,45 @@ public class AiChangeSetApplierTests
         invalid.ApplyStatus.Should().Be(AiChangeApplyStatus.Skipped);
     }
 
+    [Fact]
+    public async Task Apply_ShouldFailTheChange_WhenNoHandlerIsRegisteredForItsTool()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_unhandled_thing");
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        var tools = new AiToolRegistry([
+            new StubWriteTool("propose_unhandled_thing", NetptunePermissions.Tasks.Create),
+        ]);
+
+        var applier = new AiChangeSetApplier(
+            UnitOfWork,
+            Identity,
+            Mediator,
+            tools,
+            new AiExecutionContext(),
+            []);
+
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+
+        result!.Results.Should().ContainSingle();
+        result.Results[0].Status.Should().Be(AiChangeApplyStatus.Failed);
+        change.ApplyStatus.Should().Be(AiChangeApplyStatus.Failed);
+    }
+
     private AiChangeSetApplier CreateApplier()
     {
         var tools = new AiToolRegistry([new StubWriteTool("propose_create_task", NetptunePermissions.Tasks.Create)]);
 
-        return new AiChangeSetApplier(UnitOfWork, Identity, Mediator, tools, new AiExecutionContext());
+        return new AiChangeSetApplier(
+            UnitOfWork,
+            Identity,
+            Mediator,
+            tools,
+            new AiExecutionContext(),
+            [new CreateTaskChangeHandler(Mediator)]);
     }
 
     private void GivenChangeSet(AiChangeSet changeSet, List<AiProposedChange> changes)

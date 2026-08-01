@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Ai.Execution;
+using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Providers;
 using Netptune.Ai.Tools;
 using Netptune.Core.Services.Ai;
@@ -21,8 +22,14 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ListProjectsTool>();
         services.AddScoped<IAiTool, SearchTasksTool>();
         services.AddScoped<IAiTool, ListStatusesTool>();
+        services.AddScoped<IAiTool, ListMembersTool>();
         services.AddScoped<IAiTool, CreateTaskTool>();
         services.AddScoped<IAiTool, UpdateTaskTool>();
+        services.AddScoped<IAiTool, AssignTaskTool>();
+
+        services.AddScoped<IAiChangeHandler, CreateTaskChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UpdateTaskChangeHandler>();
+        services.AddScoped<IAiChangeHandler, AssignTaskChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();
 

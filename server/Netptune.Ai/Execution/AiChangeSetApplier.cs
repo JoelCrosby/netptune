@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Mediator;
 
+using Netptune.Ai.Execution.Handlers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
@@ -20,19 +21,22 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     private readonly IMediator Mediator;
     private readonly IAiToolRegistry Tools;
     private readonly IAiExecutionContext AiExecution;
+    private readonly Dictionary<string, IAiChangeHandler> HandlersByToolName;
 
     public AiChangeSetApplier(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IMediator mediator,
         IAiToolRegistry tools,
-        IAiExecutionContext aiExecution)
+        IAiExecutionContext aiExecution,
+        IEnumerable<IAiChangeHandler> handlers)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Mediator = mediator;
         Tools = tools;
         AiExecution = aiExecution;
+        HandlersByToolName = handlers.ToDictionary(handler => handler.ToolName, StringComparer.Ordinal);
     }
 
     private async Task<string> ResolveAgentName(AiChangeSet changeSet, CancellationToken cancellationToken)
@@ -182,10 +186,20 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     {
         try
         {
-            var isCreate = string.Equals(change.ToolName, "propose_create_task", StringComparison.Ordinal);
-            var outcome = isCreate
-                ? await ApplyCreateTask(change, cancellationToken)
-                : await ApplyUpdateTask(change, resolvedRefs, cancellationToken);
+            var handler = ResolveHandler(change.ToolName);
+
+            if (handler is null)
+            {
+                var unsupported = AiChangePayload.Failure(change, $"No handler is registered for {change.ToolName}.");
+
+                change.ApplyStatus = unsupported.Status;
+                change.ApplyError = unsupported.Error;
+
+                return unsupported;
+            }
+
+            var applyContext = new AiChangeApplyContext { Change = change, ResolvedRefs = resolvedRefs };
+            var outcome = await handler.Apply(applyContext, cancellationToken);
 
             change.ApplyStatus = outcome.Status;
             change.ApplyError = outcome.Error;
@@ -214,136 +228,10 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
     }
 
-    private async Task<AiAppliedChangeResult> ApplyCreateTask(
-        AiProposedChange change,
-        CancellationToken cancellationToken)
+    private IAiChangeHandler? ResolveHandler(string toolName)
     {
-        var payload = change.Payload.RootElement;
-        var request = new AddProjectTaskRequest
-        {
-            Name = ReadString(payload, "name") ?? string.Empty,
-            Description = ReadString(payload, "description") ?? string.Empty,
-            ProjectId = ReadInt(payload, "projectId"),
-            DueDate = ReadDate(payload, "dueDate"),
-        };
+        var found = HandlersByToolName.TryGetValue(toolName, out var handler);
 
-        var response = await Mediator.Send(new CreateTaskCommand(request), cancellationToken);
-
-        if (!response.IsSuccess)
-        {
-            return Failure(change, response.Message ?? "The task could not be created.");
-        }
-
-        return new AiAppliedChangeResult
-        {
-            ChangeId = change.Id,
-            Status = AiChangeApplyStatus.Applied,
-            AppliedEntityId = response.Payload?.Id,
-        };
-    }
-
-    private async Task<AiAppliedChangeResult> ApplyUpdateTask(
-        AiProposedChange change,
-        Dictionary<string, int> resolvedRefs,
-        CancellationToken cancellationToken)
-    {
-        var payload = change.Payload.RootElement;
-        var taskId = ResolveTaskId(change, payload, resolvedRefs);
-
-        if (!taskId.HasValue)
-        {
-            return Failure(change, "The task this change refers to could not be resolved.");
-        }
-
-        var request = new UpdateProjectTaskRequest
-        {
-            Id = taskId.Value,
-            Name = ReadString(payload, "name"),
-            Description = ReadString(payload, "description"),
-            StatusId = ReadInt(payload, "statusId"),
-        };
-
-        var dueDate = ReadDate(payload, "dueDate");
-
-        if (dueDate.HasValue)
-        {
-            request.DueDate = dueDate;
-        }
-
-        var response = await Mediator.Send(new UpdateTaskCommand(request), cancellationToken);
-
-        if (!response.IsSuccess)
-        {
-            return Failure(change, response.Message ?? "The task could not be updated.");
-        }
-
-        return new AiAppliedChangeResult
-        {
-            ChangeId = change.Id,
-            Status = AiChangeApplyStatus.Applied,
-            AppliedEntityId = taskId,
-        };
-    }
-
-    private static int? ResolveTaskId(
-        AiProposedChange change,
-        JsonElement payload,
-        Dictionary<string, int> resolvedRefs)
-    {
-        if (change.EntityId.HasValue)
-        {
-            return change.EntityId;
-        }
-
-        var refKey = ReadString(payload, "taskRef");
-        var hasRef = refKey is not null && resolvedRefs.TryGetValue(refKey, out var resolved);
-
-        if (hasRef)
-        {
-            return resolvedRefs[refKey!];
-        }
-
-        return ReadInt(payload, "taskId");
-    }
-
-    private static AiAppliedChangeResult Failure(AiProposedChange change, string message)
-    {
-        return new AiAppliedChangeResult
-        {
-            ChangeId = change.Id,
-            Status = AiChangeApplyStatus.Failed,
-            Error = message,
-        };
-    }
-
-    private static string? ReadString(JsonElement payload, string name)
-    {
-        var hasProperty = payload.ValueKind == JsonValueKind.Object
-            && payload.TryGetProperty(name, out var value)
-            && value.ValueKind == JsonValueKind.String;
-
-        return hasProperty ? payload.GetProperty(name).GetString() : null;
-    }
-
-    private static int? ReadInt(JsonElement payload, string name)
-    {
-        var isObject = payload.ValueKind == JsonValueKind.Object;
-
-        if (!isObject)
-        {
-            return null;
-        }
-
-        var hasProperty = payload.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.Number;
-
-        return hasProperty ? value.GetInt32() : null;
-    }
-
-    private static DateOnly? ReadDate(JsonElement payload, string name)
-    {
-        var raw = ReadString(payload, name);
-        var isParsed = DateOnly.TryParse(raw, out var parsed);
-
-        return isParsed ? parsed : null;
+        return found ? handler : null;
     }
 }
