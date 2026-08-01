@@ -9,6 +9,7 @@ import { NotificationBellComponent } from '@app/entry/components/notification-be
 import { CurrentSprintDropdownComponent } from './current-sprint-dropdown.component';
 import { ProfileMenuComponent } from './profile-menu.component';
 import { CommandPaletteButtonComponent } from './command-palette/command-palette-button.component';
+import { AiAssistantButtonComponent } from './ai-assistant/ai-assistant-button.component';
 
 @Component({
   selector: 'app-shell-navbar',
@@ -18,6 +19,7 @@ import { CommandPaletteButtonComponent } from './command-palette/command-palette
     CurrentSprintDropdownComponent,
     ProfileMenuComponent,
     CommandPaletteButtonComponent,
+    AiAssistantButtonComponent,
     ButtonLinkComponent,
     RouterLink,
   ],
@@ -32,6 +34,7 @@ import { CommandPaletteButtonComponent } from './command-palette/command-palette
         <app-current-sprint-dropdown />
         <app-command-palette-button />
         @if (authenticated()) {
+          <app-ai-assistant-button />
           <app-notification-bell />
           <app-profile-menu />
         } @else {

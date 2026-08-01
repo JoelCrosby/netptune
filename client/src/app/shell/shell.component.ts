@@ -18,6 +18,8 @@ import { ShellSidebarComponent } from './shell-sidebar.component';
 import { ShellService } from './shell.service';
 import { ShellNavbarComponent } from './shell-navbar.component';
 import { AiAssistantComponent } from './ai-assistant/ai-assistant.component';
+import { AiAssistantPanelComponent } from './ai-assistant/ai-assistant-panel.component';
+import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { CommandPaletteComponent } from './command-palette/command-palette.component';
 import { GlobalCommandsService } from './global-commands.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
@@ -32,6 +34,7 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
     ShellNavbarComponent,
     CommandPaletteComponent,
     AiAssistantComponent,
+    AiAssistantPanelComponent,
   ],
   styles: `
     .expanded {
@@ -39,6 +42,12 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
     }
     .collapsed {
       grid-template-columns: 72px auto;
+    }
+    .expanded.docked {
+      grid-template-columns: 247px auto clamp(20rem, 28vw, 26rem);
+    }
+    .collapsed.docked {
+      grid-template-columns: 72px auto clamp(20rem, 28vw, 26rem);
     }
   `,
   template: `
@@ -51,7 +60,8 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
     <div
       class="bg-background fixed grid h-screen w-screen grid-rows-[60px_auto] transition-all"
       [class.expanded]="shell.sideNavExpanded()"
-      [class.collapsed]="shell.sideNavCollapsed()">
+      [class.collapsed]="shell.sideNavCollapsed()"
+      [class.docked]="assistant.isDocked()">
       @if (sideMenuOpen()) {
         <app-shell-sidebar
           class="col-start-1 row-span-2 row-start-1"
@@ -62,6 +72,11 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
       <main class="col-start-2 row-start-2 overflow-y-auto">
         <router-outlet />
       </main>
+
+      @if (assistant.isDocked()) {
+        <app-ai-assistant-panel
+          class="border-border col-start-3 row-span-2 row-start-1 border-l" />
+      }
     </div>
 
     <app-command-palette></app-command-palette>
@@ -73,6 +88,7 @@ export class ShellComponent {
   private router = inject(Router);
 
   shell = inject(ShellService);
+  readonly assistant = inject(AiAssistantService);
   readonly globalCommands = inject(GlobalCommandsService);
   readonly commandShortcuts = inject(CommandShortcutService);
   readonly preferences = inject(UserPreferencesService);

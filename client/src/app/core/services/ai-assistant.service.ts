@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { AiCredential } from '@core/models/ai-credential';
+import { AiDisplayMode } from '@core/models/ai-display-mode';
+import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AiModelOption } from '@core/models/ai-model';
 import { ClientResponse } from '@core/models/client-response';
 import {
@@ -27,6 +30,8 @@ export interface AiChatEntry {
 }
 
 const STREAM_PREFIX = 'data: ';
+const MODE_STORAGE_KEY = 'ai-assistant.mode';
+const ASSISTANT_PAGE_PATTERN = /^\/[^/]+\/assistant$/;
 
 @Injectable({ providedIn: 'root' })
 export class AiAssistantService {
@@ -40,11 +45,26 @@ export class AiAssistantService {
   );
 
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly storage = inject(LocalStorageService);
 
   readonly isOpen = signal(false);
+  readonly mode = signal<AiDisplayMode>(
+    this.storage.getItem<AiDisplayMode>(MODE_STORAGE_KEY) ?? 'overlay'
+  );
+
+  readonly isOverlayOpen = computed(() => {
+    return this.isOpen() && this.mode() === 'overlay';
+  });
+
+  readonly isDocked = computed(() => {
+    return this.isOpen() && this.mode() === 'docked';
+  });
+
   readonly entries = signal<AiChatEntry[]>([]);
   readonly isStreaming = signal(false);
   readonly conversationId = signal<string | null>(null);
+  readonly conversationTitle = signal<string | null>(null);
   readonly changeSet = signal<AiChangeSet | null>(null);
   readonly excludedChangeIds = signal<Set<number>>(new Set());
   readonly isApplying = signal(false);
@@ -124,6 +144,7 @@ export class AiAssistantService {
     }
 
     this.conversationId.set(detail.conversation.id);
+    this.conversationTitle.set(detail.conversation.title);
     this.selectedModel.set(detail.conversation.model);
     this.entries.set(detail.messages.map((message) => this.toEntry(message)));
     this.changeSet.set(null);
@@ -166,6 +187,14 @@ export class AiAssistantService {
       return;
     }
 
+    const isDedicated = this.mode() === 'dedicated';
+
+    if (isDedicated) {
+      void this.openPage();
+
+      return;
+    }
+
     this.isOpen.set(true);
 
     void this.loadModels();
@@ -180,6 +209,14 @@ export class AiAssistantService {
       return;
     }
 
+    const isDedicated = this.mode() === 'dedicated';
+
+    if (isDedicated) {
+      void this.togglePage();
+
+      return;
+    }
+
     this.isOpen.update((value) => !value);
 
     if (this.isOpen()) {
@@ -187,8 +224,69 @@ export class AiAssistantService {
     }
   }
 
+  setMode(mode: AiDisplayMode) {
+    this.mode.set(mode);
+    this.storage.setItem(MODE_STORAGE_KEY, mode);
+
+    if (mode === 'dedicated') {
+      this.isOpen.set(false);
+
+      void this.openPage();
+
+      return;
+    }
+
+    if (this.isOnPage()) {
+      void this.leavePage();
+    }
+
+    this.open();
+  }
+
+  private isOnPage(): boolean {
+    const path = this.router.url.split('?')[0];
+
+    return ASSISTANT_PAGE_PATTERN.test(path);
+  }
+
+  private workspaceRoute(): string | null {
+    return this.workspace.getWorkspaceRoute() ?? this.workspaceId() ?? null;
+  }
+
+  private async openPage() {
+    const workspace = this.workspaceRoute();
+
+    if (!workspace) {
+      return;
+    }
+
+    await this.loadModels();
+    await this.router.navigate(['/', workspace, 'assistant']);
+  }
+
+  private async togglePage() {
+    if (this.isOnPage()) {
+      await this.leavePage();
+
+      return;
+    }
+
+    await this.openPage();
+  }
+
+  private async leavePage() {
+    const workspace = this.workspaceRoute();
+
+    if (!workspace) {
+      return;
+    }
+
+    await this.router.navigate(['/', workspace]);
+  }
+
   startNewConversation() {
     this.conversationId.set(null);
+    this.conversationTitle.set(null);
     this.entries.set([]);
     this.changeSet.set(null);
     this.excludedChangeIds.set(new Set());
@@ -268,6 +366,8 @@ export class AiAssistantService {
       return;
     }
 
+    const wasNewConversation = this.conversationId() === null;
+
     this.appendEntry({ role: 'user', text: trimmed, tools: [] });
     this.appendEntry({ role: 'assistant', text: '', tools: [] });
     this.isStreaming.set(true);
@@ -281,6 +381,26 @@ export class AiAssistantService {
     } finally {
       this.isStreaming.set(false);
     }
+
+    if (wasNewConversation) {
+      await this.readGeneratedTitle();
+    }
+  }
+
+  private async readGeneratedTitle() {
+    const conversationId = this.conversationId();
+
+    if (!conversationId) {
+      return;
+    }
+
+    await this.loadConversations();
+
+    const conversation = this.conversations().find((item) => {
+      return item.id === conversationId;
+    });
+
+    this.conversationTitle.set(conversation?.title ?? null);
   }
 
   private async stream(text: string) {

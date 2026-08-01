@@ -119,6 +119,12 @@ export const routes: Routes = [
         data: { title: $localize`:Page title for the calendar view:Calendar` },
       },
       {
+        path: 'assistant',
+        loadChildren: () => import('./features/assistant/assistant.routes').then((m) => m.routes),
+        canActivate: [authGuard],
+        data: { title: $localize`:Page title for the assistant chat page:Assistant` },
+      },
+      {
         path: 'notifications',
         loadChildren: () => import('./features/notifications/notifications.routes').then((m) => m.routes),
         canActivate: [authGuard],
