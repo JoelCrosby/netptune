@@ -56,7 +56,7 @@
     </unit>
     <unit id="8571899148771106217">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:173,175</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:230,232</note>
         <note category="description">Shown after changes were applied</note>
       </notes>
       <segment state="translated">
@@ -438,7 +438,7 @@
     </unit>
     <unit id="4391289919356861627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:160,163</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:217,220</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -1575,7 +1575,7 @@
     </unit>
     <unit id="145156830164118">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:50,52</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:60,62</note>
         <note category="description">Title of the AI assistant panel</note>
       </notes>
       <segment state="translated">
@@ -1625,7 +1625,7 @@
     </unit>
     <unit id="413961075487889368">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:285</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:342</note>
         <note category="description">Placeholder while the assistant is replying</note>
       </notes>
       <segment state="translated">
@@ -3983,6 +3983,16 @@
         <target>Akteur</target>
       </segment>
     </unit>
+    <unit id="7629072322253412501">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:121,124</note>
+        <note category="description">Empty state for stored conversations</note>
+      </notes>
+      <segment state="translated">
+        <source> There are no earlier conversations. </source>
+        <target> Es gibt keine früheren Unterhaltungen. </target>
+      </segment>
+    </unit>
     <unit id="6142798301634702665">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:162</note>
@@ -4606,6 +4616,16 @@
       <segment state="translated">
         <source>Action sequence</source>
         <target>Aktionsabfolge</target>
+      </segment>
+    </unit>
+    <unit id="4101852533995361725">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:106,108</note>
+        <note category="description">Counts messages in a stored conversation</note>
+      </notes>
+      <segment state="translated">
+        <source>messages</source>
+        <target>Nachrichten</target>
       </segment>
     </unit>
     <unit id="4102770166233981996">
@@ -6614,8 +6634,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:141</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:164</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:211</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:234</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -6672,6 +6692,16 @@
       <segment state="translated">
         <source> Test </source>
         <target> Testen </target>
+      </segment>
+    </unit>
+    <unit id="5211609068551558044">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:72,74</note>
+        <note category="description">Tooltip on the button that lists past conversations</note>
+      </notes>
+      <segment state="translated">
+        <source>Conversation history</source>
+        <target>Unterhaltungsverlauf</target>
       </segment>
     </unit>
     <unit id="5212673607597932136">
@@ -7050,7 +7080,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:61,64</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:82,85</note>
         <note category="description">Button that clears the assistant conversation</note>
       </notes>
       <segment state="translated">
@@ -7395,7 +7425,7 @@
     </unit>
     <unit id="7258010665968228997">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:119,122</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:176,179</note>
         <note category="description">Heading above the list of proposed workspace changes</note>
       </notes>
       <segment state="translated">
@@ -7997,7 +8027,7 @@
     </unit>
     <unit id="3525807365202276561">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:288</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:345</note>
         <note category="description">Placeholder for the assistant message input</note>
       </notes>
       <segment state="translated">
@@ -9098,7 +9128,7 @@
     </unit>
     <unit id="3427257823783553545">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:75,78</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:131,134</note>
         <note category="description">Empty state inside the AI assistant panel</note>
       </notes>
       <segment state="translated">
@@ -9333,7 +9363,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:165,168</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:222,225</note>
         <note category="description">Button that discards the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -9416,7 +9446,7 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:251</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:321</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -10287,7 +10317,7 @@
     </unit>
     <unit id="6490688569532630280">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:195,198</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:252,255</note>
         <note category="description">Button that sends a message to the assistant</note>
       </notes>
       <segment state="translated">
@@ -11323,7 +11353,7 @@
     </unit>
     <unit id="4361487192183535591">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:89,92</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:145,147</note>
         <note category="description">Label for a message the assistant sent</note>
       </notes>
       <segment state="translated">
@@ -13075,7 +13105,7 @@
     </unit>
     <unit id="720557322859638078">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:86,88</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:142,144</note>
         <note category="description">Label for a message the user sent</note>
       </notes>
       <segment state="translated">
@@ -13773,7 +13803,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:42,44</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:52,54</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment state="translated">

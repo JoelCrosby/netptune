@@ -16,21 +16,31 @@ import {
 import { FormsModule } from '@angular/forms';
 import { AiChangeSetStatus } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
-import { LucideSparkles, LucideWrench, LucideX } from '@lucide/angular';
+import {
+  LucideHistory,
+  LucideSparkles,
+  LucideTrash,
+  LucideWrench,
+  LucideX,
+} from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-ai-assistant',
   imports: [
     FormsModule,
+    LucideHistory,
     LucideSparkles,
+    LucideTrash,
     LucideWrench,
     LucideX,
     FlatButtonComponent,
     IconButtonComponent,
     StrokedButtonComponent,
+    TooltipDirective,
   ],
   template: `
     <ng-template #panelTmpl>
@@ -53,6 +63,17 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 
           <div class="flex items-center gap-1">
             <button
+              app-icon-button
+              type="button"
+              appTooltip
+              i18n-appTooltip="
+                Tooltip on the button that lists past conversations
+              "
+              appTooltip="Conversation history"
+              (click)="toggleHistory()">
+              <svg lucideHistory class="h-4 w-4"></svg>
+            </button>
+            <button
               app-stroked-button
               type="button"
               class="h-8 px-2 text-xs"
@@ -67,49 +88,85 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
           </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto px-4 py-4">
-          @if (entries().length === 0) {
-            <p
-              class="text-muted text-sm"
-              i18n="Empty state inside the AI assistant panel">
-              Ask about your workspace — projects, tasks, statuses. Any change
-              the assistant suggests is shown here for you to review before it
-              is applied.
-            </p>
-          }
-
-          <div class="flex flex-col gap-4">
-            @for (entry of entries(); track $index) {
-              <div class="flex flex-col gap-1">
-                <span class="text-muted text-xs">
-                  @if (entry.role === 'user') {
-                    <span i18n="Label for a message the user sent">You</span>
-                  } @else {
-                    <span i18n="Label for a message the assistant sent"
-                      >Assistant</span
+        @if (assistant.showHistory()) {
+          <div class="flex-1 overflow-y-auto px-4 py-4">
+            @for (
+              conversation of assistant.conversations();
+              track conversation.id
+            ) {
+              <div class="border-border flex items-center gap-2 border-b py-2">
+                <button
+                  type="button"
+                  class="min-w-0 flex-1 text-left text-sm hover:underline"
+                  (click)="openConversation(conversation.id)">
+                  <span class="block truncate">{{ conversation.title }}</span>
+                  <span class="text-muted text-xs">
+                    {{ conversation.messageCount }}
+                    <span i18n="Counts messages in a stored conversation"
+                      >messages</span
                     >
-                  }
-                </span>
-
-                @if (entry.tools.length > 0) {
-                  <div
-                    class="text-muted flex flex-wrap items-center gap-2 text-xs">
-                    <svg lucideWrench class="h-3 w-3"></svg>
-                    @for (tool of entry.tools; track $index) {
-                      <span class="font-mono">{{ tool }}</span>
-                    }
-                  </div>
-                }
-
-                <p
-                  class="text-sm whitespace-pre-wrap"
-                  [class.text-error]="entry.failed">
-                  {{ entry.text }}
-                </p>
+                  </span>
+                </button>
+                <button
+                  app-icon-button
+                  type="button"
+                  (click)="deleteConversation(conversation.id)">
+                  <svg lucideTrash class="h-4 w-4"></svg>
+                </button>
               </div>
+            } @empty {
+              <p
+                class="text-muted text-sm"
+                i18n="Empty state for stored conversations">
+                There are no earlier conversations.
+              </p>
             }
           </div>
-        </div>
+        } @else {
+          <div class="flex-1 overflow-y-auto px-4 py-4">
+            @if (entries().length === 0) {
+              <p
+                class="text-muted text-sm"
+                i18n="Empty state inside the AI assistant panel">
+                Ask about your workspace — projects, tasks, statuses. Any change
+                the assistant suggests is shown here for you to review before it
+                is applied.
+              </p>
+            }
+
+            <div class="flex flex-col gap-4">
+              @for (entry of entries(); track $index) {
+                <div class="flex flex-col gap-1">
+                  <span class="text-muted text-xs">
+                    @if (entry.role === 'user') {
+                      <span i18n="Label for a message the user sent">You</span>
+                    } @else {
+                      <span i18n="Label for a message the assistant sent"
+                        >Assistant</span
+                      >
+                    }
+                  </span>
+
+                  @if (entry.tools.length > 0) {
+                    <div
+                      class="text-muted flex flex-wrap items-center gap-2 text-xs">
+                      <svg lucideWrench class="h-3 w-3"></svg>
+                      @for (tool of entry.tools; track $index) {
+                        <span class="font-mono">{{ tool }}</span>
+                      }
+                    </div>
+                  }
+
+                  <p
+                    class="text-sm whitespace-pre-wrap"
+                    [class.text-error]="entry.failed">
+                    {{ entry.text }}
+                  </p>
+                </div>
+              }
+            </div>
+          </div>
+        }
 
         @if (changeSet(); as proposal) {
           <section class="border-border bg-card border-t px-4 py-3">
@@ -297,6 +354,18 @@ export class AiAssistantComponent implements AfterViewInit, OnDestroy {
 
     event.preventDefault();
     this.send();
+  }
+
+  protected toggleHistory() {
+    void this.assistant.toggleHistory();
+  }
+
+  protected openConversation(conversationId: string) {
+    void this.assistant.openConversation(conversationId);
+  }
+
+  protected deleteConversation(conversationId: string) {
+    void this.assistant.deleteConversation(conversationId);
   }
 
   protected startNew() {

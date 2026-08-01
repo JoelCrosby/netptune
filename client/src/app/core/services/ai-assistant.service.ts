@@ -3,6 +3,9 @@ import { Injectable, inject, signal } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   AiChangeSet,
+  AiConversation,
+  AiConversationDetail,
+  AiMessageRole,
   AiStreamEvent,
   AiStreamEventType,
 } from '@core/models/ai-conversation';
@@ -37,6 +40,72 @@ export class AiAssistantService {
   readonly changeSet = signal<AiChangeSet | null>(null);
   readonly excludedChangeIds = signal<Set<number>>(new Set());
   readonly isApplying = signal(false);
+  readonly conversations = signal<AiConversation[]>([]);
+  readonly showHistory = signal(false);
+
+  async toggleHistory() {
+    const next = !this.showHistory();
+
+    this.showHistory.set(next);
+
+    if (next) {
+      await this.loadConversations();
+    }
+  }
+
+  async loadConversations() {
+    const conversations = await this.http
+      .get<AiConversation[]>('api/ai/conversations')
+      .toPromise();
+
+    this.conversations.set(conversations ?? []);
+  }
+
+  async openConversation(conversationId: string) {
+    const response = await this.http
+      .get<ClientResponse<AiConversationDetail>>(
+        `api/ai/conversations/${conversationId}`
+      )
+      .toPromise();
+
+    const detail = response?.payload;
+
+    if (!detail) {
+      return;
+    }
+
+    this.conversationId.set(detail.conversation.id);
+    this.entries.set(detail.messages.map((message) => this.toEntry(message)));
+    this.changeSet.set(null);
+    this.excludedChangeIds.set(new Set());
+    this.showHistory.set(false);
+  }
+
+  async deleteConversation(conversationId: string) {
+    await this.http
+      .delete(`api/ai/conversations/${conversationId}`)
+      .toPromise();
+
+    const isCurrent = this.conversationId() === conversationId;
+
+    if (isCurrent) {
+      this.startNewConversation();
+    }
+
+    await this.loadConversations();
+  }
+
+  private toEntry(message: {
+    role: AiMessageRole;
+    text?: string;
+    toolNames: string[];
+  }): AiChatEntry {
+    return {
+      role: message.role === AiMessageRole.user ? 'user' : 'assistant',
+      text: message.text ?? '',
+      tools: message.toolNames,
+    };
+  }
 
   open() {
     this.isOpen.set(true);
@@ -55,6 +124,7 @@ export class AiAssistantService {
     this.entries.set([]);
     this.changeSet.set(null);
     this.excludedChangeIds.set(new Set());
+    this.showHistory.set(false);
   }
 
   toggleChange(changeId: number) {
