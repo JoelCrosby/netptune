@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
-public sealed class AiEndpointTests : IClassFixture<NetptuneFixture>
+public sealed class AiEndpointTests
 {
     private readonly NetptuneFixture Fixture;
 
