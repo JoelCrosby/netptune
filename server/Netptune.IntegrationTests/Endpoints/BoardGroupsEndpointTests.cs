@@ -55,9 +55,10 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
+        var group = await CreateBoardGroup();
         var request = new UpdateBoardGroupRequest
         {
-            BoardGroupId = 1,
+            BoardGroupId = group.Id,
             Name = "Updated name",
             SortOrder = 10,
         };
@@ -137,9 +138,10 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task Update_ShouldAssignStatus_WhenStatusValid()
     {
+        var group = await CreateBoardGroup();
         var request = new UpdateBoardGroupRequest
         {
-            BoardGroupId = 1,
+            BoardGroupId = group.Id,
             StatusId = 1,
         };
 
@@ -170,7 +172,9 @@ public sealed class BoardGroupsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.DeleteAsync("api/boardgroups/3");
+        var group = await CreateBoardGroup();
+
+        var response = await Client.DeleteAsync($"api/boardgroups/{group.Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -189,5 +193,21 @@ public sealed class BoardGroupsEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeFalse();
+    }
+
+    private async Task<BoardGroupViewModel> CreateBoardGroup()
+    {
+        var response = await Client.PostAsJsonAsync("api/boardgroups", new AddBoardGroupRequest
+        {
+            Name = $"Delete target {Guid.NewGuid():N}",
+            SortOrder = 99,
+            BoardId = 1,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardGroupViewModel>>();
+
+        return result.Payload!;
     }
 }

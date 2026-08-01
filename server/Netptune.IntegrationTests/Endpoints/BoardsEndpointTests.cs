@@ -41,9 +41,10 @@ public sealed class BoardsEndpointTests
      [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
+        var board = await CreateBoard();
         var request = new UpdateBoardRequest
         {
-            Id = 1,
+            Id = board.Id,
             Name = "Updated name",
             Meta = new()
             {
@@ -115,7 +116,9 @@ public sealed class BoardsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.DeleteAsync("api/boards/3");
+        var board = await CreateBoard();
+
+        var response = await Client.DeleteAsync($"api/boards/{board.Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -211,5 +214,22 @@ public sealed class BoardsEndpointTests
 
         result.IsSuccess.Should().BeTrue();
         result.Payload!.IsUnique.Should().BeTrue();
+    }
+
+    private async Task<BoardViewModel> CreateBoard()
+    {
+        var identifier = $"delete-target-{Guid.NewGuid():N}"[..24];
+        var response = await Client.PostAsJsonAsync("api/boards", new AddBoardRequest
+        {
+            Name = "Delete target",
+            Identifier = identifier,
+            ProjectId = 1,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardViewModel>>();
+
+        return result.Payload!;
     }
 }

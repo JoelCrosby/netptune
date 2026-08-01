@@ -174,11 +174,20 @@ public sealed class TagsEndpointTests
     [Fact]
     public async Task DeleteFromTask_ShouldReturnCorrectly_WhenInputValid()
     {
+        var tag = $"Detach target {Guid.NewGuid():N}";
         var request = new DeleteTagFromTaskRequest
         {
-            Tag = "New Tag",
+            Tag = tag,
             SystemId = "neo-1",
         };
+
+        var attached = await Client.PostAsJsonAsync("api/tags/task", new AddTagToTaskRequest
+        {
+            Tag = tag,
+            SystemId = request.SystemId,
+        });
+
+        attached.StatusCode.Should().Be(HttpStatusCode.OK, await attached.Content.ReadAsStringAsync());
 
         var response = await Client.SendAsync(new ()
         {

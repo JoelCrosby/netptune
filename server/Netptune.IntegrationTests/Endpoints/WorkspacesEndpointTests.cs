@@ -113,27 +113,43 @@ public sealed class WorkspacesEndpointTests
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
+        const string slug = "linux";
+
+        var previous = await Client.GetFromJsonAsync<WorkspaceViewModel>($"api/workspaces/{slug}");
         var request = new UpdateWorkspaceRequest
         {
             Name = "Arch Linux",
             Description = "Arch Linux test workspace",
-            Slug = "linux",
+            Slug = slug,
             MetaInfo = new ()
             {
                 Color = NamedColors.FallbackColor,
             },
         };
 
-        var response = await Client.PutAsJsonAsync("api/workspaces", request);
+        try
+        {
+            var response = await Client.PutAsJsonAsync("api/workspaces", request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<UpdateWorkspaceResponse>>();
+            var result = await response.Content.ReadFromJsonAsync<ClientResponse<UpdateWorkspaceResponse>>();
 
-        result.IsSuccess.Should().BeTrue();
-        result.Payload.Should().NotBeNull();
-        result.Payload!.Workspace.Name.Should().Be(request.Name);
-        result.Payload.Workspace.Description.Should().Be(request.Description);
+            result.IsSuccess.Should().BeTrue();
+            result.Payload.Should().NotBeNull();
+            result.Payload!.Workspace.Name.Should().Be(request.Name);
+            result.Payload.Workspace.Description.Should().Be(request.Description);
+        }
+        finally
+        {
+            await Client.PutAsJsonAsync("api/workspaces", new UpdateWorkspaceRequest
+            {
+                Slug = slug,
+                Name = previous!.Name,
+                Description = previous.Description,
+                MetaInfo = previous.MetaInfo,
+            });
+        }
     }
 
     [Fact]

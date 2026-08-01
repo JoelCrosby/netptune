@@ -3,11 +3,16 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
-using Netptune.Core.Requests;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Authorization;
+using Netptune.Core.Relationships;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Users;
+using Netptune.Entities.Contexts;
 using Netptune.TestData;
 
 using Xunit;
@@ -17,10 +22,14 @@ namespace Netptune.IntegrationTests.Endpoints;
 [Collection(UserMutationCollection.Name)]
 public sealed class UsersEndpointTests
 {
+    private const string WorkspaceSlug = "netptune";
+
     private readonly HttpClient Client;
+    private readonly NetptuneFixture Fixture;
 
     public UsersEndpointTests(NetptuneFixture fixture)
     {
+        Fixture = fixture;
         Client = fixture.CreateNetptuneClient();
     }
 
@@ -135,29 +144,41 @@ public sealed class UsersEndpointTests
     public async Task UpdateRole_ShouldReplaceTheMembersRoleAndPermissions()
     {
         var userId = SeedData.Users.ElementAt(1).Id;
+        var previous = await Client.GetFromJsonAsync<WorkspaceUserViewModel>($"api/users/{userId}");
 
-        var response = await Client.PutAsJsonAsync("api/users/role", new UpdateWorkspaceRoleRequest
+        try
         {
-            UserId = userId,
-            Role = WorkspaceRole.Viewer,
-        });
+            var response = await Client.PutAsJsonAsync("api/users/role", new UpdateWorkspaceRoleRequest
+            {
+                UserId = userId,
+                Role = WorkspaceRole.Viewer,
+            });
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content
-            .ReadFromJsonAsync<ClientResponse<WorkspaceRoleUpdateViewModel>>();
+            var result = await response.Content
+                .ReadFromJsonAsync<ClientResponse<WorkspaceRoleUpdateViewModel>>();
 
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Role.Should().Be(WorkspaceRole.Viewer);
-        result.Payload.Permissions.Should().BeEquivalentTo(
-            WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer));
+            result.IsSuccess.Should().BeTrue();
+            result.Payload!.Role.Should().Be(WorkspaceRole.Viewer);
+            result.Payload.Permissions.Should().BeEquivalentTo(
+                WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer));
 
-        var getResponse = await Client.GetAsync($"api/users/{userId}");
-        var updatedUser = await getResponse.Content.ReadFromJsonAsync<WorkspaceUserViewModel>();
+            var getResponse = await Client.GetAsync($"api/users/{userId}");
+            var updatedUser = await getResponse.Content.ReadFromJsonAsync<WorkspaceUserViewModel>();
 
-        updatedUser!.Role.Should().Be(WorkspaceRole.Viewer);
-        updatedUser.Permissions.Should().BeEquivalentTo(
-            WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer));
+            updatedUser!.Role.Should().Be(WorkspaceRole.Viewer);
+            updatedUser.Permissions.Should().BeEquivalentTo(
+                WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer));
+        }
+        finally
+        {
+            await Client.PutAsJsonAsync("api/users/role", new UpdateWorkspaceRoleRequest
+            {
+                UserId = userId,
+                Role = previous!.Role,
+            });
+        }
     }
 
     [Fact]
@@ -371,19 +392,57 @@ public sealed class UsersEndpointTests
     [Fact]
     public async Task RemoveFromWorkspace_ShouldReturnCorrectly_WhenInputValid()
     {
+        var target = SeedData.Users.Last();
         var request = new InviteUsersRequest
         {
-            EmailAddresses = [SeedData.Users.Last().Email],
+            EmailAddresses = [target.Email],
         };
 
-        var response = await Client.PostAsJsonAsync("api/users/remove", request);
+        try
+        {
+            var response = await Client.PostAsJsonAsync("api/users/remove", request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<RemoveUsersWorkspaceResponse>>();
+            var result = await response.Content.ReadFromJsonAsync<ClientResponse<RemoveUsersWorkspaceResponse>>();
 
-        result.IsSuccess.Should().BeTrue();
-        result.Payload!.Emails.Should().ContainSingle(request.EmailAddresses.First());
+            result.IsSuccess.Should().BeTrue();
+            result.Payload!.Emails.Should().ContainSingle(request.EmailAddresses.First());
+        }
+        finally
+        {
+            await RestoreWorkspaceMembership(target.Id);
+        }
+    }
+
+    private async Task RestoreWorkspaceMembership(string userId)
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var workspaceId = await context.Workspaces
+            .Where(workspace => workspace.Slug == WorkspaceSlug)
+            .Select(workspace => workspace.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        var isMember = await context.WorkspaceAppUsers.AnyAsync(
+            member => member.WorkspaceId == workspaceId && member.UserId == userId,
+            TestContext.Current.CancellationToken);
+
+        if (isMember)
+        {
+            return;
+        }
+
+        context.WorkspaceAppUsers.Add(new WorkspaceAppUser
+        {
+            WorkspaceId = workspaceId,
+            UserId = userId,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
+        });
+
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
     }
 
     private async Task<List<string>> TogglePermission(ToggleUserPermissionRequest request)

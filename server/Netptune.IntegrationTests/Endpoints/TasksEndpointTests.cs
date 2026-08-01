@@ -219,9 +219,10 @@ public sealed class TasksEndpointTests
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
         var completeStatus = await GetStatus("complete");
+        var target = await CreateDeletableTask();
         var request = new UpdateProjectTaskRequest
         {
-            Id = 1,
+            Id = target.Id,
             Name = "updated name",
             Description = "updated description",
             StatusId = completeStatus.Id,
@@ -581,7 +582,9 @@ public sealed class TasksEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.DeleteAsync("api/tasks/3");
+        var task = await CreateDeletableTask();
+
+        var response = await Client.DeleteAsync($"api/tasks/{task.Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -837,5 +840,21 @@ public sealed class TasksEndpointTests
                 IsSystem = status.IsSystem,
             })
             .SingleAsync();
+    }
+
+    private async Task<TaskViewModel> CreateDeletableTask()
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Owned target {Guid.NewGuid():N}",
+            Description = "Task created so a mutating test owns its subject.",
+            ProjectId = 1,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        return result.Payload!;
     }
 }

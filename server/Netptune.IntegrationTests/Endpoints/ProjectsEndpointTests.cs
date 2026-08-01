@@ -52,9 +52,10 @@ public sealed class ProjectsEndpointTests
      [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
+        var project = await CreateProject();
         var request = new UpdateProjectRequest
         {
-            Id = 1,
+            Id = project.Id,
             Name = "Updated name",
             Description = "Updated Description",
         };
@@ -130,7 +131,9 @@ public sealed class ProjectsEndpointTests
     [Fact]
     public async Task Delete_ShouldReturnCorrectly_WhenInputValid()
     {
-        var response = await Client.DeleteAsync("api/projects/3");
+        var project = await CreateProject();
+
+        var response = await Client.DeleteAsync($"api/projects/{project.Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -149,5 +152,24 @@ public sealed class ProjectsEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeFalse();
+    }
+
+    private async Task<ProjectViewModel> CreateProject()
+    {
+        var response = await Client.PostAsJsonAsync("api/projects", new AddProjectRequest
+        {
+            Name = $"Delete target {Guid.NewGuid():N}",
+            Description = "Project created so the delete test owns its subject.",
+            MetaInfo = new ()
+            {
+                Color = "blue",
+            },
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ProjectViewModel>>();
+
+        return result.Payload!;
     }
 }
