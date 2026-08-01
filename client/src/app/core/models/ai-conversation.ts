@@ -13,6 +13,7 @@ export enum AiStreamEventType {
   turnCompleted = 3,
   error = 4,
   conversationStarted = 5,
+  changeSetProposed = 6,
 }
 
 export interface AiStreamEvent {
@@ -21,6 +22,7 @@ export interface AiStreamEvent {
   toolName?: string;
   message?: string;
   conversationId?: string;
+  changeSetId?: string;
 }
 
 export interface AiConversation {
@@ -44,4 +46,52 @@ export interface AiMessage {
 export interface AiConversationDetail {
   conversation: AiConversation;
   messages: AiMessage[];
+}
+
+export enum AiChangeSetStatus {
+  pending = 0,
+  applied = 1,
+  discarded = 2,
+  partiallyApplied = 3,
+}
+
+export enum AiChangeValidationStatus {
+  valid = 0,
+  invalid = 1,
+}
+
+export enum AiChangeApplyStatus {
+  pending = 0,
+  applied = 1,
+  skipped = 2,
+  failed = 3,
+}
+
+export interface AiChangeField {
+  name: string;
+  before?: string | null;
+  after?: string | null;
+}
+
+export interface AiProposedChange {
+  id: number;
+  sequence: number;
+  toolName: string;
+  entityType: string;
+  entityId?: number | null;
+  refKey?: string | null;
+  summary: string;
+  fields: AiChangeField[];
+  validationStatus: AiChangeValidationStatus;
+  validationMessage?: string | null;
+  applyStatus: AiChangeApplyStatus;
+  applyError?: string | null;
+}
+
+export interface AiChangeSet {
+  id: string;
+  conversationId: string;
+  status: AiChangeSetStatus;
+  appliedAt?: string | null;
+  changes: AiProposedChange[];
 }

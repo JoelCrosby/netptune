@@ -1,5 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { AiStreamEvent, AiStreamEventType } from '@core/models/ai-conversation';
+import { ClientResponse } from '@core/models/client-response';
+import {
+  AiChangeSet,
+  AiStreamEvent,
+  AiStreamEventType,
+} from '@core/models/ai-conversation';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { environment } from '@env/environment';
@@ -22,10 +28,15 @@ export class AiAssistantService {
     selectCurrentWorkspaceIdentifier
   );
 
+  private readonly http = inject(HttpClient);
+
   readonly isOpen = signal(false);
   readonly entries = signal<AiChatEntry[]>([]);
   readonly isStreaming = signal(false);
   readonly conversationId = signal<string | null>(null);
+  readonly changeSet = signal<AiChangeSet | null>(null);
+  readonly excludedChangeIds = signal<Set<number>>(new Set());
+  readonly isApplying = signal(false);
 
   open() {
     this.isOpen.set(true);
@@ -42,6 +53,74 @@ export class AiAssistantService {
   startNewConversation() {
     this.conversationId.set(null);
     this.entries.set([]);
+    this.changeSet.set(null);
+    this.excludedChangeIds.set(new Set());
+  }
+
+  toggleChange(changeId: number) {
+    this.excludedChangeIds.update((current) => {
+      const next = new Set(current);
+      const wasExcluded = next.has(changeId);
+
+      if (wasExcluded) {
+        next.delete(changeId);
+      } else {
+        next.add(changeId);
+      }
+
+      return next;
+    });
+  }
+
+  async applyChangeSet() {
+    const changeSet = this.changeSet();
+
+    if (!changeSet || this.isApplying()) {
+      return;
+    }
+
+    const excluded = this.excludedChangeIds();
+    const changeIds = changeSet.changes
+      .filter((change) => !excluded.has(change.id))
+      .map((change) => change.id);
+
+    if (changeIds.length === 0) {
+      return;
+    }
+
+    this.isApplying.set(true);
+
+    try {
+      await this.http
+        .post(`api/ai/change-sets/${changeSet.id}/apply`, { changeIds })
+        .toPromise();
+
+      await this.refreshChangeSet(changeSet.id);
+    } finally {
+      this.isApplying.set(false);
+    }
+  }
+
+  async discardChangeSet() {
+    const changeSet = this.changeSet();
+
+    if (!changeSet) {
+      return;
+    }
+
+    await this.http
+      .post(`api/ai/change-sets/${changeSet.id}/discard`, {})
+      .toPromise();
+
+    this.changeSet.set(null);
+  }
+
+  private async refreshChangeSet(changeSetId: string) {
+    const response = await this.http
+      .get<ClientResponse<AiChangeSet>>(`api/ai/change-sets/${changeSetId}`)
+      .toPromise();
+
+    this.changeSet.set(response?.payload ?? null);
   }
 
   async send(text: string) {
@@ -153,6 +232,15 @@ export class AiAssistantService {
 
     if (event.type === AiStreamEventType.toolStarted && event.toolName) {
       this.appendTool(event.toolName);
+
+      return;
+    }
+
+    if (
+      event.type === AiStreamEventType.changeSetProposed &&
+      event.changeSetId
+    ) {
+      void this.refreshChangeSet(event.changeSetId);
 
       return;
     }

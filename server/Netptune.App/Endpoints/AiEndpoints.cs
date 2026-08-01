@@ -36,6 +36,7 @@ public static class AiEndpoints
 
         group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
         group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
+        group.MapPost("/change-sets/{changeSetId:guid}/apply", HandleApplyChangeSet);
 
         return group;
     }
@@ -112,6 +113,28 @@ public static class AiEndpoints
         var result = await mediator.Send(new DiscardAiChangeSetCommand(changeSetId), cancellationToken);
 
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleApplyChangeSet(
+        Guid changeSetId,
+        ApplyAiChangeSetRequest request,
+        IAiChangeSetApplier applier,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await applier.Apply(changeSetId, request, cancellationToken);
+
+            return result is null ? Results.NotFound() : Results.Ok(result);
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            return Results.Problem(exception.Message, statusCode: StatusCodes.Status403Forbidden);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Results.Problem(exception.Message, statusCode: StatusCodes.Status400BadRequest);
+        }
     }
 
     private static async Task HandleSendMessage(

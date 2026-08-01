@@ -14,8 +14,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AiChangeSetStatus } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { LucideSparkles, LucideWrench, LucideX } from '@lucide/angular';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 
@@ -26,6 +28,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
     LucideSparkles,
     LucideWrench,
     LucideX,
+    FlatButtonComponent,
     IconButtonComponent,
     StrokedButtonComponent,
   ],
@@ -69,8 +72,9 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
             <p
               class="text-muted text-sm"
               i18n="Empty state inside the AI assistant panel">
-              Ask about your workspace — projects, tasks, statuses. The
-              assistant can read your workspace but cannot change anything yet.
+              Ask about your workspace — projects, tasks, statuses. Any change
+              the assistant suggests is shown here for you to review before it
+              is applied.
             </p>
           }
 
@@ -106,6 +110,71 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
             }
           </div>
         </div>
+
+        @if (changeSet(); as proposal) {
+          <section class="border-border bg-card border-t px-4 py-3">
+            <h3
+              class="font-overpass mb-2 text-sm font-normal"
+              i18n="Heading above the list of proposed workspace changes">
+              Proposed changes
+            </h3>
+
+            <div class="flex flex-col gap-2">
+              @for (change of proposal.changes; track change.id) {
+                <label class="flex items-start gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    class="mt-1"
+                    [checked]="isIncluded(change.id)"
+                    [disabled]="!isPending()"
+                    (change)="assistant.toggleChange(change.id)" />
+                  <span class="flex flex-col gap-0.5">
+                    <span>{{ change.summary }}</span>
+                    @for (field of change.fields; track field.name) {
+                      <span class="text-muted text-xs">
+                        {{ field.name }}:
+                        @if (field.before) {
+                          <span class="line-through">{{ field.before }}</span>
+                        }
+                        <span>{{ field.after }}</span>
+                      </span>
+                    }
+                    @if (change.applyError) {
+                      <span class="text-error text-xs">{{
+                        change.applyError
+                      }}</span>
+                    }
+                  </span>
+                </label>
+              }
+            </div>
+
+            @if (isPending()) {
+              <div class="mt-3 flex items-center gap-2">
+                <button
+                  app-flat-button
+                  type="button"
+                  [disabled]="assistant.isApplying()"
+                  (click)="apply()">
+                  <span i18n="Button that applies the proposed changes"
+                    >Apply</span
+                  >
+                </button>
+                <button app-stroked-button type="button" (click)="discard()">
+                  <span i18n="Button that discards the proposed changes"
+                    >Discard</span
+                  >
+                </button>
+              </div>
+            } @else {
+              <p
+                class="text-muted mt-3 text-xs"
+                i18n="Shown after changes were applied">
+                These changes have been applied.
+              </p>
+            }
+          </section>
+        }
 
         <footer class="border-border border-t p-3">
           <div class="flex items-end gap-2">
@@ -150,6 +219,24 @@ export class AiAssistantComponent implements AfterViewInit, OnDestroy {
 
     return hasDraft && !this.assistant.isStreaming();
   });
+
+  protected readonly changeSet = computed(() => this.assistant.changeSet());
+
+  protected readonly isPending = computed(() => {
+    return this.changeSet()?.status === AiChangeSetStatus.pending;
+  });
+
+  protected isIncluded(changeId: number): boolean {
+    return !this.assistant.excludedChangeIds().has(changeId);
+  }
+
+  protected apply() {
+    void this.assistant.applyChangeSet();
+  }
+
+  protected discard() {
+    void this.assistant.discardChangeSet();
+  }
 
   constructor() {
     this.overlayRef = this.overlay.create({
