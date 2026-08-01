@@ -75,6 +75,7 @@ export class AiAssistantService {
   readonly showHistory = signal(false);
   readonly models = signal<AiModelOption[]>([]);
   readonly references = signal<Map<string, AiEntityReference>>(new Map());
+  readonly transcriptVersion = signal(0);
   readonly hasCredentials = signal<boolean | null>(null);
   readonly selectedModel = signal<string | null>(null);
 
@@ -310,6 +311,7 @@ export class AiAssistantService {
   }
 
   startNewConversation() {
+    this.transcriptVersion.update((version) => version + 1);
     this.conversationId.set(null);
     this.conversationTitle.set(null);
     this.references.set(new Map());

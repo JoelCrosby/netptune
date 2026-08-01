@@ -106,7 +106,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:93</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:94</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -6147,7 +6147,7 @@
     </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:128</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:173</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment state="translated">
@@ -6729,8 +6729,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:405</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:449</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:407</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:451</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -7185,7 +7185,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:120</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:165</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:52,54</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -9602,7 +9602,7 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:545</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:547</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -10829,6 +10829,16 @@
       <segment state="translated">
         <source> Sprint </source>
         <target>Sprint</target>
+      </segment>
+    </unit>
+    <unit id="4717491147966397069">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:66,68</note>
+        <note category="description">Accessible name of the assistant transcript</note>
+      </notes>
+      <segment state="translated">
+        <source>Conversation</source>
+        <target>Conversación</target>
       </segment>
     </unit>
     <unit id="3941944824627691129">
@@ -13424,6 +13434,16 @@
         <target>Añadir las tareas a un sprint próximo</target>
       </segment>
     </unit>
+    <unit id="3259201493560941662">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:106,108</note>
+        <note category="description">Accessible label for the button that scrolls to the newest message</note>
+      </notes>
+      <segment state="translated">
+        <source>Jump to latest</source>
+        <target>Ir a lo más reciente</target>
+      </segment>
+    </unit>
     <unit id="3259975990687926975">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:147,148</note>
@@ -13589,7 +13609,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:125</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:170</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment state="translated">
@@ -14044,7 +14064,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:29,31</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:47,49</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment state="translated">
