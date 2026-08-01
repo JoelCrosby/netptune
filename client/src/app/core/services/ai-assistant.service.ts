@@ -33,6 +33,7 @@ interface AiStoredSession {
   workspace: string;
   conversationId: string | null;
   isOpen: boolean;
+  pendingTurnAt: number | null;
 }
 
 const STREAM_PREFIX = 'data: ';
@@ -113,6 +114,14 @@ export class AiAssistantService {
 
   private hasRestoredSession = false;
   private pendingSince: number | null = null;
+
+  /**
+   * Set while this browser has a turn in flight. A turn that failed clears it,
+   * which is what separates a reply still being written from one that already
+   * stopped — both leave the user message as the last thing on the server.
+   */
+  private readonly pendingTurnAt = signal<number | null>(null);
+
   private drafts: Record<string, string> =
     this.storage.getItem<Record<string, string>>(DRAFT_STORAGE_KEY) ?? {};
 
@@ -153,6 +162,7 @@ export class AiAssistantService {
         workspace: this.workspaceKey() ?? '',
         conversationId: this.conversationId(),
         isOpen: this.isOpen(),
+        pendingTurnAt: this.pendingTurnAt(),
       };
 
       const canRemember = session.workspace !== '' && this.hasRestoredSession;
@@ -235,6 +245,16 @@ export class AiAssistantService {
     }
 
     this.applyConversation(detail);
+
+    const startedAt = session.pendingTurnAt;
+    const wasTurnInFlight =
+      startedAt !== null && Date.now() - startedAt < RESUME_TIMEOUT;
+
+    if (!wasTurnInFlight) {
+      this.pendingTurnAt.set(null);
+
+      return;
+    }
 
     await this.resumeTurn();
   }
@@ -339,6 +359,8 @@ export class AiAssistantService {
     const isExpired = Date.now() - startedAt >= RESUME_TIMEOUT;
 
     if (isExpired) {
+      this.pendingTurnAt.set(null);
+
       return;
     }
 
@@ -351,6 +373,7 @@ export class AiAssistantService {
     } finally {
       this.isStreaming.set(false);
       this.isThinking.set(false);
+      this.pendingTurnAt.set(null);
       this.pendingSince = null;
     }
   }
@@ -639,6 +662,7 @@ export class AiAssistantService {
     this.appendEntry({ role: 'assistant', text: '', tools: [] });
     this.isStreaming.set(true);
     this.isThinking.set(true);
+    this.pendingTurnAt.set(Date.now());
 
     try {
       await this.stream(trimmed);
@@ -649,6 +673,7 @@ export class AiAssistantService {
     } finally {
       this.isStreaming.set(false);
       this.isThinking.set(false);
+      this.pendingTurnAt.set(null);
     }
 
     if (wasNewConversation) {

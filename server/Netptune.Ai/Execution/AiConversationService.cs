@@ -208,12 +208,17 @@ public sealed class AiConversationService : IAiConversationService
             conversation.Title = title.Title;
         }
 
-        var assistantMessageId = await PersistTurn(conversation, context, reply, title.Usage, cancellationToken);
-        var changeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
+        var changeSetId = await UnitOfWork.Transaction(async () =>
+        {
+            var assistantMessageId = await PersistTurn(conversation, context, reply, title.Usage, cancellationToken);
+            var pendingChangeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
 
-        credential.LastUsedAt = DateTime.UtcNow;
+            credential.LastUsedAt = DateTime.UtcNow;
 
-        await UnitOfWork.CompleteAsync(cancellationToken);
+            await UnitOfWork.CompleteAsync(cancellationToken);
+
+            return pendingChangeSetId;
+        });
 
         if (changeSetId.HasValue)
         {
