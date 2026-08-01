@@ -901,9 +901,9 @@
         <note category="location">src/app/core/store/tasks/task-archive.service.ts:44</note>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:438</note>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:446</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:363</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:373</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:383</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:358</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:368</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:378</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:191,193</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:122,125</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:112,115</note>
@@ -916,7 +916,7 @@
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:55,57</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:105,108</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:245</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:495</note>
@@ -1564,7 +1564,7 @@
     </unit>
     <unit id="2273088133016853024">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:362</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:357</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1574,7 +1574,7 @@
     </unit>
     <unit id="141527660815930501">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:364</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:359</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1584,7 +1584,7 @@
     </unit>
     <unit id="4854172748547351453">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:365</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:360</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1594,7 +1594,7 @@
     </unit>
     <unit id="1293575230061580250">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:372</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:367</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1604,7 +1604,7 @@
     </unit>
     <unit id="8763068601818287275">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:374</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:369</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1614,7 +1614,7 @@
     </unit>
     <unit id="950348144194379022">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:375</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:370</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:108</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -1625,7 +1625,7 @@
     </unit>
     <unit id="8871304628791267226">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:382</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:377</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1635,7 +1635,7 @@
     </unit>
     <unit id="4501389782873056968">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:384</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:379</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1645,7 +1645,7 @@
     </unit>
     <unit id="5832945231912845990">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:385</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:380</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:107</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -2428,8 +2428,8 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:44</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:50</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:134</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:90,91</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:475</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:92,93</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:399</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:55,57</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:208</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:56,58</note>
@@ -2561,7 +2561,7 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:45</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:54,56</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:101,103</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:103,105</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:60,62</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:73,76</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:169,172</note>
@@ -3067,7 +3067,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:86,88</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:178,180</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:331,333</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:261,263</note>
         <note category="description">Description of the summary wizard step</note>
       </notes>
       <segment state="translated">
@@ -3090,7 +3090,7 @@
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:106,110</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:199,202</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:65,67</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:410,415</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:340,345</note>
         <note category="description">Button that returns to the previous wizard step</note>
       </notes>
       <segment state="translated">
@@ -3101,7 +3101,7 @@
     <unit id="3885497195825665706">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:116,117</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:421,422</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:351,352</note>
         <note category="description">Button that advances to the next wizard step</note>
       </notes>
       <segment state="translated">
@@ -5799,7 +5799,7 @@
     </unit>
     <unit id="2527613524061523304">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:347</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:342</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment state="translated">
@@ -10918,7 +10918,6 @@
       <notes>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:116,118</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,63</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:167,169</note>
         <note category="description">Button that removes a preference override</note>
       </notes>
       <segment state="translated">
@@ -11062,8 +11061,8 @@
     <unit id="9048091755272109818">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:57,58</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:135</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:251,253</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:126</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:187,189</note>
         <note category="description">Label of the credential name field</note>
       </notes>
       <segment state="translated">
@@ -11074,7 +11073,7 @@
     <unit id="672862139704252110">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:59,61</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:255,256</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:191,192</note>
         <note category="description">Example credential name shown as placeholder text</note>
       </notes>
       <segment state="translated">
@@ -11085,7 +11084,7 @@
     <unit id="1730059192631856512">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:61,64</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:257,260</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:193,196</note>
         <note category="description">Hint under the credential name field</note>
       </notes>
       <segment state="translated">
@@ -11096,7 +11095,7 @@
     <unit id="7617073660084768167">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:67,70</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:264,266</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:200,202</note>
         <note category="description">Heading above the permission scopes for a credential</note>
       </notes>
       <segment state="translated">
@@ -11114,19 +11113,19 @@
         <target>Geltungsbereiche können diese Zugangsdaten stärker einschränken als das Dienstkonto.</target>
       </segment>
     </unit>
-    <unit id="2968871420493013487">
+    <unit id="6722861709318164496">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:95,99</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:119</note>
         <note category="description">Shown when a service account has no permissions to scope</note>
       </notes>
       <segment state="translated">
-        <source> This service account has no API permissions. </source>
+        <source>This service account has no API permissions.</source>
         <target>Dieses Dienstkonto hat keine API-Berechtigungen.</target>
       </segment>
     </unit>
     <unit id="196598341098112332">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:113,116</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:101,104</note>
         <note category="description">Button that creates the API credential</note>
       </notes>
       <segment state="translated">
@@ -11136,7 +11135,7 @@
     </unit>
     <unit id="5356600339948309735">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:74,75</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:76,77</note>
         <note category="description">Title of the account details wizard step</note>
       </notes>
       <segment state="translated">
@@ -11157,7 +11156,7 @@
     </unit>
     <unit id="7793498748790553680">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:76,78</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:78,80</note>
         <note category="description">Description of the account details wizard step</note>
       </notes>
       <segment state="translated">
@@ -11167,7 +11166,7 @@
     </unit>
     <unit id="6133388483919940418">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:80,82</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:82,84</note>
         <note category="description">Explains what a service account is</note>
       </notes>
       <segment state="translated">
@@ -11177,7 +11176,7 @@
     </unit>
     <unit id="3016223778868322970">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:94</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:96</note>
         <note category="description">Example service account name shown as placeholder text</note>
       </notes>
       <segment state="translated">
@@ -11187,7 +11186,7 @@
     </unit>
     <unit id="5288722638871066063">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:95,98</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:97,100</note>
         <note category="description">Hint under the service account name field</note>
       </notes>
       <segment state="translated">
@@ -11197,7 +11196,7 @@
     </unit>
     <unit id="5164538628663181082">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:105,108</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:107,110</note>
         <note category="description">Example service account description shown as placeholder text</note>
       </notes>
       <segment state="translated">
@@ -11207,7 +11206,7 @@
     </unit>
     <unit id="7314814725704332646">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:113,114</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:115,116</note>
         <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:56,59</note>
         <note category="description">Title of the permissions wizard step</note>
       </notes>
@@ -11218,7 +11217,7 @@
     </unit>
     <unit id="7268651966500192698">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:115,117</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:117,119</note>
         <note category="description">Description of the permissions wizard step</note>
       </notes>
       <segment state="translated">
@@ -11228,7 +11227,7 @@
     </unit>
     <unit id="8204051222798572777">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:120,123</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:122,125</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:67,70</note>
         <note category="description">Heading above the API permissions for a service account</note>
       </notes>
@@ -11239,7 +11238,7 @@
     </unit>
     <unit id="8543632336454964015">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:129,134</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:131,136</note>
         <note category="description">Explains that credential scopes are a subset of account permissions</note>
       </notes>
       <segment state="translated">
@@ -11249,8 +11248,8 @@
     </unit>
     <unit id="4777350418733054176">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:141,148</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:88,95</note>
+        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:23,30</note>
         <note category="description">How many permissions are selected. SELECTED is the chosen count and TOTAL the number available</note>
       </notes>
       <segment state="translated">
@@ -11260,8 +11259,8 @@
     </unit>
     <unit id="1916930465370171483">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:158,160</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:105,107</note>
+        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:39,42</note>
         <note category="description">Button that selects every permission</note>
       </notes>
       <segment state="translated">
@@ -11271,7 +11270,7 @@
     </unit>
     <unit id="1420721946741654809">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:212,215</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:148,151</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:154,158</note>
         <note category="description">Validation message when no permission is selected</note>
       </notes>
@@ -11282,7 +11281,7 @@
     </unit>
     <unit id="1880902839296774666">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:221,222</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:157,158</note>
         <note category="description">Title of the first-credential wizard step</note>
       </notes>
       <segment state="translated">
@@ -11292,7 +11291,7 @@
     </unit>
     <unit id="5559344982885709649">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:223,224</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:159,160</note>
         <note category="description">Description of the first-credential wizard step</note>
       </notes>
       <segment state="translated">
@@ -11302,7 +11301,7 @@
     </unit>
     <unit id="8388111102810701496">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:234,236</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:170,172</note>
         <note category="description">Option to issue a credential while creating the account</note>
       </notes>
       <segment state="translated">
@@ -11312,7 +11311,7 @@
     </unit>
     <unit id="4088593831976939756">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:239,241</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:175,177</note>
         <note category="description">Explains that issuing a credential can be deferred</note>
       </notes>
       <segment state="translated">
@@ -11322,7 +11321,7 @@
     </unit>
     <unit id="8601413718128430503">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:272,276</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:208,212</note>
         <note category="description">Explains that a credential can be narrower than the account</note>
       </notes>
       <segment state="translated">
@@ -11332,7 +11331,7 @@
     </unit>
     <unit id="2900255064067123618">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:299,303</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:229,233</note>
         <note category="description">Validation message when a credential has no scopes selected</note>
       </notes>
       <segment state="translated">
@@ -11342,7 +11341,7 @@
     </unit>
     <unit id="4588288891937968440">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:314,317</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:244,247</note>
         <note category="description">Shown when the user opts out of issuing a first credential</note>
       </notes>
       <segment state="translated">
@@ -11352,7 +11351,7 @@
     </unit>
     <unit id="7317436935051452942">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:319,322</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:249,252</note>
         <note category="description">Reassures that a credential can be issued later</note>
       </notes>
       <segment state="translated">
@@ -11362,7 +11361,7 @@
     </unit>
     <unit id="7430680760319628492">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:330</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:260</note>
         <note category="description">Title of the review wizard step</note>
       </notes>
       <segment state="translated">
@@ -11372,7 +11371,7 @@
     </unit>
     <unit id="8105573015424494856">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:351,354</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:281,284</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:212,215</note>
         <note category="description">Heading above the permissions granted to a service account</note>
       </notes>
@@ -11383,7 +11382,7 @@
     </unit>
     <unit id="3237067120046264827">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:369,372</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:299,302</note>
         <note category="description">Heading above the first credential in the review step</note>
       </notes>
       <segment state="translated">
@@ -11393,7 +11392,7 @@
     </unit>
     <unit id="3064651799583574114">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:383,386</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:313,316</note>
         <note category="description">Credential summary in the review step. COUNT is the number of scoped permissions; the 90 day expiry is fixed by the server</note>
       </notes>
       <segment state="translated">
@@ -11403,7 +11402,7 @@
     </unit>
     <unit id="5581312806906477733">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:395,398</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:325,328</note>
         <note category="description">Shown in the review step when no credential will be issued</note>
       </notes>
       <segment state="translated">
@@ -11413,7 +11412,7 @@
     </unit>
     <unit id="9020705791982978354">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:431,434</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:361,364</note>
         <note category="description">Button that creates the service account</note>
       </notes>
       <segment state="translated">
@@ -11423,8 +11422,8 @@
     </unit>
     <unit id="3108295184226330469">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:442</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:182</note>
+        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:143</note>
         <note category="description">Button that deselects every permission in a group</note>
       </notes>
       <segment state="translated">
@@ -11434,8 +11433,8 @@
     </unit>
     <unit id="3235487491166357848">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:443</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:183</note>
+        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:144</note>
         <note category="description">Button that selects every permission in a group</note>
       </notes>
       <segment state="translated">
@@ -11445,8 +11444,8 @@
     </unit>
     <unit id="4524361724085569852">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:482</note>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:493</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:406</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:417</note>
         <note category="description">Validation error when the credential name is empty</note>
       </notes>
       <segment state="translated">
@@ -11456,7 +11455,7 @@
     </unit>
     <unit id="1687274595590894708">
       <notes>
-        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:501</note>
+        <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:425</note>
         <note category="description">Validation error when the credential name is too short</note>
       </notes>
       <segment state="translated">
@@ -11487,6 +11486,7 @@
     <unit id="8700121026680200191">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
+        <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
         <note category="description">Button that deselects every permission</note>
       </notes>
       <segment state="translated">

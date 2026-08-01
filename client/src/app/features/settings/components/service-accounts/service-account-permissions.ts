@@ -64,3 +64,18 @@ export const permissionGroups: PermissionGroupOption[] = Object.entries(
 export const allPermissions: Permission[] = permissionGroups.flatMap((group) =>
   group.permissions.map((permission) => permission.key)
 );
+
+export function filterPermissionGroups(
+  available: Iterable<Permission>
+): PermissionGroupOption[] {
+  const allowed = new Set(available);
+
+  return permissionGroups
+    .map((group) => ({
+      ...group,
+      permissions: group.permissions.filter((permission) => {
+        return allowed.has(permission.key);
+      }),
+    }))
+    .filter((group) => group.permissions.length > 0);
+}

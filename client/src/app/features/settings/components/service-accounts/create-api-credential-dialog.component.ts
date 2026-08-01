@@ -13,12 +13,12 @@ import {
 } from '@core/models/service-account';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
-import { permissionLabel } from './service-account-permissions';
+import { PermissionGridComponent } from './permission-grid.component';
+import { filterPermissionGroups } from './service-account-permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
@@ -26,7 +26,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   imports: [
     FormField,
     FormInputComponent,
-    CheckboxComponent,
+    PermissionGridComponent,
     DialogTitleComponent,
     DialogActionsDirective,
     DialogCloseDirective,
@@ -77,26 +77,14 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           </span>
         </p>
 
-        <div class="border-border divide-border divide-y rounded border">
-          @for (permission of account.permissions; track permission) {
-            <div class="px-4 py-3">
-              <app-checkbox
-                [checked]="hasScope(permission)"
-                (changed)="setScope(permission, $event)">
-                <span class="text-sm">
-                  {{ getPermissionLabel(permission) }}
-                </span>
-              </app-checkbox>
-            </div>
-          } @empty {
-            <p class="text-muted px-4 py-3 text-sm">
-              <span
-                i18n="Shown when a service account has no permissions to scope">
-                This service account has no API permissions.
-              </span>
-            </p>
-          }
-        </div>
+        <app-permission-grid
+          maxHeightClass="max-h-72"
+          [groups]="scopeGroups"
+          [selected]="selectedScopes()"
+          [emptyMessage]="noPermissionsMessage"
+          (permissionChanged)="setScope($event.permission, $event.selected)"
+          (selectAllRequested)="selectAllScopes()"
+          (clearRequested)="clearScopes()" />
       </fieldset>
     </form>
 
@@ -123,9 +111,12 @@ export class CreateApiCredentialDialogComponent {
     >(DialogRef);
 
   readonly account = inject<ServiceAccount>(DIALOG_DATA);
+  readonly scopeGroups = filterPermissionGroups(this.account.permissions);
   readonly selectedScopes = signal<Set<Permission>>(
     new Set(this.account.permissions)
   );
+
+  readonly noPermissionsMessage = $localize`:Shown when a service account has no permissions to scope:This service account has no API permissions.`;
 
   readonly credentialFormModel = signal({ name: '' });
   readonly credentialForm = form(this.credentialFormModel, (schema) => {
@@ -139,10 +130,6 @@ export class CreateApiCredentialDialogComponent {
     );
   });
 
-  hasScope(permission: Permission) {
-    return this.selectedScopes().has(permission);
-  }
-
   setScope(permission: Permission, selected: boolean) {
     this.selectedScopes.update((current) => {
       const next = new Set(current);
@@ -155,8 +142,12 @@ export class CreateApiCredentialDialogComponent {
     });
   }
 
-  getPermissionLabel(permission: Permission) {
-    return permissionLabel(permission);
+  selectAllScopes() {
+    this.selectedScopes.set(new Set(this.account.permissions));
+  }
+
+  clearScopes() {
+    this.selectedScopes.set(new Set());
   }
 
   submit(event: Event) {

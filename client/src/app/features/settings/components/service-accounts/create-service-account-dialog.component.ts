@@ -28,10 +28,11 @@ import { FormTextAreaComponent } from '@static/components/form-textarea/form-tex
 import { StepComponent } from '@static/components/stepper/step.component';
 import { StepperComponent } from '@static/components/stepper/stepper.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
+import { PermissionGridComponent } from './permission-grid.component';
 import {
   allPermissions,
+  filterPermissionGroups,
   permissionGroups,
-  PermissionGroupOption,
   permissionLabel,
 } from './service-account-permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
@@ -56,6 +57,7 @@ const defaultPermissions: Permission[] = [
     FormInputComponent,
     FormTextAreaComponent,
     CheckboxComponent,
+    PermissionGridComponent,
     StepperComponent,
     StepComponent,
     DialogActionsDirective,
@@ -131,80 +133,14 @@ const defaultPermissions: Permission[] = [
               </span>
             </p>
 
-            <div class="mb-3 flex items-center justify-between gap-3">
-              <span class="text-muted text-xs">
-                <span
-                  i18n="
-                    How many permissions are selected. SELECTED is the chosen
-                    count and TOTAL the number available
-                  ">
-                  {{
-                    selectedPermissions().size // i18n(ph="SELECTED")
-                  }}
-                  of
-                  {{
-                    totalPermissionCount // i18n(ph="TOTAL")
-                  }}
-                  selected
-                </span>
-              </span>
-              <div class="flex gap-2">
-                <button
-                  app-stroked-button
-                  type="button"
-                  class="h-8 text-xs"
-                  (click)="selectAllPermissions()">
-                  <span i18n="Button that selects every permission">
-                    Select all
-                  </span>
-                </button>
-                <button
-                  app-stroked-button
-                  type="button"
-                  class="h-8 text-xs"
-                  (click)="clearPermissions()">
-                  <span i18n="Button that deselects every permission">
-                    Clear
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            <div
-              class="border-border divide-border max-h-96 divide-y overflow-y-auto rounded border">
-              @for (group of permissionGroups; track group.key) {
-                <section>
-                  <header
-                    class="bg-foreground/3 flex items-center justify-between gap-2 px-4 py-2">
-                    <h4 class="text-xs font-semibold tracking-wide uppercase">
-                      {{ group.label }}
-                    </h4>
-                    <button
-                      type="button"
-                      class="text-primary cursor-pointer text-xs"
-                      (click)="toggleGroup(group)">
-                      {{ groupToggleLabel(group) }}
-                    </button>
-                  </header>
-
-                  <div
-                    class="divide-border grid divide-y sm:grid-cols-2 sm:divide-y-0">
-                    @for (
-                      permission of group.permissions;
-                      track permission.key
-                    ) {
-                      <div class="px-4 py-2">
-                        <app-checkbox
-                          [checked]="hasPermission(permission.key)"
-                          (changed)="setPermission(permission.key, $event)">
-                          <span class="text-sm">{{ permission.label }}</span>
-                        </app-checkbox>
-                      </div>
-                    }
-                  </div>
-                </section>
-              }
-            </div>
+            <app-permission-grid
+              [groups]="permissionGroups"
+              [selected]="selectedPermissions()"
+              (permissionChanged)="
+                setPermission($event.permission, $event.selected)
+              "
+              (selectAllRequested)="selectAllPermissions()"
+              (clearRequested)="clearPermissions()" />
 
             @if (selectedPermissions().size === 0) {
               <p class="text-warn mt-2 text-sm">
@@ -273,21 +209,15 @@ const defaultPermissions: Permission[] = [
                 </span>
               </p>
 
-              <div
-                class="border-border grid max-h-72 gap-x-4 overflow-y-auto rounded border p-2 sm:grid-cols-2">
-                @for (
-                  permission of selectedPermissionOptions();
-                  track permission.key
-                ) {
-                  <div class="px-2 py-2">
-                    <app-checkbox
-                      [checked]="hasCredentialScope(permission.key)"
-                      (changed)="setCredentialScope(permission.key, $event)">
-                      <span class="text-sm">{{ permission.label }}</span>
-                    </app-checkbox>
-                  </div>
-                }
-              </div>
+              <app-permission-grid
+                maxHeightClass="max-h-72"
+                [groups]="scopeGroups()"
+                [selected]="credentialScopes()"
+                (permissionChanged)="
+                  setCredentialScope($event.permission, $event.selected)
+                "
+                (selectAllRequested)="selectAllCredentialScopes()"
+                (clearRequested)="clearCredentialScopes()" />
 
               @if (credentialScopes().size === 0) {
                 <p class="text-warn mt-2 text-sm">
@@ -436,12 +366,6 @@ const defaultPermissions: Permission[] = [
   `,
 })
 export class CreateServiceAccountDialogComponent {
-  /** Ternaries in a template expression cannot be marked, so build the copy here. */
-  protected groupToggleLabel(group: PermissionGroupOption): string {
-    return this.isGroupSelected(group)
-      ? $localize`:Button that deselects every permission in a group:Clear group`
-      : $localize`:Button that selects every permission in a group:Select group`;
-  }
   private readonly dialogRef =
     inject<
       DialogRef<
@@ -507,6 +431,9 @@ export class CreateServiceAccountDialogComponent {
   readonly createCredential = computed(() =>
     this.accountForm.createCredential().value()
   );
+  readonly scopeGroups = computed(() => {
+    return filterPermissionGroups(this.selectedPermissions());
+  });
   readonly selectedPermissionOptions = computed(() => {
     const permissions = this.selectedPermissions();
 
@@ -528,22 +455,6 @@ export class CreateServiceAccountDialogComponent {
     );
   }
 
-  isGroupSelected(group: PermissionGroupOption) {
-    const selected = this.selectedPermissions();
-
-    return group.permissions.every((permission) =>
-      selected.has(permission.key)
-    );
-  }
-
-  toggleGroup(group: PermissionGroupOption) {
-    const select = !this.isGroupSelected(group);
-
-    for (const permission of group.permissions) {
-      this.setPermission(permission.key, select);
-    }
-  }
-
   selectAllPermissions() {
     for (const permission of allPermissions) {
       this.setPermission(permission, true);
@@ -563,6 +474,14 @@ export class CreateServiceAccountDialogComponent {
     this.credentialScopes.update((current) =>
       this.updateSelection(current, permission, selected)
     );
+  }
+
+  selectAllCredentialScopes() {
+    this.credentialScopes.set(new Set(this.selectedPermissions()));
+  }
+
+  clearCredentialScopes() {
+    this.credentialScopes.set(new Set());
   }
 
   setCreateCredential(selected: boolean) {
