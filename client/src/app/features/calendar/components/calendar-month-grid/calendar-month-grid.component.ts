@@ -52,7 +52,7 @@ const visibleTaskCount = 3;
               [class.dark:bg-black/30]="!day.currentMonth"
               [class.ring-primary]="day.today"
               [class.ring-1]="day.today"
-              [class.bg-primary/10]="selectedDate() === day.date"
+              [class.calendar-selected-day]="selectedDate() === day.date"
               [class.calendar-drop-target]="dragTargetDate() === day.date"
               [attr.aria-label]="dayLabel(day)"
               [rowIndex]="weekIndex + 1"
@@ -135,7 +135,15 @@ const visibleTaskCount = 3;
       min-width: 44rem;
     }
 
-    .calendar-drop-target {
+    .calendar-selected-day,
+    .calendar-selected-day:hover {
+      z-index: 1;
+      background-color: color-mix(in srgb, var(--primary) 24%, var(--card));
+      box-shadow: inset 0 0 0 2px var(--primary);
+    }
+
+    .calendar-drop-target,
+    .calendar-drop-target:hover {
       z-index: 1;
       background-color: color-mix(in srgb, var(--primary) 16%, var(--card));
       box-shadow: inset 0 0 0 2px var(--primary);
