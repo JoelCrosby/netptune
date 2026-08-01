@@ -8,6 +8,7 @@ public enum AiStreamEventType
     TurnCompleted = 3,
     Error = 4,
     ConversationStarted = 5,
+    ChangeSetProposed = 6,
 }
 
 public sealed record AiStreamEvent
@@ -21,6 +22,17 @@ public sealed record AiStreamEvent
     public string? Message { get; init; }
 
     public Guid? ConversationId { get; init; }
+
+    public Guid? ChangeSetId { get; init; }
+
+    public static AiStreamEvent ChangeSetProposed(Guid changeSetId)
+    {
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.ChangeSetProposed,
+            ChangeSetId = changeSetId,
+        };
+    }
 
     public static AiStreamEvent ConversationStarted(Guid conversationId)
     {

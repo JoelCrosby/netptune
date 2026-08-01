@@ -168,7 +168,6 @@ public sealed class AiConversationRunner : IAiConversationRunner
     private IReadOnlyList<IAiTool> GetAvailableTools(IReadOnlySet<string> permissions)
     {
         return Tools.All
-            .Where(tool => tool.Kind == AiToolKind.Read)
             .Where(tool => tool.RequiredPermissions.All(permissions.Contains))
             .ToList();
     }

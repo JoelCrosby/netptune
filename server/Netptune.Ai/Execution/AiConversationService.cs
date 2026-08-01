@@ -18,12 +18,18 @@ public sealed class AiConversationService : IAiConversationService
 {
     private const int MaximumTitleLength = 80;
 
+    private static readonly JsonSerializerOptions FieldSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    };
+
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiCredentialProtector Protector;
     private readonly IAiConversationRunner Runner;
     private readonly IAiChatProviderFactory ProviderFactory;
     private readonly IAiSystemPromptBuilder PromptBuilder;
+    private readonly IAiChangeSetBuilder ChangeSetBuilder;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -33,8 +39,10 @@ public sealed class AiConversationService : IAiConversationService
         IAiConversationRunner runner,
         IAiChatProviderFactory providerFactory,
         IAiSystemPromptBuilder promptBuilder,
+        IAiChangeSetBuilder changeSetBuilder,
         IOptions<AiOptions> options)
     {
+        ChangeSetBuilder = changeSetBuilder;
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
@@ -61,23 +69,39 @@ public sealed class AiConversationService : IAiConversationService
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
         var workspaceKey = Identity.GetWorkspaceKey();
-        var credential = await UnitOfWork.AiCredentials.GetForProvider(userId, AiProvider.Anthropic, cancellationToken);
+        var credentials = await UnitOfWork.AiCredentials.GetForUser(userId, cancellationToken);
 
-        if (credential is null)
+        if (credentials.Count == 0)
         {
             yield return AiStreamEvent.Failed("No API key is configured for the assistant.");
 
             yield break;
         }
 
-        var conversation = await ResolveConversation(request.ConversationId, userId, workspaceId, text, cancellationToken);
+        var existing = request.ConversationId.HasValue
+            ? await UnitOfWork.AiConversations.GetOwned(request.ConversationId.Value, userId, workspaceId, cancellationToken)
+            : null;
 
-        if (conversation is null)
+        var conversationMissing = request.ConversationId.HasValue && existing is null;
+
+        if (conversationMissing)
         {
             yield return AiStreamEvent.Failed("Conversation not found.");
 
             yield break;
         }
+
+        var provider = ResolveProvider(request.Provider, existing, credentials);
+        var credential = credentials.FirstOrDefault(item => item.Provider == provider);
+
+        if (credential is null)
+        {
+            yield return AiStreamEvent.Failed($"No API key is configured for {provider}.");
+
+            yield break;
+        }
+
+        var conversation = existing ?? await CreateConversation(userId, workspaceId, provider, text, cancellationToken);
 
         yield return AiStreamEvent.ConversationStarted(conversation.Id);
 
@@ -124,30 +148,46 @@ public sealed class AiConversationService : IAiConversationService
             yield return streamEvent;
         }
 
-        await PersistTurn(conversation, context, assistantText.ToString(), cancellationToken);
+        var assistantMessageId = await PersistTurn(conversation, context, assistantText.ToString(), cancellationToken);
+        var changeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
 
         credential.LastUsedAt = DateTime.UtcNow;
 
         await UnitOfWork.CompleteAsync(cancellationToken);
+
+        if (changeSetId.HasValue)
+        {
+            yield return AiStreamEvent.ChangeSetProposed(changeSetId.Value);
+        }
     }
 
-    private async Task<AiConversation?> ResolveConversation(
-        Guid? conversationId,
+    private static AiProvider ResolveProvider(
+        AiProvider? requested,
+        AiConversation? existing,
+        IReadOnlyList<UserAiCredential> credentials)
+    {
+        if (requested.HasValue)
+        {
+            return requested.Value;
+        }
+
+        if (existing is not null)
+        {
+            return existing.Provider;
+        }
+
+        var hasAnthropic = credentials.Any(credential => credential.Provider == AiProvider.Anthropic);
+
+        return hasAnthropic ? AiProvider.Anthropic : credentials[0].Provider;
+    }
+
+    private async Task<AiConversation> CreateConversation(
         string userId,
         int workspaceId,
+        AiProvider provider,
         string firstMessage,
         CancellationToken cancellationToken)
     {
-        if (conversationId.HasValue)
-        {
-            return await UnitOfWork.AiConversations.GetOwned(
-                conversationId.Value,
-                userId,
-                workspaceId,
-                cancellationToken);
-        }
-
-        var provider = AiProvider.Anthropic;
         var model = ProviderFactory.Resolve(provider).DefaultModel;
         var conversation = new AiConversation
         {
@@ -189,7 +229,7 @@ public sealed class AiConversationService : IAiConversationService
             .ToList();
     }
 
-    private async Task PersistMessage(
+    private async Task<long> PersistMessage(
         AiConversation conversation,
         AiChatMessage message,
         AiMessageRole role,
@@ -221,9 +261,11 @@ public sealed class AiConversationService : IAiConversationService
 
         conversation.MessageCount += 1;
         conversation.LastMessageAt = record.CreatedAt;
+
+        return record.Id;
     }
 
-    private async Task PersistTurn(
+    private async Task<long> PersistTurn(
         AiConversation conversation,
         AiRunContext context,
         string assistantText,
@@ -237,27 +279,24 @@ public sealed class AiConversationService : IAiConversationService
             ToolCalls = lastTurn?.ToolCalls ?? [],
         };
 
-        await PersistMessage(conversation, assistantMessage, AiMessageRole.Assistant, lastTurn, cancellationToken);
+        var assistantMessageId = await PersistMessage(
+            conversation,
+            assistantMessage,
+            AiMessageRole.Assistant,
+            lastTurn,
+            cancellationToken);
 
         var hasInvocations = context.Invocations.Count > 0;
 
         if (!hasInvocations)
         {
-            return;
-        }
-
-        var messages = await UnitOfWork.AiConversations.GetMessages(conversation.Id, cancellationToken);
-        var assistantRecord = messages.LastOrDefault(message => message.Role == AiMessageRole.Assistant);
-
-        if (assistantRecord is null)
-        {
-            return;
+            return assistantMessageId;
         }
 
         var invocations = context.Invocations.Select(invocation => new AiToolInvocation
         {
             ConversationId = conversation.Id,
-            MessageId = assistantRecord.Id,
+            MessageId = assistantMessageId,
             ToolName = invocation.ToolName,
             Arguments = invocation.Arguments,
             Result = JsonDocument.Parse(JsonSerializer.Serialize(invocation.Result)),
@@ -267,5 +306,59 @@ public sealed class AiConversationService : IAiConversationService
         });
 
         await UnitOfWork.AiConversations.AddToolInvocations(invocations, cancellationToken);
+
+        return assistantMessageId;
+    }
+
+    private async Task<Guid?> PersistChangeSet(
+        AiConversation conversation,
+        long assistantMessageId,
+        CancellationToken cancellationToken)
+    {
+        var drafts = ChangeSetBuilder.Changes;
+
+        if (drafts.Count == 0)
+        {
+            return null;
+        }
+
+        var changeSet = new AiChangeSet
+        {
+            Id = Guid.NewGuid(),
+            WorkspaceId = conversation.WorkspaceId,
+            ConversationId = conversation.Id,
+            MessageId = assistantMessageId,
+            UserId = conversation.UserId,
+            Status = AiChangeSetStatus.Pending,
+            CorrelationId = Guid.NewGuid(),
+        };
+
+        var changes = drafts.Select((draft, index) => new AiProposedChange
+        {
+            ChangeSetId = changeSet.Id,
+            Sequence = index + 1,
+            ToolName = draft.ToolName,
+            EntityType = draft.EntityType,
+            EntityId = draft.EntityId,
+            RefKey = draft.RefKey,
+            Summary = draft.Summary,
+            Fields = SerializeFields(draft.Fields),
+            Payload = draft.Payload,
+            ValidationStatus = draft.ValidationStatus,
+            ValidationMessage = draft.ValidationMessage,
+            ApplyStatus = AiChangeApplyStatus.Pending,
+        });
+
+        await UnitOfWork.AiChangeSets.Add(changeSet, changes, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        return changeSet.Id;
+    }
+
+    private static JsonDocument SerializeFields(List<AiChangeField> fields)
+    {
+        var json = JsonSerializer.Serialize(fields, FieldSerializerOptions);
+
+        return JsonDocument.Parse(json);
     }
 }

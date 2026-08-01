@@ -1,3 +1,4 @@
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 
 namespace Netptune.Core.Services.Ai;
@@ -7,6 +8,8 @@ public sealed record AiSendMessageRequest
     public Guid? ConversationId { get; init; }
 
     public required string Text { get; init; }
+
+    public AiProvider? Provider { get; init; }
 }
 
 public interface IAiConversationService

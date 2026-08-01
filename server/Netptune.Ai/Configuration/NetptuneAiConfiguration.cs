@@ -21,6 +21,9 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ListProjectsTool>();
         services.AddScoped<IAiTool, SearchTasksTool>();
         services.AddScoped<IAiTool, ListStatusesTool>();
+        services.AddScoped<IAiTool, CreateTaskTool>();
+        services.AddScoped<IAiTool, UpdateTaskTool>();
+        services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();
 
         services.AddScoped<IAiConversationRunner, AiConversationRunner>();

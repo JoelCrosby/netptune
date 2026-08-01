@@ -34,6 +34,9 @@ public static class AiEndpoints
         group.MapDelete("/conversations/{conversationId:guid}", HandleDeleteConversation);
         group.MapPost("/conversations/messages", HandleSendMessage);
 
+        group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
+        group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
+
         return group;
     }
 
@@ -87,6 +90,26 @@ public static class AiEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteAiConversationCommand(conversationId), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetChangeSet(
+        Guid changeSetId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAiChangeSetQuery(changeSetId), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleDiscardChangeSet(
+        Guid changeSetId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DiscardAiChangeSetCommand(changeSetId), cancellationToken);
 
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }

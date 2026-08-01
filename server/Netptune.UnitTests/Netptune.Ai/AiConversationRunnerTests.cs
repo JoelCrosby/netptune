@@ -38,6 +38,40 @@ public class AiConversationRunnerTests
     }
 
     [Fact]
+    public async Task Run_ShouldOfferWriteTools_WhenThePermissionIsHeld()
+    {
+        var write = new StubTool("propose_change", NetptunePermissions.Tasks.Create)
+        {
+            ToolKind = AiToolKind.Write,
+        };
+
+        var runner = CreateRunner([write]);
+        var context = CreateContext(NetptunePermissions.Tasks.Create);
+
+        await Drain(runner, context);
+
+        var offered = Provider.LastRequest!.Tools.Select(tool => tool.Name);
+
+        offered.Should().BeEquivalentTo("propose_change");
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotOfferWriteTools_WhenThePermissionIsMissing()
+    {
+        var write = new StubTool("propose_change", NetptunePermissions.Tasks.Create)
+        {
+            ToolKind = AiToolKind.Write,
+        };
+
+        var runner = CreateRunner([write]);
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+
+        await Drain(runner, context);
+
+        Provider.LastRequest!.Tools.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Run_ShouldStopAndReportError_WhenToolIterationLimitIsReached()
     {
         var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
@@ -200,7 +234,9 @@ public class AiConversationRunnerTests
 
         public string Description => "stub";
 
-        public AiToolKind Kind => AiToolKind.Read;
+        public AiToolKind ToolKind { get; set; } = AiToolKind.Read;
+
+        public AiToolKind Kind => ToolKind;
 
         public IReadOnlySet<string> RequiredPermissions { get; }
 

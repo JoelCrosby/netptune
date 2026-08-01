@@ -41,6 +41,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IRoadmapRepository Roadmaps { get; }
     public IAiCredentialRepository AiCredentials { get; }
     public IAiConversationRepository AiConversations { get; }
+    public IAiChangeSetRepository AiChangeSets { get; }
 
     public NetptuneUnitOfWork(
         DataContext context,
@@ -79,5 +80,6 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Roadmaps = new RoadmapRepository(connectionFactory);
         AiCredentials = new AiCredentialRepository(context, connectionFactory);
         AiConversations = new AiConversationRepository(context, connectionFactory);
+        AiChangeSets = new AiChangeSetRepository(context, connectionFactory);
     }
 }

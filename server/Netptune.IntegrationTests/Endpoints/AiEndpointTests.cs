@@ -107,6 +107,24 @@ public sealed class AiEndpointTests : IClassFixture<NetptuneFixture>
     }
 
     [Fact]
+    public async Task ChangeSets_ShouldReturnNotFound_WhenTheChangeSetDoesNotExist()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var response = await client.GetAsync($"api/ai/change-sets/{Guid.NewGuid()}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task ChangeSets_ShouldReturnNotFound_WhenDiscardingAnUnknownChangeSet()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var response = await client.PostAsync($"api/ai/change-sets/{Guid.NewGuid()}/discard", null);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Conversations_ShouldListWithoutError()
     {
         var client = Fixture.CreateNetptuneClient();
