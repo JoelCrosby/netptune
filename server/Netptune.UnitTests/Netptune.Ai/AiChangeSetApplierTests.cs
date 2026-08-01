@@ -15,6 +15,7 @@ using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
+using Netptune.Services.Ai;
 
 using NSubstitute;
 
@@ -127,7 +128,7 @@ public class AiChangeSetApplierTests
     {
         var tools = new AiToolRegistry([new StubWriteTool("propose_create_task", NetptunePermissions.Tasks.Create)]);
 
-        return new AiChangeSetApplier(UnitOfWork, Identity, Mediator, tools);
+        return new AiChangeSetApplier(UnitOfWork, Identity, Mediator, tools, new AiExecutionContext());
     }
 
     private void GivenChangeSet(AiChangeSet changeSet, List<AiProposedChange> changes)

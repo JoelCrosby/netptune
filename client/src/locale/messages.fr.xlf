@@ -1491,6 +1491,16 @@
         <target>Tâches mises à jour</target>
       </segment>
     </unit>
+    <unit id="7182192298964223312">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:56,60</note>
+        <note category="description">Precedes the assistant that made a change on the user&apos;s behalf</note>
+      </notes>
+      <segment state="translated">
+        <source>via</source>
+        <target>via</target>
+      </segment>
+    </unit>
     <unit id="7190478463652380023">
       <notes>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:268</note>
@@ -3784,7 +3794,7 @@
     </unit>
     <unit id="2648970074984732218">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:82,84</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:93,95</note>
         <note category="description">Accessible label for the button that opens an audit entry</note>
       </notes>
       <segment state="translated">

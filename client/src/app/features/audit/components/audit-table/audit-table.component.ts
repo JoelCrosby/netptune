@@ -47,6 +47,17 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
 
       <ng-template appDatatableCell="userDisplayName" let-row>
         <span class="font-medium">{{ row.userDisplayName }}</span>
+        @if (row.agent) {
+          <span class="text-muted ml-1 text-xs">
+            <span
+              i18n="
+                Precedes the assistant that made a change on the user's behalf
+              "
+              >via</span
+            >
+            {{ row.agent }}
+          </span>
+        }
       </ng-template>
 
       <ng-template appDatatableCell="type" let-row>

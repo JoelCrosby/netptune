@@ -49,6 +49,7 @@ public static class NetptuneServicesConfiguration
 
         services.AddScoped<IAncestorService, AncestorService>();
         services.AddSingleton<IAiCredentialProtector, AiCredentialProtector>();
+        services.AddScoped<IAiExecutionContext, AiExecutionContext>();
     }
 
     public static IServiceCollection AddNetptuneEventRecording(this IServiceCollection services)

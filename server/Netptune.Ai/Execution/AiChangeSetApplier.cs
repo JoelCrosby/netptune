@@ -19,17 +19,30 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     private readonly IIdentityService Identity;
     private readonly IMediator Mediator;
     private readonly IAiToolRegistry Tools;
+    private readonly IAiExecutionContext AiExecution;
 
     public AiChangeSetApplier(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IMediator mediator,
-        IAiToolRegistry tools)
+        IAiToolRegistry tools,
+        IAiExecutionContext aiExecution)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Mediator = mediator;
         Tools = tools;
+        AiExecution = aiExecution;
+    }
+
+    private async Task<string> ResolveAgentName(AiChangeSet changeSet, CancellationToken cancellationToken)
+    {
+        var conversation = await UnitOfWork.AiConversations.GetAsync(
+            changeSet.ConversationId,
+            true,
+            cancellationToken);
+
+        return conversation?.Model ?? "assistant";
     }
 
     public async Task<AiApplyResult?> Apply(
@@ -76,12 +89,16 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         var results = new List<AiAppliedChangeResult>();
         var resolvedRefs = new Dictionary<string, int>(StringComparer.Ordinal);
+        var agent = await ResolveAgentName(changeSet, cancellationToken);
 
-        foreach (var change in selected)
+        using (AiExecution.Begin(agent, changeSet.CorrelationId))
         {
-            var result = await ApplyChange(change, resolvedRefs, cancellationToken);
+            foreach (var change in selected)
+            {
+                var result = await ApplyChange(change, resolvedRefs, cancellationToken);
 
-            results.Add(result);
+                results.Add(result);
+            }
         }
 
         MarkUnselected(changes, selected);

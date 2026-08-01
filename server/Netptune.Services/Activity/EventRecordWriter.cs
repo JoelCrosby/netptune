@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Services.Activity;
@@ -18,17 +20,20 @@ public sealed class EventRecordWriter : IEventRecordWriter
     private readonly IIdentityService? Identity;
     private readonly IHttpContextAccessor? HttpContextAccessor;
     private readonly ICanonicalEventCapture? Capture;
+    private readonly IAiExecutionContext? AiExecution;
 
     public EventRecordWriter(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService? identity = null,
         IHttpContextAccessor? httpContextAccessor = null,
-        ICanonicalEventCapture? capture = null)
+        ICanonicalEventCapture? capture = null,
+        IAiExecutionContext? aiExecution = null)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         HttpContextAccessor = httpContextAccessor;
         Capture = capture;
+        AiExecution = aiExecution;
     }
 
     public async Task<EventRecord> Append<TPayload>(
@@ -47,6 +52,10 @@ public sealed class EventRecordWriter : IEventRecordWriter
             actorUserId = Identity?.GetCurrentUserId();
         }
         var eventKey = request.EventKey;
+        var isAssistantExecution = AiExecution?.IsActive == true;
+        var originType = isAssistantExecution ? AiExecution!.OriginType : EventOriginType.User;
+        var agent = isAssistantExecution ? AiExecution!.Agent : null;
+        var assistantCorrelationId = isAssistantExecution ? AiExecution!.CorrelationId : null;
 
         var record = new EventRecord
         {
@@ -59,7 +68,9 @@ public sealed class EventRecordWriter : IEventRecordWriter
             OccurredAt = request.OccurredAt ?? DateTime.UtcNow,
             RecordedAt = DateTime.UtcNow,
             ActorUserId = actorUserId,
-            CorrelationId = request.CorrelationId ?? GetCorrelationId(context),
+            OriginType = originType,
+            Agent = agent,
+            CorrelationId = request.CorrelationId ?? assistantCorrelationId ?? GetCorrelationId(context),
             CausationEventId = request.CausationEventId,
             IpAddress = GetIpAddress(context),
             UserAgent = context?.Request.Headers.UserAgent.ToString(),

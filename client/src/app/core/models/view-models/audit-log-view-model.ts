@@ -8,6 +8,7 @@ export interface AuditLogViewModel {
   userId: string;
   userDisplayName: string;
   userPictureUrl?: string;
+  agent?: string | null;
   type: ActivityType;
   entityType: EntityType;
   entityId?: number;

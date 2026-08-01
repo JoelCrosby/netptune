@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 
 using Netptune.Core.BaseEntities;
+using Netptune.Core.Enums;
 
 namespace Netptune.Core.Entities;
 
@@ -26,6 +27,10 @@ public sealed record EventRecord : KeyedEntity<long>
     public DateTime RecordedAt { get; init; }
 
     public string? ActorUserId { get; init; }
+
+    public EventOriginType OriginType { get; init; }
+
+    public string? Agent { get; init; }
 
     public Guid? CorrelationId { get; init; }
 

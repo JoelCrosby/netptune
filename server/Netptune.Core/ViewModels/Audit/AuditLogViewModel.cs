@@ -16,6 +16,8 @@ public class AuditLogViewModel
 
     public string? UserPictureUrl { get; set; }
 
+    public string? Agent { get; set; }
+
     public ActivityType Type { get; set; }
 
     public EntityType EntityType { get; set; }

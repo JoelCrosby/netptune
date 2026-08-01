@@ -20,6 +20,8 @@ public sealed class EventRecordEntityMap : IEntityTypeConfiguration<EventRecord>
         builder.Property(record => record.SubjectId).HasMaxLength(128);
         builder.Property(record => record.UserAgent).HasMaxLength(1024);
         builder.Property(record => record.RetentionClass).HasMaxLength(32).IsRequired();
+        builder.Property(record => record.OriginType).HasConversion<int>().IsRequired();
+        builder.Property(record => record.Agent).HasMaxLength(64);
         builder.Property(record => record.Payload).HasColumnType("jsonb").IsRequired();
         builder.Property(record => record.IpAddress).HasColumnType("inet");
 
