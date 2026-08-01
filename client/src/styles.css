@@ -72,6 +72,7 @@
   --font-avatar: 'Roboto Mono', 'Roboto', sans-serif;
 
   --animate-loading-bar: loading-bar 2s ease-in-out infinite;
+  --animate-globe-meridian: globe-meridian 2.4s ease-in-out infinite;
 }
 
 @keyframes loading-bar {
@@ -80,6 +81,17 @@
   }
   100% {
     transform: translateX(400%);
+  }
+}
+
+/* The meridian narrowing to a line and back reads as the globe turning. */
+@keyframes globe-meridian {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.06);
   }
 }
 

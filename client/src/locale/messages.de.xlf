@@ -6147,7 +6147,7 @@
     </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:173</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:190</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment state="translated">
@@ -7185,7 +7185,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:165</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:182</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:52,54</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -10833,7 +10833,7 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:66,68</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:68,70</note>
         <note category="description">Accessible name of the assistant transcript</note>
       </notes>
       <segment state="translated">
@@ -13436,7 +13436,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:106,108</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:112,114</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment state="translated">
@@ -13609,7 +13609,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:170</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:187</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment state="translated">
@@ -14052,6 +14052,16 @@
         <target>Keine Mitglieder</target>
       </segment>
     </unit>
+    <unit id="6631196071533020937">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-thinking.component.ts:24,28</note>
+        <note category="description">Shown while the assistant is preparing its reply</note>
+      </notes>
+      <segment state="translated">
+        <source>Thinking…</source>
+        <target>Denkt nach…</target>
+      </segment>
+    </unit>
     <unit id="6634790566400449864">
       <notes>
         <note category="location">src/app/shared/components/task-view-filters/task-view-filters.component.ts:66,69</note>
@@ -14064,7 +14074,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:47,49</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:49,51</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment state="translated">

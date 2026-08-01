@@ -66,6 +66,7 @@ export class AiAssistantService {
 
   readonly entries = signal<AiChatEntry[]>([]);
   readonly isStreaming = signal(false);
+  readonly isThinking = signal(false);
   readonly conversationId = signal<string | null>(null);
   readonly conversationTitle = signal<string | null>(null);
   readonly changeSet = signal<AiChangeSet | null>(null);
@@ -399,6 +400,7 @@ export class AiAssistantService {
     this.appendEntry({ role: 'user', text: trimmed, tools: [] });
     this.appendEntry({ role: 'assistant', text: '', tools: [] });
     this.isStreaming.set(true);
+    this.isThinking.set(true);
 
     try {
       await this.stream(trimmed);
@@ -408,6 +410,7 @@ export class AiAssistantService {
       );
     } finally {
       this.isStreaming.set(false);
+      this.isThinking.set(false);
     }
 
     if (wasNewConversation) {
@@ -512,13 +515,27 @@ export class AiAssistantService {
     }
 
     if (event.type === AiStreamEventType.textDelta && event.text) {
+      this.isThinking.set(false);
       this.appendText(event.text);
 
       return;
     }
 
     if (event.type === AiStreamEventType.toolStarted && event.toolName) {
+      this.isThinking.set(true);
       this.appendTool(event.toolName);
+
+      return;
+    }
+
+    if (event.type === AiStreamEventType.toolCompleted) {
+      this.isThinking.set(true);
+
+      return;
+    }
+
+    if (event.type === AiStreamEventType.turnCompleted) {
+      this.isThinking.set(false);
 
       return;
     }
@@ -542,6 +559,7 @@ export class AiAssistantService {
     }
 
     if (event.type === AiStreamEventType.error) {
+      this.isThinking.set(false);
       this.failLastEntry(
         event.message ??
           $localize`:Shown when the assistant reports a failure:The assistant stopped unexpectedly.`

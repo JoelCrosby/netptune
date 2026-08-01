@@ -23,6 +23,7 @@ import { AiAssistantHeaderComponent } from './components/ai-assistant-header.com
 import { AiAssistantHistoryComponent } from './components/ai-assistant-history.component';
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
+import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking.component';
 
 @Component({
   selector: 'app-ai-assistant-panel',
@@ -38,6 +39,7 @@ import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missin
     AiAssistantHistoryComponent,
     AiAssistantMessageComponent,
     AiAssistantMissingKeyComponent,
+    AiAssistantThinkingComponent,
   ],
   template: `
     <div
@@ -90,6 +92,10 @@ import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missin
                     [references]="assistant.references()"
                     [workspace]="assistant.workspaceKey()"
                     [isStreaming]="assistant.isStreaming() && $last" />
+                }
+
+                @if (isThinking()) {
+                  <app-ai-assistant-thinking />
                 }
               </div>
             }
@@ -149,6 +155,10 @@ export class AiAssistantPanelComponent {
 
   protected readonly isMissingKey = computed(() => {
     return this.assistant.hasCredentials() === false;
+  });
+
+  protected readonly isThinking = computed(() => {
+    return this.assistant.isStreaming() && this.assistant.isThinking();
   });
 
   protected readonly contentWidth = computed(() => {
