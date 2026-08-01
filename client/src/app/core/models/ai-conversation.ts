@@ -103,6 +103,8 @@ export interface AiProposedChange {
   validationMessage?: string | null;
   applyStatus: AiChangeApplyStatus;
   applyError?: string | null;
+  appliedEntityId?: number | null;
+  entitySystemId?: string | null;
 }
 
 export interface AiChangeSet {

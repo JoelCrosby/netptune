@@ -39,7 +39,11 @@ public sealed class GetAiChangeSetQueryHandler
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
-        var model = AiChangeSetMapper.ToViewModel(changeSet, changes);
+        var model = await AiChangeSetMapper.ToViewModel(
+            changeSet,
+            changes,
+            UnitOfWork.Tasks,
+            cancellationToken);
 
         return ClientResponse<AiChangeSetViewModel>.Success(model);
     }

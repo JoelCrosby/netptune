@@ -74,7 +74,7 @@ public sealed class GetTaskTool : IAiTool
             sprintName = task.SprintName,
             boardGroupId = task.BoardGroupId,
             hasComments = task.HasComments,
-            flags = task.Flags.Select(flag => flag.Name),
+            flags = task.Flags.Select(flag => new { id = flag.Id, name = flag.Name, description = flag.Description }),
         });
 
         return AiToolExecution.Success(content);

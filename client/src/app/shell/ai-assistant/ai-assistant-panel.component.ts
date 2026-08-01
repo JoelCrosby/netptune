@@ -122,7 +122,9 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
           [excludedChangeIds]="assistant.excludedChangeIds()"
           [isApplying]="assistant.isApplying()"
           [contentWidth]="contentWidth()"
+          [workspace]="assistant.workspaceKey()"
           (toggled)="assistant.toggleChange($event)"
+          (selectionChanged)="assistant.toggleChanges($event)"
           (applied)="apply()"
           (discarded)="discard()" />
       }

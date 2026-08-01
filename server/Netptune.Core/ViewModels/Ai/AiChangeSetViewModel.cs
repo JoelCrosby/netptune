@@ -36,6 +36,10 @@ public sealed record AiProposedChangeViewModel
     public AiChangeApplyStatus ApplyStatus { get; init; }
 
     public string? ApplyError { get; init; }
+
+    public int? AppliedEntityId { get; init; }
+
+    public string? EntitySystemId { get; init; }
 }
 
 public sealed record AiChangeSetViewModel

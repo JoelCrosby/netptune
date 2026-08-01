@@ -29,16 +29,19 @@ export interface AiChatEntry {
   failed?: boolean;
 }
 
-interface AiStoredSession {
-  workspace: string;
+interface AiWorkspaceSession {
   conversationId: string | null;
   isOpen: boolean;
   pendingTurnAt: number | null;
 }
 
+/** A chat belongs to the workspace it was started in, so sessions are kept per workspace. */
+type AiStoredSessions = Record<string, AiWorkspaceSession>;
+
 const STREAM_PREFIX = 'data: ';
 const MODE_STORAGE_KEY = 'ai-assistant.mode';
-const SESSION_STORAGE_KEY = 'ai-assistant.session';
+const SESSION_STORAGE_KEY = 'ai-assistant.sessions';
+const LEGACY_SESSION_STORAGE_KEY = 'ai-assistant.session';
 const DRAFT_STORAGE_KEY = 'ai-assistant.drafts';
 const DRAFT_PERSIST_DELAY = 400;
 const NEW_CONVERSATION_KEY = 'new';
@@ -112,8 +115,19 @@ export class AiAssistantService {
 
   readonly draft = signal('');
 
-  private hasRestoredSession = false;
+  private activeWorkspace: string | null = null;
+  private isSwitchingWorkspace = false;
+  private turnToken = 0;
+  private streamAbort: AbortController | null = null;
   private pendingSince: number | null = null;
+
+  private sessions: AiStoredSessions = this.readSessions();
+
+  private readSessions(): AiStoredSessions {
+    this.storage.removeItem(LEGACY_SESSION_STORAGE_KEY);
+
+    return this.storage.getItem<AiStoredSessions>(SESSION_STORAGE_KEY) ?? {};
+  }
 
   /**
    * Set while this browser has a turn in flight. A turn that failed clears it,
@@ -145,34 +159,42 @@ export class AiAssistantService {
     effect(() => {
       const workspace = this.workspaceKey();
       const isAvailable = this.isAvailable();
-      const canRestore =
-        isAvailable && workspace !== null && !this.hasRestoredSession;
+      const isReady = isAvailable && workspace !== null;
 
-      if (!canRestore) {
+      if (!isReady || workspace === this.activeWorkspace) {
         return;
       }
 
-      this.hasRestoredSession = true;
+      const isSwitch = this.activeWorkspace !== null;
 
-      void this.restoreSession(workspace);
+      this.activeWorkspace = workspace;
+      this.isSwitchingWorkspace = true;
+
+      void this.enterWorkspace(workspace, isSwitch);
     });
 
     effect(() => {
-      const session: AiStoredSession = {
-        workspace: this.workspaceKey() ?? '',
+      const session: AiWorkspaceSession = {
         conversationId: this.conversationId(),
         isOpen: this.isOpen(),
         pendingTurnAt: this.pendingTurnAt(),
       };
 
-      const canRemember = session.workspace !== '' && this.hasRestoredSession;
+      const workspace = this.activeWorkspace;
+      const canRemember = workspace !== null && !this.isSwitchingWorkspace;
 
       if (!canRemember) {
         return;
       }
 
-      this.storage.setItem(SESSION_STORAGE_KEY, session);
+      this.rememberSession(workspace, session);
     });
+  }
+
+  private rememberSession(workspace: string, session: AiWorkspaceSession) {
+    this.sessions = { ...this.sessions, [workspace]: session };
+
+    this.storage.setItem(SESSION_STORAGE_KEY, this.sessions);
   }
 
   selectModel(modelId: string | null) {
@@ -218,15 +240,63 @@ export class AiAssistantService {
     this.rememberDraft(key, '');
   }
 
-  private async restoreSession(workspace: string) {
-    const session = this.storage.getItem<AiStoredSession>(SESSION_STORAGE_KEY);
-    const isSameWorkspace = session?.workspace === workspace;
+  private async enterWorkspace(workspace: string, isSwitch: boolean) {
+    const session = this.sessions[workspace] ?? null;
 
-    if (!session || !isSameWorkspace) {
+    if (isSwitch) {
+      this.abandonTurn();
+      this.clearConversation();
+    }
+
+    try {
+      await this.restoreSession(session, isSwitch);
+    } finally {
+      this.isSwitchingWorkspace = false;
+
+      this.rememberSession(workspace, {
+        conversationId: this.conversationId(),
+        isOpen: this.isOpen(),
+        pendingTurnAt: this.pendingTurnAt(),
+      });
+    }
+  }
+
+  /** A chat from the workspace being left must not follow the user into the next one. */
+  private clearConversation() {
+    this.transcriptVersion.update((version) => version + 1);
+    this.conversationId.set(null);
+    this.conversationTitle.set(null);
+    this.entries.set([]);
+    this.references.set(new Map());
+    this.changeSet.set(null);
+    this.excludedChangeIds.set(new Set());
+    this.conversations.set([]);
+    this.showHistory.set(false);
+    this.pendingSince = null;
+  }
+
+  private abandonTurn() {
+    this.turnToken += 1;
+
+    const hasTurn = this.isStreaming();
+
+    if (!hasTurn) {
       return;
     }
 
-    const shouldOpen = session.isOpen && this.mode() !== 'dedicated';
+    this.streamAbort?.abort();
+    this.streamAbort = null;
+    this.isStreaming.set(false);
+    this.isThinking.set(false);
+    this.pendingTurnAt.set(null);
+  }
+
+  private async restoreSession(session: AiWorkspaceSession | null, isSwitch: boolean) {
+    if (!session) {
+      return;
+    }
+
+    const shouldOpen = !isSwitch && session.isOpen && this.mode() !== 'dedicated';
 
     if (shouldOpen) {
       this.isOpen.set(true);
@@ -368,21 +438,32 @@ export class AiAssistantService {
     this.isStreaming.set(true);
     this.isThinking.set(true);
 
+    const token = ++this.turnToken;
+
     try {
-      await this.awaitReply(conversationId, startedAt);
+      await this.awaitReply(conversationId, startedAt, token);
     } finally {
-      this.isStreaming.set(false);
-      this.isThinking.set(false);
-      this.pendingTurnAt.set(null);
-      this.pendingSince = null;
+      const isCurrent = this.turnToken === token;
+
+      if (isCurrent) {
+        this.isStreaming.set(false);
+        this.isThinking.set(false);
+        this.pendingTurnAt.set(null);
+        this.pendingSince = null;
+      }
     }
   }
 
-  private async awaitReply(conversationId: string, startedAt: number) {
+  private async awaitReply(
+    conversationId: string,
+    startedAt: number,
+    token: number
+  ) {
     for (;;) {
       await this.wait(RESUME_POLL_INTERVAL);
 
-      const isCurrent = this.conversationId() === conversationId;
+      const isCurrent =
+        this.turnToken === token && this.conversationId() === conversationId;
 
       if (!isCurrent) {
         return;
@@ -582,6 +663,12 @@ export class AiAssistantService {
     this.showHistory.set(false);
   }
 
+  toggleChanges(changeIds: number[]) {
+    for (const changeId of changeIds) {
+      this.toggleChange(changeId);
+    }
+  }
+
   toggleChange(changeId: number) {
     this.excludedChangeIds.update((current) => {
       const next = new Set(current);
@@ -664,16 +751,31 @@ export class AiAssistantService {
     this.isThinking.set(true);
     this.pendingTurnAt.set(Date.now());
 
+    const token = ++this.turnToken;
+
     try {
-      await this.stream(trimmed);
+      await this.stream(trimmed, token);
     } catch {
-      this.failLastEntry(
-        $localize`:Shown when the assistant request fails:The assistant could not be reached.`
-      );
+      if (this.turnToken === token) {
+        this.failLastEntry(
+          $localize`:Shown when the assistant request fails:The assistant could not be reached.`
+        );
+      }
     } finally {
-      this.isStreaming.set(false);
-      this.isThinking.set(false);
-      this.pendingTurnAt.set(null);
+      const isCurrent = this.turnToken === token;
+
+      if (isCurrent) {
+        this.streamAbort = null;
+        this.isStreaming.set(false);
+        this.isThinking.set(false);
+        this.pendingTurnAt.set(null);
+      }
+    }
+
+    const isAbandoned = this.turnToken !== token;
+
+    if (isAbandoned) {
+      return;
     }
 
     if (wasNewConversation) {
@@ -697,13 +799,18 @@ export class AiAssistantService {
     this.conversationTitle.set(conversation?.title ?? null);
   }
 
-  private async stream(text: string) {
+  private async stream(text: string, token: number) {
+    const abort = new AbortController();
+
+    this.streamAbort = abort;
+
     const response = await fetch(
       `${environment.apiEndpoint}api/ai/conversations/messages`,
       {
         method: 'POST',
         credentials: 'include',
         headers: this.createHeaders(),
+        signal: abort.signal,
         body: JSON.stringify({
           conversationId: this.conversationId(),
           text,
@@ -737,12 +844,18 @@ export class AiAssistantService {
       buffer = chunks.pop() ?? '';
 
       for (const chunk of chunks) {
-        this.handleChunk(chunk);
+        this.handleChunk(chunk, token);
       }
     }
   }
 
-  private handleChunk(chunk: string) {
+  private handleChunk(chunk: string, token: number) {
+    const isAbandoned = this.turnToken !== token;
+
+    if (isAbandoned) {
+      return;
+    }
+
     const line = chunk.trim();
 
     if (!line.startsWith(STREAM_PREFIX)) {

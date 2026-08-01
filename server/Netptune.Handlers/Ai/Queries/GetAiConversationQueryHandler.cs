@@ -73,7 +73,7 @@ public sealed class GetAiConversationQueryHandler
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
 
-        return AiChangeSetMapper.ToViewModel(changeSet, changes);
+        return await AiChangeSetMapper.ToViewModel(changeSet, changes, UnitOfWork.Tasks, cancellationToken);
     }
 
     private static AiMessageViewModel ToViewModel(
