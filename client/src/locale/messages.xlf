@@ -4199,7 +4199,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:87,90</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:114,117</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:106,108</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -5530,7 +5530,7 @@
     </unit>
     <unit id="180305693599254202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:31,35</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:38,42</note>
         <note category="description">Page title for the workspace assistant conversations</note>
       </notes>
       <segment>
@@ -5820,7 +5820,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:60,63</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:87,90</note>
         <note category="description">Label for a message sent by the member whose conversation an admin is reading</note>
       </notes>
       <segment>
@@ -6037,8 +6037,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:211</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:234</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:229</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:252</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -6475,7 +6475,7 @@
     </unit>
     <unit id="5325449899721653637">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:36,41</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:43,48</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment>
@@ -7637,6 +7637,15 @@
         <source>Workspace automations can watch task workflow events and apply the same follow-up every time.</source>
       </segment>
     </unit>
+    <unit id="7329865395750709453">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:61,65</note>
+        <note category="description">Explains what turning the assistant off does</note>
+      </notes>
+      <segment>
+        <source> Turning this off stops new assistant messages and blocks pending changes from being applied. </source>
+      </segment>
+    </unit>
     <unit id="378048253639190257">
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:106,108</note>
@@ -8527,6 +8536,15 @@
         <source>Calendar</source>
       </segment>
     </unit>
+    <unit id="3826808809713952311">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:55,58</note>
+        <note category="description">Toggle that enables the assistant for a workspace</note>
+      </notes>
+      <segment>
+        <source> Allow members to use the assistant </source>
+      </segment>
+    </unit>
     <unit id="8302075849472999986">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:92,93</note>
@@ -8584,7 +8602,7 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:321</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:339</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -10304,7 +10322,7 @@
     </unit>
     <unit id="4361487192183535591">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:64,67</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:91,94</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant.component.ts:145,147</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
         <note category="description">Label for a message the assistant sent</note>
@@ -10715,7 +10733,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:99,101</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:126,128</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -13561,7 +13579,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:103,108</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:130,135</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>

@@ -21,6 +21,8 @@ public record Workspace : AuditableEntity<int>
 
     public bool IsPublic { get; set; }
 
+    public bool AssistantEnabled { get; set; } = true;
+
     public List<string>? PublicPermissions { get; set; }
 
     public long StorageUsedBytes { get; set; }
@@ -58,6 +60,7 @@ public record Workspace : AuditableEntity<int>
             Slug = Slug,
             MetaInfo = MetaInfo,
             IsPublic = IsPublic,
+            AssistantEnabled = AssistantEnabled,
         };
     }
 

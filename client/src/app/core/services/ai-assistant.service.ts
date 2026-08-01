@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   AiChangeSet,
@@ -10,7 +10,10 @@ import {
   AiStreamEventType,
 } from '@core/models/ai-conversation';
 import { WorkspaceService } from '@core/services/workspace.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import {
+  selectCurrentWorkspace,
+  selectCurrentWorkspaceIdentifier,
+} from '@core/store/workspaces/workspaces.selectors';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 
@@ -29,6 +32,9 @@ export class AiAssistantService {
   private readonly workspace = inject(WorkspaceService);
   private readonly workspaceId = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier
+  );
+  private readonly currentWorkspace = this.store.selectSignal(
+    selectCurrentWorkspace
   );
 
   private readonly http = inject(HttpClient);
@@ -107,7 +113,15 @@ export class AiAssistantService {
     };
   }
 
+  readonly isAvailable = computed(() => {
+    return this.currentWorkspace()?.assistantEnabled !== false;
+  });
+
   open() {
+    if (!this.isAvailable()) {
+      return;
+    }
+
     this.isOpen.set(true);
   }
 
@@ -116,6 +130,10 @@ export class AiAssistantService {
   }
 
   toggle() {
+    if (!this.isAvailable()) {
+      return;
+    }
+
     this.isOpen.update((value) => !value);
   }
 

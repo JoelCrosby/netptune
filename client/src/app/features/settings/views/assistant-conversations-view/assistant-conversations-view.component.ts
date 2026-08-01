@@ -1,5 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { netptunePermissions } from '@core/auth/permissions';
+import { editWorkspace } from '@core/store/workspaces/workspaces.actions';
+import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
+import { Store } from '@ngrx/store';
+import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { ClientResponse } from '@core/models/client-response';
 import {
   AiConversationDetail,
@@ -18,6 +24,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
   selector: 'app-assistant-conversations-view',
   imports: [
     LucideArrowLeft,
+    CheckboxComponent,
     EmptyStateComponent,
     IconButtonComponent,
     PageContainerComponent,
@@ -36,6 +43,26 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
         Conversations members have had with the assistant in this workspace. The
         record of what was actually changed lives in the audit log.
       </p>
+
+      @if (canUpdateWorkspace()) {
+        <div class="border-border mb-6 rounded border p-4">
+          <app-checkbox
+            [checked]="assistantEnabled()"
+            (changed)="setAssistantEnabled($event)">
+            <span
+              class="text-sm"
+              i18n="Toggle that enables the assistant for a workspace">
+              Allow members to use the assistant
+            </span>
+          </app-checkbox>
+          <p
+            class="text-muted mt-2 text-xs"
+            i18n="Explains what turning the assistant off does">
+            Turning this off stops new assistant messages and blocks pending
+            changes from being applied.
+          </p>
+        </div>
+      }
 
       @if (selected(); as detail) {
         <div class="mb-3 flex items-center gap-2">
@@ -109,10 +136,38 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 })
 export class AssistantConversationsViewComponent {
   private readonly http = inject(HttpClient);
+  private readonly store = inject(Store);
+  private readonly workspace = this.store.selectSignal(selectCurrentWorkspace);
 
   protected readonly conversations = aiWorkspaceConversationResource();
   protected readonly selected = signal<AiConversationDetail | null>(null);
   protected readonly userRole = AiMessageRole.user;
+
+  protected readonly canUpdateWorkspace = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.workspace.update)
+  );
+
+  protected readonly assistantEnabled = computed(() => {
+    return this.workspace()?.assistantEnabled !== false;
+  });
+
+  protected setAssistantEnabled(enabled: boolean) {
+    const current = this.workspace();
+
+    if (!current) {
+      return;
+    }
+
+    this.store.dispatch(
+      editWorkspace.init({
+        request: {
+          slug: current.slug,
+          metaInfo: current.metaInfo ?? {},
+          assistantEnabled: enabled,
+        },
+      })
+    );
+  }
 
   protected select(conversation: AiWorkspaceConversation) {
     this.http

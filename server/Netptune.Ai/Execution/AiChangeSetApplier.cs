@@ -64,6 +64,14 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             return null;
         }
 
+        var workspace = await UnitOfWork.Workspaces.GetAsync(workspaceId, true, cancellationToken);
+        var isAssistantEnabled = workspace?.AssistantEnabled ?? false;
+
+        if (!isAssistantEnabled)
+        {
+            throw new InvalidOperationException("The assistant is turned off for this workspace.");
+        }
+
         var isPending = changeSet.Status == AiChangeSetStatus.Pending;
 
         if (!isPending)

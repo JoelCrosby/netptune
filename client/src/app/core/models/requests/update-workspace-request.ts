@@ -8,5 +8,6 @@ export interface UpdateWorkspaceRequest {
   description?: string;
   metaInfo: WorkspaceMeta;
   isPublic?: boolean;
+  assistantEnabled?: boolean;
   publicPermissions?: Permission[];
 }

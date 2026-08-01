@@ -15,4 +15,6 @@ public class WorkspaceViewModel
     public WorkspaceMeta? MetaInfo { get; set; }
 
     public bool IsPublic { get; set; }
+
+    public bool AssistantEnabled { get; set; } = true;
 }

@@ -34,6 +34,7 @@ public class AiChangeSetApplierTests
     private readonly IMediator Mediator = Substitute.For<IMediator>();
     private readonly IAiChangeSetRepository ChangeSets = Substitute.For<IAiChangeSetRepository>();
     private readonly IWorkspaceUserRepository WorkspaceUsers = Substitute.For<IWorkspaceUserRepository>();
+    private readonly IWorkspaceRepository Workspaces = Substitute.For<IWorkspaceRepository>();
 
     public AiChangeSetApplierTests()
     {
@@ -43,6 +44,41 @@ public class AiChangeSetApplierTests
 
         UnitOfWork.AiChangeSets.Returns(ChangeSets);
         UnitOfWork.WorkspaceUsers.Returns(WorkspaceUsers);
+        UnitOfWork.Workspaces.Returns(Workspaces);
+
+        Workspaces
+            .GetAsync(WorkspaceId, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Workspace?>(new Workspace
+            {
+                Id = WorkspaceId,
+                Name = "Netptune",
+                Slug = "netptune",
+                AssistantEnabled = true,
+            }));
+    }
+
+    [Fact]
+    public async Task Apply_ShouldThrow_WhenTheWorkspaceHasTheAssistantTurnedOff()
+    {
+        var changeSet = CreateChangeSet();
+
+        GivenChangeSet(changeSet, []);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        Workspaces
+            .GetAsync(WorkspaceId, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Workspace?>(new Workspace
+            {
+                Id = WorkspaceId,
+                Name = "Netptune",
+                Slug = "netptune",
+                AssistantEnabled = false,
+            }));
+
+        var applier = CreateApplier();
+        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+
+        await apply.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]

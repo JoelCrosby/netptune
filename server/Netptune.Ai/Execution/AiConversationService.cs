@@ -69,6 +69,16 @@ public sealed class AiConversationService : IAiConversationService
         var userId = Identity.GetCurrentUserId();
         var workspaceId = await Identity.GetWorkspaceId();
         var workspaceKey = Identity.GetWorkspaceKey();
+        var workspace = await UnitOfWork.Workspaces.GetAsync(workspaceId, true, cancellationToken);
+        var isAssistantEnabled = workspace?.AssistantEnabled ?? false;
+
+        if (!isAssistantEnabled)
+        {
+            yield return AiStreamEvent.Failed("The assistant is turned off for this workspace.");
+
+            yield break;
+        }
+
         var credentials = await UnitOfWork.AiCredentials.GetForUser(userId, cancellationToken);
 
         if (credentials.Count == 0)

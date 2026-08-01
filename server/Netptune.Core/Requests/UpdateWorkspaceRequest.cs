@@ -19,5 +19,7 @@ public record UpdateWorkspaceRequest
 
     public bool? IsPublic { get; init; }
 
+    public bool? AssistantEnabled { get; init; }
+
     public List<string>? PublicPermissions { get; init; }
 }
