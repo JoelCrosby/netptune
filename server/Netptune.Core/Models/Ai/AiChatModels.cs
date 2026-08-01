@@ -51,6 +51,8 @@ public sealed record AiUsage
     public int OutputTokens { get; init; }
 
     public int CacheReadTokens { get; init; }
+
+    public int CacheCreationTokens { get; init; }
 }
 
 public sealed record AiChatRequest

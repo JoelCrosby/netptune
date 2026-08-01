@@ -21,6 +21,8 @@ public sealed class AiConversationService : IAiConversationService
     private const string StubbedToolResult =
         "[Result omitted to make room in the context window. Call the tool again if you still need it.]";
 
+    private const int CompactionTargetPercent = 70;
+
     private static readonly JsonSerializerOptions FieldSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -378,11 +380,13 @@ public sealed class AiConversationService : IAiConversationService
         var currentTurn = history.FindLastIndex(message => message.Role == AiMessageRole.User);
         var compacted = new List<AiChatMessage>(history);
 
+        var target = maxCharacters * CompactionTargetPercent / 100;
+
         for (var index = 0; index < currentTurn; index++)
         {
-            var isOverBudget = total > maxCharacters;
+            var isOverTarget = total > target;
 
-            if (!isOverBudget)
+            if (!isOverTarget)
             {
                 break;
             }
@@ -465,6 +469,7 @@ public sealed class AiConversationService : IAiConversationService
             InputTokens = usage.InputTokens + extra.InputTokens,
             OutputTokens = usage.OutputTokens + extra.OutputTokens,
             CacheReadTokens = usage.CacheReadTokens + extra.CacheReadTokens,
+            CacheCreationTokens = usage.CacheCreationTokens + extra.CacheCreationTokens,
             CreatedAt = DateTime.UtcNow,
         };
 

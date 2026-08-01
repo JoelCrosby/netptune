@@ -107,6 +107,26 @@ public class AiHistoryTrimTests
     }
 
     [Fact]
+    public void TrimHistory_ShouldClearRoomToSpare_SoTheNextTurnDoesNotRewriteHistoryAgain()
+    {
+        var history = new List<AiChatMessage>
+        {
+            User("first"),
+            AssistantWithToolCall("call-1"),
+            ToolResult("call-1", new string('r', 300)),
+            AssistantWithToolCall("call-2"),
+            ToolResult("call-2", new string('r', 300)),
+            User("newest"),
+        };
+
+        var trimmed = AiConversationService.TrimHistory(history, 500);
+        var remaining = trimmed.Sum(message => message.ToolResults.Sum(result => result.Content.Length));
+
+        trimmed.Should().HaveCount(6);
+        remaining.Should().BeLessThan(300, "stopping at the budget would rewrite history again next turn");
+    }
+
+    [Fact]
     public void TrimHistory_ShouldKeepToolResultsFromTheNewestTurn()
     {
         var history = new List<AiChatMessage>

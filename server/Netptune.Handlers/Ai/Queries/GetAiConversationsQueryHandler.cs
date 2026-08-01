@@ -47,6 +47,7 @@ public sealed class GetAiConversationsQueryHandler
                 InputTokens = messages.Sum(message => message.InputTokens),
                 OutputTokens = messages.Sum(message => message.OutputTokens),
                 CacheReadTokens = messages.Sum(message => message.CacheReadTokens),
+                CacheCreationTokens = messages.Sum(message => message.CacheCreationTokens),
             },
         };
     }

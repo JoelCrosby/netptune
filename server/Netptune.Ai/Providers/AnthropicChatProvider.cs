@@ -145,6 +145,7 @@ public sealed class AnthropicChatProvider : IAiChatProvider
             InputTokens = (int)(usage.InputTokens ?? 0),
             OutputTokens = (int)usage.OutputTokens,
             CacheReadTokens = (int)(usage.CacheReadInputTokens ?? 0),
+            CacheCreationTokens = (int)(usage.CacheCreationInputTokens ?? 0),
         };
     }
 
@@ -166,6 +167,7 @@ public sealed class AnthropicChatProvider : IAiChatProvider
             System = system,
             Tools = request.Tools.Select(CreateTool).ToList(),
             Messages = request.Messages.Select(CreateMessage).ToList(),
+            CacheControl = new CacheControlEphemeral(),
         };
     }
 

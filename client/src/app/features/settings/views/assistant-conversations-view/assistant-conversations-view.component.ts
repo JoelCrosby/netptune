@@ -84,6 +84,11 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
               <span i18n="Counts tokens read from the provider prompt cache"
                 >cached</span
               >
+              ·
+              {{ detail.conversation.usage.cacheCreationTokens }}
+              <span i18n="Counts tokens written to the provider prompt cache"
+                >written</span
+              >
             </p>
           </div>
         </div>

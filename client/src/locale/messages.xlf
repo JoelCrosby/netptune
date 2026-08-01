@@ -96,7 +96,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:110</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:113</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -477,7 +477,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:132,134</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:137,139</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,28</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -4279,7 +4279,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:128,130</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:133,135</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:22,24</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -5932,7 +5932,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:101,104</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:106,109</note>
         <note category="description">Label for a message sent by the member whose conversation an admin is reading</note>
       </notes>
       <segment>
@@ -6150,8 +6150,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:677</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:723</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:761</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:824</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -8753,8 +8753,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:403</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:834</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:484</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:941</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -8818,6 +8818,15 @@
       </notes>
       <segment>
         <source>Completed</source>
+      </segment>
+    </unit>
+    <unit id="3313172740302558016">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:90,94</note>
+        <note category="description">Counts tokens written to the provider prompt cache</note>
+      </notes>
+      <segment>
+        <source>written</source>
       </segment>
     </unit>
     <unit id="33149636091572968">
@@ -10381,7 +10390,7 @@
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:85,89</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:85,88</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment>
@@ -10512,7 +10521,7 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:105,108</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:110,113</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
         <note category="location">src/app/workspace.routes.ts:126</note>
@@ -10933,7 +10942,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:144,146</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:149,151</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -13880,7 +13889,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:148,153</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:153,158</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>

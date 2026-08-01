@@ -34,6 +34,8 @@ public sealed record AiMessage : KeyedEntity<long>
 
     public int CacheReadTokens { get; init; }
 
+    public int CacheCreationTokens { get; init; }
+
     public DateTime CreatedAt { get; init; }
 
     [JsonIgnore]

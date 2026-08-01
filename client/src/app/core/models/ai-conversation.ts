@@ -31,6 +31,7 @@ export interface AiTokenUsage {
   inputTokens: number;
   outputTokens: number;
   cacheReadTokens: number;
+  cacheCreationTokens: number;
 }
 
 export interface AiConversation {

@@ -106,7 +106,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:110</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:113</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -529,7 +529,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:132,134</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:137,139</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,28</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -3182,7 +3182,7 @@
       </notes>
       <segment state="translated">
         <source> Select none </source>
-      <target>Tout désélectionner</target>
+        <target>Tout désélectionner</target>
       </segment>
     </unit>
     <unit id="5313896736024470177">
@@ -4376,7 +4376,7 @@
       </notes>
       <segment state="translated">
         <source>Select all</source>
-      <target>Tout sélectionner</target>
+        <target>Tout sélectionner</target>
       </segment>
     </unit>
     <unit id="149974019994124409">
@@ -4407,7 +4407,7 @@
       </notes>
       <segment state="translated">
         <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="changes.length"/> changes were applied. <ph id="2" equiv="FAILED" disp="failed"/> failed.</source>
-      <target><ph id="0" equiv="APPLIED" disp="applied"/> modifications sur <ph id="1" equiv="TOTAL" disp="changes.length"/> ont été appliquées. <ph id="2" equiv="FAILED" disp="failed"/> ont échoué.</target>
+        <target><ph id="0" equiv="APPLIED" disp="applied"/> modifications sur <ph id="1" equiv="TOTAL" disp="changes.length"/> ont été appliquées. <ph id="2" equiv="FAILED" disp="failed"/> ont échoué.</target>
       </segment>
     </unit>
     <unit id="6336655282869661216">
@@ -4717,7 +4717,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:128,130</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:133,135</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:22,24</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -6200,7 +6200,7 @@
       </notes>
       <segment state="translated">
         <source> cleared </source>
-      <target>effacé</target>
+        <target>effacé</target>
       </segment>
     </unit>
     <unit id="1802075020846609586">
@@ -6547,7 +6547,7 @@
     </unit>
     <unit id="6297950127540572260">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:101,104</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:106,109</note>
         <note category="description">Label for a message sent by the member whose conversation an admin is reading</note>
       </notes>
       <segment state="translated">
@@ -6788,8 +6788,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:677</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:723</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:761</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:824</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -7658,7 +7658,7 @@
       </notes>
       <segment state="translated">
         <source>Assignee</source>
-      <target>Responsable</target>
+        <target>Responsable</target>
       </segment>
     </unit>
     <unit id="8226595017058819046">
@@ -9672,8 +9672,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:403</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:834</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:484</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:941</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -9744,6 +9744,16 @@
       <segment state="translated">
         <source>Completed</source>
         <target>Terminés</target>
+      </segment>
+    </unit>
+    <unit id="3313172740302558016">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:90,94</note>
+        <note category="description">Counts tokens written to the provider prompt cache</note>
+      </notes>
+      <segment state="translated">
+        <source>written</source>
+      <target>écrits</target>
       </segment>
     </unit>
     <unit id="33149636091572968">
@@ -11472,12 +11482,12 @@
       </notes>
       <segment state="translated">
         <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="changes.length"/> changes were applied.</source>
-      <target><ph id="0" equiv="APPLIED" disp="applied"/> modifications sur <ph id="1" equiv="TOTAL" disp="changes.length"/> ont été appliquées.</target>
+        <target><ph id="0" equiv="APPLIED" disp="applied"/> modifications sur <ph id="1" equiv="TOTAL" disp="changes.length"/> ont été appliquées.</target>
       </segment>
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:85,89</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:85,88</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -11622,7 +11632,7 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:105,108</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:110,113</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
         <note category="location">src/app/workspace.routes.ts:126</note>
@@ -12088,7 +12098,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:144,146</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:149,151</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment state="translated">
@@ -12336,7 +12346,7 @@
       </notes>
       <segment state="translated">
         <source>This change cannot be applied.</source>
-      <target>Cette modification ne peut pas être appliquée.</target>
+        <target>Cette modification ne peut pas être appliquée.</target>
       </segment>
     </unit>
     <unit id="3500321893696134532">
@@ -13564,7 +13574,7 @@
       </notes>
       <segment state="translated">
         <source>End date</source>
-      <target>Date de fin</target>
+        <target>Date de fin</target>
       </segment>
     </unit>
     <unit id="1261958625862617754">
@@ -15010,7 +15020,7 @@
       </notes>
       <segment state="translated">
         <source>Flag</source>
-      <target>Signalement</target>
+        <target>Signalement</target>
       </segment>
     </unit>
     <unit id="7927073582775061981">
@@ -15358,7 +15368,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:148,153</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:153,158</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment state="translated">
