@@ -27,6 +27,7 @@ import {
   LucideSettings,
   LucideSettings2,
   LucideShield,
+  LucideSparkles,
   LucideBot,
   LucideSquareCheckBig,
   LucideTable2,
@@ -129,6 +130,10 @@ export class ShellSidebarComponent {
 
   canReadRelationTypes = this.store.selectSignal(
     selectHasPermission(netptunePermissions.relationTypes.read)
+  );
+
+  canReadAssistantConversations = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.assistant.readAllConversations)
   );
 
   canReadServiceAccounts = this.store.selectSignal(
@@ -296,6 +301,14 @@ export class ShellSidebarComponent {
         label: $localize`:Sidebar link to workspace service account settings:Service Accounts`,
         value: ['./settings/workspace/service-accounts'],
         icon: LucideBot,
+      });
+    }
+
+    if (this.canReadAssistantConversations()) {
+      links.push({
+        label: $localize`:Sidebar link to workspace assistant conversation settings:Assistant`,
+        value: ['./settings/workspace/assistant'],
+        icon: LucideSparkles,
       });
     }
 

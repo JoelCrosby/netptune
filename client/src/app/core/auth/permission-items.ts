@@ -11,6 +11,7 @@ import {
   LucideEye,
   LucideFilePen,
   LucideFlag,
+  LucideSparkles,
   LucideIconInput,
   LucideImage,
   LucideLayoutDashboard,
@@ -366,6 +367,13 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'automations.manage',
       label: $localize`:Name of a workspace permission:Manage Automations`,
       icon: LucideWorkflow,
+    },
+  },
+  assistant: {
+    readAllConversations: {
+      key: 'assistant.read_all_conversations',
+      label: $localize`:Name of a workspace permission:View All Assistant Conversations`,
+      icon: LucideSparkles,
     },
   },
   flags: {

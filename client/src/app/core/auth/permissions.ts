@@ -87,6 +87,9 @@ export const netptunePermissions = {
     read: 'automations.read',
     manage: 'automations.manage',
   },
+  assistant: {
+    readAllConversations: 'assistant.read_all_conversations',
+  },
   flags: {
     read: 'flags.read',
     resolve: 'flags.resolve',

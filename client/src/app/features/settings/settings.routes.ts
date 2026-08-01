@@ -75,6 +75,13 @@ export const routes: Routes = [
         loadComponent: () => import('./views/service-accounts-view/service-accounts-view.component').then((m) => m.ServiceAccountsViewComponent),
       },
       {
+        path: 'assistant',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.assistant.readAllConversations },
+        title: $localize`:Page title for workspace assistant conversations:Assistant Conversations`,
+        loadComponent: () => import('./views/assistant-conversations-view/assistant-conversations-view.component').then((m) => m.AssistantConversationsViewComponent),
+      },
+      {
         path: '**',
         redirectTo: '',
       },
