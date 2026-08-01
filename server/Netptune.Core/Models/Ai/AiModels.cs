@@ -18,6 +18,9 @@ public static class AiModels
     public const string AnthropicDefault = "claude-opus-5";
     public const string OpenAiDefault = "gpt-5.2";
 
+    public const string AnthropicTitleModel = "claude-haiku-4-5";
+    public const string OpenAiTitleModel = "gpt-5.2-mini";
+
     public static readonly IReadOnlyList<AiModelOption> Catalog =
     [
         new()
@@ -59,6 +62,15 @@ public static class AiModels
             Label = "GPT-5.1",
         },
     ];
+
+    public static string TitleModelFor(AiProvider provider)
+    {
+        return provider switch
+        {
+            AiProvider.OpenAi => OpenAiTitleModel,
+            _ => AnthropicTitleModel,
+        };
+    }
 
     public static bool IsSupported(AiProvider provider, string? model)
     {

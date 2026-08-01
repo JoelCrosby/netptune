@@ -56,6 +56,7 @@ public static class NetptuneAiConfiguration
 
         services.AddScoped<IAiConversationRunner, AiConversationRunner>();
         services.AddScoped<IAiSystemPromptBuilder, AiSystemPromptBuilder>();
+        services.AddScoped<IAiTitleGenerator, AiTitleGenerator>();
         services.AddScoped<IAiConversationService, AiConversationService>();
         services.AddScoped<IAiChangeSetApplier, AiChangeSetApplier>();
 

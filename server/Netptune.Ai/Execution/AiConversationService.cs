@@ -30,6 +30,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiChatProviderFactory ProviderFactory;
     private readonly IAiSystemPromptBuilder PromptBuilder;
     private readonly IAiChangeSetBuilder ChangeSetBuilder;
+    private readonly IAiTitleGenerator Titles;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -40,9 +41,11 @@ public sealed class AiConversationService : IAiConversationService
         IAiChatProviderFactory providerFactory,
         IAiSystemPromptBuilder promptBuilder,
         IAiChangeSetBuilder changeSetBuilder,
+        IAiTitleGenerator titles,
         IOptions<AiOptions> options)
     {
         ChangeSetBuilder = changeSetBuilder;
+        Titles = titles;
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
@@ -144,7 +147,10 @@ public sealed class AiConversationService : IAiConversationService
         var history = await LoadHistory(conversation.Id, cancellationToken);
         var userMessage = new AiChatMessage { Role = AiMessageRole.User, Text = text };
 
-        await PersistMessage(conversation, userMessage, AiMessageRole.User, null, cancellationToken);
+        await PersistMessage(
+            conversation,
+            new AiMessageDraft { Message = userMessage, Role = AiMessageRole.User },
+            cancellationToken);
 
         history.Add(userMessage);
 
@@ -172,7 +178,23 @@ public sealed class AiConversationService : IAiConversationService
             yield return streamEvent;
         }
 
-        var assistantMessageId = await PersistTurn(conversation, context, assistantText.ToString(), cancellationToken);
+        var reply = assistantText.ToString();
+        var titleRequest = new AiTitleRequest
+        {
+            Provider = provider,
+            ApiKey = apiKey,
+            UserMessage = text,
+            AssistantMessage = reply,
+        };
+
+        var title = await TryCreateTitle(titleRequest, existing is null, cancellationToken);
+
+        if (title.Title is not null)
+        {
+            conversation.Title = title.Title;
+        }
+
+        var assistantMessageId = await PersistTurn(conversation, context, reply, title.Usage, cancellationToken);
         var changeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
 
         credential.LastUsedAt = DateTime.UtcNow;
@@ -203,6 +225,28 @@ public sealed class AiConversationService : IAiConversationService
         var hasAnthropic = credentials.Any(credential => credential.Provider == AiProvider.Anthropic);
 
         return hasAnthropic ? AiProvider.Anthropic : credentials[0].Provider;
+    }
+
+    private async Task<AiTitleResult> TryCreateTitle(
+        AiTitleRequest request,
+        bool isNewConversation,
+        CancellationToken cancellationToken)
+    {
+        var shouldGenerate = isNewConversation && Options.GenerateTitles;
+
+        if (!shouldGenerate)
+        {
+            return new AiTitleResult();
+        }
+
+        try
+        {
+            return await Titles.Generate(request, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            return new AiTitleResult();
+        }
     }
 
     private string ResolveModel(AiProvider provider, string? requestedModel, string? credentialModel)
@@ -322,30 +366,41 @@ public sealed class AiConversationService : IAiConversationService
         return textLength + toolCallLength + toolResultLength;
     }
 
+    private sealed record AiMessageDraft
+    {
+        public required AiChatMessage Message { get; init; }
+
+        public AiMessageRole Role { get; init; }
+
+        public AiChatTurn? Turn { get; init; }
+
+        public AiUsage ExtraUsage { get; init; } = new();
+    }
+
     private async Task<long> PersistMessage(
         AiConversation conversation,
-        AiChatMessage message,
-        AiMessageRole role,
-        AiChatTurn? turn,
+        AiMessageDraft draft,
         CancellationToken cancellationToken)
     {
         var sequence = await UnitOfWork.AiConversations.GetNextSequence(conversation.Id, cancellationToken);
-        var content = AiMessageContent.FromChatMessage(message);
+        var content = AiMessageContent.FromChatMessage(draft.Message);
+        var turn = draft.Turn;
         var usage = turn?.Usage ?? new AiUsage();
+        var extra = draft.ExtraUsage;
         var record = new AiMessage
         {
             ConversationId = conversation.Id,
             Sequence = sequence,
-            Role = role,
+            Role = draft.Role,
             Content = content.ToJsonDocument(),
             ProviderPayload = turn?.ProviderPayload,
             Provider = conversation.Provider,
             Model = conversation.Model,
             Status = AiMessageStatus.Complete,
             FinishReason = turn?.FinishReason,
-            InputTokens = usage.InputTokens,
-            OutputTokens = usage.OutputTokens,
-            CacheReadTokens = usage.CacheReadTokens,
+            InputTokens = usage.InputTokens + extra.InputTokens,
+            OutputTokens = usage.OutputTokens + extra.OutputTokens,
+            CacheReadTokens = usage.CacheReadTokens + extra.CacheReadTokens,
             CreatedAt = DateTime.UtcNow,
         };
 
@@ -362,6 +417,7 @@ public sealed class AiConversationService : IAiConversationService
         AiConversation conversation,
         AiRunContext context,
         string assistantText,
+        AiUsage extraUsage,
         CancellationToken cancellationToken)
     {
         var lastTurn = context.Turns.LastOrDefault();
@@ -374,9 +430,13 @@ public sealed class AiConversationService : IAiConversationService
 
         var assistantMessageId = await PersistMessage(
             conversation,
-            assistantMessage,
-            AiMessageRole.Assistant,
-            lastTurn,
+            new AiMessageDraft
+            {
+                Message = assistantMessage,
+                Role = AiMessageRole.Assistant,
+                Turn = lastTurn,
+                ExtraUsage = extraUsage,
+            },
             cancellationToken);
 
         var hasInvocations = context.Invocations.Count > 0;

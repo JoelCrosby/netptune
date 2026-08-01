@@ -10,6 +10,8 @@ public sealed class AiOptions
 
     public string OpenAiModel { get; set; } = AiModels.OpenAiDefault;
 
+    public bool GenerateTitles { get; set; } = true;
+
     public int MaxToolIterations { get; set; } = 12;
 
     public int MaxOutputTokens { get; set; } = 16000;

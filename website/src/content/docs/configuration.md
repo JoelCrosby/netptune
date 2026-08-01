@@ -76,17 +76,20 @@ The current storage options do not expose a custom S3 endpoint variable. AWS S3-
 
 The assistant runs on API keys supplied by each user, so no provider key is configured here. These settings only shape how the harness behaves.
 
-| Variable                      | Default         | Description                                                                           |
-| ----------------------------- | --------------- | ------------------------------------------------------------------------------------- |
-| `Ai__AnthropicModel`          | `claude-opus-5` | Model used for conversations started on Anthropic.                                    |
-| `Ai__OpenAiModel`             | `gpt-5.2`       | Model used for conversations started on OpenAI.                                       |
-| `Ai__MaxToolIterations`       | `12`            | Tool calls allowed in a single turn before the assistant stops and reports the limit. |
-| `Ai__MaxOutputTokens`         | `16000`         | Output token ceiling per provider request.                                            |
-| `Ai__MaxToolResultCharacters` | `32000`         | Tool results longer than this are truncated before the model sees them.               |
-| `Ai__MaxHistoryCharacters`    | `120000`        | Conversation replay budget. Older turns are dropped once a conversation exceeds it.   |
-| `RateLimiting__AiPermitLimit` | `20`            | Assistant messages and change-set applies allowed per user per minute.                |
+| Variable                      | Default         | Description                                                                             |
+| ----------------------------- | --------------- | --------------------------------------------------------------------------------------- |
+| `Ai__AnthropicModel`          | `claude-opus-5` | Model used for conversations started on Anthropic.                                      |
+| `Ai__OpenAiModel`             | `gpt-5.2`       | Model used for conversations started on OpenAI.                                         |
+| `Ai__GenerateTitles`          | `true`          | Names each new conversation with one extra call to a small model after the first reply. |
+| `Ai__MaxToolIterations`       | `12`            | Tool calls allowed in a single turn before the assistant stops and reports the limit.   |
+| `Ai__MaxOutputTokens`         | `16000`         | Output token ceiling per provider request.                                              |
+| `Ai__MaxToolResultCharacters` | `32000`         | Tool results longer than this are truncated before the model sees them.                 |
+| `Ai__MaxHistoryCharacters`    | `120000`        | Conversation replay budget. Older turns are dropped once a conversation exceeds it.     |
+| `RateLimiting__AiPermitLimit` | `20`            | Assistant messages and change-set applies allowed per user per minute.                  |
 
 The two model settings are only fallbacks. The models users can actually pick come from a fixed catalogue served by `GET /api/ai/models` and defined in `AiModels.Catalog` (`server/Netptune.Core/Models/Ai/AiModels.cs`) — edit that list to offer different models. Users choose one per API key in personal settings, and can switch models mid-conversation from the assistant panel; switching to a model from the other provider moves the conversation to that provider, which needs a key for it. A conversation otherwise keeps the model it started with, so changing these settings affects new conversations only.
+
+Conversation titles are written by the model. After the first reply the assistant makes one short extra call — on the cheapest catalogue model for that provider, not the conversation's own model — and names the conversation from it. Its tokens are counted against that first assistant message, so the usage totals include it. If the call fails the title stays as the truncated first message, and `Ai__GenerateTitles=false` skips it entirely.
 
 Users supply their own provider keys from personal settings. Keys are encrypted with ASP.NET Data Protection under the purpose `netptune.ai-credentials`, so the data-protection keyring in Valkey/Redis must be stable — losing it makes stored keys unreadable and users must re-enter them.
 
