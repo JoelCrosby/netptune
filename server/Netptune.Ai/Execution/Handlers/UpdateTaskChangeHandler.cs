@@ -1,5 +1,8 @@
+using System.Text.Json;
+
 using Mediator;
 
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -37,14 +40,15 @@ public sealed class UpdateTaskChangeHandler : IAiChangeHandler
             Name = AiChangePayload.ReadString(payload, "name"),
             Description = AiChangePayload.ReadString(payload, "description"),
             StatusId = AiChangePayload.ReadInt(payload, "statusId"),
+            Priority = ReadPriority(payload),
+            EstimateType = ReadEstimateType(payload),
+            EstimateValue = AiChangePayload.ReadDecimal(payload, "estimateValue"),
         };
 
-        var dueDate = AiChangePayload.ReadDate(payload, "dueDate");
+        var cleared = AiChangePayload.ReadStringArray(payload, "clear");
 
-        if (dueDate.HasValue)
-        {
-            request.DueDate = dueDate;
-        }
+        ApplyDate(payload, "startDate", cleared, date => request.StartDate = date);
+        ApplyDate(payload, "dueDate", cleared, date => request.DueDate = date);
 
         var response = await Mediator.Send(new UpdateTaskCommand(request), cancellationToken);
 
@@ -54,5 +58,46 @@ public sealed class UpdateTaskChangeHandler : IAiChangeHandler
         }
 
         return AiChangePayload.Applied(change, taskId);
+    }
+
+    private static void ApplyDate(
+        JsonElement payload,
+        string name,
+        List<string> cleared,
+        Action<DateOnly?> apply)
+    {
+        var isCleared = cleared.Contains(name, StringComparer.Ordinal);
+
+        if (isCleared)
+        {
+            apply(null);
+
+            return;
+        }
+
+        var date = AiChangePayload.ReadDate(payload, name);
+
+        if (!date.HasValue)
+        {
+            return;
+        }
+
+        apply(date);
+    }
+
+    private static TaskPriority? ReadPriority(JsonElement payload)
+    {
+        var raw = AiChangePayload.ReadString(payload, "priority");
+        var isParsed = Enum.TryParse<TaskPriority>(raw, true, out var priority);
+
+        return isParsed ? priority : null;
+    }
+
+    private static EstimateType? ReadEstimateType(JsonElement payload)
+    {
+        var raw = AiChangePayload.ReadString(payload, "estimateType");
+        var isParsed = Enum.TryParse<EstimateType>(raw, true, out var type);
+
+        return isParsed ? type : null;
     }
 }

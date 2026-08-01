@@ -61,6 +61,27 @@ public static class AiToolSchema
         return isNumber ? value.GetInt32() : null;
     }
 
+    public static decimal? GetDecimal(JsonElement arguments, string name)
+    {
+        var isObject = arguments.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            return null;
+        }
+
+        var hasProperty = arguments.TryGetProperty(name, out var value);
+
+        if (!hasProperty)
+        {
+            return null;
+        }
+
+        var isNumber = value.ValueKind == JsonValueKind.Number && value.TryGetDecimal(out _);
+
+        return isNumber ? value.GetDecimal() : null;
+    }
+
     public static bool? GetBool(JsonElement arguments, string name)
     {
         var isObject = arguments.ValueKind == JsonValueKind.Object;

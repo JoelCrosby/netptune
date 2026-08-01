@@ -76,6 +76,20 @@ public static class AiChangePayload
             .ToList();
     }
 
+    public static decimal? ReadDecimal(JsonElement payload, string name)
+    {
+        var isObject = payload.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            return null;
+        }
+
+        var hasProperty = payload.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.Number;
+
+        return hasProperty ? value.GetDecimal() : null;
+    }
+
     public static DateOnly? ReadDate(JsonElement payload, string name)
     {
         var raw = ReadString(payload, name);
