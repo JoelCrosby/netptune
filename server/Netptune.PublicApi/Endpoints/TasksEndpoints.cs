@@ -34,13 +34,17 @@ public static class TasksEndpoints
 
         group.MapPost("/tasks/bulk-update", BulkUpdateTasks)
             .WithSummary("Bulk update tasks")
-            .WithDescription("Updates the supplied fields on multiple tasks in the credential's workspace.")
+            .WithDescription(
+                "Updates the supplied fields on multiple tasks in the credential's workspace. "
+                + "Supply boardGroupId to move them into a board column, from GET /board-groups.")
             .Produces(StatusCodes.Status403Forbidden)
             .RequireAuthorization(NetptunePermissions.Tasks.Update);
 
         group.MapPatch("/tasks/{id:int}", UpdateTask)
             .WithSummary("Update a task")
-            .WithDescription("Updates the supplied fields on an existing task. Tag values must already exist in the credential's workspace.")
+            .WithDescription(
+                "Updates the supplied fields on an existing task. Tag values must already exist in the credential's "
+                + "workspace. Supply boardGroupId to move the task into a board column, from GET /board-groups.")
             .Produces(StatusCodes.Status403Forbidden)
             .RequireAuthorization(NetptunePermissions.Tasks.Update);
 
@@ -83,7 +87,7 @@ public static class TasksEndpoints
         IAuthorizationService authorization,
         HttpContext http,
         int id,
-        UpdateProjectTaskRequest request,
+        PublicUpdateTaskRequest request,
         CancellationToken cancellationToken)
     {
         if (request.Tags is not null)
@@ -98,11 +102,55 @@ public static class TasksEndpoints
             }
         }
 
-        request.Id = id;
-        var result = await mediator.Send(new UpdateTaskCommand(request), cancellationToken);
+        if (request.BoardGroupId.HasValue)
+        {
+            var canMoveTasks = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Tasks.Move);
+
+            if (!canMoveTasks.Succeeded)
+            {
+                return TypedResults.Forbid();
+            }
+        }
+
+        var result = await mediator.Send(new UpdateTaskCommand(request.ToRequest(id)), cancellationToken);
 
         if (result.IsNotFound) return TypedResults.NotFound(result);
-        return result.IsSuccess ? TypedResults.Ok(result.Payload) : TypedResults.BadRequest(result);
+
+        if (!result.IsSuccess)
+        {
+            return TypedResults.BadRequest(result);
+        }
+
+        if (!request.BoardGroupId.HasValue)
+        {
+            return TypedResults.Ok(result.Payload);
+        }
+
+        var move = await mediator.Send(
+            new MoveTasksToBoardGroupCommand([id], request.BoardGroupId.Value),
+            cancellationToken);
+
+        if (!move.IsSuccess)
+        {
+            return MoveFailure<TaskViewModel>(move);
+        }
+
+        var moved = await mediator.Send(new GetTaskQuery(id), cancellationToken);
+
+        return TypedResults.Ok(moved);
+    }
+
+    private static Results<Ok<TValue>, NotFound<ClientResponse<TValue>>, BadRequest<ClientResponse<TValue>>, ForbidHttpResult> MoveFailure<TValue>(
+        ClientResponse move)
+    {
+        var message = move.Message ?? "The task could not be moved to the board group.";
+
+        if (move.IsNotFound)
+        {
+            return TypedResults.NotFound(ClientResponse<TValue>.Failed(message));
+        }
+
+        return TypedResults.BadRequest(ClientResponse<TValue>.Failed(message));
     }
 
     private static async Task<Results<NoContent, NotFound<ClientResponse>, BadRequest<ClientResponse>, ForbidHttpResult>> BulkUpdateTasks(
@@ -126,6 +174,16 @@ public static class TasksEndpoints
             }
         }
 
+        if (request.BoardGroupId.HasValue)
+        {
+            var canMoveTasks = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Tasks.Move);
+
+            if (!canMoveTasks.Succeeded)
+            {
+                return TypedResults.Forbid();
+            }
+        }
+
         var result = await mediator.Send(
             new BulkUpdateTasksCommand(request.ToRequest()),
             cancellationToken);
@@ -135,6 +193,25 @@ public static class TasksEndpoints
             return TypedResults.NotFound(result);
         }
 
-        return result.IsSuccess ? TypedResults.NoContent() : TypedResults.BadRequest(result);
+        if (!result.IsSuccess)
+        {
+            return TypedResults.BadRequest(result);
+        }
+
+        if (!request.BoardGroupId.HasValue)
+        {
+            return TypedResults.NoContent();
+        }
+
+        var move = await mediator.Send(
+            new MoveTasksToBoardGroupCommand(request.TaskIds, request.BoardGroupId.Value),
+            cancellationToken);
+
+        if (move.IsNotFound)
+        {
+            return TypedResults.NotFound(move);
+        }
+
+        return move.IsSuccess ? TypedResults.NoContent() : TypedResults.BadRequest(move);
     }
 }

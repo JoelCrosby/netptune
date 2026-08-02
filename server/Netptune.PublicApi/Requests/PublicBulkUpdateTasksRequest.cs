@@ -21,6 +21,8 @@ public sealed record PublicBulkUpdateTasksRequest
 
     public List<string>? AssigneeIds { get; init; }
 
+    public int? BoardGroupId { get; init; }
+
     public BulkUpdateTasksRequest ToRequest()
     {
         return new BulkUpdateTasksRequest

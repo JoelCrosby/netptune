@@ -13,4 +13,6 @@ public sealed record BoardGroupTaskTarget
     public int? StatusId { get; init; }
 
     public int? ProjectId { get; init; }
+
+    public string? BoardIdentifier { get; init; }
 }

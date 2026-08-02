@@ -181,6 +181,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 WorkspaceId = group.WorkspaceId,
                 StatusId = group.StatusId,
                 ProjectId = group.Board != null ? group.Board.ProjectId : null,
+                BoardIdentifier = group.Board != null ? group.Board.Identifier : null,
             })
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -205,6 +206,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 WorkspaceId = group.WorkspaceId,
                 StatusId = group.StatusId,
                 ProjectId = group.Board != null ? group.Board.ProjectId : null,
+                BoardIdentifier = group.Board != null ? group.Board.Identifier : null,
             })
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -223,8 +225,10 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             {
                 Id = group.Id,
                 Name = group.Name,
-                BoardName = group.Board!.Name,
+                BoardId = group.Board!.Id,
+                BoardName = group.Board.Name,
                 BoardIdentifier = group.Board.Identifier,
+                ProjectId = group.Board.ProjectId,
                 ProjectName = group.Board.Project!.Name,
             })
             .ToListAsync(cancellationToken);

@@ -8,6 +8,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ServiceAccounts;
@@ -47,7 +48,9 @@ public sealed class PublicApiV1EndpointTests
         NetptunePermissions.Tasks.Read,
         NetptunePermissions.Tasks.Create,
         NetptunePermissions.Tasks.Update,
+        NetptunePermissions.Tasks.Move,
         NetptunePermissions.Tags.Assign,
+        NetptunePermissions.BoardGroups.Read,
     ];
 
     [Fact]
@@ -288,6 +291,88 @@ public sealed class PublicApiV1EndpointTests
         var response = await client.DeleteAsync("api/v1/sprints/999999/tasks/999999");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetBoardGroups_ShouldReturnTheColumnsForTheWorkspace()
+    {
+        var client = await CreateClient();
+        var setup = await GetSetup();
+
+        var response = await client.GetAsync("api/v1/board-groups");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<List<BoardGroupOptionViewModel>>();
+
+        result!.Should().NotBeEmpty();
+        result.Should().Contain(group => group.ProjectId == setup.ProjectId);
+        result.Should().OnlyContain(group => !string.IsNullOrWhiteSpace(group.Name));
+    }
+
+    [Fact]
+    public async Task UpdateTask_ShouldMoveTheTaskIntoTheSuppliedBoardGroup()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+        var target = await FindOtherBoardGroup(client, task);
+
+        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.Id}", new
+        {
+            boardGroupId = target.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var moved = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.Id}");
+
+        moved!.BoardGroupId.Should().Be(target.Id);
+    }
+
+    [Fact]
+    public async Task UpdateTask_ShouldReturnNotFound_WhenTheBoardGroupDoesNotExist()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+
+        var response = await client.PatchAsJsonAsync($"api/v1/tasks/{task.Id}", new
+        {
+            boardGroupId = 999999,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task BulkUpdateTasks_ShouldMoveTheTasksIntoTheSuppliedBoardGroup()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+        var target = await FindOtherBoardGroup(client, task);
+
+        var response = await client.PostAsJsonAsync("api/v1/tasks/bulk-update", new
+        {
+            taskIds = new[] { task.Id },
+            boardGroupId = target.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent, await response.Content.ReadAsStringAsync());
+
+        var moved = await client.GetFromJsonAsync<TaskViewModel>($"api/v1/tasks/{task.Id}");
+
+        moved!.BoardGroupId.Should().Be(target.Id);
+    }
+
+    private async Task<BoardGroupOptionViewModel> FindOtherBoardGroup(HttpClient client, TaskViewModel task)
+    {
+        var setup = await GetSetup();
+        var groups = await client.GetFromJsonAsync<List<BoardGroupOptionViewModel>>("api/v1/board-groups");
+        var target = groups!.FirstOrDefault(group =>
+            group.ProjectId == setup.ProjectId && group.Id != task.BoardGroupId);
+
+        target.Should().NotBeNull("the test project needs a second board column to move tasks into");
+
+        return target!;
     }
 
     private async Task<HttpClient> CreateClient()
