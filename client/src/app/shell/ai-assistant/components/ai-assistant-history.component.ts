@@ -1,38 +1,44 @@
 import { Component, input, output } from '@angular/core';
 import { AiConversation } from '@core/models/ai-conversation';
 import { formatTokens } from '@core/util/ai-usage';
-import { LucideTrash } from '@lucide/angular';
+import { LucideMessageSquare, LucideTrash } from '@lucide/angular';
+import { ActionCardComponent } from '@static/components/action-card/action-card.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 
 @Component({
   selector: 'app-ai-assistant-history',
-  host: { class: 'block' },
-  imports: [LucideTrash, IconButtonComponent],
+  host: { class: 'flex flex-col gap-2' },
+  imports: [
+    LucideMessageSquare,
+    LucideTrash,
+    ActionCardComponent,
+    IconButtonComponent,
+  ],
   template: `
     @for (conversation of conversations(); track conversation.id) {
-      <div class="border-border flex items-center gap-2 border-b py-2">
+      <app-action-card
+        [heading]="conversation.title"
+        (activated)="opened.emit(conversation.id)">
+        <svg actionCardIcon lucideMessageSquare class="h-4 w-4"></svg>
+
+        {{ conversation.messageCount }}
+        <span i18n="Counts messages in a stored conversation">messages</span>
+        · {{ tokenLabel(conversation) }}
+        <span i18n="Counts tokens a conversation has cost">tokens</span>
+
         <button
-          type="button"
-          class="min-w-0 flex-1 text-left text-sm hover:underline"
-          (click)="opened.emit(conversation.id)">
-          <span class="block truncate">{{ conversation.title }}</span>
-          <span class="text-muted text-xs">
-            {{ conversation.messageCount }}
-            <span i18n="Counts messages in a stored conversation"
-              >messages</span
-            >
-            · {{ tokenLabel(conversation) }}
-            <span i18n="Counts tokens a conversation has cost">tokens</span>
-          </span>
-        </button>
-        <button
+          actionCardTrailing
           app-icon-button
           type="button"
-          class="rounded-full"
+          class="pointer-events-auto -my-1 rounded-full"
+          i18n-aria-label="
+            Accessible label for the button that deletes a stored conversation
+          "
+          aria-label="Delete conversation"
           (click)="deleted.emit(conversation.id)">
           <svg lucideTrash class="h-4 w-4"></svg>
         </button>
-      </div>
+      </app-action-card>
     } @empty {
       <p class="text-muted text-sm" i18n="Empty state for stored conversations">
         There are no earlier conversations.

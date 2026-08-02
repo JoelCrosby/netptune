@@ -530,8 +530,8 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:128,130</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,28</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:126,128</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
       <segment state="translated">
@@ -1841,7 +1841,7 @@
     </unit>
     <unit id="5830314630242453415">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:112,115</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:110,113</note>
         <note category="description">Column heading for the sentence describing a change</note>
       </notes>
       <segment state="translated">
@@ -4135,7 +4135,7 @@
     </unit>
     <unit id="7629072322253412501">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:38,43</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:44,49</note>
         <note category="description">Empty state for stored conversations</note>
       </notes>
       <segment state="translated">
@@ -4793,8 +4793,8 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:124,126</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:22,24</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:123,125</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
       <segment state="translated">
@@ -4854,6 +4854,16 @@
       <segment state="translated">
         <source>Flag name</source>
         <target>Nom du signalement</target>
+      </segment>
+    </unit>
+    <unit id="7579940623714391431">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:37,39</note>
+        <note category="description">Accessible label for the button that deletes a stored conversation</note>
+      </notes>
+      <segment state="translated">
+        <source>Delete conversation</source>
+        <target>Supprimer la conversation</target>
       </segment>
     </unit>
     <unit id="7581179961566661970">
@@ -6171,7 +6181,7 @@
     <unit id="2445414570210459149">
       <notes>
         <note category="location">src/app/features/automations/components/automation-runs-table.component.ts:44,47</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:107,110</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:105,108</note>
         <note category="description">Column heading for the task a run acted on</note>
       </notes>
       <segment state="translated">
@@ -6317,7 +6327,7 @@
     </unit>
     <unit id="180305693599254202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:41,45</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:44,48</note>
         <note category="description">Page title for the workspace assistant conversations</note>
       </notes>
       <segment state="translated">
@@ -7378,7 +7388,7 @@
     </unit>
     <unit id="5325449899721653637">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:46,51</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:49,54</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment state="translated">
@@ -8500,7 +8510,7 @@
     </unit>
     <unit id="97940262148604706">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:97,100</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:95,98</note>
         <note category="description">Column heading for what a proposed change does</note>
       </notes>
       <segment state="translated">
@@ -8699,7 +8709,7 @@
     </unit>
     <unit id="7329865395750709453">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:64,68</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:67,71</note>
         <note category="description">Explains what turning the assistant off does</note>
       </notes>
       <segment state="translated">
@@ -9726,7 +9736,7 @@
     </unit>
     <unit id="3826808809713952311">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:58,61</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:61,64</note>
         <note category="description">Toggle that enables the assistant for a workspace</note>
       </notes>
       <segment state="translated">
@@ -9873,7 +9883,7 @@
     </unit>
     <unit id="3313172740302558016">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:95,99</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:98,102</note>
         <note category="description">Counts tokens written to the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -10187,7 +10197,7 @@
     </unit>
     <unit id="117783198855509507">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:85,89</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:83,87</note>
         <note category="description">Accessible label for the checkbox that selects every proposed change</note>
       </notes>
       <segment state="translated">
@@ -10424,7 +10434,7 @@
     </unit>
     <unit id="5058386856247336582">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:91,94</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:89,92</note>
         <note category="description">Screen-reader heading for the change outcome column</note>
       </notes>
       <segment state="translated">
@@ -10465,7 +10475,7 @@
     </unit>
     <unit id="7840301863034787689">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:102,105</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:100,103</note>
         <note category="description">Column heading for the kind of entity a change targets</note>
       </notes>
       <segment state="translated">
@@ -10525,7 +10535,7 @@
     </unit>
     <unit id="4435645098786961170">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:87,88</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:90,91</note>
         <note category="description">Counts tokens returned by the model</note>
       </notes>
       <segment state="translated">
@@ -11682,7 +11692,7 @@
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:90,93</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:93,96</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -11879,7 +11889,7 @@
     </unit>
     <unit id="3056025401856031391">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:197,201</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:191,195</note>
         <note category="description">Shown when a change set has no changes left to review</note>
       </notes>
       <segment state="translated">
@@ -12302,7 +12312,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:140,142</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:136,138</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment state="translated">
@@ -12556,7 +12566,7 @@
     <unit id="5773144976658818508">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:223</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:267</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:261</note>
         <note category="description">Shown on a proposal that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -14462,7 +14472,7 @@
     </unit>
     <unit id="4423253549935469768">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:117,120</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:115,118</note>
         <note category="description">Column heading for the detail of a proposed change</note>
       </notes>
       <segment state="translated">
@@ -15138,7 +15148,7 @@
     </unit>
     <unit id="7136018875175606726">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:85,86</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:88,89</note>
         <note category="description">Counts tokens sent to the model</note>
       </notes>
       <segment state="translated">
@@ -15684,7 +15694,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:144,149</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:140,145</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment state="translated">

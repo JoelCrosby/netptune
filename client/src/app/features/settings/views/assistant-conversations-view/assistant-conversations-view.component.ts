@@ -15,7 +15,8 @@ import { toChatEntry } from '@core/services/ai-assistant.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
 import { formatTokens } from '@core/util/ai-usage';
-import { LucideArrowLeft } from '@lucide/angular';
+import { LucideArrowLeft, LucideMessageSquare } from '@lucide/angular';
+import { ActionCardComponent } from '@static/components/action-card/action-card.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -26,6 +27,8 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
   selector: 'app-assistant-conversations-view',
   imports: [
     LucideArrowLeft,
+    LucideMessageSquare,
+    ActionCardComponent,
     AiAssistantMessageComponent,
     CheckboxComponent,
     EmptyStateComponent,
@@ -107,32 +110,25 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
           }
         </div>
       } @else {
-        <div class="flex flex-col">
+        <div class="flex flex-col gap-2">
           @for (conversation of conversations.value(); track conversation.id) {
-            <button
-              type="button"
-              class="border-border flex items-center justify-between gap-4 border-b py-3 text-left"
-              (click)="select(conversation)">
-              <span class="min-w-0">
-                <span class="block truncate text-sm">{{
-                  conversation.title
-                }}</span>
-                <span class="text-muted text-xs">
-                  {{ conversation.userDisplayName }} ·
-                  {{ conversation.messageCount }}
-                  <span i18n="Counts messages in a stored conversation"
-                    >messages</span
-                  >
-                  · {{ tokenLabel(conversation) }}
-                  <span i18n="Counts tokens a conversation has cost"
-                    >tokens</span
-                  >
-                </span>
-              </span>
-              <span class="text-muted shrink-0 text-xs">
+            <app-action-card
+              [heading]="conversation.title"
+              (activated)="select(conversation)">
+              <svg actionCardIcon lucideMessageSquare class="h-4 w-4"></svg>
+
+              {{ conversation.userDisplayName }} ·
+              {{ conversation.messageCount }}
+              <span i18n="Counts messages in a stored conversation"
+                >messages</span
+              >
+              · {{ tokenLabel(conversation) }}
+              <span i18n="Counts tokens a conversation has cost">tokens</span>
+
+              <span actionCardTrailing class="text-muted mt-0.5 text-xs">
                 {{ toDate(conversation.lastMessageAt) | prettyDate }}
               </span>
-            </button>
+            </app-action-card>
           } @empty {
             <app-empty-state
               compact
