@@ -15,7 +15,6 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
-import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { first, switchMap } from 'rxjs';
@@ -50,17 +49,10 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
     FlatButtonComponent,
     IconButtonComponent,
     MenuItemComponent,
-    SectionHeaderComponent,
     TooltipDirective,
   ],
   template: `
-    <app-section-header
-      i18n-heading="Section heading for the AI assistant API keys"
-      heading="AI Assistant" />
-
-    <p
-      class="text-muted mt-2 max-w-3xl text-sm"
-      i18n="Explains why a key is needed">
+    <p class="text-muted max-w-3xl text-sm" i18n="Explains why a key is needed">
       The assistant uses your own provider API key. Keys are encrypted, are
       never shown again after saving, and are only used for requests you start.
     </p>

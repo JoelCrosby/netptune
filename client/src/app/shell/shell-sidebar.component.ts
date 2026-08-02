@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, output } from '@angular/core';
 import {
   selectCurrentUser,
   selectHasPermission,
+  selectIsAssistantAvailable,
   selectIsAuthenticated,
 } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
@@ -27,6 +28,7 @@ import {
   LucideSettings,
   LucideSettings2,
   LucideShield,
+  LucideSlidersHorizontal,
   LucideSparkles,
   LucideBot,
   LucideSquareCheckBig,
@@ -135,6 +137,8 @@ export class ShellSidebarComponent {
   canReadAssistantConversations = this.store.selectSignal(
     selectHasPermission(netptunePermissions.assistant.readAllConversations)
   );
+
+  isAssistantAvailable = this.store.selectSignal(selectIsAssistantAvailable);
 
   canReadServiceAccounts = this.store.selectSignal(
     selectHasPermission(netptunePermissions.serviceAccounts.read)
@@ -315,6 +319,33 @@ export class ShellSidebarComponent {
     return links;
   });
 
+  private personalSettingsLinks = computed(() => {
+    if (!this.authenticated()) return [];
+
+    const links: ShellMenuLink[] = [
+      {
+        label: $localize`:Sidebar link to general personal settings:General`,
+        value: ['./settings/personal/general'],
+        icon: LucideSlidersHorizontal,
+      },
+      {
+        label: $localize`:Sidebar link to personal notification settings:Notifications`,
+        value: ['./settings/personal/notifications'],
+        icon: LucideBell,
+      },
+    ];
+
+    if (this.isAssistantAvailable()) {
+      links.push({
+        label: $localize`:Sidebar link to the personal assistant key settings:Assistant`,
+        value: ['./settings/personal/assistant'],
+        icon: LucideSparkles,
+      });
+    }
+
+    return links;
+  });
+
   bottomLinks = computed(() => {
     const links: ShellMenuLink[] = [];
 
@@ -356,11 +387,17 @@ export class ShellSidebarComponent {
       });
     }
 
-    if (this.authenticated()) {
+    const [defaultPersonalSettingsLink, ...personalSettingsChildren] =
+      this.personalSettingsLinks();
+
+    if (defaultPersonalSettingsLink) {
       links.push({
         label: $localize`:Sidebar link to personal settings:Settings`,
-        value: ['./settings/personal'],
+        value: defaultPersonalSettingsLink.value,
         icon: LucideSettings,
+        overviewLabel: defaultPersonalSettingsLink.label,
+        overviewIcon: defaultPersonalSettingsLink.icon,
+        children: personalSettingsChildren,
       });
     }
 

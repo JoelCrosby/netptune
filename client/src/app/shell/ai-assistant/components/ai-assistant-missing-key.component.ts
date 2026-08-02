@@ -39,6 +39,6 @@ export class AiAssistantMissingKeyComponent {
       return null;
     }
 
-    return ['/', workspace, 'settings', 'personal'];
+    return ['/', workspace, 'settings', 'personal', 'assistant'];
   });
 }

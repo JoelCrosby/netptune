@@ -34,7 +34,7 @@
     </unit>
     <unit id="8048392167268197249">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:81</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:109</note>
         <note category="description">Page title for workspace assistant conversations</note>
       </notes>
       <segment state="translated">
@@ -731,7 +731,7 @@
     </unit>
     <unit id="7546969606032903393">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:137,139</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:129,131</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:15,17</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
@@ -818,6 +818,16 @@
       <segment state="translated">
         <source>Manage API Credentials</source>
         <target>API-Anmeldedaten verwalten</target>
+      </segment>
+    </unit>
+    <unit id="1622181844113244655">
+      <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:25</note>
+        <note category="description">Page title for personal notification settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Notification Settings</source>
+        <target>Benachrichtigungseinstellungen</target>
       </segment>
     </unit>
     <unit id="6572526459338060111">
@@ -1029,7 +1039,7 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:63,66</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:55,57</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:330</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:322</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
@@ -1381,7 +1391,7 @@
     </unit>
     <unit id="3118592863000722717">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:181,184</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:173,176</note>
         <note category="description">Button that replaces a stored API key</note>
       </notes>
       <segment state="translated">
@@ -1391,7 +1401,7 @@
     </unit>
     <unit id="3127417567733728943">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:32</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:31</note>
         <note category="description">Name of the Anthropic AI provider</note>
       </notes>
       <segment state="translated">
@@ -1598,7 +1608,7 @@
     </unit>
     <unit id="7198631316779176054">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:266</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:258</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
       <segment state="translated">
@@ -1800,7 +1810,7 @@
     </unit>
     <unit id="8768927723338869419">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:84,86</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:76,78</note>
         <note category="description">Label preceding the masked API key</note>
       </notes>
       <segment state="translated">
@@ -2097,7 +2107,9 @@
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:41,43</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:31,33</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:323</note>
+        <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,23</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:332</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:354</note>
         <note category="location">src/app/workspace.routes.ts:132</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
@@ -2160,7 +2172,7 @@
     </unit>
     <unit id="6707264088417972826">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:64,68</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:56,60</note>
         <note category="description">Explains why a key is needed</note>
       </notes>
       <segment state="translated">
@@ -2195,7 +2207,7 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:918</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:131</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:74</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:350</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
         <note category="description">The workspace entity, shown in setup copy</note>
       </notes>
       <segment state="translated">
@@ -2344,7 +2356,7 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:46</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
-        <note category="location">src/app/features/settings/settings.routes.ts:53</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:81</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:99,102</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:22</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:29</note>
@@ -2512,7 +2524,7 @@
     </unit>
     <unit id="5504590309962934202">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:114,116</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:106,108</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment state="translated">
@@ -2903,7 +2915,7 @@
     </unit>
     <unit id="8550125178086238714">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:327</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:319</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment state="translated">
@@ -3154,6 +3166,16 @@
         <target>Beziehung</target>
       </segment>
     </unit>
+    <unit id="432834967329800065">
+      <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:20</note>
+        <note category="description">Page title for general personal settings</note>
+      </notes>
+      <segment state="translated">
+        <source>General Settings</source>
+        <target>Allgemeine Einstellungen</target>
+      </segment>
+    </unit>
     <unit id="4328738626502194147">
       <notes>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:71,73</note>
@@ -3179,7 +3201,7 @@
     </unit>
     <unit id="1825829511397926879">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:39</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:67</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:82,83</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:29</note>
         <note category="description">Page title for a single workspace tag</note>
@@ -3631,7 +3653,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:47,50</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:65,66</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:293</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:297</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment state="translated">
@@ -3687,7 +3709,7 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:53</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:277</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:281</note>
         <note category="description">Section heading for a task&apos;s tags</note>
       </notes>
       <segment state="translated">
@@ -3904,7 +3926,7 @@
     </unit>
     <unit id="1428367413098223987">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:38</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:66</note>
         <note category="description">Link back to the tag list from a single tag</note>
       </notes>
       <segment state="translated">
@@ -3994,7 +4016,7 @@
     </unit>
     <unit id="5988988986257041887">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:347</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:339</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment state="translated">
@@ -4270,7 +4292,7 @@
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:339</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:370</note>
         <note category="location">src/app/workspace.routes.ts:144</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
@@ -5763,7 +5785,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:5</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:245</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:249</note>
         <note category="location">src/app/workspace.routes.ts:138</note>
         <note category="description">Label of the users field</note>
       </notes>
@@ -7418,7 +7440,7 @@
     </unit>
     <unit id="6168573387818230011">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:312</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:304</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment state="translated">
@@ -8553,7 +8575,7 @@
     </unit>
     <unit id="3477141043479115606">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:263</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:255</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
       <segment state="translated">
@@ -8575,7 +8597,7 @@
     <unit id="4930506384627295710">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:102,103</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:361</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>
         <note category="location">src/app/workspace.routes.ts:156</note>
         <note category="description">Title of the settings step</note>
       </notes>
@@ -8648,7 +8670,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:55,56</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:63,67</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:253</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:257</note>
         <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Page title for the automation list</note>
       </notes>
@@ -8936,7 +8958,7 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33,34</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:81,83</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:176</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:180</note>
         <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Stat label for the number of tasks on a board</note>
       </notes>
@@ -9375,7 +9397,7 @@
       <notes>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:43</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:51,54</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:190</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:194</note>
         <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Page title for the board list</note>
       </notes>
@@ -9446,8 +9468,8 @@
     </unit>
     <unit id="3423740992676752364">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:302</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:318</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:294</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:310</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment state="translated">
@@ -9533,7 +9555,7 @@
     </unit>
     <unit id="5101518177835903830">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:67</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:95</note>
         <note category="description">Page title for a single workspace relation type</note>
       </notes>
       <segment state="translated">
@@ -9725,7 +9747,7 @@
     <unit id="3825802286872185103">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:59,62</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:232</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:236</note>
         <note category="location">src/app/workspace.routes.ts:120</note>
         <note category="description">Page title for the calendar</note>
       </notes>
@@ -9955,7 +9977,7 @@
     <unit id="6570363013146073520">
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:23,25</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:168</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:172</note>
         <note category="location">src/app/workspace.routes.ts:73</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
@@ -10258,7 +10280,7 @@
     <unit id="4915431133669985304">
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:34,37</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:106</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:108</note>
         <note category="location">src/app/workspace.routes.ts:162</note>
         <note category="description">Page title for the user profile</note>
       </notes>
@@ -10404,7 +10426,7 @@
       <notes>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:13,15</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:182</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:186</note>
         <note category="description">Page title for the archived task list</note>
       </notes>
       <segment state="translated">
@@ -10424,7 +10446,7 @@
     </unit>
     <unit id="5051311493526387933">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:52</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:80</note>
         <note category="description">Link back to the status list from a single status</note>
       </notes>
       <segment state="translated">
@@ -10555,7 +10577,7 @@
     </unit>
     <unit id="395357454003185588">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:33</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:32</note>
         <note category="description">Where to find an Anthropic API key</note>
       </notes>
       <segment state="translated">
@@ -10567,7 +10589,7 @@
       <notes>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:38,39</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:46,50</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:222</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:226</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Page title for the project list</note>
       </notes>
@@ -10689,7 +10711,7 @@
     </unit>
     <unit id="3959473004188974816">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:352</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:344</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment state="translated">
@@ -11187,6 +11209,16 @@
         <target>Offene Arbeit nach Zuständigen. Mehrfach zugewiesene Aufgaben erscheinen bei jedem Zuständigen.</target>
       </segment>
     </unit>
+    <unit id="2764406185986782463">
+      <notes>
+        <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:25,29</note>
+        <note category="description">Explains what the notification preference table controls</note>
+      </notes>
+      <segment state="translated">
+        <source> Choose which events notify you, and whether that choice applies everywhere or only in this workspace. </source>
+        <target> Wählen Sie, welche Ereignisse Sie benachrichtigen und ob diese Wahl überall oder nur in diesem Arbeitsbereich gilt. </target>
+      </segment>
+    </unit>
     <unit id="2765298659248883432">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:41,43</note>
@@ -11311,7 +11343,7 @@
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:59,61</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:237</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:241</note>
         <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
@@ -11556,6 +11588,16 @@
         <target>Aufgabe</target>
       </segment>
     </unit>
+    <unit id="6731619174977978883">
+      <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:31</note>
+        <note category="description">Page title for the personal assistant key settings</note>
+      </notes>
+      <segment state="translated">
+        <source>Assistant Keys</source>
+        <target>Assistenzschlüssel</target>
+      </segment>
+    </unit>
     <unit id="6732290347216170876">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-timeline.component.ts:132,137</note>
@@ -11568,7 +11610,7 @@
     </unit>
     <unit id="6406732480689038024">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:102,104</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:94,96</note>
         <note category="description">Tooltip on the button that removes a stored API key</note>
       </notes>
       <segment state="translated">
@@ -11599,7 +11641,7 @@
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:60,63</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:227</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
         <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
@@ -11837,8 +11879,10 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
+        <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:44,47</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:313</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:340</note>
         <note category="location">src/app/workspace.routes.ts:126</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
@@ -12383,16 +12427,6 @@
         <target>Zurücksetzen</target>
       </segment>
     </unit>
-    <unit id="8228970721606012757">
-      <notes>
-        <note category="location">src/app/features/settings/components/settings/settings.component.ts:13,15</note>
-        <note category="description">Section heading for the user preference list</note>
-      </notes>
-      <segment state="translated">
-        <source>User Preferences</source>
-        <target>Benutzereinstellungen</target>
-      </segment>
-    </unit>
     <unit id="646405368100193319">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:31,36</note>
@@ -12455,7 +12489,7 @@
     </unit>
     <unit id="8927455770711141149">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:38</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:37</note>
         <note category="description">Where to find an OpenAI API key</note>
       </notes>
       <segment state="translated">
@@ -12465,7 +12499,7 @@
     </unit>
     <unit id="9050138848550192211">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:37</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:36</note>
         <note category="description">Name of the OpenAI provider</note>
       </notes>
       <segment state="translated">
@@ -12646,7 +12680,7 @@
     </unit>
     <unit id="5712909673292266004">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:25</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:53</note>
         <note category="description">Page title for general workspace settings</note>
       </notes>
       <segment state="translated">
@@ -12656,7 +12690,7 @@
     </unit>
     <unit id="6654135033505153591">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:32</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:60</note>
         <note category="description">Page title for workspace tag settings</note>
       </notes>
       <segment state="translated">
@@ -12666,7 +12700,7 @@
     </unit>
     <unit id="1354796016404134182">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:46</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:74</note>
         <note category="description">Page title for workspace task status settings</note>
       </notes>
       <segment state="translated">
@@ -12676,7 +12710,7 @@
     </unit>
     <unit id="6017786801241064671">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:60</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:88</note>
         <note category="description">Page title for workspace task relation type settings</note>
       </notes>
       <segment state="translated">
@@ -12686,22 +12720,12 @@
     </unit>
     <unit id="161640666417709222">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:74</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:102</note>
         <note category="description">Page title for workspace service account settings</note>
       </notes>
       <segment state="translated">
         <source>Workspace Service Accounts</source>
         <target>Dienstkonten des Arbeitsbereichs</target>
-      </segment>
-    </unit>
-    <unit id="1283241409166703000">
-      <notes>
-        <note category="location">src/app/features/settings/views/personal-settings-view/personal-settings-view.component.ts:12,15</note>
-        <note category="description">Page title for personal settings</note>
-      </notes>
-      <segment state="translated">
-        <source>Personal</source>
-        <target>Persönlich</target>
       </segment>
     </unit>
     <unit id="1531509541211048627">
@@ -13042,8 +13066,8 @@
     </unit>
     <unit id="5607669932062416162">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:151,154</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:246</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:143,146</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:238</note>
         <note category="description">Model option that defers to the server default</note>
       </notes>
       <segment state="translated">
@@ -13726,7 +13750,7 @@
     </unit>
     <unit id="7203070746919732368">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:328</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:320</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment state="translated">
@@ -13927,7 +13951,7 @@
     <unit id="5194912054053114732">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46,48</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:211</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
         <note category="description">Page title for the sprint backlog</note>
       </notes>
       <segment state="translated">
@@ -14059,7 +14083,7 @@
     <unit id="4347094825344030699">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:55,56</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:206</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:210</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
@@ -14161,7 +14185,7 @@
     <unit id="57403663622654391">
       <notes>
         <note category="location">src/app/features/storage/components/storage-header.component.ts:30,33</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:331</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:362</note>
         <note category="location">src/app/workspace.routes.ts:150</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
@@ -14228,16 +14252,6 @@
       <segment state="translated">
         <source>files</source>
         <target>Dateien</target>
-      </segment>
-    </unit>
-    <unit id="774353184448576161">
-      <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:59,62</note>
-        <note category="description">Section heading for the AI assistant API keys</note>
-      </notes>
-      <segment state="translated">
-        <source>AI Assistant</source>
-        <target>KI-Assistent</target>
       </segment>
     </unit>
     <unit id="7751731903769510184">
@@ -14864,7 +14878,7 @@
     </unit>
     <unit id="5388692830516022173">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:129,131</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:121,123</note>
         <note category="description">Label for the model input</note>
       </notes>
       <segment state="translated">
@@ -14985,7 +14999,7 @@
     </unit>
     <unit id="4034907872117288202">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:66</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:94</note>
         <note category="description">Link back to the relation type list from a single relation type</note>
       </notes>
       <segment state="translated">
@@ -15055,9 +15069,11 @@
     </unit>
     <unit id="6439365426343089851">
       <notes>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:20,22</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:19,23</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:269</note>
-        <note category="description">Page title for general workspace settings</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:273</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:327</note>
+        <note category="description">Page title for general personal settings</note>
       </notes>
       <segment state="translated">
         <source>General</source>
@@ -15067,7 +15083,7 @@
     <unit id="5168008278809915722">
       <notes>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:64,65</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:285</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:289</note>
         <note category="description">Page title for workspace task statuses</note>
       </notes>
       <segment state="translated">
@@ -15077,7 +15093,7 @@
     </unit>
     <unit id="788903633413068121">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:301</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:305</note>
         <note category="description">Sidebar link to workspace service account settings</note>
       </notes>
       <segment state="translated">
@@ -15381,7 +15397,7 @@
     </unit>
     <unit id="4814285799071780083">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:329</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:321</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="description">Confirms removing an API key</note>
       </notes>
@@ -15563,7 +15579,7 @@
     </unit>
     <unit id="4442108733606169287">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:184,186</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:176,178</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment state="translated">

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { assistantGuard } from '@core/auth/assistant.guard';
 import { netptunePermissions } from '@core/auth/permissions';
 import { workspaceSettingsGuard } from './guards/workspace-settings.guard';
 
@@ -8,6 +9,33 @@ export const routes: Routes = [
   {
     path: 'personal',
     loadComponent: () => import('./views/personal-settings-view/personal-settings-view.component').then((m) => m.PersonalSettingsViewComponent),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'general',
+      },
+      {
+        path: 'general',
+        title: $localize`:Page title for general personal settings:General Settings`,
+        loadComponent: () => import('./views/personal-general-settings-view/personal-general-settings-view.component').then((m) => m.PersonalGeneralSettingsViewComponent),
+      },
+      {
+        path: 'notifications',
+        title: $localize`:Page title for personal notification settings:Notification Settings`,
+        loadComponent: () => import('./views/personal-notification-settings-view/personal-notification-settings-view.component').then((m) => m.PersonalNotificationSettingsViewComponent),
+      },
+      {
+        path: 'assistant',
+        canActivate: [assistantGuard],
+        title: $localize`:Page title for the personal assistant key settings:Assistant Keys`,
+        loadComponent: () => import('./views/personal-assistant-settings-view/personal-assistant-settings-view.component').then((m) => m.PersonalAssistantSettingsViewComponent),
+      },
+      {
+        path: '**',
+        redirectTo: '',
+      },
+    ],
   },
   {
     path: 'workspace',
