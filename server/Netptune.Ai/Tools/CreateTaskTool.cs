@@ -48,6 +48,7 @@ public sealed class CreateTaskTool : IAiTool
           "statusId": { "type": "integer", "description": "Status id, from list_statuses. Defaults to the project's first status." },
           "assigneeId": { "type": "string", "description": "Workspace user id to assign, from list_members." },
           "sprintId": { "type": "integer", "description": "Sprint to put the task in, from list_sprints. Must belong to the same project." },
+          "sprintRef": { "type": "string", "description": "Handle of a sprint proposed earlier in this change set, instead of sprintId." },
           "boardGroupId": { "type": "integer", "description": "Board group to place the task in, from list_board_groups." },
           "priority": {
             "type": "string",
@@ -165,6 +166,20 @@ public sealed class CreateTaskTool : IAiTool
             }
 
             fields.Add(new AiChangeField { Name = "assignee", After = member.DisplayName });
+        }
+
+        var sprintRef = AiPendingReference.Read(arguments, "sprintRef");
+
+        if (sprintRef is not null)
+        {
+            var pendingSprint = AiPendingReference.Find(ChangeSet, sprintRef, "sprint");
+
+            if (pendingSprint is null)
+            {
+                return TaskPlacement.Failed(AiPendingReference.Missing(sprintRef, "sprint"));
+            }
+
+            fields.Add(new AiChangeField { Name = "sprint", After = pendingSprint.Summary });
         }
 
         var sprintId = AiToolSchema.GetInt(arguments, "sprintId");

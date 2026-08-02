@@ -34,7 +34,8 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler
             ProjectId = AiChangePayload.ReadInt(payload, "projectId"),
             StatusId = AiChangePayload.ReadInt(payload, "statusId"),
             AssigneeId = AiChangePayload.ReadString(payload, "assigneeId"),
-            SprintId = AiChangePayload.ReadInt(payload, "sprintId"),
+            SprintId = AiChangePayload.ReadInt(payload, "sprintId")
+                ?? AiChangePayload.ResolveReference(context, "sprintRef"),
             BoardGroupId = AiChangePayload.ReadInt(payload, "boardGroupId"),
             Priority = ReadEnum<TaskPriority>(payload, "priority"),
             EstimateType = ReadEnum<EstimateType>(payload, "estimateType"),

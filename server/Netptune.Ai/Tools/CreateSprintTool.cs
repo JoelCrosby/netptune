@@ -80,6 +80,7 @@ public sealed class CreateSprintTool : IAiTool
         }
 
         var goal = AiToolSchema.GetString(arguments, "goal");
+        var refKey = ChangeSet.CreateRefKey();
         var fields = new List<AiChangeField>
         {
             new() { Name = "name", After = name },
@@ -94,7 +95,7 @@ public sealed class CreateSprintTool : IAiTool
         {
             ToolName = Name,
             EntityType = "sprint",
-            RefKey = ChangeSet.CreateRefKey(),
+            RefKey = refKey,
             Summary = $"Create sprint “{name}” in {project.Name}",
             Fields = fields,
             Payload = JsonDocument.Parse(arguments.GetRawText()),
@@ -102,7 +103,7 @@ public sealed class CreateSprintTool : IAiTool
         });
 
         return AiToolExecution.Success(
-            $"Proposed creating sprint \"{name}\". Nothing has been applied yet — the user must review and apply the change.");
+            $"Proposed creating sprint \"{name}\" as {refKey}. Nothing has been applied yet — the user must review and apply the change.");
     }
 
     private static DateOnly? ReadDate(JsonElement arguments, string name)

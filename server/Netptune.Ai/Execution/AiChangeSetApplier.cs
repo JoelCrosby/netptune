@@ -102,12 +102,16 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         var results = new List<AiAppliedChangeResult>();
         var resolvedRefs = new Dictionary<string, int>(StringComparer.Ordinal);
         var agent = await ResolveAgentName(changeSet, cancellationToken);
+        var ordered = OrderByDependency(selected);
 
         using (AiExecution.Begin(agent, changeSet.CorrelationId))
         {
-            foreach (var change in selected)
+            foreach (var change in ordered)
             {
-                var result = await ApplyChange(change, resolvedRefs, cancellationToken);
+                var blocker = FindUnmetReference(change, resolvedRefs);
+                var result = blocker is null
+                    ? await ApplyChange(change, resolvedRefs, cancellationToken)
+                    : SkipChange(change, blocker);
 
                 results.Add(result);
             }
@@ -125,6 +129,78 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             ChangeSetId = changeSet.Id,
             Status = changeSet.Status,
             Results = results,
+        };
+    }
+
+    private static List<AiProposedChange> OrderByDependency(List<AiProposedChange> changes)
+    {
+        var byRefKey = changes
+            .Where(change => change.RefKey is not null)
+            .GroupBy(change => change.RefKey!, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+
+        var ordered = new List<AiProposedChange>();
+        var placed = new HashSet<long>();
+        var placing = new HashSet<long>();
+
+        foreach (var change in changes)
+        {
+            Place(change, byRefKey, ordered, placed, placing);
+        }
+
+        return ordered;
+    }
+
+    private static void Place(
+        AiProposedChange change,
+        IReadOnlyDictionary<string, AiProposedChange> byRefKey,
+        List<AiProposedChange> ordered,
+        HashSet<long> placed,
+        HashSet<long> placing)
+    {
+        var isSettled = placed.Contains(change.Id) || !placing.Add(change.Id);
+
+        if (isSettled)
+        {
+            return;
+        }
+
+        foreach (var reference in AiChangePayload.ReadReferences(change.Payload.RootElement))
+        {
+            var isKnown = byRefKey.TryGetValue(reference, out var prerequisite);
+
+            if (isKnown)
+            {
+                Place(prerequisite!, byRefKey, ordered, placed, placing);
+            }
+        }
+
+        placing.Remove(change.Id);
+        placed.Add(change.Id);
+        ordered.Add(change);
+    }
+
+    private static string? FindUnmetReference(
+        AiProposedChange change,
+        IReadOnlyDictionary<string, int> resolvedRefs)
+    {
+        return AiChangePayload
+            .ReadReferences(change.Payload.RootElement)
+            .FirstOrDefault(reference => !resolvedRefs.ContainsKey(reference));
+    }
+
+    private static AiAppliedChangeResult SkipChange(AiProposedChange change, string reference)
+    {
+        var error = $"Skipped because {reference} was not created.";
+
+        change.ApplyStatus = AiChangeApplyStatus.Skipped;
+        change.ApplyError = error;
+
+        return new AiAppliedChangeResult
+        {
+            ChangeId = change.Id,
+            Status = AiChangeApplyStatus.Skipped,
+            Error = error,
         };
     }
 

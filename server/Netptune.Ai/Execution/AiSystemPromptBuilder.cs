@@ -44,6 +44,9 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine("They add an entry to a change set the user reviews and applies themselves.");
         prompt.AppendLine("Never tell the user a change has been made — say what you have proposed and that it awaits their approval.");
         prompt.AppendLine("Look up real ids with the read tools before proposing a change against them.");
+        prompt.AppendLine("A proposal that creates something answers with a handle such as ref:1.");
+        prompt.AppendLine("Pass that handle as taskRef or sprintRef to configure an entity the same change set is still creating.");
+        prompt.AppendLine("Applying orders the changes so a handle always resolves, and skips anything whose entity failed.");
         prompt.AppendLine();
         prompt.AppendLine("Reference workspace entities with [[type:id|name]] so the client can link them.");
         prompt.AppendLine("Use task, project, sprint or board as the type, for example [[task:NPT-42|Fix the login page]].");

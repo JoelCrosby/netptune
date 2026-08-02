@@ -98,6 +98,38 @@ public static class AiChangePayload
         return isParsed ? parsed : null;
     }
 
+    public static IEnumerable<string> ReadReferences(JsonElement payload)
+    {
+        var isObject = payload.ValueKind == JsonValueKind.Object;
+
+        if (!isObject)
+        {
+            yield break;
+        }
+
+        foreach (var property in payload.EnumerateObject())
+        {
+            var isReference = property.Name.EndsWith("Ref", StringComparison.Ordinal)
+                && property.Value.ValueKind == JsonValueKind.String;
+
+            if (!isReference)
+            {
+                continue;
+            }
+
+            yield return property.Value.GetString()!;
+        }
+    }
+
+    public static int? ResolveReference(AiChangeApplyContext context, string name)
+    {
+        var payload = context.Change.Payload.RootElement;
+        var refKey = ReadString(payload, name);
+        var hasRef = refKey is not null && context.ResolvedRefs.ContainsKey(refKey);
+
+        return hasRef ? context.ResolvedRefs[refKey!] : null;
+    }
+
     public static int? ResolveTaskId(AiChangeApplyContext context)
     {
         var change = context.Change;

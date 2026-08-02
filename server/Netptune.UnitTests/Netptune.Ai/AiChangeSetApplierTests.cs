@@ -13,9 +13,12 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Repositories;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Handlers.Tasks.Commands;
 using Netptune.Services.Ai;
 
 using NSubstitute;
@@ -242,7 +245,66 @@ public class AiChangeSetApplierTests
         };
     }
 
-    private static AiProposedChange CreateChange(Guid changeSetId, string toolName, long id = 1)
+    [Fact]
+    public async Task Apply_ShouldRunAChangeBeforeAnythingThatReferencesIt()
+    {
+        var changeSet = CreateChangeSet();
+        var dependent = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 1,
+            refKey: "ref:dependent",
+            payload: """{"name":"Child","projectId":1,"sprintRef":"ref:sprint"}""");
+
+        var prerequisite = CreateChange(changeSet.Id, "propose_create_task", id: 2, refKey: "ref:sprint");
+
+        GivenChangeSet(changeSet, [dependent, prerequisite]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(7);
+
+        var applier = CreateApplier();
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+
+        result!.Results.Select(item => item.ChangeId).Should().Equal(
+            [prerequisite.Id, dependent.Id],
+            "a proposal cannot apply against an id its prerequisite has not created yet");
+    }
+
+    [Fact]
+    public async Task Apply_ShouldSkipADependent_WhenItsPrerequisiteNeverRan()
+    {
+        var changeSet = CreateChangeSet();
+        var dependent = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 1,
+            payload: """{"name":"Child","projectId":1,"sprintRef":"ref:missing"}""");
+
+        GivenChangeSet(changeSet, [dependent]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(7);
+
+        var applier = CreateApplier();
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var outcome = result!.Results.Single();
+
+        outcome.Status.Should().Be(AiChangeApplyStatus.Skipped);
+        outcome.Error.Should().Contain("ref:missing");
+    }
+
+    private void GivenCreatedTask(int taskId)
+    {
+        Mediator
+            .Send(Arg.Any<CreateTaskCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse<TaskViewModel>.Success(new TaskViewModel { Id = taskId }));
+    }
+
+    private static AiProposedChange CreateChange(
+        Guid changeSetId,
+        string toolName,
+        long id = 1,
+        string refKey = "ref:1",
+        string payload = """{"name":"Test","projectId":1}""")
     {
         return new AiProposedChange
         {
@@ -251,9 +313,9 @@ public class AiChangeSetApplierTests
             Sequence = (int)id,
             ToolName = toolName,
             EntityType = "task",
-            RefKey = "ref:1",
+            RefKey = refKey,
             Summary = "Create task",
-            Payload = JsonDocument.Parse("""{"name":"Test","projectId":1}"""),
+            Payload = JsonDocument.Parse(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,
             ApplyStatus = AiChangeApplyStatus.Pending,
         };
