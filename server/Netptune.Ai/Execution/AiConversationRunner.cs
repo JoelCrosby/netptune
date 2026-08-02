@@ -14,15 +14,18 @@ public sealed class AiConversationRunner : IAiConversationRunner
 {
     private readonly IAiChatProviderFactory ProviderFactory;
     private readonly IAiToolRegistry Tools;
+    private readonly IAiChangeSetBuilder ChangeSet;
     private readonly AiOptions Options;
 
     public AiConversationRunner(
         IAiChatProviderFactory providerFactory,
         IAiToolRegistry tools,
+        IAiChangeSetBuilder changeSet,
         IOptions<AiOptions> options)
     {
         ProviderFactory = providerFactory;
         Tools = tools;
+        ChangeSet = changeSet;
         Options = options.Value;
     }
 
@@ -35,6 +38,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
         var definitions = availableTools.Select(CreateDefinition).ToList();
         var messages = new List<AiChatMessage>(context.History);
         var iteration = 0;
+        var hasCorrectedClaim = false;
 
         while (iteration < Options.MaxToolIterations)
         {
@@ -77,9 +81,34 @@ public sealed class AiConversationRunner : IAiConversationRunner
 
             if (!hasToolCalls)
             {
-                yield return new AiStreamEvent { Type = AiStreamEventType.TurnCompleted };
+                var isUnbackedClaim = !hasCorrectedClaim
+                    && AiProposalClaim.IsUnbacked(turn.Text, ChangeSet.Changes.Count);
 
-                yield break;
+                if (!isUnbackedClaim)
+                {
+                    yield return new AiStreamEvent { Type = AiStreamEventType.TurnCompleted };
+
+                    yield break;
+                }
+
+                hasCorrectedClaim = true;
+
+                messages.Add(new AiChatMessage
+                {
+                    Role = AiMessageRole.Assistant,
+                    Text = turn.Text,
+                    ProviderPayload = turn.ProviderPayload,
+                });
+
+                messages.Add(new AiChatMessage
+                {
+                    Role = AiMessageRole.User,
+                    Text = AiProposalClaim.Correction,
+                });
+
+                yield return AiStreamEvent.ReplyReset();
+
+                continue;
             }
 
             messages.Add(new AiChatMessage

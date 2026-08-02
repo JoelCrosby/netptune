@@ -1,9 +1,10 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AiProposedChange } from '@core/models/ai-conversation';
 import { referenceRoute } from '@core/util/ai-references';
 import {
   LucideCalendarRange,
+  LucideChevronDown,
   LucideCircleAlert,
   LucideCircleCheck,
   LucideCircleDashed,
@@ -13,9 +14,11 @@ import {
 } from '@lucide/angular';
 import {
   AiChangeGroup,
+  detailFields,
   fieldLabel,
   isApplied,
   isValid,
+  summaryFields,
 } from './ai-assistant-change-group';
 
 @Component({
@@ -24,6 +27,7 @@ import {
   imports: [
     RouterLink,
     LucideCalendarRange,
+    LucideChevronDown,
     LucideCircleAlert,
     LucideCircleCheck,
     LucideCircleDashed,
@@ -85,7 +89,7 @@ import {
                   <span>{{ change.summary }}</span>
                 }
 
-                @for (field of change.fields; track field.name) {
+                @for (field of summary(change); track field.name) {
                   <span
                     class="text-muted flex flex-wrap items-center gap-1 text-xs">
                     <span class="font-medium">{{ label(field.name) }}</span>
@@ -103,6 +107,44 @@ import {
                       </span>
                     }
                   </span>
+                }
+
+                @if (details(change).length > 0) {
+                  <button
+                    type="button"
+                    class="text-muted hover:text-foreground flex w-fit items-center gap-1 text-xs"
+                    [attr.aria-expanded]="isExpanded(change)"
+                    (click)="toggleDetails(change)">
+                    <svg
+                      lucideChevronDown
+                      class="h-3 w-3 transition-transform"
+                      [class.rotate-180]="isExpanded(change)"></svg>
+                    <span i18n="Reveals the longer fields of a proposed change">
+                      Details
+                    </span>
+                  </button>
+                }
+
+                @if (isExpanded(change)) {
+                  @for (field of details(change); track field.name) {
+                    <span class="text-muted flex flex-col gap-0.5 text-xs">
+                      <span class="font-medium">{{ label(field.name) }}</span>
+                      @if (field.before) {
+                        <span class="line-through whitespace-pre-wrap">{{
+                          field.before
+                        }}</span>
+                      }
+                      @if (field.after) {
+                        <span class="whitespace-pre-wrap">{{ field.after }}</span>
+                      } @else {
+                        <span
+                          class="italic"
+                          i18n="Shown when a change removes a value">
+                          cleared
+                        </span>
+                      }
+                    </span>
+                  }
                 }
 
                 @if (!canSelect(change)) {
@@ -131,6 +173,28 @@ export class AiAssistantChangeListComponent {
   readonly toggled = output<number>();
 
   protected readonly label = fieldLabel;
+  protected readonly summary = summaryFields;
+  protected readonly details = detailFields;
+
+  private readonly expandedChangeIds = signal<Set<number>>(new Set());
+
+  protected isExpanded(change: AiProposedChange): boolean {
+    return this.expandedChangeIds().has(change.id);
+  }
+
+  protected toggleDetails(change: AiProposedChange) {
+    this.expandedChangeIds.update((current) => {
+      const next = new Set(current);
+
+      if (next.has(change.id)) {
+        next.delete(change.id);
+      } else {
+        next.add(change.id);
+      }
+
+      return next;
+    });
+  }
 
   protected isIncluded(change: AiProposedChange): boolean {
     return this.canSelect(change) && !this.excludedChangeIds().has(change.id);

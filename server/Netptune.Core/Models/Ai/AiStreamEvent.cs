@@ -10,6 +10,7 @@ public enum AiStreamEventType
     ConversationStarted = 5,
     ChangeSetProposed = 6,
     EntitiesReferenced = 7,
+    ReplyReset = 8,
 }
 
 public sealed record AiStreamEvent
@@ -68,6 +69,11 @@ public sealed record AiStreamEvent
     public static AiStreamEvent ToolCompleted(string toolName)
     {
         return new AiStreamEvent { Type = AiStreamEventType.ToolCompleted, ToolName = toolName };
+    }
+
+    public static AiStreamEvent ReplyReset()
+    {
+        return new AiStreamEvent { Type = AiStreamEventType.ReplyReset };
     }
 
     public static AiStreamEvent Failed(string message)

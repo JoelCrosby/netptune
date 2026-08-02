@@ -21,6 +21,7 @@ namespace Netptune.UnitTests.Netptune.Ai;
 public class AiConversationRunnerTests
 {
     private readonly StubChatProvider Provider = new();
+    private readonly AiChangeSetBuilder ChangeSet = new();
 
     [Fact]
     public async Task Run_ShouldOnlyOfferTools_WhenPermissionsAreHeld()
@@ -127,6 +128,96 @@ public class AiConversationRunnerTests
         invocation.Result.Should().Contain("not available");
     }
 
+    [Fact]
+    public async Task Run_ShouldAskTheModelToProposeAgain_WhenItClaimsAProposalItNeverMade()
+    {
+        var tool = new StubTool("propose_change", NetptunePermissions.Tasks.Create)
+        {
+            ToolKind = AiToolKind.Write,
+        };
+
+        var runner = CreateRunner([tool]);
+
+        Provider.ReplyText = "I have proposed renaming the task.";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Create);
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(2, "the model gets one chance to back the claim with a tool call");
+        events.Should().Contain(item => item.Type == AiStreamEventType.ReplyReset);
+
+        var correction = Provider.LastRequest!.Messages[^1];
+
+        correction.Role.Should().Be(AiMessageRole.User);
+        correction.Text.Should().Contain("no propose_ tool ran this turn");
+    }
+
+    [Fact]
+    public async Task Run_ShouldCorrectAClaimOnlyOnce_SoAStubbornModelCannotLoop()
+    {
+        var tool = new StubTool("propose_change", NetptunePermissions.Tasks.Create)
+        {
+            ToolKind = AiToolKind.Write,
+        };
+
+        var runner = CreateRunner([tool]);
+
+        Provider.ReplyText = "I have proposed renaming the task.";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Create);
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(2);
+        events[^1].Type.Should().Be(AiStreamEventType.TurnCompleted);
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotCorrect_WhenTheClaimIsBackedByAProposal()
+    {
+        var tool = new StubTool("propose_change", NetptunePermissions.Tasks.Create)
+        {
+            ToolKind = AiToolKind.Write,
+        };
+
+        var runner = CreateRunner([tool]);
+
+        Provider.ReplyText = "I have proposed renaming the task.";
+
+        ChangeSet.Add(new AiChangeDraft
+        {
+            ToolName = "propose_change",
+            EntityType = "task",
+            Summary = "Rename task",
+            Payload = JsonDocument.Parse("{}"),
+            ValidationStatus = AiChangeValidationStatus.Valid,
+        });
+
+        var context = CreateContext(NetptunePermissions.Tasks.Create);
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(1);
+        events.Should().NotContain(item => item.Type == AiStreamEventType.ReplyReset);
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotCorrect_WhenTheReplyMakesNoClaim()
+    {
+        var tool = new StubTool("propose_change", NetptunePermissions.Tasks.Create)
+        {
+            ToolKind = AiToolKind.Write,
+        };
+
+        var runner = CreateRunner([tool]);
+
+        Provider.ReplyText = "There are four tasks in the sprint.";
+
+        var context = CreateContext(NetptunePermissions.Tasks.Create);
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(1);
+        events.Should().NotContain(item => item.Type == AiStreamEventType.ReplyReset);
+    }
+
     private AiConversationRunner CreateRunner(
         IReadOnlyList<IAiTool> tools,
         int maxToolIterations = 12,
@@ -142,7 +233,7 @@ public class AiConversationRunnerTests
             MaxToolResultCharacters = maxToolResultCharacters,
         });
 
-        return new AiConversationRunner(factory, new AiToolRegistry(tools), options);
+        return new AiConversationRunner(factory, new AiToolRegistry(tools), ChangeSet, options);
     }
 
     private static AiRunContext CreateContext(params string[] permissions)
@@ -184,6 +275,8 @@ public class AiConversationRunnerTests
 
         public string? CallToolOnce { get; set; }
 
+        public string ReplyText { get; set; } = "hi";
+
         public async IAsyncEnumerable<AiProviderStreamEvent> Stream(
             AiChatRequest request,
             string apiKey,
@@ -194,21 +287,21 @@ public class AiConversationRunnerTests
 
             await Task.CompletedTask;
 
-            yield return AiProviderStreamEvent.Delta("hi");
+            yield return AiProviderStreamEvent.Delta(ReplyText);
 
             var toolName = AlwaysCallTool ?? (RequestCount == 1 ? CallToolOnce : null);
             var hasToolCall = toolName is not null;
 
             if (!hasToolCall)
             {
-                yield return AiProviderStreamEvent.Completed(new AiChatTurn { Text = "hi" });
+                yield return AiProviderStreamEvent.Completed(new AiChatTurn { Text = ReplyText });
 
                 yield break;
             }
 
             yield return AiProviderStreamEvent.Completed(new AiChatTurn
             {
-                Text = "hi",
+                Text = ReplyText,
                 ToolCalls =
                 [
                     new AiToolCall

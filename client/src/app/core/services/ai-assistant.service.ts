@@ -8,6 +8,7 @@ import { AiModelOption } from '@core/models/ai-model';
 import { ClientResponse } from '@core/models/client-response';
 import {
   AiChangeSet,
+  AiChangeSetStatus,
   AiConversation,
   AiConversationDetail,
   AiEntityReference,
@@ -790,7 +791,7 @@ export class AiAssistantService {
       .post(`api/ai/change-sets/${changeSet.id}/discard`, {})
       .toPromise();
 
-    this.changeSet.set(null);
+    await this.refreshChangeSet(changeSet.id);
   }
 
   private async refreshChangeSet(changeSetId: string, token?: number) {
@@ -870,7 +871,7 @@ export class AiAssistantService {
    * nothing on screen pointing at it. Ask for it directly rather than lose it.
    */
   private async recoverProposals(token: number) {
-    const isMissing = this.changeSet() === null;
+    const isMissing = !this.hasPendingChangeSet();
 
     if (!isMissing) {
       return;
@@ -883,7 +884,7 @@ export class AiAssistantService {
     }
 
     const pending = await this.readPendingChangeSet(conversationId);
-    const isCurrent = this.turnToken === token && this.changeSet() === null;
+    const isCurrent = this.turnToken === token && !this.hasPendingChangeSet();
 
     if (pending === null || !isCurrent) {
       return;
@@ -891,6 +892,10 @@ export class AiAssistantService {
 
     this.changeSet.set(pending);
     this.excludedChangeIds.set(new Set());
+  }
+
+  private hasPendingChangeSet(): boolean {
+    return this.changeSet()?.status === AiChangeSetStatus.pending;
   }
 
   private async readPendingChangeSet(
@@ -1047,6 +1052,13 @@ export class AiAssistantService {
       return;
     }
 
+    if (event.type === AiStreamEventType.replyReset) {
+      this.isThinking.set(true);
+      this.resetLastEntry();
+
+      return;
+    }
+
     if (
       event.type === AiStreamEventType.entitiesReferenced &&
       event.references
@@ -1110,6 +1122,18 @@ export class AiAssistantService {
       const last = next[next.length - 1];
 
       next[next.length - 1] = { ...last, tools: [...last.tools, toolName] };
+
+      return next;
+    });
+  }
+
+  /** The harness discards a reply it caught claiming work it never did. */
+  private resetLastEntry() {
+    this.entries.update((current) => {
+      const next = [...current];
+      const last = next[next.length - 1];
+
+      next[next.length - 1] = { ...last, text: '', tools: [] };
 
       return next;
     });

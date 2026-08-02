@@ -183,6 +183,11 @@ public sealed class AiConversationService : IAiConversationService
                 assistantText.Append(streamEvent.Text);
             }
 
+            if (streamEvent.Type == AiStreamEventType.ReplyReset)
+            {
+                assistantText.Clear();
+            }
+
             yield return streamEvent;
         }
 

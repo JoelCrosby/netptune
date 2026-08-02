@@ -1,10 +1,19 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import {
   AiChangeApplyStatus,
   AiChangeSet,
   AiChangeSetStatus,
 } from '@core/models/ai-conversation';
 import { DialogService } from '@core/services/dialog.service';
+import { LucideChevronDown } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import {
@@ -23,6 +32,7 @@ const INLINE_CHANGE_LIMIT = 5;
   selector: 'app-ai-assistant-change-set',
   host: { class: 'border-border block border-t' },
   imports: [
+    LucideChevronDown,
     FlatButtonComponent,
     StrokedButtonComponent,
     AiAssistantChangeListComponent,
@@ -30,13 +40,26 @@ const INLINE_CHANGE_LIMIT = 5;
   template: `
     <div class="mx-auto w-full px-4 py-3" [class]="contentWidth()">
       <div class="mb-2 flex items-center justify-between gap-2">
-        <h3
-          class="font-overpass text-sm font-medium"
-          i18n="Heading above the list of proposed workspace changes">
-          Proposed changes
-        </h3>
+        <button
+          type="button"
+          class="flex min-w-0 items-center gap-1.5 text-left"
+          [attr.aria-expanded]="!isCollapsed()"
+          (click)="toggleCollapsed()">
+          <svg
+            lucideChevronDown
+            class="text-muted h-3.5 w-3.5 shrink-0 transition-transform"
+            [class.-rotate-90]="isCollapsed()"></svg>
+          <h3
+            class="font-overpass text-sm font-medium"
+            i18n="Heading above the list of proposed workspace changes">
+            Proposed changes
+          </h3>
+          @if (isCollapsed()) {
+            <span class="text-muted truncate text-xs">{{ collapsedLabel() }}</span>
+          }
+        </button>
 
-        @if (isPending() && selectableCount() > 1) {
+        @if (!isCollapsed() && isPending() && selectableCount() > 1) {
           <button
             type="button"
             class="text-muted hover:text-foreground text-xs"
@@ -52,38 +75,40 @@ const INLINE_CHANGE_LIMIT = 5;
         }
       </div>
 
-      <app-ai-assistant-change-list
-        [groups]="visibleGroups()"
-        [excludedChangeIds]="excludedChangeIds()"
-        [isPending]="isPending()"
-        [workspace]="workspace()"
-        (toggled)="toggled.emit($event)" />
+      @if (!isCollapsed()) {
+        <app-ai-assistant-change-list
+          [groups]="visibleGroups()"
+          [excludedChangeIds]="excludedChangeIds()"
+          [isPending]="isPending()"
+          [workspace]="workspace()"
+          (toggled)="toggled.emit($event)" />
 
-      @if (hiddenCount() > 0) {
-        <button
-          type="button"
-          class="text-muted hover:text-foreground mt-2 text-xs underline"
-          (click)="showAll()">
-          {{ moreLabel() }}
-        </button>
-      }
-
-      @if (isPending()) {
-        <div class="mt-3 flex items-center gap-2">
+        @if (hiddenCount() > 0) {
           <button
-            app-flat-button
             type="button"
-            [disabled]="isApplying() || selectedCount() === 0"
-            (click)="applied.emit()">
-            <span i18n="Button that applies the proposed changes">Apply</span>
-            <span>&nbsp;({{ selectedCount() }})</span>
+            class="text-muted hover:text-foreground mt-2 text-xs underline"
+            (click)="showAll()">
+            {{ moreLabel() }}
           </button>
-          <button app-stroked-button type="button" (click)="discarded.emit()">
-            <span i18n="Button that discards the proposed changes">Discard</span>
-          </button>
-        </div>
-      } @else {
-        <p class="text-muted mt-3 text-xs">{{ outcome() }}</p>
+        }
+
+        @if (isPending()) {
+          <div class="mt-3 flex items-center gap-2">
+            <button
+              app-flat-button
+              type="button"
+              [disabled]="isApplying() || selectedCount() === 0"
+              (click)="applied.emit()">
+              <span i18n="Button that applies the proposed changes">Apply</span>
+              <span>&nbsp;({{ selectedCount() }})</span>
+            </button>
+            <button app-stroked-button type="button" (click)="discarded.emit()">
+              <span i18n="Button that discards the proposed changes">Discard</span>
+            </button>
+          </div>
+        } @else {
+          <p class="text-muted mt-3 text-xs">{{ outcome() }}</p>
+        }
       }
     </div>
   `,
@@ -104,6 +129,15 @@ export class AiAssistantChangeSetComponent {
 
   protected readonly isPending = computed(() => {
     return this.changeSet().status === AiChangeSetStatus.pending;
+  });
+
+  /** null follows the change set: open while it needs a decision, closed once it has one. */
+  private readonly collapsePreference = signal<boolean | null>(null);
+
+  private trackedState: string | null = null;
+
+  protected readonly isCollapsed = computed(() => {
+    return this.collapsePreference() ?? !this.isPending();
   });
 
   protected readonly groups = computed<AiChangeGroup[]>(() => {
@@ -141,6 +175,20 @@ export class AiAssistantChangeSetComponent {
     return $localize`:Opens a dialog with the changes not shown inline:+${hidden}:HIDDEN: more changes`;
   });
 
+  constructor() {
+    effect(() => {
+      const state = `${this.changeSet().id}:${this.isPending()}`;
+      const hasChanged = state !== this.trackedState;
+
+      if (!hasChanged) {
+        return;
+      }
+
+      this.trackedState = state;
+      this.collapsePreference.set(null);
+    });
+  }
+
   protected readonly selectable = computed(() => {
     return this.changeSet().changes.filter(isValid);
   });
@@ -157,7 +205,23 @@ export class AiAssistantChangeSetComponent {
     return this.selectedCount() === this.selectableCount();
   });
 
+  protected readonly collapsedLabel = computed(() => {
+    const total = this.changeSet().changes.length;
+
+    if (this.isPending()) {
+      return $localize`:Summarises a collapsed set of proposals awaiting a decision:${total}:TOTAL: awaiting review`;
+    }
+
+    return this.outcome();
+  });
+
   protected readonly outcome = computed(() => {
+    const isDiscarded = this.changeSet().status === AiChangeSetStatus.discarded;
+
+    if (isDiscarded) {
+      return $localize`:Shown after proposals were discarded:These changes were discarded.`;
+    }
+
     const changes = this.changeSet().changes;
     const applied = changes.filter(isApplied).length;
     const failed = changes.filter((change) => {
@@ -176,6 +240,10 @@ export class AiAssistantChangeSetComponent {
 
     return $localize`:Shown after changes were applied:These changes have been applied.`;
   });
+
+  protected toggleCollapsed() {
+    this.collapsePreference.set(!this.isCollapsed());
+  }
 
   protected showAll() {
     this.dialog.open(AiAssistantChangesDialogComponent, { width: '40rem' });
