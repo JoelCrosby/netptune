@@ -4,6 +4,8 @@ using FluentAssertions;
 
 using Mediator;
 
+using Microsoft.Extensions.Logging.Abstractions;
+
 using Netptune.Ai.Execution;
 using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Tools;
@@ -38,6 +40,7 @@ public class AiChangeSetApplierTests
     private readonly IAiChangeSetRepository ChangeSets = Substitute.For<IAiChangeSetRepository>();
     private readonly IWorkspaceUserRepository WorkspaceUsers = Substitute.For<IWorkspaceUserRepository>();
     private readonly IWorkspaceRepository Workspaces = Substitute.For<IWorkspaceRepository>();
+    private readonly IAiConversationRepository Conversations = Substitute.For<IAiConversationRepository>();
 
     public AiChangeSetApplierTests()
     {
@@ -48,6 +51,7 @@ public class AiChangeSetApplierTests
         UnitOfWork.AiChangeSets.Returns(ChangeSets);
         UnitOfWork.WorkspaceUsers.Returns(WorkspaceUsers);
         UnitOfWork.Workspaces.Returns(Workspaces);
+        UnitOfWork.AiConversations.Returns(Conversations);
 
         Workspaces
             .GetAsync(WorkspaceId, Arg.Any<bool>(), Arg.Any<CancellationToken>())
@@ -183,6 +187,7 @@ public class AiChangeSetApplierTests
             Mediator,
             tools,
             new AiExecutionContext(),
+            NullLogger<AiChangeSetApplier>.Instance,
             []);
 
         var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
@@ -202,6 +207,7 @@ public class AiChangeSetApplierTests
             Mediator,
             tools,
             new AiExecutionContext(),
+            NullLogger<AiChangeSetApplier>.Instance,
             [new CreateTaskChangeHandler(Mediator)]);
     }
 
@@ -290,6 +296,42 @@ public class AiChangeSetApplierTests
 
         outcome.Status.Should().Be(AiChangeApplyStatus.Skipped);
         outcome.Error.Should().Contain("ref:missing");
+    }
+
+    [Fact]
+    public async Task Apply_ShouldTellTheConversationWhatWasCreated()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(91);
+        GivenConversation(changeSet.ConversationId);
+
+        var applier = CreateApplier();
+
+        await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+
+        await Conversations
+            .Received(1)
+            .AddMessage(
+                Arg.Is<AiMessage>(message => message.Content.RootElement.GetRawText().Contains("id 91")),
+                Arg.Any<CancellationToken>());
+    }
+
+    private void GivenConversation(Guid conversationId)
+    {
+        Conversations
+            .GetAsync(conversationId, Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<AiConversation?>(new AiConversation
+            {
+                Id = conversationId,
+                WorkspaceId = WorkspaceId,
+                UserId = UserId,
+                Title = "Chat",
+                Model = "claude-opus-5",
+            }));
     }
 
     private void GivenCreatedTask(int taskId)

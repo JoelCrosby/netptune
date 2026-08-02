@@ -2,6 +2,8 @@ using System.Text.Json;
 
 using Mediator;
 
+using Microsoft.Extensions.Logging;
+
 using Netptune.Ai.Execution.Handlers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -21,6 +23,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     private readonly IMediator Mediator;
     private readonly IAiToolRegistry Tools;
     private readonly IAiExecutionContext AiExecution;
+    private readonly ILogger<AiChangeSetApplier> Logger;
     private readonly Dictionary<string, IAiChangeHandler> HandlersByToolName;
 
     public AiChangeSetApplier(
@@ -29,6 +32,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         IMediator mediator,
         IAiToolRegistry tools,
         IAiExecutionContext aiExecution,
+        ILogger<AiChangeSetApplier> logger,
         IEnumerable<IAiChangeHandler> handlers)
     {
         UnitOfWork = unitOfWork;
@@ -36,6 +40,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         Mediator = mediator;
         Tools = tools;
         AiExecution = aiExecution;
+        Logger = logger;
         HandlersByToolName = handlers.ToDictionary(handler => handler.ToolName, StringComparer.Ordinal);
     }
 
@@ -122,6 +127,15 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         changeSet.Status = ResolveStatus(results);
         changeSet.AppliedAt = DateTime.UtcNow;
 
+        try
+        {
+            await RecordOutcome(changeSet, ordered, results, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(exception, "The applied change set could not be recorded in the conversation.");
+        }
+
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         return new AiApplyResult
@@ -130,6 +144,118 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             Status = changeSet.Status,
             Results = results,
         };
+    }
+
+    private async Task RecordOutcome(
+        AiChangeSet changeSet,
+        List<AiProposedChange> applied,
+        List<AiAppliedChangeResult> results,
+        CancellationToken cancellationToken)
+    {
+        var summary = await DescribeOutcome(applied, results, cancellationToken);
+        var conversation = await UnitOfWork.AiConversations.GetAsync(
+            changeSet.ConversationId,
+            true,
+            cancellationToken);
+
+        if (conversation is null)
+        {
+            return;
+        }
+
+        var content = AiMessageContent.FromChatMessage(new AiChatMessage
+        {
+            Role = AiMessageRole.User,
+            Text = summary,
+        });
+
+        var sequence = await UnitOfWork.AiConversations.GetNextSequence(conversation.Id, cancellationToken);
+        var record = new AiMessage
+        {
+            ConversationId = conversation.Id,
+            Sequence = sequence,
+            Role = AiMessageRole.User,
+            Content = content.ToJsonDocument(),
+            Provider = conversation.Provider,
+            Model = conversation.Model,
+            Status = AiMessageStatus.Complete,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        await UnitOfWork.AiConversations.AddMessage(record, cancellationToken);
+
+        conversation.MessageCount += 1;
+        conversation.LastMessageAt = record.CreatedAt;
+    }
+
+    private async Task<string> DescribeOutcome(
+        List<AiProposedChange> applied,
+        List<AiAppliedChangeResult> results,
+        CancellationToken cancellationToken)
+    {
+        var byChangeId = applied.ToDictionary(change => change.Id);
+        var appliedResults = results.Where(result => result.Status == AiChangeApplyStatus.Applied).ToList();
+        var systemIds = await ReadTaskSystemIds(appliedResults, byChangeId, cancellationToken);
+        var lines = new List<string>();
+
+        foreach (var result in results)
+        {
+            var change = byChangeId[result.ChangeId];
+            var identifier = DescribeIdentifier(result, change, systemIds);
+
+            lines.Add($"- {change.Summary}: {result.Status.ToString().ToLowerInvariant()}{identifier}");
+        }
+
+        var outcome = string.Join("\n", lines);
+
+        return $"I applied the change set. Use these ids for any follow-up work rather than searching for them.\n{outcome}";
+    }
+
+    private static string DescribeIdentifier(
+        AiAppliedChangeResult result,
+        AiProposedChange change,
+        IReadOnlyDictionary<int, string> systemIds)
+    {
+        var isApplied = result.Status == AiChangeApplyStatus.Applied;
+
+        if (!isApplied)
+        {
+            return result.Error is null ? string.Empty : $" ({result.Error})";
+        }
+
+        var entityId = result.AppliedEntityId ?? change.EntityId;
+
+        if (!entityId.HasValue)
+        {
+            return string.Empty;
+        }
+
+        var hasSystemId = systemIds.TryGetValue(entityId.Value, out var systemId);
+
+        return hasSystemId ? $" ({systemId}, id {entityId})" : $" ({change.EntityType} id {entityId})";
+    }
+
+    private async Task<Dictionary<int, string>> ReadTaskSystemIds(
+        List<AiAppliedChangeResult> results,
+        IReadOnlyDictionary<long, AiProposedChange> byChangeId,
+        CancellationToken cancellationToken)
+    {
+        var taskIds = results
+            .Where(result => string.Equals(byChangeId[result.ChangeId].EntityType, "task", StringComparison.Ordinal))
+            .Select(result => result.AppliedEntityId ?? byChangeId[result.ChangeId].EntityId)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
+
+        if (taskIds.Count == 0)
+        {
+            return [];
+        }
+
+        var models = await UnitOfWork.Tasks.GetTaskViewModels(taskIds, cancellationToken);
+
+        return models?.ToDictionary(model => model.Id, model => model.SystemId) ?? [];
     }
 
     private static List<AiProposedChange> OrderByDependency(List<AiProposedChange> changes)
