@@ -94,6 +94,10 @@ public sealed class AiProposedChangeEntityMap : KeyedEntityMap<AiProposedChange,
             .HasColumnType("text");
 
         builder
+            .Property(change => change.UndoPayload)
+            .HasColumnType("jsonb");
+
+        builder
             .HasIndex(change => new { change.ChangeSetId, change.Sequence })
             .IsUnique()
             .HasDatabaseName("ix_ai_proposed_changes_change_set_sequence");

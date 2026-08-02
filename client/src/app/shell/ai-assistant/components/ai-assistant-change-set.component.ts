@@ -132,7 +132,21 @@ const INLINE_CHANGE_LIMIT = 3;
             </button>
           </div>
         } @else {
-          <p class="text-muted mt-2 px-1 text-xs">{{ outcome() }}</p>
+          <div class="mt-2 flex items-center justify-between gap-2 px-1">
+            <p class="text-muted text-xs">{{ outcome() }}</p>
+
+            @if (canUndo()) {
+              <button
+                type="button"
+                class="text-muted hover:text-foreground shrink-0 text-xs"
+                [disabled]="isApplying()"
+                (click)="undone.emit()">
+                <span i18n="Button that takes back an applied change set">
+                  Undo
+                </span>
+              </button>
+            }
+          </div>
         }
       }
     </div>
@@ -148,12 +162,28 @@ export class AiAssistantChangeSetComponent {
   readonly toggled = output<number>();
   readonly applied = output();
   readonly discarded = output();
+  readonly undone = output();
   readonly selectionChanged = output<number[]>();
 
   private readonly dialog = inject(DialogService);
 
   protected readonly isPending = computed(() => {
     return this.changeSet().status === AiChangeSetStatus.pending;
+  });
+
+  /** Only a change that actually landed, and knows how to reverse itself, can go back. */
+  protected readonly canUndo = computed(() => {
+    const changeSet = this.changeSet();
+    const isUndone =
+      changeSet.undoneAt !== null && changeSet.undoneAt !== undefined;
+
+    if (this.isPending() || isUndone) {
+      return false;
+    }
+
+    return changeSet.changes.some((change) => {
+      return isApplied(change) && change.canUndo && !change.undoneAt;
+    });
   });
 
   /** null follows the change set: open while it needs a decision, closed once it has one. */
@@ -246,6 +276,14 @@ export class AiAssistantChangeSetComponent {
 
     if (isDiscarded) {
       return $localize`:Shown after proposals were discarded:These changes were discarded.`;
+    }
+
+    const undoneCount = this.changeSet().changes.filter((change) => {
+      return change.undoneAt;
+    }).length;
+
+    if (undoneCount > 0) {
+      return $localize`:Shown after applied proposals were taken back:${undoneCount}:UNDONE: of these changes were undone.`;
     }
 
     const changes = this.changeSet().changes;

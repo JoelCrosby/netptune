@@ -1,5 +1,8 @@
+using System.Text.Json;
+
 using Mediator;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
@@ -7,7 +10,7 @@ using Netptune.Handlers.Tasks.Commands;
 
 namespace Netptune.Ai.Execution.Handlers;
 
-public sealed class AssignTaskChangeHandler : IAiChangeHandler
+public sealed class AssignTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
     private readonly IMediator Mediator;
 
@@ -45,5 +48,20 @@ public sealed class AssignTaskChangeHandler : IAiChangeHandler
         }
 
         return AiChangePayload.Applied(change, taskId);
+    }
+
+    public IReadOnlySet<string> UndoPermissions { get; } = new HashSet<string>(StringComparer.Ordinal)
+    {
+        NetptunePermissions.Tasks.Update,
+    };
+
+    public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
+    {
+        return AiTaskUndo.Capture(Mediator, AiChangePayload.ResolveTaskId(context), cancellationToken);
+    }
+
+    public Task<AiAppliedChangeResult> Revert(AiChangeUndoContext context, CancellationToken cancellationToken)
+    {
+        return AiTaskUndo.Restore(Mediator, context, cancellationToken);
     }
 }

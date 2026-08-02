@@ -791,6 +791,26 @@ export class AiAssistantService {
     }
   }
 
+  async undoChangeSet() {
+    const changeSet = this.changeSet();
+
+    if (!changeSet || this.isApplying()) {
+      return;
+    }
+
+    this.isApplying.set(true);
+
+    try {
+      await this.http
+        .post(`api/ai/change-sets/${changeSet.id}/undo`, {})
+        .toPromise();
+
+      await this.refreshChangeSet(changeSet.id);
+    } finally {
+      this.isApplying.set(false);
+    }
+  }
+
   async discardChangeSet() {
     const changeSet = this.changeSet();
 
@@ -805,10 +825,6 @@ export class AiAssistantService {
     await this.refreshChangeSet(changeSet.id);
   }
 
-  /**
-   * The turn is stopped on the server first so it stops burning tokens, then
-   * the stream is dropped so the chat is usable again without waiting.
-   */
   stopTurn() {
     const isRunning = this.isStreaming();
 

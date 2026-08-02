@@ -40,6 +40,10 @@ public sealed record AiProposedChangeViewModel
     public int? AppliedEntityId { get; init; }
 
     public string? EntitySystemId { get; init; }
+
+    public DateTime? UndoneAt { get; init; }
+
+    public bool CanUndo { get; init; }
 }
 
 public sealed record AiChangeSetViewModel
@@ -51,6 +55,8 @@ public sealed record AiChangeSetViewModel
     public AiChangeSetStatus Status { get; init; }
 
     public DateTime? AppliedAt { get; init; }
+
+    public DateTime? UndoneAt { get; init; }
 
     public List<AiProposedChangeViewModel> Changes { get; init; } = [];
 }

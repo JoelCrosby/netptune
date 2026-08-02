@@ -8,6 +8,7 @@ import {
   LucideCircleAlert,
   LucideCircleCheck,
   LucideMinus,
+  LucideUndo2,
 } from '@lucide/angular';
 import {
   BadgeColor,
@@ -50,6 +51,7 @@ interface AiChangeRow {
     LucideCircleAlert,
     LucideCircleCheck,
     LucideMinus,
+    LucideUndo2,
     SelectionCheckboxComponent,
     TableComponent,
     TableEmptyCellDirective,
@@ -120,7 +122,11 @@ interface AiChangeRow {
 
       <tbody>
         @for (row of rows(); track row.change.id) {
-          <tr appTableRow [class.opacity-60]="!row.isIncluded && isPending()">
+          <tr
+            appTableRow
+            [class.opacity-60]="
+              (!row.isIncluded && isPending()) || row.change.undoneAt
+            ">
             <td class="px-3 py-3 align-top">
               @if (isPending()) {
                 <app-selection-checkbox
@@ -131,15 +137,21 @@ interface AiChangeRow {
                   (changed)="toggled.emit(row.change.id)" />
               } @else {
                 <span class="mt-0.5 flex h-4 w-4 items-center justify-center">
-                  @switch (row.change.applyStatus) {
-                    @case (applyStatus.applied) {
-                      <svg lucideCircleCheck class="text-primary h-4 w-4"></svg>
-                    }
-                    @case (applyStatus.failed) {
-                      <svg lucideCircleAlert class="text-warn h-4 w-4"></svg>
-                    }
-                    @default {
-                      <svg lucideMinus class="text-muted h-4 w-4"></svg>
+                  @if (row.change.undoneAt) {
+                    <svg lucideUndo2 class="text-muted h-4 w-4"></svg>
+                  } @else {
+                    @switch (row.change.applyStatus) {
+                      @case (applyStatus.applied) {
+                        <svg
+                          lucideCircleCheck
+                          class="text-primary h-4 w-4"></svg>
+                      }
+                      @case (applyStatus.failed) {
+                        <svg lucideCircleAlert class="text-warn h-4 w-4"></svg>
+                      }
+                      @default {
+                        <svg lucideMinus class="text-muted h-4 w-4"></svg>
+                      }
                     }
                   }
                 </span>

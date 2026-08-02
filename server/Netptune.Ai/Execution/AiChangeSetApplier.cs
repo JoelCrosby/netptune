@@ -411,6 +411,9 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             }
 
             var applyContext = new AiChangeApplyContext { Change = change, ResolvedRefs = resolvedRefs };
+
+            await CaptureUndo(handler, applyContext, cancellationToken);
+
             var outcome = await handler.Apply(applyContext, cancellationToken);
 
             change.ApplyStatus = outcome.Status;
@@ -445,5 +448,215 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         var found = HandlersByToolName.TryGetValue(toolName, out var handler);
 
         return found ? handler : null;
+    }
+
+    /// <summary>
+    /// The prior state only exists until the change lands, so it is read first
+    /// and stored with the change. A handler that cannot be undone stores nothing.
+    /// </summary>
+    private async Task CaptureUndo(
+        IAiChangeHandler handler,
+        AiChangeApplyContext context,
+        CancellationToken cancellationToken)
+    {
+        var isUndoable = handler is IAiChangeUndoHandler;
+
+        if (!isUndoable)
+        {
+            return;
+        }
+
+        try
+        {
+            context.Change.UndoPayload = await ((IAiChangeUndoHandler)handler).Capture(context, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(exception, "The undo snapshot for {Tool} could not be captured.", handler.ToolName);
+        }
+    }
+
+    public async Task<AiApplyResult?> Undo(Guid changeSetId, CancellationToken cancellationToken)
+    {
+        var userId = Identity.GetCurrentUserId();
+        var workspaceId = await Identity.GetWorkspaceId();
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var changeSet = await UnitOfWork.AiChangeSets.GetOwned(changeSetId, userId, workspaceId, cancellationToken);
+
+        if (changeSet is null)
+        {
+            return null;
+        }
+
+        var workspace = await UnitOfWork.Workspaces.GetAsync(workspaceId, true, cancellationToken);
+        var isAssistantEnabled = workspace?.AssistantEnabled ?? false;
+
+        if (!isAssistantEnabled)
+        {
+            throw new InvalidOperationException("The assistant is turned off for this workspace.");
+        }
+
+        var wasApplied = changeSet.AppliedAt.HasValue;
+
+        if (!wasApplied)
+        {
+            throw new InvalidOperationException("Only an applied change set can be undone.");
+        }
+
+        var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
+        var undoable = changes
+            .Where(change => change.ApplyStatus == AiChangeApplyStatus.Applied)
+            .Where(change => !change.UndoneAt.HasValue)
+            .ToList();
+
+        if (undoable.Count == 0)
+        {
+            throw new InvalidOperationException("There is nothing left to undo in this change set.");
+        }
+
+        var membership = await UnitOfWork.WorkspaceUsers.GetUserPermissions(
+            userId,
+            workspaceKey,
+            cancellationToken: cancellationToken);
+
+        if (membership is null)
+        {
+            throw new InvalidOperationException("You are not a member of this workspace.");
+        }
+
+        var permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal);
+        var missingPermission = undoable.Any(change => !CanUndo(change, permissions));
+
+        if (missingPermission)
+        {
+            throw new UnauthorizedAccessException("You do not have permission to undo these changes.");
+        }
+
+        var agent = await ResolveAgentName(changeSet, cancellationToken);
+        var results = new List<AiAppliedChangeResult>();
+
+        using (AiExecution.Begin(agent, changeSet.CorrelationId))
+        {
+            /* A change set is applied in dependency order, so it comes apart in reverse. */
+            foreach (var change in OrderByDependency(undoable).AsEnumerable().Reverse())
+            {
+                var result = await UndoChange(change, cancellationToken);
+
+                results.Add(result);
+            }
+        }
+
+        var undoneEverything = changes
+            .Where(change => change.ApplyStatus == AiChangeApplyStatus.Applied)
+            .All(change => change.UndoneAt.HasValue);
+
+        if (undoneEverything)
+        {
+            changeSet.UndoneAt = DateTime.UtcNow;
+        }
+
+        try
+        {
+            await RecordUndo(changeSet, results, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(exception, "The undone change set could not be recorded in the conversation.");
+        }
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        return new AiApplyResult
+        {
+            ChangeSetId = changeSet.Id,
+            Status = changeSet.Status,
+            Results = results,
+        };
+    }
+
+    private async Task<AiAppliedChangeResult> UndoChange(
+        AiProposedChange change,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var handler = ResolveHandler(change.ToolName) as IAiChangeUndoHandler;
+
+            if (handler is null)
+            {
+                return AiChangeUndoResult.Failure(change, $"A {change.ToolName} change cannot be undone.");
+            }
+
+            var outcome = await handler.Revert(new AiChangeUndoContext { Change = change }, cancellationToken);
+            var isUndone = outcome.Status == AiChangeApplyStatus.Applied;
+
+            if (isUndone)
+            {
+                change.UndoneAt = DateTime.UtcNow;
+            }
+
+            return outcome;
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            return AiChangeUndoResult.Failure(change, exception.Message);
+        }
+    }
+
+    private bool CanUndo(AiProposedChange change, IReadOnlySet<string> permissions)
+    {
+        var handler = ResolveHandler(change.ToolName) as IAiChangeUndoHandler;
+
+        if (handler is null)
+        {
+            return true;
+        }
+
+        return handler.UndoPermissions.All(permissions.Contains);
+    }
+
+    private async Task RecordUndo(
+        AiChangeSet changeSet,
+        List<AiAppliedChangeResult> results,
+        CancellationToken cancellationToken)
+    {
+        var undone = results.Count(result => result.Status == AiChangeApplyStatus.Applied);
+        var failed = results.Count - undone;
+        var tail = failed == 0 ? string.Empty : $" {failed} could not be undone and are still in place.";
+        var summary = $"I undid the change set. {undone} of {results.Count} changes were reverted.{tail}";
+
+        var conversation = await UnitOfWork.AiConversations.GetAsync(
+            changeSet.ConversationId,
+            true,
+            cancellationToken);
+
+        if (conversation is null)
+        {
+            return;
+        }
+
+        var content = AiMessageContent.FromChatMessage(new AiChatMessage
+        {
+            Role = AiMessageRole.User,
+            Text = summary,
+        });
+
+        var sequence = await UnitOfWork.AiConversations.GetNextSequence(conversation.Id, cancellationToken);
+        var record = new AiMessage
+        {
+            ConversationId = conversation.Id,
+            Sequence = sequence,
+            Role = AiMessageRole.User,
+            Content = content.ToJsonDocument(),
+            Provider = conversation.Provider,
+            Model = conversation.Model,
+            Status = AiMessageStatus.Complete,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        await UnitOfWork.AiConversations.AddMessage(record, cancellationToken);
+
+        conversation.MessageCount += 1;
+        conversation.LastMessageAt = record.CreatedAt;
     }
 }

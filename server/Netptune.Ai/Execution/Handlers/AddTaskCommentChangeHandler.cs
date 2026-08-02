@@ -1,14 +1,18 @@
+using System.Text.Json;
+
 using Mediator;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Comments.Commands;
+using Netptune.Handlers.Tasks.Commands;
 using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Execution.Handlers;
 
-public sealed class AddTaskCommentChangeHandler : IAiChangeHandler
+public sealed class AddTaskCommentChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
     private readonly IMediator Mediator;
 
@@ -54,5 +58,37 @@ public sealed class AddTaskCommentChangeHandler : IAiChangeHandler
         }
 
         return AiChangePayload.Applied(change, response.Payload?.Id);
+    }
+
+    public IReadOnlySet<string> UndoPermissions { get; } = new HashSet<string>(StringComparer.Ordinal)
+    {
+        NetptunePermissions.Comments.DeleteOwn,
+    };
+
+    public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
+    {
+        return Task.FromResult<JsonDocument?>(null);
+    }
+
+    public async Task<AiAppliedChangeResult> Revert(
+        AiChangeUndoContext context,
+        CancellationToken cancellationToken)
+    {
+        var change = context.Change;
+        var commentId = change.AppliedEntityId;
+
+        if (!commentId.HasValue)
+        {
+            return AiChangeUndoResult.Failure(change, "The posted comment could not be resolved.");
+        }
+
+        var response = await Mediator.Send(new DeleteCommentCommand(commentId.Value), cancellationToken);
+
+        if (!response.IsSuccess)
+        {
+            return AiChangeUndoResult.Failure(change, response.Message ?? "The comment could not be removed.");
+        }
+
+        return AiChangeUndoResult.Undone(change, commentId);
     }
 }

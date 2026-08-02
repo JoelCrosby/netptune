@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using Mediator;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
@@ -10,7 +11,7 @@ using Netptune.Handlers.Tasks.Commands;
 
 namespace Netptune.Ai.Execution.Handlers;
 
-public sealed class CreateTaskChangeHandler : IAiChangeHandler
+public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHandler
 {
     private readonly IMediator Mediator;
 
@@ -84,5 +85,38 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler
         var isParsed = Enum.TryParse<TValue>(raw, true, out var value);
 
         return isParsed ? value : null;
+    }
+
+    public IReadOnlySet<string> UndoPermissions { get; } = new HashSet<string>(StringComparer.Ordinal)
+    {
+        NetptunePermissions.Tasks.Delete,
+    };
+
+    /// <summary>Nothing existed before, so the undo only needs the created task.</summary>
+    public Task<JsonDocument?> Capture(AiChangeApplyContext context, CancellationToken cancellationToken)
+    {
+        return Task.FromResult<JsonDocument?>(null);
+    }
+
+    public async Task<AiAppliedChangeResult> Revert(
+        AiChangeUndoContext context,
+        CancellationToken cancellationToken)
+    {
+        var change = context.Change;
+        var taskId = change.AppliedEntityId;
+
+        if (!taskId.HasValue)
+        {
+            return AiChangeUndoResult.Failure(change, "The created task could not be resolved.");
+        }
+
+        var response = await Mediator.Send(new DeleteTaskCommand(taskId.Value), cancellationToken);
+
+        if (!response.IsSuccess)
+        {
+            return AiChangeUndoResult.Failure(change, response.Message ?? "The created task could not be deleted.");
+        }
+
+        return AiChangeUndoResult.Undone(change, taskId);
     }
 }

@@ -95,7 +95,7 @@ Users supply their own provider keys from personal settings, and a workspace adm
 
 Workspace admins can turn the assistant off for a whole workspace from workspace settings, and the `assistant.read_all_conversations` permission (granted to Admin and Owner) exposes every member's conversations there. Managing the shared workspace key needs `workspace.update`.
 
-The assistant's tables are created with the rest of the schema when the API first starts, so there is nothing to run by hand. An existing database predating the shared workspace key needs `server/scripts/add-workspace-ai-credentials.sql`.
+The assistant's tables are created with the rest of the schema when the API first starts, so there is nothing to run by hand. An existing database predating the shared workspace key needs `server/scripts/add-workspace-ai-credentials.sql`, and one predating change-set undo needs `server/scripts/add-ai-change-set-undo.sql`.
 
 ### Hosting
 

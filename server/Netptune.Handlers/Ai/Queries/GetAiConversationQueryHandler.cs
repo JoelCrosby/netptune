@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Ai;
 
@@ -16,9 +17,14 @@ public sealed class GetAiConversationQueryHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IAiUndoCatalog UndoCatalog;
 
-    public GetAiConversationQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetAiConversationQueryHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IAiUndoCatalog undoCatalog)
     {
+        UndoCatalog = undoCatalog;
         UnitOfWork = unitOfWork;
         Identity = identity;
     }
@@ -73,7 +79,7 @@ public sealed class GetAiConversationQueryHandler
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
 
-        return await AiChangeSetMapper.ToViewModel(changeSet, changes, UnitOfWork.Tasks, cancellationToken);
+        return await AiChangeSetMapper.ToViewModel(changeSet, changes, UnitOfWork.Tasks, UndoCatalog, cancellationToken);
     }
 
     private static AiMessageViewModel ToViewModel(

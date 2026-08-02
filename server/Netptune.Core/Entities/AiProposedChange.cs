@@ -36,6 +36,10 @@ public sealed record AiProposedChange : KeyedEntity<long>
 
     public int? AppliedEntityId { get; set; }
 
+    public JsonDocument? UndoPayload { get; set; }
+
+    public DateTime? UndoneAt { get; set; }
+
     [JsonIgnore]
     public AiChangeSet ChangeSet { get; init; } = null!;
 }

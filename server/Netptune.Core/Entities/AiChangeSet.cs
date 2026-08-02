@@ -19,6 +19,8 @@ public sealed record AiChangeSet : WorkspaceEntity<Guid>
 
     public DateTime? AppliedAt { get; set; }
 
+    public DateTime? UndoneAt { get; set; }
+
     [JsonIgnore]
     public AiConversation Conversation { get; init; } = null!;
 

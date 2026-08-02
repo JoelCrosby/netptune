@@ -128,7 +128,8 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
           (toggled)="assistant.toggleChange($event)"
           (selectionChanged)="assistant.toggleChanges($event)"
           (applied)="apply()"
-          (discarded)="discard()" />
+          (discarded)="discard()"
+          (undone)="undo()" />
       }
 
       <app-ai-assistant-composer
@@ -236,6 +237,10 @@ export class AiAssistantPanelComponent {
 
   protected discard() {
     void this.assistant.discardChangeSet();
+  }
+
+  protected undo() {
+    void this.assistant.undoChangeSet();
   }
 
   protected setMode(mode: AiDisplayMode) {

@@ -109,6 +109,8 @@ export interface AiProposedChange {
   applyError?: string | null;
   appliedEntityId?: number | null;
   entitySystemId?: string | null;
+  undoneAt?: string | null;
+  canUndo: boolean;
 }
 
 export interface AiChangeSet {
@@ -116,5 +118,6 @@ export interface AiChangeSet {
   conversationId: string;
   status: AiChangeSetStatus;
   appliedAt?: string | null;
+  undoneAt?: string | null;
   changes: AiProposedChange[];
 }

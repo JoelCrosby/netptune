@@ -2,6 +2,7 @@ using Mediator;
 
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Ai;
 
@@ -14,9 +15,14 @@ public sealed class GetPendingAiChangeSetQueryHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
+    private readonly IAiUndoCatalog UndoCatalog;
 
-    public GetPendingAiChangeSetQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
+    public GetPendingAiChangeSetQueryHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        IAiUndoCatalog undoCatalog)
     {
+        UndoCatalog = undoCatalog;
         UnitOfWork = unitOfWork;
         Identity = identity;
     }
@@ -43,6 +49,7 @@ public sealed class GetPendingAiChangeSetQueryHandler
             changeSet,
             changes,
             UnitOfWork.Tasks,
+            UndoCatalog,
             cancellationToken);
 
         return ClientResponse<AiChangeSetViewModel>.Success(model);

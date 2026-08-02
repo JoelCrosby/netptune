@@ -9,7 +9,7 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { isValid } from './ai-assistant-change-group';
+import { isApplied, isValid } from './ai-assistant-change-group';
 import { AiAssistantChangesTableComponent } from './ai-assistant-changes-table.component';
 
 @Component({
@@ -71,6 +71,17 @@ import { AiAssistantChangesTableComponent } from './ai-assistant-changes-table.c
           <span>&nbsp;({{ selectedCount() }})</span>
         </button>
       } @else {
+        @if (canUndo()) {
+          <button
+            app-stroked-button
+            type="button"
+            [disabled]="assistant.isApplying()"
+            (click)="undo()">
+            <span i18n="Button that takes back an applied change set"
+              >Undo</span
+            >
+          </button>
+        }
         <button app-stroked-button type="button" (click)="close()">
           <span i18n="Button that closes the proposed changes dialog">
             Close
@@ -125,6 +136,24 @@ export class AiAssistantChangesDialogComponent {
 
     return $localize`:Counts the proposals that were applied:${applied}:APPLIED: of ${total}:TOTAL: changes applied`;
   });
+
+  protected readonly canUndo = computed(() => {
+    const changeSet = this.assistant.changeSet();
+    const isUndone =
+      changeSet?.undoneAt !== null && changeSet?.undoneAt !== undefined;
+
+    if (this.isPending() || isUndone) {
+      return false;
+    }
+
+    return this.changes().some((change) => {
+      return isApplied(change) && change.canUndo && !change.undoneAt;
+    });
+  });
+
+  protected async undo() {
+    await this.assistant.undoChangeSet();
+  }
 
   protected toggleAll() {
     const excluded = this.assistant.excludedChangeIds();

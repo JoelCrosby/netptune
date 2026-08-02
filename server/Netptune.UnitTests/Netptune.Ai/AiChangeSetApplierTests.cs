@@ -341,6 +341,100 @@ public class AiChangeSetApplierTests
             .Returns(ClientResponse<TaskViewModel>.Success(new TaskViewModel { Id = taskId }));
     }
 
+    [Fact]
+    public async Task Undo_ShouldDeleteATaskTheChangeSetCreated()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        change.ApplyStatus = AiChangeApplyStatus.Applied;
+        change.AppliedEntityId = 42;
+        changeSet.Status = AiChangeSetStatus.Applied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Delete);
+
+        Mediator
+            .Send(Arg.Any<DeleteTaskCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse.Success);
+
+        var applier = CreateApplier();
+        var result = await applier.Undo(changeSet.Id, CancellationToken.None);
+
+        result!.Results.Single().Status.Should().Be(AiChangeApplyStatus.Applied);
+        change.UndoneAt.Should().NotBeNull("an undone change must not be undone twice");
+        changeSet.UndoneAt.Should().NotBeNull();
+
+        await Mediator.Received(1).Send(
+            Arg.Is<DeleteTaskCommand>(command => command.Id == 42),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Undo_ShouldThrow_WhenTheUserCannotReverseTheChange()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        change.ApplyStatus = AiChangeApplyStatus.Applied;
+        change.AppliedEntityId = 42;
+        changeSet.Status = AiChangeSetStatus.Applied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        var applier = CreateApplier();
+        var undo = async () => await applier.Undo(changeSet.Id, CancellationToken.None);
+
+        await undo.Should().ThrowAsync<UnauthorizedAccessException>(
+            "creating a task and deleting it again are different permissions");
+    }
+
+    [Fact]
+    public async Task Undo_ShouldThrow_WhenTheChangeSetWasNeverApplied()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Delete);
+
+        var applier = CreateApplier();
+        var undo = async () => await applier.Undo(changeSet.Id, CancellationToken.None);
+
+        await undo.Should().ThrowAsync<InvalidOperationException>();
+    }
+
+    [Fact]
+    public async Task Undo_ShouldLeaveAChangeInPlace_WhenReversingItFails()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        change.ApplyStatus = AiChangeApplyStatus.Applied;
+        change.AppliedEntityId = 42;
+        changeSet.Status = AiChangeSetStatus.Applied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Delete);
+
+        Mediator
+            .Send(Arg.Any<DeleteTaskCommand>(), Arg.Any<CancellationToken>())
+            .Returns(ClientResponse.Failed("The task is locked."));
+
+        var applier = CreateApplier();
+        var result = await applier.Undo(changeSet.Id, CancellationToken.None);
+        var outcome = result!.Results.Single();
+
+        outcome.Status.Should().Be(AiChangeApplyStatus.Failed);
+        outcome.Error.Should().Be("The task is locked.");
+        change.UndoneAt.Should().BeNull("a failed undo has to stay available to retry");
+        changeSet.UndoneAt.Should().BeNull();
+    }
+
     private static AiProposedChange CreateChange(
         Guid changeSetId,
         string toolName,

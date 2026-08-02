@@ -90,6 +90,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTitleGenerator, AiTitleGenerator>();
         services.AddScoped<IAiConversationService, AiConversationService>();
         services.AddScoped<IAiChangeSetApplier, AiChangeSetApplier>();
+        services.AddScoped<IAiUndoCatalog, AiUndoCatalog>();
 
         return services;
     }
