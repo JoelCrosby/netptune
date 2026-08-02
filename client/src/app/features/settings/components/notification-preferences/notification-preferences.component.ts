@@ -1,190 +1,187 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
-import { CheckboxComponent } from '@app/static/components/checkbox/checkbox.component';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import {
   PreferenceScope,
   ResolvedPreferenceValue,
 } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
-import { LucideCheck } from '@lucide/angular';
-import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
-import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import { LucideBell } from '@lucide/angular';
+import { PanelComponent } from '@static/components/panel.component';
+import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import {
+  SegmentedControlComponent,
+  SegmentedOption,
+} from '@static/components/segmented-control/segmented-control.component';
+import { SettingRowComponent } from '@static/components/setting-row/setting-row.component';
+import { SwitchComponent } from '@static/components/switch/switch.component';
+
+interface NotificationRow {
+  key: string;
+  label: string;
+  hint: string;
+  switchLabel: string;
+  enabled: boolean;
+  isOverridden: boolean;
+  preference: ResolvedPreferenceValue;
+}
+
+const SCOPE_OPTIONS: SegmentedOption<PreferenceScope>[] = [
+  {
+    value: 'global',
+    label: $localize`:Preference scope applying to every workspace:Everywhere`,
+  },
+  {
+    value: 'workspace',
+    label: $localize`:Preference scope limited to the current workspace:This workspace`,
+  },
+];
 
 @Component({
   selector: 'app-notification-preferences',
   imports: [
-    CheckboxComponent,
-    DropdownButtonComponent,
-    FlatButtonComponent,
-    LucideCheck,
-    MenuItemComponent,
+    PanelComponent,
+    PanelHeaderComponent,
+    SegmentedControlComponent,
+    SettingRowComponent,
+    SwitchComponent,
   ],
   template: `
-    <div class="border-border max-h-96 overflow-auto rounded-md border">
-      <table class="w-full min-w-132 border-collapse text-left">
-        <thead
-          class="bg-background text-muted sticky top-0 z-10 text-sm shadow-sm">
-          <tr>
-            <th class="px-3 py-2 font-medium" scope="col">
-              <span i18n="Column heading for the notification event">
-                Event
+    <app-panel>
+      <app-panel-header
+        [icon]="headingIcon"
+        i18n-heading="Heading above the notification toggles"
+        heading="Notify me about"
+        i18n-description="Explains which scope the toggles below are editing"
+        description="Pick where these choices apply.">
+        <app-segmented-control
+          panelHeaderActions
+          [options]="scopeOptions"
+          [(value)]="scope"
+          i18n-ariaLabel="
+            Accessible label for the control that picks the preference scope
+          "
+          ariaLabel="Preference scope" />
+      </app-panel-header>
+
+      @for (row of rows(); track row.key) {
+        <app-setting-row [label]="row.label" [hint]="row.hint">
+          @if (row.isOverridden) {
+            <button
+              type="button"
+              class="text-muted hover:text-foreground text-xs"
+              (click)="clearValue(row.preference)">
+              <span i18n="Button that removes a preference override">
+                Reset
               </span>
-            </th>
-            <th class="w-24 px-3 py-2 font-medium" scope="col">
-              <span i18n="Column heading for whether a notification is on">
-                Enabled
-              </span>
-            </th>
-            <th class="w-40 px-3 py-2 font-medium" scope="col">
-              <span i18n="Column heading for the notification scope">
-                Scope
-              </span>
-            </th>
-            <th class="w-24 px-3 py-2 font-medium" scope="col">
-              <span i18n="Column heading for the per-workspace override">
-                Override
-              </span>
-            </th>
-          </tr>
-        </thead>
-        <tbody class="divide-border divide-y">
-          @for (preference of values(); track preference.definition.key) {
-            <tr class="hover:bg-foreground/3 text-sm">
-              <th class="px-3 py-1.5 font-normal" scope="row">
-                {{ preference.definition.label }}
-              </th>
-              <td class="px-3 py-1.5">
-                <app-checkbox
-                  [checked]="currentValue(preference)"
-                  (changed)="updateValue(preference, $event)">
-                  <span class="sr-only">
-                    <span
-                      i18n="
-                        Screen-reader label for a notification toggle. EVENT is
-                        the already-localised event name
-                      ">
-                      Receive
-                      {{
-                        preference.definition.label // i18n(ph="EVENT")
-                      }}
-                      notifications
-                    </span>
-                  </span>
-                </app-checkbox>
-              </td>
-              <td class="px-3 py-1.5">
-                <app-dropdown-button
-                  #scopeMenu
-                  [label]="scopeLabel(preference)"
-                  [ariaLabel]="
-                    'Notification scope for ' + preference.definition.label
-                  "
-                  buttonClass="h-7 min-w-32 justify-between px-2 text-xs">
-                  @for (
-                    scope of preference.definition.allowedScopes;
-                    track scope
-                  ) {
-                    <button
-                      app-menu-item
-                      type="button"
-                      role="menuitemradio"
-                      class="min-w-36"
-                      [attr.aria-checked]="selectedScope(preference) === scope"
-                      (click)="
-                        selectScope(preference, scope); scopeMenu.close()
-                      ">
-                      <span class="flex h-4 w-4 items-center justify-center">
-                        @if (selectedScope(preference) === scope) {
-                          <svg lucideCheck class="h-4 w-4"></svg>
-                        }
-                      </span>
-                      <span>
-                        {{ scopeOptionLabel(scope) }}
-                      </span>
-                    </button>
-                  }
-                </app-dropdown-button>
-              </td>
-              <td class="px-3 py-1.5">
-                <button
-                  app-flat-button
-                  type="button"
-                  color="contrast"
-                  class="h-7 px-3 text-xs"
-                  (click)="clearValue(preference)">
-                  <span i18n="Button that removes a preference override">
-                    Clear
-                  </span>
-                </button>
-              </td>
-            </tr>
+            </button>
           }
-        </tbody>
-      </table>
-    </div>
+
+          <app-switch
+            [checked]="row.enabled"
+            [ariaLabel]="row.switchLabel"
+            (changed)="updateValue(row.preference, $event)" />
+        </app-setting-row>
+      } @empty {
+        <p
+          class="text-muted px-4 py-6 text-sm"
+          i18n="Empty state for the notification preference list">
+          There is nothing to configure yet.
+        </p>
+      }
+    </app-panel>
   `,
 })
 export class NotificationPreferencesComponent {
-  /** Ternaries in a template expression cannot be marked, so build the copy here. */
-  protected scopeOptionLabel(scope: string): string {
-    return scope === 'workspace'
-      ? $localize`:Preference scope limited to the current workspace:Workspace`
-      : $localize`:Preference scope applying everywhere:Global`;
-  }
   readonly values = input.required<ResolvedPreferenceValue[]>();
 
-  readonly userPreferences = inject(UserPreferencesService);
-  readonly selectedScopes = signal<Record<string, PreferenceScope>>({});
+  private readonly userPreferences = inject(UserPreferencesService);
 
-  selectedScope(preference: ResolvedPreferenceValue): PreferenceScope {
-    const key = preference.definition.key;
-    const selected = this.selectedScopes()[key];
+  protected readonly headingIcon = LucideBell;
+  protected readonly scopeOptions = SCOPE_OPTIONS;
+  protected readonly scope = signal<PreferenceScope>('global');
 
-    if (selected) return selected;
-    if (preference.source === 'workspace') return 'workspace';
-    if (preference.definition.allowedScopes.includes('global')) return 'global';
+  protected readonly rows = computed<NotificationRow[]>(() => {
+    const scope = this.scope();
 
-    return preference.definition.allowedScopes[0];
-  }
+    return this.values().map((preference) => {
+      return this.toRow(preference, scope);
+    });
+  });
 
-  currentValue(preference: ResolvedPreferenceValue): boolean {
-    const value = this.valueForSelectedScope(preference);
-
-    return typeof value === 'boolean' ? value : false;
-  }
-
-  scopeLabel(preference: ResolvedPreferenceValue): string {
-    return this.selectedScope(preference) === 'workspace'
-      ? 'Workspace'
-      : 'Global';
-  }
-
-  selectScope(preference: ResolvedPreferenceValue, scope: PreferenceScope) {
-    this.selectedScopes.update((selected) => ({
-      ...selected,
-      [preference.definition.key]: scope,
-    }));
-  }
-
-  updateValue(preference: ResolvedPreferenceValue, value: boolean) {
+  protected updateValue(preference: ResolvedPreferenceValue, value: boolean) {
     this.userPreferences
-      .updateValue(
-        preference.definition.key,
-        this.selectedScope(preference),
-        value
-      )
+      .updateValue(preference.definition.key, this.scopeFor(preference), value)
       .subscribe();
   }
 
-  clearValue(preference: ResolvedPreferenceValue) {
+  protected clearValue(preference: ResolvedPreferenceValue) {
     this.userPreferences
-      .deleteValue(preference.definition.key, this.selectedScope(preference))
+      .deleteValue(preference.definition.key, this.scopeFor(preference))
       .subscribe();
   }
 
-  valueForSelectedScope(preference: ResolvedPreferenceValue): unknown {
-    return this.selectedScope(preference) === 'workspace'
-      ? (preference.workspaceValue ?? preference.effectiveValue)
-      : (preference.globalValue ?? preference.effectiveValue);
+  private toRow(
+    preference: ResolvedPreferenceValue,
+    scope: PreferenceScope
+  ): NotificationRow {
+    const value = this.valueFor(preference, scope);
+    const label = preference.definition.label;
+
+    return {
+      key: preference.definition.key,
+      label,
+      hint: this.hint(preference, scope),
+      switchLabel: $localize`:Accessible label for a notification toggle. EVENT is the already-localised event name:Receive ${label}:EVENT: notifications`,
+      enabled: value === true,
+      isOverridden: this.storedValue(preference, scope) !== null,
+      preference,
+    };
+  }
+
+  /** A preference that cannot be set per workspace stays on the scope it allows. */
+  private scopeFor(preference: ResolvedPreferenceValue): PreferenceScope {
+    const scope = this.scope();
+    const isAllowed = preference.definition.allowedScopes.includes(scope);
+
+    return isAllowed ? scope : preference.definition.allowedScopes[0];
+  }
+
+  private storedValue(
+    preference: ResolvedPreferenceValue,
+    scope: PreferenceScope
+  ): unknown {
+    const stored =
+      scope === 'workspace'
+        ? preference.workspaceValue
+        : preference.globalValue;
+
+    return stored ?? null;
+  }
+
+  private valueFor(
+    preference: ResolvedPreferenceValue,
+    scope: PreferenceScope
+  ): unknown {
+    return this.storedValue(preference, scope) ?? preference.effectiveValue;
+  }
+
+  private hint(
+    preference: ResolvedPreferenceValue,
+    scope: PreferenceScope
+  ): string {
+    const isSet = this.storedValue(preference, scope) !== null;
+
+    if (scope === 'workspace') {
+      if (isSet) {
+        return $localize`:Shown when a notification is set for this workspace only:Set for this workspace`;
+      }
+
+      return $localize`:Shown when a workspace notification follows the global choice:Following your setting for everywhere`;
+    }
+
+    if (isSet) {
+      return $localize`:Shown when a notification is set for every workspace:Set for every workspace`;
+    }
+
+    return $localize`:Shown when a notification has never been changed:Using the default`;
   }
 }

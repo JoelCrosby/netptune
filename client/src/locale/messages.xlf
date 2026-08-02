@@ -504,6 +504,15 @@
         <source>Delete Any Comment</source>
       </segment>
     </unit>
+    <unit id="8938067120885537427">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:54,57</note>
+        <note category="description">Explains which scope the toggles below are editing</note>
+      </notes>
+      <segment>
+        <source>Pick where these choices apply.</source>
+      </segment>
+    </unit>
     <unit id="5659725016755840642">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:281</note>
@@ -1995,7 +2004,6 @@
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:918</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:131</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:74</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
         <note category="description">The workspace entity, shown in setup copy</note>
@@ -3373,6 +3381,15 @@
       </notes>
       <segment>
         <source>Tags</source>
+      </segment>
+    </unit>
+    <unit id="2362646105488486702">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:185</note>
+        <note category="description">Shown when a notification has never been changed</note>
+      </notes>
+      <segment>
+        <source>Using the default</source>
       </segment>
     </unit>
     <unit id="2363693543054040821">
@@ -5224,6 +5241,15 @@
         <source>T-shirt</source>
       </segment>
     </unit>
+    <unit id="4697947893832068670">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:175</note>
+        <note category="description">Shown when a notification is set for this workspace only</note>
+      </notes>
+      <segment>
+        <source>Set for this workspace</source>
+      </segment>
+    </unit>
     <unit id="7817501228881741585">
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:29,30</note>
@@ -5280,6 +5306,15 @@
       </notes>
       <segment>
         <source>Choose the roles to notify</source>
+      </segment>
+    </unit>
+    <unit id="4944057561753398636">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:30</note>
+        <note category="description">Preference scope applying to every workspace</note>
+      </notes>
+      <segment>
+        <source>Everywhere</source>
       </segment>
     </unit>
     <unit id="8066608938393600549">
@@ -5792,7 +5827,6 @@
     <unit id="6151416851572883297">
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:134,136</note>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:35,38</note>
         <note category="description">Marks an automation that is switched on</note>
       </notes>
       <segment>
@@ -8328,6 +8362,15 @@
         <source> <ph id="0" equiv="VISIBLE" disp="{{ visibleCount() // i18n(ph=&quot;VISIBLE&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ groups().length // i18n(ph=&quot;TOTAL&quot;) }}"/> visible </source>
       </segment>
     </unit>
+    <unit id="5478121364779850827">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:73,75</note>
+        <note category="description">Button that removes a preference override</note>
+      </notes>
+      <segment>
+        <source> Reset </source>
+      </segment>
+    </unit>
     <unit id="6381140642359438701">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:75,77</note>
@@ -8961,6 +9004,15 @@
       </notes>
       <segment>
         <source>Completed</source>
+      </segment>
+    </unit>
+    <unit id="1164332617862004960">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:133</note>
+        <note category="description">Accessible label for a notification toggle. EVENT is the already-localised event name</note>
+      </notes>
+      <segment>
+        <source>Receive <ph id="0" equiv="EVENT" disp="label"/> notifications</source>
       </segment>
     </unit>
     <unit id="3313172740302558016">
@@ -10222,6 +10274,15 @@
         <source> Assignee </source>
       </segment>
     </unit>
+    <unit id="4811445635785211905">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:182</note>
+        <note category="description">Shown when a notification is set for every workspace</note>
+      </notes>
+      <segment>
+        <source>Set for every workspace</source>
+      </segment>
+    </unit>
     <unit id="7671490409333523945">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:85,87</note>
@@ -10630,24 +10691,6 @@
         <source>Enter the workspace name to continue.</source>
       </segment>
     </unit>
-    <unit id="2951980617418186650">
-      <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:30,32</note>
-        <note category="description">Column heading for the notification event</note>
-      </notes>
-      <segment>
-        <source> Event </source>
-      </segment>
-    </unit>
-    <unit id="5747310913564651286">
-      <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:40,42</note>
-        <note category="description">Column heading for the notification scope</note>
-      </notes>
-      <segment>
-        <source> Scope </source>
-      </segment>
-    </unit>
     <unit id="5750579446813656351">
       <notes>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:95,96</note>
@@ -10657,27 +10700,8 @@
         <source>Tag details</source>
       </segment>
     </unit>
-    <unit id="67472443977909420">
-      <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:45,48</note>
-        <note category="description">Column heading for the per-workspace override</note>
-      </notes>
-      <segment>
-        <source> Override </source>
-      </segment>
-    </unit>
-    <unit id="5279837579888329600">
-      <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:66,70</note>
-        <note category="description">Screen-reader label for a notification toggle. EVENT is the already-localised event name</note>
-      </notes>
-      <segment>
-        <source> Receive <ph id="0" equiv="EVENT" disp="{{ preference.definition.label // i18n(ph=&quot;EVENT&quot;) }}"/> notifications </source>
-      </segment>
-    </unit>
     <unit id="1238583382012712938">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:116,118</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,63</note>
         <note category="description">Button that removes a preference override</note>
       </notes>
@@ -10687,7 +10711,6 @@
     </unit>
     <unit id="3437679369074503203">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:132</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:75</note>
         <note category="description">Preference scope applying everywhere</note>
       </notes>
@@ -11044,6 +11067,15 @@
       </notes>
       <segment>
         <source>First credential</source>
+      </segment>
+    </unit>
+    <unit id="188527826541298850">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:178</note>
+        <note category="description">Shown when a workspace notification follows the global choice</note>
+      </notes>
+      <segment>
+        <source>Following your setting for everywhere</source>
       </segment>
     </unit>
     <unit id="5559344982885709649">
@@ -11751,6 +11783,15 @@
         <source>Service accounts could not be loaded</source>
       </segment>
     </unit>
+    <unit id="2456694907046019567">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:52,53</note>
+        <note category="description">Heading above the notification toggles</note>
+      </notes>
+      <segment>
+        <source>Notify me about</source>
+      </segment>
+    </unit>
     <unit id="6197665339164385071">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:131,132</note>
@@ -12382,6 +12423,15 @@
       </notes>
       <segment>
         <source>Start date is required.</source>
+      </segment>
+    </unit>
+    <unit id="2247746632525326951">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:34</note>
+        <note category="description">Preference scope limited to the current workspace</note>
+      </notes>
+      <segment>
+        <source>This workspace</source>
       </segment>
     </unit>
     <unit id="1510117793114900680">
@@ -13049,6 +13099,15 @@
         <source>Invite Users</source>
       </segment>
     </unit>
+    <unit id="1975110465154411737">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:87,93</note>
+        <note category="description">Empty state for the notification preference list</note>
+      </notes>
+      <segment>
+        <source> There is nothing to configure yet. </source>
+      </segment>
+    </unit>
     <unit id="4574741116548118675">
       <notes>
         <note category="location">src/app/features/workspaces/components/workspace-list-item.component.ts:43,46</note>
@@ -13092,6 +13151,15 @@
       </notes>
       <segment>
         <source>No members</source>
+      </segment>
+    </unit>
+    <unit id="4422463525624222082">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:62,66</note>
+        <note category="description">Accessible label for the control that picks the preference scope</note>
+      </notes>
+      <segment>
+        <source>Preference scope</source>
       </segment>
     </unit>
     <unit id="4423253549935469768">
