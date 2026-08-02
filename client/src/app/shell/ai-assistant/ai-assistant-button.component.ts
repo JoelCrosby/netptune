@@ -1,15 +1,38 @@
-import { Component, inject } from '@angular/core';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  TemplateRef,
+  ViewContainerRef,
+  computed,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { summarizeAssistantMarkdown } from '@core/util/ai-markdown';
 import { LucideSparkles } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { AiAssistantReplyPopupComponent } from './components/ai-assistant-reply-popup.component';
+
+const POPUP_TIMEOUT = 12000;
 
 @Component({
   selector: 'app-ai-assistant-button',
-  imports: [IconButtonComponent, LucideSparkles, TooltipDirective],
+  imports: [
+    IconButtonComponent,
+    LucideSparkles,
+    TooltipDirective,
+    AiAssistantReplyPopupComponent,
+  ],
   template: `
     @if (assistant.isAvailable()) {
       <button
+        #trigger
         app-icon-button
         type="button"
         class="relative rounded-full"
@@ -43,8 +66,139 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         }
       </button>
     }
+
+    <ng-template #popup>
+      <app-ai-assistant-reply-popup
+        [preview]="replyPreview()"
+        [failed]="replyFailed()"
+        (opened)="openChat()"
+        (dismissed)="dismissPopup()" />
+    </ng-template>
   `,
 })
 export class AiAssistantButtonComponent {
   protected readonly assistant = inject(AiAssistantService);
+
+  private readonly overlay = inject(Overlay);
+  private readonly viewContainer = inject(ViewContainerRef);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly trigger = viewChild('trigger', { read: ElementRef });
+  private readonly popup = viewChild.required<TemplateRef<unknown>>('popup');
+
+  private readonly isDismissed = signal(false);
+
+  private overlayRef: OverlayRef | null = null;
+  private timeout: ReturnType<typeof setTimeout> | null = null;
+
+  private readonly lastReply = computed(() => {
+    const last = this.assistant.entries().at(-1);
+
+    if (!last || last.role !== 'assistant') {
+      return null;
+    }
+
+    return last;
+  });
+
+  protected readonly replyPreview = computed(() => {
+    const reply = this.lastReply();
+
+    if (!reply) {
+      return '';
+    }
+
+    return summarizeAssistantMarkdown(reply.text);
+  });
+
+  protected readonly replyFailed = computed(() => {
+    return this.lastReply()?.failed === true;
+  });
+
+  constructor() {
+    effect(() => {
+      const hasReply = this.assistant.hasUnreadReply();
+
+      if (!hasReply) {
+        this.isDismissed.set(false);
+        this.hidePopup();
+
+        return;
+      }
+
+      const isHidden = this.isDismissed();
+
+      if (isHidden) {
+        return;
+      }
+
+      this.showPopup();
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.hidePopup();
+    });
+  }
+
+  protected openChat() {
+    this.hidePopup();
+    this.assistant.open();
+  }
+
+  protected dismissPopup() {
+    this.isDismissed.set(true);
+    this.hidePopup();
+  }
+
+  private showPopup() {
+    const trigger = this.trigger();
+
+    if (!trigger || this.overlayRef) {
+      return;
+    }
+
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo(trigger)
+      .withPush(true)
+      .withPositions([
+        {
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top',
+          offsetY: 8,
+        },
+        {
+          originX: 'end',
+          originY: 'top',
+          overlayX: 'end',
+          overlayY: 'bottom',
+          offsetY: -8,
+        },
+      ]);
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
+
+    this.overlayRef.attach(
+      new TemplatePortal(this.popup(), this.viewContainer)
+    );
+
+    this.timeout = setTimeout(() => {
+      this.dismissPopup();
+    }, POPUP_TIMEOUT);
+  }
+
+  private hidePopup() {
+    if (this.timeout !== null) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+
+    this.overlayRef?.dispose();
+    this.overlayRef = null;
+  }
 }

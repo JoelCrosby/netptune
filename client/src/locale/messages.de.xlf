@@ -66,7 +66,7 @@
     </unit>
     <unit id="7706632081301226281">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:241</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:248</note>
         <note category="description">Shown after changes were applied</note>
       </notes>
       <segment state="translated">
@@ -459,7 +459,7 @@
     </unit>
     <unit id="4391289919356861627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:102,103</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:105,106</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -1043,7 +1043,7 @@
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:88,91</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:182,185</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:303</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:286</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
@@ -1205,8 +1205,8 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:181,182</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:370</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:302</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:198</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:285</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:193</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:280</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -2497,6 +2497,16 @@
       <segment state="translated">
         <source> API key </source>
         <target> API-Schlüssel </target>
+      </segment>
+    </unit>
+    <unit id="5508901405364001090">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:40,45</note>
+        <note category="description">Heading of the popup shown when the assistant replies while the chat is closed</note>
+      </notes>
+      <segment state="translated">
+        <source> The assistant replied </source>
+        <target> Der Assistent hat geantwortet </target>
       </segment>
     </unit>
     <unit id="5514074948771652820">
@@ -4443,7 +4453,7 @@
     </unit>
     <unit id="6336423730887058961">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:232</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:239</note>
         <note category="description">Shown after a change set was partly applied</note>
       </notes>
       <segment state="translated">
@@ -5079,7 +5089,7 @@
     <unit id="1616102757855967475">
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:258</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:162</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:157</note>
         <note category="description">Condition group operator requiring every condition to match</note>
       </notes>
       <segment state="translated">
@@ -6236,8 +6246,8 @@
     </unit>
     <unit id="5591872322950422209">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:130,131</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:148,149</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:136,137</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:154,155</note>
         <note category="description">Shown when a change removes a value</note>
       </notes>
       <segment state="translated">
@@ -6247,7 +6257,7 @@
     </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:187</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:189</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment state="translated">
@@ -6779,7 +6789,7 @@
     </unit>
     <unit id="8315057288657960846">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:102,105</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:108,111</note>
         <note category="description">Accessible label for the toggle that reveals what a proposed change contains</note>
       </notes>
       <segment state="translated">
@@ -7287,7 +7297,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:179</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:181</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:52,54</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -8309,7 +8319,7 @@
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:91,94</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207,208</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:193</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:188</note>
         <note category="description">Button that edits the automation</note>
       </notes>
       <segment state="translated">
@@ -9632,7 +9642,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:106,109</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:113,116</note>
         <note category="description">Button that discards the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -9791,7 +9801,7 @@
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:201</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:72,73</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:96,97</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:157</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:152</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -10145,7 +10155,7 @@
     </unit>
     <unit id="933200484361789257">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:41,48</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:64,70</note>
         <note category="description">Announced when the assistant has replied while the chat is closed</note>
       </notes>
       <segment state="translated">
@@ -10997,7 +11007,7 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:69,71</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:70,72</note>
         <note category="description">Accessible name of the assistant transcript</note>
       </notes>
       <segment state="translated">
@@ -11560,7 +11570,7 @@
     </unit>
     <unit id="4791834581881654412">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:238</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:245</note>
         <note category="description">Shown after some changes were left out</note>
       </notes>
       <segment state="translated">
@@ -11715,7 +11725,7 @@
     <unit id="4361487192183535591">
       <notes>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:21,24</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:44,47</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:309</note>
         <note category="location">src/app/workspace.routes.ts:126</note>
         <note category="description">Page title for the assistant chat page</note>
@@ -12261,6 +12271,16 @@
         <target>Benutzereinstellungen</target>
       </segment>
     </unit>
+    <unit id="646405368100193319">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:31,36</note>
+        <note category="description">Heading of the popup shown when an assistant turn failed while the chat was closed</note>
+      </notes>
+      <segment state="translated">
+        <source> The assistant stopped </source>
+        <target> Der Assistent wurde gestoppt </target>
+      </segment>
+    </unit>
     <unit id="646654293203551809">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:49,51</note>
@@ -12383,7 +12403,7 @@
     </unit>
     <unit id="1002973190039508761">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:28,34</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:51,57</note>
         <note category="description">Tooltip on the button that opens the assistant. Translate the modifier key to its local name (for example Strg in German); leave the I as-is</note>
       </notes>
       <segment state="translated">
@@ -12423,7 +12443,7 @@
     </unit>
     <unit id="5773144976658818508">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:223</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:243</note>
         <note category="description">Shown on a proposal that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -12563,7 +12583,7 @@
     </unit>
     <unit id="1531509541211048627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:175</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:182</note>
         <note category="description">Opens a dialog with the changes not shown inline</note>
       </notes>
       <segment state="translated">
@@ -12603,7 +12623,7 @@
     </unit>
     <unit id="5000740075940518750">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:222</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:229</note>
         <note category="description">Shown after proposals were discarded</note>
       </notes>
       <segment state="translated">
@@ -12795,6 +12815,16 @@
       <segment state="translated">
         <source>Loading service accounts</source>
         <target>Dienstkonten werden geladen</target>
+      </segment>
+    </unit>
+    <unit id="5944081365893210369">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:55,60</note>
+        <note category="description">Button that opens the assistant from the new reply popup</note>
+      </notes>
+      <segment state="translated">
+        <source> Open chat </source>
+        <target> Chat öffnen </target>
       </segment>
     </unit>
     <unit id="5949868576384453504">
@@ -13171,7 +13201,7 @@
     <unit id="8204176479746810612">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:661</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:147</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:142</note>
         <note category="description">Badge on a credential that is currently usable</note>
       </notes>
       <segment state="translated">
@@ -13661,7 +13691,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:113,115</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:114,116</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment state="translated">
@@ -13752,7 +13782,7 @@
     <unit id="6506855098610817078">
       <notes>
         <note category="location">src/app/features/sprints/utils/sprint-days-chip.ts:28</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:248</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:243</note>
         <note category="description">Chip shown when a sprint ends today</note>
       </notes>
       <segment state="translated">
@@ -13763,7 +13793,6 @@
     <unit id="5194912054053114732">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46,48</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:61,63</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:211</note>
         <note category="description">Page title for the sprint backlog</note>
       </notes>
@@ -13854,7 +13883,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:184</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:186</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment state="translated">
@@ -13885,7 +13914,7 @@
     <unit id="1152778269115350205">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:300</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:283</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:278</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
       <segment state="translated">
@@ -13895,7 +13924,7 @@
     </unit>
     <unit id="4347094825344030699">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:57,58</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:55,56</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:206</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Page title for the sprint list</note>
@@ -13907,7 +13936,7 @@
     </unit>
     <unit id="6668584344316209309">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:152</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:147</note>
         <note category="description">Filter showing sprints not started yet</note>
       </notes>
       <segment state="translated">
@@ -14399,7 +14428,7 @@
     </unit>
     <unit id="2711241297570613337">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:212</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:219</note>
         <note category="description">Summarises a collapsed set of proposals awaiting a decision</note>
       </notes>
       <segment state="translated">
@@ -14975,9 +15004,10 @@
     </unit>
     <unit id="1536087519743707362">
       <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:67,68</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:61,62</note>
-        <note category="description">Accessible label for the button that dismisses the banner</note>
+        <note category="description">Accessible label for the button that hides the new reply popup</note>
       </notes>
       <segment state="translated">
         <source>Dismiss</source>

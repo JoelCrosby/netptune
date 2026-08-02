@@ -15,7 +15,12 @@ export type AiMarkdownBlock =
   | { kind: 'paragraph'; inline: AiMarkdownInline[] }
   | { kind: 'heading'; level: number; inline: AiMarkdownInline[] }
   | { kind: 'code'; value: string; lang: string | null }
-  | { kind: 'list'; ordered: boolean; start: number; items: AiMarkdownBlock[][] }
+  | {
+      kind: 'list';
+      ordered: boolean;
+      start: number;
+      items: AiMarkdownBlock[][];
+    }
   | { kind: 'quote'; blocks: AiMarkdownBlock[] }
   | { kind: 'table'; head: AiMarkdownInline[][]; rows: AiMarkdownInline[][][] }
   | { kind: 'rule' };
@@ -200,4 +205,62 @@ export const parseAssistantMarkdown = (
   const tokens = marked.lexer(source, { gfm: true, breaks: true });
 
   return toBlocks(tokens);
+};
+
+const toPlainInline = (nodes: AiMarkdownInline[]): string => {
+  return nodes
+    .map((node) => {
+      switch (node.kind) {
+        case 'text':
+        case 'code':
+          return node.value;
+        case 'reference':
+          return node.label;
+        case 'break':
+          return ' ';
+        default:
+          return toPlainInline(node.children);
+      }
+    })
+    .join('');
+};
+
+const toPlainBlock = (block: AiMarkdownBlock): string => {
+  switch (block.kind) {
+    case 'paragraph':
+    case 'heading':
+      return toPlainInline(block.inline);
+    case 'list':
+      return block.items.map(toPlainBlocks).join(' ');
+    case 'quote':
+      return toPlainBlocks(block.blocks);
+    default:
+      return '';
+  }
+};
+
+const toPlainBlocks = (blocks: AiMarkdownBlock[]): string => {
+  return blocks.map(toPlainBlock).join(' ');
+};
+
+export const summarizeAssistantMarkdown = (
+  text: string,
+  limit = 160
+): string => {
+  const blocks = parseAssistantMarkdown(text);
+  const prose = blocks
+    .map((block) => {
+      return toPlainBlock(block).replace(/\s+/g, ' ').trim();
+    })
+    .find((value) => value.length > 0);
+
+  if (!prose) {
+    return '';
+  }
+
+  if (prose.length <= limit) {
+    return prose;
+  }
+
+  return `${prose.slice(0, limit).trimEnd()}…`;
 };
