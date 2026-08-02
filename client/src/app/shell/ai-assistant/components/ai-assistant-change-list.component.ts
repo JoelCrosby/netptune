@@ -1,25 +1,21 @@
 import { Component, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AiProposedChange } from '@core/models/ai-conversation';
-import { referenceRoute } from '@core/util/ai-references';
 import { SelectionCheckboxComponent } from '@static/components/checkbox/selection-checkbox.component';
 import {
-  LucideCalendarRange,
   LucideChevronDown,
   LucideCircleAlert,
   LucideCircleCheck,
-  LucideCircleDashed,
-  LucideFolder,
-  LucideKanban,
-  LucideSquareCheckBig,
 } from '@lucide/angular';
 import {
   AiChangeGroup,
+  changeRoute,
   fieldLabel,
   isApplied,
   isProseField,
   isValid,
 } from './ai-assistant-change-group';
+import { AiAssistantEntityIconComponent } from './ai-assistant-entity-icon.component';
 
 @Component({
   selector: 'app-ai-assistant-change-list',
@@ -27,36 +23,16 @@ import {
   imports: [
     RouterLink,
     SelectionCheckboxComponent,
-    LucideCalendarRange,
     LucideChevronDown,
     LucideCircleAlert,
     LucideCircleCheck,
-    LucideCircleDashed,
-    LucideFolder,
-    LucideKanban,
-    LucideSquareCheckBig,
+    AiAssistantEntityIconComponent,
   ],
   template: `
     @for (group of groups(); track group.key) {
       <div class="bg-hover rounded-2xl px-3 py-2">
         <div class="text-muted mb-1 flex items-center gap-1.5 text-xs">
-          @switch (group.entityType) {
-            @case ('task') {
-              <svg lucideSquareCheckBig class="h-3 w-3"></svg>
-            }
-            @case ('project') {
-              <svg lucideFolder class="h-3 w-3"></svg>
-            }
-            @case ('sprint') {
-              <svg lucideCalendarRange class="h-3 w-3"></svg>
-            }
-            @case ('board') {
-              <svg lucideKanban class="h-3 w-3"></svg>
-            }
-            @default {
-              <svg lucideCircleDashed class="h-3 w-3"></svg>
-            }
-          }
+          <app-ai-assistant-entity-icon [entityType]="group.entityType" />
           <span>{{ group.label }}</span>
         </div>
 
@@ -73,7 +49,9 @@ import {
               } @else {
                 <span class="mt-0.5 flex h-4 w-4 items-center justify-center">
                   @if (wasApplied(change)) {
-                    <svg lucideCircleCheck class="text-primary h-3.5 w-3.5"></svg>
+                    <svg
+                      lucideCircleCheck
+                      class="text-primary h-3.5 w-3.5"></svg>
                   } @else {
                     <svg lucideCircleAlert class="text-muted h-3.5 w-3.5"></svg>
                   }
@@ -121,7 +99,7 @@ import {
                       <span class="text-muted flex flex-col gap-0.5 text-xs">
                         <span class="font-medium">{{ label(field.name) }}</span>
                         @if (field.before) {
-                          <span class="line-through whitespace-pre-wrap">{{
+                          <span class="whitespace-pre-wrap line-through">{{
                             field.before
                           }}</span>
                         }
@@ -166,7 +144,9 @@ import {
                 }
 
                 @if (change.applyError) {
-                  <span class="text-error text-xs">{{ change.applyError }}</span>
+                  <span class="text-error text-xs">{{
+                    change.applyError
+                  }}</span>
                 }
               </span>
             </div>
@@ -244,20 +224,6 @@ export class AiAssistantChangeListComponent {
   }
 
   protected routeFor(change: AiProposedChange): string[] | null {
-    const workspace = this.workspace();
-    const canLink = workspace !== null && isApplied(change);
-
-    if (!canLink) {
-      return null;
-    }
-
-    const identifier =
-      change.entitySystemId ?? change.appliedEntityId ?? change.entityId;
-
-    if (!identifier) {
-      return null;
-    }
-
-    return referenceRoute(workspace, change.entityType, `${identifier}`);
+    return changeRoute(change, this.workspace());
   }
 }

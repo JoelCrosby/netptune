@@ -55,23 +55,39 @@ const INLINE_CHANGE_LIMIT = 3;
             Proposed changes
           </h3>
           @if (isCollapsed()) {
-            <span class="text-muted truncate text-xs">{{ collapsedLabel() }}</span>
+            <span class="text-muted truncate text-xs">{{
+              collapsedLabel()
+            }}</span>
           }
         </button>
 
-        @if (!isCollapsed() && isPending() && selectableCount() > 1) {
-          <button
-            type="button"
-            class="text-muted hover:text-foreground text-xs"
-            (click)="toggleAll()">
-            @if (isEveryChangeSelected()) {
-              <span i18n="Button that clears every selected change">
-                Select none
-              </span>
-            } @else {
-              <span i18n="Button that selects every change">Select all</span>
+        @if (!isCollapsed()) {
+          <div class="flex shrink-0 items-center gap-3">
+            @if (isPending() && selectableCount() > 1) {
+              <button
+                type="button"
+                class="text-muted hover:text-foreground text-xs"
+                (click)="toggleAll()">
+                @if (isEveryChangeSelected()) {
+                  <span i18n="Button that clears every selected change">
+                    Select none
+                  </span>
+                } @else {
+                  <span i18n="Button that selects every change"
+                    >Select all</span
+                  >
+                }
+              </button>
             }
-          </button>
+
+            <button
+              type="button"
+              class="text-muted hover:text-foreground text-xs"
+              (click)="showAll()"
+              i18n="Button that opens the detailed table of proposed changes">
+              Review all
+            </button>
+          </div>
         }
       </div>
 
@@ -110,7 +126,9 @@ const INLINE_CHANGE_LIMIT = 3;
               type="button"
               class="flex-1 rounded-full"
               (click)="discarded.emit()">
-              <span i18n="Button that discards the proposed changes">Discard</span>
+              <span i18n="Button that discards the proposed changes"
+                >Discard</span
+              >
             </button>
           </div>
         } @else {
@@ -205,7 +223,8 @@ export class AiAssistantChangeSetComponent {
   protected readonly selectedCount = computed(() => {
     const excluded = this.excludedChangeIds();
 
-    return this.selectable().filter((change) => !excluded.has(change.id)).length;
+    return this.selectable().filter((change) => !excluded.has(change.id))
+      .length;
   });
 
   protected readonly isEveryChangeSelected = computed(() => {
@@ -253,7 +272,10 @@ export class AiAssistantChangeSetComponent {
   }
 
   protected showAll() {
-    this.dialog.open(AiAssistantChangesDialogComponent, { width: '40rem' });
+    this.dialog.open(AiAssistantChangesDialogComponent, {
+      width: '68rem',
+      maxWidth: '95vw',
+    });
   }
 
   protected toggleAll() {

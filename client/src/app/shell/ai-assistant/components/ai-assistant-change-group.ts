@@ -4,6 +4,7 @@ import {
   AiChangeValidationStatus,
   AiProposedChange,
 } from '@core/models/ai-conversation';
+import { referenceRoute } from '@core/util/ai-references';
 
 export interface AiChangeGroup {
   key: string;
@@ -82,6 +83,27 @@ export const isValid = (change: AiProposedChange): boolean => {
 
 export const isApplied = (change: AiProposedChange): boolean => {
   return change.applyStatus === AiChangeApplyStatus.applied;
+};
+
+/** Only an applied change has an entity worth linking to. */
+export const changeRoute = (
+  change: AiProposedChange,
+  workspace: string | null
+): string[] | null => {
+  const canLink = workspace !== null && isApplied(change);
+
+  if (!canLink) {
+    return null;
+  }
+
+  const identifier =
+    change.entitySystemId ?? change.appliedEntityId ?? change.entityId;
+
+  if (!identifier) {
+    return null;
+  }
+
+  return referenceRoute(workspace, change.entityType, `${identifier}`);
 };
 
 /**
