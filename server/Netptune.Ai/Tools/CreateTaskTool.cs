@@ -31,13 +31,26 @@ public sealed class CreateTaskTool : IAiTool
 
     public string Description =>
         "Propose creating a task, fully formed: assignee, sprint, board group, status, priority, estimate and dates "
-        + "can all be set here rather than in a second change. "
+        + "can all be set here rather than in a second change. Tags may be set here too. "
         + "The task is not created until the user reviews and applies the change.";
 
     public AiToolKind Kind => AiToolKind.Write;
 
     public IReadOnlySet<string> RequiredPermissions { get; } =
         new HashSet<string>(StringComparer.Ordinal) { NetptunePermissions.Tasks.Create };
+
+    public IReadOnlySet<string> GetRequiredPermissions(JsonElement payload)
+    {
+        var tags = AiTagVocabulary.ReadRequested(payload);
+        var hasTags = tags.Count > 0;
+
+        if (!hasTags)
+        {
+            return RequiredPermissions;
+        }
+
+        return new HashSet<string>(RequiredPermissions, StringComparer.Ordinal) { NetptunePermissions.Tags.Assign };
+    }
 
     public JsonDocument InputSchema { get; } = AiToolSchema.Object(
         """
@@ -50,6 +63,11 @@ public sealed class CreateTaskTool : IAiTool
           "sprintId": { "type": "integer", "description": "Sprint to put the task in, from list_sprints. Must belong to the same project." },
           "sprintRef": { "type": "string", "description": "Handle of a sprint proposed earlier in this change set, instead of sprintId." },
           "boardGroupId": { "type": "integer", "description": "Board group to place the task in, from list_board_groups." },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Tag names for the new task, from list_tags or proposed with propose_create_tag."
+          },
           "priority": {
             "type": "string",
             "enum": ["None", "Low", "Medium", "High", "Critical"],
@@ -106,6 +124,13 @@ public sealed class CreateTaskTool : IAiTool
 
         fields.AddRange(placement.Fields);
 
+        var tagError = await AddTagField(fields, arguments, cancellationToken);
+
+        if (tagError is not null)
+        {
+            return AiToolExecution.Failed(tagError);
+        }
+
         ChangeSet.Add(new AiChangeDraft
         {
             ToolName = Name,
@@ -119,6 +144,38 @@ public sealed class CreateTaskTool : IAiTool
 
         return AiToolExecution.Success(
             $"Proposed creating task \"{name}\" as {refKey}. Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private async Task<string?> AddTagField(
+        List<AiChangeField> fields,
+        JsonElement arguments,
+        CancellationToken cancellationToken)
+    {
+        var tags = AiTagVocabulary.ReadRequested(arguments);
+        var hasTags = tags.Count > 0;
+
+        if (!hasTags)
+        {
+            return null;
+        }
+
+        var knownNames = await AiTagVocabulary.Read(Mediator, ChangeSet, cancellationToken);
+
+        if (knownNames is null)
+        {
+            return "Workspace tags could not be read.";
+        }
+
+        var unknownError = AiTagVocabulary.FindUnknown(tags, knownNames);
+
+        if (unknownError is not null)
+        {
+            return unknownError;
+        }
+
+        fields.Add(new AiChangeField { Name = "tags", After = string.Join(", ", tags) });
+
+        return null;
     }
 
     private sealed record TaskPlacement(List<AiChangeField> Fields, string? Error)

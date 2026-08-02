@@ -51,7 +51,30 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler
             return AiChangePayload.Failure(change, response.Message ?? "The task could not be created.");
         }
 
-        return AiChangePayload.Applied(change, response.Payload?.Id);
+        var taskId = response.Payload?.Id;
+        var tags = AiChangePayload.ReadStringArray(payload, "tags");
+        var hasTags = tags.Count > 0 && taskId.HasValue;
+
+        if (!hasTags)
+        {
+            return AiChangePayload.Applied(change, taskId);
+        }
+
+        var tagRequest = new UpdateProjectTaskRequest { Id = taskId!.Value, Tags = tags };
+        var tagResponse = await Mediator.Send(new UpdateTaskCommand(tagRequest), cancellationToken);
+
+        if (!tagResponse.IsSuccess)
+        {
+            return new AiAppliedChangeResult
+            {
+                ChangeId = change.Id,
+                Status = AiChangeApplyStatus.Failed,
+                AppliedEntityId = taskId,
+                Error = "The task was created but its tags could not be set.",
+            };
+        }
+
+        return AiChangePayload.Applied(change, taskId);
     }
 
     private static TValue? ReadEnum<TValue>(JsonElement payload, string name)

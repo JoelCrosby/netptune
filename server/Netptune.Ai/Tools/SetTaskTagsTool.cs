@@ -5,7 +5,6 @@ using Mediator;
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Services.Ai;
-using Netptune.Handlers.Tags.Queries;
 using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Tools;
@@ -73,28 +72,19 @@ public sealed class SetTaskTagsTool : IAiTool
             return AiToolExecution.Failed($"Task {taskId} was not found in this workspace.");
         }
 
-        var requested = ReadTags(arguments);
-        var workspaceTags = await Mediator.Send(new GetTagsForWorkspaceQuery(), cancellationToken);
+        var requested = AiTagVocabulary.ReadRequested(arguments);
+        var knownNames = await AiTagVocabulary.Read(Mediator, ChangeSet, cancellationToken);
 
-        if (workspaceTags is null)
+        if (knownNames is null)
         {
             return AiToolExecution.Failed("Workspace tags could not be read.");
         }
 
-        var knownNames = workspaceTags.Select(tag => tag.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var unknownError = AiTagVocabulary.FindUnknown(requested, knownNames);
 
-        foreach (var proposed in ReadProposedTags())
+        if (unknownError is not null)
         {
-            knownNames.Add(proposed);
-        }
-
-        var unknown = requested.Where(tag => !knownNames.Contains(tag)).ToList();
-
-        if (unknown.Count > 0)
-        {
-            return AiToolExecution.Failed(
-                $"These tags do not exist in this workspace: {string.Join(", ", unknown)}. "
-                + "Use propose_create_tag first if the workspace needs a new one.");
+            return AiToolExecution.Failed(unknownError);
         }
 
         var before = task is null ? string.Empty : string.Join(", ", task.Tags);
@@ -121,36 +111,5 @@ public sealed class SetTaskTagsTool : IAiTool
 
         return AiToolExecution.Success(
             "Proposed retagging the task. Nothing has been applied yet — the user must review and apply the change.");
-    }
-
-    private IEnumerable<string> ReadProposedTags()
-    {
-        return ChangeSet.Changes
-            .Where(change => string.Equals(change.ToolName, CreateTagTool.ToolName, StringComparison.Ordinal))
-            .Select(CreateTagTool.ReadProposedName)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => name!);
-    }
-
-    private static List<string> ReadTags(JsonElement arguments)
-    {
-        var isObject = arguments.ValueKind == JsonValueKind.Object;
-
-        if (!isObject)
-        {
-            return [];
-        }
-
-        var hasProperty = arguments.TryGetProperty("tags", out var value) && value.ValueKind == JsonValueKind.Array;
-
-        if (!hasProperty)
-        {
-            return [];
-        }
-
-        return value.EnumerateArray()
-            .Where(item => item.ValueKind == JsonValueKind.String)
-            .Select(item => item.GetString()!)
-            .ToList();
     }
 }

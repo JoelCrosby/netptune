@@ -83,6 +83,15 @@ public sealed class CreateTagTool : IAiTool
             $"Proposed creating tag “{name}”. Nothing has been applied yet — the user must review and apply the change.");
     }
 
+    public static IEnumerable<string> ProposedNames(IAiChangeSetBuilder changeSet)
+    {
+        return changeSet.Changes
+            .Where(change => string.Equals(change.ToolName, ToolName, StringComparison.Ordinal))
+            .Select(ReadProposedName)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name!);
+    }
+
     public static string? ReadProposedName(AiChangeDraft change)
     {
         var payload = change.Payload.RootElement;

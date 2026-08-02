@@ -356,7 +356,9 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             return false;
         }
 
-        return tool.RequiredPermissions.All(permissions.Contains);
+        var required = tool.GetRequiredPermissions(change.Payload.RootElement);
+
+        return required.All(permissions.Contains);
     }
 
     private static void MarkUnselected(List<AiProposedChange> changes, List<AiProposedChange> selected)

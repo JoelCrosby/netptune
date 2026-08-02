@@ -41,6 +41,11 @@ public interface IAiTool
 
     JsonDocument InputSchema { get; }
 
+    IReadOnlySet<string> GetRequiredPermissions(JsonElement payload)
+    {
+        return RequiredPermissions;
+    }
+
     Task<AiToolExecution> Execute(JsonElement arguments, CancellationToken cancellationToken);
 }
 
