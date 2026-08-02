@@ -801,6 +801,26 @@ export class AiAssistantService {
     }
   }
 
+  async retryFailedChanges() {
+    const changeSet = this.changeSet();
+
+    if (!changeSet || this.isApplying()) {
+      return;
+    }
+
+    this.isApplying.set(true);
+
+    try {
+      await this.http
+        .post(`api/ai/change-sets/${changeSet.id}/retry`, {})
+        .toPromise();
+
+      await this.refreshChangeSet(changeSet.id);
+    } finally {
+      this.isApplying.set(false);
+    }
+  }
+
   async undoChangeSet() {
     const changeSet = this.changeSet();
 

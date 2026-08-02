@@ -659,4 +659,139 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         conversation.MessageCount += 1;
         conversation.LastMessageAt = record.CreatedAt;
     }
+
+    public async Task<AiApplyResult?> RetryFailed(Guid changeSetId, CancellationToken cancellationToken)
+    {
+        var userId = Identity.GetCurrentUserId();
+        var workspaceId = await Identity.GetWorkspaceId();
+        var workspaceKey = Identity.GetWorkspaceKey();
+        var changeSet = await UnitOfWork.AiChangeSets.GetOwned(changeSetId, userId, workspaceId, cancellationToken);
+
+        if (changeSet is null)
+        {
+            return null;
+        }
+
+        var workspace = await UnitOfWork.Workspaces.GetAsync(workspaceId, true, cancellationToken);
+        var isAssistantEnabled = workspace?.AssistantEnabled ?? false;
+
+        if (!isAssistantEnabled)
+        {
+            throw new InvalidOperationException("The assistant is turned off for this workspace.");
+        }
+
+        var wasApplied = changeSet.AppliedAt.HasValue;
+
+        if (!wasApplied)
+        {
+            throw new InvalidOperationException("Only an applied change set has failed changes to retry.");
+        }
+
+        var isUndone = changeSet.UndoneAt.HasValue;
+
+        if (isUndone)
+        {
+            throw new InvalidOperationException("An undone change set cannot be applied again.");
+        }
+
+        var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
+        var failed = changes.Where(change => change.ApplyStatus == AiChangeApplyStatus.Failed).ToList();
+
+        if (failed.Count == 0)
+        {
+            throw new InvalidOperationException("There is nothing left to retry in this change set.");
+        }
+
+        var membership = await UnitOfWork.WorkspaceUsers.GetUserPermissions(
+            userId,
+            workspaceKey,
+            cancellationToken: cancellationToken);
+
+        if (membership is null)
+        {
+            throw new InvalidOperationException("You are not a member of this workspace.");
+        }
+
+        var permissions = membership.Permissions.ToHashSet(StringComparer.Ordinal);
+        var missingPermission = failed.Any(change => !HasPermission(change, permissions));
+
+        if (missingPermission)
+        {
+            throw new UnauthorizedAccessException("You do not have permission to apply these changes.");
+        }
+
+        var resolvedRefs = ReadResolvedRefs(changes);
+        var agent = await ResolveAgentName(changeSet, cancellationToken);
+        var ordered = OrderByDependency(failed);
+        var results = new List<AiAppliedChangeResult>();
+
+        using (AiExecution.Begin(agent, changeSet.CorrelationId))
+        {
+            foreach (var change in ordered)
+            {
+                var blocker = FindUnmetReference(change, resolvedRefs);
+                var result = blocker is null
+                    ? await ApplyChange(change, resolvedRefs, cancellationToken)
+                    : SkipChange(change, blocker);
+
+                results.Add(result);
+            }
+        }
+
+        changeSet.Status = ResolveRetriedStatus(changes);
+
+        try
+        {
+            await RecordOutcome(changeSet, ordered, results, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            Logger.LogWarning(exception, "The retried change set could not be recorded in the conversation.");
+        }
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        return new AiApplyResult
+        {
+            ChangeSetId = changeSet.Id,
+            Status = changeSet.Status,
+            Results = results,
+        };
+    }
+
+    private static Dictionary<string, int> ReadResolvedRefs(List<AiProposedChange> changes)
+    {
+        var resolved = new Dictionary<string, int>(StringComparer.Ordinal);
+
+        foreach (var change in changes)
+        {
+            var isResolved = change.RefKey is not null
+                && change.ApplyStatus == AiChangeApplyStatus.Applied
+                && change.AppliedEntityId.HasValue;
+
+            if (isResolved)
+            {
+                resolved[change.RefKey!] = change.AppliedEntityId!.Value;
+            }
+        }
+
+        return resolved;
+    }
+
+    private static AiChangeSetStatus ResolveRetriedStatus(List<AiProposedChange> changes)
+    {
+        var touched = changes
+            .Where(change => change.ApplyStatus != AiChangeApplyStatus.Skipped)
+            .ToList();
+
+        var applied = touched.Count(change => change.ApplyStatus == AiChangeApplyStatus.Applied);
+        var everythingApplied = touched.Count > 0 && applied == touched.Count;
+
+        if (everythingApplied)
+        {
+            return AiChangeSetStatus.Applied;
+        }
+
+        return applied == 0 ? AiChangeSetStatus.Pending : AiChangeSetStatus.PartiallyApplied;
+    }
 }

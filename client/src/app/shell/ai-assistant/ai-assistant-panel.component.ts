@@ -132,7 +132,8 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
           (selectionChanged)="assistant.toggleChanges($event)"
           (applied)="apply()"
           (discarded)="discard()"
-          (undone)="undo()" />
+          (undone)="undo()"
+          (retried)="retryChanges()" />
       }
 
       <app-ai-assistant-composer
@@ -246,6 +247,10 @@ export class AiAssistantPanelComponent {
 
   protected undo() {
     void this.assistant.undoChangeSet();
+  }
+
+  protected retryChanges() {
+    void this.assistant.retryFailedChanges();
   }
 
   protected setMode(mode: AiDisplayMode) {

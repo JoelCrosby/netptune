@@ -66,7 +66,7 @@
     </unit>
     <unit id="7706632081301226281">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:305</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:335</note>
         <note category="description">Shown after changes were applied</note>
       </notes>
       <segment state="translated">
@@ -106,7 +106,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:152</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:150</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -1291,7 +1291,7 @@
     </unit>
     <unit id="996642948903085680">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:130</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:142</note>
         <note category="description">Counts the proposals that will be applied</note>
       </notes>
       <segment state="translated">
@@ -3068,7 +3068,7 @@
     </unit>
     <unit id="5635707779811339571">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:286</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:316</note>
         <note category="description">Shown after applied proposals were taken back</note>
       </notes>
       <segment state="translated">
@@ -4580,7 +4580,7 @@
     </unit>
     <unit id="6336423730887058961">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:296</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:326</note>
         <note category="description">Shown after a change set was partly applied</note>
       </notes>
       <segment state="translated">
@@ -5054,7 +5054,7 @@
     </unit>
     <unit id="7997497639597459089">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:145,147</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:159,161</note>
         <note category="description">Button that takes back an applied change set</note>
       </notes>
       <segment state="translated">
@@ -5631,7 +5631,7 @@
     </unit>
     <unit id="5775346636203685655">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:81,85</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:93,97</note>
         <note category="description">Button that takes back an applied change set</note>
       </notes>
       <segment state="translated">
@@ -6459,7 +6459,7 @@
     </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:196</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:197</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment state="translated">
@@ -7051,8 +7051,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:989</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1113</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1003</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1127</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -7508,7 +7508,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:188</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:189</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:52,54</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -8951,6 +8951,17 @@
         <target>Enthält Kommentare</target>
       </segment>
     </unit>
+    <unit id="3131851492199185855">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:146,148</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:81,83</note>
+        <note category="description">Button that runs the changes that failed again</note>
+      </notes>
+      <segment state="translated">
+        <source> Retry failed </source>
+        <target> Fehlgeschlagene wiederholen </target>
+      </segment>
+    </unit>
     <unit id="3134838541965966256">
       <notes>
         <note category="location">src/app/features/boards/components/board-group-hidden-notice/board-group-hidden-notice.component.ts:11,13</note>
@@ -9988,8 +9999,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:554</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1244</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:552</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1258</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -11491,7 +11502,7 @@
     </unit>
     <unit id="7679272376567925786">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:137</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:149</note>
         <note category="description">Counts the proposals that were applied</note>
       </notes>
       <segment state="translated">
@@ -11903,7 +11914,7 @@
     </unit>
     <unit id="4791834581881654412">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:302</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:332</note>
         <note category="description">Shown after some changes were left out</note>
       </notes>
       <segment state="translated">
@@ -12887,7 +12898,7 @@
     </unit>
     <unit id="1531509541211048627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:230</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:260</note>
         <note category="description">Opens a dialog with the changes not shown inline</note>
       </notes>
       <segment state="translated">
@@ -12927,7 +12938,7 @@
     </unit>
     <unit id="5000740075940518750">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:278</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:308</note>
         <note category="description">Shown after proposals were discarded</note>
       </notes>
       <segment state="translated">
@@ -14228,7 +14239,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:193</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:194</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment state="translated">
@@ -14413,7 +14424,7 @@
     </unit>
     <unit id="5547981558491672240">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:87,91</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:99,103</note>
         <note category="description">Button that closes the proposed changes dialog</note>
       </notes>
       <segment state="translated">
@@ -14803,7 +14814,7 @@
     </unit>
     <unit id="2711241297570613337">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:268</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:298</note>
         <note category="description">Summarises a collapsed set of proposals awaiting a decision</note>
       </notes>
       <segment state="translated">

@@ -71,6 +71,18 @@ import { AiAssistantChangesTableComponent } from './ai-assistant-changes-table.c
           <span>&nbsp;({{ selectedCount() }})</span>
         </button>
       } @else {
+        @if (failedCount() > 0) {
+          <button
+            app-stroked-button
+            type="button"
+            [disabled]="assistant.isApplying()"
+            (click)="retryFailed()">
+            <span i18n="Button that runs the changes that failed again">
+              Retry failed
+            </span>
+            <span>&nbsp;({{ failedCount() }})</span>
+          </button>
+        }
         @if (canUndo()) {
           <button
             app-stroked-button
@@ -150,6 +162,24 @@ export class AiAssistantChangesDialogComponent {
       return isApplied(change) && change.canUndo && !change.undoneAt;
     });
   });
+
+  protected readonly failedCount = computed(() => {
+    const changeSet = this.assistant.changeSet();
+    const isUndone =
+      changeSet?.undoneAt !== null && changeSet?.undoneAt !== undefined;
+
+    if (isUndone) {
+      return 0;
+    }
+
+    return this.changes().filter((change) => {
+      return change.applyStatus === AiChangeApplyStatus.failed;
+    }).length;
+  });
+
+  protected async retryFailed() {
+    await this.assistant.retryFailedChanges();
+  }
 
   protected async undo() {
     await this.assistant.undoChangeSet();

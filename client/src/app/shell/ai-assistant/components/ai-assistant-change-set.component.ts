@@ -135,17 +135,32 @@ const INLINE_CHANGE_LIMIT = 3;
           <div class="mt-2 flex items-center justify-between gap-2 px-1">
             <p class="text-muted text-xs">{{ outcome() }}</p>
 
-            @if (canUndo()) {
-              <button
-                type="button"
-                class="text-muted hover:text-foreground shrink-0 text-xs"
-                [disabled]="isApplying()"
-                (click)="undone.emit()">
-                <span i18n="Button that takes back an applied change set">
-                  Undo
-                </span>
-              </button>
-            }
+            <span class="flex shrink-0 items-center gap-3">
+              @if (failedCount() > 0) {
+                <button
+                  type="button"
+                  class="text-muted hover:text-foreground text-xs"
+                  [disabled]="isApplying()"
+                  (click)="retried.emit()">
+                  <span i18n="Button that runs the changes that failed again">
+                    Retry failed
+                  </span>
+                  <span>&nbsp;({{ failedCount() }})</span>
+                </button>
+              }
+
+              @if (canUndo()) {
+                <button
+                  type="button"
+                  class="text-muted hover:text-foreground text-xs"
+                  [disabled]="isApplying()"
+                  (click)="undone.emit()">
+                  <span i18n="Button that takes back an applied change set">
+                    Undo
+                  </span>
+                </button>
+              }
+            </span>
           </div>
         }
       }
@@ -163,6 +178,7 @@ export class AiAssistantChangeSetComponent {
   readonly applied = output();
   readonly discarded = output();
   readonly undone = output();
+  readonly retried = output();
   readonly selectionChanged = output<number[]>();
 
   private readonly dialog = inject(DialogService);
@@ -184,6 +200,20 @@ export class AiAssistantChangeSetComponent {
     return changeSet.changes.some((change) => {
       return isApplied(change) && change.canUndo && !change.undoneAt;
     });
+  });
+
+  protected readonly failedCount = computed(() => {
+    const changeSet = this.changeSet();
+    const isUndone =
+      changeSet.undoneAt !== null && changeSet.undoneAt !== undefined;
+
+    if (isUndone) {
+      return 0;
+    }
+
+    return changeSet.changes.filter((change) => {
+      return change.applyStatus === AiChangeApplyStatus.failed;
+    }).length;
   });
 
   /** null follows the change set: open while it needs a decision, closed once it has one. */

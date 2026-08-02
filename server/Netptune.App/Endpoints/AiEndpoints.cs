@@ -69,6 +69,10 @@ public static class AiEndpoints
             .MapPost("/change-sets/{changeSetId:guid}/undo", HandleUndoChangeSet)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
 
+        group
+            .MapPost("/change-sets/{changeSetId:guid}/retry", HandleRetryChangeSet)
+            .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
         return group;
     }
 
@@ -222,6 +226,27 @@ public static class AiEndpoints
         try
         {
             var result = await applier.Apply(changeSetId, request, cancellationToken);
+
+            return result is null ? Results.NotFound() : Results.Ok(result);
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            return Results.Problem(exception.Message, statusCode: StatusCodes.Status403Forbidden);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Results.Problem(exception.Message, statusCode: StatusCodes.Status400BadRequest);
+        }
+    }
+
+    private static async Task<IResult> HandleRetryChangeSet(
+        Guid changeSetId,
+        IAiChangeSetApplier applier,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await applier.RetryFailed(changeSetId, cancellationToken);
 
             return result is null ? Results.NotFound() : Results.Ok(result);
         }

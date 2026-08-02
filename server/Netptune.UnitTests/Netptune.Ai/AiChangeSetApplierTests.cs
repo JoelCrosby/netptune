@@ -435,6 +435,104 @@ public class AiChangeSetApplierTests
         changeSet.UndoneAt.Should().BeNull();
     }
 
+    [Fact]
+    public async Task RetryFailed_ShouldRunOnlyTheChangesThatFailed()
+    {
+        var changeSet = CreateChangeSet();
+        var applied = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:done");
+        var failed = CreateChange(changeSet.Id, "propose_create_task", id: 2, refKey: "ref:retry");
+
+        applied.ApplyStatus = AiChangeApplyStatus.Applied;
+        applied.AppliedEntityId = 11;
+        failed.ApplyStatus = AiChangeApplyStatus.Failed;
+        failed.ApplyError = "The project was locked.";
+        changeSet.Status = AiChangeSetStatus.PartiallyApplied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [applied, failed]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(12);
+
+        var applier = CreateApplier();
+        var result = await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+
+        result!.Results.Select(item => item.ChangeId).Should().Equal([failed.Id]);
+        failed.ApplyStatus.Should().Be(AiChangeApplyStatus.Applied);
+        failed.ApplyError.Should().BeNull();
+        applied.AppliedEntityId.Should().Be(11, "a change that already landed must not run twice");
+        changeSet.Status.Should().Be(AiChangeSetStatus.Applied);
+    }
+
+    [Fact]
+    public async Task RetryFailed_ShouldResolveReferencesFromTheFirstAttempt()
+    {
+        var changeSet = CreateChangeSet();
+        var prerequisite = CreateChange(changeSet.Id, "propose_create_task", id: 1, refKey: "ref:sprint");
+        var dependent = CreateChange(
+            changeSet.Id,
+            "propose_create_task",
+            id: 2,
+            refKey: "ref:child",
+            payload: """{"name":"Child","projectId":1,"sprintRef":"ref:sprint"}""");
+
+        prerequisite.ApplyStatus = AiChangeApplyStatus.Applied;
+        prerequisite.AppliedEntityId = 30;
+        dependent.ApplyStatus = AiChangeApplyStatus.Failed;
+        changeSet.Status = AiChangeSetStatus.PartiallyApplied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [prerequisite, dependent]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+        GivenCreatedTask(31);
+
+        var applier = CreateApplier();
+        var result = await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+
+        result!.Results.Single().Status.Should().Be(
+            AiChangeApplyStatus.Applied,
+            "the id its prerequisite created the first time is still good");
+    }
+
+    [Fact]
+    public async Task RetryFailed_ShouldThrow_WhenNothingFailed()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        change.ApplyStatus = AiChangeApplyStatus.Applied;
+        changeSet.Status = AiChangeSetStatus.Applied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        var applier = CreateApplier();
+        var retry = async () => await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+
+        await retry.Should().ThrowAsync<InvalidOperationException>();
+    }
+
+    [Fact]
+    public async Task RetryFailed_ShouldThrow_WhenTheChangeSetWasUndone()
+    {
+        var changeSet = CreateChangeSet();
+        var change = CreateChange(changeSet.Id, "propose_create_task");
+
+        change.ApplyStatus = AiChangeApplyStatus.Failed;
+        changeSet.Status = AiChangeSetStatus.PartiallyApplied;
+        changeSet.AppliedAt = DateTime.UtcNow;
+        changeSet.UndoneAt = DateTime.UtcNow;
+
+        GivenChangeSet(changeSet, [change]);
+        GivenPermissions(NetptunePermissions.Tasks.Create);
+
+        var applier = CreateApplier();
+        var retry = async () => await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+
+        await retry.Should().ThrowAsync<InvalidOperationException>(
+            "putting changes back after an undo would contradict the undo");
+    }
+
     private static AiProposedChange CreateChange(
         Guid changeSetId,
         string toolName,
