@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 using FluentAssertions;
 
@@ -13,6 +14,7 @@ using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Ai;
 using Netptune.Entities.Contexts;
+using Netptune.IntegrationTests.TestServices;
 
 using Xunit;
 
@@ -245,6 +247,190 @@ public sealed class AiEndpointTests
         {
             await RemoveSeed(seed.ConversationId);
         }
+    }
+
+    [Fact]
+    public async Task PendingChangeSet_ShouldBeReadableByConversation_SoALostProposalEventCanRecover()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedPendingChangeSet();
+
+        try
+        {
+            var response = await client.GetFromJsonAsync<ClientResponse<AiChangeSetViewModel>>(
+                $"api/ai/conversations/{seed.ConversationId}/change-set");
+
+            response.IsSuccess.Should().BeTrue();
+            response.Payload!.Id.Should().Be(seed.ChangeSetId);
+            response.Payload.Status.Should().Be(AiChangeSetStatus.Pending);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task PendingChangeSet_ShouldReturnNotFound_WhenTheConversationHasNoProposal()
+    {
+        var client = Fixture.CreateNetptuneClient();
+
+        var response = await client.GetAsync($"api/ai/conversations/{Guid.NewGuid()}/change-set");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task SendMessage_ShouldStoreTheProposal_WhenTheClientDisconnectsMidTurn()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var taskId = await ReadTaskId();
+
+        await SaveCredential(client);
+        ScriptTaskProposal(taskId);
+
+        var conversationId = await StartTurnThenDisconnect(client);
+
+        try
+        {
+            var changeSet = await WaitForPendingChangeSet(conversationId);
+
+            changeSet.Should().NotBeNull(
+                "the turn finishes server side even when nothing is left to stream the proposal to");
+            changeSet!.Changes.Should().ContainSingle(change => change.ToolName == "propose_update_task");
+
+            var recovered = await client.GetFromJsonAsync<ClientResponse<AiChangeSetViewModel>>(
+                $"api/ai/conversations/{conversationId}/change-set");
+
+            recovered.IsSuccess.Should().BeTrue("the client recovers the proposal through this endpoint");
+            recovered.Payload!.Id.Should().Be(changeSet.Id);
+        }
+        finally
+        {
+            await RemoveSeed(conversationId);
+            await DeleteExistingCredentials(client);
+            ResetScript();
+        }
+    }
+
+    private async Task<Guid> StartTurnThenDisconnect(HttpClient client)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "api/ai/conversations/messages")
+        {
+            Content = JsonContent.Create(new { text = "Rename the sprint please." }),
+        };
+
+        using var response = await client.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        await using var stream = await response.Content.ReadAsStreamAsync(TestContext.Current.CancellationToken);
+        using var reader = new StreamReader(stream);
+
+        var line = await reader.ReadLineAsync(TestContext.Current.CancellationToken);
+
+        line.Should().NotBeNull().And.StartWith("data: ");
+
+        var payload = JsonDocument.Parse(line![6..]);
+
+        return payload.RootElement.GetProperty("conversationId").GetGuid();
+    }
+
+    private async Task<AiChangeSetViewModel?> WaitForPendingChangeSet(Guid conversationId)
+    {
+        for (var attempt = 0; attempt < 50; attempt++)
+        {
+            await Task.Delay(100, TestContext.Current.CancellationToken);
+
+            using var scope = Fixture.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            var changeSet = await context.AiChangeSets
+                .Where(item => item.ConversationId == conversationId)
+                .FirstOrDefaultAsync(TestContext.Current.CancellationToken);
+
+            if (changeSet is null)
+            {
+                continue;
+            }
+
+            var changes = await context.AiProposedChanges
+                .Where(item => item.ChangeSetId == changeSet.Id)
+                .ToListAsync(TestContext.Current.CancellationToken);
+
+            return new AiChangeSetViewModel
+            {
+                Id = changeSet.Id,
+                ConversationId = changeSet.ConversationId,
+                Status = changeSet.Status,
+                Changes = changes.Select(change => new AiProposedChangeViewModel
+                {
+                    Id = change.Id,
+                    Sequence = change.Sequence,
+                    ToolName = change.ToolName,
+                    EntityType = change.EntityType,
+                    Summary = change.Summary,
+                }).ToList(),
+            };
+        }
+
+        return null;
+    }
+
+    private async Task<int> ReadTaskId()
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var task = await context.ProjectTasks
+            .Where(item => !item.IsDeleted)
+            .OrderBy(item => item.Id)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        return task.Id;
+    }
+
+    private void ScriptTaskProposal(int taskId)
+    {
+        using var scope = Fixture.CreateScope();
+        var script = scope.ServiceProvider.GetRequiredService<TestAiChatScript>();
+
+        script.Reset();
+        script.DelayBeforeCompletion = TimeSpan.FromMilliseconds(400);
+        script.Enqueue(new AiChatTurn
+        {
+            Text = string.Empty,
+            ToolCalls =
+            [
+                new AiToolCall
+                {
+                    Id = "call-1",
+                    Name = "propose_update_task",
+                    Arguments = JsonDocument.Parse(
+                        $$"""{"taskId":{{taskId}},"priority":"High"}"""),
+                },
+            ],
+        });
+    }
+
+    private void ResetScript()
+    {
+        using var scope = Fixture.CreateScope();
+
+        scope.ServiceProvider.GetRequiredService<TestAiChatScript>().Reset();
+    }
+
+    private static async Task SaveCredential(HttpClient client)
+    {
+        var response = await client.PutAsJsonAsync("api/ai/credentials", new
+        {
+            provider = AiProvider.Anthropic,
+            label = "Anthropic",
+            secret = "sk-ant-integration-secret-value",
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     private sealed record PendingChangeSetSeed(Guid ConversationId, Guid ChangeSetId);

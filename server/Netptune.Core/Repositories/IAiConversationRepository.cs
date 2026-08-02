@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Models.Ai;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Ai;
 
@@ -21,6 +22,8 @@ public interface IAiConversationRepository : IRepository<AiConversation, Guid>
     Task<int> GetNextSequence(Guid conversationId, CancellationToken cancellationToken = default);
 
     Task AddMessage(AiMessage message, CancellationToken cancellationToken = default);
+
+    Task AddMessageUsage(long messageId, AiUsage usage, CancellationToken cancellationToken = default);
 
     Task AddToolInvocations(IEnumerable<AiToolInvocation> invocations, CancellationToken cancellationToken = default);
 }

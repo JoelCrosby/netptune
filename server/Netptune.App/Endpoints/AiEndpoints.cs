@@ -46,6 +46,8 @@ public static class AiEndpoints
         group.MapGet("/admin/conversations/{conversationId:guid}", HandleGetWorkspaceConversation)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
 
+        group.MapGet("/conversations/{conversationId:guid}/change-set", HandleGetPendingChangeSet);
+
         group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
         group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
 
@@ -135,6 +137,16 @@ public static class AiEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAiChangeSetQuery(changeSetId), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetPendingChangeSet(
+        Guid conversationId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetPendingAiChangeSetQuery(conversationId), cancellationToken);
 
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }

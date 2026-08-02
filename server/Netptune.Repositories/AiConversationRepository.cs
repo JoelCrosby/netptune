@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
+using Netptune.Core.Models.Ai;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.ViewModels.Ai;
@@ -139,6 +140,19 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
     public async Task AddMessage(AiMessage message, CancellationToken cancellationToken = default)
     {
         await Context.AiMessages.AddAsync(message, cancellationToken);
+    }
+
+    public Task AddMessageUsage(long messageId, AiUsage usage, CancellationToken cancellationToken = default)
+    {
+        return Context.AiMessages
+            .Where(message => message.Id == messageId)
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(message => message.InputTokens, message => message.InputTokens + usage.InputTokens)
+                    .SetProperty(message => message.OutputTokens, message => message.OutputTokens + usage.OutputTokens)
+                    .SetProperty(message => message.CacheReadTokens, message => message.CacheReadTokens + usage.CacheReadTokens)
+                    .SetProperty(message => message.CacheCreationTokens, message => message.CacheCreationTokens + usage.CacheCreationTokens),
+                cancellationToken);
     }
 
     public async Task AddToolInvocations(

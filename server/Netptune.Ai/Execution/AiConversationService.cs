@@ -198,6 +198,23 @@ public sealed class AiConversationService : IAiConversationService
             yield return AiStreamEvent.EntitiesReferenced(references);
         }
 
+        var turn = await UnitOfWork.Transaction(async () =>
+        {
+            var assistantMessageId = await PersistTurn(conversation, context, reply, cancellationToken);
+            var pendingChangeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
+
+            credential.LastUsedAt = DateTime.UtcNow;
+
+            await UnitOfWork.CompleteAsync(cancellationToken);
+
+            return new PersistedTurn(assistantMessageId, pendingChangeSetId);
+        });
+
+        if (turn.ChangeSetId.HasValue)
+        {
+            yield return AiStreamEvent.ChangeSetProposed(turn.ChangeSetId.Value);
+        }
+
         var titleRequest = new AiTitleRequest
         {
             Provider = provider,
@@ -206,29 +223,29 @@ public sealed class AiConversationService : IAiConversationService
             AssistantMessage = reply,
         };
 
-        var title = await TryCreateTitle(titleRequest, existing is null, cancellationToken);
+        await ApplyTitle(conversation, turn.MessageId, titleRequest, existing is null, cancellationToken);
+    }
 
-        if (title.Title is not null)
+    private sealed record PersistedTurn(long MessageId, Guid? ChangeSetId);
+
+    private async Task ApplyTitle(
+        AiConversation conversation,
+        long assistantMessageId,
+        AiTitleRequest request,
+        bool isNewConversation,
+        CancellationToken cancellationToken)
+    {
+        var title = await TryCreateTitle(request, isNewConversation, cancellationToken);
+
+        if (title.Title is null)
         {
-            conversation.Title = title.Title;
+            return;
         }
 
-        var changeSetId = await UnitOfWork.Transaction(async () =>
-        {
-            var assistantMessageId = await PersistTurn(conversation, context, reply, title.Usage, cancellationToken);
-            var pendingChangeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
+        conversation.Title = title.Title;
 
-            credential.LastUsedAt = DateTime.UtcNow;
-
-            await UnitOfWork.CompleteAsync(cancellationToken);
-
-            return pendingChangeSetId;
-        });
-
-        if (changeSetId.HasValue)
-        {
-            yield return AiStreamEvent.ChangeSetProposed(changeSetId.Value);
-        }
+        await UnitOfWork.CompleteAsync(cancellationToken);
+        await UnitOfWork.AiConversations.AddMessageUsage(assistantMessageId, title.Usage, cancellationToken);
     }
 
     private static AiChatMessage WithClientContext(AiChatMessage message, AiClientContext? clientContext)
@@ -549,7 +566,6 @@ public sealed class AiConversationService : IAiConversationService
         AiConversation conversation,
         AiRunContext context,
         string assistantText,
-        AiUsage extraUsage,
         CancellationToken cancellationToken)
     {
         var lastTurn = context.Turns.LastOrDefault();
@@ -567,7 +583,6 @@ public sealed class AiConversationService : IAiConversationService
                 Message = assistantMessage,
                 Role = AiMessageRole.Assistant,
                 Turn = lastTurn,
-                ExtraUsage = extraUsage,
             },
             cancellationToken);
 

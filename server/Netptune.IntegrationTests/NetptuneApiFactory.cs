@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Netptune.Core.Authorization;
 using Netptune.App.Utility;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Ai;
 using Netptune.PublicApi.Configuration;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
@@ -83,6 +84,10 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
                     services.Replace<IStorageService, TestStorageService>();
                     services.Replace<ITurnstileService, TestTurnstileService>();
+
+                    services.AddSingleton<TestAiChatScript>();
+                    services.AddSingleton<TestAiChatProvider>();
+                    services.Replace<IAiChatProviderFactory, TestAiChatProviderFactory>();
 
                     services.AddAuthorization(options =>
                     {

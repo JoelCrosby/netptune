@@ -793,12 +793,23 @@ export class AiAssistantService {
     this.changeSet.set(null);
   }
 
-  private async refreshChangeSet(changeSetId: string) {
-    const response = await this.http
-      .get<ClientResponse<AiChangeSet>>(`api/ai/change-sets/${changeSetId}`)
-      .toPromise();
+  private async refreshChangeSet(changeSetId: string, token?: number) {
+    try {
+      const response = await this.http
+        .get<ClientResponse<AiChangeSet>>(`api/ai/change-sets/${changeSetId}`)
+        .toPromise();
 
-    this.changeSet.set(response?.payload ?? null);
+      const payload = response?.payload ?? null;
+      const isCurrent = token === undefined || this.turnToken === token;
+
+      if (payload === null || !isCurrent) {
+        return;
+      }
+
+      this.changeSet.set(payload);
+    } catch {
+      /* The turn recovers the proposals from the conversation instead. */
+    }
   }
 
   async send(text: string) {
@@ -846,8 +857,55 @@ export class AiAssistantService {
 
     this.markReplyReceived();
 
+    await this.recoverProposals(token);
+
     if (wasNewConversation) {
       await this.readGeneratedTitle();
+    }
+  }
+
+  /**
+   * A proposal reaches the client through a single event at the end of a turn,
+   * so a dropped connection or a failed read leaves a stored change set with
+   * nothing on screen pointing at it. Ask for it directly rather than lose it.
+   */
+  private async recoverProposals(token: number) {
+    const isMissing = this.changeSet() === null;
+
+    if (!isMissing) {
+      return;
+    }
+
+    const conversationId = this.conversationId();
+
+    if (conversationId === null) {
+      return;
+    }
+
+    const pending = await this.readPendingChangeSet(conversationId);
+    const isCurrent = this.turnToken === token && this.changeSet() === null;
+
+    if (pending === null || !isCurrent) {
+      return;
+    }
+
+    this.changeSet.set(pending);
+    this.excludedChangeIds.set(new Set());
+  }
+
+  private async readPendingChangeSet(
+    conversationId: string
+  ): Promise<AiChangeSet | null> {
+    try {
+      const response = await this.http
+        .get<ClientResponse<AiChangeSet>>(
+          `api/ai/conversations/${conversationId}/change-set`
+        )
+        .toPromise();
+
+      return response?.payload ?? null;
+    } catch {
+      return null;
     }
   }
 
@@ -1002,7 +1060,7 @@ export class AiAssistantService {
       event.type === AiStreamEventType.changeSetProposed &&
       event.changeSetId
     ) {
-      void this.refreshChangeSet(event.changeSetId);
+      void this.refreshChangeSet(event.changeSetId, this.turnToken);
 
       return;
     }
