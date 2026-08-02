@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AiCredential } from '@core/models/ai-credential';
+import { AiCredentialAvailability } from '@core/models/ai-credential';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AiModelOption } from '@core/models/ai-model';
@@ -31,6 +31,7 @@ export interface AiChatEntry {
   text: string;
   tools: string[];
   failed?: boolean;
+  stopped?: boolean;
 }
 
 /** Shared so a stored transcript renders the same wherever it is read back. */
@@ -79,7 +80,8 @@ export class AiAssistantService {
 
   readonly workspaceKey = computed(() => this.workspaceId() ?? null);
 
-  private readonly currentProject = this.store.selectSignal(selectCurrentProject);
+  private readonly currentProject =
+    this.store.selectSignal(selectCurrentProject);
   private readonly selectedTask = this.store.selectSignal(selectSelectedTask);
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
@@ -145,6 +147,7 @@ export class AiAssistantService {
   private isSwitchingWorkspace = false;
   private turnToken = 0;
   private streamAbort: AbortController | null = null;
+  private isStopping = false;
   private pendingSince: number | null = null;
 
   private sessions: AiStoredSessions = this.readSessions();
@@ -323,12 +326,16 @@ export class AiAssistantService {
     this.pendingTurnAt.set(null);
   }
 
-  private async restoreSession(session: AiWorkspaceSession | null, isSwitch: boolean) {
+  private async restoreSession(
+    session: AiWorkspaceSession | null,
+    isSwitch: boolean
+  ) {
     if (!session) {
       return;
     }
 
-    const shouldOpen = !isSwitch && session.isOpen && this.mode() !== 'dedicated';
+    const shouldOpen =
+      !isSwitch && session.isOpen && this.mode() !== 'dedicated';
 
     if (shouldOpen) {
       this.isOpen.set(true);
@@ -372,12 +379,16 @@ export class AiAssistantService {
       return;
     }
 
-    const [catalog, credentials] = await Promise.all([
+    const [catalog, availability] = await Promise.all([
       this.http.get<AiModelOption[]>('api/ai/models').toPromise(),
-      this.http.get<AiCredential[]>('api/ai/credentials').toPromise(),
+      this.http
+        .get<AiCredentialAvailability>('api/ai/credentials/availability')
+        .toPromise(),
     ]);
 
-    const providers = new Set((credentials ?? []).map((item) => item.provider));
+    const providers = new Set(
+      (availability?.providers ?? []).map((item) => item.provider)
+    );
     const available = (catalog ?? []).filter((model) => {
       return providers.has(model.provider);
     });
@@ -794,6 +805,47 @@ export class AiAssistantService {
     await this.refreshChangeSet(changeSet.id);
   }
 
+  /**
+   * The turn is stopped on the server first so it stops burning tokens, then
+   * the stream is dropped so the chat is usable again without waiting.
+   */
+  stopTurn() {
+    const isRunning = this.isStreaming();
+
+    if (!isRunning || this.isStopping) {
+      return;
+    }
+
+    this.isStopping = true;
+
+    const conversationId = this.conversationId();
+
+    if (conversationId) {
+      void this.http
+        .post(`api/ai/conversations/${conversationId}/stop`, {})
+        .toPromise()
+        .catch(() => undefined);
+    }
+
+    this.markLastEntryStopped();
+    this.streamAbort?.abort();
+  }
+
+  private markLastEntryStopped() {
+    this.entries.update((current) => {
+      const next = [...current];
+      const last = next[next.length - 1];
+
+      if (!last || last.role !== 'assistant') {
+        return current;
+      }
+
+      next[next.length - 1] = { ...last, stopped: true };
+
+      return next;
+    });
+  }
+
   private async refreshChangeSet(changeSetId: string, token?: number) {
     try {
       const response = await this.http
@@ -831,10 +883,14 @@ export class AiAssistantService {
 
     const token = ++this.turnToken;
 
+    this.isStopping = false;
+
     try {
       await this.stream(trimmed, token);
     } catch {
-      if (this.turnToken === token) {
+      const isCurrent = this.turnToken === token;
+
+      if (isCurrent && !this.isStopping) {
         this.failLastEntry(
           $localize`:Shown when the assistant request fails:The assistant could not be reached.`
         );
@@ -847,6 +903,7 @@ export class AiAssistantService {
         this.isStreaming.set(false);
         this.isThinking.set(false);
         this.pendingTurnAt.set(null);
+        this.isStopping = false;
       }
     }
 
@@ -1073,6 +1130,13 @@ export class AiAssistantService {
       event.changeSetId
     ) {
       void this.refreshChangeSet(event.changeSetId, this.turnToken);
+
+      return;
+    }
+
+    if (event.type === AiStreamEventType.stopped) {
+      this.isThinking.set(false);
+      this.markLastEntryStopped();
 
       return;
     }

@@ -16,7 +16,9 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
 import { formatTokens } from '@core/util/ai-usage';
 import { LucideArrowLeft, LucideMessageSquare } from '@lucide/angular';
+import { AiCredentialsComponent } from '@settings/components/ai-credentials/ai-credentials.component';
 import { ActionCardComponent } from '@static/components/action-card/action-card.component';
+import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -30,6 +32,8 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
     LucideMessageSquare,
     ActionCardComponent,
     AiAssistantMessageComponent,
+    AiCredentialsComponent,
+    SectionHeaderComponent,
     CheckboxComponent,
     EmptyStateComponent,
     IconButtonComponent,
@@ -68,6 +72,14 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
             changes from being applied.
           </p>
         </div>
+
+        <section class="mb-8">
+          <app-section-header
+            i18n-heading="Section heading for the shared workspace API keys"
+            heading="Workspace keys" />
+
+          <app-ai-credentials scope="workspace" />
+        </section>
       }
 
       @if (selected(); as detail) {

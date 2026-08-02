@@ -1,7 +1,8 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   AiCredential,
+  AiCredentialScope,
   AiProvider,
   SaveAiCredentialRequest,
 } from '@core/models/ai-credential';
@@ -52,10 +53,22 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
     TooltipDirective,
   ],
   template: `
-    <p class="text-muted max-w-3xl text-sm" i18n="Explains why a key is needed">
-      The assistant uses your own provider API key. Keys are encrypted, are
-      never shown again after saving, and are only used for requests you start.
-    </p>
+    @if (scope() === 'workspace') {
+      <p
+        class="text-muted max-w-3xl text-sm"
+        i18n="Explains what a workspace API key is for">
+        A workspace key lets every member use the assistant without adding one
+        of their own. Anyone who has added a personal key keeps using theirs.
+      </p>
+    } @else {
+      <p
+        class="text-muted max-w-3xl text-sm"
+        i18n="Explains why a key is needed">
+        The assistant uses your own provider API key. Keys are encrypted, are
+        never shown again after saving, and are only used for requests you
+        start.
+      </p>
+    }
 
     <div class="mt-6 flex flex-col gap-4">
       @for (option of providerOptions(); track option.provider) {
@@ -183,7 +196,9 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
   `,
 })
 export class AiCredentialsComponent {
-  private readonly credentials = aiCredentialResource();
+  readonly scope = input<AiCredentialScope>('user');
+
+  private readonly credentials = aiCredentialResource(() => this.scope());
   private readonly catalog = aiModelResource();
   private readonly service = inject(AiCredentialsService);
   private readonly snackbar = inject(SnackbarService);
@@ -282,7 +297,7 @@ export class AiCredentialsComponent {
     this.saving.set(option.provider);
 
     this.service
-      .save(request)
+      .save(request, this.scope())
       .pipe(first())
       .subscribe({
         next: (response) => {
@@ -329,7 +344,7 @@ export class AiCredentialsComponent {
             return [];
           }
 
-          return this.service.delete(credential.id);
+          return this.service.delete(credential.id, this.scope());
         })
       )
       .subscribe({

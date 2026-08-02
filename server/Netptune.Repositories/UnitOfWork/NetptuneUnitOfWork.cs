@@ -40,6 +40,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
     public IReportingRepository Reports { get; }
     public IRoadmapRepository Roadmaps { get; }
     public IAiCredentialRepository AiCredentials { get; }
+    public IWorkspaceAiCredentialRepository WorkspaceAiCredentials { get; }
     public IAiConversationRepository AiConversations { get; }
     public IAiChangeSetRepository AiChangeSets { get; }
 
@@ -79,6 +80,7 @@ public class NetptuneUnitOfWork : UnitOfWork<DataContext, IDbConnectionFactory>,
         Reports = new ReportingRepository(context);
         Roadmaps = new RoadmapRepository(connectionFactory);
         AiCredentials = new AiCredentialRepository(context, connectionFactory);
+        WorkspaceAiCredentials = new WorkspaceAiCredentialRepository(context, connectionFactory);
         AiConversations = new AiConversationRepository(context, connectionFactory);
         AiChangeSets = new AiChangeSetRepository(context, connectionFactory);
     }

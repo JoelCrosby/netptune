@@ -1,8 +1,15 @@
 import { httpResource } from '@angular/common/http';
-import { AiCredential } from '../models/ai-credential';
+import { AiCredential, AiCredentialScope } from '../models/ai-credential';
 
-export const aiCredentialResource = () => {
-  return httpResource<AiCredential[]>(() => ({ url: 'api/ai/credentials' }), {
-    defaultValue: [],
-  });
+export const aiCredentialUrl = (scope: AiCredentialScope): string => {
+  return scope === 'workspace'
+    ? 'api/ai/workspace-credentials'
+    : 'api/ai/credentials';
+};
+
+export const aiCredentialResource = (scope?: () => AiCredentialScope) => {
+  return httpResource<AiCredential[]>(
+    () => ({ url: aiCredentialUrl(scope?.() ?? 'user') }),
+    { defaultValue: [] }
+  );
 };

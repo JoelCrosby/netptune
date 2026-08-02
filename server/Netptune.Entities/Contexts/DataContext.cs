@@ -50,6 +50,7 @@ public class DataContext : IdentityDbContext<AppUser>
 
     // AI assistant
     public DbSet<UserAiCredential> UserAiCredentials { get; set; } = null!;
+    public DbSet<WorkspaceAiCredential> WorkspaceAiCredentials { get; set; } = null!;
     public DbSet<AiConversation> AiConversations { get; set; } = null!;
     public DbSet<AiMessage> AiMessages { get; set; } = null!;
     public DbSet<AiToolInvocation> AiToolInvocations { get; set; } = null!;

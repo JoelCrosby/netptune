@@ -5,6 +5,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Options;
 
 using Netptune.Ai.Configuration;
+using Netptune.Ai.Providers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
@@ -36,6 +37,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiSystemPromptBuilder PromptBuilder;
     private readonly IAiChangeSetBuilder ChangeSetBuilder;
     private readonly IAiTitleGenerator Titles;
+    private readonly IAiTurnRegistry Turns;
     private readonly AiOptions Options;
 
     public AiConversationService(
@@ -47,10 +49,12 @@ public sealed class AiConversationService : IAiConversationService
         IAiSystemPromptBuilder promptBuilder,
         IAiChangeSetBuilder changeSetBuilder,
         IAiTitleGenerator titles,
+        IAiTurnRegistry turns,
         IOptions<AiOptions> options)
     {
         ChangeSetBuilder = changeSetBuilder;
         Titles = titles;
+        Turns = turns;
         UnitOfWork = unitOfWork;
         Identity = identity;
         Protector = protector;
@@ -87,7 +91,7 @@ public sealed class AiConversationService : IAiConversationService
             yield break;
         }
 
-        var credentials = await UnitOfWork.AiCredentials.GetForUser(userId, cancellationToken);
+        var credentials = await ResolveCredentials(userId, workspaceId, cancellationToken);
 
         if (credentials.Count == 0)
         {
@@ -176,8 +180,26 @@ public sealed class AiConversationService : IAiConversationService
 
         var assistantText = new StringBuilder();
 
-        await foreach (var streamEvent in Runner.Run(context, cancellationToken))
+        using var turnCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using var registration = Turns.Register(conversation.Id, turnCancellation);
+
+        var turn = Runner.Run(context, turnCancellation.Token).GetAsyncEnumerator(turnCancellation.Token);
+        var wasStopped = false;
+        string? failure = null;
+
+        while (true)
         {
+            var step = await ReadNext(turn);
+            var streamEvent = step.Event;
+
+            if (streamEvent is null)
+            {
+                wasStopped = turnCancellation.IsCancellationRequested;
+                failure = step.Failure;
+
+                break;
+            }
+
             if (streamEvent.Type == AiStreamEventType.TextDelta && streamEvent.Text is not null)
             {
                 assistantText.Append(streamEvent.Text);
@@ -189,6 +211,18 @@ public sealed class AiConversationService : IAiConversationService
             }
 
             yield return streamEvent;
+        }
+
+        await DisposeTurn(turn);
+
+        if (wasStopped)
+        {
+            yield return AiStreamEvent.Stopped();
+        }
+
+        if (failure is not null)
+        {
+            yield return AiStreamEvent.Failed(failure);
         }
 
         var reply = assistantText.ToString();
@@ -203,21 +237,21 @@ public sealed class AiConversationService : IAiConversationService
             yield return AiStreamEvent.EntitiesReferenced(references);
         }
 
-        var turn = await UnitOfWork.Transaction(async () =>
+        var persisted = await UnitOfWork.Transaction(async () =>
         {
             var assistantMessageId = await PersistTurn(conversation, context, reply, cancellationToken);
             var pendingChangeSetId = await PersistChangeSet(conversation, assistantMessageId, cancellationToken);
 
-            credential.LastUsedAt = DateTime.UtcNow;
+            await MarkCredentialUsed(credential, cancellationToken);
 
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             return new PersistedTurn(assistantMessageId, pendingChangeSetId);
         });
 
-        if (turn.ChangeSetId.HasValue)
+        if (persisted.ChangeSetId.HasValue)
         {
-            yield return AiStreamEvent.ChangeSetProposed(turn.ChangeSetId.Value);
+            yield return AiStreamEvent.ChangeSetProposed(persisted.ChangeSetId.Value);
         }
 
         var titleRequest = new AiTitleRequest
@@ -228,7 +262,41 @@ public sealed class AiConversationService : IAiConversationService
             AssistantMessage = reply,
         };
 
-        await ApplyTitle(conversation, turn.MessageId, titleRequest, existing is null, cancellationToken);
+        await ApplyTitle(conversation, persisted.MessageId, titleRequest, existing is null, cancellationToken);
+    }
+
+    private sealed record TurnStep(AiStreamEvent? Event, string? Failure);
+
+    private static async Task<TurnStep> ReadNext(IAsyncEnumerator<AiStreamEvent> turn)
+    {
+        try
+        {
+            var moved = await turn.MoveNextAsync();
+
+            return new TurnStep(moved ? turn.Current : null, null);
+        }
+        catch (OperationCanceledException)
+        {
+            return new TurnStep(null, null);
+        }
+        catch (Exception exception)
+        {
+            var described = AiProviderErrors.Describe(exception);
+
+            return new TurnStep(null, described ?? "The assistant could not reach the provider.");
+        }
+    }
+
+    private static async Task DisposeTurn(IAsyncEnumerator<AiStreamEvent> turn)
+    {
+        try
+        {
+            await turn.DisposeAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            /* The turn was stopped, so its provider stream ends the same way. */
+        }
     }
 
     private sealed record PersistedTurn(long MessageId, Guid? ChangeSetId);
@@ -313,10 +381,47 @@ public sealed class AiConversationService : IAiConversationService
         lines.Add($"{name}: {value}");
     }
 
+    private async Task<List<AiResolvedCredential>> ResolveCredentials(
+        string userId,
+        int workspaceId,
+        CancellationToken cancellationToken)
+    {
+        var userCredentials = await UnitOfWork.AiCredentials.GetForUser(userId, cancellationToken);
+        var workspaceCredentials = await UnitOfWork.WorkspaceAiCredentials.GetForWorkspace(
+            workspaceId,
+            cancellationToken);
+
+        return AiCredentialResolution.Resolve(userCredentials, workspaceCredentials);
+    }
+
+    private async Task MarkCredentialUsed(AiResolvedCredential credential, CancellationToken cancellationToken)
+    {
+        var isWorkspaceKey = credential.Source == AiCredentialSource.Workspace;
+
+        if (isWorkspaceKey)
+        {
+            var workspaceCredential = await UnitOfWork.WorkspaceAiCredentials.GetAsync(credential.Id, cancellationToken: cancellationToken);
+
+            if (workspaceCredential is not null)
+            {
+                workspaceCredential.LastUsedAt = DateTime.UtcNow;
+            }
+
+            return;
+        }
+
+        var userCredential = await UnitOfWork.AiCredentials.GetAsync(credential.Id, cancellationToken: cancellationToken);
+
+        if (userCredential is not null)
+        {
+            userCredential.LastUsedAt = DateTime.UtcNow;
+        }
+    }
+
     private static AiProvider ResolveProvider(
         AiProvider? requested,
         AiConversation? existing,
-        IReadOnlyList<UserAiCredential> credentials)
+        IReadOnlyList<AiResolvedCredential> credentials)
     {
         if (requested.HasValue)
         {

@@ -1,13 +1,18 @@
 import { Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AiModelOption } from '@core/models/ai-model';
-import { LucideArrowUp } from '@lucide/angular';
+import { LucideArrowUp, LucideSquare } from '@lucide/angular';
 import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.component';
 
 @Component({
   selector: 'app-ai-assistant-composer',
   host: { class: 'block p-3' },
-  imports: [FormsModule, LucideArrowUp, AiAssistantModelMenuComponent],
+  imports: [
+    FormsModule,
+    LucideArrowUp,
+    LucideSquare,
+    AiAssistantModelMenuComponent,
+  ],
   template: `
     <div class="mx-auto w-full" [class]="contentWidth()">
       <div
@@ -19,7 +24,7 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
           (ngModelChange)="draftChanged.emit($event)"
           (keydown)="onKeydown($event)"
           [placeholder]="placeholder()"
-          [disabled]="isStreaming() || disabled()"></textarea>
+          [disabled]="disabled()"></textarea>
 
         <div class="flex items-center justify-between gap-2 pt-1">
           @if (models().length > 0) {
@@ -32,17 +37,30 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
             <span></span>
           }
 
-          <button
-            type="button"
-            class="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full transition disabled:opacity-40"
-            [disabled]="!canSend()"
-            i18n-aria-label="
-              Accessible label for the button that sends a message
-            "
-            aria-label="Send message"
-            (click)="send()">
-            <svg lucideArrowUp class="h-4 w-4"></svg>
-          </button>
+          @if (isStreaming()) {
+            <button
+              type="button"
+              class="bg-foreground/15 text-foreground hover:bg-foreground/25 flex h-9 w-9 items-center justify-center rounded-full transition"
+              i18n-aria-label="
+                Accessible label for the button that stops the assistant
+              "
+              aria-label="Stop the assistant"
+              (click)="stopped.emit()">
+              <svg lucideSquare class="h-3.5 w-3.5 fill-current"></svg>
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full transition disabled:opacity-40"
+              [disabled]="!canSend()"
+              i18n-aria-label="
+                Accessible label for the button that sends a message
+              "
+              aria-label="Send message"
+              (click)="send()">
+              <svg lucideArrowUp class="h-4 w-4"></svg>
+            </button>
+          }
         </div>
       </div>
     </div>
@@ -60,6 +78,7 @@ export class AiAssistantComposerComponent {
   readonly messageSent = output<string>();
   readonly modelSelected = output<string | null>();
   readonly draftChanged = output<string>();
+  readonly stopped = output();
 
   protected readonly canSend = computed(() => {
     const hasDraft = this.draft().trim().length > 0;

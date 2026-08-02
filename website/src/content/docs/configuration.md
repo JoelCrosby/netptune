@@ -74,7 +74,7 @@ The current storage options do not expose a custom S3 endpoint variable. AWS S3-
 
 ### AI assistant
 
-The assistant runs on API keys supplied by each user, so no provider key is configured here. These settings only shape how the harness behaves.
+The assistant runs on API keys supplied by users and workspace admins, so no provider key is configured here. These settings only shape how the harness behaves.
 
 | Variable                      | Default         | Description                                                                             |
 | ----------------------------- | --------------- | --------------------------------------------------------------------------------------- |
@@ -91,11 +91,11 @@ The two model settings are only fallbacks. The models users can actually pick co
 
 Conversation titles are written by the model. After the first reply the assistant makes one short extra call — on the cheapest catalogue model for that provider, not the conversation's own model — and names the conversation from it. Its tokens are counted against that first assistant message, so the usage totals include it. If the call fails the title stays as the truncated first message, and `Ai__GenerateTitles=false` skips it entirely.
 
-Users supply their own provider keys from personal settings. Keys are encrypted with ASP.NET Data Protection under the purpose `netptune.ai-credentials`, so the data-protection keyring in Valkey/Redis must be stable — losing it makes stored keys unreadable and users must re-enter them.
+Users supply their own provider keys from personal settings, and a workspace admin can add a shared key per provider from workspace settings so members can use the assistant without adding one of their own. A member's own key always wins over the workspace key, so anyone who has added one keeps their own account and quota. Keys are encrypted with ASP.NET Data Protection under the purpose `netptune.ai-credentials`, so the data-protection keyring in Valkey/Redis must be stable — losing it makes stored keys unreadable and they must be re-entered.
 
-Workspace admins can turn the assistant off for a whole workspace from workspace settings, and the `assistant.read_all_conversations` permission (granted to Admin and Owner) exposes every member's conversations there.
+Workspace admins can turn the assistant off for a whole workspace from workspace settings, and the `assistant.read_all_conversations` permission (granted to Admin and Owner) exposes every member's conversations there. Managing the shared workspace key needs `workspace.update`.
 
-The assistant's tables are created with the rest of the schema when the API first starts, so there is nothing to run by hand.
+The assistant's tables are created with the rest of the schema when the API first starts, so there is nothing to run by hand. An existing database predating the shared workspace key needs `server/scripts/add-workspace-ai-credentials.sql`.
 
 ### Hosting
 

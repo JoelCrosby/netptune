@@ -16,6 +16,7 @@ export enum AiStreamEventType {
   changeSetProposed = 6,
   entitiesReferenced = 7,
   replyReset = 8,
+  stopped = 9,
 }
 
 export interface AiStreamEvent {

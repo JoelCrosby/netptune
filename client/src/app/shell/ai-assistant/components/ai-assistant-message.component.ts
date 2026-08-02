@@ -36,6 +36,14 @@ import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component'
         [blocks]="blocks()"
         [references]="references()"
         [workspace]="workspace()" />
+
+      @if (entry().stopped) {
+        <p
+          class="text-muted mt-1 text-xs italic"
+          i18n="Shown under a reply the user stopped">
+          You stopped this reply.
+        </p>
+      }
     }
   `,
 })

@@ -11,6 +11,7 @@ public enum AiStreamEventType
     ChangeSetProposed = 6,
     EntitiesReferenced = 7,
     ReplyReset = 8,
+    Stopped = 9,
 }
 
 public sealed record AiStreamEvent
@@ -74,6 +75,11 @@ public sealed record AiStreamEvent
     public static AiStreamEvent ReplyReset()
     {
         return new AiStreamEvent { Type = AiStreamEventType.ReplyReset };
+    }
+
+    public static AiStreamEvent Stopped()
+    {
+        return new AiStreamEvent { Type = AiStreamEventType.Stopped };
     }
 
     public static AiStreamEvent Failed(string message)

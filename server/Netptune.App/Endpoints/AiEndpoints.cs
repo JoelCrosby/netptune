@@ -32,6 +32,14 @@ public static class AiEndpoints
         group.MapGet("/credentials", HandleGetCredentials);
         group.MapPut("/credentials", HandleSaveCredential);
         group.MapDelete("/credentials/{credentialId:guid}", HandleDeleteCredential);
+        group.MapGet("/credentials/availability", HandleGetCredentialAvailability);
+
+        group.MapGet("/workspace-credentials", HandleGetWorkspaceCredentials)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
+        group.MapPut("/workspace-credentials", HandleSaveWorkspaceCredential)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
+        group.MapDelete("/workspace-credentials/{credentialId:guid}", HandleDeleteWorkspaceCredential)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
 
         group.MapGet("/conversations", HandleGetConversations);
         group.MapGet("/conversations/{conversationId:guid}", HandleGetConversation);
@@ -40,6 +48,8 @@ public static class AiEndpoints
         group
             .MapPost("/conversations/messages", HandleSendMessage)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
+
+        group.MapPost("/conversations/{conversationId:guid}/stop", HandleStopTurn);
 
         group.MapGet("/admin/conversations", HandleGetWorkspaceConversations)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
@@ -81,6 +91,44 @@ public static class AiEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteAiCredentialCommand(credentialId), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetCredentialAvailability(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAiCredentialAvailabilityQuery(), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetWorkspaceCredentials(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetWorkspaceAiCredentialsQuery(), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleSaveWorkspaceCredential(
+        SaveAiCredentialRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new SaveWorkspaceAiCredentialCommand(request), cancellationToken);
+
+        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+    }
+
+    private static async Task<IResult> HandleDeleteWorkspaceCredential(
+        Guid credentialId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteWorkspaceAiCredentialCommand(credentialId), cancellationToken);
 
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
@@ -204,6 +252,16 @@ public static class AiEndpoints
 
             clientConnected = await TryWriteEvent(context, streamEvent);
         }
+    }
+
+    private static async Task<IResult> HandleStopTurn(
+        Guid conversationId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new StopAiTurnCommand(conversationId), cancellationToken);
+
+        return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 
     private static async Task<bool> TryWriteEvent(HttpContext context, AiStreamEvent streamEvent)

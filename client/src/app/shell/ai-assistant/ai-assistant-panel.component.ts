@@ -141,6 +141,7 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
         [draft]="assistant.draft()"
         (messageSent)="send($event)"
         (draftChanged)="assistant.setDraft($event)"
+        (stopped)="assistant.stopTurn()"
         (modelSelected)="assistant.selectModel($event)" />
     </div>
   `,

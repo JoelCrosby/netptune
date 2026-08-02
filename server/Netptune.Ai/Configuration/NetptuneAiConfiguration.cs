@@ -18,6 +18,7 @@ public static class NetptuneAiConfiguration
         services.AddSingleton<IAiChatProvider, AnthropicChatProvider>();
         services.AddSingleton<IAiChatProvider, OpenAiChatProvider>();
         services.AddSingleton<IAiChatProviderFactory, AiChatProviderFactory>();
+        services.AddSingleton<IAiTurnRegistry, AiTurnRegistry>();
 
         services.AddScoped<IAiTool, ListProjectsTool>();
         services.AddScoped<IAiTool, SearchTasksTool>();
