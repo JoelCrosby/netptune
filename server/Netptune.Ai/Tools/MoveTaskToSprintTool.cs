@@ -90,12 +90,11 @@ public sealed class MoveTaskToSprintTool : IAiTool
             Summary = $"Move “{task.Name}” into sprint “{sprint.Name}”",
             Fields =
             [
-                new AiChangeField
-                {
-                    Name = "sprint",
-                    Before = task.SprintName ?? "none",
-                    After = sprint.Name,
-                },
+                AiChangeFields.Values(
+                    "sprint",
+                    AiChangeValueKind.Sprint,
+                    task.SprintId.HasValue ? [AiChangeFields.Sprint(task.SprintId, task.SprintName!)] : [],
+                    [AiChangeFields.Sprint(sprint.Id, sprint.Name)]),
             ],
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,

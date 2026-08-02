@@ -93,10 +93,30 @@ export enum AiChangeApplyStatus {
   failed = 3,
 }
 
+export enum AiChangeValueKind {
+  text = 0,
+  date = 1,
+  user = 2,
+  status = 3,
+  tag = 4,
+  task = 5,
+  sprint = 6,
+}
+
+export interface AiChangeValue {
+  display: string;
+  id?: string | null;
+  color?: string | null;
+  pictureUrl?: string | null;
+}
+
 export interface AiChangeField {
   name: string;
   before?: string | null;
   after?: string | null;
+  kind: AiChangeValueKind;
+  beforeValues?: AiChangeValue[] | null;
+  afterValues?: AiChangeValue[] | null;
 }
 
 export interface AiProposedChange {

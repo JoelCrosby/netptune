@@ -83,7 +83,11 @@ public sealed class UnlinkTasksTool : IAiTool
             Summary = $"Unlink “{systemId}” from “{related}”",
             Fields =
             [
-                new AiChangeField { Name = relation.RelationTypeName, Before = related },
+                AiChangeFields.Values(
+                    relation.RelationTypeName,
+                    AiChangeValueKind.Task,
+                    [AiChangeFields.Task(relation.RelatedTask.Id, relation.RelatedTask.SystemId, relation.RelatedTask.Name)],
+                    []),
             ],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

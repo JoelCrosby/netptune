@@ -92,8 +92,8 @@ public sealed class UpdateSprintTool : IAiTool
 
         AddChangedField(fields, "name", sprint.Name, name);
         AddChangedField(fields, "goal", sprint.Goal, goal);
-        AddChangedField(fields, "startDate", Format(sprint.StartDate), Format(startDate));
-        AddChangedField(fields, "endDate", Format(sprint.EndDate), Format(endDate));
+        AddChangedDate(fields, "startDate", DateOnly.FromDateTime(sprint.StartDate), startDate);
+        AddChangedDate(fields, "endDate", DateOnly.FromDateTime(sprint.EndDate), endDate);
 
         if (fields.Count == 0)
         {
@@ -124,14 +124,20 @@ public sealed class UpdateSprintTool : IAiTool
         return isParsed ? parsed : null;
     }
 
-    private static string Format(DateTime value)
+    private static void AddChangedDate(
+        List<AiChangeField> fields,
+        string name,
+        DateOnly before,
+        DateOnly? after)
     {
-        return value.ToString(AiSprintLookup.DateFormat);
-    }
+        var isUnchanged = !after.HasValue || after.Value == before;
 
-    private static string? Format(DateOnly? value)
-    {
-        return value?.ToString(AiSprintLookup.DateFormat);
+        if (isUnchanged)
+        {
+            return;
+        }
+
+        fields.Add(AiChangeFields.Date(name, before, after));
     }
 
     private static void AddChangedField(

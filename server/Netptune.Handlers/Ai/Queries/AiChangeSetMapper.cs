@@ -11,11 +11,6 @@ public static class AiChangeSetMapper
 {
     private const string TaskEntityType = "task";
 
-    private static readonly JsonSerializerOptions FieldSerializerOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-    };
-
     public static async Task<AiChangeSetViewModel> ToViewModel(
         AiChangeSet changeSet,
         List<AiProposedChange> changes,
@@ -90,8 +85,6 @@ public static class AiChangeSetMapper
 
     private static List<AiChangeFieldViewModel> ParseFields(JsonDocument fields)
     {
-        var parsed = fields.Deserialize<List<AiChangeFieldViewModel>>(FieldSerializerOptions);
-
-        return parsed ?? [];
+        return AiChangeFieldSerializer.Deserialize(fields);
     }
 }

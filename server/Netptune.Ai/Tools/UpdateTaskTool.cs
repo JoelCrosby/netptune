@@ -14,7 +14,6 @@ namespace Netptune.Ai.Tools;
 
 public sealed class UpdateTaskTool : IAiTool
 {
-    private const string DateFormat = "yyyy-MM-dd";
     private const decimal SmallestTShirtSize = 1;
     private const decimal LargestTShirtSize = 5;
 
@@ -212,7 +211,7 @@ public sealed class UpdateTaskTool : IAiTool
 
             if (wasSet)
             {
-                fields.Add(new AiChangeField { Name = name, Before = before?.ToString(DateFormat), After = null });
+                fields.Add(AiChangeFields.Date(name, before, null));
             }
 
             return null;
@@ -230,7 +229,12 @@ public sealed class UpdateTaskTool : IAiTool
             return $"“{name}” must be a date in YYYY-MM-DD form.";
         }
 
-        AddChangedField(fields, name, before?.ToString(DateFormat), parsed.ToString(DateFormat));
+        var isUnchanged = before == parsed;
+
+        if (!isUnchanged)
+        {
+            fields.Add(AiChangeFields.Date(name, before, parsed));
+        }
 
         return null;
     }
@@ -346,12 +350,11 @@ public sealed class UpdateTaskTool : IAiTool
             return null;
         }
 
-        fields.Add(new AiChangeField
-        {
-            Name = "status",
-            Before = task.StatusName,
-            After = status.Name,
-        });
+        fields.Add(AiChangeFields.Values(
+            "status",
+            AiChangeValueKind.Status,
+            [AiChangeFields.Status(task.StatusId, task.StatusName, task.StatusColor)],
+            [AiChangeFields.Status(status.Id, status.Name, status.Color)]));
 
         return null;
     }

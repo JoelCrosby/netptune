@@ -74,7 +74,7 @@ public sealed class CreateTagTool : IAiTool
             ToolName = Name,
             EntityType = "tag",
             Summary = $"Create tag “{name}”",
-            Fields = [new AiChangeField { Name = "tag", After = name }],
+            Fields = [AiChangeFields.Values("tag", AiChangeValueKind.Tag, [], [AiChangeFields.Tag(name!)])],
             Payload = JsonSerializer.SerializeToDocument(new { name }),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });

@@ -26,11 +26,6 @@ public sealed class AiConversationService : IAiConversationService
     private const int MaxRecalledQuestions = 5;
     private const int MaxRecalledQuestionLength = 120;
 
-    private static readonly JsonSerializerOptions FieldSerializerOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-    };
-
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IAiCredentialProtector Protector;
@@ -839,7 +834,7 @@ public sealed class AiConversationService : IAiConversationService
             EntityId = draft.EntityId,
             RefKey = draft.RefKey,
             Summary = draft.Summary,
-            Fields = SerializeFields(draft.Fields),
+            Fields = AiChangeFieldSerializer.Serialize(draft.Fields),
             Payload = draft.Payload,
             ValidationStatus = draft.ValidationStatus,
             ValidationMessage = draft.ValidationMessage,
@@ -850,13 +845,6 @@ public sealed class AiConversationService : IAiConversationService
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         return changeSet.Id;
-    }
-
-    private static JsonDocument SerializeFields(List<AiChangeField> fields)
-    {
-        var json = JsonSerializer.Serialize(fields, FieldSerializerOptions);
-
-        return JsonDocument.Parse(json);
     }
 
     private async Task<string?> Rewind(AiConversation conversation, string replacement, CancellationToken cancellationToken)

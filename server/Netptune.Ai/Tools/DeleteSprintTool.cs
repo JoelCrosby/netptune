@@ -64,7 +64,11 @@ public sealed class DeleteSprintTool : IAiTool
 
         var fields = new List<AiChangeField>
         {
-            new() { Name = "sprint", Before = sprint.Name, After = null },
+            AiChangeFields.Values(
+                "sprint",
+                AiChangeValueKind.Sprint,
+                [AiChangeFields.Sprint(sprint.Id, sprint.Name)],
+                []),
         };
 
         var hasTasks = sprint.TaskCount > 0;

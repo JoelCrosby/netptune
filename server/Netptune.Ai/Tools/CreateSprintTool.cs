@@ -85,8 +85,8 @@ public sealed class CreateSprintTool : IAiTool
         {
             new() { Name = "name", After = name },
             new() { Name = "project", After = project.Name },
-            new() { Name = "startDate", After = startDate.Value.ToString("yyyy-MM-dd") },
-            new() { Name = "endDate", After = endDate.Value.ToString("yyyy-MM-dd") },
+            AiChangeFields.Date("startDate", null, startDate),
+            AiChangeFields.Date("endDate", null, endDate),
         };
 
         AiToolSchema.AddOptionalField(fields, "goal", goal);

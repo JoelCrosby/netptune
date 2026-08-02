@@ -87,8 +87,8 @@ public sealed class SetTaskTagsTool : IAiTool
             return AiToolExecution.Failed(unknownError);
         }
 
-        var before = task is null ? string.Empty : string.Join(", ", task.Tags);
-        var after = string.Join(", ", requested);
+        var before = (task?.Tags ?? []).Select(AiChangeFields.Tag).ToList();
+        var after = requested.Select(AiChangeFields.Tag).ToList();
 
         ChangeSet.Add(new AiChangeDraft
         {
@@ -96,15 +96,7 @@ public sealed class SetTaskTagsTool : IAiTool
             EntityType = "task",
             EntityId = task?.Id,
             Summary = $"Set tags on “{task?.Name ?? pending!.Summary}”",
-            Fields =
-            [
-                new AiChangeField
-                {
-                    Name = "tags",
-                    Before = before.Length == 0 ? "none" : before,
-                    After = requested.Count == 0 ? "none" : after,
-                },
-            ],
+            Fields = [AiChangeFields.Values("tags", AiChangeValueKind.Tag, before, after)],
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });

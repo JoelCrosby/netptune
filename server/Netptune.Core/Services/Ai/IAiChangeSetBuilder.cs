@@ -4,6 +4,28 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Services.Ai;
 
+public enum AiChangeValueKind
+{
+    Text = 0,
+    Date = 1,
+    User = 2,
+    Status = 3,
+    Tag = 4,
+    Task = 5,
+    Sprint = 6,
+}
+
+public sealed record AiChangeValue
+{
+    public required string Display { get; init; }
+
+    public string? Id { get; init; }
+
+    public string? Color { get; init; }
+
+    public string? PictureUrl { get; init; }
+}
+
 public sealed record AiChangeField
 {
     public required string Name { get; init; }
@@ -11,6 +33,12 @@ public sealed record AiChangeField
     public string? Before { get; init; }
 
     public string? After { get; init; }
+
+    public AiChangeValueKind Kind { get; init; } = AiChangeValueKind.Text;
+
+    public List<AiChangeValue>? BeforeValues { get; init; }
+
+    public List<AiChangeValue>? AfterValues { get; init; }
 }
 
 public sealed record AiChangeDraft

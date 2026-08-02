@@ -133,7 +133,11 @@ public sealed class AddTasksToSprintTool : IAiTool
             Summary = $"Add {pendingIds.Count} task(s) to sprint “{sprint.Name}”",
             Fields =
             [
-                new AiChangeField { Name = "tasks", After = string.Join(", ", pendingLabels) },
+                AiChangeFields.Values(
+                    "tasks",
+                    AiChangeValueKind.Task,
+                    [],
+                    pendingLabels.Select(label => AiChangeFields.Task(null, null, label))),
             ],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

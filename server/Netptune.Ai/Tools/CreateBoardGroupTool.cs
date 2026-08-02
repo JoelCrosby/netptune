@@ -113,7 +113,11 @@ public sealed class CreateBoardGroupTool : IAiTool
             return $"Status {statusId} is not in this workspace.";
         }
 
-        fields.Add(new AiChangeField { Name = "status", After = status.Name });
+        fields.Add(AiChangeFields.Values(
+            "status",
+            AiChangeValueKind.Status,
+            [],
+            [AiChangeFields.Status(status.Id, status.Name, status.Color)]));
 
         return null;
     }

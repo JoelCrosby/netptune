@@ -41,6 +41,23 @@ public class UpdateTaskToolTests
     }
 
     [Fact]
+    public async Task Execute_ShouldCarryADateChangeAsATypedValue()
+    {
+        GivenTask(CreateTask());
+
+        var result = await Execute($$"""{"taskId":{{TaskId}},"dueDate":"2026-09-01"}""");
+
+        result.IsError.Should().BeFalse();
+
+        var field = ChangeSet.Changes.Single().Fields.Single();
+
+        field.Name.Should().Be("dueDate");
+        field.Kind.Should().Be(AiChangeValueKind.Date);
+        field.BeforeValues!.Single().Display.Should().Be("2026-08-14");
+        field.AfterValues!.Single().Display.Should().Be("2026-09-01");
+    }
+
+    [Fact]
     public async Task Execute_ShouldFail_WhenThePriorityIsNotAKnownLevel()
     {
         GivenTask(CreateTask());

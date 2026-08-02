@@ -60,8 +60,16 @@ public sealed class DeleteTaskTool : IAiTool
 
         var fields = new List<AiChangeField>
         {
-            new() { Name = "task", Before = $"{task.SystemId} · {task.Name}", After = null },
-            new() { Name = "status", Before = task.StatusName },
+            AiChangeFields.Values(
+                "task",
+                AiChangeValueKind.Task,
+                [AiChangeFields.Task(task.Id, task.SystemId, task.Name)],
+                []),
+            AiChangeFields.Values(
+                "status",
+                AiChangeValueKind.Status,
+                [AiChangeFields.Status(task.StatusId, task.StatusName, task.StatusColor)],
+                []),
         };
 
         AiToolSchema.AddOptionalField(fields, "reason", AiToolSchema.GetString(arguments, "reason"));

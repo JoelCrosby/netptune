@@ -6,6 +6,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Handlers.Tasks.Queries;
 using Netptune.Handlers.Users.Queries;
 
@@ -79,8 +80,13 @@ public sealed class AssignTaskTool : IAiTool
             return AiToolExecution.Failed($"These assignee ids are not in this workspace: {string.Join(", ", unknownIds)}.");
         }
 
-        var before = string.Join(", ", task.Assignees.Select(assignee => assignee.DisplayName));
-        var after = string.Join(", ", assigneeIds.Select(id => members[id]));
+        var before = task.Assignees
+            .Select(assignee => AiChangeFields.User(assignee.Id, assignee.DisplayName, assignee.PictureUrl))
+            .ToList();
+
+        var after = assigneeIds
+            .Select(id => AiChangeFields.User(id, members[id].DisplayName, members[id].PictureUrl))
+            .ToList();
 
         ChangeSet.Add(new AiChangeDraft
         {
@@ -88,15 +94,7 @@ public sealed class AssignTaskTool : IAiTool
             EntityType = "task",
             EntityId = task.Id,
             Summary = $"Set assignees on “{task.Name}”",
-            Fields =
-            [
-                new AiChangeField
-                {
-                    Name = "assignees",
-                    Before = before,
-                    After = assigneeIds.Count == 0 ? "none" : after,
-                },
-            ],
+            Fields = [AiChangeFields.Values("assignees", AiChangeValueKind.User, before, after)],
             Payload = JsonDocument.Parse(arguments.GetRawText()),
             ValidationStatus = AiChangeValidationStatus.Valid,
         });
@@ -128,7 +126,7 @@ public sealed class AssignTaskTool : IAiTool
             .ToList();
     }
 
-    private async Task<Dictionary<string, string>?> LoadMembers(CancellationToken cancellationToken)
+    private async Task<Dictionary<string, AssigneeViewModel>?> LoadMembers(CancellationToken cancellationToken)
     {
         var filter = new AssigneeFilter { Page = 1, PageSize = MemberLookupPageSize };
         var result = await Mediator.Send(new GetAssigneesQuery(filter), cancellationToken);
@@ -140,6 +138,6 @@ public sealed class AssignTaskTool : IAiTool
 
         var members = result.Payload?.Items ?? [];
 
-        return members.ToDictionary(member => member.Id, member => member.DisplayName, StringComparer.Ordinal);
+        return members.ToDictionary(member => member.Id, member => member, StringComparer.Ordinal);
     }
 }

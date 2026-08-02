@@ -1,4 +1,8 @@
-import { AiChangeField, AiProposedChange } from '@core/models/ai-conversation';
+import {
+  AiChangeField,
+  AiChangeValue,
+  AiProposedChange,
+} from '@core/models/ai-conversation';
 import { BadgeColor } from '@static/components/badge/badge.component';
 
 export type AiChangeKind =
@@ -95,19 +99,12 @@ export interface AiChangeSummary {
 }
 
 const QUOTED = /“([^”]+)”/g;
-
-/** Lifting the name out leaves the preposition that introduced it dangling. */
 const DANGLING = /\s+(on|in|into|from|to|of|for|with)$/i;
 
-/** The name is quoted second only where the tool leads with something else. */
 const TARGET_QUOTES: Record<string, number> = {
   propose_resolve_task_flag: 1,
 };
 
-/**
- * The tools write one sentence naming the entity in quotes. The name belongs in
- * its own column, so it is lifted out and the rest is left as the phrase.
- */
 export const changeSummary = (change: AiProposedChange): AiChangeSummary => {
   const summary = change.summary;
   const quotes = [...summary.matchAll(QUOTED)];
@@ -127,12 +124,11 @@ export const changeSummary = (change: AiProposedChange): AiChangeSummary => {
 };
 
 export interface AiValueDiff {
-  kept: string[];
-  added: string[];
-  removed: string[];
+  kept: AiChangeValue[];
+  added: AiChangeValue[];
+  removed: AiChangeValue[];
 }
 
-/** The tools write an empty collection as this literal rather than leaving it out. */
 const EMPTY_COLLECTION = 'none';
 
 export const splitValues = (value: string | null | undefined): string[] => {
@@ -150,13 +146,36 @@ export const splitValues = (value: string | null | undefined): string[] => {
     .filter((part) => part.length > 0);
 };
 
+const valueKey = (value: AiChangeValue): string => value.id ?? value.display;
+
+const readValues = (
+  values: AiChangeValue[] | null | undefined,
+  rendered: string | null | undefined
+): AiChangeValue[] => {
+  if (values) {
+    return values;
+  }
+
+  return splitValues(rendered).map((display) => ({ display }));
+};
+
+export const beforeValues = (field: AiChangeField): AiChangeValue[] => {
+  return readValues(field.beforeValues, field.before);
+};
+
+export const afterValues = (field: AiChangeField): AiChangeValue[] => {
+  return readValues(field.afterValues, field.after);
+};
+
 export const valueDiff = (field: AiChangeField): AiValueDiff => {
-  const before = splitValues(field.before);
-  const after = splitValues(field.after);
+  const before = readValues(field.beforeValues, field.before);
+  const after = readValues(field.afterValues, field.after);
+  const beforeKeys = new Set(before.map(valueKey));
+  const afterKeys = new Set(after.map(valueKey));
 
   return {
-    kept: after.filter((value) => before.includes(value)),
-    added: after.filter((value) => !before.includes(value)),
-    removed: before.filter((value) => !after.includes(value)),
+    kept: after.filter((value) => beforeKeys.has(valueKey(value))),
+    added: after.filter((value) => !beforeKeys.has(valueKey(value))),
+    removed: before.filter((value) => !afterKeys.has(valueKey(value))),
   };
 };

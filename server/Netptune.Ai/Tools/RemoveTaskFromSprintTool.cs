@@ -74,7 +74,11 @@ public sealed class RemoveTaskFromSprintTool : IAiTool
             Summary = $"Take “{task.Name}” out of {task.SprintName}",
             Fields =
             [
-                new AiChangeField { Name = "sprint", Before = task.SprintName, After = null },
+                AiChangeFields.Values(
+                    "sprint",
+                    AiChangeValueKind.Sprint,
+                    [AiChangeFields.Sprint(task.SprintId, task.SprintName!)],
+                    []),
             ],
             Payload = JsonSerializer.SerializeToDocument(payload),
             ValidationStatus = AiChangeValidationStatus.Valid,

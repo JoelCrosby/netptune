@@ -173,7 +173,11 @@ public sealed class CreateTaskTool : IAiTool
             return unknownError;
         }
 
-        fields.Add(new AiChangeField { Name = "tags", After = string.Join(", ", tags) });
+        fields.Add(AiChangeFields.Values(
+            "tags",
+            AiChangeValueKind.Tag,
+            [],
+            tags.Select(AiChangeFields.Tag)));
 
         return null;
     }
@@ -204,7 +208,11 @@ public sealed class CreateTaskTool : IAiTool
                 return TaskPlacement.Failed($"Status {statusId} is not in this workspace.");
             }
 
-            fields.Add(new AiChangeField { Name = "status", After = status.Name });
+            fields.Add(AiChangeFields.Values(
+                "status",
+                AiChangeValueKind.Status,
+                [],
+                [AiChangeFields.Status(status.Id, status.Name, status.Color)]));
         }
 
         var assigneeId = AiToolSchema.GetString(arguments, "assigneeId");
@@ -222,7 +230,11 @@ public sealed class CreateTaskTool : IAiTool
                 return TaskPlacement.Failed($"User {assigneeId} is not a member of this workspace.");
             }
 
-            fields.Add(new AiChangeField { Name = "assignee", After = member.DisplayName });
+            fields.Add(AiChangeFields.Values(
+                "assignee",
+                AiChangeValueKind.User,
+                [],
+                [AiChangeFields.User(member.Id, member.DisplayName, member.PictureUrl)]));
         }
 
         var sprintRef = AiPendingReference.Read(arguments, "sprintRef");
@@ -236,7 +248,11 @@ public sealed class CreateTaskTool : IAiTool
                 return TaskPlacement.Failed(AiPendingReference.Missing(sprintRef, "sprint"));
             }
 
-            fields.Add(new AiChangeField { Name = "sprint", After = pendingSprint.Summary });
+            fields.Add(AiChangeFields.Values(
+                "sprint",
+                AiChangeValueKind.Sprint,
+                [],
+                [AiChangeFields.Sprint(null, pendingSprint.Summary)]));
         }
 
         var sprintId = AiToolSchema.GetInt(arguments, "sprintId");
@@ -257,7 +273,11 @@ public sealed class CreateTaskTool : IAiTool
                 return TaskPlacement.Failed($"Sprint “{sprint.Name}” belongs to a different project.");
             }
 
-            fields.Add(new AiChangeField { Name = "sprint", After = sprint.Name });
+            fields.Add(AiChangeFields.Values(
+                "sprint",
+                AiChangeValueKind.Sprint,
+                [],
+                [AiChangeFields.Sprint(sprint.Id, sprint.Name)]));
         }
 
         var scheduleError = AddScheduleFields(fields, arguments);
@@ -327,7 +347,7 @@ public sealed class CreateTaskTool : IAiTool
                 return $"“{name}” must be a date in YYYY-MM-DD form.";
             }
 
-            fields.Add(new AiChangeField { Name = name, After = parsed.ToString("yyyy-MM-dd") });
+            fields.Add(AiChangeFields.Date(name, null, parsed));
         }
 
         return null;

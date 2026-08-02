@@ -1,4 +1,5 @@
 using Netptune.Core.Enums;
+using Netptune.Core.Services.Ai;
 
 namespace Netptune.Core.ViewModels.Ai;
 
@@ -9,6 +10,12 @@ public sealed record AiChangeFieldViewModel
     public string? Before { get; init; }
 
     public string? After { get; init; }
+
+    public AiChangeValueKind Kind { get; init; } = AiChangeValueKind.Text;
+
+    public List<AiChangeValue>? BeforeValues { get; init; }
+
+    public List<AiChangeValue>? AfterValues { get; init; }
 }
 
 public sealed record AiProposedChangeViewModel
