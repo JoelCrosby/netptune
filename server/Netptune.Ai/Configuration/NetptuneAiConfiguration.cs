@@ -53,6 +53,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, RemoveTaskFromSprintTool>();
         services.AddScoped<IAiTool, UpdateProjectTool>();
         services.AddScoped<IAiTool, ResolveTaskFlagTool>();
+        services.AddScoped<IAiTool, CreateTagTool>();
         services.AddScoped<IAiTool, CreateBoardGroupTool>();
 
         services.AddScoped<IAiChangeHandler, CreateTaskChangeHandler>();
@@ -76,6 +77,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, RemoveTaskFromSprintChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateProjectChangeHandler>();
         services.AddScoped<IAiChangeHandler, ResolveTaskFlagChangeHandler>();
+        services.AddScoped<IAiChangeHandler, CreateTagChangeHandler>();
         services.AddScoped<IAiChangeHandler, CreateBoardGroupChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();

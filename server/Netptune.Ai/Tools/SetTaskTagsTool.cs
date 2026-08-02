@@ -70,11 +70,19 @@ public sealed class SetTaskTagsTool : IAiTool
         }
 
         var knownNames = workspaceTags.Select(tag => tag.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var proposed in ReadProposedTags())
+        {
+            knownNames.Add(proposed);
+        }
+
         var unknown = requested.Where(tag => !knownNames.Contains(tag)).ToList();
 
         if (unknown.Count > 0)
         {
-            return AiToolExecution.Failed($"These tags do not exist in this workspace: {string.Join(", ", unknown)}.");
+            return AiToolExecution.Failed(
+                $"These tags do not exist in this workspace: {string.Join(", ", unknown)}. "
+                + "Use propose_create_tag first if the workspace needs a new one.");
         }
 
         var before = string.Join(", ", task.Tags);
@@ -101,6 +109,15 @@ public sealed class SetTaskTagsTool : IAiTool
 
         return AiToolExecution.Success(
             $"Proposed retagging task {task.Id}. Nothing has been applied yet — the user must review and apply the change.");
+    }
+
+    private IEnumerable<string> ReadProposedTags()
+    {
+        return ChangeSet.Changes
+            .Where(change => string.Equals(change.ToolName, CreateTagTool.ToolName, StringComparison.Ordinal))
+            .Select(CreateTagTool.ReadProposedName)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name!);
     }
 
     private static List<string> ReadTags(JsonElement arguments)

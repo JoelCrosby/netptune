@@ -66,7 +66,7 @@
     </unit>
     <unit id="7706632081301226281">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:232</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:177</note>
         <note category="description">Shown after changes were applied</note>
       </notes>
       <segment state="translated">
@@ -106,7 +106,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:113</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:115</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -459,7 +459,7 @@
     </unit>
     <unit id="4391289919356861627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:164,165</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:78,79</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -2339,6 +2339,7 @@
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:259,264</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:93,95</note>
         <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:142,145</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:35,40</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:65,66</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
@@ -3177,7 +3178,7 @@
     </unit>
     <unit id="5311439953585427905">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:60,62</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:46,48</note>
         <note category="description">Button that clears every selected change</note>
       </notes>
       <segment state="translated">
@@ -4371,7 +4372,7 @@
     </unit>
     <unit id="1494518490116523821">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:63,66</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:49,52</note>
         <note category="description">Button that selects every change</note>
       </notes>
       <segment state="translated">
@@ -4402,7 +4403,7 @@
     </unit>
     <unit id="6336423730887058961">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:223</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:168</note>
         <note category="description">Shown after a change set was partly applied</note>
       </notes>
       <segment state="translated">
@@ -6195,7 +6196,7 @@
     </unit>
     <unit id="5591872322950422209">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:134,135</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:102,103</note>
         <note category="description">Shown when a change removes a value</note>
       </notes>
       <segment state="translated">
@@ -6788,8 +6789,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:761</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:824</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:783</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:846</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -7601,7 +7602,8 @@
     </unit>
     <unit id="7258010665968228997">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:50,53</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:36,39</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:21,24</note>
         <note category="description">Heading above the list of proposed workspace changes</note>
       </notes>
       <segment state="translated">
@@ -9579,7 +9581,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:168,171</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:82,85</note>
         <note category="description">Button that discards the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -9672,8 +9674,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:484</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:941</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:505</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:963</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -9753,7 +9755,7 @@
       </notes>
       <segment state="translated">
         <source>written</source>
-      <target>geschrieben</target>
+        <target>geschrieben</target>
       </segment>
     </unit>
     <unit id="33149636091572968">
@@ -11477,7 +11479,7 @@
     </unit>
     <unit id="4791834581881654412">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:229</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:174</note>
         <note category="description">Shown after some changes were left out</note>
       </notes>
       <segment state="translated">
@@ -12341,7 +12343,7 @@
     </unit>
     <unit id="5773144976658818508">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:254</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:154</note>
         <note category="description">Shown on a proposal that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -12477,6 +12479,16 @@
       <segment state="translated">
         <source>Personal</source>
         <target>Persönlich</target>
+      </segment>
+    </unit>
+    <unit id="1531509541211048627">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:141</note>
+        <note category="description">Opens a dialog with the changes not shown inline</note>
+      </notes>
+      <segment state="translated">
+        <source>+<ph id="0" equiv="HIDDEN" disp="hidden"/> more changes</source>
+      <target>+<ph id="0" equiv="HIDDEN" disp="hidden"/> weitere Änderungen</target>
       </segment>
     </unit>
     <unit id="1534534589646989824">
