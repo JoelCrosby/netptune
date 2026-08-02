@@ -1,5 +1,11 @@
 import { Token, Tokens, marked } from 'marked';
-import { dropPartialReference, parseAssistantText } from './ai-references';
+import {
+  AiReferenceSlot,
+  dropPartialReference,
+  expandReferences,
+  protectReferences,
+  restoreReferences,
+} from './ai-references';
 
 export type AiMarkdownInline =
   | { kind: 'text'; value: string }
@@ -26,13 +32,6 @@ export type AiMarkdownBlock =
   | { kind: 'rule' };
 
 const FENCE = '```';
-
-/**
- * Markers the model has opened but not yet closed, dropped so the text reads as
- * plain prose until its closing marker arrives rather than flashing as syntax.
- * Lone `*` and `_` are left alone — stripping them would eat the underscores in
- * identifiers far more often than it would hide an emphasis marker.
- */
 const UNCLOSED_MARKERS = ['**', '~~', '`'];
 
 const dropUnclosedMarker = (text: string, marker: string): string => {
@@ -65,26 +64,37 @@ const closePartialSyntax = (text: string): string => {
   return `${head}${tail}`;
 };
 
-const toInline = (tokens: Token[] | undefined): AiMarkdownInline[] => {
+const toInline = (
+  tokens: Token[] | undefined,
+  slots: AiReferenceSlot[]
+): AiMarkdownInline[] => {
   if (!tokens) {
     return [];
   }
 
   return tokens.flatMap((token) => {
-    return toInlineToken(token);
+    return toInlineToken(token, slots);
   });
 };
 
-const toInlineToken = (token: Token): AiMarkdownInline[] => {
+const toInlineToken = (
+  token: Token,
+  slots: AiReferenceSlot[]
+): AiMarkdownInline[] => {
   switch (token.type) {
     case 'strong':
-      return [{ kind: 'strong', children: toInline(token.tokens) }];
+      return [{ kind: 'strong', children: toInline(token.tokens, slots) }];
     case 'em':
-      return [{ kind: 'em', children: toInline(token.tokens) }];
+      return [{ kind: 'em', children: toInline(token.tokens, slots) }];
     case 'del':
-      return [{ kind: 'strike', children: toInline(token.tokens) }];
+      return [{ kind: 'strike', children: toInline(token.tokens, slots) }];
     case 'codespan':
-      return [{ kind: 'code', value: (token as Tokens.Codespan).text }];
+      return [
+        {
+          kind: 'code',
+          value: restoreReferences((token as Tokens.Codespan).text, slots),
+        },
+      ];
     case 'br':
       return [{ kind: 'break' }];
     case 'link':
@@ -92,30 +102,33 @@ const toInlineToken = (token: Token): AiMarkdownInline[] => {
         {
           kind: 'link',
           href: (token as Tokens.Link).href,
-          children: toInline(token.tokens),
+          children: toInline(token.tokens, slots),
         },
       ];
     case 'text':
     case 'escape':
     case 'html':
-      return toReferenceAware(token);
+      return toReferenceAware(token, slots);
     default:
-      return toReferenceAware(token);
+      return toReferenceAware(token, slots);
   }
 };
 
 /** Workspace references live inside plain text, so they are split out here. */
-const toReferenceAware = (token: Token): AiMarkdownInline[] => {
+const toReferenceAware = (
+  token: Token,
+  slots: AiReferenceSlot[]
+): AiMarkdownInline[] => {
   const nested = 'tokens' in token ? token.tokens : undefined;
   const hasNested = Array.isArray(nested) && nested.length > 0;
 
   if (hasNested) {
-    return toInline(nested);
+    return toInline(nested, slots);
   }
 
   const text = 'text' in token ? token.text : token.raw;
 
-  return parseAssistantText(text ?? '').map((segment) => {
+  return expandReferences(text ?? '', slots).map((segment) => {
     if (segment.kind === 'text') {
       return { kind: 'text', value: segment.value };
     }
@@ -129,13 +142,16 @@ const toReferenceAware = (token: Token): AiMarkdownInline[] => {
   });
 };
 
-const toBlocks = (tokens: Token[]): AiMarkdownBlock[] => {
+const toBlocks = (
+  tokens: Token[],
+  slots: AiReferenceSlot[]
+): AiMarkdownBlock[] => {
   return tokens.flatMap((token) => {
-    return toBlock(token);
+    return toBlock(token, slots);
   });
 };
 
-const toBlock = (token: Token): AiMarkdownBlock[] => {
+const toBlock = (token: Token, slots: AiReferenceSlot[]): AiMarkdownBlock[] => {
   switch (token.type) {
     case 'space':
       return [];
@@ -144,31 +160,34 @@ const toBlock = (token: Token): AiMarkdownBlock[] => {
         {
           kind: 'heading',
           level: (token as Tokens.Heading).depth,
-          inline: toInline(token.tokens),
+          inline: toInline(token.tokens, slots),
         },
       ];
     case 'code':
       return [
         {
           kind: 'code',
-          value: (token as Tokens.Code).text,
+          value: restoreReferences((token as Tokens.Code).text, slots),
           lang: (token as Tokens.Code).lang || null,
         },
       ];
     case 'blockquote':
-      return [{ kind: 'quote', blocks: toBlocks(token.tokens ?? []) }];
+      return [{ kind: 'quote', blocks: toBlocks(token.tokens ?? [], slots) }];
     case 'hr':
       return [{ kind: 'rule' }];
     case 'list':
-      return [toList(token as Tokens.List)];
+      return [toList(token as Tokens.List, slots)];
     case 'table':
-      return [toTable(token as Tokens.Table)];
+      return [toTable(token as Tokens.Table, slots)];
     default:
-      return [{ kind: 'paragraph', inline: toInlineToken(token) }];
+      return [{ kind: 'paragraph', inline: toInlineToken(token, slots) }];
   }
 };
 
-const toList = (token: Tokens.List): AiMarkdownBlock => {
+const toList = (
+  token: Tokens.List,
+  slots: AiReferenceSlot[]
+): AiMarkdownBlock => {
   const start = typeof token.start === 'number' ? token.start : 1;
 
   return {
@@ -176,20 +195,23 @@ const toList = (token: Tokens.List): AiMarkdownBlock => {
     ordered: token.ordered,
     start,
     items: token.items.map((item) => {
-      return toBlocks(item.tokens ?? []);
+      return toBlocks(item.tokens ?? [], slots);
     }),
   };
 };
 
-const toTable = (token: Tokens.Table): AiMarkdownBlock => {
+const toTable = (
+  token: Tokens.Table,
+  slots: AiReferenceSlot[]
+): AiMarkdownBlock => {
   return {
     kind: 'table',
     head: token.header.map((cell) => {
-      return toInline(cell.tokens);
+      return toInline(cell.tokens, slots);
     }),
     rows: token.rows.map((row) => {
       return row.map((cell) => {
-        return toInline(cell.tokens);
+        return toInline(cell.tokens, slots);
       });
     }),
   };
@@ -199,12 +221,14 @@ export const parseAssistantMarkdown = (
   text: string,
   isStreaming = false
 ): AiMarkdownBlock[] => {
+  const settled = isStreaming ? dropPartialReference(text) : text;
+  const protectedText = protectReferences(settled);
   const source = isStreaming
-    ? closePartialSyntax(dropPartialReference(text))
-    : text;
+    ? closePartialSyntax(protectedText.text)
+    : protectedText.text;
   const tokens = marked.lexer(source, { gfm: true, breaks: true });
 
-  return toBlocks(tokens);
+  return toBlocks(tokens, protectedText.slots);
 };
 
 const toPlainInline = (nodes: AiMarkdownInline[]): string => {
