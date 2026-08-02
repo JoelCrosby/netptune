@@ -33,6 +33,8 @@ public sealed record AiSendMessageRequest
     public AiClientContext? Context { get; init; }
 
     public string? Locale { get; init; }
+
+    public bool Retry { get; init; }
 }
 
 public interface IAiConversationService

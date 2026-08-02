@@ -93,7 +93,10 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
                     [entry]="entry"
                     [references]="assistant.references()"
                     [workspace]="assistant.workspaceKey()"
-                    [isStreaming]="assistant.isStreaming() && $last" />
+                    [isStreaming]="assistant.isStreaming() && $last"
+                    [isLast]="$last && !assistant.isStreaming()"
+                    (retried)="retry()"
+                    (edited)="assistant.editLastQuestion()" />
                 }
 
                 @if (isThinking()) {
@@ -141,8 +144,10 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
         [contentWidth]="contentWidth()"
         [draft]="assistant.draft()"
         (messageSent)="send($event)"
+        [isReplacing]="assistant.isReplacingLastTurn()"
         (draftChanged)="assistant.setDraft($event)"
         (stopped)="assistant.stopTurn()"
+        (editCancelled)="assistant.cancelEdit()"
         (modelSelected)="assistant.selectModel($event)" />
     </div>
   `,
@@ -264,6 +269,10 @@ export class AiAssistantPanelComponent {
   }
 
   protected send(text: string) {
-    void this.assistant.send(text);
+    void this.assistant.send(text, this.assistant.isReplacingLastTurn());
+  }
+
+  protected retry() {
+    void this.assistant.retryLastTurn();
   }
 }

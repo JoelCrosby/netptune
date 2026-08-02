@@ -71,7 +71,7 @@ public sealed class AiConversationService : IAiConversationService
         var text = request.Text.Trim();
         var hasText = text.Length > 0;
 
-        if (!hasText)
+        if (!hasText && !request.Retry)
         {
             yield return AiStreamEvent.Failed("A message is required.");
 
@@ -154,6 +154,20 @@ public sealed class AiConversationService : IAiConversationService
             yield return AiStreamEvent.Failed("You are not a member of this workspace.");
 
             yield break;
+        }
+
+        if (request.Retry)
+        {
+            var rewound = await Rewind(conversation, text, cancellationToken);
+
+            if (rewound is null)
+            {
+                yield return AiStreamEvent.Failed("There is no message to try again.");
+
+                yield break;
+            }
+
+            text = rewound;
         }
 
         var history = await LoadHistory(conversation.Id, cancellationToken);
@@ -772,5 +786,52 @@ public sealed class AiConversationService : IAiConversationService
         var json = JsonSerializer.Serialize(fields, FieldSerializerOptions);
 
         return JsonDocument.Parse(json);
+    }
+
+    private async Task<string?> Rewind(AiConversation conversation, string replacement, CancellationToken cancellationToken)
+    {
+        var messages = await UnitOfWork.AiConversations.GetMessages(conversation.Id, cancellationToken);
+        var lastUserMessage = messages.LastOrDefault(message => message.Role == AiMessageRole.User);
+
+        if (lastUserMessage is null)
+        {
+            return null;
+        }
+
+        var original = AiMessageContent.FromJsonDocument(lastUserMessage.Content).ToChatMessage(AiMessageRole.User).Text ?? string.Empty;
+        var hasReplacement = replacement.Length > 0;
+        var text = hasReplacement ? replacement : original;
+
+        if (text.Length == 0)
+        {
+            return null;
+        }
+
+        await DiscardPendingChangeSet(conversation, cancellationToken);
+
+        var removed = await UnitOfWork.AiConversations.RemoveMessagesFrom(
+            conversation.Id,
+            lastUserMessage.Sequence,
+            cancellationToken);
+
+        conversation.MessageCount = Math.Max(0, conversation.MessageCount - removed);
+
+        return text;
+    }
+
+    private async Task DiscardPendingChangeSet(AiConversation conversation, CancellationToken cancellationToken)
+    {
+        var pending = await UnitOfWork.AiChangeSets.GetPending(
+            conversation.Id,
+            conversation.UserId,
+            conversation.WorkspaceId,
+            cancellationToken);
+
+        if (pending is null)
+        {
+            return;
+        }
+
+        pending.Status = AiChangeSetStatus.Discarded;
     }
 }

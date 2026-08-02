@@ -1,8 +1,8 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { AiEntityReference } from '@core/models/ai-conversation';
 import { AiChatEntry } from '@core/services/ai-assistant.service';
 import { parseAssistantMarkdown } from '@core/util/ai-markdown';
-import { LucideWrench } from '@lucide/angular';
+import { LucidePencil, LucideRefreshCw, LucideWrench } from '@lucide/angular';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
 
 interface AiToolChip {
@@ -16,7 +16,12 @@ interface AiToolChip {
     class: 'flex flex-col gap-1.5',
     '[class.items-end]': 'isUser()',
   },
-  imports: [LucideWrench, AiAssistantMarkdownComponent],
+  imports: [
+    LucidePencil,
+    LucideRefreshCw,
+    LucideWrench,
+    AiAssistantMarkdownComponent,
+  ],
   template: `
     @if (tools().length > 0) {
       <div class="text-muted flex flex-wrap items-center gap-1.5 text-xs">
@@ -38,6 +43,18 @@ interface AiToolChip {
         class="bg-hover max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap">
         {{ entry().text }}
       </p>
+
+      @if (isLast()) {
+        <button
+          type="button"
+          class="text-muted hover:text-foreground flex items-center gap-1 text-xs"
+          (click)="edited.emit()">
+          <svg lucidePencil class="h-3 w-3"></svg>
+          <span i18n="Button that reopens the last question for rewording">
+            Edit
+          </span>
+        </button>
+      }
     } @else {
       <app-ai-assistant-markdown
         [class.text-error]="entry().failed"
@@ -52,6 +69,24 @@ interface AiToolChip {
           You stopped this reply.
         </p>
       }
+
+      @if (isRetryable()) {
+        <button
+          type="button"
+          class="text-muted hover:text-foreground mt-1 flex items-center gap-1 text-xs"
+          (click)="retried.emit()">
+          <svg lucideRefreshCw class="h-3 w-3"></svg>
+          @if (entry().failed) {
+            <span i18n="Button that runs a failed assistant turn again">
+              Try again
+            </span>
+          } @else {
+            <span i18n="Button that asks the assistant to answer again">
+              Regenerate
+            </span>
+          }
+        </button>
+      }
     }
   `,
 })
@@ -60,8 +95,16 @@ export class AiAssistantMessageComponent {
   readonly references = input<Map<string, AiEntityReference>>(new Map());
   readonly workspace = input<string | null>(null);
   readonly isStreaming = input(false);
+  readonly isLast = input(false);
+
+  readonly retried = output();
+  readonly edited = output();
 
   protected readonly isUser = computed(() => this.entry().role === 'user');
+
+  protected readonly isRetryable = computed(() => {
+    return this.isLast() && !this.isUser() && !this.isStreaming();
+  });
 
   protected readonly tools = computed<AiToolChip[]>(() => {
     const counts = new Map<string, number>();

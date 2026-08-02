@@ -26,6 +26,21 @@ import { AiAssistantModelMenuComponent } from './ai-assistant-model-menu.compone
           [placeholder]="placeholder()"
           [disabled]="disabled()"></textarea>
 
+        @if (isReplacing()) {
+          <div
+            class="text-muted flex items-center justify-between gap-2 px-2 pb-1 text-xs">
+            <span i18n="Shown while a question is being reworded">
+              Editing your last question — sending replaces the reply.
+            </span>
+            <button
+              type="button"
+              class="hover:text-foreground shrink-0"
+              (click)="editCancelled.emit()">
+              <span i18n="Dismisses a dialog without acting">Cancel</span>
+            </button>
+          </div>
+        }
+
         <div class="flex items-center justify-between gap-2 pt-1">
           @if (models().length > 0) {
             <app-ai-assistant-model-menu
@@ -71,6 +86,7 @@ export class AiAssistantComposerComponent {
   readonly selectedModel = input.required<string | null>();
   readonly modelLabel = input.required<string>();
   readonly isStreaming = input(false);
+  readonly isReplacing = input(false);
   readonly disabled = input(false);
   readonly contentWidth = input('');
   readonly draft = input('');
@@ -79,6 +95,7 @@ export class AiAssistantComposerComponent {
   readonly modelSelected = output<string | null>();
   readonly draftChanged = output<string>();
   readonly stopped = output();
+  readonly editCancelled = output();
 
   protected readonly canSend = computed(() => {
     const hasDraft = this.draft().trim().length > 0;

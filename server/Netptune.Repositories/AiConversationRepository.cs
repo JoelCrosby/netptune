@@ -142,6 +142,29 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
         await Context.AiMessages.AddAsync(message, cancellationToken);
     }
 
+    public async Task<int> RemoveMessagesFrom(
+        Guid conversationId,
+        int sequence,
+        CancellationToken cancellationToken = default)
+    {
+        var doomed = Context.AiMessages
+            .Where(message => message.ConversationId == conversationId)
+            .Where(message => message.Sequence >= sequence);
+
+        var messageIds = await doomed.Select(message => message.Id).ToListAsync(cancellationToken);
+
+        if (messageIds.Count == 0)
+        {
+            return 0;
+        }
+
+        await Context.AiToolInvocations
+            .Where(invocation => messageIds.Contains(invocation.MessageId))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        return await doomed.ExecuteDeleteAsync(cancellationToken);
+    }
+
     public Task AddMessageUsage(long messageId, AiUsage usage, CancellationToken cancellationToken = default)
     {
         return Context.AiMessages

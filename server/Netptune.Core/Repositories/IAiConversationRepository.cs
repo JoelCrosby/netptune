@@ -23,6 +23,8 @@ public interface IAiConversationRepository : IRepository<AiConversation, Guid>
 
     Task AddMessage(AiMessage message, CancellationToken cancellationToken = default);
 
+    Task<int> RemoveMessagesFrom(Guid conversationId, int sequence, CancellationToken cancellationToken = default);
+
     Task AddMessageUsage(long messageId, AiUsage usage, CancellationToken cancellationToken = default);
 
     Task AddToolInvocations(IEnumerable<AiToolInvocation> invocations, CancellationToken cancellationToken = default);

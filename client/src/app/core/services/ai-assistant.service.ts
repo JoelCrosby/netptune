@@ -106,6 +106,7 @@ export class AiAssistantService {
   });
 
   readonly hasUnreadReply = signal(false);
+  readonly isReplacingLastTurn = signal(false);
 
   private readonly transcriptViewers = signal(0);
 
@@ -315,6 +316,7 @@ export class AiAssistantService {
     this.conversations.set([]);
     this.showHistory.set(false);
     this.hasUnreadReply.set(false);
+    this.isReplacingLastTurn.set(false);
     this.pendingSince = null;
   }
 
@@ -855,6 +857,61 @@ export class AiAssistantService {
     this.streamAbort?.abort();
   }
 
+  async retryLastTurn() {
+    await this.send('', true);
+  }
+
+  editLastQuestion() {
+    const question = this.lastQuestion();
+
+    if (question === null || this.isStreaming()) {
+      return;
+    }
+
+    this.setDraft(question);
+    this.isReplacingLastTurn.set(true);
+  }
+
+  cancelEdit() {
+    this.isReplacingLastTurn.set(false);
+  }
+
+  private lastQuestion(): string | null {
+    const entries = this.entries();
+
+    for (let index = entries.length - 1; index >= 0; index -= 1) {
+      const entry = entries[index];
+
+      if (entry.role === 'user') {
+        return entry.text;
+      }
+    }
+
+    return null;
+  }
+
+  /** Drops the exchange being replaced, and answers with the question to ask again. */
+  private rewindToLastQuestion(replacement: string): string | null {
+    const entries = this.entries();
+    let index = entries.length - 1;
+
+    while (index >= 0 && entries[index].role !== 'user') {
+      index -= 1;
+    }
+
+    if (index < 0) {
+      return null;
+    }
+
+    const question = replacement.length > 0 ? replacement : entries[index].text;
+
+    this.entries.set(entries.slice(0, index));
+    this.changeSet.set(null);
+    this.isReplacingLastTurn.set(false);
+
+    return question;
+  }
+
   private markLastEntryStopped() {
     this.entries.update((current) => {
       const next = [...current];
@@ -889,17 +946,23 @@ export class AiAssistantService {
     }
   }
 
-  async send(text: string) {
+  async send(text: string, isRetry = false) {
     const trimmed = text.trim();
+    const hasText = trimmed.length > 0;
 
-    if (!trimmed || this.isStreaming()) {
+    if ((!hasText && !isRetry) || this.isStreaming()) {
       return;
     }
 
     const wasNewConversation = this.conversationId() === null;
+    const question = isRetry ? this.rewindToLastQuestion(trimmed) : trimmed;
+
+    if (question === null) {
+      return;
+    }
 
     this.forgetDraft(this.draftKey());
-    this.appendEntry({ role: 'user', text: trimmed, tools: [] });
+    this.appendEntry({ role: 'user', text: question, tools: [] });
     this.appendEntry({ role: 'assistant', text: '', tools: [] });
     this.isStreaming.set(true);
     this.isThinking.set(true);
@@ -910,7 +973,7 @@ export class AiAssistantService {
     this.isStopping = false;
 
     try {
-      await this.stream(trimmed, token);
+      await this.stream(question, token, isRetry);
     } catch {
       const isCurrent = this.turnToken === token;
 
@@ -1011,7 +1074,7 @@ export class AiAssistantService {
     this.conversationTitle.set(conversation?.title ?? null);
   }
 
-  private async stream(text: string, token: number) {
+  private async stream(text: string, token: number, isRetry = false) {
     const abort = new AbortController();
 
     this.streamAbort = abort;
@@ -1028,6 +1091,7 @@ export class AiAssistantService {
           text,
           model: this.selectedModel(),
           locale: this.locale,
+          retry: isRetry,
           context: buildClientContext({
             url: this.router.url,
             project: this.currentProject(),
