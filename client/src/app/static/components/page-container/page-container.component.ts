@@ -18,15 +18,17 @@ const progressRevealDelayMs = 200;
       [class.h-full]="fullHeight() && !marginBottom()"
       [class.pb-[20vh]]="marginBottom()">
       <div
-        class="h-[0.8rem] shrink-0"
+        class="h-3 shrink-0"
         [class.invisible]="!progressVisible()"
         [attr.aria-hidden]="progressVisible() ? null : 'true'">
         <app-progress-bar mode="indeterminate" />
       </div>
       <div
-        class="flex flex-1 flex-col px-8 max-[600px]:px-3"
+        class="flex flex-1 flex-col"
+        [class.px-8]="horizontalPadding()"
+        [class.max-[600px]:px-3]="horizontalPadding()"
         [class.py-16]="verticalPadding()"
-        [class.h-[calc(100vh-56px)]]="fullHeight()">
+        [class.h-[calc(100vh-76px)]]="fullHeight()">
         <ng-content />
       </div>
     </div>
@@ -34,6 +36,7 @@ const progressRevealDelayMs = 200;
 })
 export class PageContainerComponent {
   readonly verticalPadding = input<boolean | null>(false);
+  readonly horizontalPadding = input<boolean | null>(true);
   readonly showProgress = input<boolean | null>(false);
   readonly marginBottom = input<boolean | null>(false);
   readonly fullHeight = input<boolean | null>(true);

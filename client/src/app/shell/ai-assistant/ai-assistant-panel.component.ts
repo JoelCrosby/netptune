@@ -44,10 +44,11 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
   ],
   template: `
     <div
-      class="bg-card text-foreground flex h-full w-full flex-col overflow-hidden"
+      class="text-foreground flex h-full w-full flex-col overflow-hidden"
       role="region"
       i18n-aria-label="Accessible name of the AI assistant panel"
-      aria-label="AI assistant">
+      aria-label="AI assistant"
+      [class.bg-card]="!isPage()">
       <app-ai-assistant-header
         [title]="headerTitle()"
         [subtitle]="headerSubtitle()"
@@ -63,7 +64,7 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
         <div
           appMessageScroller
           #scroller="messageScroller"
-          class="flex min-h-0 flex-1 flex-col overflow-y-auto"
+          class="custom-scroll flex min-h-0 flex-1 flex-col overflow-y-auto"
           role="log"
           i18n-aria-label="Accessible name of the assistant transcript"
           aria-label="Conversation">
@@ -156,6 +157,7 @@ export class AiAssistantPanelComponent {
   protected readonly entries = computed(() => this.assistant.entries());
 
   protected readonly isDrawer = computed(() => this.variant() === 'drawer');
+  protected readonly isPage = computed(() => this.variant() === 'page');
 
   protected readonly isMissingKey = computed(() => {
     return this.assistant.hasCredentials() === false;

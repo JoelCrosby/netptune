@@ -15,7 +15,6 @@ import {
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { LucideSettings2, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
@@ -42,7 +41,6 @@ type StatusFilter = SprintStatus | null;
     PageContainerComponent,
     PageHeaderComponent,
     DatePipe,
-    FlatButtonComponent,
     TabGroupComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
@@ -57,9 +55,6 @@ type StatusFilter = SprintStatus | null;
         [count]="count()"
         [actionTitle]="canCreate() ? 'Create Sprint' : null"
         (actionClick)="onOpenCreateDialog()">
-        <a app-flat-button [routerLink]="['backlog']">
-          <span i18n="Link to the sprint backlog">Backlog</span>
-        </a>
       </app-page-header>
 
       <div class="flex flex-col gap-6">

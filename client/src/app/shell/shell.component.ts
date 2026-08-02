@@ -69,7 +69,8 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
       }
       <app-shell-navbar />
 
-      <main class="col-start-2 row-start-2 overflow-y-auto">
+      <main
+        class="col-start-2 row-start-2 scrollbar-gutter-stable overflow-y-auto">
         <router-outlet />
       </main>
 
