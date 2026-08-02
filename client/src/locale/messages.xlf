@@ -1132,7 +1132,7 @@
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:321</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:193</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:280</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:27</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:28</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -2964,7 +2964,7 @@
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:67</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:82,83</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:29</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:30</note>
         <note category="description">Page title for a single workspace tag</note>
       </notes>
       <segment>
@@ -2983,7 +2983,7 @@
     <unit id="2981219928115418649">
       <notes>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:130,132</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:31</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:32</note>
         <note category="description">Button that creates the task link</note>
       </notes>
       <segment>
@@ -3995,6 +3995,15 @@
         <source> A Netptune account already exists for <ph id="0" equiv="EMAIL" disp="{{ link.email // i18n(ph=&quot;EMAIL&quot;) }}"/>. Sign in to that account before connecting <ph id="1" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/>. </source>
       </segment>
     </unit>
+    <unit id="4658982717700339898">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:33</note>
+        <note category="description">What a proposed change does</note>
+      </notes>
+      <segment>
+        <source>Unlink</source>
+      </segment>
+    </unit>
     <unit id="631526687542702213">
       <notes>
         <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:76,81</note>
@@ -4499,7 +4508,7 @@
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:193,194</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:23</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:42</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:30</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:31</note>
         <note category="description">Label of the comment field</note>
       </notes>
       <segment>
@@ -7601,7 +7610,7 @@
     </unit>
     <unit id="584754872792429089">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:28</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:29</note>
         <note category="description">What a proposed change does</note>
       </notes>
       <segment>
@@ -9027,7 +9036,7 @@
     <unit id="2354817630223808522">
       <notes>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:68,73</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:32</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:34</note>
         <note category="description">Button that moves the task to the chosen date</note>
       </notes>
       <segment>
@@ -11958,7 +11967,7 @@
     </unit>
     <unit id="4021752662928002901">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:26</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:27</note>
         <note category="description">What a proposed change does</note>
       </notes>
       <segment>
@@ -12617,7 +12626,7 @@
     <unit id="5674286808255988565">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:96,101</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:25</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:26</note>
         <note category="description">Button that creates the sprint</note>
       </notes>
       <segment>

@@ -19,6 +19,7 @@ const KINDS: Record<string, AiChangeKind> = {
   propose_set_task_tags: 'collection',
   propose_add_tasks_to_sprint: 'collection',
   propose_link_tasks: 'collection',
+  propose_unlink_tasks: 'collection',
   propose_add_comment: 'comment',
 };
 
@@ -29,6 +30,7 @@ const ASSIGN = $localize`:What a proposed change does:Assign`;
 const TAG = $localize`:What a proposed change does:Tag`;
 const COMMENT = $localize`:What a proposed change does:Comment`;
 const LINK = $localize`:What a proposed change does:Link`;
+const UNLINK = $localize`:What a proposed change does:Unlink`;
 const MOVE = $localize`:What a proposed change does:Move`;
 
 const ACTIONS: Record<string, string> = {
@@ -52,6 +54,7 @@ const ACTIONS: Record<string, string> = {
   propose_set_task_tags: TAG,
   propose_add_comment: COMMENT,
   propose_link_tasks: LINK,
+  propose_unlink_tasks: UNLINK,
   propose_move_task_to_sprint: MOVE,
   propose_move_task_to_board_group: MOVE,
   propose_add_tasks_to_sprint: MOVE,

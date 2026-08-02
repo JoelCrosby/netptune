@@ -57,6 +57,16 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, CreateTagTool>();
         services.AddScoped<IAiTool, DeleteTaskTool>();
         services.AddScoped<IAiTool, CreateBoardGroupTool>();
+        services.AddScoped<IAiTool, UnlinkTasksTool>();
+        services.AddScoped<IAiTool, GetFlowReportTool>();
+        services.AddScoped<IAiTool, GetWorkloadReportTool>();
+        services.AddScoped<IAiTool, GetSprintBurndownTool>();
+        services.AddScoped<IAiTool, GetVelocityReportTool>();
+        services.AddScoped<IAiTool, ListAutomationsTool>();
+        services.AddScoped<IAiTool, ListAutomationRunsTool>();
+        services.AddScoped<IAiTool, ListMemberRolesTool>();
+        services.AddScoped<IAiTool, ListTaskFilesTool>();
+        services.AddScoped<IAiTool, ListWorkspaceFilesTool>();
 
         services.AddScoped<IAiChangeHandler, CreateTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateTaskChangeHandler>();
@@ -82,6 +92,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, CreateTagChangeHandler>();
         services.AddScoped<IAiChangeHandler, DeleteTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, CreateBoardGroupChangeHandler>();
+        services.AddScoped<IAiChangeHandler, UnlinkTasksChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();
 
