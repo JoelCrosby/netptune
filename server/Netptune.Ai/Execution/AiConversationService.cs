@@ -167,7 +167,8 @@ public sealed class AiConversationService : IAiConversationService
         history.Add(WithClientContext(userMessage, request.Context));
 
         var apiKey = Protector.Unprotect(credential.Secret);
-        var systemPrompt = await PromptBuilder.Build(cancellationToken);
+        var language = AiLanguage.Describe(request.Locale);
+        var systemPrompt = await PromptBuilder.Build(request.Locale, cancellationToken);
         var context = new AiRunContext
         {
             Provider = conversation.Provider,
@@ -260,6 +261,7 @@ public sealed class AiConversationService : IAiConversationService
             ApiKey = apiKey,
             UserMessage = text,
             AssistantMessage = reply,
+            Language = language,
         };
 
         await ApplyTitle(conversation, persisted.MessageId, titleRequest, existing is null, cancellationToken);

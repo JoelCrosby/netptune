@@ -79,7 +79,7 @@ The assistant runs on API keys supplied by users and workspace admins, so no pro
 | Variable                      | Default         | Description                                                                             |
 | ----------------------------- | --------------- | --------------------------------------------------------------------------------------- |
 | `Ai__AnthropicModel`          | `claude-opus-5` | Model used for conversations started on Anthropic.                                      |
-| `Ai__OpenAiModel`             | `gpt-5.2`       | Model used for conversations started on OpenAI.                                         |
+| `Ai__OpenAiModel`             | `gpt-5.6-sol`   | Model used for conversations started on OpenAI.                                         |
 | `Ai__GenerateTitles`          | `true`          | Names each new conversation with one extra call to a small model after the first reply. |
 | `Ai__MaxToolIterations`       | `12`            | Tool calls allowed in a single turn before the assistant stops and reports the limit.   |
 | `Ai__MaxOutputTokens`         | `16000`         | Output token ceiling per provider request.                                              |

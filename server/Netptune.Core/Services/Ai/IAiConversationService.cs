@@ -31,6 +31,8 @@ public sealed record AiSendMessageRequest
     public string? Model { get; init; }
 
     public AiClientContext? Context { get; init; }
+
+    public string? Locale { get; init; }
 }
 
 public interface IAiConversationService

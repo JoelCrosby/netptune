@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { selectCurrentUserDisplayName } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { LucideSparkles } from '@lucide/angular';
@@ -24,9 +24,30 @@ import { LucideSparkles } from '@lucide/angular';
       Ask about your workspace — projects, tasks, statuses. Any change the
       assistant suggests is shown here for you to review before it is applied.
     </p>
+
+    <div class="mt-2 flex max-w-sm flex-wrap justify-center gap-2">
+      @for (prompt of prompts; track prompt) {
+        <button
+          type="button"
+          class="bg-hover hover:bg-foreground/10 focus-visible:ring-primary rounded-full px-3 py-1.5 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          (click)="selected.emit(prompt)">
+          {{ prompt }}
+        </button>
+      }
+    </div>
   `,
 })
 export class AiAssistantEmptyStateComponent {
+  readonly selected = output<string>();
+
+  /** First questions that show what the assistant can reach without teaching a syntax. */
+  protected readonly prompts = [
+    $localize`:Suggested first question in the assistant:What changed in this workspace today?`,
+    $localize`:Suggested first question in the assistant:Summarise the current sprint`,
+    $localize`:Suggested first question in the assistant:What should I work on next?`,
+    $localize`:Suggested first question in the assistant:Find tasks with no assignee`,
+  ];
+
   private readonly store = inject(Store);
   private readonly displayName = this.store.selectSignal(
     selectCurrentUserDisplayName

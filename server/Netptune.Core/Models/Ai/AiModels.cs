@@ -16,10 +16,10 @@ public sealed record AiModelOption
 public static class AiModels
 {
     public const string AnthropicDefault = "claude-opus-5";
-    public const string OpenAiDefault = "gpt-5.2";
+    public const string OpenAiDefault = "gpt-5.6-sol";
 
     public const string AnthropicTitleModel = "claude-haiku-4-5";
-    public const string OpenAiTitleModel = "gpt-5.2-mini";
+    public const string OpenAiTitleModel = "gpt-5.6-luna";
 
     public static readonly IReadOnlyList<AiModelOption> Catalog =
     [
@@ -46,20 +46,20 @@ public static class AiModels
         {
             Provider = AiProvider.OpenAi,
             Id = OpenAiDefault,
-            Label = "GPT-5.2",
+            Label = "GPT-5.6 Sol",
             IsDefault = true,
         },
         new()
         {
             Provider = AiProvider.OpenAi,
-            Id = "gpt-5.2-mini",
-            Label = "GPT-5.2 mini",
+            Id = "gpt-5.6-terra",
+            Label = "GPT-5.6 Terra",
         },
         new()
         {
             Provider = AiProvider.OpenAi,
-            Id = "gpt-5.1",
-            Label = "GPT-5.1",
+            Id = OpenAiTitleModel,
+            Label = "GPT-5.6 Luna",
         },
     ];
 

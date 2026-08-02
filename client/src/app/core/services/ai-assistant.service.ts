@@ -1,5 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import {
+  Injectable,
+  LOCALE_ID,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AiCredentialAvailability } from '@core/models/ai-credential';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
@@ -86,6 +93,7 @@ export class AiAssistantService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly storage = inject(LocalStorageService);
+  private readonly locale = inject(LOCALE_ID);
 
   readonly isOpen = signal(false);
   readonly isAvailable = this.store.selectSignal(selectIsAssistantAvailable);
@@ -1019,6 +1027,7 @@ export class AiAssistantService {
           conversationId: this.conversationId(),
           text,
           model: this.selectedModel(),
+          locale: this.locale,
           context: buildClientContext({
             url: this.router.url,
             project: this.currentProject(),

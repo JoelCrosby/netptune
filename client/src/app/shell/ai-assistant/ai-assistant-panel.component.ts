@@ -83,7 +83,7 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
                 (opened)="openConversation($event)"
                 (deleted)="deleteConversation($event)" />
             } @else if (entries().length === 0) {
-              <app-ai-assistant-empty-state />
+              <app-ai-assistant-empty-state (selected)="send($event)" />
             } @else {
               <div class="flex flex-col gap-5">
                 @for (entry of entries(); track $index) {

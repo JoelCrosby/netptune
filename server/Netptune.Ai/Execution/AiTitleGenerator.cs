@@ -17,6 +17,11 @@ public sealed class AiTitleGenerator : IAiTitleGenerator
         "You name conversations. Reply with a title of at most six words describing what the user asked about. "
         + "Use sentence case, no quotation marks, no trailing punctuation, and no preamble — reply with the title alone.";
 
+    private static string CreatePrompt(string? language)
+    {
+        return language is null ? TitlePrompt : $"{TitlePrompt} Write the title in {language}.";
+    }
+
     private readonly IAiChatProviderFactory ProviderFactory;
 
     public AiTitleGenerator(IAiChatProviderFactory providerFactory)
@@ -31,7 +36,7 @@ public sealed class AiTitleGenerator : IAiTitleGenerator
         var chatRequest = new AiChatRequest
         {
             Model = AiModels.TitleModelFor(request.Provider),
-            SystemPrompt = TitlePrompt,
+            SystemPrompt = CreatePrompt(request.Language),
             Messages = [new AiChatMessage { Role = AiMessageRole.User, Text = exchange }],
             Tools = [],
             MaxOutputTokens = MaxTitleTokens,

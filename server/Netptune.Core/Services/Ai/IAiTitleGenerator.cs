@@ -12,6 +12,8 @@ public sealed record AiTitleRequest
     public required string UserMessage { get; init; }
 
     public required string AssistantMessage { get; init; }
+
+    public string? Language { get; init; }
 }
 
 public sealed record AiTitleResult

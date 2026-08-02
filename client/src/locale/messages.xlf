@@ -96,7 +96,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:141</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:149</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -696,7 +696,7 @@
     </unit>
     <unit id="5860895315722028345">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:40</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:61</note>
         <note category="description">Greeting shown in the assistant before noon</note>
       </notes>
       <segment>
@@ -1506,6 +1506,15 @@
       </notes>
       <segment>
         <source>Are you sure you want to delete this task?</source>
+      </segment>
+    </unit>
+    <unit id="1613971249126193196">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:45</note>
+        <note category="description">Suggested first question in the assistant</note>
+      </notes>
+      <segment>
+        <source>What changed in this workspace today?</source>
       </segment>
     </unit>
     <unit id="1614669751334500006">
@@ -5022,6 +5031,15 @@
         <source>Actions</source>
       </segment>
     </unit>
+    <unit id="6223729853033621981">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:48</note>
+        <note category="description">Suggested first question in the assistant</note>
+      </notes>
+      <segment>
+        <source>Find tasks with no assignee</source>
+      </segment>
+    </unit>
     <unit id="6224093675275906575">
       <notes>
         <note category="location">src/app/features/automations/components/automation-detail-stats.component.ts:17,20</note>
@@ -6351,8 +6369,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:916</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1038</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:919</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1042</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -6562,7 +6580,7 @@
     </unit>
     <unit id="8892176286444857296">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:47</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:68</note>
         <note category="description">Greeting shown in the assistant during the evening</note>
       </notes>
       <segment>
@@ -7299,6 +7317,15 @@
       </notes>
       <segment>
         <source>When a task is due in <ph id="0" equiv="DAYS" disp="durationDays"/> days</source>
+      </segment>
+    </unit>
+    <unit id="3974873904219815105">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:46</note>
+        <note category="description">Suggested first question in the assistant</note>
+      </notes>
+      <segment>
+        <source>Summarise the current sprint</source>
       </segment>
     </unit>
     <unit id="3975108382595868936">
@@ -8094,7 +8121,7 @@
     </unit>
     <unit id="661825300358772750">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:44</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:65</note>
         <note category="description">Greeting shown in the assistant during the afternoon</note>
       </notes>
       <segment>
@@ -8676,7 +8703,7 @@
     </unit>
     <unit id="3427257823783553545">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:24,29</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:24,28</note>
         <note category="description">Empty state inside the AI assistant panel</note>
       </notes>
       <segment>
@@ -8993,8 +9020,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:542</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1169</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:550</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1173</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -12713,6 +12740,15 @@
       </notes>
       <segment>
         <source>Due today</source>
+      </segment>
+    </unit>
+    <unit id="6509537909021660545">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:47</note>
+        <note category="description">Suggested first question in the assistant</note>
+      </notes>
+      <segment>
+        <source>What should I work on next?</source>
       </segment>
     </unit>
     <unit id="5194912054053114732">

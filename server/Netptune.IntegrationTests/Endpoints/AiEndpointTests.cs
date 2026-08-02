@@ -136,7 +136,7 @@ public sealed class AiEndpointTests
             provider = AiProvider.Anthropic,
             label = "Anthropic",
             secret = "sk-ant-catalogue-check-secret",
-            model = "gpt-5.2",
+            model = "gpt-5.6-sol",
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
