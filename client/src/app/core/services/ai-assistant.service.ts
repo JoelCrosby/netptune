@@ -881,6 +881,31 @@ export class AiAssistantService {
     await this.send('', true);
   }
 
+  /**
+   * Opens the chat with the entity already named, so a question asked from a
+   * task or sprint does not have to describe which one it is about.
+   */
+  askAboutTask(task: { systemId: string; name: string }) {
+    this.askAbout(
+      $localize`:Seeds the assistant composer with a question about a task:About task ${task.systemId}:ID: (${task.name}:NAME:): `
+    );
+  }
+
+  askAboutSprint(sprint: { id: number; name: string }) {
+    this.askAbout(
+      $localize`:Seeds the assistant composer with a question about a sprint:About sprint ${sprint.name}:NAME: (id ${sprint.id}:ID:): `
+    );
+  }
+
+  private askAbout(seed: string) {
+    if (!this.isAvailable()) {
+      return;
+    }
+
+    this.open();
+    this.setDraft(seed);
+  }
+
   editLastQuestion() {
     const question = this.lastQuestion();
 

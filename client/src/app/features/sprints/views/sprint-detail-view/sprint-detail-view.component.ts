@@ -25,8 +25,10 @@ import {
   LucideListPlus,
   LucideSettings2,
   LucidePlus,
+  LucideSparkles,
   LucideTrash2,
 } from '@lucide/angular';
+import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -56,6 +58,7 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
     LucideListPlus,
     LucideSettings2,
     LucidePlus,
+    LucideSparkles,
     LucideTrash2,
     LucideCheck,
     SprintStatsComponent,
@@ -113,6 +116,20 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
             </div>
 
             <div class="flex shrink-0 items-center gap-2">
+              @if (assistant.isAvailable()) {
+                <button
+                  app-icon-button
+                  type="button"
+                  i18n-title="
+                    Tooltip on the button that asks the assistant about this
+                    sprint
+                  "
+                  title="Ask the assistant about this sprint"
+                  (click)="assistant.askAboutSprint(sprint)">
+                  <svg lucideSparkles class="h-4 w-4"></svg>
+                </button>
+              }
+
               @if (canUpdate()) {
                 <button
                   app-icon-button
@@ -216,6 +233,8 @@ export class SprintDetailViewComponent {
   private router = inject(Router);
   private dialog = inject(DialogService);
   private confirmation = inject(ConfirmationService);
+
+  protected readonly assistant = inject(AiAssistantService);
 
   readonly sprintStatus = SprintStatus;
   readonly sprintId = signal<number | null>(null);
