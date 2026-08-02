@@ -4,6 +4,7 @@ using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Relations.Commands;
+using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Execution.Handlers;
 
@@ -24,8 +25,8 @@ public sealed class LinkTasksChangeHandler : IAiChangeHandler
     {
         var change = context.Change;
         var payload = change.Payload.RootElement;
-        var sourceSystemId = AiChangePayload.ReadString(payload, "sourceSystemId");
-        var targetSystemId = AiChangePayload.ReadString(payload, "targetSystemId");
+        var sourceSystemId = await ResolveSystemId(context, "sourceSystemId", "sourceRef", cancellationToken);
+        var targetSystemId = await ResolveSystemId(context, "targetSystemId", "targetRef", cancellationToken);
         var relationTypeId = AiChangePayload.ReadInt(payload, "relationTypeId");
         var hasTasks = !string.IsNullOrWhiteSpace(sourceSystemId) && !string.IsNullOrWhiteSpace(targetSystemId);
 
@@ -49,5 +50,30 @@ public sealed class LinkTasksChangeHandler : IAiChangeHandler
         }
 
         return AiChangePayload.Applied(change, change.EntityId);
+    }
+
+    private async Task<string?> ResolveSystemId(
+        AiChangeApplyContext context,
+        string systemIdName,
+        string refName,
+        CancellationToken cancellationToken)
+    {
+        var systemId = AiChangePayload.ReadString(context.Change.Payload.RootElement, systemIdName);
+
+        if (!string.IsNullOrWhiteSpace(systemId))
+        {
+            return systemId;
+        }
+
+        var taskId = AiChangePayload.ResolveReference(context, refName);
+
+        if (!taskId.HasValue)
+        {
+            return null;
+        }
+
+        var task = await Mediator.Send(new GetTaskQuery(taskId.Value), cancellationToken);
+
+        return task?.SystemId;
     }
 }
