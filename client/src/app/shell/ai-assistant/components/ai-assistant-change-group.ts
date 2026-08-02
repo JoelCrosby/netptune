@@ -60,12 +60,12 @@ export const entityLabel = (entityType: string): string => {
   return ENTITY_LABELS[entityType] ?? fieldLabel(entityType);
 };
 
-/** Prose fields say little at a glance and cost a lot of height in a chat panel. */
+/** Prose reads better stacked under its label than inline beside it. */
 const DETAIL_FIELDS = new Set(['description', 'goal', 'comment']);
 
 const INLINE_VALUE_LIMIT = 80;
 
-export const isDetailField = (field: AiChangeField): boolean => {
+export const isProseField = (field: AiChangeField): boolean => {
   if (DETAIL_FIELDS.has(field.name)) {
     return true;
   }
@@ -74,16 +74,6 @@ export const isDetailField = (field: AiChangeField): boolean => {
   const after = field.after?.length ?? 0;
 
   return Math.max(before, after) > INLINE_VALUE_LIMIT;
-};
-
-export const summaryFields = (change: AiProposedChange): AiChangeField[] => {
-  return change.fields.filter((field) => {
-    return !isDetailField(field);
-  });
-};
-
-export const detailFields = (change: AiProposedChange): AiChangeField[] => {
-  return change.fields.filter(isDetailField);
 };
 
 export const isValid = (change: AiProposedChange): boolean => {

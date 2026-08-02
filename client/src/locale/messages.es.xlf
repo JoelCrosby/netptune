@@ -6236,8 +6236,8 @@
     </unit>
     <unit id="5591872322950422209">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:106,107</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:143,144</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:130,131</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:148,149</note>
         <note category="description">Shown when a change removes a value</note>
       </notes>
       <segment state="translated">
@@ -6775,6 +6775,16 @@
       <segment state="translated">
         <source> Actions run once for every task in the sprint. </source>
         <target> Las acciones se ejecutan una vez por cada tarea del sprint. </target>
+      </segment>
+    </unit>
+    <unit id="8315057288657960846">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:102,105</note>
+        <note category="description">Accessible label for the toggle that reveals what a proposed change contains</note>
+      </notes>
+      <segment state="translated">
+        <source>Change details</source>
+        <target>Detalles del cambio</target>
       </segment>
     </unit>
     <unit id="1586327137770791990">
@@ -9716,7 +9726,7 @@
     <unit id="3154294923374510663">
       <notes>
         <note category="location">src/app/core/services/ai-assistant.service.ts:531</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1077</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1084</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -12413,7 +12423,7 @@
     </unit>
     <unit id="5773144976658818508">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:218</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:223</note>
         <note category="description">Shown on a proposal that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -14285,16 +14295,6 @@
       <segment state="translated">
         <source>No members</source>
         <target>Sin miembros</target>
-      </segment>
-    </unit>
-    <unit id="4423253549935469768">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:123,125</note>
-        <note category="description">Reveals the longer fields of a proposed change</note>
-      </notes>
-      <segment state="translated">
-        <source> Details </source>
-        <target> Detalles </target>
       </segment>
     </unit>
     <unit id="4426738042466538780">

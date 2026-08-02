@@ -2,6 +2,7 @@ import { Component, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AiProposedChange } from '@core/models/ai-conversation';
 import { referenceRoute } from '@core/util/ai-references';
+import { SelectionCheckboxComponent } from '@static/components/checkbox/selection-checkbox.component';
 import {
   LucideCalendarRange,
   LucideChevronDown,
@@ -14,18 +15,18 @@ import {
 } from '@lucide/angular';
 import {
   AiChangeGroup,
-  detailFields,
   fieldLabel,
   isApplied,
+  isProseField,
   isValid,
-  summaryFields,
 } from './ai-assistant-change-group';
 
 @Component({
   selector: 'app-ai-assistant-change-list',
-  host: { class: 'flex flex-col gap-3' },
+  host: { class: 'flex flex-col gap-2' },
   imports: [
     RouterLink,
+    SelectionCheckboxComponent,
     LucideCalendarRange,
     LucideChevronDown,
     LucideCircleAlert,
@@ -37,9 +38,8 @@ import {
   ],
   template: `
     @for (group of groups(); track group.key) {
-      <div class="border-border rounded-lg border">
-        <div
-          class="text-muted border-border flex items-center gap-1.5 border-b px-2 py-1 text-xs">
+      <div class="bg-hover rounded-2xl px-3 py-2">
+        <div class="text-muted mb-1 flex items-center gap-1.5 text-xs">
           @switch (group.entityType) {
             @case ('task') {
               <svg lucideSquareCheckBig class="h-3 w-3"></svg>
@@ -60,16 +60,16 @@ import {
           <span>{{ group.label }}</span>
         </div>
 
-        <div class="flex flex-col gap-2 p-2">
+        <div class="flex flex-col gap-1.5">
           @for (change of group.changes; track change.id) {
             <div class="flex items-start gap-2 text-sm">
               @if (isPending()) {
-                <input
-                  type="checkbox"
-                  class="mt-1"
+                <app-selection-checkbox
+                  class="mt-0.5"
                   [checked]="isIncluded(change)"
                   [disabled]="!canSelect(change)"
-                  (change)="toggled.emit(change.id)" />
+                  [label]="change.summary"
+                  (changed)="toggled.emit(change.id)" />
               } @else {
                 <span class="mt-0.5 flex h-4 w-4 items-center justify-center">
                   @if (wasApplied(change)) {
@@ -80,70 +80,82 @@ import {
                 </span>
               }
 
-              <span class="flex min-w-0 flex-col gap-0.5">
-                @if (routeFor(change); as route) {
-                  <a [routerLink]="route" class="hover:underline">{{
-                    change.summary
-                  }}</a>
-                } @else {
-                  <span>{{ change.summary }}</span>
-                }
+              <span class="flex min-w-0 flex-1 flex-col gap-1">
+                <span
+                  class="flex min-w-0 items-start gap-1"
+                  [class.cursor-pointer]="hasDetails(change)"
+                  (click)="toggleDetails(change)">
+                  @if (routeFor(change); as route) {
+                    <a
+                      [routerLink]="route"
+                      class="min-w-0 flex-1 hover:underline"
+                      (click)="stopPropagation($event)"
+                      >{{ change.summary }}</a
+                    >
+                  } @else {
+                    <span class="min-w-0 flex-1">{{ change.summary }}</span>
+                  }
 
-                @for (field of summary(change); track field.name) {
-                  <span
-                    class="text-muted flex flex-wrap items-center gap-1 text-xs">
-                    <span class="font-medium">{{ label(field.name) }}</span>
-                    @if (field.before) {
-                      <span class="line-through">{{ field.before }}</span>
-                      <span aria-hidden="true">→</span>
-                    }
-                    @if (field.after) {
-                      <span>{{ field.after }}</span>
-                    } @else {
-                      <span
-                        class="italic"
-                        i18n="Shown when a change removes a value">
-                        cleared
-                      </span>
-                    }
-                  </span>
-                }
-
-                @if (details(change).length > 0) {
-                  <button
-                    type="button"
-                    class="text-muted hover:text-foreground flex w-fit items-center gap-1 text-xs"
-                    [attr.aria-expanded]="isExpanded(change)"
-                    (click)="toggleDetails(change)">
-                    <svg
-                      lucideChevronDown
-                      class="h-3 w-3 transition-transform"
-                      [class.rotate-180]="isExpanded(change)"></svg>
-                    <span i18n="Reveals the longer fields of a proposed change">
-                      Details
-                    </span>
-                  </button>
-                }
+                  @if (hasDetails(change)) {
+                    <button
+                      type="button"
+                      class="text-muted hover:text-foreground -mr-1 shrink-0 rounded p-1"
+                      [attr.aria-expanded]="isExpanded(change)"
+                      i18n-aria-label="
+                        Accessible label for the toggle that reveals what a
+                        proposed change contains
+                      "
+                      aria-label="Change details"
+                      (click)="toggleDetails(change, $event)">
+                      <svg
+                        lucideChevronDown
+                        class="h-3.5 w-3.5 transition-transform"
+                        [class.rotate-180]="isExpanded(change)"></svg>
+                    </button>
+                  }
+                </span>
 
                 @if (isExpanded(change)) {
-                  @for (field of details(change); track field.name) {
-                    <span class="text-muted flex flex-col gap-0.5 text-xs">
-                      <span class="font-medium">{{ label(field.name) }}</span>
-                      @if (field.before) {
-                        <span class="line-through whitespace-pre-wrap">{{
-                          field.before
-                        }}</span>
-                      }
-                      @if (field.after) {
-                        <span class="whitespace-pre-wrap">{{ field.after }}</span>
-                      } @else {
-                        <span
-                          class="italic"
-                          i18n="Shown when a change removes a value">
-                          cleared
-                        </span>
-                      }
-                    </span>
+                  @for (field of change.fields; track field.name) {
+                    @if (isProse(field)) {
+                      <span class="text-muted flex flex-col gap-0.5 text-xs">
+                        <span class="font-medium">{{ label(field.name) }}</span>
+                        @if (field.before) {
+                          <span class="line-through whitespace-pre-wrap">{{
+                            field.before
+                          }}</span>
+                        }
+                        @if (field.after) {
+                          <span class="whitespace-pre-wrap">{{
+                            field.after
+                          }}</span>
+                        } @else {
+                          <span
+                            class="italic"
+                            i18n="Shown when a change removes a value">
+                            cleared
+                          </span>
+                        }
+                      </span>
+                    } @else {
+                      <span
+                        class="text-muted flex flex-wrap items-center gap-1 text-xs">
+                        <span class="font-medium">{{ label(field.name) }}</span>
+                        @if (field.before) {
+                          <span class="line-through">{{ field.before }}</span>
+                          <span aria-hidden="true">→</span>
+                        }
+                        @if (field.after) {
+                          <span>{{ field.after }}</span>
+                        } @else {
+                          <span
+                            class="italic"
+                            i18n="Shown when a change removes a value">
+                            cleared
+                          </span>
+                        }
+                      </span>
+                    }
                   }
                 }
 
@@ -173,8 +185,7 @@ export class AiAssistantChangeListComponent {
   readonly toggled = output<number>();
 
   protected readonly label = fieldLabel;
-  protected readonly summary = summaryFields;
-  protected readonly details = detailFields;
+  protected readonly isProse = isProseField;
 
   private readonly expandedChangeIds = signal<Set<number>>(new Set());
 
@@ -182,7 +193,21 @@ export class AiAssistantChangeListComponent {
     return this.expandedChangeIds().has(change.id);
   }
 
-  protected toggleDetails(change: AiProposedChange) {
+  protected hasDetails(change: AiProposedChange): boolean {
+    return change.fields.length > 0;
+  }
+
+  protected stopPropagation(event: Event) {
+    event.stopPropagation();
+  }
+
+  protected toggleDetails(change: AiProposedChange, event?: Event) {
+    event?.stopPropagation();
+
+    if (!this.hasDetails(change)) {
+      return;
+    }
+
     this.expandedChangeIds.update((current) => {
       const next = new Set(current);
 

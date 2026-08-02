@@ -26,7 +26,7 @@ import { AiAssistantChangeListComponent } from './ai-assistant-change-list.compo
 import { AiAssistantChangesDialogComponent } from './ai-assistant-changes-dialog.component';
 
 /** Enough to read at a glance without pushing the composer off the screen. */
-const INLINE_CHANGE_LIMIT = 5;
+const INLINE_CHANGE_LIMIT = 3;
 
 @Component({
   selector: 'app-ai-assistant-change-set',
@@ -39,7 +39,7 @@ const INLINE_CHANGE_LIMIT = 5;
   ],
   template: `
     <div class="mx-auto w-full px-4 py-3" [class]="contentWidth()">
-      <div class="mb-2 flex items-center justify-between gap-2">
+      <div class="flex items-center justify-between gap-2 px-1 py-1">
         <button
           type="button"
           class="flex min-w-0 items-center gap-1.5 text-left"
@@ -84,30 +84,37 @@ const INLINE_CHANGE_LIMIT = 5;
           (toggled)="toggled.emit($event)" />
 
         @if (hiddenCount() > 0) {
-          <button
-            type="button"
-            class="text-muted hover:text-foreground mt-2 text-xs underline"
-            (click)="showAll()">
-            {{ moreLabel() }}
-          </button>
+          <div class="mt-2 flex justify-center">
+            <button
+              type="button"
+              class="bg-hover text-muted hover:text-foreground rounded-full px-4 py-2 text-xs transition-colors"
+              (click)="showAll()">
+              {{ moreLabel() }}
+            </button>
+          </div>
         }
 
         @if (isPending()) {
-          <div class="mt-3 flex items-center gap-2">
+          <div class="mt-2 flex items-center gap-2 px-1">
             <button
               app-flat-button
               type="button"
+              class="flex-1 rounded-full"
               [disabled]="isApplying() || selectedCount() === 0"
               (click)="applied.emit()">
               <span i18n="Button that applies the proposed changes">Apply</span>
               <span>&nbsp;({{ selectedCount() }})</span>
             </button>
-            <button app-stroked-button type="button" (click)="discarded.emit()">
+            <button
+              app-stroked-button
+              type="button"
+              class="flex-1 rounded-full"
+              (click)="discarded.emit()">
               <span i18n="Button that discards the proposed changes">Discard</span>
             </button>
           </div>
         } @else {
-          <p class="text-muted mt-3 text-xs">{{ outcome() }}</p>
+          <p class="text-muted mt-2 px-1 text-xs">{{ outcome() }}</p>
         }
       }
     </div>
