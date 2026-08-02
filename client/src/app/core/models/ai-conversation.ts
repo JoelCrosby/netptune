@@ -17,6 +17,7 @@ export enum AiStreamEventType {
   entitiesReferenced = 7,
   replyReset = 8,
   stopped = 9,
+  historyCompacted = 10,
 }
 
 export interface AiStreamEvent {
@@ -27,6 +28,7 @@ export interface AiStreamEvent {
   conversationId?: string;
   changeSetId?: string;
   references?: AiEntityReference[];
+  droppedMessages?: number;
 }
 
 export interface AiTokenUsage {

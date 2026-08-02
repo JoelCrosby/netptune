@@ -23,6 +23,8 @@ public sealed class AiConversationService : IAiConversationService
         "[Result omitted to make room in the context window. Call the tool again if you still need it.]";
 
     private const int CompactionTargetPercent = 70;
+    private const int MaxRecalledQuestions = 5;
+    private const int MaxRecalledQuestionLength = 120;
 
     private static readonly JsonSerializerOptions FieldSerializerOptions = new()
     {
@@ -170,7 +172,14 @@ public sealed class AiConversationService : IAiConversationService
             text = rewound;
         }
 
-        var history = await LoadHistory(conversation.Id, cancellationToken);
+        var compacted = await LoadHistory(conversation.Id, cancellationToken);
+        var history = WithRecap(compacted);
+
+        if (compacted.DroppedMessages > 0)
+        {
+            yield return AiStreamEvent.HistoryCompacted(compacted.DroppedMessages);
+        }
+
         var userMessage = new AiChatMessage { Role = AiMessageRole.User, Text = text };
 
         await PersistMessage(
@@ -537,17 +546,22 @@ public sealed class AiConversationService : IAiConversationService
         return $"{normalised[..MaximumTitleLength].TrimEnd()}…";
     }
 
-    private async Task<List<AiChatMessage>> LoadHistory(Guid conversationId, CancellationToken cancellationToken)
+    private async Task<AiCompactedHistory> LoadHistory(Guid conversationId, CancellationToken cancellationToken)
     {
         var messages = await UnitOfWork.AiConversations.GetMessages(conversationId, cancellationToken);
         var history = messages
             .Select(message => AiMessageContent.FromJsonDocument(message.Content).ToChatMessage(message.Role))
             .ToList();
 
-        return TrimHistory(history, Options.MaxHistoryCharacters);
+        return Compact(history, Options.MaxHistoryCharacters);
     }
 
     public static List<AiChatMessage> TrimHistory(List<AiChatMessage> history, int maxCharacters)
+    {
+        return Compact(history, maxCharacters).Messages;
+    }
+
+    public static AiCompactedHistory Compact(List<AiChatMessage> history, int maxCharacters)
     {
         var compacted = CompactToolResults(history, maxCharacters);
         var kept = new List<AiChatMessage>();
@@ -570,7 +584,60 @@ public sealed class AiConversationService : IAiConversationService
 
         kept.Reverse();
 
-        return DropOrphanedToolResults(kept);
+        var messages = DropOrphanedToolResults(kept);
+        var dropped = compacted.Take(compacted.Count - messages.Count).ToList();
+
+        return new AiCompactedHistory
+        {
+            Messages = messages,
+            DroppedMessages = dropped.Count,
+            DroppedQuestions = ReadQuestions(dropped),
+        };
+    }
+
+    private static List<string> ReadQuestions(List<AiChatMessage> dropped)
+    {
+        return dropped
+            .Where(message => message.Role == AiMessageRole.User)
+            .Select(message => message.Text ?? string.Empty)
+            .Where(text => text.Length > 0)
+            .Select(Shorten)
+            .TakeLast(MaxRecalledQuestions)
+            .ToList();
+    }
+
+    private static string Shorten(string text)
+    {
+        var collapsed = text.ReplaceLineEndings(" ").Trim();
+
+        return collapsed.Length <= MaxRecalledQuestionLength
+            ? collapsed
+            : $"{collapsed[..MaxRecalledQuestionLength].TrimEnd()}…";
+    }
+
+    private static List<AiChatMessage> WithRecap(AiCompactedHistory compacted)
+    {
+        var messages = compacted.Messages;
+        var hasRecap = compacted.DroppedMessages > 0 && messages.Count > 0;
+
+        if (!hasRecap)
+        {
+            return messages;
+        }
+
+        var questions = compacted.DroppedQuestions.Count == 0
+            ? string.Empty
+            : $" They asked: {string.Join("; ", compacted.DroppedQuestions.Select(question => $"“{question}”"))}.";
+
+        var recap = $"[Earlier context] {compacted.DroppedMessages} earlier messages in this conversation "
+            + "are no longer available, to stay within the context window."
+            + questions
+            + " Look anything up again with the tools rather than guessing at it.";
+
+        var first = messages[0];
+        var rewritten = first with { Text = $"{recap}\n\n{first.Text}" };
+
+        return [rewritten, .. messages.Skip(1)];
     }
 
     private static List<AiChatMessage> CompactToolResults(List<AiChatMessage> history, int maxCharacters)

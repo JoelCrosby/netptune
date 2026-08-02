@@ -85,6 +85,18 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
             } @else if (entries().length === 0) {
               <app-ai-assistant-empty-state (selected)="send($event)" />
             } @else {
+              @if (assistant.droppedMessages() > 0) {
+                <p
+                  class="text-muted mb-4 text-center text-xs"
+                  i18n="
+                    Shown when older messages were left out of what the
+                    assistant can see
+                  ">
+                  Older messages in this chat are no longer in the assistant's
+                  context.
+                </p>
+              }
+
               <div class="flex flex-col gap-5">
                 @for (entry of entries(); track $index) {
                   <app-ai-assistant-message

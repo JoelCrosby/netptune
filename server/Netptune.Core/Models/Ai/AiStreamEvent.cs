@@ -12,6 +12,7 @@ public enum AiStreamEventType
     EntitiesReferenced = 7,
     ReplyReset = 8,
     Stopped = 9,
+    HistoryCompacted = 10,
 }
 
 public sealed record AiStreamEvent
@@ -29,6 +30,8 @@ public sealed record AiStreamEvent
     public Guid? ChangeSetId { get; init; }
 
     public List<AiEntityReference>? References { get; init; }
+
+    public int? DroppedMessages { get; init; }
 
     public static AiStreamEvent ChangeSetProposed(Guid changeSetId)
     {
@@ -75,6 +78,15 @@ public sealed record AiStreamEvent
     public static AiStreamEvent ReplyReset()
     {
         return new AiStreamEvent { Type = AiStreamEventType.ReplyReset };
+    }
+
+    public static AiStreamEvent HistoryCompacted(int droppedMessages)
+    {
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.HistoryCompacted,
+            DroppedMessages = droppedMessages,
+        };
     }
 
     public static AiStreamEvent Stopped()

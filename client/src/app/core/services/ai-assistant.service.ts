@@ -106,6 +106,7 @@ export class AiAssistantService {
   });
 
   readonly hasUnreadReply = signal(false);
+  readonly droppedMessages = signal(0);
   readonly isReplacingLastTurn = signal(false);
 
   private readonly transcriptViewers = signal(0);
@@ -317,6 +318,7 @@ export class AiAssistantService {
     this.showHistory.set(false);
     this.hasUnreadReply.set(false);
     this.isReplacingLastTurn.set(false);
+    this.droppedMessages.set(0);
     this.pendingSince = null;
   }
 
@@ -478,6 +480,7 @@ export class AiAssistantService {
     this.changeSet.set(detail.pendingChangeSet ?? null);
     this.excludedChangeIds.set(new Set());
     this.showHistory.set(false);
+    this.droppedMessages.set(0);
     this.pendingSince = isAwaitingReply ? Date.parse(last.createdAt) : null;
   }
 
@@ -749,6 +752,7 @@ export class AiAssistantService {
     this.changeSet.set(null);
     this.excludedChangeIds.set(new Set());
     this.showHistory.set(false);
+    this.droppedMessages.set(0);
   }
 
   toggleChanges(changeIds: number[]) {
@@ -1264,6 +1268,14 @@ export class AiAssistantService {
       event.changeSetId
     ) {
       void this.refreshChangeSet(event.changeSetId, this.turnToken);
+
+      return;
+    }
+
+    if (event.type === AiStreamEventType.historyCompacted) {
+      const dropped = event.droppedMessages ?? 0;
+
+      this.droppedMessages.update((current) => current + dropped);
 
       return;
     }

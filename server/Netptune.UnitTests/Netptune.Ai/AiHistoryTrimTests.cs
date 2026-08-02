@@ -144,6 +144,59 @@ public class AiHistoryTrimTests
         trimmed[0].Text.Should().Be("newest question", "older turns go before the live one is touched");
     }
 
+    [Fact]
+    public void Compact_ShouldReportNothingDropped_WhenWithinBudget()
+    {
+        var history = new List<AiChatMessage>
+        {
+            User("hello"),
+            Assistant("hi"),
+        };
+
+        var compacted = AiConversationService.Compact(history, 1000);
+
+        compacted.DroppedMessages.Should().Be(0);
+        compacted.DroppedQuestions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Compact_ShouldReportTheQuestionsItDropped()
+    {
+        var history = new List<AiChatMessage>
+        {
+            User("what is in the backlog"),
+            Assistant(new string('a', 200)),
+            User("and the sprint"),
+            Assistant(new string('b', 200)),
+            User("thanks"),
+        };
+
+        var compacted = AiConversationService.Compact(history, 250);
+
+        compacted.DroppedMessages.Should().BeGreaterThan(0);
+        compacted.DroppedQuestions.Should().Contain(
+            "what is in the backlog",
+            "the model has to be told what it can no longer see");
+    }
+
+    [Fact]
+    public void Compact_ShouldShortenALongQuestion()
+    {
+        var question = new string('q', 400);
+        var history = new List<AiChatMessage>
+        {
+            User(question),
+            Assistant(new string('a', 400)),
+            User("now what"),
+        };
+
+        var compacted = AiConversationService.Compact(history, 100);
+        var recalled = compacted.DroppedQuestions.Should().ContainSingle().Subject;
+
+        recalled.Should().HaveLength(121, "a recalled question is capped and marked with an ellipsis");
+        recalled.Should().EndWith("…");
+    }
+
     private static AiChatMessage User(string text)
     {
         return new AiChatMessage { Role = AiMessageRole.User, Text = text };
