@@ -5,6 +5,11 @@ import { parseAssistantMarkdown } from '@core/util/ai-markdown';
 import { LucideWrench } from '@lucide/angular';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
 
+interface AiToolChip {
+  name: string;
+  count: number;
+}
+
 @Component({
   selector: 'app-ai-assistant-message',
   host: {
@@ -13,14 +18,17 @@ import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component'
   },
   imports: [LucideWrench, AiAssistantMarkdownComponent],
   template: `
-    @if (entry().tools.length > 0) {
+    @if (tools().length > 0) {
       <div class="text-muted flex flex-wrap items-center gap-1.5 text-xs">
         <svg lucideWrench class="h-3 w-3"></svg>
-        @for (tool of entry().tools; track $index) {
+        @for (tool of tools(); track tool.name) {
           <span
-            class="bg-hover rounded px-1.5 py-0.5 font-mono text-[0.7rem]"
-            >{{ tool }}</span
-          >
+            class="bg-hover flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[0.7rem]">
+            {{ tool.name }}
+            @if (tool.count > 1) {
+              <span class="text-muted/80">×{{ tool.count }}</span>
+            }
+          </span>
         }
       </div>
     }
@@ -54,6 +62,16 @@ export class AiAssistantMessageComponent {
   readonly isStreaming = input(false);
 
   protected readonly isUser = computed(() => this.entry().role === 'user');
+
+  protected readonly tools = computed<AiToolChip[]>(() => {
+    const counts = new Map<string, number>();
+
+    for (const tool of this.entry().tools) {
+      counts.set(tool, (counts.get(tool) ?? 0) + 1);
+    }
+
+    return [...counts].map(([name, count]) => ({ name, count }));
+  });
 
   protected readonly blocks = computed(() => {
     return parseAssistantMarkdown(this.entry().text, this.isStreaming());
