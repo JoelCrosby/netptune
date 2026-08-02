@@ -12,7 +12,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
       <button
         app-icon-button
         type="button"
-        class="rounded-full"
+        class="relative rounded-full"
         [class.text-primary]="assistant.isOpen()"
         [attr.aria-pressed]="assistant.isOpen()"
         i18n-aria-label="
@@ -28,6 +28,19 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         appTooltip="Assistant · Ctrl I"
         (click)="assistant.toggle()">
         <svg lucideSparkles class="h-4 w-4"></svg>
+
+        @if (assistant.hasUnreadReply()) {
+          <span
+            aria-hidden="true"
+            class="bg-primary border-background absolute top-1.5 right-1.5 h-2 w-2 rounded-full border"></span>
+          <span
+            class="sr-only"
+            i18n="
+              Announced when the assistant has replied while the chat is closed
+            ">
+            New assistant reply
+          </span>
+        }
       </button>
     }
   `,

@@ -32,6 +32,19 @@ export interface AiChatEntry {
   failed?: boolean;
 }
 
+/** Shared so a stored transcript renders the same wherever it is read back. */
+export const toChatEntry = (message: {
+  role: AiMessageRole;
+  text?: string;
+  toolNames: string[];
+}): AiChatEntry => {
+  return {
+    role: message.role === AiMessageRole.user ? 'user' : 'assistant',
+    text: message.text ?? '',
+    tools: message.toolNames,
+  };
+};
+
 interface AiWorkspaceSession {
   conversationId: string | null;
   isOpen: boolean;
@@ -80,6 +93,10 @@ export class AiAssistantService {
   readonly isVisible = computed(() => {
     return this.isOpen() && this.isAvailable();
   });
+
+  readonly hasUnreadReply = signal(false);
+
+  private readonly transcriptViewers = signal(0);
 
   readonly isOverlayOpen = computed(() => {
     return this.isVisible() && this.mode() === 'overlay';
@@ -285,6 +302,7 @@ export class AiAssistantService {
     this.excludedChangeIds.set(new Set());
     this.conversations.set([]);
     this.showHistory.set(false);
+    this.hasUnreadReply.set(false);
     this.pendingSince = null;
   }
 
@@ -477,6 +495,7 @@ export class AiAssistantService {
         this.isThinking.set(false);
         this.pendingTurnAt.set(null);
         this.pendingSince = null;
+        this.markReplyReceived();
       }
     }
   }
@@ -552,11 +571,30 @@ export class AiAssistantService {
     text?: string;
     toolNames: string[];
   }): AiChatEntry {
-    return {
-      role: message.role === AiMessageRole.user ? 'user' : 'assistant',
-      text: message.text ?? '',
-      tools: message.toolNames,
+    return toChatEntry(message);
+  }
+
+  /**
+   * The panel registers itself while it is on screen, so a reply that lands
+   * behind a closed chat is the only one that raises the badge.
+   */
+  watchTranscript(): () => void {
+    this.transcriptViewers.update((count) => count + 1);
+    this.hasUnreadReply.set(false);
+
+    return () => {
+      this.transcriptViewers.update((count) => count - 1);
     };
+  }
+
+  private markReplyReceived() {
+    const isWatched = this.transcriptViewers() > 0;
+
+    if (isWatched) {
+      return;
+    }
+
+    this.hasUnreadReply.set(true);
   }
 
   open() {
@@ -805,6 +843,8 @@ export class AiAssistantService {
     if (isAbandoned) {
       return;
     }
+
+    this.markReplyReceived();
 
     if (wasNewConversation) {
       await this.readGeneratedTitle();

@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { AiAssistantMessageComponent } from '@app/shell/ai-assistant/components/ai-assistant-message.component';
 import { HttpClient } from '@angular/common/http';
 import { netptunePermissions } from '@core/auth/permissions';
 import { editWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -7,11 +8,11 @@ import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { ClientResponse } from '@core/models/client-response';
-import {
-  AiConversationDetail,
-  AiMessageRole,
-} from '@core/models/ai-conversation';
+import { AiConversationDetail } from '@core/models/ai-conversation';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
+import { referenceMap } from '@core/util/ai-references';
+import { toChatEntry } from '@core/services/ai-assistant.service';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
 import { formatTokens } from '@core/util/ai-usage';
 import { LucideArrowLeft } from '@lucide/angular';
@@ -25,6 +26,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
   selector: 'app-assistant-conversations-view',
   imports: [
     LucideArrowLeft,
+    AiAssistantMessageComponent,
     CheckboxComponent,
     EmptyStateComponent,
     IconButtonComponent,
@@ -75,6 +77,9 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
               {{ detail.conversation.title }}
             </h3>
             <p class="text-muted text-xs">
+              @if (selectedMember(); as member) {
+                {{ member }} ·
+              }
               {{ detail.conversation.model }} ·
               {{ detail.conversation.usage.inputTokens }}
               <span i18n="Counts tokens sent to the model">in</span> ·
@@ -93,26 +98,12 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
           </div>
         </div>
 
-        <div class="flex flex-col gap-4">
-          @for (message of detail.messages; track message.id) {
-            <div class="flex flex-col gap-1">
-              <span class="text-muted text-xs">
-                @if (message.role === userRole) {
-                  <span
-                    i18n="
-                      Label for a message sent by the member whose conversation
-                      an admin is reading
-                    "
-                    >Member</span
-                  >
-                } @else {
-                  <span i18n="Label for a message the assistant sent"
-                    >Assistant</span
-                  >
-                }
-              </span>
-              <p class="text-sm whitespace-pre-wrap">{{ message.text }}</p>
-            </div>
+        <div class="flex flex-col gap-5">
+          @for (entry of transcript(); track $index) {
+            <app-ai-assistant-message
+              [entry]="entry"
+              [references]="references()"
+              [workspace]="workspaceKey()" />
           }
         </div>
       } @else {
@@ -164,7 +155,27 @@ export class AssistantConversationsViewComponent {
 
   protected readonly conversations = aiWorkspaceConversationResource();
   protected readonly selected = signal<AiConversationDetail | null>(null);
-  protected readonly userRole = AiMessageRole.user;
+  protected readonly selectedMember = signal<string | null>(null);
+
+  private readonly workspaceIdentifier = this.store.selectSignal(
+    selectCurrentWorkspaceIdentifier
+  );
+
+  protected readonly workspaceKey = computed(() => {
+    return this.workspaceIdentifier() ?? null;
+  });
+
+  protected readonly transcript = computed(() => {
+    const messages = this.selected()?.messages ?? [];
+
+    return messages.map(toChatEntry);
+  });
+
+  protected readonly references = computed(() => {
+    const messages = this.selected()?.messages ?? [];
+
+    return referenceMap(messages.flatMap((message) => message.references));
+  });
 
   protected readonly canUpdateWorkspace = this.store.selectSignal(
     selectHasPermission(netptunePermissions.workspace.update)
@@ -197,6 +208,8 @@ export class AssistantConversationsViewComponent {
   }
 
   protected select(conversation: AiWorkspaceConversation) {
+    this.selectedMember.set(conversation.userDisplayName);
+
     this.http
       .get<ClientResponse<AiConversationDetail>>(
         `api/ai/admin/conversations/${conversation.id}`
@@ -210,5 +223,6 @@ export class AssistantConversationsViewComponent {
 
   protected clearSelection() {
     this.selected.set(null);
+    this.selectedMember.set(null);
   }
 }

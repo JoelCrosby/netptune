@@ -1,5 +1,6 @@
 import {
   Component,
+  DestroyRef,
   Injector,
   afterNextRender,
   computed,
@@ -187,6 +188,10 @@ export class AiAssistantPanelComponent {
   });
 
   constructor() {
+    const stopWatching = this.assistant.watchTranscript();
+
+    inject(DestroyRef).onDestroy(stopWatching);
+
     effect(() => {
       const entries = this.assistant.entries();
       const anchorId = this.latestTurnId(entries);
