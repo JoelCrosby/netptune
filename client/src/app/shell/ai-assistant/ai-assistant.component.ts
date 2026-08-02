@@ -1,7 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-  AfterViewInit,
   Component,
   HostListener,
   OnDestroy,
@@ -27,14 +26,13 @@ const PANEL_MARGIN = '1rem';
     </ng-template>
   `,
 })
-export class AiAssistantComponent implements AfterViewInit, OnDestroy {
-  private readonly panelTmpl =
-    viewChild.required<TemplateRef<unknown>>('panelTmpl');
+export class AiAssistantComponent implements OnDestroy {
+  private readonly panelTmpl = viewChild<TemplateRef<unknown>>('panelTmpl');
 
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly overlayRef: OverlayRef;
-  private portal!: TemplatePortal;
+  private portal: TemplatePortal | null = null;
 
   protected readonly assistant = inject(AiAssistantService);
 
@@ -53,21 +51,25 @@ export class AiAssistantComponent implements AfterViewInit, OnDestroy {
 
     effect(() => {
       const isOpen = this.assistant.isOverlayOpen();
+      const template = this.panelTmpl();
 
-      if (isOpen && this.portal && !this.overlayRef.hasAttached()) {
+      if (!template) {
+        return;
+      }
+
+      const isAttached = this.overlayRef.hasAttached();
+
+      if (isOpen && !isAttached) {
+        this.portal ??= new TemplatePortal(template, this.vcr);
         this.overlayRef.attach(this.portal);
 
         return;
       }
 
-      if (!isOpen && this.overlayRef.hasAttached()) {
+      if (!isOpen && isAttached) {
         this.overlayRef.detach();
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this.portal = new TemplatePortal(this.panelTmpl(), this.vcr);
   }
 
   ngOnDestroy() {
