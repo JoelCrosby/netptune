@@ -160,7 +160,7 @@ public sealed class AiConversationService : IAiConversationService
             new AiMessageDraft { Message = userMessage, Role = AiMessageRole.User },
             cancellationToken);
 
-        history.Add(userMessage);
+        history.Add(WithClientContext(userMessage, request.Context));
 
         var apiKey = Protector.Unprotect(credential.Secret);
         var systemPrompt = await PromptBuilder.Build(cancellationToken);
@@ -229,6 +229,66 @@ public sealed class AiConversationService : IAiConversationService
         {
             yield return AiStreamEvent.ChangeSetProposed(changeSetId.Value);
         }
+    }
+
+    private static AiChatMessage WithClientContext(AiChatMessage message, AiClientContext? clientContext)
+    {
+        var described = DescribeClientContext(clientContext);
+
+        if (described is null)
+        {
+            return message;
+        }
+
+        return message with { Text = $"{message.Text}\n\n<viewing>\n{described}\n</viewing>" };
+    }
+
+    private static string? DescribeClientContext(AiClientContext? clientContext)
+    {
+        if (clientContext is null)
+        {
+            return null;
+        }
+
+        var lines = new List<string>();
+
+        AddContextLine(lines, "view", clientContext.View);
+        AddContextLine(lines, "project", Describe(clientContext.ProjectName, clientContext.ProjectId));
+        AddContextLine(lines, "board", clientContext.BoardId?.ToString());
+        AddContextLine(lines, "sprint", clientContext.SprintId?.ToString());
+        AddContextLine(lines, "task", Describe(clientContext.TaskName, clientContext.TaskSystemId));
+
+        if (lines.Count == 0)
+        {
+            return null;
+        }
+
+        return string.Join("\n", lines);
+    }
+
+    private static string? Describe(string? name, object? identifier)
+    {
+        var hasName = !string.IsNullOrWhiteSpace(name);
+        var hasIdentifier = identifier is not null;
+
+        if (hasName && hasIdentifier)
+        {
+            return $"{name} ({identifier})";
+        }
+
+        return hasName ? name : identifier?.ToString();
+    }
+
+    private static void AddContextLine(List<string> lines, string name, string? value)
+    {
+        var hasValue = !string.IsNullOrWhiteSpace(value);
+
+        if (!hasValue)
+        {
+            return;
+        }
+
+        lines.Add($"{name}: {value}");
     }
 
     private static AiProvider ResolveProvider(

@@ -17,7 +17,10 @@ import {
 } from '@core/models/ai-conversation';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { selectIsAssistantAvailable } from '@core/store/auth/auth.selectors';
+import { selectCurrentProject } from '@core/store/projects/projects.selectors';
+import { selectSelectedTask } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { buildClientContext } from '@core/util/ai-client-context';
 import { referenceKey } from '@core/util/ai-references';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
@@ -61,6 +64,9 @@ export class AiAssistantService {
   );
 
   readonly workspaceKey = computed(() => this.workspaceId() ?? null);
+
+  private readonly currentProject = this.store.selectSignal(selectCurrentProject);
+  private readonly selectedTask = this.store.selectSignal(selectSelectedTask);
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly storage = inject(LocalStorageService);
@@ -837,6 +843,11 @@ export class AiAssistantService {
           conversationId: this.conversationId(),
           text,
           model: this.selectedModel(),
+          context: buildClientContext({
+            url: this.router.url,
+            project: this.currentProject(),
+            task: this.selectedTask(),
+          }),
         }),
       }
     );

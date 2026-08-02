@@ -106,7 +106,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:115</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:121</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -919,6 +919,16 @@
         <target>Verknüpfungen zu archivierten Aufgaben bleiben erhalten und werden markiert.</target>
       </segment>
     </unit>
+    <unit id="7731815178951959340">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:22</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>task list</source>
+      <target>Aufgabenliste</target>
+      </segment>
+    </unit>
     <unit id="7732202925677045087">
       <notes>
         <note category="location">src/app/core/enums/estimate-type.ts:24</note>
@@ -1132,6 +1142,16 @@
       <segment state="translated">
         <source>Reset password request is invalid or expired</source>
         <target>Die Anfrage zum Zurücksetzen ist ungültig oder abgelaufen</target>
+      </segment>
+    </unit>
+    <unit id="6590475405017990661">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:26</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>reports</source>
+      <target>Berichte</target>
       </segment>
     </unit>
     <unit id="3797778920049399855">
@@ -2596,6 +2616,16 @@
         <target>Kategorie</target>
       </segment>
     </unit>
+    <unit id="5520127934627226585">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:21</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>board</source>
+      <target>Board</target>
+      </segment>
+    </unit>
     <unit id="5520178242922065579">
       <notes>
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:70,74</note>
@@ -2719,6 +2749,16 @@
       <segment state="translated">
         <source> Create Tag </source>
         <target>Tag erstellen</target>
+      </segment>
+    </unit>
+    <unit id="3836000317327860441">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:25</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>projects</source>
+      <target>Projekte</target>
       </segment>
     </unit>
     <unit id="3195412850271307750">
@@ -6789,8 +6829,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:783</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:846</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:789</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:857</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -9481,6 +9521,16 @@
         <target>Kalender nach Sprint filtern</target>
       </segment>
     </unit>
+    <unit id="8190317540244065621">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:28</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>roadmap</source>
+      <target>Roadmap</target>
+      </segment>
+    </unit>
     <unit id="2148921956974186881">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:86,88</note>
@@ -9674,8 +9724,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:505</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:963</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:511</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:974</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -9902,6 +9952,16 @@
         <target> Ungelesen </target>
       </segment>
     </unit>
+    <unit id="3512180719745660914">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:27</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>calendar</source>
+      <target>Kalender</target>
+      </segment>
+    </unit>
     <unit id="3512672071226814404">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:118,119</note>
@@ -10102,6 +10162,16 @@
       <segment state="translated">
         <source>Profile</source>
         <target>Profil</target>
+      </segment>
+    </unit>
+    <unit id="4917333568122703029">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:29</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>automations</source>
+      <target>Automatisierungen</target>
       </segment>
     </unit>
     <unit id="5708580315739377560">
@@ -12488,7 +12558,7 @@
       </notes>
       <segment state="translated">
         <source>+<ph id="0" equiv="HIDDEN" disp="hidden"/> more changes</source>
-      <target>+<ph id="0" equiv="HIDDEN" disp="hidden"/> weitere Änderungen</target>
+        <target>+<ph id="0" equiv="HIDDEN" disp="hidden"/> weitere Änderungen</target>
       </segment>
     </unit>
     <unit id="1534534589646989824">
@@ -12908,6 +12978,16 @@
         <target>Dienstkonto erstellen</target>
       </segment>
     </unit>
+    <unit id="2946988289493771337">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:24</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>backlog</source>
+      <target>Backlog</target>
+      </segment>
+    </unit>
     <unit id="7889477161949511803">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:520</note>
@@ -13077,6 +13157,16 @@
       <segment state="translated">
         <source>Active</source>
         <target>Aktiv</target>
+      </segment>
+    </unit>
+    <unit id="8208675890777914624">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:30</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>assistant</source>
+      <target>Assistent</target>
       </segment>
     </unit>
     <unit id="851501460099408919">
@@ -13680,6 +13770,16 @@
       <segment state="translated">
         <source>Other</source>
         <target>Sonstige</target>
+      </segment>
+    </unit>
+    <unit id="8123881768100361598">
+      <notes>
+        <note category="location">src/app/core/util/ai-client-context.ts:23</note>
+        <note category="description">Names the screen the user is on</note>
+      </notes>
+      <segment state="translated">
+        <source>sprints</source>
+      <target>Sprints</target>
       </segment>
     </unit>
     <unit id="8124076252558546675">
