@@ -25,6 +25,7 @@ import { AiAssistantHistoryComponent } from './components/ai-assistant-history.c
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
 import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking.component';
+import { AiAssistantUsageComponent } from './components/ai-assistant-usage.component';
 
 @Component({
   selector: 'app-ai-assistant-panel',
@@ -41,6 +42,7 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
     AiAssistantMessageComponent,
     AiAssistantMissingKeyComponent,
     AiAssistantThinkingComponent,
+    AiAssistantUsageComponent,
   ],
   template: `
     <div
@@ -148,6 +150,12 @@ import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking
           (retried)="retryChanges()" />
       }
 
+      @if (spend(); as usage) {
+        <app-ai-assistant-usage
+          [usage]="usage"
+          [contentWidth]="contentWidth()" />
+      }
+
       <app-ai-assistant-composer
         [disabled]="isMissingKey()"
         [models]="assistant.models()"
@@ -181,6 +189,16 @@ export class AiAssistantPanelComponent {
 
   protected readonly isMissingKey = computed(() => {
     return this.assistant.hasCredentials() === false;
+  });
+
+  protected readonly spend = computed(() => {
+    const usage = this.assistant.usage();
+
+    if (usage === null || usage.outputTokens === 0) {
+      return null;
+    }
+
+    return usage;
   });
 
   protected readonly isThinking = computed(() => {

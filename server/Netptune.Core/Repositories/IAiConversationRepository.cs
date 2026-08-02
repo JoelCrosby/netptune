@@ -15,6 +15,8 @@ public interface IAiConversationRepository : IRepository<AiConversation, Guid>
 
     Task<List<AiWorkspaceConversationViewModel>> GetForWorkspace(int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<AiTokenUsageViewModel> GetUsage(Guid conversationId, CancellationToken cancellationToken = default);
+
     Task<List<AiMessage>> GetMessages(Guid conversationId, CancellationToken cancellationToken = default);
 
     Task<List<AiToolInvocation>> GetToolInvocations(Guid conversationId, CancellationToken cancellationToken = default);

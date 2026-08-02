@@ -1,3 +1,5 @@
+using Netptune.Core.ViewModels.Ai;
+
 namespace Netptune.Core.Models.Ai;
 
 public enum AiStreamEventType
@@ -13,6 +15,7 @@ public enum AiStreamEventType
     ReplyReset = 8,
     Stopped = 9,
     HistoryCompacted = 10,
+    UsageUpdated = 11,
 }
 
 public sealed record AiStreamEvent
@@ -32,6 +35,17 @@ public sealed record AiStreamEvent
     public List<AiEntityReference>? References { get; init; }
 
     public int? DroppedMessages { get; init; }
+
+    public AiTokenUsageViewModel? Usage { get; init; }
+
+    public static AiStreamEvent UsageUpdated(AiTokenUsageViewModel usage)
+    {
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.UsageUpdated,
+            Usage = usage,
+        };
+    }
 
     public static AiStreamEvent ChangeSetProposed(Guid changeSetId)
     {

@@ -12,6 +12,19 @@ public sealed record AiTokenUsageViewModel
     public int CacheReadTokens { get; init; }
 
     public int CacheCreationTokens { get; init; }
+
+    /// <summary>
+    /// Estimated spend in US dollars, priced from the published rates for the model that produced the tokens.
+    /// </summary>
+    public decimal Cost { get; init; }
+
+    public AiTokenUsageViewModel WithCost(string? model)
+    {
+        return this with
+        {
+            Cost = AiModelPricing.Cost(model, InputTokens, OutputTokens, CacheReadTokens, CacheCreationTokens),
+        };
+    }
 }
 
 public sealed record AiConversationViewModel

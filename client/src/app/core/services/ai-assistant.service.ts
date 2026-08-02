@@ -22,6 +22,7 @@ import {
   AiMessageRole,
   AiStreamEvent,
   AiStreamEventType,
+  AiTokenUsage,
 } from '@core/models/ai-conversation';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { selectIsAssistantAvailable } from '@core/store/auth/auth.selectors';
@@ -107,6 +108,7 @@ export class AiAssistantService {
 
   readonly hasUnreadReply = signal(false);
   readonly droppedMessages = signal(0);
+  readonly usage = signal<AiTokenUsage | null>(null);
   readonly isReplacingLastTurn = signal(false);
 
   private readonly transcriptViewers = signal(0);
@@ -319,6 +321,7 @@ export class AiAssistantService {
     this.hasUnreadReply.set(false);
     this.isReplacingLastTurn.set(false);
     this.droppedMessages.set(0);
+    this.usage.set(null);
     this.pendingSince = null;
   }
 
@@ -481,6 +484,7 @@ export class AiAssistantService {
     this.excludedChangeIds.set(new Set());
     this.showHistory.set(false);
     this.droppedMessages.set(0);
+    this.usage.set(detail.conversation.usage);
     this.pendingSince = isAwaitingReply ? Date.parse(last.createdAt) : null;
   }
 
@@ -753,6 +757,7 @@ export class AiAssistantService {
     this.excludedChangeIds.set(new Set());
     this.showHistory.set(false);
     this.droppedMessages.set(0);
+    this.usage.set(null);
   }
 
   toggleChanges(changeIds: number[]) {
@@ -1276,6 +1281,12 @@ export class AiAssistantService {
       const dropped = event.droppedMessages ?? 0;
 
       this.droppedMessages.update((current) => current + dropped);
+
+      return;
+    }
+
+    if (event.type === AiStreamEventType.usageUpdated && event.usage) {
+      this.usage.set(event.usage);
 
       return;
     }

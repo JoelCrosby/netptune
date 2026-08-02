@@ -18,6 +18,7 @@ export enum AiStreamEventType {
   replyReset = 8,
   stopped = 9,
   historyCompacted = 10,
+  usageUpdated = 11,
 }
 
 export interface AiStreamEvent {
@@ -29,6 +30,7 @@ export interface AiStreamEvent {
   changeSetId?: string;
   references?: AiEntityReference[];
   droppedMessages?: number;
+  usage?: AiTokenUsage;
 }
 
 export interface AiTokenUsage {
@@ -36,6 +38,7 @@ export interface AiTokenUsage {
   outputTokens: number;
   cacheReadTokens: number;
   cacheCreationTokens: number;
+  cost: number;
 }
 
 export interface AiConversation {

@@ -34,6 +34,14 @@ public sealed class GetAiConversationsQueryHandler
 
     public static AiConversationViewModel ToViewModel(AiConversation conversation, IReadOnlyList<AiMessage> messages)
     {
+        var usage = new AiTokenUsageViewModel
+        {
+            InputTokens = messages.Sum(message => message.InputTokens),
+            OutputTokens = messages.Sum(message => message.OutputTokens),
+            CacheReadTokens = messages.Sum(message => message.CacheReadTokens),
+            CacheCreationTokens = messages.Sum(message => message.CacheCreationTokens),
+        };
+
         return new AiConversationViewModel
         {
             Id = conversation.Id,
@@ -43,13 +51,7 @@ public sealed class GetAiConversationsQueryHandler
             RequestedModel = conversation.RequestedModel,
             LastMessageAt = conversation.LastMessageAt,
             MessageCount = conversation.MessageCount,
-            Usage = new AiTokenUsageViewModel
-            {
-                InputTokens = messages.Sum(message => message.InputTokens),
-                OutputTokens = messages.Sum(message => message.OutputTokens),
-                CacheReadTokens = messages.Sum(message => message.CacheReadTokens),
-                CacheCreationTokens = messages.Sum(message => message.CacheCreationTokens),
-            },
+            Usage = usage.WithCost(conversation.Model),
         };
     }
 }

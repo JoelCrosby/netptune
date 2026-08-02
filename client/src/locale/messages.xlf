@@ -87,7 +87,7 @@
     </unit>
     <unit id="3563415301877713192">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:95,100</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:97,102</note>
         <note category="description">Shown when older messages were left out of what the assistant can see</note>
       </notes>
       <segment>
@@ -487,7 +487,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:138,140</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:179,180</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -4232,7 +4232,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:902</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:905</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment>
@@ -4458,7 +4458,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:135,137</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:176,178</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -5765,6 +5765,15 @@
         <source> Target </source>
       </segment>
     </unit>
+    <unit id="2502326904654547900">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:147,149</note>
+        <note category="description">Label for the number of tokens the assistant has used</note>
+      </notes>
+      <segment>
+        <source> Tokens </source>
+      </segment>
+    </unit>
     <unit id="2525230676386818985">
       <notes>
         <note category="location">src/app/features/automations/components/automation-runs-table.component.ts:51,54</note>
@@ -5781,6 +5790,15 @@
       </notes>
       <segment>
         <source>Failed to update workspace</source>
+      </segment>
+    </unit>
+    <unit id="7284407085760520822">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:139,141</note>
+        <note category="description">Label for the number of assistant conversations</note>
+      </notes>
+      <segment>
+        <source> Conversations </source>
       </segment>
     </unit>
     <unit id="7285206740824251940">
@@ -5872,7 +5890,7 @@
     </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:209</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:227</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment>
@@ -6406,8 +6424,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1033</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1157</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1036</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1160</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment>
@@ -6827,7 +6845,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:201</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:219</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:52,54</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -8150,7 +8168,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:896</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:899</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment>
@@ -8506,6 +8524,15 @@
       </notes>
       <segment>
         <source> Uncheck a group to hide it from this board. This only affects your view. </source>
+      </segment>
+    </unit>
+    <unit id="5469501863404839059">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:132,134</note>
+        <note category="description">Section heading for what the assistant has cost the workspace</note>
+      </notes>
+      <segment>
+        <source>Assistant spend</source>
       </segment>
     </unit>
     <unit id="5477970714848105392">
@@ -9094,8 +9121,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:557</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1296</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:559</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1305</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment>
@@ -9172,7 +9199,7 @@
     </unit>
     <unit id="3313172740302558016">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:110,114</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:110,113</note>
         <note category="description">Counts tokens written to the provider prompt cache</note>
       </notes>
       <segment>
@@ -9589,6 +9616,15 @@
       </notes>
       <segment>
         <source>There are currently no deleted tasks.</source>
+      </segment>
+    </unit>
+    <unit id="5561787587584733752">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:158,160</note>
+        <note category="description">Label for what the assistant has cost, priced from published model rates</note>
+      </notes>
+      <segment>
+        <source> Estimated cost </source>
       </segment>
     </unit>
     <unit id="5569798609793426852">
@@ -10286,7 +10322,7 @@
     </unit>
     <unit id="4717491147966397069">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:70,72</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:72,74</note>
         <note category="description">Accessible name of the assistant transcript</note>
       </notes>
       <segment>
@@ -11372,7 +11408,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:148,150</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:190,192</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -11787,6 +11823,15 @@
       </notes>
       <segment>
         <source> Category </source>
+      </segment>
+    </unit>
+    <unit id="5186531450031488551">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-usage.component.ts:45</note>
+        <note category="description">Tooltip breaking assistant token spend down by category</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="sent" disp="sent"/> sent · <ph id="1" equiv="received" disp="received"/> received · <ph id="2" equiv="cacheRead" disp="cacheRead"/> cached · <ph id="3" equiv="cacheWritten" disp="cacheWritten"/> written</source>
       </segment>
     </unit>
     <unit id="2201411529066364907">
@@ -12745,7 +12790,7 @@
     </unit>
     <unit id="3259201493560941662">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:129,131</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:131,133</note>
         <note category="description">Accessible label for the button that scrolls to the newest message</note>
       </notes>
       <segment>
@@ -12927,7 +12972,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:206</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:224</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment>
@@ -13373,7 +13418,7 @@
     </unit>
     <unit id="8426796922329733141">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:50,52</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:52,54</note>
         <note category="description">Accessible name of the AI assistant panel</note>
       </notes>
       <segment>
@@ -14456,6 +14501,15 @@
         <source>No Sprint</source>
       </segment>
     </unit>
+    <unit id="610756099298959676">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-usage.component.ts:35</note>
+        <note category="description">Assistant spend shown above the message box, for example &quot;12.4k tokens · $0.08&quot;</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="tokens" disp="tokens"/> tokens · <ph id="1" equiv="cost" disp="cost"/></source>
+      </segment>
+    </unit>
     <unit id="9195124130913900158">
       <notes>
         <note category="location">src/app/static/components/task-properties/task-status-select.component.ts:32,34</note>
@@ -14467,7 +14521,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:152,157</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:194,199</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>

@@ -14,7 +14,7 @@ import { referenceMap } from '@core/util/ai-references';
 import { toChatEntry } from '@core/services/ai-assistant.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
-import { formatTokens } from '@core/util/ai-usage';
+import { formatCost, formatTokens, sumUsage } from '@core/util/ai-usage';
 import { LucideArrowLeft, LucideMessageSquare } from '@lucide/angular';
 import { AiCredentialsComponent } from '@settings/components/ai-credentials/ai-credentials.component';
 import { ActionCardComponent } from '@static/components/action-card/action-card.component';
@@ -109,6 +109,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
               <span i18n="Counts tokens written to the provider prompt cache"
                 >written</span
               >
+              · {{ detailCostLabel() }}
             </p>
           </div>
         </div>
@@ -122,6 +123,46 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
           }
         </div>
       } @else {
+        @if (hasSpend()) {
+          <section class="mb-6">
+            <app-section-header
+              i18n-heading="
+                Section heading for what the assistant has cost the workspace
+              "
+              heading="Assistant spend" />
+
+            <dl class="border-border grid grid-cols-3 gap-4 rounded border p-4">
+              <div>
+                <dt
+                  class="text-muted text-xs"
+                  i18n="Label for the number of assistant conversations">
+                  Conversations
+                </dt>
+                <dd class="font-overpass text-lg">{{ conversationCount() }}</dd>
+              </div>
+              <div>
+                <dt
+                  class="text-muted text-xs"
+                  i18n="Label for the number of tokens the assistant has used">
+                  Tokens
+                </dt>
+                <dd class="font-overpass text-lg">{{ totalTokenLabel() }}</dd>
+              </div>
+              <div>
+                <dt
+                  class="text-muted text-xs"
+                  i18n="
+                    Label for what the assistant has cost, priced from published
+                    model rates
+                  ">
+                  Estimated cost
+                </dt>
+                <dd class="font-overpass text-lg">{{ totalCostLabel() }}</dd>
+              </div>
+            </dl>
+          </section>
+        }
+
         <div class="flex flex-col gap-2">
           @for (conversation of conversations.value(); track conversation.id) {
             <app-action-card
@@ -135,7 +176,8 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
                 >messages</span
               >
               · {{ tokenLabel(conversation) }}
-              <span i18n="Counts tokens a conversation has cost">tokens</span>
+              <span i18n="Counts tokens a conversation has cost">tokens</span> ·
+              {{ costLabel(conversation) }}
 
               <span actionCardTrailing class="text-muted mt-0.5 text-xs">
                 {{ toDate(conversation.lastMessageAt) | prettyDate }}
@@ -171,6 +213,10 @@ export class AssistantConversationsViewComponent {
 
   protected readonly workspaceKey = computed(() => {
     return this.workspaceIdentifier() ?? null;
+  });
+
+  protected readonly detailCostLabel = computed(() => {
+    return formatCost(this.selected()?.conversation.usage);
   });
 
   protected readonly transcript = computed(() => {
@@ -211,8 +257,32 @@ export class AssistantConversationsViewComponent {
     );
   }
 
+  protected readonly workspaceUsage = computed(() => {
+    const conversations = this.conversations.value() ?? [];
+
+    return sumUsage(conversations.map((conversation) => conversation.usage));
+  });
+
+  protected readonly conversationCount = computed(() => {
+    return this.conversations.value()?.length ?? 0;
+  });
+
+  protected readonly hasSpend = computed(() => this.conversationCount() > 0);
+
+  protected readonly totalTokenLabel = computed(() => {
+    return formatTokens(this.workspaceUsage());
+  });
+
+  protected readonly totalCostLabel = computed(() => {
+    return formatCost(this.workspaceUsage());
+  });
+
   protected tokenLabel(conversation: AiWorkspaceConversation): string {
     return formatTokens(conversation.usage);
+  }
+
+  protected costLabel(conversation: AiWorkspaceConversation): string {
+    return formatCost(conversation.usage);
   }
 
   protected select(conversation: AiWorkspaceConversation) {

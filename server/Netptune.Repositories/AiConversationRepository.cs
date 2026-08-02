@@ -13,12 +13,12 @@ namespace Netptune.Repositories;
 public class AiConversationRepository(DataContext context, IDbConnectionFactory connectionFactory)
     : Repository<DataContext, AiConversation, Guid>(context, connectionFactory), IAiConversationRepository
 {
-    public Task<List<AiConversationViewModel>> GetForUser(
+    public async Task<List<AiConversationViewModel>> GetForUser(
         string userId,
         int workspaceId,
         CancellationToken cancellationToken = default)
     {
-        return Entities
+        var conversations = await Entities
             .AsNoTracking()
             .Where(conversation =>
                 conversation.UserId == userId &&
@@ -38,9 +38,14 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
                     InputTokens = conversation.Messages.Sum(message => message.InputTokens),
                     OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
                     CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
+                    CacheCreationTokens = conversation.Messages.Sum(message => message.CacheCreationTokens),
                 },
             })
             .ToListAsync(cancellationToken);
+
+        return conversations
+            .Select(conversation => conversation with { Usage = conversation.Usage.WithCost(conversation.Model) })
+            .ToList();
     }
 
     public Task<AiConversation?> GetOwned(
@@ -72,11 +77,33 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<List<AiWorkspaceConversationViewModel>> GetForWorkspace(
+    public async Task<AiTokenUsageViewModel> GetUsage(
+        Guid conversationId,
+        CancellationToken cancellationToken = default)
+    {
+        var messages = Context.AiMessages
+            .AsNoTracking()
+            .Where(message => message.ConversationId == conversationId);
+
+        var usage = await messages
+            .GroupBy(message => message.ConversationId)
+            .Select(group => new AiTokenUsageViewModel
+            {
+                InputTokens = group.Sum(message => message.InputTokens),
+                OutputTokens = group.Sum(message => message.OutputTokens),
+                CacheReadTokens = group.Sum(message => message.CacheReadTokens),
+                CacheCreationTokens = group.Sum(message => message.CacheCreationTokens),
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return usage ?? new AiTokenUsageViewModel();
+    }
+
+    public async Task<List<AiWorkspaceConversationViewModel>> GetForWorkspace(
         int workspaceId,
         CancellationToken cancellationToken = default)
     {
-        return Entities
+        var conversations = await Entities
             .AsNoTracking()
             .Where(conversation => conversation.WorkspaceId == workspaceId && !conversation.IsDeleted)
             .OrderByDescending(conversation => conversation.LastMessageAt)
@@ -97,9 +124,14 @@ public class AiConversationRepository(DataContext context, IDbConnectionFactory 
                     InputTokens = conversation.Messages.Sum(message => message.InputTokens),
                     OutputTokens = conversation.Messages.Sum(message => message.OutputTokens),
                     CacheReadTokens = conversation.Messages.Sum(message => message.CacheReadTokens),
+                    CacheCreationTokens = conversation.Messages.Sum(message => message.CacheCreationTokens),
                 },
             })
             .ToListAsync(cancellationToken);
+
+        return conversations
+            .Select(conversation => conversation with { Usage = conversation.Usage.WithCost(conversation.Model) })
+            .ToList();
     }
 
     public Task<List<AiMessage>> GetMessages(Guid conversationId, CancellationToken cancellationToken = default)

@@ -288,6 +288,10 @@ public sealed class AiConversationService : IAiConversationService
         };
 
         await ApplyTitle(conversation, persisted.MessageId, titleRequest, existing is null, cancellationToken);
+
+        var usage = await UnitOfWork.AiConversations.GetUsage(conversation.Id, cancellationToken);
+
+        yield return AiStreamEvent.UsageUpdated(usage.WithCost(conversation.Model));
     }
 
     private sealed record TurnStep(AiStreamEvent? Event, string? Failure);
