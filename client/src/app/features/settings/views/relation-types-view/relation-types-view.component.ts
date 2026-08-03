@@ -130,7 +130,7 @@ import { finalize, first } from 'rxjs';
               track relationType.id;
               let i = $index
             ) {
-              <tr appTableRow class="bg-card">
+              <tr appTableRow>
                 <td class="px-4 py-2 align-middle">
                   <app-color-swatch
                     variant="swatch"

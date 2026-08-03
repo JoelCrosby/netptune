@@ -109,7 +109,7 @@ import { finalize, first } from 'rxjs';
               track status.id;
               let i = $index
             ) {
-              <tr appTableRow class="bg-card">
+              <tr appTableRow>
                 <td class="px-4 py-2 align-middle">
                   <app-color-swatch variant="swatch" [color]="status.color" />
                 </td>

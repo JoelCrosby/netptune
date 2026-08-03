@@ -77,7 +77,7 @@ import { tagResource } from '@app/core/resources/tag.resource';
           </thead>
           <tbody>
             @for (tag of tags.value(); track tag.id) {
-              <tr appTableRow class="group bg-card">
+              <tr appTableRow class="group">
                 <td class="px-4 py-2 align-middle">
                   <a
                     class="block w-full truncate text-left font-medium hover:underline"
