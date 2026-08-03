@@ -1,60 +1,109 @@
 import { Component, computed, inject } from '@angular/core';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { Store } from '@ngrx/store';
 import { AuditStore } from '@audit/audit-state.service';
 import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
+import {
+  REPORT_CHART_LABEL_STYLE,
+  reportChartThemeSignal,
+} from '@core/util/chart-theme';
+import { LucideActivity } from '@lucide/angular';
+import { Store } from '@ngrx/store';
+import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @Component({
   selector: 'app-audit-activity-chart',
-  imports: [NgApexchartsModule],
+  imports: [
+    ChartCardComponent,
+    EmptyStateComponent,
+    LucideActivity,
+    NgApexchartsModule,
+    SkeletonComponent,
+  ],
+  host: { class: 'block' },
   template: `
-    <div class="border-border mb-6 rounded border p-4">
-      <p
-        class="text-foreground/60 mb-3 text-xs font-medium tracking-wide uppercase">
-        <span i18n="Heading of the audit activity chart">
-          Activity Over Time
-        </span>
-      </p>
-      <apx-chart
-        [series]="series()"
-        [chart]="chartConfig"
-        [xaxis]="xaxis()"
-        [yaxis]="yaxis"
-        [stroke]="stroke"
-        [fill]="fill"
-        [dataLabels]="dataLabels"
-        [grid]="grid"
-        [tooltip]="tooltip()" />
-    </div>
+    <app-chart-card
+      [icon]="activityIcon"
+      i18n-title="Heading of the audit activity chart"
+      title="Activity over time"
+      i18n-description="Explains what the audit activity chart plots"
+      description="Recorded events per day">
+      @if (!auditStore.loaded()) {
+        <div
+          role="status"
+          i18n-aria-label="Shown while the audit activity chart loads"
+          aria-label="Loading activity">
+          <app-skeleton class="h-45 w-full" />
+        </div>
+      } @else if (hasData()) {
+        <apx-chart
+          i18n-aria-label="Accessible name of the audit activity chart"
+          aria-label="Recorded audit events per day"
+          [series]="series()"
+          [chart]="chartConfig"
+          [colors]="colors()"
+          [xaxis]="xaxis()"
+          [yaxis]="yaxis"
+          [stroke]="stroke"
+          [fill]="fill"
+          [dataLabels]="dataLabels"
+          [grid]="grid()"
+          [tooltip]="tooltip()" />
+      } @else {
+        <app-empty-state
+          compact
+          i18n-title="Empty state for the audit activity chart"
+          title="No activity in this period."
+          i18n-description="Advice shown when the audit period has no events"
+          description="Widen the date range to see recorded events.">
+          <svg emptyStateIcon lucideActivity class="h-8 w-8"></svg>
+        </app-empty-state>
+      }
+    </app-chart-card>
   `,
 })
 export class AuditActivityChartComponent {
-  private auditStore = inject(AuditStore);
-  private store = inject(Store);
+  protected readonly auditStore = inject(AuditStore);
 
-  private effectiveTheme = this.store.selectSignal(selectEffectiveTheme);
+  private readonly store = inject(Store);
+  private readonly effectiveTheme =
+    this.store.selectSignal(selectEffectiveTheme);
+  private readonly theme = reportChartThemeSignal();
 
-  series = computed(() => [
+  protected readonly activityIcon = LucideActivity;
+
+  protected readonly hasData = computed(() =>
+    this.auditStore.summary().some((point) => point.count > 0)
+  );
+
+  readonly series = computed(() => [
     {
-      name: 'Events',
-      data: this.auditStore
-        .summary()
-        .map((p) => [new Date(p.date).getTime(), p.count]),
+      name: $localize`:Series name for recorded audit events:Events`,
+      data: this.auditStore.summary().map((point) => {
+        return [new Date(point.date).getTime(), point.count];
+      }),
     },
   ]);
 
-  xaxis = computed(() => {
+  readonly colors = computed(() => [this.theme().primary]);
+
+  readonly grid = computed(() => ({
+    borderColor: this.theme().border,
+    strokeDashArray: 4,
+    xaxis: { lines: { show: false } },
+    padding: { left: 0, right: 0 },
+  }));
+
+  readonly xaxis = computed(() => {
     const points = this.auditStore.summary();
+    const last = points[points.length - 1];
+
     return {
       type: 'datetime' as const,
       min: points[0] ? new Date(points[0].date).getTime() : undefined,
-      max: points[points.length - 1]
-        ? new Date(points[points.length - 1].date).getTime()
-        : undefined,
-      labels: {
-        style: { colors: 'rgba(var(--foreground-rgb), 0.5)', fontSize: '11px' },
-        datetimeUTC: false,
-      },
+      max: last ? new Date(last.date).getTime() : undefined,
+      labels: { style: REPORT_CHART_LABEL_STYLE, datetimeUTC: false },
       axisBorder: { show: false },
       axisTicks: { show: false },
     };
@@ -65,7 +114,6 @@ export class AuditActivityChartComponent {
     height: 180,
     toolbar: { show: false },
     zoom: { enabled: false },
-    sparkline: { enabled: false },
     animations: { enabled: false },
     background: 'transparent',
   };
@@ -74,35 +122,28 @@ export class AuditActivityChartComponent {
     min: 0,
     tickAmount: 4,
     labels: {
-      style: { colors: 'rgba(var(--foreground-rgb), 0.5)', fontSize: '11px' },
-      formatter: (v: number) => Math.floor(v).toString(),
+      style: REPORT_CHART_LABEL_STYLE,
+      formatter: (value: number) => Math.floor(value).toString(),
     },
   };
 
   readonly stroke = { curve: 'smooth' as const, width: 2 };
 
   readonly fill = {
-    type: 'gradient',
+    type: 'gradient' as const,
     gradient: {
-      shadeIntensity: 1,
-      opacityFrom: 0.35,
-      opacityTo: 0.02,
+      type: 'vertical' as const,
+      shadeIntensity: 0,
+      opacityFrom: 0.4,
+      opacityTo: 0,
       stops: [0, 100],
     },
   };
 
   readonly dataLabels = { enabled: false };
 
-  readonly grid = {
-    borderColor: 'var(--border)',
-    strokeDashArray: 4,
-    xaxis: { lines: { show: false } },
-  };
-
-  readonly tooltip = computed(() => {
-    return {
-      x: { format: 'dd MMM yyyy' },
-      theme: this.effectiveTheme(),
-    };
-  });
+  readonly tooltip = computed(() => ({
+    x: { format: 'dd MMM yyyy' },
+    theme: this.effectiveTheme(),
+  }));
 }

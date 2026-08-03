@@ -1671,7 +1671,7 @@
     </unit>
     <unit id="7182192298964223312">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:56,60</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:59,63</note>
         <note category="description">Precedes the assistant that made a change on the user&apos;s behalf</note>
       </notes>
       <segment state="translated">
@@ -4122,19 +4122,19 @@
         <target>Verfügbarkeit der Kennung konnte nicht geprüft werden</target>
       </segment>
     </unit>
-    <unit id="7805009499865793594">
+    <unit id="8954234322952828545">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:15,18</note>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:29,30</note>
         <note category="description">Heading of the audit activity chart</note>
       </notes>
-      <segment state="translated">
-        <source> Activity Over Time </source>
+      <segment state="initial">
+        <source>Activity over time</source>
         <target> Aktivität im Zeitverlauf </target>
       </segment>
     </unit>
     <unit id="5203279511751768967">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:23,25</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:26,28</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:102,103</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:398</note>
@@ -4157,7 +4157,7 @@
     </unit>
     <unit id="1640609344969975994">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:29,31</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:32,34</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:110,111</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:408</note>
@@ -4170,7 +4170,7 @@
     </unit>
     <unit id="8829497237648100098">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:32,34</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:35,37</note>
         <note category="description">Button that applies the filters</note>
       </notes>
       <segment state="translated">
@@ -4180,7 +4180,7 @@
     </unit>
     <unit id="7808756054397155068">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:35,38</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:38,42</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:76,78</note>
         <note category="description">Button that clears the filters</note>
       </notes>
@@ -4191,7 +4191,7 @@
     </unit>
     <unit id="2014694668412418346">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:40,44</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:48,52</note>
         <note category="description">Button that downloads the audit log as CSV</note>
       </notes>
       <segment state="translated">
@@ -4201,7 +4201,7 @@
     </unit>
     <unit id="7690634761514161231">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:31,32</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:33,34</note>
         <note category="description">Shown when the audit log fails to load</note>
       </notes>
       <segment state="translated">
@@ -4221,7 +4221,7 @@
     </unit>
     <unit id="2373398189346663368">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:35,37</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:38,40</note>
         <note category="description">Empty state for the audit log</note>
       </notes>
       <segment state="translated">
@@ -4241,7 +4241,7 @@
     </unit>
     <unit id="9037534911513149290">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:40,42</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:43,45</note>
         <note category="description">Plural noun for audit entries, used in the selection summary</note>
       </notes>
       <segment state="translated">
@@ -4586,7 +4586,7 @@
     </unit>
     <unit id="1678559204833619774">
       <notes>
-        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,24</note>
+        <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,25</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:370</note>
         <note category="location">src/app/workspace.routes.ts:144</note>
         <note category="description">Page title for the workspace audit log</note>
@@ -6105,6 +6105,16 @@
         <target>Ist ungleich</target>
       </segment>
     </unit>
+    <unit id="1776590029606700905">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:36,38</note>
+        <note category="description">Shown while the audit activity chart loads</note>
+      </notes>
+      <segment state="translated">
+        <source>Loading activity</source>
+        <target>Aktivität wird geladen</target>
+      </segment>
+    </unit>
     <unit id="6238291467288576076">
       <notes>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:194</note>
@@ -7580,6 +7590,16 @@
       <segment state="translated">
         <source> Some conditions only apply while a task is changing, so they cannot be checked here. </source>
         <target> Manche Bedingungen gelten nur während einer Aufgabenänderung und können hier daher nicht geprüft werden. </target>
+      </segment>
+    </unit>
+    <unit id="5729418620241283277">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:82</note>
+        <note category="description">Series name for recorded audit events</note>
+      </notes>
+      <segment state="translated">
+        <source>Events</source>
+        <target>Ereignisse</target>
       </segment>
     </unit>
     <unit id="84990333805541981">
@@ -9541,6 +9561,16 @@
         <target>Was muss erledigt werden?</target>
       </segment>
     </unit>
+    <unit id="6626868272726543269">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:31,34</note>
+        <note category="description">Explains what the audit activity chart plots</note>
+      </notes>
+      <segment state="translated">
+        <source>Recorded events per day</source>
+        <target>Aufgezeichnete Ereignisse pro Tag</target>
+      </segment>
+    </unit>
     <unit id="662925928705970482">
       <notes>
         <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:185,187</note>
@@ -9938,6 +9968,16 @@
       <segment state="translated">
         <source> Reset </source>
         <target> Zurücksetzen </target>
+      </segment>
+    </unit>
+    <unit id="6380983428321393066">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:42,44</note>
+        <note category="description">Accessible name of the audit activity chart</note>
+      </notes>
+      <segment state="translated">
+        <source>Recorded audit events per day</source>
+        <target>Aufgezeichnete Audit-Ereignisse pro Tag</target>
       </segment>
     </unit>
     <unit id="6381140642359438701">
@@ -11952,6 +11992,16 @@
       <segment state="translated">
         <source>Last <ph id="0" equiv="DAYS" disp="this.flow.trailingDays"/> days</source>
         <target>Letzte <ph id="0" equiv="DAYS" disp="this.flow.trailingDays"/> Tage</target>
+      </segment>
+    </unit>
+    <unit id="3938527502818260365">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:59,60</note>
+        <note category="description">Advice shown when the audit period has no events</note>
+      </notes>
+      <segment state="translated">
+        <source>Widen the date range to see recorded events.</source>
+        <target>Erweitern Sie den Zeitraum, um aufgezeichnete Ereignisse zu sehen.</target>
       </segment>
     </unit>
     <unit id="3941944824627691129">
@@ -14506,6 +14556,16 @@
       <segment state="translated">
         <source>Goal</source>
         <target>Ziel</target>
+      </segment>
+    </unit>
+    <unit id="5026839905470666885">
+      <notes>
+        <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:57,58</note>
+        <note category="description">Empty state for the audit activity chart</note>
+      </notes>
+      <segment state="translated">
+        <source>No activity in this period.</source>
+        <target>Keine Aktivität in diesem Zeitraum.</target>
       </segment>
     </unit>
     <unit id="5027851135384593485">

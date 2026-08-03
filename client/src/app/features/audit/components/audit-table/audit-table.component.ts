@@ -5,6 +5,7 @@ import { ActivityType } from '@core/models/view-models/activity-view-model';
 import { AuditLogViewModel } from '@core/models/view-models/audit-log-view-model';
 import { DialogService } from '@core/services/dialog.service';
 import { LucideExternalLink } from '@lucide/angular';
+import { BadgeComponent } from '@static/components/badge/badge.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
@@ -18,6 +19,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
   selector: 'app-audit-table',
   imports: [
     ActivityTypePipe,
+    BadgeComponent,
     DatatableCellTemplateDirective,
     DatatableComponent,
     EntityTypePipe,
@@ -29,7 +31,8 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
     <app-datatable
       i18n-errorMessage="Shown when the audit log fails to load"
       errorMessage="Audit events could not be loaded."
-      containerClass="h-[calc(100vh-42rem)] overflow-auto"
+      containerClass="h-[calc(100vh-42rem)] overflow-auto rounded-lg shadow-sm"
+      headerClass="bg-card-header text-muted uppercase"
       tableClass="min-w-180 table-fixed"
       i18n-emptyMessage="Empty state for the audit log"
       emptyMessage="No audit events found."
@@ -61,12 +64,9 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
       </ng-template>
 
       <ng-template appDatatableCell="type" let-row>
-        <span
-          [class]="
-            'rounded px-2 py-0.5 text-xs font-medium ' + pillClass(row.type)
-          ">
+        <app-badge shape="rounded" [class]="pillClass(row.type)">
           {{ row.type | activityType }}
-        </span>
+        </app-badge>
       </ng-template>
 
       <ng-template appDatatableCell="entityType" let-row>

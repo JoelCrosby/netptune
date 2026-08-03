@@ -19,11 +19,13 @@ import { pipe, switchMap } from 'rxjs';
 interface AuditState {
   filter: AuditLogFilter;
   summary: AuditActivityPoint[];
+  loaded: boolean;
 }
 
 const initialState: AuditState = {
   filter: {},
   summary: [],
+  loaded: false,
 };
 
 export const AuditStore = signalStore(
@@ -35,10 +37,14 @@ export const AuditStore = signalStore(
           auditService.getActivitySummary(filter).pipe(
             tapResponse({
               next: (response) => {
-                return patchState(store, { summary: response.payload ?? [] });
+                return patchState(store, {
+                  summary: response.payload ?? [],
+                  loaded: true,
+                });
               },
               error: (err) => {
                 Logger.error(err);
+                patchState(store, { loaded: true });
               },
             })
           )

@@ -1,6 +1,7 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { AuditLogFilter } from '@core/models/view-models/audit-log-view-model';
 import { AuditService } from '@core/store/audit/audit.service';
+import { LucideDownload } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { AuditStore } from '@audit/audit-state.service';
@@ -12,10 +13,12 @@ import { AuditDateFilterComponent } from './audit-date-filter.component';
   imports: [
     AuditDateFilterComponent,
     FlatButtonComponent,
+    LucideDownload,
     StrokedButtonComponent,
   ],
   template: `
-    <div class="mb-8 flex flex-wrap items-end gap-3">
+    <div
+      class="border-border bg-card flex flex-wrap items-end gap-3 rounded-lg border px-6 py-4 shadow-sm">
       <app-audit-date-filter
         controlId="from-date"
         i18n-label="Label of the start-date filter"
@@ -28,14 +31,19 @@ import { AuditDateFilterComponent } from './audit-date-filter.component';
         label="To"
         [(value)]="toDate" />
 
-      <button app-stroked-button (click)="onApply()">
+      <button app-stroked-button type="button" (click)="onApply()">
         <span i18n="Button that applies the filters">Filter</span>
       </button>
-      <button app-stroked-button (click)="onReset()">
+      <button app-stroked-button type="button" (click)="onReset()">
         <span i18n="Button that clears the filters">Reset</span>
       </button>
 
-      <button app-flat-button (click)="onExport()" class="ml-auto">
+      <button
+        app-flat-button
+        type="button"
+        class="ml-auto gap-2"
+        (click)="onExport()">
+        <svg lucideDownload class="h-4 w-4"></svg>
         <span i18n="Button that downloads the audit log as CSV">
           Export CSV
         </span>

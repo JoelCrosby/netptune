@@ -21,9 +21,11 @@ import { AuditStore } from '@audit/audit-state.service';
       <app-page-header
         i18n-title="Page title for the workspace audit log"
         title="Audit Log" />
-      <app-audit-filters (filterChange)="auditTable.goToFirstPage()" />
-      <app-audit-activity-chart />
-      <app-audit-table #auditTable />
+      <div class="flex flex-col gap-6">
+        <app-audit-filters (filterChange)="auditTable.goToFirstPage()" />
+        <app-audit-activity-chart />
+        <app-audit-table #auditTable />
+      </div>
     </app-page-container>
   `,
 })
