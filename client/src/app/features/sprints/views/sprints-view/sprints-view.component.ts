@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
-import { SprintStatus, sprintStatusLabels } from '@core/enums/sprint-status';
+import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -35,6 +35,13 @@ import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.comp
 
 type StatusFilter = SprintStatus | null;
 
+const emptyMessages: Record<SprintStatus, string> = {
+  [SprintStatus.active]: $localize`:Shown when no sprint is currently running:No active sprints.`,
+  [SprintStatus.planning]: $localize`:Shown when no sprint is being planned:No planning sprints.`,
+  [SprintStatus.completed]: $localize`:Shown when no sprint has been completed:No completed sprints.`,
+  [SprintStatus.cancelled]: $localize`:Shown when no sprint has been cancelled:No cancelled sprints.`,
+};
+
 @Component({
   selector: 'app-sprints-view',
   imports: [
@@ -54,7 +61,7 @@ type StatusFilter = SprintStatus | null;
         i18n-title="Page title for the sprint list"
         title="Sprints"
         [count]="count()"
-        [actionTitle]="canCreate() ? 'Create Sprint' : null"
+        [actionTitle]="createActionTitle()"
         (actionClick)="onOpenCreateDialog()">
       </app-page-header>
 
@@ -65,8 +72,11 @@ type StatusFilter = SprintStatus | null;
           (changed)="onStatusChanged($event)" />
 
         <app-datatable
-          containerClass="h-[calc(100vh-314px)] min-h-160 overflow-auto"
+          containerClass="h-[calc(100vh-314px)] min-h-160 overflow-auto rounded-lg shadow-sm"
           tableClass="min-w-[720px]"
+          headerClass="bg-card-header text-muted uppercase"
+          i18n-itemLabel="Plural noun for sprints, used in the row summary"
+          itemLabel="sprints"
           [data]="data()"
           [emptyMessage]="emptyMessage()">
           <ng-template appDatatableCell="name" let-sprint>
@@ -121,11 +131,25 @@ export class SprintsViewComponent {
 
   readonly selectedStatus = signal<StatusFilter>(SprintStatus.active);
 
+  readonly createActionTitle = computed(() => {
+    return this.canCreate()
+      ? $localize`:Button that opens the create-sprint dialog:Create Sprint`
+      : null;
+  });
+
+  /**
+   * One message per status rather than interpolating the status name, which is
+   * an untranslated enum label and would read as English inside a translated
+   * sentence.
+   */
   readonly emptyMessage = computed(() => {
     const status = this.selectedStatus();
-    return status === null
-      ? 'No sprints yet.'
-      : `No ${sprintStatusLabels[status].toLowerCase()} sprints.`;
+
+    if (status === null) {
+      return $localize`:Shown when the workspace has no sprints at all:No sprints yet.`;
+    }
+
+    return emptyMessages[status];
   });
 
   readonly statusTabs = computed((): TabItem[] => {

@@ -20,7 +20,9 @@ import { selectAllUsers } from '@core/store/users/users.selectors';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { TaskListFiltersComponent } from '@project-tasks/components/task-list/task-list-filters.component';
-import { CardComponent } from '@static/components/card/card.component';
+import { LucideCalendarPlus, LucideListChecks } from '@lucide/angular';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { SprintBacklogGroupComponent } from '../../components/sprint-backlog-group.component';
@@ -35,7 +37,9 @@ interface BacklogGroupConfig {
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    CardComponent,
+    EmptyStateComponent,
+    IconTileComponent,
+    LucideListChecks,
     TaskListFiltersComponent,
     SprintBacklogGroupComponent,
   ],
@@ -51,15 +55,18 @@ interface BacklogGroupConfig {
 
         @if (canManageTasks() && assignableSprints().length === 0) {
           <div
-            class="text-muted border-border rounded border-2 border-dashed p-4 text-sm">
-            <span
-              i18n="
-                Shown when there is no sprint available to assign backlog tasks
-                to
-              ">
-              No planning or active sprints found. Create a sprint first to
-              assign tasks to it.
-            </span>
+            class="border-border bg-card flex items-start gap-3 rounded-lg border border-dashed px-6 py-5 shadow-sm">
+            <app-icon-tile [icon]="noticeIcon" />
+            <p class="text-muted text-sm">
+              <span
+                i18n="
+                  Shown when there is no sprint available to assign backlog
+                  tasks to
+                ">
+                No planning or active sprints found. Create a sprint first to
+                assign tasks to it.
+              </span>
+            </p>
           </div>
         }
 
@@ -72,13 +79,12 @@ interface BacklogGroupConfig {
         }
 
         @if (allEmpty()) {
-          <app-card class="text-muted min-h-0 text-center">
-            {{
-              filtersActive()
-                ? 'No backlog tasks match these filters.'
-                : 'The backlog is empty — all tasks are assigned to sprints.'
-            }}
-          </app-card>
+          <div
+            class="border-border bg-card rounded-lg border px-6 py-5 shadow-sm">
+            <app-empty-state compact [title]="emptyMessage()">
+              <svg emptyStateIcon lucideListChecks class="h-8 w-8"></svg>
+            </app-empty-state>
+          </div>
         }
       </div>
     </app-page-container>
@@ -86,6 +92,14 @@ interface BacklogGroupConfig {
 })
 export class SprintBacklogViewComponent {
   private store = inject(Store);
+
+  protected readonly noticeIcon = LucideCalendarPlus;
+
+  protected readonly emptyMessage = computed(() => {
+    return this.filtersActive()
+      ? $localize`:Shown when no backlog task matches the active filters:No backlog tasks match these filters.`
+      : $localize`:Shown when every task already belongs to a sprint:The backlog is empty — all tasks are assigned to sprints.`;
+  });
 
   readonly allSprints = this.store.selectSignal(selectAllSprints);
   readonly users = this.store.selectSignal(selectAllUsers);

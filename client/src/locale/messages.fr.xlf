@@ -870,6 +870,16 @@
         <target>Gérer les identifiants API</target>
       </segment>
     </unit>
+    <unit id="162110177014271319">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:41</note>
+        <note category="description">Shown when no sprint has been completed</note>
+      </notes>
+      <segment state="translated">
+        <source>No completed sprints.</source>
+        <target>Aucun sprint terminé.</target>
+      </segment>
+    </unit>
     <unit id="1622181844113244655">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:25</note>
@@ -1123,8 +1133,8 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:71,74</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:87,90</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:182,185</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:310</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:237</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:322</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:261</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:39,41</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
         <note category="description">Dismisses a dialog without acting</note>
@@ -1287,9 +1297,9 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:466</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:181,182</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:369</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:309</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:185</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:236</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:321</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:209</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:260</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:32</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -1929,6 +1939,16 @@
       <segment state="translated">
         <source>Mark Workspace as Public</source>
         <target>Rendre l&apos;espace de travail public</target>
+      </segment>
+    </unit>
+    <unit id="950764916725173684">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:100</note>
+        <note category="description">Shown when no backlog task matches the active filters</note>
+      </notes>
+      <segment state="translated">
+        <source>No backlog tasks match these filters.</source>
+        <target>Aucune tâche du backlog ne correspond à ces filtres.</target>
       </segment>
     </unit>
     <unit id="8871304628791267226">
@@ -2651,7 +2671,7 @@
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:114</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:54</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:148</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:73,76</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:76,79</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:37</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:156,158</note>
@@ -3717,6 +3737,16 @@
       <segment state="translated">
         <source>Comment updated</source>
         <target>Commentaire mis à jour</target>
+      </segment>
+    </unit>
+    <unit id="7249772516873565478">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:39</note>
+        <note category="description">Shown when no sprint is currently running</note>
+      </notes>
+      <segment state="translated">
+        <source>No active sprints.</source>
+        <target>Aucun sprint actif.</target>
       </segment>
     </unit>
     <unit id="4813239392166088334">
@@ -5252,6 +5282,16 @@
         <target>Tâches liées par cette relation</target>
       </segment>
     </unit>
+    <unit id="686613347719255569">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:42</note>
+        <note category="description">Shown when no sprint has been cancelled</note>
+      </notes>
+      <segment state="translated">
+        <source>No cancelled sprints.</source>
+        <target>Aucun sprint annulé.</target>
+      </segment>
+    </unit>
     <unit id="8070396816726827304">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:304,305</note>
@@ -5470,7 +5510,7 @@
     <unit id="1616102757855967475">
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:258</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:149</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:173</note>
         <note category="description">Condition group operator requiring every condition to match</note>
       </notes>
       <segment state="translated">
@@ -5607,7 +5647,7 @@
         <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:100,102</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:109,111</note>
         <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:94,96</note>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:83,86</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:86,89</note>
         <note category="description">Shown in place of an empty value</note>
       </notes>
       <segment state="translated">
@@ -6201,6 +6241,7 @@
     <unit id="4946687580398284029">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:110,116</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:21,27</note>
         <note category="description">Sprint completion. PERCENT is a whole number</note>
       </notes>
       <segment state="translated">
@@ -8055,8 +8096,8 @@
     <unit id="1780950485960518731">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:118</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:22,23</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:111</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:77</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:125</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
       <segment state="translated">
@@ -8945,7 +8986,7 @@
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:92,95</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207,208</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:180</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:204</note>
         <note category="description">Button that edits the automation</note>
       </notes>
       <segment state="translated">
@@ -9527,6 +9568,16 @@
         <target>CRÉER UNE TÂCHE</target>
       </segment>
     </unit>
+    <unit id="6838555747958902386">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:136</note>
+        <note category="description">Button that opens the create-sprint dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Create Sprint</source>
+        <target>Créer un sprint</target>
+      </segment>
+    </unit>
     <unit id="6839740256703554925">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:47,48</note>
@@ -9774,6 +9825,16 @@
       <segment state="translated">
         <source> Missing headers </source>
         <target>En-têtes manquants</target>
+      </segment>
+    </unit>
+    <unit id="3689382754703918674">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:40</note>
+        <note category="description">Shown when no sprint is being planned</note>
+      </notes>
+      <segment state="translated">
+        <source>No planning sprints.</source>
+        <target>Aucun sprint en préparation.</target>
       </segment>
     </unit>
     <unit id="3691649462800508923">
@@ -10198,6 +10259,7 @@
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:37,39</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:54,56</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:47,49</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
       </notes>
       <segment state="translated">
@@ -10553,7 +10615,7 @@
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:72,73</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:96,97</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:144</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:168</note>
         <note category="description">Series name for tasks finished each day</note>
       </notes>
       <segment state="translated">
@@ -10634,7 +10696,7 @@
     <unit id="3448462145758383019">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:15,17</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:69</note>
         <note category="description">Centre label showing the total task count</note>
       </notes>
       <segment state="translated">
@@ -11049,7 +11111,7 @@
     </unit>
     <unit id="1258729180612470994">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:119,121</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:134,136</note>
         <note category="description">Tooltip on the button that asks the assistant about this sprint</note>
       </notes>
       <segment state="translated">
@@ -11170,6 +11232,16 @@
       <segment state="translated">
         <source>Archive</source>
         <target>Archives</target>
+      </segment>
+    </unit>
+    <unit id="1061882657304479894">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:101</note>
+        <note category="description">Shown when every task already belongs to a sprint</note>
+      </notes>
+      <segment state="translated">
+        <source>The backlog is empty — all tasks are assigned to sprints.</source>
+        <target>Le backlog est vide — toutes les tâches sont affectées à des sprints.</target>
       </segment>
     </unit>
     <unit id="2386184427978292327">
@@ -11354,6 +11426,16 @@
       <segment state="translated">
         <source> Create Project </source>
         <target>Créer un projet</target>
+      </segment>
+    </unit>
+    <unit id="5654547208168525627">
+      <notes>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:149</note>
+        <note category="description">Shown when the workspace has no sprints at all</note>
+      </notes>
+      <segment state="translated">
+        <source>No sprints yet.</source>
+        <target>Aucun sprint pour le moment.</target>
       </segment>
     </unit>
     <unit id="5657006843165020544">
@@ -14178,7 +14260,7 @@
     <unit id="8204176479746810612">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:662</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:134</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:158</note>
         <note category="description">Badge on a credential that is currently usable</note>
       </notes>
       <segment state="translated">
@@ -14371,8 +14453,8 @@
     </unit>
     <unit id="5280218112746407598">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:19,20</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:107</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:73</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:121</note>
         <note category="description">Stat label for tasks not started yet</note>
       </notes>
       <segment state="translated">
@@ -14382,7 +14464,7 @@
     </unit>
     <unit id="8384225360105280028">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:26,27</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:81</note>
         <note category="description">Stat label for finished tasks</note>
       </notes>
       <segment state="translated">
@@ -14392,7 +14474,7 @@
     </unit>
     <unit id="3602788914563459016">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:39,46</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:35,42</note>
         <note category="description">Sprint progress. DONE is the finished task count and TOTAL the total</note>
       </notes>
       <segment state="translated">
@@ -14402,7 +14484,7 @@
     </unit>
     <unit id="2169543080106889901">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:43,45</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:44,45</note>
         <note category="description">Empty state for the sprint task list</note>
       </notes>
       <segment state="translated">
@@ -14412,7 +14494,7 @@
     </unit>
     <unit id="8212177249756365917">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:97,100</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:100,103</note>
         <note category="description">Button that removes the task from the sprint</note>
       </notes>
       <segment state="translated">
@@ -14600,7 +14682,7 @@
     <unit id="763816024488593537">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:39,42</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:201,202</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:216,217</note>
         <note category="description">Title of the dialog for completing a sprint</note>
       </notes>
       <segment state="translated">
@@ -14789,7 +14871,7 @@
     </unit>
     <unit id="5194912054053114732">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:47,49</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:51,53</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
         <note category="description">Page title for the sprint backlog</note>
       </notes>
@@ -14800,7 +14882,7 @@
     </unit>
     <unit id="8279562457696531698">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:60,66</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:66,71</note>
         <note category="description">Shown when there is no sprint available to assign backlog tasks to</note>
       </notes>
       <segment state="translated">
@@ -14810,7 +14892,7 @@
     </unit>
     <unit id="8693603235657020323">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:115</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:129</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:132</note>
         <note category="description">Backlog group heading for tasks in any other status</note>
       </notes>
@@ -14822,6 +14904,7 @@
     <unit id="8123881768100361598">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:23</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:80,81</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -14831,7 +14914,7 @@
     </unit>
     <unit id="8124076252558546675">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:130,132</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:145,147</note>
         <note category="description">Tooltip on the button that edits the sprint</note>
       </notes>
       <segment state="translated">
@@ -14841,7 +14924,7 @@
     </unit>
     <unit id="6222783490221982219">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:138,140</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:153,155</note>
         <note category="description">Tooltip on the button that deletes the sprint</note>
       </notes>
       <segment state="translated">
@@ -14851,7 +14934,7 @@
     </unit>
     <unit id="1183305546671848577">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:154,156</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:169,171</note>
         <note category="description">Tooltip on the button that adds existing tasks to the sprint</note>
       </notes>
       <segment state="translated">
@@ -14861,7 +14944,7 @@
     </unit>
     <unit id="7609408325154938991">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:162,166</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:177,181</note>
         <note category="description">Button that opens the dialog for adding existing tasks to the sprint</note>
       </notes>
       <segment state="translated">
@@ -14871,7 +14954,7 @@
     </unit>
     <unit id="2465583616985358329">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:172,174</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:187,189</note>
         <note category="description">Tooltip on the button that creates a task in the sprint</note>
       </notes>
       <segment state="translated">
@@ -14901,7 +14984,7 @@
     </unit>
     <unit id="4013607694293243242">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:176,178</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:191,193</note>
         <note category="description">Button that creates a new task in the sprint</note>
       </notes>
       <segment state="translated">
@@ -14911,7 +14994,7 @@
     </unit>
     <unit id="4741538562127389826">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:188,190</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:203,205</note>
         <note category="description">Button that starts the sprint</note>
       </notes>
       <segment state="translated">
@@ -14921,8 +15004,8 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:307</note>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:234</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:319</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:258</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
       <segment state="translated">
@@ -14932,7 +15015,7 @@
     </unit>
     <unit id="4347094825344030699">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:56,57</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:63,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:210</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Page title for the sprint list</note>
@@ -14944,7 +15027,7 @@
     </unit>
     <unit id="6668584344316209309">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:139</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:163</note>
         <note category="description">Filter showing sprints not started yet</note>
       </notes>
       <segment state="translated">

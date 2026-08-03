@@ -37,10 +37,13 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
   ],
   template: `
     <app-datatable
-      containerClass="overflow-auto"
+      containerClass="overflow-auto rounded-lg shadow-sm"
       tableClass="min-w-[820px] table-fixed"
+      headerClass="bg-card-header text-muted uppercase"
       i18n-emptyMessage="Empty state for the sprint task list"
       emptyMessage="No tasks in this sprint."
+      i18n-itemLabel="Plural noun for tasks, used in the row summary"
+      itemLabel="tasks"
       [data]="data()"
       [stickyHeader]="true">
       <ng-template appDatatableCell="systemId" let-task>

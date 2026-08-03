@@ -1,62 +1,86 @@
 import { Component, computed, input } from '@angular/core';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
-import { StatComponent } from '@static/components/stat/stat.component';
+import {
+  StatStripComponent,
+  StatStripItem,
+} from '@static/components/stat-strip/stat-strip.component';
 
 @Component({
   selector: 'app-sprint-stats',
-  imports: [ProgressBarComponent, StatComponent],
+  imports: [ProgressBarComponent, StatStripComponent],
+  host: { class: 'block' },
   template: `
-    <div class="flex flex-col gap-6">
-      <div class="grid gap-3 md:grid-cols-4">
-        <app-stat
-          i18n-label="Stat label for the total number of tasks in a sprint"
-          label="Total"
-          [value]="sprint().taskCount" />
-        <app-stat
-          i18n-label="Stat label for tasks not started yet"
-          label="New"
-          [value]="sprint().newTaskCount" />
-        <app-stat
-          i18n-label="Stat label for tasks being worked on"
-          label="In Progress"
-          [value]="sprint().activeTaskCount" />
-        <app-stat
-          i18n-label="Stat label for finished tasks"
-          label="Complete"
-          [value]="sprint().doneTaskCount" />
-      </div>
-
-      @if (sprint().taskCount > 0) {
-        <div>
-          <app-progress-bar [value]="progressPercent()" />
-          <p class="text-foreground mt-2">
-            <span
-              i18n="
-                Sprint progress. DONE is the finished task count and TOTAL the
-                total
-              ">
+    <section
+      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+      <div class="px-6 py-5">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+          <p
+            class="flex items-baseline gap-2"
+            i18n="Sprint completion. PERCENT is a whole number">
+            <span class="text-3xl font-semibold tracking-tight tabular-nums">
               {{
-                sprint().doneTaskCount // i18n(ph="DONE")
-              }}
-              /
-              {{
-                sprint().taskCount // i18n(ph="TOTAL")
-              }}
-              complete
+                progressPercent()  // i18n(ph="PERCENT")
+              }}%
             </span>
+            complete
+          </p>
+
+          <p
+            class="text-muted text-sm tabular-nums"
+            i18n="
+              Sprint progress. DONE is the finished task count and TOTAL the
+              total
+            ">
+            {{
+              sprint().doneTaskCount // i18n(ph="DONE")
+            }}
+            /
+            {{
+              sprint().taskCount // i18n(ph="TOTAL")
+            }}
+            complete
           </p>
         </div>
-      }
-    </div>
+
+        <app-progress-bar class="mt-4 h-2" [value]="progressPercent()" />
+      </div>
+
+      <app-stat-strip [items]="stats()" />
+    </section>
   `,
 })
 export class SprintStatsComponent {
   readonly sprint = input.required<SprintDetailViewModel>();
 
   readonly progressPercent = computed(() => {
-    const s = this.sprint();
-    if (!s.taskCount) return 0;
-    return Math.round((s.doneTaskCount / s.taskCount) * 100);
+    const sprint = this.sprint();
+
+    if (!sprint.taskCount) return 0;
+
+    return Math.round((sprint.doneTaskCount / sprint.taskCount) * 100);
+  });
+
+  protected readonly stats = computed<StatStripItem[]>(() => {
+    const sprint = this.sprint();
+
+    return [
+      {
+        label: $localize`:Stat label for the total number of tasks in a sprint:Total`,
+        value: sprint.taskCount,
+      },
+      {
+        label: $localize`:Stat label for tasks not started yet:New`,
+        value: sprint.newTaskCount,
+      },
+      {
+        label: $localize`:Stat label for tasks being worked on:In Progress`,
+        value: sprint.activeTaskCount,
+      },
+      {
+        label: $localize`:Stat label for finished tasks:Complete`,
+        value: sprint.doneTaskCount,
+      },
+    ];
   });
 }
