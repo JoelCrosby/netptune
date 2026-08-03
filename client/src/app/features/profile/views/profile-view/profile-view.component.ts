@@ -15,6 +15,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
 @Component({
+  selector: 'app-profile-view',
   imports: [
     ErrorStateComponent,
     PageContainerComponent,

@@ -14,6 +14,7 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
 import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
 
 @Component({
+  selector: 'app-user-detail-view',
   imports: [
     ErrorStateComponent,
     PageContainerComponent,

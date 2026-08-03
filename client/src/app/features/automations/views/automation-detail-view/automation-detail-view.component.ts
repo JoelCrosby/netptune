@@ -35,6 +35,7 @@ import { AutomationRule, AutomationRun } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
 
 @Component({
+  selector: 'app-automation-detail-view',
   imports: [
     ErrorStateComponent,
     RouterLink,

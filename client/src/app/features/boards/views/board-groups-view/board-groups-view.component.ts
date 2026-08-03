@@ -75,6 +75,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directive';
 
 @Component({
+  selector: 'app-board-groups-view',
   styles: [
     `
       .cdk-drag-placeholder {

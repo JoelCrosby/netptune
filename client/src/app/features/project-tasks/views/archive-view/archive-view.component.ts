@@ -4,6 +4,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
 @Component({
+  selector: 'app-archive-view',
   imports: [PageContainerComponent, PageHeaderComponent, ArchiveListComponent],
   template: `
     <app-page-container>

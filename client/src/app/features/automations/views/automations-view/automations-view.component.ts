@@ -34,6 +34,7 @@ import {
 import { AutomationsService } from '../../services/automations.service';
 
 @Component({
+  selector: 'app-automations-view',
   imports: [
     ErrorStateComponent,
     RouterLink,

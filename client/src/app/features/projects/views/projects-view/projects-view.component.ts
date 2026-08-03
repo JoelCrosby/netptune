@@ -20,6 +20,7 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 
 @Component({
+  selector: 'app-projects-view',
   imports: [
     SkeletonCardGridComponent,
     PageContainerComponent,

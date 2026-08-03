@@ -9,6 +9,7 @@ import { UserListComponent } from '@users/components/user-list/user-list.compone
 import { first } from 'rxjs/operators';
 
 @Component({
+  selector: 'app-users-view',
   templateUrl: './users-view.component.html',
   imports: [PageContainerComponent, PageHeaderComponent, UserListComponent],
 })

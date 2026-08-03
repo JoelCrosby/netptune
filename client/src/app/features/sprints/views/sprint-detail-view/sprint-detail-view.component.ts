@@ -47,6 +47,7 @@ import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
 import { sprintDaysChip } from '../../utils/sprint-days-chip';
 
 @Component({
+  selector: 'app-sprint-detail-view',
   imports: [
     DatePipe,
     ErrorStateComponent,

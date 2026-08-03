@@ -54,6 +54,7 @@ import type { AutomationFormStep } from '../../services/automation-rule-request-
 import { AutomationsService } from '../../services/automations.service';
 
 @Component({
+  selector: 'app-automation-form-view',
   imports: [
     RouterLink,
     PageContainerComponent,

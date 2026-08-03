@@ -8,6 +8,7 @@ import { selectIsConfirmEmailLoading } from '@app/core/store/auth/auth.selectors
 import { Store } from '@ngrx/store';
 
 @Component({
+  selector: 'app-confirm-view',
   templateUrl: './confirm-view.component.html',
   imports: [SpinnerComponent],
 })

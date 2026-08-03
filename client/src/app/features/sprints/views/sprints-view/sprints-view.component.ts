@@ -36,6 +36,7 @@ import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
 type StatusFilter = SprintStatus | null;
 
 @Component({
+  selector: 'app-sprints-view',
   imports: [
     RouterLink,
     PageContainerComponent,

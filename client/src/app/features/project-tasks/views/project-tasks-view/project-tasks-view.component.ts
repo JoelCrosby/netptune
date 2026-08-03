@@ -14,6 +14,7 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
 @Component({
+  selector: 'app-project-tasks-view',
   imports: [PageContainerComponent, PageHeaderComponent, TaskListComponent],
   template: `
     <app-page-container>

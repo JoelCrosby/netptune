@@ -7,6 +7,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 
 @Component({
+  selector: 'app-project-detail-view',
   imports: [
     ErrorStateComponent,
     PageContainerComponent,

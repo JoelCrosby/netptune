@@ -31,6 +31,7 @@ interface BacklogGroupConfig {
 }
 
 @Component({
+  selector: 'app-sprint-backlog-view',
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
