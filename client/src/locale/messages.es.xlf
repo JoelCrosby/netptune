@@ -570,7 +570,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:179,180</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:264,266</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -791,7 +791,7 @@
     </unit>
     <unit id="7546969606032903393">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:140,142</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:142,144</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:15,17</note>
         <note category="description">Accessible label for the assistant model selector</note>
       </notes>
@@ -1084,7 +1084,7 @@
     </unit>
     <unit id="8906443777485204163">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:92</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:94</note>
         <note category="description">Label for the number of tasks still open</note>
       </notes>
       <segment state="translated">
@@ -1119,7 +1119,7 @@
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:63,66</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:55,57</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:337</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:339</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
@@ -1473,7 +1473,7 @@
     </unit>
     <unit id="3118592863000722717">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:184,187</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:186,189</note>
         <note category="description">Button that replaces a stored API key</note>
       </notes>
       <segment state="translated">
@@ -1690,7 +1690,7 @@
     </unit>
     <unit id="7198631316779176054">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:273</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:275</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
       <segment state="translated">
@@ -1912,7 +1912,7 @@
     </unit>
     <unit id="8768927723338869419">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:87,89</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:89,91</note>
         <note category="description">Label preceding the masked API key</note>
       </notes>
       <segment state="translated">
@@ -2449,7 +2449,7 @@
     </unit>
     <unit id="7494201798156075724">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:96</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:98</note>
         <note category="description">Label for the highest number of tasks completed in one day</note>
       </notes>
       <segment state="translated">
@@ -2565,6 +2565,16 @@
         <target>Nombre del grupo</target>
       </segment>
     </unit>
+    <unit id="2042627893306275814">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:75,77</note>
+        <note category="description">Accessible label for the button that leaves a conversation</note>
+      </notes>
+      <segment state="translated">
+        <source>Back to conversations</source>
+        <target>Volver a las conversaciones</target>
+      </segment>
+    </unit>
     <unit id="6899352499692995227">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:53,56</note>
@@ -2654,7 +2664,7 @@
     </unit>
     <unit id="5504590309962934202">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:117,119</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:119,121</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment state="translated">
@@ -2999,7 +3009,7 @@
     <unit id="4737822868227557262">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:55</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:92</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:94</note>
         <note category="description">Series name for the 85th percentile cycle time</note>
       </notes>
       <segment state="translated">
@@ -3107,7 +3117,7 @@
     </unit>
     <unit id="8550125178086238714">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:334</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:336</note>
         <note category="description">Title of the remove API key confirmation</note>
       </notes>
       <segment state="translated">
@@ -3370,7 +3380,7 @@
     </unit>
     <unit id="4321311470265684813">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:58,59</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:60,61</note>
         <note category="description">Explains why the cycle time chart is empty</note>
       </notes>
       <segment state="translated">
@@ -4259,7 +4269,7 @@
     </unit>
     <unit id="5988988986257041887">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:354</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:356</note>
         <note category="description">Shown after an API key is removed</note>
       </notes>
       <segment state="translated">
@@ -4729,14 +4739,14 @@
         <target>Contraseña</target>
       </segment>
     </unit>
-    <unit id="1439962216652354006">
+    <unit id="348464760083521708">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:79,82</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:158,162</note>
         <note category="description">Section heading for the shared workspace API keys</note>
       </notes>
       <segment state="translated">
-        <source>Workspace keys</source>
-        <target>Claves del espacio de trabajo</target>
+        <source> Workspace keys </source>
+        <target> Claves del espacio de trabajo </target>
       </segment>
     </unit>
     <unit id="1494518490116523821">
@@ -5118,7 +5128,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:176,178</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:260,262</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -6604,14 +6614,14 @@
         <target> Destino </target>
       </segment>
     </unit>
-    <unit id="2502326904654547900">
+    <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:147,149</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:388</note>
         <note category="description">Label for the number of tokens the assistant has used</note>
       </notes>
       <segment state="translated">
-        <source> Tokens </source>
-        <target> Tokens </target>
+        <source>Tokens</source>
+        <target>Tokens</target>
       </segment>
     </unit>
     <unit id="2525230676386818985">
@@ -6636,8 +6646,8 @@
     </unit>
     <unit id="7284407085760520822">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:139,141</note>
-        <note category="description">Label for the number of assistant conversations</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:205,207</note>
+        <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment state="translated">
         <source> Conversations </source>
@@ -6763,7 +6773,7 @@
     </unit>
     <unit id="180305693599254202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:48,52</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:61,65</note>
         <note category="description">Page title for the workspace assistant conversations</note>
       </notes>
       <segment state="translated">
@@ -7872,16 +7882,6 @@
         <target>Tareas con este estado</target>
       </segment>
     </unit>
-    <unit id="5325449899721653637">
-      <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:53,58</note>
-        <note category="description">Explains what an admin sees on the assistant conversations page</note>
-      </notes>
-      <segment state="translated">
-        <source> Conversations members have had with the assistant in this workspace. The record of what was actually changed lives in the audit log. </source>
-        <target> Conversaciones que los miembros han tenido con el asistente en este espacio de trabajo. El registro de lo que realmente cambió está en el registro de auditoría. </target>
-      </segment>
-    </unit>
     <unit id="5325481293405718739">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:76</note>
@@ -7904,7 +7904,7 @@
     </unit>
     <unit id="6168573387818230011">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:319</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:321</note>
         <note category="description">Shown after an API key is stored</note>
       </notes>
       <segment state="translated">
@@ -8292,7 +8292,7 @@
     </unit>
     <unit id="5739581984228459958">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:104</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:106</note>
         <note category="description">Label for tasks assigned to more than one person</note>
       </notes>
       <segment state="translated">
@@ -8782,7 +8782,7 @@
     </unit>
     <unit id="7384355056639627100">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:96</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:98</note>
         <note category="description">Label for how many tasks the cycle time was measured from</note>
       </notes>
       <segment state="translated">
@@ -9004,7 +9004,7 @@
     </unit>
     <unit id="5046831552555610590">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:52,53</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:54,55</note>
         <note category="description">Empty state for the dashboard workload card</note>
       </notes>
       <segment state="translated">
@@ -9109,7 +9109,7 @@
     </unit>
     <unit id="3477141043479115606">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:270</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:272</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
       <segment state="translated">
@@ -9245,7 +9245,7 @@
     </unit>
     <unit id="6061621792314924087">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:158</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:160</note>
         <note category="description">Label for the share of committed work that was finished</note>
       </notes>
       <segment state="translated">
@@ -9255,7 +9255,7 @@
     </unit>
     <unit id="6069680004547866674">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:96</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:98</note>
         <note category="description">Label for the number of open assigned tasks</note>
       </notes>
       <segment state="translated">
@@ -9295,7 +9295,7 @@
     </unit>
     <unit id="7329865395750709453">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:71,76</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:135,137</note>
         <note category="description">Explains what turning the assistant off does</note>
       </notes>
       <segment state="translated">
@@ -9445,6 +9445,16 @@
       <segment state="translated">
         <source>What do you need to get done?</source>
         <target>¿Qué necesitas hacer?</target>
+      </segment>
+    </unit>
+    <unit id="662925928705970482">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:185,187</note>
+        <note category="description">Explains how assistant cost is worked out</note>
+      </notes>
+      <segment state="translated">
+        <source> Estimated from published model rates. </source>
+        <target> Estimado a partir de las tarifas publicadas de los modelos. </target>
       </segment>
     </unit>
     <unit id="8761140310272472389">
@@ -9776,14 +9786,14 @@
         <target>Desmarca un grupo para ocultarlo en este tablero. Solo afecta a tu vista.</target>
       </segment>
     </unit>
-    <unit id="5469501863404839059">
+    <unit id="8222816683597787340">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:132,134</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:180,183</note>
         <note category="description">Section heading for what the assistant has cost the workspace</note>
       </notes>
       <segment state="translated">
-        <source>Assistant spend</source>
-        <target>Gasto del asistente</target>
+        <source> Assistant spend </source>
+        <target> Gasto del asistente </target>
       </segment>
     </unit>
     <unit id="5477970714848105392">
@@ -10073,8 +10083,8 @@
     </unit>
     <unit id="3423740992676752364">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:309</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:325</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:311</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:327</note>
         <note category="description">Shown when saving an API key fails</note>
       </notes>
       <segment state="translated">
@@ -10361,14 +10371,14 @@
         <target>Calendario</target>
       </segment>
     </unit>
-    <unit id="3826808809713952311">
+    <unit id="6500565621649261493">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:65,68</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:147,148</note>
         <note category="description">Toggle that enables the assistant for a workspace</note>
       </notes>
       <segment state="translated">
-        <source> Allow members to use the assistant </source>
-        <target> Permitir que los miembros usen el asistente </target>
+        <source>Allow members to use the assistant</source>
+        <target>Permitir que los miembros usen el asistente</target>
       </segment>
     </unit>
     <unit id="8302075849472999986">
@@ -10490,7 +10500,7 @@
         <note category="location">src/app/features/dashboard/components/charts/throughput-chart.component.ts:43</note>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:47</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:232</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:84</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:72,73</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:96,97</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:144</note>
@@ -10513,7 +10523,7 @@
     </unit>
     <unit id="1166473993510000594">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:45,46</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:47,48</note>
         <note category="description">Empty state for the dashboard throughput card</note>
       </notes>
       <segment state="translated">
@@ -10523,7 +10533,7 @@
     </unit>
     <unit id="1167413339139829976">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:150</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:152</note>
         <note category="description">Label for the mean work completed per sprint</note>
       </notes>
       <segment state="translated">
@@ -10533,7 +10543,7 @@
     </unit>
     <unit id="3313172740302558016">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:110,113</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:100,102</note>
         <note category="description">Counts tokens written to the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -10563,7 +10573,7 @@
     </unit>
     <unit id="3867445261912406579">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:31,32</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:32,33</note>
         <note category="description">Heading of the dashboard status breakdown card</note>
       </notes>
       <segment state="translated">
@@ -10573,7 +10583,7 @@
     </unit>
     <unit id="3448462145758383019">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:34</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:15,17</note>
         <note category="description">Centre label showing the total task count</note>
       </notes>
@@ -10584,7 +10594,7 @@
     </unit>
     <unit id="235558583662639798">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35,37</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:36,38</note>
         <note category="description">Empty state for the status breakdown card</note>
       </notes>
       <segment state="translated">
@@ -10687,7 +10697,7 @@
     </unit>
     <unit id="7798866470020611786">
       <notes>
-        <note category="location">src/app/features/dashboard/components/charts/workload-chart.component.ts:21,24</note>
+        <note category="location">src/app/features/dashboard/components/charts/workload-chart.component.ts:23,26</note>
         <note category="description">Accessible name of the dashboard workload chart</note>
       </notes>
       <segment state="translated">
@@ -10807,7 +10817,7 @@
     </unit>
     <unit id="5914287100798497400">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:56,57</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:58,59</note>
         <note category="description">Empty state for the dashboard cycle time card</note>
       </notes>
       <segment state="translated">
@@ -11020,7 +11030,7 @@
     </unit>
     <unit id="2196169795561391151">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:74,75</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:76,77</note>
         <note category="description">Explains why the velocity chart is empty</note>
       </notes>
       <segment state="translated">
@@ -11028,14 +11038,14 @@
         <target>La velocidad aparece cuando se completa un sprint.</target>
       </segment>
     </unit>
-    <unit id="5561787587584733752">
+    <unit id="2510741784888393227">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:158,160</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:392</note>
         <note category="description">Label for what the assistant has cost, priced from published model rates</note>
       </notes>
       <segment state="translated">
-        <source> Estimated cost </source>
-        <target> Coste estimado </target>
+        <source>Estimated cost</source>
+        <target>Coste estimado</target>
       </segment>
     </unit>
     <unit id="5569798609793426852">
@@ -11225,7 +11235,7 @@
     </unit>
     <unit id="4435645098786961170">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:102,103</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:92,93</note>
         <note category="description">Counts tokens returned by the model</note>
       </notes>
       <segment state="translated">
@@ -11379,7 +11389,7 @@
     </unit>
     <unit id="3959473004188974816">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:359</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:361</note>
         <note category="description">Shown when removing an API key fails</note>
       </notes>
       <segment state="translated">
@@ -11660,7 +11670,7 @@
     </unit>
     <unit id="1361503266870843106">
       <notes>
-        <note category="location">src/app/features/dashboard/components/charts/workload-chart.component.ts:44</note>
+        <note category="location">src/app/features/dashboard/components/charts/workload-chart.component.ts:46</note>
         <note category="description">Series name for the number of open tasks</note>
       </notes>
       <segment state="translated">
@@ -11830,7 +11840,7 @@
     </unit>
     <unit id="4719181036371913207">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:67</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:69</note>
         <note category="description">Period covered by the dashboard throughput chart</note>
       </notes>
       <segment state="translated">
@@ -11848,6 +11858,16 @@
         <target> Comprometido </target>
       </segment>
     </unit>
+    <unit id="2107380426080326188">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:384</note>
+        <note category="description">Label for the number of assistant conversations</note>
+      </notes>
+      <segment state="translated">
+        <source>Conversations</source>
+        <target>Conversaciones</target>
+      </segment>
+    </unit>
     <unit id="2108328209482012964">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:238,240</note>
@@ -11860,7 +11880,7 @@
     </unit>
     <unit id="8253925941682305559">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:88</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:90</note>
         <note category="description">Label for the mean number of tasks completed each day</note>
       </notes>
       <segment state="translated">
@@ -11940,7 +11960,7 @@
     </unit>
     <unit id="2772274445484275338">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:47,48</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:49,50</note>
         <note category="description">Advice shown when nothing has been completed</note>
       </notes>
       <segment state="translated">
@@ -11980,7 +12000,7 @@
     </unit>
     <unit id="8406787523492971076">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:100</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:102</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:59,61</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:52,55</note>
         <note category="description">Label for the number of open tasks with no assignee</note>
@@ -12340,7 +12360,7 @@
     </unit>
     <unit id="6406732480689038024">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:105,107</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:107,109</note>
         <note category="description">Tooltip on the button that removes a stored API key</note>
       </notes>
       <segment state="translated">
@@ -12464,7 +12484,7 @@
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:105,108</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:95,98</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment state="translated">
@@ -12727,7 +12747,7 @@
     <unit id="6723383211174802747">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:46</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:88</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:90</note>
         <note category="description">Series name for the middle cycle time value</note>
       </notes>
       <segment state="translated">
@@ -13085,7 +13105,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:190,192</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:280,282</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment state="translated">
@@ -13318,7 +13338,7 @@
     </unit>
     <unit id="2758582799865898429">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:154</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:156</note>
         <note category="description">Label for the best sprint result</note>
       </notes>
       <segment state="translated">
@@ -13743,6 +13763,16 @@
         <target>Crear una cuenta de servicio</target>
       </segment>
     </unit>
+    <unit id="4026751160851308362">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:213,217</note>
+        <note category="description">Explains what an admin sees on the assistant conversations page</note>
+      </notes>
+      <segment state="translated">
+        <source> What members asked the assistant. The record of what changed lives in the audit log. </source>
+        <target> Lo que los miembros han preguntado al asistente. El registro de lo que cambió está en el historial de auditoría. </target>
+      </segment>
+    </unit>
     <unit id="7357824854550266974">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:105,107</note>
@@ -13855,8 +13885,8 @@
     </unit>
     <unit id="5607669932062416162">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:154,157</note>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:253</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:156,159</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:255</note>
         <note category="description">Model option that defers to the server default</note>
       </notes>
       <segment state="translated">
@@ -14549,7 +14579,7 @@
     </unit>
     <unit id="7203070746919732368">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:335</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:337</note>
         <note category="description">Explains what removing an API key does</note>
       </notes>
       <segment state="translated">
@@ -15415,7 +15445,7 @@
     </unit>
     <unit id="8104821430899590252">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:54,55</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:56,57</note>
         <note category="description">Advice shown when nobody has open assigned tasks</note>
       </notes>
       <segment state="translated">
@@ -15747,12 +15777,22 @@
     </unit>
     <unit id="5388692830516022173">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:132,134</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:134,136</note>
         <note category="description">Label for the model input</note>
       </notes>
       <segment state="translated">
         <source> Model </source>
         <target> Modelo </target>
+      </segment>
+    </unit>
+    <unit id="6601864657708472888">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:130,132</note>
+        <note category="description">Heading of the assistant access card</note>
+      </notes>
+      <segment state="translated">
+        <source> Assistant access </source>
+        <target> Acceso al asistente </target>
       </segment>
     </unit>
     <unit id="6607728160061723306">
@@ -16043,7 +16083,7 @@
     </unit>
     <unit id="7136018875175606726">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:100,101</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:90,91</note>
         <note category="description">Counts tokens sent to the model</note>
       </notes>
       <segment state="translated">
@@ -16225,7 +16265,7 @@
     </unit>
     <unit id="6396952862144590894">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:72,73</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:74,75</note>
         <note category="description">Empty state for the dashboard velocity card</note>
       </notes>
       <segment state="translated">
@@ -16296,7 +16336,7 @@
     </unit>
     <unit id="4814285799071780083">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:336</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:338</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="description">Confirms removing an API key</note>
       </notes>
@@ -16436,6 +16476,16 @@
         <target>Ir a la página anterior</target>
       </segment>
     </unit>
+    <unit id="622130541512871637">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:225,226</note>
+        <note category="description">Accessible label while conversations load</note>
+      </notes>
+      <segment state="translated">
+        <source>Loading conversations</source>
+        <target>Cargando las conversaciones</target>
+      </segment>
+    </unit>
     <unit id="5430045444410376992">
       <notes>
         <note category="location">src/app/static/components/table/table.component.ts:187,189</note>
@@ -16478,7 +16528,7 @@
     </unit>
     <unit id="4442108733606169287">
       <notes>
-        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:187,189</note>
+        <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:189,191</note>
         <note category="description">Button that stores an API key</note>
       </notes>
       <segment state="translated">
@@ -16619,7 +16669,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:194,199</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:284,286</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment state="translated">

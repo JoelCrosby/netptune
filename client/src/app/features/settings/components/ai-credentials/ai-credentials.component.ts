@@ -73,12 +73,14 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
 
     <div class="mt-6 flex flex-col gap-4">
       @for (option of providerOptions(); track option.provider) {
-        <article class="border-border bg-card rounded border p-5 shadow-sm">
-          <div class="flex flex-wrap items-start justify-between gap-4">
+        <article
+          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+          <header
+            class="border-border flex flex-wrap items-start justify-between gap-4 border-b px-6 py-5">
             <div class="flex min-w-0 items-start gap-3">
-              <app-icon-tile size="large" [icon]="providerIcon" />
+              <app-icon-tile [icon]="providerIcon" />
               <div class="min-w-0">
-                <h4 class="font-overpass text-[1.05rem] font-normal">
+                <h4 class="font-overpass text-base font-semibold">
                   {{ option.label }}
                 </h4>
                 @if (credentialFor(option.provider); as credential) {
@@ -107,9 +109,9 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
                 <svg lucideTrash class="h-4 w-4"></svg>
               </button>
             }
-          </div>
+          </header>
 
-          <div class="mt-4 flex flex-wrap items-end gap-3">
+          <div class="flex flex-wrap items-end gap-3 px-6 py-5">
             <label class="flex min-w-56 flex-1 flex-col gap-1">
               <span
                 class="text-muted text-xs"

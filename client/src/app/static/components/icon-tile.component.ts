@@ -2,7 +2,19 @@ import { Component, computed, input } from '@angular/core';
 import { LucideDynamicIcon, type LucideIconInput } from '@lucide/angular';
 import { cn } from './button/button.variants';
 
-export type IconTileSize = 'medium' | 'large';
+export type IconTileSize = 'small' | 'medium' | 'large';
+
+const sizeClasses: Record<IconTileSize, string> = {
+  small: 'h-7 w-7',
+  medium: 'h-9 w-9',
+  large: 'h-10 w-10',
+};
+
+const iconClasses: Record<IconTileSize, string> = {
+  small: 'h-3.5 w-3.5',
+  medium: 'h-4 w-4',
+  large: 'h-5 w-5',
+};
 
 @Component({
   selector: 'app-icon-tile',
@@ -22,12 +34,10 @@ export class IconTileComponent {
   protected readonly tileClass = computed(() =>
     cn(
       'bg-primary/10 text-primary flex shrink-0 items-center justify-center rounded-lg',
-      this.size() === 'large' ? 'h-10 w-10' : 'h-9 w-9',
+      sizeClasses[this.size()],
       this.class()
     )
   );
 
-  protected readonly iconClass = computed(() =>
-    this.size() === 'large' ? 'h-5 w-5' : 'h-4 w-4'
-  );
+  protected readonly iconClass = computed(() => iconClasses[this.size()]);
 }

@@ -1,45 +1,58 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { AiAssistantMessageComponent } from '@app/shell/ai-assistant/components/ai-assistant-message.component';
-import { HttpClient } from '@angular/common/http';
 import { netptunePermissions } from '@core/auth/permissions';
-import { editWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
-import { ClientResponse } from '@core/models/client-response';
 import { AiConversationDetail } from '@core/models/ai-conversation';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
-import { referenceMap } from '@core/util/ai-references';
-import { toChatEntry } from '@core/services/ai-assistant.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { ClientResponse } from '@core/models/client-response';
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
+import { toChatEntry } from '@core/services/ai-assistant.service';
+import { selectHasPermission } from '@core/store/auth/auth.selectors';
+import { editWorkspace } from '@core/store/workspaces/workspaces.actions';
+import {
+  selectCurrentWorkspace,
+  selectCurrentWorkspaceIdentifier,
+} from '@core/store/workspaces/workspaces.selectors';
+import { referenceMap } from '@core/util/ai-references';
 import { formatCost, formatTokens, sumUsage } from '@core/util/ai-usage';
-import { LucideArrowLeft, LucideMessageSquare } from '@lucide/angular';
+import {
+  LucideArrowLeft,
+  LucideKeyRound,
+  LucideMessagesSquare,
+  LucideSparkles,
+  LucideWallet,
+} from '@lucide/angular';
+import { Store } from '@ngrx/store';
 import { AiCredentialsComponent } from '@settings/components/ai-credentials/ai-credentials.component';
-import { ActionCardComponent } from '@static/components/action-card/action-card.component';
-import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
+import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import {
+  StatStripComponent,
+  StatStripItem,
+} from '@static/components/stat-strip/stat-strip.component';
+import { SwitchComponent } from '@static/components/switch/switch.component';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 
 @Component({
   selector: 'app-assistant-conversations-view',
   imports: [
-    LucideArrowLeft,
-    LucideMessageSquare,
-    ActionCardComponent,
     AiAssistantMessageComponent,
     AiCredentialsComponent,
-    SectionHeaderComponent,
-    CheckboxComponent,
     EmptyStateComponent,
     IconButtonComponent,
+    IconTileComponent,
+    LucideArrowLeft,
+    LucideMessagesSquare,
     PageContainerComponent,
     PageHeaderComponent,
     PrettyDatePipe,
+    SkeletonComponent,
+    StatStripComponent,
+    SwitchComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -47,152 +60,238 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
         i18n-title="Page title for the workspace assistant conversations"
         title="Assistant conversations" />
 
-      <p
-        class="text-muted mb-4 max-w-3xl text-sm"
-        i18n="Explains what an admin sees on the assistant conversations page">
-        Conversations members have had with the assistant in this workspace. The
-        record of what was actually changed lives in the audit log.
-      </p>
-
-      @if (canUpdateWorkspace()) {
-        <div class="border-border mb-6 rounded border p-4">
-          <app-checkbox
-            [checked]="assistantEnabled()"
-            (changed)="setAssistantEnabled($event)">
-            <span
-              class="text-sm"
-              i18n="Toggle that enables the assistant for a workspace">
-              Allow members to use the assistant
-            </span>
-          </app-checkbox>
-          <p
-            class="text-muted mt-2 text-xs"
-            i18n="Explains what turning the assistant off does">
-            Turning this off stops new assistant messages and blocks pending
-            changes from being applied.
-          </p>
-        </div>
-
-        <section class="mb-8">
-          <app-section-header
-            i18n-heading="Section heading for the shared workspace API keys"
-            heading="Workspace keys" />
-
-          <app-ai-credentials scope="workspace" />
-        </section>
-      }
-
       @if (selected(); as detail) {
-        <div class="mb-3 flex items-center gap-2">
-          <button app-icon-button type="button" (click)="clearSelection()">
-            <svg lucideArrowLeft class="h-4 w-4"></svg>
-          </button>
-          <div class="min-w-0">
-            <h3 class="font-overpass truncate text-[1.05rem] font-normal">
-              {{ detail.conversation.title }}
-            </h3>
-            <p class="text-muted text-xs">
-              @if (selectedMember(); as member) {
-                {{ member }} ·
-              }
-              {{ detail.conversation.model }} ·
-              {{ detail.conversation.usage.inputTokens }}
-              <span i18n="Counts tokens sent to the model">in</span> ·
-              {{ detail.conversation.usage.outputTokens }}
-              <span i18n="Counts tokens returned by the model">out</span> ·
-              {{ detail.conversation.usage.cacheReadTokens }}
-              <span i18n="Counts tokens read from the provider prompt cache"
-                >cached</span
-              >
-              ·
-              {{ detail.conversation.usage.cacheCreationTokens }}
-              <span i18n="Counts tokens written to the provider prompt cache"
-                >written</span
-              >
-              · {{ detailCostLabel() }}
-            </p>
+        <section
+          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+          <header
+            class="border-border flex items-start gap-3 border-b px-6 py-5">
+            <button
+              app-icon-button
+              class="mt-0.5 h-8 w-8 shrink-0"
+              type="button"
+              i18n-aria-label="
+                Accessible label for the button that leaves a conversation
+              "
+              aria-label="Back to conversations"
+              (click)="clearSelection()">
+              <svg lucideArrowLeft class="h-4 w-4"></svg>
+            </button>
+
+            <div class="min-w-0">
+              <h2 class="font-overpass truncate text-base font-semibold">
+                {{ detail.conversation.title }}
+              </h2>
+              <p class="text-muted mt-1 text-xs">
+                @if (selectedMember(); as member) {
+                  {{ member }} ·
+                }
+                {{ detail.conversation.model }} ·
+                {{ detail.conversation.usage.inputTokens }}
+                <span i18n="Counts tokens sent to the model">in</span> ·
+                {{ detail.conversation.usage.outputTokens }}
+                <span i18n="Counts tokens returned by the model">out</span> ·
+                {{ detail.conversation.usage.cacheReadTokens }}
+                <span i18n="Counts tokens read from the provider prompt cache"
+                  >cached</span
+                >
+                ·
+                {{ detail.conversation.usage.cacheCreationTokens }}
+                <span i18n="Counts tokens written to the provider prompt cache"
+                  >written</span
+                >
+                · {{ detailCostLabel() }}
+              </p>
+            </div>
+          </header>
+
+          <div class="flex flex-col gap-5 px-6 py-5">
+            @for (entry of transcript(); track $index) {
+              <app-ai-assistant-message
+                [entry]="entry"
+                [references]="references()"
+                [workspace]="workspaceKey()" />
+            }
           </div>
-        </div>
-
-        <div class="flex flex-col gap-5">
-          @for (entry of transcript(); track $index) {
-            <app-ai-assistant-message
-              [entry]="entry"
-              [references]="references()"
-              [workspace]="workspaceKey()" />
-          }
-        </div>
+        </section>
       } @else {
-        @if (hasSpend()) {
-          <section class="mb-6">
-            <app-section-header
-              i18n-heading="
-                Section heading for what the assistant has cost the workspace
-              "
-              heading="Assistant spend" />
+        <div class="flex flex-col gap-6">
+          @if (canUpdateWorkspace()) {
+            <section
+              class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+              <div
+                class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 px-6 py-5">
+                <div class="flex min-w-0 items-start gap-3">
+                  <app-icon-tile [icon]="assistantIcon" />
 
-            <dl class="border-border grid grid-cols-3 gap-4 rounded border p-4">
-              <div>
-                <dt
-                  class="text-muted text-xs"
-                  i18n="Label for the number of assistant conversations">
-                  Conversations
-                </dt>
-                <dd class="font-overpass text-lg">{{ conversationCount() }}</dd>
+                  <div class="min-w-0">
+                    <h2
+                      class="font-overpass text-base font-semibold"
+                      i18n="Heading of the assistant access card">
+                      Assistant access
+                    </h2>
+                    <p
+                      class="text-muted mt-1 text-sm"
+                      i18n="Explains what turning the assistant off does">
+                      Turning this off stops new assistant messages and blocks
+                      pending changes from being applied.
+                    </p>
+                  </div>
+                </div>
+
+                <app-switch
+                  class="shrink-0"
+                  [checked]="assistantEnabled()"
+                  i18n-ariaLabel="
+                    Toggle that enables the assistant for a workspace
+                  "
+                  ariaLabel="Allow members to use the assistant"
+                  (changed)="setAssistantEnabled($event)" />
               </div>
-              <div>
-                <dt
-                  class="text-muted text-xs"
-                  i18n="Label for the number of tokens the assistant has used">
-                  Tokens
-                </dt>
-                <dd class="font-overpass text-lg">{{ totalTokenLabel() }}</dd>
+            </section>
+
+            <section>
+              <div class="mb-4 flex min-w-0 items-center gap-3">
+                <app-icon-tile [icon]="keyIcon" />
+                <h2
+                  class="font-overpass text-base font-semibold"
+                  i18n="Section heading for the shared workspace API keys">
+                  Workspace keys
+                </h2>
               </div>
-              <div>
-                <dt
-                  class="text-muted text-xs"
-                  i18n="
-                    Label for what the assistant has cost, priced from published
-                    model rates
-                  ">
-                  Estimated cost
-                </dt>
-                <dd class="font-overpass text-lg">{{ totalCostLabel() }}</dd>
-              </div>
-            </dl>
-          </section>
-        }
 
-        <div class="flex flex-col gap-2">
-          @for (conversation of conversations.value(); track conversation.id) {
-            <app-action-card
-              [heading]="conversation.title"
-              (activated)="select(conversation)">
-              <svg actionCardIcon lucideMessageSquare class="h-4 w-4"></svg>
-
-              {{ conversation.userDisplayName }} ·
-              {{ conversation.messageCount }}
-              <span i18n="Counts messages in a stored conversation"
-                >messages</span
-              >
-              · {{ tokenLabel(conversation) }}
-              <span i18n="Counts tokens a conversation has cost">tokens</span> ·
-              {{ costLabel(conversation) }}
-
-              <span actionCardTrailing class="text-muted mt-0.5 text-xs">
-                {{ toDate(conversation.lastMessageAt) | prettyDate }}
-              </span>
-            </app-action-card>
-          } @empty {
-            <app-empty-state
-              compact
-              i18n-title="Heading when no assistant conversations exist"
-              title="There are no conversations"
-              i18n-description="
-                Explains why the assistant conversation list is empty
-              "
-              description="Conversations appear here once members use the assistant" />
+              <app-ai-credentials scope="workspace" />
+            </section>
           }
+
+          @if (hasSpend()) {
+            <section
+              class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+              <header class="border-border border-b px-6 py-5">
+                <div class="flex min-w-0 items-center gap-3">
+                  <app-icon-tile [icon]="spendIcon" />
+
+                  <div class="min-w-0">
+                    <h2
+                      class="font-overpass text-base font-semibold"
+                      i18n="
+                        Section heading for what the assistant has cost the
+                        workspace
+                      ">
+                      Assistant spend
+                    </h2>
+                    <p
+                      class="text-muted mt-1 text-sm"
+                      i18n="Explains how assistant cost is worked out">
+                      Estimated from published model rates.
+                    </p>
+                  </div>
+                </div>
+              </header>
+
+              <app-stat-strip [items]="spendStats()" />
+            </section>
+          }
+
+          <section
+            class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+            <header class="border-border border-b px-6 py-5">
+              <div class="flex min-w-0 items-center gap-3">
+                <app-icon-tile [icon]="conversationIcon" />
+
+                <div class="min-w-0">
+                  <h2
+                    class="font-overpass text-base font-semibold"
+                    i18n="Heading of the assistant conversation list">
+                    Conversations
+                  </h2>
+                  <p
+                    class="text-muted mt-1 text-sm"
+                    i18n="
+                      Explains what an admin sees on the assistant conversations
+                      page
+                    ">
+                    What members asked the assistant. The record of what changed
+                    lives in the audit log.
+                  </p>
+                </div>
+              </div>
+            </header>
+
+            @if (isInitialLoad()) {
+              <div
+                class="flex flex-col gap-4 px-6 py-5"
+                role="status"
+                i18n-aria-label="Accessible label while conversations load"
+                aria-label="Loading conversations">
+                @for (row of skeletonRows; track $index) {
+                  <div class="flex items-center gap-3">
+                    <app-skeleton class="h-8 w-8 shrink-0 rounded-lg" />
+                    <div class="flex-1">
+                      <app-skeleton class="h-3 w-48" />
+                      <app-skeleton class="mt-2 h-3 w-72" />
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <ul class="divide-border/50 flex flex-col divide-y">
+                @for (
+                  conversation of conversations.value();
+                  track conversation.id
+                ) {
+                  <li>
+                    <button
+                      type="button"
+                      class="hover:bg-hover focus-visible:ring-primary flex w-full items-center gap-3 px-6 py-4 text-left transition-colors focus-visible:ring-2 focus-visible:-outline-offset-2 focus-visible:outline-none"
+                      (click)="select(conversation)">
+                      <app-icon-tile
+                        size="small"
+                        [icon]="conversationIcon"
+                        class="mt-0.5" />
+
+                      <span class="min-w-0 flex-1">
+                        <span class="block truncate text-sm font-medium">
+                          {{ conversation.title }}
+                        </span>
+                        <span class="text-muted block truncate text-xs">
+                          {{ conversation.userDisplayName }} ·
+                          {{ conversation.messageCount }}
+                          <span i18n="Counts messages in a stored conversation"
+                            >messages</span
+                          >
+                          · {{ tokenLabel(conversation) }}
+                          <span i18n="Counts tokens a conversation has cost"
+                            >tokens</span
+                          >
+                          · {{ costLabel(conversation) }}
+                        </span>
+                      </span>
+
+                      <span class="text-muted shrink-0 text-xs">
+                        {{ toDate(conversation.lastMessageAt) | prettyDate }}
+                      </span>
+                    </button>
+                  </li>
+                } @empty {
+                  <li>
+                    <app-empty-state
+                      compact
+                      i18n-title="Heading when no assistant conversations exist"
+                      title="There are no conversations"
+                      i18n-description="
+                        Explains why the assistant conversation list is empty
+                      "
+                      description="Conversations appear here once members use the assistant">
+                      <svg
+                        emptyStateIcon
+                        lucideMessagesSquare
+                        class="h-8 w-8"></svg>
+                    </app-empty-state>
+                  </li>
+                }
+              </ul>
+            }
+          </section>
         </div>
       }
     </app-page-container>
@@ -207,12 +306,22 @@ export class AssistantConversationsViewComponent {
   protected readonly selected = signal<AiConversationDetail | null>(null);
   protected readonly selectedMember = signal<string | null>(null);
 
+  protected readonly assistantIcon = LucideSparkles;
+  protected readonly keyIcon = LucideKeyRound;
+  protected readonly spendIcon = LucideWallet;
+  protected readonly conversationIcon = LucideMessagesSquare;
+  protected readonly skeletonRows = Array.from({ length: 4 });
+
   private readonly workspaceIdentifier = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier
   );
 
   protected readonly workspaceKey = computed(() => {
     return this.workspaceIdentifier() ?? null;
+  });
+
+  protected readonly isInitialLoad = computed(() => {
+    return this.conversations.isLoading() && this.conversationCount() === 0;
   });
 
   protected readonly detailCostLabel = computed(() => {
@@ -269,12 +378,21 @@ export class AssistantConversationsViewComponent {
 
   protected readonly hasSpend = computed(() => this.conversationCount() > 0);
 
-  protected readonly totalTokenLabel = computed(() => {
-    return formatTokens(this.workspaceUsage());
-  });
-
-  protected readonly totalCostLabel = computed(() => {
-    return formatCost(this.workspaceUsage());
+  protected readonly spendStats = computed<StatStripItem[]>(() => {
+    return [
+      {
+        label: $localize`:Label for the number of assistant conversations:Conversations`,
+        value: this.conversationCount(),
+      },
+      {
+        label: $localize`:Label for the number of tokens the assistant has used:Tokens`,
+        value: formatTokens(this.workspaceUsage()),
+      },
+      {
+        label: $localize`:Label for what the assistant has cost, priced from published model rates:Estimated cost`,
+        value: formatCost(this.workspaceUsage()),
+      },
+    ];
   });
 
   protected tokenLabel(conversation: AiWorkspaceConversation): string {
