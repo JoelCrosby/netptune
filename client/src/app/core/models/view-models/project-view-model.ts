@@ -6,6 +6,7 @@ export interface ProjectViewModel {
   repositoryUrl: string;
   workspaceId: number;
   ownerDisplayName: string;
+  ownerPictureUrl?: string | null;
   updatedAt: Date;
   createdAt: Date;
   defaultBoardIdentifier: string;

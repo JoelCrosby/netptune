@@ -16,6 +16,8 @@ public class ProjectViewModel
 
     public string OwnerDisplayName { get; set; } = null!;
 
+    public string? OwnerPictureUrl { get; set; }
+
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime CreatedAt { get; set; }

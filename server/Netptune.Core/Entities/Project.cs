@@ -61,6 +61,7 @@ public record Project : WorkspaceEntity<int>
             RepositoryUrl = RepositoryUrl,
             WorkspaceId = WorkspaceId,
             OwnerDisplayName = Owner!.DisplayName,
+            OwnerPictureUrl = Owner.PictureUrl,
             UpdatedAt = UpdatedAt,
             CreatedAt = CreatedAt,
             DefaultBoardIdentifier = identifier,

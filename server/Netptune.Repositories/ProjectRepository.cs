@@ -38,16 +38,56 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
     {
         pageRequest ??= new PageRequest();
         var pagination = pageRequest.GetPagination();
+        var query = Entities.Where(project => project.Workspace!.Slug == workspaceKey && !project.IsDeleted);
+        var ordered = ApplyProjectOrder(query, pageRequest.SortBy, pageRequest.SortDirection);
 
-        return Entities
-            .Where(project => project.Workspace!.Slug == workspaceKey && !project.IsDeleted)
-            .OrderByDescending(project => project.UpdatedAt ?? project.CreatedAt)
-            .ThenByDescending(project => project.Id)
+        return ordered
             .Skip(pagination.Skip)
             .Take(pagination.PageSize)
             .AsNoTracking()
             .Select(ProjectToViewModel())
             .ToListAsync(cancellationToken);
+    }
+
+    private static IQueryable<Project> ApplyProjectOrder(IQueryable<Project> query, string? sortBy, string? sortDirection)
+    {
+        var descending = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+        var ownerSortKey = OwnerSortKey();
+        var recentActivitySortKey = RecentActivitySortKey();
+
+        IOrderedQueryable<Project> ordered = sortBy?.Trim() switch
+        {
+            "name" => descending
+                ? query.OrderByDescending(project => project.Name)
+                : query.OrderBy(project => project.Name),
+            "key" => descending
+                ? query.OrderByDescending(project => project.Key)
+                : query.OrderBy(project => project.Key),
+            "description" => descending
+                ? query.OrderByDescending(project => project.Description)
+                : query.OrderBy(project => project.Description),
+            "owner" => descending
+                ? query.OrderByDescending(ownerSortKey)
+                : query.OrderBy(ownerSortKey),
+            "updatedAt" => descending
+                ? query.OrderByDescending(recentActivitySortKey)
+                : query.OrderBy(recentActivitySortKey),
+            _ => query.OrderByDescending(recentActivitySortKey),
+        };
+
+        return ordered.ThenByDescending(project => project.Id);
+    }
+
+    private static Expression<Func<Project, string?>> OwnerSortKey()
+    {
+        return project => string.IsNullOrEmpty(project.Owner!.Firstname)
+            ? project.Owner.UserName
+            : project.Owner.Firstname;
+    }
+
+    private static Expression<Func<Project, DateTime>> RecentActivitySortKey()
+    {
+        return project => project.UpdatedAt ?? project.CreatedAt;
     }
 
     public Task<List<ProjectViewModel>> GetProjectViewModels(IEnumerable<int> projectIds, CancellationToken cancellationToken = default)
@@ -142,6 +182,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             OwnerDisplayName = string.IsNullOrEmpty(x.Owner!.Firstname) && string.IsNullOrEmpty(x.Owner.Lastname)
                 ? x.Owner.UserName!
                 : x.Owner.Firstname + " " + x.Owner.Lastname,
+            OwnerPictureUrl = x.Owner.PictureUrl,
             UpdatedAt = x.UpdatedAt,
             CreatedAt = x.CreatedAt,
             Color = x.MetaInfo != null ? x.MetaInfo.Color : null,

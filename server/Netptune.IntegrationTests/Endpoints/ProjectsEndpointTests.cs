@@ -29,6 +29,39 @@ public sealed class ProjectsEndpointTests
         result!.Should().NotBeEmpty();
     }
 
+    [Theory]
+    [InlineData("name")]
+    [InlineData("key")]
+    [InlineData("description")]
+    [InlineData("owner")]
+    [InlineData("updatedAt")]
+    public async Task Get_ShouldSortCorrectly_WhenSortByProvided(string sortBy)
+    {
+        var response = await Client.GetAsync($"api/projects?sortBy={sortBy}&sortDirection=desc");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<List<ProjectViewModel>>();
+
+        result!.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Get_ShouldReverseOrder_WhenSortDirectionFlipped()
+    {
+        var ascendingResponse = await Client.GetAsync("api/projects?sortBy=name&sortDirection=asc");
+        var descendingResponse = await Client.GetAsync("api/projects?sortBy=name&sortDirection=desc");
+
+        var ascending = await ascendingResponse.Content.ReadFromJsonAsync<List<ProjectViewModel>>();
+        var descending = await descendingResponse.Content.ReadFromJsonAsync<List<ProjectViewModel>>();
+
+        var ascendingNames = ascending!.Select(project => project.Name).ToList();
+        var descendingNames = descending!.Select(project => project.Name).ToList();
+
+        ascendingNames.Should().NotBeEmpty();
+        descendingNames.Should().Equal(ascendingNames.AsEnumerable().Reverse());
+    }
+
     [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
