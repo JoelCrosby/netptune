@@ -33,15 +33,13 @@ const columnClasses: Record<number, string> = {
 })
 export class StatStripComponent {
   readonly items = input.required<readonly StatStripItem[]>();
-  readonly class = input('');
 
   protected readonly stripClass = computed(() => {
     const columns = columnClasses[this.items().length] ?? columnClasses[3];
 
     return cn(
       'border-border divide-border grid grid-cols-1 divide-y border-t',
-      columns,
-      this.class()
+      columns
     );
   });
 }

@@ -194,6 +194,15 @@
         <source>You cannot change your own workspace role</source>
       </segment>
     </unit>
+    <unit id="6080640886567136968">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:40,43</note>
+        <note category="description">Explains what the cycle time chart measures</note>
+      </notes>
+      <segment>
+        <source>How long finished tasks took, by week</source>
+      </segment>
+    </unit>
     <unit id="1726548551961127827">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:119</note>
@@ -964,6 +973,15 @@
       </notes>
       <segment>
         <source>Accept</source>
+      </segment>
+    </unit>
+    <unit id="8906443777485204163">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:92</note>
+        <note category="description">Label for the number of tasks still open</note>
+      </notes>
+      <segment>
+        <source>Still open</source>
       </segment>
     </unit>
     <unit id="2159130950882492111">
@@ -1910,6 +1928,15 @@
         <source>Yellow</source>
       </segment>
     </unit>
+    <unit id="2061190442821229023">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:19,22</note>
+        <note category="description">Accessible name of the dashboard velocity chart</note>
+      </notes>
+      <segment>
+        <source>Committed and completed work per sprint</source>
+      </segment>
+    </unit>
     <unit id="2078458646816114516">
       <notes>
         <note category="location">src/app/core/util/colors/colors.ts:214</note>
@@ -2185,6 +2212,15 @@
       </notes>
       <segment>
         <source>Workflow template</source>
+      </segment>
+    </unit>
+    <unit id="7494201798156075724">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:96</note>
+        <note category="description">Label for the highest number of tasks completed in one day</note>
+      </notes>
+      <segment>
+        <source>Best day</source>
       </segment>
     </unit>
     <unit id="1255339738217085471">
@@ -2562,6 +2598,15 @@
         <source>Name</source>
       </segment>
     </unit>
+    <unit id="6945435366592832880">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:36,39</note>
+        <note category="description">Explains what the workload chart shows</note>
+      </notes>
+      <segment>
+        <source>Open tasks by assignee</source>
+      </segment>
+    </unit>
     <unit id="694553946899296600">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:166,167</note>
@@ -2672,6 +2717,16 @@
       </notes>
       <segment>
         <source>Documents</source>
+      </segment>
+    </unit>
+    <unit id="4737822868227557262">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:55</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:92</note>
+        <note category="description">Series name for the 85th percentile cycle time</note>
+      </notes>
+      <segment>
+        <source>85th percentile</source>
       </segment>
     </unit>
     <unit id="4739818603756173797">
@@ -3001,6 +3056,15 @@
       </notes>
       <segment>
         <source>Relation</source>
+      </segment>
+    </unit>
+    <unit id="4321311470265684813">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:58,59</note>
+        <note category="description">Explains why the cycle time chart is empty</note>
+      </notes>
+      <segment>
+        <source>Cycle time appears once tasks have been completed.</source>
       </segment>
     </unit>
     <unit id="432834967329800065">
@@ -3660,6 +3724,15 @@
         <source>From</source>
       </segment>
     </unit>
+    <unit id="1639080312962454359">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:34,36</note>
+        <note category="description">Accessible label while the throughput chart loads</note>
+      </notes>
+      <segment>
+        <source>Loading throughput</source>
+      </segment>
+    </unit>
     <unit id="1640609344969975994">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:29,31</note>
@@ -4038,6 +4111,15 @@
         <source>User agent</source>
       </segment>
     </unit>
+    <unit id="2268041450256836423">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:41,43</note>
+        <note category="description">Accessible label while the workload chart loads</note>
+      </notes>
+      <segment>
+        <source>Loading team workload</source>
+      </segment>
+    </unit>
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,24</note>
@@ -4340,6 +4422,15 @@
       </notes>
       <segment>
         <source> Back to Log in </source>
+      </segment>
+    </unit>
+    <unit id="3168854044290465130">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:45,47</note>
+        <note category="description">Accessible label while the cycle time chart loads</note>
+      </notes>
+      <segment>
+        <source>Loading cycle time</source>
       </segment>
     </unit>
     <unit id="5342432350421167093">
@@ -4893,6 +4984,15 @@
       </notes>
       <segment>
         <source> If </source>
+      </segment>
+    </unit>
+    <unit id="6960644556302408953">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:34,35</note>
+        <note category="description">Heading of the dashboard workload card</note>
+      </notes>
+      <segment>
+        <source>Team workload</source>
       </segment>
     </unit>
     <unit id="4774743033649921775">
@@ -5745,6 +5845,15 @@
         <source>WHEN</source>
       </segment>
     </unit>
+    <unit id="5551448153793462049">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:61,63</note>
+        <note category="description">Accessible label while the velocity chart loads</note>
+      </notes>
+      <segment>
+        <source>Loading sprint velocity</source>
+      </segment>
+    </unit>
     <unit id="5556145510587651152">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-summary.component.ts:95,97</note>
@@ -6029,6 +6138,7 @@
     <unit id="7047572971445448461">
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:83,85</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:51,52</note>
         <note category="description">Placeholder text: Choose a project</note>
       </notes>
       <segment>
@@ -6177,6 +6287,15 @@
       </notes>
       <segment>
         <source> Replace assignees </source>
+      </segment>
+    </unit>
+    <unit id="2789470198117284549">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:28,30</note>
+        <note category="description">Heading of the dashboard throughput card</note>
+      </notes>
+      <segment>
+        <source>Throughput</source>
       </segment>
     </unit>
     <unit id="2790722573443430248">
@@ -6918,6 +7037,15 @@
         <source>Add comment</source>
       </segment>
     </unit>
+    <unit id="4510078011810002922">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:44,46</note>
+        <note category="description">Explains what the velocity chart compares</note>
+      </notes>
+      <segment>
+        <source>Committed against completed, by sprint</source>
+      </segment>
+    </unit>
     <unit id="4510676848705799339">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:63</note>
@@ -7377,6 +7505,15 @@
         <source>When a task has no due date</source>
       </segment>
     </unit>
+    <unit id="5739581984228459958">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:104</note>
+        <note category="description">Label for tasks assigned to more than one person</note>
+      </notes>
+      <segment>
+        <source>Shared</source>
+      </segment>
+    </unit>
     <unit id="6889806069691569993">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:372</note>
@@ -7809,6 +7946,15 @@
         <source> Storage usage </source>
       </segment>
     </unit>
+    <unit id="7384355056639627100">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:96</note>
+        <note category="description">Label for how many tasks the cycle time was measured from</note>
+      </notes>
+      <segment>
+        <source>Measured from</source>
+      </segment>
+    </unit>
     <unit id="2533649065343508753">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:767</note>
@@ -7999,6 +8145,15 @@
       </notes>
       <segment>
         <source> Edit the automation to point these at something that still exists, otherwise its runs will fail. </source>
+      </segment>
+    </unit>
+    <unit id="5046831552555610590">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:52,53</note>
+        <note category="description">Empty state for the dashboard workload card</note>
+      </notes>
+      <segment>
+        <source>No assigned work open.</source>
       </segment>
     </unit>
     <unit id="5049991566529231719">
@@ -8208,6 +8363,24 @@
       </notes>
       <segment>
         <source>Automations could not be loaded</source>
+      </segment>
+    </unit>
+    <unit id="6061621792314924087">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:158</note>
+        <note category="description">Label for the share of committed work that was finished</note>
+      </notes>
+      <segment>
+        <source>Commitment met</source>
+      </segment>
+    </unit>
+    <unit id="6069680004547866674">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:96</note>
+        <note category="description">Label for the number of open assigned tasks</note>
+      </notes>
+      <segment>
+        <source>Assigned</source>
       </segment>
     </unit>
     <unit id="9062789234067719677">
@@ -9316,11 +9489,14 @@
     </unit>
     <unit id="1161299114153631702">
       <notes>
+        <note category="location">src/app/features/dashboard/components/charts/throughput-chart.component.ts:43</note>
+        <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:47</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:232</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:84</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:72,73</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:96,97</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:144</note>
-        <note category="description">Label shown in the interface</note>
+        <note category="description">Series name for tasks finished each day</note>
       </notes>
       <segment>
         <source>Completed</source>
@@ -9333,6 +9509,24 @@
       </notes>
       <segment>
         <source>Receive <ph id="0" equiv="EVENT" disp="label"/> notifications</source>
+      </segment>
+    </unit>
+    <unit id="1166473993510000594">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:45,46</note>
+        <note category="description">Empty state for the dashboard throughput card</note>
+      </notes>
+      <segment>
+        <source>No completed tasks yet.</source>
+      </segment>
+    </unit>
+    <unit id="1167413339139829976">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:150</note>
+        <note category="description">Label for the mean work completed per sprint</note>
+      </notes>
+      <segment>
+        <source>Average velocity</source>
       </segment>
     </unit>
     <unit id="3313172740302558016">
@@ -9401,7 +9595,7 @@
     </unit>
     <unit id="6570363013146073520">
       <notes>
-        <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:23,25</note>
+        <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:36,38</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:172</note>
         <note category="location">src/app/workspace.routes.ts:73</note>
         <note category="description">Page title for the dashboard</note>
@@ -9472,6 +9666,15 @@
       </notes>
       <segment>
         <source> Unread </source>
+      </segment>
+    </unit>
+    <unit id="7798866470020611786">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/charts/workload-chart.component.ts:21,24</note>
+        <note category="description">Accessible name of the dashboard workload chart</note>
+      </notes>
+      <segment>
+        <source>Open tasks per assignee</source>
       </segment>
     </unit>
     <unit id="3512180719745660914">
@@ -9571,6 +9774,15 @@
       </notes>
       <segment>
         <source> Change Profile Picture </source>
+      </segment>
+    </unit>
+    <unit id="5914287100798497400">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:56,57</note>
+        <note category="description">Empty state for the dashboard cycle time card</note>
+      </notes>
+      <segment>
+        <source>Not enough finished work yet.</source>
       </segment>
     </unit>
     <unit id="1295614462098694869">
@@ -9754,6 +9966,15 @@
       </notes>
       <segment>
         <source>There are currently no deleted tasks.</source>
+      </segment>
+    </unit>
+    <unit id="2196169795561391151">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:74,75</note>
+        <note category="description">Explains why the velocity chart is empty</note>
+      </notes>
+      <segment>
+        <source>Velocity appears once a sprint has been completed.</source>
       </segment>
     </unit>
     <unit id="5561787587584733752">
@@ -10279,6 +10500,15 @@
         <source>Committed scope, burndown, and completed velocity.</source>
       </segment>
     </unit>
+    <unit id="1131240155962002938">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:38,39</note>
+        <note category="description">Heading of the dashboard cycle time card</note>
+      </notes>
+      <segment>
+        <source>Cycle time</source>
+      </segment>
+    </unit>
     <unit id="1132945315828298235">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:62,63</note>
@@ -10315,6 +10545,15 @@
         <source>Burndown is unavailable</source>
       </segment>
     </unit>
+    <unit id="1361503266870843106">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/charts/workload-chart.component.ts:44</note>
+        <note category="description">Series name for the number of open tasks</note>
+      </notes>
+      <segment>
+        <source>Open tasks</source>
+      </segment>
+    </unit>
     <unit id="8611492333162495855">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:77,79</note>
@@ -10326,8 +10565,9 @@
     </unit>
     <unit id="2873196070623992437">
       <notes>
+        <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:43</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:84,86</note>
-        <note category="description">Stat label for scope committed at sprint start</note>
+        <note category="description">Series name for work a sprint took on</note>
       </notes>
       <segment>
         <source>Committed</source>
@@ -10458,6 +10698,15 @@
         <source>Conversation</source>
       </segment>
     </unit>
+    <unit id="4719181036371913207">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:67</note>
+        <note category="description">Period covered by the dashboard throughput chart</note>
+      </notes>
+      <segment>
+        <source>Last <ph id="0" equiv="DAYS" disp="this.flow.trailingDays"/> days</source>
+      </segment>
+    </unit>
     <unit id="3941944824627691129">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:228,229</note>
@@ -10474,6 +10723,15 @@
       </notes>
       <segment>
         <source> Missing estimate </source>
+      </segment>
+    </unit>
+    <unit id="8253925941682305559">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:88</note>
+        <note category="description">Label for the mean number of tasks completed each day</note>
+      </notes>
+      <segment>
+        <source>Daily average</source>
       </segment>
     </unit>
     <unit id="8254706596070129232">
@@ -10539,6 +10797,15 @@
         <source>Loading workload</source>
       </segment>
     </unit>
+    <unit id="2772274445484275338">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:47,48</note>
+        <note category="description">Advice shown when nothing has been completed</note>
+      </notes>
+      <segment>
+        <source>Completed tasks will show up here as they land.</source>
+      </segment>
+    </unit>
     <unit id="4257828580066254399">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:47,48</note>
@@ -10568,9 +10835,10 @@
     </unit>
     <unit id="8406787523492971076">
       <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:100</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:59,61</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:52,55</note>
-        <note category="description">Stat label for open tasks with nobody assigned</note>
+        <note category="description">Label for the number of open tasks with no assignee</note>
       </notes>
       <segment>
         <source>Unassigned</source>
@@ -11239,6 +11507,25 @@
         <source>This service account has no API permissions.</source>
       </segment>
     </unit>
+    <unit id="6723383211174802747">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:46</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-cycle-time-card.component.ts:88</note>
+        <note category="description">Series name for the middle cycle time value</note>
+      </notes>
+      <segment>
+        <source>Median</source>
+      </segment>
+    </unit>
+    <unit id="6724294782511215339">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/charts/throughput-chart.component.ts:18,21</note>
+        <note category="description">Accessible name of the dashboard throughput chart</note>
+      </notes>
+      <segment>
+        <source>Tasks completed each day</source>
+      </segment>
+    </unit>
     <unit id="196598341098112332">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:101,104</note>
@@ -11752,6 +12039,15 @@
       </notes>
       <segment>
         <source>Share none</source>
+      </segment>
+    </unit>
+    <unit id="2758582799865898429">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:154</note>
+        <note category="description">Label for the best sprint result</note>
+      </notes>
+      <segment>
+        <source>Best sprint</source>
       </segment>
     </unit>
     <unit id="577229888706444517">
@@ -13599,6 +13895,15 @@
         <source>Open command palette</source>
       </segment>
     </unit>
+    <unit id="2212233429253959768">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:42,43</note>
+        <note category="description">Heading of the dashboard velocity card</note>
+      </notes>
+      <segment>
+        <source>Sprint velocity</source>
+      </segment>
+    </unit>
     <unit id="2212695292809375179">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette-button.component.ts:21,24</note>
@@ -13624,6 +13929,15 @@
       </notes>
       <segment>
         <source>Type to search or use &gt; for commands.</source>
+      </segment>
+    </unit>
+    <unit id="8104821430899590252">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-workload-card.component.ts:54,55</note>
+        <note category="description">Advice shown when nobody has open assigned tasks</note>
+      </notes>
+      <segment>
+        <source>Assign tasks to see how work is spread across the team.</source>
       </segment>
     </unit>
     <unit id="4844611077398964021">
@@ -14007,6 +14321,15 @@
         <source>Use dark theme</source>
       </segment>
     </unit>
+    <unit id="5452413274615745691">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/charts/cycle-time-chart.component.ts:19,22</note>
+        <note category="description">Accessible name of the dashboard cycle time chart</note>
+      </notes>
+      <segment>
+        <source>Cycle time by week</source>
+      </segment>
+    </unit>
     <unit id="123010868147850959">
       <notes>
         <note category="location">src/app/shell/profile-menu.component.ts:138</note>
@@ -14336,6 +14659,15 @@
       </notes>
       <segment>
         <source>Selected</source>
+      </segment>
+    </unit>
+    <unit id="6396952862144590894">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:72,73</note>
+        <note category="description">Empty state for the dashboard velocity card</note>
+      </notes>
+      <segment>
+        <source>No completed sprints yet.</source>
       </segment>
     </unit>
     <unit id="6398969587818603892">

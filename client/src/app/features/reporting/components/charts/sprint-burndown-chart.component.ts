@@ -5,7 +5,7 @@ import {
   REPORT_CHART_LABEL_STYLE,
   formatReportValue,
   reportChartThemeSignal,
-} from '../../utils/report-chart-theme';
+} from '@core/util/chart-theme';
 
 @Component({
   selector: 'app-sprint-burndown-chart',

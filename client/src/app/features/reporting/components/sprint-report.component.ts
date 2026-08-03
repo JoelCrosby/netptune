@@ -24,7 +24,7 @@ import {
 import { SprintBurndownChartComponent } from './charts/sprint-burndown-chart.component';
 import { SprintVelocityChartComponent } from './charts/sprint-velocity-chart.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
-import { formatReportValue } from '../utils/report-chart-theme';
+import { formatReportValue } from '@core/util/chart-theme';
 
 @Component({
   selector: 'app-sprint-report',

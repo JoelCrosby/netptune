@@ -25,6 +25,7 @@ const fallbackPalette: NamedColor[] = [
 @Component({
   selector: 'app-dashboard-status-breakdown-card',
   imports: [DonutStatCardComponent],
+  host: { class: 'block h-full' },
   template: `
     <app-donut-stat-card
       i18n-title="Heading of the dashboard status breakdown card"

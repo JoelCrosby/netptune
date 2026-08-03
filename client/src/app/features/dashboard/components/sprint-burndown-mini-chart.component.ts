@@ -5,7 +5,7 @@ import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   formatReportValue,
   reportChartThemeSignal,
-} from '@app/features/reporting/utils/report-chart-theme';
+} from '@core/util/chart-theme';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
 // Compact counterpart of the reporting sprint burndown chart. Drops the axes, legend and

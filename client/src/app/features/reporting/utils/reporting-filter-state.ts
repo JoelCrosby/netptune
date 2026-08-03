@@ -1,19 +1,15 @@
 import { SprintStatus } from '@core/enums/sprint-status';
 import { Sprint } from '@core/models/sprint';
 import { ReportingGrouping } from '@core/models/reporting';
-
-export const reportingDateValue = (date: Date): string =>
-  date.toISOString().slice(0, 10);
+import { isoDateValue } from '@core/util/dates';
 
 export function defaultReportingRange(now = new Date()): {
   from: string;
   to: string;
 } {
   return {
-    from: reportingDateValue(
-      new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
-    ),
-    to: reportingDateValue(now),
+    from: isoDateValue(new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)),
+    to: isoDateValue(now),
   };
 }
 

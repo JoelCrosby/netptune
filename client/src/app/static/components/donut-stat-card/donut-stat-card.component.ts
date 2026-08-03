@@ -24,6 +24,7 @@ export interface DonutStatItem {
     NgApexchartsModule,
     SkeletonComponent,
   ],
+  host: { class: 'block h-full' },
   template: `
     <section
       class="border-border bg-card flex h-full min-h-24 flex-col overflow-hidden rounded-lg border shadow-sm">

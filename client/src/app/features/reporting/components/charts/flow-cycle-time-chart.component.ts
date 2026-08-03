@@ -4,7 +4,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import {
   REPORT_CHART_LABEL_STYLE,
   reportChartThemeSignal,
-} from '../../utils/report-chart-theme';
+} from '@core/util/chart-theme';
 
 @Component({
   selector: 'app-flow-cycle-time-chart',
