@@ -277,7 +277,7 @@
     </unit>
     <unit id="551825878782946048">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:242</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:268</note>
         <note category="description">Body of a confirmation dialog listing what breaks when a workspace identifier changes</note>
       </notes>
       <segment>
@@ -1006,7 +1006,7 @@
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:245</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:271</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:568</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:612</note>
@@ -1066,7 +1066,7 @@
     </unit>
     <unit id="6404445332132473818">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:240</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:266</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1519,6 +1519,15 @@
         <source>Task deleted</source>
       </segment>
     </unit>
+    <unit id="7192329107569394032">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:101,104</note>
+        <note category="description">Warns what happens when leaving a workspace</note>
+      </notes>
+      <segment>
+        <source> You lose access to this workspace&apos;s content and need to be re-invited to rejoin. </source>
+      </segment>
+    </unit>
     <unit id="7198631316779176054">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:275</note>
@@ -1731,7 +1740,7 @@
     <unit id="950348144194379022">
       <notes>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:370</note>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:108</note>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:167</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1768,7 +1777,7 @@
     <unit id="5832945231912845990">
       <notes>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:380</note>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:107</note>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:166</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -2020,7 +2029,7 @@
     </unit>
     <unit id="4064937437199233155">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:244</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:270</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -2086,7 +2095,7 @@
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:918</note>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:74</note>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:72</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
         <note category="description">The workspace entity, shown in setup copy</note>
       </notes>
@@ -2575,8 +2584,8 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:399</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:55,57</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:208</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:56,58</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:120</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:79,81</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:146</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:146</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:376</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:96,98</note>
@@ -2753,7 +2762,7 @@
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:103,105</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:60,62</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:73,76</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:96,99</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:169,172</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:142,145</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:28</note>
@@ -2892,7 +2901,7 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:111,114</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:160,162</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:82,84</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:79,82</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:102,105</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:175,178</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:93,95</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:148,151</note>
@@ -3599,8 +3608,8 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:142,144</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:184,186</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:258</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:61,63</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:127</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:84,86</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:153</note>
         <note category="description">Label of the workspace URL identifier field</note>
       </notes>
       <segment>
@@ -3621,7 +3630,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:120,123</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:172,177</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:94,97</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:118,121</note>
         <note category="description">Button that saves edits to the workspace</note>
       </notes>
       <segment>
@@ -3686,7 +3695,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:291</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:184</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:161</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:187</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment>
@@ -6087,7 +6096,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:65</note>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:220</note>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:42</note>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:45</note>
         <note category="description">Label of the scope field</note>
       </notes>
       <segment>
@@ -6226,6 +6235,15 @@
         <source>Set description</source>
       </segment>
     </unit>
+    <unit id="7114722244395904206">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:68,71</note>
+        <note category="description">Explains what the workspace detail form controls</note>
+      </notes>
+      <segment>
+        <source> How this workspace is named, described and addressed. </source>
+      </segment>
+    </unit>
     <unit id="7119306462815128114">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:105,107</note>
@@ -6255,7 +6273,7 @@
     </unit>
     <unit id="1267184118353244642">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:241</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:267</note>
         <note category="description">Body of a confirmation dialog. CURRENT and NEXT are the old and new workspace identifiers</note>
       </notes>
       <segment>
@@ -6897,6 +6915,15 @@
       </notes>
       <segment>
         <source>Task is created</source>
+      </segment>
+    </unit>
+    <unit id="3270635086281977081">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:54,56</note>
+        <note category="description">Explains what public workspace visibility means</note>
+      </notes>
+      <segment>
+        <source> Anyone with the link can view whatever is shared below, but only members can edit it. </source>
       </segment>
     </unit>
     <unit id="3272090577260786877">
@@ -8609,6 +8636,15 @@
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> task selected} other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"><ph id="2" equiv="INTERPOLATION"/></pc> tasks selected}}</source>
+      </segment>
+    </unit>
+    <unit id="1198375666409252436">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:96,98</note>
+        <note category="description">Heading of the leave workspace card</note>
+      </notes>
+      <segment>
+        <source> Leave workspace </source>
       </segment>
     </unit>
     <unit id="119867477199510044">
@@ -11019,7 +11055,7 @@
     </unit>
     <unit id="7501850844985876036">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:243</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:269</note>
         <note category="description">Checkbox a user must tick to confirm a dangerous action</note>
       </notes>
       <segment>
@@ -11254,7 +11290,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:34,37</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:67,70</note>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:95,101</note>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:148,151</note>
         <note category="description">Title of the delete-workspace dialog</note>
       </notes>
       <segment>
@@ -11315,18 +11351,9 @@
         <source>Tag details</source>
       </segment>
     </unit>
-    <unit id="1238583382012712938">
-      <notes>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,63</note>
-        <note category="description">Button that removes a preference override</note>
-      </notes>
-      <segment>
-        <source> Clear </source>
-      </segment>
-    </unit>
     <unit id="3437679369074503203">
       <notes>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:75</note>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:73</note>
         <note category="description">Preference scope applying everywhere</note>
       </notes>
       <segment>
@@ -11344,7 +11371,7 @@
     </unit>
     <unit id="3855456680169888833">
       <notes>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:28,30</note>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:30,32</note>
         <note category="description">Placeholder in a preference value picker</note>
       </notes>
       <segment>
@@ -11353,7 +11380,7 @@
     </unit>
     <unit id="9082027484739685780">
       <notes>
-        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:43,45</note>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:46,48</note>
         <note category="description">Placeholder in the preference scope picker</note>
       </notes>
       <segment>
@@ -11907,9 +11934,10 @@
     </unit>
     <unit id="8700121026680200191">
       <notes>
+        <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,65</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
-        <note category="description">Button that deselects every permission</note>
+        <note category="description">Button that removes a preference override</note>
       </notes>
       <segment>
         <source>Clear</source>
@@ -11924,13 +11952,13 @@
         <source> The assistant stopped </source>
       </segment>
     </unit>
-    <unit id="646654293203551809">
+    <unit id="9109938174492852826">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:49,51</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:63,66</note>
         <note category="description">Section heading for the workspace detail form</note>
       </notes>
       <segment>
-        <source>Workspace Details</source>
+        <source> Workspace details </source>
       </segment>
     </unit>
     <unit id="7331635054649292901">
@@ -11944,7 +11972,7 @@
     </unit>
     <unit id="7333095346036961883">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:68,72</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:91,94</note>
         <note category="description">Warns that changing the workspace identifier breaks existing links</note>
       </notes>
       <segment>
@@ -11953,7 +11981,7 @@
     </unit>
     <unit id="3894039560161506093">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:84,86</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:107,109</note>
         <note category="description">Label of the workspace time zone field</note>
       </notes>
       <segment>
@@ -11962,7 +11990,7 @@
     </unit>
     <unit id="8921855151408700743">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:89,93</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:112,116</note>
         <note category="description">Hint under the time zone field. Europe/London is a literal IANA zone name</note>
       </notes>
       <segment>
@@ -11989,7 +12017,7 @@
     </unit>
     <unit id="9052706340903358762">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:166</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:192</note>
         <note category="description">Shown when the workspace identifier availability check fails</note>
       </notes>
       <segment>
@@ -12087,13 +12115,13 @@
         <source>This change cannot be applied.</source>
       </segment>
     </unit>
-    <unit id="3500321893696134532">
+    <unit id="6837273430029345174">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:34,37</note>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:49,51</note>
         <note category="description">Section heading for workspace visibility settings</note>
       </notes>
       <segment>
-        <source>Visibility and access</source>
+        <source> Visibility and access </source>
       </segment>
     </unit>
     <unit id="3500565826089528548">
@@ -12105,58 +12133,31 @@
         <source> Untagged </source>
       </segment>
     </unit>
-    <unit id="5528247241021977221">
-      <notes>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:41,43</note>
-        <note category="description">Explains what public workspace visibility means</note>
-      </notes>
-      <segment>
-        <source> This workspace is currently <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Public</pc>. This means that anyone with the link can view whatever is shared below. However, only members of the workspace can edit it. </source>
-      </segment>
-    </unit>
-    <unit id="4110053962009350113">
-      <notes>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:47,49</note>
-        <note category="description">Explains what private workspace visibility means</note>
-      </notes>
-      <segment>
-        <source> This workspace is currently <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Private</pc>. This means that only members of the workspace can view and edit it. </source>
-      </segment>
-    </unit>
-    <unit id="486070931556140673">
-      <notes>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:67,72</note>
-        <note category="description">Warns what happens when leaving a workspace</note>
-      </notes>
-      <segment>
-        <source> Leaving this workspace removes your access to its content. You&apos;ll need to be re-invited to rejoin. </source>
-      </segment>
-    </unit>
     <unit id="7068860286643870184">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:74,78</note>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:114,117</note>
         <note category="description">Button that removes the user from the workspace</note>
       </notes>
       <segment>
         <source> Leave Workspace </source>
       </segment>
     </unit>
-    <unit id="2547571169649786686">
+    <unit id="5428802817871610865">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:85,86</note>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:130,133</note>
         <note category="description">Section heading above destructive workspace actions</note>
       </notes>
       <segment>
-        <source>Danger zone</source>
+        <source> Danger zone </source>
       </segment>
     </unit>
-    <unit id="7921370537290180977">
+    <unit id="3165555119723543121">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:87,91</note>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:135,138</note>
         <note category="description">Warns about the reach of deleting a workspace</note>
       </notes>
       <segment>
-        <source>Deleting a workspace affects every member and all of its content.</source>
+        <source> Deleting a workspace affects every member and all of its content. </source>
       </segment>
     </unit>
     <unit id="5712909673292266004">
@@ -14194,6 +14195,15 @@
         <source>Go to Boards</source>
       </segment>
     </unit>
+    <unit id="5086267064675007910">
+      <notes>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:32,35</note>
+        <note category="description">Accessible label while personal settings load</note>
+      </notes>
+      <segment>
+        <source>Loading settings</source>
+      </segment>
+    </unit>
     <unit id="2627358752486456707">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:82</note>
@@ -14402,6 +14412,15 @@
         <source>Back to Relations</source>
       </segment>
     </unit>
+    <unit id="2614124875804545199">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:59,61</note>
+        <note category="description">Explains what private workspace visibility means</note>
+      </notes>
+      <segment>
+        <source> Only members of this workspace can view and edit it. </source>
+      </segment>
+    </unit>
     <unit id="2614607010577950577">
       <notes>
         <note category="location">src/app/shell/shell-menu-link.component.ts:123</note>
@@ -14458,8 +14477,8 @@
     </unit>
     <unit id="6439365426343089851">
       <notes>
-        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:20,22</note>
-        <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:19,23</note>
+        <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:25,29</note>
+        <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:19,22</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:273</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:327</note>
         <note category="description">Page title for general personal settings</note>

@@ -1,5 +1,5 @@
 import { Component, inject, input, signal } from '@angular/core';
-import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
+import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import {
   COMMAND_PALETTE_RECENT_ITEMS_SCOPE,
   PreferenceScope,
@@ -13,16 +13,18 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
 @Component({
   selector: 'app-preference-list',
   imports: [
-    FlatButtonComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
+    StrokedButtonComponent,
   ],
+  host: { class: 'block' },
   template: `
-    <div class="grid gap-4">
+    <ul class="divide-border/50 flex flex-col divide-y">
       @for (preference of values(); track preference.definition.key) {
-        <div class="flex items-end gap-3 rounded-md py-4">
+        <li class="flex flex-wrap items-end gap-3 px-6 py-4">
           <app-form-select
-            class="block max-w-86"
+            class="block max-w-86 min-w-56 flex-1"
+            [noMargin]="true"
             [label]="preference.definition.label"
             i18n-placeholder="Placeholder in a preference value picker"
             placeholder="Select value"
@@ -37,6 +39,7 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
 
           <app-form-select
             class="block w-46"
+            [noMargin]="true"
             i18n-label="Label of the preference scope field"
             label="Scope"
             i18n-placeholder="Placeholder in the preference scope picker"
@@ -50,21 +53,16 @@ import { RecentItemsService } from '../../../../shell/command-palette/recent-ite
             }
           </app-form-select>
 
-          <div>
-            <button
-              app-flat-button
-              type="button"
-              color="contrast"
-              class="mb-6 h-10 px-4"
-              (click)="clearValue(preference)">
-              <span i18n="Button that removes a preference override">
-                Clear
-              </span>
-            </button>
-          </div>
-        </div>
+          <button
+            app-stroked-button
+            type="button"
+            class="h-10 shrink-0 px-4"
+            (click)="clearValue(preference)">
+            <span i18n="Button that removes a preference override">Clear</span>
+          </button>
+        </li>
       }
-    </div>
+    </ul>
   `,
 })
 export class PreferenceListComponent {

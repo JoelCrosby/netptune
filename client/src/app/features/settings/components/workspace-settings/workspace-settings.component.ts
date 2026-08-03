@@ -11,10 +11,15 @@ import {
 } from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Workspace } from '@core/models/workspace';
+import {
+  LucideGlobe,
+  LucideLogOut,
+  LucideTriangleAlert,
+} from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { WorkspacePublicAccessComponent } from '../workspace-public-access/workspace-public-access.component';
 import { DialogService } from '@core/services/dialog.service';
 import { DeleteWorkspaceDialogComponent } from '../delete-workspace-dialog/delete-workspace-dialog.component';
@@ -25,81 +30,135 @@ import { take } from 'rxjs/operators';
   imports: [
     FlatButtonComponent,
     StrokedButtonComponent,
-    SectionHeaderComponent,
+    IconTileComponent,
     WorkspacePublicAccessComponent,
   ],
+  host: { class: 'block' },
   template: `
-    <app-section-header
-      i18n-heading="Section heading for workspace visibility settings"
-      heading="Visibility and access" />
+    <div class="flex flex-col gap-6">
+      <section
+        class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        <header class="border-border border-b px-6 py-5">
+          <div class="flex min-w-0 items-center gap-3">
+            <app-icon-tile [icon]="visibilityIcon" />
 
-    <div class="flex flex-col items-start gap-4">
-      @if (canUpdate()) {
-        <p class="text-foreground/80 mb-2 text-sm">
-          @if (workspace()?.isPublic) {
-            <span i18n="Explains what public workspace visibility means">
-              This workspace is currently <strong>Public</strong>. This means
-              that anyone with the link can view whatever is shared below.
-              However, only members of the workspace can edit it.
-            </span>
-          } @else {
-            <span i18n="Explains what private workspace visibility means">
-              This workspace is currently <strong>Private</strong>. This means
-              that only members of the workspace can view and edit it.
-            </span>
-          }
-        </p>
+            <div class="min-w-0">
+              <h2
+                class="font-overpass text-base font-semibold"
+                i18n="Section heading for workspace visibility settings">
+                Visibility and access
+              </h2>
+              <p class="text-muted mt-1 text-sm">
+                @if (workspace()?.isPublic) {
+                  <span i18n="Explains what public workspace visibility means">
+                    Anyone with the link can view whatever is shared below, but
+                    only members can edit it.
+                  </span>
+                } @else {
+                  <span i18n="Explains what private workspace visibility means">
+                    Only members of this workspace can view and edit it.
+                  </span>
+                }
+              </p>
+            </div>
+          </div>
+        </header>
 
-        <button
-          app-flat-button
-          color="warn"
-          type="button"
-          (click)="togglePublic()">
-          {{ visibilityToggleLabel() }}
-        </button>
-      }
+        @if (canUpdate()) {
+          <div class="border-border border-b px-6 py-4">
+            <button
+              app-stroked-button
+              color="warn"
+              type="button"
+              (click)="togglePublic()">
+              {{ visibilityToggleLabel() }}
+            </button>
+          </div>
+        }
 
-      <app-workspace-public-access />
+        @if (showPublicAccess()) {
+          <div class="px-6 py-5">
+            <app-workspace-public-access />
+          </div>
+        }
+      </section>
 
       @if (canLeave()) {
-        <p class="text-foreground/80 mt-4 mb-2 text-sm">
-          <span i18n="Warns what happens when leaving a workspace">
-            Leaving this workspace removes your access to its content. You'll
-            need to be re-invited to rejoin.
-          </span>
-        </p>
+        <section
+          class="border-border bg-card flex flex-wrap items-center justify-between gap-x-4 gap-y-3 rounded-lg border px-6 py-5 shadow-sm">
+          <div class="flex min-w-0 items-center gap-3">
+            <app-icon-tile [icon]="leaveIcon" />
 
-        <button app-stroked-button color="warn" type="button" (click)="leave()">
-          <span i18n="Button that removes the user from the workspace">
-            Leave Workspace
-          </span>
-        </button>
+            <div class="min-w-0">
+              <h2
+                class="font-overpass text-base font-semibold"
+                i18n="Heading of the leave workspace card">
+                Leave workspace
+              </h2>
+              <p
+                class="text-muted mt-1 text-sm"
+                i18n="Warns what happens when leaving a workspace">
+                You lose access to this workspace's content and need to be
+                re-invited to rejoin.
+              </p>
+            </div>
+          </div>
+
+          <button
+            app-stroked-button
+            color="warn"
+            type="button"
+            class="shrink-0"
+            (click)="leave()">
+            <span i18n="Button that removes the user from the workspace">
+              Leave Workspace
+            </span>
+          </button>
+        </section>
+      }
+
+      @if (canDelete()) {
+        <section
+          class="border-warn/40 bg-card flex flex-wrap items-center justify-between gap-x-4 gap-y-3 rounded-lg border px-6 py-5 shadow-sm">
+          <div class="flex min-w-0 items-center gap-3">
+            <app-icon-tile [icon]="dangerIcon" class="bg-warn/10 text-warn" />
+
+            <div class="min-w-0">
+              <h2
+                class="font-overpass text-warn text-base font-semibold"
+                i18n="Section heading above destructive workspace actions">
+                Danger zone
+              </h2>
+              <p
+                class="text-muted mt-1 text-sm"
+                i18n="Warns about the reach of deleting a workspace">
+                Deleting a workspace affects every member and all of its
+                content.
+              </p>
+            </div>
+          </div>
+
+          <button
+            app-flat-button
+            color="warn"
+            type="button"
+            class="shrink-0"
+            (click)="openDeleteDialog()">
+            <span i18n="Button that opens the delete-workspace dialog">
+              Delete Workspace
+            </span>
+          </button>
+        </section>
       }
     </div>
-
-    @if (canDelete()) {
-      <div class="border-border my-8 border-b-2"></div>
-
-      <app-section-header
-        i18n-heading="Section heading above destructive workspace actions"
-        heading="Danger zone"
-        i18n-description="Warns about the reach of deleting a workspace"
-        description="Deleting a workspace affects every member and all of its content." />
-
-      <button
-        app-flat-button
-        color="warn"
-        type="button"
-        (click)="openDeleteDialog()">
-        <span i18n="Button that opens the delete-workspace dialog">
-          Delete Workspace
-        </span>
-      </button>
-    }
   `,
 })
 export class WorkspaceSettings {
   private store = inject(Store);
+
+  protected readonly visibilityIcon = LucideGlobe;
+  protected readonly leaveIcon = LucideLogOut;
+  protected readonly dangerIcon = LucideTriangleAlert;
 
   /** Ternaries in a template expression cannot be marked, so build the copy here. */
   readonly visibilityToggleLabel = computed(() => {
@@ -119,6 +178,10 @@ export class WorkspaceSettings {
   canDelete = this.store.selectSignal(
     selectHasPermission(netptunePermissions.workspace.delete)
   );
+
+  /** Mirrors the condition the public access panel renders under, so the card
+   * does not leave an empty padded block when it has nothing to show. */
+  showPublicAccess = computed(() => this.isPublic() && this.canUpdate());
 
   canLeave = computed(() => {
     const workspace = this.workspace();

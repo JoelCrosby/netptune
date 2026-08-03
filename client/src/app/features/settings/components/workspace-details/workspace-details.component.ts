@@ -23,13 +23,17 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import * as Actions from '@core/store/workspaces/workspaces.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
-import { LucideCheck, LucideTriangleAlert } from '@lucide/angular';
+import {
+  LucideBuilding2,
+  LucideCheck,
+  LucideTriangleAlert,
+} from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
-import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { firstValueFrom, map } from 'rxjs';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
@@ -41,60 +45,80 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FormTextAreaComponent,
     ColorSelectComponent,
     FlatButtonComponent,
-    SectionHeaderComponent,
+    IconTileComponent,
   ],
+  host: { class: 'block' },
   template: `
-    <app-section-header
-      i18n-heading="Section heading for the workspace detail form"
-      heading="Workspace Details" />
+    <form
+      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
+      (submit)="save($event)">
+      <header class="border-border border-b px-6 py-5">
+        <div class="flex min-w-0 items-center gap-3">
+          <app-icon-tile [icon]="detailsIcon" />
 
-    <form class="grid max-w-2xl gap-4" (submit)="save($event)">
-      <app-form-input
-        [formField]="detailsForm.name"
-        i18n-label="Label of the name field"
-        label="Name"
-        maxLength="1024" />
+          <div class="min-w-0">
+            <h2
+              class="font-overpass text-base font-semibold"
+              i18n="Section heading for the workspace detail form">
+              Workspace details
+            </h2>
+            <p
+              class="text-muted mt-1 text-sm"
+              i18n="Explains what the workspace detail form controls">
+              How this workspace is named, described and addressed.
+            </p>
+          </div>
+        </div>
+      </header>
 
-      <app-form-input
-        [formField]="detailsForm.identifier"
-        i18n-label="Label of the workspace URL identifier field"
-        label="Identifier"
-        maxLength="1024"
-        [icon]="identifierIcon()"
-        [loading]="detailsForm.identifier().pending()"
-        i18n-hint="
-          Warns that changing the workspace identifier breaks existing links
-        "
-        hint="Changing the identifier changes the workspace URL and will break existing shared links." />
+      <div class="grid max-w-2xl gap-4 px-6 py-5">
+        <app-form-input
+          [formField]="detailsForm.name"
+          i18n-label="Label of the name field"
+          label="Name"
+          maxLength="1024" />
 
-      <app-form-textarea
-        [formField]="detailsForm.description"
-        i18n-label="Label of the description field"
-        label="Description"
-        maxLength="4096" />
+        <app-form-input
+          [formField]="detailsForm.identifier"
+          i18n-label="Label of the workspace URL identifier field"
+          label="Identifier"
+          maxLength="1024"
+          [icon]="identifierIcon()"
+          [loading]="detailsForm.identifier().pending()"
+          i18n-hint="
+            Warns that changing the workspace identifier breaks existing links
+          "
+          hint="Changing the identifier changes the workspace URL and will break existing shared links." />
 
-      <app-color-select
-        [formField]="detailsForm.color"
-        i18n-label="Label of the colour picker field"
-        label="Color" />
+        <app-form-textarea
+          [formField]="detailsForm.description"
+          i18n-label="Label of the description field"
+          label="Description"
+          maxLength="4096" />
 
-      <app-form-input
-        [formField]="detailsForm.timeZone"
-        i18n-label="Label of the workspace time zone field"
-        label="Timezone"
-        i18n-hint="
-          Hint under the time zone field. Europe/London is a literal IANA zone
-          name
-        "
-        hint="Use an IANA timezone, for example Europe/London." />
+        <app-color-select
+          [formField]="detailsForm.color"
+          i18n-label="Label of the colour picker field"
+          label="Color" />
 
-      <div>
+        <app-form-input
+          [formField]="detailsForm.timeZone"
+          i18n-label="Label of the workspace time zone field"
+          label="Timezone"
+          i18n-hint="
+            Hint under the time zone field. Europe/London is a literal IANA zone
+            name
+          "
+          hint="Use an IANA timezone, for example Europe/London." />
+      </div>
+
+      <footer class="border-border border-t px-6 py-4">
         <button app-flat-button type="submit">
           <span i18n="Button that saves the workspace details">
             Save Changes
           </span>
         </button>
-      </div>
+      </footer>
     </form>
   `,
 })
@@ -102,6 +126,8 @@ export class WorkspaceDetailsComponent {
   private store = inject(Store);
   private workspaceService = inject(WorkspacesService);
   private confirmation = inject(ConfirmationService);
+
+  protected readonly detailsIcon = LucideBuilding2;
 
   workspace = this.store.selectSignal(selectCurrentWorkspace);
 

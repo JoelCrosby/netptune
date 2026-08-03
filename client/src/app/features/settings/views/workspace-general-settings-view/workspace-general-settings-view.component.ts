@@ -18,11 +18,10 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
         i18n-title="Page title for general workspace settings"
         title="General" />
 
-      <app-workspace-details />
-
-      <div class="border-border my-8 border-b-2"></div>
-
-      <app-workspace-settings />
+      <div class="flex flex-col gap-6">
+        <app-workspace-details />
+        <app-workspace-settings />
+      </div>
     </app-page-container>
   `,
 })
