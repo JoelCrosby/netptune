@@ -191,16 +191,32 @@ public sealed class BoardsEndpointTests
 
 
     [Fact]
-    public async Task GetBoardView_ShouldReturnCorrectly_WhenHasTagsProvided()
+    public async Task GetBoardView_ShouldExcludeTaggedTasks_WhenHasTagsFalse()
     {
-        var response = await Client.GetAsync("api/boards/view/neovim?hasTags=false");
+        var tasks = await GetBoardViewTasks("api/boards/view/neovim?hasTags=false");
+
+        tasks.Should().NotContain(task => task.Tags.Count > 0);
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldExcludeUntaggedTasks_WhenHasTagsTrue()
+    {
+        var tasks = await GetBoardViewTasks("api/boards/view/neovim?hasTags=true");
+
+        tasks.Should().NotContain(task => task.Tags.Count == 0);
+    }
+
+    private async Task<List<BoardViewTask>> GetBoardViewTasks(string url)
+    {
+        var response = await Client.GetAsync(url);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardView>>();
 
         result.IsSuccess.Should().BeTrue();
-        result.Payload!.Groups.SelectMany(group => group.Tasks).Should().OnlyContain(task => task.Tags.Count == 0);
+
+        return [.. result.Payload!.Groups.SelectMany(group => group.Tasks)];
     }
 
     [Fact]
