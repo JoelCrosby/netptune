@@ -49,6 +49,27 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
     .collapsed.docked {
       grid-template-columns: 72px auto clamp(20rem, 28vw, 26rem);
     }
+
+    @keyframes assistant-dock-in {
+      from {
+        opacity: 0;
+        clip-path: inset(0 0 0 100%);
+      }
+      to {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    .assistant-dock {
+      animation: assistant-dock-in 180ms ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .assistant-dock {
+        animation: none;
+      }
+    }
   `,
   template: `
     @if (chunkLoading()) {
@@ -76,7 +97,7 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
 
       @if (assistant.isDocked()) {
         <app-ai-assistant-panel
-          class="border-border col-start-3 row-span-2 row-start-1 border-l" />
+          class="assistant-dock border-border col-start-3 row-span-2 row-start-1 border-l" />
       }
     </div>
 

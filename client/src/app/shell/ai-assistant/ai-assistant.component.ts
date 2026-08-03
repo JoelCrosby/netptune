@@ -22,9 +22,34 @@ const PANEL_MARGIN = '1rem';
   template: `
     <ng-template #panelTmpl>
       <app-ai-assistant-panel
-        class="border-border overflow-hidden rounded-2xl border shadow-lg" />
+        class="assistant-panel border-border overflow-hidden rounded-2xl border shadow-lg" />
     </ng-template>
   `,
+  styles: [
+    `
+      @keyframes assistant-panel-in {
+        from {
+          opacity: 0;
+          transform: translateX(1rem) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+        }
+      }
+
+      .assistant-panel {
+        animation: assistant-panel-in 180ms ease-out;
+        transform-origin: top right;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .assistant-panel {
+          animation: none;
+        }
+      }
+    `,
+  ],
 })
 export class AiAssistantComponent implements OnDestroy {
   private readonly panelTmpl = viewChild<TemplateRef<unknown>>('panelTmpl');
