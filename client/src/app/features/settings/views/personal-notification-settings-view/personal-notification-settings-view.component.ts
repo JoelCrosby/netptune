@@ -19,13 +19,6 @@ const NOTIFICATION_GROUP = 'notifications';
         i18n-title="Page title for personal notification settings"
         title="Notifications" />
 
-      <p
-        class="text-muted mb-6 max-w-3xl text-sm"
-        i18n="Explains what the notification preference table controls">
-        Choose which events notify you, and whether that choice applies
-        everywhere or only in this workspace.
-      </p>
-
       <app-notification-preferences [values]="preferences()" />
     </app-page-container>
   `,

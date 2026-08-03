@@ -5,7 +5,7 @@ import { Component, input } from '@angular/core';
   selector: 'app-setting-row',
   host: {
     class:
-      'border-border flex items-center justify-between gap-4 border-b px-4 py-3 last:border-b-0',
+      'border-border flex items-center justify-between gap-4 border-b px-6 py-4 last:border-b-0',
   },
   template: `
     <div class="min-w-0">

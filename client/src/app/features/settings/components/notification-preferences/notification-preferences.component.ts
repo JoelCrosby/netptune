@@ -5,13 +5,14 @@ import {
 } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { LucideBell } from '@lucide/angular';
-import { PanelComponent } from '@static/components/panel.component';
-import { PanelHeaderComponent } from '@static/components/panel-header.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import {
   SegmentedControlComponent,
   SegmentedOption,
 } from '@static/components/segmented-control/segmented-control.component';
 import { SettingRowComponent } from '@static/components/setting-row/setting-row.component';
+import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
 import { SwitchComponent } from '@static/components/switch/switch.component';
 
 interface NotificationRow {
@@ -38,56 +39,96 @@ const SCOPE_OPTIONS: SegmentedOption<PreferenceScope>[] = [
 @Component({
   selector: 'app-notification-preferences',
   imports: [
-    PanelComponent,
-    PanelHeaderComponent,
+    EmptyStateComponent,
+    IconTileComponent,
+    LucideBell,
     SegmentedControlComponent,
     SettingRowComponent,
+    SkeletonComponent,
     SwitchComponent,
   ],
+  host: { class: 'block' },
   template: `
-    <app-panel>
-      <app-panel-header
-        [icon]="headingIcon"
-        i18n-heading="Heading above the notification toggles"
-        heading="Notify me about"
-        i18n-description="Explains which scope the toggles below are editing"
-        description="Pick where these choices apply.">
+    <section
+      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+      <header
+        class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
+        <div class="flex min-w-0 items-center gap-3">
+          <app-icon-tile [icon]="headingIcon" />
+
+          <div class="min-w-0">
+            <h2
+              class="font-overpass text-base font-semibold"
+              i18n="Heading above the notification toggles">
+              Notify me about
+            </h2>
+            <p
+              class="text-muted mt-1 text-sm"
+              i18n="Explains which scope the toggles below are editing">
+              Choose which events notify you, and where that choice applies.
+            </p>
+          </div>
+        </div>
+
         <app-segmented-control
-          panelHeaderActions
+          class="shrink-0"
           [options]="scopeOptions"
           [(value)]="scope"
           i18n-ariaLabel="
             Accessible label for the control that picks the preference scope
           "
           ariaLabel="Preference scope" />
-      </app-panel-header>
+      </header>
 
-      @for (row of rows(); track row.key) {
-        <app-setting-row [label]="row.label" [hint]="row.hint">
-          @if (row.isOverridden) {
-            <button
-              type="button"
-              class="text-muted hover:text-foreground text-xs"
-              (click)="clearValue(row.preference)">
-              <span i18n="Button that removes a preference override">
-                Reset
-              </span>
-            </button>
+      @if (isInitialLoad()) {
+        <div
+          class="flex flex-col gap-5 px-6 py-5"
+          role="status"
+          i18n-aria-label="Accessible label while notification preferences load"
+          aria-label="Loading notification preferences">
+          @for (row of skeletonRows; track $index) {
+            <div class="flex items-center justify-between gap-4">
+              <div class="flex-1">
+                <app-skeleton class="h-3 w-40" />
+                <app-skeleton class="mt-2 h-3 w-56" />
+              </div>
+              <app-skeleton class="h-5 w-9 shrink-0 rounded-full" />
+            </div>
           }
+        </div>
+      } @else {
+        @for (row of rows(); track row.key) {
+          <app-setting-row [label]="row.label" [hint]="row.hint">
+            @if (row.isOverridden) {
+              <button
+                type="button"
+                class="text-muted hover:text-foreground text-xs"
+                (click)="clearValue(row.preference)">
+                <span i18n="Button that removes a preference override">
+                  Reset
+                </span>
+              </button>
+            }
 
-          <app-switch
-            [checked]="row.enabled"
-            [ariaLabel]="row.switchLabel"
-            (changed)="updateValue(row.preference, $event)" />
-        </app-setting-row>
-      } @empty {
-        <p
-          class="text-muted px-4 py-6 text-sm"
-          i18n="Empty state for the notification preference list">
-          There is nothing to configure yet.
-        </p>
+            <app-switch
+              [checked]="row.enabled"
+              [ariaLabel]="row.switchLabel"
+              (changed)="updateValue(row.preference, $event)" />
+          </app-setting-row>
+        } @empty {
+          <app-empty-state
+            compact
+            i18n-title="Empty state for the notification preference list"
+            title="There is nothing to configure yet."
+            i18n-description="
+              Explains why the notification preference list is empty
+            "
+            description="Notification options appear here once they are available.">
+            <svg emptyStateIcon lucideBell class="h-8 w-8"></svg>
+          </app-empty-state>
+        }
       }
-    </app-panel>
+    </section>
   `,
 })
 export class NotificationPreferencesComponent {
@@ -98,6 +139,11 @@ export class NotificationPreferencesComponent {
   protected readonly headingIcon = LucideBell;
   protected readonly scopeOptions = SCOPE_OPTIONS;
   protected readonly scope = signal<PreferenceScope>('global');
+  protected readonly skeletonRows = Array.from({ length: 5 });
+
+  protected readonly isInitialLoad = computed(() => {
+    return !this.userPreferences.loaded() && this.values().length === 0;
+  });
 
   protected readonly rows = computed<NotificationRow[]>(() => {
     const scope = this.scope();

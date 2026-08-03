@@ -599,16 +599,6 @@
         <target>beliebige Kommentare löschen</target>
       </segment>
     </unit>
-    <unit id="8938067120885537427">
-      <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:54,57</note>
-        <note category="description">Explains which scope the toggles below are editing</note>
-      </notes>
-      <segment state="translated">
-        <source>Pick where these choices apply.</source>
-        <target>Wählen Sie, wo diese Auswahl gilt.</target>
-      </segment>
-    </unit>
     <unit id="5659725016755840642">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:281</note>
@@ -2219,7 +2209,7 @@
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:41,43</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:31,33</note>
-        <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,23</note>
+        <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,22</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:332</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:354</note>
         <note category="location">src/app/workspace.routes.ts:132</note>
@@ -3941,7 +3931,7 @@
     </unit>
     <unit id="2362646105488486702">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:185</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:231</note>
         <note category="description">Shown when a notification has never been changed</note>
       </notes>
       <segment state="translated">
@@ -6116,7 +6106,7 @@
     </unit>
     <unit id="4697947893832068670">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:175</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:221</note>
         <note category="description">Shown when a notification is set for this workspace only</note>
       </notes>
       <segment state="translated">
@@ -6190,7 +6180,7 @@
     </unit>
     <unit id="4944057561753398636">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:30</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:31</note>
         <note category="description">Preference scope applying to every workspace</note>
       </notes>
       <segment state="translated">
@@ -7195,6 +7185,16 @@
       <segment state="translated">
         <source>Choose what starts this automation.</source>
         <target>Wählen Sie aus, was diese Automatisierung startet.</target>
+      </segment>
+    </unit>
+    <unit id="1838131741653693713">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:88,90</note>
+        <note category="description">Accessible label while notification preferences load</note>
+      </notes>
+      <segment state="translated">
+        <source>Loading notification preferences</source>
+        <target>Benachrichtigungseinstellungen werden geladen</target>
       </segment>
     </unit>
     <unit id="8618665278485882283">
@@ -9397,6 +9397,16 @@
         <target>Ausgeblendete Gruppen verwalten</target>
       </segment>
     </unit>
+    <unit id="3136143367735182406">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:126,127</note>
+        <note category="description">Explains why the notification preference list is empty</note>
+      </notes>
+      <segment state="translated">
+        <source>Notification options appear here once they are available.</source>
+        <target>Benachrichtigungsoptionen erscheinen hier, sobald sie verfügbar sind.</target>
+      </segment>
+    </unit>
     <unit id="8708845522681012494">
       <notes>
         <note category="location">src/app/features/boards/components/board-group-sort/board-group-sort.component.ts:37,39</note>
@@ -9808,7 +9818,7 @@
     </unit>
     <unit id="5478121364779850827">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:73,75</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:108,110</note>
         <note category="description">Button that removes a preference override</note>
       </notes>
       <segment state="translated">
@@ -10513,7 +10523,7 @@
     </unit>
     <unit id="1164332617862004960">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:133</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:179</note>
         <note category="description">Accessible label for a notification toggle. EVENT is the already-localised event name</note>
       </notes>
       <segment state="translated">
@@ -11938,16 +11948,6 @@
         <target>Offene Arbeit nach Zuständigen. Mehrfach zugewiesene Aufgaben erscheinen bei jedem Zuständigen.</target>
       </segment>
     </unit>
-    <unit id="2764406185986782463">
-      <notes>
-        <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:25,29</note>
-        <note category="description">Explains what the notification preference table controls</note>
-      </notes>
-      <segment state="translated">
-        <source> Choose which events notify you, and whether that choice applies everywhere or only in this workspace. </source>
-        <target> Wählen Sie, welche Ereignisse Sie benachrichtigen und ob diese Wahl überall oder nur in diesem Arbeitsbereich gilt. </target>
-      </segment>
-    </unit>
     <unit id="2765298659248883432">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:41,43</note>
@@ -12042,7 +12042,7 @@
     </unit>
     <unit id="4811445635785211905">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:182</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:228</note>
         <note category="description">Shown when a notification is set for every workspace</note>
       </notes>
       <segment state="translated">
@@ -12943,7 +12943,7 @@
     </unit>
     <unit id="188527826541298850">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:178</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:224</note>
         <note category="description">Shown when a workspace notification follows the global choice</note>
       </notes>
       <segment state="translated">
@@ -13803,14 +13803,14 @@
         <target>Dienstkonten konnten nicht geladen werden</target>
       </segment>
     </unit>
-    <unit id="2456694907046019567">
+    <unit id="595057067927295883">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:52,53</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:63,66</note>
         <note category="description">Heading above the notification toggles</note>
       </notes>
       <segment state="translated">
-        <source>Notify me about</source>
-        <target>Benachrichtigen bei</target>
+        <source> Notify me about </source>
+        <target> Benachrichtigen bei </target>
       </segment>
     </unit>
     <unit id="6197665339164385071">
@@ -14517,7 +14517,7 @@
     </unit>
     <unit id="2247746632525326951">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:34</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:35</note>
         <note category="description">Preference scope limited to the current workspace</note>
       </notes>
       <segment state="translated">
@@ -15273,14 +15273,14 @@
         <target>Einladen</target>
       </segment>
     </unit>
-    <unit id="1975110465154411737">
+    <unit id="8987098024875595306">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:87,93</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:122,124</note>
         <note category="description">Empty state for the notification preference list</note>
       </notes>
       <segment state="translated">
-        <source> There is nothing to configure yet. </source>
-        <target> Es gibt noch nichts einzustellen. </target>
+        <source>There is nothing to configure yet.</source>
+        <target>Es gibt noch nichts einzustellen.</target>
       </segment>
     </unit>
     <unit id="4574741116548118675">
@@ -15335,7 +15335,7 @@
     </unit>
     <unit id="4422463525624222082">
       <notes>
-        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:62,66</note>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:80,85</note>
         <note category="description">Accessible label for the control that picks the preference scope</note>
       </notes>
       <segment state="translated">
@@ -15593,6 +15593,16 @@
       <segment state="translated">
         <source>Delete &quot;<ph id="0" equiv="NAME" disp="relationType.name"/>&quot;? This cannot be undone.</source>
         <target>&quot;<ph id="0" equiv="NAME" disp="relationType.name"/>&quot; löschen? Dies kann nicht rückgängig gemacht werden.</target>
+      </segment>
+    </unit>
+    <unit id="8283092071761639431">
+      <notes>
+        <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:68,72</note>
+        <note category="description">Explains which scope the toggles below are editing</note>
+      </notes>
+      <segment state="translated">
+        <source> Choose which events notify you, and where that choice applies. </source>
+        <target> Wählen Sie, welche Ereignisse Sie benachrichtigen und wo diese Wahl gilt. </target>
       </segment>
     </unit>
     <unit id="8287890269428561193">
