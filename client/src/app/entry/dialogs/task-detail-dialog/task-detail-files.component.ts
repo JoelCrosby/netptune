@@ -8,22 +8,23 @@ import {
 } from '@core/services/task-file-upload.service';
 import { WorkspaceFilesService } from '@core/services/workspace-files.service';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { formatBytes } from '@core/util/bytes';
 import {
   LucideDownload,
-  LucideFile,
   LucideRotateCcw,
   LucideTrash2,
   LucideX,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dropzone.component';
+import { FileTypeIconComponent } from '@static/components/file-type-icon/file-type-icon.component';
+import { FileSizePipe } from '@static/pipes/file-size.pipe';
 
 @Component({
   selector: 'app-task-detail-files',
   imports: [
     FileDropzoneComponent,
-    LucideFile,
+    FileSizePipe,
+    FileTypeIconComponent,
     LucideDownload,
     LucideRotateCcw,
     LucideTrash2,
@@ -91,7 +92,7 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
         }
         @for (file of files(); track file.id) {
           <div class="border-border flex items-center gap-3 rounded border p-2">
-            <svg lucideFile class="text-muted h-4 w-4 shrink-0"></svg>
+            <app-file-type-icon size="small" [group]="file.contentTypeGroup" />
             <div class="min-w-0 flex-1">
               <a
                 class="block truncate font-medium hover:underline"
@@ -101,7 +102,7 @@ import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dro
                 {{ file.originalName }}
               </a>
               <span class="text-muted text-xs">
-                {{ formatBytes(file.sizeBytes) }} ·
+                {{ file.sizeBytes | fileSize }} ·
                 {{ file.uploadedByDisplayName || 'Unknown user' }}
               </span>
             </div>
@@ -151,7 +152,6 @@ export class TaskDetailFilesComponent {
   private readonly store = inject(Store);
   private readonly mutationError = signal('');
 
-  protected readonly formatBytes = formatBytes;
   readonly uploads = this.uploadService.uploads;
   readonly uploading = this.uploadService.uploading;
   readonly loading = this.filesResource.isLoading;

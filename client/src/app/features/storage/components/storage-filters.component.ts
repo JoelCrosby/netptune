@@ -1,74 +1,82 @@
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import {
+  WorkspaceFileContentTypeGroup,
   WorkspaceFileFilter,
   WorkspaceFilePurpose,
 } from '@core/models/view-models/workspace-file-view-model';
-import { LucideCheck } from '@lucide/angular';
-import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
-import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import {
+  LucideArrowUpDown,
+  LucideFile,
+  LucideListFilter,
+  LucideX,
+} from '@lucide/angular';
+import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
+import {
+  SelectMenuComponent,
+  SelectMenuOption,
+} from '@static/components/select-menu/select-menu.component';
 
 export type StorageSort = 'createdAt' | 'name' | 'sizeBytes';
+
+const facetButtonClass =
+  'border-border text-foreground hover:bg-foreground/5 h-9 min-w-0 gap-2 rounded-md border bg-transparent px-3 text-sm font-normal tracking-normal';
+
+const activeFacetButtonClass =
+  'border-primary/40 bg-primary/5 text-primary hover:bg-primary/10';
 
 @Component({
   selector: 'app-storage-filters',
   imports: [
-    DropdownButtonComponent,
-    LucideCheck,
-    MenuItemComponent,
+    FlatButtonComponent,
+    LucideX,
     SearchInputComponent,
+    SelectMenuComponent,
   ],
   template: `
-    <div class="mb-4 flex flex-wrap items-start gap-3">
+    <div class="mb-4 flex flex-wrap items-center gap-2">
       <app-search-input
         [term]="filter().query"
         (searchChange)="queryChange.emit($event ?? '')" />
 
-      <app-dropdown-button
-        #originMenu
-        [label]="originLabel()"
+      <app-select-menu
+        [options]="originOptions"
+        [value]="filter().purpose"
+        [icon]="originIcon"
         i18n-ariaLabel="Accessible label for the file origin filter"
         ariaLabel="Filter by origin"
-        buttonClass="w-44 justify-between">
-        @for (option of originOptions; track option.label) {
-          <button
-            app-menu-item
-            type="button"
-            role="menuitemradio"
-            [attr.aria-checked]="filter().purpose === option.value"
-            (click)="purposeChange.emit(option.value); originMenu.close()">
-            <span class="flex h-4 w-4 items-center justify-center">
-              @if (filter().purpose === option.value) {
-                <svg lucideCheck class="h-4 w-4"></svg>
-              }
-            </span>
-            <span>{{ option.label }}</span>
-          </button>
-        }
-      </app-dropdown-button>
+        [buttonClass]="originButtonClass()"
+        (valueChange)="purposeChange.emit($event)" />
 
-      <app-dropdown-button
-        #sortMenu
-        [label]="sortLabel()"
+      <app-select-menu
+        [options]="contentTypeOptions"
+        [value]="filter().contentTypeGroup"
+        [icon]="contentTypeIcon"
+        i18n-ariaLabel="Accessible label for the file type filter"
+        ariaLabel="Filter by file type"
+        [buttonClass]="contentTypeButtonClass()"
+        (valueChange)="contentTypeChange.emit($event)" />
+
+      <app-select-menu
+        [options]="sortOptions"
+        [value]="filter().sortBy"
+        [icon]="sortIcon"
         i18n-ariaLabel="Accessible label for the file sort control"
         ariaLabel="Sort files"
-        buttonClass="w-44 justify-between">
-        @for (option of sortOptions; track option.value) {
-          <button
-            app-menu-item
-            type="button"
-            role="menuitemradio"
-            [attr.aria-checked]="filter().sortBy === option.value"
-            (click)="sortChange.emit(option.value); sortMenu.close()">
-            <span class="flex h-4 w-4 items-center justify-center">
-              @if (filter().sortBy === option.value) {
-                <svg lucideCheck class="h-4 w-4"></svg>
-              }
-            </span>
-            <span>{{ option.label }}</span>
-          </button>
-        }
-      </app-dropdown-button>
+        [buttonClass]="facetButtonClass"
+        (valueChange)="emitSort($event)" />
+
+      @if (hasActiveFilters()) {
+        <button
+          app-flat-button
+          type="button"
+          color="ghost"
+          class="text-muted hover:text-foreground h-9 min-w-0 gap-1.5 rounded-md px-3 font-normal tracking-normal"
+          (click)="resetFilters.emit()">
+          <span i18n="Button that clears every active file filter">Reset</span>
+          <svg lucideX class="h-4 w-4"></svg>
+        </button>
+      }
     </div>
   `,
 })
@@ -77,12 +85,20 @@ export class StorageFiltersComponent {
 
   readonly queryChange = output<string>();
   readonly purposeChange = output<WorkspaceFilePurpose | undefined>();
+  readonly contentTypeChange = output<
+    WorkspaceFileContentTypeGroup | undefined
+  >();
   readonly sortChange = output<StorageSort>();
+  readonly resetFilters = output();
 
-  protected readonly originOptions: readonly {
-    label: string;
-    value: WorkspaceFilePurpose | undefined;
-  }[] = [
+  protected readonly facetButtonClass = facetButtonClass;
+  protected readonly originIcon = LucideListFilter;
+  protected readonly contentTypeIcon = LucideFile;
+  protected readonly sortIcon = LucideArrowUpDown;
+
+  protected readonly originOptions: readonly SelectMenuOption<
+    WorkspaceFilePurpose | undefined
+  >[] = [
     {
       label: $localize`:Label shown in the interface:All origins`,
       value: undefined,
@@ -97,10 +113,28 @@ export class StorageFiltersComponent {
     },
   ];
 
-  protected readonly sortOptions: readonly {
-    label: string;
-    value: StorageSort;
-  }[] = [
+  protected readonly contentTypeOptions: readonly SelectMenuOption<
+    WorkspaceFileContentTypeGroup | undefined
+  >[] = [
+    {
+      label: $localize`:Label shown in the interface:All types`,
+      value: undefined,
+    },
+    { label: $localize`:Label shown in the interface:Images`, value: 'image' },
+    {
+      label: $localize`:Label shown in the interface:Documents`,
+      value: 'document',
+    },
+    {
+      label: $localize`:Label shown in the interface:Archives`,
+      value: 'archive',
+    },
+    { label: $localize`:Label shown in the interface:Other`, value: 'other' },
+  ];
+
+  protected readonly sortOptions: readonly SelectMenuOption<
+    StorageSort | undefined
+  >[] = [
     {
       label: $localize`:Label shown in the interface:Newest`,
       value: 'createdAt',
@@ -112,18 +146,31 @@ export class StorageFiltersComponent {
     },
   ];
 
-  protected originLabel(): string {
-    return (
-      this.originOptions.find(
-        (option) => option.value === this.filter().purpose
-      )?.label ?? 'All origins'
+  protected readonly originButtonClass = computed(() => {
+    return this.facetClass(this.filter().purpose !== undefined);
+  });
+
+  protected readonly contentTypeButtonClass = computed(() => {
+    return this.facetClass(this.filter().contentTypeGroup !== undefined);
+  });
+
+  protected readonly hasActiveFilters = computed(() => {
+    const filter = this.filter();
+
+    return Boolean(
+      filter.query || filter.purpose !== undefined || filter.contentTypeGroup
     );
+  });
+
+  protected emitSort(sortBy: StorageSort | undefined) {
+    if (!sortBy) return;
+
+    this.sortChange.emit(sortBy);
   }
 
-  protected sortLabel(): string {
-    return (
-      this.sortOptions.find((option) => option.value === this.filter().sortBy)
-        ?.label ?? 'Newest'
-    );
+  private facetClass(active: boolean): string {
+    return active
+      ? `${facetButtonClass} ${activeFacetButtonClass}`
+      : facetButtonClass;
   }
 }

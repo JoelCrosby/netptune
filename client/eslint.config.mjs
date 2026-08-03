@@ -113,7 +113,7 @@ export default defineConfig([
             'd', 'points', 'vector-effect', 'orient', 'markerUnits',
             'marker-end', 'marker-start',
             // CSS class inputs on this repo's design-system components
-            'buttonClass', 'containerClass', 'emptyCellClass',
+            'buttonClass', 'containerClass', 'emptyCellClass', 'headerClass',
             'maxHeightClass', 'rowClass', 'tableClass',
             // fixed-vocabulary inputs (enum-like), not prose
             'align', 'appearance', 'appTooltipPosition', 'cdkDropListOrientation',

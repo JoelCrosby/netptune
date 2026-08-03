@@ -4,7 +4,7 @@
     <unit id="1196063204965083742">
       <notes>
         <note category="location">src/app/app.routes.ts:23</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:32,33</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:33,34</note>
         <note category="description">Page title for the workspace picker</note>
       </notes>
       <segment>
@@ -41,8 +41,8 @@
     <unit id="8049735056636703804">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:60</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:34,37</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:84</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:35,38</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:85</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -138,6 +138,15 @@
       </notes>
       <segment>
         <source>Remove Members</source>
+      </segment>
+    </unit>
+    <unit id="3818167647859760292">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:80,84</note>
+        <note category="description">Storage limit shown next to the used total. LIMIT is a formatted byte count</note>
+      </notes>
+      <segment>
+        <source> of <ph id="0" equiv="LIMIT" disp="{{ usage.limitBytes | fileSize // i18n(ph=&quot;LIMIT&quot;) }}"/> </source>
       </segment>
     </unit>
     <unit id="5277744923448150585">
@@ -386,7 +395,7 @@
     <unit id="2145525847134662630">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:220</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:55</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:56</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -396,7 +405,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:225</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:302</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:303</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -438,6 +447,15 @@
       </notes>
       <segment>
         <source> Delete relation type </source>
+      </segment>
+    </unit>
+    <unit id="4399723122506773449">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:99,101</note>
+        <note category="description">Label for the remaining storage figure</note>
+      </notes>
+      <segment>
+        <source> Available </source>
       </segment>
     </unit>
     <unit id="5179126202645575816">
@@ -538,6 +556,15 @@
       </notes>
       <segment>
         <source>Create Tags</source>
+      </segment>
+    </unit>
+    <unit id="814220969588557104">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:174</note>
+        <note category="description">Share of the storage limit currently in use</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="PERCENT" disp="percentage"/> used</source>
       </segment>
     </unit>
     <unit id="8144780536536072093">
@@ -723,7 +750,7 @@
     </unit>
     <unit id="3662745975342424755">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:262</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:244</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment>
@@ -849,7 +876,7 @@
     </unit>
     <unit id="7349773737371985580">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:260</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:242</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment>
@@ -950,18 +977,18 @@
         <note category="location">src/app/core/store/projects/projects.effects.ts:154</note>
         <note category="location">src/app/core/store/tags/tags.effects.ts:132</note>
         <note category="location">src/app/core/store/tasks/task-archive.service.ts:44</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:438</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:446</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:419</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:427</note>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:358</note>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:368</note>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:378</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:191,193</note>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:122,125</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:121,124</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:112,115</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:147</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:279</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:280</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:280</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:281</note>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:77,80</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:63,66</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
@@ -971,16 +998,16 @@
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:245</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:495</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:567</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:611</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:468</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:371</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:467</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:370</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:88,91</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:71,74</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:88,91</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:87,90</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:182,185</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:322</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:323</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:281</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:39,41</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
@@ -1116,20 +1143,21 @@
         <note category="location">src/app/core/store/boards/boards.effects.ts:130</note>
         <note category="location">src/app/core/store/groups/board-groups.effects.ts:602</note>
         <note category="location">src/app/core/store/notifications/notifications.effects.ts:23</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:437</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:445</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:418</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:426</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:146</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:278</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:279</note>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:173</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:279</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:280</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:172</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:34,36</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:263</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:494</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:262</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:219</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:493</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:566</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:467</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:466</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:181,182</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:370</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:321</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:369</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:322</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:193</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:280</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:32</note>
@@ -1151,7 +1179,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/store/boards/boards.effects.ts:133</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:312</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:313</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1161,7 +1189,7 @@
     <unit id="5887960889618527515">
       <notes>
         <note category="location">src/app/core/store/groups/board-groups.effects.ts:165</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:197</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:178</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1420,7 +1448,7 @@
       <notes>
         <note category="location">src/app/core/store/tags/tags.effects.ts:131</note>
         <note category="location">src/app/core/store/tags/tags.effects.ts:134</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:368</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:367</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -1439,7 +1467,7 @@
     <unit id="6770769801335635194">
       <notes>
         <note category="location">src/app/core/store/tasks/task-archive.service.ts:43</note>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:185</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:184</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -1448,7 +1476,7 @@
     </unit>
     <unit id="6419601202667262693">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:219</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:200</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1457,7 +1485,7 @@
     </unit>
     <unit id="8473956176297638892">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:241</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:222</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1475,7 +1503,7 @@
     </unit>
     <unit id="7190478463652380023">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:268</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:249</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1493,7 +1521,7 @@
     </unit>
     <unit id="2733818832464911318">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:384</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:365</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1502,7 +1530,7 @@
     </unit>
     <unit id="3902426799753147106">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:390</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:371</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1511,7 +1539,7 @@
     </unit>
     <unit id="1316502449942805709">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:439</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:420</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1529,7 +1557,7 @@
     </unit>
     <unit id="1614669751334500006">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:440</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:421</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:44,45</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:46,48</note>
         <note category="description">Title of a confirmation dialog</note>
@@ -1540,7 +1568,7 @@
     </unit>
     <unit id="6669247952835732315">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:132</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:114</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1549,7 +1577,7 @@
     </unit>
     <unit id="146031208309512340">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:154</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:136</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1558,7 +1586,7 @@
     </unit>
     <unit id="5317928950061943875">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:176</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:158</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1567,7 +1595,7 @@
     </unit>
     <unit id="6798662151758949681">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:199</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:181</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1594,16 +1622,25 @@
     </unit>
     <unit id="414708731564173967">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:221</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:203</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
         <source>User(s) removed</source>
       </segment>
     </unit>
+    <unit id="414887388288176527">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:123</note>
+        <note category="description">Label shown in the interface</note>
+      </notes>
+      <segment>
+        <source>Images</source>
+      </segment>
+    </unit>
     <unit id="5407874423943418786">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:270</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:252</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment>
@@ -1612,7 +1649,7 @@
     </unit>
     <unit id="8992660517762852123">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:272</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:254</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -2047,10 +2084,10 @@
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:82</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:70,71</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:25,28</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:82</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:385</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:308</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:384</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:307</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:48</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:18</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:38</note>
@@ -2201,7 +2238,7 @@
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:116,118</note>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:259,264</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:93,95</note>
         <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:142,145</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:65,66</note>
@@ -2312,7 +2349,7 @@
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:114</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:54</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:148</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:73,76</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:74,77</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:37</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:156,158</note>
@@ -2377,8 +2414,8 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:166,168</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:47</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:95</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:392</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:315</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:391</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:314</note>
         <note category="description">Label of the assignees field</note>
       </notes>
       <segment>
@@ -2391,7 +2428,7 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:124,129</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:49,54</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:108,119</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:97,103</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:96,102</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:47,60</note>
         <note category="description">Button that applies the bulk edit to the selected tasks</note>
       </notes>
@@ -2497,19 +2534,19 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:56,58</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:120</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:146</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:377</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:376</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:96,98</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:137</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:349</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:348</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:84,86</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:105</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:275</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:274</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:69,71</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:61,62</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:133</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:44,45</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:102</note>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:108</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:142</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:27</note>
         <note category="description">Label of the name field</note>
       </notes>
@@ -2555,6 +2592,15 @@
         <source> Create Status </source>
       </segment>
     </unit>
+    <unit id="424356320420294719">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:120</note>
+        <note category="description">Label shown in the interface</note>
+      </notes>
+      <segment>
+        <source>All types</source>
+      </segment>
+    </unit>
     <unit id="4246498607630718538">
       <notes>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:82,87</note>
@@ -2576,6 +2622,7 @@
     <unit id="3836000317327860441">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:25</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:79,81</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment>
@@ -2594,11 +2641,20 @@
     <unit id="6164296601931172481">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:54,56</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:25,27</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:26,28</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
       <segment>
         <source>Create Task</source>
+      </segment>
+    </unit>
+    <unit id="4733307402565258070">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:125</note>
+        <note category="description">Label shown in the interface</note>
+      </notes>
+      <segment>
+        <source>Documents</source>
       </segment>
     </unit>
     <unit id="4739818603756173797">
@@ -2923,7 +2979,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:58,59</note>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:48,50</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:404</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:403</note>
         <note category="description">Label of the relation type field</note>
       </notes>
       <segment>
@@ -2973,7 +3029,7 @@
     </unit>
     <unit id="1830028453025281383">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:99,102</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:98,101</note>
         <note category="description">Shown when no tasks match the link search</note>
       </notes>
       <segment>
@@ -2982,7 +3038,7 @@
     </unit>
     <unit id="2981219928115418649">
       <notes>
-        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:130,132</note>
+        <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:129,131</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:36</note>
         <note category="description">Button that creates the task link</note>
       </notes>
@@ -3072,8 +3128,8 @@
     </unit>
     <unit id="5898235959611677094">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:277,279</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:218,220</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:276,278</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:217,219</note>
         <note category="description">Heading of an empty task list on a usage page</note>
       </notes>
       <segment>
@@ -3152,7 +3208,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:106,110</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:199,202</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:65,67</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:66,68</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:340,345</note>
         <note category="description">Button that returns to the previous wizard step</note>
       </notes>
@@ -3173,8 +3229,8 @@
     <unit id="2489114267038713519">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:125,128</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:40,42</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:101</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:63,65</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:252</note>
         <note category="description">Button that creates the project</note>
       </notes>
       <segment>
@@ -3214,7 +3270,7 @@
     </unit>
     <unit id="4315644716788167441">
       <notes>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:369</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:368</note>
         <note category="description">Asks the user to confirm deleting a tag. NAME is the tag name, COUNT is how many tasks carry it</note>
       </notes>
       <segment>
@@ -3250,7 +3306,7 @@
     </unit>
     <unit id="4116911651502837995">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:37,40</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:38,41</note>
         <note category="description">Section heading for files attached to a task</note>
       </notes>
       <segment>
@@ -3259,7 +3315,7 @@
     </unit>
     <unit id="8107440182294518448">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:46,49</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:47,50</note>
         <note category="description">Button that stops in-progress file uploads</note>
       </notes>
       <segment>
@@ -3268,7 +3324,7 @@
     </unit>
     <unit id="7765958911112446269">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:53,56</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:54,57</note>
         <note category="description">Shown while a task&apos;s files are loading</note>
       </notes>
       <segment>
@@ -3286,7 +3342,7 @@
     </unit>
     <unit id="5171192616638755303">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:78,80</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:79,81</note>
         <note category="description">Button that retries a failed file upload</note>
       </notes>
       <segment>
@@ -3295,8 +3351,8 @@
     </unit>
     <unit id="1789680955834451263">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:114,116</note>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:162,164</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:115,117</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:189,191</note>
         <note category="description">Accessible label for the button that downloads an attached file</note>
       </notes>
       <segment>
@@ -3305,8 +3361,8 @@
     </unit>
     <unit id="6693349469471580292">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:125,127</note>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:176,178</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:126,128</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:203,205</note>
         <note category="description">Accessible label for the button that deletes an attached file</note>
       </notes>
       <segment>
@@ -3315,7 +3371,7 @@
     </unit>
     <unit id="8598917078690004028">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:134,137</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:135,138</note>
         <note category="description">Empty state when a task has no attached files</note>
       </notes>
       <segment>
@@ -3491,6 +3547,15 @@
         <source> Save Changes </source>
       </segment>
     </unit>
+    <unit id="6274063464421350914">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:110,112</note>
+        <note category="description">Label for the number of files counted towards storage</note>
+      </notes>
+      <segment>
+        <source> Tracked files </source>
+      </segment>
+    </unit>
     <unit id="3561477610750565242">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:129,130</note>
@@ -3571,7 +3636,7 @@
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:23,25</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:99,100</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:399</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:398</note>
         <note category="description">Label of the start-date filter</note>
       </notes>
       <segment>
@@ -3583,7 +3648,7 @@
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:29,31</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:107,108</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:409</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:408</note>
         <note category="description">Label of the end-date filter</note>
       </notes>
       <segment>
@@ -3602,6 +3667,7 @@
     <unit id="7808756054397155068">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:35,38</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:76,78</note>
         <note category="description">Button that clears the filters</note>
       </notes>
       <segment>
@@ -4310,8 +4376,8 @@
     </unit>
     <unit id="2176659033176029418">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:371</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:294</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:370</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:293</note>
         <note category="description">Column heading for the task key</note>
       </notes>
       <segment>
@@ -4888,10 +4954,10 @@
     <unit id="491995769371858733">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:82,83</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:101,103</note>
-        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:110,112</note>
-        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:95,97</note>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:84,87</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:100,102</note>
+        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:109,111</note>
+        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:94,96</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:83,86</note>
         <note category="description">Shown in place of an empty value</note>
       </notes>
       <segment>
@@ -4999,8 +5065,8 @@
     <unit id="2409078062655081027">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:192,194</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:78,81</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:128,131</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:77,80</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:127,130</note>
         <note category="description">Option placing the created task outside any sprint</note>
       </notes>
       <segment>
@@ -5058,7 +5124,7 @@
     <unit id="4754052462239552170">
       <notes>
         <note category="location">src/app/features/automations/components/automation-detail-heading.component.ts:50,52</note>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:354</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:353</note>
         <note category="description">Tooltip on the button that deletes an automation rule</note>
       </notes>
       <segment>
@@ -5068,7 +5134,7 @@
     <unit id="3193976279273491157">
       <notes>
         <note category="location">src/app/features/automations/components/automation-detail-stats.component.ts:14,15</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:148</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:149</note>
         <note category="location">src/app/shell/command-palette/command-palette.component.ts:136,138</note>
         <note category="location">src/app/static/components/page-header/page-header-actions.component.ts:28,29</note>
         <note category="description">Stat label for how many actions a rule has</note>
@@ -5171,7 +5237,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-enabled-badge.component.ts:17</note>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:88,91</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:150</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:151</note>
         <note category="description">Badge marking an automation that is switched on</note>
       </notes>
       <segment>
@@ -5606,6 +5672,15 @@
         <source>Every linked task</source>
       </segment>
     </unit>
+    <unit id="691562233899087793">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:134,136</note>
+        <note category="description">Accessible label while the storage summary loads</note>
+      </notes>
+      <segment>
+        <source>Loading storage usage</source>
+      </segment>
+    </unit>
     <unit id="6179875935234779828">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rule-summary.component.ts:38,40</note>
@@ -5701,7 +5776,7 @@
     </unit>
     <unit id="6678152968885144111">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:176,179</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:175,178</note>
         <note category="description">Shown when an automation has never run</note>
       </notes>
       <segment>
@@ -5710,7 +5785,7 @@
     </unit>
     <unit id="1083429400694527107">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:339</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:338</note>
         <note category="description">Row action that edits an automation</note>
       </notes>
       <segment>
@@ -5719,7 +5794,7 @@
     </unit>
     <unit id="1859763796404778382">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:344</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:343</note>
         <note category="description">Row action that toggles an automation on or off</note>
       </notes>
       <segment>
@@ -5728,7 +5803,7 @@
     </unit>
     <unit id="3021733521983397827">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:349</note>
+        <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:348</note>
         <note category="description">Row action that duplicates an automation</note>
       </notes>
       <segment>
@@ -5746,8 +5821,8 @@
     </unit>
     <unit id="8497552253509503838">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:271,272</note>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:296,297</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:270,271</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:295,296</note>
         <note category="description">Marks a deleted task</note>
       </notes>
       <segment>
@@ -5757,7 +5832,7 @@
     <unit id="7343642247493540451">
       <notes>
         <note category="location">src/app/features/automations/components/automation-runs-table.component.ts:40,42</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:122</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:123</note>
         <note category="description">Column heading for the trigger</note>
       </notes>
       <segment>
@@ -6351,7 +6426,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:172,174</note>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:207,209</note>
-        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:83,86</note>
+        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:82,85</note>
         <note category="description">Heading above the schedule settings</note>
       </notes>
       <segment>
@@ -6471,7 +6546,7 @@
     </unit>
     <unit id="4592727056497878092">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:83,85</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:82,84</note>
         <note category="description">Empty state for the dry-run task picker</note>
       </notes>
       <segment>
@@ -6480,8 +6555,8 @@
     </unit>
     <unit id="7659765116047088006">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:101,104</note>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:71,74</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:100,103</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:72,75</note>
         <note category="description">Button that tests the automation against a task</note>
       </notes>
       <segment>
@@ -6499,7 +6574,7 @@
     </unit>
     <unit id="5212673607597932136">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:110,112</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:109,111</note>
         <note category="description">Shown when a test run fails</note>
       </notes>
       <segment>
@@ -6508,9 +6583,9 @@
     </unit>
     <unit id="4260236037636469178">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:119,121</note>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:132,134</note>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:158,160</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:118,120</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:131,133</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:157,159</note>
         <note category="description">Prefix before the task a rule would not act on</note>
       </notes>
       <segment>
@@ -6519,7 +6594,7 @@
     </unit>
     <unit id="395494752454949389">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:125,127</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:124,126</note>
         <note category="description">Explains why a rule would not run</note>
       </notes>
       <segment>
@@ -6528,7 +6603,7 @@
     </unit>
     <unit id="783159925836439639">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:142,145</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:141,144</note>
         <note category="description">Explains that the trigger does not currently apply. TRIGGER is the trigger name</note>
       </notes>
       <segment>
@@ -6537,7 +6612,7 @@
     </unit>
     <unit id="872680167129760755">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:151,153</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:150,152</note>
         <note category="description">Prefix before the task a rule would act on</note>
       </notes>
       <segment>
@@ -6546,7 +6621,7 @@
     </unit>
     <unit id="3890635969259921320">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:171,174</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:170,173</note>
         <note category="description">Explains that the trigger only fires on change. TRIGGER is the trigger name</note>
       </notes>
       <segment>
@@ -6555,7 +6630,7 @@
     </unit>
     <unit id="4280948567601431972">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:182,184</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:181,183</note>
         <note category="description">Explains that a disabled rule never runs</note>
       </notes>
       <segment>
@@ -6564,7 +6639,7 @@
     </unit>
     <unit id="5725166963799068404">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:190,192</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:189,191</note>
         <note category="description">Explains conditions that need a change event</note>
       </notes>
       <segment>
@@ -6573,7 +6648,7 @@
     </unit>
     <unit id="84990333805541981">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:206,208</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:205,207</note>
         <note category="description">Explains a rule without conditions</note>
       </notes>
       <segment>
@@ -6582,7 +6657,7 @@
     </unit>
     <unit id="1678965029912836783">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:224,226</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:223,225</note>
         <note category="description">Button that runs the automation immediately</note>
       </notes>
       <segment>
@@ -6591,16 +6666,25 @@
     </unit>
     <unit id="4463677923816016664">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:229,233</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:228,232</note>
         <note category="description">Explains what Run now does. TASK is the task name</note>
       </notes>
       <segment>
         <source> Runs the actions above against <ph id="0" equiv="TASK" disp="{{ dryRun.taskName // i18n(ph=&quot;TASK&quot;) }}"/>. </source>
       </segment>
     </unit>
+    <unit id="446504275054335484">
+      <notes>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:75,77</note>
+        <note category="description">Shown when the project list fails to load</note>
+      </notes>
+      <segment>
+        <source>Projects could not be loaded.</source>
+      </segment>
+    </unit>
     <unit id="4290124631686506665">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:240,242</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:239,241</note>
         <note category="description">Confirms a run was queued</note>
       </notes>
       <segment>
@@ -6609,7 +6693,7 @@
     </unit>
     <unit id="5703309413910727209">
       <notes>
-        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:249,251</note>
+        <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:248,250</note>
         <note category="description">Shown when starting a run fails</note>
       </notes>
       <segment>
@@ -7029,7 +7113,7 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:118</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:22,23</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:110</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:111</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
       <segment>
@@ -7575,7 +7659,7 @@
     </unit>
     <unit id="2826309495913375988">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:266</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:248</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment>
@@ -7681,6 +7765,15 @@
         <source>Delete the task after <ph id="0" equiv="COUNT" disp="amount"/> days</source>
       </segment>
     </unit>
+    <unit id="7382738738639707814">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:50,52</note>
+        <note category="description">Heading of the storage usage summary</note>
+      </notes>
+      <segment>
+        <source> Storage usage </source>
+      </segment>
+    </unit>
     <unit id="2533649065343508753">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:767</note>
@@ -7764,7 +7857,7 @@
     </unit>
     <unit id="6236514510816269149">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:60,63</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:61,64</note>
         <note category="description">Page title for a single automation</note>
       </notes>
       <segment>
@@ -7773,7 +7866,7 @@
     </unit>
     <unit id="9187855490716817910">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:83,85</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:84,86</note>
         <note category="description">Button that switches an automation off</note>
       </notes>
       <segment>
@@ -7782,7 +7875,7 @@
     </unit>
     <unit id="2180291763949669799">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:86,89</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:87,90</note>
         <note category="description">Button that switches an automation on</note>
       </notes>
       <segment>
@@ -7791,7 +7884,7 @@
     </unit>
     <unit id="7585826646011739428">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:91,94</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:92,95</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207,208</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:188</note>
@@ -7803,8 +7896,8 @@
     </unit>
     <unit id="2650015568553587457">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:101,102</note>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:283</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:102,103</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:284</note>
         <note category="description">Shown when a single automation fails to load</note>
       </notes>
       <segment>
@@ -7813,15 +7906,15 @@
     </unit>
     <unit id="3660632916771561809">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:103,105</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:74,76</note>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:43,46</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:34,36</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:104,106</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:75,77</note>
+        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:44,47</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:35,37</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:102,104</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:108,110</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:89,91</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:63,65</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:44,47</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:45,48</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
       <segment>
@@ -7830,7 +7923,7 @@
     </unit>
     <unit id="3202007690147542060">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:120,122</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:121,123</note>
         <note category="description">Heading of the auto-disabled warning</note>
       </notes>
       <segment>
@@ -7839,7 +7932,7 @@
     </unit>
     <unit id="2536790850571610592">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:126,128</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:127,129</note>
         <note category="description">Advice on the auto-disabled warning</note>
       </notes>
       <segment>
@@ -7848,7 +7941,7 @@
     </unit>
     <unit id="8451136300262007554">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:140,142</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:141,143</note>
         <note category="description">Heading of the broken-reference warning</note>
       </notes>
       <segment>
@@ -7857,7 +7950,7 @@
     </unit>
     <unit id="4308895016686267984">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:150,152</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:151,153</note>
         <note category="description">Advice on the broken-reference warning</note>
       </notes>
       <segment>
@@ -7866,7 +7959,7 @@
     </unit>
     <unit id="5049991566529231719">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:168,170</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:169,171</note>
         <note category="description">Heading above the automation run history</note>
       </notes>
       <segment>
@@ -7875,7 +7968,7 @@
     </unit>
     <unit id="1102717806459547726">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:172,174</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:173,175</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:200,203</note>
         <note category="description">Button that reloads the run history</note>
       </notes>
@@ -7885,7 +7978,7 @@
     </unit>
     <unit id="7399447739064801797">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:261</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:262</note>
         <note category="description">Confirmation after switching an automation off</note>
       </notes>
       <segment>
@@ -7894,7 +7987,7 @@
     </unit>
     <unit id="1611905710648746346">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:262</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:263</note>
         <note category="description">Confirmation after switching an automation on</note>
       </notes>
       <segment>
@@ -7903,8 +7996,8 @@
     </unit>
     <unit id="976634642400414372">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:268</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:225</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:269</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:226</note>
         <note category="description">Error after failing to update an automation</note>
       </notes>
       <segment>
@@ -7922,8 +8015,8 @@
     </unit>
     <unit id="7223592009379733387">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:276</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:277</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:277</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:278</note>
         <note category="description">Title of the confirmation dialog for deleting an automation</note>
       </notes>
       <segment>
@@ -7932,8 +8025,8 @@
     </unit>
     <unit id="2841737509665294845">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:295</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:298</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:296</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:299</note>
         <note category="description">Confirmation after deleting an automation</note>
       </notes>
       <segment>
@@ -7942,8 +8035,8 @@
     </unit>
     <unit id="3476741388176301769">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:301</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:304</note>
+        <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:302</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:305</note>
         <note category="description">Error after failing to delete an automation</note>
       </notes>
       <segment>
@@ -7961,7 +8054,7 @@
     </unit>
     <unit id="2330577642930707695">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:80,83</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:81,84</note>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:121,123</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
@@ -7971,7 +8064,7 @@
     </unit>
     <unit id="4930506384627295710">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:102,103</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:103,104</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>
         <note category="location">src/app/workspace.routes.ts:156</note>
         <note category="description">Title of the settings step</note>
@@ -7982,7 +8075,7 @@
     </unit>
     <unit id="3834809105377207268">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:104,105</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:105,106</note>
         <note category="description">Description of the settings step</note>
       </notes>
       <segment>
@@ -7991,7 +8084,7 @@
     </unit>
     <unit id="5604082766881429976">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:123,124</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:124,125</note>
         <note category="description">Description of the trigger step</note>
       </notes>
       <segment>
@@ -8000,7 +8093,7 @@
     </unit>
     <unit id="2079395509894825886">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:133,134</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:134,135</note>
         <note category="description">Title of the conditions step</note>
       </notes>
       <segment>
@@ -8009,7 +8102,7 @@
     </unit>
     <unit id="1338399653861272449">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:135,136</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:136,137</note>
         <note category="description">Description of the conditions step</note>
       </notes>
       <segment>
@@ -8018,7 +8111,7 @@
     </unit>
     <unit id="4077737974918457925">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:149,150</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:150,151</note>
         <note category="description">Description of the actions step</note>
       </notes>
       <segment>
@@ -8027,7 +8120,7 @@
     </unit>
     <unit id="428134870314022743">
       <notes>
-        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:439</note>
+        <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:440</note>
         <note category="description">Error after failing to save an automation</note>
       </notes>
       <segment>
@@ -8036,8 +8129,8 @@
     </unit>
     <unit id="6112696339048270378">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:55,56</note>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:63,67</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:56,57</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:64,68</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:257</note>
         <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Page title for the automation list</note>
@@ -8057,7 +8150,7 @@
     </unit>
     <unit id="8913974798870595154">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:57,59</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:58,60</note>
         <note category="description">Button that opens the create-automation form</note>
       </notes>
       <segment>
@@ -8066,7 +8159,7 @@
     </unit>
     <unit id="6054707091375835376">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:72,73</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:73,74</note>
         <note category="description">Shown when the automation list fails to load</note>
       </notes>
       <segment>
@@ -8084,7 +8177,7 @@
     </unit>
     <unit id="9063742557685234950">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:92,94</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:93,95</note>
         <note category="description">Heading of the empty automation list</note>
       </notes>
       <segment>
@@ -8093,7 +8186,7 @@
     </unit>
     <unit id="7327883206054172578">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:96,97</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:97,98</note>
         <note category="description">Explains what workspace automations do, on the empty state</note>
       </notes>
       <segment>
@@ -8111,7 +8204,7 @@
     </unit>
     <unit id="378048253639190257">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:106,108</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:107,109</note>
         <note category="description">Button that opens the create-automation form</note>
       </notes>
       <segment>
@@ -8120,7 +8213,7 @@
     </unit>
     <unit id="4645345687322304891">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:146</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:147</note>
         <note category="description">Stat label for how many automation rules exist</note>
       </notes>
       <segment>
@@ -8129,7 +8222,7 @@
     </unit>
     <unit id="3036804340853319197">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:154</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:155</note>
         <note category="description">Stat label for recent failed automation runs</note>
       </notes>
       <segment>
@@ -8138,7 +8231,7 @@
     </unit>
     <unit id="6473284394312594965">
       <notes>
-        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:265</note>
+        <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:266</note>
         <note category="description">Error after failing to clone an automation</note>
       </notes>
       <segment>
@@ -8158,8 +8251,8 @@
       <notes>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:77,79</note>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:81,85</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:104,106</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:108,111</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:103,105</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:107,110</note>
         <note category="description">Accessible label for the icon marking a task that has comments</note>
       </notes>
       <segment>
@@ -8322,8 +8415,8 @@
     <unit id="6904866445262015585">
       <notes>
         <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:59</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:24</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33,34</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:25</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:34,35</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:81,83</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:180</note>
@@ -8373,7 +8466,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:124</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:292</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:293</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment>
@@ -8384,7 +8477,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:125</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:129</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:44,46</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:45,47</note>
         <note category="description">Title of the create-board dialog</note>
       </notes>
       <segment>
@@ -8702,7 +8795,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:192,193</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:193,194</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment>
@@ -8711,7 +8804,7 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:204,205</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:205,206</note>
         <note category="description">Tooltip on the button that deletes a board group</note>
       </notes>
       <segment>
@@ -8720,7 +8813,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:297</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:298</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment>
@@ -8729,7 +8822,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:307</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:308</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment>
@@ -8738,8 +8831,8 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:43</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:51,54</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:44</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:52,55</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:194</note>
         <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Page title for the board list</note>
@@ -8750,7 +8843,7 @@
     </unit>
     <unit id="1274285614133216742">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:61,63</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:62,64</note>
         <note category="description">Heading of the empty board list</note>
       </notes>
       <segment>
@@ -8759,7 +8852,7 @@
     </unit>
     <unit id="7856854208950034768">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:492</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:491</note>
         <note category="description">Title of the confirmation dialog for deleting a relation type</note>
       </notes>
       <segment>
@@ -8768,7 +8861,7 @@
     </unit>
     <unit id="7864156617362454936">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:65,68</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:66,69</note>
         <note category="description">Explains what a board is for, on the empty board list</note>
       </notes>
       <segment>
@@ -8777,7 +8870,7 @@
     </unit>
     <unit id="8077962914491228902">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:76,78</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:77,79</note>
         <note category="description">Button that opens the create-board dialog</note>
       </notes>
       <segment>
@@ -8862,7 +8955,7 @@
     <unit id="4237605958853876047">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:37,39</note>
-        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:55,57</note>
+        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:54,56</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
       </notes>
       <segment>
@@ -8872,9 +8965,9 @@
     <unit id="8713901901396468144">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:72,75</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:147,150</note>
-        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:122,125</note>
-        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:113,115</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:146,149</note>
+        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:121,124</note>
+        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:112,114</note>
         <note category="description">Shown when a task has nobody assigned</note>
       </notes>
       <segment>
@@ -8929,7 +9022,7 @@
     </unit>
     <unit id="6425790240382566513">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:264</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:246</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment>
@@ -9112,7 +9205,7 @@
     </unit>
     <unit id="1301232718408636510">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:46,48</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:45,47</note>
         <note category="description">Empty state for the assigned-tasks card</note>
       </notes>
       <segment>
@@ -9330,7 +9423,7 @@
     </unit>
     <unit id="2014313920164588286">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:102,105</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:101,104</note>
         <note category="description">Badge marking a notification that has been read</note>
       </notes>
       <segment>
@@ -9339,7 +9432,7 @@
     </unit>
     <unit id="7795403436492031020">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:109,112</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:108,111</note>
         <note category="description">Badge marking an unread notification</note>
       </notes>
       <segment>
@@ -9357,7 +9450,7 @@
     </unit>
     <unit id="3512672071226814404">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:118,119</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:117,118</note>
         <note category="description">Empty state when there are no notifications</note>
       </notes>
       <segment>
@@ -9366,7 +9459,7 @@
     </unit>
     <unit id="3408295258641264159">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:120,124</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:119,123</note>
         <note category="description">Explains what the notification list will contain</note>
       </notes>
       <segment>
@@ -9375,7 +9468,7 @@
     </unit>
     <unit id="1616968388083998795">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:163</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:162</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -9384,7 +9477,7 @@
     </unit>
     <unit id="7593555694782789615">
       <notes>
-        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:168</note>
+        <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:167</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -9510,7 +9603,7 @@
     </unit>
     <unit id="4878739351848976503">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:306,308</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:305,307</note>
         <note category="description">Heading of an empty relation list on a usage page</note>
       </notes>
       <segment>
@@ -9546,7 +9639,7 @@
     </unit>
     <unit id="4915431133669985304">
       <notes>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:34,37</note>
+        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:35,38</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:108</note>
         <note category="location">src/app/workspace.routes.ts:162</note>
         <note category="description">Page title for the user profile</note>
@@ -9566,7 +9659,7 @@
     </unit>
     <unit id="5708580315739377560">
       <notes>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:41,42</note>
+        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:42,43</note>
         <note category="description">Shown when the profile fails to load</note>
       </notes>
       <segment>
@@ -9575,7 +9668,7 @@
     </unit>
     <unit id="5342600259269350996">
       <notes>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:52,55</note>
+        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:53,56</note>
         <note category="description">Heading above linked external sign-in accounts</note>
       </notes>
       <segment>
@@ -9602,7 +9695,7 @@
     </unit>
     <unit id="1258729180612470994">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:127,129</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:128,130</note>
         <note category="description">Tooltip on the button that asks the assistant about this sprint</note>
       </notes>
       <segment>
@@ -9611,8 +9704,8 @@
     </unit>
     <unit id="1258966902012251034">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:100,103</note>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:126,129</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:99,102</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:150,153</note>
         <note category="description">Shown in place of a value that is not known</note>
       </notes>
       <segment>
@@ -9621,7 +9714,7 @@
     </unit>
     <unit id="2195929958481364265">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:116,117</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:115,116</note>
         <note category="description">Heading of the empty archive list</note>
       </notes>
       <segment>
@@ -9639,7 +9732,7 @@
     </unit>
     <unit id="5569798609793426852">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:118,119</note>
+        <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:117,118</note>
         <note category="description">Explains what the archive list will contain</note>
       </notes>
       <segment>
@@ -9686,7 +9779,7 @@
     </unit>
     <unit id="2630272244920413702">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:182,184</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:181,183</note>
         <note category="description">Button that opens the create-task dialog</note>
       </notes>
       <segment>
@@ -9696,7 +9789,7 @@
     <unit id="1055686627716339120">
       <notes>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
-        <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:13,15</note>
+        <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:14,16</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:186</note>
         <note category="description">Page title for the archived task list</note>
       </notes>
@@ -9786,18 +9879,9 @@
         <source>Default task status</source>
       </segment>
     </unit>
-    <unit id="2646058129880881718">
-      <notes>
-        <note category="location">src/app/features/projects/components/project-list-item/project-list-item.component.ts:27,31</note>
-        <note category="description">Heading above a project&apos;s source repository link</note>
-      </notes>
-      <segment>
-        <source> Repository </source>
-      </segment>
-    </unit>
     <unit id="429530728708175872">
       <notes>
-        <note category="location">src/app/features/projects/components/project-list-item/project-list-item.component.ts:63</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:213</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -9824,7 +9908,7 @@
     </unit>
     <unit id="3953140809261219704">
       <notes>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:32,33</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:33,34</note>
         <note category="description">Shown when a project fails to load</note>
       </notes>
       <segment>
@@ -9842,8 +9926,8 @@
     </unit>
     <unit id="7091571651222742304">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:38,39</note>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:46,50</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,62</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:69,73</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:226</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Page title for the project list</note>
@@ -9854,7 +9938,7 @@
     </unit>
     <unit id="2364747842302328591">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:57,59</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:150,152</note>
         <note category="description">Heading of the empty project list</note>
       </notes>
       <segment>
@@ -9863,7 +9947,7 @@
     </unit>
     <unit id="6574109356050640128">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,64</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:154,157</note>
         <note category="description">Explains what a project is for, on the empty project list</note>
       </notes>
       <segment>
@@ -9872,7 +9956,7 @@
     </unit>
     <unit id="4921087619298848078">
       <notes>
-        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:72,74</note>
+        <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:165,167</note>
         <note category="description">Button that opens the create-project dialog</note>
       </notes>
       <segment>
@@ -10744,8 +10828,8 @@
     <unit id="4578192247039196794">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-timeline.component.ts:71,72</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:378</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:301</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:377</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:300</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:17</note>
         <note category="description">Noun for a roadmap row, used in the selection summary</note>
       </notes>
@@ -10791,7 +10875,7 @@
     </unit>
     <unit id="1314763293556517482">
       <notes>
-        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:52,53</note>
+        <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:51,52</note>
         <note category="description">Empty state for the unscheduled task list</note>
       </notes>
       <segment>
@@ -10957,9 +11041,9 @@
     </unit>
     <unit id="9092123752727924180">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:310,312</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:281,282</note>
-        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:222,223</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:309,311</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:280,281</note>
+        <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:221,222</note>
         <note category="description">Explains that nothing currently uses the item being viewed</note>
       </notes>
       <segment>
@@ -11827,7 +11911,7 @@
     </unit>
     <unit id="5183297199669717683">
       <notes>
-        <note category="location">src/app/core/store/users/users.effects.ts:258</note>
+        <note category="location">src/app/core/store/users/users.effects.ts:240</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment>
@@ -12513,7 +12597,7 @@
     </unit>
     <unit id="3468129479435447499">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:123,124</note>
+        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:122,123</note>
         <note category="description">Button that assigns the task to a sprint</note>
       </notes>
       <segment>
@@ -12522,7 +12606,7 @@
     </unit>
     <unit id="5390387947838066066">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:149,152</note>
+        <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:148,151</note>
         <note category="description">Shown when there is no sprint to assign a task to</note>
       </notes>
       <segment>
@@ -12532,7 +12616,7 @@
     <unit id="5280218112746407598">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:19,20</note>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:106</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:107</note>
         <note category="description">Stat label for tasks not started yet</note>
       </notes>
       <segment>
@@ -12559,7 +12643,7 @@
     </unit>
     <unit id="2169543080106889901">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:44,46</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:43,45</note>
         <note category="description">Empty state for the sprint task list</note>
       </notes>
       <segment>
@@ -12568,7 +12652,7 @@
     </unit>
     <unit id="8212177249756365917">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:98,101</note>
+        <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:97,100</note>
         <note category="description">Button that removes the task from the sprint</note>
       </notes>
       <segment>
@@ -12711,7 +12795,7 @@
     </unit>
     <unit id="8185120639208275754">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:63,66</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
         <note category="description">Shown when no tasks match the add-to-sprint search</note>
       </notes>
       <segment>
@@ -12729,7 +12813,7 @@
     </unit>
     <unit id="7203499214337934700">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:97,100</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:96,99</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =0 {Add tasks} =1 {Add 1 task} other {Add <ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
@@ -12738,7 +12822,7 @@
     <unit id="763816024488593537">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:39,42</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:209,210</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:210,211</note>
         <note category="description">Title of the dialog for completing a sprint</note>
       </notes>
       <segment>
@@ -12909,7 +12993,7 @@
     </unit>
     <unit id="5194912054053114732">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:46,48</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:47,49</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
         <note category="description">Page title for the sprint backlog</note>
       </notes>
@@ -12919,7 +13003,7 @@
     </unit>
     <unit id="8279562457696531698">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:59,65</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:60,66</note>
         <note category="description">Shown when there is no sprint available to assign backlog tasks to</note>
       </notes>
       <segment>
@@ -12928,7 +13012,8 @@
     </unit>
     <unit id="8693603235657020323">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:114</note>
+        <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:115</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:132</note>
         <note category="description">Backlog group heading for tasks in any other status</note>
       </notes>
       <segment>
@@ -12946,7 +13031,7 @@
     </unit>
     <unit id="8124076252558546675">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:138,140</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:139,141</note>
         <note category="description">Tooltip on the button that edits the sprint</note>
       </notes>
       <segment>
@@ -12955,7 +13040,7 @@
     </unit>
     <unit id="6222783490221982219">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:146,148</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:147,149</note>
         <note category="description">Tooltip on the button that deletes the sprint</note>
       </notes>
       <segment>
@@ -12964,7 +13049,7 @@
     </unit>
     <unit id="1183305546671848577">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:162,164</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:163,165</note>
         <note category="description">Tooltip on the button that adds existing tasks to the sprint</note>
       </notes>
       <segment>
@@ -12973,7 +13058,7 @@
     </unit>
     <unit id="7609408325154938991">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:170,174</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:171,175</note>
         <note category="description">Button that opens the dialog for adding existing tasks to the sprint</note>
       </notes>
       <segment>
@@ -12982,11 +13067,20 @@
     </unit>
     <unit id="2465583616985358329">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:180,182</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:181,183</note>
         <note category="description">Tooltip on the button that creates a task in the sprint</note>
       </notes>
       <segment>
         <source>Create a new task in this sprint</source>
+      </segment>
+    </unit>
+    <unit id="4003810434505790997">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:56,58</note>
+        <note category="description">Accessible label for the file type filter</note>
+      </notes>
+      <segment>
+        <source>Filter by file type</source>
       </segment>
     </unit>
     <unit id="4007569097635901294">
@@ -13000,7 +13094,7 @@
     </unit>
     <unit id="4013607694293243242">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:184,186</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:185,187</note>
         <note category="description">Button that creates a new task in the sprint</note>
       </notes>
       <segment>
@@ -13009,7 +13103,7 @@
     </unit>
     <unit id="4741538562127389826">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:196,198</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:197,199</note>
         <note category="description">Button that starts the sprint</note>
       </notes>
       <segment>
@@ -13018,7 +13112,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:319</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:320</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:278</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -13028,7 +13122,7 @@
     </unit>
     <unit id="4347094825344030699">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:55,56</note>
+        <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:56,57</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:210</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Page title for the sprint list</note>
@@ -13048,7 +13142,7 @@
     </unit>
     <unit id="4447812500450821815">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:31,33</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:47,49</note>
         <note category="description">Accessible label for the file origin filter</note>
       </notes>
       <segment>
@@ -13057,7 +13151,7 @@
     </unit>
     <unit id="2171902520766849476">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:54,56</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:65,67</note>
         <note category="description">Accessible label for the file sort control</note>
       </notes>
       <segment>
@@ -13066,7 +13160,7 @@
     </unit>
     <unit id="4900513099591631260">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:87</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:103</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -13075,7 +13169,7 @@
     </unit>
     <unit id="4193383036457853626">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:91</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:107</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -13084,7 +13178,7 @@
     </unit>
     <unit id="4594682104428036137">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:95</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:111</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -13093,7 +13187,7 @@
     </unit>
     <unit id="5423991647761194551">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:105</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:139</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -13111,7 +13205,7 @@
     </unit>
     <unit id="45739481977493163">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:110</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:144</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -13120,7 +13214,7 @@
     </unit>
     <unit id="57403663622654391">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:30,33</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:32,35</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:362</note>
         <note category="location">src/app/workspace.routes.ts:150</note>
         <note category="description">Page title for workspace file storage</note>
@@ -13129,27 +13223,9 @@
         <source>Storage</source>
       </segment>
     </unit>
-    <unit id="606643270391444337">
-      <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:38,45</note>
-        <note category="description">Storage usage. USED and LIMIT are formatted byte counts</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="USED" disp="{{ usage.usedBytes | fileSize // i18n(ph=&quot;USED&quot;) }}"/> of <ph id="1" equiv="LIMIT" disp="{{ usage.limitBytes | fileSize // i18n(ph=&quot;LIMIT&quot;) }}"/> used </source>
-      </segment>
-    </unit>
-    <unit id="8588372256463790150">
-      <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:54,61</note>
-        <note category="description">File count and remaining storage. COUNT is the number of files and AVAILABLE a formatted byte count</note>
-      </notes>
-      <segment>
-        <source> <ph id="0" equiv="COUNT" disp="{{ usage.fileCount // i18n(ph=&quot;COUNT&quot;) }}"/> tracked files · <ph id="1" equiv="AVAILABLE" disp="{{ usage.availableBytes | fileSize // i18n(ph=&quot;AVAILABLE&quot;) }}"/> available </source>
-      </segment>
-    </unit>
     <unit id="5547904534300795196">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-header.component.ts:73,76</note>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:55,58</note>
         <note category="description">Explains what is excluded from the storage total</note>
       </notes>
       <segment>
@@ -13167,7 +13243,7 @@
     </unit>
     <unit id="3156973054003371495">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:76,78</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:90,91</note>
         <note category="description">Shown when the file list fails to load</note>
       </notes>
       <segment>
@@ -13176,7 +13252,7 @@
     </unit>
     <unit id="6889473896134264260">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:82,84</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:98,100</note>
         <note category="description">Plural noun for files, used in the selection summary</note>
       </notes>
       <segment>
@@ -13185,7 +13261,7 @@
     </unit>
     <unit id="7751731903769510184">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:108,113</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:132,135</note>
         <note category="description">File origin: embedded in a description or comment</note>
       </notes>
       <segment>
@@ -13194,7 +13270,7 @@
     </unit>
     <unit id="6225788593340992229">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:152,154</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:179,181</note>
         <note category="description">Accessible label for the button that opens a file</note>
       </notes>
       <segment>
@@ -13203,7 +13279,7 @@
     </unit>
     <unit id="8979656408332491985">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:187,188</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:214,215</note>
         <note category="description">Empty state for the file list</note>
       </notes>
       <segment>
@@ -13212,7 +13288,7 @@
     </unit>
     <unit id="2637409888010075708">
       <notes>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:465</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:464</note>
         <note category="description">Title of the confirmation dialog for deleting a status</note>
       </notes>
       <segment>
@@ -13221,7 +13297,7 @@
     </unit>
     <unit id="263855177523209020">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-list.component.ts:189,190</note>
+        <note category="location">src/app/features/storage/components/storage-list.component.ts:216,217</note>
         <note category="description">Advice on the empty file list</note>
       </notes>
       <segment>
@@ -13257,7 +13333,7 @@
     </unit>
     <unit id="3458528087553681046">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:73,75</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:72,74</note>
         <note category="description">Badge marking an invited member who has not joined</note>
       </notes>
       <segment>
@@ -13266,7 +13342,7 @@
     </unit>
     <unit id="9193001935256028830">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:80,82</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:79,81</note>
         <note category="description">Badge marking the workspace owner</note>
       </notes>
       <segment>
@@ -13275,7 +13351,7 @@
     </unit>
     <unit id="2993974933777113616">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:91,92</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:90,91</note>
         <note category="description">Empty state for the member list</note>
       </notes>
       <segment>
@@ -13284,7 +13360,7 @@
     </unit>
     <unit id="2654431555310940196">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:93,97</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:92,96</note>
         <note category="description">Advice on the empty member list</note>
       </notes>
       <segment>
@@ -13293,16 +13369,25 @@
     </unit>
     <unit id="6381762701019694219">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:122</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:121</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
         <source>Resend invite</source>
       </segment>
     </unit>
+    <unit id="228120404428462173">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:129</note>
+        <note category="description">Label shown in the interface</note>
+      </notes>
+      <segment>
+        <source>Archives</source>
+      </segment>
+    </unit>
     <unit id="2285158653699607527">
       <notes>
-        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:127</note>
+        <note category="location">src/app/features/users/components/user-list/user-list.component.ts:126</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -13320,7 +13405,7 @@
     </unit>
     <unit id="8839963009744223515">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:33,34</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:34,35</note>
         <note category="description">Shown when a member fails to load</note>
       </notes>
       <segment>
@@ -13329,7 +13414,7 @@
     </unit>
     <unit id="8327886049061327137">
       <notes>
-        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:35,38</note>
+        <note category="location">src/app/features/users/views/user-detail-view/user-detail-view.component.ts:36,39</note>
         <note category="description">Explains why a member may fail to load</note>
       </notes>
       <segment>
@@ -13374,7 +13459,7 @@
     </unit>
     <unit id="5125508136883174617">
       <notes>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:42,43</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:43,44</note>
         <note category="description">Shown when the workspace list fails to load</note>
       </notes>
       <segment>
@@ -13609,8 +13694,8 @@
     </unit>
     <unit id="628468315033128728">
       <notes>
-        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:493</note>
-        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:466</note>
+        <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:492</note>
+        <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:465</note>
         <note category="description">Asks the user to confirm deleting a relation type. NAME is the relation type name</note>
       </notes>
       <segment>
@@ -13633,6 +13718,15 @@
       </notes>
       <segment>
         <source> Remove sprint filter </source>
+      </segment>
+    </unit>
+    <unit id="8794534312288331307">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-header.component.ts:121,123</note>
+        <note category="description">Label for the mean size of the tracked files</note>
+      </notes>
+      <segment>
+        <source> Average file size </source>
       </segment>
     </unit>
     <unit id="5927656988084674304">

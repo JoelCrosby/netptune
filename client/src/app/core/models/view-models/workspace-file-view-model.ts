@@ -5,11 +5,14 @@ export enum WorkspaceFilePurpose {
   inlineMedia = 1,
 }
 
+export type WorkspaceFileContentTypeGroup =
+  'image' | 'document' | 'archive' | 'other';
+
 export interface WorkspaceFileViewModel {
   id: number;
   originalName: string;
   contentType: string;
-  contentTypeGroup: 'image' | 'document' | 'archive' | 'other';
+  contentTypeGroup: WorkspaceFileContentTypeGroup;
   sizeBytes: number;
   purpose: WorkspaceFilePurpose;
   createdAt: string;
@@ -42,7 +45,7 @@ export interface FileUploadResult {
 export interface WorkspaceFileFilter extends PageQuery {
   query?: string;
   purpose?: WorkspaceFilePurpose;
-  contentTypeGroup?: string;
+  contentTypeGroup?: WorkspaceFileContentTypeGroup;
   sortBy?: 'createdAt' | 'name' | 'sizeBytes';
   sortDirection?: 'asc' | 'desc';
 }
