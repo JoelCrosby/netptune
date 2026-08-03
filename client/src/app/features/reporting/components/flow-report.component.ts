@@ -1,49 +1,49 @@
 import { httpResource } from '@angular/common/http';
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { FlowReport } from '@core/models/reporting';
-import { CardContentComponent } from '@static/components/card/card-content.component';
-import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
-import { CardComponent } from '@static/components/card/card.component';
+import { LucideTimer, LucideTrendingUp } from '@lucide/angular';
+import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
-import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
-import { StatComponent } from '@static/components/stat/stat.component';
+import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import {
+  StatStripComponent,
+  StatStripItem,
+} from '@static/components/stat-strip/stat-strip.component';
 import {
   TableComponent,
   TableHeaderRowDirective,
   TableHeadDirective,
   TableRowDirective,
 } from '@static/components/table/table.component';
-import { FlowThroughputChartComponent } from './charts/flow-throughput-chart.component';
 import { FlowCycleTimeChartComponent } from './charts/flow-cycle-time-chart.component';
+import { FlowThroughputChartComponent } from './charts/flow-throughput-chart.component';
 import { ReportCoverageNoticeComponent } from './report-coverage-notice.component';
+
+function hoursLabel(value?: number | null): string {
+  return value == null ? '—' : `${Math.round(value * 10) / 10}h`;
+}
 
 @Component({
   selector: 'app-flow-report',
   imports: [
-    CardComponent,
-    CardContentComponent,
-    CardHeaderComponent,
-    CardSubtitleComponent,
-    CardTitleComponent,
+    ChartCardComponent,
     EmptyStateComponent,
     ErrorStateComponent,
     FlowThroughputChartComponent,
     FlowCycleTimeChartComponent,
-    PageLoadingComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
-    StatComponent,
+    SkeletonComponent,
+    StatStripComponent,
     TableComponent,
     TableHeaderRowDirective,
     TableHeadDirective,
     TableRowDirective,
   ],
   template: `
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-6">
       <app-section-header
         i18n-heading="Section heading for flow metrics"
         heading="Flow"
@@ -51,10 +51,13 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
         description="Completed work and elapsed cycle time." />
 
       @if (resource.isLoading()) {
-        <div class="h-40">
-          <app-page-loading
-            i18n-label="Shown while flow metrics load"
-            label="Loading flow metrics" />
+        <div
+          class="border-border bg-card rounded-lg border p-6 shadow-sm"
+          role="status"
+          i18n-aria-label="Shown while flow metrics load"
+          aria-label="Loading flow metrics">
+          <app-skeleton class="h-10 w-full" />
+          <app-skeleton class="mt-6 h-52 w-full" />
         </div>
       } @else if (resource.error()) {
         <app-error-state
@@ -66,40 +69,23 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
           (retry)="resource.reload()" />
       } @else if (resource.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
-        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <app-stat
-            i18n-label="Stat label for completed tasks"
-            label="Completed"
-            [value]="report.throughput" />
-          <app-stat
-            i18n-label="Stat label for the median cycle time"
-            label="Median cycle"
-            [value]="hours(report.medianCycleTimeHours)" />
-          <app-stat
-            label="85th percentile"
-            [value]="hours(report.p85CycleTimeHours)" />
-          <app-stat
-            i18n-label="Stat label for tasks still open"
-            label="Current open tasks"
-            [value]="report.currentOpenTaskCount" />
-        </div>
+
+        <section
+          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+          <app-stat-strip [items]="stats()" />
+        </section>
 
         @if (report.buckets.length) {
-          <app-card>
-            <app-card-header>
-              <app-card-title i18n="Heading of the throughput chart card">
-                Throughput
-              </app-card-title>
-              <app-card-subtitle i18n="Subheading of the throughput chart card">
-                Completed tasks over time
-              </app-card-subtitle>
-            </app-card-header>
-            <app-card-content>
-              <app-flow-throughput-chart [buckets]="report.buckets" />
-            </app-card-content>
-          </app-card>
+          <app-chart-card
+            [icon]="throughputIcon"
+            i18n-title="Heading of the throughput chart card"
+            title="Throughput"
+            i18n-description="Subheading of the throughput chart card"
+            description="Completed tasks over time">
+            <app-flow-throughput-chart [buckets]="report.buckets" />
+          </app-chart-card>
 
-          <app-table containerClass="overflow-x-auto">
+          <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
             <thead appTableHead>
               <tr appTableHeaderRow>
                 <th class="px-4 py-3">
@@ -116,39 +102,24 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
               @for (bucket of report.buckets; track bucket.date) {
                 <tr appTableRow>
                   <td class="px-4 py-2.5">{{ bucket.date }}</td>
-                  <td class="px-4 py-2.5">{{ bucket.completed }}</td>
+                  <td class="px-4 py-2.5 tabular-nums">
+                    {{ bucket.completed }}
+                  </td>
                 </tr>
               }
             </tbody>
           </app-table>
 
           @if (report.cycleTimeBuckets.length) {
-            <app-card>
-              <app-card-header>
-                <app-card-title i18n="Heading of the cycle-time chart card">
-                  Cycle-time trend
-                </app-card-title>
-                <app-card-subtitle>
-                  <span
-                    i18n="
-                      Subheading of the cycle-time chart card. COUNT is how many
-                      completed cycles the figures are based on
-                    ">
-                    Weekly median and 85th percentile from
-                    {{
-                      report.cycleTimeSampleSize // i18n(ph="COUNT")
-                    }}
-                    completed cycle samples
-                  </span>
-                </app-card-subtitle>
-              </app-card-header>
-              <app-card-content>
-                <app-flow-cycle-time-chart
-                  [buckets]="report.cycleTimeBuckets" />
-              </app-card-content>
-            </app-card>
+            <app-chart-card
+              [icon]="cycleTimeIcon"
+              i18n-title="Heading of the cycle-time chart card"
+              title="Cycle-time trend"
+              [description]="cycleTimeDescription()">
+              <app-flow-cycle-time-chart [buckets]="report.cycleTimeBuckets" />
+            </app-chart-card>
 
-            <app-table containerClass="overflow-x-auto">
+            <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
               <thead appTableHead>
                 <tr appTableHeaderRow>
                   <th class="px-4 py-3">
@@ -181,13 +152,15 @@ import { ReportCoverageNoticeComponent } from './report-coverage-notice.componen
                 ) {
                   <tr appTableRow>
                     <td class="px-4 py-2.5">{{ bucket.weekStarting }}</td>
-                    <td class="px-4 py-2.5">
+                    <td class="px-4 py-2.5 tabular-nums">
                       {{ hours(bucket.medianCycleTimeHours) }}
                     </td>
-                    <td class="px-4 py-2.5">
+                    <td class="px-4 py-2.5 tabular-nums">
                       {{ hours(bucket.p85CycleTimeHours) }}
                     </td>
-                    <td class="px-4 py-2.5">{{ bucket.sampleSize }}</td>
+                    <td class="px-4 py-2.5 tabular-nums">
+                      {{ bucket.sampleSize }}
+                    </td>
                   </tr>
                 }
               </tbody>
@@ -211,7 +184,41 @@ export class FlowReportComponent {
     () => `api/reports/flow?${this.query()}`
   );
 
+  protected readonly throughputIcon = LucideTrendingUp;
+  protected readonly cycleTimeIcon = LucideTimer;
+
+  protected readonly stats = computed<StatStripItem[]>(() => {
+    const report = this.resource.value();
+
+    if (!report) return [];
+
+    return [
+      {
+        label: $localize`:Stat label for completed tasks:Completed`,
+        value: report.throughput,
+      },
+      {
+        label: $localize`:Stat label for the median cycle time:Median cycle`,
+        value: hoursLabel(report.medianCycleTimeHours),
+      },
+      {
+        label: $localize`:Stat label for the 85th percentile cycle time:85th percentile`,
+        value: hoursLabel(report.p85CycleTimeHours),
+      },
+      {
+        label: $localize`:Stat label for tasks still open:Current open tasks`,
+        value: report.currentOpenTaskCount,
+      },
+    ];
+  });
+
+  protected readonly cycleTimeDescription = computed(() => {
+    const samples = this.resource.value()?.cycleTimeSampleSize ?? 0;
+
+    return $localize`:Subheading of the cycle-time chart card. COUNT is how many completed cycles the figures are based on:Weekly median and 85th percentile from ${samples}:COUNT: completed cycle samples`;
+  });
+
   hours(value?: number | null): string {
-    return value == null ? '—' : `${Math.round(value * 10) / 10}h`;
+    return hoursLabel(value);
   }
 }

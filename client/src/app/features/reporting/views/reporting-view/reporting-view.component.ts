@@ -10,14 +10,11 @@ import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { loadSprints } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
-import { CardContentComponent } from '@static/components/card/card-content.component';
-import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
-import { CardComponent } from '@static/components/card/card.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { LucideSlidersHorizontal } from '@lucide/angular';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { FlowReportComponent } from '../../components/flow-report.component';
@@ -37,11 +34,7 @@ const defaultFrom = defaultRange.from;
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
-    CardComponent,
-    CardContentComponent,
-    CardHeaderComponent,
-    CardSubtitleComponent,
-    CardTitleComponent,
+    IconTileComponent,
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
@@ -58,19 +51,29 @@ const defaultFrom = defaultRange.from;
         i18n-title="Page title for the reporting views"
         title="Reports" />
 
-      <app-card class="sticky top-10 z-12 mb-8 block">
-        <app-card-header>
-          <app-card-title i18n="Heading of the report filter card">
-            Report filters
-          </app-card-title>
-          <app-card-subtitle>
-            <span i18n="Explains what the report filters control">
-              Choose the scope, period, and estimation unit used by the reports.
-            </span>
-          </app-card-subtitle>
-        </app-card-header>
+      <section
+        class="border-border bg-card sticky top-10 z-12 mb-8 overflow-hidden rounded-lg border shadow-sm">
+        <header class="border-border border-b px-6 py-5">
+          <div class="flex min-w-0 items-center gap-3">
+            <app-icon-tile [icon]="filterIcon" />
 
-        <app-card-content>
+            <div class="min-w-0">
+              <h2
+                class="font-overpass text-base font-semibold"
+                i18n="Heading of the report filter card">
+                Report filters
+              </h2>
+              <p
+                class="text-muted mt-1 text-sm"
+                i18n="Explains what the report filters control">
+                Choose the scope, period, and estimation unit used by the
+                reports.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <div class="px-6 py-5">
           <div
             class="grid grid-cols-1 gap-x-4 sm:grid-cols-2 lg:grid-cols-6"
             i18n-aria-label="Accessible name of the report filter form"
@@ -160,8 +163,8 @@ const defaultFrom = defaultRange.from;
               </app-form-select>
             }
           </div>
-        </app-card-content>
-      </app-card>
+        </div>
+      </section>
 
       <div class="flex flex-col gap-12">
         <app-flow-report [query]="query()" />
@@ -180,6 +183,8 @@ const defaultFrom = defaultRange.from;
   `,
 })
 export class ReportingViewComponent {
+  protected readonly filterIcon = LucideSlidersHorizontal;
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly store = inject(Store);

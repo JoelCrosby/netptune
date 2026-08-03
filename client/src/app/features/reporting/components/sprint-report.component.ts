@@ -5,16 +5,16 @@ import {
   SprintBurndownReport,
   VelocityReport,
 } from '@core/models/reporting';
+import { LucideChartColumnBig, LucideTrendingDown } from '@lucide/angular';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
-import { CardContentComponent } from '@static/components/card/card-content.component';
-import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardSubtitleComponent } from '@static/components/card/card-subtitle.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
-import { CardComponent } from '@static/components/card/card.component';
+import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
-import { StatComponent } from '@static/components/stat/stat.component';
+import {
+  StatStripComponent,
+  StatStripItem,
+} from '@static/components/stat-strip/stat-strip.component';
 import {
   TableComponent,
   TableHeaderRowDirective,
@@ -30,18 +30,14 @@ import { formatReportValue } from '@core/util/chart-theme';
   selector: 'app-sprint-report',
   imports: [
     ErrorStateComponent,
-    CardComponent,
-    CardContentComponent,
-    CardHeaderComponent,
-    CardSubtitleComponent,
-    CardTitleComponent,
+    ChartCardComponent,
     EmptyStateComponent,
     PageLoadingComponent,
     ReportCoverageNoticeComponent,
     SectionHeaderComponent,
     SprintBurndownChartComponent,
     SprintVelocityChartComponent,
-    StatComponent,
+    StatStripComponent,
     TableComponent,
     TableHeaderRowDirective,
     TableHeadDirective,
@@ -78,28 +74,10 @@ import { formatReportValue } from '@core/util/chart-theme';
           (retry)="burndown.reload()" />
       } @else if (burndown.value(); as report) {
         <app-report-coverage-notice [coverage]="report.coverage" />
-        <div class="grid grid-cols-2 gap-3 lg:grid-cols-5">
-          <app-stat
-            i18n-label="Stat label for scope committed at sprint start"
-            label="Committed"
-            [value]="report.committedCount" />
-          <app-stat
-            i18n-label="Stat label for scope added mid-sprint"
-            label="Added"
-            [value]="report.addedCount" />
-          <app-stat
-            i18n-label="Stat label for scope removed mid-sprint"
-            label="Removed"
-            [value]="report.removedCount" />
-          <app-stat
-            i18n-label="Stat label for completed scope"
-            label="Completed"
-            [value]="report.completedCount" />
-          <app-stat
-            i18n-label="Stat label for the completion percentage"
-            label="Completion"
-            [value]="report.completionPercentage + '%'" />
-        </div>
+        <section
+          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+          <app-stat-strip [items]="burndownStats(report)" />
+        </section>
 
         @if (shouldShowMissingEstimateWarning(report)) {
           <p class="text-muted text-sm">
@@ -119,23 +97,16 @@ import { formatReportValue } from '@core/util/chart-theme';
           </p>
         }
 
-        <app-card>
-          <app-card-header>
-            <app-card-title i18n="Heading of the burndown chart card">
-              Burndown
-            </app-card-title>
-            <app-card-subtitle>
-              <span i18n="Subheading of the burndown chart card">
-                Remaining scope compared with the ideal trajectory
-              </span>
-            </app-card-subtitle>
-          </app-card-header>
-          <app-card-content>
-            <app-sprint-burndown-chart [points]="report.points" />
-          </app-card-content>
-        </app-card>
+        <app-chart-card
+          [icon]="burndownIcon"
+          i18n-title="Heading of the burndown chart card"
+          title="Burndown"
+          i18n-description="Subheading of the burndown chart card"
+          description="Remaining scope compared with the ideal trajectory">
+          <app-sprint-burndown-chart [points]="report.points" />
+        </app-chart-card>
 
-        <app-table containerClass="overflow-x-auto">
+        <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
           <thead appTableHead>
             <tr appTableHeaderRow>
               <th class="px-4 py-3">
@@ -199,23 +170,16 @@ import { formatReportValue } from '@core/util/chart-theme';
           <app-report-coverage-notice [coverage]="report.coverage" />
 
           @if (report.sprints.length) {
-            <app-card>
-              <app-card-header>
-                <app-card-title i18n="Heading of the velocity chart card">
-                  Recent velocity
-                </app-card-title>
-                <app-card-subtitle>
-                  <span i18n="Subheading of the velocity chart card">
-                    Committed and completed sprint scope
-                  </span>
-                </app-card-subtitle>
-              </app-card-header>
-              <app-card-content>
-                <app-sprint-velocity-chart [sprints]="report.sprints" />
-              </app-card-content>
-            </app-card>
+            <app-chart-card
+              [icon]="velocityIcon"
+              i18n-title="Heading of the velocity chart card"
+              title="Recent velocity"
+              i18n-description="Subheading of the velocity chart card"
+              description="Committed and completed sprint scope">
+              <app-sprint-velocity-chart [sprints]="report.sprints" />
+            </app-chart-card>
 
-            <app-table containerClass="overflow-x-auto">
+            <app-table containerClass="overflow-x-auto rounded-lg shadow-sm">
               <thead appTableHead>
                 <tr appTableHeaderRow>
                   <th class="px-4 py-3">
@@ -283,6 +247,35 @@ import { formatReportValue } from '@core/util/chart-theme';
 })
 export class SprintReportComponent {
   readonly formatValue = formatReportValue;
+
+  protected readonly burndownIcon = LucideTrendingDown;
+  protected readonly velocityIcon = LucideChartColumnBig;
+
+  protected burndownStats(report: SprintBurndownReport): StatStripItem[] {
+    return [
+      {
+        label: $localize`:Stat label for scope committed at sprint start:Committed`,
+        value: report.committedCount,
+      },
+      {
+        label: $localize`:Stat label for scope added mid-sprint:Added`,
+        value: report.addedCount,
+      },
+      {
+        label: $localize`:Stat label for scope removed mid-sprint:Removed`,
+        value: report.removedCount,
+      },
+      {
+        label: $localize`:Stat label for completed scope:Completed`,
+        value: report.completedCount,
+      },
+      {
+        label: $localize`:Stat label for the completion percentage:Completion`,
+        value: `${report.completionPercentage}%`,
+      },
+    ];
+  }
+
   readonly sprintId = input<number>();
   readonly projectId = input<number>();
   readonly unit = input.required<ReportingUnit>();

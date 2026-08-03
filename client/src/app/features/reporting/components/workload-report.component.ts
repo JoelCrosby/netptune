@@ -1,11 +1,14 @@
 import { httpResource } from '@angular/common/http';
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { WorkloadReport } from '@core/models/reporting';
-import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
+import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
-import { StatComponent } from '@static/components/stat/stat.component';
+import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import {
+  StatStripComponent,
+  StatStripItem,
+} from '@static/components/stat-strip/stat-strip.component';
 import {
   TableComponent,
   TableHeaderRowDirective,
@@ -16,18 +19,18 @@ import {
 @Component({
   selector: 'app-workload-report',
   imports: [
-    ErrorStateComponent,
     EmptyStateComponent,
-    PageLoadingComponent,
+    ErrorStateComponent,
     SectionHeaderComponent,
-    StatComponent,
+    SkeletonComponent,
+    StatStripComponent,
     TableComponent,
     TableHeaderRowDirective,
     TableHeadDirective,
     TableRowDirective,
   ],
   template: `
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-6">
       <app-section-header
         i18n-heading="Section heading for the workload report"
         heading="Current workload"
@@ -35,10 +38,13 @@ import {
         description="Open work by assignee. Multi-assigned tasks appear for every assignee." />
 
       @if (resource.isLoading()) {
-        <div class="h-40">
-          <app-page-loading
-            i18n-label="Shown while the workload report loads"
-            label="Loading workload" />
+        <div
+          class="border-border bg-card rounded-lg border p-6 shadow-sm"
+          role="status"
+          i18n-aria-label="Shown while the workload report loads"
+          aria-label="Loading workload">
+          <app-skeleton class="h-10 w-full" />
+          <app-skeleton class="mt-6 h-32 w-full" />
         </div>
       } @else if (resource.error()) {
         <app-error-state
@@ -49,27 +55,13 @@ import {
           description="Retry the request to load workload reporting."
           (retry)="resource.reload()" />
       } @else if (resource.value(); as report) {
-        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <app-stat
-            i18n-label="Stat label for distinct open tasks"
-            label="Unique open tasks"
-            [value]="report.uniqueTaskCount" />
-          <app-stat
-            i18n-label="Stat label for open tasks with nobody assigned"
-            label="Unassigned"
-            [value]="report.unassignedTaskCount" />
-          <app-stat
-            i18n-label="Stat label for tasks with several assignees"
-            label="Multi-assigned"
-            [value]="report.multiAssignedTaskCount" />
-          <app-stat
-            i18n-label="Stat label for tasks without an estimate"
-            label="Missing estimate"
-            [value]="report.missingEstimateCount" />
-        </div>
+        <section
+          class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+          <app-stat-strip [items]="stats()" />
+        </section>
 
         @if (report.rows.length) {
-          <app-table>
+          <app-table containerClass="rounded-lg shadow-sm">
             <thead appTableHead>
               <tr appTableHeaderRow>
                 <th class="px-4 py-3">
@@ -93,8 +85,8 @@ import {
                   <td class="px-4 py-2.5 font-medium">
                     {{ row.displayName }}
                   </td>
-                  <td class="px-4 py-2.5">{{ row.taskCount }}</td>
-                  <td class="px-4 py-2.5">{{ row.value }}</td>
+                  <td class="px-4 py-2.5 tabular-nums">{{ row.taskCount }}</td>
+                  <td class="px-4 py-2.5 tabular-nums">{{ row.value }}</td>
                 </tr>
               }
             </tbody>
@@ -116,4 +108,29 @@ export class WorkloadReportComponent {
   readonly resource = httpResource<WorkloadReport>(
     () => `api/reports/workload?${this.query()}`
   );
+
+  protected readonly stats = computed<StatStripItem[]>(() => {
+    const report = this.resource.value();
+
+    if (!report) return [];
+
+    return [
+      {
+        label: $localize`:Stat label for distinct open tasks:Unique open tasks`,
+        value: report.uniqueTaskCount,
+      },
+      {
+        label: $localize`:Stat label for open tasks with nobody assigned:Unassigned`,
+        value: report.unassignedTaskCount,
+      },
+      {
+        label: $localize`:Stat label for tasks with several assignees:Multi-assigned`,
+        value: report.multiAssignedTaskCount,
+      },
+      {
+        label: $localize`:Stat label for tasks without an estimate:Missing estimate`,
+        value: report.missingEstimateCount,
+      },
+    ];
+  });
 }
