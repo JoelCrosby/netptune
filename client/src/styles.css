@@ -38,6 +38,7 @@
   --color-border: var(--border);
   --color-hover: var(--hover);
   --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
   --color-card-header: var(--card-header);
   --color-board-group-card: var(--board-group-card);
   --color-card-warn: var(--card-warn);
@@ -169,6 +170,7 @@
   --tooltip-bg: #000;
 
   --card: #fff;
+  --card-hover: #f4f4f4;
   --card-header: rgb(244, 244, 246);
   --board-group-card: #fff;
   --card-warn: #ffe5e5;
@@ -228,6 +230,7 @@
   --tooltip-bg: #fff;
 
   --card: rgb(10, 10, 10);
+  --card-hover: rgb(56, 56, 56);
   --card-header: rgb(4, 4, 4);
   --board-group-card: rgb(26, 26, 26);
   --card-warn: #472d2d;

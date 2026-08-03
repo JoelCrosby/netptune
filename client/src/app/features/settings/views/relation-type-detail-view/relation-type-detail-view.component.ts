@@ -250,7 +250,6 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
               errorMessage="Relations could not be loaded."
               containerClass="max-h-[520px] overflow-auto border-0"
               tableClass="min-w-[760px] table-fixed"
-              rowClass="bg-card"
               [data]="relationData()"
               [stickyHeader]="true">
               <ng-template appDatatableCell="sourceTask" let-relation>

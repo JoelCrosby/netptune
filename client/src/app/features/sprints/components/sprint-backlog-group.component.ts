@@ -53,7 +53,6 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
         <app-datatable
           containerClass="h-[calc(100vh-912px)] min-h-80 overflow-auto"
           tableClass="min-w-[1040px] table-fixed"
-          rowClass="bg-card"
           [data]="data()"
           [stickyHeader]="true"
           (loaded)="onLoaded($event)">

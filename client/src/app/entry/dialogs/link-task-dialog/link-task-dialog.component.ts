@@ -94,7 +94,6 @@ export interface LinkTaskDialogResult {
       <app-datatable
         containerClass="h-[380px] overflow-y-auto overflow-x-hidden"
         tableClass="table-fixed"
-        rowClass="bg-card"
         i18n-emptyMessage="Shown when no tasks match the link search"
         emptyMessage="No tasks available to link."
         [data]="data"

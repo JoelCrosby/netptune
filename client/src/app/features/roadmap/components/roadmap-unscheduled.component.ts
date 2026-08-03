@@ -47,7 +47,6 @@ import {
       <app-datatable
         containerClass="max-h-[32rem] overflow-auto"
         tableClass="min-w-[820px] table-fixed"
-        rowClass="bg-card"
         i18n-emptyMessage="Empty state for the unscheduled task list"
         emptyMessage="No unscheduled tasks match the current filters."
         i18n-itemLabel="Plural noun for tasks, used in the selection summary"

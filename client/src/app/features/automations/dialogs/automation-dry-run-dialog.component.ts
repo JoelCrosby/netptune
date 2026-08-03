@@ -78,7 +78,6 @@ export interface AutomationDryRunDialogData {
       <app-datatable
         containerClass="h-[320px] overflow-y-auto overflow-x-hidden"
         tableClass="table-fixed"
-        rowClass="bg-card"
         i18n-emptyMessage="Empty state for the dry-run task picker"
         emptyMessage="No tasks available to test."
         [data]="data"

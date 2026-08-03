@@ -39,7 +39,6 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
     <app-datatable
       containerClass="overflow-auto"
       tableClass="min-w-[820px] table-fixed"
-      rowClass="bg-card"
       i18n-emptyMessage="Empty state for the sprint task list"
       emptyMessage="No tasks in this sprint."
       [data]="data()"

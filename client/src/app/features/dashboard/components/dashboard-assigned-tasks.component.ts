@@ -41,7 +41,6 @@ import { TaskStatusPillComponent } from '@static/components/task-status-pill.com
       <app-datatable
         containerClass="h-[calc(100vh-612px)] min-h-80 overflow-auto"
         tableClass="min-w-[820px] table-fixed"
-        rowClass="bg-card"
         i18n-emptyMessage="Empty state for the assigned-tasks card"
         emptyMessage="You have no tasks assigned to you."
         [data]="data()"

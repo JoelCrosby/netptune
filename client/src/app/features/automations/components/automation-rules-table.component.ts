@@ -122,7 +122,6 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
       errorMessage="Automation rules could not be loaded."
       containerClass="max-h-[calc(100vh-420px)] min-h-80 overflow-auto"
       tableClass="min-w-[900px]"
-      rowClass="bg-card"
       [data]="data()"
       [stickyHeader]="true">
       <ng-template appDatatableCell="name" let-rule>

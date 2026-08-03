@@ -58,7 +58,6 @@ export interface SprintAddTaskDialogData {
       <app-datatable
         containerClass="h-[420px] overflow-y-auto overflow-x-hidden"
         tableClass="table-fixed"
-        rowClass="bg-card"
         i18n-emptyMessage="Shown when no tasks match the add-to-sprint search"
         emptyMessage="No tasks available to add."
         [data]="data"

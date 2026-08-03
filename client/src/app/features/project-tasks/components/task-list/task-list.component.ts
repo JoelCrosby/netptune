@@ -77,7 +77,6 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
       #datatable
       containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
       tableClass="min-w-[760px] table-fixed"
-      rowClass="bg-card"
       [data]="taskData()"
       [selection]="canDelete()"
       [customizableColumns]="true"

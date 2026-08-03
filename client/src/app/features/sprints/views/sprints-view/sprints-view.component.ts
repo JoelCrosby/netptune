@@ -66,7 +66,6 @@ type StatusFilter = SprintStatus | null;
         <app-datatable
           containerClass="h-[calc(100vh-314px)] min-h-160 overflow-auto"
           tableClass="min-w-[720px]"
-          rowClass="bg-card"
           [data]="data()"
           [emptyMessage]="emptyMessage()">
           <ng-template appDatatableCell="name" let-sprint>

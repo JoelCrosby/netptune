@@ -243,7 +243,6 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
               errorMessage="Tasks could not be loaded."
               containerClass="max-h-[520px] overflow-auto border-0"
               tableClass="min-w-[720px] table-fixed"
-              rowClass="bg-card"
               [data]="taskData"
               [stickyHeader]="true">
               <ng-template appDatatableCell="systemId" let-task>
