@@ -21,11 +21,6 @@ export const selectCurrentSprints = createSelector(
   (state: SprintsState) => state.currentSprints
 );
 
-export const selectCurrentSprintsLoading = createSelector(
-  selectSprintsFeature,
-  (state: SprintsState) => state.currentSprintsLoading
-);
-
 export const selectCurrentSprintsLoaded = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.currentSprintsLoaded

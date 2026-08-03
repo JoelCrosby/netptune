@@ -10,32 +10,17 @@ const reducer = createReducer(
     ...state,
     loading: true,
   })),
-  on(actions.setUsersPageSize, (state, { pageSize }): UsersState => ({
-    ...state,
-    pageSize,
-    page: 1,
-  })),
-  on(actions.setUsersPage, (state, { page }): UsersState => ({
-    ...state,
-    page,
-  })),
   on(actions.loadUsers.fail, (state, { error }): UsersState => ({
     ...state,
     loading: false,
     loadingError: error,
   })),
-  on(
-    actions.loadUsers.success,
-    (state, { users, page, pageSize, totalCount, totalPages }): UsersState =>
-      adapter.setAll(users, {
-        ...state,
-        loading: false,
-        loaded: true,
-        page,
-        pageSize,
-        totalCount,
-        totalPages,
-      })
+  on(actions.loadUsers.success, (state, { users }): UsersState =>
+    adapter.setAll(users, {
+      ...state,
+      loading: false,
+      loaded: true,
+    })
   ),
   on(actions.loadUser.init, (state): UsersState => ({
     ...state,

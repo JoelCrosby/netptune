@@ -9,25 +9,9 @@ export const clearState = createAction('[Users] Clear State');
 // Load Users
 
 export const loadUsers = createAsyncAction('[Users] Load Users', {
-  success: props<{
-    users: WorkspaceAppUser[];
-    page: number;
-    pageSize: number;
-    totalCount: number;
-    totalPages: number;
-  }>(),
+  success: props<{ users: WorkspaceAppUser[] }>(),
   fail: props<{ error: HttpErrorResponse | Error }>(),
 });
-
-export const setUsersPageSize = createAction(
-  '[Users] Set Users Page Size',
-  props<{ pageSize: number }>()
-);
-
-export const setUsersPage = createAction(
-  '[Users] Set Users Page',
-  props<{ page: number }>()
-);
 
 // Load User
 

@@ -18,7 +18,6 @@ import * as actions from './users.actions';
 import { UsersService } from './users.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { getErrorMessage } from '@core/util/error-message';
-import { selectUsersPage, selectUsersPageSize } from './users.selectors';
 
 const emptyWorkspaceAppUser: WorkspaceAppUser = {
   id: '',
@@ -47,28 +46,20 @@ export class UsersEffects {
     return this.actions$.pipe(
       ofType(actions.loadUsers.init),
       concatLatestFrom(() => [
-        this.store.select(selectUsersPage),
-        this.store.select(selectUsersPageSize),
         this.store.select(selectIsPublicViewer),
         this.store.select(selectCurrentWorkspaceIdentifier),
       ]),
-      switchMap(([_, page, pageSize, isPublicViewer, workspaceKey]) => {
+      switchMap(([_, isPublicViewer, workspaceKey]) => {
         const users$ =
           isPublicViewer && workspaceKey
-            ? this.publicMembers(workspaceKey, page, pageSize)
+            ? this.publicMembers(workspaceKey)
             : this.usersService
-                .getUsersInWorkspace({ page, pageSize })
+                .getUsersInWorkspace()
                 .pipe(unwrapClientReposne());
 
         return users$.pipe(
           map((usersPage) =>
-            actions.loadUsers.success({
-              users: usersPage.items,
-              page: usersPage.page,
-              pageSize: usersPage.pageSize,
-              totalCount: usersPage.totalCount,
-              totalPages: usersPage.totalPages,
-            })
+            actions.loadUsers.success({ users: usersPage.items })
           ),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadUsers.fail({ error }))
@@ -78,31 +69,22 @@ export class UsersEffects {
     );
   });
 
-  private publicMembers(workspaceKey: string, page: number, pageSize: number) {
-    return this.usersService
-      .getPublicMembersInWorkspace(workspaceKey, { page, pageSize })
-      .pipe(
-        map((membersPage): Page<WorkspaceAppUser> => {
-          return {
-            ...membersPage,
-            items: membersPage.items.map((member) => ({
-              ...emptyWorkspaceAppUser,
-              id: member.id,
-              displayName: member.displayName,
-              pictureUrl: member.pictureUrl,
-              isServiceAccount: member.isServiceAccount,
-            })),
-          };
-        })
-      );
-  }
-
-  reloadUsersOnPaginationChange$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.setUsersPage, actions.setUsersPageSize),
-      map(() => actions.loadUsers.init())
+  private publicMembers(workspaceKey: string) {
+    return this.usersService.getPublicMembersInWorkspace(workspaceKey).pipe(
+      map((membersPage): Page<WorkspaceAppUser> => {
+        return {
+          ...membersPage,
+          items: membersPage.items.map((member) => ({
+            ...emptyWorkspaceAppUser,
+            id: member.id,
+            displayName: member.displayName,
+            pictureUrl: member.pictureUrl,
+            isServiceAccount: member.isServiceAccount,
+          })),
+        };
+      })
     );
-  });
+  }
 
   loadUser$ = createEffect(() => {
     return this.actions$.pipe(

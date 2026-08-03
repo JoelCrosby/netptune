@@ -11,11 +11,6 @@ export const selectUnreadCount = createSelector(
   (state) => state.unreadCount
 );
 
-export const selectNotificationsLoading = createSelector(
-  selectNotificationsFeature,
-  (state) => state.loading
-);
-
 export const selectNotificationsLoaded = createSelector(
   selectNotificationsFeature,
   (state) => state.loaded

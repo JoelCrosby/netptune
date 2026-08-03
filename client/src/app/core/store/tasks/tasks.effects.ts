@@ -38,8 +38,6 @@ import {
   selectSelectedAssignees,
   selectSelectedTaskStatuses,
   selectTaskSearchTerm,
-  selectTasksPage,
-  selectTasksPageSize,
 } from './tasks.selectors';
 import { ProjectTasksService } from './tasks.service';
 
@@ -57,35 +55,18 @@ export class ProjectTasksEffects {
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadProjectTasks.init),
-      concatLatestFrom(() => [
-        this.store.select(selectProjectTasksFilter),
-        this.store.select(selectTasksPage),
-        this.store.select(selectTasksPageSize),
-      ]),
-      switchMap(([_, taskFilter, page, pageSize]) =>
-        this.projectTasksService.get({ ...taskFilter, page, pageSize }).pipe(
+      concatLatestFrom(() => [this.store.select(selectProjectTasksFilter)]),
+      switchMap(([_, taskFilter]) =>
+        this.projectTasksService.get(taskFilter).pipe(
           unwrapClientReposne(),
           map((page) =>
-            actions.loadProjectTasks.success({
-              tasks: page.items,
-              page: page.page,
-              pageSize: page.pageSize,
-              totalCount: page.totalCount,
-              totalPages: page.totalPages,
-            })
+            actions.loadProjectTasks.success({ tasks: page.items })
           ),
           catchError((error: HttpErrorResponse) =>
             of(actions.loadProjectTasks.fail({ error }))
           )
         )
       )
-    );
-  });
-
-  reloadProjectTasksOnPaginationChange$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.setProjectTasksPage, actions.setProjectTasksPageSize),
-      map(() => actions.loadProjectTasks.init())
     );
   });
 

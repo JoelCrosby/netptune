@@ -1,5 +1,4 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { CommentViewModel } from '@core/models/comment';
 import { ProjectTask as TaskModel } from '@core/models/project-task';
 import { PageQuery } from '@core/models/pagination';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -17,15 +16,10 @@ export const initialState: TasksState = adapter.getInitialState({
   deleteState: DEFAULT_ACTION_STATE,
   editState: DEFAULT_ACTION_STATE,
   detailState: DEFAULT_ACTION_STATE,
-  comments: [],
   searchTerm: null,
   selectedStatuses: [],
   selectedAssignees: [],
   selectedTaskIds: [],
-  page: 1,
-  pageSize: 50,
-  totalCount: 0,
-  totalPages: 1,
 });
 
 export interface TasksState extends AsyncEntityState<TaskViewModel> {
@@ -37,18 +31,12 @@ export interface TasksState extends AsyncEntityState<TaskViewModel> {
   deleteState: ActionState;
   editState: ActionState;
   selectedTask?: TaskViewModel;
-  inlineEditActive?: boolean;
   detailTask?: TaskViewModel;
   detailState: ActionState;
-  comments: CommentViewModel[];
   searchTerm?: string | null;
   selectedStatuses: number[];
   selectedAssignees: string[];
   selectedTaskIds: number[];
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
 }
 
 export interface TaskListGroup {

@@ -87,26 +87,6 @@ export const selectProjectTasksFilter = createSelector(
   })
 );
 
-export const selectTasksPage = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.page
-);
-
-export const selectTasksPageSize = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.pageSize
-);
-
-export const selectTasksTotalCount = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.totalCount
-);
-
-export const selectTasksTotalPages = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.totalPages
-);
-
 export const selectTaskAssigneeOptions = createSelector(
   selectAllTasks,
   selectSelectedAssignees,
@@ -131,18 +111,6 @@ export const selectTaskAssigneeOptions = createSelector(
   }
 );
 
-export const selectTasks = selectAllTasks;
-
-export const selectTasksLoading = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.loading && !state.loaded
-);
-
-export const selectTasksLoaded = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.loaded
-);
-
 export const selectTaskEditLoading = createSelector(
   selectTasksFeature,
   (state: TasksState) => state.editState.loading
@@ -151,11 +119,6 @@ export const selectTaskEditLoading = createSelector(
 export const selectSelectedTask = createSelector(
   selectTasksFeature,
   (state: TasksState) => state.selectedTask
-);
-
-export const selectInlineEditActive = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.inlineEditActive
 );
 
 export const selectDetailTask = createSelector(
@@ -187,9 +150,4 @@ export const selectRequiredDetailTask = createSelector(
 
     return state.detailTask;
   }
-);
-
-export const selectComments = createSelector(
-  selectTasksFeature,
-  (state: TasksState) => state.comments
 );

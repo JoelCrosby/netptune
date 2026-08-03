@@ -6,17 +6,7 @@ export const selectUsersFeature = createFeatureSelector<UsersState>('users');
 
 const { selectAll } = adapter.getSelectors();
 
-export const selectUsers = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state
-);
-
-export const selectAllUsers = createSelector(selectUsers, selectAll);
-
-export const selectUsersLoading = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state.loading && !state.loaded
-);
+export const selectAllUsers = createSelector(selectUsersFeature, selectAll);
 
 export const selectUserDetail = createSelector(
   selectUsersFeature,
@@ -31,31 +21,6 @@ export const selectUserDetailLoading = createSelector(
 export const selectUserDetailLoadingError = createSelector(
   selectUsersFeature,
   (state: UsersState) => state.userDetailLoadingError
-);
-
-export const selectUsersLoaded = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state.loaded
-);
-
-export const selectUsersPage = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state.page
-);
-
-export const selectUsersPageSize = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state.pageSize
-);
-
-export const selectUsersTotalCount = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state.totalCount
-);
-
-export const selectUsersTotalPages = createSelector(
-  selectUsersFeature,
-  (state: UsersState) => state.totalPages
 );
 
 export interface State extends AppState {

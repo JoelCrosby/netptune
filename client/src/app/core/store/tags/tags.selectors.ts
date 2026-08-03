@@ -8,18 +8,9 @@ const { selectAll } = adapter.getSelectors();
 
 export const selectTags = createSelector(selectTagsFeature, selectAll);
 
-export const selectTagNames = createSelector(selectTags, (state: Tag[]) =>
-  state.map((tag) => tag.name)
-);
-
 export const selectTagsLoaded = createSelector(
   selectTagsFeature,
   (state: TagsState) => state.loaded
-);
-
-export const selectTagsLoading = createSelector(
-  selectTagsFeature,
-  (state: TagsState) => state.loading
 );
 
 export const selectSelectedTags = createSelector(

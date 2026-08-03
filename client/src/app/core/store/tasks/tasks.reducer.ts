@@ -13,15 +13,6 @@ const reducer = createReducer(
     ...state,
     loading: true,
   })),
-  on(actions.setProjectTasksPageSize, (state, { pageSize }): TasksState => ({
-    ...state,
-    pageSize,
-    page: 1,
-  })),
-  on(actions.setProjectTasksPage, (state, { page }): TasksState => ({
-    ...state,
-    page,
-  })),
   on(
     actions.hydrateProjectTaskFiltersFromRoute,
     (state, { term, assigneeIds, statuses }): TasksState => ({
@@ -29,7 +20,6 @@ const reducer = createReducer(
       searchTerm: term,
       selectedAssignees: assigneeIds,
       selectedStatuses: statuses,
-      page: 1,
     })
   ),
   on(actions.loadProjectTasks.fail, (state, { error }): TasksState => ({
@@ -37,18 +27,12 @@ const reducer = createReducer(
     loading: false,
     loadProjectsError: error,
   })),
-  on(
-    actions.loadProjectTasks.success,
-    (state, { tasks, page, pageSize, totalCount, totalPages }): TasksState =>
-      adapter.setAll(tasks, {
-        ...state,
-        loading: false,
-        loaded: true,
-        page,
-        pageSize,
-        totalCount,
-        totalPages,
-      })
+  on(actions.loadProjectTasks.success, (state, { tasks }): TasksState =>
+    adapter.setAll(tasks, {
+      ...state,
+      loading: false,
+      loaded: true,
+    })
   ),
   // Create Task
 
@@ -144,13 +128,6 @@ const reducer = createReducer(
     selectedTask: undefined,
   })),
 
-  // Set Inline Edit Active
-
-  on(actions.setInlineEditActive, (state, { active }): TasksState => ({
-    ...state,
-    inlineEditActive: active,
-  })),
-
   // Load Task Details
 
   on(actions.loadTaskDetails.init, (state): TasksState => ({
@@ -174,7 +151,6 @@ const reducer = createReducer(
     ...state,
     detailTask: undefined,
     detailState: DEFAULT_ACTION_STATE,
-    comments: [],
   })),
 
   // Filters

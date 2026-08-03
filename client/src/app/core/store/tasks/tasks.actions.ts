@@ -17,24 +17,8 @@ export const clearState = createAction('[ProjectTasks] Clear State');
 export const loadProjectTasks = createAsyncAction(
   '[ProjectTasks] Load ProjectTasks',
   {
-    success: props<{
-      tasks: TaskViewModel[];
-      page: number;
-      pageSize: number;
-      totalCount: number;
-      totalPages: number;
-    }>(),
+    success: props<{ tasks: TaskViewModel[] }>(),
   }
-);
-
-export const setProjectTasksPageSize = createAction(
-  '[ProjectTasks] Set ProjectTasks Page Size',
-  props<{ pageSize: number }>()
-);
-
-export const setProjectTasksPage = createAction(
-  '[ProjectTasks] Set ProjectTasks Page',
-  props<{ page: number }>()
 );
 
 export const hydrateProjectTaskFiltersFromRoute = createAction(
@@ -141,13 +125,6 @@ export const loadTaskDetails = createAsyncAction(
 // Clear Task detail
 
 export const clearTaskDetail = createAction('[ProjectTasks] Clear Task detail');
-
-// Set Inline Edit Active
-
-export const setInlineEditActive = createAction(
-  '[ProjectTasks] Set Inline Edit Active',
-  props<{ active: boolean }>()
-);
 
 // Export Tasks
 
