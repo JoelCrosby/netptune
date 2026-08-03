@@ -12,6 +12,7 @@ import { aiModelResource } from '@core/resources/ai-model.resource';
 import { AiCredentialsService } from '@core/services/ai-credentials.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { LucideCheck, LucideKeyRound, LucideTrash } from '@lucide/angular';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { DropdownButtonComponent } from '@static/components/dropdown-menu/dropdown-button.component';
@@ -44,8 +45,8 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
   imports: [
     FormsModule,
     LucideCheck,
-    LucideKeyRound,
     LucideTrash,
+    IconTileComponent,
     DropdownButtonComponent,
     FlatButtonComponent,
     IconButtonComponent,
@@ -75,10 +76,7 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
         <article class="border-border bg-card rounded border p-5 shadow-sm">
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div class="flex min-w-0 items-start gap-3">
-              <div
-                class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded">
-                <svg lucideKeyRound class="h-5 w-5"></svg>
-              </div>
+              <app-icon-tile size="large" [icon]="providerIcon" />
               <div class="min-w-0">
                 <h4 class="font-overpass text-[1.05rem] font-normal">
                   {{ option.label }}
@@ -197,6 +195,8 @@ const PROVIDER_OPTIONS: ProviderOption[] = [
 })
 export class AiCredentialsComponent {
   readonly scope = input<AiCredentialScope>('user');
+
+  protected readonly providerIcon = LucideKeyRound;
 
   private readonly credentials = aiCredentialResource(() => this.scope());
   private readonly catalog = aiModelResource();

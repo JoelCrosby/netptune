@@ -28,10 +28,10 @@ import {
   TabGroupComponent,
   TabItem,
 } from '@static/components/tab-group/tab-group.component';
+import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.component';
+import { SprintStatusBadgeComponent } from '@static/components/sprint-status-badge.component';
 import { CreateSprintDialogComponent } from '../../dialogs/create-sprint-dialog.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
-import { SprintStatusClassesPipe } from '../../pipes/sprint-status-classes.pipe';
-import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
 
 type StatusFilter = SprintStatus | null;
 
@@ -45,8 +45,8 @@ type StatusFilter = SprintStatus | null;
     TabGroupComponent,
     DatatableComponent,
     DatatableCellTemplateDirective,
-    SprintStatusClassesPipe,
-    SprintStatusLabelPipe,
+    SprintStatusBadgeComponent,
+    SprintDaysBadgeComponent,
   ],
   template: `
     <app-page-container [centerPage]="true">
@@ -77,18 +77,10 @@ type StatusFilter = SprintStatus | null;
 
           <ng-template appDatatableCell="status" let-sprint>
             <div class="flex flex-wrap items-center gap-2">
-              <span
-                class="rounded px-2 py-0.5 text-xs font-semibold"
-                [class]="sprint.status | sprintStatusClasses">
-                {{ sprint.status | sprintStatusLabel }}
-              </span>
-              @if (daysChip(sprint); as chip) {
-                <span
-                  class="rounded px-2 py-0.5 text-xs font-medium"
-                  [class]="chip.classes">
-                  {{ chip.label }}
-                </span>
-              }
+              <app-sprint-status-badge [status]="sprint.status" />
+              <app-sprint-days-badge
+                [status]="sprint.status"
+                [endDate]="sprint.endDate" />
             </div>
           </ng-template>
 
@@ -221,42 +213,6 @@ export class SprintsViewComponent {
     if (status === null) return sprints.length;
 
     return sprints.filter((sprint) => sprint.status === status).length;
-  }
-
-  daysChip(sprint: SprintViewModel): { label: string; classes: string } | null {
-    if (sprint.status !== SprintStatus.active) return null;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const end = new Date(sprint.endDate);
-    end.setHours(0, 0, 0, 0);
-    const diff = Math.ceil((end.getTime() - today.getTime()) / 86_400_000);
-
-    if (diff < 0) {
-      return {
-        label: `${Math.abs(diff)}d overdue`,
-        classes: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300',
-      };
-    }
-    if (diff === 0) {
-      return {
-        label: $localize`:Chip shown when a sprint ends today:Due today`,
-        classes:
-          'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300',
-      };
-    }
-    if (diff <= 3) {
-      return {
-        label: `${diff}d left`,
-        classes:
-          'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300',
-      };
-    }
-    return {
-      label: `${diff}d left`,
-      classes:
-        'bg-neutral-100 text-neutral-600 dark:bg-neutral-500/15 dark:text-neutral-300',
-    };
   }
 
   onOpenCreateDialog() {

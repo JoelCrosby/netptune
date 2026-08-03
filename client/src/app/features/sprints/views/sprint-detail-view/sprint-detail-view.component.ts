@@ -36,15 +36,14 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
+import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.component';
+import { SprintStatusBadgeComponent } from '@static/components/sprint-status-badge.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
 import { SprintAddTaskDialogComponent } from '../../dialogs/sprint-add-task-dialog.component';
 import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion-dialog.component';
-import { SprintStatusClassesPipe } from '../../pipes/sprint-status-classes.pipe';
-import { SprintStatusLabelPipe } from '../../pipes/sprint-status-label.pipe';
-import { sprintDaysChip } from '../../utils/sprint-days-chip';
 
 @Component({
   selector: 'app-sprint-detail-view',
@@ -64,8 +63,8 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
     LucideCheck,
     SprintStatsComponent,
     SprintTaskListComponent,
-    SprintStatusClassesPipe,
-    SprintStatusLabelPipe,
+    SprintStatusBadgeComponent,
+    SprintDaysBadgeComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -95,18 +94,10 @@ import { sprintDaysChip } from '../../utils/sprint-days-chip';
             <div class="min-w-0 flex-1">
               <div class="mb-1 flex flex-wrap items-center gap-2">
                 <h1 class="text-2xl font-semibold">{{ sprint.name }}</h1>
-                <span
-                  class="rounded-sm px-2.5 py-0.5 text-xs font-semibold"
-                  [class]="sprint.status | sprintStatusClasses">
-                  {{ sprint.status | sprintStatusLabel }}
-                </span>
-                @if (daysChip(sprint); as chip) {
-                  <span
-                    class="rounded-sm px-2 py-0.5 text-xs font-medium"
-                    [class]="chip.classes">
-                    {{ chip.label }}
-                  </span>
-                }
+                <app-sprint-status-badge [status]="sprint.status" />
+                <app-sprint-days-badge
+                  [status]="sprint.status"
+                  [endDate]="sprint.endDate" />
               </div>
               <p class="text-muted text-sm">
                 <span class="font-medium">{{ sprint.projectName }}</span>
@@ -271,10 +262,6 @@ export class SprintDetailViewComponent {
     if (!sprintId) return;
 
     this.store.dispatch(loadSprintDetail.init({ sprintId }));
-  }
-
-  daysChip(sprint: SprintDetailViewModel) {
-    return sprintDaysChip(sprint.status, sprint.endDate);
   }
 
   onEdit(sprint: SprintDetailViewModel) {

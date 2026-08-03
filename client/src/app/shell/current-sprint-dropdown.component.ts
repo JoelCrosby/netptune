@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { sprintDaysChip } from '@app/features/sprints/utils/sprint-days-chip';
 import { selectIsSprintFilterableRoute } from '@core/core.route.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
 import {
@@ -26,6 +25,7 @@ import { Store } from '@ngrx/store';
 import { ButtonLinkComponent } from '@static/components/button/button-link.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.component';
 
 @Component({
   selector: 'app-current-sprint-dropdown',
@@ -40,6 +40,7 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
     LucideExternalLink,
     LucideFilterX,
     LucideCalendarFold,
+    SprintDaysBadgeComponent,
   ],
   template: `
     @if (
@@ -56,12 +57,10 @@ import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.co
           <svg lucideCalendarDays class="h-4 w-4 shrink-0"></svg>
           <span class="truncate">{{ triggerLabel() }}</span>
 
-          @if (daysChip(); as chip) {
-            <span
-              class="shrink-0 rounded-sm px-2 py-0.5 text-xs font-medium"
-              [class]="chip.classes">
-              {{ chip.label }}
-            </span>
+          @if (selectedSprintFilter(); as selectedSprint) {
+            <app-sprint-days-badge
+              [status]="selectedSprint.status"
+              [endDate]="selectedSprint.endDate" />
           }
 
           <svg lucideChevronDown class="h-4 w-4 shrink-0 opacity-70"></svg>
@@ -176,14 +175,6 @@ export class CurrentSprintDropdownComponent {
     selectSelectedSprintFilterId
   );
   selectedSprintFilter = this.store.selectSignal(selectSelectedSprintFilter);
-
-  daysChip = computed(() => {
-    const sprint = this.selectedSprintFilter();
-
-    if (!sprint) return null;
-
-    return sprintDaysChip(sprint.status, sprint.endDate);
-  });
 
   triggerLabel = computed(() => {
     const selectedSprint = this.selectedSprintFilter();

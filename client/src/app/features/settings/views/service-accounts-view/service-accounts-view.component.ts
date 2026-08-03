@@ -30,6 +30,7 @@ import {
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { BadgeComponent } from '@static/components/badge/badge.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -58,6 +59,7 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
   imports: [
     ErrorStateComponent,
     LucideBot,
+    IconTileComponent,
     LucideKeyRound,
     LucidePlus,
     LucideSettings2,
@@ -115,10 +117,7 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
               <header
                 class="border-border flex flex-wrap items-start justify-between gap-4 border-b px-5 py-4">
                 <div class="flex min-w-0 items-start gap-3">
-                  <div
-                    class="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded">
-                    <svg lucideBot class="h-5 w-5"></svg>
-                  </div>
+                  <app-icon-tile size="large" [icon]="accountIcon" />
                   <div class="min-w-0">
                     <div class="flex flex-wrap items-center gap-2">
                       <h3 class="font-overpass text-lg font-medium">
@@ -357,6 +356,8 @@ import { permissionLabel } from '@settings/components/service-accounts/service-a
   `,
 })
 export class ServiceAccountsViewComponent {
+  protected readonly accountIcon = LucideBot;
+
   private readonly locale = inject(LOCALE_ID);
 
   private readonly service = inject(ServiceAccountsService);

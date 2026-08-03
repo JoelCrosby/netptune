@@ -1,82 +1,96 @@
-import { hostTimeZone } from '@core/util/dates';
-import { httpResource } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { httpResource } from '@angular/common/http';
 import { Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ClientResponse } from '@core/models/client-response';
 import { EstimateType, estimateTypeUnits } from '@core/enums/estimate-type';
+import { ClientResponse } from '@core/models/client-response';
 import { SprintBurndownReport } from '@core/models/reporting';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
-import { LucideCalendarClock } from '@lucide/angular';
+import { hostTimeZone } from '@core/util/dates';
+import { LucideCalendarClock, LucideCalendarOff } from '@lucide/angular';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
-import { SpinnerComponent } from '@static/components/spinner/spinner.component';
-import { StatComponent } from '@static/components/stat/stat.component';
-import { SprintStatusClassesPipe } from '@app/features/sprints/pipes/sprint-status-classes.pipe';
-import { SprintStatusLabelPipe } from '@app/features/sprints/pipes/sprint-status-label.pipe';
-import { sprintDaysChip } from '@app/features/sprints/utils/sprint-days-chip';
+import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
+import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.component';
+import { SprintStatusBadgeComponent } from '@static/components/sprint-status-badge.component';
+import {
+  StatStripComponent,
+  StatStripItem,
+} from '@static/components/stat-strip/stat-strip.component';
 import { SprintBurndownSparklineComponent } from './sprint-burndown-sparkline.component';
-
-interface SprintStat {
-  label: string;
-  value: string | number;
-}
 
 @Component({
   selector: 'app-dashboard-current-sprint-card',
   imports: [
     DatePipe,
-    RouterLink,
-    SpinnerComponent,
+    EmptyStateComponent,
+    IconTileComponent,
+    LucideCalendarOff,
     ProgressBarComponent,
-    StatComponent,
+    RouterLink,
+    SkeletonComponent,
     SprintBurndownSparklineComponent,
-    SprintStatusClassesPipe,
-    SprintStatusLabelPipe,
-    LucideCalendarClock,
+    SprintDaysBadgeComponent,
+    SprintStatusBadgeComponent,
+    StatStripComponent,
   ],
   template: `
     @if (isInitialLoad()) {
-      <div
-        class="border-border bg-card flex min-h-40 items-center justify-center rounded border p-6 shadow-sm">
-        <app-spinner diameter="24" />
-      </div>
+      <section
+        class="border-border bg-card rounded-lg border p-6 shadow-sm"
+        role="status"
+        i18n-aria-label="Accessible label while the current sprint loads"
+        aria-label="Loading current sprint">
+        <div class="flex items-start gap-3">
+          <app-skeleton class="h-9 w-9 rounded-lg" />
+          <div class="flex-1">
+            <app-skeleton class="h-3 w-28" />
+            <app-skeleton class="mt-2 h-5 w-56" />
+          </div>
+        </div>
+        <app-skeleton class="mt-6 h-8 w-32" />
+        <app-skeleton class="mt-4 h-2 w-full rounded-full" />
+        <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          @for (tile of skeletonTiles; track $index) {
+            <app-skeleton class="h-10" />
+          }
+        </div>
+      </section>
     } @else if (sprint(); as sprint) {
       <section
-        class="border-border bg-card flex flex-col gap-5 rounded border p-6 shadow-sm">
-        <div class="flex flex-wrap items-start justify-between gap-3">
-          <div class="min-w-0 flex-1">
-            <p
-              class="text-muted mb-1 flex items-center gap-1.5 text-xs font-semibold tracking-wide uppercase">
-              <svg lucideCalendarClock class="h-3.5 w-3.5"></svg>
-              <span i18n="Heading of the dashboard current-sprint card">
+        class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
+        <header
+          class="border-border flex flex-wrap items-start justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
+          <div class="flex min-w-0 items-start gap-3">
+            <app-icon-tile [icon]="sprintIcon" />
+
+            <div class="min-w-0">
+              <p
+                class="text-muted text-xs font-semibold tracking-wide uppercase"
+                i18n="Heading of the dashboard current-sprint card">
                 Current sprint
-              </span>
-            </p>
-            <div class="mb-1 flex flex-wrap items-center gap-2">
-              <a
-                class="text-foreground truncate text-lg font-semibold hover:underline"
-                [routerLink]="['../sprints', sprint.id]">
-                {{ sprint.name }}
-              </a>
-              <span
-                class="rounded-sm px-2 py-0.5 text-xs font-semibold"
-                [class]="sprint.status | sprintStatusClasses">
-                {{ sprint.status | sprintStatusLabel }}
-              </span>
-              @if (daysChip(); as chip) {
-                <span
-                  class="rounded-sm px-2 py-0.5 text-xs font-medium"
-                  [class]="chip.classes">
-                  {{ chip.label }}
-                </span>
-              }
+              </p>
+
+              <div class="mt-1 flex flex-wrap items-center gap-2">
+                <a
+                  class="font-overpass text-foreground truncate text-lg font-semibold hover:underline"
+                  [routerLink]="['../sprints', sprint.id]">
+                  {{ sprint.name }}
+                </a>
+                <app-sprint-status-badge [status]="sprint.status" />
+                <app-sprint-days-badge
+                  [status]="sprint.status"
+                  [endDate]="sprint.endDate" />
+              </div>
+
+              <p class="text-muted mt-1 text-sm">
+                <span class="font-medium">{{ sprint.projectName }}</span>
+                &nbsp;·&nbsp;
+                {{ sprint.startDate | date: 'mediumDate' }} –
+                {{ sprint.endDate | date: 'mediumDate' }}
+              </p>
             </div>
-            <p class="text-muted text-sm">
-              <span class="font-medium">{{ sprint.projectName }}</span>
-              &nbsp;·&nbsp;
-              {{ sprint.startDate | date: 'mediumDate' }} –
-              {{ sprint.endDate | date: 'mediumDate' }}
-            </p>
           </div>
 
           <a
@@ -84,54 +98,57 @@ interface SprintStat {
             [routerLink]="['../sprints', sprint.id]">
             <span i18n="Link to the current sprint">View sprint</span>
           </a>
-        </div>
+        </header>
 
-        @if (sprint.goal) {
-          <p class="text-muted text-sm">{{ sprint.goal }}</p>
-        }
-
-        @if (sprint.taskCount > 0) {
-          <div>
-            <div class="mb-2 flex items-baseline justify-between">
-              <span class="text-foreground text-sm font-semibold">
-                <span i18n="Sprint completion. PERCENT is a whole number">
+        <div class="px-6 py-5">
+          @if (sprint.taskCount > 0) {
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <p
+                class="flex items-baseline gap-2"
+                i18n="Sprint completion. PERCENT is a whole number">
+                <span
+                  class="text-3xl font-semibold tracking-tight tabular-nums">
                   {{
                     progressPercent()  // i18n(ph="PERCENT")
-                  }}% complete
+                  }}%
                 </span>
-              </span>
-              <span class="text-muted text-sm">
-                <span
-                  i18n="
-                    Sprint task progress. DONE is finished tasks and TOTAL the
-                    total
-                  ">
-                  {{
-                    sprint.doneTaskCount // i18n(ph="DONE")
-                  }}
-                  /
-                  {{
-                    sprint.taskCount // i18n(ph="TOTAL")
-                  }}
-                  tasks
-                </span>
-              </span>
-            </div>
-            <app-progress-bar [value]="progressPercent()" />
-          </div>
-        }
+                complete
+              </p>
 
-        <div class="grid gap-3 sm:grid-cols-3">
-          @for (stat of stats(); track stat.label) {
-            <app-stat compact [label]="stat.label" [value]="stat.value" />
+              <p
+                class="text-muted text-sm tabular-nums"
+                i18n="
+                  Sprint task progress. DONE is finished tasks and TOTAL the
+                  total
+                ">
+                {{
+                  sprint.doneTaskCount // i18n(ph="DONE")
+                }}
+                /
+                {{
+                  sprint.taskCount // i18n(ph="TOTAL")
+                }}
+                tasks
+              </p>
+            </div>
+
+            <app-progress-bar class="mt-4 h-2" [value]="progressPercent()" />
+          }
+
+          @if (sprint.goal) {
+            <p class="text-muted text-sm" [class.mt-4]="sprint.taskCount > 0">
+              {{ sprint.goal }}
+            </p>
           }
         </div>
 
+        <app-stat-strip [items]="stats()" />
+
         @if (burndownPoints().length > 1) {
-          <div class="border-border/60 flex flex-col gap-2 border-t pt-4">
+          <div class="border-border border-t px-6 py-5">
             <app-sprint-burndown-sparkline [points]="burndownPoints()" />
             <a
-              class="text-primary self-end text-xs font-medium hover:underline"
+              class="text-primary mt-2 block text-right text-xs font-medium hover:underline"
               [routerLink]="['../reports']"
               [queryParams]="{ sprintId: sprint.id }">
               <span i18n="Link to the sprint burndown report">
@@ -141,6 +158,17 @@ interface SprintStat {
           </div>
         }
       </section>
+    } @else {
+      <section class="border-border bg-card rounded-lg border p-6 shadow-sm">
+        <app-empty-state
+          compact
+          i18n-title="Empty state when no sprint is running"
+          title="No active sprint."
+          i18n-description="Advice shown when no sprint is running"
+          description="Start a sprint to track progress here.">
+          <svg emptyStateIcon lucideCalendarOff class="h-8 w-8"></svg>
+        </app-empty-state>
+      </section>
     }
   `,
 })
@@ -148,6 +176,9 @@ export class DashboardCurrentSprintCardComponent {
   private readonly resource = httpResource<
     ClientResponse<SprintDetailViewModel | null>
   >(() => 'api/sprints/current');
+
+  protected readonly sprintIcon = LucideCalendarClock;
+  protected readonly skeletonTiles = Array.from({ length: 3 });
 
   readonly sprint = computed(() => this.resource.value()?.payload ?? null);
 
@@ -172,11 +203,11 @@ export class DashboardCurrentSprintCardComponent {
     return Math.round((sprint.doneTaskCount / sprint.taskCount) * 100);
   });
 
-  readonly stats = computed<SprintStat[]>(() => {
+  readonly stats = computed<StatStripItem[]>(() => {
     const sprint = this.sprint();
     if (!sprint) return [];
 
-    const tiles: SprintStat[] = [
+    const tiles: StatStripItem[] = [
       {
         label: $localize`:Label shown in the interface:Remaining`,
         value: sprint.taskCount - sprint.doneTaskCount,
@@ -205,11 +236,6 @@ export class DashboardCurrentSprintCardComponent {
 
     return tiles;
   });
-
-  readonly daysChip = computed(() => {
-    const sprint = this.sprint();
-    return sprint ? sprintDaysChip(sprint.status, sprint.endDate) : null;
-  });
 }
 
 function scopeLabel(report: SprintBurndownReport): string {
@@ -219,7 +245,7 @@ function scopeLabel(report: SprintBurndownReport): string {
   return `${report.committedCount}`;
 }
 
-function estimateStat(sprint: SprintDetailViewModel): SprintStat | null {
+function estimateStat(sprint: SprintDetailViewModel): StatStripItem | null {
   const type = sprint.estimateType;
   const value = sprint.totalEstimateValue;
 
