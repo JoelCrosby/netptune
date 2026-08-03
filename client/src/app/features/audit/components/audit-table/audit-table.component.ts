@@ -5,11 +5,13 @@ import { ActivityType } from '@core/models/view-models/activity-view-model';
 import { AuditLogViewModel } from '@core/models/view-models/audit-log-view-model';
 import { DialogService } from '@core/services/dialog.service';
 import { LucideExternalLink } from '@lucide/angular';
+import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
+import { TooltipDirective } from '@static/directives/tooltip.directive';
 import { ActivityTypePipe } from '@static/pipes/activity-type.pipe';
 import { EntityTypePipe } from '@static/pipes/entity-type.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
@@ -19,6 +21,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
   selector: 'app-audit-table',
   imports: [
     ActivityTypePipe,
+    AvatarComponent,
     BadgeComponent,
     DatatableCellTemplateDirective,
     DatatableComponent,
@@ -26,6 +29,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
     IconButtonComponent,
     LucideExternalLink,
     PrettyDatePipe,
+    TooltipDirective,
   ],
   template: `
     <app-datatable
@@ -49,18 +53,28 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
       </ng-template>
 
       <ng-template appDatatableCell="userDisplayName" let-row>
-        <span class="font-medium">{{ row.userDisplayName }}</span>
-        @if (row.agent) {
-          <span class="text-muted ml-1 text-xs">
-            <span
-              i18n="
-                Precedes the assistant that made a change on the user's behalf
-              "
-              >via</span
-            >
-            {{ row.agent }}
+        <div class="flex min-w-0 items-center gap-2">
+          <app-avatar
+            class="shrink-0"
+            size="sm"
+            [name]="row.userDisplayName"
+            [imageUrl]="row.userPictureUrl" />
+          <span class="min-w-0 truncate">
+            <span class="font-medium">{{ row.userDisplayName }}</span>
+            @if (row.agent) {
+              <span class="text-muted ml-1 text-xs">
+                <span
+                  i18n="
+                    Precedes the assistant that made a change on the user's
+                    behalf
+                  "
+                  >via</span
+                >
+                {{ row.agent }}
+              </span>
+            }
           </span>
-        }
+        </div>
       </ng-template>
 
       <ng-template appDatatableCell="type" let-row>
@@ -70,7 +84,7 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
       </ng-template>
 
       <ng-template appDatatableCell="entityType" let-row>
-        <span class="text-foreground/80">
+        <span class="text-foreground/80 block truncate">
           {{ row.entityType | entityType }}
           @if (row.entityId) {
             <span class="text-foreground/50">#{{ row.entityId }}</span>
@@ -79,7 +93,11 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
       </ng-template>
 
       <ng-template appDatatableCell="context" let-row>
-        <span class="text-foreground/70 text-sm">{{ row.summary }}</span>
+        <span
+          class="text-foreground/70 block truncate text-sm"
+          [appTooltip]="row.summary">
+          {{ row.summary }}
+        </span>
       </ng-template>
 
       <ng-template appDatatableCell="details" let-row>
@@ -121,11 +139,31 @@ export class AuditTableComponent {
   protected readonly data: DatatableDataSource<AuditLogViewModel> = {
     key: 'audit-log',
     columns: [
-      { id: 'occurredAt', header: 'Timestamp', widthClass: 'w-64' },
-      { id: 'userDisplayName', header: 'Actor', widthClass: 'w-48' },
-      { id: 'type', header: 'Action', widthClass: 'w-48' },
-      { id: 'entityType', header: 'Entity', widthClass: 'w-40' },
-      { id: 'context', header: 'Context' },
+      {
+        id: 'occurredAt',
+        header: 'Timestamp',
+        widthClass: 'w-64',
+        cellClass: 'whitespace-nowrap',
+      },
+      {
+        id: 'userDisplayName',
+        header: 'Actor',
+        widthClass: 'w-56',
+        cellClass: 'overflow-hidden',
+      },
+      {
+        id: 'type',
+        header: 'Action',
+        widthClass: 'w-48',
+        cellClass: 'whitespace-nowrap',
+      },
+      {
+        id: 'entityType',
+        header: 'Entity',
+        widthClass: 'w-40',
+        cellClass: 'overflow-hidden',
+      },
+      { id: 'context', header: 'Context', cellClass: 'overflow-hidden' },
       {
         id: 'details',
         header: '',
