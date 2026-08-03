@@ -2202,8 +2202,8 @@
     </unit>
     <unit id="4057181605248220505">
       <notes>
-        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:26,28</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:29,32</note>
+        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:22,24</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:40,43</note>
         <note category="description">Heading of the notifications dropdown</note>
       </notes>
       <segment state="translated">
@@ -2223,7 +2223,7 @@
     </unit>
     <unit id="4040806670191010035">
       <notes>
-        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:33,36</note>
+        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:29,32</note>
         <note category="description">Button that marks every notification as read</note>
       </notes>
       <segment state="translated">
@@ -2233,7 +2233,7 @@
     </unit>
     <unit id="1656872994210958357">
       <notes>
-        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:57,59</note>
+        <note category="location">src/app/static/components/notification-list.component.ts:22,23</note>
         <note category="description">Heading of the empty notifications list</note>
       </notes>
       <segment state="translated">
@@ -2243,8 +2243,7 @@
     </unit>
     <unit id="2324455558447195061">
       <notes>
-        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:61,63</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:50,51</note>
+        <note category="location">src/app/static/components/notification-list.component.ts:24,26</note>
         <note category="description">Reassurance shown when there are no notifications</note>
       </notes>
       <segment state="translated">
@@ -2264,7 +2263,7 @@
     </unit>
     <unit id="6711113068963618455">
       <notes>
-        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:73,75</note>
+        <note category="location">src/app/entry/components/notification-bell/notification-dropdown.component.ts:48,50</note>
         <note category="description">Link to the full notifications page</note>
       </notes>
       <segment state="translated">
@@ -2583,6 +2582,16 @@
       <segment state="translated">
         <source>Priority</source>
         <target>Priorität</target>
+      </segment>
+    </unit>
+    <unit id="2734780694152757859">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:54,58</note>
+        <note category="description">Link to the full notifications page</note>
+      </notes>
+      <segment state="translated">
+        <source>View all</source>
+        <target>Alle anzeigen</target>
       </segment>
     </unit>
     <unit id="8508552938611649591">
@@ -8763,6 +8772,16 @@
         <target>Die Automatisierung konnte nicht geladen werden</target>
       </segment>
     </unit>
+    <unit id="3655032270479055533">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:63,64</note>
+        <note category="description">Accessible label while notifications load</note>
+      </notes>
+      <segment state="translated">
+        <source>Loading notifications</source>
+        <target>Benachrichtigungen werden geladen</target>
+      </segment>
+    </unit>
     <unit id="3660632916771561809">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:104,106</note>
@@ -10309,7 +10328,7 @@
     </unit>
     <unit id="33149636091572968">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:66,70</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:88,91</note>
         <note category="description">Button that loads more notifications</note>
       </notes>
       <segment state="translated">
@@ -12642,6 +12661,16 @@
       <segment state="translated">
         <source> Select at least one credential scope or skip credential creation. </source>
         <target>Wählen Sie mindestens einen Geltungsbereich oder überspringen Sie die Erstellung.</target>
+      </segment>
+    </unit>
+    <unit id="2901842024267246951">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:125</note>
+        <note category="description">Number of unread notifications shown on the dashboard card</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="count"/> unread</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> ungelesen</target>
       </segment>
     </unit>
     <unit id="4588288891937968440">

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationViewModel } from '@app/core/models/view-models/notification-view-model';
 import { markAsRead } from '@app/core/store/notifications/notifications.actions';
@@ -17,13 +17,12 @@ import { Store } from '@ngrx/store';
     @if (notification(); as notification) {
       <button
         type="button"
-        class="hover:bg-hover focus-visible:ring-primary flex w-full min-w-80 cursor-pointer flex-row items-center gap-3 px-3 py-3 text-left text-sm focus-visible:ring-2 focus-visible:outline-none"
-        [class.opacity-50]="notification.isRead"
+        [class]="buttonClass()"
         (click)="onNotificationClick()">
         @if (!notification.isRead) {
-          <span class="bg-primary h-2 w-2 shrink-0 rounded-full"></span>
+          <span class="bg-primary mt-2 h-2 w-2 shrink-0 rounded-full"></span>
         } @else {
-          <span class="h-2 w-2 shrink-0"></span>
+          <span class="mt-2 h-2 w-2 shrink-0"></span>
         }
 
         <app-avatar
@@ -33,12 +32,13 @@ import { Store } from '@ngrx/store';
           [isServiceAccount]="notification.actorIsServiceAccount ?? false"
           size="md" />
 
-        <div class="flex flex-1 flex-col gap-1">
-          <div class="flex items-center justify-between">
-            <span class="font-medium tracking-[0.225px]">
+        <div class="flex min-w-0 flex-1 flex-col gap-1">
+          <div class="flex items-baseline justify-between gap-2">
+            <span class="truncate font-medium tracking-[0.225px]">
               {{ notification.actorUsername }}
             </span>
             <span
+              class="text-muted shrink-0 text-xs"
               [appTooltip]="notification.createdAt | date: 'd/M/yy, h:mm a'">
               {{ fromNow(notification.createdAt) }}
             </span>
@@ -70,6 +70,13 @@ export class NotificationItemComponent {
   readonly notificationSummary = notificationSummary;
   readonly entityTypeToString = entityTypeToString;
   readonly fromNow = fromNow;
+
+  protected readonly buttonClass = computed(() => {
+    const base =
+      'hover:bg-hover focus-visible:ring-primary flex w-full min-w-80 cursor-pointer flex-row items-start gap-3 px-4 py-3 text-left text-sm transition-colors focus-visible:-outline-offset-2 focus-visible:ring-2 focus-visible:outline-none';
+
+    return this.notification().isRead ? base : `${base} bg-primary/4`;
+  });
 
   onNotificationClick() {
     const notification = this.notification();

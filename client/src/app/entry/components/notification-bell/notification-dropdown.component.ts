@@ -1,10 +1,8 @@
 import { Component, computed, input, output } from '@angular/core';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
-import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { NotificationListComponent } from '@static/components/notification-list.component';
 import { PopoverSurfaceComponent } from '@static/components/popover-surface/popover-surface.component';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
-import { LucideBell } from '@lucide/angular';
-import { NotificationItemComponent } from './notification-item.component';
 
 const DROPDOWN_LIMIT = 10;
 
@@ -12,10 +10,8 @@ const DROPDOWN_LIMIT = 10;
   selector: 'app-notification-dropdown',
   imports: [
     SpinnerComponent,
-    EmptyStateComponent,
+    NotificationListComponent,
     PopoverSurfaceComponent,
-    LucideBell,
-    NotificationItemComponent,
   ],
   template: `
     <app-popover-surface class="mt-[0.4rem] mr-4 block" enterFrom="top-right">
@@ -39,29 +35,8 @@ const DROPDOWN_LIMIT = 10;
       <div class="border-border/50 border-t"></div>
 
       @if (loaded()) {
-        <div class="flex max-h-64 flex-col overflow-auto">
-          @for (
-            notification of visibleNotifications();
-            track notification.id;
-            let last = $last
-          ) {
-            <app-notification-item [notification]="notification" />
-
-            @if (!last) {
-              <div class="border-border/50 w-full border-t"></div>
-            }
-          } @empty {
-            <app-empty-state
-              compact
-              i18n-title="Heading of the empty notifications list"
-              title="No notifications"
-              i18n-description="
-                Reassurance shown when there are no notifications
-              "
-              description="You're all caught up!">
-              <svg emptyStateIcon lucideBell></svg>
-            </app-empty-state>
-          }
+        <div class="custom-scroll max-h-64 overflow-auto">
+          <app-notification-list [notifications]="visibleNotifications()" />
         </div>
 
         @if (notifications().length) {
