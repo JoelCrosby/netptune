@@ -92,6 +92,13 @@ Authorization: ApiKey ntp_<credential-id>_<secret>
 
 Repeat a filter parameter to match any supplied value within that field. Different filter fields are combined, so a task must match every supplied field.
 
+The boolean `hasTags`, `hasFlags`, and `noSprint` parameters select tasks by presence rather than value. Pass `hasTags=false` to list tasks that carry no tags at all, or `hasTags=true` for those that carry at least one.
+
+```http
+GET /api/v1/tasks?hasTags=false&pageSize=100
+Authorization: ApiKey ntp_<credential-id>_<secret>
+```
+
 Bulk-update tasks. Every supplied task and assignee must belong to the credential's workspace. When `sprintId` is supplied, every task must belong to that sprint's project.
 
 ```http

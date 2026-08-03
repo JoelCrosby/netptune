@@ -27,4 +27,6 @@ public sealed class TaskFilter : PageRequest
     public bool? NoSprint { get; init; }
 
     public bool? HasFlags { get; init; }
+
+    public bool? HasTags { get; init; }
 }

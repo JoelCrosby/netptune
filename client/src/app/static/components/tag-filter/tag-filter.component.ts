@@ -1,4 +1,11 @@
-import { Component, ElementRef, inject, input, output } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
 import { LucideTag } from '@lucide/angular';
@@ -21,11 +28,23 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
       i18n-label="Label on the control that filters tasks by tag"
       label="Filter by Tag"
       [icon]="lucideTag"
-      [color]="selectedCount() ? 'primary' : undefined"
-      [count]="selectedCount()"
+      [color]="activeCount() ? 'primary' : undefined"
+      [count]="activeCount()"
       (action)="opened.emit(); menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu>
+      <button
+        app-menu-checkbox-item
+        [checked]="untagged()"
+        (checkedChange)="untaggedChange.emit($event)">
+        <span i18n="Filters the list down to tasks that carry no tags">
+          Untagged
+        </span>
+      </button>
+
+      <div
+        class="my-1 border-t border-neutral-200 dark:border-neutral-700"></div>
+
       @if (loaded()) {
         @if (tags().length) {
           @for (tag of tags(); track tag.id) {
@@ -68,7 +87,13 @@ export class TagFilterComponent {
   readonly tags = input<Selected<Tag>[]>([]);
   readonly loaded = input(false);
   readonly selectedCount = input(0);
+  readonly untagged = input(false);
 
   readonly opened = output();
   readonly toggled = output<Selected<Tag>>();
+  readonly untaggedChange = output<boolean>();
+
+  readonly activeCount = computed(() => {
+    return this.selectedCount() + (this.untagged() ? 1 : 0);
+  });
 }

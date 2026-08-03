@@ -27,6 +27,12 @@ public sealed record PublicTaskFilter
 
     public string[] Tags { get; init; } = [];
 
+    public bool? NoSprint { get; init; }
+
+    public bool? HasFlags { get; init; }
+
+    public bool? HasTags { get; init; }
+
     internal TaskFilter ToTaskFilter()
     {
         return new TaskFilter
@@ -42,6 +48,9 @@ public sealed record PublicTaskFilter
             Priorities = Priorities,
             Assignees = Assignees,
             Tags = Tags,
+            NoSprint = NoSprint,
+            HasFlags = HasFlags,
+            HasTags = HasTags,
         };
     }
 }

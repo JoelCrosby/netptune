@@ -191,6 +191,19 @@ public sealed class BoardsEndpointTests
 
 
     [Fact]
+    public async Task GetBoardView_ShouldReturnCorrectly_WhenHasTagsProvided()
+    {
+        var response = await Client.GetAsync("api/boards/view/neovim?hasTags=false");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<BoardView>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Groups.SelectMany(group => group.Tasks).Should().OnlyContain(task => task.Tags.Count == 0);
+    }
+
+    [Fact]
     public async Task IsSlugUnique_ShouldReturnFalse_WhenSlugUnique()
     {
         var response = await Client.GetAsync("api/boards/is-unique/neovim");

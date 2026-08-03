@@ -168,6 +168,36 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldFilterTasksByTagPresence_WhenHasTagsProvided()
+    {
+        var untaggedResponse = await Client.GetAsync("api/tasks?hasTags=false&pageSize=100");
+
+        untaggedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var untaggedResult = await untaggedResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        untaggedResult.IsSuccess.Should().BeTrue();
+        untaggedResult.Payload!.Items.Should().NotBeEmpty();
+        untaggedResult.Payload.Items.Should().OnlyContain(task => task.Tags.Count == 0);
+
+        var taggedResponse = await Client.GetAsync("api/tasks?hasTags=true&pageSize=100");
+
+        taggedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var taggedResult = await taggedResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        taggedResult.IsSuccess.Should().BeTrue();
+        taggedResult.Payload!.Items.Should().NotBeEmpty();
+        taggedResult.Payload.Items.Should().OnlyContain(task => task.Tags.Count > 0);
+
+        var unfilteredResponse = await Client.GetAsync("api/tasks?pageSize=1");
+        var unfilteredResult = await unfilteredResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+        var totalCount = unfilteredResult.Payload!.TotalCount;
+
+        untaggedResult.Payload.TotalCount.Should().Be(totalCount - taggedResult.Payload.TotalCount);
+    }
+
+    [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/tasks/1");

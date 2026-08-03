@@ -19,7 +19,9 @@ public static class TasksEndpoints
     {
         group.MapGet("/tasks", GetTasks)
             .WithSummary("List tasks")
-            .WithDescription("Returns a paginated list of tasks. Filter by status, priority, assignee, or tag.")
+            .WithDescription(
+                "Returns a paginated list of tasks. Filter by status, priority, assignee, or tag. "
+                + "Use hasTags, hasFlags and noSprint to select tasks by the presence of tags, flags or a sprint.")
             .RequireAuthorization(NetptunePermissions.Tasks.Read);
 
         group.MapGet("/tasks/{id:int}", GetTask)

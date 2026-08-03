@@ -206,7 +206,10 @@ export class TaskListComponent {
   readonly filtersActive = computed(() => {
     const routeFilters = parseTaskFilterRouteParams(this.params());
 
-    return this.storeFiltersActive() || routeFilters.hasFlags === true;
+    const presenceFiltersActive =
+      routeFilters.hasFlags === true || routeFilters.hasTags !== undefined;
+
+    return this.storeFiltersActive() || presenceFiltersActive;
   });
 
   canCreate = this.store.selectSignal(

@@ -132,6 +132,22 @@ public sealed class PublicApiV1EndpointTests
     }
 
     [Fact]
+    public async Task GetTasks_ShouldReturnOnlyUntaggedTasks_WhenHasTagsIsFalse()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/v1/tasks?hasTags=false&pageSize=100");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Items.Should().NotBeEmpty();
+        result.Payload.Items.Should().OnlyContain(task => task.Tags.Count == 0);
+    }
+
+    [Fact]
     public async Task CreateTask_ShouldReturnCreated_AndBeReadableById()
     {
         var client = await CreateClient();

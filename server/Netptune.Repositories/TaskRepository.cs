@@ -387,6 +387,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             excludeTaskId = filter.ExcludeTaskId,
             noSprint = filter.NoSprint ?? false,
             hasFlags = filter.HasFlags,
+            hasTags = filter.HasTags,
             statusIds,
             statusCategories = filter.StatusCategories,
             priorities,

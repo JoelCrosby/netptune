@@ -2,6 +2,7 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -46,6 +47,76 @@ public class GetBoardViewQueryHandlerTests
         var result = await Handler.Handle(new GetBoardViewQuery(identifier, filter), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldReturnOnlyUntaggedTasks_WhenHasTagsIsFalse()
+    {
+        var filter = BoardGroupsFilter.Empty() with { HasTags = false };
+
+        var result = await HandleWithTaggedAndUntaggedTasks(filter);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Groups.Single().Tasks.Select(task => task.Id).Should().Equal(2);
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldReturnOnlyTaggedTasks_WhenHasTagsIsTrue()
+    {
+        var filter = BoardGroupsFilter.Empty() with { HasTags = true };
+
+        var result = await HandleWithTaggedAndUntaggedTasks(filter);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Groups.Single().Tasks.Select(task => task.Id).Should().Equal(1);
+    }
+
+    [Fact]
+    public async Task GetBoardView_ShouldReturnEveryTask_WhenHasTagsIsNotSupplied()
+    {
+        var filter = BoardGroupsFilter.Empty();
+
+        var result = await HandleWithTaggedAndUntaggedTasks(filter);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Groups.Single().Tasks.Select(task => task.Id).Should().Equal(1, 2);
+    }
+
+    private async Task<ClientResponse<BoardView>> HandleWithTaggedAndUntaggedTasks(BoardGroupsFilter filter)
+    {
+        const string identifier = "board";
+        const int workspaceId = 1;
+        const int boardId = 1;
+
+        var group = AutoFixtures.BoardViewGroup;
+
+        group.Tasks =
+        [
+            CreateTask(1, ["Typescript"]),
+            CreateTask(2, []),
+        ];
+
+        Identity.GetWorkspaceId().Returns(workspaceId);
+        UnitOfWork.Boards.GetIdByIdentifier(identifier, workspaceId, TestContext.Current.CancellationToken).Returns(boardId);
+        UnitOfWork.BoardGroups.GetBoardViewGroups(boardId, Arg.Any<string>(), Arg.Any<int?>(), TestContext.Current.CancellationToken).Returns([group]);
+        UnitOfWork.Boards.GetViewModel(boardId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardViewModel);
+        UnitOfWork.Users.GetAllByIdAsync(Arg.Any<IEnumerable<string>>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns([]);
+
+        return await Handler.Handle(new GetBoardViewQuery(identifier, filter), TestContext.Current.CancellationToken);
+    }
+
+    private static BoardViewTask CreateTask(int id, List<string> tags)
+    {
+        return new BoardViewTask
+        {
+            Id = id,
+            Name = $"Task {id}",
+            SystemId = $"nep-{id}",
+            StatusName = "In Progress",
+            StatusKey = "in-progress",
+            Assignees = [],
+            Tags = tags,
+        };
     }
 
     [Fact]

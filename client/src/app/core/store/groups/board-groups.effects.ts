@@ -494,20 +494,24 @@ export class BoardGroupsEffects {
         this.store.select(selectors.selectSearchTerm),
         this.store.select(selectors.selectSelectedSprintId),
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
+        this.route.queryParamMap,
       ]),
       filter(([, , , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      map(([_, users, tags, statuses, term, sprintId]) =>
-        buildTaskFilterRouteParams(
+      map(([_, users, tags, statuses, term, sprintId, , paramMap]) => {
+        const { hasTags } = parseTaskFilterRouteParams(paramMap);
+
+        return buildTaskFilterRouteParams(
           {
             users,
             tags,
             statuses,
             term,
             sprintId,
+            hasTags,
           },
           { includeStatuses: true }
-        )
-      ),
+        );
+      }),
       map((params) => actions.updateBoardFilter({ params }))
     );
   });

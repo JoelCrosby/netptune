@@ -92,6 +92,12 @@ WITH filtered_tasks AS (
             AND f_filter.entity_id = pt.id
             AND NOT f_filter.is_deleted
       ))
+      AND (@hasTags IS NULL OR @hasTags = EXISTS (
+          SELECT 1
+          FROM project_task_tags ptt_any
+                   INNER JOIN tags t_any ON ptt_any.tag_id = t_any.id AND NOT t_any.is_deleted
+          WHERE ptt_any.project_task_id = pt.id
+      ))
       AND (CARDINALITY(@statusIds) = 0 OR pt.status_id = ANY(@statusIds))
       AND (CARDINALITY(@statusCategories) = 0 OR st.category = ANY(@statusCategories))
       AND (CARDINALITY(@priorities) = 0

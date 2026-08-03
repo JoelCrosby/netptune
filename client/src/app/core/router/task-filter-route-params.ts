@@ -7,6 +7,7 @@ export interface TaskFilterRouteParams {
   sprintId?: number;
   statuses?: number[];
   hasFlags?: boolean;
+  hasTags?: boolean;
 }
 
 export interface TaskFilterRouteQueryParams extends Params {
@@ -16,6 +17,7 @@ export interface TaskFilterRouteQueryParams extends Params {
   sprintId?: number;
   statusIds?: string[];
   hasFlags?: boolean;
+  hasTags?: boolean;
 }
 
 export interface BuildTaskFilterRouteParamsOptions {
@@ -32,6 +34,7 @@ export function parseTaskFilterRouteParams(
     sprintId: getSprintId(paramMap.get('sprintId')),
     statuses: parseStatusIds(paramMap.getAll('statusIds')),
     hasFlags: paramMap.get('hasFlags') === 'true' ? true : undefined,
+    hasTags: parseBoolean(paramMap.get('hasTags')),
   };
 }
 
@@ -69,7 +72,18 @@ export function buildTaskFilterRouteParams(
     queryParams['hasFlags'] = true;
   }
 
+  if (params.hasTags !== undefined) {
+    queryParams['hasTags'] = params.hasTags;
+  }
+
   return queryParams;
+}
+
+function parseBoolean(value: string | null): boolean | undefined {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+
+  return undefined;
 }
 
 function parseStatusIds(values: string[]): number[] {

@@ -67,4 +67,5 @@ export interface ProjectTasksFilter extends PageQuery {
   statusIds?: number[];
   assignees?: string[];
   hasFlags?: boolean;
+  hasTags?: boolean;
 }

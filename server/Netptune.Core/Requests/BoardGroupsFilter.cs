@@ -12,6 +12,8 @@ public record BoardGroupsFilter
 
     public int? SprintId { get; init; }
 
+    public bool? HasTags { get; init; }
+
     public static BoardGroupsFilter Empty()
     {
         return new BoardGroupsFilter

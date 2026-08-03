@@ -40,6 +40,10 @@ export class ProjectTasksService {
       params = params.set('hasFlags', filter.hasFlags);
     }
 
+    if (filter?.hasTags !== undefined) {
+      params = params.set('hasTags', filter.hasTags);
+    }
+
     for (const tag of filter?.tags ?? []) {
       params = params.append('tags', tag);
     }
