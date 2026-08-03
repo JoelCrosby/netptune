@@ -60,6 +60,30 @@
     @apply border-b border-slate-100 px-4 py-3 align-top text-slate-600 last:border-0 dark:border-white/5 dark:text-white/65;
   }
 
+  .docs-markdown p:has(> img) {
+    @apply my-6;
+  }
+
+  .docs-markdown img {
+    @apply w-full rounded-xl border border-slate-200 shadow-lg shadow-brand/5 dark:border-white/10;
+  }
+
+  /*
+   * A screenshot is written as a light and dark pair of plain markdown images,
+   * so the page stays readable as markdown and only one of the two is shown.
+   */
+  .docs-markdown img[src$='-dark.webp'] {
+    @apply hidden;
+  }
+
+  .dark .docs-markdown img[src$='-light.webp'] {
+    @apply hidden;
+  }
+
+  .dark .docs-markdown img[src$='-dark.webp'] {
+    @apply block;
+  }
+
   .docs-markdown .docs-admonition {
     @apply my-6 rounded-xl border p-4 text-sm shadow-sm;
   }

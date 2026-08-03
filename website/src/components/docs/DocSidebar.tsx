@@ -7,6 +7,10 @@ const sections = [
     items: [{ href: '/docs', label: 'Overview' }],
   },
   {
+    heading: 'Features',
+    items: [{ href: '/docs/assistant', label: 'AI Assistant' }],
+  },
+  {
     heading: 'Deployment',
     items: [
       { href: '/docs/docker-compose', label: 'Docker Compose' },

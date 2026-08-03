@@ -3,6 +3,6 @@ import source from '~/content/docs/index.md?raw';
 
 export default function DocsOverview() {
   return (
-    <MarkdownDoc source={source} next={{ href: '/docs/docker-compose', label: 'Docker Compose' }} />
+    <MarkdownDoc source={source} next={{ href: '/docs/assistant', label: 'AI Assistant' }} />
   );
 }

@@ -2,6 +2,45 @@ import type { FeatureHighlight } from '~/types/feature-highlight';
 
 export const featureHighlights: FeatureHighlight[] = [
   {
+    eyebrow: 'AI assistant',
+    title: 'Ask about your work. Approve what changes.',
+    description:
+      'Ask what slipped last sprint, who is overloaded, or which rule moved a task, and get an answer read from your workspace. Ask it to make a change and it writes a proposal instead — you review each row and apply the ones you want.',
+    reversed: true,
+    extra: () => (
+      <div class="space-y-3">
+        <p class="text-sm leading-relaxed text-slate-500 dark:text-white/55">
+          It runs with your permissions and on your own Anthropic or OpenAI key, so it sees only
+          what you see and Netptune adds no charge of its own.
+        </p>
+        <a
+          href="/docs/assistant"
+          class="inline-block text-sm font-semibold text-brand underline decoration-violet-300 underline-offset-4 transition-colors hover:text-brand-dark dark:text-violet-300 dark:decoration-violet-500/50 dark:hover:text-fuchsia-300"
+        >
+          How the assistant works
+        </a>
+      </div>
+    ),
+    visual: () => (
+      <div class="min-w-0 flex-1">
+        <img
+          width={800}
+          height={450}
+          class="rounded-lg border border-neutral-200 object-contain shadow-2xl shadow-brand/30 dark:hidden"
+          src="/images/assistant-light.webp"
+          alt="The Netptune assistant proposing changes for review"
+        />
+        <img
+          width={800}
+          height={450}
+          class="hidden rounded-lg border border-white/15 object-contain shadow-2xl shadow-brand/30 dark:block"
+          src="/images/assistant-dark.webp"
+          alt="The Netptune assistant proposing changes for review"
+        />
+      </div>
+    ),
+  },
+  {
     eyebrow: 'Kanban boards',
     title: 'The way your team works — visualized.',
     description:

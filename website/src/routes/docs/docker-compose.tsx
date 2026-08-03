@@ -5,7 +5,7 @@ export default function DockerComposePage() {
   return (
     <MarkdownDoc
       source={source}
-      prev={{ href: '/docs', label: 'Overview' }}
+      prev={{ href: '/docs/assistant', label: 'AI Assistant' }}
       next={{ href: '/docs/kubernetes', label: 'Kubernetes / Helm' }}
     />
   );
