@@ -2,66 +2,73 @@ import { Component, computed, inject, input } from '@angular/core';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { colorBackgroundClass } from '@core/util/colors/colors';
 import { LucideChartColumnBig } from '@lucide/angular';
-import { CardHeaderImageComponent } from '@static/components/card/card-header-image.component';
-import { CardHeaderComponent } from '@static/components/card/card-header.component';
-import { CardTitleComponent } from '@static/components/card/card-title.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
 
+interface BoardStat {
+  label: string;
+  value: string | number;
+}
+
+/**
+ * Deliberately not `app-stat-strip`: that is sized for full-width cards, and its
+ * `text-lg` values wrap inside a grid tile this narrow.
+ */
 @Component({
   selector: 'app-boards-grid-card',
   providers: [FromNowPipe],
-  imports: [
-    CardHeaderImageComponent,
-    LucideChartColumnBig,
-    CardHeaderComponent,
-    CardTitleComponent,
-  ],
+  imports: [IconTileComponent],
+  host: { class: 'block h-full' },
   template: `
-    <div
-      class="bg-card-header border-border flex min-h-38 min-w-72 flex-col overflow-hidden rounded border">
-      <div class="flex p-6">
-        <app-card-header-image
-          [class]="colorBackgroundClass(board().metaInfo.color)">
-          <svg lucideChartColumnBig></svg>
-        </app-card-header-image>
-        <app-card-header>
-          <app-card-title>{{ board().name }}</app-card-title>
-        </app-card-header>
+    <article
+      class="border-border bg-card hover:border-primary/40 flex h-full min-h-38 flex-col overflow-hidden rounded-lg border shadow-sm transition-colors">
+      <div class="flex flex-1 items-start gap-3 px-5 py-4">
+        <app-icon-tile [icon]="boardIcon" [class]="tileClass()" />
+
+        <h3 class="font-overpass min-w-0 truncate text-base font-semibold">
+          {{ board().name }}
+        </h3>
       </div>
-      <div
-        class="bg-card border-border mt-auto flex items-center justify-stretch gap-4 rounded border-t px-4 py-3 text-sm">
-        @for (stat of stats(); track $index) {
-          <div class="flex w-full flex-col items-baseline justify-center gap-1">
-            <span
-              class="text-muted/60 flex items-center gap-1.5 text-xs tracking-wider uppercase">
+
+      <dl
+        class="border-border divide-border grid grid-cols-2 divide-x border-t">
+        @for (stat of stats(); track stat.label) {
+          <div class="min-w-0 px-5 py-3">
+            <dt
+              class="text-muted truncate text-[0.7rem] font-medium tracking-wide uppercase">
               {{ stat.label }}
-            </span>
-            <span
-              class="text-foreground flex items-center gap-1.5 font-semibold tracking-wide">
+            </dt>
+            <dd class="mt-0.5 truncate text-sm font-semibold">
               {{ stat.value }}
-            </span>
+            </dd>
           </div>
         }
-      </div>
-    </div>
+      </dl>
+    </article>
   `,
 })
 export class BoardsGridCardComponent {
-  readonly colorBackgroundClass = colorBackgroundClass;
-  board = input.required<BoardViewModel>();
-  fromNow = inject(FromNowPipe);
+  readonly board = input.required<BoardViewModel>();
 
-  stats = computed(() => {
-    const data = this.board();
+  private readonly fromNow = inject(FromNowPipe);
+
+  protected readonly boardIcon = LucideChartColumnBig;
+
+  protected readonly tileClass = computed(() => {
+    return `${colorBackgroundClass(this.board().metaInfo.color)} text-white`;
+  });
+
+  protected readonly stats = computed<BoardStat[]>(() => {
+    const board = this.board();
 
     return [
       {
         label: $localize`:Stat label for the number of tasks on a board:Tasks`,
-        value: data.taskCount,
+        value: board.taskCount,
       },
       {
         label: $localize`:Stat label for when a board was last changed:Modified`,
-        value: this.fromNow.transform(data.lastUpdated),
+        value: this.fromNow.transform(board.lastUpdated),
       },
     ];
   });

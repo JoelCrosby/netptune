@@ -9598,7 +9598,7 @@
     </unit>
     <unit id="6904866445262015585">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:59</note>
+        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:66</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:25</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:34,35</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:81,83</note>
@@ -9614,7 +9614,7 @@
     </unit>
     <unit id="3553216189604488439">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:63</note>
+        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:70</note>
         <note category="description">Stat label for when a board was last changed</note>
       </notes>
       <segment state="translated">
