@@ -51,12 +51,17 @@ import { LucideChevronsUpDown } from '@lucide/angular';
           [color]="workspace.metaInfo?.color"
           [letter]="workspace.name[0]" />
         @if (shell.sideNavExpanded()) {
-          <div
-            class="w-full overflow-hidden text-base font-medium tracking-[.225px] text-ellipsis whitespace-nowrap text-white select-none">
-            {{ workspace.name }}
-          </div>
+          <span class="min-w-0 flex-1 select-none">
+            <span
+              class="block truncate text-sm font-medium tracking-[.225px] text-white">
+              {{ workspace.name }}
+            </span>
+            <span class="block truncate text-xs text-white/50">
+              /{{ workspace.slug }}
+            </span>
+          </span>
 
-          <svg lucideChevronsUpDown class="h-5 w-5 flex-none opacity-70"></svg>
+          <svg lucideChevronsUpDown class="h-4 w-4 flex-none opacity-70"></svg>
         }
       }
     </button>
@@ -67,6 +72,7 @@ import { LucideChevronsUpDown } from '@lucide/angular';
         [filteredOptions]="filteredOptions()"
         [workspaces]="workspaces()"
         [selected]="selected()"
+        [current]="currentWorkspace()"
         [searchField]="searchForm.term"
         (optionSelect)="select($event)"
         (logout)="onlogOutClicked()" />

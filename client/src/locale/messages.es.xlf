@@ -16239,7 +16239,7 @@
     </unit>
     <unit id="6480721176754917879">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:19,22</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:38,41</note>
         <note category="description">Shown when no workspace matches the search term</note>
       </notes>
       <segment state="translated">
@@ -16249,7 +16249,7 @@
     </unit>
     <unit id="4192963686165639179">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:28,30</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:48,50</note>
         <note category="location">src/app/static/components/user-select/user-select.component.ts:95,97</note>
         <note category="description">Placeholder in the workspace search box</note>
       </notes>
@@ -16260,7 +16260,7 @@
     </unit>
     <unit id="3451492603028845941">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:54,57</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:77,80</note>
         <note category="description">Workspace menu action that opens the workspace picker</note>
       </notes>
       <segment state="translated">
@@ -16270,7 +16270,7 @@
     </unit>
     <unit id="7504940227782988572">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:61,64</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:86,89</note>
         <note category="description">Workspace menu action that signs the user out</note>
       </notes>
       <segment state="translated">
