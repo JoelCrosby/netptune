@@ -9364,7 +9364,7 @@
     </unit>
     <unit id="3867445261912406579">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:30,31</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:31,32</note>
         <note category="description">Heading of the dashboard status breakdown card</note>
       </notes>
       <segment>
@@ -9373,7 +9373,7 @@
     </unit>
     <unit id="3448462145758383019">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:33</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:34</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:15,17</note>
         <note category="description">Centre label showing the total task count</note>
       </notes>
@@ -9383,7 +9383,7 @@
     </unit>
     <unit id="235558583662639798">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:34,36</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35,37</note>
         <note category="description">Empty state for the status breakdown card</note>
       </notes>
       <segment>

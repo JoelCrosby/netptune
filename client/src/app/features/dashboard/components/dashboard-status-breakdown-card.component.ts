@@ -3,6 +3,7 @@ import { Component, computed } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { TaskStatusBreakdown } from '@core/models/view-models/task-status-breakdown';
 import { NamedColor } from '@core/util/colors/colors';
+import { LucideChartPie } from '@lucide/angular';
 import {
   DonutStatCardComponent,
   DonutStatItem,
@@ -32,14 +33,18 @@ const fallbackPalette: NamedColor[] = [
       totalLabel="Total"
       i18n-emptyMessage="Empty state for the status breakdown card"
       emptyMessage="No tasks to display."
+      [icon]="breakdownIcon"
       [items]="statusItems()"
-      [total]="statusTotal()" />
+      [total]="statusTotal()"
+      [loading]="isInitialLoad()" />
   `,
 })
 export class DashboardStatusBreakdownCardComponent {
   private readonly breakdown = httpResource<
     ClientResponse<TaskStatusBreakdown>
   >(() => 'api/tasks/status-breakdown');
+
+  protected readonly breakdownIcon = LucideChartPie;
 
   readonly statusItems = computed<DonutStatItem[]>(() =>
     (this.breakdown.value()?.payload?.statuses ?? []).map((status, index) => ({
@@ -51,5 +56,9 @@ export class DashboardStatusBreakdownCardComponent {
 
   readonly statusTotal = computed(
     () => this.breakdown.value()?.payload?.total ?? 0
+  );
+
+  readonly isInitialLoad = computed(
+    () => this.breakdown.isLoading() && !this.breakdown.hasValue()
   );
 }
