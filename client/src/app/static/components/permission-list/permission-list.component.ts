@@ -23,41 +23,34 @@ interface PermissionGroup {
 @Component({
   selector: 'app-permission-list',
   imports: [LucideDynamicIcon, CheckboxComponent],
-  host: {
-    class: 'block w-full rounded ',
-  },
+  host: { class: 'block w-full' },
   template: `
-    <div class="flex w-full flex-col gap-6">
-      @for (group of groups(); track group.heading) {
-        <div class="border-border/60 w-full rounded border">
-          <h4
-            class="border-border/60 text-foreground/80 bg-background sticky top-0 z-20 rounded-t border-b px-4 py-2 tracking-wide capitalize">
-            {{ group.heading }}
-          </h4>
-          <div class="flex w-full flex-col">
-            @for (item of group.items; track item.key; let last = $last) {
-              <div
-                class="bg-board-group border-border hover:bg-hover flex h-10 w-full cursor-pointer items-center gap-3 border-b px-4"
-                [class.border-0!]="last">
-                <svg
-                  [lucideIcon]="item.icon"
-                  class="h-4 w-4 shrink-0"
-                  [class.opacity-40]="!item.granted"></svg>
-                <span class="flex-1 text-sm" [class.opacity-40]="!item.granted">
-                  {{ item.label }}
-                </span>
+    @for (group of groups(); track group.heading) {
+      <section class="border-border border-t first:border-t-0">
+        <h4
+          class="border-border bg-card-header text-muted border-b px-6 py-2 text-xs font-medium tracking-wide uppercase">
+          {{ group.heading }}
+        </h4>
 
-                <app-checkbox
-                  #check
-                  [checked]="item.granted"
-                  [disabled]="!enabled()"
-                  (changed)="onChanged(item)" />
-              </div>
-            }
+        @for (item of group.items; track item.key) {
+          <div
+            class="border-border/60 hover:bg-hover flex w-full items-center gap-3 border-b px-6 py-3 last:border-b-0">
+            <svg
+              [lucideIcon]="item.icon"
+              class="h-4 w-4 shrink-0"
+              [class.opacity-40]="!item.granted"></svg>
+            <span class="flex-1 text-sm" [class.opacity-40]="!item.granted">
+              {{ item.label }}
+            </span>
+
+            <app-checkbox
+              [checked]="item.granted"
+              [disabled]="!enabled()"
+              (changed)="onChanged(item)" />
           </div>
-        </div>
-      }
-    </div>
+        }
+      </section>
+    }
   `,
 })
 export class PermissionListComponent {

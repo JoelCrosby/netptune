@@ -207,7 +207,7 @@
     </unit>
     <unit id="6077676238123249584">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:98</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:150</note>
         <note category="description">Explains why a member cannot edit their own role</note>
       </notes>
       <segment state="translated">
@@ -698,6 +698,16 @@
       <segment state="translated">
         <source>Manage Relation Types</source>
         <target>Gestionar los tipos de relación</target>
+      </segment>
+    </unit>
+    <unit id="5265020118967515341">
+      <notes>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:100,102</note>
+        <note category="description">Heading above a member&apos;s permissions</note>
+      </notes>
+      <segment state="translated">
+        <source> Permissions </source>
+        <target> Permisos </target>
       </segment>
     </unit>
     <unit id="3781527988196646385">
@@ -2262,6 +2272,16 @@
         <target>Notificaciones</target>
       </segment>
     </unit>
+    <unit id="4057572997574726547">
+      <notes>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:105,107</note>
+        <note category="description">Explains what a member&apos;s permissions grant</note>
+      </notes>
+      <segment state="translated">
+        <source> What this member can do in the workspace, on top of their role. </source>
+        <target> Lo que este miembro puede hacer en el espacio de trabajo, además de su rol. </target>
+      </segment>
+    </unit>
     <unit id="4064937437199233155">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:270</note>
@@ -3106,6 +3126,16 @@
         <target>El proyecto es obligatorio.</target>
       </segment>
     </unit>
+    <unit id="6340642993291274556">
+      <notes>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:120,121</note>
+        <note category="description">Advice shown when a member cannot be found</note>
+      </notes>
+      <segment state="translated">
+        <source>They may have been removed from this workspace.</source>
+        <target>Es posible que se haya eliminado de este espacio de trabajo.</target>
+      </segment>
+    </unit>
     <unit id="6346359058786917733">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:133,138</note>
@@ -3356,7 +3386,7 @@
         <note category="location">src/app/features/auth/components/login/login.component.ts:145</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:172</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:86</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:95</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:120</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -3370,7 +3400,7 @@
         <note category="location">src/app/features/auth/components/login/login.component.ts:148</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:175</note>
         <note category="location">src/app/features/auth/components/request-password-reset/request-password-reset.component.ts:89</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:99</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:124</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4199,6 +4229,16 @@
         <target> Exportar CSV </target>
       </segment>
     </unit>
+    <unit id="7686295785200907064">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:48,51</note>
+        <note category="description">Heading of the profile details card</note>
+      </notes>
+      <segment state="translated">
+        <source> Profile details </source>
+        <target> Datos del perfil </target>
+      </segment>
+    </unit>
     <unit id="7690634761514161231">
       <notes>
         <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:33,34</note>
@@ -4868,7 +4908,7 @@
     <unit id="4360072995007239979">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:61,64</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:41,43</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:65,67</note>
         <note category="description">Label of the given-name field on the registration form</note>
       </notes>
       <segment state="translated">
@@ -4879,7 +4919,7 @@
     <unit id="7617062131879090220">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:69,72</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:45,47</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:69,71</note>
         <note category="description">Label of the family-name field on the registration form</note>
       </notes>
       <segment state="translated">
@@ -4890,7 +4930,7 @@
     <unit id="3241357959735682038">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:99,102</note>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:46,49</note>
+        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:75,78</note>
         <note category="description">Label of the password confirmation field on the registration form</note>
       </notes>
       <segment state="translated">
@@ -4933,7 +4973,7 @@
     <unit id="5342432350421167093">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:160</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:83</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:108</note>
         <note category="description">Field name used inside registration validation messages, e.g. &quot;First name is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -4944,7 +4984,7 @@
     <unit id="3586674587150281199">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:167</note>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:90</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:115</note>
         <note category="description">Field name used inside registration validation messages, e.g. &quot;Last name is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -5018,7 +5058,7 @@
     <unit id="1221596867309460035">
       <notes>
         <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:49,52</note>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:39,42</note>
+        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:68,70</note>
         <note category="description">Label of the new password field on the password reset form</note>
       </notes>
       <segment state="translated">
@@ -7825,7 +7865,7 @@
     <unit id="3715596725146409911">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:48</note>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:55,56</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:83,84</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
       <segment state="translated">
@@ -10912,7 +10952,7 @@
     </unit>
     <unit id="1846542227840529109">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:32,35</note>
+        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:61,64</note>
         <note category="description">Label of the existing password field</note>
       </notes>
       <segment state="translated">
@@ -10922,7 +10962,7 @@
     </unit>
     <unit id="1481645236299803925">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:58,61</note>
+        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:85,88</note>
         <note category="description">Button that changes the account password</note>
       </notes>
       <segment state="translated">
@@ -10932,7 +10972,7 @@
     </unit>
     <unit id="1543538730036692975">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:89</note>
+        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:119</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -10940,9 +10980,19 @@
         <target>Las contraseñas no coinciden.</target>
       </segment>
     </unit>
+    <unit id="1557080315836233628">
+      <notes>
+        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:44,47</note>
+        <note category="description">Heading of the change password card</note>
+      </notes>
+      <segment state="translated">
+        <source> Password </source>
+        <target> Contraseña </target>
+      </segment>
+    </unit>
     <unit id="5390644233266949395">
       <notes>
-        <note category="location">src/app/features/profile/components/linked-providers/linked-providers.component.ts:11,15</note>
+        <note category="location">src/app/features/profile/components/linked-providers/linked-providers.component.ts:27,31</note>
         <note category="description">Explains what linked external sign-in accounts are for</note>
       </notes>
       <segment state="translated">
@@ -10952,7 +11002,7 @@
     </unit>
     <unit id="3921583758161750632">
       <notes>
-        <note category="location">src/app/features/profile/components/linked-providers/linked-providers.component.ts:18,22</note>
+        <note category="location">src/app/features/profile/components/linked-providers/linked-providers.component.ts:39,42</note>
         <note category="description">Shown when no external sign-in accounts are linked</note>
       </notes>
       <segment state="translated">
@@ -11062,7 +11112,7 @@
     </unit>
     <unit id="4879517228803151475">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:49,51</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:73,75</note>
         <note category="description">Label of the e-mail address field</note>
       </notes>
       <segment state="translated">
@@ -11082,7 +11132,7 @@
     </unit>
     <unit id="935836356119933355">
       <notes>
-        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:58,62</note>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:85,88</note>
         <note category="description">Button that saves profile changes</note>
       </notes>
       <segment state="translated">
@@ -11124,7 +11174,7 @@
     </unit>
     <unit id="5342600259269350996">
       <notes>
-        <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:53,56</note>
+        <note category="location">src/app/features/profile/components/linked-providers/linked-providers.component.ts:22,25</note>
         <note category="description">Heading above linked external sign-in accounts</note>
       </notes>
       <segment state="translated">
@@ -12995,7 +13045,6 @@
     <unit id="7314814725704332646">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:115,116</note>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:62,65</note>
         <note category="description">Title of the permissions wizard step</note>
       </notes>
       <segment state="translated">
@@ -13451,6 +13500,16 @@
       <segment state="translated">
         <source>Assistant · Ctrl I</source>
         <target>Asistente · Ctrl I</target>
+      </segment>
+    </unit>
+    <unit id="1005293436477635392">
+      <notes>
+        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:49,52</note>
+        <note category="description">Explains what the change password card does</note>
+      </notes>
+      <segment state="translated">
+        <source> Change the password you use to sign in. </source>
+        <target> Cambia la contraseña que usas para iniciar sesión. </target>
       </segment>
     </unit>
     <unit id="1005858772988721003">
@@ -15016,6 +15075,16 @@
         <target>Trabajando en ello…</target>
       </segment>
     </unit>
+    <unit id="4008430204592584922">
+      <notes>
+        <note category="location">src/app/features/profile/components/update-profile/update-profile.component.ts:53,56</note>
+        <note category="description">Explains what the profile details card controls</note>
+      </notes>
+      <segment state="translated">
+        <source> Your name, email address and picture. </source>
+        <target> Tu nombre, tu dirección de correo y tu foto. </target>
+      </segment>
+    </unit>
     <unit id="4013607694293243242">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:191,193</note>
@@ -15253,7 +15322,7 @@
     </unit>
     <unit id="2304081999211595609">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:40,42</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:65,67</note>
         <note category="description">Label of the member role field</note>
       </notes>
       <segment state="translated">
@@ -15263,7 +15332,7 @@
     </unit>
     <unit id="5250569740790418380">
       <notes>
-        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:71,76</note>
+        <note category="location">src/app/features/users/components/user-detail/user-detail.component.ts:118,119</note>
         <note category="description">Shown when a member cannot be found</note>
       </notes>
       <segment state="translated">

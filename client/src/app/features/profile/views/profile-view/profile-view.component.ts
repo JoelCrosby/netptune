@@ -44,16 +44,11 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           description="Check your connection and try again."
           (retry)="reload()" />
       } @else {
-        <app-update-profile />
-        <div class="border-border my-8 border-b-2"></div>
-        <app-change-password />
-        <div class="border-border my-8 border-b-2"></div>
-        <h2 class="mb-4 text-lg font-semibold">
-          <span i18n="Heading above linked external sign-in accounts">
-            Linked Accounts
-          </span>
-        </h2>
-        <app-linked-providers />
+        <div class="flex flex-col gap-6">
+          <app-update-profile />
+          <app-change-password />
+          <app-linked-providers />
+        </div>
       }
     </app-page-container>
   `,

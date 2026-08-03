@@ -18,50 +18,80 @@ import {
 } from '@app/core/store/profile/profile.selectors';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { LucideLock } from '@lucide/angular';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 
 @Component({
   selector: 'app-change-password',
-  imports: [FormField, FormInputComponent, StrokedButtonComponent],
+  imports: [
+    FormField,
+    FormInputComponent,
+    IconTileComponent,
+    StrokedButtonComponent,
+  ],
   template: `
-    <form class="max-w-120 px-0" (submit)="changePasswordClicked($event)">
-      <app-form-input
-        type="password"
-        [formField]="passwordForm.currentPassword"
-        autocomplete="current-password"
-        i18n-label="Label of the existing password field"
-        label="Current Password"></app-form-input>
+    <form
+      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
+      (submit)="changePasswordClicked($event)">
+      <header class="border-border border-b px-6 py-5">
+        <div class="flex min-w-0 items-center gap-3">
+          <app-icon-tile [icon]="passwordIcon" />
 
-      <app-form-input
-        type="password"
-        [formField]="passwordForm.newPassword"
-        autocomplete="new-password"
-        i18n-label="Label of the new password field"
-        label="New Password"></app-form-input>
+          <div class="min-w-0">
+            <h2
+              class="font-overpass text-base font-semibold"
+              i18n="Heading of the change password card">
+              Password
+            </h2>
+            <p
+              class="text-muted mt-1 text-sm"
+              i18n="Explains what the change password card does">
+              Change the password you use to sign in.
+            </p>
+          </div>
+        </div>
+      </header>
 
-      <app-form-input
-        type="password"
-        [formField]="passwordForm.confirmPassword"
-        autocomplete="new-password"
-        i18n-label="Label of the password confirmation field"
-        label="Confirm Password"></app-form-input>
+      <div class="max-w-120 px-6 py-5">
+        <app-form-input
+          type="password"
+          [formField]="passwordForm.currentPassword"
+          autocomplete="current-password"
+          i18n-label="Label of the existing password field"
+          label="Current Password"></app-form-input>
 
-      @if (error()) {
-        <div class="text-warn my-1 mb-3 text-sm font-medium">{{ error() }}</div>
-      }
+        <app-form-input
+          type="password"
+          [formField]="passwordForm.newPassword"
+          autocomplete="new-password"
+          i18n-label="Label of the new password field"
+          label="New Password"></app-form-input>
 
-      <button
-        class="mt-3 ml-auto block"
-        app-stroked-button
-        type="submit"
-        [disabled]="loading()">
-        <span i18n="Button that changes the account password">
-          Change Password
-        </span>
-      </button>
+        <app-form-input
+          type="password"
+          [formField]="passwordForm.confirmPassword"
+          autocomplete="new-password"
+          i18n-label="Label of the password confirmation field"
+          label="Confirm Password"></app-form-input>
+
+        @if (error()) {
+          <p class="text-warn mt-1 text-sm font-medium">{{ error() }}</p>
+        }
+      </div>
+
+      <footer class="border-border border-t px-6 py-4">
+        <button app-stroked-button type="submit" [disabled]="loading()">
+          <span i18n="Button that changes the account password">
+            Change Password
+          </span>
+        </button>
+      </footer>
     </form>
   `,
 })
 export class ChangePasswordComponent {
+  protected readonly passwordIcon = LucideLock;
+
   private store = inject(Store);
 
   loading = this.store.selectSignal(selectChangePasswordLoading);
