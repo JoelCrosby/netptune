@@ -118,16 +118,13 @@ public class SprintRepository : WorkspaceEntityRepository<DataContext, Sprint, i
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<SprintDetailViewModel?> GetCurrentSprintForUserAsync(
+    public Task<SprintDetailViewModel?> GetCurrentSprintAsync(
         string workspaceKey,
-        string? userId,
         CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(sprint => sprint.Workspace!.Slug == workspaceKey && !sprint.IsDeleted)
             .Where(sprint => sprint.Status == SprintStatus.Active)
-            .Where(sprint => userId == null || sprint.ProjectTasks.Any(task =>
-                !task.IsDeleted && task.ProjectTaskAppUsers.Any(assignee => assignee.UserId == userId)))
             .OrderByDescending(sprint => sprint.StartDate)
             .ThenByDescending(sprint => sprint.Id)
             .AsNoTracking()

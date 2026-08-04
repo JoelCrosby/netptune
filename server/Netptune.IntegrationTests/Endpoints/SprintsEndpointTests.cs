@@ -7,6 +7,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.Sprints;
+using Netptune.TestData;
 using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
@@ -96,7 +97,7 @@ public sealed class SprintsEndpointTests
     }
 
     [Fact]
-    public async Task GetCurrent_ShouldReturnMostRecentActiveSprintWithMyTasks()
+    public async Task GetCurrent_ShouldReturnMostRecentActiveSprint_WhenCallerIsAssignedNoneOfItsTasks()
     {
         var project = await CreateProject();
 
@@ -115,7 +116,9 @@ public sealed class SprintsEndpointTests
         var createResponse = await Client.PostAsJsonAsync("api/sprints", request);
         var sprint = (await createResponse.Content.ReadFromJsonAsync<ClientResponse<SprintViewModel>>()).Payload!;
 
-        var task = await CreateTask(project.Id);
+        var callerId = await GetCallerUserId(project.Id);
+        var otherUser = SeedData.Users.First(user => user.Id != callerId);
+        var task = await CreateTask(project.Id, otherUser.Id);
 
         await Client.PostAsJsonAsync(
             $"api/sprints/{sprint.Id}/tasks",
@@ -130,10 +133,11 @@ public sealed class SprintsEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse<SprintDetailViewModel>>();
 
         result.IsSuccess.Should().BeTrue();
-        result.Payload.Should().NotBeNull();
+        result.Payload.Should().NotBeNull("the running sprint is workspace scoped, not scoped to the caller's assignments");
         result.Payload!.Id.Should().Be(sprint.Id);
         result.Payload.Status.Should().Be(SprintStatus.Active);
         result.Payload.Tasks.Should().Contain(item => item.Id == task.Id);
+        result.Payload.Tasks.Should().OnlyContain(item => item.Assignees.All(assignee => assignee.Id != callerId));
     }
 
     [Fact]
@@ -346,13 +350,21 @@ public sealed class SprintsEndpointTests
         return result.Payload!;
     }
 
-    private async Task<TaskViewModel> CreateTask(int projectId)
+    private async Task<string> GetCallerUserId(int projectId)
+    {
+        var task = await CreateTask(projectId);
+
+        return task.Assignees.Single().Id;
+    }
+
+    private async Task<TaskViewModel> CreateTask(int projectId, string? assigneeId = null)
     {
         var request = new AddProjectTaskRequest
         {
             Name = $"Sprint task {Guid.NewGuid():N}",
             Description = "Task for sprint integration tests",
             ProjectId = projectId,
+            AssigneeId = assigneeId,
         };
 
         var response = await Client.PostAsJsonAsync("api/tasks", request);

@@ -22,9 +22,7 @@ public sealed class GetCurrentSprintQueryHandler : IRequestHandler<GetCurrentSpr
     public async ValueTask<ClientResponse<SprintDetailViewModel?>> Handle(GetCurrentSprintQuery request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
-        var userId = Identity.TryGetCurrentUserId();
-
-        var sprint = await UnitOfWork.Sprints.GetCurrentSprintForUserAsync(workspaceKey, userId, cancellationToken);
+        var sprint = await UnitOfWork.Sprints.GetCurrentSprintAsync(workspaceKey, cancellationToken);
 
         return ClientResponse<SprintDetailViewModel?>.Success(sprint);
     }
