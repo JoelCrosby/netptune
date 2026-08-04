@@ -40,6 +40,13 @@ spec:
               protocol: "TCP"
               containerPort: {{ .Values.parameters.publicApi.port_http | int }}
           imagePullPolicy: "Always"
+          startupProbe:
+            httpGet:
+              path: "/health/ready"
+              port: "http"
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 30
           livenessProbe:
             httpGet:
               path: "/health/live"

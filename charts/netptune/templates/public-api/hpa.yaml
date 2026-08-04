@@ -22,4 +22,19 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.parameters.publicApi.autoscaling.targetCPUUtilizationPercentage }}
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: {{ .Values.parameters.publicApi.autoscaling.scaleUpStabilizationSeconds }}
+      selectPolicy: Max
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: {{ .Values.parameters.publicApi.autoscaling.scaleDownStabilizationSeconds }}
+      selectPolicy: Max
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
 {{- end }}
