@@ -1,6 +1,6 @@
 using Netptune.Transfer.Enums;
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import;
 

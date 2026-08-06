@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import;
 

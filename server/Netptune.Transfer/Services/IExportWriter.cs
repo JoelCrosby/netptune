@@ -1,5 +1,6 @@
 using Netptune.Transfer.Enums;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Records;
 
 namespace Netptune.Transfer.Services;
 

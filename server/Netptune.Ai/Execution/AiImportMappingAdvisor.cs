@@ -6,7 +6,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Transfer.Services;
 
 namespace Netptune.Ai.Execution;

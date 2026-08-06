@@ -1,6 +1,6 @@
 using Netptune.Core.Entities;
 
-namespace Netptune.Transfer.Import;
+namespace Netptune.Transfer.Mapping;
 
 public sealed class ImportVocabulary
 {

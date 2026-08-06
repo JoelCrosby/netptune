@@ -2,7 +2,7 @@ using Netptune.Transfer.Enums;
 using FluentAssertions;
 
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Import;
 
 using Xunit;

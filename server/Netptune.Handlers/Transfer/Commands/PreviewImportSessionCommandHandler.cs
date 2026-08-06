@@ -1,69 +1,21 @@
-using Netptune.Transfer.Repositories;
-using Netptune.Transfer.Enums;
 using System.Text.Json;
-
 using Mediator;
-
 using Microsoft.Extensions.Options;
-
 using Netptune.Core.Encoding;
-using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
-using Netptune.Transfer.Services;
-using Netptune.Transfer;
-using Netptune.Transfer.Import;
 using Netptune.Core.UnitOfWork;
-using Netptune.Transfer.ViewModels;
+using Netptune.Transfer;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Repositories;
+using Netptune.Transfer.Services;
 
-namespace Netptune.Handlers.Transfer.Queries;
+namespace Netptune.Handlers.Transfer.Commands;
 
-public sealed record GetImportSessionsQuery(PageRequest Page) : IRequest<ClientResponse<PagedResponse<ImportSessionViewModel>>>;
+public sealed record PreviewImportSessionCommand(Guid PublicId) : IRequest<ClientResponse<ImportPreviewResult>>;
 
-public sealed class GetImportSessionsQueryHandler : IRequestHandler<GetImportSessionsQuery, ClientResponse<PagedResponse<ImportSessionViewModel>>>
-{
-    private readonly IImportSessionRepository ImportSessions;
-    private readonly IIdentityService Identity;
-
-    public GetImportSessionsQueryHandler(IIdentityService identity, IImportSessionRepository importSessions)
-    {
-        Identity = identity;
-        ImportSessions = importSessions;
-    }
-
-    public async ValueTask<ClientResponse<PagedResponse<ImportSessionViewModel>>> Handle(GetImportSessionsQuery request, CancellationToken cancellationToken)
-    {
-        var workspaceId = await Identity.GetWorkspaceId();
-        var sessions = await ImportSessions.GetSessions(workspaceId, request.Page, cancellationToken);
-
-        return ClientResponse<PagedResponse<ImportSessionViewModel>>.Success(sessions);
-    }
-}
-
-public sealed record GetImportSessionQuery(Guid PublicId) : IRequest<ImportSessionViewModel?>;
-
-public sealed class GetImportSessionQueryHandler : IRequestHandler<GetImportSessionQuery, ImportSessionViewModel?>
-{
-    private readonly IIdentityService Identity;
-    private readonly IImportSessionRepository ImportSessions;
-
-    public GetImportSessionQueryHandler(IIdentityService identity, IImportSessionRepository importSessions)
-    {
-        Identity = identity;
-        ImportSessions = importSessions;
-    }
-
-    public async ValueTask<ImportSessionViewModel?> Handle(GetImportSessionQuery request, CancellationToken cancellationToken)
-    {
-        var workspaceId = await Identity.GetWorkspaceId();
-
-        return await ImportSessions.GetViewModel(request.PublicId, workspaceId, cancellationToken);
-    }
-}
-
-public sealed record PreviewImportSessionQuery(Guid PublicId) : IRequest<ClientResponse<ImportPreviewResult>>;
-
-public sealed class PreviewImportSessionQueryHandler : IRequestHandler<PreviewImportSessionQuery, ClientResponse<ImportPreviewResult>>
+public sealed class PreviewImportSessionCommandHandler : IRequestHandler<PreviewImportSessionCommand, ClientResponse<ImportPreviewResult>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
@@ -72,7 +24,7 @@ public sealed class PreviewImportSessionQueryHandler : IRequestHandler<PreviewIm
     private readonly TransferOptions Options;
     private readonly IImportSessionRepository ImportSessions;
 
-    public PreviewImportSessionQueryHandler(
+    public PreviewImportSessionCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IImportSourceStore store,
@@ -88,7 +40,7 @@ public sealed class PreviewImportSessionQueryHandler : IRequestHandler<PreviewIm
         ImportSessions = importSessions;
     }
 
-    public async ValueTask<ClientResponse<ImportPreviewResult>> Handle(PreviewImportSessionQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ClientResponse<ImportPreviewResult>> Handle(PreviewImportSessionCommand request, CancellationToken cancellationToken)
     {
         var workspaceKey = Identity.GetWorkspaceKey();
         var workspaceId = await Identity.GetWorkspaceId();
@@ -97,6 +49,14 @@ public sealed class PreviewImportSessionQueryHandler : IRequestHandler<PreviewIm
         if (session is null)
         {
             return ClientResponse<ImportPreviewResult>.NotFound;
+        }
+
+        var isPreviewable = ImportStages.CanPreview(session.Stage);
+
+        if (!isPreviewable)
+        {
+            return ClientResponse<ImportPreviewResult>.Failed(
+                $"An import that is {session.Stage} cannot be previewed.");
         }
 
         var mapping = session.Mapping?.Deserialize<ImportMappingModel>(JsonOptions.Default);

@@ -9,7 +9,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Transfer.Commands;

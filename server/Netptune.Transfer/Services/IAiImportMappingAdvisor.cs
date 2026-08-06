@@ -1,6 +1,6 @@
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Transfer.Services;
 

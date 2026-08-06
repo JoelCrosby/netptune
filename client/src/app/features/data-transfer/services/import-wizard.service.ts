@@ -13,6 +13,7 @@ import { TransferField } from '@core/models/view-models/export-definition';
 import {
   ImportMappingSuggestion,
   ImportPreviewResult,
+  ImportSessionState,
   ImportSessionViewModel,
   ImportSourceProfile,
   ImportStage,
@@ -84,7 +85,9 @@ export class ImportWizardService {
     return this.boardsResource.value().flatMap((group) => group.boards);
   });
 
-  readonly fileName = computed(() => this.file()?.name ?? null);
+  readonly fileName = computed(() => {
+    return this.file()?.name ?? this.session()?.originalName ?? null;
+  });
 
   readonly vendorName = computed(() => VendorNames[this.vendor()] ?? null);
 
@@ -183,6 +186,97 @@ export class ImportWizardService {
     });
 
     inject(DestroyRef).onDestroy(() => this.stopPolling());
+
+    const sessionId = this.route.snapshot.paramMap.get('sessionId');
+
+    if (sessionId) {
+      this.resume(sessionId);
+    }
+  }
+
+  resume(sessionId: string) {
+    this.isBusy.set(true);
+    this.error.set(null);
+
+    this.http
+      .get<ClientResponse<ImportSessionState>>(
+        `api/import/sessions/${sessionId}/state`
+      )
+      .subscribe({
+        next: (response) => {
+          this.isBusy.set(false);
+
+          const state = response.payload;
+
+          if (!state) {
+            this.error.set(
+              $localize`:Shown when a started import could not be reopened:This import could not be reopened.`
+            );
+
+            return;
+          }
+
+          this.restore(state);
+        },
+        error: () => {
+          this.isBusy.set(false);
+          this.error.set(
+            $localize`:Shown when a started import could not be reopened:This import could not be reopened.`
+          );
+        },
+      });
+  }
+
+  private restore(state: ImportSessionState) {
+    const session = state.session;
+    const profile = state.sourceProfile ?? null;
+
+    this.session.set(session);
+    this.profile.set(profile);
+    this.preview.set(state.previewResult ?? null);
+    this.vendor.set(session.vendorProfile);
+    this.boardIdentifier.set(session.targetBoardIdentifier ?? null);
+
+    if (profile) {
+      this.hasHeaderRow.set(profile.hasHeaderRow);
+      this.delimiterOverride.set(profile.delimiter ?? null);
+      this.selectedSheet.set(profile.selectedSheet ?? null);
+    }
+
+    if (state.mapping) {
+      this.bindings.set(this.toBindings(state.mapping.bindings));
+    }
+
+    this.openStageStep(state);
+  }
+
+  private openStageStep(state: ImportSessionState) {
+    switch (state.session.stage) {
+      case ImportStage.uploaded:
+        this.inspect();
+
+        return;
+      case ImportStage.inspected:
+        this.activeIndex.set(2);
+        this.loadSuggestion();
+
+        return;
+      case ImportStage.mapped:
+        this.activeIndex.set(3);
+        this.loadPreview();
+
+        return;
+      case ImportStage.previewed:
+        this.activeIndex.set(3);
+
+        if (!state.previewResult) {
+          this.loadPreview();
+        }
+
+        return;
+      default:
+        this.activeIndex.set(4);
+    }
   }
 
   newEntityLabel(): string {

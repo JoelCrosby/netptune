@@ -10,7 +10,7 @@ using Netptune.Transfer.Messages;
 using Netptune.Core.Services;
 using Netptune.Transfer.Services;
 using Netptune.Core.Storage;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.JobServer.Handlers;
@@ -51,7 +51,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
             return default;
         }
 
-        if (job.Status != ExportJobStatus.Pending)
+        if (!ExportJobStatuses.CanRun(job.Status))
         {
             Logger.LogInformation("[Export] job {PublicId} is {Status} and will not be run", job.PublicId, job.Status);
 

@@ -7,7 +7,7 @@ using Netptune.App.Configuration;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Handlers.Transfer.Commands;
 using Netptune.Handlers.Transfer.Queries;
 
@@ -33,6 +33,9 @@ public static class ImportEndpoints
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapGet("/sessions/{publicId:guid}", HandleGetSession)
+            .RequireAuthorization(NetptunePermissions.Tasks.Import);
+
+        group.MapGet("/sessions/{publicId:guid}/state", HandleGetSessionState)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapPost("/sessions/{publicId:guid}/inspect", HandleInspect)
@@ -233,6 +236,16 @@ public static class ImportEndpoints
         return result is null ? Results.NotFound() : Results.Ok(result);
     }
 
+    private static async Task<IResult> HandleGetSessionState(
+        IMediator mediator,
+        Guid publicId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetImportSessionStateQuery(publicId), cancellationToken);
+
+        return Respond(result.IsNotFound, result.IsSuccess, result);
+    }
+
     private static async Task<IResult> HandleInspect(
         IMediator mediator,
         Guid publicId,
@@ -280,7 +293,7 @@ public static class ImportEndpoints
         Guid publicId,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new PreviewImportSessionQuery(publicId), cancellationToken);
+        var result = await mediator.Send(new PreviewImportSessionCommand(publicId), cancellationToken);
 
         return Respond(result.IsNotFound, result.IsSuccess, result);
     }

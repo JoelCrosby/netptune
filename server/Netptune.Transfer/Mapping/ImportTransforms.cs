@@ -2,7 +2,7 @@ using Netptune.Transfer.Enums;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Netptune.Transfer.Import;
+namespace Netptune.Transfer.Mapping;
 
 public static partial class ImportTransforms
 {

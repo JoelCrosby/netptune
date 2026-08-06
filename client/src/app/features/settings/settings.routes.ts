@@ -124,6 +124,13 @@ export const routes: Routes = [
         loadComponent: () => import('@app/features/data-transfer/views/import-wizard-view/import-wizard-view.component').then((m) => m.ImportWizardViewComponent),
       },
       {
+        path: 'data/import/:sessionId',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.tasks.import, back: $localize`:Link back to the data page from the import wizard:Back to Data` },
+        title: $localize`:Page title for resuming a started import:Resume Import`,
+        loadComponent: () => import('@app/features/data-transfer/views/import-wizard-view/import-wizard-view.component').then((m) => m.ImportWizardViewComponent),
+      },
+      {
         path: 'assistant',
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.assistant.readAllConversations },

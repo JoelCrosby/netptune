@@ -39,7 +39,7 @@ public sealed class CancelExportJobCommandHandler : IRequestHandler<CancelExport
             return ClientResponse<ExportJobViewModel>.NotFound;
         }
 
-        var isCancellable = job.Status is ExportJobStatus.Pending or ExportJobStatus.Running;
+        var isCancellable = ExportJobStatuses.CanCancel(job.Status);
 
         if (!isCancellable)
         {

@@ -42,7 +42,7 @@ public sealed class GetExportJobDownloadQueryHandler : IRequestHandler<GetExport
             return ClientResponse<Uri>.NotFound;
         }
 
-        var hasArtefact = job.Status == ExportJobStatus.Succeeded && job.StorageKey is not null && job.FileName is not null;
+        var hasArtefact = ExportJobStatuses.HasArtefact(job.Status) && job.StorageKey is not null && job.FileName is not null;
 
         if (!hasArtefact)
         {

@@ -3,7 +3,7 @@ using System.Text.Json;
 
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Records;
 
 namespace Netptune.Export.Writers;
 

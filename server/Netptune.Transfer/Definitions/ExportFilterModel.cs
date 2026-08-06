@@ -1,6 +1,6 @@
 using Netptune.Core.Enums;
 
-namespace Netptune.Transfer.Export;
+namespace Netptune.Transfer.Definitions;
 
 public sealed record ExportFilterModel
 {

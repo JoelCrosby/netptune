@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import;
 

@@ -8,7 +8,7 @@ using Netptune.Core.Extensions;
 using Netptune.Transfer.Services;
 using Netptune.Core.Responses.Common;
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Transfer.ViewModels;
 
 using Xunit;
@@ -120,6 +120,54 @@ public sealed class ImportEndpointTests
         var response = await Client.PutAsJsonAsync($"api/import/sessions/{publicId}/mapping", mapping);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task State_ShouldReturnEverythingTheWizardNeedsToResume()
+    {
+        var session = await Upload();
+
+        await Inspect(session.PublicId);
+        await SetMapping(session.PublicId);
+        await Client.PostAsync($"api/import/sessions/{session.PublicId}/preview", null);
+
+        var response = await Client.GetAsync($"api/import/sessions/{session.PublicId}/state");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ImportSessionStateViewModel>>();
+        var state = result.Payload!;
+
+        state.Session.Stage.Should().Be(ImportStage.Previewed);
+        state.Session.TargetBoardIdentifier.Should().Be("neovim");
+        state.SourceProfile!.Columns.Select(column => column.Name)
+            .Should().Equal("Name", "assignees", "group", "due");
+        state.Mapping!.Bindings.Should().Contain(binding => binding.FieldKey == TaskFieldKeys.Name);
+        state.PreviewResult!.TotalRows.Should().Be(2, "the stored preview is replayed rather than recomputed");
+        state.PreviewResult.WillCreate.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task State_ShouldOmitTheMappingAndPreviewOfASessionThatHasOnlyBeenUploaded()
+    {
+        var session = await Upload();
+
+        var response = await Client.GetAsync($"api/import/sessions/{session.PublicId}/state");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<ImportSessionStateViewModel>>();
+        var state = result.Payload!;
+
+        state.Session.Stage.Should().Be(ImportStage.Uploaded);
+        state.SourceProfile.Should().BeNull();
+        state.Mapping.Should().BeNull();
+        state.PreviewResult.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task State_ShouldNotFindASessionThatDoesNotExist()
+    {
+        var response = await Client.GetAsync($"api/import/sessions/{Guid.NewGuid()}/state");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]

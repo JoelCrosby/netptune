@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using ClosedXML.Excel;
 
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import;
 

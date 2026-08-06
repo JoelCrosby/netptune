@@ -20,6 +20,7 @@ import {
   LucideDownload,
   LucideFileDown,
   LucideFileUp,
+  LucidePlay,
   LucideUndo2,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -38,6 +39,14 @@ import { PanelComponent } from '@static/components/panel.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 
+const ResumableStages = [
+  ImportStage.uploaded,
+  ImportStage.inspected,
+  ImportStage.mapped,
+  ImportStage.previewed,
+  ImportStage.failed,
+];
+
 @Component({
   selector: 'app-data-transfer-view',
   imports: [
@@ -52,6 +61,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
     LucideBan,
     LucideDatabase,
     LucideDownload,
+    LucidePlay,
     LucideUndo2,
     PageContainerComponent,
     PageHeaderComponent,
@@ -237,6 +247,16 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 
           <ng-template appDatatableCell="actions" let-session>
             <div class="flex items-center justify-end gap-1">
+              @if (canResume(session)) {
+                <a
+                  app-icon-button
+                  [routerLink]="['import', session.publicId]"
+                  i18n-aria-label="Accessible label for the import resume link"
+                  aria-label="Resume this import">
+                  <svg lucidePlay class="h-4 w-4"></svg>
+                </a>
+              }
+
               @if (session.canUndo) {
                 <button
                   app-icon-button
@@ -439,6 +459,10 @@ export class DataTransferViewComponent {
 
   protected isImportRunning(session: ImportSessionViewModel): boolean {
     return session.stage === ImportStage.committing;
+  }
+
+  protected canResume(session: ImportSessionViewModel): boolean {
+    return ResumableStages.includes(session.stage);
   }
 
   protected stageLabel(session: ImportSessionViewModel): string {

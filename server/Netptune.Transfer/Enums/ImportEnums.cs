@@ -1,18 +1,5 @@
 namespace Netptune.Transfer.Enums;
 
-public enum ImportStage
-{
-    Uploaded = 0,
-    Inspected = 1,
-    Mapped = 2,
-    Previewed = 3,
-    Committing = 4,
-    Committed = 5,
-    Failed = 6,
-    Undone = 7,
-    Abandoned = 8,
-}
-
 public enum ImportSourceKind
 {
     Csv = 0,

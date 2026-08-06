@@ -14,7 +14,7 @@ using Netptune.Transfer.Messages;
 using Netptune.Core.Services;
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.JobServer.Handlers;
@@ -58,7 +58,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
             return default;
         }
 
-        if (session.Stage != ImportStage.Committing)
+        if (!ImportStages.CanRun(session.Stage))
         {
             Logger.LogInformation("[Import] session {PublicId} is {Stage} and will not be committed", session.PublicId, session.Stage);
 

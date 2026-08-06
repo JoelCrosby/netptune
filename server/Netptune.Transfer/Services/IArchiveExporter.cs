@@ -1,4 +1,4 @@
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 
 namespace Netptune.Transfer.Services;
 

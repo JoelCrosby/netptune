@@ -12,7 +12,7 @@ using Netptune.Import;
 using Netptune.Transfer;
 using Netptune.Transfer.Entities;
 using Netptune.Transfer.Enums;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Transfer.Repositories;
 using Netptune.Transfer.Services;
 

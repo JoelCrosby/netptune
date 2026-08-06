@@ -8,7 +8,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import;
 

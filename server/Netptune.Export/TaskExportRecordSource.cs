@@ -3,7 +3,8 @@ using System.Runtime.CompilerServices;
 
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Records;
 
 namespace Netptune.Export;
 

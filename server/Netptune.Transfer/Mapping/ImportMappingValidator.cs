@@ -1,4 +1,4 @@
-namespace Netptune.Transfer.Import;
+namespace Netptune.Transfer.Mapping;
 
 public sealed record ImportMappingValidationResult
 {

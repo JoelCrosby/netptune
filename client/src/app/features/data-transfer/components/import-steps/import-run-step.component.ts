@@ -34,6 +34,10 @@ import {
         {{ current.progressMessage }} · {{ current.progressPercent }}%
       </p>
 
+      @if (current.error; as reason) {
+        <p class="text-warn mt-2 text-sm" role="alert">{{ reason }}</p>
+      }
+
       @if (wizard.stalled()) {
         <p class="text-warn mt-2 text-sm" role="status">
           <span

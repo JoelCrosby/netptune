@@ -1,4 +1,4 @@
-namespace Netptune.Transfer.Import;
+namespace Netptune.Transfer.Mapping;
 
 // The raw shape the model is asked to return. Nothing here is trusted until validated.
 public sealed record AiMappingProposal

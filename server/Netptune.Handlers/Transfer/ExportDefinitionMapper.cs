@@ -2,7 +2,7 @@ using Netptune.Transfer.Entities;
 using System.Text.Json;
 
 using Netptune.Core.Encoding;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 using Netptune.Transfer.ViewModels;
 
 namespace Netptune.Handlers.Transfer;

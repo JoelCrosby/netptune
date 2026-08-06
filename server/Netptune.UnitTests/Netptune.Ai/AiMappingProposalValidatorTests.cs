@@ -3,7 +3,7 @@ using FluentAssertions;
 
 using Netptune.Ai.Execution;
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 using Xunit;
 

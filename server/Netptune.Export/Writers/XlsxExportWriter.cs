@@ -2,7 +2,7 @@ using Netptune.Transfer.Enums;
 using ClosedXML.Excel;
 
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Records;
 
 namespace Netptune.Export.Writers;
 

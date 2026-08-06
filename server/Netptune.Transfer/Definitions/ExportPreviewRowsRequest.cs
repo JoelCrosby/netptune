@@ -2,7 +2,7 @@ using Netptune.Transfer.Enums;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 
-namespace Netptune.Transfer.Export;
+namespace Netptune.Transfer.Definitions;
 
 // The export definition flattened into query parameters, so preview rows can be fetched with a paged
 // GET. Everything that shapes a row is here; the writer-only options (delimiter, header row) are not,

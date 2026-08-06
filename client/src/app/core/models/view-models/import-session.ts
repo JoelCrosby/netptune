@@ -48,6 +48,13 @@ export interface ImportSessionViewModel {
   expiresAt: string;
 }
 
+export interface ImportSessionState {
+  session: ImportSessionViewModel;
+  sourceProfile?: ImportSourceProfile;
+  mapping?: ImportMappingModel;
+  previewResult?: ImportPreviewResult;
+}
+
 export interface ImportSourceColumn {
   index: number;
   name: string;

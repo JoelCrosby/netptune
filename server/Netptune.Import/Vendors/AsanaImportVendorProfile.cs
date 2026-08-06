@@ -1,7 +1,7 @@
 using Netptune.Transfer.Enums;
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 using static Netptune.Import.Vendors.VendorMappingBuilder;
 

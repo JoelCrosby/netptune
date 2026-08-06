@@ -1,4 +1,4 @@
-namespace Netptune.Transfer.Export;
+namespace Netptune.Transfer.Records;
 
 public sealed record ExportRecord
 {

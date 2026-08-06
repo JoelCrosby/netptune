@@ -1,4 +1,4 @@
-namespace Netptune.Transfer.Import;
+namespace Netptune.Transfer.Mapping;
 
 // The workspace values a suggested mapping has to land on. Handed to the suggester so it can break
 // ties by value shape and pre-fill value maps, without the suggester itself touching the database.

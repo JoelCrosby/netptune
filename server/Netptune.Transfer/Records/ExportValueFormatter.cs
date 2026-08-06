@@ -1,6 +1,8 @@
 using System.Globalization;
 
-namespace Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
+
+namespace Netptune.Transfer.Records;
 
 public sealed class ExportValueFormatter
 {

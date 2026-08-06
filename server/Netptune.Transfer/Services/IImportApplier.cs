@@ -1,5 +1,5 @@
 using Netptune.Transfer.Entities;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Transfer.Services;
 

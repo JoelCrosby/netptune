@@ -15,7 +15,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Transfer;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 using Netptune.Core.UnitOfWork;
 using Netptune.Transfer.ViewModels;
 

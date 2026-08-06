@@ -1,6 +1,6 @@
 using Netptune.Core.Enums;
 using Netptune.Core.UnitOfWork;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 
 namespace Netptune.Handlers.Transfer;
 

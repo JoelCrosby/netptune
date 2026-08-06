@@ -3,7 +3,7 @@ using FluentAssertions;
 
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Import;
 using Netptune.Import.Vendors;
 using Netptune.TestData;

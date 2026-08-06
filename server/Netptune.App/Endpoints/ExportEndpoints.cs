@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Handlers.Transfer.Commands;

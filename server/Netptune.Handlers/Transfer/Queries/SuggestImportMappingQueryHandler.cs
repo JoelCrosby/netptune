@@ -8,7 +8,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Transfer.Queries;

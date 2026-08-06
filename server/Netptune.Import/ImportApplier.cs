@@ -12,7 +12,7 @@ using Netptune.Core.Relationships;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Transfer.Services;
-using Netptune.Transfer.Import;
+using Netptune.Transfer.Mapping;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Import;

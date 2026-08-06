@@ -10,7 +10,7 @@ using Netptune.Transfer.Services;
 using Netptune.Transfer;
 using Netptune.Transfer.Archive;
 using Netptune.Transfer.Catalog;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 
 using Xunit;
 

@@ -1,11 +1,12 @@
-using Netptune.Transfer.Services;
+using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+
 using Netptune.Transfer;
 using Netptune.Transfer.Catalog;
-using Netptune.Transfer.Export;
-
-using Netptune.Core.Requests;
-
-using Netptune.Core.Responses.Common;
+using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Records;
+using Netptune.Transfer.Services;
 
 namespace Netptune.Export;
 
@@ -34,7 +35,7 @@ public sealed class ExportRunner : IExportRunner
             throw new NotSupportedException(string.Join(" ", validation.Errors));
         }
 
-        if (definition.Format == Transfer.Enums.ExportFormat.Archive)
+        if (definition.Format == ExportFormat.Archive)
         {
             var archiveRequest = new ArchiveExportRequest
             {
@@ -112,7 +113,7 @@ public sealed class ExportRunner : IExportRunner
             throw new NotSupportedException(string.Join(" ", validation.Errors));
         }
 
-        if (definition.Format == Transfer.Enums.ExportFormat.Archive)
+        if (definition.Format == ExportFormat.Archive)
         {
             return await PreviewArchive(request, cancellationToken);
         }
@@ -141,7 +142,7 @@ public sealed class ExportRunner : IExportRunner
             Headers = fields.Select(field => field.Name).ToList(),
             Rows = rows,
             EstimatedRowCount = estimate,
-            CanRunInline = definition.Format != Transfer.Enums.ExportFormat.Archive && estimate <= request.InlineRowLimit,
+            CanRunInline = definition.Format != ExportFormat.Archive && estimate <= request.InlineRowLimit,
         };
     }
 
@@ -159,7 +160,7 @@ public sealed class ExportRunner : IExportRunner
         }
 
         // An archive has no tabular shape to page through.
-        if (definition.Format == Transfer.Enums.ExportFormat.Archive)
+        if (definition.Format == ExportFormat.Archive)
         {
             return new PagedResponse<ExportPreviewRow>([], pagination.Page, pagination.PageSize, 0);
         }

@@ -15,7 +15,7 @@ using Netptune.Core.Relationships;
 using Netptune.Core.Responses.Common;
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
-using Netptune.Transfer.Export;
+using Netptune.Transfer.Definitions;
 
 using Xunit;
 
