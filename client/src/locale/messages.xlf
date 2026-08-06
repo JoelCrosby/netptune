@@ -31,7 +31,7 @@
     </unit>
     <unit id="8048392167268197249">
       <notes>
-        <note category="location">src/app/features/settings/settings.routes.ts:109</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:130</note>
         <note category="description">Page title for workspace assistant conversations</note>
       </notes>
       <segment>
@@ -58,6 +58,15 @@
         <source>Edit Workspace</source>
       </segment>
     </unit>
+    <unit id="7702646444963497962">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:366</note>
+        <note category="description">Column heading for who ran an import</note>
+      </notes>
+      <segment>
+        <source>By</source>
+      </segment>
+    </unit>
     <unit id="7706632081301226281">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:335</note>
@@ -65,6 +74,15 @@
       </notes>
       <segment>
         <source>These changes have been applied.</source>
+      </segment>
+    </unit>
+    <unit id="7713123645366708778">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:449</note>
+        <note category="description">An import whose file has been read</note>
+      </notes>
+      <segment>
+        <source>Inspected</source>
       </segment>
     </unit>
     <unit id="8576643134711566154">
@@ -230,6 +248,15 @@
         <source>Delete Projects</source>
       </segment>
     </unit>
+    <unit id="1570107404481300948">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:195,196</note>
+        <note category="description">Shown when the import history fails to load</note>
+      </notes>
+      <segment>
+        <source>Imports could not be loaded.</source>
+      </segment>
+    </unit>
     <unit id="1575435135569882153">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:136</note>
@@ -284,6 +311,24 @@
         <source>Links that have already been shared or bookmarked will stop working, and any integration calling the API with the old identifier will start failing. The old identifier is released immediately and can be claimed by another workspace.</source>
       </segment>
     </unit>
+    <unit id="2819630635250956643">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:91,95</note>
+        <note category="description">Option saying the first row holds column names</note>
+      </notes>
+      <segment>
+        <source> First row holds column names </source>
+      </segment>
+    </unit>
+    <unit id="2819840741711369608">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:64,66</note>
+        <note category="description">Explains what a saved export does</note>
+      </notes>
+      <segment>
+        <source>Load a setup you have saved before.</source>
+      </segment>
+    </unit>
     <unit id="2819959485156980302">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:158</note>
@@ -293,6 +338,15 @@
         <source>View Board Groups</source>
       </segment>
     </unit>
+    <unit id="5321164057411888974">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:461</note>
+        <note category="description">An import that has been rolled back</note>
+      </notes>
+      <segment>
+        <source>Undone</source>
+      </segment>
+    </unit>
     <unit id="5322626006494247041">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:163</note>
@@ -300,6 +354,15 @@
       </notes>
       <segment>
         <source>Create Board Groups</source>
+      </segment>
+    </unit>
+    <unit id="5323231108109170943">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:126</note>
+        <note category="description">Excel export format</note>
+      </notes>
+      <segment>
+        <source>Excel</source>
       </segment>
     </unit>
     <unit id="6390571285331619884">
@@ -375,6 +438,16 @@
         <source>Delete Any Task</source>
       </segment>
     </unit>
+    <unit id="843548054527451651">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:170</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:139</note>
+        <note category="description">Counts the columns an export will contain</note>
+      </notes>
+      <segment>
+        <source>Columns</source>
+      </segment>
+    </unit>
     <unit id="22852633810459681">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:205</note>
@@ -391,6 +464,15 @@
       </notes>
       <segment>
         <source>Move Tasks</source>
+      </segment>
+    </unit>
+    <unit id="899247850202486311">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:99,105</note>
+        <note category="description">Button that stores the current export setup for reuse</note>
+      </notes>
+      <segment>
+        <source> Save as definition </source>
       </segment>
     </unit>
     <unit id="8992597512682859829">
@@ -415,7 +497,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:225</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:303</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:309</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -440,6 +522,15 @@
         <source>Create Sprints</source>
       </segment>
     </unit>
+    <unit id="4390635106652893166">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:281</note>
+        <note category="description">Shown when an export job could not be queued</note>
+      </notes>
+      <segment>
+        <source>The export could not be started.</source>
+      </segment>
+    </unit>
     <unit id="4391289919356861627">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:121,122</note>
@@ -457,6 +548,15 @@
       </notes>
       <segment>
         <source> Delete relation type </source>
+      </segment>
+    </unit>
+    <unit id="4397487264295948754">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:74,77</note>
+        <note category="description">Says only column names are sent to the model</note>
+      </notes>
+      <segment>
+        <source> Column names and types only — this workspace does not share example values. </source>
       </segment>
     </unit>
     <unit id="3955868613858648955">
@@ -495,6 +595,15 @@
         <source>Manage Sprint Tasks</source>
       </segment>
     </unit>
+    <unit id="338954840845347808">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:180,183</note>
+        <note category="description">Explains how long an import stays undoable</note>
+      </notes>
+      <segment>
+        <source>A committed import can be undone until its session expires.</source>
+      </segment>
+    </unit>
     <unit id="3398156745191610421">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:259</note>
@@ -515,7 +624,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:264,266</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:293,295</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -530,6 +639,15 @@
       </notes>
       <segment>
         <source>Delete Own Comments</source>
+      </segment>
+    </unit>
+    <unit id="8824506098366714045">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:176,178</note>
+        <note category="description">Toggle that shares example values with the assistant</note>
+      </notes>
+      <segment>
+        <source>Share example values with the assistant</source>
       </segment>
     </unit>
     <unit id="8933548881178191171">
@@ -665,6 +783,15 @@
       </notes>
       <segment>
         <source>Export Audit Log</source>
+      </segment>
+    </unit>
+    <unit id="3222861994325757867">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:42,44</note>
+        <note category="description">Filter heading for boards</note>
+      </notes>
+      <segment>
+        <source> Boards </source>
       </segment>
     </unit>
     <unit id="3223868158732972286">
@@ -976,6 +1103,15 @@
         <source>XL</source>
       </segment>
     </unit>
+    <unit id="2681587452018229228">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:29,33</note>
+        <note category="description">Archive option that includes workspace members</note>
+      </notes>
+      <segment>
+        <source> Members, roles and permissions </source>
+      </segment>
+    </unit>
     <unit id="8905995985388209337">
       <notes>
         <note category="location">src/app/core/services/confirmation.service.ts:11</note>
@@ -1005,8 +1141,8 @@
         <note category="location">src/app/core/store/projects/projects.effects.ts:154</note>
         <note category="location">src/app/core/store/tags/tags.effects.ts:132</note>
         <note category="location">src/app/core/store/tasks/task-archive.service.ts:44</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:419</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:427</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:394</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:402</note>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:358</note>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:368</note>
         <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:378</note>
@@ -1063,6 +1199,15 @@
       </notes>
       <segment>
         <source>Confirm?</source>
+      </segment>
+    </unit>
+    <unit id="2184282850413747842">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:33,34</note>
+        <note category="description">Card that exports a whole workspace as an archive</note>
+      </notes>
+      <segment>
+        <source>Entire workspace</source>
       </segment>
     </unit>
     <unit id="1658524632123898542">
@@ -1171,8 +1316,8 @@
         <note category="location">src/app/core/store/boards/boards.effects.ts:130</note>
         <note category="location">src/app/core/store/groups/board-groups.effects.ts:602</note>
         <note category="location">src/app/core/store/notifications/notifications.effects.ts:23</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:418</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:426</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:393</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:401</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:146</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:279</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:280</note>
@@ -1195,6 +1340,15 @@
         <source>Delete</source>
       </segment>
     </unit>
+    <unit id="2742664813202759813">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:131</note>
+        <note category="description">JSON export format</note>
+      </notes>
+      <segment>
+        <source>JSON</source>
+      </segment>
+    </unit>
     <unit id="2745143813283482996">
       <notes>
         <note category="location">src/app/core/store/boards/boards.effects.ts:132</note>
@@ -1207,7 +1361,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/store/boards/boards.effects.ts:133</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:313</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:319</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1315,6 +1469,15 @@
         <source>Delete Selected Tasks</source>
       </segment>
     </unit>
+    <unit id="5495168454905214621">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/export-wizard.service.ts:68</note>
+        <note category="description">Explains why an export cannot leave the field step</note>
+      </notes>
+      <segment>
+        <source>Choose at least one field to export.</source>
+      </segment>
+    </unit>
     <unit id="7286578348594697265">
       <notes>
         <note category="location">src/app/core/store/profile/profile.effects.ts:56</note>
@@ -1349,6 +1512,15 @@
       </notes>
       <segment>
         <source>Replace key</source>
+      </segment>
+    </unit>
+    <unit id="3121402176088379752">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:55,58</note>
+        <note category="description">Precedes the name of the recognised export tool</note>
+      </notes>
+      <segment>
+        <source>Recognised this as a</source>
       </segment>
     </unit>
     <unit id="3127417567733728943">
@@ -1404,6 +1576,16 @@
       </notes>
       <segment>
         <source>Sprint updated</source>
+      </segment>
+    </unit>
+    <unit id="6932865105766151309">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:55,59</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:53,54</note>
+        <note category="description">Button that uploads an import file</note>
+      </notes>
+      <segment>
+        <source>Upload</source>
       </segment>
     </unit>
     <unit id="4229930832776293995">
@@ -1522,7 +1704,7 @@
     </unit>
     <unit id="7182192298964223312">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:59,63</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:71,76</note>
         <note category="description">Precedes the assistant that made a change on the user&apos;s behalf</note>
       </notes>
       <segment>
@@ -1556,27 +1738,9 @@
         <source>Paste your API key</source>
       </segment>
     </unit>
-    <unit id="2733818832464911318">
-      <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:365</note>
-        <note category="description">Confirmation shown after an action succeeds</note>
-      </notes>
-      <segment>
-        <source>Import Successful</source>
-      </segment>
-    </unit>
-    <unit id="3902426799753147106">
-      <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:371</note>
-        <note category="description">Confirmation shown after an action succeeds</note>
-      </notes>
-      <segment>
-        <source>Import Failed</source>
-      </segment>
-    </unit>
     <unit id="1316502449942805709">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:420</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:395</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1594,7 +1758,7 @@
     </unit>
     <unit id="1614669751334500006">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:421</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:396</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:44,45</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:46,48</note>
         <note category="description">Title of a confirmation dialog</note>
@@ -1747,6 +1911,15 @@
         <source>Are you sure you want to mark this Workspace as public?</source>
       </segment>
     </unit>
+    <unit id="8766960991546227350">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:76,79</note>
+        <note category="description">Column heading for how many rows share a problem</note>
+      </notes>
+      <segment>
+        <source> Rows </source>
+      </segment>
+    </unit>
     <unit id="8768927723338869419">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:89,91</note>
@@ -1782,6 +1955,15 @@
       </notes>
       <segment>
         <source>Mark as Private</source>
+      </segment>
+    </unit>
+    <unit id="8872864195187098171">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:132</note>
+        <note category="description">Explains why an import cannot leave the preview step</note>
+      </notes>
+      <segment>
+        <source>Press Import to start the import before you continue.</source>
       </segment>
     </unit>
     <unit id="4501389782873056968">
@@ -1857,6 +2039,16 @@
         <source>Fuchsia</source>
       </segment>
     </unit>
+    <unit id="2956098160626271284">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:411</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:455</note>
+        <note category="description">An export that is being produced</note>
+      </notes>
+      <segment>
+        <source>Running</source>
+      </segment>
+    </unit>
     <unit id="2959209095246465690">
       <notes>
         <note category="location">src/app/core/util/colors/colors.ts:104</note>
@@ -1902,6 +2094,15 @@
         <source>Sky</source>
       </segment>
     </unit>
+    <unit id="6746921307284578995">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:90,91</note>
+        <note category="description">Shown when the export history fails to load</note>
+      </notes>
+      <segment>
+        <source>Exports could not be loaded.</source>
+      </segment>
+    </unit>
     <unit id="674855581046452024">
       <notes>
         <note category="location">src/app/core/util/colors/colors.ts:154</note>
@@ -1936,6 +2137,15 @@
       </notes>
       <segment>
         <source>Green</source>
+      </segment>
+    </unit>
+    <unit id="2420393159555195445">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:71,74</note>
+        <note category="description">Column heading for what went wrong with a row</note>
+      </notes>
+      <segment>
+        <source> Problem </source>
       </segment>
     </unit>
     <unit id="2428767488933945361">
@@ -2036,8 +2246,8 @@
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:31,33</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,22</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:332</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:354</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:345</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:367</note>
         <note category="location">src/app/workspace.routes.ts:132</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
@@ -2080,6 +2290,15 @@
       </notes>
       <segment>
         <source> Mark all as read </source>
+      </segment>
+    </unit>
+    <unit id="4043049091728011235">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:417</note>
+        <note category="description">An export a member stopped</note>
+      </notes>
+      <segment>
+        <source>Cancelled</source>
       </segment>
     </unit>
     <unit id="1656872994210958357">
@@ -2133,7 +2352,7 @@
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:918</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:72</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:381</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:394</note>
         <note category="description">The workspace entity, shown in setup copy</note>
       </notes>
       <segment>
@@ -2195,6 +2414,15 @@
       </notes>
       <segment>
         <source>Board flow</source>
+      </segment>
+    </unit>
+    <unit id="3917644028160931566">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:166</note>
+        <note category="description">Counts the records an export will contain</note>
+      </notes>
+      <segment>
+        <source>Records</source>
       </segment>
     </unit>
     <unit id="3435864796418567667">
@@ -2278,6 +2506,7 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:46</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:297</note>
         <note category="location">src/app/features/settings/settings.routes.ts:81</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:99,102</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:22</note>
@@ -2309,10 +2538,10 @@
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:80,82</note>
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:64,66</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:116,118</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:93,95</note>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:142,145</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:65,66</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
@@ -2512,6 +2741,15 @@
         <source>Assignees</source>
       </segment>
     </unit>
+    <unit id="885182347182627513">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:157,159</note>
+        <note category="description">Heading of the assistant data sampling setting</note>
+      </notes>
+      <segment>
+        <source> Share example values with the assistant </source>
+      </segment>
+    </unit>
     <unit id="8856905278208146821">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:196,201</note>
@@ -2608,6 +2846,8 @@
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:65</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:56</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:153</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:42</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:93</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:90,92</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:137</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:251</note>
@@ -2930,6 +3170,15 @@
         <source> Edit Relation Type </source>
       </segment>
     </unit>
+    <unit id="8405696167275937470">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:37,39</note>
+        <note category="description">Explains the import preview step</note>
+      </notes>
+      <segment>
+        <source>A dry run over your file. Nothing is written until you commit.</source>
+      </segment>
+    </unit>
     <unit id="8406721537832870070">
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:56,61</note>
@@ -2967,6 +3216,15 @@
       </notes>
       <segment>
         <source> Save Relation Type </source>
+      </segment>
+    </unit>
+    <unit id="3081649378322035442">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:137</note>
+        <note category="description">Explains what an NDJSON export suits</note>
+      </notes>
+      <segment>
+        <source>One record per line</source>
       </segment>
     </unit>
     <unit id="5634840284625052531">
@@ -3012,6 +3270,24 @@
       </notes>
       <segment>
         <source>Relation type</source>
+      </segment>
+    </unit>
+    <unit id="3098241202730749011">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:124</note>
+        <note category="description">Explains why an import cannot leave the source step</note>
+      </notes>
+      <segment>
+        <source>Upload a file so its columns can be read.</source>
+      </segment>
+    </unit>
+    <unit id="3099741642167775297">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:87,90</note>
+        <note category="description">Button that downloads an export straight away</note>
+      </notes>
+      <segment>
+        <source>Download</source>
       </segment>
     </unit>
     <unit id="3961381754418860602">
@@ -3094,6 +3370,15 @@
         <source>Enter a valid email address.</source>
       </segment>
     </unit>
+    <unit id="8390210831451931366">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:93,94</note>
+        <note category="description">Names the rows of the export history table</note>
+      </notes>
+      <segment>
+        <source>exports</source>
+      </segment>
+    </unit>
     <unit id="8398664974459229978">
       <notes>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:49,52</note>
@@ -3162,6 +3447,16 @@
       </notes>
       <segment>
         <source>Tag</source>
+      </segment>
+    </unit>
+    <unit id="2820891757772079703">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:59,60</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:80,81</note>
+        <note category="description">Label of the CSV delimiter option</note>
+      </notes>
+      <segment>
+        <source>Delimiter</source>
       </segment>
     </unit>
     <unit id="1830028453025281383">
@@ -3321,6 +3616,15 @@
         <source>Choose the layout for the project&apos;s default board.</source>
       </segment>
     </unit>
+    <unit id="3608055412630629320">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:254</note>
+        <note category="description">Shown when an immediate export download failed</note>
+      </notes>
+      <segment>
+        <source>The export could not be downloaded.</source>
+      </segment>
+    </unit>
     <unit id="5630056212347859555">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:86,88</note>
@@ -3356,6 +3660,8 @@
     <unit id="3885497195825665706">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:116,117</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:125,128</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:105,108</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:351,352</note>
         <note category="description">Button that advances to the next wizard step</note>
       </notes>
@@ -3542,6 +3848,15 @@
         <source> Added by automation rule #<ph id="0" equiv="RULE_ID" disp="{{ flag.automationRuleId // i18n(ph=&quot;RULE_ID&quot;) }}"/> </source>
       </segment>
     </unit>
+    <unit id="1225327047686807431">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:164,167</note>
+        <note category="description">Explains what turning off assistant data sampling does</note>
+      </notes>
+      <segment>
+        <source> When an import mapping is improved by the assistant, a few real cell values are sent with the column names. Turn this off to send column names and types only. </source>
+      </segment>
+    </unit>
     <unit id="425305352567912856">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-flags.component.ts:85,86</note>
@@ -3569,11 +3884,20 @@
         <source>Flag could not be updated</source>
       </segment>
     </unit>
+    <unit id="3911323019910272488">
+      <notes>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:51,53</note>
+        <note category="description">Explains what sharing a saved export does</note>
+      </notes>
+      <segment>
+        <source>Everyone who can export will be able to use it.</source>
+      </segment>
+    </unit>
     <unit id="3915858391862498397">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:47,50</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:65,66</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:297</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:302</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment>
@@ -3624,7 +3948,7 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:53</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:281</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:286</note>
         <note category="description">Section heading for a task&apos;s tags</note>
       </notes>
       <segment>
@@ -3691,6 +4015,15 @@
       </notes>
       <segment>
         <source> Save Changes </source>
+      </segment>
+    </unit>
+    <unit id="6777820926829862896">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:98,103</note>
+        <note category="description">Option that imports everything except failing rows</note>
+      </notes>
+      <segment>
+        <source> Skip rows that cannot be imported </source>
       </segment>
     </unit>
     <unit id="6779219464246705631">
@@ -3813,6 +4146,8 @@
     <unit id="8829497237648100098">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:35,37</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:18</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:81,82</note>
         <note category="description">Button that applies the filters</note>
       </notes>
       <segment>
@@ -3849,7 +4184,7 @@
     </unit>
     <unit id="7690634761514161231">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:33,34</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:37,38</note>
         <note category="description">Shown when the audit log fails to load</note>
       </notes>
       <segment>
@@ -3867,7 +4202,7 @@
     </unit>
     <unit id="2373398189346663368">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:38,40</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:42,44</note>
         <note category="description">Empty state for the audit log</note>
       </notes>
       <segment>
@@ -3885,7 +4220,7 @@
     </unit>
     <unit id="9037534911513149290">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:43,45</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:47,49</note>
         <note category="description">Plural noun for audit entries, used in the selection summary</note>
       </notes>
       <segment>
@@ -3894,7 +4229,7 @@
     </unit>
     <unit id="2648970074984732218">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:93,95</note>
+        <note category="location">src/app/features/audit/components/audit-table/audit-table.component.ts:111,113</note>
         <note category="description">Accessible label for the button that opens an audit entry</note>
       </notes>
       <segment>
@@ -4037,6 +4372,15 @@
         <source>Schema version</source>
       </segment>
     </unit>
+    <unit id="7562141152835800738">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:78,82</note>
+        <note category="description">Button that restores the default field selection</note>
+      </notes>
+      <segment>
+        <source>Defaults only</source>
+      </segment>
+    </unit>
     <unit id="7562775069074087863">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:148</note>
@@ -4062,6 +4406,15 @@
       </notes>
       <segment>
         <source>Actor</source>
+      </segment>
+    </unit>
+    <unit id="7626297176054464121">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:120</note>
+        <note category="description">Explains why an import cannot leave the upload step</note>
+      </notes>
+      <segment>
+        <source>Choose a file and press Upload before you continue.</source>
       </segment>
     </unit>
     <unit id="7629072322253412501">
@@ -4104,6 +4457,7 @@
     <unit id="8650499415827640724">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:183</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:356</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -4197,7 +4551,7 @@
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,25</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:370</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:383</note>
         <note category="location">src/app/workspace.routes.ts:144</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
@@ -4213,6 +4567,15 @@
       </notes>
       <segment>
         <source>Netptune logo</source>
+      </segment>
+    </unit>
+    <unit id="420317131093281855">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:64,65</note>
+        <note category="description">Explains what the export wizard produces</note>
+      </notes>
+      <segment>
+        <source>Choose the records and fields, then download the file or run it in the background.</source>
       </segment>
     </unit>
     <unit id="4204889037794993823">
@@ -4261,6 +4624,15 @@
         <source> Sign in to connect <ph id="0" equiv="PROVIDER" disp="{{ link.provider // i18n(ph=&quot;PROVIDER&quot;) }}"/> </source>
       </segment>
     </unit>
+    <unit id="9155608366859514313">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:59,60</note>
+        <note category="description">Wizard step showing what was detected in the file</note>
+      </notes>
+      <segment>
+        <source>Source</source>
+      </segment>
+    </unit>
     <unit id="9155752269182001378">
       <notes>
         <note category="location">src/app/features/auth/components/link-provider/link-provider.component.ts:127,131</note>
@@ -4286,6 +4658,16 @@
       </notes>
       <segment>
         <source><ph id="0" equiv="PROVIDER" disp="pending.provider"/> connected</source>
+      </segment>
+    </unit>
+    <unit id="7933350213373266585">
+      <notes>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:34,37</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,74</note>
+        <note category="description">Title of the save-export-definition dialog</note>
+      </notes>
+      <segment>
+        <source> Save Export </source>
       </segment>
     </unit>
     <unit id="7935613686723040127">
@@ -4365,7 +4747,7 @@
     </unit>
     <unit id="348464760083521708">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:158,162</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:187,191</note>
         <note category="description">Section heading for the shared workspace API keys</note>
       </notes>
       <segment>
@@ -4374,9 +4756,10 @@
     </unit>
     <unit id="1494518490116523821">
       <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:70,73</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:77,80</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:44,47</note>
-        <note category="description">Button that selects every change</note>
+        <note category="description">Button that selects every exportable field</note>
       </notes>
       <segment>
         <source>Select all</source>
@@ -4410,6 +4793,24 @@
         <source> Editing your last question — sending replaces the reply. </source>
       </segment>
     </unit>
+    <unit id="3733378544613473393">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:66,68</note>
+        <note category="description">Label of the export date format option</note>
+      </notes>
+      <segment>
+        <source>Date format</source>
+      </segment>
+    </unit>
+    <unit id="6333009862786718391">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:41,47</note>
+        <note category="description">Shown when a committed import has not progressed for a while</note>
+      </notes>
+      <segment>
+        <source> This import has not moved for a while. It runs on the job server — check that the job server is running. </source>
+      </segment>
+    </unit>
     <unit id="6336423730887058961">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:326</note>
@@ -4437,6 +4838,15 @@
       </notes>
       <segment>
         <source>Password is required.</source>
+      </segment>
+    </unit>
+    <unit id="174825604462950768">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:22,25</note>
+        <note category="description">Explains what an archive always contains</note>
+      </notes>
+      <segment>
+        <source>An archive always contains every record type. Choose what else to include.</source>
       </segment>
     </unit>
     <unit id="8896743380996942708">
@@ -4507,6 +4917,24 @@
         <source>Loading cycle time</source>
       </segment>
     </unit>
+    <unit id="3170538180379206411">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:127</note>
+        <note category="description">Explains what an Excel export suits</note>
+      </notes>
+      <segment>
+        <source>Typed cells</source>
+      </segment>
+    </unit>
+    <unit id="3179872144192255158">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:152,156</note>
+        <note category="description">Explains why the mapping step is empty</note>
+      </notes>
+      <segment>
+        <source>Upload a file first — its columns appear here once it has been read.</source>
+      </segment>
+    </unit>
     <unit id="5342432350421167093">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:160</note>
@@ -4564,6 +4992,15 @@
       </notes>
       <segment>
         <source>Key</source>
+      </segment>
+    </unit>
+    <unit id="7769760824505957468">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:35,37</note>
+        <note category="description">Explains what a whole-workspace archive contains</note>
+      </notes>
+      <segment>
+        <source>Portable .nptz archive</source>
       </segment>
     </unit>
     <unit id="2865831084118060040">
@@ -4677,6 +5114,15 @@
         <source>Back to Automations</source>
       </segment>
     </unit>
+    <unit id="8562778474158270448">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:463</note>
+        <note category="description">An import nobody finished configuring</note>
+      </notes>
+      <segment>
+        <source>Abandoned</source>
+      </segment>
+    </unit>
     <unit id="8566173628384128958">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:75,78</note>
@@ -4715,7 +5161,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:260,262</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:289,291</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -4770,6 +5216,24 @@
       </notes>
       <segment>
         <source>Flag name</source>
+      </segment>
+    </unit>
+    <unit id="7571931095853268764">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:24,26</note>
+        <note category="description">Filter heading for projects</note>
+      </notes>
+      <segment>
+        <source> Projects </source>
+      </segment>
+    </unit>
+    <unit id="7577628836870551599">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:41,44</note>
+        <note category="description">Explains the export review step</note>
+      </notes>
+      <segment>
+        <source>A sample of the first rows this export produces.</source>
       </segment>
     </unit>
     <unit id="7579940623714391431">
@@ -4901,6 +5365,15 @@
       </notes>
       <segment>
         <source> not matched </source>
+      </segment>
+    </unit>
+    <unit id="8897910710795464221">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:95,99</note>
+        <note category="description">Option that writes a header row into the export</note>
+      </notes>
+      <segment>
+        <source>Include a header row</source>
       </segment>
     </unit>
     <unit id="8898663612822494752">
@@ -5123,6 +5596,15 @@
         <source>Send message</source>
       </segment>
     </unit>
+    <unit id="8754000074916889543">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:48,49</note>
+        <note category="description">Explains what the import wizard does</note>
+      </notes>
+      <segment>
+        <source>Upload a file, map its columns onto fields, then check what will change before committing.</source>
+      </segment>
+    </unit>
     <unit id="8755955868589563514">
       <notes>
         <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:72,74</note>
@@ -5233,6 +5715,16 @@
         <source> Business days after creation </source>
       </segment>
     </unit>
+    <unit id="7899089935301421029">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:94,96</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:104,106</note>
+        <note category="description">Column heading for a source column name</note>
+      </notes>
+      <segment>
+        <source> Column </source>
+      </segment>
+    </unit>
     <unit id="1704839025286044463">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:160,162</note>
@@ -5330,6 +5822,15 @@
         <source> · Updated <ph id="0" equiv="DATE" disp="{{ rule().updatedAt | prettyDate // i18n(ph=&quot;DATE&quot;) }}"/> </source>
       </segment>
     </unit>
+    <unit id="4752892888616730702">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:56,58</note>
+        <note category="description">Precedes emails that do not belong to members</note>
+      </notes>
+      <segment>
+        <source>Not workspace members</source>
+      </segment>
+    </unit>
     <unit id="4754052462239552170">
       <notes>
         <note category="location">src/app/features/automations/components/automation-detail-heading.component.ts:50,52</note>
@@ -5338,6 +5839,15 @@
       </notes>
       <segment>
         <source>Delete rule</source>
+      </segment>
+    </unit>
+    <unit id="4754993936947658096">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:453</note>
+        <note category="description">An import that has been dry-run</note>
+      </notes>
+      <segment>
+        <source>Previewed</source>
       </segment>
     </unit>
     <unit id="3193976279273491157">
@@ -5433,6 +5943,15 @@
         <source> Updates <ph id="0" equiv="FIELDS" disp="{{ describeUpdatedFields(action) // i18n(ph=&quot;FIELDS&quot;) }}"/> </source>
       </segment>
     </unit>
+    <unit id="7179698649996299397">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:118,122</note>
+        <note category="description">Button that builds an import preview</note>
+      </notes>
+      <segment>
+        <source> Build a preview </source>
+      </segment>
+    </unit>
     <unit id="1127526540861457021">
       <notes>
         <note category="location">src/app/features/automations/components/automation-dry-run-effects.component.ts:89,92</note>
@@ -5461,6 +5980,15 @@
       </notes>
       <segment>
         <source>Disabled</source>
+      </segment>
+    </unit>
+    <unit id="655114862670279052">
+      <notes>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:43,47</note>
+        <note category="description">Explains what a saved export name is for</note>
+      </notes>
+      <segment>
+        <source>You will see this name when starting an export.</source>
       </segment>
     </unit>
     <unit id="6555318547274416232">
@@ -5550,6 +6078,15 @@
       </notes>
       <segment>
         <source>Removed</source>
+      </segment>
+    </unit>
+    <unit id="6423210280939340786">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:413</note>
+        <note category="description">An export that finished and can be downloaded</note>
+      </notes>
+      <segment>
+        <source>Ready</source>
       </segment>
     </unit>
     <unit id="6424246633820870206">
@@ -5665,7 +6202,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:5</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:249</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:254</note>
         <note category="location">src/app/workspace.routes.ts:138</note>
         <note category="description">Label of the users field</note>
       </notes>
@@ -5810,6 +6347,15 @@
         <source> Choose a relation </source>
       </segment>
     </unit>
+    <unit id="4872987153696118205">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:73,74</note>
+        <note category="description">Label of the export time zone option</note>
+      </notes>
+      <segment>
+        <source>Time zone</source>
+      </segment>
+    </unit>
     <unit id="3542436707982684146">
       <notes>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:106,107</note>
@@ -5828,6 +6374,16 @@
         <source> The triggering task is the source </source>
       </segment>
     </unit>
+    <unit id="151590427979424193">
+      <notes>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:49,50</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:57,59</note>
+        <note category="description">Label of the option that shares a saved export</note>
+      </notes>
+      <segment>
+        <source>Share with the workspace</source>
+      </segment>
+    </unit>
     <unit id="1518817821048558722">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:80,82</note>
@@ -5835,6 +6391,15 @@
       </notes>
       <segment>
         <source> The triggering task is the target </source>
+      </segment>
+    </unit>
+    <unit id="1519954996184640001">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:142</note>
+        <note category="description">Counts rows an import cannot use</note>
+      </notes>
+      <segment>
+        <source>Error</source>
       </segment>
     </unit>
     <unit id="4094558053839852233">
@@ -5993,6 +6558,15 @@
         <source>Filter by Status</source>
       </segment>
     </unit>
+    <unit id="5223235322022344945">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:143</note>
+        <note category="description">Names the character encoding of an import file</note>
+      </notes>
+      <segment>
+        <source>Encoding</source>
+      </segment>
+    </unit>
     <unit id="5225658676211455363">
       <notes>
         <note category="location">src/app/features/automations/components/automation-rules-table.component.ts:101,103</note>
@@ -6066,6 +6640,15 @@
         <source> Archived </source>
       </segment>
     </unit>
+    <unit id="7343458434870773763">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:347</note>
+        <note category="description">Column heading for the state of an import</note>
+      </notes>
+      <segment>
+        <source>Stage</source>
+      </segment>
+    </unit>
     <unit id="7343642247493540451">
       <notes>
         <note category="location">src/app/features/automations/components/automation-runs-table.component.ts:40,42</note>
@@ -6088,7 +6671,7 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:388</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:439</note>
         <note category="description">Label for the number of tokens the assistant has used</note>
       </notes>
       <segment>
@@ -6115,7 +6698,7 @@
     </unit>
     <unit id="7284407085760520822">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:205,207</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:234,236</note>
         <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment>
@@ -6235,6 +6818,15 @@
       </notes>
       <segment>
         <source>Assistant conversations</source>
+      </segment>
+    </unit>
+    <unit id="7046128589684724143">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:142,144</note>
+        <note category="description">Accessible label for the export download button</note>
+      </notes>
+      <segment>
+        <source>Download this export</source>
       </segment>
     </unit>
     <unit id="7047572971445448461">
@@ -6492,6 +7084,15 @@
         <source> Move to backlog </source>
       </segment>
     </unit>
+    <unit id="8951117304119903136">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:168,169</note>
+        <note category="description">Explains when export rows start appearing</note>
+      </notes>
+      <segment>
+        <source>Exports you run appear here with a download link.</source>
+      </segment>
+    </unit>
     <unit id="8951751805390485436">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:316,318</note>
@@ -6582,6 +7183,15 @@
         <source>Use a negative number for a date before the run date.</source>
       </segment>
     </unit>
+    <unit id="4205595143431222827">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:29,32</note>
+        <note category="description">Explains that an archive has a fixed format</note>
+      </notes>
+      <segment>
+        <source>An archive is always a .nptz file, so there is nothing to choose here.</source>
+      </segment>
+    </unit>
     <unit id="888341446683346521">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:397</note>
@@ -6595,6 +7205,15 @@
         <source>Start date</source>
       </segment>
     </unit>
+    <unit id="8885070189608491402">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:40,41</note>
+        <note category="description">Heading of the import source step</note>
+      </notes>
+      <segment>
+        <source>What we found</source>
+      </segment>
+    </unit>
     <unit id="8332739082335520867">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:37,39</note>
@@ -6602,6 +7221,24 @@
       </notes>
       <segment>
         <source>Automation trigger</source>
+      </segment>
+    </unit>
+    <unit id="8338056161813096540">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:206</note>
+        <note category="description">Shown when a saved export setup could not be stored</note>
+      </notes>
+      <segment>
+        <source>The export could not be saved.</source>
+      </segment>
+    </unit>
+    <unit id="8339090278326732814">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:76,81</note>
+        <note category="description">Explains why the import run step is empty</note>
+      </notes>
+      <segment>
+        <source> Nothing is running yet. Finish the earlier steps and press Import. </source>
       </segment>
     </unit>
     <unit id="5080770073669254740">
@@ -6709,6 +7346,15 @@
         <source>Lead time</source>
       </segment>
     </unit>
+    <unit id="4417055464837786275">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:58,61</note>
+        <note category="description">Button that reverses a finished import</note>
+      </notes>
+      <segment>
+        <source> Undo this import </source>
+      </segment>
+    </unit>
     <unit id="4701747457278336568">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:191,193</note>
@@ -6736,6 +7382,15 @@
         <source>Change details</source>
       </segment>
     </unit>
+    <unit id="1583399193111493692">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:69,70</note>
+        <note category="description">Wizard step that picks what to export</note>
+      </notes>
+      <segment>
+        <source>What</source>
+      </segment>
+    </unit>
     <unit id="1586327137770791990">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:226,228</note>
@@ -6743,6 +7398,15 @@
       </notes>
       <segment>
         <source> days before the due date </source>
+      </segment>
+    </unit>
+    <unit id="1593334071453286987">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:50,53</note>
+        <note category="description">Button that re-reads a file with new settings</note>
+      </notes>
+      <segment>
+        <source> Re-read the file </source>
       </segment>
     </unit>
     <unit id="6200234742131297452">
@@ -6790,6 +7454,15 @@
       </notes>
       <segment>
         <source> Cloning <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;text-foreground font-medium&quot;&gt;" dispEnd="&lt;/span &gt;"><ph id="1" equiv="NAME" disp="{{ dialogData.ruleName // i18n(ph=&quot;NAME&quot;) }}"/></pc>. The copy keeps the same trigger and actions, and starts disabled so you can review it before it runs. </source>
+      </segment>
+    </unit>
+    <unit id="5832711343712261211">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:23,26</note>
+        <note category="description">Explains what an import file may contain</note>
+      </notes>
+      <segment>
+        <source>Upload a CSV, TSV, Excel, JSON or NDJSON file. Up to 50 MB.</source>
       </segment>
     </unit>
     <unit id="8626022915953041009">
@@ -6912,6 +7585,17 @@
         <source> Some conditions only apply while a task is changing, so they cannot be checked here. </source>
       </segment>
     </unit>
+    <unit id="5727110993298059160">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:135</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:311</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:361</note>
+        <note category="description">Counts the rows found in an import file</note>
+      </notes>
+      <segment>
+        <source>Rows</source>
+      </segment>
+    </unit>
     <unit id="5729418620241283277">
       <notes>
         <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:82</note>
@@ -6991,6 +7675,16 @@
       </notes>
       <segment>
         <source>Task changes</source>
+      </segment>
+    </unit>
+    <unit id="8890553633144307762">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:110,113</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:90,93</note>
+        <note category="description">Button that moves back one wizard step</note>
+      </notes>
+      <segment>
+        <source>Back</source>
       </segment>
     </unit>
     <unit id="8891200563650176405">
@@ -7110,6 +7804,15 @@
         <source>Task becomes unblocked</source>
       </segment>
     </unit>
+    <unit id="5932221991709725834">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:122</note>
+        <note category="description">Explains what a TSV export suits</note>
+      </notes>
+      <segment>
+        <source>Tab separated</source>
+      </segment>
+    </unit>
     <unit id="5937123977590623598">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:40</note>
@@ -7185,6 +7888,15 @@
         <source>Committed against completed, by sprint</source>
       </segment>
     </unit>
+    <unit id="2628097777464281980">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:22,24</note>
+        <note category="description">Explains the first export wizard step</note>
+      </notes>
+      <segment>
+        <source>Choose the records this export contains.</source>
+      </segment>
+    </unit>
     <unit id="4510676848705799339">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:63</note>
@@ -7201,6 +7913,15 @@
       </notes>
       <segment>
         <source>Create task</source>
+      </segment>
+    </unit>
+    <unit id="249014267714770723">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:53,55</note>
+        <note category="description">Precedes the size of the files an archive adds</note>
+      </notes>
+      <segment>
+        <source>Files add about</source>
       </segment>
     </unit>
     <unit id="2498784210328272403">
@@ -7319,6 +8040,16 @@
       </notes>
       <segment>
         <source>Relation details</source>
+      </segment>
+    </unit>
+    <unit id="9033045811000879464">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:62</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:75</note>
+        <note category="description">Heading of the export field selection step</note>
+      </notes>
+      <segment>
+        <source>Fields</source>
       </segment>
     </unit>
     <unit id="9033565096841222907">
@@ -7545,6 +8276,8 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:151</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:161</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:415</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:459</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment>
@@ -7565,6 +8298,7 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:152</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:162</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:97</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment>
@@ -7651,6 +8385,15 @@
       </notes>
       <segment>
         <source>When a sprint starts, for every task in it</source>
+      </segment>
+    </unit>
+    <unit id="1865312454548647277">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:42,44</note>
+        <note category="description">Explains the import source step</note>
+      </notes>
+      <segment>
+        <source>Check this matches your file, then re-read it if you change anything.</source>
       </segment>
     </unit>
     <unit id="1868277924307510629">
@@ -7806,6 +8549,15 @@
         <source>When a task&apos;s <ph id="0" equiv="FIELDS" disp="fieldText"/> changes</source>
       </segment>
     </unit>
+    <unit id="1648151393865820081">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:145,148</note>
+        <note category="description">Button that stores the column mapping</note>
+      </notes>
+      <segment>
+        <source>Save mapping</source>
+      </segment>
+    </unit>
     <unit id="8864329926850607537">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:470</note>
@@ -7896,6 +8648,15 @@
         <source>Flag the task</source>
       </segment>
     </unit>
+    <unit id="9102156037674511261">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:69,72</note>
+        <note category="description">Warns that example cell values are sent to the model</note>
+      </notes>
+      <segment>
+        <source> Column names, types and a few example values are sent to your assistant provider. </source>
+      </segment>
+    </unit>
     <unit id="7787043747271951847">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:518</note>
@@ -7950,6 +8711,16 @@
         <source>1 chosen user</source>
       </segment>
     </unit>
+    <unit id="2825093609304249365">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:371</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:447</note>
+        <note category="description">Column heading for when an import was uploaded</note>
+      </notes>
+      <segment>
+        <source>Uploaded</source>
+      </segment>
+    </unit>
     <unit id="2825872265156103296">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:710</note>
@@ -7975,6 +8746,24 @@
       </notes>
       <segment>
         <source>Remove the configured task relations</source>
+      </segment>
+    </unit>
+    <unit id="880144039825111570">
+      <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:109</note>
+        <note category="description">Page title for workspace import and export</note>
+      </notes>
+      <segment>
+        <source>Workspace Data</source>
+      </segment>
+    </unit>
+    <unit id="5151267613413369127">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:62,63</note>
+        <note category="description">Heading of the saved export list</note>
+      </notes>
+      <segment>
+        <source>Saved exports</source>
       </segment>
     </unit>
     <unit id="8815827077002938200">
@@ -8215,6 +9004,15 @@
         <source>Automation could not be loaded</source>
       </segment>
     </unit>
+    <unit id="3650965204243552982">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:82,85</note>
+        <note category="description">Button that opens the guided export builder</note>
+      </notes>
+      <segment>
+        <source> Create Export </source>
+      </segment>
+    </unit>
     <unit id="3655032270479055533">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-notifications-card.component.ts:63,64</note>
@@ -8268,6 +9066,15 @@
         <source> This automation references items that no longer exist </source>
       </segment>
     </unit>
+    <unit id="8455204924704616723">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:352</note>
+        <note category="description">Column heading for the file an import came from</note>
+      </notes>
+      <segment>
+        <source>File</source>
+      </segment>
+    </unit>
     <unit id="4308895016686267984">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:151,153</note>
@@ -8275,6 +9082,24 @@
       </notes>
       <segment>
         <source> Edit the automation to point these at something that still exists, otherwise its runs will fail. </source>
+      </segment>
+    </unit>
+    <unit id="5042522818852325305">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:238</note>
+        <note category="description">Shown when an import has no file or destination</note>
+      </notes>
+      <segment>
+        <source>Choose a file and a destination board.</source>
+      </segment>
+    </unit>
+    <unit id="5044351709300326566">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:260,261</note>
+        <note category="description">Explains when import rows start appearing</note>
+      </notes>
+      <segment>
+        <source>Files you import appear here with their results.</source>
       </segment>
     </unit>
     <unit id="5046831552555610590">
@@ -8298,6 +9123,7 @@
     <unit id="1102717806459547726">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:173,175</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:69,73</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:200,203</note>
         <note category="description">Button that reloads the run history</note>
       </notes>
@@ -8394,12 +9220,21 @@
     <unit id="4930506384627295710">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:103,104</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:395</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:408</note>
         <note category="location">src/app/workspace.routes.ts:156</note>
         <note category="description">Title of the settings step</note>
       </notes>
       <segment>
         <source>Settings</source>
+      </segment>
+    </unit>
+    <unit id="383181061702648553">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:409</note>
+        <note category="description">An export that has not started yet</note>
+      </notes>
+      <segment>
+        <source>Queued</source>
       </segment>
     </unit>
     <unit id="3834809105377207268">
@@ -8460,7 +9295,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:56,57</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:64,68</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:257</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:262</note>
         <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Page title for the automation list</note>
       </notes>
@@ -8567,6 +9402,15 @@
         <source>Rules</source>
       </segment>
     </unit>
+    <unit id="4645362382240125023">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:46,47</note>
+        <note category="description">Heading of the import wizard card</note>
+      </notes>
+      <segment>
+        <source>Import a file</source>
+      </segment>
+    </unit>
     <unit id="3036804340853319197">
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:155</note>
@@ -8576,6 +9420,15 @@
         <source>Recent failures</source>
       </segment>
     </unit>
+    <unit id="6473103763059566553">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:28,30</note>
+        <note category="description">Explains the import run step</note>
+      </notes>
+      <segment>
+        <source>Progress and the result. A finished import can be undone.</source>
+      </segment>
+    </unit>
     <unit id="6473284394312594965">
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:266</note>
@@ -8583,6 +9436,15 @@
       </notes>
       <segment>
         <source>Automation could not be cloned</source>
+      </segment>
+    </unit>
+    <unit id="1400004660661958122">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:82,84</note>
+        <note category="description">Filter heading for tags</note>
+      </notes>
+      <segment>
+        <source> Tags </source>
       </segment>
     </unit>
     <unit id="1411214360177743011">
@@ -8699,7 +9561,7 @@
     </unit>
     <unit id="662925928705970482">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:185,187</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:214,216</note>
         <note category="description">Explains how assistant cost is worked out</note>
       </notes>
       <segment>
@@ -8804,6 +9666,16 @@
         <source>Reassign</source>
       </segment>
     </unit>
+    <unit id="146442697456175258">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:68,71</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:326</note>
+        <note category="description">Page title for the workspace import and export page</note>
+      </notes>
+      <segment>
+        <source>Data</source>
+      </segment>
+    </unit>
     <unit id="6904866445262015585">
       <notes>
         <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:66</note>
@@ -8811,7 +9683,7 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:34,35</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:122,123</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:180</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:185</note>
         <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Stat label for the number of tasks on a board</note>
       </notes>
@@ -8837,6 +9709,15 @@
         <source> Create Group </source>
       </segment>
     </unit>
+    <unit id="7171889468809878081">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:258,259</note>
+        <note category="description">Heading when a workspace has never imported anything</note>
+      </notes>
+      <segment>
+        <source>No imports yet</source>
+      </segment>
+    </unit>
     <unit id="5787327883657253628">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:55,56</note>
@@ -8858,7 +9739,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:124</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:293</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:299</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment>
@@ -8904,69 +9785,6 @@
         <source>Board identifier</source>
       </segment>
     </unit>
-    <unit id="4256801075744565841">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:37,40</note>
-        <note category="description">Title of the CSV task import dialog</note>
-      </notes>
-      <segment>
-        <source> Import Tasks </source>
-      </segment>
-    </unit>
-    <unit id="2939600421785023931">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:45,46</note>
-        <note category="description">Placeholder in the CSV file picker</note>
-      </notes>
-      <segment>
-        <source>Choose a CSV file</source>
-      </segment>
-    </unit>
-    <unit id="7243655142619450707">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:47,49</note>
-        <note category="description">Hint under the CSV file picker</note>
-      </notes>
-      <segment>
-        <source>CSV files only</source>
-      </segment>
-    </unit>
-    <unit id="763210887075274411">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:57,60</note>
-        <note category="description">Shown while the import file is being validated</note>
-      </notes>
-      <segment>
-        <source> Validating import file... </source>
-      </segment>
-    </unit>
-    <unit id="3054539539596121280">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:73,75</note>
-        <note category="description">Shown when the import file passes validation</note>
-      </notes>
-      <segment>
-        <source> Validation passed </source>
-      </segment>
-    </unit>
-    <unit id="8263809994864944543">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:78,80</note>
-        <note category="description">Shown when the import file fails validation</note>
-      </notes>
-      <segment>
-        <source> Validation failed </source>
-      </segment>
-    </unit>
-    <unit id="1093384388385027184">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:91,93</note>
-        <note category="description">Heading listing CSV columns that are absent</note>
-      </notes>
-      <segment>
-        <source> Missing headers </source>
-      </segment>
-    </unit>
     <unit id="3689382754703918674">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:40</note>
@@ -8976,40 +9794,15 @@
         <source>No planning sprints.</source>
       </segment>
     </unit>
-    <unit id="3691649462800508923">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:107,109</note>
-        <note category="description">Heading listing CSV columns that are not recognised</note>
-      </notes>
-      <segment>
-        <source> Invalid headers </source>
-      </segment>
-    </unit>
-    <unit id="4546375861091845028">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:125,128</note>
-        <note category="description">Heading listing CSV e-mail addresses with no matching user</note>
-      </notes>
-      <segment>
-        <source> Unknown email addresses </source>
-      </segment>
-    </unit>
     <unit id="1071721880474488785">
       <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:149,154</note>
-        <note category="description">Button that starts the CSV task import</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:109,112</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:41,44</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:123</note>
+        <note category="description">Button that starts an import</note>
       </notes>
       <segment>
         <source>Import</source>
-      </segment>
-    </unit>
-    <unit id="9166772339314709556">
-      <notes>
-        <note category="location">src/app/features/boards/components/import-tasks-dialog/import-tasks-dialog.component.ts:212</note>
-        <note category="description">Shown when a CSV import fails before validation could run</note>
-      </notes>
-      <segment>
-        <source>Import failed before validation completed.</source>
       </segment>
     </unit>
     <unit id="1927153743913680762">
@@ -9032,7 +9825,7 @@
     </unit>
     <unit id="8222816683597787340">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:180,183</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:209,212</note>
         <note category="description">Section heading for what the assistant has cost the workspace</note>
       </notes>
       <segment>
@@ -9120,6 +9913,15 @@
         <source> Move Tasks To Group </source>
       </segment>
     </unit>
+    <unit id="3105841859086865531">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:62,63</note>
+        <note category="description">Heading of the export wizard card</note>
+      </notes>
+      <segment>
+        <source>Build an export</source>
+      </segment>
+    </unit>
     <unit id="3107849048897468340">
       <notes>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:40,45</note>
@@ -9176,6 +9978,15 @@
         <source> Select the user you wish to assign the selected tasks to </source>
       </segment>
     </unit>
+    <unit id="2231567984326326581">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:292</note>
+        <note category="description">Shown when an import file could not be read</note>
+      </notes>
+      <segment>
+        <source>The file could not be read.</source>
+      </segment>
+    </unit>
     <unit id="2233560223291461480">
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:29</note>
@@ -9188,15 +9999,26 @@
     <unit id="4207916966377787111">
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:32</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:89</note>
         <note category="description">Sort option ordering by creation date</note>
       </notes>
       <segment>
         <source>Created</source>
       </segment>
     </unit>
+    <unit id="7239336941262974806">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:413</note>
+        <note category="description">Shown when an import preview could not be built</note>
+      </notes>
+      <segment>
+        <source>This import could not be previewed.</source>
+      </segment>
+    </unit>
     <unit id="7239750919884229270">
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:33</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:93</note>
         <note category="description">Sort option ordering by last-changed date</note>
       </notes>
       <segment>
@@ -9205,7 +10027,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:193,194</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:194,195</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment>
@@ -9214,7 +10036,7 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:205,206</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:206,207</note>
         <note category="description">Tooltip on the button that deletes a board group</note>
       </notes>
       <segment>
@@ -9223,7 +10045,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:298</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:304</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment>
@@ -9232,7 +10054,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:308</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:314</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment>
@@ -9243,7 +10065,7 @@
       <notes>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:44</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:52,55</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:194</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:199</note>
         <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Page title for the board list</note>
       </notes>
@@ -9371,6 +10193,15 @@
       </notes>
       <segment>
         <source>tasks</source>
+      </segment>
+    </unit>
+    <unit id="8713752143619372030">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:154,156</note>
+        <note category="description">Accessible label for the export cancel button</note>
+      </notes>
+      <segment>
+        <source>Cancel this export</source>
       </segment>
     </unit>
     <unit id="8713901901396468144">
@@ -9501,6 +10332,15 @@
         <source>Next month</source>
       </segment>
     </unit>
+    <unit id="3628453231979912240">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:128</note>
+        <note category="description">Explains why an import cannot leave the mapping step</note>
+      </notes>
+      <segment>
+        <source>Press Save mapping before you continue.</source>
+      </segment>
+    </unit>
     <unit id="6153898823588732021">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:151,152</note>
@@ -9518,6 +10358,34 @@
       </notes>
       <segment>
         <source> Move <ph id="0" equiv="TASK_ID" disp="{{ data.task.systemId // i18n(ph=&quot;TASK_ID&quot;) }}"/> </source>
+      </segment>
+    </unit>
+    <unit id="1023931309557040065">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:246,248</note>
+        <note category="description">Accessible label for the import undo button</note>
+      </notes>
+      <segment>
+        <source>Undo this import</source>
+      </segment>
+    </unit>
+    <unit id="1029077242272940476">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:34,35</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:150,151</note>
+        <note category="description">Heading of the import mapping step</note>
+      </notes>
+      <segment>
+        <source>Map the columns</source>
+      </segment>
+    </unit>
+    <unit id="7070451801438959154">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:83</note>
+        <note category="description">Counts the fields a record type can export</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="count" disp="count"/> fields</source>
       </segment>
     </unit>
     <unit id="7077495639998556235">
@@ -9558,10 +10426,19 @@
         <source>Discard</source>
       </segment>
     </unit>
+    <unit id="3825771792569625715">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:21,22</note>
+        <note category="description">Heading of the import upload step</note>
+      </notes>
+      <segment>
+        <source>Choose a file</source>
+      </segment>
+    </unit>
     <unit id="3825802286872185103">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:59,62</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:236</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:241</note>
         <note category="location">src/app/workspace.routes.ts:120</note>
         <note category="description">Page title for the calendar</note>
       </notes>
@@ -9605,6 +10482,15 @@
         <source> This calendar contains more than 2,000 scheduled tasks. Narrow the project or sprint filter to see the complete result. </source>
       </segment>
     </unit>
+    <unit id="3759965007855499397">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:75,76</note>
+        <note category="description">Wizard step that runs the import</note>
+      </notes>
+      <segment>
+        <source>Run</source>
+      </segment>
+    </unit>
     <unit id="3763180352815734429">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:36,38</note>
@@ -9633,6 +10519,15 @@
         <source> Current sprint </source>
       </segment>
     </unit>
+    <unit id="2137697922901944556">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:70,74</note>
+        <note category="description">Shown while an export preview loads</note>
+      </notes>
+      <segment>
+        <source> Building a preview… </source>
+      </segment>
+    </unit>
     <unit id="3154294923374510663">
       <notes>
         <note category="location">src/app/core/services/ai-assistant.service.ts:559</note>
@@ -9659,6 +10554,15 @@
       </notes>
       <segment>
         <source> <ph id="0" equiv="DONE" disp="{{ sprint.doneTaskCount // i18n(ph=&quot;DONE&quot;) }}"/> / <ph id="1" equiv="TOTAL" disp="{{ sprint.taskCount // i18n(ph=&quot;TOTAL&quot;) }}"/> tasks </source>
+      </segment>
+    </unit>
+    <unit id="4563965495368336177">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:138</note>
+        <note category="description">Counts records an import would skip</note>
+      </notes>
+      <segment>
+        <source>Skip</source>
       </segment>
     </unit>
     <unit id="3806717211639406056">
@@ -9781,7 +10685,7 @@
     <unit id="6570363013146073520">
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:36,38</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:172</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:177</note>
         <note category="location">src/app/workspace.routes.ts:73</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
@@ -9981,8 +10885,9 @@
     </unit>
     <unit id="1295614462098694869">
       <notes>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:70,72</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:29</note>
-        <note category="description">Alt text for the chosen profile picture preview</note>
+        <note category="description">Wizard step that shows what an import would do</note>
       </notes>
       <segment>
         <source>Preview</source>
@@ -10081,7 +10986,7 @@
     <unit id="4915431133669985304">
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:35,38</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:108</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:109</note>
         <note category="location">src/app/workspace.routes.ts:162</note>
         <note category="description">Page title for the user profile</note>
       </notes>
@@ -10153,6 +11058,15 @@
         <source> Unknown </source>
       </segment>
     </unit>
+    <unit id="2194591546577080727">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:451</note>
+        <note category="description">An import whose columns have been mapped</note>
+      </notes>
+      <segment>
+        <source>Mapped</source>
+      </segment>
+    </unit>
     <unit id="2195929958481364265">
       <notes>
         <note category="location">src/app/features/project-tasks/components/archive-list/archive-list.component.ts:115,116</note>
@@ -10173,11 +11087,20 @@
     </unit>
     <unit id="2510741784888393227">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:392</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:443</note>
         <note category="description">Label for what the assistant has cost, priced from published model rates</note>
       </notes>
       <segment>
         <source>Estimated cost</source>
+      </segment>
+    </unit>
+    <unit id="2511878039894643291">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:492</note>
+        <note category="description">Summary of how many rows an import created, updated and skipped</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="created" disp="session.created"/> created · <ph id="1" equiv="updated" disp="session.updated"/> updated · <ph id="2" equiv="skipped" disp="session.skipped"/> skipped</source>
       </segment>
     </unit>
     <unit id="5569798609793426852">
@@ -10205,6 +11128,15 @@
       </notes>
       <segment>
         <source> Flagged </source>
+      </segment>
+    </unit>
+    <unit id="3047004215880340008">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:26,27</note>
+        <note category="description">Heading of the import run step</note>
+      </notes>
+      <segment>
+        <source>Running the import</source>
       </segment>
     </unit>
     <unit id="8054034789307349890">
@@ -10240,7 +11172,7 @@
       <notes>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:14,16</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:186</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:191</note>
         <note category="description">Page title for the archived task list</note>
       </notes>
       <segment>
@@ -10320,6 +11252,24 @@
         <source> Type </source>
       </segment>
     </unit>
+    <unit id="7841806737534285652">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:117</note>
+        <note category="description">Explains what a CSV export suits</note>
+      </notes>
+      <segment>
+        <source>Opens anywhere</source>
+      </segment>
+    </unit>
+    <unit id="8202154820002793003">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:19,21</note>
+        <note category="description">Explains the export filter step</note>
+      </notes>
+      <segment>
+        <source>Narrow the export down. Leave everything unticked to include it all.</source>
+      </segment>
+    </unit>
     <unit id="820331289830799665">
       <notes>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:72,74</note>
@@ -10387,7 +11337,7 @@
       <notes>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,62</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:69,73</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:226</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Page title for the project list</note>
       </notes>
@@ -10659,6 +11609,15 @@
         <source>with the next recorded change</source>
       </segment>
     </unit>
+    <unit id="4107438817414896014">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:225</note>
+        <note category="description">Shown when an export preview could not be built</note>
+      </notes>
+      <segment>
+        <source>This export could not be previewed. Check the fields and filters.</source>
+      </segment>
+    </unit>
     <unit id="7593806729418317060">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:50,51</note>
@@ -10693,6 +11652,25 @@
       </notes>
       <segment>
         <source>Cycle time</source>
+      </segment>
+    </unit>
+    <unit id="1131333642368142893">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:97,99</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:107,109</note>
+        <note category="description">Column heading for example values</note>
+      </notes>
+      <segment>
+        <source> Examples </source>
+      </segment>
+    </unit>
+    <unit id="113198702100384861">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:136</note>
+        <note category="description">Newline delimited JSON export format</note>
+      </notes>
+      <segment>
+        <source>NDJSON</source>
       </segment>
     </unit>
     <unit id="1132945315828298235">
@@ -10740,6 +11718,15 @@
         <source>Open tasks</source>
       </segment>
     </unit>
+    <unit id="1366412932937395612">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:59,64</note>
+        <note category="description">Follows the name of the recognised export tool</note>
+      </notes>
+      <segment>
+        <source>export and mapped it for you.</source>
+      </segment>
+    </unit>
     <unit id="8611492333162495855">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:73,75</note>
@@ -10752,6 +11739,7 @@
     <unit id="2873196070623992437">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:43</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:457</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:257</note>
         <note category="description">Series name for work a sprint took on</note>
       </notes>
@@ -10819,6 +11807,16 @@
       </notes>
       <segment>
         <source>Committed and completed scope across recent sprints.</source>
+      </segment>
+    </unit>
+    <unit id="6793067934389787615">
+      <notes>
+        <note category="location">src/app/features/settings/settings.routes.ts:115</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:122</note>
+        <note category="description">Link back to the data page from the export wizard</note>
+      </notes>
+      <segment>
+        <source>Back to Data</source>
       </segment>
     </unit>
     <unit id="6796520629267981972">
@@ -10911,9 +11909,18 @@
         <source> Committed </source>
       </segment>
     </unit>
+    <unit id="2105499142972466940">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:75,78</note>
+        <note category="description">Explains how long an export stays downloadable</note>
+      </notes>
+      <segment>
+        <source>Exports are kept for seven days, then removed from workspace storage.</source>
+      </segment>
+    </unit>
     <unit id="2107380426080326188">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:384</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:435</note>
         <note category="description">Label for the number of assistant conversations</note>
       </notes>
       <segment>
@@ -11057,6 +12064,15 @@
         <source>Missing estimate</source>
       </segment>
     </unit>
+    <unit id="4800829567095869045">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:329</note>
+        <note category="description">Shown when the assistant could not improve a mapping</note>
+      </notes>
+      <segment>
+        <source>The assistant could not improve this mapping.</source>
+      </segment>
+    </unit>
     <unit id="4810347345927320513">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:69,71</note>
@@ -11114,7 +12130,7 @@
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:52,55</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:241</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:246</note>
         <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
@@ -11257,6 +12273,15 @@
         <source>Filter roadmap by project</source>
       </segment>
     </unit>
+    <unit id="7512145564167521417">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:103,106</note>
+        <note category="description">Option that repeats a task once per assignee and tag</note>
+      </notes>
+      <segment>
+        <source> One row per assignee and tag </source>
+      </segment>
+    </unit>
     <unit id="7512998769125510673">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:158,162</note>
@@ -11264,6 +12289,19 @@
       </notes>
       <segment>
         <source> Show unscheduled </source>
+      </segment>
+    </unit>
+    <unit id="7513076467032912668">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:28</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:34</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:174</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:306</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:87,88</note>
+        <note category="description">Heading of the export format step</note>
+      </notes>
+      <segment>
+        <source>Format</source>
       </segment>
     </unit>
     <unit id="2361523692110697213">
@@ -11302,6 +12340,15 @@
       </notes>
       <segment>
         <source>Week</source>
+      </segment>
+    </unit>
+    <unit id="4776806173794348537">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:83,85</note>
+        <note category="description">Label of the separator between multiple values in one cell</note>
+      </notes>
+      <segment>
+        <source>Multi-value separator</source>
       </segment>
     </unit>
     <unit id="5403684285319082289">
@@ -11383,7 +12430,7 @@
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:60,63</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:236</note>
         <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
@@ -11438,6 +12485,33 @@
         <source> Delete Workspace </source>
       </segment>
     </unit>
+    <unit id="8237455330254721018">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:20,21</note>
+        <note category="description">Heading of the archive contents step</note>
+      </notes>
+      <segment>
+        <source>Archive contents</source>
+      </segment>
+    </unit>
+    <unit id="8241813984684687145">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:440</note>
+        <note category="description">Shown when an import could not be started</note>
+      </notes>
+      <segment>
+        <source>The import could not be started.</source>
+      </segment>
+    </unit>
+    <unit id="2479388840534737755">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:65</note>
+        <note category="description">Label of the spreadsheet sheet to import from</note>
+      </notes>
+      <segment>
+        <source>Sheet</source>
+      </segment>
+    </unit>
     <unit id="1485939374779972161">
       <notes>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:44,47</note>
@@ -11445,6 +12519,24 @@
       </notes>
       <segment>
         <source> This will delete <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ workspace.name }}"/></pc> for every member. To confirm, type the workspace name below. </source>
+      </segment>
+    </unit>
+    <unit id="4782869372248003542">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:166,167</note>
+        <note category="description">Heading when a workspace has never exported anything</note>
+      </notes>
+      <segment>
+        <source>No exports yet</source>
+      </segment>
+    </unit>
+    <unit id="478482834819167466">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:46,50</note>
+        <note category="description">Button that asks the assistant to improve a mapping</note>
+      </notes>
+      <segment>
+        <source> Improve with assistant </source>
       </segment>
     </unit>
     <unit id="4786271583797086407">
@@ -11553,13 +12645,22 @@
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:44,47</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:313</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:340</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:318</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:353</note>
         <note category="location">src/app/workspace.routes.ts:126</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
       <segment>
         <source>Assistant</source>
+      </segment>
+    </unit>
+    <unit id="4363498861095963216">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:264</note>
+        <note category="description">Shown when an import file could not be uploaded</note>
+      </notes>
+      <segment>
+        <source>The file could not be uploaded.</source>
       </segment>
     </unit>
     <unit id="3078203495278068534">
@@ -11596,6 +12697,15 @@
       </notes>
       <segment>
         <source> Copy Secret </source>
+      </segment>
+    </unit>
+    <unit id="3054751514444960309">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:322</note>
+        <note category="description">Reports how many assistant suggestions were rejected</note>
+      </notes>
+      <segment>
+        <source>The assistant proposed <ph id="0" equiv="count" disp="result.discardedBindings"/> bindings that were discarded.</source>
       </segment>
     </unit>
     <unit id="3056025401856031391">
@@ -11888,6 +12998,15 @@
         <source>Optionally issue the first API credential.</source>
       </segment>
     </unit>
+    <unit id="8387177636915307389">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:103,105</note>
+        <note category="description">Placeholder of the export search filter</note>
+      </notes>
+      <segment>
+        <source>Match a task name or description</source>
+      </segment>
+    </unit>
     <unit id="8388111102810701496">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:170,172</note>
@@ -11953,8 +13072,10 @@
     </unit>
     <unit id="7430680760319628492">
       <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:40</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:93,94</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:260</note>
-        <note category="description">Title of the review wizard step</note>
+        <note category="description">Heading of the export review step</note>
       </notes>
       <segment>
         <source>Review</source>
@@ -12018,7 +13139,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:280,282</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:309,311</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -12126,6 +13247,15 @@
       </notes>
       <segment>
         <source>Timezone</source>
+      </segment>
+    </unit>
+    <unit id="3894066071729494357">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:102,105</note>
+        <note category="description">Column heading for the field a column maps onto</note>
+      </notes>
+      <segment>
+        <source> Field </source>
       </segment>
     </unit>
     <unit id="8921855151408700743">
@@ -12473,6 +13603,15 @@
         <source>Order</source>
       </segment>
     </unit>
+    <unit id="6821798958013344489">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:20,21</note>
+        <note category="description">Heading of the export record type step</note>
+      </notes>
+      <segment>
+        <source>What to export</source>
+      </segment>
+    </unit>
     <unit id="6828663359167389620">
       <notes>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:114,115</note>
@@ -12576,10 +13715,20 @@
         <source> Create workspace identities for agents and integrations without sharing a user login. </source>
       </segment>
     </unit>
+    <unit id="1932803164688112903">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:37,41</note>
+        <note category="description">Archive option that includes uploaded files</note>
+      </notes>
+      <segment>
+        <source> Uploaded files </source>
+      </segment>
+    </unit>
     <unit id="4021752662928002901">
       <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:134</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:31</note>
-        <note category="description">What a proposed change does</note>
+        <note category="description">Counts records an import would update</note>
       </notes>
       <segment>
         <source>Update</source>
@@ -12594,9 +13743,18 @@
         <source> Create service account </source>
       </segment>
     </unit>
+    <unit id="4023379316864867526">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:187,190</note>
+        <note category="description">Button that opens the guided import builder</note>
+      </notes>
+      <segment>
+        <source> Create Import </source>
+      </segment>
+    </unit>
     <unit id="4026751160851308362">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:213,217</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:242,246</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment>
@@ -12655,6 +13813,15 @@
       </notes>
       <segment>
         <source> Active </source>
+      </segment>
+    </unit>
+    <unit id="245684657274991357">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:36,37</note>
+        <note category="description">Explains the import mapping step</note>
+      </notes>
+      <segment>
+        <source>Bind each column in your file to a field. Anything left as Ignore is dropped.</source>
       </segment>
     </unit>
     <unit id="8673416323370089865">
@@ -12811,6 +13978,15 @@
         <source>Create Service Account</source>
       </segment>
     </unit>
+    <unit id="2943033819969004159">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:323</note>
+        <note category="description">Column heading for when an export was requested</note>
+      </notes>
+      <segment>
+        <source>Requested</source>
+      </segment>
+    </unit>
     <unit id="2946988289493771337">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:24</note>
@@ -12946,6 +14122,15 @@
         <source>Credential could not be revoked</source>
       </segment>
     </unit>
+    <unit id="7094647661069266723">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:124,129</note>
+        <note category="description">Shown before a file is uploaded</note>
+      </notes>
+      <segment>
+        <source> Upload a file to see what it contains. </source>
+      </segment>
+    </unit>
     <unit id="7096440230985171865">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:655</note>
@@ -12957,8 +14142,9 @@
     </unit>
     <unit id="464749780222721589">
       <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:419</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:659</note>
-        <note category="description">Badge on a credential that has passed its expiry</note>
+        <note category="description">An export whose file has been removed</note>
       </notes>
       <segment>
         <source>Expired</source>
@@ -13158,6 +14344,15 @@
         <source>Complete</source>
       </segment>
     </unit>
+    <unit id="8385660955611557548">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:62</note>
+        <note category="description">Names the rows of the export preview table</note>
+      </notes>
+      <segment>
+        <source>rows</source>
+      </segment>
+    </unit>
     <unit id="3602788914563459016">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:35,42</note>
@@ -13185,6 +14380,15 @@
         <source> Remove </source>
       </segment>
     </unit>
+    <unit id="8960678085928120824">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:198,199</note>
+        <note category="description">Names the rows of the import history table</note>
+      </notes>
+      <segment>
+        <source>imports</source>
+      </segment>
+    </unit>
     <unit id="8967222112822821127">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:41,44</note>
@@ -13192,6 +14396,15 @@
       </notes>
       <segment>
         <source> Create Sprint </source>
+      </segment>
+    </unit>
+    <unit id="4720257215670644464">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:64,66</note>
+        <note category="description">Filter heading for statuses</note>
+      </notes>
+      <segment>
+        <source> Statuses </source>
       </segment>
     </unit>
     <unit id="472532913963722778">
@@ -13242,6 +14455,15 @@
         <source>Start</source>
       </segment>
     </unit>
+    <unit id="1240739868347418586">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:159</note>
+        <note category="description">Mapping option that ignores a source column</note>
+      </notes>
+      <segment>
+        <source>Ignore</source>
+      </segment>
+    </unit>
     <unit id="1241348629231510663">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:81,82</note>
@@ -13254,9 +14476,10 @@
     </unit>
     <unit id="5674286808255988565">
       <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:130</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:96,101</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:30</note>
-        <note category="description">Button that creates the sprint</note>
+        <note category="description">Counts records an import would create</note>
       </notes>
       <segment>
         <source>Create</source>
@@ -13298,6 +14521,15 @@
       </notes>
       <segment>
         <source>End date is required.</source>
+      </segment>
+    </unit>
+    <unit id="4612184659246432792">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:31,32</note>
+        <note category="description">Accessible label for the whole-workspace archive card</note>
+      </notes>
+      <segment>
+        <source>Export the entire workspace as an archive</source>
       </segment>
     </unit>
     <unit id="4618863287236731878">
@@ -13372,6 +14604,15 @@
         <source>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> incomplete task in this sprint. } other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"> <ph id="2" equiv="INTERPOLATION"/> </pc> incomplete tasks in this sprint. }}</source>
       </segment>
     </unit>
+    <unit id="6526435222428086076">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:47,50</note>
+        <note category="description">Precedes the list of things an import will create</note>
+      </notes>
+      <segment>
+        <source>This import will also create</source>
+      </segment>
+    </unit>
     <unit id="6534027096593338100">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:87,91</note>
@@ -13388,6 +14629,15 @@
       </notes>
       <segment>
         <source>Move incomplete tasks to backlog</source>
+      </segment>
+    </unit>
+    <unit id="8359451401558817525">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:132</note>
+        <note category="description">Explains what a JSON export suits</note>
+      </notes>
+      <segment>
+        <source>One array of records</source>
       </segment>
     </unit>
     <unit id="8363756509021548960">
@@ -13444,6 +14694,17 @@
         <source>Target sprint</source>
       </segment>
     </unit>
+    <unit id="7462301153729425254">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:302</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:57,60</note>
+        <note category="location">src/app/features/settings/settings.routes.ts:116</note>
+        <note category="description">Column heading for what an export contains</note>
+      </notes>
+      <segment>
+        <source>Export</source>
+      </segment>
+    </unit>
     <unit id="7473967539394647356">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:149,150</note>
@@ -13498,6 +14759,15 @@
         <source>Unknown</source>
       </segment>
     </unit>
+    <unit id="446781622622565068">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:512</note>
+        <note category="description">Shown when an import could not be undone</note>
+      </notes>
+      <segment>
+        <source>This import could not be undone.</source>
+      </segment>
+    </unit>
     <unit id="3410379442094172650">
       <notes>
         <note category="location">src/app/features/sprints/sprints.routes.ts:30</note>
@@ -13528,7 +14798,7 @@
     <unit id="5194912054053114732">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:51,53</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:220</note>
         <note category="description">Page title for the sprint backlog</note>
       </notes>
       <segment>
@@ -13589,6 +14859,15 @@
       </notes>
       <segment>
         <source>Add existing tasks to this sprint</source>
+      </segment>
+    </unit>
+    <unit id="7607713563510753803">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:179</note>
+        <note category="description">Heading of the import history panel</note>
+      </notes>
+      <segment>
+        <source>Imports</source>
       </segment>
     </unit>
     <unit id="7609408325154938991">
@@ -13654,6 +14933,15 @@
         <source>Start Sprint</source>
       </segment>
     </unit>
+    <unit id="4749495612349488878">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:35,36</note>
+        <note category="description">Heading of the import preview step</note>
+      </notes>
+      <segment>
+        <source>What will change</source>
+      </segment>
+    </unit>
     <unit id="1152778269115350205">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:319</note>
@@ -13667,7 +14955,7 @@
     <unit id="4347094825344030699">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:63,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:210</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
         <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
@@ -13749,8 +15037,9 @@
     </unit>
     <unit id="45739481977493163">
       <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:317</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:144</note>
-        <note category="description">Label shown in the interface</note>
+        <note category="description">Column heading for the size of an export file</note>
       </notes>
       <segment>
         <source>Size</source>
@@ -13759,7 +15048,7 @@
     <unit id="57403663622654391">
       <notes>
         <note category="location">src/app/features/storage/components/storage-header.component.ts:39,42</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:362</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:375</note>
         <note category="location">src/app/workspace.routes.ts:150</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
@@ -14010,6 +15299,15 @@
         <source>Your workspaces could not be loaded</source>
       </segment>
     </unit>
+    <unit id="333564916315430948">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:45,48</note>
+        <note category="description">Archive option that includes the audit history</note>
+      </notes>
+      <segment>
+        <source> Audit history </source>
+      </segment>
+    </unit>
     <unit id="3339303141258670173">
       <notes>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:97,100</note>
@@ -14064,6 +15362,15 @@
         <source> Clear filters </source>
       </segment>
     </unit>
+    <unit id="8420929075694258422">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:35,37</note>
+        <note category="description">Explains the export format step</note>
+      </notes>
+      <segment>
+        <source>Choose the file this export produces.</source>
+      </segment>
+    </unit>
     <unit id="8426796922329733141">
       <notes>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:52,54</note>
@@ -14080,6 +15387,15 @@
       </notes>
       <segment>
         <source>Name, colour and category for this status.</source>
+      </segment>
+    </unit>
+    <unit id="8432496963548837928">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:63,64</note>
+        <note category="description">Explains the export field selection step</note>
+      </notes>
+      <segment>
+        <source>Pick the columns this export contains.</source>
       </segment>
     </unit>
     <unit id="8432692871267877459">
@@ -14647,8 +15963,8 @@
       <notes>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:25,29</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:19,22</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:273</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:327</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:278</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:340</note>
         <note category="description">Page title for general personal settings</note>
       </notes>
       <segment>
@@ -14658,7 +15974,7 @@
     <unit id="5168008278809915722">
       <notes>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:64,65</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:289</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:294</note>
         <note category="description">Page title for workspace task statuses</note>
       </notes>
       <segment>
@@ -14667,7 +15983,7 @@
     </unit>
     <unit id="788903633413068121">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:305</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:310</note>
         <note category="description">Sidebar link to workspace service account settings</note>
       </notes>
       <segment>
@@ -14681,6 +15997,15 @@
       </notes>
       <segment>
         <source> No results found... </source>
+      </segment>
+    </unit>
+    <unit id="6499330284779318893">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:64,66</note>
+        <note category="description">Wizard step that maps columns onto fields</note>
+      </notes>
+      <segment>
+        <source>Mapping</source>
       </segment>
     </unit>
     <unit id="4192963686165639179">
@@ -14830,6 +16155,15 @@
         <source> Toggle which columns are shown and drag to reorder them. </source>
       </segment>
     </unit>
+    <unit id="2099366504914913515">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:121</note>
+        <note category="description">Tab separated export format</note>
+      </notes>
+      <segment>
+        <source>TSV</source>
+      </segment>
+    </unit>
     <unit id="5670251735546841727">
       <notes>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:67,69</note>
@@ -14846,6 +16180,15 @@
       </notes>
       <segment>
         <source>Customize columns</source>
+      </segment>
+    </unit>
+    <unit id="3687716071175862785">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:38,40</note>
+        <note category="description">Label of the board an import lands in</note>
+      </notes>
+      <segment>
+        <source>Destination board</source>
       </segment>
     </unit>
     <unit id="7973003423744435058">
@@ -14893,6 +16236,15 @@
         <source>Selected</source>
       </segment>
     </unit>
+    <unit id="9042248046207790541">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:92,97</note>
+        <note category="description">Button that queues an export to run in the background</note>
+      </notes>
+      <segment>
+        <source> Start export </source>
+      </segment>
+    </unit>
     <unit id="6396952862144590894">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-velocity-card.component.ts:74,75</note>
@@ -14900,6 +16252,15 @@
       </notes>
       <segment>
         <source>No completed sprints yet.</source>
+      </segment>
+    </unit>
+    <unit id="6398639872378040675">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:387</note>
+        <note category="description">Shown when an import mapping was rejected</note>
+      </notes>
+      <segment>
+        <source>This mapping is not complete yet.</source>
       </segment>
     </unit>
     <unit id="6398969587818603892">
@@ -14921,6 +16282,15 @@
         <source>Flag</source>
       </segment>
     </unit>
+    <unit id="7926143511350598250">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:116</note>
+        <note category="description">Comma separated export format</note>
+      </notes>
+      <segment>
+        <source>CSV</source>
+      </segment>
+    </unit>
     <unit id="7926451185520893221">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:69,73</note>
@@ -14932,7 +16302,7 @@
     </unit>
     <unit id="7927073582775061981">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:31,33</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:32,34</note>
         <note category="description">Button that opens the file picker</note>
       </notes>
       <segment>
@@ -14941,7 +16311,7 @@
     </unit>
     <unit id="602857205353730547">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:38,41</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:39,42</note>
         <note category="description">Hint under the file picker. The 50 MiB limit is a fixed server limit</note>
       </notes>
       <segment>
@@ -14950,7 +16320,7 @@
     </unit>
     <unit id="4865868083675132195">
       <notes>
-        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:48,51</note>
+        <note category="location">src/app/static/components/file-dropzone/file-dropzone.component.ts:49,52</note>
         <note category="description">Remaining upload allowance. SIZE is a formatted byte count such as 1.2 MB</note>
       </notes>
       <segment>
@@ -14996,8 +16366,9 @@
     </unit>
     <unit id="4580988005648117665">
       <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:102</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
-        <note category="description">Placeholder in the search box</note>
+        <note category="description">Label of the export search filter</note>
       </notes>
       <segment>
         <source>Search</source>
@@ -15038,6 +16409,15 @@
       </notes>
       <segment>
         <source> <ph id="0" equiv="SELECTED" disp="{{ selectedItems() // i18n(ph=&quot;SELECTED&quot;) }}"/> of <ph id="1" equiv="TOTAL" disp="{{ totalItems() // i18n(ph=&quot;TOTAL&quot;) }}"/> <ph id="2" equiv="ITEM_LABEL" disp="{{ itemLabel() // i18n(ph=&quot;ITEM_LABEL&quot;) }}"/> selected. </source>
+      </segment>
+    </unit>
+    <unit id="1890894168383710137">
+      <notes>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:74</note>
+        <note category="description">Heading of the export history panel</note>
+      </notes>
+      <segment>
+        <source>Exports</source>
       </segment>
     </unit>
     <unit id="1899871388582691778">
@@ -15087,7 +16467,7 @@
     </unit>
     <unit id="622130541512871637">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:225,226</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:254,255</note>
         <note category="description">Accessible label while conversations load</note>
       </notes>
       <segment>
@@ -15259,7 +16639,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:284,286</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:313,315</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>
@@ -15273,6 +16653,15 @@
       </notes>
       <segment>
         <source>Resize start date</source>
+      </segment>
+    </unit>
+    <unit id="1982377256620089345">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:52,57</note>
+        <note category="description">Explains why an export has to run as a job</note>
+      </notes>
+      <segment>
+        <source> This export is too large to download directly and will run in the background. </source>
       </segment>
     </unit>
     <unit id="8524579610338244684">
