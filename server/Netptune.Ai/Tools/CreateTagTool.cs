@@ -95,7 +95,7 @@ public sealed class CreateTagTool : IAiTool
     public static string? ReadProposedName(AiChangeDraft change)
     {
         var payload = change.Payload.RootElement;
-        var hasName = payload.ValueKind == JsonValueKind.Object && payload.TryGetProperty("name", out var value);
+        var hasName = payload.ValueKind == JsonValueKind.Object && payload.TryGetProperty("name", out _);
 
         return hasName ? payload.GetProperty("name").GetString() : null;
     }

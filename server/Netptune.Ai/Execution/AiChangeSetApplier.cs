@@ -1,18 +1,12 @@
-using System.Text.Json;
-
-using Mediator;
-
 using Microsoft.Extensions.Logging;
 
 using Netptune.Ai.Execution.Handlers;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
-using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
-using Netptune.Handlers.Tasks.Commands;
 
 namespace Netptune.Ai.Execution;
 
@@ -20,7 +14,6 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
-    private readonly IMediator Mediator;
     private readonly IAiToolRegistry Tools;
     private readonly IAiExecutionContext AiExecution;
     private readonly ILogger<AiChangeSetApplier> Logger;
@@ -29,7 +22,6 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     public AiChangeSetApplier(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IMediator mediator,
         IAiToolRegistry tools,
         IAiExecutionContext aiExecution,
         ILogger<AiChangeSetApplier> logger,
@@ -37,7 +29,6 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
-        Mediator = mediator;
         Tools = tools;
         AiExecution = aiExecution;
         Logger = logger;
@@ -133,7 +124,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            Logger.LogWarning(exception, "The applied change set could not be recorded in the conversation.");
+            Logger.LogWarning(exception, "The applied change set could not be recorded in the conversation");
         }
 
         await UnitOfWork.CompleteAsync(cancellationToken);
@@ -255,7 +246,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
 
         var models = await UnitOfWork.Tasks.GetTaskViewModels(taskIds, cancellationToken);
 
-        return models?.ToDictionary(model => model.Id, model => model.SystemId) ?? [];
+        return models.ToDictionary(model => model.Id, model => model.SystemId);
     }
 
     private static List<AiProposedChange> OrderByDependency(List<AiProposedChange> changes)
@@ -472,7 +463,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            Logger.LogWarning(exception, "The undo snapshot for {Tool} could not be captured.", handler.ToolName);
+            Logger.LogWarning(exception, "The undo snapshot for {Tool} could not be captured", handler.ToolName);
         }
     }
 
@@ -561,7 +552,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            Logger.LogWarning(exception, "The undone change set could not be recorded in the conversation.");
+            Logger.LogWarning(exception, "The undone change set could not be recorded in the conversation");
         }
 
         await UnitOfWork.CompleteAsync(cancellationToken);
@@ -746,7 +737,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            Logger.LogWarning(exception, "The retried change set could not be recorded in the conversation.");
+            Logger.LogWarning(exception, "The retried change set could not be recorded in the conversation");
         }
 
         await UnitOfWork.CompleteAsync(cancellationToken);

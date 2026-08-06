@@ -203,8 +203,9 @@ public sealed class AiConversationService : IAiConversationService
         using var registration = Turns.Register(conversation.Id, turnCancellation);
 
         var turn = Runner.Run(context, turnCancellation.Token).GetAsyncEnumerator(turnCancellation.Token);
-        var wasStopped = false;
-        string? failure = null;
+
+        bool wasStopped;
+        string? failure;
 
         while (true)
         {

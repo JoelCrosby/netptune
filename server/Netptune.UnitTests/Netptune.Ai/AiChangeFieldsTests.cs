@@ -54,7 +54,7 @@ public class AiChangeFieldsTests
     [Fact]
     public void Date_ShouldReadAClearedDateAsAnEmptySide()
     {
-        var field = AiChangeFields.Date("startDate", new DateOnly(2026, 7, 1), (DateOnly?)null);
+        var field = AiChangeFields.Date("startDate", new DateOnly(2026, 7, 1), null);
 
         field.Before.Should().Be("2026-07-01");
         field.After.Should().BeNull();

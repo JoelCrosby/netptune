@@ -57,7 +57,7 @@ public static class AiToolSchema
             return null;
         }
 
-        var isNumber = value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var parsed);
+        var isNumber = value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out _);
 
         return isNumber ? value.GetInt32() : null;
     }

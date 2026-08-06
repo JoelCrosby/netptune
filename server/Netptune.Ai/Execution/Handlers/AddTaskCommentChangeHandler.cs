@@ -7,7 +7,6 @@ using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Comments.Commands;
-using Netptune.Handlers.Tasks.Commands;
 using Netptune.Handlers.Tasks.Queries;
 
 namespace Netptune.Ai.Execution.Handlers;

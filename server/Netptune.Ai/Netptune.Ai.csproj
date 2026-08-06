@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+    <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
     <ProjectReference Include="..\Netptune.Handlers\Netptune.Handlers.csproj" />
   </ItemGroup>
 

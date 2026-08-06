@@ -41,6 +41,7 @@ public class AiChangeSetApplierTests
     private readonly IWorkspaceUserRepository WorkspaceUsers = Substitute.For<IWorkspaceUserRepository>();
     private readonly IWorkspaceRepository Workspaces = Substitute.For<IWorkspaceRepository>();
     private readonly IAiConversationRepository Conversations = Substitute.For<IAiConversationRepository>();
+    private readonly ITaskRepository Tasks = Substitute.For<ITaskRepository>();
 
     public AiChangeSetApplierTests()
     {
@@ -52,6 +53,19 @@ public class AiChangeSetApplierTests
         UnitOfWork.WorkspaceUsers.Returns(WorkspaceUsers);
         UnitOfWork.Workspaces.Returns(Workspaces);
         UnitOfWork.AiConversations.Returns(Conversations);
+        UnitOfWork.Tasks.Returns(Tasks);
+
+        Tasks
+            .GetTaskViewModels(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
+            .Returns(call =>
+            {
+                var taskIds = call.Arg<IEnumerable<int>>();
+                var models = taskIds
+                    .Select(taskId => new TaskViewModel { Id = taskId, SystemId = $"netp-{taskId}" })
+                    .ToList();
+
+                return Task.FromResult(models);
+            });
 
         Workspaces
             .GetAsync(WorkspaceId, Arg.Any<bool>(), Arg.Any<CancellationToken>())
@@ -184,7 +198,6 @@ public class AiChangeSetApplierTests
         var applier = new AiChangeSetApplier(
             UnitOfWork,
             Identity,
-            Mediator,
             tools,
             new AiExecutionContext(),
             NullLogger<AiChangeSetApplier>.Instance,
@@ -204,7 +217,6 @@ public class AiChangeSetApplierTests
         return new AiChangeSetApplier(
             UnitOfWork,
             Identity,
-            Mediator,
             tools,
             new AiExecutionContext(),
             NullLogger<AiChangeSetApplier>.Instance,

@@ -6,6 +6,7 @@ using Netptune.Ai.Execution.Handlers;
 using Netptune.Ai.Providers;
 using Netptune.Ai.Tools;
 using Netptune.Core.Services.Ai;
+using Netptune.Transfer.Services;
 
 namespace Netptune.Ai.Configuration;
 
@@ -99,6 +100,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiConversationRunner, AiConversationRunner>();
         services.AddScoped<IAiSystemPromptBuilder, AiSystemPromptBuilder>();
         services.AddScoped<IAiTitleGenerator, AiTitleGenerator>();
+        services.AddScoped<IAiImportMappingAdvisor, AiImportMappingAdvisor>();
         services.AddScoped<IAiConversationService, AiConversationService>();
         services.AddScoped<IAiChangeSetApplier, AiChangeSetApplier>();
         services.AddScoped<IAiUndoCatalog, AiUndoCatalog>();
