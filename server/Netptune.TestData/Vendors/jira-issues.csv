@@ -1,0 +1,3 @@
+Issue key,Issue Type,Summary,Description,Status,Priority,Assignee,Reporter,Story Points,Due Date,Created,Sprint,Sprint,Labels,Labels
+PROJ-101,Story,Fix the export fan-out,The CSV repeats a task per tag,In Progress,High,person@acme.co.uk,lead@acme.co.uk,3,2026-08-18,2026-08-01,Sprint 1,Sprint 2,backend,urgent
+PROJ-102,Bug,Import drops assignees,,To Do,Medium,other@acme.co.uk,lead@acme.co.uk,5,2026-08-25,2026-08-02,Sprint 2,,frontend,

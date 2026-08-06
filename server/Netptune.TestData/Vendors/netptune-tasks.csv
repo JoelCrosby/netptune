@@ -1,0 +1,3 @@
+System id,Name,Description,Status,Priority,Estimate,Start date,Due date,Project,Sprint,Board group,Assignees,Tags,Created by,Created at,Updated at
+acme-1,Fix the export fan-out,The CSV repeats a task per tag,in-progress,High,3,2026-08-10,2026-08-18,acme,acme/sprint-1,acme-default-board/doing,person@acme.co.uk,backend|urgent,lead@acme.co.uk,2026-08-01T09:15:00Z,2026-08-02T11:02:00Z
+acme-2,Ship the reader,,todo,Medium,5,,2026-08-25,acme,,acme-default-board/todo,other@acme.co.uk,frontend,lead@acme.co.uk,2026-08-02T09:15:00Z,

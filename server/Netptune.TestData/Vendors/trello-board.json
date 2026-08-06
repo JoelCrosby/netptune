@@ -1,0 +1,31 @@
+{
+  "name": "Acme board",
+  "lists": [
+    { "id": "list-1", "name": "Todo" },
+    { "id": "list-2", "name": "Doing" }
+  ],
+  "cards": [
+    {
+      "shortLink": "abc123",
+      "name": "Fix the export fan-out",
+      "desc": "The CSV repeats a task per tag",
+      "idList": "list-2",
+      "due": "2026-08-18T00:00:00.000Z",
+      "closed": false,
+      "labels": ["backend", "urgent"],
+      "idMembers": ["person@acme.co.uk"],
+      "dateLastActivity": "2026-08-02T09:00:00.000Z"
+    },
+    {
+      "shortLink": "def456",
+      "name": "Ship the reader",
+      "desc": "",
+      "idList": "list-1",
+      "due": null,
+      "closed": false,
+      "labels": [],
+      "idMembers": [],
+      "dateLastActivity": "2026-08-03T09:00:00.000Z"
+    }
+  ]
+}

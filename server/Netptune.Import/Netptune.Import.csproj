@@ -4,12 +4,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Vendors\**\*" />
+    <PackageReference Include="ClosedXML" />
+    <PackageReference Include="CsvHelper" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
-    <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
+    <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
   </ItemGroup>
 
 </Project>
