@@ -6,6 +6,8 @@ using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Audit.Queries;
 
+using Netptune.App.Utility;
+
 namespace Netptune.App.Endpoints;
 
 public static class AuditEndpoints
@@ -71,11 +73,11 @@ public static class AuditEndpoints
     {
         var result = await mediator.Send(new ExportAuditLogQuery(filter), cancellationToken);
 
-        await ExportEndpoints.LogExportRequested(
+        await ExportAuditWriter.LogExportRequested(
             eventRecords,
             unitOfWork,
             identity,
-            new ExportEndpoints.ExportAuditDetails("audit-log"),
+            new ExportAuditDetails("audit-log"),
             cancellationToken);
 
         return Results.File(result.Stream, result.ContentType, result.Filename);

@@ -34,6 +34,13 @@ public class TestStorageService : IStorageService
         return Task.FromResult(Objects.ContainsKey(readOptions.Key) ? new Uri($"https://storage.test/{Uri.EscapeDataString(readOptions.Key)}") : null);
     }
 
+    public Task<Stream?> OpenReadAsync(string key, CancellationToken cancellationToken = default)
+    {
+        var found = Objects.TryGetValue(key, out var content);
+
+        return Task.FromResult<Stream?>(found ? new MemoryStream(content!) : null);
+    }
+
     public Task DeleteFileAsync(string key, CancellationToken cancellationToken = default)
     {
         Objects.Remove(key);

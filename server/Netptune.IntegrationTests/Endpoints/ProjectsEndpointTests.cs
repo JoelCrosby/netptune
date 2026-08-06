@@ -58,8 +58,13 @@ public sealed class ProjectsEndpointTests
         var ascendingNames = ascending!.Select(project => project.Name).ToList();
         var descendingNames = descending!.Select(project => project.Name).ToList();
 
-        ascendingNames.Should().NotBeEmpty();
-        descendingNames.Should().Equal(ascendingNames.AsEnumerable().Reverse());
+        // Another test in this collection can create a project between the two calls, so compare
+        // only the names both responses saw.
+        var sharedAscending = ascendingNames.Where(descendingNames.Contains).ToList();
+        var sharedDescending = descendingNames.Where(ascendingNames.Contains).ToList();
+
+        sharedAscending.Should().NotBeEmpty();
+        sharedDescending.Should().Equal(sharedAscending.AsEnumerable().Reverse());
     }
 
     [Fact]

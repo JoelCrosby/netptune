@@ -25,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
     <ProjectReference Include="..\Netptune.Activity\Netptune.Activity.csproj" />
+    <ProjectReference Include="..\Netptune.Import\Netptune.Import.csproj" />
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
     <ProjectReference Include="..\Netptune.PublicApi\Netptune.PublicApi.csproj" />

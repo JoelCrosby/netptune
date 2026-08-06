@@ -108,7 +108,10 @@ public sealed class AuditEndpointTests
 
     private async Task<AuditLogViewModel> RecordExportEvent()
     {
-        var export = await Client.GetAsync("api/export/tasks/export-workspace");
+        var export = await Client.PostAsJsonAsync("api/export/run", new
+        {
+            definition = new { recordType = "task", format = 0 },
+        });
 
         export.StatusCode.Should().Be(HttpStatusCode.OK);
 

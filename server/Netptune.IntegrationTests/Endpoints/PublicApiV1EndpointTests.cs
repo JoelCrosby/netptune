@@ -388,7 +388,7 @@ public sealed class PublicApiV1EndpointTests
 
         target.Should().NotBeNull("the test project needs a second board column to move tasks into");
 
-        return target!;
+        return target;
     }
 
     private async Task<HttpClient> CreateClient()

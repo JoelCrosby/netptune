@@ -2,9 +2,12 @@ using Netptune.Cache;
 using Netptune.Automation;
 using Netptune.Core.Events;
 using Netptune.Core.Extensions;
+using Netptune.Transfer;
 using Netptune.Search;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
+using Netptune.Import;
+using Netptune.Export;
 using Netptune.JobServer.Services;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
@@ -46,9 +49,14 @@ builder.Services.AddS3StorageService(options =>
 
 builder.AddNetptuneSearch();
 
+builder.Services.Configure<TransferOptions>(builder.Configuration.GetSection(TransferOptions.SectionName));
+builder.Services.AddNetptuneExport();
+builder.Services.AddNetptuneImport();
+
 builder.Services.AddNetptuneAutomation(builder.Configuration);
 builder.Services.AddHostedService<SearchSeedService>();
 builder.Services.AddHostedService<EventOutboxPublisher>();
+builder.Services.AddHostedService<ExportRetentionService>();
 
 builder.Services.AddNetptuneMessageQueue(
     builder.Configuration.GetNetptuneNatsConnectionString(),

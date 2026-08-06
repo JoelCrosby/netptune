@@ -135,6 +135,11 @@ public sealed class CountingStorageService : IStorageService
         return Task.FromResult<Uri?>(new Uri($"https://storage.test/{readOptions.Key}"));
     }
 
+    public Task<Stream?> OpenReadAsync(string key, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult<Stream?>(null);
+    }
+
     public Task DeleteFileAsync(string key, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;

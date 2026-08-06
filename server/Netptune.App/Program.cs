@@ -11,8 +11,11 @@ using Netptune.App.Utility;
 using Netptune.Cache;
 using Netptune.Core.Extensions;
 using Netptune.Core.Preferences;
+using Netptune.Transfer;
 using Netptune.Entities.Configuration;
 using Netptune.Events;
+using Netptune.Import;
+using Netptune.Export;
 using Netptune.Handlers;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
@@ -58,11 +61,14 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
+builder.Services.Configure<TransferOptions>(configuration.GetSection(TransferOptions.SectionName));
+
 builder.Services.AddSingleton<BuildInfo>();
 builder.Services.AddSingleton<BoardEventService>();
 builder.Services.AddSingleton<IBoardEventService>(services => services.GetRequiredService<BoardEventService>());
 builder.Services.AddHostedService<BoardEventService>(services => services.GetRequiredService<BoardEventService>());
 builder.Services.AddSingleton<INotificationEventService, NotificationEventService>();
+builder.Services.AddSingleton<IExportJobEventService, ExportJobEventService>();
 builder.Services.AddSingleton<IPreferenceDefinitionRegistry, PreferenceDefinitionRegistry>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
@@ -100,6 +106,9 @@ builder.Services.AddNetptuneServices(options =>
     options.ClientOrigin = configuration.GetRequiredValue("Origin");
     options.ContentRootPath = builder.Environment.ContentRootPath;
 });
+
+builder.Services.AddNetptuneExport();
+builder.Services.AddNetptuneImport();
 
 builder.AddNetptuneSearch();
 
@@ -172,6 +181,7 @@ apiGroup.MapRelationTypesEndpoints();
 apiGroup.MapTaskRelationsEndpoints();
 apiGroup.MapTagsEndpoints();
 apiGroup.MapTasksEndpoints();
+apiGroup.MapTransferEndpoints();
 apiGroup.MapUsersEndpoints();
 apiGroup.MapWorkspacesEndpoints();
 apiGroup.MapPublicEndpoints();

@@ -85,7 +85,7 @@ public sealed class AiEndpointTests
         var listed = await client.GetFromJsonAsync<List<AiCredentialViewModel>>("api/ai/credentials");
 
         listed.Should().ContainSingle();
-        listed![0].Label.Should().Be("Second");
+        listed[0].Label.Should().Be("Second");
         listed[0].SecretHint.Should().Be("bbbb");
 
         await DeleteExistingCredentials(client);
@@ -109,7 +109,7 @@ public sealed class AiEndpointTests
         var listed = await client.GetFromJsonAsync<List<AiCredentialViewModel>>("api/ai/credentials");
 
         listed.Should().ContainSingle();
-        listed![0].Model.Should().Be("claude-sonnet-5");
+        listed[0].Model.Should().Be("claude-sonnet-5");
 
         await client.PutAsJsonAsync("api/ai/credentials", new
         {
@@ -239,7 +239,7 @@ public sealed class AiEndpointTests
             var pending = detail.Payload!.PendingChangeSet;
 
             pending.Should().NotBeNull("a reload has no other way to recover an unapplied proposal");
-            pending!.Id.Should().Be(seed.ChangeSetId);
+            pending.Id.Should().Be(seed.ChangeSetId);
             pending.Status.Should().Be(AiChangeSetStatus.Pending);
             pending.Changes.Should().ContainSingle(change => change.ToolName == "propose_update_sprint");
         }
@@ -297,7 +297,7 @@ public sealed class AiEndpointTests
 
             changeSet.Should().NotBeNull(
                 "the turn finishes server side even when nothing is left to stream the proposal to");
-            changeSet!.Changes.Should().ContainSingle(change => change.ToolName == "propose_update_task");
+            changeSet.Changes.Should().ContainSingle(change => change.ToolName == "propose_update_task");
 
             var recovered = await client.GetFromJsonAsync<ClientResponse<AiChangeSetViewModel>>(
                 $"api/ai/conversations/{conversationId}/change-set");
@@ -315,10 +315,9 @@ public sealed class AiEndpointTests
 
     private async Task<Guid> StartTurnThenDisconnect(HttpClient client)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "api/ai/conversations/messages")
-        {
-            Content = JsonContent.Create(new { text = "Rename the sprint please." }),
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Post, "api/ai/conversations/messages");
+
+        request.Content = JsonContent.Create(new { text = "Rename the sprint please." });
 
         using var response = await client.SendAsync(
             request,
@@ -334,7 +333,7 @@ public sealed class AiEndpointTests
 
         line.Should().NotBeNull().And.StartWith("data: ");
 
-        var payload = JsonDocument.Parse(line![6..]);
+        var payload = JsonDocument.Parse(line[6..]);
 
         return payload.RootElement.GetProperty("conversationId").GetGuid();
     }

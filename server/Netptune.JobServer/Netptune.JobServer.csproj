@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Netptune.Automation\Netptune.Automation.csproj" />
     <ProjectReference Include="..\Netptune.Search\Netptune.Search.csproj" />
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+    <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
     <ProjectReference Include="..\Netptune.Events\Netptune.Events.csproj" />
     <ProjectReference Include="..\Netptune.Messaging\Netptune.Messaging.csproj" />
@@ -25,6 +26,8 @@
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
     <ProjectReference Include="..\Netptune.ServiceDefaults\Netptune.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
+    <ProjectReference Include="..\Netptune.Export\Netptune.Export.csproj" />
+    <ProjectReference Include="..\Netptune.Import\Netptune.Import.csproj" />
   </ItemGroup>
 
 </Project>

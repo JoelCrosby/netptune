@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.UnitOfWork;
+using Netptune.Transfer.Repositories;
 using Netptune.Repositories.ConnectionFactories;
 using Netptune.Repositories.UnitOfWork;
 
@@ -25,5 +26,11 @@ public static class NetptuneRepositoryConfigurations
 
         services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(netptuneRepositoryOptions.ConnectionString));
         services.AddScoped<INetptuneUnitOfWork, NetptuneUnitOfWork>();
+
+        services.AddScoped<IExportJobRepository, ExportJobRepository>();
+        services.AddScoped<IExportDefinitionRepository, ExportDefinitionRepository>();
+        services.AddScoped<ITransferRepository, TransferRepository>();
+        services.AddScoped<IArchiveRepository, ArchiveRepository>();
+        services.AddScoped<IImportSessionRepository, ImportSessionRepository>();
     }
 }

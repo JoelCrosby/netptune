@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
     <ProjectReference Include="..\Netptune.Activity\Netptune.Activity.csproj" />
     <ProjectReference Include="..\Netptune.Ai\Netptune.Ai.csproj" />
     <ProjectReference Include="..\Netptune.Automation\Netptune.Automation.csproj" />
@@ -25,6 +26,9 @@
     <ProjectReference Include="..\Netptune.Handlers\Netptune.Handlers.csproj" />
     <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
+    <ProjectReference Include="..\Netptune.Export\Netptune.Export.csproj" />
+    <ProjectReference Include="..\Netptune.Import\Netptune.Import.csproj" />
+    <ProjectReference Include="..\Netptune.TestData\Netptune.TestData.csproj" />
     <ProjectReference Include="..\Netptune.JobServer\Netptune.JobServer.csproj" />
   </ItemGroup>
 
