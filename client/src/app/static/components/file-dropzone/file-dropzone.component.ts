@@ -20,6 +20,7 @@ const maxFileSize = 50 * 1024 * 1024;
         class="sr-only"
         type="file"
         multiple
+        [attr.accept]="acceptTypes() || null"
         [disabled]="disabled()"
         (change)="onInput($event)" />
       <button
@@ -62,6 +63,8 @@ export class FileDropzoneComponent {
   protected readonly formatBytes = formatBytes;
 
   readonly disabled = input(false);
+  /** Comma-separated extension list for the picker, e.g. ".csv,.xlsx". */
+  readonly acceptTypes = input('');
   readonly remainingBytes = input<number>();
   readonly filesSelected = output<File[]>();
   readonly dragging = signal(false);

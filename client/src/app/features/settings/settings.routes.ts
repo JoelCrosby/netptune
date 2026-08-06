@@ -103,6 +103,27 @@ export const routes: Routes = [
         loadComponent: () => import('./views/service-accounts-view/service-accounts-view.component').then((m) => m.ServiceAccountsViewComponent),
       },
       {
+        path: 'data',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.tasks.export },
+        title: $localize`:Page title for workspace import and export:Workspace Data`,
+        loadComponent: () => import('@app/features/data-transfer/views/data-transfer-view/data-transfer-view.component').then((m) => m.DataTransferViewComponent),
+      },
+      {
+        path: 'data/export',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.tasks.export, back: $localize`:Link back to the data page from the export wizard:Back to Data` },
+        title: $localize`:Page title for the guided export builder:Export`,
+        loadComponent: () => import('@app/features/data-transfer/views/export-wizard-view/export-wizard-view.component').then((m) => m.ExportWizardViewComponent),
+      },
+      {
+        path: 'data/import',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.tasks.import, back: $localize`:Link back to the data page from the import wizard:Back to Data` },
+        title: $localize`:Page title for the guided import builder:Import`,
+        loadComponent: () => import('@app/features/data-transfer/views/import-wizard-view/import-wizard-view.component').then((m) => m.ImportWizardViewComponent),
+      },
+      {
         path: 'assistant',
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.assistant.readAllConversations },

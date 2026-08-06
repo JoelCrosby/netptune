@@ -352,31 +352,6 @@ export class ProjectTasksEffects {
     );
   });
 
-  importTasks$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.importTasks.init),
-      switchMap((action) =>
-        this.projectTasksService
-          .import(action.boardIdentifier, action.file)
-          .pipe(
-            unwrapClientReposne(),
-            tap(() =>
-              this.snackbar.open(
-                $localize`:Confirmation shown after an action succeeds:Import Successful`
-              )
-            ),
-            map(() => actions.importTasks.success()),
-            catchError((error) => {
-              this.snackbar.open(
-                $localize`:Confirmation shown after an action succeeds:Import Failed`
-              );
-              return of(actions.importTasks.fail({ error }));
-            })
-          )
-      )
-    );
-  });
-
   addTagToTask$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.addTagToTask.init),

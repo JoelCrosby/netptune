@@ -21,19 +21,15 @@ import { StepComponent } from './step.component';
           <li class="flex min-w-0 items-center" [class.flex-1]="!last">
             <div class="flex min-w-0 flex-col items-center gap-2 text-center">
               <span
-                class="border-border bg-background flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium transition-colors"
-                [class.border-primary]="index <= activeIndex()"
-                [class.bg-primary]="index < activeIndex()"
-                [class.text-background]="index < activeIndex()"
-                [class.text-primary]="index === activeIndex()"
+                [class]="markerClass(index)"
                 [attr.aria-current]="
                   index === activeIndex() ? 'step' : undefined
                 ">
                 {{ index + 1 }}
               </span>
               <span
-                class="text-muted max-w-28 truncate text-xs"
-                [class.text-foreground]="index === activeIndex()">
+                class="max-w-28 truncate text-xs"
+                [class]="labelClass(index)">
                 {{ step.title() }}
               </span>
             </div>
@@ -62,6 +58,31 @@ export class StepperComponent {
   readonly mode = input<'vertical' | 'wizard'>('vertical');
   readonly activeIndex = model(0);
   readonly steps = contentChildren(StepComponent);
+
+  // The step you are on has to be the most prominent marker in the rail. Painting completed steps
+  // solid and the current one as a faint outline read backwards: the last completed step looked
+  // active, so people thought they were a step behind where they actually were.
+  protected markerClass(index: number): string {
+    const base =
+      'flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium transition-colors';
+    const active = this.activeIndex();
+
+    if (index === active) {
+      return `${base} border-primary bg-primary text-background ring-primary/30 ring-4`;
+    }
+
+    if (index < active) {
+      return `${base} border-primary/40 bg-primary/15 text-primary`;
+    }
+
+    return `${base} border-border bg-background text-muted`;
+  }
+
+  protected labelClass(index: number): string {
+    return index === this.activeIndex()
+      ? 'text-foreground font-medium'
+      : 'text-muted';
+  }
 
   constructor() {
     effect(() => {

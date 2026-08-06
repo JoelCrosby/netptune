@@ -31,6 +31,7 @@ import {
   LucideSlidersHorizontal,
   LucideSparkles,
   LucideBot,
+  LucideDatabase,
   LucideSquareCheckBig,
   LucideTable2,
   LucideTag,
@@ -142,6 +143,10 @@ export class ShellSidebarComponent {
 
   canReadServiceAccounts = this.store.selectSignal(
     selectHasPermission(netptunePermissions.serviceAccounts.read)
+  );
+
+  canExportData = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.tasks.export)
   );
 
   canReadAudit = this.store.selectSignal(
@@ -313,6 +318,14 @@ export class ShellSidebarComponent {
         label: $localize`:Sidebar link to workspace assistant conversation settings:Assistant`,
         value: ['./settings/workspace/assistant'],
         icon: LucideSparkles,
+      });
+    }
+
+    if (this.canExportData()) {
+      links.push({
+        label: $localize`:Sidebar link to workspace import and export settings:Data`,
+        value: ['./settings/workspace/data'],
+        icon: LucideDatabase,
       });
     }
 

@@ -1,11 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { taskExportDefinition } from '@core/util/task-export-definition';
 import { ClientResponse } from '@core/models/client-response';
 import { CommentViewModel } from '@core/models/comment';
 import { appendPageParams, Page } from '@core/models/pagination';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { AddCommentRequest } from '@core/models/requests/add-comment-request';
-import { TaskImportResult } from '@core/models/import/task-import-result';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { FileResponse } from '@core/types/file-response';
 import { extractFilenameFromHeaders } from '@core/util/header-utils';
@@ -113,10 +113,11 @@ export class ProjectTasksService {
 
   export(): Observable<FileResponse> {
     return this.http
-      .get(`api/export/tasks/export-workspace`, {
-        observe: 'response',
-        responseType: 'blob',
-      })
+      .post(
+        'api/export/run',
+        { definition: taskExportDefinition() },
+        { observe: 'response', responseType: 'blob' }
+      )
       .pipe(
         switchMap((response) => {
           if (response.body === null) {
@@ -129,19 +130,6 @@ export class ProjectTasksService {
           });
         })
       );
-  }
-
-  import(
-    boardIdentifier: string,
-    file: File
-  ): Observable<ClientResponse<TaskImportResult>> {
-    const formData = new FormData();
-    formData.append('files', file);
-
-    return this.http.post<ClientResponse<TaskImportResult>>(
-      `api/import/tasks/${boardIdentifier}`,
-      formData
-    );
   }
 }
 

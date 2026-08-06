@@ -36,7 +36,6 @@ import { BoardGroupStatusDotComponent } from '@boards/components/board-group-sta
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { CreateBoardGroupComponent } from '@boards/components/create-board-group/create-board-group.component';
-import { ImportTasksDialogComponent } from '@boards/components/import-tasks-dialog/import-tasks-dialog.component';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
 import { UpdateBoardGroupRequest } from '@core/models/requests/update-board-group-request';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
@@ -65,6 +64,8 @@ import {
   LucideSettings2,
   LucideX,
 } from '@lucide/angular';
+import { Router } from '@angular/router';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -226,6 +227,11 @@ export class BoardGroupsViewComponent implements OnDestroy {
   private hubService = inject(ProjectTasksHubService);
   private dialog = inject(DialogService);
   private preferences = inject(UserPreferencesService);
+  private router = inject(Router);
+
+  private workspaceId = this.store.selectSignal(
+    selectCurrentWorkspaceIdentifier
+  );
 
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 
@@ -426,12 +432,10 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
     if (boardIdentifier === undefined || boardIdentifier === null) return;
 
-    this.dialog.open(ImportTasksDialogComponent, {
-      panelClass: 'app-modal-class',
-      data: {
-        boardIdentifier,
-      },
-    });
+    this.router.navigate(
+      ['/', this.workspaceId(), 'settings', 'workspace', 'data', 'import'],
+      { queryParams: { board: boardIdentifier } }
+    );
   }
 
   onEditBoardClicked() {

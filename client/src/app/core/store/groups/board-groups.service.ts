@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Params } from '@angular/router';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
+import { taskExportDefinition } from '@core/util/task-export-definition';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
@@ -51,10 +52,11 @@ export class BoardGroupsService {
 
   export(boardId: string): Observable<FileResponse> {
     return this.http
-      .get(`api/export/tasks/export-board/${boardId}`, {
-        observe: 'response',
-        responseType: 'blob',
-      })
+      .post(
+        'api/export/run',
+        { definition: taskExportDefinition(boardId) },
+        { observe: 'response', responseType: 'blob' }
+      )
       .pipe(
         switchMap((response) => {
           if (response.body === null) {
