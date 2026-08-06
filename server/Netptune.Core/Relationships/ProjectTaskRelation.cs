@@ -18,16 +18,16 @@ public record ProjectTaskRelation : KeyedEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public Workspace Workspace { get; set; } = null!;
+    public Workspace? Workspace { get; set; }
 
     [JsonIgnore]
-    public RelationType RelationType { get; set; } = null!;
+    public RelationType? RelationType { get; set; }
 
     [JsonIgnore]
-    public ProjectTask SourceTask { get; set; } = null!;
+    public ProjectTask? SourceTask { get; set; }
 
     [JsonIgnore]
-    public ProjectTask TargetTask { get; set; } = null!;
+    public ProjectTask? TargetTask { get; set; }
 
     #endregion
 }

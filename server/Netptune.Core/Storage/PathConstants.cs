@@ -8,4 +8,14 @@ public static class PathConstants
     {
         return $"workspace/{workspaceIdentifier}/media/task/";
     }
+
+    public static string ExportPath(string workspaceIdentifier)
+    {
+        return $"workspace/{workspaceIdentifier}/exports/";
+    }
+
+    public static string ImportPath(string workspaceIdentifier)
+    {
+        return $"workspace/{workspaceIdentifier}/imports/";
+    }
 }

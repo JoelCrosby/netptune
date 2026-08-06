@@ -41,4 +41,5 @@ public enum ActivityType
     AddComment = 33,
     ModifyComment = 34,
     RemoveComment = 35,
+    ImportCompleted = 36,
 }

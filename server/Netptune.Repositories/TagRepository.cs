@@ -116,7 +116,7 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
     {
         return Context.ProjectTaskTags
             .AsNoTracking()
-            .Where(taskTag => taskTag.ProjectTask.WorkspaceId == workspaceId && !taskTag.ProjectTask.IsDeleted)
+            .Where(taskTag => taskTag.ProjectTask!.WorkspaceId == workspaceId && !taskTag.ProjectTask.IsDeleted)
             .GroupBy(taskTag => taskTag.TagId)
             .Select(group => new { TagId = group.Key, Count = group.Count() })
             .ToDictionaryAsync(row => row.TagId, row => row.Count, cancellationToken);
@@ -155,7 +155,7 @@ public class TagRepository : NamedWorkspaceEntityRepository<DataContext, Tag, in
     {
         return Context.ProjectTaskTags
             .AsNoTracking()
-            .CountAsync(taskTag => taskTag.TagId == tagId && !taskTag.ProjectTask.IsDeleted, cancellationToken);
+            .CountAsync(taskTag => taskTag.TagId == tagId && !taskTag.ProjectTask!.IsDeleted, cancellationToken);
     }
 
     public Task<bool> ExistsForTask(int tagId, int taskId, CancellationToken cancellationToken = default)

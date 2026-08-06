@@ -23,6 +23,8 @@ public record Workspace : AuditableEntity<int>
 
     public bool AssistantEnabled { get; set; } = true;
 
+    public bool AllowAssistantDataSampling { get; set; } = true;
+
     public List<string>? PublicPermissions { get; set; }
 
     public long StorageUsedBytes { get; set; }
@@ -61,6 +63,7 @@ public record Workspace : AuditableEntity<int>
             MetaInfo = MetaInfo,
             IsPublic = IsPublic,
             AssistantEnabled = AssistantEnabled,
+            AllowAssistantDataSampling = AllowAssistantDataSampling,
         };
     }
 

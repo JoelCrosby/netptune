@@ -21,5 +21,7 @@ public record UpdateWorkspaceRequest
 
     public bool? AssistantEnabled { get; init; }
 
+    public bool? AllowAssistantDataSampling { get; init; }
+
     public List<string>? PublicPermissions { get; init; }
 }

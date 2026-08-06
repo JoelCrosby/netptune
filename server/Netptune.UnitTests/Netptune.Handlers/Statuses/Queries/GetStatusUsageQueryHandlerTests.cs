@@ -60,7 +60,7 @@ public class GetStatusUsageQueryHandlerTests
         var result = await Handler.Handle(new GetStatusUsageQuery(4), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
-        result!.UsageCount.Should().Be(3);
+        result.UsageCount.Should().Be(3);
         result.Kind.Should().Be(UsageSubjectKind.Status);
         result.References.Should().HaveCount(2);
         result.References[0].Kind.Should().Be(UsageReferenceKind.Project);

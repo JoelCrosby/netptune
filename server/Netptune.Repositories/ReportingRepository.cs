@@ -96,7 +96,7 @@ public sealed class ReportingRepository : IReportingRepository
             .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
             .Where(task => task.ProjectId != null && visibleProjectIds.Contains(task.ProjectId.Value))
             .Where(task => filter.ProjectId == null || task.ProjectId == filter.ProjectId)
-            .Where(task => task.Status.Category != StatusCategory.Done && task.Status.Category != StatusCategory.Inactive)
+            .Where(task => task.Status!.Category != StatusCategory.Done && task.Status.Category != StatusCategory.Inactive)
             .CountAsync(cancellationToken);
 
         return report with { CurrentOpenTaskCount = currentOpenTaskCount };
@@ -112,7 +112,7 @@ public sealed class ReportingRepository : IReportingRepository
             .Where(task => task.WorkspaceId == workspaceId && !task.IsDeleted)
             .Where(task => task.ProjectId != null && visibleProjectIds.Contains(task.ProjectId.Value))
             .Where(task => filter.ProjectId == null || task.ProjectId == filter.ProjectId)
-            .Where(task => task.Status.Category != StatusCategory.Done && task.Status.Category != StatusCategory.Inactive)
+            .Where(task => task.Status!.Category != StatusCategory.Done && task.Status.Category != StatusCategory.Inactive)
             .Select(task => new
             {
                 task.Id,

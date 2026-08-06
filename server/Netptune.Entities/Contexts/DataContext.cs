@@ -1,3 +1,4 @@
+using Netptune.Transfer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,13 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<AutomationActionResult> AutomationActionResults { get; set; } = null!;
     public DbSet<ScheduledAutomationAction> ScheduledAutomationActions { get; set; } = null!;
     public DbSet<WorkspaceFile> WorkspaceFiles { get; set; } = null!;
+
+    // Data transfer
+    public DbSet<ExportJob> ExportJobs { get; set; } = null!;
+    public DbSet<ExportDefinition> ExportDefinitions { get; set; } = null!;
+    public DbSet<ImportSession> ImportSessions { get; set; } = null!;
+    public DbSet<ImportSessionEntry> ImportSessionEntries { get; set; } = null!;
+    public DbSet<ImportDefinition> ImportDefinitions { get; set; } = null!;
 
     // AI assistant
     public DbSet<UserAiCredential> UserAiCredentials { get; set; } = null!;

@@ -56,6 +56,11 @@ public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
             .HasDefaultValue(true)
             .IsRequired();
 
+        builder
+            .Property(workspace => workspace.AllowAssistantDataSampling)
+            .HasDefaultValue(true)
+            .IsRequired();
+
         builder.ToTable(table =>
         {
             table.HasCheckConstraint("ck_workspaces_storage_used_bytes", "storage_used_bytes >= 0");

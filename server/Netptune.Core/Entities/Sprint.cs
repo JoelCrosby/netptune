@@ -25,7 +25,7 @@ public record Sprint : WorkspaceEntity<int>
     public int ProjectId { get; set; }
 
     [JsonIgnore]
-    public Project Project { get; set; } = null!;
+    public Project? Project { get; set; }
 
     [JsonIgnore]
     public ICollection<ProjectTask> ProjectTasks { get; set; } = new HashSet<ProjectTask>();
@@ -43,7 +43,7 @@ public record Sprint : WorkspaceEntity<int>
             EndDate = EndDate,
             CompletedAt = CompletedAt,
             ProjectId = ProjectId,
-            ProjectName = Project.Name,
+            ProjectName = Project!.Name,
             ProjectKey = Project.Key,
             WorkspaceId = WorkspaceId,
             CreatedAt = CreatedAt,

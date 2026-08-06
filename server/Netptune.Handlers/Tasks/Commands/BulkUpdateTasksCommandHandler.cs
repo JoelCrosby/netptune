@@ -155,7 +155,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             foreach (var task in tasks)
             {
                 var oldStatusId = task.StatusId;
-                var oldStatusCategory = task.Status.Category;
+                var oldStatusCategory = task.Status!.Category;
                 var oldEstimateType = task.EstimateType;
                 var oldEstimateValue = task.EstimateValue;
                 var oldSprintId = task.SprintId;
@@ -366,7 +366,7 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
                 EstimateType = task.EstimateType?.ToString(),
                 EstimateValue = task.EstimateValue,
                 StatusId = task.StatusId,
-                StatusCategory = task.Status.Category.ToString(),
+                StatusCategory = task.Status!.Category.ToString(),
             },
             References =
         [

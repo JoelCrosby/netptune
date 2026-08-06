@@ -27,6 +27,7 @@ public static class EventKeys
     public const string SecurityLoginSucceeded = "security.login-succeeded";
     public const string SecurityLoginFailed = "security.login-failed";
     public const string ExportRequested = "export.requested";
+    public const string ImportCompleted = "import.completed";
     public const string WorkspaceRoleChanged = "workspace.member-role-changed";
     public const string WorkspaceSettingsChanged = "workspace.settings-changed";
     public const string CommentCreated = "comment.created";
@@ -53,6 +54,7 @@ public static class EventKeys
         ActivityType.RoleChanged => WorkspaceRoleChanged,
         ActivityType.WorkspaceSettingsChanged => WorkspaceSettingsChanged,
         ActivityType.ExportRequested => ExportRequested,
+        ActivityType.ImportCompleted => ImportCompleted,
         ActivityType.LoginSuccess => SecurityLoginSucceeded,
         ActivityType.LoginFailed => SecurityLoginFailed,
         ActivityType.AddComment => CommentCreated,
@@ -87,6 +89,7 @@ public static class EventKeys
             SecurityLoginSucceeded => ActivityType.LoginSuccess,
             SecurityLoginFailed => ActivityType.LoginFailed,
             ExportRequested => ActivityType.ExportRequested,
+            ImportCompleted => ActivityType.ImportCompleted,
             WorkspaceRoleChanged => ActivityType.RoleChanged,
             WorkspaceSettingsChanged => ActivityType.WorkspaceSettingsChanged,
             CommentCreated => ActivityType.AddComment,
@@ -172,6 +175,7 @@ public static class EventDefinitionRegistry
             [(EventKeys.SecurityLoginSucceeded, 1)] = typeof(AuthenticationEventPayload),
             [(EventKeys.SecurityLoginFailed, 1)] = typeof(AuthenticationEventPayload),
             [(EventKeys.ExportRequested, 1)] = typeof(ExportRequestedPayload),
+            [(EventKeys.ImportCompleted, 1)] = typeof(ImportCompletedPayload),
             [(EventKeys.WorkspaceRoleChanged, 1)] = typeof(WorkspaceRoleChangedPayload),
             [(EventKeys.WorkspaceSettingsChanged, 1)] = typeof(WorkspaceSettingsChangedPayload),
             [(EventKeys.CommentCreated, 1)] = typeof(CommentEventPayload),

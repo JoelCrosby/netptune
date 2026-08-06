@@ -14,6 +14,18 @@ public class ProjectTaskEntityMap : WorkspaceEntityMap<ProjectTask, int>
         base.Configure(builder);
 
         builder
+            .Property(task => task.ExternalId)
+            .HasMaxLength(256);
+
+        builder
+            .HasIndex(task => new
+            {
+                task.WorkspaceId,
+                task.ExternalId
+            })
+            .HasFilter("external_id IS NOT NULL");
+
+        builder
             .Property(task => task.ProjectScopeId)
             .IsRequired();
 

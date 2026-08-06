@@ -17,4 +17,6 @@ public class WorkspaceViewModel
     public bool IsPublic { get; set; }
 
     public bool AssistantEnabled { get; set; } = true;
+
+    public bool AllowAssistantDataSampling { get; set; } = true;
 }

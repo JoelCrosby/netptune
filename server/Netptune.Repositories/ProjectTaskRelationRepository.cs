@@ -199,13 +199,13 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
         return Entities
             .Where(relation =>
                 taskIds.Contains(relation.TargetTaskId) &&
-                relation.RelationType.Category == RelationCategory.Dependency &&
-                !relation.SourceTask.IsDeleted)
+                relation.RelationType!.Category == RelationCategory.Dependency &&
+                !relation.SourceTask!.IsDeleted)
             .GroupBy(relation => relation.TargetTaskId)
             .Select(group => new TaskRelationCounts(
                 group.Key,
                 group.Count(),
-                group.Count(relation => relation.SourceTask.Status.Category != StatusCategory.Done)))
+                group.Count(relation => relation.SourceTask!.Status!.Category != StatusCategory.Done)))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
@@ -222,13 +222,13 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
         return Entities
             .Where(relation =>
                 taskIds.Contains(relation.SourceTaskId) &&
-                relation.RelationType.Category == RelationCategory.Hierarchy &&
-                !relation.TargetTask.IsDeleted)
+                relation.RelationType!.Category == RelationCategory.Hierarchy &&
+                !relation.TargetTask!.IsDeleted)
             .GroupBy(relation => relation.SourceTaskId)
             .Select(group => new TaskRelationCounts(
                 group.Key,
                 group.Count(),
-                group.Count(relation => relation.TargetTask.Status.Category != StatusCategory.Done)))
+                group.Count(relation => relation.TargetTask!.Status!.Category != StatusCategory.Done)))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
@@ -245,8 +245,8 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
         return Entities
             .Where(relation =>
                 blockingTaskIds.Contains(relation.SourceTaskId) &&
-                relation.RelationType.Category == RelationCategory.Dependency &&
-                !relation.TargetTask.IsDeleted)
+                relation.RelationType!.Category == RelationCategory.Dependency &&
+                !relation.TargetTask!.IsDeleted)
             .Select(relation => relation.TargetTaskId)
             .Distinct()
             .ToListAsync(cancellationToken);
@@ -264,8 +264,8 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
         return Entities
             .Where(relation =>
                 childTaskIds.Contains(relation.TargetTaskId) &&
-                relation.RelationType.Category == RelationCategory.Hierarchy &&
-                !relation.SourceTask.IsDeleted)
+                relation.RelationType!.Category == RelationCategory.Hierarchy &&
+                !relation.SourceTask!.IsDeleted)
             .Select(relation => relation.SourceTaskId)
             .Distinct()
             .ToListAsync(cancellationToken);

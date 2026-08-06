@@ -153,7 +153,7 @@ internal sealed class ScheduledActionEligibilityEvaluator
         var task = scheduledAction.Task;
         var today = AutomationTimeZones.Today(scheduledAction.AutomationRule, now);
         var isOverdue = task.DueDate < today;
-        var isIncomplete = task.Status.Category != StatusCategory.Done;
+        var isIncomplete = task.Status!.Category != StatusCategory.Done;
         var matchesConditions = MatchesConditions(scheduledAction);
 
         return isOverdue && isIncomplete && matchesConditions;
@@ -163,7 +163,7 @@ internal sealed class ScheduledActionEligibilityEvaluator
     {
         var task = scheduledAction.Task;
         var hasNoDueDate = task.DueDate is null;
-        var isIncomplete = task.Status.Category != StatusCategory.Done;
+        var isIncomplete = task.Status!.Category != StatusCategory.Done;
         var matchesConditions = MatchesConditions(scheduledAction);
 
         return hasNoDueDate && isIncomplete && matchesConditions;

@@ -22,6 +22,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Notifications.Update,
         NetptunePermissions.Storage.UploadProfilePicture,
         NetptunePermissions.Tasks.Export,
+        NetptunePermissions.Data.Export,
         NetptunePermissions.Files.Read,
     };
 
@@ -68,6 +69,10 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Members.Invite,
         NetptunePermissions.Members.Remove,
         NetptunePermissions.Tasks.Import,
+        NetptunePermissions.Data.Import,
+        NetptunePermissions.Data.ManageDefinitions,
+        NetptunePermissions.Data.ExportArchive,
+        NetptunePermissions.Data.ImportArchive,
         NetptunePermissions.Automations.Read,
         NetptunePermissions.Automations.Manage,
         NetptunePermissions.RelationTypes.Manage,

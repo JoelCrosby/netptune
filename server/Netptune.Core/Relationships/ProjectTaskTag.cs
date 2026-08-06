@@ -14,10 +14,10 @@ public record ProjectTaskTag : KeyedEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public ProjectTask ProjectTask { get; set; } = null!;
+    public ProjectTask? ProjectTask { get; set; }
 
     [JsonIgnore]
-    public Tag Tag { get; set; } = null!;
+    public Tag? Tag { get; set; }
 
     #endregion
 

@@ -88,6 +88,7 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         result.MetaInfo = request.Request.MetaInfo ?? result.MetaInfo;
         result.IsPublic = request.Request.IsPublic ?? result.IsPublic;
         result.AssistantEnabled = request.Request.AssistantEnabled ?? result.AssistantEnabled;
+        result.AllowAssistantDataSampling = request.Request.AllowAssistantDataSampling ?? result.AllowAssistantDataSampling;
         result.PublicPermissions = ResolvePublicPermissions(result, request.Request);
         result.UpdatedAt = DateTime.UtcNow;
 

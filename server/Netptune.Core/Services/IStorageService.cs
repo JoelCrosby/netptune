@@ -10,6 +10,8 @@ public interface IStorageService
 
     Task<Uri?> GetReadUriAsync(StorageReadOptions readOptions, CancellationToken cancellationToken = default);
 
+    Task<Stream?> OpenReadAsync(string key, CancellationToken cancellationToken = default);
+
     Task DeleteFileAsync(string key, CancellationToken cancellationToken = default);
 
     Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default);

@@ -50,7 +50,7 @@ public class GetRelationTypeUsageQueryHandlerTests
         var result = await Handler.Handle(new GetRelationTypeUsageQuery(6), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
-        result!.UsageCount.Should().Be(4);
+        result.UsageCount.Should().Be(4);
         result.Kind.Should().Be(UsageSubjectKind.RelationType);
         result.CanDelete.Should().BeFalse();
         result.BlockedReason.Should().Be("Relation type is in use and cannot be deleted.");

@@ -100,7 +100,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
                                 Field = "status",
                                 OldValue = oldTask.StatusId.ToString(),
                                 NewValue = newStatus.Id.ToString(),
-                                OldCategory = oldTask.Status.Category.ToString(),
+                                OldCategory = oldTask.Status!.Category.ToString(),
                                 NewCategory = newStatus.Category.ToString(),
                             },
                             References = references,

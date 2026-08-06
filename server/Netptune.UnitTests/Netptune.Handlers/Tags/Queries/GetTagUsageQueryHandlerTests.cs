@@ -60,7 +60,7 @@ public class GetTagUsageQueryHandlerTests
         var result = await Handler.Handle(new GetTagUsageQuery(3), TestContext.Current.CancellationToken);
 
         result.Should().NotBeNull();
-        result!.UsageCount.Should().Be(12);
+        result.UsageCount.Should().Be(12);
         result.Name.Should().Be("urgent");
         result.Kind.Should().Be(UsageSubjectKind.Tag);
         result.CanDelete.Should().BeTrue();

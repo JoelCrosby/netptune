@@ -88,7 +88,7 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                         {
                             TaskId = task.Id,
                             StatusId = task.StatusId,
-                            StatusCategory = task.Status.Category.ToString(),
+                            StatusCategory = task.Status!.Category.ToString(),
                             EstimateType = task.EstimateType?.ToString(),
                             EstimateValue = task.EstimateValue,
                         })
@@ -122,7 +122,7 @@ public sealed class StartSprintCommandHandler : IRequestHandler<StartSprintComma
                         EstimateType = task.EstimateType?.ToString(),
                         EstimateValue = task.EstimateValue,
                         StatusId = task.StatusId,
-                        StatusCategory = task.Status.Category.ToString(),
+                        StatusCategory = task.Status!.Category.ToString(),
                     },
                     References =
                     [

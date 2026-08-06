@@ -43,6 +43,15 @@ public static class NetptunePermissions
         public const string DeletePermanent = "workspace.delete_permanent";
     }
 
+    public static class Data
+    {
+        public const string Export = "data.export";
+        public const string Import = "data.import";
+        public const string ManageDefinitions = "data.manage_definitions";
+        public const string ExportArchive = "data.export_archive";
+        public const string ImportArchive = "data.import_archive";
+    }
+
     public static class Members
     {
         public const string Read = "members.read";

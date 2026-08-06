@@ -160,6 +160,23 @@ public sealed record ExportRequestedPayload
     public string? Scope { get; init; }
 }
 
+public sealed record ImportCompletedPayload
+{
+    public required string RecordType { get; init; }
+
+    public required string SourceKind { get; init; }
+
+    public int Created { get; init; }
+
+    public int Updated { get; init; }
+
+    public int Skipped { get; init; }
+
+    public int Failed { get; init; }
+
+    public string? VendorProfile { get; init; }
+}
+
 public sealed record WorkspaceRoleChangedPayload
 {
     public required string TargetUserId { get; init; }

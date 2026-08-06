@@ -26,6 +26,8 @@ public record ProjectTask : WorkspaceEntity<int>
 
     public DateOnly? DueDate { get; set; }
 
+    public string? ExternalId { get; set; }
+
     #region ForeignKeys
 
     public int? ProjectId { get; set; }
@@ -37,7 +39,7 @@ public record ProjectTask : WorkspaceEntity<int>
     #region NavigationProperties
 
     [JsonIgnore]
-    public Status Status { get; set; } = null!;
+    public Status? Status { get; set; }
 
     [JsonIgnore]
     public ICollection<ProjectTaskAppUser> ProjectTaskAppUsers { get; set; } = new HashSet<ProjectTaskAppUser>();

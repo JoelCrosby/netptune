@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
+    <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
     <ProjectReference Include="..\Netptune.Entities\Netptune.Entities.csproj" />
 
     <!-- Generates SqlScripts constants from the .sql files below; not referenced as an assembly. -->

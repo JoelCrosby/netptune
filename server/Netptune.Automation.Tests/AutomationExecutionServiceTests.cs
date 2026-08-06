@@ -294,7 +294,7 @@ public sealed class AutomationExecutionServiceTests
 
         task.Priority.Should().Be(TaskPriority.High);
         task.StatusId.Should().Be(expectedStatusId);
-        task.Status.Key.Should().Be("complete");
+        task.Status?.Key.Should().Be("complete");
         task.ModifiedByUserId.Should().Be(scenario.ExecutionUser.Id);
 
         var fieldEvents = scope.EventRecords.Events
@@ -482,7 +482,7 @@ public sealed class AutomationExecutionServiceTests
         task.Description.Should().Be("Expanded update");
         task.OwnerId.Should().Be(nextOwner.Id);
         task.ProjectTaskAppUsers.Should().BeEmpty();
-        task.ProjectTaskTags.Select(item => item.Tag.Name).Should().Equal("new-tag");
+        task.ProjectTaskTags.Select(item => item.Tag?.Name).Should().Equal("new-tag");
         task.DueDate.Should().Be(AddBusinessDays(runDate, 3));
         task.EstimateType.Should().Be(EstimateType.Hours);
         task.EstimateValue.Should().Be(8);
@@ -805,7 +805,7 @@ public sealed class AutomationExecutionServiceTests
             .SingleAsync(item => item.Id == scenario.Task.Id, TestContext.Current.CancellationToken);
 
         task.IsDeleted.Should().BeTrue();
-        task.Status.Key.Should().Be(expectedStatusKey);
+        task.Status?.Key.Should().Be(expectedStatusKey);
 
         var actionResults = await scope.Db.AutomationActionResults
             .OrderBy(result => result.SortOrder)

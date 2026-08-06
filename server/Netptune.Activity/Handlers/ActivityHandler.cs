@@ -298,7 +298,7 @@ public sealed class ActivityHandler :
 
         foreach (var group in groups)
         {
-            var (workspaceId, entityType, entityId, userId, agent) = group.Key;
+            var (workspaceId, entityType, entityId, userId, _) = group.Key;
 
             await UnitOfWork.ActivityEntries.ExpireEntriesForOtherUsers(
                 workspaceId,

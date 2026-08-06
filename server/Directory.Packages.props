@@ -24,6 +24,7 @@
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.PostgreSQL.Extensions" Version="13.4.0" />
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.DbGate" Version="13.4.0" />
     <PackageVersion Include="CommunityToolkit.Aspire.Meilisearch" Version="13.4.0" />
+    <PackageVersion Include="ClosedXML" Version="0.105.0" />
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
     <PackageVersion Include="Dapper" Version="2.1.79" />
     <PackageVersion Include="EFCore.NamingConventions" Version="10.0.1" />

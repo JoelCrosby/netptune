@@ -1,3 +1,5 @@
+using System.Net;
+
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Transfer;
@@ -75,6 +77,20 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
         }
     }
 
+    public async Task<Stream?> OpenReadAsync(string key, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var response = await S3Client.GetObjectAsync(Options.BucketName, key, cancellationToken);
+
+            return response.ResponseStream;
+        }
+        catch (AmazonS3Exception exception) when (exception.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+    }
+
     public Task<Uri?> GetReadUriAsync(StorageReadOptions readOptions, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -108,7 +124,7 @@ public class S3StorageService : ServiceBase<UploadResponse>, IStorageService
             await S3Client.GetObjectMetadataAsync(Options.BucketName, key, cancellationToken);
             return true;
         }
-        catch (AmazonS3Exception exception) when (exception.StatusCode == System.Net.HttpStatusCode.NotFound)
+        catch (AmazonS3Exception exception) when (exception.StatusCode == HttpStatusCode.NotFound)
         {
             return false;
         }

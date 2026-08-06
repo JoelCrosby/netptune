@@ -81,7 +81,7 @@ public sealed class CompleteSprintCommandHandler : IRequestHandler<CompleteSprin
                         {
                             TaskId = task.Id,
                             StatusId = task.StatusId,
-                            StatusCategory = task.Status.Category.ToString(),
+                            StatusCategory = task.Status!.Category.ToString(),
                             EstimateType = task.EstimateType?.ToString(),
                             EstimateValue = task.EstimateValue,
                         })

@@ -62,7 +62,7 @@ public static partial class AutomationMessageTemplate
         {
             "task.name" => task.Name,
             "task.key" => BuildTaskKey(task),
-            "task.status" => task.Status.Name,
+            "task.status" => task.Status!.Name,
             "task.priority" => task.Priority?.ToString() ?? string.Empty,
             "task.startdate" => FormatDate(task.StartDate),
             "task.duedate" => FormatDate(task.DueDate),
