@@ -1,89 +1,256 @@
+using Netptune.Transfer.Enums;
+using Mediator;
+
+using Microsoft.AspNetCore.Authorization;
+
+using Netptune.App.Services;
 using Netptune.Core.Authorization;
-using Netptune.Core.Enums;
-using Netptune.Core.Events;
+using Netptune.Transfer.Export;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Core.Services.Export;
-using Netptune.Core.UnitOfWork;
+using Netptune.Handlers.Transfer.Commands;
+using Netptune.Handlers.Transfer.Queries;
 
 namespace Netptune.App.Endpoints;
 
 public static class ExportEndpoints
 {
-    internal sealed record ExportAuditDetails(string ExportType, string? Scope = null);
-
     public static RouteGroupBuilder MapExportEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("export");
 
-        group.MapGet("/tasks/export-workspace", HandleExportWorkspaceTasks)
+        group.MapPost("/preview", HandlePreview)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
-        group.MapGet("/tasks/export-board/{boardId}", HandleExportBoardTasks)
+
+        group.MapGet("/preview/rows", HandlePreviewRows)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapPost("/run", HandleRunInline)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapGet("/definitions", HandleGetDefinitions)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapPost("/definitions", HandleSaveDefinition)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapPut("/definitions", HandleSaveDefinition)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapDelete("/definitions/{id:int}", HandleDeleteDefinition)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapPost("/jobs", HandleCreateJob)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapGet("/jobs", HandleGetJobs)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapGet("/jobs/{publicId:guid}", HandleGetJob)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapPost("/jobs/{publicId:guid}/cancel", HandleCancelJob)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        group.MapGet("/jobs/{publicId:guid}/download", HandleDownloadJob)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
+        builder.MapGet("/hubs/export-jobs", HandleSse)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         return group;
     }
 
-    public static async Task<IResult> HandleExportWorkspaceTasks(
-        ITaskExportService taskExportService,
-        IEventRecordWriter eventRecords,
-        INetptuneUnitOfWork unitOfWork,
+    private static async Task HandleSse(
+        HttpContext context,
         IIdentityService identity,
-        CancellationToken cancellationToken)
+        IExportJobEventService exportJobEvents)
     {
-        var result = await taskExportService.ExportWorkspaceTasks();
+        var workspaceKey = identity.GetWorkspaceKey();
 
-        await LogExportRequested(
-            eventRecords,
-            unitOfWork,
-            identity,
-            new ExportAuditDetails("workspace-tasks"),
-            cancellationToken);
-
-        return Results.File(result.Stream, result.ContentType, result.Filename);
+        await exportJobEvents.SubscribeAsync(workspaceKey, context.Response, context.RequestAborted);
     }
 
-    public static async Task<IResult> HandleExportBoardTasks(
-        ITaskExportService taskExportService,
-        IEventRecordWriter eventRecords,
-        INetptuneUnitOfWork unitOfWork,
-        IIdentityService identity,
-        string boardId,
+    private static async Task<IResult> HandleGetDefinitions(
+        IMediator mediator,
         CancellationToken cancellationToken)
     {
-        var result = await taskExportService.ExportBoardTasks(boardId);
+        var result = await mediator.Send(new GetExportDefinitionsQuery(), cancellationToken);
 
-        await LogExportRequested(
-            eventRecords,
-            unitOfWork,
-            identity,
-            new ExportAuditDetails("board-tasks", boardId),
-            cancellationToken);
-
-        return Results.File(result.Stream, result.ContentType, result.Filename);
+        return Results.Ok(result);
     }
 
-    internal static async Task LogExportRequested(
-        IEventRecordWriter eventRecords,
-        INetptuneUnitOfWork unitOfWork,
-        IIdentityService identity,
-        ExportAuditDetails details,
+    private static async Task<IResult> HandleSaveDefinition(
+        IMediator mediator,
+        SaveExportDefinitionRequest request,
         CancellationToken cancellationToken)
     {
-        var workspaceId = await identity.GetWorkspaceId();
+        var result = await mediator.Send(new SaveExportDefinitionCommand(request), cancellationToken);
 
-        await eventRecords.Append(new EventWriteRequest<ExportRequestedPayload>
+        if (result.IsNotFound)
         {
-            WorkspaceId = workspaceId,
-            EventKey = EventKeys.ExportRequested,
-            SubjectType = EventEntityTypes.From(EntityType.Workspace),
-            SubjectId = workspaceId.ToString(),
-            Payload = new ExportRequestedPayload
-            {
-                ExportType = details.ExportType,
-                Scope = details.Scope,
-            },
-        }, cancellationToken);
+            return Results.NotFound(result);
+        }
 
-        await unitOfWork.CompleteAsync(cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleDeleteDefinition(
+        IMediator mediator,
+        int id,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteExportDefinitionCommand(id), cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleCreateJob(
+        IMediator mediator,
+        IAuthorizationService authorization,
+        HttpContext http,
+        CreateExportJobRequest request,
+        CancellationToken cancellationToken)
+    {
+        var isArchive = request.Definition.Format == ExportFormat.Archive;
+
+        if (isArchive)
+        {
+            var archiveAuthorization = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Data.ExportArchive);
+
+            if (!archiveAuthorization.Succeeded)
+            {
+                return Results.Forbid();
+            }
+        }
+
+        var result = await mediator.Send(new CreateExportJobCommand(request), cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Accepted($"/api/export/jobs/{result.Payload!.PublicId}", result);
+    }
+
+    private static async Task<IResult> HandleGetJobs(
+        IMediator mediator,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetExportJobsQuery(page), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetJob(
+        IMediator mediator,
+        Guid publicId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetExportJobQuery(publicId), cancellationToken);
+
+        return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleCancelJob(
+        IMediator mediator,
+        Guid publicId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CancelExportJobCommand(publicId), cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    // Hands back the signed storage URL rather than redirecting to it. A redirect can only be followed
+    // by a top level navigation, and a navigation cannot carry the workspace header the permission
+    // check needs, so every download came back 403.
+    private static async Task<IResult> HandleDownloadJob(
+        IMediator mediator,
+        Guid publicId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetExportJobDownloadQuery(publicId), cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound();
+        }
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandlePreviewRows(
+        IMediator mediator,
+        [AsParameters] ExportPreviewRowsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetExportPreviewRowsQuery(request), cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandlePreview(
+        IMediator mediator,
+        ExportPreviewRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetExportPreviewQuery(request), cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleRunInline(
+        IMediator mediator,
+        RunExportInlineRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RunExportInlineCommand(request), cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        var export = result.Payload!;
+
+        return Results.File(export.Content, export.ContentType, export.FileName);
     }
 }
