@@ -4,7 +4,6 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Encoding;
-using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Transfer.Services;

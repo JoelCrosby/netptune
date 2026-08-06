@@ -28,7 +28,7 @@ public class WorkspaceUserCacheTests
     [Fact]
     public async Task IsUserInWorkspace_ShouldCacheMembership_WhenTheUserIsAMember()
     {
-        UnitOfWork.Users.IsUserInWorkspace("user", "workspace").Returns(true);
+        UnitOfWork.Users.IsUserInWorkspace("user", "workspace", TestContext.Current.CancellationToken).Returns(true);
 
         var result = await Cache.IsUserInWorkspace("user", "workspace");
 
@@ -43,7 +43,7 @@ public class WorkspaceUserCacheTests
     [Fact]
     public async Task IsUserInWorkspace_ShouldNotCacheTheAnswer_WhenTheUserIsNotAMember()
     {
-        UnitOfWork.Users.IsUserInWorkspace("user", "workspace").Returns(false);
+        UnitOfWork.Users.IsUserInWorkspace("user", "workspace", TestContext.Current.CancellationToken).Returns(false);
 
         var result = await Cache.IsUserInWorkspace("user", "workspace");
 

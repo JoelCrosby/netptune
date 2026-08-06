@@ -4,7 +4,6 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.Core.Events;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;

@@ -1,12 +1,11 @@
 using FluentAssertions;
 
-using global::Netptune.Core.Entities;
-using global::Netptune.Core.Enums;
-using global::Netptune.Core.Repositories;
-using global::Netptune.Core.UnitOfWork;
-using global::Netptune.Import;
-using global::Netptune.Transfer.Mapping;
-using global::Netptune.Transfer.Services;
+using Netptune.Core.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Repositories;
+using Netptune.Core.UnitOfWork;
+using Netptune.Import;
+using Netptune.Transfer.Mapping;
 
 using NSubstitute;
 
