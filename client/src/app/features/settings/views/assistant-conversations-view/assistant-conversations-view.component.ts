@@ -147,6 +147,35 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
                   ariaLabel="Allow members to use the assistant"
                   (changed)="setAssistantEnabled($event)" />
               </div>
+
+              <div
+                class="border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t px-6 py-5">
+                <div class="min-w-0">
+                  <h3
+                    class="text-sm font-medium"
+                    i18n="Heading of the assistant data sampling setting">
+                    Share example values with the assistant
+                  </h3>
+                  <p
+                    class="text-muted mt-1 text-sm"
+                    i18n="
+                      Explains what turning off assistant data sampling does
+                    ">
+                    When an import mapping is improved by the assistant, a few
+                    real cell values are sent with the column names. Turn this
+                    off to send column names and types only.
+                  </p>
+                </div>
+
+                <app-switch
+                  class="shrink-0"
+                  [checked]="allowsDataSampling()"
+                  i18n-ariaLabel="
+                    Toggle that shares example values with the assistant
+                  "
+                  ariaLabel="Share example values with the assistant"
+                  (changed)="setAllowDataSampling($event)" />
+              </div>
             </section>
 
             <section>
@@ -347,6 +376,28 @@ export class AssistantConversationsViewComponent {
   protected readonly assistantEnabled = computed(() => {
     return this.workspace()?.assistantEnabled !== false;
   });
+
+  protected readonly allowsDataSampling = computed(() => {
+    return this.workspace()?.allowAssistantDataSampling !== false;
+  });
+
+  protected setAllowDataSampling(allowed: boolean) {
+    const current = this.workspace();
+
+    if (!current) {
+      return;
+    }
+
+    this.store.dispatch(
+      editWorkspace.init({
+        request: {
+          slug: current.slug,
+          metaInfo: current.metaInfo ?? {},
+          allowAssistantDataSampling: allowed,
+        },
+      })
+    );
+  }
 
   protected setAssistantEnabled(enabled: boolean) {
     const current = this.workspace();

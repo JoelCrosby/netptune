@@ -9,5 +9,6 @@ export interface UpdateWorkspaceRequest {
   metaInfo: WorkspaceMeta;
   isPublic?: boolean;
   assistantEnabled?: boolean;
+  allowAssistantDataSampling?: boolean;
   publicPermissions?: Permission[];
 }

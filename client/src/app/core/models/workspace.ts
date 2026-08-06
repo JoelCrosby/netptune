@@ -12,6 +12,7 @@ export interface Workspace extends Basemodel {
   slug: string;
   isPublic?: boolean;
   assistantEnabled?: boolean;
+  allowAssistantDataSampling?: boolean;
   isLastVisited?: boolean;
   publicPermissions?: Permission[];
 }
