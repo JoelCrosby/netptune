@@ -120,7 +120,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .Where(task =>
                 workspaceIds.Contains(task.WorkspaceId) &&
                 !task.IsDeleted &&
-                task.Status.Category != StatusCategory.Done &&
+                task.Status!.Category != StatusCategory.Done &&
                 task.DueDate >= from &&
                 task.DueDate <= to)
             .AsNoTracking()
@@ -135,7 +135,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return AutomationCandidates(workspaceIds)
             .Where(task =>
-                task.Status.Category != StatusCategory.Done &&
+                task.Status!.Category != StatusCategory.Done &&
                 task.DueDate < today)
             .ToListAsync(cancellationToken);
     }
@@ -146,7 +146,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
     {
         return AutomationCandidates(workspaceIds)
             .Where(task =>
-                task.Status.Category != StatusCategory.Done &&
+                task.Status!.Category != StatusCategory.Done &&
                 task.DueDate == null)
             .ToListAsync(cancellationToken);
     }
@@ -592,7 +592,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             Name = x.Name,
             Description = x.Description,
             StatusId = x.StatusId,
-            StatusName = x.Status.Name,
+            StatusName = x.Status!.Name,
             StatusKey = x.Status.Key,
             StatusColor = x.Status.Color,
             StatusCategory = x.Status.Category,
@@ -697,90 +697,6 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         {
             task.Flags = flagsByTask.GetValueOrDefault(task.Id) ?? [];
         }
-    }
-
-    public async Task<List<ExportTaskViewModel>> GetExportTasksAsync(string workspaceKey, CancellationToken cancellationToken = default)
-    {
-        using var connection = ConnectionFactory.StartConnection();
-
-        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(SqlScripts.GetExportTasks, new
-        {
-            workspaceKey,
-            take = PaginationDefaults.MaxExportRows,
-        }, cancellationToken: cancellationToken));
-
-        return RowsToExportList(rows);
-    }
-
-    public async Task<List<ExportTaskViewModel>> GetBoardExportTasksAsync(string workspaceKey, string boardIdentifier, CancellationToken cancellationToken = default)
-    {
-        using var connection = ConnectionFactory.StartConnection();
-
-        var rows = await connection.QueryAsync<TasksViewRowMap>(new CommandDefinition(SqlScripts.GetBoardExportTasks, new
-        {
-            workspaceKey,
-            boardIdentifier,
-            take = PaginationDefaults.MaxExportRows,
-        }, cancellationToken: cancellationToken));
-
-        return RowsToExportList(rows);
-    }
-
-    private static readonly HashSet<string> Empty = new();
-
-    private static List<ExportTaskViewModel> RowsToExportList(IEnumerable<TasksViewRowMap> rows)
-    {
-        return rows.Aggregate(new List<ExportTaskViewModel>(200), (result, row) =>
-        {
-            var lastTask = result.LastOrDefault();
-            var lastTag = lastTask?.Tags.LastOrDefault();
-            var lastAssignee = lastTask?.Assignees.FirstOrDefault();
-            var systemId = $"{row.Project_Key}-{row.Project_Scope_Id}";
-
-            if (lastTask?.SystemId is not null && systemId == lastTask.SystemId)
-            {
-                if (lastTag != row.Tag && row.Tag is not null)
-                {
-                    lastTask.Tags.Add(row.Tag);
-                }
-                else if (lastAssignee != row.Assignee_Email && row.Assignee_Email is not null)
-                {
-                    lastTask.Assignees.Add(row.Assignee_Email);
-                }
-
-                return result;
-            }
-
-            static HashSet<string> Set(string? initialValue)
-            {
-                return initialValue is null ? Empty : new HashSet<string> { initialValue };
-            }
-
-            result.Add(new ExportTaskViewModel
-            {
-                Name = row.Task_Name,
-                Description = row.Task_Description,
-                SystemId = systemId,
-                Status = row.Task_Status,
-                SortOrder = row.Task_Sort_Order,
-                Board = row.Board_Identifier,
-                CreatedAt = row.Task_Created_At,
-                UpdatedAt = row.Task_Updated_At,
-                StartDate = row.Task_Start_Date,
-                DueDate = row.Task_Due_Date,
-                Assignees = Set(row.Assignee_Email),
-                Owner = row.Owner_Email,
-                Project = row.Project_Name,
-                Group = row.Board_Group_Name,
-                Sprint = row.Sprint_Name,
-                SprintStatus = row.Sprint_Status?.ToString(),
-                SprintStartDate = row.Sprint_Start_Date,
-                SprintEndDate = row.Sprint_End_Date,
-                Tags = Set(row.Tag),
-            });
-
-            return result;
-        });
     }
 
     public async Task<List<int>> GetTaskIdsInBoard(string boardIdentifier, CancellationToken cancellationToken = default)

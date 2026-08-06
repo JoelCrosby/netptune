@@ -5,15 +5,11 @@ using Netptune.Core.Models.Hosting;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.Ai;
-using Netptune.Core.Services.Export;
-using Netptune.Core.Services.Import;
 using Netptune.Core.Services.Integration;
 using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.Services.Reporting;
 using Netptune.Services.Activity;
 using Netptune.Services.Ai;
-using Netptune.Services.Export;
-using Netptune.Services.Import;
 using Netptune.Services.Integration;
 using Netptune.Services.ProjectTasks;
 using Netptune.Services.Reporting;
@@ -33,8 +29,6 @@ public static class NetptuneServicesConfiguration
 
         services.AddTransient<IHostingService, HostingService>();
         services.AddTransient<IPublicWorkspaceService, PublicWorkspaceService>();
-        services.AddTransient<ITaskImportService, TaskImportService>();
-        services.AddTransient<ITaskExportService, TaskExportService>();
         services.AddTransient<IWebService, WebService>();
         services.AddTransient<IReportingScopeResolver, ReportingScopeResolver>();
 
