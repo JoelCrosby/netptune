@@ -1,3 +1,4 @@
+using Netptune.Transfer.Repositories;
 using Netptune.Core.Entities;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -40,6 +41,7 @@ public sealed class WorkspaceFileReconciliationService : BackgroundService
         await using var scope = ScopeFactory.CreateAsyncScope();
 
         var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
+        var exportJobs = scope.ServiceProvider.GetRequiredService<IExportJobRepository>();
         var storage = scope.ServiceProvider.GetRequiredService<IStorageService>();
         var staleBefore = DateTime.UtcNow.AddMinutes(-10);
         var staleFiles = await unitOfWork.WorkspaceFiles.GetStalePending(staleBefore, cancellationToken);
@@ -79,7 +81,9 @@ public sealed class WorkspaceFileReconciliationService : BackgroundService
                     return;
                 }
 
-                var expected = await unitOfWork.WorkspaceFiles.GetExpectedStorageUsage(workspaceId, cancellationToken);
+                var expectedFileUsage = await unitOfWork.WorkspaceFiles.GetExpectedStorageUsage(workspaceId, cancellationToken);
+                var expectedExportUsage = await exportJobs.GetExpectedStorageUsage(workspaceId, cancellationToken);
+                var expected = expectedFileUsage + expectedExportUsage;
 
                 if (workspace.StorageUsedBytes == expected)
                 {
