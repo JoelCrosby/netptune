@@ -11,9 +11,6 @@ using Netptune.Transfer.Services;
 
 namespace Netptune.Ai.Execution;
 
-// One shot, non-conversational, no tools, no change set — the same shape as AiTitleGenerator. It
-// refines a mapping the heuristic suggester already produced and its answer is validated against the
-// catalog before anything downstream sees it.
 public sealed class AiImportMappingAdvisor : IAiImportMappingAdvisor
 {
     private const int TokensPerColumn = 120;

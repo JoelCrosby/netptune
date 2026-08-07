@@ -9,7 +9,6 @@ public sealed record ImportArchiveRequest
 
     public ArchiveImportMode Mode { get; init; }
 
-    // Slug for the workspace created by ArchiveImportMode.Clone.
     public string? TargetSlug { get; init; }
 
     public bool InviteUnmatchedMembers { get; init; }

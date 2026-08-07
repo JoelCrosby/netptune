@@ -30,6 +30,7 @@ builder.AddNetptuneCache(options =>
 builder.Services.AddNetptuneRepository(options => options.ConnectionString = connectionString);
 builder.Services.AddNetptuneEntities(options => options.ConnectionString = connectionString);
 builder.Services.AddNetptuneEventRecording();
+builder.Services.AddNetptuneBackgroundIdentity();
 
 builder.Services.AddCloudflareEmailService(options =>
 {

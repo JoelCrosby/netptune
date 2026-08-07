@@ -6,15 +6,13 @@ using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import;
 
-// Accumulates one column's values so every reader infers types, samples and cardinality the same way.
 public sealed partial class ImportColumnProfiler(int sampleLimit = 500)
 {
     private readonly List<ColumnAccumulator> Columns = [];
 
     public IReadOnlyList<string> Headers { get; private set; } = [];
 
-    // Every data row seen, not just the sampled ones.
-    public long RowCount { get; private set; }
+    public long RowsSeen { get; private set; }
 
     public void SetHeaders(IEnumerable<string> headers)
     {
@@ -25,9 +23,9 @@ public sealed partial class ImportColumnProfiler(int sampleLimit = 500)
 
     public void Add(ImportRow row)
     {
-        RowCount++;
+        RowsSeen++;
 
-        if (RowCount > sampleLimit)
+        if (RowsSeen > sampleLimit)
         {
             return;
         }

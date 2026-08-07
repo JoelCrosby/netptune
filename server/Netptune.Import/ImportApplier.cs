@@ -26,7 +26,7 @@ public sealed class ImportApplier : IImportApplier
     private readonly IEnumerable<IImportSourceReader> Readers;
     private readonly IEventRecordWriter EventRecords;
     private readonly IEventPublisher EventPublisher;
-    private readonly IActivityLogger? Activity;
+    private readonly IActivityLogger Activity;
 
     public ImportApplier(
         INetptuneUnitOfWork unitOfWork,
@@ -34,9 +34,7 @@ public sealed class ImportApplier : IImportApplier
         IEventRecordWriter eventRecords,
         IEventPublisher eventPublisher,
         IImportSessionRepository importSessions,
-        // Optional because the job server has no HTTP request to take an actor from, the same reason
-        // TaskMutationPipeline treats it as optional.
-        IActivityLogger? activity = null)
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
         Readers = readers;
@@ -417,8 +415,6 @@ public sealed class ImportApplier : IImportApplier
             EventKey = EventKeys.EntityCreated,
             SubjectType = EventEntityTypes.From(EntityType.Task),
             SubjectId = task.Id.ToString(),
-            // Named outright, the way the automation handlers do. A commit runs on the job server with
-            // no request to take an identity from, so leaving it to be resolved records no actor at all.
             ActorUserId = request.UserId,
             Payload = new EntityCreatedPayload
             {
@@ -445,7 +441,7 @@ public sealed class ImportApplier : IImportApplier
             return;
         }
 
-        Activity?.LogMany(options =>
+        Activity.LogMany(options =>
         {
             options.EntityIds = createdTaskIds.ToList();
             options.EntityType = EntityType.Task;

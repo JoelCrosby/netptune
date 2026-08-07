@@ -49,7 +49,7 @@ public sealed class XlsxImportSourceReader : IImportSourceReader
             HasHeaderRow = options.HasHeaderRow,
             SheetNames = sheet.SheetNames,
             SelectedSheet = sheet.SelectedSheet,
-            EstimatedRowCount = profiler.RowCount,
+            EstimatedRowCount = profiler.RowsSeen,
             Columns = profiler.ToColumns(),
         };
     }

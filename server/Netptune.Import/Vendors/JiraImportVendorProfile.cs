@@ -7,8 +7,6 @@ using static Netptune.Import.Vendors.VendorMappingBuilder;
 
 namespace Netptune.Import.Vendors;
 
-// Jira's CSV export. Its distinguishing quirk is repeated headers: "Sprint" and "Labels" appear
-// once per value, so each is folded into a single collection binding.
 public sealed class JiraImportVendorProfile : IImportVendorProfile
 {
     private static readonly string[] Required = ["Issue key", "Summary"];

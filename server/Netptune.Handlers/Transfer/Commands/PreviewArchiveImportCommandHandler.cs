@@ -36,7 +36,6 @@ public sealed class PreviewArchiveImportCommandHandler
         }
         catch (ArchiveSchemaException exception)
         {
-            // A malformed or incompatible archive is the caller's problem, not a server fault.
             return ClientResponse<ArchiveImportPreviewViewModel>.Failed(exception.Message);
         }
     }

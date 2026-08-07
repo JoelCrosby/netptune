@@ -26,6 +26,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
     private readonly IImportSourceStore Store;
     private readonly IImportApplier Applier;
     private readonly IEventRecordWriter EventRecords;
+    private readonly IActorContext Actor;
     private readonly TransferOptions Options;
     private readonly ILogger<ImportJobHandler> Logger;
 
@@ -34,6 +35,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         IImportSourceStore store,
         IImportApplier applier,
         IEventRecordWriter eventRecords,
+        IActorContext actor,
         IOptions<TransferOptions> options,
         ILogger<ImportJobHandler> logger,
         IImportSessionRepository importSessions)
@@ -42,6 +44,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         Store = store;
         Applier = applier;
         EventRecords = eventRecords;
+        Actor = actor;
         Options = options.Value;
         Logger = logger;
         ImportSessions = importSessions;
@@ -94,6 +97,8 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         var mapping = session.Mapping?.Deserialize<ImportMappingModel>(JsonOptions.Default)
             ?? throw new InvalidOperationException("The mapping could not be read.");
         var profile = session.SourceProfile?.Deserialize<ImportSourceProfile>(JsonOptions.Default);
+
+        using var actor = Actor.Begin(new ActorIdentity(request.UserId, session.WorkspaceId, workspaceSlug));
 
         await using var source = await Store.Open(session, cancellationToken);
 
@@ -153,7 +158,6 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
             EventKey = EventKeys.ImportCompleted,
             SubjectType = EventEntityTypes.From(EntityType.Workspace),
             SubjectId = session.WorkspaceId.ToString(),
-            // The job server has no request to resolve an identity from, so the actor is named here.
             ActorUserId = userId,
             Payload = new ImportCompletedPayload
             {

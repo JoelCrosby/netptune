@@ -58,7 +58,7 @@ public sealed class CsvImportSourceReader : IImportSourceReader
             Encoding = encoding.WebName,
             Delimiter = delimiter,
             HasHeaderRow = options.HasHeaderRow,
-            EstimatedRowCount = profiler.RowCount,
+            EstimatedRowCount = profiler.RowsSeen,
             Columns = profiler.ToColumns(),
         };
     }

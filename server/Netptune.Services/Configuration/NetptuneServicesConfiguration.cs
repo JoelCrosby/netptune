@@ -55,6 +55,15 @@ public static class NetptuneServicesConfiguration
         return services;
     }
 
+    public static IServiceCollection AddNetptuneBackgroundIdentity(this IServiceCollection services)
+    {
+        services.AddScoped<IActorContext, ActorContext>();
+        services.AddScoped<IIdentityService, BackgroundIdentityService>();
+        services.AddTransient<IActivityLogger, ActivityLogger>();
+
+        return services;
+    }
+
     private static void ConfigureServices(IServiceCollection services, Action<HostingOptions> action)
     {
 

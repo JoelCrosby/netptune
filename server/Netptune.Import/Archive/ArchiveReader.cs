@@ -122,7 +122,6 @@ public sealed record ArchiveRow
     }
 }
 
-// Reads a .nptz archive: the manifest first, then any declared section on demand.
 public sealed class ArchiveReader : IDisposable
 {
     private readonly ZipArchive Zip;

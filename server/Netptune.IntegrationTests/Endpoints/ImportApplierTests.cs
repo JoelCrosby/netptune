@@ -2,12 +2,15 @@ using System.Text;
 
 using FluentAssertions;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Cache;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Import;
+using Netptune.Services.Activity;
 using Netptune.Transfer;
 using Netptune.Transfer.Entities;
 using Netptune.Transfer.Enums;
@@ -108,16 +111,23 @@ public sealed class ImportApplierTests
         entries.Should().OnlyContain(entry => entry.EntityId > 0, "the entries are written after the tasks have ids");
     }
 
-    // Built by hand rather than resolved, so it has the shape the job server gives it: no activity
-    // logger, because a commit runs off a queued message with no request to take an actor from.
-    private static IImportApplier BuildApplier(IServiceScope scope)
+    // Built by hand so it has the shape the job server gives it: a background identity taking its actor
+    // from the queued message rather than from an HTTP request.
+    private static IImportApplier BuildApplier(IServiceScope scope, IActorContext actor)
     {
+        var identity = new BackgroundIdentityService(actor, scope.ServiceProvider.GetRequiredService<IUserCache>());
+        var activity = new ActivityLogger(
+            scope.ServiceProvider.GetRequiredService<IEventPublisher>(),
+            identity,
+            scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>());
+
         return new ImportApplier(
             scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>(),
             scope.ServiceProvider.GetServices<IImportSourceReader>(),
             scope.ServiceProvider.GetRequiredService<IEventRecordWriter>(),
             scope.ServiceProvider.GetRequiredService<IEventPublisher>(),
-            scope.ServiceProvider.GetRequiredService<IImportSessionRepository>());
+            scope.ServiceProvider.GetRequiredService<IImportSessionRepository>(),
+            activity);
     }
 
     private static async Task<ImportCommitResult> Commit(
@@ -126,9 +136,12 @@ public sealed class ImportApplierTests
         CancellationToken cancellationToken,
         ImportSession? session = null)
     {
-        var applier = BuildApplier(scope);
+        var actor = new ActorContext();
+        var applier = BuildApplier(scope, actor);
 
         session ??= await NewSession(scope, cancellationToken);
+
+        using var actorScope = actor.Begin(new ActorIdentity(session.CreatedBy, 1, "netptune"));
 
         var mapping = new ImportMappingModel
         {

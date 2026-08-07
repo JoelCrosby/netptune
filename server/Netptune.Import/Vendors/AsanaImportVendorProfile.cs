@@ -7,7 +7,6 @@ using static Netptune.Import.Vendors.VendorMappingBuilder;
 
 namespace Netptune.Import.Vendors;
 
-// Asana's CSV export. Sections become board groups and its tag column is comma separated.
 public sealed class AsanaImportVendorProfile : IImportVendorProfile
 {
     private static readonly string[] Required = ["Task ID", "Name"];

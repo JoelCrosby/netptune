@@ -9,9 +9,6 @@ using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Import.Archive;
 
-// Rebuilds a workspace from a .nptz archive. Every cross-reference in the archive is an EntityRef, so
-// the applier keeps one ref → new id map and fills it in as each section lands; nothing ever resolves
-// through a database id from the source system.
 public sealed class ArchiveImporter : IArchiveImporter
 {
     // Records added between saves. Small enough to keep the change tracker and the pending-ref list

@@ -56,7 +56,7 @@ public sealed class JsonImportSourceReader : IImportSourceReader
             Kind = IsNewlineDelimited ? ImportSourceKind.Ndjson : ImportSourceKind.Json,
             Encoding = Encoding.UTF8.WebName,
             HasHeaderRow = false,
-            EstimatedRowCount = profiler.RowCount,
+            EstimatedRowCount = profiler.RowsSeen,
             Columns = profiler.ToColumns(),
         };
     }
@@ -228,7 +228,7 @@ public sealed class JsonImportSourceReader : IImportSourceReader
                 continue;
             }
 
-            var score = KeyBreadth(property.Value);
+            var score = DistinctKeyCount(property.Value);
 
             if (score > bestScore)
             {
@@ -240,8 +240,7 @@ public sealed class JsonImportSourceReader : IImportSourceReader
         return best;
     }
 
-    // How many distinct keys the array's object elements introduce.
-    private static int KeyBreadth(JsonElement array)
+    private static int DistinctKeyCount(JsonElement array)
     {
         var keys = new HashSet<string>(StringComparer.Ordinal);
         var scanned = 0;
@@ -318,8 +317,6 @@ public sealed class JsonImportSourceReader : IImportSourceReader
         return element.GetRawText();
     }
 
-    // Column order in the order the first few records introduce their keys, so a record that omits a
-    // key still lines up with the others.
     private sealed class HeaderAccumulator
     {
         private readonly HashSet<string> Seen = new(StringComparer.Ordinal);

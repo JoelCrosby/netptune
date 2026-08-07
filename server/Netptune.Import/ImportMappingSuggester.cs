@@ -11,8 +11,6 @@ public sealed record SuggestedMapping
     public IReadOnlyList<int> UnmappedColumns { get; init; } = [];
 }
 
-// Scores every (source column, catalog field) pair and greedily assigns the best ones. Pure and
-// deterministic: the only workspace knowledge it uses is the vocabulary it is handed.
 public sealed class ImportMappingSuggester
 {
     public const double MinimumConfidence = 0.55;

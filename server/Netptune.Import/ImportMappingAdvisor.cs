@@ -4,8 +4,6 @@ using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import;
 
-// Picks the best vendor profile for a file, or falls back to the heuristic suggester. A vendor
-// profile only wins when it recognises the file confidently; anything else is scored by name.
 public sealed class ImportMappingAdvisor : IImportMappingAdvisor
 {
     public const double MinimumVendorConfidence = 0.6;

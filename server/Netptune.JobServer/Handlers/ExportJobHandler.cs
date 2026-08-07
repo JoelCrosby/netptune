@@ -22,6 +22,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
     private readonly IExportRunner Runner;
     private readonly IStorageService Storage;
     private readonly IExportJobNotifier Notifier;
+    private readonly IActorContext Actor;
     private readonly ILogger<ExportJobHandler> Logger;
 
     public ExportJobHandler(
@@ -29,6 +30,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         IExportRunner runner,
         IStorageService storage,
         IExportJobNotifier notifier,
+        IActorContext actor,
         ILogger<ExportJobHandler> logger,
         IExportJobRepository exportJobs)
     {
@@ -36,6 +38,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         Runner = runner;
         Storage = storage;
         Notifier = notifier;
+        Actor = actor;
         Logger = logger;
         ExportJobs = exportJobs;
     }
@@ -66,6 +69,8 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
 
             return default;
         }
+
+        using var actor = Actor.Begin(new ActorIdentity(request.UserId, job.WorkspaceId, workspaceSlug));
 
         try
         {

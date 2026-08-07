@@ -4,8 +4,6 @@ using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import.Vendors;
 
-// Shared plumbing for vendor profiles: find columns by header name, fold repeated headers into one
-// binding, and score a fingerprint from how many expected headers are present.
 internal static class VendorMappingBuilder
 {
     public static double Fingerprint(ImportSourceProfile profile, IReadOnlyList<string> required, IReadOnlyList<string> optional)
@@ -40,7 +38,7 @@ internal static class VendorMappingBuilder
         string header,
         IReadOnlyList<ImportTransform>? transforms = null)
     {
-        var columns = Find(profile, header);
+        var columns = FindColumnsNamed(profile, header);
 
         if (columns.Count == 0)
         {
@@ -77,8 +75,7 @@ internal static class VendorMappingBuilder
         return null;
     }
 
-    // Every column index sharing this header name, in file order. Jira repeats headers.
-    public static List<int> Find(ImportSourceProfile profile, string header)
+    public static List<int> FindColumnsNamed(ImportSourceProfile profile, string header)
     {
         var target = Normalize(header);
 
