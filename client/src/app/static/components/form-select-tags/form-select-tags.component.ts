@@ -182,6 +182,12 @@ export class FormSelectTagsComponent<TValue>
       .withWrap();
   }
 
+  private clearSearch() {
+    this.searchQuery.set('');
+    this.searchInput().nativeElement.value = '';
+    this.rebuildKeyManager();
+  }
+
   showDropdown() {
     this.dropdown().show();
     if (this.options()?.length) {
@@ -191,8 +197,7 @@ export class FormSelectTagsComponent<TValue>
 
   hideDropdown() {
     this.dropdown().hide();
-    this.searchQuery.set('');
-    this.searchInput().nativeElement.value = '';
+    this.clearSearch();
   }
 
   toggleOption(option: FormSelectTagsOptionComponent<TValue>) {
@@ -204,6 +209,12 @@ export class FormSelectTagsComponent<TValue>
       isSelected ? current.filter((v) => v !== val) : [...current, val]
     );
     this.changed.emit(this.value());
+    this.clearSearch();
+
+    if (this.dropdown().showing()) {
+      this.keyManager?.setFirstItemActive();
+    }
+
     this.searchInput().nativeElement.focus();
   }
 
