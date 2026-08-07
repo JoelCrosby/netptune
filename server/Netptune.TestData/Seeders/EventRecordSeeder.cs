@@ -9,14 +9,7 @@ namespace Netptune.TestData.Seeders;
 internal static class EventRecordSeeder
 {
     private static readonly ActivityType[] Types = Enum.GetValues<ActivityType>();
-    private static readonly DateTime BaseDate = new(
-        2025,
-        1,
-        1,
-        0,
-        0,
-        0,
-        DateTimeKind.Utc);
+    private static readonly DateTime BaseDate = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     internal static List<EventRecord> Generate(List<ProjectTask> tasks, List<AppUser> users, List<Workspace> workspaces) =>
         tasks
@@ -37,7 +30,10 @@ internal static class EventRecordSeeder
                     RetentionClass = EventRetentionClasses.Audit,
                     Payload = JsonSerializer.SerializeToDocument(new
                     {
-                        activityType = (int)Types[idx % Types.Length],
+                        // Keyed on the record's own offset rather than idx, so every task gets the same
+                        // spread. Carrying the task index in would repartition the types across tasks
+                        // whenever an ActivityType is added, silently moving seeded activity between them.
+                        activityType = (int)Types[i % Types.Length],
                         taskId = task.Id,
                     }),
                 };
