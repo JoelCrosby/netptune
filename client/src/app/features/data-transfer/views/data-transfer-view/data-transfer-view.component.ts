@@ -22,6 +22,7 @@ import {
   LucideBan,
   LucideDatabase,
   LucideDownload,
+  LucideFileArchive,
   LucideFileDown,
   LucideFileUp,
   LucidePlay,
@@ -75,6 +76,7 @@ const ResumableStages = [
     LucideBan,
     LucideDatabase,
     LucideDownload,
+    LucideFileArchive,
     LucideFileDown,
     LucideFileUp,
     LucidePlay,
@@ -223,14 +225,24 @@ const ResumableStages = [
             heading="Imports"
             i18n-description="Explains how long an import stays undoable"
             description="A committed import can be undone until its session expires.">
-            @if (canImport()) {
-              <a panelHeaderActions app-flat-button [routerLink]="['import']">
-                <svg lucideFileUp class="h-4 w-4"></svg>
-                <span i18n="Button that opens the guided import builder">
-                  Create Import
-                </span>
-              </a>
-            }
+            <div panelHeaderActions class="flex items-center gap-2">
+              @if (canImportArchive()) {
+                <a app-flat-button color="neutral" [routerLink]="['archive']">
+                  <svg lucideFileArchive class="h-4 w-4"></svg>
+                  <span i18n="Button that opens the archive import page">
+                    Import Archive
+                  </span>
+                </a>
+              }
+              @if (canImport()) {
+                <a app-flat-button [routerLink]="['import']">
+                  <svg lucideFileUp class="h-4 w-4"></svg>
+                  <span i18n="Button that opens the guided import builder">
+                    Create Import
+                  </span>
+                </a>
+              }
+            </div>
           </app-panel-header>
 
           <app-datatable
@@ -354,6 +366,10 @@ export class DataTransferViewComponent {
 
   protected readonly canImport = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.import)
+  );
+
+  protected readonly canImportArchive = this.store.selectSignal(
+    selectHasPermission(netptunePermissions.data.importArchive)
   );
 
   protected readonly undoing = signal<string | null>(null);

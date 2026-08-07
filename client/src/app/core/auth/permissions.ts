@@ -44,6 +44,13 @@ export const netptunePermissions = {
     export: 'tasks.export',
     import: 'tasks.import',
   },
+  data: {
+    export: 'data.export',
+    import: 'data.import',
+    manageDefinitions: 'data.manage_definitions',
+    exportArchive: 'data.export_archive',
+    importArchive: 'data.import_archive',
+  },
   sprints: {
     read: 'sprints.read',
     create: 'sprints.create',

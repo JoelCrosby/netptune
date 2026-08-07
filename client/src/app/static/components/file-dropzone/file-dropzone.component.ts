@@ -2,7 +2,7 @@ import { Component, input, output, signal } from '@angular/core';
 import { formatBytes } from '@core/util/bytes';
 import { LucideUpload } from '@lucide/angular';
 
-const maxFileSize = 50 * 1024 * 1024;
+const defaultMaxFileSize = 50 * 1024 * 1024;
 
 @Component({
   selector: 'app-file-dropzone',
@@ -34,9 +34,14 @@ const maxFileSize = 50 * 1024 * 1024;
       <p class="text-muted text-xs">
         <span
           i18n="
-            Hint under the file picker. The 50 MiB limit is a fixed server limit
+            Hint under the file picker. SIZE is a formatted byte limit such as
+            50 MB
           ">
-          or drag and drop · 50 MiB maximum per file
+          or drag and drop ·
+          {{
+            formatBytes(maxBytes()) // i18n(ph="SIZE")
+          }}
+          maximum per file
         </span>
       </p>
       @if (remainingBytes() !== undefined) {
@@ -65,6 +70,7 @@ export class FileDropzoneComponent {
   readonly disabled = input(false);
   /** Comma-separated extension list for the picker, e.g. ".csv,.xlsx". */
   readonly acceptTypes = input('');
+  readonly maxBytes = input(defaultMaxFileSize);
   readonly remainingBytes = input<number>();
   readonly filesSelected = output<File[]>();
   readonly dragging = signal(false);
@@ -93,12 +99,13 @@ export class FileDropzoneComponent {
   }
 
   private accept(files: File[]) {
-    const valid = files.filter(
-      (file) => file.size > 0 && file.size <= maxFileSize
-    );
+    const limit = this.maxBytes();
+    const valid = files.filter((file) => file.size > 0 && file.size <= limit);
     const rejected = files.length - valid.length;
     this.error.set(
-      rejected ? `${rejected} file(s) were empty or exceeded 50 MiB.` : ''
+      rejected
+        ? `${rejected} file(s) were empty or exceeded ${formatBytes(limit)}.`
+        : ''
     );
 
     if (valid.length) {

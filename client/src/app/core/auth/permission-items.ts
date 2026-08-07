@@ -9,6 +9,7 @@ import {
   LucideClipboardList,
   LucideDownload,
   LucideEye,
+  LucideFileArchive,
   LucideFilePen,
   LucideFlag,
   LucideSparkles,
@@ -224,6 +225,33 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'tasks.import',
       label: $localize`:Name of a workspace permission:Import Tasks`,
       icon: LucideUpload,
+    },
+  },
+  data: {
+    export: {
+      key: 'data.export',
+      label: $localize`:Name of a workspace permission:Export Data`,
+      icon: LucideDownload,
+    },
+    import: {
+      key: 'data.import',
+      label: $localize`:Name of a workspace permission:Import Data`,
+      icon: LucideUpload,
+    },
+    manageDefinitions: {
+      key: 'data.manage_definitions',
+      label: $localize`:Name of a workspace permission:Manage Export Definitions`,
+      icon: LucideFilePen,
+    },
+    exportArchive: {
+      key: 'data.export_archive',
+      label: $localize`:Name of a workspace permission:Export Workspace Archive`,
+      icon: LucideFileArchive,
+    },
+    importArchive: {
+      key: 'data.import_archive',
+      label: $localize`:Name of a workspace permission:Import Workspace Archive`,
+      icon: LucideArchiveRestore,
     },
   },
   sprints: {

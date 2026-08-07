@@ -124,6 +124,13 @@ export const routes: Routes = [
         loadComponent: () => import('@app/features/data-transfer/views/import-wizard-view/import-wizard-view.component').then((m) => m.ImportWizardViewComponent),
       },
       {
+        path: 'data/archive',
+        canActivate: [workspaceSettingsGuard],
+        data: { permission: netptunePermissions.data.importArchive, back: $localize`:Link back to the data page from the archive import:Back to Data` },
+        title: $localize`:Page title for the workspace archive import:Import Archive`,
+        loadComponent: () => import('@app/features/data-transfer/views/archive-import-view/archive-import-view.component').then((m) => m.ArchiveImportViewComponent),
+      },
+      {
         path: 'data/import/:sessionId',
         canActivate: [workspaceSettingsGuard],
         data: { permission: netptunePermissions.tasks.import, back: $localize`:Link back to the data page from the import wizard:Back to Data` },
