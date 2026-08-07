@@ -10,6 +10,7 @@ import {
   output,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StorageService } from '@core/services/storage.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import Attaches from '@editorjs/attaches';
@@ -26,8 +27,11 @@ import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Underline from '@editorjs/underline';
 import { environment } from '@env/environment';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
+
+const saveDebounceMs = 750;
 
 @Component({
   selector: 'app-editor',
@@ -35,6 +39,7 @@ import { AbstractFormValueControl } from '../abstract-form-value-control';
   host: {
     class:
       'bg-background mb-4 dark:bg-secondary-background border-foreground/30 mt-2 flex rounded-sm border-2 px-4 py-1 overflow-y-auto max-h-[600px]',
+    '(focusout)': 'onFocusOut($event)',
   },
 })
 export class EditorComponent
@@ -49,17 +54,43 @@ export class EditorComponent
   readonly isReadOnly = input(false);
   readonly loaded = output();
   readonly saved = output<string>();
+
+  // receives the editor's final content while the component is torn down. this
+  // cannot go through `saved`: angular removes output listeners as part of the
+  // same teardown, and reading the content back out of editorjs is asynchronous,
+  // so the emit would land after the listener is gone. for the same reason the
+  // callback must not read state that the teardown clears.
+  readonly finalSave = input<((value: string) => void) | null>(null);
+
   readonly injector = inject(Injector);
 
   editor!: EditorJS;
 
+  private editorValue: string | null = null;
+
+  // the blocks as of the last value handed to a consumer. editorjs stamps every
+  // serialisation with a fresh `time`, so the blocks alone say whether the
+  // content actually changed.
+  private savedBlocks: string | null = null;
+  private deliveredValue: string | null = null;
+  private destroyed = false;
+  private readonly changed = new Subject<void>();
+  private readonly emitSaved = (value: string) => this.saved.emit(value);
+
   constructor() {
     super();
+
+    this.changed
+      .pipe(debounceTime(saveDebounceMs), takeUntilDestroyed())
+      .subscribe(() => void this.persist(this.emitSaved));
 
     afterNextRender(() => {
       effect(
         () => {
           const value = this.value();
+
+          if (value === this.editorValue) return;
+
           this.setValue(value);
         },
         { injector: this.injector }
@@ -68,10 +99,87 @@ export class EditorComponent
   }
 
   ngOnDestroy() {
-    this.editor?.destroy?.();
+    const editor = this.editor;
+    const deliver = this.finalSave();
+
+    this.destroyed = true;
+
+    if (!editor) return;
+
+    if (!deliver) {
+      editor.destroy?.();
+      return;
+    }
+
+    // the editor has to outlive this hook long enough to read its content back
+    void this.persist(deliver).finally(() => editor.destroy?.());
+  }
+
+  // serialises what is on screen right now and hands it over when it differs
+  // from the last save. editorjs batches its own change events, so the value
+  // carried by the last change can be several hundred milliseconds behind the
+  // user and is never enough on its own.
+  private async persist(deliver: (value: string) => void) {
+    const editor = this.editor;
+
+    if (!editor) return;
+
+    const data = await editor.save().catch(() => null);
+
+    if (!data) return;
+
+    const blocks = JSON.stringify(data.blocks);
+
+    if (blocks === this.savedBlocks) return;
+
+    const serialised = JSON.stringify(data);
+
+    this.savedBlocks = blocks;
+    this.deliveredValue = serialised;
+    this.editorValue = serialised;
+
+    // writing to the model would emit its change output, which angular has
+    // already torn down by the time a final save resolves
+    if (!this.destroyed) {
+      this.value.set(serialised);
+    }
+
+    deliver(serialised);
+  }
+
+  // records the editor's own serialisation of the content it was handed, so a
+  // later save can tell a real edit from editorjs normalising what it loaded
+  private async captureBaseline() {
+    const editor = this.editor;
+
+    if (!editor) return;
+
+    const data = await editor.save().catch(() => null);
+
+    if (!data) return;
+
+    this.savedBlocks = JSON.stringify(data.blocks);
+  }
+
+  onFocusOut(event: FocusEvent) {
+    const next = event.relatedTarget as Node | null;
+    const holder = this.el().nativeElement as HTMLElement;
+
+    if (next && holder.contains(next)) return;
+
+    void this.persist(this.emitSaved);
   }
 
   setValue(value?: string) {
+    // an incoming value replaces what is on screen, so hand over the latest
+    // content the editor produced before the current instance goes
+    if (this.editorValue !== null && this.editorValue !== this.deliveredValue) {
+      this.deliveredValue = this.editorValue;
+      this.saved.emit(this.editorValue);
+    }
+
+    this.editorValue = value ?? null;
+
     try {
       const parsed = value ? JSON.parse(value) : null;
 
@@ -165,13 +273,17 @@ export class EditorComponent
         },
       },
       data: initialValue || undefined,
-      onReady: () => this.loaded.emit(),
+      onReady: () => {
+        void this.captureBaseline();
+        this.loaded.emit();
+      },
       onChange: () => {
         void this.editor.save().then((value) => {
           const serialised = JSON.stringify(value);
 
+          this.editorValue = serialised;
           this.value.set(serialised);
-          this.saved.emit(serialised);
+          this.changed.next();
         });
       },
     });
@@ -192,7 +304,11 @@ export class EditorComponent
     setTimeout(
       () =>
         void this.editor.save().then((value) => {
-          this.value.set(JSON.stringify(value));
+          const serialised = JSON.stringify(value);
+
+          this.editorValue = serialised;
+          this.value.set(serialised);
+          this.changed.next();
         }),
       0
     );

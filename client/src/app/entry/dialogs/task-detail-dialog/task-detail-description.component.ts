@@ -1,4 +1,5 @@
-import { Component, effect, inject, model } from '@angular/core';
+import { Component, computed, effect, inject, model } from '@angular/core';
+import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
 import { editProjectTask } from '@app/core/store/tasks/tasks.actions';
 import {
   selectDetailTask,
@@ -20,6 +21,7 @@ import { EditorComponent } from '@static/components/editor/editor.component';
       i18n-placeholder="Placeholder in the empty task description editor"
       placeholder="Add a Description..."
       (saved)="updateTask($event)"
+      [finalSave]="finalSave()"
       [(value)]="description"
       [isReadOnly]="isReadOnly()"
       class="@xl:px-16"></app-editor>
@@ -34,6 +36,15 @@ export class TaskDetailDescriptionComponent {
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
   isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
   description = model(this.task()?.description ?? '');
+
+  finalSave = computed(() => {
+    const task = this.task();
+    const identifier = this.hubGroupId();
+
+    if (!task || !identifier) return null;
+
+    return (value: string) => this.saveDescription(task, identifier, value);
+  });
 
   constructor() {
     effect(() => {
@@ -53,7 +64,15 @@ export class TaskDetailDescriptionComponent {
       return;
     }
 
-    if (task.description === value) {
+    this.saveDescription(task, identifier, value);
+  }
+
+  private saveDescription(
+    task: TaskViewModel,
+    identifier: string,
+    description: string
+  ) {
+    if (task.description === description) {
       return;
     }
 
@@ -62,7 +81,7 @@ export class TaskDetailDescriptionComponent {
         identifier,
         task: {
           ...task,
-          description: value,
+          description,
         },
       })
     );
