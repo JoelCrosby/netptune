@@ -70,6 +70,8 @@ const ResumableStages = [
     LucideBan,
     LucideDatabase,
     LucideDownload,
+    LucideFileDown,
+    LucideFileUp,
     LucidePlay,
     LucideTrash2,
     LucideUndo2,
@@ -102,12 +104,11 @@ const ResumableStages = [
             i18n-description="Explains how long an export stays downloadable"
             description="Exports are kept for seven days, then removed from workspace storage.">
             @if (canExport()) {
-              <a
-                panelHeaderActions
-                app-flat-button
-                [routerLink]="['export']"
-                i18n="Button that opens the guided export builder">
-                Create Export
+              <a panelHeaderActions app-flat-button [routerLink]="['export']">
+                <svg lucideFileDown class="h-4 w-4"></svg>
+                <span i18n="Button that opens the guided export builder">
+                  Create Export
+                </span>
               </a>
             }
           </app-panel-header>
@@ -218,12 +219,11 @@ const ResumableStages = [
             i18n-description="Explains how long an import stays undoable"
             description="A committed import can be undone until its session expires.">
             @if (canImport()) {
-              <a
-                panelHeaderActions
-                app-flat-button
-                [routerLink]="['import']"
-                i18n="Button that opens the guided import builder">
-                Create Import
+              <a panelHeaderActions app-flat-button [routerLink]="['import']">
+                <svg lucideFileUp class="h-4 w-4"></svg>
+                <span i18n="Button that opens the guided import builder">
+                  Create Import
+                </span>
               </a>
             }
           </app-panel-header>

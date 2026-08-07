@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ImportWizardService } from '@app/features/data-transfer/services/import-wizard.service';
 import { ImportSourceProfile } from '@core/models/view-models/import-session';
+import { LucideRefreshCw } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -21,6 +22,7 @@ import {
 @Component({
   selector: 'app-import-source-step',
   imports: [
+    LucideRefreshCw,
     CheckboxComponent,
     FormInputComponent,
     FormSelectComponent,
@@ -46,6 +48,7 @@ import {
           type="button"
           [disabled]="wizard.isBusy()"
           (click)="wizard.inspect()">
+          <svg lucideRefreshCw class="h-4 w-4"></svg>
           <span i18n="Button that re-reads a file with new settings">
             Re-read the file
           </span>

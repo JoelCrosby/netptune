@@ -4,6 +4,7 @@ import {
   ImportSessionViewModel,
   ImportStage,
 } from '@core/models/view-models/import-session';
+import { LucideRefreshCw, LucideUndo2 } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
@@ -15,6 +16,8 @@ import {
 @Component({
   selector: 'app-import-run-step',
   imports: [
+    LucideRefreshCw,
+    LucideUndo2,
     ProgressBarComponent,
     SectionHeaderComponent,
     StatStripComponent,
@@ -58,6 +61,7 @@ import {
           class="mt-4"
           type="button"
           (click)="wizard.undo()">
+          <svg lucideUndo2 class="h-4 w-4"></svg>
           <span i18n="Button that reverses a finished import">
             Undo this import
           </span>
@@ -70,6 +74,7 @@ import {
           class="mt-4 ml-2"
           type="button"
           (click)="wizard.refresh()">
+          <svg lucideRefreshCw class="h-4 w-4"></svg>
           <span i18n="Button that re-reads the import progress">Refresh</span>
         </button>
       }

@@ -1,5 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { ExportWizardService } from '@app/features/data-transfer/services/export-wizard.service';
+import { LucideCheckCheck, LucideRotateCcw } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import {
   FilterFacetComponent,
@@ -12,6 +13,8 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
   selector: 'app-export-fields-step',
   imports: [
     FileSizePipe,
+    LucideCheckCheck,
+    LucideRotateCcw,
     FilterFacetComponent,
     SectionHeaderComponent,
     StrokedButtonComponent,
@@ -72,6 +75,7 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
             app-stroked-button
             type="button"
             (click)="wizard.selectAllFields()">
+            <svg lucideCheckCheck class="h-4 w-4"></svg>
             <span i18n="Button that selects every exportable field"
               >Select all</span
             >
@@ -80,6 +84,7 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
             app-stroked-button
             type="button"
             (click)="wizard.selectDefaultFields()">
+            <svg lucideRotateCcw class="h-4 w-4"></svg>
             <span i18n="Button that restores the default field selection"
               >Defaults only</span
             >

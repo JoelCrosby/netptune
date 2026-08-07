@@ -9,7 +9,7 @@ import {
   ImportWizardService,
 } from '@app/features/data-transfer/services/import-wizard.service';
 import { WizardActionsComponent } from '@app/features/data-transfer/components/wizard-actions.component';
-import { LucideFileUp } from '@lucide/angular';
+import { LucideFileUp, LucidePlay } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -30,6 +30,7 @@ const PreviewStepIndex = 3;
     ImportSourceStepComponent,
     ImportUploadStepComponent,
     FlatButtonComponent,
+    LucidePlay,
     PageContainerComponent,
     PageHeaderComponent,
     StepComponent,
@@ -98,6 +99,7 @@ const PreviewStepIndex = 3;
               type="button"
               [disabled]="!wizard.canCommit() || wizard.isBusy()"
               (click)="wizard.commit()">
+              <svg lucidePlay class="h-4 w-4"></svg>
               <span i18n="Button that starts an import">Import</span>
             </button>
           }

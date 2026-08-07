@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ImportWizardService } from '@app/features/data-transfer/services/import-wizard.service';
 import { LucideSparkles } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
-import { FormSelectComponent } from '@static/components/form-select/form-select.component';
+import { InlineSelectComponent } from '@static/components/inline-select/inline-select.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import {
   TableComponent,
@@ -15,8 +14,7 @@ import {
 @Component({
   selector: 'app-import-mapping-step',
   imports: [
-    FormSelectComponent,
-    FormSelectOptionComponent,
+    InlineSelectComponent,
     LucideSparkles,
     SectionHeaderComponent,
     StrokedButtonComponent,
@@ -108,22 +106,12 @@ import {
               <td class="text-muted max-w-64 truncate px-4 py-3">
                 {{ column.sampleValues.join(', ') }}
               </td>
-              <td class="px-4 py-3">
-                <app-form-select
-                  class="[&_.nept-form-control]:mb-0"
-                  label=""
-                  [name]="'import-field-' + column.index"
+              <td class="px-2 py-1">
+                <app-inline-select
+                  [options]="fieldOptions()"
                   [value]="wizard.bindingFor(column.index) ?? ''"
-                  (changed)="wizard.bindColumn(column.index, $event ?? '')">
-                  <app-form-select-option value="">
-                    {{ ignoreLabel }}
-                  </app-form-select-option>
-                  @for (field of wizard.importableFields(); track field.key) {
-                    <app-form-select-option [value]="field.key">
-                      {{ field.name }}
-                    </app-form-select-option>
-                  }
-                </app-form-select>
+                  [ariaLabel]="fieldLabelFor(column.name)"
+                  (changed)="wizard.bindColumn(column.index, $event)" />
               </td>
             </tr>
           }
@@ -146,4 +134,16 @@ export class ImportMappingStepComponent {
   protected readonly wizard = inject(ImportWizardService);
 
   protected readonly ignoreLabel = $localize`:Mapping option that ignores a source column:Ignore`;
+
+  protected readonly fieldOptions = computed(() => {
+    const fields = this.wizard
+      .importableFields()
+      .map((field) => ({ value: field.key, label: field.name }));
+
+    return [{ value: '', label: this.ignoreLabel }, ...fields];
+  });
+
+  protected fieldLabelFor(columnName: string): string {
+    return $localize`:Accessible label for the field a source column maps onto:Field for ${columnName}:column:`;
+  }
 }

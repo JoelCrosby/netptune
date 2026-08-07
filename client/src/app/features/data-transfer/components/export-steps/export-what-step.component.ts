@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ExportWizardService } from '@app/features/data-transfer/services/export-wizard.service';
-import { LucideArchive, LucideTable } from '@lucide/angular';
+import { LucideArchive, LucideBookmark, LucideTable } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { SelectableCardComponent } from '@static/components/selectable-card/selectable-card.component';
@@ -9,6 +9,7 @@ import { SelectableCardComponent } from '@static/components/selectable-card/sele
   selector: 'app-export-what-step',
   imports: [
     LucideArchive,
+    LucideBookmark,
     LucideTable,
     SectionHeaderComponent,
     SelectableCardComponent,
@@ -69,6 +70,7 @@ import { SelectableCardComponent } from '@static/components/selectable-card/sele
             app-stroked-button
             type="button"
             (click)="wizard.loadDefinition(saved)">
+            <svg lucideBookmark class="h-4 w-4"></svg>
             {{ saved.name }}
           </button>
         }

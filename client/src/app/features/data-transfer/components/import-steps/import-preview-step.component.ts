@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ImportWizardService } from '@app/features/data-transfer/services/import-wizard.service';
 import { ImportPreviewResult } from '@core/models/view-models/import-session';
+import { LucideEye } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
@@ -19,6 +20,7 @@ import {
   selector: 'app-import-preview-step',
   imports: [
     CheckboxComponent,
+    LucideEye,
     SectionHeaderComponent,
     StatStripComponent,
     StrokedButtonComponent,
@@ -103,6 +105,7 @@ import {
         type="button"
         [disabled]="wizard.isBusy()"
         (click)="wizard.loadPreview()">
+        <svg lucideEye class="h-4 w-4"></svg>
         <span i18n="Button that builds an import preview">
           Build a preview
         </span>

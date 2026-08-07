@@ -23,7 +23,12 @@ import {
   SaveExportDefinitionDialogResult,
 } from '@entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component';
 import { WizardActionsComponent } from '@app/features/data-transfer/components/wizard-actions.component';
-import { LucideDownload, LucideFileDown, LucidePlay } from '@lucide/angular';
+import {
+  LucideBookmark,
+  LucideDownload,
+  LucideFileDown,
+  LucidePlay,
+} from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -45,6 +50,7 @@ import { first } from 'rxjs';
     ExportReviewStepComponent,
     ExportWhatStepComponent,
     FlatButtonComponent,
+    LucideBookmark,
     LucideDownload,
     LucidePlay,
     PageContainerComponent,
@@ -115,6 +121,7 @@ import { first } from 'rxjs';
                 app-stroked-button
                 type="button"
                 (click)="saveDefinition()">
+                <svg lucideBookmark class="h-4 w-4"></svg>
                 <span
                   i18n="Button that stores the current export setup for reuse">
                   Save as definition
