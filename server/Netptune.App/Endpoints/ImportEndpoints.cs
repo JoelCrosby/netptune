@@ -27,6 +27,7 @@ public static class ImportEndpoints
 
         group.MapPost("/sessions", HandleUpload)
             .WithMetadata(new RequestSizeLimitAttribute(MaxRequestSize))
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapGet("/sessions", HandleGetSessions)
@@ -39,9 +40,11 @@ public static class ImportEndpoints
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapPost("/sessions/{publicId:guid}/inspect", HandleInspect)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapPost("/sessions/{publicId:guid}/suggest", HandleSuggest)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapPost("/sessions/{publicId:guid}/suggest/assistant", HandleImprove)
@@ -52,12 +55,15 @@ public static class ImportEndpoints
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapPost("/sessions/{publicId:guid}/preview", HandlePreview)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapPost("/sessions/{publicId:guid}/commit", HandleCommit)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapPost("/sessions/{publicId:guid}/undo", HandleUndo)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
         group.MapDelete("/sessions/{publicId:guid}", HandleDeleteSession)

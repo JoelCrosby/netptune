@@ -3,6 +3,7 @@ using Mediator;
 
 using Microsoft.AspNetCore.Authorization;
 
+using Netptune.App.Configuration;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Transfer.Definitions;
@@ -20,12 +21,15 @@ public static class ExportEndpoints
         var group = builder.MapGroup("export");
 
         group.MapPost("/preview", HandlePreview)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         group.MapGet("/preview/rows", HandlePreviewRows)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         group.MapPost("/run", HandleRunInline)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         group.MapGet("/definitions", HandleGetDefinitions)
@@ -41,6 +45,7 @@ public static class ExportEndpoints
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         group.MapPost("/jobs", HandleCreateJob)
+            .RequireRateLimiting(RateLimiterConfiguration.TransferPolicyName)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         group.MapGet("/jobs", HandleGetJobs)
@@ -58,7 +63,7 @@ public static class ExportEndpoints
         group.MapGet("/jobs/{publicId:guid}/download", HandleDownloadJob)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
-        builder.MapGet("/hubs/export-jobs", HandleSse)
+        builder.MapGet("/hubs/transfer-jobs", HandleSse)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
         return group;
@@ -67,11 +72,11 @@ public static class ExportEndpoints
     private static async Task HandleSse(
         HttpContext context,
         IIdentityService identity,
-        IExportJobEventService exportJobEvents)
+        ITransferJobEventService transferJobEvents)
     {
         var workspaceKey = identity.GetWorkspaceKey();
 
-        await exportJobEvents.SubscribeAsync(workspaceKey, context.Response, context.RequestAborted);
+        await transferJobEvents.SubscribeAsync(workspaceKey, context.Response, context.RequestAborted);
     }
 
     private static async Task<IResult> HandleGetDefinitions(

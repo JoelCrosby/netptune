@@ -17,9 +17,12 @@ public sealed class CancelExportJobCommandHandler : IRequestHandler<CancelExport
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IExportJobRepository ExportJobs;
     private readonly IIdentityService Identity;
-    private readonly IExportJobNotifier Notifier;
+    private readonly ITransferJobNotifier Notifier;
 
-    public CancelExportJobCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IExportJobNotifier notifier,
+    public CancelExportJobCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IIdentityService identity,
+        ITransferJobNotifier notifier,
         IExportJobRepository exportJobs)
     {
         UnitOfWork = unitOfWork;
@@ -53,7 +56,7 @@ public sealed class CancelExportJobCommandHandler : IRequestHandler<CancelExport
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        await Notifier.PublishAsync(workspaceKey, new ExportJobProgressEvent
+        await Notifier.PublishExportAsync(workspaceKey, new ExportJobProgressEvent
         {
             PublicId = job.PublicId,
             Status = job.Status,

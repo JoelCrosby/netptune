@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 using Netptune.Cache.Redis;
 using Netptune.Transfer.Services;
@@ -8,17 +7,14 @@ using StackExchange.Redis;
 
 namespace Netptune.App.Services;
 
-[JsonSerializable(typeof(ExportJobProgressEvent))]
-internal partial class ExportJobEventSerializerContext : JsonSerializerContext;
-
-public interface IExportJobEventService
+public interface ITransferJobEventService
 {
     Task SubscribeAsync(string workspaceSlug, HttpResponse response, CancellationToken cancellationToken);
 }
 
-public sealed class ExportJobEventService(
-    ILogger<ExportJobEventService> logger,
-    IConnectionMultiplexer connection) : IExportJobEventService
+public sealed class TransferJobEventService(
+    ILogger<TransferJobEventService> logger,
+    IConnectionMultiplexer connection) : ITransferJobEventService
 {
     public async Task SubscribeAsync(string workspaceSlug, HttpResponse response, CancellationToken cancellationToken)
     {
@@ -29,7 +25,7 @@ public sealed class ExportJobEventService(
 
         await response.Body.FlushAsync(cancellationToken);
 
-        var queue = await connection.GetSubscriber().SubscribeAsync(ExportJobChannels.ForWorkspace(workspaceSlug));
+        var queue = await connection.GetSubscriber().SubscribeAsync(TransferJobChannels.ForWorkspace(workspaceSlug));
 
         try
         {
@@ -40,7 +36,7 @@ public sealed class ExportJobEventService(
         }
         catch (OperationCanceledException exception)
         {
-            logger.LogDebug(exception, "Export job SSE client disconnected");
+            logger.LogDebug(exception, "Transfer job SSE client disconnected");
         }
         finally
         {
@@ -48,30 +44,36 @@ public sealed class ExportJobEventService(
         }
     }
 
-    // The publisher already wrote the frame's JSON, so it is forwarded as-is. Deserialising it only to
-    // serialise the identical object back would cost a round trip per event and change nothing. It is
-    // still parsed once to reject anything malformed before it reaches the browser.
+    // The publisher already wrote the payload's JSON, so it is forwarded as-is. Deserialising it only to
+    // serialise the identical object back would cost a round trip per event and change nothing.
     private async Task WriteFrame(ChannelMessage message, HttpResponse response, CancellationToken cancellationToken)
     {
-        var json = message.Message.ToString();
-
         try
         {
-            var progressEvent = JsonSerializer.Deserialize(
-                json,
-                ExportJobEventSerializerContext.Default.ExportJobProgressEvent);
+            using var envelope = JsonDocument.Parse(message.Message.ToString());
+            var root = envelope.RootElement;
 
-            if (progressEvent is null)
+            var hasName = root.TryGetProperty("event", out var name);
+            var hasData = root.TryGetProperty("data", out var data);
+
+            if (!hasName || !hasData)
             {
                 return;
             }
 
-            await response.WriteAsync($"event: export-job-progress\ndata: {json}\n\n", cancellationToken);
+            var eventName = name.GetString();
+
+            if (!TransferJobEventNames.IsKnown(eventName))
+            {
+                return;
+            }
+
+            await response.WriteAsync($"event: {eventName}\ndata: {data.GetRawText()}\n\n", cancellationToken);
             await response.Body.FlushAsync(cancellationToken);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            logger.LogError(exception, "Export job event could not be written");
+            logger.LogError(exception, "Transfer job event could not be written");
         }
     }
 }

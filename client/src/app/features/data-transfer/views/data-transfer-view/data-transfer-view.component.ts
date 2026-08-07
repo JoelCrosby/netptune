@@ -5,16 +5,19 @@ import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { ClientResponse } from '@core/models/client-response';
 import {
+  ImportSessionProgressEvent,
   ImportSessionViewModel,
   ImportStage,
 } from '@core/models/view-models/import-session';
 import {
   ExportFormat,
+  ExportJobProgressEvent,
   ExportJobStatus,
   ExportJobViewModel,
 } from '@core/models/view-models/export-job-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { ExportJobSseService } from '@core/sse/export-job-sse.service';
+import { TransferJobSseService } from '@core/sse/transfer-job-sse.service';
+import { CoalescedAction } from '@core/util/coalesced-action';
 import {
   LucideBan,
   LucideDatabase,
@@ -47,6 +50,8 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 import { first } from 'rxjs';
 
 type DataTab = 'exports' | 'imports';
+
+const ProgressReloadWindowMs = 1500;
 
 const ResumableStages = [
   ImportStage.uploaded,
@@ -335,7 +340,7 @@ const ResumableStages = [
 export class DataTransferViewComponent {
   readonly http = inject(HttpClient);
   readonly store = inject(Store);
-  readonly exportEvents = inject(ExportJobSseService);
+  readonly transferEvents = inject(TransferJobSseService);
   readonly confirmation = inject(ConfirmationService);
   readonly destroyRef = inject(DestroyRef);
   readonly router = inject(Router);
@@ -485,16 +490,57 @@ export class DataTransferViewComponent {
     reloadSignal: this.importReloadToken,
   };
 
+  private readonly exportReload = new CoalescedAction(
+    () => this.reload(),
+    ProgressReloadWindowMs
+  );
+
+  private readonly importReload = new CoalescedAction(
+    () => this.reloadImports(),
+    ProgressReloadWindowMs
+  );
+
   constructor() {
-    this.exportEvents.connect(() => this.reload());
-    this.destroyRef.onDestroy(() => this.exportEvents.disconnect());
+    this.transferEvents.connect({
+      onExport: (progress) => this.onExportProgress(progress),
+      onImport: (progress) => this.onImportProgress(progress),
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.transferEvents.disconnect();
+      this.exportReload.cancel();
+      this.importReload.cancel();
+    });
+  }
+
+  private onExportProgress(progress: ExportJobProgressEvent): void {
+    if (this.isRunningStatus(progress.status)) {
+      this.exportReload.schedule();
+
+      return;
+    }
+
+    this.exportReload.now();
+  }
+
+  private onImportProgress(progress: ImportSessionProgressEvent): void {
+    if (progress.stage === ImportStage.committing) {
+      this.importReload.schedule();
+
+      return;
+    }
+
+    this.importReload.now();
+  }
+
+  private isRunningStatus(status: ExportJobStatus): boolean {
+    return (
+      status === ExportJobStatus.pending || status === ExportJobStatus.running
+    );
   }
 
   protected isRunning(job: ExportJobViewModel): boolean {
-    return (
-      job.status === ExportJobStatus.pending ||
-      job.status === ExportJobStatus.running
-    );
+    return this.isRunningStatus(job.status);
   }
 
   protected isCancellable(job: ExportJobViewModel): boolean {

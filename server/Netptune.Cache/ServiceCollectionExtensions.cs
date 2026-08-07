@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(options.Connection));
         services.TryAddSingleton<ICacheProvider, RedisCache>();
         services.TryAddSingleton<INotificationEventPublisher, RedisNotificationEventPublisher>();
-        services.TryAddSingleton<IExportJobNotifier, RedisExportJobNotifier>();
+        services.TryAddSingleton<ITransferJobNotifier, RedisTransferJobNotifier>();
 
         services.AddScoped<IUserCache, UserCache>();
         services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();

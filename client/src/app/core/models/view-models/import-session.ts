@@ -48,6 +48,14 @@ export interface ImportSessionViewModel {
   expiresAt: string;
 }
 
+export interface ImportSessionProgressEvent {
+  publicId: string;
+  stage: ImportStage;
+  progressPercent: number;
+  progressMessage?: string;
+  error?: string;
+}
+
 export interface ImportSessionState {
   session: ImportSessionViewModel;
   sourceProfile?: ImportSourceProfile;

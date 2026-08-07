@@ -24,7 +24,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
     private readonly IExportJobRepository ExportJobs;
     private readonly IExportRunner Runner;
     private readonly IStorageService Storage;
-    private readonly IExportJobNotifier Notifier;
+    private readonly ITransferJobNotifier Notifier;
     private readonly IEventRecordWriter EventRecords;
     private readonly INotificationDispatcher Notifications;
     private readonly IActorContext Actor;
@@ -34,7 +34,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         INetptuneUnitOfWork unitOfWork,
         IExportRunner runner,
         IStorageService storage,
-        IExportJobNotifier notifier,
+        ITransferJobNotifier notifier,
         IEventRecordWriter eventRecords,
         INotificationDispatcher notifications,
         IActorContext actor,
@@ -298,7 +298,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
             Error = job.Error,
         };
 
-        await Notifier.PublishAsync(workspaceSlug, progressEvent, cancellationToken);
+        await Notifier.PublishExportAsync(workspaceSlug, progressEvent, cancellationToken);
     }
 }
 

@@ -28,6 +28,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
     private readonly IImportApplier Applier;
     private readonly IEventRecordWriter EventRecords;
     private readonly INotificationDispatcher Notifications;
+    private readonly ITransferJobNotifier Notifier;
     private readonly IActorContext Actor;
     private readonly TransferOptions Options;
     private readonly ILogger<ImportJobHandler> Logger;
@@ -38,6 +39,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         IImportApplier applier,
         IEventRecordWriter eventRecords,
         INotificationDispatcher notifications,
+        ITransferJobNotifier notifier,
         IActorContext actor,
         IOptions<TransferOptions> options,
         ILogger<ImportJobHandler> logger,
@@ -48,6 +50,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         Applier = applier;
         EventRecords = eventRecords;
         Notifications = notifications;
+        Notifier = notifier;
         Actor = actor;
         Options = options.Value;
         Logger = logger;
@@ -103,6 +106,8 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
                 },
                 request.UserId,
                 cancellationToken);
+
+            await PublishProgress(session, session.Workspace?.Slug, cancellationToken);
         }
 
         return default;
@@ -163,6 +168,8 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
             request.UserId,
             cancellationToken);
 
+        await PublishProgress(session, workspaceSlug, cancellationToken);
+
         Logger.LogInformation(
             "[Import] session {PublicId} created {Created} and updated {Updated} records",
             session.PublicId,
@@ -175,7 +182,25 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
             session.ProgressMessage = progress.Message;
 
             await UnitOfWork.CompleteAsync(token);
+            await PublishProgress(session, workspaceSlug, token);
         }
+    }
+
+    private Task PublishProgress(ImportSession session, string? workspaceSlug, CancellationToken cancellationToken)
+    {
+        if (workspaceSlug is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        return Notifier.PublishImportAsync(workspaceSlug, new ImportSessionProgressEvent
+        {
+            PublicId = session.PublicId,
+            Stage = session.Stage,
+            ProgressPercent = session.ProgressPercent,
+            ProgressMessage = session.ProgressMessage,
+            Error = session.Error,
+        }, cancellationToken);
     }
 
     private static string? VendorProfileOf(ImportSession session)

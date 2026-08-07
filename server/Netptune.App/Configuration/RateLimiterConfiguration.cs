@@ -8,6 +8,8 @@ public static class RateLimiterConfiguration
 {
     public const string AiPolicyName = "ai";
 
+    public const string TransferPolicyName = "import-export";
+
     private const int DefaultApiPermitLimit = 300;
 
     private const int DefaultAiPermitLimit = 20;
@@ -59,7 +61,9 @@ public static class RateLimiterConfiguration
                         QueueLimit = 10,
                     }));
 
-            options.AddPolicy("import-export", context =>
+            // Deliberately narrow — this budget is for work that reads a file or scans the workspace, not
+            // for the reads that poll it. Applying it to a listing endpoint starves the page watching a job.
+            options.AddPolicy(TransferPolicyName, context =>
                 RateLimitPartition.GetSlidingWindowLimiter(
                     context.GetRateLimitPartitionKey(),
                     _ => new SlidingWindowRateLimiterOptions

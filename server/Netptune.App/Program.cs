@@ -68,7 +68,7 @@ builder.Services.AddSingleton<BoardEventService>();
 builder.Services.AddSingleton<IBoardEventService>(services => services.GetRequiredService<BoardEventService>());
 builder.Services.AddHostedService<BoardEventService>(services => services.GetRequiredService<BoardEventService>());
 builder.Services.AddSingleton<INotificationEventService, NotificationEventService>();
-builder.Services.AddSingleton<IExportJobEventService, ExportJobEventService>();
+builder.Services.AddSingleton<ITransferJobEventService, TransferJobEventService>();
 builder.Services.AddSingleton<IPreferenceDefinitionRegistry, PreferenceDefinitionRegistry>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
@@ -192,10 +192,8 @@ apiGroup.MapCommandPaletteEndpoints();
 apiGroup.MapServiceAccountsEndpoints();
 apiGroup.MapAiEndpoints();
 
-apiGroup.MapExportEndpoints()
-    .RequireRateLimiting("import-export");
-apiGroup.MapImportEndpoints()
-    .RequireRateLimiting("import-export");
+apiGroup.MapExportEndpoints();
+apiGroup.MapImportEndpoints();
 
 app.MapDefaultEndpoints();
 
