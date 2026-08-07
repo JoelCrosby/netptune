@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { DialogService } from '@core/services/dialog.service';
 import {
@@ -24,6 +25,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { Tag } from '@core/models/tag';
 import * as actions from '@core/store/tags/tags.actions';
 import { LucideSettings2, LucideX } from '@lucide/angular';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
 import { tagResource } from '@app/core/resources/tag.resource';
@@ -134,12 +136,24 @@ import { tagResource } from '@app/core/resources/tag.resource';
 })
 export class TagsViewComponent {
   private store = inject(Store);
+  private actions$ = inject(Actions);
   private dialog = inject(DialogService);
 
   tags = tagResource();
 
   constructor() {
     this.store.dispatch(actions.loadTags.init());
+
+    this.actions$
+      .pipe(
+        ofType(
+          actions.addTag.success,
+          actions.editTag.success,
+          actions.deleteTags.success
+        ),
+        takeUntilDestroyed()
+      )
+      .subscribe(() => this.tags.reload());
   }
 
   openCreateDialog() {
