@@ -114,25 +114,16 @@ export class ImportWizardService {
   readonly stalled = signal(false);
 
   readonly stepBlocker = computed<string | null>(() => {
-    const stage = this.session()?.stage;
-
     switch (this.activeIndex()) {
       case 0:
-        return this.session()
+        return this.file() || this.session()
           ? null
-          : $localize`:Explains why an import cannot leave the upload step:Choose a file and press Upload before you continue.`;
+          : $localize`:Explains why an import cannot leave the upload step:Choose a file to continue.`;
       case 1:
+      case 2:
         return this.profile()
           ? null
           : $localize`:Explains why an import cannot leave the source step:Upload a file so its columns can be read.`;
-      case 2:
-        return stage !== undefined && stage >= ImportStage.mapped
-          ? null
-          : $localize`:Explains why an import cannot leave the mapping step:Press Save mapping before you continue.`;
-      case 3:
-        return stage !== undefined && stage >= ImportStage.committing
-          ? null
-          : $localize`:Explains why an import cannot leave the preview step:Press Import to start the import before you continue.`;
       default:
         return null;
     }
@@ -141,7 +132,7 @@ export class ImportWizardService {
   readonly canGoNext = computed(() => {
     const isLastStep = this.activeIndex() === ImportLastStepIndex;
 
-    return !isLastStep && this.stepBlocker() === null;
+    return !isLastStep && !this.isBusy() && this.stepBlocker() === null;
   });
 
   readonly canCommit = computed(() => {
@@ -317,6 +308,20 @@ export class ImportWizardService {
 
   next() {
     if (!this.canGoNext()) return;
+
+    const needsUpload = this.activeIndex() === 0 && !this.session();
+
+    if (needsUpload) {
+      this.upload();
+
+      return;
+    }
+
+    if (this.activeIndex() === 2) {
+      this.saveMapping();
+
+      return;
+    }
 
     this.activeIndex.update((index) =>
       Math.min(index + 1, ImportLastStepIndex)

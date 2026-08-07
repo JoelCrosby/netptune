@@ -8,7 +8,8 @@ import { IconTileComponent } from '../icon-tile.component';
   host: { class: 'block h-full' },
   template: `
     <section
-      class="border-border bg-card flex h-full min-h-24 flex-col overflow-hidden rounded-lg border shadow-sm">
+      class="border-border bg-card flex h-full min-h-24 flex-col rounded-lg border shadow-sm"
+      [class.overflow-hidden]="clipContent()">
       <header
         class="border-border flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-6 py-5">
         <div class="flex min-w-0 items-center gap-3">
@@ -39,4 +40,5 @@ export class ChartCardComponent {
   readonly icon = input.required<LucideIconInput>();
   readonly title = input.required<string>();
   readonly description = input('');
+  readonly clipContent = input(true);
 }

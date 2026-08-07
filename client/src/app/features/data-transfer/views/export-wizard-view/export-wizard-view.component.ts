@@ -22,7 +22,8 @@ import {
   SaveExportDefinitionDialogComponent,
   SaveExportDefinitionDialogResult,
 } from '@entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component';
-import { LucideFileDown } from '@lucide/angular';
+import { WizardActionsComponent } from '@app/features/data-transfer/components/wizard-actions.component';
+import { LucideDownload, LucideFileDown, LucidePlay } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -44,11 +45,14 @@ import { first } from 'rxjs';
     ExportReviewStepComponent,
     ExportWhatStepComponent,
     FlatButtonComponent,
+    LucideDownload,
+    LucidePlay,
     PageContainerComponent,
     PageHeaderComponent,
     StepComponent,
     StepperComponent,
     StrokedButtonComponent,
+    WizardActionsComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -57,6 +61,7 @@ import { first } from 'rxjs';
         title="Export" />
 
       <app-chart-card
+        [clipContent]="false"
         [icon]="exportIcon"
         i18n-title="Heading of the export wizard card"
         title="Build an export"
@@ -93,41 +98,52 @@ import { first } from 'rxjs';
             <app-export-review-step
               [preview]="preview()"
               [error]="error()"
-              [isBusy]="isBusy()"
-              [active]="activeIndex() === lastStepIndex"
-              (startExport)="start()"
-              (saveDefinition)="saveDefinition()" />
+              [active]="activeIndex() === lastStepIndex" />
           </app-step>
         </app-stepper>
 
-        <div
-          class="border-border mt-6 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
-          <button
-            app-stroked-button
-            type="button"
-            [disabled]="wizard.activeIndex() === 0"
-            (click)="wizard.back()">
-            <span i18n="Button that moves back one wizard step">Back</span>
-          </button>
-
-          @if (wizard.activeIndex() !== lastStepIndex) {
-            <div class="flex min-w-0 items-center gap-3">
-              @if (wizard.stepBlocker(); as reason) {
-                <p class="text-muted text-xs" role="status">{{ reason }}</p>
-              }
+        <app-wizard-actions
+          [activeIndex]="wizard.activeIndex()"
+          [lastStepIndex]="lastStepIndex"
+          [blocker]="wizard.stepBlocker()"
+          [canGoNext]="wizard.canGoNext()"
+          (back)="wizard.back()"
+          (next)="wizard.next()">
+          @if (activeIndex() === lastStepIndex) {
+            <div wizardActions class="flex flex-wrap items-center gap-3">
+              <button
+                app-stroked-button
+                type="button"
+                (click)="saveDefinition()">
+                <span
+                  i18n="Button that stores the current export setup for reuse">
+                  Save as definition
+                </span>
+              </button>
 
               <button
                 app-flat-button
                 type="button"
-                [disabled]="!wizard.canGoNext()"
-                (click)="wizard.next()">
-                <span i18n="Button that moves forward one wizard step"
-                  >Next</span
-                >
+                [disabled]="isBusy()"
+                (click)="start()">
+                @if (canRunInline()) {
+                  <svg lucideDownload class="h-4 w-4"></svg>
+                  <span i18n="Button that downloads an export straight away"
+                    >Download</span
+                  >
+                } @else {
+                  <svg lucidePlay class="h-4 w-4"></svg>
+                  <span
+                    i18n="
+                      Button that queues an export to run in the background
+                    ">
+                    Start export
+                  </span>
+                }
               </button>
             </div>
           }
-        </div>
+        </app-wizard-actions>
       </app-chart-card>
     </app-page-container>
   `,
@@ -153,6 +169,10 @@ export class ExportWizardViewComponent {
     return this.preview()?.archiveFileBytes ?? 0;
   });
 
+  protected readonly canRunInline = computed(() => {
+    return this.preview()?.canRunInline ?? false;
+  });
+
   constructor() {
     effect(() => {
       const isReviewStep = this.activeIndex() === this.lastStepIndex;
@@ -167,7 +187,7 @@ export class ExportWizardViewComponent {
   }
 
   protected start() {
-    const canRunInline = this.preview()?.canRunInline ?? false;
+    const canRunInline = this.canRunInline();
 
     if (canRunInline) {
       this.download();

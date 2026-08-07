@@ -488,7 +488,7 @@
     </unit>
     <unit id="843548054527451651">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:170</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:126</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:139</note>
         <note category="description">Counts the columns an export will contain</note>
       </notes>
@@ -519,7 +519,7 @@
     </unit>
     <unit id="899247850202486311">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:99,105</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:120,123</note>
         <note category="description">Button that stores the current export setup for reuse</note>
       </notes>
       <segment>
@@ -581,7 +581,7 @@
     </unit>
     <unit id="4390635106652893166">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:281</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:301</note>
         <note category="description">Shown when an export job could not be queued</note>
       </notes>
       <segment>
@@ -612,7 +612,7 @@
     </unit>
     <unit id="4397487264295948754">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:74,77</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:72,75</note>
         <note category="description">Says only column names are sent to the model</note>
       </notes>
       <segment>
@@ -871,16 +871,6 @@
         <target>Exportar el registro de auditoría</target>
       </segment>
     </unit>
-    <unit id="3222861994325757867">
-      <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:42,44</note>
-        <note category="description">Filter heading for boards</note>
-      </notes>
-      <segment>
-        <source> Boards </source>
-        <target> Tableros </target>
-      </segment>
-    </unit>
     <unit id="3223868158732972286">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:351</note>
@@ -909,6 +899,16 @@
       <segment state="translated">
         <source>View Automations</source>
         <target>Ver las automatizaciones</target>
+      </segment>
+    </unit>
+    <unit id="5305521700224184284">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:29,31</note>
+        <note category="description">Heading of the optional archive contents list</note>
+      </notes>
+      <segment state="initial">
+        <source>Also include</source>
+        <target>Incluir también</target>
       </segment>
     </unit>
     <unit id="5307305327820813211">
@@ -1224,14 +1224,14 @@
         <target>XL</target>
       </segment>
     </unit>
-    <unit id="2681587452018229228">
+    <unit id="2418005021131392302">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:29,33</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:100</note>
         <note category="description">Archive option that includes workspace members</note>
       </notes>
       <segment>
-        <source> Members, roles and permissions </source>
-        <target> Miembros, roles y permisos </target>
+        <source>Members, roles and permissions</source>
+        <target>Miembros, roles y permisos</target>
       </segment>
     </unit>
     <unit id="8905995985388209337">
@@ -1675,7 +1675,7 @@
     </unit>
     <unit id="3121402176088379752">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:55,58</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:53,56</note>
         <note category="description">Precedes the name of the recognised export tool</note>
       </notes>
       <segment>
@@ -1746,9 +1746,8 @@
     </unit>
     <unit id="6932865105766151309">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:55,59</note>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:53,54</note>
-        <note category="description">Button that uploads an import file</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:56,57</note>
+        <note category="description">Wizard step that uploads the file to import</note>
       </notes>
       <segment>
         <source>Upload</source>
@@ -2100,7 +2099,7 @@
       </notes>
       <segment state="initial">
         <source>Resume Import</source>
-      <target>Reanudar la importación</target>
+        <target>Reanudar la importación</target>
       </segment>
     </unit>
     <unit id="1293575230061580250">
@@ -2125,7 +2124,7 @@
     </unit>
     <unit id="8766960991546227350">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:76,79</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:74,77</note>
         <note category="description">Column heading for how many rows share a problem</note>
       </notes>
       <segment state="initial">
@@ -2172,16 +2171,6 @@
       <segment state="translated">
         <source>Mark as Private</source>
         <target>Marcar como privado</target>
-      </segment>
-    </unit>
-    <unit id="8872864195187098171">
-      <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:135</note>
-        <note category="description">Explains why an import cannot leave the preview step</note>
-      </notes>
-      <segment state="initial">
-        <source>Press Import to start the import before you continue.</source>
-        <target>Pulsa Importar para iniciar la importación antes de continuar.</target>
       </segment>
     </unit>
     <unit id="4501389782873056968">
@@ -2378,7 +2367,7 @@
     </unit>
     <unit id="2420393159555195445">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:71,74</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:69,72</note>
         <note category="description">Column heading for what went wrong with a row</note>
       </notes>
       <segment state="initial">
@@ -2683,7 +2672,7 @@
     </unit>
     <unit id="3917644028160931566">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:166</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:122</note>
         <note category="description">Counts the records an export will contain</note>
       </notes>
       <segment state="initial">
@@ -3506,7 +3495,7 @@
     </unit>
     <unit id="8405696167275937470">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:37,39</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:35,37</note>
         <note category="description">Explains the import preview step</note>
       </notes>
       <segment state="initial">
@@ -3618,7 +3607,7 @@
     </unit>
     <unit id="3098241202730749011">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:127</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:126</note>
         <note category="description">Explains why an import cannot leave the source step</note>
       </notes>
       <segment state="initial">
@@ -3628,7 +3617,7 @@
     </unit>
     <unit id="3099741642167775297">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:87,90</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:132,135</note>
         <note category="description">Button that downloads an export straight away</note>
       </notes>
       <segment>
@@ -3998,7 +3987,7 @@
     </unit>
     <unit id="3608055412630629320">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:254</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:274</note>
         <note category="description">Shown when an immediate export download failed</note>
       </notes>
       <segment>
@@ -4044,8 +4033,7 @@
     <unit id="3885497195825665706">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:116,117</note>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:125,128</note>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:105,108</note>
+        <note category="location">src/app/features/data-transfer/components/wizard-actions.component.ts:41,42</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:351,352</note>
         <note category="description">Button that advances to the next wizard step</note>
       </notes>
@@ -4345,6 +4333,16 @@
         <target>Sin tareas vinculadas</target>
       </segment>
     </unit>
+    <unit id="5447393345049316697">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:67,68</note>
+        <note category="description">Shown when a record type exposes no exportable fields</note>
+      </notes>
+      <segment state="initial">
+        <source>This record type has no fields to export.</source>
+        <target>Este tipo de registro no tiene campos para exportar.</target>
+      </segment>
+    </unit>
     <unit id="5064013424659405171">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:282</note>
@@ -4360,6 +4358,7 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:20,23</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:53</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:286</note>
@@ -4440,7 +4439,7 @@
     </unit>
     <unit id="6777820926829862896">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:98,103</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:96,100</note>
         <note category="description">Option that imports everything except failing rows</note>
       </notes>
       <segment>
@@ -4580,13 +4579,23 @@
     <unit id="8829497237648100098">
       <notes>
         <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:35,37</note>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:18</note>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:81,82</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:24</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:86,87</note>
         <note category="description">Button that applies the filters</note>
       </notes>
       <segment state="translated">
         <source>Filter</source>
         <target>Filtrar</target>
+      </segment>
+    </unit>
+    <unit id="7806425119826438913">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:33,36</note>
+        <note category="description">Button that clears every export filter</note>
+      </notes>
+      <segment state="initial">
+        <source> Clear all filters </source>
+        <target>Borrar todos los filtros</target>
       </segment>
     </unit>
     <unit id="7808756054397155068">
@@ -4833,7 +4842,7 @@
     </unit>
     <unit id="7562141152835800738">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:78,82</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:84,88</note>
         <note category="description">Button that restores the default field selection</note>
       </notes>
       <segment>
@@ -4869,16 +4878,6 @@
       <segment state="translated">
         <source>Actor</source>
         <target>Actor</target>
-      </segment>
-    </unit>
-    <unit id="7626297176054464121">
-      <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:123</note>
-        <note category="description">Explains why an import cannot leave the upload step</note>
-      </notes>
-      <segment state="initial">
-        <source>Choose a file and press Upload before you continue.</source>
-        <target>Elige un archivo y pulsa Subir antes de continuar.</target>
       </segment>
     </unit>
     <unit id="7629072322253412501">
@@ -4983,6 +4982,16 @@
         <target>ID del evento causante</target>
       </segment>
     </unit>
+    <unit id="4674466765772871246">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:66,68</note>
+        <note category="description">Shown when a workspace has no boards to filter by</note>
+      </notes>
+      <segment state="initial">
+        <source>This workspace has no boards yet.</source>
+        <target>Este espacio de trabajo aún no tiene tableros.</target>
+      </segment>
+    </unit>
     <unit id="467515590191938529">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:228</note>
@@ -5051,7 +5060,7 @@
     </unit>
     <unit id="420317131093281855">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:64,65</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:69,70</note>
         <note category="description">Explains what the export wizard produces</note>
       </notes>
       <segment state="initial">
@@ -5112,7 +5121,7 @@
     </unit>
     <unit id="9155608366859514313">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:59,60</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:62,63</note>
         <note category="description">Wizard step showing what was detected in the file</note>
       </notes>
       <segment>
@@ -5256,7 +5265,7 @@
     </unit>
     <unit id="1494518490116523821">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:70,73</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:76,79</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:77,80</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-dialog.component.ts:44,47</note>
         <note category="description">Button that selects every exportable field</note>
@@ -5309,7 +5318,7 @@
     </unit>
     <unit id="6333009862786718391">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:41,47</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:45,51</note>
         <note category="description">Shown when a committed import has not progressed for a while</note>
       </notes>
       <segment state="initial">
@@ -5351,7 +5360,7 @@
     </unit>
     <unit id="174825604462950768">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:22,25</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:25,28</note>
         <note category="description">Explains what an archive always contains</note>
       </notes>
       <segment>
@@ -5446,7 +5455,7 @@
     </unit>
     <unit id="3179872144192255158">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:152,156</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:141,145</note>
         <note category="description">Explains why the mapping step is empty</note>
       </notes>
       <segment state="initial">
@@ -5767,19 +5776,9 @@
         <target>Nombre de la marca</target>
       </segment>
     </unit>
-    <unit id="7571931095853268764">
-      <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:24,26</note>
-        <note category="description">Filter heading for projects</note>
-      </notes>
-      <segment>
-        <source> Projects </source>
-        <target> Proyectos </target>
-      </segment>
-    </unit>
     <unit id="7577628836870551599">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:41,44</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:30,33</note>
         <note category="description">Explains the export review step</note>
       </notes>
       <segment state="initial">
@@ -6188,7 +6187,7 @@
     </unit>
     <unit id="8754000074916889543">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:48,49</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:51,52</note>
         <note category="description">Explains what the import wizard does</note>
       </notes>
       <segment state="initial">
@@ -6319,7 +6318,7 @@
     </unit>
     <unit id="7899089935301421029">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:94,96</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:92,94</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:104,106</note>
         <note category="description">Column heading for a source column name</note>
       </notes>
@@ -6437,7 +6436,7 @@
     </unit>
     <unit id="4752892888616730702">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:56,58</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:54,56</note>
         <note category="description">Precedes emails that do not belong to members</note>
       </notes>
       <segment>
@@ -6571,7 +6570,7 @@
     </unit>
     <unit id="7179698649996299397">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:118,122</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:107,111</note>
         <note category="description">Button that builds an import preview</note>
       </notes>
       <segment>
@@ -6620,6 +6619,16 @@
       <segment state="initial">
         <source>You will see this name when starting an export.</source>
         <target>Verás este nombre al iniciar una exportación.</target>
+      </segment>
+    </unit>
+    <unit id="6551717975805992144">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:56,58</note>
+        <note category="description">Shown when a workspace has no projects to filter by</note>
+      </notes>
+      <segment state="initial">
+        <source>This workspace has no projects yet.</source>
+        <target>Este espacio de trabajo aún no tiene proyectos.</target>
       </segment>
     </unit>
     <unit id="6555318547274416232">
@@ -6696,6 +6705,16 @@
       <segment state="translated">
         <source>Is not empty</source>
         <target>No está vacío</target>
+      </segment>
+    </unit>
+    <unit id="231459167716648305">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:86,88</note>
+        <note category="description">Shown when a workspace has no tags to filter by</note>
+      </notes>
+      <segment state="initial">
+        <source>This workspace has no tags yet.</source>
+        <target>Este espacio de trabajo aún no tiene etiquetas.</target>
       </segment>
     </unit>
     <unit id="231679111972850796">
@@ -7069,7 +7088,7 @@
     </unit>
     <unit id="1519954996184640001">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:142</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:131</note>
         <note category="description">Counts rows an import cannot use</note>
       </notes>
       <segment state="initial">
@@ -7989,7 +8008,7 @@
     </unit>
     <unit id="8338056161813096540">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:206</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:226</note>
         <note category="description">Shown when a saved export setup could not be stored</note>
       </notes>
       <segment>
@@ -7999,7 +8018,7 @@
     </unit>
     <unit id="8339090278326732814">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:76,81</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:80,85</note>
         <note category="description">Explains why the import run step is empty</note>
       </notes>
       <segment state="initial">
@@ -8125,7 +8144,7 @@
     </unit>
     <unit id="4417055464837786275">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:58,61</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:62,65</note>
         <note category="description">Button that reverses a finished import</note>
       </notes>
       <segment>
@@ -8165,7 +8184,7 @@
     </unit>
     <unit id="1583399193111493692">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:69,70</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:74,75</note>
         <note category="description">Wizard step that picks what to export</note>
       </notes>
       <segment>
@@ -8247,7 +8266,7 @@
     </unit>
     <unit id="5832711343712261211">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:23,26</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:21,24</note>
         <note category="description">Explains what an import file may contain</note>
       </notes>
       <segment>
@@ -8492,8 +8511,7 @@
     </unit>
     <unit id="8890553633144307762">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:110,113</note>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:90,93</note>
+        <note category="location">src/app/features/data-transfer/components/wizard-actions.component.ts:25,28</note>
         <note category="description">Button that moves back one wizard step</note>
       </notes>
       <segment>
@@ -8756,7 +8774,7 @@
     </unit>
     <unit id="249014267714770723">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:53,55</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:45,47</note>
         <note category="description">Precedes the size of the files an archive adds</note>
       </notes>
       <segment>
@@ -8897,8 +8915,9 @@
     </unit>
     <unit id="9033045811000879464">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:62</note>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:75</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:54</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:60,61</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:80</note>
         <note category="description">Heading of the export field selection step</note>
       </notes>
       <segment>
@@ -9178,7 +9197,7 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:152</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:162</note>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:97</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:101</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment state="translated">
@@ -9457,16 +9476,6 @@
         <target>Cuando cambia <ph id="0" equiv="FIELDS" disp="fieldText"/> de una tarea</target>
       </segment>
     </unit>
-    <unit id="1648151393865820081">
-      <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:145,148</note>
-        <note category="description">Button that stores the column mapping</note>
-      </notes>
-      <segment>
-        <source>Save mapping</source>
-        <target>Guardar la correspondencia</target>
-      </segment>
-    </unit>
     <unit id="8864329926850607537">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:470</note>
@@ -9569,7 +9578,7 @@
     </unit>
     <unit id="9102156037674511261">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:69,72</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:67,70</note>
         <note category="description">Warns that example cell values are sent to the model</note>
       </notes>
       <segment>
@@ -10052,7 +10061,7 @@
     </unit>
     <unit id="5042522818852325305">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:332</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:337</note>
         <note category="description">Shown when an import has no file or destination</note>
       </notes>
       <segment>
@@ -10093,7 +10102,7 @@
     <unit id="1102717806459547726">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:173,175</note>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:69,73</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:73,77</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:200,203</note>
         <note category="description">Button that reloads the run history</note>
       </notes>
@@ -10404,7 +10413,7 @@
     </unit>
     <unit id="4645362382240125023">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:46,47</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:49,50</note>
         <note category="description">Heading of the import wizard card</note>
       </notes>
       <segment state="initial">
@@ -10440,16 +10449,6 @@
       <segment state="translated">
         <source>Automation could not be cloned</source>
         <target>No se pudo duplicar la automatización</target>
-      </segment>
-    </unit>
-    <unit id="1400004660661958122">
-      <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:82,84</note>
-        <note category="description">Filter heading for tags</note>
-      </notes>
-      <segment>
-        <source> Tags </source>
-        <target> Etiquetas </target>
       </segment>
     </unit>
     <unit id="1411214360177743011">
@@ -10838,10 +10837,10 @@
     </unit>
     <unit id="1071721880474488785">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:109,112</note>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:41,44</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:43,46</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:101,103</note>
         <note category="location">src/app/features/settings/settings.routes.ts:123</note>
-        <note category="description">Button that starts an import</note>
+        <note category="description">Page title for the guided import builder</note>
       </notes>
       <segment state="translated">
         <source>Import</source>
@@ -10970,7 +10969,7 @@
     </unit>
     <unit id="3105841859086865531">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:62,63</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:67,68</note>
         <note category="description">Heading of the export wizard card</note>
       </notes>
       <segment state="initial">
@@ -11042,7 +11041,7 @@
     </unit>
     <unit id="2231567984326326581">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:386</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:391</note>
         <note category="description">Shown when an import file could not be read</note>
       </notes>
       <segment>
@@ -11063,7 +11062,7 @@
     <unit id="4207916966377787111">
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:32</note>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:89</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:93</note>
         <note category="description">Sort option ordering by creation date</note>
       </notes>
       <segment state="translated">
@@ -11073,7 +11072,7 @@
     </unit>
     <unit id="7239336941262974806">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:507</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:512</note>
         <note category="description">Shown when an import preview could not be built</note>
       </notes>
       <segment>
@@ -11084,7 +11083,7 @@
     <unit id="7239750919884229270">
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:33</note>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:93</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:97</note>
         <note category="description">Sort option ordering by last-changed date</note>
       </notes>
       <segment state="translated">
@@ -11136,6 +11135,7 @@
       <notes>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:44</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:52,55</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:199</note>
         <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Page title for the board list</note>
@@ -11431,16 +11431,6 @@
         <target>Mes siguiente</target>
       </segment>
     </unit>
-    <unit id="3628453231979912240">
-      <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:131</note>
-        <note category="description">Explains why an import cannot leave the mapping step</note>
-      </notes>
-      <segment state="initial">
-        <source>Press Save mapping before you continue.</source>
-        <target>Pulsa Guardar asignación antes de continuar.</target>
-      </segment>
-    </unit>
     <unit id="6153898823588732021">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:151,152</note>
@@ -11474,8 +11464,8 @@
     </unit>
     <unit id="1029077242272940476">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:34,35</note>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:150,151</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:32,33</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:139,140</note>
         <note category="description">Heading of the import mapping step</note>
       </notes>
       <segment state="initial">
@@ -11537,7 +11527,7 @@
     </unit>
     <unit id="3825771792569625715">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:21,22</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:19,20</note>
         <note category="description">Heading of the import upload step</note>
       </notes>
       <segment>
@@ -11599,7 +11589,7 @@
     </unit>
     <unit id="3759965007855499397">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:75,76</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:78,79</note>
         <note category="description">Wizard step that runs the import</note>
       </notes>
       <segment>
@@ -11640,7 +11630,7 @@
     </unit>
     <unit id="2137697922901944556">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:70,74</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:59,63</note>
         <note category="description">Shown while an export preview loads</note>
       </notes>
       <segment>
@@ -11681,7 +11671,7 @@
     </unit>
     <unit id="4563965495368336177">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:138</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:127</note>
         <note category="description">Counts records an import would skip</note>
       </notes>
       <segment state="initial">
@@ -12043,7 +12033,7 @@
     </unit>
     <unit id="1295614462098694869">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:70,72</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:73,75</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:29</note>
         <note category="description">Wizard step that shows what an import would do</note>
       </notes>
@@ -12462,7 +12452,7 @@
     </unit>
     <unit id="8202154820002793003">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:19,21</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:25,27</note>
         <note category="description">Explains the export filter step</note>
       </notes>
       <segment state="initial">
@@ -12542,11 +12532,12 @@
     </unit>
     <unit id="7091571651222742304">
       <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:52,54</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,62</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:69,73</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
-        <note category="description">Page title for the project list</note>
+        <note category="description">Filter heading for projects</note>
       </notes>
       <segment state="translated">
         <source>Projects</source>
@@ -12585,13 +12576,13 @@
     </unit>
     <unit id="5652735137625845954">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:213</note>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:224</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:204</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:215</note>
         <note category="description">Shown when a started import could not be reopened</note>
       </notes>
       <segment state="initial">
         <source>This import could not be reopened.</source>
-      <target>No se pudo volver a abrir esta importación.</target>
+        <target>No se pudo volver a abrir esta importación.</target>
       </segment>
     </unit>
     <unit id="5654547208168525627">
@@ -12859,7 +12850,7 @@
     </unit>
     <unit id="4107438817414896014">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:225</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:245</note>
         <note category="description">Shown when an export preview could not be built</note>
       </notes>
       <segment>
@@ -12909,7 +12900,7 @@
     </unit>
     <unit id="1131333642368142893">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:97,99</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:95,97</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:107,109</note>
         <note category="description">Column heading for example values</note>
       </notes>
@@ -12980,7 +12971,7 @@
     </unit>
     <unit id="1366412932937395612">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:59,64</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:57,62</note>
         <note category="description">Follows the name of the recognised export tool</note>
       </notes>
       <segment>
@@ -13365,7 +13356,7 @@
     </unit>
     <unit id="4800829567095869045">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:423</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:428</note>
         <note category="description">Shown when the assistant could not improve a mapping</note>
       </notes>
       <segment>
@@ -13619,9 +13610,9 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:28</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:34</note>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:174</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:130</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:326</note>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:87,88</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:92,93</note>
         <note category="description">Heading of the export format step</note>
       </notes>
       <segment>
@@ -13831,7 +13822,7 @@
     </unit>
     <unit id="8237455330254721018">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:20,21</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:23,24</note>
         <note category="description">Heading of the archive contents step</note>
       </notes>
       <segment state="initial">
@@ -13841,7 +13832,7 @@
     </unit>
     <unit id="8241813984684687145">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:534</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:539</note>
         <note category="description">Shown when an import could not be started</note>
       </notes>
       <segment>
@@ -13881,7 +13872,7 @@
     </unit>
     <unit id="478482834819167466">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:46,50</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:44,48</note>
         <note category="description">Button that asks the assistant to improve a mapping</note>
       </notes>
       <segment>
@@ -14018,7 +14009,7 @@
     </unit>
     <unit id="4363498861095963216">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:358</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:363</note>
         <note category="description">Shown when an import file could not be uploaded</note>
       </notes>
       <segment>
@@ -14068,7 +14059,7 @@
     </unit>
     <unit id="3054751514444960309">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:416</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:421</note>
         <note category="description">Reports how many assistant suggestions were rejected</note>
       </notes>
       <segment>
@@ -14399,7 +14390,7 @@
     </unit>
     <unit id="8387177636915307389">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:103,105</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:45,47</note>
         <note category="description">Placeholder of the export search filter</note>
       </notes>
       <segment>
@@ -14479,8 +14470,8 @@
     </unit>
     <unit id="7430680760319628492">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:40</note>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:93,94</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:29</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:98,99</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:260</note>
         <note category="description">Heading of the export review step</note>
       </notes>
@@ -14618,6 +14609,7 @@
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,65</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
+        <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:57,60</note>
         <note category="description">Button that removes a preference override</note>
       </notes>
       <segment state="translated">
@@ -14677,7 +14669,7 @@
     </unit>
     <unit id="3894066071729494357">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:102,105</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:100,103</note>
         <note category="description">Column heading for the field a column maps onto</note>
       </notes>
       <segment state="initial">
@@ -15192,19 +15184,19 @@
         <target> Crea identidades del espacio de trabajo para agentes e integraciones sin compartir una cuenta de usuario. </target>
       </segment>
     </unit>
-    <unit id="1932803164688112903">
+    <unit id="5727676672309093168">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:37,41</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:104</note>
         <note category="description">Archive option that includes uploaded files</note>
       </notes>
       <segment>
-        <source> Uploaded files </source>
-        <target> Archivos subidos </target>
+        <source>Uploaded files</source>
+        <target>Archivos subidos</target>
       </segment>
     </unit>
     <unit id="4021752662928002901">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:134</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:123</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:31</note>
         <note category="description">Counts records an import would update</note>
       </notes>
@@ -15305,7 +15297,7 @@
     </unit>
     <unit id="245684657274991357">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:36,37</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:34,35</note>
         <note category="description">Explains the import mapping step</note>
       </notes>
       <segment state="initial">
@@ -15892,7 +15884,7 @@
     </unit>
     <unit id="8385660955611557548">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:62</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:51</note>
         <note category="description">Names the rows of the export preview table</note>
       </notes>
       <segment state="initial">
@@ -15950,16 +15942,6 @@
         <target>Crear un sprint</target>
       </segment>
     </unit>
-    <unit id="4720257215670644464">
-      <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:64,66</note>
-        <note category="description">Filter heading for statuses</note>
-      </notes>
-      <segment>
-        <source> Statuses </source>
-        <target> Estados </target>
-      </segment>
-    </unit>
     <unit id="472532913963722778">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:49,51</note>
@@ -16015,7 +15997,7 @@
     </unit>
     <unit id="1240739868347418586">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:159</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:148</note>
         <note category="description">Mapping option that ignores a source column</note>
       </notes>
       <segment>
@@ -16036,7 +16018,7 @@
     </unit>
     <unit id="5674286808255988565">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:130</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:119</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:96,101</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:30</note>
         <note category="description">Counts records an import would create</note>
@@ -16180,7 +16162,7 @@
     </unit>
     <unit id="6526435222428086076">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:47,50</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:45,48</note>
         <note category="description">Precedes the list of things an import will create</note>
       </notes>
       <segment>
@@ -16281,7 +16263,7 @@
     <unit id="7462301153729425254">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:322</note>
-        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:57,60</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:61,64</note>
         <note category="location">src/app/features/settings/settings.routes.ts:116</note>
         <note category="description">Column heading for what an export contains</note>
       </notes>
@@ -16352,7 +16334,7 @@
     </unit>
     <unit id="446781622622565068">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:606</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:611</note>
         <note category="description">Shown when an import could not be undone</note>
       </notes>
       <segment>
@@ -16545,7 +16527,7 @@
     </unit>
     <unit id="4749495612349488878">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:35,36</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-preview-step.component.ts:33,34</note>
         <note category="description">Heading of the import preview step</note>
       </notes>
       <segment state="initial">
@@ -16949,14 +16931,24 @@
         <target>No se pudieron cargar tus espacios de trabajo</target>
       </segment>
     </unit>
-    <unit id="333564916315430948">
+    <unit id="3329470854233050194">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:45,48</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:76,78</note>
+        <note category="description">Shown when a workspace has no statuses to filter by</note>
+      </notes>
+      <segment state="initial">
+        <source>This workspace has no statuses yet.</source>
+        <target>Este espacio de trabajo aún no tiene estados.</target>
+      </segment>
+    </unit>
+    <unit id="6762559989986024448">
+      <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:108</note>
         <note category="description">Archive option that includes the audit history</note>
       </notes>
       <segment>
-        <source> Audit history </source>
-        <target> Historial de auditoría </target>
+        <source>Audit history</source>
+        <target>Historial de auditoría</target>
       </segment>
     </unit>
     <unit id="3339303141258670173">
@@ -17051,7 +17043,7 @@
     </unit>
     <unit id="8432496963548837928">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:63,64</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:55,58</note>
         <note category="description">Explains the export field selection step</note>
       </notes>
       <segment state="initial">
@@ -17697,9 +17689,10 @@
     </unit>
     <unit id="5168008278809915722">
       <notes>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:72,74</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:64,65</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:294</note>
-        <note category="description">Page title for workspace task statuses</note>
+        <note category="description">Filter heading for statuses</note>
       </notes>
       <segment state="translated">
         <source>Statuses</source>
@@ -17726,9 +17719,19 @@
         <target>No se han encontrado resultados...</target>
       </segment>
     </unit>
+    <unit id="6496945047527833233">
+      <notes>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:121</note>
+        <note category="description">Explains why an import cannot leave the upload step</note>
+      </notes>
+      <segment state="initial">
+        <source>Choose a file to continue.</source>
+        <target>Elija un archivo para continuar.</target>
+      </segment>
+    </unit>
     <unit id="6499330284779318893">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:64,66</note>
+        <note category="location">src/app/features/data-transfer/views/import-wizard-view/import-wizard-view.component.ts:67,69</note>
         <note category="description">Wizard step that maps columns onto fields</note>
       </notes>
       <segment>
@@ -17931,7 +17934,7 @@
     </unit>
     <unit id="3687716071175862785">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:38,40</note>
+        <note category="location">src/app/features/data-transfer/components/import-steps/import-upload-step.component.ts:36,38</note>
         <note category="description">Label of the board an import lands in</note>
       </notes>
       <segment>
@@ -17991,7 +17994,7 @@
     </unit>
     <unit id="9042248046207790541">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:92,97</note>
+        <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:140,143</note>
         <note category="description">Button that queues an export to run in the background</note>
       </notes>
       <segment>
@@ -18011,7 +18014,7 @@
     </unit>
     <unit id="6398639872378040675">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:481</note>
+        <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:486</note>
         <note category="description">Shown when an import mapping was rejected</note>
       </notes>
       <segment>
@@ -18133,7 +18136,7 @@
     </unit>
     <unit id="4580988005648117665">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:102</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:44</note>
         <note category="location">src/app/static/components/search-input/search-input.component.ts:39</note>
         <note category="description">Label of the export search filter</note>
       </notes>
@@ -18220,7 +18223,7 @@
       </notes>
       <segment state="initial">
         <source>Resume this import</source>
-      <target>Reanudar esta importación</target>
+        <target>Reanudar esta importación</target>
       </segment>
     </unit>
     <unit id="238958074114617441">
@@ -18466,7 +18469,7 @@
     </unit>
     <unit id="1982377256620089345">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:52,57</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:41,46</note>
         <note category="description">Explains why an export has to run as a job</note>
       </notes>
       <segment>

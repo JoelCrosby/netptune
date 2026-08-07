@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ImportWizardService } from '@app/features/data-transfer/services/import-wizard.service';
 import { ImportPreviewResult } from '@core/models/view-models/import-session';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
@@ -20,7 +19,6 @@ import {
   selector: 'app-import-preview-step',
   imports: [
     CheckboxComponent,
-    FlatButtonComponent,
     SectionHeaderComponent,
     StatStripComponent,
     StrokedButtonComponent,
@@ -99,15 +97,6 @@ import {
           </span>
         </app-checkbox>
       }
-
-      <button
-        app-flat-button
-        class="mt-6"
-        type="button"
-        [disabled]="!wizard.canCommit() || wizard.isBusy()"
-        (click)="wizard.commit()">
-        <span i18n="Button that starts an import">Import</span>
-      </button>
     } @else {
       <button
         app-stroked-button

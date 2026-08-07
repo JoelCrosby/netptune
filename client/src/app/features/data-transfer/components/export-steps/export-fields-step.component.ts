@@ -1,15 +1,18 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { ExportWizardService } from '@app/features/data-transfer/services/export-wizard.service';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
+import {
+  FilterFacetComponent,
+  FilterFacetToggle,
+} from '@static/components/filter-facet/filter-facet.component';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 
 @Component({
   selector: 'app-export-fields-step',
   imports: [
-    CheckboxComponent,
     FileSizePipe,
+    FilterFacetComponent,
     SectionHeaderComponent,
     StrokedButtonComponent,
   ],
@@ -21,31 +24,20 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
         i18n-description="Explains what an archive always contains"
         description="An archive always contains every record type. Choose what else to include." />
 
-      <div class="flex flex-col gap-3">
-        <app-checkbox
-          [checked]="wizard.options().includeMembers"
-          (changed)="wizard.patchOptions({ includeMembers: $event })">
-          <span i18n="Archive option that includes workspace members">
-            Members, roles and permissions
-          </span>
-        </app-checkbox>
-
-        <app-checkbox
-          [checked]="wizard.options().includeFiles"
-          (changed)="wizard.patchOptions({ includeFiles: $event })">
-          <span i18n="Archive option that includes uploaded files">
-            Uploaded files
-          </span>
-        </app-checkbox>
-
-        <app-checkbox
-          [checked]="wizard.options().includeHistory"
-          (changed)="wizard.patchOptions({ includeHistory: $event })">
-          <span i18n="Archive option that includes the audit history">
-            Audit history
-          </span>
-        </app-checkbox>
-      </div>
+      <app-filter-facet
+        i18n-label="Heading of the optional archive contents list"
+        label="Also include"
+        [options]="archiveOptions"
+        [selected]="archiveSelected()"
+        [maxHeight]="'none'"
+        (toggled)="onArchiveToggled($event)"
+        (cleared)="
+          wizard.patchOptions({
+            includeMembers: false,
+            includeFiles: false,
+            includeHistory: false,
+          })
+        " />
 
       @if (archiveFileBytes() > 0 && wizard.options().includeFiles) {
         <p class="text-muted mt-3 text-xs">
@@ -60,8 +52,22 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
         i18n-heading="Heading of the export field selection step"
         heading="Fields"
         i18n-description="Explains the export field selection step"
-        description="Pick the columns this export contains.">
-        <div sectionHeaderActions class="flex flex-wrap gap-2">
+        description="Pick the columns this export contains." />
+
+      <app-filter-facet
+        i18n-label="Heading of the exported field list"
+        label="Fields"
+        [options]="fieldOptions()"
+        [selected]="wizard.fields()"
+        [columns]="2"
+        [maxHeight]="'none'"
+        i18n-emptyMessage="
+          Shown when a record type exposes no exportable fields
+        "
+        emptyMessage="This record type has no fields to export."
+        (toggled)="wizard.toggleField($event.value, $event.selected)"
+        (cleared)="wizard.setFields([])">
+        <div facetActions class="flex flex-wrap gap-2">
           <button
             app-stroked-button
             type="button"
@@ -79,17 +85,7 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
             >
           </button>
         </div>
-      </app-section-header>
-
-      <div class="grid gap-2 sm:grid-cols-2">
-        @for (field of wizard.availableFields(); track field.key) {
-          <app-checkbox
-            [checked]="wizard.isFieldSelected(field.key)"
-            (changed)="wizard.toggleField(field.key, $event)">
-            {{ field.name }}
-          </app-checkbox>
-        }
-      </div>
+      </app-filter-facet>
     }
   `,
 })
@@ -97,4 +93,57 @@ export class ExportFieldsStepComponent {
   protected readonly wizard = inject(ExportWizardService);
 
   readonly archiveFileBytes = input(0);
+
+  protected readonly archiveOptions = [
+    {
+      value: 'members',
+      label: $localize`:Archive option that includes workspace members:Members, roles and permissions`,
+    },
+    {
+      value: 'files',
+      label: $localize`:Archive option that includes uploaded files:Uploaded files`,
+    },
+    {
+      value: 'history',
+      label: $localize`:Archive option that includes the audit history:Audit history`,
+    },
+  ];
+
+  protected readonly archiveSelected = computed(() => {
+    const options = this.wizard.options();
+    const included: string[] = [];
+
+    if (options.includeMembers) {
+      included.push('members');
+    }
+
+    if (options.includeFiles) {
+      included.push('files');
+    }
+
+    if (options.includeHistory) {
+      included.push('history');
+    }
+
+    return included;
+  });
+
+  protected readonly fieldOptions = computed(() => {
+    return this.wizard
+      .availableFields()
+      .map((field) => ({ value: field.key, label: field.name }));
+  });
+
+  protected onArchiveToggled(toggle: FilterFacetToggle) {
+    switch (toggle.value) {
+      case 'members':
+        this.wizard.patchOptions({ includeMembers: toggle.selected });
+        return;
+      case 'files':
+        this.wizard.patchOptions({ includeFiles: toggle.selected });
+        return;
+      default:
+        this.wizard.patchOptions({ includeHistory: toggle.selected });
+    }
+  }
 }

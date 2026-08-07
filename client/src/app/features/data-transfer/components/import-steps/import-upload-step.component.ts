@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { ImportWizardService } from '@app/features/data-transfer/services/import-wizard.service';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dropzone.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -10,7 +9,6 @@ import { SectionHeaderComponent } from '@static/components/section-header/sectio
   selector: 'app-import-upload-step',
   imports: [
     FileDropzoneComponent,
-    FlatButtonComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
     SectionHeaderComponent,
@@ -45,15 +43,6 @@ import { SectionHeaderComponent } from '@static/components/section-header/sectio
         }
       </app-form-select>
     }
-
-    <button
-      app-flat-button
-      class="mt-2"
-      type="button"
-      [disabled]="!wizard.file() || wizard.isBusy()"
-      (click)="wizard.upload()">
-      <span i18n="Button that uploads an import file">Upload</span>
-    </button>
   `,
 })
 export class ImportUploadStepComponent {

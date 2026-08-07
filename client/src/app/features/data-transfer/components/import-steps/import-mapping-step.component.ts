@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ImportWizardService } from '@app/features/data-transfer/services/import-wizard.service';
 import { LucideSparkles } from '@lucide/angular';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -16,7 +15,6 @@ import {
 @Component({
   selector: 'app-import-mapping-step',
   imports: [
-    FlatButtonComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
     LucideSparkles,
@@ -135,15 +133,6 @@ import {
       @if (wizard.mappingError(); as message) {
         <p class="text-warn mt-4 text-sm" role="alert">{{ message }}</p>
       }
-
-      <button
-        app-flat-button
-        class="mt-6"
-        type="button"
-        [disabled]="wizard.isBusy()"
-        (click)="wizard.saveMapping()">
-        <span i18n="Button that stores the column mapping">Save mapping</span>
-      </button>
     } @else {
       <app-section-header
         i18n-heading="Heading of the import mapping step"

@@ -1,10 +1,7 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { ExportWizardService } from '@app/features/data-transfer/services/export-wizard.service';
 import { ExportPreviewResult } from '@core/models/view-models/export-definition';
 import { ExportFormat } from '@core/models/view-models/export-job-view-model';
-import { LucideDownload, LucidePlay } from '@lucide/angular';
-import { FlatButtonComponent } from '@static/components/button/flat-button.component';
-import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { SectionHeaderComponent } from '@static/components/section-header/section-header.component';
@@ -24,15 +21,7 @@ function formatName(format: ExportFormat): string {
 
 @Component({
   selector: 'app-export-review-step',
-  imports: [
-    DatatableComponent,
-    FlatButtonComponent,
-    LucideDownload,
-    LucidePlay,
-    SectionHeaderComponent,
-    StatStripComponent,
-    StrokedButtonComponent,
-  ],
+  imports: [DatatableComponent, SectionHeaderComponent, StatStripComponent],
   template: `
     <app-section-header
       i18n-heading="Heading of the export review step"
@@ -41,7 +30,7 @@ function formatName(format: ExportFormat): string {
       description="A sample of the first rows this export produces." />
 
     @if (preview(); as result) {
-      <div class="-mx-6 mb-4">
+      <div class="-mx-6">
         <app-stat-strip [items]="reviewStats(result)" />
       </div>
 
@@ -74,32 +63,6 @@ function formatName(format: ExportFormat): string {
     @if (error(); as message) {
       <p class="text-warn mt-4 text-sm" role="alert">{{ message }}</p>
     }
-
-    <div class="mt-6 flex flex-wrap gap-3">
-      <button
-        app-flat-button
-        type="button"
-        [disabled]="isBusy()"
-        (click)="startExport.emit()">
-        @if (canRunInline()) {
-          <svg lucideDownload class="h-4 w-4"></svg>
-          <span i18n="Button that downloads an export straight away"
-            >Download</span
-          >
-        } @else {
-          <svg lucidePlay class="h-4 w-4"></svg>
-          <span i18n="Button that queues an export to run in the background">
-            Start export
-          </span>
-        }
-      </button>
-
-      <button app-stroked-button type="button" (click)="saveDefinition.emit()">
-        <span i18n="Button that stores the current export setup for reuse">
-          Save as definition
-        </span>
-      </button>
-    </div>
   `,
 })
 export class ExportReviewStepComponent {
@@ -107,15 +70,7 @@ export class ExportReviewStepComponent {
 
   readonly preview = input<ExportPreviewResult | null>(null);
   readonly error = input<string | null>(null);
-  readonly isBusy = input(false);
   readonly active = input(false);
-
-  readonly startExport = output();
-  readonly saveDefinition = output();
-
-  protected readonly canRunInline = computed(() => {
-    return this.preview()?.canRunInline ?? false;
-  });
 
   private readonly previewParams = computed(() => {
     const filter = this.wizard.filter();
@@ -150,6 +105,7 @@ export class ExportReviewStepComponent {
         header: byKey.get(fieldKey) ?? fieldKey,
         accessor: (row: ExportPreviewRow) => row.values[fieldKey] ?? '',
         cellClass: 'max-w-56 truncate',
+        headerClass: 'max-w-56 truncate whitespace-nowrap',
       })),
       resource: {
         url: 'api/export/preview/rows',

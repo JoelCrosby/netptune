@@ -106,8 +106,12 @@ export class ExportWizardService {
     return this.fields().includes(key);
   }
 
-  hasFilter(key: ExportFilterListKey, value: string): boolean {
-    return this.filter()[key].includes(value);
+  clearFilterList(key: ExportFilterListKey) {
+    this.filter.update((filter) => ({ ...filter, [key]: [] }));
+  }
+
+  clearFilters() {
+    this.filter.set(emptyExportFilter());
   }
 
   toggleField(key: string, selected: boolean) {
