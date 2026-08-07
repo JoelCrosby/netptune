@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { ClientResponse } from '@core/models/client-response';
@@ -36,8 +36,14 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
 import { PanelComponent } from '@static/components/panel.component';
+import {
+  TabGroupComponent,
+  TabItem,
+} from '@static/components/tab-group/tab-group.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+
+type DataTab = 'exports' | 'imports';
 
 const ResumableStages = [
   ImportStage.uploaded,
@@ -69,6 +75,7 @@ const ResumableStages = [
     PanelHeaderComponent,
     PrettyDatePipe,
     RouterLink,
+    TabGroupComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -76,220 +83,233 @@ const ResumableStages = [
         i18n-title="Page title for the workspace import and export page"
         title="Data" />
 
-      <app-panel>
-        <app-panel-header
-          [icon]="exportIcon"
-          i18n-heading="Heading of the export history panel"
-          heading="Exports"
-          i18n-description="Explains how long an export stays downloadable"
-          description="Exports are kept for seven days, then removed from workspace storage.">
-          @if (canExport()) {
-            <a
-              panelHeaderActions
-              app-flat-button
-              [routerLink]="['export']"
-              i18n="Button that opens the guided export builder">
-              Create Export
-            </a>
-          }
-        </app-panel-header>
+      <app-tab-group
+        class="mb-6 block"
+        [tabs]="tabs"
+        [value]="selectedTab()"
+        (changed)="onTabChanged($event)" />
 
-        <app-datatable
-          [rounded]="false"
-          i18n-errorMessage="Shown when the export history fails to load"
-          errorMessage="Exports could not be loaded."
-          i18n-itemLabel="Names the rows of the export history table"
-          itemLabel="exports"
-          containerClass="border-0 overflow-x-auto"
-          tableClass="min-w-[840px] table-fixed"
-          [data]="exportData">
-          <ng-template appDatatableCell="status" let-job>
-            <app-badge [color]="statusColor(job)">
-              {{ statusLabel(job) }}
-            </app-badge>
-          </ng-template>
-
-          <ng-template appDatatableCell="name" let-job>
-            <span class="block truncate font-medium">
-              {{ job.name ?? job.fileName ?? job.recordType }}
-            </span>
-            @if (job.error) {
-              <span class="text-warn block truncate text-xs">
-                {{ job.error }}
-              </span>
-            } @else if (isRunning(job)) {
-              <span class="text-muted block truncate text-xs">
-                {{ job.progressMessage }} · {{ job.progressPercent }}%
-              </span>
+      @if (selectedTab() === 'exports') {
+        <app-panel>
+          <app-panel-header
+            [icon]="exportIcon"
+            i18n-heading="Heading of the export history panel"
+            heading="Exports"
+            i18n-description="Explains how long an export stays downloadable"
+            description="Exports are kept for seven days, then removed from workspace storage.">
+            @if (canExport()) {
+              <a
+                panelHeaderActions
+                app-flat-button
+                [routerLink]="['export']"
+                i18n="Button that opens the guided export builder">
+                Create Export
+              </a>
             }
-          </ng-template>
+          </app-panel-header>
 
-          <ng-template appDatatableCell="format" let-job>
-            {{ formatLabel(job) }}
-          </ng-template>
+          <app-datatable
+            [rounded]="false"
+            i18n-errorMessage="Shown when the export history fails to load"
+            errorMessage="Exports could not be loaded."
+            i18n-itemLabel="Names the rows of the export history table"
+            itemLabel="exports"
+            containerClass="border-0 overflow-x-auto"
+            tableClass="min-w-[840px] table-fixed"
+            [data]="exportData">
+            <ng-template appDatatableCell="status" let-job>
+              <app-badge [color]="statusColor(job)">
+                {{ statusLabel(job) }}
+              </app-badge>
+            </ng-template>
 
-          <ng-template appDatatableCell="rowCount" let-job>
-            {{ job.rowCount ?? '—' }}
-          </ng-template>
-
-          <ng-template appDatatableCell="sizeBytes" let-job>
-            {{ job.sizeBytes ? (job.sizeBytes | fileSize) : '—' }}
-          </ng-template>
-
-          <ng-template appDatatableCell="createdAt" let-job>
-            {{ toDate(job.createdAt) | prettyDate }}
-          </ng-template>
-
-          <ng-template appDatatableCell="actions" let-job>
-            <div class="flex items-center justify-end gap-1">
-              @if (job.hasArtefact) {
-                <button
-                  app-icon-button
-                  type="button"
-                  i18n-aria-label="
-                    Accessible label for the export download button
-                  "
-                  aria-label="Download this export"
-                  (click)="download(job)">
-                  <svg lucideDownload class="h-4 w-4"></svg>
-                </button>
-              }
-              @if (isCancellable(job)) {
-                <button
-                  app-icon-button
-                  type="button"
-                  i18n-aria-label="
-                    Accessible label for the export cancel button
-                  "
-                  aria-label="Cancel this export"
-                  (click)="cancel(job)">
-                  <svg lucideBan class="h-4 w-4"></svg>
-                </button>
-              }
-            </div>
-          </ng-template>
-
-          <app-empty-state
-            appDatatableEmpty
-            compact
-            i18n-title="Heading when a workspace has never exported anything"
-            title="No exports yet"
-            i18n-description="Explains when export rows start appearing"
-            description="Exports you run appear here with a download link.">
-            <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
-          </app-empty-state>
-        </app-datatable>
-      </app-panel>
-
-      <app-panel class="mt-6">
-        <app-panel-header
-          [icon]="importIcon"
-          i18n-heading="Heading of the import history panel"
-          heading="Imports"
-          i18n-description="Explains how long an import stays undoable"
-          description="A committed import can be undone until its session expires.">
-          @if (canImport()) {
-            <a
-              panelHeaderActions
-              app-flat-button
-              [routerLink]="['import']"
-              i18n="Button that opens the guided import builder">
-              Create Import
-            </a>
-          }
-        </app-panel-header>
-
-        <app-datatable
-          [rounded]="false"
-          i18n-errorMessage="Shown when the import history fails to load"
-          errorMessage="Imports could not be loaded."
-          i18n-itemLabel="Names the rows of the import history table"
-          itemLabel="imports"
-          containerClass="border-0 overflow-x-auto"
-          tableClass="min-w-[840px] table-fixed"
-          [data]="importData">
-          <ng-template appDatatableCell="stage" let-session>
-            <app-badge [color]="stageColor(session)">
-              {{ stageLabel(session) }}
-            </app-badge>
-          </ng-template>
-
-          <ng-template appDatatableCell="originalName" let-session>
-            <span class="block truncate font-medium">
-              {{ session.originalName }}
-            </span>
-            @if (session.error) {
-              <span class="text-warn block truncate text-xs">
-                {{ session.error }}
+            <ng-template appDatatableCell="name" let-job>
+              <span class="block truncate font-medium">
+                {{ job.name ?? job.fileName ?? job.recordType }}
               </span>
-            } @else if (isImportRunning(session)) {
-              <span class="text-muted block truncate text-xs">
-                {{ session.progressMessage }} · {{ session.progressPercent }}%
-              </span>
+              @if (job.error) {
+                <span class="text-warn block truncate text-xs">
+                  {{ job.error }}
+                </span>
+              } @else if (isRunning(job)) {
+                <span class="text-muted block truncate text-xs">
+                  {{ job.progressMessage }} · {{ job.progressPercent }}%
+                </span>
+              }
+            </ng-template>
+
+            <ng-template appDatatableCell="format" let-job>
+              {{ formatLabel(job) }}
+            </ng-template>
+
+            <ng-template appDatatableCell="rowCount" let-job>
+              {{ job.rowCount ?? '—' }}
+            </ng-template>
+
+            <ng-template appDatatableCell="sizeBytes" let-job>
+              {{ job.sizeBytes ? (job.sizeBytes | fileSize) : '—' }}
+            </ng-template>
+
+            <ng-template appDatatableCell="createdAt" let-job>
+              {{ toDate(job.createdAt) | prettyDate }}
+            </ng-template>
+
+            <ng-template appDatatableCell="actions" let-job>
+              <div class="flex items-center justify-end gap-1">
+                @if (job.hasArtefact) {
+                  <button
+                    app-icon-button
+                    type="button"
+                    i18n-aria-label="
+                      Accessible label for the export download button
+                    "
+                    aria-label="Download this export"
+                    (click)="download(job)">
+                    <svg lucideDownload class="h-4 w-4"></svg>
+                  </button>
+                }
+                @if (isCancellable(job)) {
+                  <button
+                    app-icon-button
+                    type="button"
+                    i18n-aria-label="
+                      Accessible label for the export cancel button
+                    "
+                    aria-label="Cancel this export"
+                    (click)="cancel(job)">
+                    <svg lucideBan class="h-4 w-4"></svg>
+                  </button>
+                }
+              </div>
+            </ng-template>
+
+            <app-empty-state
+              appDatatableEmpty
+              compact
+              i18n-title="Heading when a workspace has never exported anything"
+              title="No exports yet"
+              i18n-description="Explains when export rows start appearing"
+              description="Exports you run appear here with a download link.">
+              <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
+            </app-empty-state>
+          </app-datatable>
+        </app-panel>
+      } @else {
+        <app-panel>
+          <app-panel-header
+            [icon]="importIcon"
+            i18n-heading="Heading of the import history panel"
+            heading="Imports"
+            i18n-description="Explains how long an import stays undoable"
+            description="A committed import can be undone until its session expires.">
+            @if (canImport()) {
+              <a
+                panelHeaderActions
+                app-flat-button
+                [routerLink]="['import']"
+                i18n="Button that opens the guided import builder">
+                Create Import
+              </a>
             }
-          </ng-template>
+          </app-panel-header>
 
-          <ng-template appDatatableCell="targetRecordType" let-session>
-            {{ session.targetRecordType }}
-          </ng-template>
+          <app-datatable
+            [rounded]="false"
+            i18n-errorMessage="Shown when the import history fails to load"
+            errorMessage="Imports could not be loaded."
+            i18n-itemLabel="Names the rows of the import history table"
+            itemLabel="imports"
+            containerClass="border-0 overflow-x-auto"
+            tableClass="min-w-[840px] table-fixed"
+            [data]="importData">
+            <ng-template appDatatableCell="stage" let-session>
+              <app-badge [color]="stageColor(session)">
+                {{ stageLabel(session) }}
+              </app-badge>
+            </ng-template>
 
-          <ng-template appDatatableCell="counts" let-session>
-            {{ countsLabel(session) }}
-          </ng-template>
-
-          <ng-template appDatatableCell="createdBy" let-session>
-            {{ session.createdByDisplayName ?? '—' }}
-          </ng-template>
-
-          <ng-template appDatatableCell="createdAt" let-session>
-            {{ toDate(session.createdAt) | prettyDate }}
-          </ng-template>
-
-          <ng-template appDatatableCell="actions" let-session>
-            <div class="flex items-center justify-end gap-1">
-              @if (canResume(session)) {
-                <a
-                  app-icon-button
-                  [routerLink]="['import', session.publicId]"
-                  i18n-aria-label="Accessible label for the import resume link"
-                  aria-label="Resume this import">
-                  <svg lucidePlay class="h-4 w-4"></svg>
-                </a>
+            <ng-template appDatatableCell="originalName" let-session>
+              <span class="block truncate font-medium">
+                {{ session.originalName }}
+              </span>
+              @if (session.error) {
+                <span class="text-warn block truncate text-xs">
+                  {{ session.error }}
+                </span>
+              } @else if (isImportRunning(session)) {
+                <span class="text-muted block truncate text-xs">
+                  {{ session.progressMessage }} · {{ session.progressPercent }}%
+                </span>
               }
+            </ng-template>
 
-              @if (session.canUndo) {
-                <button
-                  app-icon-button
-                  type="button"
-                  [disabled]="undoing() === session.publicId"
-                  i18n-aria-label="Accessible label for the import undo button"
-                  aria-label="Undo this import"
-                  (click)="undo(session)">
-                  <svg lucideUndo2 class="h-4 w-4"></svg>
-                </button>
-              }
-            </div>
-          </ng-template>
+            <ng-template appDatatableCell="targetRecordType" let-session>
+              {{ session.targetRecordType }}
+            </ng-template>
 
-          <app-empty-state
-            appDatatableEmpty
-            compact
-            i18n-title="Heading when a workspace has never imported anything"
-            title="No imports yet"
-            i18n-description="Explains when import rows start appearing"
-            description="Files you import appear here with their results.">
-            <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
-          </app-empty-state>
-        </app-datatable>
-      </app-panel>
+            <ng-template appDatatableCell="counts" let-session>
+              {{ countsLabel(session) }}
+            </ng-template>
+
+            <ng-template appDatatableCell="createdBy" let-session>
+              {{ session.createdByDisplayName ?? '—' }}
+            </ng-template>
+
+            <ng-template appDatatableCell="createdAt" let-session>
+              {{ toDate(session.createdAt) | prettyDate }}
+            </ng-template>
+
+            <ng-template appDatatableCell="actions" let-session>
+              <div class="flex items-center justify-end gap-1">
+                @if (canResume(session)) {
+                  <button
+                    app-icon-button
+                    (click)="router.navigate(['import', session.publicId])"
+                    i18n-aria-label="
+                      Accessible label for the import resume link
+                    "
+                    aria-label="Resume this import">
+                    <svg lucidePlay class="h-4 w-4"></svg>
+                  </button>
+                }
+
+                @if (session.canUndo) {
+                  <button
+                    app-icon-button
+                    type="button"
+                    [disabled]="undoing() === session.publicId"
+                    i18n-aria-label="
+                      Accessible label for the import undo button
+                    "
+                    aria-label="Undo this import"
+                    (click)="undo(session)">
+                    <svg lucideUndo2 class="h-4 w-4"></svg>
+                  </button>
+                }
+              </div>
+            </ng-template>
+
+            <app-empty-state
+              appDatatableEmpty
+              compact
+              i18n-title="Heading when a workspace has never imported anything"
+              title="No imports yet"
+              i18n-description="Explains when import rows start appearing"
+              description="Files you import appear here with their results.">
+              <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
+            </app-empty-state>
+          </app-datatable>
+        </app-panel>
+      }
     </app-page-container>
   `,
 })
 export class DataTransferViewComponent {
-  private readonly http = inject(HttpClient);
-  private readonly store = inject(Store);
-  private readonly exportEvents = inject(ExportJobSseService);
-  private readonly destroyRef = inject(DestroyRef);
+  readonly http = inject(HttpClient);
+  readonly store = inject(Store);
+  readonly exportEvents = inject(ExportJobSseService);
+  readonly destroyRef = inject(DestroyRef);
+  readonly router = inject(Router);
 
   protected readonly exportIcon = LucideFileDown;
   protected readonly importIcon = LucideFileUp;
@@ -304,6 +324,23 @@ export class DataTransferViewComponent {
 
   protected readonly undoing = signal<string | null>(null);
 
+  protected readonly selectedTab = signal<DataTab>('exports');
+
+  protected readonly tabs: TabItem[] = [
+    {
+      label: $localize`:Tab that shows the workspace export history:Exports`,
+      value: 'exports',
+    },
+    {
+      label: $localize`:Tab that shows the workspace import history:Imports`,
+      value: 'imports',
+    },
+  ];
+
+  protected onTabChanged(value: string | number | null) {
+    this.selectedTab.set(value === 'imports' ? 'imports' : 'exports');
+  }
+
   private readonly reloadToken = signal(0);
   private readonly importReloadToken = signal(0);
 
@@ -315,32 +352,38 @@ export class DataTransferViewComponent {
       {
         id: 'status',
         header: $localize`:Column heading for the state of an export:Status`,
+        cellClass: 'truncate',
         widthClass: 'w-28',
       },
       {
         id: 'name',
         header: $localize`:Column heading for what an export contains:Export`,
+        cellClass: 'truncate',
       },
       {
         id: 'format',
         header: $localize`:Column heading for the file format of an export:Format`,
+        cellClass: 'truncate',
         widthClass: 'w-24',
       },
       {
         id: 'rowCount',
         header: $localize`:Column heading for how many rows an export produced:Rows`,
+        cellClass: 'truncate',
         widthClass: 'w-24',
         align: 'end',
       },
       {
         id: 'sizeBytes',
         header: $localize`:Column heading for the size of an export file:Size`,
+        cellClass: 'truncate',
         widthClass: 'w-24',
         align: 'end',
       },
       {
         id: 'createdAt',
         header: $localize`:Column heading for when an export was requested:Requested`,
+        cellClass: 'truncate',
         widthClass: 'w-40',
       },
       {
@@ -365,30 +408,36 @@ export class DataTransferViewComponent {
       {
         id: 'stage',
         header: $localize`:Column heading for the state of an import:Stage`,
+        cellClass: 'truncate',
         widthClass: 'w-28',
       },
       {
         id: 'originalName',
         header: $localize`:Column heading for the file an import came from:File`,
+        cellClass: 'truncate',
       },
       {
         id: 'targetRecordType',
         header: $localize`:Column heading for what kind of record an import creates:Type`,
+        cellClass: 'truncate',
         widthClass: 'w-24',
       },
       {
         id: 'counts',
         header: $localize`:Column heading for the created, updated and skipped row counts of an import:Rows`,
+        cellClass: 'truncate',
         widthClass: 'w-44',
       },
       {
         id: 'createdBy',
         header: $localize`:Column heading for who ran an import:By`,
+        cellClass: 'truncate',
         widthClass: 'w-36',
       },
       {
         id: 'createdAt',
         header: $localize`:Column heading for when an import was uploaded:Uploaded`,
+        cellClass: 'truncate',
         widthClass: 'w-40',
       },
       {
