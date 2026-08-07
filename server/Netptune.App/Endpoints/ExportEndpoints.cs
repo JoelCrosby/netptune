@@ -49,6 +49,9 @@ public static class ExportEndpoints
         group.MapGet("/jobs/{publicId:guid}", HandleGetJob)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
+        group.MapDelete("/jobs/{publicId:guid}", HandleDeleteJob)
+            .RequireAuthorization(NetptunePermissions.Tasks.Export);
+
         group.MapPost("/jobs/{publicId:guid}/cancel", HandleCancelJob)
             .RequireAuthorization(NetptunePermissions.Tasks.Export);
 
@@ -162,6 +165,26 @@ public static class ExportEndpoints
         var result = await mediator.Send(new GetExportJobQuery(publicId), cancellationToken);
 
         return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleDeleteJob(
+        IMediator mediator,
+        Guid publicId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteExportJobCommand(publicId), cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Ok(result);
     }
 
     private static async Task<IResult> HandleCancelJob(

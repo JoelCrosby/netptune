@@ -16,6 +16,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
 using Netptune.Transfer.Definitions;
+using Netptune.Transfer.ViewModels;
 
 using Xunit;
 
@@ -296,6 +297,32 @@ public sealed class ExportEndpointTests
     public async Task Download_ShouldReturnNotFound_WhenTheJobDoesNotExist()
     {
         var response = await Client.GetAsync($"api/export/jobs/{Guid.NewGuid()}/download");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldRemoveTheJobAndItsArtefact()
+    {
+        var publicId = await SeedCompletedJob();
+        var response = await Client.DeleteAsync($"api/export/jobs/{publicId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var download = await Client.GetAsync($"api/export/jobs/{publicId}/download");
+
+        download.StatusCode.Should().Be(HttpStatusCode.NotFound, "the job is gone");
+
+        var listed = await Client.GetAsync("api/export/jobs?pageSize=100&page=1");
+        var jobs = await listed.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<ExportJobViewModel>>>();
+
+        jobs.Payload!.Items.Should().NotContain(job => job.PublicId == publicId);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnNotFound_WhenTheJobDoesNotExist()
+    {
+        var response = await Client.DeleteAsync($"api/export/jobs/{Guid.NewGuid()}");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

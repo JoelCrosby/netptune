@@ -52,4 +52,6 @@ public static class ImportStages
     public static bool CanRun(ImportStage stage) => stage is ImportStage.Committing;
 
     public static bool CanUndo(ImportStage stage) => stage is ImportStage.Committed;
+
+    public static bool CanDelete(ImportStage stage) => stage is not ImportStage.Committing;
 }

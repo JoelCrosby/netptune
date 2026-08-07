@@ -60,6 +60,9 @@ public static class ImportEndpoints
         group.MapPost("/sessions/{publicId:guid}/undo", HandleUndo)
             .RequireAuthorization(NetptunePermissions.Tasks.Import);
 
+        group.MapDelete("/sessions/{publicId:guid}", HandleDeleteSession)
+            .RequireAuthorization(NetptunePermissions.Tasks.Import);
+
         group.MapPost("/archive/preview", HandlePreviewArchive)
             .WithMetadata(new RequestSizeLimitAttribute(MaxArchiveRequestSize))
             .RequireAuthorization(NetptunePermissions.Data.ImportArchive);
@@ -234,6 +237,16 @@ public static class ImportEndpoints
         var result = await mediator.Send(new GetImportSessionQuery(publicId), cancellationToken);
 
         return result is null ? Results.NotFound() : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleDeleteSession(
+        IMediator mediator,
+        Guid publicId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteImportSessionCommand(publicId), cancellationToken);
+
+        return Respond(result.IsNotFound, result.IsSuccess, result);
     }
 
     private static async Task<IResult> HandleGetSessionState(

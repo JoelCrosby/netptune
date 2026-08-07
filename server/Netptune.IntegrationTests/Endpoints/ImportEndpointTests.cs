@@ -163,6 +163,32 @@ public sealed class ImportEndpointTests
     }
 
     [Fact]
+    public async Task Delete_ShouldRemoveTheSession()
+    {
+        var session = await Upload();
+        var response = await Client.DeleteAsync($"api/import/sessions/{session.PublicId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var state = await Client.GetAsync($"api/import/sessions/{session.PublicId}/state");
+
+        state.StatusCode.Should().Be(HttpStatusCode.NotFound, "the session is gone");
+
+        var listed = await Client.GetAsync("api/import/sessions?pageSize=100&page=1");
+        var sessions = await listed.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<ImportSessionViewModel>>>();
+
+        sessions.Payload!.Items.Should().NotContain(item => item.PublicId == session.PublicId);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldReturnNotFound_WhenTheSessionDoesNotExist()
+    {
+        var response = await Client.DeleteAsync($"api/import/sessions/{Guid.NewGuid()}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task State_ShouldNotFindASessionThatDoesNotExist()
     {
         var response = await Client.GetAsync($"api/import/sessions/{Guid.NewGuid()}/state");

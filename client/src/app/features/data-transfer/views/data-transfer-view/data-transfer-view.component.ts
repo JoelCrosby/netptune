@@ -13,6 +13,7 @@ import {
   ExportJobStatus,
   ExportJobViewModel,
 } from '@core/models/view-models/export-job-view-model';
+import { ConfirmationService } from '@core/services/confirmation.service';
 import { ExportJobSseService } from '@core/sse/export-job-sse.service';
 import {
   LucideBan,
@@ -21,6 +22,7 @@ import {
   LucideFileDown,
   LucideFileUp,
   LucidePlay,
+  LucideTrash2,
   LucideUndo2,
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -42,6 +44,7 @@ import {
 } from '@static/components/tab-group/tab-group.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+import { first } from 'rxjs';
 
 type DataTab = 'exports' | 'imports';
 
@@ -68,6 +71,7 @@ const ResumableStages = [
     LucideDatabase,
     LucideDownload,
     LucidePlay,
+    LucideTrash2,
     LucideUndo2,
     PageContainerComponent,
     PageHeaderComponent,
@@ -179,6 +183,17 @@ const ResumableStages = [
                     (click)="cancel(job)">
                     <svg lucideBan class="h-4 w-4"></svg>
                   </button>
+                } @else {
+                  <button
+                    app-icon-button
+                    type="button"
+                    i18n-aria-label="
+                      Accessible label for the export delete button
+                    "
+                    aria-label="Delete this export"
+                    (click)="deleteExport(job)">
+                    <svg lucideTrash2 class="h-4 w-4"></svg>
+                  </button>
                 }
               </div>
             </ng-template>
@@ -286,6 +301,19 @@ const ResumableStages = [
                     <svg lucideUndo2 class="h-4 w-4"></svg>
                   </button>
                 }
+
+                @if (canDeleteImport(session)) {
+                  <button
+                    app-icon-button
+                    type="button"
+                    i18n-aria-label="
+                      Accessible label for the import delete button
+                    "
+                    aria-label="Delete this import"
+                    (click)="deleteImport(session)">
+                    <svg lucideTrash2 class="h-4 w-4"></svg>
+                  </button>
+                }
               </div>
             </ng-template>
 
@@ -308,6 +336,7 @@ export class DataTransferViewComponent {
   readonly http = inject(HttpClient);
   readonly store = inject(Store);
   readonly exportEvents = inject(ExportJobSseService);
+  readonly confirmation = inject(ConfirmationService);
   readonly destroyRef = inject(DestroyRef);
   readonly router = inject(Router);
 
@@ -514,6 +543,10 @@ export class DataTransferViewComponent {
     return ResumableStages.includes(session.stage);
   }
 
+  protected canDeleteImport(session: ImportSessionViewModel): boolean {
+    return session.stage !== ImportStage.committing;
+  }
+
   protected stageLabel(session: ImportSessionViewModel): string {
     switch (session.stage) {
       case ImportStage.uploaded:
@@ -610,6 +643,50 @@ export class DataTransferViewComponent {
           this.reloadImports();
         },
         error: () => this.undoing.set(null),
+      });
+  }
+
+  protected deleteExport(job: ExportJobViewModel): void {
+    const name = job.name ?? job.fileName ?? job.recordType;
+
+    this.confirmation
+      .open({
+        title: $localize`:Title of the dialog that confirms deleting an export:Delete this export?`,
+        message: $localize`:Warns that deleting an export also removes its file:${name}:name: and its file are removed for good.`,
+        acceptLabel: $localize`:Confirms deleting a record:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+        color: 'warn',
+      })
+      .pipe(first())
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+
+        this.http
+          .delete<ClientResponse>(`api/export/jobs/${job.publicId}`)
+          .subscribe(() => this.reload());
+      });
+  }
+
+  protected deleteImport(session: ImportSessionViewModel): void {
+    const message = session.canUndo
+      ? $localize`:Warns that deleting a committed import gives up undo:${session.originalName}:name: is removed and this import can no longer be undone.`
+      : $localize`:Warns that deleting an import also removes its file:${session.originalName}:name: and its uploaded file are removed for good.`;
+
+    this.confirmation
+      .open({
+        title: $localize`:Title of the dialog that confirms deleting an import:Delete this import?`,
+        message,
+        acceptLabel: $localize`:Confirms deleting a record:Delete`,
+        cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+        color: 'warn',
+      })
+      .pipe(first())
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+
+        this.http
+          .delete<ClientResponse>(`api/import/sessions/${session.publicId}`)
+          .subscribe(() => this.reloadImports());
       });
   }
 

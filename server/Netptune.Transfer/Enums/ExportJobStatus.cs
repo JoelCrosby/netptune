@@ -25,4 +25,6 @@ public static class ExportJobStatuses
     public static bool CanCancel(ExportJobStatus status) => InFlight.Contains(status);
 
     public static bool HasArtefact(ExportJobStatus status) => status is ExportJobStatus.Succeeded;
+
+    public static bool CanDelete(ExportJobStatus status) => !InFlight.Contains(status);
 }
