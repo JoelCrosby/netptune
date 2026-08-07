@@ -18,7 +18,7 @@ public class NotificationLinkTests
     [InlineData(EntityType.Status, "99", "/test-workspace/settings/workspace/statuses/99")]
     public void Build_ShouldRouteToEntity_ForSupportedEntityTypes(EntityType entityType, string identifier, string expected)
     {
-        var link = NotificationLink.Build("test-workspace", entityType, identifier);
+        var link = NotificationLink.Build("test-workspace", entityType, ActivityType.Modify, identifier);
 
         link.Should().Be(expected);
     }
@@ -31,15 +31,27 @@ public class NotificationLinkTests
     [InlineData(EntityType.Board, "")]
     public void Build_ShouldFallBackToWorkspaceRoot_WhenEntityIsNotRoutable(EntityType entityType, string? identifier)
     {
-        var link = NotificationLink.Build("test-workspace", entityType, identifier);
+        var link = NotificationLink.Build("test-workspace", entityType, ActivityType.Modify, identifier);
 
         link.Should().Be("/test-workspace");
+    }
+
+    [Theory]
+    [InlineData(ActivityType.ImportCompleted)]
+    [InlineData(ActivityType.ImportFailed)]
+    [InlineData(ActivityType.ExportCompleted)]
+    [InlineData(ActivityType.ExportFailed)]
+    public void Build_ShouldRouteToDataPage_ForTransferJobs(ActivityType activityType)
+    {
+        var link = NotificationLink.Build("test-workspace", EntityType.Workspace, activityType, null);
+
+        link.Should().Be("/test-workspace/settings/workspace/data");
     }
 
     [Fact]
     public void Build_ShouldUseSuppliedSlug_SoRenamesAreReflected()
     {
-        var link = NotificationLink.Build("renamed-workspace", EntityType.Task, "PROJ-42");
+        var link = NotificationLink.Build("renamed-workspace", EntityType.Task, ActivityType.Modify, "PROJ-42");
 
         link.Should().Be("/renamed-workspace/tasks/PROJ-42");
     }

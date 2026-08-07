@@ -175,6 +175,21 @@ public sealed record ImportCompletedPayload
     public int Failed { get; init; }
 
     public string? VendorProfile { get; init; }
+
+    public string? Error { get; init; }
+}
+
+public sealed record ExportCompletedPayload
+{
+    public required string Format { get; init; }
+
+    public string? FileName { get; init; }
+
+    public long? RowCount { get; init; }
+
+    public long? SizeBytes { get; init; }
+
+    public string? Error { get; init; }
 }
 
 public sealed record WorkspaceRoleChangedPayload

@@ -53,4 +53,8 @@ export enum ActivityType {
   addComment = 33,
   modifyComment = 34,
   removeComment = 35,
+  importCompleted = 36,
+  importFailed = 37,
+  exportCompleted = 38,
+  exportFailed = 39,
 }

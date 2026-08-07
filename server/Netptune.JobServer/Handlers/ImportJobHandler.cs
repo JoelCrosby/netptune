@@ -12,6 +12,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Transfer.Messages;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Notifications;
 using Netptune.Transfer.Services;
 using Netptune.Transfer;
 using Netptune.Transfer.Mapping;
@@ -26,6 +27,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
     private readonly IImportSourceStore Store;
     private readonly IImportApplier Applier;
     private readonly IEventRecordWriter EventRecords;
+    private readonly INotificationDispatcher Notifications;
     private readonly IActorContext Actor;
     private readonly TransferOptions Options;
     private readonly ILogger<ImportJobHandler> Logger;
@@ -35,6 +37,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         IImportSourceStore store,
         IImportApplier applier,
         IEventRecordWriter eventRecords,
+        INotificationDispatcher notifications,
         IActorContext actor,
         IOptions<TransferOptions> options,
         ILogger<ImportJobHandler> logger,
@@ -44,6 +47,7 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         Store = store;
         Applier = applier;
         EventRecords = eventRecords;
+        Notifications = notifications;
         Actor = actor;
         Options = options.Value;
         Logger = logger;
@@ -85,6 +89,20 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
             session.ProgressMessage = "Failed";
 
             await UnitOfWork.CompleteAsync(cancellationToken);
+
+            await Announce(
+                session,
+                EventKeys.ImportFailed,
+                ActivityType.ImportFailed,
+                new ImportCompletedPayload
+                {
+                    RecordType = session.TargetRecordType,
+                    SourceKind = session.SourceKind.ToString(),
+                    Error = exception.Message,
+                    VendorProfile = VendorProfileOf(session),
+                },
+                request.UserId,
+                cancellationToken);
         }
 
         return default;
@@ -128,8 +146,22 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         session.CommittedAt = DateTime.UtcNow;
         session.Result = JsonSerializer.SerializeToDocument(result, JsonOptions.Default);
 
-        await WriteCompletedEvent(session, result, request.UserId, cancellationToken);
-        await UnitOfWork.CompleteAsync(cancellationToken);
+        await Announce(
+            session,
+            EventKeys.ImportCompleted,
+            ActivityType.ImportCompleted,
+            new ImportCompletedPayload
+            {
+                RecordType = session.TargetRecordType,
+                SourceKind = session.SourceKind.ToString(),
+                Created = result.Created,
+                Updated = result.Updated,
+                Skipped = result.Skipped,
+                Failed = result.Failed,
+                VendorProfile = VendorProfileOf(session),
+            },
+            request.UserId,
+            cancellationToken);
 
         Logger.LogInformation(
             "[Import] session {PublicId} created {Created} and updated {Updated} records",
@@ -146,29 +178,39 @@ public sealed class ImportJobHandler : IRequestHandler<ImportCommitRequestedMess
         }
     }
 
-    private async Task WriteCompletedEvent(
+    private static string? VendorProfileOf(ImportSession session)
+    {
+        return session.VendorProfile == ImportVendorProfile.None ? null : session.VendorProfile.ToString();
+    }
+
+    private async Task Announce(
         ImportSession session,
-        ImportCommitResult result,
+        string eventKey,
+        ActivityType activityType,
+        ImportCompletedPayload payload,
         string userId,
         CancellationToken cancellationToken)
     {
-        await EventRecords.Append(new EventWriteRequest<ImportCompletedPayload>
+        var record = await EventRecords.Append(new EventWriteRequest<ImportCompletedPayload>
         {
             WorkspaceId = session.WorkspaceId,
-            EventKey = EventKeys.ImportCompleted,
+            EventKey = eventKey,
             SubjectType = EventEntityTypes.From(EntityType.Workspace),
             SubjectId = session.WorkspaceId.ToString(),
             ActorUserId = userId,
-            Payload = new ImportCompletedPayload
-            {
-                RecordType = session.TargetRecordType,
-                SourceKind = session.SourceKind.ToString(),
-                Created = result.Created,
-                Updated = result.Updated,
-                Skipped = result.Skipped,
-                Failed = result.Failed,
-                VendorProfile = session.VendorProfile == ImportVendorProfile.None ? null : session.VendorProfile.ToString(),
-            },
+            Payload = payload,
+        }, cancellationToken);
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        await Notifications.Dispatch(new NotificationDispatchRequest
+        {
+            UserId = userId,
+            ActorUserId = userId,
+            EventRecordId = record.Id,
+            WorkspaceId = session.WorkspaceId,
+            EntityType = EntityType.Workspace,
+            ActivityType = activityType,
         }, cancellationToken);
     }
 }

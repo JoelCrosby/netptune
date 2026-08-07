@@ -42,4 +42,7 @@ public enum ActivityType
     ModifyComment = 34,
     RemoveComment = 35,
     ImportCompleted = 36,
+    ImportFailed = 37,
+    ExportCompleted = 38,
+    ExportFailed = 39,
 }

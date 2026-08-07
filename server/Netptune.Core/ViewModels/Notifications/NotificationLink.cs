@@ -4,9 +4,19 @@ namespace Netptune.Core.ViewModels.Notifications;
 
 public static class NotificationLink
 {
-    public static string Build(string workspaceSlug, EntityType entityType, string? identifier)
+    public static string Build(string workspaceSlug, EntityType entityType, ActivityType activityType, string? identifier)
     {
         var workspaceRoot = $"/{workspaceSlug}";
+
+        var isTransferJob = activityType is ActivityType.ImportCompleted
+            or ActivityType.ImportFailed
+            or ActivityType.ExportCompleted
+            or ActivityType.ExportFailed;
+
+        if (isTransferJob)
+        {
+            return $"{workspaceRoot}/settings/workspace/data";
+        }
 
         if (string.IsNullOrWhiteSpace(identifier))
         {

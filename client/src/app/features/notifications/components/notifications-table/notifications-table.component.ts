@@ -16,7 +16,10 @@ import {
   markAsRead,
   markAsReadMany,
 } from '@core/store/notifications/notifications.actions';
-import { notificationSummary } from '@core/transforms/activity-type';
+import {
+  notificationNamesEntity,
+  notificationSummary,
+} from '@core/transforms/activity-type';
 import { entityTypeToString } from '@core/transforms/entity-type';
 import { fromNow } from '@core/util/dates';
 import { LucideCheck, LucideExternalLink, LucideTrash2 } from '@lucide/angular';
@@ -73,7 +76,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
           [class.opacity-60]="notification.isRead"
           (click)="onOpen(notification)">
           {{ notificationSummary(notification) }}
-          {{ entityTypeToString(notification.entityType) }}
+          @if (notificationNamesEntity(notification.activityType)) {
+            {{ entityTypeToString(notification.entityType) }}
+          }
           @if (notification.entityIdentifier) {
             <span class="font-medium">{{ notification.entityIdentifier }}</span>
           }
@@ -126,6 +131,7 @@ export class NotificationsTableComponent {
   private readonly router = inject(Router);
 
   readonly notificationSummary = notificationSummary;
+  readonly notificationNamesEntity = notificationNamesEntity;
   readonly entityTypeToString = entityTypeToString;
   readonly fromNow = fromNow;
 

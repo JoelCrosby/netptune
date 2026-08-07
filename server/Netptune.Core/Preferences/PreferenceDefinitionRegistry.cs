@@ -178,6 +178,10 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         ActivityType.AddComment => "Comment added",
         ActivityType.ModifyComment => "Comment changed",
         ActivityType.RemoveComment => "Comment removed",
+        ActivityType.ImportCompleted => "Import completed",
+        ActivityType.ImportFailed => "Import failed",
+        ActivityType.ExportCompleted => "Export completed",
+        ActivityType.ExportFailed => "Export failed",
         _ => activityType.ToString(),
     };
 

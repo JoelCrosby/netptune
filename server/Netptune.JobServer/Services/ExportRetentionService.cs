@@ -1,7 +1,10 @@
 using Netptune.Transfer.Repositories;
 using Netptune.Transfer.Enums;
 using Netptune.Transfer.Entities;
+using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.JobServer.Services;
@@ -52,9 +55,11 @@ public sealed class ExportRetentionService : BackgroundService
         var unitOfWork = scope.ServiceProvider.GetRequiredService<INetptuneUnitOfWork>();
         var exportJobs = scope.ServiceProvider.GetRequiredService<IExportJobRepository>();
         var storage = scope.ServiceProvider.GetRequiredService<IStorageService>();
+        var eventRecords = scope.ServiceProvider.GetRequiredService<IEventRecordWriter>();
+        var notifications = scope.ServiceProvider.GetRequiredService<INotificationDispatcher>();
 
         await ExpireArtefacts(unitOfWork, exportJobs, storage, cancellationToken);
-        await FailStaleJobs(unitOfWork, exportJobs, cancellationToken);
+        await FailStaleJobs(unitOfWork, exportJobs, eventRecords, notifications, cancellationToken);
     }
 
     private async Task ExpireArtefacts(
@@ -115,6 +120,8 @@ public sealed class ExportRetentionService : BackgroundService
     private async Task FailStaleJobs(
         INetptuneUnitOfWork unitOfWork,
         IExportJobRepository exportJobs,
+        IEventRecordWriter eventRecords,
+        INotificationDispatcher notifications,
         CancellationToken cancellationToken)
     {
         var startedBefore = DateTime.UtcNow.Subtract(StaleRunningAfter);
@@ -125,10 +132,12 @@ public sealed class ExportRetentionService : BackgroundService
             return;
         }
 
+        const string abandonedError = "The export did not finish and was abandoned.";
+
         foreach (var job in stale)
         {
             job.Status = ExportJobStatus.Failed;
-            job.Error = "The export did not finish and was abandoned.";
+            job.Error = abandonedError;
             job.ProgressMessage = "Abandoned";
             job.CompletedAt = DateTime.UtcNow;
         }
@@ -136,5 +145,49 @@ public sealed class ExportRetentionService : BackgroundService
         await unitOfWork.CompleteAsync(cancellationToken);
 
         Logger.LogWarning("[Export] abandoned {Count} stale running jobs", stale.Count);
+
+        foreach (var job in stale)
+        {
+            await AnnounceAbandoned(job, abandonedError, eventRecords, notifications, cancellationToken);
+        }
+    }
+
+    private static async Task AnnounceAbandoned(
+        ExportJob job,
+        string error,
+        IEventRecordWriter eventRecords,
+        INotificationDispatcher notifications,
+        CancellationToken cancellationToken)
+    {
+        var userId = job.CreatedByUserId;
+
+        if (userId is null)
+        {
+            return;
+        }
+
+        var record = await eventRecords.Append(new EventWriteRequest<ExportCompletedPayload>
+        {
+            WorkspaceId = job.WorkspaceId,
+            EventKey = EventKeys.ExportFailed,
+            SubjectType = EventEntityTypes.From(EntityType.Workspace),
+            SubjectId = job.WorkspaceId.ToString(),
+            ActorUserId = userId,
+            Payload = new ExportCompletedPayload
+            {
+                Format = job.Format.ToString(),
+                Error = error,
+            },
+        }, cancellationToken);
+
+        await notifications.Dispatch(new NotificationDispatchRequest
+        {
+            UserId = userId,
+            ActorUserId = userId,
+            EventRecordId = record.Id,
+            WorkspaceId = job.WorkspaceId,
+            EntityType = EntityType.Workspace,
+            ActivityType = ActivityType.ExportFailed,
+        }, cancellationToken);
     }
 }

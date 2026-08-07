@@ -6,8 +6,11 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Encoding;
+using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Transfer.Messages;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Notifications;
 using Netptune.Transfer.Services;
 using Netptune.Core.Storage;
 using Netptune.Transfer.Definitions;
@@ -22,6 +25,8 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
     private readonly IExportRunner Runner;
     private readonly IStorageService Storage;
     private readonly IExportJobNotifier Notifier;
+    private readonly IEventRecordWriter EventRecords;
+    private readonly INotificationDispatcher Notifications;
     private readonly IActorContext Actor;
     private readonly ILogger<ExportJobHandler> Logger;
 
@@ -30,6 +35,8 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         IExportRunner runner,
         IStorageService storage,
         IExportJobNotifier notifier,
+        IEventRecordWriter eventRecords,
+        INotificationDispatcher notifications,
         IActorContext actor,
         ILogger<ExportJobHandler> logger,
         IExportJobRepository exportJobs)
@@ -38,6 +45,8 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         Runner = runner;
         Storage = storage;
         Notifier = notifier;
+        EventRecords = eventRecords;
+        Notifications = notifications;
         Actor = actor;
         Logger = logger;
         ExportJobs = exportJobs;
@@ -65,7 +74,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
 
         if (workspaceSlug is null)
         {
-            await Fail(job, null, "The workspace could not be resolved.", cancellationToken);
+            await Fail(job, null, request.UserId, "The workspace could not be resolved.", cancellationToken);
 
             return default;
         }
@@ -74,7 +83,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
 
         try
         {
-            await Run(job, workspaceSlug, cancellationToken);
+            await Run(job, workspaceSlug, request.UserId, cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -90,7 +99,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         {
             Logger.LogError(exception, "[Export] job {PublicId} failed", job.PublicId);
 
-            await Fail(job, workspaceSlug, exception.Message, cancellationToken);
+            await Fail(job, workspaceSlug, request.UserId, exception.Message, cancellationToken);
         }
 
         return default;
@@ -106,7 +115,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         }
     }
 
-    private async Task Run(ExportJob job, string workspaceSlug, CancellationToken cancellationToken)
+    private async Task Run(ExportJob job, string workspaceSlug, string userId, CancellationToken cancellationToken)
     {
         job.Status = ExportJobStatus.Running;
         job.StartedAt = DateTime.UtcNow;
@@ -148,7 +157,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
 
         if (!reserved)
         {
-            await Fail(job, workspaceSlug, $"Workspace storage limit exceeded ({sizeBytes} bytes requested).", cancellationToken);
+            await Fail(job, workspaceSlug, userId, $"Workspace storage limit exceeded ({sizeBytes} bytes requested).", cancellationToken);
 
             return;
         }
@@ -185,6 +194,20 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
 
         await Save(job, workspaceSlug, cancellationToken);
 
+        await Announce(
+            job,
+            EventKeys.ExportCompleted,
+            ActivityType.ExportCompleted,
+            new ExportCompletedPayload
+            {
+                Format = job.Format.ToString(),
+                FileName = job.FileName,
+                RowCount = job.RowCount,
+                SizeBytes = job.SizeBytes,
+            },
+            userId,
+            cancellationToken);
+
         Logger.LogInformation("[Export] job {PublicId} produced {RowCount} rows", job.PublicId, result.RowCount);
     }
 
@@ -204,7 +227,7 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         return response.IsSuccess;
     }
 
-    private async Task Fail(ExportJob job, string? workspaceSlug, string error, CancellationToken cancellationToken)
+    private async Task Fail(ExportJob job, string? workspaceSlug, string userId, string error, CancellationToken cancellationToken)
     {
         job.Status = ExportJobStatus.Failed;
         job.Error = error;
@@ -212,6 +235,49 @@ public sealed class ExportJobHandler : IRequestHandler<ExportJobRequestedMessage
         job.CompletedAt = DateTime.UtcNow;
 
         await Save(job, workspaceSlug, cancellationToken);
+
+        await Announce(
+            job,
+            EventKeys.ExportFailed,
+            ActivityType.ExportFailed,
+            new ExportCompletedPayload
+            {
+                Format = job.Format.ToString(),
+                Error = error,
+            },
+            userId,
+            cancellationToken);
+    }
+
+    private async Task Announce(
+        ExportJob job,
+        string eventKey,
+        ActivityType activityType,
+        ExportCompletedPayload payload,
+        string userId,
+        CancellationToken cancellationToken)
+    {
+        var record = await EventRecords.Append(new EventWriteRequest<ExportCompletedPayload>
+        {
+            WorkspaceId = job.WorkspaceId,
+            EventKey = eventKey,
+            SubjectType = EventEntityTypes.From(EntityType.Workspace),
+            SubjectId = job.WorkspaceId.ToString(),
+            ActorUserId = userId,
+            Payload = payload,
+        }, cancellationToken);
+
+        await UnitOfWork.CompleteAsync(cancellationToken);
+
+        await Notifications.Dispatch(new NotificationDispatchRequest
+        {
+            UserId = userId,
+            ActorUserId = userId,
+            EventRecordId = record.Id,
+            WorkspaceId = job.WorkspaceId,
+            EntityType = EntityType.Workspace,
+            ActivityType = activityType,
+        }, cancellationToken);
     }
 
     private async Task Save(ExportJob job, string? workspaceSlug, CancellationToken cancellationToken)

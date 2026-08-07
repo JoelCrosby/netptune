@@ -51,6 +51,7 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
             notification.Link = NotificationLink.Build(
                 notification.WorkspaceSlug,
                 notification.EntityType,
+                notification.ActivityType,
                 notification.LinkIdentifier);
         }
 

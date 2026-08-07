@@ -146,9 +146,32 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Deleted comment';
     case ActivityType.restore:
       return 'Restored';
+    case ActivityType.importCompleted:
+      return 'Import completed';
+    case ActivityType.importFailed:
+      return 'Import failed';
+    case ActivityType.exportCompleted:
+      return 'Export completed';
+    case ActivityType.exportFailed:
+      return 'Export failed';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }
+};
+
+/**
+ * Whether a notification should name the entity it happened to. Transfer jobs are workspace scoped and
+ * their summary already says everything, so "Import completed Workspace" is noise.
+ */
+export const notificationNamesEntity = (
+  activityType: ActivityType
+): boolean => {
+  return (
+    activityType !== ActivityType.importCompleted &&
+    activityType !== ActivityType.importFailed &&
+    activityType !== ActivityType.exportCompleted &&
+    activityType !== ActivityType.exportFailed
+  );
 };
 
 /**
