@@ -35,9 +35,9 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
         actionTitle="Create Workspace"
         (actionClick)="openWorkspaceDialog()" />
 
-      @if (loading()) {
+      @if (loading() && !loaded()) {
         <app-page-loading />
-      } @else if (loadError()) {
+      } @else if (loadError() && !loaded()) {
         <app-error-state
           i18n-title="Shown when the workspace list fails to load"
           title="Your workspaces could not be loaded"
@@ -57,11 +57,13 @@ export class WorkspacesViewComponent {
 
   loading = this.store.selectSignal(selectWorkspacesLoading);
   loadError = this.store.selectSignal(selectWorkspacesLoadingError);
-  private loaded = this.store.selectSignal(selectWorkspacesLoaded);
+  protected loaded = this.store.selectSignal(selectWorkspacesLoaded);
   private workspaces = this.store.selectSignal(selectAllWorkspaces);
   private initialSetupOpened = false;
 
   constructor() {
+    this.store.dispatch(loadWorkspaces.init());
+
     effect(() => {
       if (
         !this.loaded() ||
