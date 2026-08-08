@@ -1,10 +1,10 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { AuditLogFilter } from '@core/models/view-models/audit-log-view-model';
-import { AuditService } from '@core/store/audit/audit.service';
+import { AuditService } from '@core/services/audit.service';
 import { LucideDownload } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { AuditStore } from '@audit/audit-state.service';
+import { AuditFilterService } from '@audit/audit-filter.service';
 import { downloadFile } from '@core/util/download-helper';
 import { AuditDateFilterComponent } from './audit-date-filter.component';
 
@@ -52,7 +52,7 @@ import { AuditDateFilterComponent } from './audit-date-filter.component';
   `,
 })
 export class AuditFiltersComponent {
-  private state = inject(AuditStore);
+  private filters = inject(AuditFilterService);
   private auditService = inject(AuditService);
 
   fromDate = signal<string>('');
@@ -60,7 +60,7 @@ export class AuditFiltersComponent {
   readonly filterChange = output();
 
   onApply() {
-    this.state.applyFilters(
+    this.filters.apply(
       this.fromDate() || undefined,
       this.toDate() || undefined
     );
@@ -70,7 +70,7 @@ export class AuditFiltersComponent {
   onReset() {
     this.fromDate.set('');
     this.toDate.set('');
-    this.state.reset();
+    this.filters.reset();
     this.filterChange.emit();
   }
 

@@ -1,6 +1,7 @@
 import { Component, computed, inject, viewChild } from '@angular/core';
 import { Params } from '@angular/router';
-import { AuditStore } from '@audit/audit-state.service';
+import { AuditFilterService } from '@audit/audit-filter.service';
+import { auditFilterParams } from '@core/resources/audit.resource';
 import { ActivityType } from '@core/models/view-models/activity-view-model';
 import { AuditLogViewModel } from '@core/models/view-models/audit-log-view-model';
 import { DialogService } from '@core/services/dialog.service';
@@ -118,22 +119,14 @@ import { AuditLogDetailDialogComponent } from '../../dialogs/audit-log-detail-di
   `,
 })
 export class AuditTableComponent {
-  private readonly state = inject(AuditStore);
+  private readonly filters = inject(AuditFilterService);
   private readonly dialog = inject(DialogService);
   private readonly datatable = viewChild.required(
     DatatableComponent<AuditLogViewModel>
   );
 
   private readonly resourceParams = computed<Params>(() => {
-    const filter = this.state.filter();
-
-    return {
-      userId: filter.userId,
-      entityType: filter.entityType,
-      activityType: filter.activityType,
-      from: filter.from,
-      to: filter.to,
-    };
+    return auditFilterParams(this.filters.filter());
   });
 
   protected readonly data: DatatableDataSource<AuditLogViewModel> = {

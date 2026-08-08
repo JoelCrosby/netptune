@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
-import { AuditStore } from '@audit/audit-state.service';
+import { AuditFilterService } from '@audit/audit-filter.service';
+import { auditSummaryResource } from '@core/resources/audit.resource';
 import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   REPORT_CHART_LABEL_STYLE,
@@ -29,7 +30,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
       title="Activity over time"
       i18n-description="Explains what the audit activity chart plots"
       description="Recorded events per day">
-      @if (!auditStore.loaded()) {
+      @if (summary.isLoading()) {
         <div
           role="status"
           i18n-aria-label="Shown while the audit activity chart loads"
@@ -64,7 +65,9 @@ import { NgApexchartsModule } from 'ng-apexcharts';
   `,
 })
 export class AuditActivityChartComponent {
-  protected readonly auditStore = inject(AuditStore);
+  private readonly filters = inject(AuditFilterService);
+
+  protected readonly summary = auditSummaryResource(this.filters.filter);
 
   private readonly store = inject(Store);
   private readonly effectiveTheme =
@@ -74,13 +77,13 @@ export class AuditActivityChartComponent {
   protected readonly activityIcon = LucideActivity;
 
   protected readonly hasData = computed(() =>
-    this.auditStore.summary().some((point) => point.count > 0)
+    this.summary.value().some((point) => point.count > 0)
   );
 
   readonly series = computed(() => [
     {
       name: $localize`:Series name for recorded audit events:Events`,
-      data: this.auditStore.summary().map((point) => {
+      data: this.summary.value().map((point) => {
         return [new Date(point.date).getTime(), point.count];
       }),
     },
@@ -96,7 +99,7 @@ export class AuditActivityChartComponent {
   }));
 
   readonly xaxis = computed(() => {
-    const points = this.auditStore.summary();
+    const points = this.summary.value();
     const last = points[points.length - 1];
 
     return {

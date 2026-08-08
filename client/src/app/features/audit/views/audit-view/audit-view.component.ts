@@ -4,11 +4,11 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 import { AuditFiltersComponent } from '@audit/components/audit-filters/audit-filters.component';
 import { AuditTableComponent } from '@audit/components/audit-table/audit-table.component';
 import { AuditActivityChartComponent } from '@audit/components/audit-activity-chart/audit-activity-chart.component';
-import { AuditStore } from '@audit/audit-state.service';
+import { AuditFilterService } from '@audit/audit-filter.service';
 
 @Component({
   selector: 'app-audit-view',
-  providers: [AuditStore],
+  providers: [AuditFilterService],
   imports: [
     PageContainerComponent,
     PageHeaderComponent,
