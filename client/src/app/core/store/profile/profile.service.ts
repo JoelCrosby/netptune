@@ -3,6 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { ClientResponse } from '@core/models/client-response';
+import { LoginMethods } from '@core/models/login-methods';
+import { SetPasswordRequest } from '@core/models/requests/set-password-request';
 import { UploadResponse } from '@core/models/upload-result';
 import { map } from 'rxjs/operators';
 
@@ -22,6 +24,10 @@ export class ProfileService {
     return this.http.patch<ClientResponse>('api/auth/change-password', request);
   }
 
+  setPassword(request: SetPasswordRequest) {
+    return this.http.post<ClientResponse>('api/auth/set-password', request);
+  }
+
   uploadProfilePicture(data: FormData) {
     return this.http.post<ClientResponse<UploadResponse>>(
       'api/storage/profile-picture',
@@ -29,9 +35,9 @@ export class ProfileService {
     );
   }
 
-  getLoginProviders() {
+  getLoginMethods() {
     return this.http
-      .get<ClientResponse<string[]>>('api/auth/login-providers')
-      .pipe(map((r) => r.payload ?? []));
+      .get<ClientResponse<LoginMethods>>('api/auth/login-methods')
+      .pipe(map((r) => r.payload ?? { providers: [], hasPassword: false }));
   }
 }

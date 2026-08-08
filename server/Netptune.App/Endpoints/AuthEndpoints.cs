@@ -7,6 +7,7 @@ using Netptune.App.Utility;
 using Netptune.Core.Authentication;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
+using Netptune.Core.Models.Authentication;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -24,41 +25,94 @@ public static class AuthEndpoints
     {
         var group = builder.MapGroup("auth");
 
-        group.MapPost("/login", HandleLogin)
+        group
+            .MapPost("/login", HandleLogin)
             .AllowAnonymous()
             .RequireRateLimiting("auth");
 
-        group.MapPost("/register", HandleRegister)
+        group
+            .MapPost("/register", HandleRegister)
             .AllowAnonymous()
             .RequireRateLimiting("register");
 
-        group.MapPost("/confirm-email", HandleConfirmEmail).AllowAnonymous();
-        group.MapGet("/request-password-reset", HandleRequestPasswordReset).AllowAnonymous();
-        group.MapPost("/reset-password", HandleResetPassword).AllowAnonymous();
-        group.MapPatch("/change-password", HandleChangePassword).RequireAuthorization(NetptunePolicies.InteractiveUser);
-        group.MapGet("/current-user", HandleCurrentUser).RequireAuthorization(NetptunePolicies.InteractiveUser);
-        group.MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite).AllowAnonymous();
-        group.MapPost("/refresh", HandleRefresh).AllowAnonymous();
-        group.MapPost("/logout", HandleLogout).RequireAuthorization(NetptunePolicies.InteractiveUser);
-        group.MapPost("/link-provider", HandleLinkProvider).RequireAuthorization(NetptunePolicies.InteractiveUser);
-        group.MapGet("/login-providers", HandleGetLoginProviders).RequireAuthorization(NetptunePolicies.InteractiveUser);
+        group
+            .MapPost("/confirm-email", HandleConfirmEmail)
+            .AllowAnonymous();
 
-        group.MapGet("/github-login", HandleGithubLogin).AllowAnonymous();
-        group.MapGet("/github-login-redirect", HandleGithubLoginCallback)
+        group
+            .MapGet("/request-password-reset", HandleRequestPasswordReset)
+            .AllowAnonymous();
+
+        group
+            .MapPost("/reset-password", HandleResetPassword)
+            .AllowAnonymous();
+
+        group
+            .MapPatch("/change-password", HandleChangePassword)
+            .RequireAuthorization(NetptunePolicies.InteractiveUser);
+
+        group
+            .MapPost("/set-password", HandleSetPassword)
+            .RequireAuthorization(NetptunePolicies.InteractiveUser);
+
+        group
+            .MapGet("/current-user", HandleCurrentUser)
+            .RequireAuthorization(NetptunePolicies.InteractiveUser);
+
+        group
+            .MapGet("/validate-workspace-invite", HandleValidateWorkspaceInvite)
+            .AllowAnonymous();
+
+        group
+            .MapPost("/refresh", HandleRefresh)
+            .AllowAnonymous();
+
+        group
+            .MapPost("/logout", HandleLogout)
+            .RequireAuthorization(NetptunePolicies.InteractiveUser);
+
+        group
+            .MapPost("/link-provider", HandleLinkProvider)
+            .RequireAuthorization(NetptunePolicies.InteractiveUser);
+
+        group
+            .MapGet("/login-methods", HandleGetLoginMethods)
+            .RequireAuthorization(NetptunePolicies.InteractiveUser);
+
+        group
+            .MapGet("/github-login", HandleGithubLogin)
+            .AllowAnonymous();
+
+        group
+            .MapGet("/github-login-redirect", HandleGithubLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Github);
-        group.MapGet("/github-login-complete", HandleGithubLoginCallback)
+
+        group
+            .MapGet("/github-login-complete", HandleGithubLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Github);
 
-        group.MapGet("/google-login", HandleGoogleLogin).AllowAnonymous();
-        group.MapGet("/google-login-redirect", HandleGoogleLoginCallback)
-            .RequireAuthorization(AuthenticationSchemes.Google);
-        group.MapGet("/google-login-complete", HandleGoogleLoginCallback)
+        group
+            .MapGet("/google-login", HandleGoogleLogin)
+            .AllowAnonymous();
+
+        group
+            .MapGet("/google-login-redirect", HandleGoogleLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Google);
 
-        group.MapGet("/microsoft-login", HandleMicrosoftLogin).AllowAnonymous();
-        group.MapGet("/microsoft-login-redirect", HandleMicrosoftLoginCallback)
+        group
+            .MapGet("/google-login-complete", HandleGoogleLoginCallback)
+            .RequireAuthorization(AuthenticationSchemes.Google);
+
+        group
+            .MapGet("/microsoft-login", HandleMicrosoftLogin)
+            .AllowAnonymous();
+
+        group
+            .MapGet("/microsoft-login-redirect", HandleMicrosoftLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Microsoft);
-        group.MapGet("/microsoft-login-complete", HandleMicrosoftLoginCallback)
+
+        group
+            .MapGet("/microsoft-login-complete", HandleMicrosoftLoginCallback)
             .RequireAuthorization(AuthenticationSchemes.Microsoft);
 
         return builder;
@@ -224,6 +278,22 @@ public static class AuthEndpoints
         return Results.Ok(result);
     }
 
+    public static async Task<IResult> HandleSetPassword(
+        INetptuneAuthService authenticationService,
+        SetPasswordRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Password))
+        {
+            return Results.BadRequest(ClientResponse.Failed("Password is required."));
+        }
+
+        var result = await authenticationService.SetPassword(request);
+
+        if (!result.IsSuccess) return Results.BadRequest(result);
+
+        return Results.Ok(result);
+    }
+
     public static async Task<IResult> HandleCurrentUser(
         INetptuneAuthService authenticationService)
     {
@@ -251,10 +321,10 @@ public static class AuthEndpoints
         return Results.Ok();
     }
 
-    public static async Task<IResult> HandleGetLoginProviders(INetptuneAuthService authenticationService)
+    public static async Task<IResult> HandleGetLoginMethods(INetptuneAuthService authenticationService)
     {
-        var providers = await authenticationService.GetLoginProviders();
-        return Results.Ok(ClientResponse<IList<string>>.Success(providers));
+        var methods = await authenticationService.GetLoginMethods();
+        return Results.Ok(ClientResponse<LoginMethods>.Success(methods));
     }
 
     public static async Task<IResult> HandleLinkProvider(

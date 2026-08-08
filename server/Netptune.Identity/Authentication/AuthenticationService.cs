@@ -532,6 +532,34 @@ public class NetptuneAuthService : INetptuneAuthService
         return ClientResponse.Success;
     }
 
+    public async Task<ClientResponse> SetPassword(SetPasswordRequest request)
+    {
+        var user = await UserManager.FindByIdAsync(Identity.GetCurrentUserId());
+
+        if (!IsInteractiveUser(user)) return ClientResponse.Failed();
+
+        var hasPassword = await UserManager.HasPasswordAsync(user);
+
+        // Adding a password is only for accounts created through an external
+        // provider. Anyone with a password already must go through ChangePassword,
+        // which proves knowledge of the current one.
+        if (hasPassword)
+        {
+            return ClientResponse.Failed("This account already has a password.");
+        }
+
+        var result = await UserManager.AddPasswordAsync(user, request.Password);
+
+        if (!result.Succeeded)
+        {
+            return ClientResponse.Failed(string.Join(", ", result.Errors.Select(error => error.Description)));
+        }
+
+        await LogUserIn(user);
+
+        return ClientResponse.Success;
+    }
+
     public async Task<CurrentUserResponse?> CurrentUser()
     {
         var principle = ContextAccessor.HttpContext?.User;
@@ -696,12 +724,22 @@ public class NetptuneAuthService : INetptuneAuthService
         };
     }
 
-    public async Task<IList<string>> GetLoginProviders()
+    public async Task<LoginMethods> GetLoginMethods()
     {
-        var user = await Identity.GetCurrentUser();
-        var logins = await UserManager.GetLoginsAsync(user);
+        // Loaded through the UserManager rather than the identity cache, whose copy of the
+        // user can predate a password being set and would report HasPassword incorrectly.
+        var user = await UserManager.FindByIdAsync(Identity.GetCurrentUserId());
 
-        return logins.Select(l => l.LoginProvider).ToList();
+        if (user is null) return new LoginMethods();
+
+        var logins = await UserManager.GetLoginsAsync(user);
+        var hasPassword = await UserManager.HasPasswordAsync(user);
+
+        return new LoginMethods
+        {
+            Providers = logins.Select(l => l.LoginProvider).ToList(),
+            HasPassword = hasPassword,
+        };
     }
 
     private static bool IsInteractiveUser([NotNullWhen(true)] AppUser? user)

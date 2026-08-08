@@ -46,7 +46,30 @@ export const selectChangePasswordError = createSelector(
   }
 );
 
+export const selectSetPasswordLoading = createSelector(
+  selectProfileFeature,
+  (state: ProfileState) => state.setPasswordLoading
+);
+
+export const selectSetPasswordError = createSelector(
+  selectProfileFeature,
+  (state: ProfileState) => {
+    const error = state.setPasswordError;
+
+    // Not the raw Error.message: unwrapClientReposne prefixes it with
+    // "Server responded with failure: ", which getErrorMessage strips.
+    return error ? getErrorMessage(error) : undefined;
+  }
+);
+
 export const selectLoginProviders = createSelector(
   selectProfileFeature,
   (state: ProfileState) => state.loginProviders ?? []
+);
+
+// Undefined until the login methods have loaded, so the password card can hold
+// off on choosing between its set and change modes.
+export const selectHasPassword = createSelector(
+  selectProfileFeature,
+  (state: ProfileState) => state.hasPassword
 );

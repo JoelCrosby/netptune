@@ -1,6 +1,8 @@
 import { AppUser } from '@core/models/appuser';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoginMethods } from '@core/models/login-methods';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
+import { SetPasswordRequest } from '@core/models/requests/set-password-request';
 import { UploadResponse } from '@core/models/upload-result';
 import { createAsyncAction } from '@core/util/create-async-action';
 import { props } from '@ngrx/store';
@@ -27,12 +29,19 @@ export const changePassword = createAsyncAction('[Profile] Change Password', {
   fail: props<{ error: HttpErrorResponse | Error }>(),
 });
 
-// Load Login Providers
+// Set Password
 
-export const loadLoginProviders = createAsyncAction(
-  '[Profile] Load Login Providers',
+export const setPassword = createAsyncAction('[Profile] Set Password', {
+  init: props<{ request: SetPasswordRequest }>(),
+  fail: props<{ error: HttpErrorResponse | Error }>(),
+});
+
+// Load Login Methods
+
+export const loadLoginMethods = createAsyncAction(
+  '[Profile] Load Login Methods',
   {
-    success: props<{ providers: string[] }>(),
+    success: props<{ methods: LoginMethods }>(),
     fail: props<{ error: HttpErrorResponse | Error }>(),
   }
 );

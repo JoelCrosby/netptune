@@ -6,6 +6,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.WebUtilities;
 
+using Netptune.Core.Models.Authentication;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.TestData;
 
@@ -132,21 +134,22 @@ public sealed class AuthExternalProviderEndpointTests
     }
 
     [Fact]
-    public async Task GetLoginProviders_ShouldReturnOkWithCorrectShape()
+    public async Task GetLoginMethods_ShouldReturnOkWithCorrectShape()
     {
-        var response = await AuthenticatedClient.GetAsync("api/auth/login-providers");
+        var response = await AuthenticatedClient.GetAsync("api/auth/login-methods");
         var content = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, content);
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<string>>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<LoginMethods>>();
 
         result.IsSuccess.Should().BeTrue();
         result.Payload.Should().NotBeNull();
+        result.Payload!.Providers.Should().NotBeNull();
     }
 
     [Fact]
-    public async Task GetLoginProviders_ShouldReturnProvider_AfterLinkingOne()
+    public async Task GetLoginMethods_ShouldReturnProvider_AfterLinkingOne()
     {
         using var providerRequest = new HttpRequestMessage(HttpMethod.Get, "api/auth/github-login-complete");
         var unique = Guid.NewGuid().ToString("N")[..8];
@@ -160,11 +163,11 @@ public sealed class AuthExternalProviderEndpointTests
         var linkResponse = await AuthenticatedClient.PostAsJsonAsync("api/auth/link-provider", new { token });
         linkResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var response = await AuthenticatedClient.GetAsync("api/auth/login-providers");
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<string>>>();
+        var response = await AuthenticatedClient.GetAsync("api/auth/login-methods");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<LoginMethods>>();
 
         result.IsSuccess.Should().BeTrue();
-        result.Payload.Should().Contain("GitHub");
+        result.Payload!.Providers.Should().Contain("GitHub");
     }
 
     [Fact]
@@ -194,5 +197,40 @@ public sealed class AuthExternalProviderEndpointTests
 
         var reuseResponse = await Client.PostAsJsonAsync("api/auth/link-provider", new { token });
         reuseResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    // The seeded users are created without a password hash, which is the same shape as an account
+    // that only ever signed in through an external provider.
+    [Fact]
+    public async Task SetPassword_ShouldAddAPassword_AndThenRejectFurtherAttempts()
+    {
+        var response = await AuthenticatedClient.PostAsJsonAsync("api/auth/set-password", new SetPasswordRequest
+        {
+            Password = "Integration-Set-Password-1!",
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var methods = await AuthenticatedClient.GetFromJsonAsync<ClientResponse<LoginMethods>>("api/auth/login-methods");
+
+        methods.Payload!.HasPassword.Should().BeTrue();
+
+        var repeat = await AuthenticatedClient.PostAsJsonAsync("api/auth/set-password", new SetPasswordRequest
+        {
+            Password = "Integration-Set-Password-2!",
+        });
+
+        repeat.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task SetPassword_ShouldReturnBadRequest_WhenThePasswordIsEmpty()
+    {
+        var response = await AuthenticatedClient.PostAsJsonAsync("api/auth/set-password", new SetPasswordRequest
+        {
+            Password = string.Empty,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

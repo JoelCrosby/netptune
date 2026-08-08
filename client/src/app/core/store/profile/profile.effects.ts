@@ -96,6 +96,24 @@ export class ProfileEffects {
     );
   });
 
+  setPassword$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(actions.setPassword.init),
+      switchMap((action) =>
+        this.profileService.setPassword(action.request).pipe(
+          unwrapClientReposne(),
+          tap(() =>
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Password Set`
+            )
+          ),
+          map(() => actions.setPassword.success()),
+          catchError((error) => of(actions.setPassword.fail({ error })))
+        )
+      )
+    );
+  });
+
   updateProfileWithImage$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.updateProfile.init),
@@ -123,14 +141,14 @@ export class ProfileEffects {
     );
   });
 
-  loadLoginProviders$ = createEffect(() => {
+  loadLoginMethods$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadProfile.init),
       switchMap(() =>
-        this.profileService.getLoginProviders().pipe(
-          map((providers) => actions.loadLoginProviders.success({ providers })),
+        this.profileService.getLoginMethods().pipe(
+          map((methods) => actions.loadLoginMethods.success({ methods })),
           catchError((error: HttpErrorResponse) =>
-            of(actions.loadLoginProviders.fail({ error }))
+            of(actions.loadLoginMethods.fail({ error }))
           )
         )
       )

@@ -46,7 +46,7 @@
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:61</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:35,38</note>
-        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:85</note>
+        <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:87</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -3238,7 +3238,7 @@
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:84,86</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:105</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:274</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:69,71</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:71,73</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:61,62</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:133</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:44,45</note>
@@ -3415,7 +3415,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:75,78</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:67,68</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:15,19</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:16,20</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:105,108</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:154,157</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
@@ -3437,7 +3437,7 @@
     <unit id="533409430255690539">
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:81,83</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:21,23</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:22,24</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
       <segment state="translated">
@@ -3616,6 +3616,16 @@
       <segment state="translated">
         <source>Color</source>
         <target>Color</target>
+      </segment>
+    </unit>
+    <unit id="9013345619407100866">
+      <notes>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:67,73</note>
+        <note category="description">Explains what the set password card does for accounts created through an external provider</note>
+      </notes>
+      <segment state="translated">
+        <source> You sign in with a linked account. Set a password to also sign in with your email address. </source>
+        <target> Inicias sesión con una cuenta vinculada. Establece una contraseña para iniciar sesión también con tu dirección de correo electrónico. </target>
       </segment>
     </unit>
     <unit id="3080368134005829146">
@@ -4443,7 +4453,7 @@
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:53</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:55</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:286</note>
         <note category="description">Section heading for a task&apos;s tags</note>
@@ -5341,6 +5351,7 @@
       <notes>
         <note category="location">src/app/features/auth/components/login/login.component.ts:78,81</note>
         <note category="location">src/app/features/auth/components/register/register.component.ts:88,91</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:162</note>
         <note category="description">Label of the password field on the login form</note>
       </notes>
       <segment state="translated">
@@ -5498,7 +5509,7 @@
     <unit id="3241357959735682038">
       <notes>
         <note category="location">src/app/features/auth/components/register/register.component.ts:99,102</note>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:75,78</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:96,99</note>
         <note category="description">Label of the password confirmation field on the registration form</note>
       </notes>
       <segment state="translated">
@@ -5656,7 +5667,7 @@
     <unit id="1221596867309460035">
       <notes>
         <note category="location">src/app/features/auth/components/reset-password/reset-password.component.ts:49,52</note>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:68,70</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:159</note>
         <note category="description">Label of the new password field on the password reset form</note>
       </notes>
       <segment state="translated">
@@ -8460,6 +8471,16 @@
         <target> No se ha podido probar esta tarea. </target>
       </segment>
     </unit>
+    <unit id="5218793950357608759">
+      <notes>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:111,114</note>
+        <note category="description">Button that sets a password on the account</note>
+      </notes>
+      <segment state="translated">
+        <source> Set Password </source>
+        <target> Establecer contraseña </target>
+      </segment>
+    </unit>
     <unit id="4260236037636469178">
       <notes>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:118,120</note>
@@ -9741,6 +9762,16 @@
         <target> Los nombres y tipos de columna y algunos valores de ejemplo se envían a tu proveedor de asistente. </target>
       </segment>
     </unit>
+    <unit id="778667009561929745">
+      <notes>
+        <note category="location">src/app/core/store/profile/profile.effects.ts:107</note>
+        <note category="description">Confirmation shown after an action succeeds</note>
+      </notes>
+      <segment state="translated">
+        <source>Password Set</source>
+        <target>Contraseña establecida</target>
+      </segment>
+    </unit>
     <unit id="7787043747271951847">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:518</note>
@@ -10175,7 +10206,7 @@
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:102,104</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:108,110</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:89,91</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:63,65</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:65,67</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:45,48</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
@@ -12159,7 +12190,7 @@
     </unit>
     <unit id="1846542227840529109">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:61,64</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:82,85</note>
         <note category="description">Label of the existing password field</note>
       </notes>
       <segment state="translated">
@@ -12169,7 +12200,7 @@
     </unit>
     <unit id="1481645236299803925">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:85,88</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:107,109</note>
         <note category="description">Button that changes the account password</note>
       </notes>
       <segment state="translated">
@@ -12179,7 +12210,7 @@
     </unit>
     <unit id="1543538730036692975">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:119</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:185</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -12189,8 +12220,8 @@
     </unit>
     <unit id="1557080315836233628">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:44,47</note>
-        <note category="description">Heading of the change password card</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:52,54</note>
+        <note category="description">Heading of the account password card</note>
       </notes>
       <segment state="translated">
         <source> Password </source>
@@ -14506,7 +14537,7 @@
     <unit id="5356677481738441703">
       <notes>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:93,96</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:73,75</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:75,77</note>
         <note category="description">Column heading for the number of tasks using a row</note>
       </notes>
       <segment state="translated">
@@ -15089,7 +15120,7 @@
     </unit>
     <unit id="1005293436477635392">
       <notes>
-        <note category="location">src/app/features/profile/components/change-password/change-password.component.ts:49,52</note>
+        <note category="location">src/app/features/profile/components/account-password/account-password.component.ts:58,60</note>
         <note category="description">Explains what the change password card does</note>
       </notes>
       <segment state="translated">
@@ -16130,7 +16161,7 @@
     </unit>
     <unit id="9066599393258396757">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:54,57</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:56,59</note>
         <note category="description">Button that opens the create-tag dialog</note>
       </notes>
       <segment state="translated">
@@ -16140,7 +16171,7 @@
     </unit>
     <unit id="7065760978924019495">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:61,62</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:63,64</note>
         <note category="description">Shown when the tag list fails to load</note>
       </notes>
       <segment state="translated">
@@ -16150,8 +16181,8 @@
     </unit>
     <unit id="5872175735754226507">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:96,98</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:101,103</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:98,100</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:103,105</note>
         <note category="description">Tooltip on the button that edits a tag</note>
       </notes>
       <segment state="translated">
@@ -16162,8 +16193,8 @@
     <unit id="108935827638897170">
       <notes>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:126,128</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:108,110</note>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:113,115</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:110,112</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:115,117</note>
         <note category="description">Button that deletes a tag</note>
       </notes>
       <segment state="translated">
@@ -16173,7 +16204,7 @@
     </unit>
     <unit id="2723715945767972460">
       <notes>
-        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:124,125</note>
+        <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:126,127</note>
         <note category="description">Empty state for the tag list</note>
       </notes>
       <segment state="translated">

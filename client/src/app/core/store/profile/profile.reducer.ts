@@ -47,6 +47,7 @@ const reducer = createReducer(
   on(actions.changePassword.init, (state): ProfileState => ({
     ...state,
     changePasswordLoading: true,
+    changePasswordError: undefined,
   })),
   on(actions.changePassword.fail, (state, { error }): ProfileState => ({
     ...state,
@@ -56,17 +57,35 @@ const reducer = createReducer(
   on(actions.changePassword.success, (state): ProfileState => ({
     ...state,
     changePasswordLoading: false,
+    changePasswordError: undefined,
   })),
 
-  // Load Login Providers
+  // Set Password
 
-  on(
-    actions.loadLoginProviders.success,
-    (state, { providers }): ProfileState => ({
-      ...state,
-      loginProviders: providers,
-    })
-  ),
+  on(actions.setPassword.init, (state): ProfileState => ({
+    ...state,
+    setPasswordLoading: true,
+    setPasswordError: undefined,
+  })),
+  on(actions.setPassword.fail, (state, { error }): ProfileState => ({
+    ...state,
+    setPasswordLoading: false,
+    setPasswordError: error,
+  })),
+  on(actions.setPassword.success, (state): ProfileState => ({
+    ...state,
+    setPasswordLoading: false,
+    setPasswordError: undefined,
+    hasPassword: true,
+  })),
+
+  // Load Login Methods
+
+  on(actions.loadLoginMethods.success, (state, { methods }): ProfileState => ({
+    ...state,
+    loginProviders: methods.providers,
+    hasPassword: methods.hasPassword,
+  })),
 
   // Upload Profile Picture
 

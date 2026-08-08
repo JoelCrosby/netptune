@@ -28,9 +28,11 @@ public interface INetptuneAuthService
 
     Task<ClientResponse> ChangePassword(ChangePasswordRequest request);
 
+    Task<ClientResponse> SetPassword(SetPasswordRequest request);
+
     Task<CurrentUserResponse?> CurrentUser();
 
     Task<WorkspaceInvite?> ValidateInviteCode(string code);
 
-    Task<IList<string>> GetLoginProviders();
+    Task<LoginMethods> GetLoginMethods();
 }

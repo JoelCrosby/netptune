@@ -10,7 +10,10 @@ export interface ProfileState {
   updateProfileLoading: boolean;
   changePasswordLoading: boolean;
   changePasswordError?: HttpErrorResponse | Error;
+  setPasswordLoading: boolean;
+  setPasswordError?: HttpErrorResponse | Error;
   loginProviders?: string[];
+  hasPassword?: boolean;
 }
 
 export const initialState: ProfileState = {
@@ -18,4 +21,5 @@ export const initialState: ProfileState = {
   loadProfileloading: true,
   updateProfileLoading: false,
   changePasswordLoading: false,
+  setPasswordLoading: false,
 };

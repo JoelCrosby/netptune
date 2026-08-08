@@ -1146,10 +1146,77 @@ public class AuthenticationServiceTests
         result.Should().BeNull();
     }
 
-    // GetLoginProviders
+    // SetPassword
 
     [Fact]
-    public async Task GetLoginProviders_ShouldReturnProviderNames_WhenUserHasLinkedProviders()
+    public async Task SetPassword_ShouldReturnSuccess_WhenAccountHasNoPassword()
+    {
+        var user = AutoFixtures.AppUser;
+        var request = new SetPasswordRequest { Password = "newpassword" };
+
+        Identity.GetCurrentUserId().Returns(user.Id);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
+        UserManager.HasPasswordAsync(user).Returns(false);
+        UserManager.AddPasswordAsync(user, request.Password).Returns(IdentityResult.Success);
+        SignInManager.SignInAsync(user, false).Returns(Task.CompletedTask);
+        UserManager.UpdateAsync(user).Returns(IdentityResult.Success);
+
+        var result = await Service.SetPassword(request);
+
+        result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task SetPassword_ShouldReturnFailure_WhenAccountAlreadyHasPassword()
+    {
+        var user = AutoFixtures.AppUser;
+        var request = new SetPasswordRequest { Password = "newpassword" };
+
+        Identity.GetCurrentUserId().Returns(user.Id);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
+        UserManager.HasPasswordAsync(user).Returns(true);
+
+        var result = await Service.SetPassword(request);
+
+        result.IsSuccess.Should().BeFalse();
+        await UserManager.DidNotReceive().AddPasswordAsync(user, Arg.Any<string>());
+    }
+
+    [Fact]
+    public async Task SetPassword_ShouldReturnFailure_WhenUserNotFound()
+    {
+        var request = new SetPasswordRequest { Password = "newpassword" };
+
+        Identity.GetCurrentUserId().Returns("missing-id");
+        UserManager.FindByIdAsync("missing-id").ReturnsNull();
+
+        var result = await Service.SetPassword(request);
+
+        result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task SetPassword_ShouldReturnFailure_WhenPasswordIsRejected()
+    {
+        var user = AutoFixtures.AppUser;
+        var request = new SetPasswordRequest { Password = "short" };
+
+        Identity.GetCurrentUserId().Returns(user.Id);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
+        UserManager.HasPasswordAsync(user).Returns(false);
+        UserManager.AddPasswordAsync(user, request.Password)
+            .Returns(IdentityResult.Failed(new IdentityError { Description = "Password is too short" }));
+
+        var result = await Service.SetPassword(request);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Be("Password is too short");
+    }
+
+    // GetLoginMethods
+
+    [Fact]
+    public async Task GetLoginMethods_ShouldReturnProviderNames_WhenUserHasLinkedProviders()
     {
         var user = AutoFixtures.AppUser;
         var logins = new List<UserLoginInfo>
@@ -1158,24 +1225,30 @@ public class AuthenticationServiceTests
             new("Google", "google-key-456", "Google"),
         };
 
-        Identity.GetCurrentUser().Returns(user);
+        Identity.GetCurrentUserId().Returns(user.Id);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
         UserManager.GetLoginsAsync(user).Returns(logins);
+        UserManager.HasPasswordAsync(user).Returns(true);
 
-        var result = await Service.GetLoginProviders();
+        var result = await Service.GetLoginMethods();
 
-        result.Should().BeEquivalentTo(["GitHub", "Google"]);
+        result.Providers.Should().BeEquivalentTo(["GitHub", "Google"]);
+        result.HasPassword.Should().BeTrue();
     }
 
     [Fact]
-    public async Task GetLoginProviders_ShouldReturnEmptyList_WhenUserHasNoLinkedProviders()
+    public async Task GetLoginMethods_ShouldReturnEmptyList_WhenUserHasNoLinkedProviders()
     {
         var user = AutoFixtures.AppUser;
 
-        Identity.GetCurrentUser().Returns(user);
+        Identity.GetCurrentUserId().Returns(user.Id);
+        UserManager.FindByIdAsync(user.Id).Returns(user);
         UserManager.GetLoginsAsync(user).Returns([]);
+        UserManager.HasPasswordAsync(user).Returns(false);
 
-        var result = await Service.GetLoginProviders();
+        var result = await Service.GetLoginMethods();
 
-        result.Should().BeEmpty();
+        result.Providers.Should().BeEmpty();
+        result.HasPassword.Should().BeFalse();
     }
 }

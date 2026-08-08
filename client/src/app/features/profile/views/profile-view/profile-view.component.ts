@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
 import { Store } from '@ngrx/store';
-import { ChangePasswordComponent } from '@profile/components/change-password/change-password.component';
+import { AccountPasswordComponent } from '@profile/components/account-password/account-password.component';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
 import { LinkedProvidersComponent } from '@profile/components/linked-providers/linked-providers.component';
 import { loadProfile } from '@app/core/store/profile/profile.actions';
@@ -22,7 +22,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     PageHeaderComponent,
     PageLoadingComponent,
     UpdateProfileComponent,
-    ChangePasswordComponent,
+    AccountPasswordComponent,
     LinkedProvidersComponent,
   ],
   template: `
@@ -46,7 +46,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
       } @else {
         <div class="flex flex-col gap-6">
           <app-update-profile />
-          <app-change-password />
+          <app-account-password />
           <app-linked-providers />
         </div>
       }
