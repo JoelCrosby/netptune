@@ -6,8 +6,10 @@ import {
   OnDestroy,
   TemplateRef,
   ViewContainerRef,
+  computed,
   inject,
   input,
+  signal,
   viewChild,
 } from '@angular/core';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
@@ -16,14 +18,11 @@ import { PopoverSurfaceComponent } from '@static/components/popover-surface/popo
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EntityType } from '@core/models/entity-type';
-import * as ActivityActions from '@core/store/activity/activity.actions';
 import {
-  selectActivities,
-  selectActivitiesLoaded,
-  selectActivityCanLoadMore,
-} from '@core/store/activity/activity.selectors';
+  ActivityFeedRequest,
+  activityResource,
+} from '@core/resources/activity.resource';
 import { LucideActivity, LucideHistory } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { ActivityTimeRangePipe } from '@static/pipes/activity-time-range.pipe';
 import { ActivityPipe } from '@static/pipes/activity.pipe';
@@ -123,7 +122,6 @@ import { ActivityPipe } from '@static/pipes/activity.pipe';
   `,
 })
 export class ActivityMenuComponent implements OnDestroy {
-  private store = inject(Store);
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
   private el = inject(ElementRef<HTMLElement>);
@@ -131,9 +129,22 @@ export class ActivityMenuComponent implements OnDestroy {
   readonly entityType = input.required<EntityType>();
   readonly entityId = input<number>();
 
-  readonly activities = this.store.selectSignal(selectActivities);
-  readonly loaded = this.store.selectSignal(selectActivitiesLoaded);
-  readonly canLoadMore = this.store.selectSignal(selectActivityCanLoadMore);
+  private readonly isOpen = signal(false);
+
+  private readonly request = computed<ActivityFeedRequest | null>(() => {
+    const entityId = this.entityId();
+    const isReady = this.isOpen() && entityId !== undefined;
+
+    if (!isReady) return null;
+
+    return { entityType: this.entityType(), entityId };
+  });
+
+  private readonly feed = activityResource(this.request);
+
+  readonly activities = this.feed.items;
+  readonly loaded = this.feed.loaded;
+  readonly canLoadMore = this.feed.canLoadMore;
 
   private readonly menuTemplate =
     viewChild.required<TemplateRef<unknown>>('menuTemplate');
@@ -179,30 +190,18 @@ export class ActivityMenuComponent implements OnDestroy {
     this.overlayRef.attach(new TemplatePortal(this.menuTemplate(), this.vcr));
     this.overlayRef.backdropClick().subscribe(() => this.closeMenu());
 
-    const entityType = this.entityType();
-    const entityId = this.entityId();
-
-    if (entityId !== undefined) {
-      this.store.dispatch(
-        ActivityActions.loadActivity.init({ entityType, entityId })
-      );
-    }
+    this.isOpen.set(true);
   }
 
+  /* Closing idles the resource, which empties the list and forgets the cursor. */
   private closeMenu() {
     this.overlayRef?.detach();
-    this.store.dispatch(ActivityActions.clearState());
+
+    this.isOpen.set(false);
   }
 
   loadMore() {
-    const entityType = this.entityType();
-    const entityId = this.entityId();
-
-    if (entityId !== undefined) {
-      this.store.dispatch(
-        ActivityActions.loadMoreActivity.init({ entityType, entityId })
-      );
-    }
+    this.feed.loadMore();
   }
 
   ngOnDestroy() {

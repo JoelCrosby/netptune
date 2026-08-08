@@ -561,7 +561,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:226</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:309</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:307</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1286,20 +1286,20 @@
     </unit>
     <unit id="2159130950882492111">
       <notes>
+        <note category="location">src/app/core/services/board-commands.service.ts:73</note>
         <note category="location">src/app/core/services/confirmation.service.ts:12</note>
         <note category="location">src/app/core/store/auth/auth.effects.ts:259</note>
-        <note category="location">src/app/core/store/boards/boards.effects.ts:131</note>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:603</note>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:610</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:597</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:604</note>
         <note category="location">src/app/core/store/notifications/notifications.effects.ts:24</note>
         <note category="location">src/app/core/store/projects/projects.effects.ts:154</note>
         <note category="location">src/app/core/store/tags/tags.effects.ts:132</note>
         <note category="location">src/app/core/store/tasks/task-archive.service.ts:44</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:394</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:402</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:358</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:368</note>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:378</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:382</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:390</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:346</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:356</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:366</note>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:191,193</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:121,124</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:112,115</note>
@@ -1474,7 +1474,7 @@
     </unit>
     <unit id="5309147989294591413">
       <notes>
-        <note category="location">src/app/core/store/boards/boards.effects.ts:83</note>
+        <note category="location">src/app/core/services/board-commands.service.ts:63</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1484,11 +1484,11 @@
     </unit>
     <unit id="7022070615528435141">
       <notes>
-        <note category="location">src/app/core/store/boards/boards.effects.ts:130</note>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:602</note>
+        <note category="location">src/app/core/services/board-commands.service.ts:72</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:596</note>
         <note category="location">src/app/core/store/notifications/notifications.effects.ts:23</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:393</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:401</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:381</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:389</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:151</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:279</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:280</note>
@@ -1526,7 +1526,7 @@
     </unit>
     <unit id="2745143813283482996">
       <notes>
-        <note category="location">src/app/core/store/boards/boards.effects.ts:132</note>
+        <note category="location">src/app/core/services/board-commands.service.ts:74</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1536,8 +1536,8 @@
     </unit>
     <unit id="8878271828886295802">
       <notes>
-        <note category="location">src/app/core/store/boards/boards.effects.ts:133</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:319</note>
+        <note category="location">src/app/core/services/board-commands.service.ts:75</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:317</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1547,8 +1547,8 @@
     </unit>
     <unit id="5887960889618527515">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:165</note>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:178</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:159</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:179</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1558,7 +1558,7 @@
     </unit>
     <unit id="993746193567776624">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:225</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:219</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1578,8 +1578,8 @@
     </unit>
     <unit id="2856093664313447266">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:345</note>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:454</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:339</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:448</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1589,7 +1589,7 @@
     </unit>
     <unit id="4885517637912217945">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:413</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:407</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1599,7 +1599,7 @@
     </unit>
     <unit id="4076698465756278873">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:566</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:560</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1609,7 +1609,7 @@
     </unit>
     <unit id="171368812856780023">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:604</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:598</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1619,7 +1619,7 @@
     </unit>
     <unit id="3596210590059423029">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:605</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:599</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1629,7 +1629,7 @@
     </unit>
     <unit id="8634240575353261228">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:609</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:603</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1659,7 +1659,7 @@
     </unit>
     <unit id="1935533427606827690">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:611</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:605</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1669,7 +1669,7 @@
     </unit>
     <unit id="5480361778944446991">
       <notes>
-        <note category="location">src/app/core/store/groups/board-groups.effects.ts:612</note>
+        <note category="location">src/app/core/store/groups/board-groups.effects.ts:606</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1916,7 +1916,7 @@
     </unit>
     <unit id="6419601202667262693">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:200</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:201</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1926,7 +1926,7 @@
     </unit>
     <unit id="8473956176297638892">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:222</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:221</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1946,7 +1946,7 @@
     </unit>
     <unit id="7190478463652380023">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:249</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:246</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1976,7 +1976,7 @@
     </unit>
     <unit id="1316502449942805709">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:395</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:383</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1996,7 +1996,7 @@
     </unit>
     <unit id="1614669751334500006">
       <notes>
-        <note category="location">src/app/core/store/tasks/tasks.effects.ts:396</note>
+        <note category="location">src/app/core/store/tasks/tasks.effects.ts:384</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:44,45</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:46,48</note>
         <note category="description">Title of a confirmation dialog</note>
@@ -2108,7 +2108,7 @@
     </unit>
     <unit id="5589864608128781435">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:148</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:136</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2118,7 +2118,7 @@
     </unit>
     <unit id="2273088133016853024">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:357</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:345</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -2128,7 +2128,7 @@
     </unit>
     <unit id="141527660815930501">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:359</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:347</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2138,7 +2138,7 @@
     </unit>
     <unit id="4854172748547351453">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:360</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:348</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2158,7 +2158,7 @@
     </unit>
     <unit id="1293575230061580250">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:367</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:355</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -2168,7 +2168,7 @@
     </unit>
     <unit id="8763068601818287275">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:369</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:357</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2198,7 +2198,7 @@
     </unit>
     <unit id="950348144194379022">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:370</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:358</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:167</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -2219,7 +2219,7 @@
     </unit>
     <unit id="8871304628791267226">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:377</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:365</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -2229,7 +2229,7 @@
     </unit>
     <unit id="4501389782873056968">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:379</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:367</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2249,7 +2249,7 @@
     </unit>
     <unit id="5832945231912845990">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:380</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:368</note>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:166</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
@@ -2559,7 +2559,7 @@
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,22</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:345</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:367</note>
-        <note category="location">src/app/workspace.routes.ts:132</note>
+        <note category="location">src/app/workspace.routes.ts:124</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
       <segment state="translated">
@@ -2688,7 +2688,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:114,115</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:82</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:70,71</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:67,68</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:85</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:384</note>
@@ -2880,7 +2880,7 @@
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:64,66</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:116,118</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:93,95</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:90,92</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:65,66</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
@@ -3605,7 +3605,7 @@
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:64,67</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:111,114</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:160,162</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:82,84</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:79,81</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:102,105</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:175,178</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:93,95</note>
@@ -4604,7 +4604,7 @@
     <unit id="6807439652660785540">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:291</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:184</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:182</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:187</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
@@ -4616,7 +4616,7 @@
     <unit id="8398928552891290802">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:296</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:189</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:187</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -5144,7 +5144,7 @@
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,25</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:383</note>
-        <note category="location">src/app/workspace.routes.ts:144</note>
+        <note category="location">src/app/workspace.routes.ts:136</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
       <segment state="translated">
@@ -5519,7 +5519,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:918</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:902</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment state="translated">
@@ -6991,7 +6991,7 @@
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:5</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:254</note>
-        <note category="location">src/app/workspace.routes.ts:138</note>
+        <note category="location">src/app/workspace.routes.ts:130</note>
         <note category="description">Label of the users field</note>
       </notes>
       <segment state="translated">
@@ -7560,7 +7560,7 @@
     </unit>
     <unit id="2527613524061523304">
       <notes>
-        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:342</note>
+        <note category="location">src/app/core/store/workspaces/workspaces.effects.ts:330</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment state="translated">
@@ -8391,8 +8391,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1066</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1190</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1050</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1174</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -10426,7 +10426,7 @@
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:103,104</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:408</note>
-        <note category="location">src/app/workspace.routes.ts:156</note>
+        <note category="location">src/app/workspace.routes.ts:148</note>
         <note category="description">Title of the settings step</note>
       </notes>
       <segment state="translated">
@@ -10509,7 +10509,7 @@
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:56,57</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:64,68</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:262</note>
-        <note category="location">src/app/workspace.routes.ts:90</note>
+        <note category="location">src/app/workspace.routes.ts:82</note>
         <note category="description">Page title for the automation list</note>
       </notes>
       <segment state="translated">
@@ -10713,7 +10713,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:912</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:896</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment state="translated">
@@ -10949,7 +10949,7 @@
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:122,123</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:185</note>
-        <note category="location">src/app/workspace.routes.ts:84</note>
+        <note category="location">src/app/workspace.routes.ts:76</note>
         <note category="description">Stat label for the number of tasks on a board</note>
       </notes>
       <segment state="translated">
@@ -10989,7 +10989,7 @@
     </unit>
     <unit id="5787327883657253628">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:55,56</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:52,53</note>
         <note category="description">Label of the board name field</note>
       </notes>
       <segment state="translated">
@@ -10999,7 +10999,7 @@
     </unit>
     <unit id="1611891243024655805">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:61,63</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:58,60</note>
         <note category="description">Label of the board URL identifier field</note>
       </notes>
       <segment state="translated">
@@ -11009,8 +11009,8 @@
     </unit>
     <unit id="5810814854864452102">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:124</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:299</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:122</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:297</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -11020,9 +11020,9 @@
     </unit>
     <unit id="5254986591758472931">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:125</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:129</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:45,47</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:123</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:127</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:40,42</note>
         <note category="description">Title of the create-board dialog</note>
       </notes>
       <segment state="translated">
@@ -11032,7 +11032,7 @@
     </unit>
     <unit id="4319441956121197474">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:128</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:126</note>
         <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:100,103</note>
         <note category="description">Button that saves edits to the board</note>
       </notes>
@@ -11043,7 +11043,7 @@
     </unit>
     <unit id="8257779685263061072">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:143</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:141</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board name is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -11053,7 +11053,7 @@
     </unit>
     <unit id="2534295129536831583">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:150</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:148</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board identifier is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -11330,7 +11330,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:194,195</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:191,192</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -11340,7 +11340,7 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:206,207</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:203,204</note>
         <note category="description">Tooltip on the button that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -11350,7 +11350,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:304</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:302</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -11360,7 +11360,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:314</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:312</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -11370,11 +11370,11 @@
     </unit>
     <unit id="7107218117130409950">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:44</note>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:52,55</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:39</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:47,50</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:199</note>
-        <note category="location">src/app/workspace.routes.ts:96</note>
+        <note category="location">src/app/workspace.routes.ts:88</note>
         <note category="description">Page title for the board list</note>
       </notes>
       <segment state="translated">
@@ -11384,7 +11384,7 @@
     </unit>
     <unit id="1274285614133216742">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:62,64</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:57,59</note>
         <note category="description">Heading of the empty board list</note>
       </notes>
       <segment state="translated">
@@ -11404,7 +11404,7 @@
     </unit>
     <unit id="7864156617362454936">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:66,69</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:61,64</note>
         <note category="description">Explains what a board is for, on the empty board list</note>
       </notes>
       <segment state="translated">
@@ -11414,7 +11414,7 @@
     </unit>
     <unit id="8077962914491228902">
       <notes>
-        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:77,79</note>
+        <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:72,74</note>
         <note category="description">Button that opens the create-board dialog</note>
       </notes>
       <segment state="translated">
@@ -11475,8 +11475,8 @@
     </unit>
     <unit id="4030757567682873742">
       <notes>
-        <note category="location">src/app/features/calendar/components/calendar-planning-month/calendar-planning-month.component.ts:177</note>
-        <note category="location">src/app/features/roadmap/components/roadmap-planning-timeline.component.ts:109</note>
+        <note category="location">src/app/features/calendar/components/calendar-planning-month/calendar-planning-month.component.ts:166</note>
+        <note category="location">src/app/features/roadmap/components/roadmap-planning-timeline.component.ts:94</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -11486,8 +11486,8 @@
     </unit>
     <unit id="5176619016271356774">
       <notes>
-        <note category="location">src/app/features/calendar/components/calendar-planning-month/calendar-planning-month.component.ts:190</note>
-        <note category="location">src/app/features/roadmap/components/roadmap-planning-timeline.component.ts:122</note>
+        <note category="location">src/app/features/calendar/components/calendar-planning-month/calendar-planning-month.component.ts:179</note>
+        <note category="location">src/app/features/roadmap/components/roadmap-planning-timeline.component.ts:107</note>
         <note category="description">Error shown after an action fails</note>
       </notes>
       <segment state="translated">
@@ -11784,9 +11784,9 @@
     </unit>
     <unit id="3825802286872185103">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:59,62</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:58,61</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:241</note>
-        <note category="location">src/app/workspace.routes.ts:120</note>
+        <note category="location">src/app/workspace.routes.ts:112</note>
         <note category="description">Page title for the calendar</note>
       </notes>
       <segment state="translated">
@@ -11806,7 +11806,7 @@
     </unit>
     <unit id="8302075849472999986">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:92,93</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:91,92</note>
         <note category="description">Shown when the calendar fails to load</note>
       </notes>
       <segment state="translated">
@@ -11816,7 +11816,7 @@
     </unit>
     <unit id="6412136724540655924">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:94,96</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:93,95</note>
         <note category="description">Advice when the calendar fails to load</note>
       </notes>
       <segment state="translated">
@@ -11826,7 +11826,7 @@
     </unit>
     <unit id="396253146311252179">
       <notes>
-        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:104,110</note>
+        <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:103,109</note>
         <note category="description">Warning that the calendar result was truncated. The 2,000 limit is fixed by the server</note>
       </notes>
       <segment state="translated">
@@ -11888,7 +11888,7 @@
     <unit id="3154294923374510663">
       <notes>
         <note category="location">src/app/core/services/ai-assistant.service.ts:566</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1335</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1319</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">
@@ -12059,7 +12059,7 @@
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:36,38</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:177</note>
-        <note category="location">src/app/workspace.routes.ts:73</note>
+        <note category="location">src/app/workspace.routes.ts:65</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
       <segment state="translated">
@@ -12393,7 +12393,7 @@
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:35,38</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:109</note>
-        <note category="location">src/app/workspace.routes.ts:162</note>
+        <note category="location">src/app/workspace.routes.ts:154</note>
         <note category="description">Page title for the user profile</note>
       </notes>
       <segment state="translated">
@@ -12804,7 +12804,7 @@
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,62</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:69,73</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>
-        <note category="location">src/app/workspace.routes.ts:78</note>
+        <note category="location">src/app/workspace.routes.ts:70</note>
         <note category="description">Filter heading for projects</note>
       </notes>
       <segment state="translated">
@@ -13737,7 +13737,7 @@
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:52,55</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:246</note>
-        <note category="location">src/app/workspace.routes.ts:108</note>
+        <note category="location">src/app/workspace.routes.ts:100</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
       <segment state="translated">
@@ -14067,9 +14067,9 @@
     </unit>
     <unit id="6215048040341403789">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:60,63</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:59,62</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:236</note>
-        <note category="location">src/app/workspace.routes.ts:114</note>
+        <note category="location">src/app/workspace.routes.ts:106</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
       <segment state="translated">
@@ -14079,7 +14079,7 @@
     </unit>
     <unit id="1734549338855999467">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:106,107</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:105,106</note>
         <note category="description">Shown when the roadmap fails to load</note>
       </notes>
       <segment state="translated">
@@ -14089,7 +14089,7 @@
     </unit>
     <unit id="1125626855616757413">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:108,110</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:107,109</note>
         <note category="description">Advice when the roadmap fails to load</note>
       </notes>
       <segment state="translated">
@@ -14099,7 +14099,7 @@
     </unit>
     <unit id="5243494589614712043">
       <notes>
-        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:118,124</note>
+        <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:117,123</note>
         <note category="description">Warning that the roadmap result was truncated. The 2,000 limit is fixed by the server</note>
       </notes>
       <segment state="translated">
@@ -14330,7 +14330,7 @@
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:44,47</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:318</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:353</note>
-        <note category="location">src/app/workspace.routes.ts:126</note>
+        <note category="location">src/app/workspace.routes.ts:118</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
       <segment state="translated">
@@ -16954,7 +16954,7 @@
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:63,64</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
-        <note category="location">src/app/workspace.routes.ts:102</note>
+        <note category="location">src/app/workspace.routes.ts:94</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
       <segment state="translated">
@@ -17057,7 +17057,7 @@
       <notes>
         <note category="location">src/app/features/storage/components/storage-header.component.ts:39,42</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:375</note>
-        <note category="location">src/app/workspace.routes.ts:150</note>
+        <note category="location">src/app/workspace.routes.ts:142</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
       <segment state="translated">

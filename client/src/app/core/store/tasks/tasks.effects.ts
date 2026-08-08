@@ -21,7 +21,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { clearState } from '../activity/activity.actions';
 import * as SprintActions from '../sprints/sprints.actions';
 import { selectSelectedSprintFilterId } from '../sprints/sprints.selectors';
 import * as TagActions from '../tags/tags.actions';
@@ -325,13 +324,6 @@ export class ProjectTasksEffects {
     return this.actions$.pipe(
       ofType(actions.loadTaskDetails.init),
       map(() => loadUsers.init())
-    );
-  });
-
-  clearTaskDetail$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.clearTaskDetail),
-      map(() => clearState())
     );
   });
 

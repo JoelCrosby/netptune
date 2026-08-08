@@ -5,10 +5,6 @@ import { assistantGuard } from './core/auth/assistant.guard';
 import { authGuard } from './core/auth/auth.guard';
 import { workspaceGuard } from './core/auth/workspace.guard';
 import { workspaceResovler } from './core/resolvers/workspace-resolver';
-import { ActivityEffects } from './core/store/activity/activity.effects';
-import { activityReducer } from './core/store/activity/activity.reducer';
-import { BoardsEffects } from './core/store/boards/boards.effects';
-import { boardsReducer } from './core/store/boards/boards.reducer';
 import { BoardGroupsEffects } from './core/store/groups/board-groups.effects';
 import { boardGroupsReducer } from './core/store/groups/board-groups.reducer';
 import { hubContextReducer } from './core/store/hub-context/hub-context.reducer';
@@ -35,7 +31,6 @@ export const routes: Routes = [
     canActivate: [workspaceGuard],
     resolve: [workspaceResovler],
     providers: [
-      provideState('activites', activityReducer),
       provideState('projects', projectsReducer),
       provideState('tasks', projectTasksReducer),
       provideState('users', usersReducer),
@@ -43,17 +38,14 @@ export const routes: Routes = [
       provideState('hub', hubContextReducer),
       provideState('notifications', notificationsReducer),
       provideState('sprints', sprintsReducer),
-      provideState('boards', boardsReducer),
       provideState('boardgroups', boardGroupsReducer),
       provideState('profile', profileReducer),
       provideEffects([
-        ActivityEffects,
         NotificationsEffects,
         ProjectsEffects,
         ProjectTasksEffects,
         UsersEffects,
         TagsEffects,
-        BoardsEffects,
         ProfileEffects,
         BoardGroupsEffects,
         SprintsEffects,

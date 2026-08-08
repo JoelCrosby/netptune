@@ -21,7 +21,7 @@ import { Params } from '@angular/router';
 import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 import { DialogService } from '@app/core/services/dialog.service';
-import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
+import { reloadOnWorkspaceChange } from '@core/util/reload-on-refresh';
 import { Store } from '@ngrx/store';
 import {
   LucideArrowDown,
@@ -308,10 +308,6 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
   dialog = inject(DialogService);
   store = inject(Store);
-  workspaceIdentifier = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
-  workspaceTracked = false;
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });
@@ -519,18 +515,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
       untracked(() => this.resourceRef.reload());
     });
 
-    effect(() => {
-      this.workspaceIdentifier();
-
-      untracked(() => {
-        if (!this.workspaceTracked) {
-          this.workspaceTracked = true;
-          return;
-        }
-
-        this.resourceRef.reload();
-      });
-    });
+    reloadOnWorkspaceChange(this.resourceRef);
   }
 
   ngOnDestroy() {

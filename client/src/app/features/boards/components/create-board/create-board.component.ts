@@ -17,11 +17,8 @@ import {
 } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import {
-  createBoard,
-  updateBoard,
-} from '@app/core/store/boards/boards.actions';
-import { BoardsService } from '@app/core/store/boards/boards.service';
+import { BoardCommandsService } from '@core/services/board-commands.service';
+import { BoardsService } from '@core/services/boards.service';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
@@ -113,6 +110,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 })
 export class CreateBoardComponent {
   private store = inject(Store);
+  private boardCommands = inject(BoardCommandsService);
   private boardsService = inject(BoardsService);
 
   dialogRef = inject<DialogRef<CreateBoardComponent>>(DialogRef);
@@ -244,7 +242,7 @@ export class CreateBoardComponent {
           },
         };
 
-        this.store.dispatch(updateBoard.init({ request }));
+        this.boardCommands.update(request);
       } else {
         const projectId = this.boardForm.projectId().value();
 
@@ -260,7 +258,7 @@ export class CreateBoardComponent {
           templateKey: templateKey().value(),
         };
 
-        this.store.dispatch(createBoard.init({ request }));
+        this.boardCommands.create(request);
       }
 
       this.dialogRef.close();

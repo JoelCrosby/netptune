@@ -1,4 +1,3 @@
-import * as BoardActions from '@core/store/boards/boards.actions';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { Action, createReducer, on } from '@ngrx/store';
 import {
@@ -214,16 +213,6 @@ const reducer = createReducer(
 
   on(TaskActions.editProjectTask.success, (state, { task }): BoardGroupsState =>
     updateTask(state, task)
-  ),
-
-  // Board Actions
-
-  on(
-    BoardActions.updateBoard.success,
-    (state, { response }): BoardGroupsState => ({
-      ...state,
-      board: state.board?.id === response.id ? response : state.board,
-    })
   ),
 
   // Set Inline Task Content

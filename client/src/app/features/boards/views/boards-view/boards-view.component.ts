@@ -1,13 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
-import { loadBoards } from '@app/core/store/boards/boards.actions';
-import {
-  selectAllBoards,
-  selectBoardsLoading,
-} from '@app/core/store/boards/boards.selectors';
+import { workspaceBoardsResource } from '@core/resources/board.resource';
 import { DialogService } from '@core/services/dialog.service';
-import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -80,7 +75,7 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
           }
         </app-empty-state>
       } @else {
-        <app-boards-grid />
+        <app-boards-grid [groups]="boards()" />
       }
     </app-page-container>
   `,
@@ -89,18 +84,16 @@ export class BoardsViewComponent {
   private dialog = inject(DialogService);
   private store = inject(Store);
 
-  loading = this.store.selectSignal(selectBoardsLoading);
+  readonly boardsResource = workspaceBoardsResource();
+
+  loading = computed(() => this.boardsResource.isLoading());
   showSkeleton = delayedLoading(this.loading);
-  boards = this.store.selectSignal(selectAllBoards);
+  boards = computed(() => this.boardsResource.value());
   count = computed(() => (this.loading() ? null : this.boards().length));
 
   canCreateBoards = this.store.selectSignal(
     selectHasPermission(netptunePermissions.boards.create)
   );
-
-  constructor() {
-    dispatchForWorkspace(() => loadBoards.init());
-  }
 
   onCreateBoardClicked() {
     this.dialog.open(CreateBoardComponent, {

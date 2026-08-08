@@ -1,7 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import * as BoardSelectors from '@app/core/store/boards/boards.selectors';
-import { Store } from '@ngrx/store';
+import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 import { BoardsGridCardComponent } from './boards-grid-card.component';
 
 @Component({
@@ -32,7 +31,5 @@ import { BoardsGridCardComponent } from './boards-grid-card.component';
   `,
 })
 export class BoardsGridComponent {
-  private store = inject(Store);
-
-  groups = this.store.selectSignal(BoardSelectors.selectAllBoards);
+  readonly groups = input.required<readonly BoardsViewModel[]>();
 }

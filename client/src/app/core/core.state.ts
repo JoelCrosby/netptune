@@ -9,10 +9,8 @@ import { clearState } from './meta-reducers/clear-state';
 import { debug } from './meta-reducers/debug.reducer';
 import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local-storage.reducer';
 import { RouterStateUrl } from './router/router.state';
-import type { ActivityState } from './store/activity/activity.model';
 import type { AuthState } from './store/auth/auth.models';
 import { authReducer } from './store/auth/auth.reducer';
-import type { BoardsState } from './store/boards/boards.model';
 import type { BoardGroupsState } from './store/groups/board-groups.model';
 import type { HubContextState } from './store/hub-context/hub-context.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
@@ -53,7 +51,6 @@ const selectFeature = <TState>(name: keyof AppState) =>
 
 export const selectAuthFeature = selectFeature<AuthState>('auth');
 export const selectMetaFeature = selectFeature<MetaState>('meta');
-export const selectActivitesFeature = selectFeature<ActivityState>('activites');
 export const selectLayoutFeature = selectFeature<LayoutState>('layout');
 export const selectSettingsFeature = selectFeature<SettingsState>('settings');
 export const selectWorkspacesFeature =
@@ -70,7 +67,6 @@ export const selectSprintsFeature = selectFeature<SprintsState>('sprints');
 export interface AppState {
   auth: AuthState;
   meta: MetaState;
-  activites: ActivityState;
   router: RouterReducerState<RouterStateUrl>;
   layout: LayoutState;
   settings: SettingsState;
@@ -82,7 +78,6 @@ export interface AppState {
   hub: HubContextState;
   notifications: NotificationsState;
   sprints: SprintsState;
-  boards: BoardsState;
   boardgroups: BoardGroupsState;
   profile: ProfileState;
 }

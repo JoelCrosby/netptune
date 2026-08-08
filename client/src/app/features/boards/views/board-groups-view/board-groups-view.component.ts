@@ -14,10 +14,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
-import {
-  deleteBoard,
-  updateBoard,
-} from '@app/core/store/boards/boards.actions';
+import { BoardCommandsService } from '@core/services/board-commands.service';
 import {
   clearState,
   deleteBoardGroup,
@@ -224,6 +221,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
 })
 export class BoardGroupsViewComponent implements OnDestroy {
   private store = inject(Store);
+  private boardCommands = inject(BoardCommandsService);
   private hubService = inject(ProjectTasksHubService);
   private dialog = inject(DialogService);
   private preferences = inject(UserPreferencesService);
@@ -342,14 +340,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
     if (!title || !board?.id) return;
 
-    this.store.dispatch(
-      updateBoard.init({
-        request: {
-          id: board.id,
-          name: title,
-        },
-      })
-    );
+    this.boardCommands.update({ id: board.id, name: title });
   }
 
   getsiblingIds(group: BoardViewGroup, groups: BoardViewGroup[]): string[] {
@@ -464,6 +455,6 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
     if (boardId === undefined || boardId === null) return;
 
-    this.store.dispatch(deleteBoard.init({ boardId }));
+    this.boardCommands.delete(boardId);
   }
 }

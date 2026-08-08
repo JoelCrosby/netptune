@@ -6,7 +6,10 @@ import {
 } from '@angular/common/http';
 import { assertInInjectionContext, inject, Signal } from '@angular/core';
 import { RefreshScope } from '@core/models/refresh-scope';
-import { reloadOnRefresh } from '@core/util/reload-on-refresh';
+import {
+  reloadOnRefresh,
+  reloadOnWorkspaceChange,
+} from '@core/util/reload-on-refresh';
 import { Store } from '@ngrx/store';
 import { Permission } from '../auth/permissions';
 import { selectHasPermission } from '../store/auth/auth.selectors';
@@ -48,6 +51,8 @@ export function permissionResource<T>(
     () => (canRead() ? request() : undefined),
     resourceOptions as HttpResourceOptions<T, unknown>
   );
+
+  reloadOnWorkspaceChange(resource);
 
   if (refreshOn?.length) {
     reloadOnRefresh(resource, refreshOn);
