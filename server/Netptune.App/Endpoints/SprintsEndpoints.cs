@@ -146,7 +146,7 @@ public static class SprintsEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -163,7 +163,7 @@ public static class SprintsEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }

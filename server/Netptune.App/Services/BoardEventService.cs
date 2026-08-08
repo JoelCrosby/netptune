@@ -12,7 +12,14 @@ public sealed record WorkspaceEvent
 
     public required string SourceClientId { get; init; }
 
+    public string[] Scopes { get; init; } = [];
+
     public DateTimeOffset CreatedAt { get; init; }
+}
+
+public sealed record WorkspaceUpdateFrame
+{
+    public string[] Scopes { get; init; } = [];
 }
 
 public sealed record RealtimeSubscription
@@ -144,12 +151,13 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         }
     }
 
-    public Task BroadcastAsync(string workspace, string sourceClientId)
+    public Task BroadcastAsync(string workspace, string sourceClientId, string[] scopes)
     {
         var message = new WorkspaceEvent
         {
             Workspace = workspace,
             SourceClientId = sourceClientId,
+            Scopes = scopes,
             CreatedAt = DateTimeOffset.UtcNow,
         };
         var json = JsonSerializer.Serialize(message, BoardEventSerializerContext.Default.WorkspaceEvent);
@@ -170,6 +178,8 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
                 return;
             }
 
+            var frame = CreateUpdateFrame(workspaceEvent.Scopes);
+
             foreach (var connection in Connections.Values)
             {
                 var subscription = connection.Subscription;
@@ -178,7 +188,7 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
 
                 if (isSameWorkspace && !isSourceClient)
                 {
-                    TryWrite(connection, "data: update\n\n");
+                    TryWrite(connection, frame);
                 }
             }
         }
@@ -186,6 +196,14 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         {
             Logger.LogError(exception, "Workspace event deserialization failed");
         }
+    }
+
+    private static string CreateUpdateFrame(string[] scopes)
+    {
+        var payload = new WorkspaceUpdateFrame { Scopes = scopes };
+        var json = JsonSerializer.Serialize(payload, BoardEventSerializerContext.Default.WorkspaceUpdateFrame);
+
+        return $"data: {json}\n\n";
     }
 
     private async Task HandlePresenceMessageAsync(ChannelMessage message)

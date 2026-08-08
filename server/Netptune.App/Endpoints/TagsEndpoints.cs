@@ -51,7 +51,7 @@ public static class TagsEndpoints
 
         if (result.IsNotFound) return Results.NotFound();
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -113,7 +113,7 @@ public static class TagsEndpoints
 
         if (result.IsNotFound) return Results.NotFound();
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }

@@ -2,31 +2,18 @@ import {
   AiChangeApplyStatus,
   AiProposedChange,
 } from '@core/models/ai-conversation';
-import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
+import { RefreshScope } from '@core/models/refresh-scope';
+import { scopesForEntityType } from '@core/util/entity-refresh-scopes';
 
-const scopesByEntityType: Record<string, RefreshScope[]> = {
-  task: ['tasks', 'boardGroups', 'sprints'],
-  sprint: ['sprints', 'tasks'],
-  project: ['projects', 'boards', 'tasks'],
-  board: ['boards', 'boardGroups'],
-  tag: ['tags', 'tasks'],
-  status: ['statuses', 'tasks', 'boardGroups'],
-};
-
+/** Tools whose blast radius is wider or narrower than their entity kind alone. */
 const scopesByToolName: Record<string, RefreshScope[]> = {
   propose_add_comment: ['comments', 'tasks'],
   propose_set_task_tags: ['tasks', 'boardGroups', 'sprints', 'tags'],
 };
 
-/**
- * A change the server refuses to describe is worth an extra fetch — a view left
- * stale after a tool the client has never heard of is the worse outcome.
- */
 const scopesForChange = (change: AiProposedChange): readonly RefreshScope[] => {
   return (
-    scopesByToolName[change.toolName] ??
-    scopesByEntityType[change.entityType] ??
-    allRefreshScopes
+    scopesByToolName[change.toolName] ?? scopesForEntityType(change.entityType)
   );
 };
 

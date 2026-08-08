@@ -50,7 +50,7 @@ public static class BoardGroupsEndpoints
 
         if (result.IsNotFound) return Results.NotFound();
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
 
         return Results.Ok(result);
     }
@@ -64,7 +64,7 @@ public static class BoardGroupsEndpoints
     {
         var result = await mediator.Send(new CreateBoardGroupCommand(request), cancellationToken);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
 
         return Results.Ok(result);
     }
@@ -80,7 +80,7 @@ public static class BoardGroupsEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
 
         return Results.Ok(result);
     }

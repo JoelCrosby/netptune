@@ -7,10 +7,12 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
 import * as groupsActions from '@core/store/groups/board-groups.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
@@ -18,6 +20,22 @@ import { RealtimeClientIdService } from './realtime-client-id.service';
 
 /** Bursts of remote edits arrive as one event each, and each one costs a round of reloads. */
 const REFRESH_DELAY = 250;
+
+interface WorkspaceUpdateFrame {
+  scopes?: string[];
+}
+
+/** A server that named nothing, or named something unknown, leaves the change unbounded. */
+const readChangedScopes = (data: string): Set<RefreshScope> | null => {
+  try {
+    const frame = JSON.parse(data) as WorkspaceUpdateFrame;
+    const entityTypes = frame.scopes ?? [];
+
+    return entityTypes.length ? refreshScopesForEntityTypes(entityTypes) : null;
+  } catch {
+    return null;
+  }
+};
 
 /** No view owns the stream, so nothing else would construct the service that opens it. */
 export function provideWorkspaceEvents(): EnvironmentProviders {
@@ -49,6 +67,7 @@ export class WorkspaceEventsService {
 
   private eventSource: EventSource | null = null;
   private isConnected = false;
+  private pendingScopes = new Set<RefreshScope>();
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
@@ -96,9 +115,9 @@ export class WorkspaceEventsService {
     const url = `${environment.apiEndpoint}api/hubs/board-events?${params.toString()}`;
     const eventSource = new EventSource(url, { withCredentials: true });
 
-    eventSource.addEventListener('message', () => {
+    eventSource.addEventListener('message', (event: MessageEvent<string>) => {
       Logger.log('%c[SSE][EVENT] workspace update received', 'color: lime');
-      this.requestRefresh();
+      this.requestRefresh(readChangedScopes(event.data));
     });
 
     eventSource.addEventListener('presence', (event) => {
@@ -133,7 +152,7 @@ export class WorkspaceEventsService {
   /* An open that follows an earlier one is a recovered connection, and events were missed while it was down. */
   private handleOpen() {
     if (this.isConnected) {
-      this.requestRefresh();
+      this.requestRefresh(null);
 
       return;
     }
@@ -141,16 +160,29 @@ export class WorkspaceEventsService {
     this.isConnected = true;
   }
 
-  private requestRefresh() {
+  /** A null scope list means the change went unnamed, which only a full refresh covers. */
+  private requestRefresh(scopes: Set<RefreshScope> | null) {
+    const pending = scopes ?? new Set(allRefreshScopes);
+
+    for (const scope of pending) {
+      this.pendingScopes.add(scope);
+    }
+
     if (this.refreshTimer !== null) return;
 
     this.refreshTimer = setTimeout(() => {
+      const requested = this.pendingScopes;
+
       this.refreshTimer = null;
-      this.workspaceRefresh.refreshAll();
+      this.pendingScopes = new Set();
+
+      this.workspaceRefresh.refresh(requested);
     }, REFRESH_DELAY);
   }
 
   private cancelRefresh() {
+    this.pendingScopes = new Set();
+
     if (this.refreshTimer === null) return;
 
     clearTimeout(this.refreshTimer);

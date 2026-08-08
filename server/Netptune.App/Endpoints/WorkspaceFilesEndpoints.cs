@@ -75,7 +75,7 @@ public static class WorkspaceFilesEndpoints
             return Results.NotFound(result);
         }
 
-        await boardEvents.BroadcastRequestAsync(http);
+        await boardEvents.BroadcastRequestAsync(http, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -94,7 +94,7 @@ public static class WorkspaceFilesEndpoints
             return Results.Forbid();
         }
 
-        await boardEvents.BroadcastRequestAsync(http);
+        await boardEvents.BroadcastRequestAsync(http, WorkspaceEventScopes.Task);
 
         return Results.NoContent();
     }

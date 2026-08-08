@@ -32,6 +32,7 @@ import {
   parseTaskFilterRouteParams,
 } from './task-filter-route-params';
 import * as actions from './tasks.actions';
+import { ProjectTasksApiService } from './project-tasks-api.service';
 import { ProjectTasksHubService } from './tasks.hub.service';
 import {
   selectProjectTasksFilter,
@@ -46,6 +47,7 @@ export class ProjectTasksEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private projectTasksService = inject(ProjectTasksService);
   private projectTasksHubService = inject(ProjectTasksHubService);
+  private tasksApi = inject(ProjectTasksApiService);
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
   private store = inject(Store);
@@ -171,7 +173,7 @@ export class ProjectTasksEffects {
     return this.actions$.pipe(
       ofType(actions.createProjectTask.init),
       switchMap((action) =>
-        this.projectTasksHubService.post(action.identifier, action.task).pipe(
+        this.tasksApi.post(action.identifier, action.task).pipe(
           unwrapClientReposne(),
           tap(() =>
             this.snackbar.open(
@@ -191,7 +193,7 @@ export class ProjectTasksEffects {
     return this.actions$.pipe(
       ofType(actions.editProjectTask.init),
       concatMap((action) =>
-        this.projectTasksHubService.put(action.identifier, action.task).pipe(
+        this.tasksApi.put(action.identifier, action.task).pipe(
           unwrapClientReposne(),
           tap(
             () =>
@@ -213,21 +215,19 @@ export class ProjectTasksEffects {
     return this.actions$.pipe(
       ofType(actions.bulkUpdateTasks.init),
       concatMap((action) =>
-        this.projectTasksHubService
-          .bulkUpdate(action.identifier, action.request)
-          .pipe(
-            unwrapClientReposne(),
-            tap(() => {
-              this.snackbar.open(
-                $localize`:Confirmation shown after an action succeeds:Tasks updated`
-              );
-              this.projectTasksHubService.reloadTaskList();
-            }),
-            map(() => actions.bulkUpdateTasks.success()),
-            catchError((error: HttpErrorResponse) =>
-              of(actions.bulkUpdateTasks.fail({ error }))
-            )
+        this.tasksApi.bulkUpdate(action.identifier, action.request).pipe(
+          unwrapClientReposne(),
+          tap(() => {
+            this.snackbar.open(
+              $localize`:Confirmation shown after an action succeeds:Tasks updated`
+            );
+            this.projectTasksHubService.reloadTaskList();
+          }),
+          map(() => actions.bulkUpdateTasks.success()),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.bulkUpdateTasks.fail({ error }))
           )
+        )
       )
     );
   });
@@ -240,32 +240,30 @@ export class ProjectTasksEffects {
           switchMap((result) => {
             if (!result) return EMPTY;
 
-            return this.projectTasksHubService
-              .delete(action.identifier, action.task)
-              .pipe(
-                unwrapClientReposne(),
-                tap(() =>
-                  this.snackbar.open(
-                    $localize`:Confirmation shown after an action succeeds:Task deleted`
-                  )
-                ),
-                map(() => {
-                  const taskId = action.task.id;
-                  const identifier = action.identifier;
-
-                  if (taskId === undefined || taskId === null) {
-                    throw new Error('taskid was null or undefined');
-                  }
-
-                  return actions.deleteProjectTask.success({
-                    taskId,
-                    identifier,
-                  });
-                }),
-                catchError((error) =>
-                  of(actions.deleteProjectTask.fail({ error }))
+            return this.tasksApi.delete(action.identifier, action.task).pipe(
+              unwrapClientReposne(),
+              tap(() =>
+                this.snackbar.open(
+                  $localize`:Confirmation shown after an action succeeds:Task deleted`
                 )
-              );
+              ),
+              map(() => {
+                const taskId = action.task.id;
+                const identifier = action.identifier;
+
+                if (taskId === undefined || taskId === null) {
+                  throw new Error('taskid was null or undefined');
+                }
+
+                return actions.deleteProjectTask.success({
+                  taskId,
+                  identifier,
+                });
+              }),
+              catchError((error) =>
+                of(actions.deleteProjectTask.fail({ error }))
+              )
+            );
           })
         )
       )
@@ -282,7 +280,7 @@ export class ProjectTasksEffects {
             switchMap((result) => {
               if (!result) return EMPTY;
 
-              return this.projectTasksHubService
+              return this.tasksApi
                 .deleteMultiple(action.identifier, action.ids)
                 .pipe(
                   unwrapClientReposne(),
@@ -356,7 +354,7 @@ export class ProjectTasksEffects {
     return this.actions$.pipe(
       ofType(actions.addTagToTask.init),
       concatMap(({ identifier, request }) =>
-        this.projectTasksHubService.addTagToTask(identifier, request).pipe(
+        this.tasksApi.addTagToTask(identifier, request).pipe(
           unwrapClientReposne(),
           map((tag) => actions.addTagToTask.success({ tag })),
           catchError((error: HttpErrorResponse) =>
@@ -371,15 +369,13 @@ export class ProjectTasksEffects {
     return this.actions$.pipe(
       ofType(actions.deleteTagFromTask.init),
       switchMap(({ identifier, systemId, tag }) =>
-        this.projectTasksHubService
-          .deleteTagFromTask(identifier, { systemId, tag })
-          .pipe(
-            unwrapClientReposne(),
-            map(() => actions.deleteTagFromTask.success()),
-            catchError((error: HttpErrorResponse) =>
-              of(actions.deleteTagFromTask.fail({ error }))
-            )
+        this.tasksApi.deleteTagFromTask(identifier, { systemId, tag }).pipe(
+          unwrapClientReposne(),
+          map(() => actions.deleteTagFromTask.success()),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.deleteTagFromTask.fail({ error }))
           )
+        )
       )
     );
   });

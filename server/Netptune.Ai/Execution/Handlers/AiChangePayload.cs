@@ -156,6 +156,7 @@ public static class AiChangePayload
         return new AiAppliedChangeResult
         {
             ChangeId = change.Id,
+            EntityType = change.EntityType,
             Status = AiChangeApplyStatus.Failed,
             Error = message,
         };
@@ -166,6 +167,7 @@ public static class AiChangePayload
         return new AiAppliedChangeResult
         {
             ChangeId = change.Id,
+            EntityType = change.EntityType,
             Status = AiChangeApplyStatus.Applied,
             AppliedEntityId = entityId,
         };

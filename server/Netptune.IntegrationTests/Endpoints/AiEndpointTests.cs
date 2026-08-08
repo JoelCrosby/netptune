@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -20,6 +21,9 @@ using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
+// The broadcast test listens to the workspace event stream, which carries every client's changes —
+// a workspace write running alongside it arrives on the same connection.
+[Collection(WorkspaceMutationCollection.Name)]
 public sealed class AiEndpointTests
 {
     private readonly NetptuneFixture Fixture;
@@ -297,17 +301,22 @@ public sealed class AiEndpointTests
 
             using var reader = new StreamReader(await stream.Content.ReadAsStreamAsync(cancellation.Token));
 
-            // The join writes a presence frame before the read loop starts, so this line proves the
+            // The join writes a presence frame before the read loop starts, so this frame proves the
             // connection is registered — an apply raced ahead of it would broadcast to nobody.
-            await reader.ReadLineAsync(cancellation.Token);
+            await ReadFrame(reader, cancellation.Token);
 
             var applied = await ApplyChangeSet(client, seed.ChangeSetId, cancellation.Token);
 
             applied.Results.Should().ContainSingle(result => result.Status == AiChangeApplyStatus.Applied);
 
-            var update = await ReadUpdateFrame(reader, cancellation.Token);
+            var update = await ReadUpdateFrame(reader, WorkspaceEventScopes.Task, cancellation.Token);
 
-            update.Should().BeTrue("a client that did not apply the change set has no other way to hear about it");
+            update.Should().NotBeNull(
+                "a client that did not apply the change set has no other way to hear about it");
+
+            update.Should().Equal(
+                [WorkspaceEventScopes.Task],
+                "naming what changed is what keeps the other client from refetching everything");
         }
         finally
         {
@@ -337,25 +346,86 @@ public sealed class AiEndpointTests
         return result!;
     }
 
-    private static async Task<bool> ReadUpdateFrame(StreamReader reader, CancellationToken cancellationToken)
+    private static async Task<string[]?> ReadUpdateFrame(
+        StreamReader reader,
+        string scope,
+        CancellationToken cancellationToken)
     {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var frame = await ReadFrame(reader, cancellationToken);
+
+            if (frame is null)
+            {
+                return null;
+            }
+
+            /* Presence carries its own event name; an update is the unnamed one. */
+            if (frame.Event is not null)
+            {
+                continue;
+            }
+
+            var payload = JsonSerializer.Deserialize<WorkspaceUpdate>(frame.Data, SerializerOptions);
+            var scopes = payload?.Scopes ?? [];
+
+            if (scopes.Contains(scope, StringComparer.Ordinal))
+            {
+                return scopes;
+            }
+        }
+
+        return null;
+    }
+
+    private static async Task<SseFrame?> ReadFrame(StreamReader reader, CancellationToken cancellationToken)
+    {
+        const string eventPrefix = "event: ";
+        const string dataPrefix = "data: ";
+
+        var name = (string?) null;
+        var data = (string?) null;
+
         while (!cancellationToken.IsCancellationRequested)
         {
             var line = await reader.ReadLineAsync(cancellationToken);
 
             if (line is null)
             {
-                return false;
+                return null;
             }
 
-            if (line == "data: update")
+            if (line.Length == 0)
             {
-                return true;
+                if (data is not null)
+                {
+                    return new SseFrame(name, data);
+                }
+
+                name = null;
+                continue;
+            }
+
+            if (line.StartsWith(eventPrefix, StringComparison.Ordinal))
+            {
+                name = line[eventPrefix.Length..];
+                continue;
+            }
+
+            if (line.StartsWith(dataPrefix, StringComparison.Ordinal))
+            {
+                data = line[dataPrefix.Length..];
             }
         }
 
-        return false;
+        return null;
     }
+
+    private sealed record SseFrame(string? Event, string Data);
+
+    private sealed record WorkspaceUpdate(string[] Scopes);
+
+    private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
 
     [Fact]
     public async Task PendingChangeSet_ShouldReturnNotFound_WhenTheConversationHasNoProposal()

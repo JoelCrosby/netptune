@@ -7,5 +7,5 @@ public interface IBoardEventService
         HttpResponse response,
         CancellationToken cancellationToken);
 
-    Task BroadcastAsync(string workspace, string sourceClientId);
+    Task BroadcastAsync(string workspace, string sourceClientId, string[] scopes);
 }

@@ -69,6 +69,7 @@ public sealed class CreateTaskChangeHandler : IAiChangeHandler, IAiChangeUndoHan
             return new AiAppliedChangeResult
             {
                 ChangeId = change.Id,
+                EntityType = change.EntityType,
                 Status = AiChangeApplyStatus.Failed,
                 AppliedEntityId = taskId,
                 Error = "The task was created but its tags could not be set.",

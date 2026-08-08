@@ -11,6 +11,8 @@ public sealed record AiAppliedChangeResult
 {
     public long ChangeId { get; init; }
 
+    public string? EntityType { get; init; }
+
     public AiChangeApplyStatus Status { get; init; }
 
     public int? AppliedEntityId { get; init; }

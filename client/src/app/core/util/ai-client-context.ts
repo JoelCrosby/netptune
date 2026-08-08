@@ -32,10 +32,16 @@ const SECTIONS: Record<string, string> = {
 
 /** The first segment is the workspace slug, so the section is the one after it. */
 const readSegments = (url: string): string[] => {
-  return url.split('?')[0].split('/').filter((segment) => segment.length > 0);
+  return url
+    .split('?')[0]
+    .split('/')
+    .filter((segment) => segment.length > 0);
 };
 
-const readIdentifier = (segments: string[], section: string): number | undefined => {
+const readIdentifier = (
+  segments: string[],
+  section: string
+): number | undefined => {
   const index = segments.indexOf(section);
   const identifier = index < 0 ? undefined : Number(segments[index + 1]);
 
@@ -61,7 +67,9 @@ export const buildClientContext = (
     taskName: source.task?.name,
   };
 
-  const hasContext = Object.values(context).some((value) => value !== undefined);
+  const hasContext = Object.values(context).some(
+    (value) => value !== undefined
+  );
 
   return hasContext ? context : null;
 };

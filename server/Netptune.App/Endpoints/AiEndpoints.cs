@@ -259,11 +259,7 @@ public static class AiEndpoints
             context);
     }
 
-    // The client that ran the action is left out of the broadcast by design, and refreshes its own views instead.
-    private static async Task<IResult> RunChangeSetAction(
-        Func<Task<AiApplyResult?>> action,
-        IBoardEventService boardEventService,
-        HttpContext context)
+    private static async Task<IResult> RunChangeSetAction(Func<Task<AiApplyResult?>> action, IBoardEventService boardEventService, HttpContext context)
     {
         try
         {
@@ -274,11 +270,17 @@ public static class AiEndpoints
                 return Results.NotFound();
             }
 
-            var changedWorkspaceData = result.Results.Any(change => change.Status == AiChangeApplyStatus.Applied);
+            var applied = result.Results.Where(change => change.Status == AiChangeApplyStatus.Applied).ToList();
 
-            if (changedWorkspaceData)
+            if (applied.Count > 0)
             {
-                await boardEventService.BroadcastRequestAsync(context);
+                var changedScopes = applied
+                    .Select(change => change.EntityType)
+                    .OfType<string>()
+                    .Distinct(StringComparer.Ordinal)
+                    .ToArray();
+
+                await boardEventService.BroadcastRequestAsync(context, changedScopes);
             }
 
             return Results.Ok(result);

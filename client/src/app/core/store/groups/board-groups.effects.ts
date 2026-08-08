@@ -10,7 +10,7 @@ import { selectSelectedTags } from '@core/store/tags/tags.selectors';
 import * as SprintActions from '@core/store/sprints/sprints.actions';
 import { selectSelectedSprintFilterId } from '@core/store/sprints/sprints.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { ProjectTasksApiService } from '@core/store/tasks/project-tasks-api.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -44,7 +44,7 @@ import { BoardGroupsService } from './board-groups.service';
 export class BoardGroupsEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private boardGroupsService = inject(BoardGroupsService);
-  private tasksHubService = inject(ProjectTasksHubService);
+  private tasksApi = inject(ProjectTasksApiService);
   private store = inject(Store);
   private confirmation = inject(ConfirmationService);
   private dialog = inject(DialogService);
@@ -124,17 +124,13 @@ export class BoardGroupsEffects {
     return this.actions$.pipe(
       ofType(actions.createBoardGroup.init),
       switchMap((action) =>
-        this.tasksHubService
-          .addBoardGroup(action.identifier, action.request)
-          .pipe(
-            unwrapClientReposne(),
-            map((boardGroup) =>
-              actions.createBoardGroup.success({ boardGroup })
-            ),
-            catchError((error: HttpErrorResponse) =>
-              of(actions.createBoardGroup.fail({ error }))
-            )
+        this.tasksApi.addBoardGroup(action.identifier, action.request).pipe(
+          unwrapClientReposne(),
+          map((boardGroup) => actions.createBoardGroup.success({ boardGroup })),
+          catchError((error: HttpErrorResponse) =>
+            of(actions.createBoardGroup.fail({ error }))
           )
+        )
       )
     );
   });
@@ -152,7 +148,7 @@ export class BoardGroupsEffects {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
-        return this.tasksHubService
+        return this.tasksApi
           .post(identifier, {
             ...action.task,
             assigneeId: userId,
@@ -217,7 +213,7 @@ export class BoardGroupsEffects {
               );
             }
 
-            return this.tasksHubService
+            return this.tasksApi
               .deleteBoardGroup(identifier, action.boardGroup.id)
               .pipe(
                 tap(() =>
@@ -255,7 +251,7 @@ export class BoardGroupsEffects {
         const previousStatusId =
           entities[action.request.boardGroupId]?.statusId ?? null;
 
-        return this.tasksHubService.putGroup(identifier, action.request).pipe(
+        return this.tasksApi.putGroup(identifier, action.request).pipe(
           unwrapClientReposne(),
           map((boardGroup) =>
             actions.editBoardGroup.success({
@@ -332,7 +328,7 @@ export class BoardGroupsEffects {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
-        return this.tasksHubService
+        return this.tasksApi
           .moveTasksToGroup(identifier, {
             boardId: identifier,
             newGroupId: action.newGroupId,
@@ -365,7 +361,7 @@ export class BoardGroupsEffects {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
-        return this.tasksHubService
+        return this.tasksApi
           .moveTaskInBoardGroup(identifier, action.request)
           .pipe(
             map(actions.moveTaskInBoardGroup.success),
@@ -406,7 +402,7 @@ export class BoardGroupsEffects {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
-        return this.tasksHubService.deleteMultiple(identifier, action.ids).pipe(
+        return this.tasksApi.deleteMultiple(identifier, action.ids).pipe(
           unwrapClientReposne(),
           tap(() =>
             this.snackbar.open(
@@ -441,7 +437,7 @@ export class BoardGroupsEffects {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
-        return this.tasksHubService
+        return this.tasksApi
           .moveTasksToGroup(identifier, {
             boardId: identifier,
             newGroupId: action.newGroupId,
@@ -553,7 +549,7 @@ export class BoardGroupsEffects {
           return throwError(() => new Error('board identifier is undefined'));
         }
 
-        return this.tasksHubService
+        return this.tasksApi
           .reassignTasks(identifier, {
             boardId: identifier,
             assigneeId: action.assigneeId,

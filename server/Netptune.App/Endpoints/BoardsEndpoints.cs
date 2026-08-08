@@ -90,7 +90,7 @@ public static class BoardsEndpoints
             return Results.NotFound();
         }
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
 
         return Results.Ok(result);
     }
@@ -120,7 +120,7 @@ public static class BoardsEndpoints
             return Results.NotFound(result);
         }
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Board);
 
         return Results.Ok(result);
     }

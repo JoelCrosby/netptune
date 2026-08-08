@@ -4,10 +4,6 @@ using Netptune.Core.Models.Ai;
 
 namespace Netptune.Ai.Execution.Handlers;
 
-/// <summary>
-/// An undo reports itself with the same statuses as an apply: applied means the
-/// change was taken back, failed means it is still in place.
-/// </summary>
 public static class AiChangeUndoResult
 {
     public static AiAppliedChangeResult Undone(AiProposedChange change, int? entityId)
@@ -15,6 +11,7 @@ public static class AiChangeUndoResult
         return new AiAppliedChangeResult
         {
             ChangeId = change.Id,
+            EntityType = change.EntityType,
             Status = AiChangeApplyStatus.Applied,
             AppliedEntityId = entityId,
         };
@@ -25,6 +22,7 @@ public static class AiChangeUndoResult
         return new AiAppliedChangeResult
         {
             ChangeId = change.Id,
+            EntityType = change.EntityType,
             Status = AiChangeApplyStatus.Failed,
             Error = message,
         };

@@ -72,7 +72,7 @@ public static class TasksEndpoints
             return Results.BadRequest(result);
         }
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -96,7 +96,7 @@ public static class TasksEndpoints
     {
         var result = await mediator.Send(new RestoreTasksCommand(ids), cancellationToken);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -151,7 +151,7 @@ public static class TasksEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -165,7 +165,7 @@ public static class TasksEndpoints
     {
         var result = await mediator.Send(new CreateTaskCommand(request), cancellationToken);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -181,7 +181,7 @@ public static class TasksEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -197,7 +197,7 @@ public static class TasksEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -213,7 +213,7 @@ public static class TasksEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -229,7 +229,7 @@ public static class TasksEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -243,7 +243,7 @@ public static class TasksEndpoints
     {
         var result = await mediator.Send(new ReassignTasksCommand(request), cancellationToken);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -257,7 +257,7 @@ public static class TasksEndpoints
     {
         var result = await mediator.Send(new BulkUpdateTasksCommand(request), cancellationToken);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }

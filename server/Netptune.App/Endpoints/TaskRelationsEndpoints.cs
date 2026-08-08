@@ -44,7 +44,7 @@ public static class TaskRelationsEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
@@ -60,7 +60,7 @@ public static class TaskRelationsEndpoints
 
         if (result.IsNotFound) return Results.NotFound(result);
 
-        await boardEventService.BroadcastRequestAsync(context);
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
 
         return Results.Ok(result);
     }
