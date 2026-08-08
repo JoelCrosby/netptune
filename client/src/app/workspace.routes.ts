@@ -1,13 +1,8 @@
 import { Routes } from '@angular/router';
-import { provideEffects } from '@ngrx/effects';
-import { provideState } from '@ngrx/store';
 import { assistantGuard } from './core/auth/assistant.guard';
 import { authGuard } from './core/auth/auth.guard';
 import { workspaceGuard } from './core/auth/workspace.guard';
 import { workspaceResovler } from './core/resolvers/workspace-resolver';
-import { BoardGroupsEffects } from './core/store/groups/board-groups.effects';
-import { boardGroupsReducer } from './core/store/groups/board-groups.reducer';
-import { hubContextReducer } from './core/store/hub-context/hub-context.reducer';
 
 // prettier-ignore
 
@@ -16,13 +11,6 @@ export const routes: Routes = [
     path: '',
     canActivate: [workspaceGuard],
     resolve: [workspaceResovler],
-    providers: [
-      provideState('hub', hubContextReducer),
-      provideState('boardgroups', boardGroupsReducer),
-      provideEffects([
-        BoardGroupsEffects,
-      ]),
-    ],
     loadComponent: () => import('./shell/shell.component').then((m) => m.ShellComponent),
     children: [
       {

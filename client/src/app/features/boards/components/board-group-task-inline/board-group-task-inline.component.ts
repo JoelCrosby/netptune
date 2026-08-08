@@ -22,17 +22,9 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
-import {
-  createProjectTask,
-  setInlineTaskContent,
-  setIsInlineDirty,
-} from '@app/core/store/groups/board-groups.actions';
-import {
-  selectBoardProjectId,
-  selectCreateBoardGroupTaskMessage,
-  selectInlineTaskContent,
-  selectIsInlineDirty,
-} from '@app/core/store/groups/board-groups.selectors';
+import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
+import { BoardComposerService } from '@core/services/board-composer.service';
+import { BoardViewService } from '@core/services/board-view.service';
 import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
@@ -100,6 +92,9 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 export class BoardGroupTaskInlineComponent implements AfterViewInit {
   private document = inject(DocumentService);
   private store = inject(Store);
+  private boardView = inject(BoardViewService);
+  private composer = inject(BoardComposerService);
+  private boardCommands = inject(BoardGroupCommandsService);
   private elementRef = inject(ElementRef);
   private inputElementRef =
     viewChild<ElementRef<HTMLTextAreaElement>>('textarea');
@@ -108,11 +103,11 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   readonly canceled = output();
 
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
-  currentProjectId = this.store.selectSignal(selectBoardProjectId);
+  currentProjectId = computed(() => this.boardView.board()?.projectId);
   currentUser = this.store.selectSignal(selectCurrentUser);
-  message = this.store.selectSignal(selectCreateBoardGroupTaskMessage);
-  content = this.store.selectSignal(selectInlineTaskContent);
-  isInlineDirty = this.store.selectSignal(selectIsInlineDirty);
+  message = this.composer.warning;
+  content = this.composer.content;
+  isInlineDirty = this.composer.isDirty;
   private readonly sprintFilter = inject(SprintFilterService);
   private readonly sprintsResource = sprintResource([]);
   private readonly sprints = this.sprintsResource.value;
@@ -150,7 +145,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
 
     effect(() => {
       const content = this.taskForm.name().value();
-      this.store.dispatch(setInlineTaskContent({ content }));
+      this.composer.setContent(content);
     });
 
     effect(() => {
@@ -159,7 +154,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
       if (isInlineDirty) {
         this.loading.set(false);
         this.taskForm.name().value.set('');
-        this.store.dispatch(setIsInlineDirty({ isDirty: false }));
+        this.composer.setIsDirty(false);
       }
     });
   }
@@ -210,7 +205,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
         boardGroupId: this.boardGroupId(),
       };
 
-      this.store.dispatch(createProjectTask.init({ task }));
+      this.boardCommands.createTask(task);
       this.loading.set(true);
     });
   }

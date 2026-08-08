@@ -1,14 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectPermissions } from '@app/core/store/auth/auth.selectors';
-import {
-  clearTaskSelection,
-  deleteSelectedTasks,
-} from '@app/core/store/groups/board-groups.actions';
-import {
-  selectSelectedTasks,
-  selectSelectedTasksCount,
-} from '@app/core/store/groups/board-groups.selectors';
+import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
+import { BoardSelectionService } from '@core/services/board-selection.service';
 import { DialogService } from '@core/services/dialog.service';
 import {
   LucideCombine,
@@ -79,11 +73,13 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
 export class BoardGroupsSelectionComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
+  private selection = inject(BoardSelectionService);
+  private boardCommands = inject(BoardGroupCommandsService);
 
   readonly lucideEllipsis = LucideEllipsis;
 
-  selected = this.store.selectSignal(selectSelectedTasks);
-  count = this.store.selectSignal(selectSelectedTasksCount);
+  selected = this.selection.taskIds;
+  count = this.selection.count;
   permissions = this.store.selectSignal(selectPermissions);
 
   actions = computed(() => {
@@ -116,11 +112,11 @@ export class BoardGroupsSelectionComponent {
   });
 
   onClearClicked() {
-    this.store.dispatch(clearTaskSelection());
+    this.selection.clear();
   }
 
   onDeleteClicked() {
-    this.store.dispatch(deleteSelectedTasks());
+    this.boardCommands.deleteSelectedTasks();
   }
 
   onMoveTasksClicked() {

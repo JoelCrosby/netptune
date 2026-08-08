@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { LucidePlus } from '@lucide/angular';
-import { selectBoardIdAndIdentifier } from '@app/core/store/groups/board-groups.selectors';
+import { BoardViewService } from '@core/services/board-view.service';
 import { DialogService } from '@core/services/dialog.service';
 import { BoardGroupDialogComponent } from '@entry/dialogs/board-group-dialog/board-group-dialog.component';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-create-board-group',
@@ -23,12 +22,14 @@ import { Store } from '@ngrx/store';
 })
 export class CreateBoardGroupComponent {
   private dialog = inject(DialogService);
-  private store = inject(Store);
-
-  boardIdAndIdentifier = this.store.selectSignal(selectBoardIdAndIdentifier);
+  private boardView = inject(BoardViewService);
 
   onClick() {
-    const [boardId, identifier] = this.boardIdAndIdentifier();
+    const board = this.boardView.board();
+
+    if (!board) return;
+
+    const { id: boardId, identifier } = board;
 
     this.dialog.open(BoardGroupDialogComponent, {
       width: '600px',

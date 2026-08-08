@@ -15,12 +15,6 @@ export const selectPageTitle = createSelector(
   (state: RouterStateUrl) => state?.title
 );
 
-export const selectRouterParam = (props: string) =>
-  createSelector(
-    selectRouterReducerState,
-    (state: RouterStateUrl) => state?.params[props]
-  );
-
 export const selectRouterStateUrl = createSelector(
   selectRouterReducerState,
   (state: RouterStateUrl) => state.url
@@ -79,11 +73,6 @@ export const selectIsTaskFilterableRoute = createSelector(
   selectIsRoadmapRoute,
   (isSprintFilterable, isBacklog, isCalendar, isRoadmap) =>
     isSprintFilterable || isBacklog || isCalendar || isRoadmap
-);
-
-export const selectRouteTagCount = createSelector(
-  selectRouterState,
-  (state) => (state?.state?.queryParams?.['tags'] as string[] | undefined) ?? []
 );
 
 export const selectSideBarTransparent = createSelector(

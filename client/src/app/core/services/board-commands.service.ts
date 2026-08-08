@@ -12,10 +12,6 @@ import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, switchMap } from 'rxjs';
 
-/**
- * Writes outlive the dialog that starts them, so they are held here rather than
- * in the component, whose destruction would cancel the request.
- */
 @Injectable({ providedIn: 'root' })
 export class BoardCommandsService {
   private readonly boards = inject(BoardsService);

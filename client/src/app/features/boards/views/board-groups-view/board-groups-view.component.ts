@@ -10,24 +10,18 @@ import {
   computed,
   effect,
   inject,
+  input,
   linkedSignal,
   OnDestroy,
 } from '@angular/core';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { BoardCommandsService } from '@core/services/board-commands.service';
+import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import {
-  clearState,
-  deleteBoardGroup,
-  editBoardGroup,
-  exportBoardTasks,
-} from '@app/core/store/groups/board-groups.actions';
-import {
-  selectAllBoardGroupsWithSelection,
-  selectBoardGroupsLoaded,
-  selectBoardGroupsLoading,
-  selectBoardIdentifier,
-  selectSelectedBoard,
-} from '@app/core/store/groups/board-groups.selectors';
+  BoardSelectionService,
+  BoardViewGroupWithSelection,
+} from '@core/services/board-selection.service';
+import { BoardViewService } from '@core/services/board-view.service';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
 import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
@@ -222,6 +216,9 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
 export class BoardGroupsViewComponent implements OnDestroy {
   private store = inject(Store);
   private boardCommands = inject(BoardCommandsService);
+  private boardView = inject(BoardViewService);
+  private selection = inject(BoardSelectionService);
+  private boardGroupCommands = inject(BoardGroupCommandsService);
   private hubService = inject(ProjectTasksHubService);
   private dialog = inject(DialogService);
   private preferences = inject(UserPreferencesService);
@@ -233,7 +230,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 
-  groups = this.store.selectSignal(selectAllBoardGroupsWithSelection);
+  groups = this.selection.groups;
 
   hiddenGroupIds = computed(() => {
     const boardId = this.board()?.id;
@@ -275,12 +272,14 @@ export class BoardGroupsViewComponent implements OnDestroy {
     return new Map(this.statuses.value().map((status) => [status.id, status]));
   });
 
-  board = this.store.selectSignal(selectSelectedBoard);
+  readonly id = input.required<string>();
+
+  board = this.boardView.board;
   boardName = linkedSignal(() => this.board()?.name);
-  loading = this.store.selectSignal(selectBoardGroupsLoading);
+  loading = this.boardView.loading;
   showSkeleton = delayedLoading(this.loading);
-  boardGroupsLoaded = this.store.selectSignal(selectBoardGroupsLoaded);
-  boardIdentifier = this.store.selectSignal(selectBoardIdentifier);
+  boardGroupsLoaded = this.boardView.loaded;
+  boardIdentifier = this.boardView.identifier;
 
   siblingIdMap = computed(() => {
     const groups = this.groups();
@@ -321,17 +320,18 @@ export class BoardGroupsViewComponent implements OnDestroy {
   ];
 
   constructor() {
+    // Navigating between boards reuses this component, so the open board has to
+    // follow the input rather than be claimed once on the way in.
     effect(() => {
-      const identifier = this.boardIdentifier();
+      const identifier = this.id();
 
-      if (!identifier) return;
-
+      this.boardView.open(identifier);
       this.hubService.addToGroup(identifier);
     });
   }
 
   ngOnDestroy() {
-    this.store.dispatch(clearState());
+    this.boardView.close();
     this.hubService.leaveGroup();
   }
 
@@ -349,7 +349,13 @@ export class BoardGroupsViewComponent implements OnDestroy {
       .map((item) => item.id.toString());
   }
 
-  drop(event: CdkDragDrop<BoardViewGroup[], BoardViewGroup, BoardViewGroup>) {
+  drop(
+    event: CdkDragDrop<
+      BoardViewGroupWithSelection[],
+      BoardViewGroupWithSelection,
+      BoardViewGroupWithSelection
+    >
+  ) {
     moveItemInArray(
       event.container.data,
       event.previousIndex,
@@ -376,14 +382,10 @@ export class BoardGroupsViewComponent implements OnDestroy {
   }
 
   moveBoardGroup(boardGroup: BoardViewGroup, sortOrder: number) {
-    this.store.dispatch(
-      editBoardGroup.init({
-        request: {
-          boardGroupId: boardGroup.id,
-          sortOrder,
-        },
-      })
-    );
+    this.boardGroupCommands.editGroup({
+      boardGroupId: boardGroup.id,
+      sortOrder,
+    });
   }
 
   trackBoardGroup(_: number, group: BoardViewGroup) {
@@ -391,7 +393,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   }
 
   onDeleteGroupClicked(boardGroup: BoardViewGroup) {
-    this.store.dispatch(deleteBoardGroup.init({ boardGroup }));
+    this.boardGroupCommands.deleteGroup(boardGroup);
   }
 
   onEditGroupClicked(group: BoardViewGroup) {
@@ -415,7 +417,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
       name: value,
     };
 
-    this.store.dispatch(editBoardGroup.init({ request }));
+    this.boardGroupCommands.editGroup(request);
   }
 
   onImportTasksClicked() {
@@ -447,7 +449,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   }
 
   onExportTasksClicked() {
-    this.store.dispatch(exportBoardTasks.init());
+    this.boardGroupCommands.exportTasks();
   }
 
   onDeleteBoardClicked() {

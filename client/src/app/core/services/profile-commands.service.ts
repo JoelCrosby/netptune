@@ -11,7 +11,6 @@ import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
-/** Writes outlive the form that starts them, so they are held here. */
 @Injectable({ providedIn: 'root' })
 export class ProfileCommandsService {
   private readonly profile = inject(ProfileService);

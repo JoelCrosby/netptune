@@ -1,5 +1,5 @@
 import { Component, ElementRef, computed, inject } from '@angular/core';
-import { selectSelectedBoard } from '@app/core/store/groups/board-groups.selectors';
+import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_TASK_SORT } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import {
@@ -8,7 +8,6 @@ import {
   LucideArrowUpDown,
   LucideCheck,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
@@ -85,13 +84,12 @@ import {
 })
 export class BoardGroupSortComponent {
   readonly el = inject(ElementRef);
-  private readonly store = inject(Store);
   private readonly preferences = inject(UserPreferencesService);
 
   readonly lucideArrowUpDown = LucideArrowUpDown;
   readonly fieldOptions = boardTaskSortFieldOptions;
 
-  private readonly board = this.store.selectSignal(selectSelectedBoard);
+  private readonly board = inject(BoardViewService).board;
 
   readonly sort = computed(() => {
     const boardId = this.board()?.id;

@@ -1,15 +1,11 @@
 import { Component, computed, inject } from '@angular/core';
-import {
-  selectAllBoardGroupsWithSelection,
-  selectSelectedBoard,
-} from '@app/core/store/groups/board-groups.selectors';
+import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import {
   hiddenGroupIdsForBoard,
   withBoardHiddenGroups,
 } from '@boards/util/hidden-board-groups';
-import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
@@ -146,11 +142,10 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
   `,
 })
 export class ManageBoardGroupsDialogComponent {
-  private store = inject(Store);
   private preferences = inject(UserPreferencesService);
 
-  protected groups = this.store.selectSignal(selectAllBoardGroupsWithSelection);
-  private board = this.store.selectSignal(selectSelectedBoard);
+  protected groups = inject(BoardViewService).groups;
+  private board = inject(BoardViewService).board;
 
   private hiddenIds = computed(() => {
     const boardId = this.board()?.id;

@@ -121,11 +121,11 @@ export class ProjectTasksService {
     return this.http.delete<ClientResponse>(`api/comments/${commentId}`);
   }
 
-  export(): Observable<FileResponse> {
+  export(boardId?: string): Observable<FileResponse> {
     return this.http
       .post(
         'api/export/run',
-        { definition: taskExportDefinition() },
+        { definition: taskExportDefinition(boardId) },
         { observe: 'response', responseType: 'blob' }
       )
       .pipe(

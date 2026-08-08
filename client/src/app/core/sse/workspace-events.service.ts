@@ -10,7 +10,6 @@ import {
 import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import * as groupsActions from '@core/store/groups/board-groups.actions';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
 import { Logger } from '@core/util/logger';
@@ -65,6 +64,10 @@ export class WorkspaceEventsService {
   /** Presence is reported per group, so a view that shows who else is here claims one. */
   private readonly group = signal<string | null>(null);
 
+  private readonly online = signal<string[]>([]);
+
+  readonly onlineUserIds = this.online.asReadonly();
+
   private eventSource: EventSource | null = null;
   private isConnected = false;
   private pendingScopes = new Set<RefreshScope>();
@@ -98,6 +101,8 @@ export class WorkspaceEventsService {
     const isCurrent = untracked(this.group) === group;
 
     if (isCurrent) return;
+
+    this.online.set([]);
 
     this.isConnected = false;
     this.group.set(group);
@@ -196,9 +201,7 @@ export class WorkspaceEventsService {
     if (!hasGroup) return;
 
     try {
-      const userIds = JSON.parse(data) as string[];
-
-      this.store.dispatch(groupsActions.setOnlineUsers({ userIds }));
+      this.online.set(JSON.parse(data) as string[]);
     } catch {
       Logger.warn('[SSE] Failed to parse presence event.');
     }

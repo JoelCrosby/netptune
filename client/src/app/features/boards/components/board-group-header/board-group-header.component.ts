@@ -11,7 +11,7 @@ import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-f
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { selectSelectedBoard } from '@app/core/store/groups/board-groups.selectors';
+import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
@@ -61,7 +61,7 @@ export class BoardGroupHeaderComponent {
   private preferences = inject(UserPreferencesService);
   private dialog = inject(DialogService);
 
-  private board = this.store.selectSignal(selectSelectedBoard);
+  private board = inject(BoardViewService).board;
 
   hiddenCount = computed(() => {
     const boardId = this.board()?.id;

@@ -3,8 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { apply, FormField, form, submit } from '@angular/forms/signals';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import * as BoardGroupActions from '@app/core/store/groups/board-groups.actions';
-import { Store } from '@ngrx/store';
+import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -78,7 +77,7 @@ export interface BoardGroupDialogData {
   `,
 })
 export class BoardGroupDialogComponent {
-  private store = inject(Store);
+  private boardCommands = inject(BoardGroupCommandsService);
   dialogRef = inject<DialogRef<BoardGroupDialogComponent>>(DialogRef);
   data = inject<BoardGroupDialogData>(DIALOG_DATA);
 
@@ -119,27 +118,18 @@ export class BoardGroupDialogComponent {
       const boardGroupId = this.data.boardGroupId;
 
       if (boardGroupId !== undefined) {
-        this.store.dispatch(
-          BoardGroupActions.editBoardGroup.init({
-            request: {
-              boardGroupId,
-              name,
-              statusId: statusId ?? undefined,
-              clearStatus: statusId === null,
-            },
-          })
-        );
+        this.boardCommands.editGroup({
+          boardGroupId,
+          name,
+          statusId: statusId ?? undefined,
+          clearStatus: statusId === null,
+        });
       } else {
-        this.store.dispatch(
-          BoardGroupActions.createBoardGroup.init({
-            identifier: this.data.identifier,
-            request: {
-              name,
-              boardId: this.data.boardId,
-              statusId,
-            },
-          })
-        );
+        this.boardCommands.createGroup(this.data.identifier, {
+          name,
+          boardId: this.data.boardId,
+          statusId,
+        });
       }
 
       this.dialogRef.close();

@@ -9,7 +9,6 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 
-/** Writes outlive the dialog or row that starts them, so they are held here. */
 @Injectable({ providedIn: 'root' })
 export class UserCommandsService {
   private readonly users = inject(UsersService);

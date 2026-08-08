@@ -1,11 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { statusResource } from '@app/core/resources/status.resources';
-import { toggleStatusSelection } from '@app/core/store/groups/board-groups.actions';
-import {
-  selectBoardGroupStatusOptions,
-  selectBoardGroupsSelectedStatusCount,
-} from '@app/core/store/groups/board-groups.selectors';
-import { Store } from '@ngrx/store';
+import { TaskFilterService } from '@core/services/task-filter.service';
 import { StatusFilterComponent } from '@static/components/status-filter/status-filter.component';
 
 @Component({
@@ -20,15 +15,24 @@ import { StatusFilterComponent } from '@static/components/status-filter/status-f
   `,
 })
 export class BoardGroupStatusComponent {
-  private readonly store = inject(Store);
+  private readonly filters = inject(TaskFilterService);
 
-  readonly selected = this.store.selectSignal(selectBoardGroupStatusOptions);
   readonly statuses = statusResource();
-  readonly selectedCount = this.store.selectSignal(
-    selectBoardGroupsSelectedStatusCount
+
+  private readonly selectedIds = computed(
+    () => this.filters.filters().statuses ?? []
   );
 
+  readonly selected = computed(() => new Set(this.selectedIds()));
+  readonly selectedCount = computed(() => this.selectedIds().length);
+
   onToggled(status: number) {
-    this.store.dispatch(toggleStatusSelection({ status }));
+    const selected = this.selectedIds();
+
+    const statuses = selected.includes(status)
+      ? selected.filter((id) => id !== status)
+      : [...selected, status];
+
+    this.filters.update({ statuses });
   }
 }

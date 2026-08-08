@@ -1,19 +1,23 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
 import { WorkspaceEventsService } from '@core/sse/workspace-events.service';
-import { Store } from '@ngrx/store';
 
 /** Tracks which realtime group the open view belongs to, and when its task lists went stale. */
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectTasksHubService {
-  private store = inject(Store);
   private workspaceEvents = inject(WorkspaceEventsService);
   private workspaceRefresh = inject(WorkspaceRefreshService);
 
   private readonly localReloads = signal(0);
+
+  private readonly groupId = signal<string | null>(null);
+
+  readonly onlineUserIds = this.workspaceEvents.onlineUserIds;
+
+  /** The board or project that task writes from the open view are addressed to. */
+  readonly currentGroupId = this.groupId.asReadonly();
 
   /** Task lists reload for a write made here and for one that arrived from elsewhere. */
   readonly updateVersion = computed(() => {
@@ -21,12 +25,12 @@ export class ProjectTasksHubService {
   });
 
   addToGroup(groupId: string) {
-    this.store.dispatch(setCurrentGroupId({ groupId }));
+    this.groupId.set(groupId);
     this.workspaceEvents.joinGroup(groupId);
   }
 
   leaveGroup() {
-    this.store.dispatch(setCurrentGroupId({ groupId: null }));
+    this.groupId.set(null);
     this.workspaceEvents.leaveGroup();
   }
 

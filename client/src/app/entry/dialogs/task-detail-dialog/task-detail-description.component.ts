@@ -1,8 +1,8 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { Store } from '@ngrx/store';
 import { EditorComponent } from '@static/components/editor/editor.component';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { TaskDetailService } from './task-detail.service';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
@@ -32,7 +32,7 @@ export class TaskDetailDescriptionComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;
-  hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
+  readonly hubGroupId = inject(ProjectTasksHubService).currentGroupId;
   private readonly canUpdate = selectCanUpdateTask(this.store);
 
   isReadOnly = computed(() => !this.canUpdate());

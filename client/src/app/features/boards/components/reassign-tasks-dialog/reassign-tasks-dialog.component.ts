@@ -1,8 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import * as actions from '@app/core/store/groups/board-groups.actions';
-import { selectBoardGroupsUsersModel } from '@app/core/store/groups/board-groups.selectors';
-import { Store } from '@ngrx/store';
+import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
+import { BoardViewService } from '@core/services/board-view.service';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -75,11 +74,11 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
   `,
 })
 export class ReassignTasksDialogComponent {
-  private store = inject(Store);
+  private boardCommands = inject(BoardGroupCommandsService);
   private cd = inject(ChangeDetectorRef);
   dialogRef = inject<DialogRef<ReassignTasksDialogComponent>>(DialogRef);
 
-  users = this.store.selectSignal(selectBoardGroupsUsersModel);
+  users = inject(BoardViewService).userOptions;
 
   selected: string | null = null;
 
@@ -94,6 +93,6 @@ export class ReassignTasksDialogComponent {
     }
 
     const assigneeId = this.selected;
-    this.store.dispatch(actions.reassignTasks.init({ assigneeId }));
+    this.boardCommands.reassignSelectedTasks(assigneeId);
   }
 }

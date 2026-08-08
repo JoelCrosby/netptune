@@ -11,8 +11,6 @@ import { initStateFromLocalStorage } from './meta-reducers/init-state-from-local
 import { RouterStateUrl } from './router/router.state';
 import type { AuthState } from './store/auth/auth.models';
 import { authReducer } from './store/auth/auth.reducer';
-import type { BoardGroupsState } from './store/groups/board-groups.model';
-import type { HubContextState } from './store/hub-context/hub-context.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
 import type { MetaState } from './store/meta/meta.model';
 import { metaReducer } from './store/meta/meta.reducer';
@@ -48,7 +46,6 @@ export const selectLayoutFeature = selectFeature<LayoutState>('layout');
 export const selectSettingsFeature = selectFeature<SettingsState>('settings');
 export const selectWorkspacesFeature =
   selectFeature<WorkspacesState>('workspaces');
-export const selectHubContextFeature = selectFeature<HubContextState>('hub');
 
 export interface AppState {
   auth: AuthState;
@@ -57,6 +54,4 @@ export interface AppState {
   layout: LayoutState;
   settings: SettingsState;
   workspaces: WorkspacesState;
-  hub: HubContextState;
-  boardgroups: BoardGroupsState;
 }

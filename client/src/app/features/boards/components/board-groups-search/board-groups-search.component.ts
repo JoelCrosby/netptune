@@ -1,7 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { setSearchTerm } from '@app/core/store/groups/board-groups.actions';
-import { selectSearchTerm } from '@app/core/store/groups/board-groups.selectors';
-import { Store } from '@ngrx/store';
+import { Component, computed, inject } from '@angular/core';
+import { TaskFilterService } from '@core/services/task-filter.service';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 
 @Component({
@@ -12,11 +10,11 @@ import { SearchInputComponent } from '@static/components/search-input/search-inp
   `,
 })
 export class BoardGroupsSearchComponent {
-  private store = inject(Store);
+  private readonly filters = inject(TaskFilterService);
 
-  searchTerm = this.store.selectSignal(selectSearchTerm);
+  readonly searchTerm = computed(() => this.filters.filters().term);
 
   onSearch(term: string | null) {
-    this.store.dispatch(setSearchTerm({ term }));
+    this.filters.update({ term });
   }
 }

@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { toggleUserSelection } from '@app/core/store/groups/board-groups.actions';
-import { selectBoardGroupsUsersModel } from '@app/core/store/groups/board-groups.selectors';
-import { Store } from '@ngrx/store';
+import { BoardViewService } from '@core/services/board-view.service';
+import { TaskFilterService } from '@core/services/task-filter.service';
 import {
   AvatarFilterComponent,
   AvatarFilterOption,
@@ -18,7 +17,8 @@ import {
   `,
 })
 export class BoardGroupUsersComponent {
-  private store = inject(Store);
+  private readonly boardView = inject(BoardViewService);
+  private readonly filters = inject(TaskFilterService);
 
   /**
    * Angular disallows `i18n-onlineLabel` because the attribute name starts with
@@ -27,13 +27,15 @@ export class BoardGroupUsersComponent {
    */
   readonly viewingLabel = $localize`:Presence state appended after a person's name on a board:is viewing this board`;
 
-  users = this.store.selectSignal(selectBoardGroupsUsersModel);
+  readonly users = this.boardView.userOptions;
 
   onUserClicked(option: AvatarFilterOption) {
-    const user = this.users().find((item) => item.id === option.id);
+    const selected = this.filters.filters().users ?? [];
 
-    if (user) {
-      this.store.dispatch(toggleUserSelection({ user }));
-    }
+    const users = selected.includes(option.id)
+      ? selected.filter((id) => id !== option.id)
+      : [...selected, option.id];
+
+    this.filters.update({ users });
   }
 }

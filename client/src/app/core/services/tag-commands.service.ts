@@ -8,7 +8,6 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 
-/** Writes outlive the dialog or row that starts them, so they are held here. */
 @Injectable({ providedIn: 'root' })
 export class TagCommandsService {
   private readonly tags = inject(TagsService);

@@ -5,9 +5,9 @@ import { Tag } from '@app/core/models/tag';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
-import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { Store } from '@ngrx/store';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { TaskDetailService } from './task-detail.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 
@@ -51,7 +51,7 @@ export class TaskDetailTagsComponent {
   private readonly taskCommands = inject(TaskCommandsService);
 
   task = this.taskDetail.task;
-  hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
+  readonly hubGroupId = inject(ProjectTasksHubService).currentGroupId;
   selectedTags = linkedSignal(() => this.task()?.tags ?? []);
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 

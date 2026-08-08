@@ -7,7 +7,7 @@ import { TaskRelation } from '@core/models/task-relation';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskRelationsService } from '@core/services/task-relations.service';
-import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
+import { retainWhileLoading } from '@core/resources/stable-resource';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { colorSwatchClass } from '@core/util/colors/colors';
@@ -24,6 +24,7 @@ import {
   LinkTaskDialogData,
   LinkTaskDialogResult,
 } from '../link-task-dialog/link-task-dialog.component';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { TaskDetailService } from './task-detail.service';
 
 interface RelationGroup {
@@ -137,7 +138,7 @@ export class TaskDetailRelationsComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   readonly task = this.taskDetail.task;
-  readonly hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
+  readonly hubGroupId = inject(ProjectTasksHubService).currentGroupId;
   readonly canUpdate = selectCanUpdateTask(this.store);
 
   readonly busy = linkedSignal({
@@ -161,17 +162,7 @@ export class TaskDetailRelationsComponent {
     { defaultValue: [] }
   );
 
-  // httpResource blanks its value while a new request is in flight, which would tear the section
-  // down and rebuild it every time the user clicks through to a linked task. Holding the previous
-  // list keeps the rendered rows in place until the new ones arrive.
-  private readonly displayedRelations = linkedSignal<
-    TaskRelation[],
-    TaskRelation[]
-  >({
-    source: () => this.relations.value(),
-    computation: (next, previous) =>
-      this.relations.isLoading() && previous ? previous.value : next,
-  });
+  private readonly displayedRelations = retainWhileLoading(this.relations);
 
   // Relations arrive ordered by relation type and direction, so consecutive rows sharing a label
   // belong together. Grouping by label rather than by type id is deliberate: one type produces two

@@ -1,10 +1,9 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
-import { moveSelectedTasks } from '@app/core/store/groups/board-groups.actions';
-import { selectAllBoardGroups } from '@app/core/store/groups/board-groups.selectors';
+import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
+import { BoardViewService } from '@core/services/board-view.service';
 import { DialogContentComponent } from '@app/static/components/dialog-content/dialog-content.component';
 import { statusResource } from '@core/resources/status.resources';
-import { Store } from '@ngrx/store';
 import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -90,10 +89,10 @@ import { DialogCloseDirective } from '@static/directives/dialog-close.directive'
   `,
 })
 export class MoveTasksDialogComponent {
-  private store = inject(Store);
+  private boardCommands = inject(BoardGroupCommandsService);
   dialogRef = inject<DialogRef<MoveTasksDialogComponent>>(DialogRef);
 
-  groups = this.store.selectSignal(selectAllBoardGroups);
+  groups = inject(BoardViewService).groups;
   selected = signal<number | null>(null);
 
   private statuses = statusResource();
@@ -115,7 +114,7 @@ export class MoveTasksDialogComponent {
 
     if (newGroupId === null) return;
 
-    this.store.dispatch(moveSelectedTasks.init({ newGroupId }));
+    this.boardCommands.moveSelectedTasks(newGroupId);
     this.dialogRef.close();
   }
 }

@@ -12,9 +12,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import * as BoardGroupActions from '@app/core/store/groups/board-groups.actions';
-import * as BoardGroupSelectors from '@app/core/store/groups/board-groups.selectors';
-import { selectInlineActiveGroupId } from '@app/core/store/groups/board-groups.selectors';
+import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
+import { BoardComposerService } from '@core/services/board-composer.service';
+import { BoardSelectionService } from '@core/services/board-selection.service';
+import { BoardViewService } from '@core/services/board-view.service';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
 import { Selected } from '@core/models/selected';
@@ -121,6 +122,10 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 })
 export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private store = inject(Store);
+  private boardView = inject(BoardViewService);
+  private selection = inject(BoardSelectionService);
+  private composer = inject(BoardComposerService);
+  private boardCommands = inject(BoardGroupCommandsService);
   private dialog = inject(DialogService);
   private destroyRef = inject(DestroyRef);
 
@@ -138,10 +143,8 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
 
   focused = signal(false);
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
-  isDragging = this.store.selectSignal(BoardGroupSelectors.selectIsDragging);
-  private inlineActiveGroupId = this.store.selectSignal(
-    selectInlineActiveGroupId
-  );
+  isDragging = this.boardView.isDragging;
+  private inlineActiveGroupId = this.composer.activeGroupId;
   isInlineActive = computed(
     () => this.group().id === this.inlineActiveGroupId()
   );
@@ -172,13 +175,11 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   }
 
   onAddTaskClicked() {
-    this.store.dispatch(
-      BoardGroupActions.setInlineActive({ groupId: this.group().id })
-    );
+    this.composer.open(this.group().id);
   }
 
   onInlineCanceled() {
-    this.store.dispatch(BoardGroupActions.clearInlineActive());
+    this.composer.close();
   }
 
   drop(event: CdkDragDrop<BoardViewTask[]>) {
@@ -186,25 +187,23 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
 
     const isTransfer = event.container.id !== event.previousContainer.id;
 
-    this.store.dispatch(
-      BoardGroupActions.moveTaskInBoardGroup.init({
-        request: {
-          newGroupId: +event.container.id,
-          oldGroupId: +event.previousContainer.id,
-          taskId: task.id,
-          currentIndex: event.currentIndex,
-          previousIndex: event.previousIndex,
-        },
-        // Only a transfer between groups applies the target group's status.
-        status: isTransfer ? this.assignedStatus() : null,
-      })
+    this.boardCommands.moveTask(
+      {
+        newGroupId: +event.container.id,
+        oldGroupId: +event.previousContainer.id,
+        taskId: task.id,
+        currentIndex: event.currentIndex,
+        previousIndex: event.previousIndex,
+      },
+      // Only a transfer between groups applies the target group's status.
+      isTransfer ? this.assignedStatus() : null
     );
   }
 
   onDragStarted() {
     this.trackMousePosition();
 
-    this.store.dispatch(BoardGroupActions.setIsDragging({ isDragging: true }));
+    this.boardView.setIsDragging(true);
   }
 
   trackMousePosition() {
@@ -220,7 +219,7 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   onDragRelease() {
     this.untrackMousePosition();
 
-    this.store.dispatch(BoardGroupActions.setIsDragging({ isDragging: false }));
+    this.boardView.setIsDragging(false);
   }
 
   trackGroupTask(_: number, task: BoardViewTask) {
@@ -236,17 +235,17 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
     const selected = task.selected;
 
     if (event.shiftKey) {
-      this.store.dispatch(
-        selected
-          ? BoardGroupActions.deSelectTaskBulk({ id, groupId })
-          : BoardGroupActions.selectTaskBulk({ id, groupId })
-      );
+      if (selected) {
+        this.selection.deselectRange(id, groupId);
+      } else {
+        this.selection.selectRange(id, groupId);
+      }
     } else if (event.ctrlKey) {
-      this.store.dispatch(
-        selected
-          ? BoardGroupActions.deSelectTask({ id })
-          : BoardGroupActions.selectTask({ id })
-      );
+      if (selected) {
+        this.selection.deselect(id);
+      } else {
+        this.selection.select(id);
+      }
     } else {
       this.dialog.open(TaskDetailDialogComponent, {
         width: TaskDetailDialogComponent.width,
