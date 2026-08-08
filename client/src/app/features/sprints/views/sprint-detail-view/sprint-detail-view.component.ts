@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
@@ -9,17 +10,8 @@ import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-vi
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import {
-  deleteSprint,
-  loadSprintDetail,
-  startSprint,
-} from '@core/store/sprints/sprints.actions';
-import {
-  selectSprintDetail,
-  selectSprintDetailError,
-  selectSprintDetailLoading,
-  selectSprintUpdateLoading,
-} from '@core/store/sprints/sprints.selectors';
+import { sprintDetailResource } from '@core/resources/sprint.resource';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import {
   LucideCalendarClock,
   LucideCheck,
@@ -242,10 +234,17 @@ export class SprintDetailViewComponent {
 
   readonly sprintStatus = SprintStatus;
   readonly sprintId = signal<number | null>(null);
-  readonly sprint = this.store.selectSignal(selectSprintDetail);
-  readonly loading = this.store.selectSignal(selectSprintDetailLoading);
-  readonly loadError = this.store.selectSignal(selectSprintDetailError);
-  readonly updateLoading = this.store.selectSignal(selectSprintUpdateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+  private readonly sprintResourceRef = sprintDetailResource(
+    computed(() => this.sprintId() ?? undefined)
+  );
+
+  readonly sprint = this.sprintResourceRef.value;
+  readonly loading = this.sprintResourceRef.isLoading;
+  readonly loadError = computed(
+    () => this.sprintResourceRef.error() as HttpErrorResponse | undefined
+  );
+  readonly updateLoading = this.sprintCommands.isUpdating;
   readonly canUpdate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.update)
   );
@@ -263,17 +262,12 @@ export class SprintDetailViewComponent {
       .subscribe((sprintId) => {
         if (Number.isFinite(sprintId) && sprintId > 0) {
           this.sprintId.set(sprintId);
-          this.store.dispatch(loadSprintDetail.init({ sprintId }));
         }
       });
   }
 
   reload() {
-    const sprintId = this.sprintId();
-
-    if (!sprintId) return;
-
-    this.store.dispatch(loadSprintDetail.init({ sprintId }));
+    this.sprintResourceRef.reload();
   }
 
   onEdit(sprint: SprintDetailViewModel) {
@@ -300,7 +294,7 @@ export class SprintDetailViewComponent {
 
   onStart(sprintId?: number) {
     if (!sprintId) return;
-    this.store.dispatch(startSprint({ sprintId }));
+    this.sprintCommands.start(sprintId);
   }
 
   onComplete(sprint: SprintDetailViewModel) {
@@ -324,7 +318,7 @@ export class SprintDetailViewComponent {
       })
       .subscribe((confirmed) => {
         if (confirmed && sprint.id) {
-          this.store.dispatch(deleteSprint.init({ sprintId: sprint.id }));
+          this.sprintCommands.delete(sprint.id);
           this.router.navigate(['../'], { relativeTo: this.route });
         }
       });

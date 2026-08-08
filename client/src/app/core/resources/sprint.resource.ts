@@ -1,3 +1,6 @@
+import { Signal } from '@angular/core';
+import { ClientResponse } from '../models/client-response';
+import { SprintDetailViewModel } from '../models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '../models/view-models/sprint-view-model';
 import { SprintStatus } from '../enums/sprint-status';
 import { netptunePermissions } from '../auth/permissions';
@@ -16,5 +19,33 @@ export const sprintResource = (
       },
     }),
     { defaultValue: [], refreshOn: ['sprints'] }
+  );
+};
+
+export const currentSprintsResource = () => {
+  return permissionResource<SprintViewModel[]>(
+    netptunePermissions.sprints.read,
+    () => ({
+      url: 'api/sprints',
+      params: { status: SprintStatus.active, take: 10 },
+    }),
+    { defaultValue: [], refreshOn: ['sprints'] }
+  );
+};
+
+export const sprintDetailResource = (sprintId: Signal<number | undefined>) => {
+  return permissionResource<SprintDetailViewModel | undefined>(
+    netptunePermissions.sprints.read,
+    () => {
+      const id = sprintId();
+
+      return id === undefined ? undefined : { url: `api/sprints/${id}` };
+    },
+    {
+      refreshOn: ['sprints', 'tasks'],
+      parse: (response) => {
+        return (response as ClientResponse<SprintDetailViewModel>).payload;
+      },
+    }
   );
 };

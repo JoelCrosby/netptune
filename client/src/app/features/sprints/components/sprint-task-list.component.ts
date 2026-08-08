@@ -3,10 +3,8 @@ import { Params, RouterLink } from '@angular/router';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
-import { removeTaskFromSprint } from '@core/store/sprints/sprints.actions';
-import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
-import { Store } from '@ngrx/store';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -105,14 +103,15 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
   `,
 })
 export class SprintTaskListComponent {
-  private store = inject(Store);
   private hub = inject(ProjectTasksHubService);
 
   readonly sprint = input.required<SprintDetailViewModel>();
   readonly canManage = input.required<boolean>();
 
   readonly sprintStatus = SprintStatus;
-  readonly updateLoading = this.store.selectSignal(selectSprintUpdateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+
+  readonly updateLoading = this.sprintCommands.isUpdating;
   readonly canEditSprintTasks = computed(
     () => this.canManage() && this.sprint().status !== SprintStatus.completed
   );
@@ -156,6 +155,6 @@ export class SprintTaskListComponent {
   onRemoveTask(taskId?: number) {
     const sprintId = this.sprint().id;
     if (!sprintId || !taskId) return;
-    this.store.dispatch(removeTaskFromSprint({ sprintId, taskId }));
+    this.sprintCommands.removeTask(sprintId, taskId);
   }
 }

@@ -39,7 +39,7 @@ import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.select
 import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DocumentService } from '@static/services/document.service';
-import { selectAllSprints } from '@app/core/store/sprints/sprints.selectors';
+import { sprintResource } from '@core/resources/sprint.resource';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
@@ -114,7 +114,8 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   content = this.store.selectSignal(selectInlineTaskContent);
   isInlineDirty = this.store.selectSignal(selectIsInlineDirty);
   private readonly sprintFilter = inject(SprintFilterService);
-  private readonly sprints = this.store.selectSignal(selectAllSprints);
+  private readonly sprintsResource = sprintResource([]);
+  private readonly sprints = this.sprintsResource.value;
 
   selectedSprint = computed(() => {
     const sprintId = this.sprintFilter.sprintId();

@@ -8,8 +8,6 @@ import { workspaceResovler } from './core/resolvers/workspace-resolver';
 import { BoardGroupsEffects } from './core/store/groups/board-groups.effects';
 import { boardGroupsReducer } from './core/store/groups/board-groups.reducer';
 import { hubContextReducer } from './core/store/hub-context/hub-context.reducer';
-import { SprintsEffects } from './core/store/sprints/sprints.effects';
-import { sprintsReducer } from './core/store/sprints/sprints.reducer';
 import { ProjectTasksEffects } from './core/store/tasks/tasks.effects';
 import { projectTasksReducer } from './core/store/tasks/tasks.reducer';
 
@@ -23,12 +21,10 @@ export const routes: Routes = [
     providers: [
       provideState('tasks', projectTasksReducer),
       provideState('hub', hubContextReducer),
-      provideState('sprints', sprintsReducer),
       provideState('boardgroups', boardGroupsReducer),
       provideEffects([
         ProjectTasksEffects,
         BoardGroupsEffects,
-        SprintsEffects,
       ]),
     ],
     loadComponent: () => import('./shell/shell.component').then((m) => m.ShellComponent),

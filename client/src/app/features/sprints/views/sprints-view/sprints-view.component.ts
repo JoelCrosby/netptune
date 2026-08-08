@@ -7,12 +7,8 @@ import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { deleteSprint, loadSprints } from '@core/store/sprints/sprints.actions';
-import {
-  selectAllSprints,
-  selectSprintsLoading,
-} from '@core/store/sprints/sprints.selectors';
-import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
+import { sprintResource } from '@core/resources/sprint.resource';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { LucideSettings2, LucideTrash2 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -120,8 +116,11 @@ export class SprintsViewComponent {
   private dialog = inject(DialogService);
   private confirmation = inject(ConfirmationService);
 
-  readonly loading = this.store.selectSignal(selectSprintsLoading);
-  readonly sprints = this.store.selectSignal(selectAllSprints);
+  private readonly sprintCommands = inject(SprintCommandsService);
+  private readonly sprintsResource = sprintResource([]);
+
+  readonly loading = this.sprintsResource.isLoading;
+  readonly sprints = this.sprintsResource.value;
   readonly canCreate = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.create)
   );
@@ -223,10 +222,6 @@ export class SprintsViewComponent {
     reloadSignal: this.sprints,
   }));
 
-  constructor() {
-    dispatchForWorkspace(() => loadSprints.init({ filter: { take: 100 } }));
-  }
-
   onStatusChanged(value: string | number | null) {
     this.selectedStatus.set(value as StatusFilter);
   }
@@ -263,7 +258,7 @@ export class SprintsViewComponent {
       })
       .subscribe((confirmed) => {
         if (confirmed && sprint.id) {
-          this.store.dispatch(deleteSprint.init({ sprintId: sprint.id }));
+          this.sprintCommands.delete(sprint.id);
         }
       });
   }

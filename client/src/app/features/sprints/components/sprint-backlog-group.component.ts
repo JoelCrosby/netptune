@@ -4,8 +4,7 @@ import { netptunePermissions } from '@core/auth/permissions';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
-import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { Store } from '@ngrx/store';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
@@ -163,7 +162,9 @@ export class SprintBacklogGroupComponent {
   readonly filterParams = input.required<Params>();
   readonly sprints = input.required<SprintViewModel[]>();
 
-  readonly loading = this.store.selectSignal(selectSprintUpdateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+
+  readonly loading = this.sprintCommands.isUpdating;
   readonly canManageTasks = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.manageTasks)
   );
@@ -240,6 +241,6 @@ export class SprintBacklogGroupComponent {
   onAssign(task: TaskViewModel, sprintId: number) {
     if (!task.id || !sprintId) return;
 
-    this.store.dispatch(assignBacklogTask({ taskId: task.id, sprintId }));
+    this.sprintCommands.addTask(sprintId, task.id);
   }
 }

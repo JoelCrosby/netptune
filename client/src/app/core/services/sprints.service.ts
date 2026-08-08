@@ -1,12 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { SprintStatus } from '@core/enums/sprint-status';
 import { ClientResponse } from '@core/models/client-response';
 import { AddSprintRequest } from '@core/models/requests/add-sprint-request';
 import { AddTasksToSprintRequest } from '@core/models/requests/add-tasks-to-sprint-request';
 import { UpdateSprintRequest } from '@core/models/requests/update-sprint-request';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
-import { SprintFilter } from './sprints.model';
+export interface SprintFilter {
+  projectId?: number;
+  status?: SprintStatus;
+  statuses?: SprintStatus[];
+  take?: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SprintsService {

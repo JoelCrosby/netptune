@@ -10,9 +10,7 @@ import {
   validate,
 } from '@angular/forms/signals';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
-import { updateSprint } from '@core/store/sprints/sprints.actions';
-import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
-import { Store } from '@ngrx/store';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -82,11 +80,12 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   `,
 })
 export class EditSprintDialogComponent {
-  private store = inject(Store);
   dialogRef = inject<DialogRef<EditSprintDialogComponent>>(DialogRef);
   sprint = inject<SprintViewModel>(DIALOG_DATA);
 
-  readonly updateLoading = this.store.selectSignal(selectSprintUpdateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+
+  readonly updateLoading = this.sprintCommands.isUpdating;
 
   readonly sprintFormModel = signal({
     name: this.sprint.name,
@@ -131,17 +130,13 @@ export class EditSprintDialogComponent {
     submit(this.sprintForm, async () => {
       const value = this.sprintFormModel();
 
-      this.store.dispatch(
-        updateSprint.init({
-          request: {
-            id: this.sprint.id,
-            name: value.name.trim(),
-            goal: value.goal.trim() || null,
-            startDate: value.startDate,
-            endDate: value.endDate,
-          },
-        })
-      );
+      this.sprintCommands.update({
+        id: this.sprint.id,
+        name: value.name.trim(),
+        goal: value.goal.trim() || null,
+        startDate: value.startDate,
+        endDate: value.endDate,
+      });
 
       this.dialogRef.close();
     });

@@ -2,9 +2,7 @@ import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { assignBacklogTask } from '@core/store/sprints/sprints.actions';
-import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
-import { Store } from '@ngrx/store';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -90,11 +88,11 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
   `,
 })
 export class SprintBacklogTaskRowComponent {
-  private store = inject(Store);
-
   readonly task = input.required<TaskViewModel>();
   readonly sprints = input.required<SprintViewModel[]>();
-  readonly loading = this.store.selectSignal(selectSprintUpdateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+
+  readonly loading = this.sprintCommands.isUpdating;
 
   readonly selectedSprintId = signal<number | undefined>(undefined);
 
@@ -107,7 +105,7 @@ export class SprintBacklogTaskRowComponent {
     const sprintId = this.selectedSprintId();
     if (!taskId || !sprintId) return;
 
-    this.store.dispatch(assignBacklogTask({ taskId, sprintId }));
+    this.sprintCommands.addTask(sprintId, taskId);
     this.selectedSprintId.set(undefined);
   }
 }

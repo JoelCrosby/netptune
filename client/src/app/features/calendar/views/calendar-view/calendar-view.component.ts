@@ -14,8 +14,7 @@ import { taskFilterRoute } from '@core/router/task-filter-route';
 import { TaskFilterRouteParams } from '@core/router/task-filter-route-params';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { projectResource } from '@core/resources/project.resource';
-import { loadSprints } from '@core/store/sprints/sprints.actions';
-import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
+import { sprintResource } from '@core/resources/sprint.resource';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
@@ -135,7 +134,8 @@ export class CalendarViewComponent {
 
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
-  readonly sprints = this.store.selectSignal(selectAllSprints);
+  readonly sprintsResource = sprintResource([]);
+  readonly sprints = this.sprintsResource.value;
   readonly canUpdateTasks = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.update)
   );
@@ -183,10 +183,6 @@ export class CalendarViewComponent {
   });
 
   constructor() {
-    if (this.canReadSprints()) {
-      this.store.dispatch(loadSprints.init({ filter: { take: 100 } }));
-    }
-
     this.ensureDefaultMonth();
   }
 

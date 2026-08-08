@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import {
   selectCurrentUser,
   selectHasPermission,
@@ -6,11 +6,7 @@ import {
   selectIsAuthenticated,
 } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
-import { loadCurrentSprints } from '@core/store/sprints/sprints.actions';
-import {
-  selectCurrentSprints,
-  selectCurrentSprintsLoaded,
-} from '@core/store/sprints/sprints.selectors';
+import { currentSprintsResource } from '@core/resources/sprint.resource';
 import {
   LucideArchive,
   LucideBell,
@@ -104,14 +100,15 @@ export class ShellSidebarComponent {
 
   shell = inject(ShellService);
 
-  /** Built here because an object literal in a template cannot be marked with i18n. */
   readonly profileLink: ShellMenuLink = {
     label: $localize`:Sidebar link to the signed-in user's profile:Profile`,
     value: ['./profile'],
   };
 
-  currentSprints = this.store.selectSignal(selectCurrentSprints);
-  currentSprintsLoaded = this.store.selectSignal(selectCurrentSprintsLoaded);
+  private readonly currentSprintsRef = currentSprintsResource();
+
+  currentSprints = this.currentSprintsRef.value;
+  currentSprintsLoaded = computed(() => !this.currentSprintsRef.isLoading());
 
   authenticated = this.store.selectSignal(selectIsAuthenticated);
 
@@ -419,14 +416,6 @@ export class ShellSidebarComponent {
 
   user = this.store.selectSignal(selectCurrentUser);
   workspaceChange = output<Workspace>();
-
-  constructor() {
-    effect(() => {
-      if (this.canReadSprints() && !this.currentSprintsLoaded()) {
-        this.store.dispatch(loadCurrentSprints.init());
-      }
-    });
-  }
 
   onWorkspaceChange(workspace: Workspace) {
     this.workspaceChange.emit(workspace);

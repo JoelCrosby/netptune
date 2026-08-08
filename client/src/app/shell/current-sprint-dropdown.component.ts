@@ -1,15 +1,13 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { selectIsSprintFilterableRoute } from '@core/core.route.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
-import { loadCurrentSprints } from '@core/store/sprints/sprints.actions';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import {
-  selectCurrentSprints,
-  selectCurrentSprintsLoaded,
-  selectSprintEntities,
-} from '@core/store/sprints/sprints.selectors';
+  currentSprintsResource,
+  sprintResource,
+} from '@core/resources/sprint.resource';
 import {
   LucideCalendarDays,
   LucideCalendarFold,
@@ -167,9 +165,11 @@ export class CurrentSprintDropdownComponent {
   canReadSprints = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.read)
   );
-  currentSprints = this.store.selectSignal(selectCurrentSprints);
-  sprintEntities = this.store.selectSignal(selectSprintEntities);
-  currentSprintsLoaded = this.store.selectSignal(selectCurrentSprintsLoaded);
+  private readonly currentSprintsRef = currentSprintsResource();
+  private readonly allSprintsRef = sprintResource([]);
+
+  currentSprints = this.currentSprintsRef.value;
+  currentSprintsLoaded = computed(() => !this.currentSprintsRef.isLoading());
   selectedSprintFilterId = this.sprintFilter.sprintId;
 
   selectedSprintFilter = computed(() => {
@@ -179,7 +179,7 @@ export class CurrentSprintDropdownComponent {
 
     return (
       this.currentSprints().find((sprint) => sprint.id === sprintId) ??
-      this.sprintEntities()[sprintId]
+      this.allSprintsRef.value().find((sprint) => sprint.id === sprintId)
     );
   });
 
@@ -193,21 +193,10 @@ export class CurrentSprintDropdownComponent {
     const count = this.currentSprints().length;
     const isSingle = count === 1;
 
-    // $localize does not evaluate ICU, so this is a ternary rather than a plural
-    // expression. fr/de/es share English's one/other split; a locale with more
-    // plural categories (ru, pl, ar) means moving this into a template ICU.
     return isSingle
       ? $localize`:Sprint dropdown label when exactly one sprint is active:1 active sprint`
       : $localize`:Sprint dropdown label showing how many sprints are active. COUNT is never 1:${count}:COUNT: active sprints`;
   });
-
-  constructor() {
-    effect(() => {
-      if (this.canReadSprints()) {
-        this.store.dispatch(loadCurrentSprints.init());
-      }
-    });
-  }
 
   onSprintSelected(sprintId: number, menu: DropdownMenuComponent) {
     menu.close();

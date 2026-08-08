@@ -3,9 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Params } from '@angular/router';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { addTasksToSprint } from '@core/store/sprints/sprints.actions';
-import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
-import { Store } from '@ngrx/store';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -104,12 +102,13 @@ export interface SprintAddTaskDialogData {
   `,
 })
 export class SprintAddTaskDialogComponent {
-  private store = inject(Store);
   private dialogRef =
     inject<DialogRef<SprintAddTaskDialogComponent>>(DialogRef);
   private dialogData = inject<SprintAddTaskDialogData>(DIALOG_DATA);
 
-  readonly loading = this.store.selectSignal(selectSprintUpdateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+
+  readonly loading = this.sprintCommands.isUpdating;
 
   readonly searchInput = signal('');
   readonly selected = signal<readonly TaskViewModel[]>([]);
@@ -160,12 +159,7 @@ export class SprintAddTaskDialogComponent {
 
     if (taskIds.length === 0) return;
 
-    this.store.dispatch(
-      addTasksToSprint({
-        sprintId: this.dialogData.sprintId,
-        request: { taskIds },
-      })
-    );
+    this.sprintCommands.addTasks(this.dialogData.sprintId, { taskIds });
 
     this.dialogRef.close();
   }

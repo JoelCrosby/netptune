@@ -10,9 +10,7 @@ import {
   validate,
 } from '@angular/forms/signals';
 import { projectResource } from '@core/resources/project.resource';
-import { createSprint } from '@core/store/sprints/sprints.actions';
-import { selectSprintCreateLoading } from '@core/store/sprints/sprints.selectors';
-import { Store } from '@ngrx/store';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -99,10 +97,11 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   `,
 })
 export class CreateSprintDialogComponent {
-  private store = inject(Store);
   dialogRef = inject<DialogRef<CreateSprintDialogComponent>>(DialogRef);
 
-  readonly createLoading = this.store.selectSignal(selectSprintCreateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+
+  readonly createLoading = this.sprintCommands.isCreating;
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
 
@@ -172,17 +171,13 @@ export class CreateSprintDialogComponent {
 
       if (!value.projectId) return;
 
-      this.store.dispatch(
-        createSprint.init({
-          request: {
-            projectId: value.projectId,
-            name: value.name.trim(),
-            goal: value.goal.trim() || null,
-            startDate: value.startDate,
-            endDate: value.endDate,
-          },
-        })
-      );
+      this.sprintCommands.create({
+        projectId: value.projectId,
+        name: value.name.trim(),
+        goal: value.goal.trim() || null,
+        startDate: value.startDate,
+        endDate: value.endDate,
+      });
 
       this.dialogRef.close();
     });

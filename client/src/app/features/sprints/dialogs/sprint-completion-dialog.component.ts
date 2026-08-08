@@ -5,10 +5,8 @@ import { SprintStatus } from '@core/enums/sprint-status';
 import { StatusCategory } from '@core/models/status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
-import { SprintsService } from '@core/store/sprints/sprints.service';
-import { completeSprintWithReassignment } from '@core/store/sprints/sprints.actions';
-import { selectSprintUpdateLoading } from '@core/store/sprints/sprints.selectors';
-import { Store } from '@ngrx/store';
+import { SprintsService } from '@core/services/sprints.service';
+import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -193,13 +191,14 @@ type MoveMode = 'backlog' | 'sprint';
   `,
 })
 export class SprintCompletionDialogComponent {
-  private store = inject(Store);
   private sprintsService = inject(SprintsService);
 
   dialogRef = inject<DialogRef<SprintCompletionDialogComponent>>(DialogRef);
   sprint = inject<SprintDetailViewModel>(DIALOG_DATA);
 
-  readonly updateLoading = this.store.selectSignal(selectSprintUpdateLoading);
+  private readonly sprintCommands = inject(SprintCommandsService);
+
+  readonly updateLoading = this.sprintCommands.isUpdating;
   readonly moveMode = signal<MoveMode>('backlog');
   readonly targetSprintId = signal<number | null>(null);
 
@@ -246,12 +245,10 @@ export class SprintCompletionDialogComponent {
         ? (this.targetSprintId() ?? undefined)
         : undefined;
 
-    this.store.dispatch(
-      completeSprintWithReassignment({
-        sprintId: this.sprint.id,
-        incompleteTaskIds,
-        targetSprintId,
-      })
+    this.sprintCommands.completeWithReassignment(
+      this.sprint.id,
+      incompleteTaskIds,
+      targetSprintId
     );
 
     this.dialogRef.close();

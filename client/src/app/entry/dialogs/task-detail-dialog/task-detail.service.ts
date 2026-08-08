@@ -6,7 +6,7 @@ import {
   loadTaskDetails,
 } from '@app/core/store/tasks/tasks.actions';
 import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
-import { SprintsService } from '@core/store/sprints/sprints.service';
+import { SprintsService } from '@core/services/sprints.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';

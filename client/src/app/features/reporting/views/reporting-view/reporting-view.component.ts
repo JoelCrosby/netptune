@@ -6,8 +6,7 @@ import { netptunePermissions } from '@core/auth/permissions';
 import { ReportingGrouping, ReportingUnit } from '@core/models/reporting';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { projectResource } from '@core/resources/project.resource';
-import { loadSprints } from '@core/store/sprints/sprints.actions';
-import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
+import { sprintResource } from '@core/resources/sprint.resource';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
@@ -193,7 +192,8 @@ export class ReportingViewComponent {
 
   readonly projectsResource = projectResource();
   readonly projects = this.projectsResource.value;
-  readonly sprints = this.store.selectSignal(selectAllSprints);
+  readonly sprintsResource = sprintResource([]);
+  readonly sprints = this.sprintsResource.value;
   readonly canReadMembers = this.store.selectSignal(
     selectHasPermission(netptunePermissions.members.read)
   );
@@ -258,8 +258,6 @@ export class ReportingViewComponent {
     if (!canLoadSprintOptions) {
       return;
     }
-
-    this.store.dispatch(loadSprints.init({ filter: { take: 100 } }));
   }
 
   setParam(key: string, value: string): void {

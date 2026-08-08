@@ -6,11 +6,9 @@ import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { initBacklogView } from '@core/store/sprints/sprints.actions';
-import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
+import { sprintResource } from '@core/resources/sprint.resource';
 import { taskFilterRoute } from '@core/router/task-filter-route';
 import { workspaceUsersResource } from '@core/resources/user.resource';
-import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { TaskListFiltersComponent } from '@project-tasks/components/task-list/task-list-filters.component';
 import { LucideCalendarPlus, LucideListChecks } from '@lucide/angular';
@@ -94,7 +92,8 @@ export class SprintBacklogViewComponent {
       : $localize`:Shown when every task already belongs to a sprint:The backlog is empty — all tasks are assigned to sprints.`;
   });
 
-  readonly allSprints = this.store.selectSignal(selectAllSprints);
+  private readonly sprintsResource = sprintResource([]);
+  readonly allSprints = this.sprintsResource.value;
   readonly users = workspaceUsersResource();
   private readonly filterRoute = taskFilterRoute();
 
@@ -182,8 +181,6 @@ export class SprintBacklogViewComponent {
     return params;
   });
 
-  // Only show the global empty message once every group has resolved its fetch
-  // and all came back empty.
   readonly allEmpty = computed(() => {
     const groups = this.backlogGroups();
 
@@ -192,8 +189,6 @@ export class SprintBacklogViewComponent {
     return groups.every((group) => group.hasLoaded() && group.count() === 0);
   });
 
-  // Combined backlog total for the page header, available once every group has
-  // resolved its fetch.
   readonly totalCount = computed((): number | null => {
     const groups = this.backlogGroups();
 
@@ -203,8 +198,4 @@ export class SprintBacklogViewComponent {
 
     return groups.reduce((total, group) => total + group.count(), 0);
   });
-
-  constructor() {
-    dispatchForWorkspace(() => initBacklogView());
-  }
 }
