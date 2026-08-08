@@ -5,12 +5,7 @@ import {
   UserSelectOption,
   UserSelectValue,
 } from '@core/models/view-models/user-select-option';
-import {
-  deleteNotifications,
-  markAllAsRead,
-  markAsReadMany,
-} from '@core/store/notifications/notifications.actions';
-import { Store } from '@ngrx/store';
+import { NotificationCommandsService } from '@core/services/notification-commands.service';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { NotificationsFiltersComponent } from '../../components/notifications-filters/notifications-filters.component';
@@ -51,7 +46,7 @@ import { NotificationsTableComponent } from '../../components/notifications-tabl
   `,
 })
 export class NotificationsViewComponent {
-  private readonly store = inject(Store);
+  private readonly notificationCommands = inject(NotificationCommandsService);
 
   readonly count = signal<number | null>(null);
   readonly selected = signal<NotificationViewModel[]>([]);
@@ -72,7 +67,7 @@ export class NotificationsViewComponent {
   });
 
   onMarkAllAsRead() {
-    this.store.dispatch(markAllAsRead.init());
+    this.notificationCommands.markAllAsRead();
   }
 
   onSearch(term: string | null) {
@@ -108,7 +103,7 @@ export class NotificationsViewComponent {
       return;
     }
 
-    this.store.dispatch(markAsReadMany.init({ ids }));
+    this.notificationCommands.markManyAsRead(ids);
   }
 
   onDeleteSelected() {
@@ -116,6 +111,6 @@ export class NotificationsViewComponent {
 
     if (!ids.length) return;
 
-    this.store.dispatch(deleteNotifications.init({ ids }));
+    this.notificationCommands.delete(ids);
   }
 }

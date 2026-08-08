@@ -8,18 +8,17 @@ import {
   ViewContainerRef,
   inject,
   viewChild,
+  computed,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import * as notificationActions from '@core/store/notifications/notifications.actions';
-import { loadNotifications } from '@core/store/notifications/notifications.actions';
 import {
-  selectNotifications,
-  selectNotificationsLoaded,
-  selectUnreadCount,
-} from '@core/store/notifications/notifications.selectors';
+  recentNotificationsResource,
+  unreadNotificationCountResource,
+} from '@core/resources/notification.resource';
+import { NotificationCommandsService } from '@core/services/notification-commands.service';
 import { LucideBell } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { NotificationDropdownComponent } from './notification-dropdown.component';
@@ -63,6 +62,7 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
 })
 export class NotificationBellComponent implements OnDestroy {
   private store = inject(Store);
+  private notificationCommands = inject(NotificationCommandsService);
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
   private el = inject(ElementRef<HTMLElement>);
@@ -70,19 +70,16 @@ export class NotificationBellComponent implements OnDestroy {
   private route = inject(ActivatedRoute);
 
   readonly authenticated = this.store.selectSignal(selectIsAuthenticated);
-  readonly notifications = this.store.selectSignal(selectNotifications);
-  readonly unreadCount = this.store.selectSignal(selectUnreadCount);
-  readonly loaded = this.store.selectSignal(selectNotificationsLoaded);
+  private readonly recent = recentNotificationsResource();
+  private readonly unread = unreadNotificationCountResource();
+
+  readonly notifications = this.recent.value;
+  readonly unreadCount = this.unread.value;
+  readonly loaded = computed(() => !this.recent.isLoading());
 
   private readonly menuTemplate =
     viewChild.required<TemplateRef<unknown>>('menuTemplate');
   private overlayRef?: OverlayRef;
-
-  constructor() {
-    if (this.authenticated()) {
-      this.store.dispatch(loadNotifications.init());
-    }
-  }
 
   toggleMenu() {
     if (this.overlayRef?.hasAttached()) {
@@ -122,7 +119,7 @@ export class NotificationBellComponent implements OnDestroy {
     this.overlayRef.attach(new TemplatePortal(this.menuTemplate(), this.vcr));
     this.overlayRef.backdropClick().subscribe(() => this.closeMenu());
 
-    this.store.dispatch(notificationActions.loadNotifications.init());
+    this.recent.reload();
   }
 
   private closeMenu() {
@@ -130,7 +127,7 @@ export class NotificationBellComponent implements OnDestroy {
   }
 
   markAllAsRead() {
-    this.store.dispatch(notificationActions.markAllAsRead.init());
+    this.notificationCommands.markAllAsRead();
   }
 
   onViewAll() {

@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationViewModel } from '@app/core/models/view-models/notification-view-model';
-import { markAsRead } from '@app/core/store/notifications/notifications.actions';
+import { NotificationCommandsService } from '@core/services/notification-commands.service';
 import {
   notificationNamesEntity,
   notificationSummary,
@@ -11,7 +11,6 @@ import { entityTypeToString } from '@app/core/transforms/entity-type';
 import { fromNow } from '@app/core/util/dates';
 import { AvatarComponent } from '@app/static/components/avatar/avatar.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-notification-item',
@@ -69,7 +68,7 @@ import { Store } from '@ngrx/store';
 })
 export class NotificationItemComponent {
   readonly notification = input.required<NotificationViewModel>();
-  private store = inject(Store);
+  private notificationCommands = inject(NotificationCommandsService);
   private router = inject(Router);
 
   readonly notificationSummary = notificationSummary;
@@ -88,7 +87,7 @@ export class NotificationItemComponent {
     const notification = this.notification();
 
     if (!notification.isRead) {
-      this.store.dispatch(markAsRead.init({ id: notification.id }));
+      this.notificationCommands.markAsRead(notification.id);
     }
 
     void this.router.navigateByUrl(notification.link);

@@ -17,6 +17,7 @@ import { authInterceptor } from './app/core/http-interceptors/auth.interceptor';
 import { CustomSerializer } from './app/core/router/custom-serializer';
 import { provideNavigationService } from './app/core/services/navigation.service';
 import { provideVersionCheck } from './app/core/services/version-check.service';
+import { provideNotificationEvents } from './app/core/sse/notification-sse.service';
 import { provideWorkspaceEvents } from './app/core/sse/workspace-events.service';
 import { AuthEffects } from './app/core/store/auth/auth.effects';
 import { LayoutEffects } from './app/core/store/layout/layout.effects';
@@ -56,5 +57,6 @@ bootstrapApplication(AppComponent, {
     provideNavigationService(),
     provideVersionCheck(),
     provideWorkspaceEvents(),
+    provideNotificationEvents(),
   ],
 });

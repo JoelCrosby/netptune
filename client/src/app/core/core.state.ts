@@ -16,7 +16,6 @@ import type { HubContextState } from './store/hub-context/hub-context.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
 import type { MetaState } from './store/meta/meta.model';
 import { metaReducer } from './store/meta/meta.reducer';
-import type { NotificationsState } from './store/notifications/notifications.model';
 import type { ProfileState } from './store/profile/profile.model';
 import type { SettingsState } from './store/settings/settings.model';
 import type { SprintsState } from './store/sprints/sprints.model';
@@ -56,8 +55,6 @@ export const selectWorkspacesFeature =
 export const selectTasksFeature = selectFeature<TasksState>('tasks');
 export const selectTagsFeature = selectFeature<TagsState>('tags');
 export const selectHubContextFeature = selectFeature<HubContextState>('hub');
-export const selectNotificationsFeature =
-  selectFeature<NotificationsState>('notifications');
 export const selectSprintsFeature = selectFeature<SprintsState>('sprints');
 
 export interface AppState {
@@ -70,7 +67,6 @@ export interface AppState {
   tasks: TasksState;
   tags: TagsState;
   hub: HubContextState;
-  notifications: NotificationsState;
   sprints: SprintsState;
   boardgroups: BoardGroupsState;
   profile: ProfileState;

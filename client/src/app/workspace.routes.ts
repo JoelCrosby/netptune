@@ -8,8 +8,6 @@ import { workspaceResovler } from './core/resolvers/workspace-resolver';
 import { BoardGroupsEffects } from './core/store/groups/board-groups.effects';
 import { boardGroupsReducer } from './core/store/groups/board-groups.reducer';
 import { hubContextReducer } from './core/store/hub-context/hub-context.reducer';
-import { NotificationsEffects } from './core/store/notifications/notifications.effects';
-import { notificationsReducer } from './core/store/notifications/notifications.reducer';
 import { ProfileEffects } from './core/store/profile/profile.effects';
 import { profileReducer } from './core/store/profile/profile.reducer';
 import { SprintsEffects } from './core/store/sprints/sprints.effects';
@@ -30,12 +28,10 @@ export const routes: Routes = [
       provideState('tasks', projectTasksReducer),
       provideState('tags', tagsReducer),
       provideState('hub', hubContextReducer),
-      provideState('notifications', notificationsReducer),
       provideState('sprints', sprintsReducer),
       provideState('boardgroups', boardGroupsReducer),
       provideState('profile', profileReducer),
       provideEffects([
-        NotificationsEffects,
         ProjectTasksEffects,
         TagsEffects,
         ProfileEffects,

@@ -7,15 +7,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Params, Router } from '@angular/router';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
-import {
-  deleteNotifications,
-  markAllAsRead,
-  markAsRead,
-  markAsReadMany,
-} from '@core/store/notifications/notifications.actions';
+import { NotificationCommandsService } from '@core/services/notification-commands.service';
+import { onWorkspaceRefresh } from '@core/util/reload-on-refresh';
 import {
   notificationNamesEntity,
   notificationSummary,
@@ -23,8 +18,6 @@ import {
 import { entityTypeToString } from '@core/transforms/entity-type';
 import { fromNow } from '@core/util/dates';
 import { LucideCheck, LucideExternalLink, LucideTrash2 } from '@lucide/angular';
-import { Actions, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -126,8 +119,7 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
   `,
 })
 export class NotificationsTableComponent {
-  private readonly store = inject(Store);
-  private readonly actions$ = inject(Actions);
+  private readonly notificationCommands = inject(NotificationCommandsService);
   private readonly router = inject(Router);
 
   readonly notificationSummary = notificationSummary;
@@ -183,20 +175,10 @@ export class NotificationsTableComponent {
   };
 
   constructor() {
-    this.actions$
-      .pipe(
-        ofType(
-          markAsRead.success,
-          markAllAsRead.success,
-          markAsReadMany.success,
-          deleteNotifications.success
-        ),
-        takeUntilDestroyed()
-      )
-      .subscribe(() => {
-        this.datatable().clearSelection();
-        this.reload.update((value) => value + 1);
-      });
+    onWorkspaceRefresh(['notifications'], () => {
+      this.datatable().clearSelection();
+      this.reload.update((value) => value + 1);
+    });
   }
 
   goToFirstPage() {
@@ -210,16 +192,16 @@ export class NotificationsTableComponent {
   onMarkRead(notification: NotificationViewModel) {
     if (notification.isRead) return;
 
-    this.store.dispatch(markAsRead.init({ id: notification.id }));
+    this.notificationCommands.markAsRead(notification.id);
   }
 
   onDelete(notification: NotificationViewModel) {
-    this.store.dispatch(deleteNotifications.init({ ids: [notification.id] }));
+    this.notificationCommands.delete([notification.id]);
   }
 
   onOpen(notification: NotificationViewModel) {
     if (!notification.isRead) {
-      this.store.dispatch(markAsRead.init({ id: notification.id }));
+      this.notificationCommands.markAsRead(notification.id);
     }
 
     void this.router.navigateByUrl(notification.link);

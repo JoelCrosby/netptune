@@ -1,12 +1,11 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Page } from '@app/core/models/pagination';
 import { ClientResponse } from '@core/models/client-response';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
-import { selectUnreadCount } from '@core/store/notifications/notifications.selectors';
+import { unreadNotificationCountResource } from '@core/resources/notification.resource';
 import { LucideBell } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
@@ -94,12 +93,13 @@ const pageSize = 20;
   `,
 })
 export class DashboardNotificationsCardComponent {
-  private readonly store = inject(Store);
   private readonly take = signal(pageSize);
 
   protected readonly notificationIcon = LucideBell;
   protected readonly skeletonRows = Array.from({ length: 4 });
-  protected readonly unreadCount = this.store.selectSignal(selectUnreadCount);
+  private readonly unread = unreadNotificationCountResource();
+
+  protected readonly unreadCount = this.unread.value;
 
   readonly resource = httpResource<ClientResponse<Page<NotificationViewModel>>>(
     () => ({
