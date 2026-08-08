@@ -29,12 +29,11 @@ export class CreateBoardGroupComponent {
 
     if (!board) return;
 
-    const { id: boardId, identifier } = board;
+    const { id: boardId } = board;
 
     this.dialog.open(BoardGroupDialogComponent, {
       width: '600px',
       data: {
-        identifier,
         boardId,
       },
     });

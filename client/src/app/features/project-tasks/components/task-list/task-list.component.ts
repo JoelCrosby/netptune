@@ -347,6 +347,6 @@ export class TaskListComponent {
   }
 
   deleteClicked(task: TaskViewModel) {
-    this.taskCommands.delete(`[workspace] ${task.workspaceKey}`, task);
+    this.taskCommands.delete(task);
   }
 }

@@ -24,7 +24,6 @@ import {
   LinkTaskDialogData,
   LinkTaskDialogResult,
 } from '../link-task-dialog/link-task-dialog.component';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { TaskDetailService } from './task-detail.service';
 
 interface RelationGroup {
@@ -138,7 +137,6 @@ export class TaskDetailRelationsComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   readonly task = this.taskDetail.task;
-  readonly hubGroupId = inject(ProjectTasksHubService).currentGroupId;
   readonly canUpdate = selectCanUpdateTask(this.store);
 
   readonly busy = linkedSignal({
@@ -224,10 +222,7 @@ export class TaskDetailRelationsComponent {
             : { sourceSystemId: other.systemId, targetSystemId: task.systemId };
 
           return this.relationsService
-            .create(
-              { ...request, relationTypeId: result.relationTypeId },
-              this.hubGroupId()
-            )
+            .create({ ...request, relationTypeId: result.relationTypeId })
             .pipe(
               tap((response) => {
                 if (!response.isSuccess) {
@@ -270,7 +265,7 @@ export class TaskDetailRelationsComponent {
     this.error.set(null);
 
     this.relationsService
-      .delete(relation.id, this.hubGroupId())
+      .delete(relation.id)
       .pipe(
         unwrapClientReposne(),
         tap(() => {

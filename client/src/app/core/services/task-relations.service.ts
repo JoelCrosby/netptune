@@ -16,17 +16,14 @@ export class TaskRelationsService {
     return this.http.get<TaskRelation[]>(`api/task-relations/${systemId}`);
   }
 
-  create(request: CreateTaskRelationRequest, groupId?: string | null) {
+  create(request: CreateTaskRelationRequest) {
     return this.http.post<ClientResponse<TaskRelation>>(
       'api/task-relations',
-      request,
-      { headers: groupId ? { 'X-Group': groupId } : {} }
+      request
     );
   }
 
-  delete(id: number, groupId?: string | null) {
-    return this.http.delete<ClientResponse>(`api/task-relations/${id}`, {
-      headers: groupId ? { 'X-Group': groupId } : {},
-    });
+  delete(id: number) {
+    return this.http.delete<ClientResponse>(`api/task-relations/${id}`);
   }
 }

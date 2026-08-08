@@ -1,7 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, submit, validate } from '@angular/forms/signals';
-import { Store } from '@ngrx/store';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { estimateTypeOptions } from '@core/enums/estimate-type';
@@ -19,7 +18,6 @@ import { FormSelectComponent } from '@static/components/form-select/form-select.
 import { FormSelectTagsOptionComponent } from '@static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@static/components/form-select-tags/form-select-tags.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
-import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
 
 const NO_SPRINT = -1;
 
@@ -207,17 +205,12 @@ export class BulkEditTasksDialogComponent {
 
   private readonly dialogRef =
     inject<DialogRef<void, BulkEditTasksDialogComponent>>(DialogRef);
-  private readonly store = inject(Store);
   private readonly taskCommands = inject(TaskCommandsService);
   readonly tasks = inject<number[]>(DIALOG_DATA);
 
   readonly noSprint = NO_SPRINT;
   readonly priorityOptions = taskPriorityOptions;
   readonly estimateOptions = estimateTypeOptions;
-  readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
-
   readonly taskCount = computed(() => this.tasks.length);
 
   readonly statuses = statusResource();
@@ -258,15 +251,9 @@ export class BulkEditTasksDialogComponent {
 
   apply(event: Event) {
     event.preventDefault();
-    const workspaceId = this.workspaceId();
-
-    if (!workspaceId) return;
 
     submit(this.editForm, async () => {
-      this.taskCommands.bulkUpdate(
-        `[workspace] ${workspaceId}`,
-        this.buildRequest()
-      );
+      this.taskCommands.bulkUpdate(this.buildRequest());
 
       this.dialogRef.close();
     });

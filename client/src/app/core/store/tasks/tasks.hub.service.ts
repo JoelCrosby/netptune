@@ -12,12 +12,7 @@ export class ProjectTasksHubService {
 
   private readonly localReloads = signal(0);
 
-  private readonly groupId = signal<string | null>(null);
-
   readonly onlineUserIds = this.workspaceEvents.onlineUserIds;
-
-  /** The board or project that task writes from the open view are addressed to. */
-  readonly currentGroupId = this.groupId.asReadonly();
 
   /** Task lists reload for a write made here and for one that arrived from elsewhere. */
   readonly updateVersion = computed(() => {
@@ -25,12 +20,10 @@ export class ProjectTasksHubService {
   });
 
   addToGroup(groupId: string) {
-    this.groupId.set(groupId);
     this.workspaceEvents.joinGroup(groupId);
   }
 
   leaveGroup() {
-    this.groupId.set(null);
     this.workspaceEvents.leaveGroup();
   }
 

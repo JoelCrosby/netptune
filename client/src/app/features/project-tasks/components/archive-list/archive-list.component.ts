@@ -15,9 +15,7 @@ import { EmptyStateComponent } from '@app/static/components/empty-state/empty-st
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskArchiveService } from '@core/store/tasks/task-archive.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { LucideArchiveRestore } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
@@ -121,14 +119,9 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
   `,
 })
 export class ArchiveListComponent {
-  private store = inject(Store);
   private archiveService = inject(TaskArchiveService);
 
   private datatable = viewChild(DatatableComponent<TaskViewModel>);
-  private workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
-
   readonly countChange = output<number>();
 
   readonly selection = signal<TaskViewModel[]>([]);
@@ -200,16 +193,12 @@ export class ArchiveListComponent {
   }
 
   private restore(ids: number[]) {
-    const workspaceId = this.workspaceId();
+    if (ids.length === 0) return;
 
-    if (!workspaceId || ids.length === 0) return;
-
-    this.archiveService
-      .restore(`[workspace] ${workspaceId}`, ids)
-      .subscribe(() => {
-        this.datatable()?.clearSelection();
-        this.selection.set([]);
-        this.reloadVersion.update((version) => version + 1);
-      });
+    this.archiveService.restore(ids).subscribe(() => {
+      this.datatable()?.clearSelection();
+      this.selection.set([]);
+      this.reloadVersion.update((version) => version + 1);
+    });
   }
 }

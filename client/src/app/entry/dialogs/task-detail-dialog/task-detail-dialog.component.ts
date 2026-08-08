@@ -18,7 +18,6 @@ import { TaskDetailHeaderComponent } from './task-detail-header.component';
 import { TaskDetailPropertiesComponent } from './task-detail-properties.component';
 import { TaskDetailRelationsComponent } from './task-detail-relations.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { TaskDetailService } from './task-detail.service';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
@@ -124,7 +123,6 @@ export class TaskDetailDialogComponent {
   statusCategory = StatusCategory;
 
   task = this.taskDetail.task;
-  readonly hubGroupId = inject(ProjectTasksHubService).currentGroupId;
 
   readTags = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tags.read)

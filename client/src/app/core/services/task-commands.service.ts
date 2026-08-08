@@ -27,9 +27,9 @@ export class TaskCommandsService {
 
   readonly isEditing = this.editing.asReadonly();
 
-  create(identifier: string, task: AddProjectTaskRequest) {
+  create(task: AddProjectTaskRequest) {
     this.tasksApi
-      .post(identifier, task)
+      .post(task)
       .pipe(
         unwrapClientReposne(),
         catchError(() => EMPTY)
@@ -43,14 +43,13 @@ export class TaskCommandsService {
   }
 
   update(
-    identifier: string,
     task: Partial<UpdateProjectTaskRequest>,
     options?: { silent?: boolean }
   ) {
     this.editing.set(true);
 
     this.tasksApi
-      .put(identifier, task)
+      .put(task)
       .pipe(
         unwrapClientReposne(),
         catchError(() => EMPTY),
@@ -67,9 +66,9 @@ export class TaskCommandsService {
       });
   }
 
-  bulkUpdate(identifier: string, request: BulkUpdateTasksRequest) {
+  bulkUpdate(request: BulkUpdateTasksRequest) {
     this.tasksApi
-      .bulkUpdate(identifier, request)
+      .bulkUpdate(request)
       .pipe(
         unwrapClientReposne(),
         catchError(() => EMPTY)
@@ -82,16 +81,14 @@ export class TaskCommandsService {
       });
   }
 
-  delete(identifier: string, task: ProjectTask, onDeleted?: () => void) {
+  delete(task: ProjectTask, onDeleted?: () => void) {
     this.confirmation
       .open(DELETE_TASK_CONFIRMATION)
       .pipe(
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tasksApi
-            .delete(identifier, task)
-            .pipe(unwrapClientReposne());
+          return this.tasksApi.delete(task).pipe(unwrapClientReposne());
         }),
         catchError(() => EMPTY)
       )
@@ -104,16 +101,14 @@ export class TaskCommandsService {
       });
   }
 
-  deleteMany(identifier: string, ids: number[]) {
+  deleteMany(ids: number[]) {
     this.confirmation
       .open(buildDeleteTasksConfirmation(ids.length))
       .pipe(
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tasksApi
-            .deleteMultiple(identifier, ids)
-            .pipe(unwrapClientReposne());
+          return this.tasksApi.deleteMultiple(ids).pipe(unwrapClientReposne());
         }),
         catchError(() => EMPTY)
       )
@@ -125,9 +120,9 @@ export class TaskCommandsService {
       });
   }
 
-  addTag(identifier: string, request: AddTagToTaskRequest) {
+  addTag(request: AddTagToTaskRequest) {
     this.tasksApi
-      .addTagToTask(identifier, request)
+      .addTagToTask(request)
       .pipe(
         unwrapClientReposne(),
         catchError(() => EMPTY)
@@ -135,9 +130,9 @@ export class TaskCommandsService {
       .subscribe(() => this.workspaceRefresh.refresh(['tasks', 'tags']));
   }
 
-  removeTag(identifier: string, request: DeleteTagFromTaskRequest) {
+  removeTag(request: DeleteTagFromTaskRequest) {
     this.tasksApi
-      .deleteTagFromTask(identifier, request)
+      .deleteTagFromTask(request)
       .pipe(
         unwrapClientReposne(),
         catchError(() => EMPTY)

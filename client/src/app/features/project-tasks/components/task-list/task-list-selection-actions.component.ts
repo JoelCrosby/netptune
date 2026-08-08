@@ -3,10 +3,8 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { LucideSettings2, LucideTrash } from '@lucide/angular';
 import { DialogService } from '@core/services/dialog.service';
 import { BulkEditTasksDialogComponent } from '@entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component';
-import { Store } from '@ngrx/store';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskSelectionService } from '@core/services/task-selection.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 
 @Component({
   selector: 'app-task-list-selection-actions',
@@ -48,11 +46,6 @@ import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspa
 })
 export class TaskListSelectionActionsComponent {
   private readonly dialog = inject(DialogService);
-  private readonly store = inject(Store);
-
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
 
   private readonly taskCommands = inject(TaskCommandsService);
   private readonly taskSelection = inject(TaskSelectionService);
@@ -69,11 +62,10 @@ export class TaskListSelectionActionsComponent {
   }
 
   deleteClicked() {
-    const workspaceId = this.workspaceId();
     const ids = this.selection();
 
-    if (!workspaceId || ids.length === 0) return;
+    if (ids.length === 0) return;
 
-    this.taskCommands.deleteMany(`[workspace] ${workspaceId}`, [...ids]);
+    this.taskCommands.deleteMany([...ids]);
   }
 }

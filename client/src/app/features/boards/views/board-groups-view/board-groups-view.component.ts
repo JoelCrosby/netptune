@@ -279,7 +279,6 @@ export class BoardGroupsViewComponent implements OnDestroy {
   loading = this.boardView.loading;
   showSkeleton = delayedLoading(this.loading);
   boardGroupsLoaded = this.boardView.loaded;
-  boardIdentifier = this.boardView.identifier;
 
   siblingIdMap = computed(() => {
     const groups = this.groups();
@@ -401,7 +400,6 @@ export class BoardGroupsViewComponent implements OnDestroy {
       width: '600px',
       data: {
         boardId: group.boardId,
-        identifier: this.boardIdentifier(),
         boardGroupId: group.id,
         name: group.name,
         statusId: group.statusId,

@@ -14,9 +14,7 @@ import { TaskPriority } from '@core/enums/task-priority';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { UserSelectValue } from '@core/models/view-models/user-select-option';
 import { TaskCommandsService } from '@core/services/task-commands.service';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { CurrentProjectService } from '@core/services/current-project.service';
-import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
@@ -138,14 +136,12 @@ interface CreateTaskForm {
 export class CreateTaskDialogComponent {
   static readonly width = '972px';
 
-  private store = inject(Store);
   private taskCommands = inject(TaskCommandsService);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
   readonly data = inject<CreateTaskDialogData | null>(DIALOG_DATA, {
     optional: true,
   });
 
-  currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
   currentProjectId = inject(CurrentProjectService).currentId;
 
   readonly statusId = signal<number | null>(null);
@@ -230,19 +226,11 @@ export class CreateTaskDialogComponent {
     submit(this.taskForm, async () => {
       if (this.scheduleInvalid()) return;
 
-      const workspace = this.currentWorkspace();
       const projectId = this.projectId();
 
       if (projectId === null) return;
 
-      if (!workspace?.slug) {
-        throw new Error('workspace slug is undefined');
-      }
-
-      this.taskCommands.create(
-        `[workspace] ${workspace.slug}`,
-        this.buildRequest(projectId)
-      );
+      this.taskCommands.create(this.buildRequest(projectId));
 
       this.dialogRef.close();
     });

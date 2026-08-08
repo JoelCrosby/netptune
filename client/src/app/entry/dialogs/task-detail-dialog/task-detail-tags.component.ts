@@ -7,7 +7,6 @@ import { FormSelectTagsOptionComponent } from '@app/static/components/form-selec
 import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { Store } from '@ngrx/store';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { TaskDetailService } from './task-detail.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 
@@ -51,7 +50,6 @@ export class TaskDetailTagsComponent {
   private readonly taskCommands = inject(TaskCommandsService);
 
   task = this.taskDetail.task;
-  readonly hubGroupId = inject(ProjectTasksHubService).currentGroupId;
   selectedTags = linkedSignal(() => this.task()?.tags ?? []);
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 
@@ -63,9 +61,8 @@ export class TaskDetailTagsComponent {
 
   onTagsSelectionChanged(tags: string[]) {
     const task = this.task();
-    const identifier = this.hubGroupId();
 
-    if (!task || !identifier) return;
+    if (!task) return;
 
     const currentTags = new Set(this.selectedTags());
     const nextTags = new Set(tags);
@@ -76,15 +73,9 @@ export class TaskDetailTagsComponent {
     const removed = [...currentTags].find((t) => !nextTags.has(t));
 
     if (removed) {
-      this.taskCommands.removeTag(identifier, {
-        systemId: task.systemId,
-        tag: removed,
-      });
+      this.taskCommands.removeTag({ systemId: task.systemId, tag: removed });
     } else if (added) {
-      this.taskCommands.addTag(identifier, {
-        systemId: task.systemId,
-        tag: added,
-      });
+      this.taskCommands.addTag({ systemId: task.systemId, tag: added });
     }
   }
 }

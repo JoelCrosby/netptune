@@ -33,9 +33,9 @@ export class BoardGroupCommandsService {
   private readonly snackbar = inject(SnackbarService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
-  createGroup(identifier: string, request: AddBoardGroupRequest) {
+  createGroup(request: AddBoardGroupRequest) {
     this.tasksApi
-      .addBoardGroup(identifier, request)
+      .addBoardGroup(request)
       .pipe(
         unwrapClientReposne(),
         catchError(() => EMPTY)
@@ -47,16 +47,12 @@ export class BoardGroupCommandsService {
   }
 
   editGroup(request: UpdateBoardGroupRequest) {
-    const identifier = this.boardView.identifier();
-
-    if (!identifier) return;
-
     const previousStatusId =
       this.boardView.groups().find((group) => group.id === request.boardGroupId)
         ?.statusId ?? null;
 
     this.tasksApi
-      .putGroup(identifier, request)
+      .putGroup(request)
       .pipe(
         unwrapClientReposne(),
         catchError(() => EMPTY)
@@ -74,17 +70,13 @@ export class BoardGroupCommandsService {
   }
 
   deleteGroup(boardGroup: BoardViewGroup) {
-    const identifier = this.boardView.identifier();
-
-    if (!identifier) return;
-
     this.confirmation
       .open(DELETE_CONFIRMATION)
       .pipe(
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tasksApi.deleteBoardGroup(identifier, boardGroup.id);
+          return this.tasksApi.deleteBoardGroup(boardGroup.id);
         }),
         catchError(() => EMPTY)
       )
@@ -97,12 +89,8 @@ export class BoardGroupCommandsService {
   }
 
   createTask(task: AddProjectTaskRequest) {
-    const identifier = this.boardView.identifier();
-
-    if (!identifier) return;
-
     this.tasksApi
-      .post(identifier, {
+      .post({
         ...task,
         assigneeId: this.composer.assigneeId(),
         sprintId: task.sprintId ?? this.composer.sprintId(),
@@ -121,14 +109,10 @@ export class BoardGroupCommandsService {
   }
 
   moveTask(request: MoveTaskInGroupRequest, status?: Status | null) {
-    const identifier = this.boardView.identifier();
-
-    if (!identifier) return;
-
     this.boardView.applyTaskMove(request, status);
 
     this.tasksApi
-      .moveTaskInBoardGroup(identifier, request)
+      .moveTaskInBoardGroup(request)
       .pipe(catchError(() => EMPTY))
       .subscribe();
   }
@@ -147,7 +131,7 @@ export class BoardGroupCommandsService {
     if (!identifier) return;
 
     this.tasksApi
-      .reassignTasks(identifier, {
+      .reassignTasks({
         boardId: identifier,
         assigneeId,
         taskIds: this.selection.taskIds(),
@@ -165,10 +149,6 @@ export class BoardGroupCommandsService {
   }
 
   deleteSelectedTasks() {
-    const identifier = this.boardView.identifier();
-
-    if (!identifier) return;
-
     const ids = this.selection.taskIds();
 
     this.confirmation
@@ -177,9 +157,7 @@ export class BoardGroupCommandsService {
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tasksApi
-            .deleteMultiple(identifier, ids)
-            .pipe(unwrapClientReposne());
+          return this.tasksApi.deleteMultiple(ids).pipe(unwrapClientReposne());
         }),
         catchError(() => EMPTY)
       )
@@ -210,7 +188,7 @@ export class BoardGroupCommandsService {
     if (!identifier) return;
 
     this.tasksApi
-      .moveTasksToGroup(identifier, {
+      .moveTasksToGroup({
         boardId: identifier,
         newGroupId,
         taskIds,

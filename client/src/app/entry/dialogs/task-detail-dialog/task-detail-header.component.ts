@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
 import { InlineEditHeadingComponent } from '@app/static/components/inline-edit-heading/inline-edit-heading.component';
 import { Store } from '@ngrx/store';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { TaskDetailService } from './task-detail.service';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
@@ -21,7 +20,6 @@ export class TaskDetailHeaderComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;
-  readonly hubGroupId = inject(ProjectTasksHubService).currentGroupId;
   private readonly canUpdate = selectCanUpdateTask(this.store);
 
   isReadOnly = computed(() => !this.canUpdate());
@@ -39,10 +37,9 @@ export class TaskDetailHeaderComponent {
       return;
     }
 
-    const identifier = this.hubGroupId();
     const task = this.task();
 
-    if (!identifier || !task) {
+    if (!task) {
       return;
     }
 

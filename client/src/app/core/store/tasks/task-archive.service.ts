@@ -14,26 +14,22 @@ export class TaskArchiveService {
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
 
-  restore(groupId: string, ids: number[]): Observable<number[]> {
+  restore(ids: number[]): Observable<number[]> {
     return this.confirmation.open(buildRestoreConfirmation(ids.length)).pipe(
       switchMap((confirmed) => {
         if (!confirmed) return EMPTY;
 
-        return this.http
-          .post<ClientResponse>('api/tasks/restore', ids, {
-            headers: { 'X-Group': groupId },
-          })
-          .pipe(
-            unwrapClientReposne(),
-            tap(() =>
-              this.snackbar.open(
-                ids.length === 1
-                  ? 'Task restored'
-                  : `${ids.length} tasks restored`
-              )
-            ),
-            map(() => ids)
-          );
+        return this.http.post<ClientResponse>('api/tasks/restore', ids).pipe(
+          unwrapClientReposne(),
+          tap(() =>
+            this.snackbar.open(
+              ids.length === 1
+                ? 'Task restored'
+                : `${ids.length} tasks restored`
+            )
+          ),
+          map(() => ids)
+        );
       })
     );
   }

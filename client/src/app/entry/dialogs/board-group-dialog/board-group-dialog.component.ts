@@ -15,8 +15,6 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface BoardGroupDialogData {
   boardId: number;
-  identifier: string;
-  // Present when editing an existing group.
   boardGroupId?: number;
   name?: string;
   statusId?: number | null;
@@ -85,7 +83,6 @@ export class BoardGroupDialogComponent {
 
   isEdit = this.data.boardGroupId !== undefined;
 
-  /** Ternaries in a template expression cannot be marked, so build the copy here. */
   readonly titleLabel = this.isEdit
     ? $localize`:Title of the dialog for editing a board group:Edit Group`
     : $localize`:Title of the dialog for creating a board group:Create Group`;
@@ -125,7 +122,7 @@ export class BoardGroupDialogComponent {
           clearStatus: statusId === null,
         });
       } else {
-        this.boardCommands.createGroup(this.data.identifier, {
+        this.boardCommands.createGroup({
           name,
           boardId: this.data.boardId,
           statusId,

@@ -52,7 +52,7 @@ export class TaskDetailService {
 
     if (!task) return;
 
-    this.taskCommands.update(task.systemId, { ...task, ...update });
+    this.taskCommands.update({ ...task, ...update });
   }
 
   deleteTask(onDeleted?: () => void) {
@@ -60,7 +60,7 @@ export class TaskDetailService {
 
     if (!task) return;
 
-    this.taskCommands.delete(task.systemId, task, onDeleted);
+    this.taskCommands.delete(task, onDeleted);
   }
 
   assignSprint(sprintId: number) {

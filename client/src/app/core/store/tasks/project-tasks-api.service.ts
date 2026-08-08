@@ -22,101 +22,71 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 export class ProjectTasksApiService {
   private http = inject(HttpClient);
 
-  moveTaskInBoardGroup(
-    boardIdentifier: string,
-    request: MoveTaskInGroupRequest
-  ) {
+  moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
     return this.http.post<ClientResponse>(
       'api/tasks/move-task-in-group',
-      request,
-      { headers: { 'X-Group': boardIdentifier } }
+      request
     );
   }
 
-  post(groupId: string, task: AddProjectTaskRequest) {
-    return this.http.post<ClientResponse<TaskViewModel>>('api/tasks', task, {
-      headers: { 'X-Group': groupId },
-    });
+  post(task: AddProjectTaskRequest) {
+    return this.http.post<ClientResponse<TaskViewModel>>('api/tasks', task);
   }
 
-  put(
-    groupId: string,
-    task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>
-  ) {
-    return this.http.put<ClientResponse<TaskViewModel>>('api/tasks', task, {
-      headers: { 'X-Group': groupId },
-    });
+  put(task: ProjectTask | BoardViewTask | Partial<UpdateProjectTaskRequest>) {
+    return this.http.put<ClientResponse<TaskViewModel>>('api/tasks', task);
   }
 
-  bulkUpdate(groupId: string, request: BulkUpdateTasksRequest) {
-    return this.http.post<ClientResponse>('api/tasks/bulk-update', request, {
-      headers: { 'X-Group': groupId },
-    });
+  bulkUpdate(request: BulkUpdateTasksRequest) {
+    return this.http.post<ClientResponse>('api/tasks/bulk-update', request);
   }
 
-  putGroup(groupId: string, request: UpdateBoardGroupRequest) {
+  putGroup(request: UpdateBoardGroupRequest) {
     return this.http.put<ClientResponse<BoardGroupViewModel>>(
       'api/boardgroups',
-      request,
-      { headers: { 'X-Group': groupId } }
+      request
     );
   }
 
-  delete(groupId: string, task: ProjectTask) {
+  delete(task: ProjectTask) {
     if (task.id === undefined || task.id === null) {
       throw new Error('task id undefined');
     }
 
-    return this.http.delete<ClientResponse>(`api/tasks/${task.id}`, {
-      headers: { 'X-Group': groupId },
-    });
+    return this.http.delete<ClientResponse>(`api/tasks/${task.id}`);
   }
 
-  deleteMultiple(groupId: string, ids: number[]) {
-    return this.http.delete<ClientResponse>('api/tasks', {
-      headers: { 'X-Group': groupId },
-      body: ids,
-    });
+  deleteMultiple(ids: number[]) {
+    return this.http.delete<ClientResponse>('api/tasks', { body: ids });
   }
 
-  addTagToTask(groupId: string, request: AddTagToTaskRequest) {
-    return this.http.post<ClientResponse<Tag>>('api/tags/task', request, {
-      headers: { 'X-Group': groupId },
-    });
+  addTagToTask(request: AddTagToTaskRequest) {
+    return this.http.post<ClientResponse<Tag>>('api/tags/task', request);
   }
 
-  deleteTagFromTask(groupId: string, request: DeleteTagFromTaskRequest) {
-    return this.http.delete<ClientResponse>('api/tags/task', {
-      headers: { 'X-Group': groupId },
-      body: request,
-    });
+  deleteTagFromTask(request: DeleteTagFromTaskRequest) {
+    return this.http.delete<ClientResponse>('api/tags/task', { body: request });
   }
 
-  addBoardGroup(groupId: string, request: AddBoardGroupRequest) {
+  addBoardGroup(request: AddBoardGroupRequest) {
     return this.http.post<ClientResponse<BoardGroupViewModel>>(
       'api/boardgroups',
-      request,
-      { headers: { 'X-Group': groupId } }
+      request
     );
   }
 
-  deleteBoardGroup(groupId: string, boardGroupId: number) {
-    return this.http.delete<ClientResponse>(`api/boardgroups/${boardGroupId}`, {
-      headers: { 'X-Group': groupId },
-    });
+  deleteBoardGroup(boardGroupId: number) {
+    return this.http.delete<ClientResponse>(`api/boardgroups/${boardGroupId}`);
   }
 
-  moveTasksToGroup(groupId: string, request: MoveTasksToGroupRequest) {
+  moveTasksToGroup(request: MoveTasksToGroupRequest) {
     return this.http.post<ClientResponse>(
       'api/tasks/move-tasks-to-group',
-      request,
-      { headers: { 'X-Group': groupId } }
+      request
     );
   }
 
-  reassignTasks(groupId: string, request: ReassignTasksRequest) {
-    return this.http.post<ClientResponse>('api/tasks/reassign-tasks', request, {
-      headers: { 'X-Group': groupId },
-    });
+  reassignTasks(request: ReassignTasksRequest) {
+    return this.http.post<ClientResponse>('api/tasks/reassign-tasks', request);
   }
 }
