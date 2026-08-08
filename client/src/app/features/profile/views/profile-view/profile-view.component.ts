@@ -1,15 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
-import { Store } from '@ngrx/store';
+import { profileResource } from '@core/resources/profile.resource';
+import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { AccountPasswordComponent } from '@profile/components/account-password/account-password.component';
 import { UpdateProfileComponent } from '@profile/components/update-profile/update-profile.component';
 import { LinkedProvidersComponent } from '@profile/components/linked-providers/linked-providers.component';
-import { loadProfile } from '@app/core/store/profile/profile.actions';
-import {
-  selectProfileError,
-  selectProfileLoading,
-  selectUpdateProfileLoading,
-} from '@app/core/store/profile/profile.selectors';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -54,17 +49,15 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
   `,
 })
 export class ProfileViewComponent {
-  private store = inject(Store);
+  private readonly profileCommands = inject(ProfileCommandsService);
 
-  loading = this.store.selectSignal(selectProfileLoading);
-  loadError = this.store.selectSignal(selectProfileError);
-  loadingUpdate = this.store.selectSignal(selectUpdateProfileLoading);
+  readonly profile = profileResource();
 
-  constructor() {
-    this.store.dispatch(loadProfile.init());
-  }
+  readonly loading = this.profile.isLoading;
+  readonly loadError = this.profile.error;
+  readonly loadingUpdate = this.profileCommands.isUpdating;
 
   reload() {
-    this.store.dispatch(loadProfile.init());
+    this.profile.reload();
   }
 }

@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { selectLoginProviders } from '@app/core/store/profile/profile.selectors';
+import { Component, computed } from '@angular/core';
+import { loginMethodsResource } from '@core/resources/profile.resource';
 import { LucideLink2 } from '@lucide/angular';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 
@@ -104,9 +103,9 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
 export class LinkedProvidersComponent {
   protected readonly linkIcon = LucideLink2;
 
-  private store = inject(Store);
+  private readonly loginMethods = loginMethodsResource();
 
-  providers = this.store.selectSignal(selectLoginProviders);
+  providers = computed(() => this.loginMethods.value().providers);
 
   providerKey(provider: string) {
     return provider.trim().toLowerCase();

@@ -11,17 +11,8 @@ import {
 import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { Store } from '@ngrx/store';
-import {
-  changePassword,
-  setPassword,
-} from '@app/core/store/profile/profile.actions';
-import {
-  selectChangePasswordError,
-  selectChangePasswordLoading,
-  selectHasPassword,
-  selectSetPasswordError,
-  selectSetPasswordLoading,
-} from '@app/core/store/profile/profile.selectors';
+import { loginMethodsResource } from '@core/resources/profile.resource';
+import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { LucideLock } from '@lucide/angular';
@@ -124,21 +115,18 @@ export class AccountPasswordComponent {
 
   // Undefined until the login methods have loaded, at which point the card
   // commits to either setting a first password or changing an existing one.
-  hasPassword = this.store.selectSignal(selectHasPassword);
+  private readonly profileCommands = inject(ProfileCommandsService);
+  private readonly loginMethods = loginMethodsResource();
 
-  private changePasswordLoading = this.store.selectSignal(
-    selectChangePasswordLoading
-  );
+  hasPassword = computed(() => this.loginMethods.value().hasPassword);
 
-  private setPasswordLoading = this.store.selectSignal(
-    selectSetPasswordLoading
-  );
+  private changePasswordLoading = this.profileCommands.isChangingPassword;
 
-  private changePasswordError = this.store.selectSignal(
-    selectChangePasswordError
-  );
+  private setPasswordLoading = this.profileCommands.isSettingPassword;
 
-  private setPasswordError = this.store.selectSignal(selectSetPasswordError);
+  private changePasswordError = this.profileCommands.changePasswordError;
+
+  private setPasswordError = this.profileCommands.setPasswordError;
 
   loading = computed(() => {
     return this.hasPassword()
@@ -225,17 +213,15 @@ export class AccountPasswordComponent {
         newPassword: this.passwordForm.newPassword().value(),
       };
 
-      this.store.dispatch(changePassword.init({ request }));
+      this.profileCommands.changePassword(request);
     });
   }
 
   private setPasswordClicked() {
     submit(this.passwordForm, async () => {
-      this.store.dispatch(
-        setPassword.init({
-          request: { password: this.passwordForm.newPassword().value() },
-        })
-      );
+      this.profileCommands.setPassword({
+        password: this.passwordForm.newPassword().value(),
+      });
     });
   }
 }

@@ -9,6 +9,7 @@ export const allRefreshScopes = [
   'comments',
   'users',
   'notifications',
+  'profile',
 ] as const;
 
 export type RefreshScope = (typeof allRefreshScopes)[number];

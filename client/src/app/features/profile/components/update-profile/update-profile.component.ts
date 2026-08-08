@@ -9,12 +9,8 @@ import {
   required,
   submit,
 } from '@angular/forms/signals';
-import { Store } from '@ngrx/store';
-import { updateProfile } from '@app/core/store/profile/profile.actions';
-import {
-  selectProfile,
-  selectUpdateProfileLoading,
-} from '@app/core/store/profile/profile.selectors';
+import { profileResource } from '@core/resources/profile.resource';
+import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { LucideUserRound } from '@lucide/angular';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
@@ -91,7 +87,6 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 export class UpdateProfileComponent {
   protected readonly profileIcon = LucideUserRound;
 
-  private store = inject(Store);
   private dialog = inject(DialogService);
 
   profileFormModel = signal({
@@ -126,13 +121,15 @@ export class UpdateProfileComponent {
     disabled(schema, () => this.loadingUpdate());
   });
 
-  currentProfile = this.store.selectSignal(selectProfile);
-  loadingUpdate = this.store.selectSignal(selectUpdateProfileLoading);
+  private readonly profileCommands = inject(ProfileCommandsService);
+  private readonly profile = profileResource();
+
+  currentProfile = this.profile.value;
+  loadingUpdate = this.profileCommands.isUpdating;
 
   constructor() {
     effect(() => {
-      const profile = this.store.selectSignal(selectProfile);
-      const value = profile();
+      const value = this.currentProfile();
 
       if (!value) return;
 
@@ -152,16 +149,12 @@ export class UpdateProfileComponent {
     if (!profile) return;
 
     submit(this.profileForm, async () => {
-      this.store.dispatch(
-        updateProfile.init({
-          profile: {
-            ...profile,
-            firstname: this.profileForm.firstname().value().trim(),
-            lastname: this.profileForm.lastname().value().trim(),
-            email: this.profileForm.email().value().trim(),
-          },
-        })
-      );
+      this.profileCommands.update({
+        ...profile,
+        firstname: this.profileForm.firstname().value().trim(),
+        lastname: this.profileForm.lastname().value().trim(),
+        email: this.profileForm.email().value().trim(),
+      });
     });
   }
 

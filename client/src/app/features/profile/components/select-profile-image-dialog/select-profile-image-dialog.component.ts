@@ -1,7 +1,6 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
-import { uploadProfilePicture } from '@app/core/store/profile/profile.actions';
-import { Store } from '@ngrx/store';
+import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -63,7 +62,7 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
   `,
 })
 export class SelectProfileImageDialogComponent {
-  private store = inject(Store);
+  private profileCommands = inject(ProfileCommandsService);
   dialogRef = inject(DialogRef);
 
   previewUrl = signal<string | null>(null);
@@ -89,7 +88,7 @@ export class SelectProfileImageDialogComponent {
     const formData = new FormData();
     formData.append('image', file, file.name);
 
-    this.store.dispatch(uploadProfilePicture.init({ data: formData }));
+    this.profileCommands.uploadPicture(formData);
     this.dialogRef.close();
   }
 }

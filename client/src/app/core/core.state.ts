@@ -16,7 +16,6 @@ import type { HubContextState } from './store/hub-context/hub-context.reducer';
 import { layoutReducer, LayoutState } from './store/layout/layout.reducer';
 import type { MetaState } from './store/meta/meta.model';
 import { metaReducer } from './store/meta/meta.reducer';
-import type { ProfileState } from './store/profile/profile.model';
 import type { SettingsState } from './store/settings/settings.model';
 import type { SprintsState } from './store/sprints/sprints.model';
 import { settingsReducer } from './store/settings/settings.reducer';
@@ -69,5 +68,4 @@ export interface AppState {
   hub: HubContextState;
   sprints: SprintsState;
   boardgroups: BoardGroupsState;
-  profile: ProfileState;
 }
