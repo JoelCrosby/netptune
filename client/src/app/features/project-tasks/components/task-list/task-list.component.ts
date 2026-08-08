@@ -22,11 +22,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import * as actions from '@core/store/tasks/tasks.actions';
-import {
-  selectProjectTasksFilter,
-  selectSelectedTaskIds,
-  selectTaskFiltersActive,
-} from '@core/store/tasks/tasks.selectors';
+import { selectSelectedTaskIds } from '@core/store/tasks/tasks.selectors';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import {
@@ -42,8 +38,7 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
 import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
 import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
-import { injectParams } from '@app/core/router/signals';
-import { parseTaskFilterRouteParams } from '@app/core/router/task-filter-route-params';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service';
 import { DatePipe } from '@angular/common';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
@@ -191,7 +186,6 @@ export class TaskListComponent {
   private store = inject(Store);
   private dialog = inject(DialogService);
   private projectTasksHubService = inject(ProjectTasksHubService);
-  private params = injectParams();
 
   private readonly sprintFilter = inject(SprintFilterService);
 
@@ -201,18 +195,16 @@ export class TaskListComponent {
 
   selection = this.store.selectSignal(selectSelectedTaskIds);
 
-  taskFilter = this.store.selectSignal(selectProjectTasksFilter);
-  private readonly storeFiltersActive = this.store.selectSignal(
-    selectTaskFiltersActive
-  );
+  private readonly filterRoute = taskFilterRoute();
+
   readonly filtersActive = computed(() => {
-    const routeFilters = parseTaskFilterRouteParams(this.params());
+    const routeFilters = this.filterRoute.filters();
 
     const presenceFiltersActive =
       routeFilters.hasFlags === true || routeFilters.hasTags !== undefined;
 
     return (
-      this.storeFiltersActive() ||
+      this.filterRoute.hasFilters() ||
       presenceFiltersActive ||
       this.sprintFilter.sprintId() !== undefined
     );
@@ -229,13 +221,12 @@ export class TaskListComponent {
   );
 
   taskRequestParams = computed(() => {
-    const params = this.params();
-    const filter = this.taskFilter();
-    const filters = parseTaskFilterRouteParams(params);
+    const filters = this.filterRoute.filters();
     const queryParams: Params = { ...filters };
+    const search = filters.term?.trim();
 
-    if (filter.search) {
-      queryParams['search'] = filter.search;
+    if (search) {
+      queryParams['search'] = search;
     }
 
     const sprintId = this.sprintFilter.sprintId();
@@ -244,20 +235,12 @@ export class TaskListComponent {
       queryParams['sprintId'] = sprintId;
     }
 
-    if (filter.noSprint !== undefined) {
-      queryParams['noSprint'] = filter.noSprint;
+    if (filters.statuses?.length) {
+      queryParams['statusIds'] = filters.statuses;
     }
 
-    if (filter.tags?.length) {
-      queryParams['tags'] = filter.tags;
-    }
-
-    if (filter.statusIds?.length) {
-      queryParams['statusIds'] = filter.statusIds;
-    }
-
-    if (filter.assignees?.length) {
-      queryParams['assignees'] = filter.assignees;
+    if (filters.users?.length) {
+      queryParams['assignees'] = filters.users;
     }
 
     return queryParams;

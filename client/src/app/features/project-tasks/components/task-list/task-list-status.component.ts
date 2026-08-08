@@ -1,11 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { statusResource } from '@app/core/resources/status.resources';
-import { toggleSelectedStatus } from '@core/store/tasks/tasks.actions';
-import {
-  selectSelectedTaskStatusCount,
-  selectTaskStatusOptions,
-} from '@core/store/tasks/tasks.selectors';
-import { Store } from '@ngrx/store';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { StatusFilterComponent } from '@static/components/status-filter/status-filter.component';
 
 @Component({
@@ -20,15 +15,25 @@ import { StatusFilterComponent } from '@static/components/status-filter/status-f
   `,
 })
 export class TaskListStatusComponent {
-  private readonly store = inject(Store);
+  private readonly filterRoute = taskFilterRoute();
 
-  readonly selected = this.store.selectSignal(selectTaskStatusOptions);
   readonly statuses = statusResource();
-  readonly selectedCount = this.store.selectSignal(
-    selectSelectedTaskStatusCount
+
+  readonly selected = computed(
+    () => new Set(this.filterRoute.filters().statuses ?? [])
   );
 
+  readonly selectedCount = computed(() => this.selected().size);
+
   onToggled(status: number) {
-    this.store.dispatch(toggleSelectedStatus({ status }));
+    const selected = new Set(this.selected());
+
+    if (selected.has(status)) {
+      selected.delete(status);
+    } else {
+      selected.add(status);
+    }
+
+    this.filterRoute.set('statusIds', [...selected]);
   }
 }

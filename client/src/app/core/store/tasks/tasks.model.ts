@@ -16,9 +16,6 @@ export const initialState: TasksState = adapter.getInitialState({
   deleteState: DEFAULT_ACTION_STATE,
   editState: DEFAULT_ACTION_STATE,
   detailState: DEFAULT_ACTION_STATE,
-  searchTerm: null,
-  selectedStatuses: [],
-  selectedAssignees: [],
   selectedTaskIds: [],
 });
 
@@ -33,9 +30,6 @@ export interface TasksState extends AsyncEntityState<TaskViewModel> {
   selectedTask?: TaskViewModel;
   detailTask?: TaskViewModel;
   detailState: ActionState;
-  searchTerm?: string | null;
-  selectedStatuses: number[];
-  selectedAssignees: string[];
   selectedTaskIds: number[];
 }
 

@@ -1,8 +1,8 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { toggleSelectedAssignee } from '@core/store/tasks/tasks.actions';
-import { selectTaskAssigneeOptions } from '@core/store/tasks/tasks.selectors';
+import { selectTaskAssignees } from '@core/store/tasks/tasks.selectors';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { Store } from '@ngrx/store';
 import {
   AvatarFilterComponent,
@@ -23,13 +23,41 @@ import {
 export class TaskListAssigneesComponent {
   private readonly store = inject(Store);
 
+  private readonly filterRoute = taskFilterRoute();
+
   readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
-  readonly storeAssignees = this.store.selectSignal(selectTaskAssigneeOptions);
-  readonly assignees = computed(
-    () => this.assigneeOptions() ?? this.storeAssignees()
+
+  private readonly selected = computed(
+    () => new Set(this.filterRoute.filters().users ?? [])
   );
 
+  private readonly loadedAssignees =
+    this.store.selectSignal(selectTaskAssignees);
+
+  readonly assignees = computed<Selected<AssigneeViewModel>[]>(() => {
+    const selected = this.selected();
+    const options =
+      this.assigneeOptions() ??
+      this.loadedAssignees().map((assignee) => ({
+        ...assignee,
+        selected: false,
+      }));
+
+    return options.map((option) => ({
+      ...option,
+      selected: selected.has(option.id),
+    }));
+  });
+
   onAssigneeClicked(option: AvatarFilterOption) {
-    this.store.dispatch(toggleSelectedAssignee({ assigneeId: option.id }));
+    const selected = new Set(this.selected());
+
+    if (selected.has(option.id)) {
+      selected.delete(option.id);
+    } else {
+      selected.add(option.id);
+    }
+
+    this.filterRoute.set('users', [...selected]);
   }
 }

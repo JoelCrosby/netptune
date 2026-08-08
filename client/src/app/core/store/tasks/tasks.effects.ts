@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -21,22 +21,13 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import * as TagActions from '../tags/tags.actions';
-import { selectSelectedTags } from '../tags/tags.selectors';
-import {
-  buildTaskFilterRouteParams,
-  parseTaskFilterRouteParams,
-} from './task-filter-route-params';
+import { parseTaskFilterRouteParams } from '@core/router/task-filter-route-params';
 import * as actions from './tasks.actions';
+import { ProjectTasksFilter } from './tasks.model';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { ProjectTasksApiService } from './project-tasks-api.service';
 import { ProjectTasksHubService } from './tasks.hub.service';
-import {
-  selectProjectTasksFilter,
-  selectSelectedAssignees,
-  selectSelectedTaskStatuses,
-  selectTaskSearchTerm,
-} from './tasks.selectors';
+
 import { ProjectTasksService } from './tasks.service';
 
 @Injectable()
@@ -49,15 +40,14 @@ export class ProjectTasksEffects {
   private snackbar = inject(SnackbarService);
   private store = inject(Store);
   private sprintFilter = inject(SprintFilterService);
-  private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   loadProjectTasks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.loadProjectTasks.init),
-      concatLatestFrom(() => [this.store.select(selectProjectTasksFilter)]),
-      switchMap(([_, taskFilter]) =>
-        this.projectTasksService.get(taskFilter).pipe(
+      concatLatestFrom(() => [this.route.queryParamMap]),
+      switchMap(([_, paramMap]) =>
+        this.projectTasksService.get(this.taskFilter(paramMap)).pipe(
           unwrapClientReposne(),
           map((page) =>
             actions.loadProjectTasks.success({ tasks: page.items })
@@ -70,74 +60,29 @@ export class ProjectTasksEffects {
     );
   });
 
-  updateProjectTasksFilter$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(
-        actions.setSearchTerm,
-        actions.toggleSelectedStatus,
-        actions.toggleSelectedAssignee,
-        TagActions.toggleSelectedTag
-      ),
-      concatLatestFrom(() => [
-        this.store.select(selectTaskSearchTerm),
-        this.store.select(selectSelectedTags),
-        this.store.select(selectSelectedAssignees),
-        this.store.select(selectSelectedTaskStatuses),
-        this.store.select(RouteSelectors.selectIsTaskListRoute),
-      ]),
-      filter(([, , , , , isTaskListRoute]) => isTaskListRoute),
-      map(([, term, tags, users, statuses]) =>
-        buildTaskFilterRouteParams(
-          {
-            term,
-            tags,
-            users,
-            statuses,
-            sprintId: this.sprintFilter.sprintId(),
-          },
-          { includeStatuses: true }
-        )
-      ),
-      map((params) => actions.updateProjectTasksFilter({ params }))
-    );
-  });
+  /* Everything the list asks for is in the URL, except the sprint, which follows the user. */
+  private taskFilter(paramMap: ParamMap): ProjectTasksFilter {
+    const filters = parseTaskFilterRouteParams(paramMap);
 
-  onUpdateProjectTasksFilter$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(actions.updateProjectTasksFilter),
-        switchMap(({ params }) =>
-          this.router.navigate([], {
-            queryParams: params,
-          })
-        )
-      );
-    },
-    { dispatch: false }
-  );
+    return {
+      search: filters.term?.trim() || undefined,
+      sprintId: this.sprintFilter.sprintId(),
+      tags: filters.tags?.length ? filters.tags : undefined,
+      statusIds: filters.statuses?.length ? filters.statuses : undefined,
+      assignees: filters.users?.length ? filters.users : undefined,
+      hasFlags: filters.hasFlags,
+      hasTags: filters.hasTags,
+    };
+  }
 
   onTaskListRouterNavigated$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ROUTER_NAVIGATED),
       concatLatestFrom(() => [
         this.store.select(RouteSelectors.selectIsTaskListRoute),
-        this.route.queryParamMap,
       ]),
       filter(([, isTaskListRoute]) => isTaskListRoute),
-      switchMap(([, , paramMap]) => {
-        const filters = parseTaskFilterRouteParams(paramMap);
-
-        return of(
-          TagActions.setSelectedTags({ selectedTags: filters.tags ?? [] }),
-          actions.hydrateProjectTaskFiltersFromRoute({
-            term: filters.term ?? null,
-            assigneeIds: filters.users ?? [],
-            statuses: filters.statuses ?? [],
-            tags: filters.tags ?? [],
-          }),
-          actions.loadProjectTasks.init()
-        );
-      })
+      map(() => actions.loadProjectTasks.init())
     );
   });
 

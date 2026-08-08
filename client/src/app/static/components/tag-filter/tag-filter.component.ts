@@ -30,7 +30,7 @@ import { SpinnerComponent } from '@static/components/spinner/spinner.component';
       [icon]="lucideTag"
       [color]="activeCount() ? 'primary' : undefined"
       [count]="activeCount()"
-      (action)="opened.emit(); menu.toggle(el.nativeElement)" />
+      (action)="menu.toggle(el.nativeElement)" />
 
     <app-dropdown-menu #menu>
       <button
@@ -89,7 +89,6 @@ export class TagFilterComponent {
   readonly selectedCount = input(0);
   readonly untagged = input(false);
 
-  readonly opened = output();
   readonly toggled = output<Selected<Tag>>();
   readonly untaggedChange = output<boolean>();
 

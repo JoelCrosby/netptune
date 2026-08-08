@@ -13,11 +13,6 @@ export const loadTags = createAsyncAction('[Tags] Load Tags', {
 
 // Sync selection action
 
-export const toggleSelectedTag = createAction(
-  '[Tags] Toggle Selected Tag',
-  props<{ tag: string }>()
-);
-
 // Add Tag
 
 export const addTag = createAsyncAction('[Tags] Add Tag', {

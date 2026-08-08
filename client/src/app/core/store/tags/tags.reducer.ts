@@ -27,25 +27,13 @@ const reducer = createReducer(
     })
   ),
 
-  on(actions.toggleSelectedTag, (state, { tag }): TagsState => ({
-    ...state,
-    selectedTags: state.selectedTags.includes(tag)
-      ? state.selectedTags.filter((t) => t !== tag)
-      : Array.from(new Set([...state.selectedTags, tag])),
-  })),
-
   on(actions.editTag.success, (state, { tag }): TagsState =>
     adapter.updateOne({ id: tag.id, changes: tag }, state)
   ),
 
   on(actions.addTag.success, (state, { tag }): TagsState =>
     adapter.addOne(tag, state)
-  ),
-
-  on(actions.setSelectedTags, (state, { selectedTags }): TagsState => ({
-    ...state,
-    selectedTags,
-  }))
+  )
 );
 
 export const tagsReducer = (

@@ -4,7 +4,7 @@ import { AppUser } from '@core/models/appuser';
 import { Selected } from '@core/models/selected';
 import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
-import { selectSelectedTagCount } from '@core/store/tags/tags.selectors';
+import { selectRouteTagCount } from '@core/core.route.selectors';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { adapter, BoardGroupsState } from './board-groups.model';
 
@@ -187,15 +187,15 @@ export const selectCreateBoardGroupTaskMessage = createSelector(
   selectCurrentUserId,
   selectBoardGroupTaskAssignee,
   selectSearchTerm,
-  selectSelectedTagCount,
+  selectRouteTagCount,
   (
     currentUserId: string | undefined,
     assigneeId: string | undefined,
     term: string | undefined | null,
-    tagCount: number
+    tags: string[]
   ): string | null => {
     const differentUser = currentUserId !== assigneeId;
-    const filterApplied = term || tagCount;
+    const filterApplied = term || tags.length;
 
     if (differentUser || filterApplied) {
       return 'The filters currently applied may cause the newly created task to be hidden.';

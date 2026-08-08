@@ -13,15 +13,6 @@ const reducer = createReducer(
     ...state,
     loading: true,
   })),
-  on(
-    actions.hydrateProjectTaskFiltersFromRoute,
-    (state, { term, assigneeIds, statuses }): TasksState => ({
-      ...state,
-      searchTerm: term,
-      selectedAssignees: assigneeIds,
-      selectedStatuses: statuses,
-    })
-  ),
   on(actions.loadProjectTasks.fail, (state, { error }): TasksState => ({
     ...state,
     loading: false,
@@ -151,25 +142,6 @@ const reducer = createReducer(
     ...state,
     detailTask: undefined,
     detailState: DEFAULT_ACTION_STATE,
-  })),
-
-  // Filters
-
-  on(actions.setSearchTerm, (state, { term }): TasksState => ({
-    ...state,
-    searchTerm: term,
-  })),
-  on(actions.toggleSelectedStatus, (state, { status }): TasksState => ({
-    ...state,
-    selectedStatuses: state.selectedStatuses.includes(status)
-      ? state.selectedStatuses.filter((item) => item !== status)
-      : [...state.selectedStatuses, status],
-  })),
-  on(actions.toggleSelectedAssignee, (state, { assigneeId }): TasksState => ({
-    ...state,
-    selectedAssignees: state.selectedAssignees.includes(assigneeId)
-      ? state.selectedAssignees.filter((item) => item !== assigneeId)
-      : [...state.selectedAssignees, assigneeId],
   }))
 );
 

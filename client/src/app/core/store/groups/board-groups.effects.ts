@@ -4,8 +4,6 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { toggleSelectedTag } from '@core/store/tags/tags.actions';
-import { selectSelectedTags } from '@core/store/tags/tags.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { ProjectTasksApiService } from '@core/store/tasks/project-tasks-api.service';
@@ -18,7 +16,7 @@ import { DialogService } from '@core/services/dialog.service';
 import {
   buildTaskFilterRouteParams,
   parseTaskFilterRouteParams,
-} from '@core/store/tasks/task-filter-route-params';
+} from '@core/router/task-filter-route-params';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
@@ -465,21 +463,19 @@ export class BoardGroupsEffects {
     return this.actions$.pipe(
       ofType(
         actions.toggleUserSelection,
-        toggleSelectedTag,
         actions.toggleStatusSelection,
         actions.setSearchTerm
       ),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardGroupsSelectedUserIds),
-        this.store.select(selectSelectedTags),
         this.store.select(selectors.selectBoardGroupsSelectedStatusIds),
         this.store.select(selectors.selectSearchTerm),
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
         this.route.queryParamMap,
       ]),
-      filter(([, , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      map(([_, users, tags, statuses, term, , paramMap]) => {
-        const { hasTags } = parseTaskFilterRouteParams(paramMap);
+      filter(([, , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
+      map(([_, users, statuses, term, , paramMap]) => {
+        const { hasTags, tags } = parseTaskFilterRouteParams(paramMap);
         const sprintId = this.sprintFilter.sprintId();
 
         return buildTaskFilterRouteParams(

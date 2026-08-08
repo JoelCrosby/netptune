@@ -5,7 +5,6 @@ import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-vi
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { createAsyncAction } from '@core/util/create-async-action';
 import { createAction, props } from '@ngrx/store';
-import { Params } from '@angular/router';
 import { SprintFilter } from './sprints.model';
 
 export const clearState = createAction('[Sprints] Clear State');
@@ -89,11 +88,6 @@ export const completeSprintWithReassignment = createAction(
 );
 
 export const initBacklogView = createAction('[Sprints] Init Backlog View');
-
-export const updateBacklogTaskFilter = createAction(
-  '[Sprints] Update Backlog Task Filter',
-  props<{ params: Params }>()
-);
 
 export const assignBacklogTask = createAction(
   '[Sprints] Assign Backlog Task',

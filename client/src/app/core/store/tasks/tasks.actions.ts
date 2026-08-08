@@ -1,4 +1,3 @@
-import { Params } from '@angular/router';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
@@ -19,21 +18,6 @@ export const loadProjectTasks = createAsyncAction(
   {
     success: props<{ tasks: TaskViewModel[] }>(),
   }
-);
-
-export const hydrateProjectTaskFiltersFromRoute = createAction(
-  '[ProjectTasks] Hydrate ProjectTask Filters From Route',
-  props<{
-    term?: string | null;
-    assigneeIds: string[];
-    statuses: number[];
-    tags: string[];
-  }>()
-);
-
-export const updateProjectTasksFilter = createAction(
-  '[ProjectTasks] Update ProjectTasks Filter',
-  props<{ params: Params }>()
 );
 
 // Create Task
@@ -163,16 +147,6 @@ export const loadActivity = createAsyncAction('[ProjectTasks] Load Activity', {
 });
 
 // Filters
-
-export const setSearchTerm = createAction(
-  '[ProjectTasks] Set Search Term',
-  props<{ term?: string | null }>()
-);
-
-export const toggleSelectedStatus = createAction(
-  '[ProjectTasks] Toggle Selected Status',
-  props<{ status: number }>()
-);
 
 export const toggleSelectedAssignee = createAction(
   '[ProjectTasks] Toggle Selected Assignee',

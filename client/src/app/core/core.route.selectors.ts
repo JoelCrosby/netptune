@@ -55,10 +55,35 @@ export const selectIsSprintFilterableRoute = createSelector(
   }
 );
 
+export const selectIsCalendarRoute = createSelector(
+  selectRouterStateUrl,
+  (state: string) => /^\/[^/?#]+\/calendar(?:[?#].*)?$/.test(state ?? '')
+);
+
+export const selectIsRoadmapRoute = createSelector(
+  selectRouterStateUrl,
+  (state: string) => /^\/[^/?#]+\/roadmap(?:[?#].*)?$/.test(state ?? '')
+);
+
 export const selectIsSprintBacklogRoute = createSelector(
   selectRouterStateUrl,
   (state: string) =>
     /^\/[^/?#]+\/sprints\/backlog(?:[?#].*)?$/.test(state ?? '')
+);
+
+/** Every view whose task filters are shared, so the filters follow the user between them. */
+export const selectIsTaskFilterableRoute = createSelector(
+  selectIsSprintFilterableRoute,
+  selectIsSprintBacklogRoute,
+  selectIsCalendarRoute,
+  selectIsRoadmapRoute,
+  (isSprintFilterable, isBacklog, isCalendar, isRoadmap) =>
+    isSprintFilterable || isBacklog || isCalendar || isRoadmap
+);
+
+export const selectRouteTagCount = createSelector(
+  selectRouterState,
+  (state) => (state?.state?.queryParams?.['tags'] as string[] | undefined) ?? []
 );
 
 export const selectSideBarTransparent = createSelector(

@@ -8,13 +8,7 @@ import { AssigneeViewModel } from '@core/models/view-models/board-view';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { initBacklogView } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
-import {
-  selectSelectedAssignees,
-  selectSelectedTaskStatuses,
-  selectTaskFiltersActive,
-  selectTaskSearchTerm,
-} from '@core/store/tasks/tasks.selectors';
-import { selectSelectedTags } from '@core/store/tags/tags.selectors';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { workspaceUsersResource } from '@core/resources/user.resource';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
@@ -102,13 +96,17 @@ export class SprintBacklogViewComponent {
 
   readonly allSprints = this.store.selectSignal(selectAllSprints);
   readonly users = workspaceUsersResource();
-  readonly searchTerm = this.store.selectSignal(selectTaskSearchTerm);
-  readonly selectedTags = this.store.selectSignal(selectSelectedTags);
-  readonly selectedStatuses = this.store.selectSignal(
-    selectSelectedTaskStatuses
+  private readonly filterRoute = taskFilterRoute();
+
+  readonly searchTerm = computed(() => this.filterRoute.filters().term);
+  readonly selectedTags = computed(() => this.filterRoute.filters().tags ?? []);
+  readonly selectedStatuses = computed(
+    () => this.filterRoute.filters().statuses ?? []
   );
-  readonly selectedAssignees = this.store.selectSignal(selectSelectedAssignees);
-  readonly filtersActive = this.store.selectSignal(selectTaskFiltersActive);
+  readonly selectedAssignees = computed(
+    () => this.filterRoute.filters().users ?? []
+  );
+  readonly filtersActive = this.filterRoute.hasFilters;
   readonly canManageTasks = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.manageTasks)
   );

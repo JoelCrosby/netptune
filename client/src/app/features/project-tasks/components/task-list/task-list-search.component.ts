@@ -1,7 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { setSearchTerm } from '@core/store/tasks/tasks.actions';
-import { selectTaskSearchTerm } from '@core/store/tasks/tasks.selectors';
-import { Store } from '@ngrx/store';
+import { Component, computed } from '@angular/core';
+import { taskFilterRoute } from '@core/router/task-filter-route';
 import { SearchInputComponent } from '@static/components/search-input/search-input.component';
 
 @Component({
@@ -12,11 +10,11 @@ import { SearchInputComponent } from '@static/components/search-input/search-inp
   `,
 })
 export class TaskListSearchComponent {
-  private readonly store = inject(Store);
+  private readonly filterRoute = taskFilterRoute();
 
-  readonly searchTerm = this.store.selectSignal(selectTaskSearchTerm);
+  readonly searchTerm = computed(() => this.filterRoute.filters().term ?? null);
 
   onSearch(term: string | null) {
-    this.store.dispatch(setSearchTerm({ term }));
+    this.filterRoute.set('term', term);
   }
 }
