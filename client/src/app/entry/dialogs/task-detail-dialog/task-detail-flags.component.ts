@@ -2,10 +2,8 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import {
-  FlagResolutionType,
-  ProjectTasksService,
-} from '@app/core/store/tasks/tasks.service';
+import { FlagResolutionType } from '@core/enums/flag-resolution-type';
+import { ProjectTasksApiService } from '@core/store/tasks/project-tasks-api.service';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
 import { LucideCheck, LucideFlag, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
@@ -108,7 +106,7 @@ import { TaskDetailService } from './task-detail.service';
 })
 export class TaskDetailFlagsComponent {
   private readonly store = inject(Store);
-  private readonly service = inject(ProjectTasksService);
+  private readonly service = inject(ProjectTasksApiService);
   private readonly snackbar = inject(SnackbarService);
   private readonly destroyRef = inject(DestroyRef);
 

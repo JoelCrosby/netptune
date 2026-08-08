@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { FlagResolutionType } from '@core/enums/flag-resolution-type';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
@@ -15,6 +16,11 @@ import { Tag } from '@core/models/tag';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { FileResponse } from '@core/types/file-response';
+import { extractFilenameFromHeaders } from '@core/util/header-utils';
+import { taskExportDefinition } from '@core/util/task-export-definition';
+import { Observable, of, throwError } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -88,5 +94,33 @@ export class ProjectTasksApiService {
 
   reassignTasks(request: ReassignTasksRequest) {
     return this.http.post<ClientResponse>('api/tasks/reassign-tasks', request);
+  }
+
+  resolveFlag(taskId: number, flagId: number, resolution: FlagResolutionType) {
+    return this.http.put<ClientResponse>(
+      `api/tasks/${taskId}/flags/${flagId}/resolution`,
+      { resolution }
+    );
+  }
+
+  export(boardId?: string): Observable<FileResponse> {
+    return this.http
+      .post(
+        'api/export/run',
+        { definition: taskExportDefinition(boardId) },
+        { observe: 'response', responseType: 'blob' }
+      )
+      .pipe(
+        switchMap((response) => {
+          if (response.body === null) {
+            return throwError(() => new Error('repsone body was null'));
+          }
+
+          return of({
+            file: response.body,
+            filename: extractFilenameFromHeaders(response.headers),
+          });
+        })
+      );
   }
 }

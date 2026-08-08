@@ -8,7 +8,6 @@ import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-t
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { ProjectTasksApiService } from '@core/store/tasks/project-tasks-api.service';
-import { ProjectTasksService } from '@core/store/tasks/tasks.service';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
@@ -18,7 +17,6 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class TaskCommandsService {
   private readonly tasksApi = inject(ProjectTasksApiService);
-  private readonly tasks = inject(ProjectTasksService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly snackbar = inject(SnackbarService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
@@ -141,7 +139,7 @@ export class TaskCommandsService {
   }
 
   export() {
-    this.tasks
+    this.tasksApi
       .export()
       .pipe(catchError(() => EMPTY))
       .subscribe(
