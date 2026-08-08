@@ -12,7 +12,7 @@ import { BoardViewService } from '@core/services/board-view.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { ProjectTasksApiService } from '@core/store/tasks/project-tasks-api.service';
+import { TasksService } from '@app/core/store/tasks/tasks.service';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
@@ -22,7 +22,7 @@ import { catchError, EMPTY, first, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BoardGroupCommandsService {
-  private readonly tasksApi = inject(ProjectTasksApiService);
+  private readonly tasksApi = inject(TasksService);
   private readonly boardView = inject(BoardViewService);
   private readonly selection = inject(BoardSelectionService);
   private readonly composer = inject(BoardComposerService);

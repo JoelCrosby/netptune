@@ -25,7 +25,7 @@ import { switchMap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectTasksApiService {
+export class TasksService {
   private http = inject(HttpClient);
 
   moveTaskInBoardGroup(request: MoveTaskInGroupRequest) {
