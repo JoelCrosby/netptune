@@ -21,8 +21,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import * as SprintActions from '../sprints/sprints.actions';
-import { selectSelectedSprintFilterId } from '../sprints/sprints.selectors';
 import * as TagActions from '../tags/tags.actions';
 import { selectSelectedTags } from '../tags/tags.selectors';
 import {
@@ -30,6 +28,7 @@ import {
   parseTaskFilterRouteParams,
 } from './task-filter-route-params';
 import * as actions from './tasks.actions';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { ProjectTasksApiService } from './project-tasks-api.service';
 import { ProjectTasksHubService } from './tasks.hub.service';
 import {
@@ -49,6 +48,7 @@ export class ProjectTasksEffects {
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
   private store = inject(Store);
+  private sprintFilter = inject(SprintFilterService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
@@ -76,37 +76,24 @@ export class ProjectTasksEffects {
         actions.setSearchTerm,
         actions.toggleSelectedStatus,
         actions.toggleSelectedAssignee,
-        TagActions.toggleSelectedTag,
-        SprintActions.setSprintTaskFilter
+        TagActions.toggleSelectedTag
       ),
       concatLatestFrom(() => [
         this.store.select(selectTaskSearchTerm),
         this.store.select(selectSelectedTags),
         this.store.select(selectSelectedAssignees),
         this.store.select(selectSelectedTaskStatuses),
-        this.store.select(selectSelectedSprintFilterId),
         this.store.select(RouteSelectors.selectIsTaskListRoute),
-        this.route.queryParamMap,
       ]),
-      filter(([action, , , , , , isTaskListRoute, paramMap]) => {
-        if (!isTaskListRoute) return false;
-
-        if (action.type === SprintActions.setSprintTaskFilter.type) {
-          return (
-            parseTaskFilterRouteParams(paramMap).sprintId !== action.sprintId
-          );
-        }
-
-        return true;
-      }),
-      map(([, term, tags, users, statuses, sprintId]) =>
+      filter(([, , , , , isTaskListRoute]) => isTaskListRoute),
+      map(([, term, tags, users, statuses]) =>
         buildTaskFilterRouteParams(
           {
             term,
             tags,
             users,
             statuses,
-            sprintId,
+            sprintId: this.sprintFilter.sprintId(),
           },
           { includeStatuses: true }
         )
@@ -147,20 +134,7 @@ export class ProjectTasksEffects {
             assigneeIds: filters.users ?? [],
             statuses: filters.statuses ?? [],
             tags: filters.tags ?? [],
-            sprintId: filters.sprintId,
           }),
-          // The sprint filter is global (sprints store) and shared across views,
-          // so it must persist when navigating between views. Query params are not
-          // preserved across navigation, so only hydrate it from the route when a
-          // sprintId is actually present (e.g. a deep link); otherwise leave the
-          // existing global filter intact instead of clearing it.
-          ...(paramMap.has('sprintId')
-            ? [
-                SprintActions.setSprintTaskFilter({
-                  sprintId: filters.sprintId,
-                }),
-              ]
-            : []),
           actions.loadProjectTasks.init()
         );
       })

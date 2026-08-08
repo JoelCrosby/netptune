@@ -6,9 +6,8 @@ import * as RouteSelectors from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { toggleSelectedTag } from '@core/store/tags/tags.actions';
 import { selectSelectedTags } from '@core/store/tags/tags.selectors';
-import * as SprintActions from '@core/store/sprints/sprints.actions';
-import { selectSelectedSprintFilterId } from '@core/store/sprints/sprints.selectors';
 import * as TaskActions from '@core/store/tasks/tasks.actions';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { ProjectTasksApiService } from '@core/store/tasks/project-tasks-api.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { downloadFile } from '@core/util/download-helper';
@@ -44,6 +43,7 @@ export class BoardGroupsEffects {
   private actions$ = inject<Actions<Action>>(Actions);
   private boardGroupsService = inject(BoardGroupsService);
   private tasksApi = inject(ProjectTasksApiService);
+  private sprintFilter = inject(SprintFilterService);
   private store = inject(Store);
   private confirmation = inject(ConfirmationService);
   private dialog = inject(DialogService);
@@ -68,12 +68,11 @@ export class BoardGroupsEffects {
         this.store.select(RouteSelectors.selectRouterParam('id')),
         this.route.queryParamMap,
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
-        this.store.select(selectSelectedSprintFilterId),
       ]),
       filter(([, , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      switchMap(([_, id, paramMap, , selectedSprintFilterId]) => {
+      switchMap(([_, id, paramMap]) => {
         const routeFilters = parseTaskFilterRouteParams(paramMap);
-        const sprintId = selectedSprintFilterId ?? routeFilters.sprintId;
+        const sprintId = this.sprintFilter.sprintId() ?? routeFilters.sprintId;
         const requestParams = buildTaskFilterRouteParams(
           {
             ...routeFilters,
@@ -139,9 +138,10 @@ export class BoardGroupsEffects {
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardIdentifier),
         this.store.select(selectors.selectBoardGroupTaskAssignee),
-        this.store.select(selectSelectedSprintFilterId),
       ]),
-      switchMap(([action, identifier, userId, sprintId]) => {
+      switchMap(([action, identifier, userId]) => {
+        const sprintId = this.sprintFilter.sprintId();
+
         if (identifier === undefined) {
           return throwError(() => new Error('board identifier is undefined'));
         }
@@ -461,38 +461,26 @@ export class BoardGroupsEffects {
     return this.actions$.pipe(ofType(selectWorkspace), map(actions.clearState));
   });
 
-  syncSprintTaskFilterToBoard$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(SprintActions.setSprintTaskFilter),
-      concatLatestFrom(() =>
-        this.store.select(RouteSelectors.selectIsBoardGroupsRoute)
-      ),
-      filter(([, isBoardGroupsRoute]) => isBoardGroupsRoute),
-      map(([{ sprintId }]) => actions.setSprintFilter({ sprintId }))
-    );
-  });
-
   updateFilters$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
         actions.toggleUserSelection,
         toggleSelectedTag,
         actions.toggleStatusSelection,
-        actions.setSearchTerm,
-        actions.setSprintFilter
+        actions.setSearchTerm
       ),
       concatLatestFrom(() => [
         this.store.select(selectors.selectBoardGroupsSelectedUserIds),
         this.store.select(selectSelectedTags),
         this.store.select(selectors.selectBoardGroupsSelectedStatusIds),
         this.store.select(selectors.selectSearchTerm),
-        this.store.select(selectors.selectSelectedSprintId),
         this.store.select(RouteSelectors.selectIsBoardGroupsRoute),
         this.route.queryParamMap,
       ]),
-      filter(([, , , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
-      map(([_, users, tags, statuses, term, sprintId, , paramMap]) => {
+      filter(([, , , , , isBoardGroupsRoute]) => isBoardGroupsRoute),
+      map(([_, users, tags, statuses, term, , paramMap]) => {
         const { hasTags } = parseTaskFilterRouteParams(paramMap);
+        const sprintId = this.sprintFilter.sprintId();
 
         return buildTaskFilterRouteParams(
           {

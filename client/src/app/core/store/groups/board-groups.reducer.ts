@@ -151,13 +151,6 @@ const reducer = createReducer(
     searchTerm: term,
   })),
 
-  // Set Sprint Filter
-
-  on(actions.setSprintFilter, (state, { sprintId }): BoardGroupsState => ({
-    ...state,
-    selectedSprintId: sprintId,
-  })),
-
   // Select Task
 
   on(actions.selectTask, (state, { id }): BoardGroupsState => ({

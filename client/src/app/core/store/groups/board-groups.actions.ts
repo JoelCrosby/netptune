@@ -136,11 +136,6 @@ export const setSearchTerm = createAction(
 
 // Set Sprint Filter
 
-export const setSprintFilter = createAction(
-  '[BoardGroups] Set Sprint Filter',
-  props<{ sprintId?: number }>()
-);
-
 // Select Task
 
 export const selectTask = createAction(

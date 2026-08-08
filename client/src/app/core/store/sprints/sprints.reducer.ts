@@ -44,10 +44,6 @@ const reducer = createReducer(
     currentSprintsLoading: false,
     currentSprintsLoaded: state.currentSprintsLoaded,
   })),
-  on(actions.setSprintTaskFilter, (state, { sprintId }): SprintsState => ({
-    ...state,
-    selectedSprintFilterId: sprintId,
-  })),
   on(actions.loadSprintDetail.init, (state): SprintsState => ({
     ...state,
     detailLoading: true,
@@ -105,11 +101,6 @@ const reducer = createReducer(
       ...state,
       detail,
       currentSprints: upsertCurrentSprint(state.currentSprints, sprint),
-      selectedSprintFilterId:
-        state.selectedSprintFilterId === sprint.id &&
-        sprint.status !== SprintStatus.active
-          ? undefined
-          : state.selectedSprintFilterId,
       updateState: { loading: false },
     });
   }),
@@ -128,10 +119,6 @@ const reducer = createReducer(
       currentSprints: state.currentSprints.filter(
         (sprint) => sprint.id !== sprintId
       ),
-      selectedSprintFilterId:
-        state.selectedSprintFilterId === sprintId
-          ? undefined
-          : state.selectedSprintFilterId,
       deleteState: { loading: false },
     })
   ),

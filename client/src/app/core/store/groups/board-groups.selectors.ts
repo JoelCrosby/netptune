@@ -183,11 +183,6 @@ export const selectSearchTerm = createSelector(
   (state: BoardGroupsState) => state.searchTerm
 );
 
-export const selectSelectedSprintId = createSelector(
-  selectBoardGroupsFeature,
-  (state: BoardGroupsState) => state.selectedSprintId
-);
-
 export const selectCreateBoardGroupTaskMessage = createSelector(
   selectCurrentUserId,
   selectBoardGroupTaskAssignee,

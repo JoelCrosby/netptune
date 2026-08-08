@@ -5,7 +5,6 @@ import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { Selected } from '@core/models/selected';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { selectSelectedSprintFilterId } from '../sprints/sprints.selectors';
 import {
   selectSelectedTagCount,
   selectSelectedTags,
@@ -58,28 +57,27 @@ export const selectTaskStatusOptions = createSelector(
   }
 );
 
+/** The sprint filter is held outside the store, so callers add it themselves. */
 export const selectTaskFiltersActive = createSelector(
-  selectSelectedSprintFilterId,
   selectTaskSearchTerm,
   selectSelectedTagCount,
   selectSelectedTaskStatusCount,
   selectSelectedAssigneeCount,
-  (sprintId, searchTerm, tagCount, statusCount, assigneeCount) =>
-    !!sprintId ||
-    !!searchTerm?.trim() ||
-    tagCount > 0 ||
-    statusCount > 0 ||
-    assigneeCount > 0
+  (searchTerm, tagCount, statusCount, assigneeCount) =>
+    !!searchTerm?.trim() || tagCount > 0 || statusCount > 0 || assigneeCount > 0
 );
 
 export const selectProjectTasksFilter = createSelector(
-  selectSelectedSprintFilterId,
   selectTaskSearchTerm,
   selectSelectedTags,
   selectSelectedTaskStatuses,
   selectSelectedAssignees,
-  (sprintId, search, tags, statuses, assignees): ProjectTasksFilter => ({
-    sprintId,
+  (
+    search,
+    tags,
+    statuses,
+    assignees
+  ): Omit<ProjectTasksFilter, 'sprintId'> => ({
     search: search?.trim() || undefined,
     tags: tags.length ? tags : undefined,
     statusIds: statuses.length ? statuses : undefined,

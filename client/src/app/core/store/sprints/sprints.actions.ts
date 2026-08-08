@@ -26,13 +26,6 @@ export const loadCurrentSprints = createAsyncAction(
   }
 );
 
-// Sync filter setter
-
-export const setSprintTaskFilter = createAction(
-  '[Sprints] Set Sprint Task Filter',
-  props<{ sprintId?: number }>()
-);
-
 // Load Sprint Detail
 
 export const loadSprintDetail = createAsyncAction(

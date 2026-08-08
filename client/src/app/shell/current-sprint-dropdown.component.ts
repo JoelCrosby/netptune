@@ -3,15 +3,12 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { selectIsSprintFilterableRoute } from '@core/core.route.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
-import {
-  loadCurrentSprints,
-  setSprintTaskFilter,
-} from '@core/store/sprints/sprints.actions';
+import { loadCurrentSprints } from '@core/store/sprints/sprints.actions';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import {
   selectCurrentSprints,
   selectCurrentSprintsLoaded,
-  selectSelectedSprintFilter,
-  selectSelectedSprintFilterId,
+  selectSprintEntities,
 } from '@core/store/sprints/sprints.selectors';
 import {
   LucideCalendarDays,
@@ -160,6 +157,7 @@ import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.c
 })
 export class CurrentSprintDropdownComponent {
   private readonly store = inject(Store);
+  private readonly sprintFilter = inject(SprintFilterService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -170,11 +168,20 @@ export class CurrentSprintDropdownComponent {
     selectHasPermission(netptunePermissions.sprints.read)
   );
   currentSprints = this.store.selectSignal(selectCurrentSprints);
+  sprintEntities = this.store.selectSignal(selectSprintEntities);
   currentSprintsLoaded = this.store.selectSignal(selectCurrentSprintsLoaded);
-  selectedSprintFilterId = this.store.selectSignal(
-    selectSelectedSprintFilterId
-  );
-  selectedSprintFilter = this.store.selectSignal(selectSelectedSprintFilter);
+  selectedSprintFilterId = this.sprintFilter.sprintId;
+
+  selectedSprintFilter = computed(() => {
+    const sprintId = this.selectedSprintFilterId();
+
+    if (sprintId === undefined) return undefined;
+
+    return (
+      this.currentSprints().find((sprint) => sprint.id === sprintId) ??
+      this.sprintEntities()[sprintId]
+    );
+  });
 
   triggerLabel = computed(() => {
     const selectedSprint = this.selectedSprintFilter();
@@ -204,7 +211,7 @@ export class CurrentSprintDropdownComponent {
 
   onSprintSelected(sprintId: number, menu: DropdownMenuComponent) {
     menu.close();
-    this.store.dispatch(setSprintTaskFilter({ sprintId }));
+    this.sprintFilter.set(sprintId);
   }
 
   onSprintOpened(sprintId: number, menu: DropdownMenuComponent) {
@@ -216,7 +223,7 @@ export class CurrentSprintDropdownComponent {
 
   onSprintFilterRemoved(menu: DropdownMenuComponent) {
     menu.close();
-    this.store.dispatch(setSprintTaskFilter({ sprintId: undefined }));
+    this.sprintFilter.clear();
   }
 
   onSprintsSelected(menu: DropdownMenuComponent) {

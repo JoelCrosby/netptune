@@ -3,6 +3,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import {
   AfterViewInit,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -38,7 +39,8 @@ import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.select
 import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DocumentService } from '@static/services/document.service';
-import { selectSelectedSprintFilter } from '@app/core/store/sprints/sprints.selectors';
+import { selectAllSprints } from '@app/core/store/sprints/sprints.selectors';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 @Component({
@@ -111,7 +113,14 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   message = this.store.selectSignal(selectCreateBoardGroupTaskMessage);
   content = this.store.selectSignal(selectInlineTaskContent);
   isInlineDirty = this.store.selectSignal(selectIsInlineDirty);
-  selectedSprint = this.store.selectSignal(selectSelectedSprintFilter);
+  private readonly sprintFilter = inject(SprintFilterService);
+  private readonly sprints = this.store.selectSignal(selectAllSprints);
+
+  selectedSprint = computed(() => {
+    const sprintId = this.sprintFilter.sprintId();
+
+    return this.sprints().find((sprint) => sprint.id === sprintId);
+  });
 
   taskFormModel = signal({
     name: this.content() ?? '',

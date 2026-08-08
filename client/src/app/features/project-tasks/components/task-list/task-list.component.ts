@@ -20,6 +20,7 @@ import {
 import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import * as actions from '@core/store/tasks/tasks.actions';
 import {
   selectProjectTasksFilter,
@@ -192,6 +193,8 @@ export class TaskListComponent {
   private projectTasksHubService = inject(ProjectTasksHubService);
   private params = injectParams();
 
+  private readonly sprintFilter = inject(SprintFilterService);
+
   private datatable = viewChild(DatatableComponent<TaskViewModel>);
 
   readonly countChange = output<number>();
@@ -208,7 +211,11 @@ export class TaskListComponent {
     const presenceFiltersActive =
       routeFilters.hasFlags === true || routeFilters.hasTags !== undefined;
 
-    return this.storeFiltersActive() || presenceFiltersActive;
+    return (
+      this.storeFiltersActive() ||
+      presenceFiltersActive ||
+      this.sprintFilter.sprintId() !== undefined
+    );
   });
 
   canCreate = this.store.selectSignal(
@@ -231,8 +238,10 @@ export class TaskListComponent {
       queryParams['search'] = filter.search;
     }
 
-    if (filter.sprintId !== undefined) {
-      queryParams['sprintId'] = filter.sprintId;
+    const sprintId = this.sprintFilter.sprintId();
+
+    if (sprintId !== undefined) {
+      queryParams['sprintId'] = sprintId;
     }
 
     if (filter.noSprint !== undefined) {

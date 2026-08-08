@@ -28,7 +28,6 @@ export const hydrateProjectTaskFiltersFromRoute = createAction(
     assigneeIds: string[];
     statuses: number[];
     tags: string[];
-    sprintId?: number;
   }>()
 );
 

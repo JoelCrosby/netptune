@@ -28,7 +28,7 @@ import {
 } from '../tasks/task-filter-route-params';
 import { ProjectTasksHubService } from '../tasks/tasks.hub.service';
 import * as actions from './sprints.actions';
-import { selectSelectedSprintFilterId } from './sprints.selectors';
+import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { SprintsService } from './sprints.service';
 
 @Injectable()
@@ -38,6 +38,7 @@ export class SprintsEffects {
   private snackbar = inject(SnackbarService);
   private confirmation = inject(ConfirmationService);
   private store = inject(Store);
+  private sprintFilter = inject(SprintFilterService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private tasksHub = inject(ProjectTasksHubService);
@@ -254,54 +255,6 @@ export class SprintsEffects {
     );
   });
 
-  hydrateSprintFilterFromRoute$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(ROUTER_NAVIGATED),
-      concatLatestFrom(() => [
-        this.route.queryParamMap,
-        this.store.select(RouteSelectors.selectIsSprintFilterableRoute),
-        this.store.select(selectSelectedSprintFilterId),
-      ]),
-      filter(
-        ([, paramMap, isSprintFilterableRoute]) =>
-          isSprintFilterableRoute && paramMap.has('sprintId')
-      ),
-      map(([, paramMap, , currentSprintId]) => ({
-        sprintId: parseTaskFilterRouteParams(paramMap).sprintId,
-        currentSprintId,
-      })),
-      filter(({ sprintId, currentSprintId }) => sprintId !== currentSprintId),
-      map(({ sprintId }) => actions.setSprintTaskFilter({ sprintId }))
-    );
-  });
-
-  persistSprintFilterToRoute$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(ROUTER_NAVIGATED),
-        concatLatestFrom(() => [
-          this.route.queryParamMap,
-          this.store.select(RouteSelectors.selectIsSprintFilterableRoute),
-          this.store.select(selectSelectedSprintFilterId),
-        ]),
-        filter(([, paramMap, isSprintFilterableRoute, sprintId]) => {
-          return (
-            isSprintFilterableRoute &&
-            sprintId !== undefined &&
-            !paramMap.has('sprintId')
-          );
-        }),
-        switchMap(([, , , sprintId]) => {
-          return this.router.navigate([], {
-            queryParams: { sprintId },
-            queryParamsHandling: 'merge',
-          });
-        })
-      );
-    },
-    { dispatch: false }
-  );
-
   updateBacklogTaskFilter$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
@@ -393,11 +346,29 @@ export class SprintsEffects {
         assigneeIds: filters.users ?? [],
         statuses: filters.statuses ?? [],
         tags: filters.tags ?? [],
-        sprintId: undefined,
       }),
-      actions.setSprintTaskFilter({ sprintId: undefined }),
     ];
   }
+
+  forgetFilteredSprint$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(actions.updateSprint.success, actions.deleteSprint.success),
+        tap((action) => {
+          const isFilterable =
+            'sprint' in action && action.sprint.status === SprintStatus.active;
+
+          if (isFilterable) return;
+
+          const sprintId =
+            'sprint' in action ? action.sprint.id : action.sprintId;
+
+          this.sprintFilter.clearIfSelected(sprintId);
+        })
+      );
+    },
+    { dispatch: false }
+  );
 
   addTasksToSprint$ = createEffect(() => {
     return this.actions$.pipe(
