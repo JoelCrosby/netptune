@@ -1,19 +1,11 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, inject, OnDestroy } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  clearTaskDetail,
-  deleteProjectTask,
-  loadTaskDetails,
-} from '@app/core/store/tasks/tasks.actions';
-import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
+import { Component, effect, inject, untracked } from '@angular/core';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { LucideCheck } from '@lucide/angular';
-import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
@@ -119,19 +111,19 @@ export interface TaskDetailDialogData {
   ],
   providers: [TaskDetailService],
 })
-export class TaskDetailDialogComponent implements OnDestroy {
+export class TaskDetailDialogComponent {
   data = inject<TaskDetailDialogData>(DIALOG_DATA, { optional: false });
   store = inject(Store);
   private dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
-  private actions$ = inject(Actions);
   private snackbar = inject(SnackbarService);
+  private taskDetail = inject(TaskDetailService);
 
   public static width = '972px';
 
   entityType = EntityType.task;
   statusCategory = StatusCategory;
 
-  task = this.store.selectSignal(selectDetailTask);
+  task = this.taskDetail.task;
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
 
   readTags = this.store.selectSignal(
@@ -155,32 +147,19 @@ export class TaskDetailDialogComponent implements OnDestroy {
   );
 
   constructor() {
-    const systemId: string = this.data.systemId;
-    this.store.dispatch(loadTaskDetails.init({ systemId }));
+    this.taskDetail.show(this.data.systemId);
 
-    this.actions$
-      .pipe(ofType(deleteProjectTask.success), takeUntilDestroyed())
-      .subscribe(({ taskId }) => {
-        if (taskId === this.task()?.id) {
-          this.dialogRef.close();
-        }
-      });
+    effect(() => {
+      const wasRemoved = this.taskDetail.loadError()?.status === 404;
 
-    this.actions$
-      .pipe(ofType(loadTaskDetails.fail), takeUntilDestroyed())
-      .subscribe(({ error }) => {
-        const wasRemoved = error.status === 404;
+      if (!wasRemoved) return;
 
-        if (!wasRemoved) return;
-
+      untracked(() => {
         this.snackbar.error(
           $localize`:Shown when the open task no longer exists:This task no longer exists.`
         );
         this.dialogRef.close();
       });
-  }
-
-  ngOnDestroy() {
-    this.store.dispatch(clearTaskDetail());
+    });
   }
 }

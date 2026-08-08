@@ -21,8 +21,8 @@ import { EmptyStateComponent } from '@app/static/components/empty-state/empty-st
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
-import * as actions from '@core/store/tasks/tasks.actions';
-import { selectSelectedTaskIds } from '@core/store/tasks/tasks.selectors';
+import { TaskCommandsService } from '@core/services/task-commands.service';
+import { TaskSelectionService } from '@core/services/task-selection.service';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import {
@@ -193,7 +193,10 @@ export class TaskListComponent {
 
   readonly countChange = output<number>();
 
-  selection = this.store.selectSignal(selectSelectedTaskIds);
+  private readonly taskCommands = inject(TaskCommandsService);
+  private readonly taskSelection = inject(TaskSelectionService);
+
+  selection = this.taskSelection.taskIds;
 
   private readonly filterRoute = taskFilterRoute();
 
@@ -309,12 +312,8 @@ export class TaskListComponent {
   }));
 
   constructor() {
-    // Start each visit to the list with a clean selection; the datatable's
-    // internal selection is recreated fresh on every mount.
-    this.store.dispatch(actions.clearSelectedTaskIds());
+    this.taskSelection.clear();
 
-    // Keep the datatable's internal selection in sync when the store
-    // selection is cleared elsewhere (e.g. after a bulk delete).
     effect(() => {
       if (this.selection().length === 0) {
         this.datatable()?.clearSelection();
@@ -329,9 +328,7 @@ export class TaskListComponent {
   }
 
   onSelectionChanged(tasks: TaskViewModel[]) {
-    this.store.dispatch(
-      actions.setSelectedTaskIds({ ids: tasks.map((e) => e.id) })
-    );
+    this.taskSelection.set(tasks.map((task) => task.id));
   }
 
   titleClicked(task: TaskViewModel) {
@@ -350,11 +347,6 @@ export class TaskListComponent {
   }
 
   deleteClicked(task: TaskViewModel) {
-    this.store.dispatch(
-      actions.deleteProjectTask.init({
-        identifier: `[workspace] ${task.workspaceKey}`,
-        task,
-      })
-    );
+    this.taskCommands.delete(`[workspace] ${task.workspaceKey}`, task);
   }
 }

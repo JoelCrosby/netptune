@@ -1,14 +1,4 @@
-import { Component, effect, inject, input, OnDestroy } from '@angular/core';
-import {
-  clearTaskDetail,
-  deleteProjectTask,
-  loadTaskDetails,
-} from '@app/core/store/tasks/tasks.actions';
-import {
-  selectDetailTask,
-  selectDetailTaskError,
-  selectDetailTaskLoading,
-} from '@app/core/store/tasks/tasks.selectors';
+import { Component, effect, inject, input } from '@angular/core';
 import { PageLoadingComponent } from '@app/static/components/page-loading/page-loading.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
@@ -30,11 +20,7 @@ import { PageContainerComponent } from '@app/static/components/page-container/pa
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@app/core/auth/permissions';
-import { Actions, ofType } from '@ngrx/effects';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, withLatestFrom } from 'rxjs';
 import { Router } from '@angular/router';
-import { selectCurrentWorkspaceIdentifier } from '@app/core/store/workspaces/workspaces.selectors';
 import { TaskDetailFilesComponent } from '@entry/dialogs/task-detail-dialog/task-detail-files.component';
 import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-flags.component';
 
@@ -138,16 +124,17 @@ import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task
   ],
   providers: [TaskDetailService],
 })
-export class TaskDetailPageComponent implements OnDestroy {
+export class TaskDetailPageComponent {
   store = inject(Store);
-  actions = inject(Actions);
   router = inject(Router);
 
   entityType = EntityType.task;
   statusCategory = StatusCategory;
-  task = this.store.selectSignal(selectDetailTask);
-  loading = this.store.selectSignal(selectDetailTaskLoading);
-  loadError = this.store.selectSignal(selectDetailTaskError);
+  private readonly taskDetail = inject(TaskDetailService);
+
+  task = this.taskDetail.task;
+  loading = this.taskDetail.loading;
+  loadError = this.taskDetail.loadError;
 
   systemId = input.required<string>();
 
@@ -176,29 +163,12 @@ export class TaskDetailPageComponent implements OnDestroy {
       const systemId = this.systemId();
 
       if (systemId) {
-        this.store.dispatch(loadTaskDetails.init({ systemId }));
+        this.taskDetail.show(systemId);
       }
     });
-
-    this.actions
-      .pipe(
-        takeUntilDestroyed(),
-        ofType(deleteProjectTask.success),
-        filter((action) => action.identifier === this.systemId()),
-        withLatestFrom(this.store.select(selectCurrentWorkspaceIdentifier))
-      )
-      .subscribe({
-        next: ([, workspaceId]) => {
-          void this.router.navigate(['/', workspaceId, 'tasks']);
-        },
-      });
   }
 
   reload() {
-    this.store.dispatch(loadTaskDetails.init({ systemId: this.systemId() }));
-  }
-
-  ngOnDestroy() {
-    this.store.dispatch(clearTaskDetail());
+    this.taskDetail.reload();
   }
 }

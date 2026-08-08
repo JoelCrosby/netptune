@@ -3,7 +3,6 @@ import { httpResource } from '@angular/common/http';
 import { Component, computed, inject, linkedSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
-import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { TaskRelation } from '@core/models/task-relation';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
@@ -25,6 +24,7 @@ import {
   LinkTaskDialogData,
   LinkTaskDialogResult,
 } from '../link-task-dialog/link-task-dialog.component';
+import { TaskDetailService } from './task-detail.service';
 
 interface RelationGroup {
   label: string;
@@ -134,7 +134,9 @@ export class TaskDetailRelationsComponent {
   // Present when this renders inside the task detail dialog, absent on the standalone task page.
   private readonly dialogRef = inject(DialogRef, { optional: true });
 
-  readonly task = this.store.selectSignal(selectDetailTask);
+  private readonly taskDetail = inject(TaskDetailService);
+
+  readonly task = this.taskDetail.task;
   readonly hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
   readonly canUpdate = selectCanUpdateTask(this.store);
 

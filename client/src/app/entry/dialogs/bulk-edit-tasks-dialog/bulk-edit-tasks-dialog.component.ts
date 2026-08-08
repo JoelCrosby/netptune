@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, submit, validate } from '@angular/forms/signals';
 import { Store } from '@ngrx/store';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
-import { bulkUpdateTasks } from '@core/store/tasks/tasks.actions';
+import { TaskCommandsService } from '@core/services/task-commands.service';
 import { estimateTypeOptions } from '@core/enums/estimate-type';
 import { taskPriorityOptions } from '@core/enums/task-priority';
 import { statusResource } from '@core/resources/status.resources';
@@ -208,6 +208,7 @@ export class BulkEditTasksDialogComponent {
   private readonly dialogRef =
     inject<DialogRef<void, BulkEditTasksDialogComponent>>(DialogRef);
   private readonly store = inject(Store);
+  private readonly taskCommands = inject(TaskCommandsService);
   readonly tasks = inject<number[]>(DIALOG_DATA);
 
   readonly noSprint = NO_SPRINT;
@@ -262,11 +263,9 @@ export class BulkEditTasksDialogComponent {
     if (!workspaceId) return;
 
     submit(this.editForm, async () => {
-      this.store.dispatch(
-        bulkUpdateTasks.init({
-          identifier: `[workspace] ${workspaceId}`,
-          request: this.buildRequest(),
-        })
+      this.taskCommands.bulkUpdate(
+        `[workspace] ${workspaceId}`,
+        this.buildRequest()
       );
 
       this.dialogRef.close();

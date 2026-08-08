@@ -4,8 +4,8 @@ import { LucideSettings2, LucideTrash } from '@lucide/angular';
 import { DialogService } from '@core/services/dialog.service';
 import { BulkEditTasksDialogComponent } from '@entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component';
 import { Store } from '@ngrx/store';
-import { bulkDeleteTasksAction } from '@core/store/tasks/tasks.actions';
-import { selectSelectedTaskIds } from '@core/store/tasks/tasks.selectors';
+import { TaskCommandsService } from '@core/services/task-commands.service';
+import { TaskSelectionService } from '@core/services/task-selection.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 
 @Component({
@@ -54,7 +54,10 @@ export class TaskListSelectionActionsComponent {
     selectCurrentWorkspaceIdentifier
   );
 
-  readonly selection = this.store.selectSignal(selectSelectedTaskIds);
+  private readonly taskCommands = inject(TaskCommandsService);
+  private readonly taskSelection = inject(TaskSelectionService);
+
+  readonly selection = this.taskSelection.taskIds;
   readonly selectedCount = computed(() => this.selection().length);
 
   bulkEditClicked() {
@@ -71,11 +74,6 @@ export class TaskListSelectionActionsComponent {
 
     if (!workspaceId || ids.length === 0) return;
 
-    this.store.dispatch(
-      bulkDeleteTasksAction.init({
-        identifier: `[workspace] ${workspaceId}`,
-        ids: [...ids],
-      })
-    );
+    this.taskCommands.deleteMany(`[workspace] ${workspaceId}`, [...ids]);
   }
 }

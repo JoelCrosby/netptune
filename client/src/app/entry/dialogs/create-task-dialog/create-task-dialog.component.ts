@@ -13,7 +13,7 @@ import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { UserSelectValue } from '@core/models/view-models/user-select-option';
-import { createProjectTask } from '@core/store/tasks/tasks.actions';
+import { TaskCommandsService } from '@core/services/task-commands.service';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { CurrentProjectService } from '@core/services/current-project.service';
 import { Store } from '@ngrx/store';
@@ -139,6 +139,7 @@ export class CreateTaskDialogComponent {
   static readonly width = '972px';
 
   private store = inject(Store);
+  private taskCommands = inject(TaskCommandsService);
   dialogRef = inject<DialogRef<CreateTaskDialogComponent>>(DialogRef);
   readonly data = inject<CreateTaskDialogData | null>(DIALOG_DATA, {
     optional: true,
@@ -238,11 +239,9 @@ export class CreateTaskDialogComponent {
         throw new Error('workspace slug is undefined');
       }
 
-      this.store.dispatch(
-        createProjectTask.init({
-          identifier: `[workspace] ${workspace.slug}`,
-          task: this.buildRequest(projectId),
-        })
+      this.taskCommands.create(
+        `[workspace] ${workspace.slug}`,
+        this.buildRequest(projectId)
       );
 
       this.dialogRef.close();

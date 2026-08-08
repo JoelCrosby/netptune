@@ -1,12 +1,9 @@
-import { Component, effect, inject, model } from '@angular/core';
+import { Component, computed, effect, inject, model } from '@angular/core';
 import { selectCurrentHubGroupId } from '@app/core/store/hub-context/hub-context.selectors';
-import { editProjectTask } from '@app/core/store/tasks/tasks.actions';
-import {
-  selectDetailTask,
-  selectDetailTaskIsRedOnly,
-} from '@app/core/store/tasks/tasks.selectors';
 import { InlineEditHeadingComponent } from '@app/static/components/inline-edit-heading/inline-edit-heading.component';
 import { Store } from '@ngrx/store';
+import { TaskDetailService } from './task-detail.service';
+import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
 @Component({
   selector: 'app-task-detail-header',
@@ -21,9 +18,13 @@ import { Store } from '@ngrx/store';
 export class TaskDetailHeaderComponent {
   readonly store = inject(Store);
 
-  task = this.store.selectSignal(selectDetailTask);
+  private readonly taskDetail = inject(TaskDetailService);
+
+  task = this.taskDetail.task;
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
-  isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
+  private readonly canUpdate = selectCanUpdateTask(this.store);
+
+  isReadOnly = computed(() => !this.canUpdate());
 
   name = model(this.task()?.name ?? '');
 
@@ -49,14 +50,6 @@ export class TaskDetailHeaderComponent {
       return;
     }
 
-    this.store.dispatch(
-      editProjectTask.init({
-        identifier,
-        task: {
-          ...task,
-          name: value,
-        },
-      })
-    );
+    this.taskDetail.updateTask({ name: value });
   }
 }

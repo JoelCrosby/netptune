@@ -7,8 +7,6 @@ import {
 } from '@angular/core';
 import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
 import * as groupsActions from '@core/store/groups/board-groups.actions';
-import * as tasksActions from '@core/store/tasks/tasks.actions';
-import { selectDetailTask } from '@core/store/tasks/tasks.selectors';
 import { Store } from '@ngrx/store';
 
 type ScopeVersions = Record<RefreshScope, WritableSignal<number>>;
@@ -24,8 +22,6 @@ export class WorkspaceRefreshService {
   private readonly store = inject(Store);
 
   private readonly versions = createVersions();
-
-  private readonly detailTask = this.store.selectSignal(selectDetailTask);
 
   version(scope: RefreshScope): Signal<number> {
     return this.versions[scope];
@@ -57,16 +53,5 @@ export class WorkspaceRefreshService {
 
   private reloadTaskViews() {
     this.store.dispatch(groupsActions.loadBoardGroups.init());
-    this.reloadDetailTask();
-  }
-
-  private reloadDetailTask() {
-    const task = this.detailTask();
-
-    if (!task) return;
-
-    this.store.dispatch(
-      tasksActions.loadTaskDetails.init({ systemId: task.systemId })
-    );
   }
 }

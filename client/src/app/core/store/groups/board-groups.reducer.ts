@@ -1,9 +1,7 @@
-import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { Action, createReducer, on } from '@ngrx/store';
 import {
   getBulkTaskSelection,
   moveTaskInBoardGroup,
-  updateTask,
 } from './board-group.utils';
 import * as actions from './board-groups.actions';
 import { adapter, BoardGroupsState, initialState } from './board-groups.model';
@@ -197,16 +195,6 @@ const reducer = createReducer(
     ...state,
     selectedTasks: [],
   })),
-
-  // ProjectTaskActions
-
-  on(TaskActions.editProjectTask.init, (state, { task }): BoardGroupsState =>
-    updateTask(state, task)
-  ),
-
-  on(TaskActions.editProjectTask.success, (state, { task }): BoardGroupsState =>
-    updateTask(state, task)
-  ),
 
   // Set Inline Task Content
 

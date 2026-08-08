@@ -7,7 +7,6 @@ import {
   selectCanCreateComment,
   selectCanDeleteComment,
 } from '@app/core/store/permissions/permissions.selectors';
-import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { CommentViewModel } from '@core/models/comment';
 import {
@@ -27,6 +26,7 @@ import {
 import { EMPTY } from 'rxjs';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { ConfirmDialogOptions } from '../confirm-dialog/confirm-dialog.component';
+import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-comments',
@@ -56,7 +56,9 @@ export class TaskDetailCommentsComponent {
   user = this.store.selectSignal(selectCurrentUser);
   workspaceUsers = workspaceUsersResource();
 
-  task = this.store.selectSignal(selectDetailTask);
+  private readonly taskDetail = inject(TaskDetailService);
+
+  task = this.taskDetail.task;
 
   comments = httpResource<CommentViewModel[]>(
     () => {

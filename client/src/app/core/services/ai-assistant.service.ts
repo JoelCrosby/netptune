@@ -26,10 +26,10 @@ import {
   AiTokenUsage,
 } from '@core/models/ai-conversation';
 import { CurrentProjectService } from '@core/services/current-project.service';
+import { CurrentTaskService } from '@core/services/current-task.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { selectIsAssistantAvailable } from '@core/store/auth/auth.selectors';
-import { selectSelectedTask } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { buildClientContext } from '@core/util/ai-client-context';
 import { referenceKey } from '@core/util/ai-references';
@@ -95,7 +95,7 @@ export class AiAssistantService {
   readonly workspaceKey = computed(() => this.workspaceId() ?? null);
 
   private readonly currentProject = inject(CurrentProjectService).current;
-  private readonly selectedTask = this.store.selectSignal(selectSelectedTask);
+  private readonly selectedTask = inject(CurrentTaskService).task;
   private readonly http = inject(HttpClient);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly router = inject(Router);

@@ -4,7 +4,6 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as RouteSelectors from '@core/core.route.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import * as TaskActions from '@core/store/tasks/tasks.actions';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { ProjectTasksApiService } from '@core/store/tasks/project-tasks-api.service';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
@@ -57,10 +56,7 @@ export class BoardGroupsEffects {
         actions.moveSelectedTasks.success,
         actions.moveMatchingTasks.success,
         actions.reassignTasks.success,
-        actions.editBoardGroup.success,
-        TaskActions.importTasks.success,
-        TaskActions.deleteTagFromTask.success,
-        TaskActions.addTagToTask.success
+        actions.editBoardGroup.success
       ),
       concatLatestFrom(() => [
         this.store.select(RouteSelectors.selectRouterParam('id')),
@@ -179,17 +175,6 @@ export class BoardGroupsEffects {
   createProjectTasksSuccess$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(actions.createProjectTask.success),
-      map(() => actions.loadBoardGroups.init())
-    );
-  });
-
-  taskDeleted$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(TaskActions.deleteProjectTask.success),
-      concatLatestFrom(() =>
-        this.store.select(RouteSelectors.selectIsBoardGroupsRoute)
-      ),
-      filter(([_, isCorrectRoute]) => isCorrectRoute),
       map(() => actions.loadBoardGroups.init())
     );
   });

@@ -18,7 +18,6 @@ import type { MetaState } from './store/meta/meta.model';
 import { metaReducer } from './store/meta/meta.reducer';
 import type { SettingsState } from './store/settings/settings.model';
 import { settingsReducer } from './store/settings/settings.reducer';
-import type { TasksState } from './store/tasks/tasks.model';
 import type { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 
@@ -49,7 +48,6 @@ export const selectLayoutFeature = selectFeature<LayoutState>('layout');
 export const selectSettingsFeature = selectFeature<SettingsState>('settings');
 export const selectWorkspacesFeature =
   selectFeature<WorkspacesState>('workspaces');
-export const selectTasksFeature = selectFeature<TasksState>('tasks');
 export const selectHubContextFeature = selectFeature<HubContextState>('hub');
 
 export interface AppState {
@@ -59,7 +57,6 @@ export interface AppState {
   layout: LayoutState;
   settings: SettingsState;
   workspaces: WorkspacesState;
-  tasks: TasksState;
   hub: HubContextState;
   boardgroups: BoardGroupsState;
 }

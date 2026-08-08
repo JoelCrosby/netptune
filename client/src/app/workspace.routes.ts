@@ -8,8 +8,6 @@ import { workspaceResovler } from './core/resolvers/workspace-resolver';
 import { BoardGroupsEffects } from './core/store/groups/board-groups.effects';
 import { boardGroupsReducer } from './core/store/groups/board-groups.reducer';
 import { hubContextReducer } from './core/store/hub-context/hub-context.reducer';
-import { ProjectTasksEffects } from './core/store/tasks/tasks.effects';
-import { projectTasksReducer } from './core/store/tasks/tasks.reducer';
 
 // prettier-ignore
 
@@ -19,11 +17,9 @@ export const routes: Routes = [
     canActivate: [workspaceGuard],
     resolve: [workspaceResovler],
     providers: [
-      provideState('tasks', projectTasksReducer),
       provideState('hub', hubContextReducer),
       provideState('boardgroups', boardGroupsReducer),
       provideEffects([
-        ProjectTasksEffects,
         BoardGroupsEffects,
       ]),
     ],

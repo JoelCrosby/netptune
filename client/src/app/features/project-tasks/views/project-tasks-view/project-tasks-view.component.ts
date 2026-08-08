@@ -2,7 +2,7 @@ import { Component, OnDestroy, inject, signal } from '@angular/core';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { netptunePermissions } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
-import { exportTasks } from '@core/store/tasks/tasks.actions';
+import { TaskCommandsService } from '@core/services/task-commands.service';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { HeaderAction } from '@core/types/header-action';
@@ -42,6 +42,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 export class ProjectTasksViewComponent implements OnDestroy {
   dialog = inject(DialogService);
   private store = inject(Store);
+  private taskCommands = inject(TaskCommandsService);
   private hubService = inject(ProjectTasksHubService);
 
   readonly count = signal<number | null>(null);
@@ -78,6 +79,6 @@ export class ProjectTasksViewComponent implements OnDestroy {
   }
 
   onExportTasksClicked() {
-    this.store.dispatch(exportTasks.init());
+    this.taskCommands.export();
   }
 }

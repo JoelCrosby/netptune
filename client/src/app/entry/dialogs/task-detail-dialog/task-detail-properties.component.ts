@@ -1,11 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { TaskPriority } from '@app/core/enums/task-priority';
 import { UserSelectValue } from '@app/core/models/view-models/user-select-option';
-import {
-  selectDetailTaskIsRedOnly,
-  selectRequiredDetailTask,
-  selectTaskEditLoading,
-} from '@app/core/store/tasks/tasks.selectors';
 import { TaskEstimate } from '@app/static/components/task-properties/task-estimate-select.component';
 import {
   TaskPropertiesComponent,
@@ -13,48 +8,60 @@ import {
 } from '@app/static/components/task-properties/task-properties.component';
 import { Store } from '@ngrx/store';
 import { TaskDetailService } from './task-detail.service';
+import { TaskCommandsService } from '@core/services/task-commands.service';
+import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
 @Component({
   selector: 'app-task-detail-properties',
   imports: [TaskPropertiesComponent],
   template: `
-    <app-task-properties
-      [statusId]="task().statusId"
-      [statusLabel]="task().statusName"
-      [priority]="task().priority"
-      [estimateType]="task().estimateType"
-      [estimateValue]="task().estimateValue"
-      [startDate]="task().startDate ?? ''"
-      [dueDate]="task().dueDate ?? ''"
-      [projectId]="task().projectId"
-      [sprintId]="task().sprintId ?? null"
-      [sprintLabel]="task().sprintName ?? 'No Sprint'"
-      [assignees]="task().assignees"
-      [reporter]="reporter()"
-      [loading]="updateLoading()"
-      [editable]="!isReadOnly()"
-      (statusIdChange)="selectStatus($event)"
-      (priorityChange)="selectPriority($event)"
-      (estimateChange)="selectEstimate($event)"
-      (startDateChange)="selectStartDate($event)"
-      (dueDateChange)="selectDueDate($event)"
-      (projectIdChange)="selectProject($event)"
-      (sprintIdChange)="selectSprint($event)"
-      (assigneesChange)="selectAssignees($event)" />
+    @if (task(); as task) {
+      <app-task-properties
+        [statusId]="task.statusId"
+        [statusLabel]="task.statusName"
+        [priority]="task.priority"
+        [estimateType]="task.estimateType"
+        [estimateValue]="task.estimateValue"
+        [startDate]="task.startDate ?? ''"
+        [dueDate]="task.dueDate ?? ''"
+        [projectId]="task.projectId"
+        [sprintId]="task.sprintId ?? null"
+        [sprintLabel]="task.sprintName ?? 'No Sprint'"
+        [assignees]="task.assignees"
+        [reporter]="reporter()"
+        [loading]="updateLoading()"
+        [editable]="!isReadOnly()"
+        (statusIdChange)="selectStatus($event)"
+        (priorityChange)="selectPriority($event)"
+        (estimateChange)="selectEstimate($event)"
+        (startDateChange)="selectStartDate($event)"
+        (dueDateChange)="selectDueDate($event)"
+        (projectIdChange)="selectProject($event)"
+        (sprintIdChange)="selectSprint($event)"
+        (assigneesChange)="selectAssignees($event)" />
+    }
   `,
 })
 export class TaskDetailPropertiesComponent {
   readonly store = inject(Store);
   readonly taskDetailService = inject(TaskDetailService);
-  readonly task = this.store.selectSignal(selectRequiredDetailTask);
-  readonly updateLoading = this.store.selectSignal(selectTaskEditLoading);
-  readonly isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
+  private readonly taskCommands = inject(TaskCommandsService);
+  private readonly canUpdate = selectCanUpdateTask(this.store);
+  readonly task = this.taskDetailService.task;
+  readonly updateLoading = this.taskCommands.isEditing;
+  readonly isReadOnly = computed(() => !this.canUpdate());
 
-  readonly reporter = computed<TaskReporter>(() => ({
-    displayName: this.task().ownerUsername,
-    pictureUrl: this.task().ownerPictureUrl,
-    isServiceAccount: this.task().ownerIsServiceAccount,
-  }));
+  readonly reporter = computed<TaskReporter | null>(() => {
+    const task = this.task();
+
+    if (!task) return null;
+
+    return {
+      displayName: task.ownerUsername,
+      pictureUrl: task.ownerPictureUrl,
+      isServiceAccount: task.ownerIsServiceAccount,
+    };
+  });
 
   selectStatus(statusId: number | null) {
     if (statusId === null) return;

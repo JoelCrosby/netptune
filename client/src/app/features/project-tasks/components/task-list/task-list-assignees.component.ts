@@ -1,9 +1,8 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { selectTaskAssignees } from '@core/store/tasks/tasks.selectors';
+import { workspaceUsersResource } from '@core/resources/user.resource';
 import { taskFilterRoute } from '@core/router/task-filter-route';
-import { Store } from '@ngrx/store';
 import {
   AvatarFilterComponent,
   AvatarFilterOption,
@@ -21,8 +20,6 @@ import {
   `,
 })
 export class TaskListAssigneesComponent {
-  private readonly store = inject(Store);
-
   private readonly filterRoute = taskFilterRoute();
 
   readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
@@ -31,8 +28,16 @@ export class TaskListAssigneesComponent {
     () => new Set(this.filterRoute.filters().users ?? [])
   );
 
-  private readonly loadedAssignees =
-    this.store.selectSignal(selectTaskAssignees);
+  private readonly workspaceUsers = workspaceUsersResource();
+
+  private readonly loadedAssignees = computed<AssigneeViewModel[]>(() =>
+    this.workspaceUsers().map((user) => ({
+      id: user.id,
+      displayName: user.displayName,
+      pictureUrl: user.pictureUrl ?? '',
+      isServiceAccount: user.isServiceAccount ?? false,
+    }))
+  );
 
   readonly assignees = computed<Selected<AssigneeViewModel>[]>(() => {
     const selected = this.selected();

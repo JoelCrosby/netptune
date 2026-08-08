@@ -3,16 +3,13 @@ import { Component, computed, inject, linkedSignal } from '@angular/core';
 import { MAX_PAGE_SIZE } from '@app/core/models/pagination';
 import { Tag } from '@app/core/models/tag';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
-import {
-  addTagToTask,
-  deleteTagFromTask,
-} from '@app/core/store/tasks/tasks.actions';
-import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { Store } from '@ngrx/store';
+import { TaskDetailService } from './task-detail.service';
+import { TaskCommandsService } from '@core/services/task-commands.service';
 
 @Component({
   selector: 'app-task-detail-tags',
@@ -50,7 +47,10 @@ export class TaskDetailTagsComponent {
     { defaultValue: [] }
   );
 
-  task = this.store.selectSignal(selectDetailTask);
+  private readonly taskDetail = inject(TaskDetailService);
+  private readonly taskCommands = inject(TaskCommandsService);
+
+  task = this.taskDetail.task;
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
   selectedTags = linkedSignal(() => this.task()?.tags ?? []);
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
@@ -76,23 +76,15 @@ export class TaskDetailTagsComponent {
     const removed = [...currentTags].find((t) => !nextTags.has(t));
 
     if (removed) {
-      this.store.dispatch(
-        deleteTagFromTask.init({
-          identifier,
-          systemId: task.systemId,
-          tag: removed,
-        })
-      );
+      this.taskCommands.removeTag(identifier, {
+        systemId: task.systemId,
+        tag: removed,
+      });
     } else if (added) {
-      this.store.dispatch(
-        addTagToTask.init({
-          identifier,
-          request: {
-            systemId: task.systemId,
-            tag: added,
-          },
-        })
-      );
+      this.taskCommands.addTag(identifier, {
+        systemId: task.systemId,
+        tag: added,
+      });
     }
   }
 }

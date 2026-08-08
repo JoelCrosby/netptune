@@ -1,13 +1,10 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { editProjectTask } from '@app/core/store/tasks/tasks.actions';
-import {
-  selectDetailTask,
-  selectDetailTaskIsRedOnly,
-} from '@app/core/store/tasks/tasks.selectors';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
 import { Store } from '@ngrx/store';
 import { EditorComponent } from '@static/components/editor/editor.component';
+import { TaskDetailService } from './task-detail.service';
+import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
 @Component({
   selector: 'app-task-detail-description',
@@ -32,18 +29,21 @@ import { EditorComponent } from '@static/components/editor/editor.component';
 export class TaskDetailDescriptionComponent {
   readonly store = inject(Store);
 
-  task = this.store.selectSignal(selectDetailTask);
+  private readonly taskDetail = inject(TaskDetailService);
+
+  task = this.taskDetail.task;
   hubGroupId = this.store.selectSignal(selectCurrentHubGroupId);
-  isReadOnly = this.store.selectSignal(selectDetailTaskIsRedOnly);
+  private readonly canUpdate = selectCanUpdateTask(this.store);
+
+  isReadOnly = computed(() => !this.canUpdate());
   description = model(this.task()?.description ?? '');
 
   finalSave = computed(() => {
     const task = this.task();
-    const identifier = this.hubGroupId();
 
-    if (!task || !identifier) return null;
+    if (!task) return null;
 
-    return (value: string) => this.saveDescription(task, identifier, value);
+    return (value: string) => this.saveDescription(task, value);
   });
 
   constructor() {
@@ -57,33 +57,20 @@ export class TaskDetailDescriptionComponent {
       return;
     }
 
-    const identifier = this.hubGroupId();
     const task = this.task();
 
-    if (!identifier || !task) {
+    if (!task) {
       return;
     }
 
-    this.saveDescription(task, identifier, value);
+    this.saveDescription(task, value);
   }
 
-  private saveDescription(
-    task: TaskViewModel,
-    identifier: string,
-    description: string
-  ) {
+  private saveDescription(task: TaskViewModel, description: string) {
     if (task.description === description) {
       return;
     }
 
-    this.store.dispatch(
-      editProjectTask.init({
-        identifier,
-        task: {
-          ...task,
-          description,
-        },
-      })
-    );
+    this.taskDetail.updateTask({ description });
   }
 }

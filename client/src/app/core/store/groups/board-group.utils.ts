@@ -1,15 +1,9 @@
-import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
-import {
-  BoardViewGroup,
-  BoardViewTask,
-} from '@core/models/view-models/board-view';
+import { BoardViewGroup } from '@core/models/view-models/board-view';
 import { Status } from '@core/models/status';
-import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
-import { Update } from '@ngrx/entity';
-import { adapter, BoardGroupsState } from './board-groups.model';
+import { BoardGroupsState } from './board-groups.model';
 
 export const moveTaskInBoardGroup = (
   state: BoardGroupsState,
@@ -76,48 +70,6 @@ export const moveTaskInBoardGroup = (
     });
 
   return stateClone;
-};
-
-export const updateTask = (
-  state: BoardGroupsState,
-  task: BoardViewTask | TaskViewModel | Partial<UpdateProjectTaskRequest>
-) => {
-  const getGroupWithTask = (): BoardViewGroup | undefined => {
-    for (const g of Object.values(state.entities)) {
-      if (g?.tasks.some((x) => x.id === task.id)) {
-        return g;
-      }
-    }
-
-    return undefined;
-  };
-
-  const group = getGroupWithTask();
-
-  if (!group) return state;
-
-  const { sortOrder, ...changes } = task as BoardViewTask;
-
-  const tasks = group.tasks.map((item) => {
-    if (item.id !== task.id) {
-      return item;
-    }
-
-    return {
-      ...item,
-      ...changes,
-    };
-  });
-
-  const update: Update<BoardViewGroup> = {
-    id: group.id,
-    changes: {
-      ...group,
-      tasks,
-    },
-  };
-
-  return adapter.updateOne(update, state);
 };
 
 export const getBulkTaskSelection = (

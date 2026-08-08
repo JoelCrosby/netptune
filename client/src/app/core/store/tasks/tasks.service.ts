@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { taskExportDefinition } from '@core/util/task-export-definition';
 import { ClientResponse } from '@core/models/client-response';
+import { PageQuery } from '@core/models/pagination';
 import { CommentViewModel } from '@core/models/comment';
 import { appendPageParams, Page } from '@core/models/pagination';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
@@ -11,7 +12,16 @@ import { FileResponse } from '@core/types/file-response';
 import { extractFilenameFromHeaders } from '@core/util/header-utils';
 import { Observable, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ProjectTasksFilter } from './tasks.model';
+export interface ProjectTasksFilter extends PageQuery {
+  search?: string | null;
+  sprintId?: number;
+  noSprint?: boolean;
+  tags?: string[];
+  statusIds?: number[];
+  assignees?: string[];
+  hasFlags?: boolean;
+  hasTags?: boolean;
+}
 
 @Injectable({
   providedIn: 'root',

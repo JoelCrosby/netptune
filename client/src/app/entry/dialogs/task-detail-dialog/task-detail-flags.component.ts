@@ -2,16 +2,15 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { loadTaskDetails } from '@app/core/store/tasks/tasks.actions';
 import {
   FlagResolutionType,
   ProjectTasksService,
 } from '@app/core/store/tasks/tasks.service';
-import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
 import { LucideCheck, LucideFlag, LucideX } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { finalize } from 'rxjs';
+import { TaskDetailService } from './task-detail.service';
 
 @Component({
   selector: 'app-task-detail-flags',
@@ -73,12 +72,7 @@ import { finalize } from 'rxjs';
                         class="hover:bg-foreground/5 flex h-8 items-center gap-1 rounded px-2 text-xs font-medium text-green-700 disabled:opacity-50"
                         [disabled]="resolvingFlagId() === flag.id"
                         (click)="
-                          resolve(
-                            task.id,
-                            task.systemId,
-                            flag.id,
-                            resolutionType.resolved
-                          )
+                          resolve(task.id, flag.id, resolutionType.resolved)
                         ">
                         <svg lucideCheck size="14" aria-hidden="true"></svg>
                         <span i18n="Button that marks a task flag as resolved">
@@ -90,12 +84,7 @@ import { finalize } from 'rxjs';
                         class="text-muted hover:bg-foreground/5 flex h-8 items-center gap-1 rounded px-2 text-xs font-medium disabled:opacity-50"
                         [disabled]="resolvingFlagId() === flag.id"
                         (click)="
-                          resolve(
-                            task.id,
-                            task.systemId,
-                            flag.id,
-                            resolutionType.dismissed
-                          )
+                          resolve(task.id, flag.id, resolutionType.dismissed)
                         ">
                         <svg lucideX size="14" aria-hidden="true"></svg>
                         <span
@@ -124,18 +113,15 @@ export class TaskDetailFlagsComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly resolutionType = FlagResolutionType;
-  readonly task = this.store.selectSignal(selectDetailTask);
+  private readonly taskDetail = inject(TaskDetailService);
+
+  readonly task = this.taskDetail.task;
   readonly resolvingFlagId = signal<number | null>(null);
   readonly canResolve = this.store.selectSignal(
     selectHasPermission(netptunePermissions.flags.resolve)
   );
 
-  resolve(
-    taskId: number,
-    systemId: string,
-    flagId: number,
-    resolution: FlagResolutionType
-  ) {
+  resolve(taskId: number, flagId: number, resolution: FlagResolutionType) {
     this.resolvingFlagId.set(flagId);
     this.service
       .resolveFlag(taskId, flagId, resolution)
@@ -150,7 +136,7 @@ export class TaskDetailFlagsComponent {
               ? 'Flag resolved'
               : 'Flag dismissed';
           this.snackbar.open(message);
-          this.store.dispatch(loadTaskDetails.init({ systemId }));
+          this.taskDetail.reload();
         },
         error: () =>
           this.snackbar.error(
