@@ -1,7 +1,6 @@
 import {
   Component,
   DestroyRef,
-  effect,
   inject,
   input,
   linkedSignal,
@@ -9,8 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SseService } from '@core/sse/sse.service';
 import { TaskSchedulingService } from '@core/services/task-scheduling.service';
+import { onWorkspaceRefresh } from '@core/util/reload-on-refresh';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { TimelineZoom } from '@static/components/timeline/timeline.models';
 import { debounceTime, Subject } from 'rxjs';
@@ -42,14 +41,12 @@ export class RoadmapPlanningTimelineComponent {
   readonly from = input.required<string>();
   readonly to = input.required<string>();
   readonly zoom = input.required<TimelineZoom>();
-  readonly realtimeGroup = input<string>();
   readonly canUpdateTasks = input(false);
   readonly taskSelected = output<RoadmapTask>();
   readonly refreshRequested = output();
 
   private readonly planning = inject(TaskSchedulingService);
   private readonly snackbar = inject(SnackbarService);
-  private readonly sse = inject(SseService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refreshSignals = new Subject<void>();
   private refreshQueued = false;
@@ -62,28 +59,16 @@ export class RoadmapPlanningTimelineComponent {
       .pipe(debounceTime(250), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.flushRefresh());
 
-    effect((onCleanup) => {
-      const group = this.realtimeGroup();
-
-      if (!group) {
-        return;
-      }
-
-      this.sse.connect(group, () => this.requestRefresh());
-      onCleanup(() => this.sse.disconnect());
-    });
+    onWorkspaceRefresh(['tasks'], () => this.requestRefresh());
   }
 
   updateSchedule(change: RoadmapScheduleChange): void {
-    const group = this.realtimeGroup();
     const task = this.optimisticView().tasks.find(
       (item) => item.id === change.task.id
     );
 
     const canStartUpdate =
-      !!group &&
-      this.canUpdateTasks() &&
-      !this.pendingTaskIds().has(change.task.id);
+      this.canUpdateTasks() && !this.pendingTaskIds().has(change.task.id);
 
     if (!canStartUpdate) {
       return;

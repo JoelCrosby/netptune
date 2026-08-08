@@ -6,8 +6,3 @@ export const selectCurrentHubGroupId = createSelector(
   selectHubContextFeature,
   (state: HubContextState) => state.groupId
 );
-
-export const selectIsWorkspaceGroup = createSelector(
-  selectCurrentHubGroupId,
-  (state?: string | null) => state?.startsWith('[workspace]')
-);

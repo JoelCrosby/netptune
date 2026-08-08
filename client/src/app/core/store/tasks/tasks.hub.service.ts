@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
-import * as groupsActions from '@app/core/store/groups/board-groups.actions';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
@@ -16,9 +15,9 @@ import { Tag } from '@core/models/tag';
 import { BoardGroupViewModel } from '@core/models/view-models/board-group-view-model';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { setCurrentGroupId } from '@core/store/hub-context/hub-context.actions';
-import { selectIsWorkspaceGroup } from '@core/store/hub-context/hub-context.selectors';
-import { SseService } from '@core/sse/sse.service';
+import { WorkspaceEventsService } from '@core/sse/workspace-events.service';
 import { Store } from '@ngrx/store';
 
 @Injectable({
@@ -27,41 +26,28 @@ import { Store } from '@ngrx/store';
 export class ProjectTasksHubService {
   private http = inject(HttpClient);
   private store = inject(Store);
-  private sse = inject(SseService);
+  private workspaceEvents = inject(WorkspaceEventsService);
+  private workspaceRefresh = inject(WorkspaceRefreshService);
 
-  updateVersion = signal(0);
+  private readonly localReloads = signal(0);
+
+  /** Task lists reload for a write made here and for one that arrived from elsewhere. */
+  readonly updateVersion = computed(() => {
+    return this.localReloads() + this.workspaceRefresh.version('tasks')();
+  });
 
   addToGroup(groupId: string) {
     this.store.dispatch(setCurrentGroupId({ groupId }));
-    this.sse.connect(
-      groupId,
-      () => this.reloadRequiredViews(),
-      (userIds) =>
-        this.store.dispatch(groupsActions.setOnlineUsers({ userIds }))
-    );
+    this.workspaceEvents.joinGroup(groupId);
   }
 
-  removeFromGroup(_groupId: string) {
+  leaveGroup() {
     this.store.dispatch(setCurrentGroupId({ groupId: null }));
-    this.sse.disconnect();
-  }
-
-  disconnect() {
-    this.sse.disconnect();
+    this.workspaceEvents.leaveGroup();
   }
 
   reloadTaskList() {
-    this.updateVersion.update((version) => version + 1);
-  }
-
-  reloadRequiredViews() {
-    const isWorkspaceGroup = this.store.selectSignal(selectIsWorkspaceGroup);
-
-    if (isWorkspaceGroup()) {
-      this.updateVersion.set(this.updateVersion() + 1);
-    } else {
-      this.store.dispatch(groupsActions.loadBoardGroups.init());
-    }
+    this.localReloads.update((version) => version + 1);
   }
 
   moveTaskInBoardGroup(

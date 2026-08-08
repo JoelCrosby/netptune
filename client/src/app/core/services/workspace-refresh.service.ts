@@ -20,16 +20,22 @@ import {
 import * as tagsActions from '@core/store/tags/tags.actions';
 import { selectTagsLoaded } from '@core/store/tags/tags.selectors';
 import * as tasksActions from '@core/store/tasks/tasks.actions';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { selectDetailTask } from '@core/store/tasks/tasks.selectors';
 import { Store } from '@ngrx/store';
+
+type ScopeVersions = Record<RefreshScope, WritableSignal<number>>;
+
+function createVersions(): ScopeVersions {
+  const versions = allRefreshScopes.map((scope) => [scope, signal(0)]);
+
+  return Object.fromEntries(versions) as ScopeVersions;
+}
 
 @Injectable({ providedIn: 'root' })
 export class WorkspaceRefreshService {
   private readonly store = inject(Store);
-  private readonly hub = inject(ProjectTasksHubService);
 
-  private readonly versions = new Map<RefreshScope, WritableSignal<number>>();
+  private readonly versions = createVersions();
 
   private readonly boardsLoaded = this.store.selectSignal(selectBoardsLoaded);
   private readonly projectsLoaded =
@@ -41,7 +47,7 @@ export class WorkspaceRefreshService {
   private readonly detailTask = this.store.selectSignal(selectDetailTask);
 
   version(scope: RefreshScope): Signal<number> {
-    return this.versionOf(scope).asReadonly();
+    return this.versions[scope];
   }
 
   refreshAll() {
@@ -54,24 +60,10 @@ export class WorkspaceRefreshService {
     if (!requested.size) return;
 
     for (const scope of requested) {
-      this.versionOf(scope).update((version) => version + 1);
+      this.versions[scope].update((version) => version + 1);
     }
 
     this.reloadStores(requested);
-  }
-
-  private versionOf(scope: RefreshScope): WritableSignal<number> {
-    const existing = this.versions.get(scope);
-
-    if (existing) {
-      return existing;
-    }
-
-    const created = signal(0);
-
-    this.versions.set(scope, created);
-
-    return created;
   }
 
   private reloadStores(scopes: ReadonlySet<RefreshScope>) {
@@ -108,7 +100,6 @@ export class WorkspaceRefreshService {
 
   /* The board groups effect ignores the action off a board route, so it is safe to always ask. */
   private reloadTaskViews() {
-    this.hub.reloadTaskList();
     this.store.dispatch(groupsActions.loadBoardGroups.init());
     this.reloadDetailTask();
   }

@@ -1,14 +1,4 @@
-export type RefreshScope =
-  | 'tasks'
-  | 'boardGroups'
-  | 'boards'
-  | 'sprints'
-  | 'projects'
-  | 'tags'
-  | 'statuses'
-  | 'comments';
-
-export const allRefreshScopes: readonly RefreshScope[] = [
+export const allRefreshScopes = [
   'tasks',
   'boardGroups',
   'boards',
@@ -17,4 +7,6 @@ export const allRefreshScopes: readonly RefreshScope[] = [
   'tags',
   'statuses',
   'comments',
-];
+] as const;
+
+export type RefreshScope = (typeof allRefreshScopes)[number];

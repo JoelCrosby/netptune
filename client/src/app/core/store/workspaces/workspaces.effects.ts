@@ -27,7 +27,6 @@ import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 import * as actions from './workspaces.actions';
 import { selectCurrentWorkspace } from './workspaces.selectors';
 import { WorkspacesService } from './workspaces.service';
-import { SseService } from '@core/sse/sse.service';
 import { Workspace } from '@core/models/workspace';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 
@@ -38,7 +37,6 @@ export class WorkspacesEffects implements OnInitEffects {
   private workspacesService = inject(WorkspacesService);
   private confirmation = inject(ConfirmationService);
   private snackbar = inject(SnackbarService);
-  private sse = inject(SseService);
   private router = inject(Router);
   private workspace = inject(WorkspaceService);
 
@@ -66,16 +64,6 @@ export class WorkspacesEffects implements OnInitEffects {
       map(([, workspace]) => actions.selectWorkspace({ workspace }))
     );
   });
-
-  selectWorkspace$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(actions.selectWorkspace),
-        tap(() => void this.sse.disconnect())
-      );
-    },
-    { dispatch: false }
-  );
 
   updatePrimaryColor$ = createEffect(
     () => {

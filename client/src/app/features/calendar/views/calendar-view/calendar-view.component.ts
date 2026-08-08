@@ -19,7 +19,6 @@ import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { loadSprints } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
 import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
@@ -118,7 +117,6 @@ import {
             [assigneeIds]="taskFilters().users ?? []"
             [tagNames]="taskFilters().tags ?? []"
             [statusIds]="taskFilters().statuses ?? []"
-            [realtimeGroup]="realtimeGroup()"
             (refreshRequested)="refreshCalendar()"
             (taskSelected)="openTask($event)" />
         }
@@ -140,9 +138,6 @@ export class CalendarViewComponent {
 
   readonly projects = this.store.selectSignal(selectAllProjects);
   readonly sprints = this.store.selectSignal(selectAllSprints);
-  readonly workspaceIdentifier = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
   readonly canUpdateTasks = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.update)
   );
@@ -182,10 +177,6 @@ export class CalendarViewComponent {
   readonly showSkeleton = delayedLoading(
     computed(() => this.calendar.isLoading() && !this.calendar.hasValue())
   );
-  readonly realtimeGroup = computed(() => {
-    const workspace = this.workspaceIdentifier();
-    return workspace ? `tasks:${workspace}` : undefined;
-  });
   readonly selectedDate = linkedSignal(() => {
     const range = this.range();
     const today = todayDate();

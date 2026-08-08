@@ -1,0 +1,174 @@
+import {
+  EnvironmentProviders,
+  Injectable,
+  effect,
+  inject,
+  provideAppInitializer,
+  signal,
+  untracked,
+} from '@angular/core';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
+import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
+import * as groupsActions from '@core/store/groups/board-groups.actions';
+import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
+import { Logger } from '@core/util/logger';
+import { environment } from '@env/environment';
+import { Store } from '@ngrx/store';
+import { RealtimeClientIdService } from './realtime-client-id.service';
+
+/** Bursts of remote edits arrive as one event each, and each one costs a round of reloads. */
+const REFRESH_DELAY = 250;
+
+/** No view owns the stream, so nothing else would construct the service that opens it. */
+export function provideWorkspaceEvents(): EnvironmentProviders {
+  return provideAppInitializer(() => {
+    inject(WorkspaceEventsService);
+  });
+}
+
+/**
+ * Holds the workspace event stream open for as long as a workspace is open, so a
+ * view that never claimed a realtime group still sees other people's changes.
+ */
+@Injectable({ providedIn: 'root' })
+export class WorkspaceEventsService {
+  private readonly store = inject(Store);
+  private readonly realtimeClientId = inject(RealtimeClientIdService);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
+
+  private readonly isAuthenticated = this.store.selectSignal(
+    selectIsAuthenticated
+  );
+
+  private readonly workspaceId = this.store.selectSignal(
+    selectCurrentWorkspaceIdentifier
+  );
+
+  /** Presence is reported per group, so a view that shows who else is here claims one. */
+  private readonly group = signal<string | null>(null);
+
+  private eventSource: EventSource | null = null;
+  private isConnected = false;
+  private refreshTimer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor() {
+    effect(() => {
+      const workspace = this.workspaceId();
+      const isReady = this.isAuthenticated() && !!workspace;
+
+      if (!isReady) {
+        this.disconnect();
+
+        return;
+      }
+
+      this.connect(workspace, this.group() ?? `[workspace] ${workspace}`);
+    });
+  }
+
+  joinGroup(group: string) {
+    this.setGroup(group);
+  }
+
+  leaveGroup() {
+    this.setGroup(null);
+  }
+
+  /* Views claim their group from inside an effect, which must not come to depend on it. */
+  private setGroup(group: string | null) {
+    const isCurrent = untracked(this.group) === group;
+
+    if (isCurrent) return;
+
+    this.isConnected = false;
+    this.group.set(group);
+  }
+
+  private connect(workspace: string, group: string) {
+    this.disconnect();
+
+    const params = new URLSearchParams({
+      clientId: this.realtimeClientId.value,
+      group,
+      workspace,
+    });
+
+    const url = `${environment.apiEndpoint}api/hubs/board-events?${params.toString()}`;
+    const eventSource = new EventSource(url, { withCredentials: true });
+
+    eventSource.addEventListener('message', () => {
+      Logger.log('%c[SSE][EVENT] workspace update received', 'color: lime');
+      this.requestRefresh();
+    });
+
+    eventSource.addEventListener('presence', (event) => {
+      Logger.log('%c[SSE][EVENT] presence received', 'color: cyan');
+      this.setOnlineUsers(event.data);
+    });
+
+    eventSource.onerror = () => {
+      Logger.warn('[SSE] Connection error or closed.');
+    };
+
+    eventSource.onopen = () => {
+      Logger.log('%c[SSE][Connected]', 'color: lime');
+      this.handleOpen();
+    };
+
+    this.eventSource = eventSource;
+  }
+
+  private disconnect() {
+    this.isConnected = false;
+    this.cancelRefresh();
+
+    if (!this.eventSource) return;
+
+    this.eventSource.close();
+    this.eventSource = null;
+
+    Logger.log('%c[SSE][Disconnected]', 'color: orange');
+  }
+
+  /* An open that follows an earlier one is a recovered connection, and events were missed while it was down. */
+  private handleOpen() {
+    if (this.isConnected) {
+      this.requestRefresh();
+
+      return;
+    }
+
+    this.isConnected = true;
+  }
+
+  private requestRefresh() {
+    if (this.refreshTimer !== null) return;
+
+    this.refreshTimer = setTimeout(() => {
+      this.refreshTimer = null;
+      this.workspaceRefresh.refreshAll();
+    }, REFRESH_DELAY);
+  }
+
+  private cancelRefresh() {
+    if (this.refreshTimer === null) return;
+
+    clearTimeout(this.refreshTimer);
+    this.refreshTimer = null;
+  }
+
+  /** Only a claimed group reports the people looking at the same board. */
+  private setOnlineUsers(data: string) {
+    const hasGroup = untracked(this.group) !== null;
+
+    if (!hasGroup) return;
+
+    try {
+      const userIds = JSON.parse(data) as string[];
+
+      this.store.dispatch(groupsActions.setOnlineUsers({ userIds }));
+    } catch {
+      Logger.warn('[SSE] Failed to parse presence event.');
+    }
+  }
+}

@@ -804,19 +804,7 @@ export class AiAssistantService {
       return;
     }
 
-    this.isApplying.set(true);
-
-    try {
-      await this.http
-        .post(`api/ai/change-sets/${changeSet.id}/apply`, { changeIds })
-        .toPromise();
-
-      const wasRead = await this.refreshChangeSet(changeSet.id);
-
-      this.refreshAffectedViews(changeSet.changes, wasRead);
-    } finally {
-      this.isApplying.set(false);
-    }
+    await this.runChangeSetAction(changeSet, 'apply', { changeIds });
   }
 
   async retryFailedChanges() {
@@ -826,19 +814,7 @@ export class AiAssistantService {
       return;
     }
 
-    this.isApplying.set(true);
-
-    try {
-      await this.http
-        .post(`api/ai/change-sets/${changeSet.id}/retry`, {})
-        .toPromise();
-
-      const wasRead = await this.refreshChangeSet(changeSet.id);
-
-      this.refreshAffectedViews(changeSet.changes, wasRead);
-    } finally {
-      this.isApplying.set(false);
-    }
+    await this.runChangeSetAction(changeSet, 'retry', {});
   }
 
   async undoChangeSet() {
@@ -848,11 +824,19 @@ export class AiAssistantService {
       return;
     }
 
+    await this.runChangeSetAction(changeSet, 'undo', {});
+  }
+
+  private async runChangeSetAction(
+    changeSet: AiChangeSet,
+    action: 'apply' | 'retry' | 'undo',
+    body: object
+  ) {
     this.isApplying.set(true);
 
     try {
       await this.http
-        .post(`api/ai/change-sets/${changeSet.id}/undo`, {})
+        .post(`api/ai/change-sets/${changeSet.id}/${action}`, body)
         .toPromise();
 
       const wasRead = await this.refreshChangeSet(changeSet.id);

@@ -334,7 +334,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(clearState());
-    this.hubService.disconnect();
+    this.hubService.leaveGroup();
   }
 
   onTitleSubmitted(title: string) {

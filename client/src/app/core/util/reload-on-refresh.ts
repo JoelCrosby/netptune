@@ -11,11 +11,11 @@ export interface ReloadableResource {
   reload(): boolean;
 }
 
-export function reloadOnRefresh(
-  resource: ReloadableResource,
-  scopes: readonly RefreshScope[]
+export function onWorkspaceRefresh(
+  scopes: readonly RefreshScope[],
+  onRefresh: () => void
 ): void {
-  assertInInjectionContext(reloadOnRefresh);
+  assertInInjectionContext(onWorkspaceRefresh);
 
   const workspaceRefresh = inject(WorkspaceRefreshService);
   const versions = scopes.map((scope) => workspaceRefresh.version(scope));
@@ -33,6 +33,15 @@ export function reloadOnRefresh(
       return;
     }
 
-    untracked(() => resource.reload());
+    untracked(onRefresh);
   });
+}
+
+export function reloadOnRefresh(
+  resource: ReloadableResource,
+  scopes: readonly RefreshScope[]
+): void {
+  assertInInjectionContext(reloadOnRefresh);
+
+  onWorkspaceRefresh(scopes, () => resource.reload());
 }

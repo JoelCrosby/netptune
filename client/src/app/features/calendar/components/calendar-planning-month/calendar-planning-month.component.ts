@@ -1,7 +1,6 @@
 import {
   Component,
   DestroyRef,
-  effect,
   inject,
   input,
   linkedSignal,
@@ -13,7 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskSchedulingService } from '@core/services/task-scheduling.service';
-import { SseService } from '@core/sse/sse.service';
+import { onWorkspaceRefresh } from '@core/util/reload-on-refresh';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { debounceTime, Subject } from 'rxjs';
 import {
@@ -67,7 +66,6 @@ export class CalendarPlanningMonthComponent {
   readonly view = input.required<CalendarViewModel>();
   readonly days = input.required<CalendarDay[]>();
   readonly selectedDate = model.required<string>();
-  readonly realtimeGroup = input<string>();
   readonly canUpdateTasks = input(false);
   readonly projectId = input<number>();
   readonly sprintId = input<number>();
@@ -81,7 +79,6 @@ export class CalendarPlanningMonthComponent {
   private readonly scheduling = inject(TaskSchedulingService);
   private readonly dialog = inject(DialogService);
   private readonly snackbar = inject(SnackbarService);
-  private readonly sse = inject(SseService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refreshSignals = new Subject<void>();
   private refreshQueued = false;
@@ -96,15 +93,7 @@ export class CalendarPlanningMonthComponent {
       .pipe(debounceTime(250), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.flushRefresh());
 
-    effect((onCleanup) => {
-      const group = this.realtimeGroup();
-      if (!group) {
-        return;
-      }
-
-      this.sse.connect(group, () => this.requestRefresh());
-      onCleanup(() => this.sse.disconnect());
-    });
+    onWorkspaceRefresh(['tasks'], () => this.requestRefresh());
   }
 
   requestRefresh(): void {

@@ -68,7 +68,7 @@ export class ProjectTasksViewComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.hubService.disconnect();
+    this.hubService.leaveGroup();
   }
 
   showAddModal() {

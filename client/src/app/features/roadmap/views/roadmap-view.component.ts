@@ -8,7 +8,6 @@ import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectAllProjects } from '@core/store/projects/projects.selectors';
 import { loadSprints } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import {
   parseTaskFilterRouteParams,
@@ -127,7 +126,6 @@ const defaultTo = addDays(today, 45);
             [to]="to()"
             [zoom]="zoom()"
             [canUpdateTasks]="canUpdateTasks()"
-            [realtimeGroup]="realtimeGroup()"
             (refreshRequested)="refreshRoadmapData()"
             (taskSelected)="openTask($event)" />
         }
@@ -167,9 +165,6 @@ export class RoadmapViewComponent {
 
   readonly projects = this.store.selectSignal(selectAllProjects);
   readonly sprints = this.store.selectSignal(selectAllSprints);
-  readonly workspaceIdentifier = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
 
   readonly canUpdateTasks = this.store.selectSignal(
     selectHasPermission(netptunePermissions.tasks.update)
@@ -228,10 +223,6 @@ export class RoadmapViewComponent {
   readonly showSkeleton = delayedLoading(
     computed(() => this.roadmap.isLoading() && !this.roadmap.hasValue())
   );
-  readonly realtimeGroup = computed(() => {
-    const workspace = this.workspaceIdentifier();
-    return workspace ? `tasks:${workspace}` : undefined;
-  });
 
   readonly sprintOptions = computed(() =>
     this.sprints().length > 0

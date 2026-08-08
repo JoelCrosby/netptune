@@ -219,7 +219,7 @@ public static class AiEndpoints
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleApplyChangeSet(
+    private static Task<IResult> HandleApplyChangeSet(
         Guid changeSetId,
         ApplyAiChangeSetRequest request,
         IAiChangeSetApplier applier,
@@ -227,87 +227,70 @@ public static class AiEndpoints
         HttpContext context,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var result = await applier.Apply(changeSetId, request, cancellationToken);
-
-            return await CompleteChangeSetAction(result, boardEventService, context);
-        }
-        catch (UnauthorizedAccessException exception)
-        {
-            return Results.Problem(exception.Message, statusCode: StatusCodes.Status403Forbidden);
-        }
-        catch (InvalidOperationException exception)
-        {
-            return Results.Problem(exception.Message, statusCode: StatusCodes.Status400BadRequest);
-        }
+        return RunChangeSetAction(
+            () => applier.Apply(changeSetId, request, cancellationToken),
+            boardEventService,
+            context);
     }
 
-    private static async Task<IResult> HandleRetryChangeSet(
+    private static Task<IResult> HandleRetryChangeSet(
         Guid changeSetId,
         IAiChangeSetApplier applier,
         IBoardEventService boardEventService,
         HttpContext context,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var result = await applier.RetryFailed(changeSetId, cancellationToken);
-
-            return await CompleteChangeSetAction(result, boardEventService, context);
-        }
-        catch (UnauthorizedAccessException exception)
-        {
-            return Results.Problem(exception.Message, statusCode: StatusCodes.Status403Forbidden);
-        }
-        catch (InvalidOperationException exception)
-        {
-            return Results.Problem(exception.Message, statusCode: StatusCodes.Status400BadRequest);
-        }
+        return RunChangeSetAction(
+            () => applier.RetryFailed(changeSetId, cancellationToken),
+            boardEventService,
+            context);
     }
 
-    private static async Task<IResult> HandleUndoChangeSet(
+    private static Task<IResult> HandleUndoChangeSet(
         Guid changeSetId,
         IAiChangeSetApplier applier,
         IBoardEventService boardEventService,
         HttpContext context,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var result = await applier.Undo(changeSetId, cancellationToken);
-
-            return await CompleteChangeSetAction(result, boardEventService, context);
-        }
-        catch (UnauthorizedAccessException exception)
-        {
-            return Results.Problem(exception.Message, statusCode: StatusCodes.Status403Forbidden);
-        }
-        catch (InvalidOperationException exception)
-        {
-            return Results.Problem(exception.Message, statusCode: StatusCodes.Status400BadRequest);
-        }
+        return RunChangeSetAction(
+            () => applier.Undo(changeSetId, cancellationToken),
+            boardEventService,
+            context);
     }
 
-    // The applying client is left out of the broadcast by design, and refreshes its own views instead.
-    private static async Task<IResult> CompleteChangeSetAction(
-        AiApplyResult? result,
+    // The client that ran the action is left out of the broadcast by design, and refreshes its own views instead.
+    private static async Task<IResult> RunChangeSetAction(
+        Func<Task<AiApplyResult?>> action,
         IBoardEventService boardEventService,
         HttpContext context)
     {
-        if (result is null)
+        try
         {
-            return Results.NotFound();
+            var result = await action();
+
+            if (result is null)
+            {
+                return Results.NotFound();
+            }
+
+            var changedWorkspaceData = result.Results.Any(change => change.Status == AiChangeApplyStatus.Applied);
+
+            if (changedWorkspaceData)
+            {
+                await boardEventService.BroadcastRequestAsync(context);
+            }
+
+            return Results.Ok(result);
         }
-
-        var changedWorkspaceData = result.Results.Any(change => change.Status == AiChangeApplyStatus.Applied);
-
-        if (changedWorkspaceData)
+        catch (UnauthorizedAccessException exception)
         {
-            await boardEventService.BroadcastRequestAsync(context);
+            return Results.Problem(exception.Message, statusCode: StatusCodes.Status403Forbidden);
         }
-
-        return Results.Ok(result);
+        catch (InvalidOperationException exception)
+        {
+            return Results.Problem(exception.Message, statusCode: StatusCodes.Status400BadRequest);
+        }
     }
 
     private static async Task HandleSendMessage(
