@@ -10,8 +10,6 @@ import { boardGroupsReducer } from './core/store/groups/board-groups.reducer';
 import { hubContextReducer } from './core/store/hub-context/hub-context.reducer';
 import { SprintsEffects } from './core/store/sprints/sprints.effects';
 import { sprintsReducer } from './core/store/sprints/sprints.reducer';
-import { TagsEffects } from './core/store/tags/tags.effects';
-import { tagsReducer } from './core/store/tags/tags.reducer';
 import { ProjectTasksEffects } from './core/store/tasks/tasks.effects';
 import { projectTasksReducer } from './core/store/tasks/tasks.reducer';
 
@@ -24,13 +22,11 @@ export const routes: Routes = [
     resolve: [workspaceResovler],
     providers: [
       provideState('tasks', projectTasksReducer),
-      provideState('tags', tagsReducer),
       provideState('hub', hubContextReducer),
       provideState('sprints', sprintsReducer),
       provideState('boardgroups', boardGroupsReducer),
       provideEffects([
         ProjectTasksEffects,
-        TagsEffects,
         BoardGroupsEffects,
         SprintsEffects,
       ]),

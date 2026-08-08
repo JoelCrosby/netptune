@@ -13,8 +13,6 @@ import {
   selectSprintsFilter,
   selectSprintsLoaded,
 } from '@core/store/sprints/sprints.selectors';
-import * as tagsActions from '@core/store/tags/tags.actions';
-import { selectTagsLoaded } from '@core/store/tags/tags.selectors';
 import * as tasksActions from '@core/store/tasks/tasks.actions';
 import { selectDetailTask } from '@core/store/tasks/tasks.selectors';
 import { Store } from '@ngrx/store';
@@ -36,7 +34,6 @@ export class WorkspaceRefreshService {
   private readonly sprintsLoaded = this.store.selectSignal(selectSprintsLoaded);
   private readonly sprintsFilter = this.store.selectSignal(selectSprintsFilter);
   private readonly sprintDetail = this.store.selectSignal(selectSprintDetail);
-  private readonly tagsLoaded = this.store.selectSignal(selectTagsLoaded);
   private readonly detailTask = this.store.selectSignal(selectDetailTask);
 
   version(scope: RefreshScope): Signal<number> {
@@ -70,12 +67,6 @@ export class WorkspaceRefreshService {
 
     if (touchesSprints) {
       this.reloadSprints();
-    }
-
-    const touchesTags = scopes.has('tags') && this.tagsLoaded();
-
-    if (touchesTags) {
-      this.store.dispatch(tagsActions.loadTags.init());
     }
   }
 

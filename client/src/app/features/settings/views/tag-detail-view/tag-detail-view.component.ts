@@ -19,8 +19,8 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { tagUsageResource } from '@core/resources/entity-usage.resource';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import * as actions from '@core/store/tags/tags.actions';
-import { TagsService } from '@core/store/tags/tags.service';
+import { TagsService } from '@core/services/tags.service';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import {
@@ -231,6 +231,7 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
 export class TagDetailViewComponent {
   private readonly store = inject(Store);
   private readonly tagsService = inject(TagsService);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -353,7 +354,7 @@ export class TagDetailViewComponent {
 
       if (!response.isSuccess) return;
 
-      this.store.dispatch(actions.loadTags.init());
+      this.workspaceRefresh.refresh(['tags']);
       this.usage.reload();
     });
   }
@@ -387,7 +388,7 @@ export class TagDetailViewComponent {
             return;
           }
 
-          this.store.dispatch(actions.loadTags.init());
+          this.workspaceRefresh.refresh(['tags']);
           void this.router.navigate(['..'], { relativeTo: this.route });
         },
       });

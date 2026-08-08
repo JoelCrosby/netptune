@@ -19,7 +19,6 @@ import { metaReducer } from './store/meta/meta.reducer';
 import type { SettingsState } from './store/settings/settings.model';
 import type { SprintsState } from './store/sprints/sprints.model';
 import { settingsReducer } from './store/settings/settings.reducer';
-import type { TagsState } from './store/tags/tags.model';
 import type { TasksState } from './store/tasks/tasks.model';
 import type { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
@@ -52,7 +51,6 @@ export const selectSettingsFeature = selectFeature<SettingsState>('settings');
 export const selectWorkspacesFeature =
   selectFeature<WorkspacesState>('workspaces');
 export const selectTasksFeature = selectFeature<TasksState>('tasks');
-export const selectTagsFeature = selectFeature<TagsState>('tags');
 export const selectHubContextFeature = selectFeature<HubContextState>('hub');
 export const selectSprintsFeature = selectFeature<SprintsState>('sprints');
 
@@ -64,7 +62,6 @@ export interface AppState {
   settings: SettingsState;
   workspaces: WorkspacesState;
   tasks: TasksState;
-  tags: TagsState;
   hub: HubContextState;
   sprints: SprintsState;
   boardgroups: BoardGroupsState;

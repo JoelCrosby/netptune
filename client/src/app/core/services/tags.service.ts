@@ -9,7 +9,7 @@ import {
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { UpdateTagRequest } from '@core/models/requests/update-tag-request';
 import { Tag } from '@core/models/tag';
-import { DeleteTagsRequest } from '../../models/requests/delete-tag-request';
+import { DeleteTagsRequest } from '@core/models/requests/delete-tag-request';
 
 @Injectable({
   providedIn: 'root',
