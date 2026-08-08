@@ -120,6 +120,7 @@ WITH filtered_tasks AS (
           LOWER(pt.name) LIKE @searchPattern
           OR LOWER(p.key) LIKE @searchPattern
           OR LOWER(p.name) LIKE @searchPattern
+          OR LOWER(CONCAT(p.key, '-', pt.project_scope_id)) LIKE @searchPattern
           OR EXISTS (
               SELECT 1
               FROM project_task_tags ptt_search

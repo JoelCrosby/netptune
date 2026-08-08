@@ -10,7 +10,9 @@ WITH board_groups_for_board AS (
     WHERE bg.board_id = @boardId
       AND NOT bg.is_deleted
 ),
-limited_tasks AS (
+-- MATERIALIZED because this is referenced once and postgres would otherwise inline it, re-running
+-- the whole task scan and search filter for every board group rather than once for the board.
+limited_tasks AS MATERIALIZED (
     SELECT pt.id               AS task_id
          , pt.name             AS task_name
          , pt.priority         AS task_priority
@@ -39,9 +41,11 @@ limited_tasks AS (
                 AND NOT pt.is_deleted
              INNER JOIN statuses st on pt.status_id = st.id
              LEFT JOIN sprints s on pt.sprint_id = s.id AND NOT s.is_deleted
+             LEFT JOIN projects p on pt.project_id = p.id
     WHERE (@sprintId IS NULL OR pt.sprint_id = @sprintId)
       AND (@searchPhrase IS NULL
-           OR to_tsvector('english', pt.name) @@ websearch_to_tsquery('english', @searchPhrase))
+           OR to_tsvector('english', pt.name) @@ websearch_to_tsquery('english', @searchPhrase)
+           OR LOWER(CONCAT(p.key, '-', pt.project_scope_id)) LIKE @searchPattern)
 )
 SELECT lt.task_id
      , lt.task_name

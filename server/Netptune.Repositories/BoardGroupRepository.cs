@@ -56,9 +56,11 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
             ? null
             : string.Join(" or ", searchTerm.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
 
+        var searchPattern = $"%{searchTerm?.Trim().ToLowerInvariant()}%";
+
         var results = await connection.QueryMultipleAsync(new CommandDefinition(
             SqlScripts.GetBoardView,
-            new { boardId, searchPhrase, sprintId, taskEntityType = EntityType.Task },
+            new { boardId, searchPhrase, searchPattern, sprintId, taskEntityType = EntityType.Task },
             cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();

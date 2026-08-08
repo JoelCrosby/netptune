@@ -345,7 +345,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var queryable = Entities
             .Where(x =>
                 x.Workspace!.Slug == workspaceKey &&
-                x.Project!.Key == projectKey &&
+                x.Project!.Key.ToLower() == projectKey.ToLower() &&
                 x.ProjectScopeId == projectScopeId)
             .Include(x => x.ProjectTaskAppUsers).ThenInclude(x => x.User)
             .Include(x => x.Project)

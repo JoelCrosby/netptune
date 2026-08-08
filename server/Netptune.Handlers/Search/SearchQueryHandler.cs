@@ -95,7 +95,7 @@ public sealed class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResp
         string workspaceSlug,
         CancellationToken cancellationToken)
     {
-        var includesTasks = request.Types is null || request.Types.Any(IsTaskType);
+        var includesTasks = request.Types is not { Length: > 0 } || request.Types.Any(IsTaskType);
         var query = request.Q.Trim();
         var separatorIndex = query.LastIndexOf('-');
         var hasIdentifierShape = separatorIndex > 0
