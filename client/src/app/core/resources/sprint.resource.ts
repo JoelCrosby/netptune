@@ -15,6 +15,6 @@ export const sprintResource = (
         take: 100,
       },
     }),
-    { defaultValue: [] }
+    { defaultValue: [], refreshOn: ['sprints'] }
   );
 };

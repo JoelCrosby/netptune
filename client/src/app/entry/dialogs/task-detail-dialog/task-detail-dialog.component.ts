@@ -15,6 +15,7 @@ import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-
 import { LucideCheck } from '@lucide/angular';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
@@ -123,6 +124,7 @@ export class TaskDetailDialogComponent implements OnDestroy {
   store = inject(Store);
   private dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
   private actions$ = inject(Actions);
+  private snackbar = inject(SnackbarService);
 
   public static width = '972px';
 
@@ -162,6 +164,19 @@ export class TaskDetailDialogComponent implements OnDestroy {
         if (taskId === this.task()?.id) {
           this.dialogRef.close();
         }
+      });
+
+    this.actions$
+      .pipe(ofType(loadTaskDetails.fail), takeUntilDestroyed())
+      .subscribe(({ error }) => {
+        const wasRemoved = error.status === 404;
+
+        if (!wasRemoved) return;
+
+        this.snackbar.error(
+          $localize`:Shown when the open task no longer exists:This task no longer exists.`
+        );
+        this.dialogRef.close();
       });
   }
 

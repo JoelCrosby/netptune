@@ -12,16 +12,21 @@ export const statusUsageResource = (id: Signal<number | null>) => {
       return statusId === null
         ? undefined
         : { url: `api/statuses/${statusId}/usage` };
-    }
+    },
+    { refreshOn: ['statuses', 'tasks'] }
   );
 };
 
 export const tagUsageResource = (id: Signal<number | null>) => {
-  return permissionResource<EntityUsage>(netptunePermissions.tags.read, () => {
-    const tagId = id();
+  return permissionResource<EntityUsage>(
+    netptunePermissions.tags.read,
+    () => {
+      const tagId = id();
 
-    return tagId === null ? undefined : { url: `api/tags/${tagId}/usage` };
-  });
+      return tagId === null ? undefined : { url: `api/tags/${tagId}/usage` };
+    },
+    { refreshOn: ['tags', 'tasks'] }
+  );
 };
 
 export const relationTypeUsageResource = (id: Signal<number | null>) => {

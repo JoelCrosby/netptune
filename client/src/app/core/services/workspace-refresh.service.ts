@@ -1,0 +1,142 @@
+import {
+  Injectable,
+  Signal,
+  WritableSignal,
+  inject,
+  signal,
+} from '@angular/core';
+import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
+import * as boardsActions from '@core/store/boards/boards.actions';
+import { selectBoardsLoaded } from '@core/store/boards/boards.selectors';
+import * as groupsActions from '@core/store/groups/board-groups.actions';
+import * as projectsActions from '@core/store/projects/projects.actions';
+import { selectProjectsLoaded } from '@core/store/projects/projects.selectors';
+import * as sprintsActions from '@core/store/sprints/sprints.actions';
+import {
+  selectSprintDetail,
+  selectSprintsFilter,
+  selectSprintsLoaded,
+} from '@core/store/sprints/sprints.selectors';
+import * as tagsActions from '@core/store/tags/tags.actions';
+import { selectTagsLoaded } from '@core/store/tags/tags.selectors';
+import * as tasksActions from '@core/store/tasks/tasks.actions';
+import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { selectDetailTask } from '@core/store/tasks/tasks.selectors';
+import { Store } from '@ngrx/store';
+
+@Injectable({ providedIn: 'root' })
+export class WorkspaceRefreshService {
+  private readonly store = inject(Store);
+  private readonly hub = inject(ProjectTasksHubService);
+
+  private readonly versions = new Map<RefreshScope, WritableSignal<number>>();
+
+  private readonly boardsLoaded = this.store.selectSignal(selectBoardsLoaded);
+  private readonly projectsLoaded =
+    this.store.selectSignal(selectProjectsLoaded);
+  private readonly sprintsLoaded = this.store.selectSignal(selectSprintsLoaded);
+  private readonly sprintsFilter = this.store.selectSignal(selectSprintsFilter);
+  private readonly sprintDetail = this.store.selectSignal(selectSprintDetail);
+  private readonly tagsLoaded = this.store.selectSignal(selectTagsLoaded);
+  private readonly detailTask = this.store.selectSignal(selectDetailTask);
+
+  version(scope: RefreshScope): Signal<number> {
+    return this.versionOf(scope).asReadonly();
+  }
+
+  refreshAll() {
+    this.refresh(allRefreshScopes);
+  }
+
+  refresh(scopes: Iterable<RefreshScope>) {
+    const requested = new Set(scopes);
+
+    if (!requested.size) return;
+
+    for (const scope of requested) {
+      this.versionOf(scope).update((version) => version + 1);
+    }
+
+    this.reloadStores(requested);
+  }
+
+  private versionOf(scope: RefreshScope): WritableSignal<number> {
+    const existing = this.versions.get(scope);
+
+    if (existing) {
+      return existing;
+    }
+
+    const created = signal(0);
+
+    this.versions.set(scope, created);
+
+    return created;
+  }
+
+  private reloadStores(scopes: ReadonlySet<RefreshScope>) {
+    const touchesTasks = scopes.has('tasks') || scopes.has('boardGroups');
+
+    if (touchesTasks) {
+      this.reloadTaskViews();
+    }
+
+    const touchesSprints = scopes.has('sprints');
+
+    if (touchesSprints) {
+      this.reloadSprints();
+    }
+
+    const touchesProjects = scopes.has('projects') && this.projectsLoaded();
+
+    if (touchesProjects) {
+      this.store.dispatch(projectsActions.loadProjects.init());
+    }
+
+    const touchesBoards = scopes.has('boards') && this.boardsLoaded();
+
+    if (touchesBoards) {
+      this.store.dispatch(boardsActions.loadBoards.init());
+    }
+
+    const touchesTags = scopes.has('tags') && this.tagsLoaded();
+
+    if (touchesTags) {
+      this.store.dispatch(tagsActions.loadTags.init());
+    }
+  }
+
+  /* The board groups effect ignores the action off a board route, so it is safe to always ask. */
+  private reloadTaskViews() {
+    this.hub.reloadTaskList();
+    this.store.dispatch(groupsActions.loadBoardGroups.init());
+    this.reloadDetailTask();
+  }
+
+  private reloadDetailTask() {
+    const task = this.detailTask();
+
+    if (!task) return;
+
+    this.store.dispatch(
+      tasksActions.loadTaskDetails.init({ systemId: task.systemId })
+    );
+  }
+
+  /* Dispatching without the stored filter would reset it to the unfiltered list. */
+  private reloadSprints() {
+    if (this.sprintsLoaded()) {
+      this.store.dispatch(
+        sprintsActions.loadSprints.init({ filter: this.sprintsFilter() })
+      );
+    }
+
+    const detail = this.sprintDetail();
+
+    if (!detail) return;
+
+    this.store.dispatch(
+      sprintsActions.loadSprintDetail.init({ sprintId: detail.id })
+    );
+  }
+}

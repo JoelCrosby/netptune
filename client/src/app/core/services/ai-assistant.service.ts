@@ -20,17 +20,23 @@ import {
   AiConversationDetail,
   AiEntityReference,
   AiMessageRole,
+  AiProposedChange,
   AiStreamEvent,
   AiStreamEventType,
   AiTokenUsage,
 } from '@core/models/ai-conversation';
 import { WorkspaceService } from '@core/services/workspace.service';
+import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { selectIsAssistantAvailable } from '@core/store/auth/auth.selectors';
 import { selectCurrentProject } from '@core/store/projects/projects.selectors';
 import { selectSelectedTask } from '@core/store/tasks/tasks.selectors';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { buildClientContext } from '@core/util/ai-client-context';
 import { referenceKey } from '@core/util/ai-references';
+import {
+  landedChanges,
+  refreshScopesForChanges,
+} from '@core/util/ai-refresh-scopes';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
 
@@ -92,6 +98,7 @@ export class AiAssistantService {
     this.store.selectSignal(selectCurrentProject);
   private readonly selectedTask = this.store.selectSignal(selectSelectedTask);
   private readonly http = inject(HttpClient);
+  private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly router = inject(Router);
   private readonly storage = inject(LocalStorageService);
   private readonly locale = inject(LOCALE_ID);
@@ -804,7 +811,9 @@ export class AiAssistantService {
         .post(`api/ai/change-sets/${changeSet.id}/apply`, { changeIds })
         .toPromise();
 
-      await this.refreshChangeSet(changeSet.id);
+      const wasRead = await this.refreshChangeSet(changeSet.id);
+
+      this.refreshAffectedViews(changeSet.changes, wasRead);
     } finally {
       this.isApplying.set(false);
     }
@@ -824,7 +833,9 @@ export class AiAssistantService {
         .post(`api/ai/change-sets/${changeSet.id}/retry`, {})
         .toPromise();
 
-      await this.refreshChangeSet(changeSet.id);
+      const wasRead = await this.refreshChangeSet(changeSet.id);
+
+      this.refreshAffectedViews(changeSet.changes, wasRead);
     } finally {
       this.isApplying.set(false);
     }
@@ -844,7 +855,9 @@ export class AiAssistantService {
         .post(`api/ai/change-sets/${changeSet.id}/undo`, {})
         .toPromise();
 
-      await this.refreshChangeSet(changeSet.id);
+      const wasRead = await this.refreshChangeSet(changeSet.id);
+
+      this.refreshAffectedViews(changeSet.changes, wasRead);
     } finally {
       this.isApplying.set(false);
     }
@@ -981,7 +994,10 @@ export class AiAssistantService {
     });
   }
 
-  private async refreshChangeSet(changeSetId: string, token?: number) {
+  private async refreshChangeSet(
+    changeSetId: string,
+    token?: number
+  ): Promise<boolean> {
     try {
       const response = await this.http
         .get<ClientResponse<AiChangeSet>>(`api/ai/change-sets/${changeSetId}`)
@@ -991,13 +1007,27 @@ export class AiAssistantService {
       const isCurrent = token === undefined || this.turnToken === token;
 
       if (payload === null || !isCurrent) {
-        return;
+        return false;
       }
 
       this.changeSet.set(payload);
+
+      return true;
     } catch {
       /* The turn recovers the proposals from the conversation instead. */
+      return false;
     }
+  }
+
+  /* Without a re-read there is nothing to diff, so every proposal counts as landed. */
+  private refreshAffectedViews(
+    before: readonly AiProposedChange[],
+    wasRead: boolean
+  ) {
+    const after = this.changeSet()?.changes ?? [];
+    const landed = wasRead ? landedChanges(before, after) : before;
+
+    this.workspaceRefresh.refresh(refreshScopesForChanges(landed));
   }
 
   async send(text: string, isRetry = false) {

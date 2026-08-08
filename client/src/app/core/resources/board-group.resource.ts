@@ -6,6 +6,6 @@ export const boardGroupOptionsResource = () => {
   return permissionResource<AutomationBoardGroupOption[]>(
     netptunePermissions.boardGroups.read,
     () => ({ url: 'api/boardgroups/options' }),
-    { defaultValue: [] }
+    { defaultValue: [], refreshOn: ['boardGroups'] }
   );
 };

@@ -3,7 +3,9 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.App.Configuration;
+using Netptune.App.Services;
 using Netptune.Core.Authorization;
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Services.Ai;
@@ -221,13 +223,15 @@ public static class AiEndpoints
         Guid changeSetId,
         ApplyAiChangeSetRequest request,
         IAiChangeSetApplier applier,
+        IBoardEventService boardEventService,
+        HttpContext context,
         CancellationToken cancellationToken)
     {
         try
         {
             var result = await applier.Apply(changeSetId, request, cancellationToken);
 
-            return result is null ? Results.NotFound() : Results.Ok(result);
+            return await CompleteChangeSetAction(result, boardEventService, context);
         }
         catch (UnauthorizedAccessException exception)
         {
@@ -242,13 +246,15 @@ public static class AiEndpoints
     private static async Task<IResult> HandleRetryChangeSet(
         Guid changeSetId,
         IAiChangeSetApplier applier,
+        IBoardEventService boardEventService,
+        HttpContext context,
         CancellationToken cancellationToken)
     {
         try
         {
             var result = await applier.RetryFailed(changeSetId, cancellationToken);
 
-            return result is null ? Results.NotFound() : Results.Ok(result);
+            return await CompleteChangeSetAction(result, boardEventService, context);
         }
         catch (UnauthorizedAccessException exception)
         {
@@ -263,13 +269,15 @@ public static class AiEndpoints
     private static async Task<IResult> HandleUndoChangeSet(
         Guid changeSetId,
         IAiChangeSetApplier applier,
+        IBoardEventService boardEventService,
+        HttpContext context,
         CancellationToken cancellationToken)
     {
         try
         {
             var result = await applier.Undo(changeSetId, cancellationToken);
 
-            return result is null ? Results.NotFound() : Results.Ok(result);
+            return await CompleteChangeSetAction(result, boardEventService, context);
         }
         catch (UnauthorizedAccessException exception)
         {
@@ -279,6 +287,27 @@ public static class AiEndpoints
         {
             return Results.Problem(exception.Message, statusCode: StatusCodes.Status400BadRequest);
         }
+    }
+
+    // The applying client is left out of the broadcast by design, and refreshes its own views instead.
+    private static async Task<IResult> CompleteChangeSetAction(
+        AiApplyResult? result,
+        IBoardEventService boardEventService,
+        HttpContext context)
+    {
+        if (result is null)
+        {
+            return Results.NotFound();
+        }
+
+        var changedWorkspaceData = result.Results.Any(change => change.Status == AiChangeApplyStatus.Applied);
+
+        if (changedWorkspaceData)
+        {
+            await boardEventService.BroadcastRequestAsync(context);
+        }
+
+        return Results.Ok(result);
     }
 
     private static async Task HandleSendMessage(

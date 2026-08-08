@@ -136,7 +136,7 @@
     </unit>
     <unit id="810888510148304696">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:153</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:160</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-model-menu.component.ts:28,30</note>
         <note category="description">Model option that lets the server choose</note>
       </notes>
@@ -1303,7 +1303,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:191,193</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:121,124</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:112,115</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:147</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:152</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:280</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:281</note>
@@ -1489,7 +1489,7 @@
         <note category="location">src/app/core/store/notifications/notifications.effects.ts:23</note>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:393</note>
         <note category="location">src/app/core/store/tasks/tasks.effects.ts:401</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:146</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:151</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:279</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:280</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:718</note>
@@ -4164,7 +4164,7 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:34,37</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:35,38</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
       <segment state="translated">
@@ -4174,7 +4174,7 @@
     </unit>
     <unit id="4313782791271467411">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:114</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:119</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4194,7 +4194,7 @@
     </unit>
     <unit id="7248378588975188090">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:135</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:140</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4214,7 +4214,7 @@
     </unit>
     <unit id="4813239392166088334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:148</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:153</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4224,7 +4224,7 @@
     </unit>
     <unit id="9136333277025964285">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:149</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:154</note>
         <note category="description">Title of a dialog or section</note>
       </notes>
       <segment state="translated">
@@ -4386,7 +4386,7 @@
     </unit>
     <unit id="3915858391862498397">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:47,50</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:48,51</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:65,66</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:302</note>
         <note category="description">Section heading for links between tasks</note>
@@ -4398,7 +4398,7 @@
     </unit>
     <unit id="3802104514603079488">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:56,61</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:57,62</note>
         <note category="description">Button that links this task to another</note>
       </notes>
       <segment state="translated">
@@ -4408,8 +4408,8 @@
     </unit>
     <unit id="1880237574877817137">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:101,103</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:105,107</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:102,104</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:106,108</note>
         <note category="description">Tooltip on the button that removes a task link</note>
       </notes>
       <segment state="translated">
@@ -4419,7 +4419,7 @@
     </unit>
     <unit id="5445703507341144559">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:119,125</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:120,126</note>
         <note category="description">Empty state when a task has no links to other tasks</note>
       </notes>
       <segment state="translated">
@@ -4439,7 +4439,7 @@
     </unit>
     <unit id="5064013424659405171">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:282</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:287</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4449,7 +4449,7 @@
     </unit>
     <unit id="7886570921510760899">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:20,23</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:21,24</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
@@ -4475,7 +4475,7 @@
     </unit>
     <unit id="2363693543054040821">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:25,27</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:26,28</note>
         <note category="description">Placeholder in the box for adding a tag to a task</note>
       </notes>
       <segment state="translated">
@@ -5519,7 +5519,7 @@
     </unit>
     <unit id="3160376611740224455">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:905</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:918</note>
         <note category="description">Seeds the assistant composer with a question about a sprint</note>
       </notes>
       <segment state="translated">
@@ -6004,6 +6004,16 @@
       <segment state="translated">
         <source> Undo </source>
         <target> Deshacer </target>
+      </segment>
+    </unit>
+    <unit id="7997648753385248331">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:177</note>
+        <note category="description">Shown when the open task no longer exists</note>
+      </notes>
+      <segment state="translated">
+        <source>This task no longer exists.</source>
+        <target>Esta tarea ya no existe.</target>
       </segment>
     </unit>
     <unit id="7998546634092617403">
@@ -8381,8 +8391,8 @@
     </unit>
     <unit id="6189233648220583946">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1036</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1160</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1066</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1190</note>
         <note category="description">Shown when the assistant request fails</note>
       </notes>
       <segment state="translated">
@@ -10703,7 +10713,7 @@
     </unit>
     <unit id="3132998863898047908">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:899</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:912</note>
         <note category="description">Seeds the assistant composer with a question about a task</note>
       </notes>
       <segment state="translated">
@@ -11877,8 +11887,8 @@
     </unit>
     <unit id="3154294923374510663">
       <notes>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:559</note>
-        <note category="location">src/app/core/services/ai-assistant.service.ts:1305</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:566</note>
+        <note category="location">src/app/core/services/ai-assistant.service.ts:1335</note>
         <note category="description">Shown when the assistant reports a failure</note>
       </notes>
       <segment state="translated">

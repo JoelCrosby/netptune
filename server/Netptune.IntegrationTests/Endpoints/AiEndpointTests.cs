@@ -271,6 +271,93 @@ public sealed class AiEndpointTests
     }
 
     [Fact]
+    public async Task ApplyChangeSet_ShouldBroadcastAWorkspaceEvent_SoOtherClientsDoNotGoStale()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var listener = Fixture.CreateNetptuneClient();
+        var taskId = await ReadTaskId();
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = "propose_update_task",
+            EntityType = "task",
+            Summary = "Rename the task",
+            Payload = JsonDocument.Parse($$"""{"taskId":{{taskId}},"name":"Renamed by the assistant"}"""),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+
+        try
+        {
+            using var stream = await listener.GetAsync(
+                $"api/hubs/board-events?workspace=netptune&group=board-1&clientId={Guid.NewGuid():N}",
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellation.Token);
+
+            using var reader = new StreamReader(await stream.Content.ReadAsStreamAsync(cancellation.Token));
+
+            // The join writes a presence frame before the read loop starts, so this line proves the
+            // connection is registered — an apply raced ahead of it would broadcast to nobody.
+            await reader.ReadLineAsync(cancellation.Token);
+
+            var applied = await ApplyChangeSet(client, seed.ChangeSetId, cancellation.Token);
+
+            applied.Results.Should().ContainSingle(result => result.Status == AiChangeApplyStatus.Applied);
+
+            var update = await ReadUpdateFrame(reader, cancellation.Token);
+
+            update.Should().BeTrue("a client that did not apply the change set has no other way to hear about it");
+        }
+        finally
+        {
+            await cancellation.CancelAsync();
+            await RemoveSeed(seed.ConversationId);
+
+            listener.Dispose();
+        }
+    }
+
+    private static async Task<AiApplyResult> ApplyChangeSet(
+        HttpClient client,
+        Guid changeSetId,
+        CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"api/ai/change-sets/{changeSetId}/apply");
+
+        request.Headers.Add("X-Realtime-Client", Guid.NewGuid().ToString("N"));
+        request.Content = JsonContent.Create(new { changeIds = Array.Empty<long>() });
+
+        using var response = await client.SendAsync(request, cancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<AiApplyResult>(cancellationToken);
+
+        return result!;
+    }
+
+    private static async Task<bool> ReadUpdateFrame(StreamReader reader, CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var line = await reader.ReadLineAsync(cancellationToken);
+
+            if (line is null)
+            {
+                return false;
+            }
+
+            if (line == "data: update")
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    [Fact]
     public async Task PendingChangeSet_ShouldReturnNotFound_WhenTheConversationHasNoProposal()
     {
         var client = Fixture.CreateNetptuneClient();
@@ -434,7 +521,18 @@ public sealed class AiEndpointTests
 
     private sealed record PendingChangeSetSeed(Guid ConversationId, Guid ChangeSetId);
 
-    private async Task<PendingChangeSetSeed> SeedPendingChangeSet()
+    private sealed record AiProposedChangeSeed
+    {
+        public required string ToolName { get; init; }
+
+        public required string EntityType { get; init; }
+
+        public required string Summary { get; init; }
+
+        public required JsonDocument Payload { get; init; }
+    }
+
+    private async Task<PendingChangeSetSeed> SeedPendingChangeSet(AiProposedChangeSeed? proposal = null)
     {
         using var scope = Fixture.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
@@ -487,9 +585,10 @@ public sealed class AiEndpointTests
         {
             ChangeSetId = changeSet.Id,
             Sequence = 0,
-            ToolName = "propose_update_sprint",
-            EntityType = "sprint",
-            Summary = "Update name on sprint “Sprint 4”",
+            ToolName = proposal?.ToolName ?? "propose_update_sprint",
+            EntityType = proposal?.EntityType ?? "sprint",
+            Summary = proposal?.Summary ?? "Update name on sprint “Sprint 4”",
+            Payload = proposal?.Payload ?? JsonDocument.Parse("{}"),
         };
 
         await context.AiChangeSets.AddAsync(changeSet, TestContext.Current.CancellationToken);

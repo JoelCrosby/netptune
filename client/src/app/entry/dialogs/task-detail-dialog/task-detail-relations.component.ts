@@ -9,6 +9,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskRelationsService } from '@core/services/task-relations.service';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
+import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { colorSwatchClass } from '@core/util/colors/colors';
 import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
@@ -189,6 +190,10 @@ export class TaskDetailRelationsComponent {
 
     return groups;
   });
+
+  constructor() {
+    reloadOnRefresh(this.relations, ['tasks']);
+  }
 
   openLinkDialog() {
     const task = this.task();

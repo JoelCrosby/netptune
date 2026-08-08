@@ -10,6 +10,6 @@ export const tagResource = () => {
       url: 'api/tags/workspace',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
     }),
-    { defaultValue: [] }
+    { defaultValue: [], refreshOn: ['tags'] }
   );
 };

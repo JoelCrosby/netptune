@@ -16,6 +16,16 @@ export const selectSprintsLoading = createSelector(
   (state: SprintsState) => state.loading && !state.loaded
 );
 
+export const selectSprintsLoaded = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.loaded
+);
+
+export const selectSprintsFilter = createSelector(
+  selectSprintsFeature,
+  (state: SprintsState) => state.filter
+);
+
 export const selectCurrentSprints = createSelector(
   selectSprintsFeature,
   (state: SprintsState) => state.currentSprints

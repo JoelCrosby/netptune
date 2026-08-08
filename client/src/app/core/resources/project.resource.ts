@@ -11,7 +11,7 @@ export const projectResource = () => {
       url: 'api/projects',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
     }),
-    { defaultValue: [] }
+    { defaultValue: [], refreshOn: ['projects'] }
   );
 };
 
@@ -20,6 +20,7 @@ export const projectDetailResource = (keySignal: Signal<string>) => {
     netptunePermissions.projects.read,
     () => ({
       url: `api/projects/${keySignal()}`,
-    })
+    }),
+    { refreshOn: ['projects'] }
   );
 };

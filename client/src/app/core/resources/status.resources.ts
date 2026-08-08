@@ -11,6 +11,6 @@ export const statusResource = () => {
       url: 'api/statuses',
       params: { page: 1, pageSize: MAX_PAGE_SIZE, entityType: EntityType.task },
     }),
-    { defaultValue: [] }
+    { defaultValue: [], refreshOn: ['statuses'] }
   );
 };

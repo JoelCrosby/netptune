@@ -33,12 +33,14 @@ public static class BoardEventsEndpoints
             return;
         }
 
+        // Not the transport connection id: HTTP/2 multiplexes several streams onto one connection,
+        // and two subscriptions sharing a key would evict each other from the connection map.
         var subscription = new RealtimeSubscription
         {
             Workspace = workspace,
             Group = group,
             SourceClientId = clientId,
-            ConnectionId = context.Connection.Id,
+            ConnectionId = Guid.NewGuid().ToString("N"),
             UserId = userId,
         };
 

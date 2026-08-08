@@ -15,6 +15,7 @@ import {
   UpdateCommentRequest,
 } from '@core/models/requests/add-comment-request';
 import { selectAllUsers } from '@core/store/users/users.selectors';
+import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -78,6 +79,10 @@ export class TaskDetailCommentsComponent {
 
   canCreateComment = selectCanCreateComment(this.store);
   canDeleteComment = selectCanDeleteComment(this.store);
+
+  constructor() {
+    reloadOnRefresh(this.comments, ['comments']);
+  }
 
   onCommentSubmit(event: CommentSubmitEvent) {
     if (!event.text) return;

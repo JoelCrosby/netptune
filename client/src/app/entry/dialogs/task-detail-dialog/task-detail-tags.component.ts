@@ -11,6 +11,7 @@ import { selectDetailTask } from '@app/core/store/tasks/tasks.selectors';
 import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
 import { selectCurrentHubGroupId } from '@core/store/hub-context/hub-context.selectors';
+import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -55,6 +56,10 @@ export class TaskDetailTagsComponent {
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 
   canUpdate = selectCanUpdateTask(this.store);
+
+  constructor() {
+    reloadOnRefresh(this.tags, ['tags']);
+  }
 
   onTagsSelectionChanged(tags: string[]) {
     const task = this.task();
