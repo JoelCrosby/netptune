@@ -4,17 +4,10 @@ import { Params, Router, RouterLink } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
+import { projectResource } from '@core/resources/project.resource';
 import { DialogService } from '@core/services/dialog.service';
-import {
-  deleteProject,
-  loadProjects,
-} from '@core/store/projects/projects.actions';
-import {
-  selectAllProjects,
-  selectProjectsLoading,
-} from '@core/store/projects/projects.selectors';
+import { ProjectCommandsService } from '@core/services/project-commands.service';
 import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { ProjectDialogComponent } from '@entry/dialogs/project-dialog/project-dialog.component';
 import {
   LucideFolderOpen,
@@ -175,9 +168,11 @@ export class ProjectsViewComponent {
   private dialog = inject(DialogService);
   private router = inject(Router);
   private store = inject(Store);
+  private projectCommands = inject(ProjectCommandsService);
 
-  readonly loading = this.store.selectSignal(selectProjectsLoading);
-  readonly projects = this.store.selectSignal(selectAllProjects);
+  readonly projectsResource = projectResource();
+  readonly loading = computed(() => this.projectsResource.isLoading());
+  readonly projects = this.projectsResource.value;
   readonly workspaceId = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier
   );
@@ -239,10 +234,6 @@ export class ProjectsViewComponent {
     };
   });
 
-  constructor() {
-    dispatchForWorkspace(() => loadProjects.init());
-  }
-
   projectLink(project: ProjectViewModel) {
     return this.canUpdateProjects() ? ['.', project.key] : null;
   }
@@ -268,6 +259,6 @@ export class ProjectsViewComponent {
   }
 
   onDelete(project: ProjectViewModel) {
-    this.store.dispatch(deleteProject.init({ project }));
+    this.projectCommands.delete(project);
   }
 }

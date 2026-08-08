@@ -22,12 +22,10 @@ import { BoardsService } from '@core/services/boards.service';
 import { Board } from '@core/models/board';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
-import { loadProjects } from '@core/store/projects/projects.actions';
-import { selectAllProjects } from '@core/store/projects/projects.selectors';
+import { projectResource } from '@core/resources/project.resource';
 import { colorDictionary } from '@core/util/colors/colors';
 import { toUrlSlug } from '@core/util/strings';
 import { LucideCheck } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -109,7 +107,6 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   ],
 })
 export class CreateBoardComponent {
-  private store = inject(Store);
   private boardCommands = inject(BoardCommandsService);
   private boardsService = inject(BoardsService);
 
@@ -189,7 +186,8 @@ export class CreateBoardComponent {
     });
   });
 
-  projects = this.store.selectSignal(selectAllProjects);
+  readonly projectsResource = projectResource();
+  readonly projects = this.projectsResource.value;
 
   identifierIcon = computed(() => {
     if (this.boardForm.identifier().pending()) {
@@ -222,8 +220,6 @@ export class CreateBoardComponent {
         return { ...model, identifier };
       });
     });
-
-    this.store.dispatch(loadProjects.init());
   }
 
   getResult() {

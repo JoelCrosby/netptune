@@ -9,7 +9,7 @@ import {
   submit,
   validate,
 } from '@angular/forms/signals';
-import { selectAllProjects } from '@core/store/projects/projects.selectors';
+import { projectResource } from '@core/resources/project.resource';
 import { createSprint } from '@core/store/sprints/sprints.actions';
 import { selectSprintCreateLoading } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
@@ -103,7 +103,8 @@ export class CreateSprintDialogComponent {
   dialogRef = inject<DialogRef<CreateSprintDialogComponent>>(DialogRef);
 
   readonly createLoading = this.store.selectSignal(selectSprintCreateLoading);
-  readonly projects = this.store.selectSignal(selectAllProjects);
+  readonly projectsResource = projectResource();
+  readonly projects = this.projectsResource.value;
 
   readonly defaultDates = computed(() => {
     const start = new Date();

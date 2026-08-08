@@ -5,7 +5,6 @@ import { SprintStatus } from '@core/enums/sprint-status';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import * as RouteSelectors from '@core/core.route.selectors';
-import { loadProjects } from '@core/store/projects/projects.actions';
 import { selectWorkspace } from '@core/store/workspaces/workspaces.actions';
 import { getErrorMessage } from '@core/util/error-message';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -54,13 +53,6 @@ export class SprintsEffects {
           )
         )
       )
-    );
-  });
-
-  loadProjectsForSprints$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadSprints.init),
-      map(() => loadProjects.init())
     );
   });
 

@@ -18,7 +18,6 @@ import type { MetaState } from './store/meta/meta.model';
 import { metaReducer } from './store/meta/meta.reducer';
 import type { NotificationsState } from './store/notifications/notifications.model';
 import type { ProfileState } from './store/profile/profile.model';
-import type { ProjectsState } from './store/projects/projects.model';
 import type { SettingsState } from './store/settings/settings.model';
 import type { SprintsState } from './store/sprints/sprints.model';
 import { settingsReducer } from './store/settings/settings.reducer';
@@ -55,7 +54,6 @@ export const selectLayoutFeature = selectFeature<LayoutState>('layout');
 export const selectSettingsFeature = selectFeature<SettingsState>('settings');
 export const selectWorkspacesFeature =
   selectFeature<WorkspacesState>('workspaces');
-export const selectProjectsFeature = selectFeature<ProjectsState>('projects');
 export const selectTasksFeature = selectFeature<TasksState>('tasks');
 export const selectUsersFeature = selectFeature<UsersState>('users');
 export const selectTagsFeature = selectFeature<TagsState>('tags');
@@ -71,7 +69,6 @@ export interface AppState {
   layout: LayoutState;
   settings: SettingsState;
   workspaces: WorkspacesState;
-  projects: ProjectsState;
   tasks: TasksState;
   users: UsersState;
   tags: TagsState;

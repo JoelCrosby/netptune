@@ -4,8 +4,7 @@ import { netptunePermissions } from '@core/auth/permissions';
 import { VelocityReport } from '@core/models/reporting';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { loadProjects } from '@core/store/projects/projects.actions';
-import { selectAllProjects } from '@core/store/projects/projects.selectors';
+import { projectResource } from '@core/resources/project.resource';
 import { LucideGauge } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
@@ -89,7 +88,8 @@ export class DashboardVelocityCardComponent {
     selectHasPermission(netptunePermissions.sprints.read)
   );
 
-  private readonly projects = this.store.selectSignal(selectAllProjects);
+  private readonly projectsResource = projectResource();
+  private readonly projects = this.projectsResource.value;
 
   /**
    * Defaults to the first project once the list arrives, but keeps whatever the
@@ -162,8 +162,4 @@ export class DashboardVelocityCardComponent {
       },
     ];
   });
-
-  constructor() {
-    this.store.dispatch(loadProjects.init());
-  }
 }

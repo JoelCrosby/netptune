@@ -7,8 +7,6 @@ import {
 } from '@angular/core';
 import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
 import * as groupsActions from '@core/store/groups/board-groups.actions';
-import * as projectsActions from '@core/store/projects/projects.actions';
-import { selectProjectsLoaded } from '@core/store/projects/projects.selectors';
 import * as sprintsActions from '@core/store/sprints/sprints.actions';
 import {
   selectSprintDetail,
@@ -35,8 +33,6 @@ export class WorkspaceRefreshService {
 
   private readonly versions = createVersions();
 
-  private readonly projectsLoaded =
-    this.store.selectSignal(selectProjectsLoaded);
   private readonly sprintsLoaded = this.store.selectSignal(selectSprintsLoaded);
   private readonly sprintsFilter = this.store.selectSignal(selectSprintsFilter);
   private readonly sprintDetail = this.store.selectSignal(selectSprintDetail);
@@ -74,12 +70,6 @@ export class WorkspaceRefreshService {
 
     if (touchesSprints) {
       this.reloadSprints();
-    }
-
-    const touchesProjects = scopes.has('projects') && this.projectsLoaded();
-
-    if (touchesProjects) {
-      this.store.dispatch(projectsActions.loadProjects.init());
     }
 
     const touchesTags = scopes.has('tags') && this.tagsLoaded();

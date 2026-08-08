@@ -4,8 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { loadProjects } from '@core/store/projects/projects.actions';
-import { selectAllProjects } from '@core/store/projects/projects.selectors';
+import { projectResource } from '@core/resources/project.resource';
 import { loadSprints } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
@@ -163,7 +162,8 @@ export class RoadmapViewComponent {
     initialValue: this.route.snapshot.queryParamMap,
   });
 
-  readonly projects = this.store.selectSignal(selectAllProjects);
+  readonly projectsResource = projectResource();
+  readonly projects = this.projectsResource.value;
   readonly sprints = this.store.selectSignal(selectAllSprints);
 
   readonly canUpdateTasks = this.store.selectSignal(
@@ -231,8 +231,6 @@ export class RoadmapViewComponent {
   );
 
   constructor() {
-    this.store.dispatch(loadProjects.init());
-
     if (this.canReadSprints()) {
       this.store.dispatch(loadSprints.init({ filter: { take: 100 } }));
     }

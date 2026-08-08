@@ -12,8 +12,6 @@ import { NotificationsEffects } from './core/store/notifications/notifications.e
 import { notificationsReducer } from './core/store/notifications/notifications.reducer';
 import { ProfileEffects } from './core/store/profile/profile.effects';
 import { profileReducer } from './core/store/profile/profile.reducer';
-import { ProjectsEffects } from './core/store/projects/projects.effects';
-import { projectsReducer } from './core/store/projects/projects.reducer';
 import { SprintsEffects } from './core/store/sprints/sprints.effects';
 import { sprintsReducer } from './core/store/sprints/sprints.reducer';
 import { TagsEffects } from './core/store/tags/tags.effects';
@@ -31,7 +29,6 @@ export const routes: Routes = [
     canActivate: [workspaceGuard],
     resolve: [workspaceResovler],
     providers: [
-      provideState('projects', projectsReducer),
       provideState('tasks', projectTasksReducer),
       provideState('users', usersReducer),
       provideState('tags', tagsReducer),
@@ -42,7 +39,6 @@ export const routes: Routes = [
       provideState('profile', profileReducer),
       provideEffects([
         NotificationsEffects,
-        ProjectsEffects,
         ProjectTasksEffects,
         UsersEffects,
         TagsEffects,

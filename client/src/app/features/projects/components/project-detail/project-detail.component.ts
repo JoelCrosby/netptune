@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  input,
-  linkedSignal,
-  OnDestroy,
-} from '@angular/core';
+import { Component, inject, input, linkedSignal } from '@angular/core';
 import {
   apply,
   disabled,
@@ -17,13 +11,8 @@ import {
 import { ProjectViewModel } from '@app/core/models/view-models/project-view-model';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
+import { ProjectCommandsService } from '@core/services/project-commands.service';
 import { statusResource } from '@core/resources/status.resources';
-import {
-  clearProjectDetail,
-  updateProject,
-} from '@core/store/projects/projects.actions';
-import { selectUpdateProjectLoading } from '@core/store/projects/projects.selectors';
-import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -103,11 +92,11 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     </div>
   `,
 })
-export class ProjectDetailComponent implements OnDestroy {
-  private store = inject(Store);
+export class ProjectDetailComponent {
+  private projectCommands = inject(ProjectCommandsService);
 
   project = input<ProjectViewModel>();
-  loading = this.store.selectSignal(selectUpdateProjectLoading);
+  loading = this.projectCommands.isUpdating;
   statuses = statusResource();
 
   projectFormModel = linkedSignal(() => ({
@@ -141,10 +130,6 @@ export class ProjectDetailComponent implements OnDestroy {
     disabled(schema, { when: () => this.loading() });
   });
 
-  ngOnDestroy() {
-    this.store.dispatch(clearProjectDetail());
-  }
-
   updateClicked(event: Event) {
     event.preventDefault();
 
@@ -164,7 +149,7 @@ export class ProjectDetailComponent implements OnDestroy {
         defaultStatusId: defaultStatusId().value() || null,
       };
 
-      this.store.dispatch(updateProject.init({ project }));
+      this.projectCommands.update(project);
     });
   }
 }

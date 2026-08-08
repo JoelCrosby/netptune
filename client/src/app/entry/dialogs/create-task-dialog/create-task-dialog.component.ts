@@ -13,9 +13,9 @@ import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { UserSelectValue } from '@core/models/view-models/user-select-option';
-import { selectCurrentProjectId } from '@core/store/projects/projects.selectors';
 import { createProjectTask } from '@core/store/tasks/tasks.actions';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { CurrentProjectService } from '@core/services/current-project.service';
 import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -145,7 +145,7 @@ export class CreateTaskDialogComponent {
   });
 
   currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
-  currentProjectId = this.store.selectSignal(selectCurrentProjectId);
+  currentProjectId = inject(CurrentProjectService).currentId;
 
   readonly statusId = signal<number | null>(null);
   readonly priority = signal<TaskPriority | null>(null);

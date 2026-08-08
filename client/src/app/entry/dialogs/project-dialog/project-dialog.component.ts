@@ -10,7 +10,7 @@ import {
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { AddProjectRequest } from '@core/models/project';
-import { createProject } from '@core/store/projects/projects.actions';
+import { ProjectCommandsService } from '@core/services/project-commands.service';
 import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -130,6 +130,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 })
 export class ProjectDialogComponent {
   private store = inject(Store);
+  private projectCommands = inject(ProjectCommandsService);
   private setupTemplates = inject(WorkspaceSetupTemplatesService);
   dialogRef = inject<DialogRef<ProjectDialogComponent>>(DialogRef);
   currentStep = signal(0);
@@ -199,7 +200,7 @@ export class ProjectDialogComponent {
         templateKey: templateKey().value(),
       };
 
-      this.store.dispatch(createProject.init({ project }));
+      this.projectCommands.create(project);
       this.dialogRef.close();
     });
   }
