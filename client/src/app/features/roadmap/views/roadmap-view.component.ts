@@ -8,10 +8,8 @@ import { projectResource } from '@core/resources/project.resource';
 import { loadSprints } from '@core/store/sprints/sprints.actions';
 import { selectAllSprints } from '@core/store/sprints/sprints.selectors';
 import { Store } from '@ngrx/store';
-import {
-  parseTaskFilterRouteParams,
-  TaskFilterRouteParams,
-} from '@core/router/task-filter-route-params';
+import { taskFilterRoute } from '@core/router/task-filter-route';
+import { TaskFilterRouteParams } from '@core/router/task-filter-route-params';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -83,11 +81,11 @@ const defaultTo = addDays(today, 45);
           [assigneeIds]="taskFilters().users ?? []"
           [tagNames]="taskFilters().tags ?? []"
           [statusIds]="taskFilters().statuses ?? []"
-          (searchChanged)="setTaskFilter('term', $event)"
-          (assigneeIdsChanged)="setTaskFilter('users', $event)"
-          (tagNamesChanged)="setTaskFilter('tags', $event)"
-          (statusIdsChanged)="setTaskFilter('statusIds', $event)"
-          (cleared)="clearTaskFilters()" />
+          (searchChanged)="filterRoute.set('term', $event)"
+          (assigneeIdsChanged)="filterRoute.set('users', $event)"
+          (tagNamesChanged)="filterRoute.set('tags', $event)"
+          (statusIdsChanged)="filterRoute.set('statusIds', $event)"
+          (cleared)="filterRoute.clear()" />
 
         @if (rangeValidationError(); as validationError) {
           <div
@@ -177,9 +175,8 @@ export class RoadmapViewComponent {
   readonly to = computed(() => this.params().get('to') ?? defaultTo);
   readonly projectId = computed(() => this.numberParam('projectId'));
   readonly sprintId = computed(() => this.numberParam('sprintId'));
-  readonly taskFilters = computed(() =>
-    parseTaskFilterRouteParams(this.params())
-  );
+  protected readonly filterRoute = taskFilterRoute();
+  readonly taskFilters = this.filterRoute.filters;
   readonly includeUnscheduled = computed(
     () => this.params().get('unscheduled') !== 'false'
   );
@@ -271,26 +268,6 @@ export class RoadmapViewComponent {
 
   setUnscheduled(includeUnscheduled: boolean): void {
     this.setParam('unscheduled', String(includeUnscheduled));
-  }
-
-  setTaskFilter(
-    key: 'term' | 'users' | 'tags' | 'statusIds',
-    value: string | string[] | number[] | null
-  ): void {
-    const hasValue = Array.isArray(value) ? value.length > 0 : !!value;
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { [key]: hasValue ? value : null },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  clearTaskFilters(): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { term: null, users: null, tags: null, statusIds: null },
-      queryParamsHandling: 'merge',
-    });
   }
 
   showToday(): void {

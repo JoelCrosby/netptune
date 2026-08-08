@@ -10,10 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { netptunePermissions } from '@core/auth/permissions';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
-import {
-  parseTaskFilterRouteParams,
-  TaskFilterRouteParams,
-} from '@core/router/task-filter-route-params';
+import { taskFilterRoute } from '@core/router/task-filter-route';
+import { TaskFilterRouteParams } from '@core/router/task-filter-route-params';
 import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { projectResource } from '@core/resources/project.resource';
 import { loadSprints } from '@core/store/sprints/sprints.actions';
@@ -75,11 +73,11 @@ import {
           [assigneeIds]="taskFilters().users ?? []"
           [tagNames]="taskFilters().tags ?? []"
           [statusIds]="taskFilters().statuses ?? []"
-          (searchChanged)="setTaskFilter('term', $event)"
-          (assigneeIdsChanged)="setTaskFilter('users', $event)"
-          (tagNamesChanged)="setTaskFilter('tags', $event)"
-          (statusIdsChanged)="setTaskFilter('statusIds', $event)"
-          (cleared)="clearTaskFilters()" />
+          (searchChanged)="filterRoute.set('term', $event)"
+          (assigneeIdsChanged)="filterRoute.set('users', $event)"
+          (tagNamesChanged)="filterRoute.set('tags', $event)"
+          (statusIdsChanged)="filterRoute.set('statusIds', $event)"
+          (cleared)="filterRoute.clear()" />
 
         @if (showSkeleton()) {
           <app-skeleton-calendar-month />
@@ -151,9 +149,8 @@ export class CalendarViewComponent {
   readonly range = computed(() => calendarMonthRange(this.month()));
   readonly projectId = computed(() => this.numberParam('projectId'));
   readonly sprintId = computed(() => this.numberParam('sprintId'));
-  readonly taskFilters = computed(() =>
-    parseTaskFilterRouteParams(this.params())
-  );
+  protected readonly filterRoute = taskFilterRoute();
+  readonly taskFilters = this.filterRoute.filters;
   readonly query = computed(() => {
     const range = this.range();
     const query = new URLSearchParams({ from: range.from, to: range.to });
@@ -220,26 +217,6 @@ export class CalendarViewComponent {
         sprintId,
         projectId: sprint?.projectId ?? this.projectId() ?? null,
       },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  setTaskFilter(
-    key: 'term' | 'users' | 'tags' | 'statusIds',
-    value: string | string[] | number[] | null
-  ): void {
-    const hasValue = Array.isArray(value) ? value.length > 0 : !!value;
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { [key]: hasValue ? value : null },
-      queryParamsHandling: 'merge',
-    });
-  }
-
-  clearTaskFilters(): void {
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { term: null, users: null, tags: null, statusIds: null },
       queryParamsHandling: 'merge',
     });
   }
