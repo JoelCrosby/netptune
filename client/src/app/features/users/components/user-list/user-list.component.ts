@@ -3,10 +3,7 @@ import { RouterLink } from '@angular/router';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { WorkspaceAppUser } from '@core/models/appuser';
-import {
-  removeUsersFromWorkspace,
-  resendInvite,
-} from '@core/store/users/users.actions';
+import { UserCommandsService } from '@core/services/user-commands.service';
 import { LucideTrash2, LucideSend } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -95,6 +92,7 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 })
 export class UserListComponent {
   private store = inject(Store);
+  private userCommands = inject(UserCommandsService);
 
   readonly countChange = output<number>();
   readonly workspaceRole = WorkspaceRole;
@@ -143,9 +141,7 @@ export class UserListComponent {
 
   onRemoveClicked(user: WorkspaceAppUser) {
     if (!user || user.role === WorkspaceRole.owner) return;
-    this.store.dispatch(
-      removeUsersFromWorkspace.init({ emailAddresses: [user.email] })
-    );
+    this.userCommands.remove([user.email]);
   }
 
   roleLabel(role: WorkspaceRole) {
@@ -154,6 +150,6 @@ export class UserListComponent {
 
   onResendClicked(user: WorkspaceAppUser) {
     if (!user?.email || !user.isPending) return;
-    this.store.dispatch(resendInvite.init({ email: user.email }));
+    this.userCommands.resendInvite(user.email);
   }
 }

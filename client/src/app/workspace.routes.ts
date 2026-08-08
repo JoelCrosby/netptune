@@ -18,8 +18,6 @@ import { TagsEffects } from './core/store/tags/tags.effects';
 import { tagsReducer } from './core/store/tags/tags.reducer';
 import { ProjectTasksEffects } from './core/store/tasks/tasks.effects';
 import { projectTasksReducer } from './core/store/tasks/tasks.reducer';
-import { UsersEffects } from './core/store/users/users.effects';
-import { usersReducer } from './core/store/users/users.reducer';
 
 // prettier-ignore
 
@@ -30,7 +28,6 @@ export const routes: Routes = [
     resolve: [workspaceResovler],
     providers: [
       provideState('tasks', projectTasksReducer),
-      provideState('users', usersReducer),
       provideState('tags', tagsReducer),
       provideState('hub', hubContextReducer),
       provideState('notifications', notificationsReducer),
@@ -40,7 +37,6 @@ export const routes: Routes = [
       provideEffects([
         NotificationsEffects,
         ProjectTasksEffects,
-        UsersEffects,
         TagsEffects,
         ProfileEffects,
         BoardGroupsEffects,

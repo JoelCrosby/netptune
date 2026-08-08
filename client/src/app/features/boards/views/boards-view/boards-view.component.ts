@@ -86,9 +86,9 @@ export class BoardsViewComponent {
 
   readonly boardsResource = workspaceBoardsResource();
 
-  loading = computed(() => this.boardsResource.isLoading());
+  loading = this.boardsResource.isLoading;
   showSkeleton = delayedLoading(this.loading);
-  boards = computed(() => this.boardsResource.value());
+  boards = this.boardsResource.value;
   count = computed(() => (this.loading() ? null : this.boards().length));
 
   canCreateBoards = this.store.selectSignal(

@@ -23,7 +23,6 @@ import type { SprintsState } from './store/sprints/sprints.model';
 import { settingsReducer } from './store/settings/settings.reducer';
 import type { TagsState } from './store/tags/tags.model';
 import type { TasksState } from './store/tasks/tasks.model';
-import type { UsersState } from './store/users/users.model';
 import type { WorkspacesState } from './store/workspaces/workspaces.model';
 import { workspacesReducer } from './store/workspaces/workspaces.reducer';
 
@@ -55,7 +54,6 @@ export const selectSettingsFeature = selectFeature<SettingsState>('settings');
 export const selectWorkspacesFeature =
   selectFeature<WorkspacesState>('workspaces');
 export const selectTasksFeature = selectFeature<TasksState>('tasks');
-export const selectUsersFeature = selectFeature<UsersState>('users');
 export const selectTagsFeature = selectFeature<TagsState>('tags');
 export const selectHubContextFeature = selectFeature<HubContextState>('hub');
 export const selectNotificationsFeature =
@@ -70,7 +68,6 @@ export interface AppState {
   settings: SettingsState;
   workspaces: WorkspacesState;
   tasks: TasksState;
-  users: UsersState;
   tags: TagsState;
   hub: HubContextState;
   notifications: NotificationsState;

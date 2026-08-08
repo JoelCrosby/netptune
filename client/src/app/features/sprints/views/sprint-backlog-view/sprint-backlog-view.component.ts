@@ -15,8 +15,7 @@ import {
   selectTaskSearchTerm,
 } from '@core/store/tasks/tasks.selectors';
 import { selectSelectedTags } from '@core/store/tags/tags.selectors';
-import { loadUsers } from '@core/store/users/users.actions';
-import { selectAllUsers } from '@core/store/users/users.selectors';
+import { workspaceUsersResource } from '@core/resources/user.resource';
 import { dispatchForWorkspace } from '@core/util/dispatch-for-workspace';
 import { Store } from '@ngrx/store';
 import { TaskListFiltersComponent } from '@project-tasks/components/task-list/task-list-filters.component';
@@ -102,7 +101,7 @@ export class SprintBacklogViewComponent {
   });
 
   readonly allSprints = this.store.selectSignal(selectAllSprints);
-  readonly users = this.store.selectSignal(selectAllUsers);
+  readonly users = workspaceUsersResource();
   readonly searchTerm = this.store.selectSignal(selectTaskSearchTerm);
   readonly selectedTags = this.store.selectSignal(selectSelectedTags);
   readonly selectedStatuses = this.store.selectSignal(
@@ -209,6 +208,5 @@ export class SprintBacklogViewComponent {
 
   constructor() {
     dispatchForWorkspace(() => initBacklogView());
-    dispatchForWorkspace(() => loadUsers.init());
   }
 }

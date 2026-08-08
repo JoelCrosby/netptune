@@ -1,12 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { loadUser } from '@core/store/users/users.actions';
-import {
-  selectUserDetail,
-  selectUserDetailLoading,
-  selectUserDetailLoadingError,
-} from '@core/store/users/users.selectors';
-import { Store } from '@ngrx/store';
+import { userDetailResource } from '@core/resources/user.resource';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -36,24 +32,25 @@ import { UserDetailComponent } from '../../components/user-detail/user-detail.co
           description="They may have been removed from the workspace, or the request failed."
           (retry)="reload()" />
       } @else {
-        <app-user-detail />
+        <app-user-detail [user]="user()" />
       }
     </app-page-container>
   `,
 })
 export class UserDetailViewComponent {
-  private store = inject(Store);
   private route = inject(ActivatedRoute);
 
-  loading = this.store.selectSignal(selectUserDetailLoading);
-  loadError = this.store.selectSignal(selectUserDetailLoadingError);
-  user = this.store.selectSignal(selectUserDetail);
+  private readonly userId = toSignal(
+    this.route.params.pipe(map((params) => params['id'] as string | undefined))
+  );
+
+  private readonly userResource = userDetailResource(this.userId);
+
+  readonly user = this.userResource.value;
+  readonly loading = this.userResource.isLoading;
+  readonly loadError = this.userResource.error;
 
   reload() {
-    const userId = this.route.snapshot.params['id'] as string | undefined;
-
-    if (!userId) return;
-
-    this.store.dispatch(loadUser.init({ userId }));
+    this.userResource.reload();
   }
 }

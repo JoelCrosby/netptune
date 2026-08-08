@@ -171,7 +171,7 @@ export class ProjectsViewComponent {
   private projectCommands = inject(ProjectCommandsService);
 
   readonly projectsResource = projectResource();
-  readonly loading = computed(() => this.projectsResource.isLoading());
+  readonly loading = this.projectsResource.isLoading;
   readonly projects = this.projectsResource.value;
   readonly workspaceId = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier

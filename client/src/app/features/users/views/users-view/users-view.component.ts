@@ -1,8 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { DialogService } from '@core/services/dialog.service';
-import { inviteUsersToWorkspace } from '@core/store/users/users.actions';
+import { UserCommandsService } from '@core/services/user-commands.service';
 import { InviteDialogComponent } from '@entry/dialogs/invite-dialog/invite-dialog.component';
-import { Store } from '@ngrx/store';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { UserListComponent } from '@users/components/user-list/user-list.component';
@@ -15,7 +14,7 @@ import { first } from 'rxjs/operators';
 })
 export class UsersViewComponent {
   private dialog = inject(DialogService);
-  private store = inject(Store);
+  private userCommands = inject(UserCommandsService);
 
   readonly count = signal<number | null>(null);
 
@@ -28,9 +27,7 @@ export class UsersViewComponent {
       next: (result) => {
         if (!result?.length) return;
 
-        this.store.dispatch(
-          inviteUsersToWorkspace.init({ emailAddresses: result })
-        );
+        this.userCommands.invite(result);
       },
     });
   }

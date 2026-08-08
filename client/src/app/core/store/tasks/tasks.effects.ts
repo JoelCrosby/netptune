@@ -25,7 +25,6 @@ import * as SprintActions from '../sprints/sprints.actions';
 import { selectSelectedSprintFilterId } from '../sprints/sprints.selectors';
 import * as TagActions from '../tags/tags.actions';
 import { selectSelectedTags } from '../tags/tags.selectors';
-import { loadUsers } from '../users/users.actions';
 import {
   buildTaskFilterRouteParams,
   parseTaskFilterRouteParams,
@@ -317,13 +316,6 @@ export class ProjectTasksEffects {
           )
         )
       )
-    );
-  });
-
-  loadTaskDetailUsers$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(actions.loadTaskDetails.init),
-      map(() => loadUsers.init())
     );
   });
 

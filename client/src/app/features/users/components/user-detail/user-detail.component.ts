@@ -1,6 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { PermissionListComponent } from '@app/static/components/permission-list/permission-list.component';
-import { selectUserDetail } from '@core/store/users/users.selectors';
 import { Store } from '@ngrx/store';
 import { LucideShieldCheck, LucideUserRoundX } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
@@ -16,7 +15,8 @@ import {
   selectHasPermission,
 } from '@app/core/store/auth/auth.selectors';
 import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
-import { updateWorkspaceRole } from '@core/store/users/users.actions';
+import { UserCommandsService } from '@core/services/user-commands.service';
+import { WorkspaceAppUser } from '@core/models/appuser';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 
@@ -109,7 +109,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
             </div>
           </header>
 
-          <app-permission-list />
+          <app-permission-list [user]="user" />
         </section>
       </div>
     } @else {
@@ -127,7 +127,9 @@ export class UserDetailComponent {
   protected readonly permissionsIcon = LucideShieldCheck;
 
   readonly store = inject(Store);
-  user = this.store.selectSignal(selectUserDetail);
+  private readonly userCommands = inject(UserCommandsService);
+
+  readonly user = input<WorkspaceAppUser>();
   readonly workspaceRole = WorkspaceRole;
   readonly editableRoles = [
     WorkspaceRole.viewer,
@@ -162,6 +164,6 @@ export class UserDetailComponent {
     const userId = this.user()?.id;
     if (!userId) return;
 
-    this.store.dispatch(updateWorkspaceRole.init({ userId, role }));
+    this.userCommands.updateRole(userId, role);
   }
 }

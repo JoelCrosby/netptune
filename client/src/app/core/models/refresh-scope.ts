@@ -7,6 +7,7 @@ export const allRefreshScopes = [
   'tags',
   'statuses',
   'comments',
+  'users',
 ] as const;
 
 export type RefreshScope = (typeof allRefreshScopes)[number];

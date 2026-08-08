@@ -14,7 +14,7 @@ import {
   AddCommentRequest,
   UpdateCommentRequest,
 } from '@core/models/requests/add-comment-request';
-import { selectAllUsers } from '@core/store/users/users.selectors';
+import { workspaceUsersResource } from '@core/resources/user.resource';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { Store } from '@ngrx/store';
@@ -54,7 +54,7 @@ export class TaskDetailCommentsComponent {
   snackbar = inject(SnackbarService);
 
   user = this.store.selectSignal(selectCurrentUser);
-  workspaceUsers = this.store.selectSignal(selectAllUsers);
+  workspaceUsers = workspaceUsersResource();
 
   task = this.store.selectSignal(selectDetailTask);
 

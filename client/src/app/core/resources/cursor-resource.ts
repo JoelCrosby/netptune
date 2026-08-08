@@ -114,7 +114,7 @@ export function cursorResource<T>(
 
   return {
     items: items.asReadonly(),
-    isLoading: computed(() => resource.isLoading()),
+    isLoading: resource.isLoading,
     /* A later page must not put the loading state back over the pages already shown. */
     loaded: computed(() => hasSettled(resource) || items().length > 0),
     canLoadMore: computed(() => !!nextCursor()),

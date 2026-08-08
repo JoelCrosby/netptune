@@ -1,5 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
-import { selectUserDetail } from '@app/core/store/users/users.selectors';
+import { Component, computed, inject, input } from '@angular/core';
 import {
   netptunePermissionLabels,
   PermissionMeta,
@@ -9,7 +8,8 @@ import { Store } from '@ngrx/store';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { netptunePermissions } from '@app/core/auth/permissions';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { toggleUserPermission } from '@app/core/store/users/users.actions';
+import { UserCommandsService } from '@core/services/user-commands.service';
+import { WorkspaceAppUser } from '@core/models/appuser';
 
 interface PermissionItem extends PermissionMeta {
   granted: boolean;
@@ -55,8 +55,9 @@ interface PermissionGroup {
 })
 export class PermissionListComponent {
   readonly store = inject(Store);
+  private readonly userCommands = inject(UserCommandsService);
 
-  user = this.store.selectSignal(selectUserDetail);
+  readonly user = input<WorkspaceAppUser>();
   permissions = computed(() => this.user()?.permissions || []);
 
   enabled = this.store.selectSignal(
@@ -88,11 +89,6 @@ export class PermissionListComponent {
 
     if (!userId) return;
 
-    this.store.dispatch(
-      toggleUserPermission.init({
-        permission: permission.key,
-        userId,
-      })
-    );
+    this.userCommands.togglePermission(userId, permission.key);
   }
 }
