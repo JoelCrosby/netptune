@@ -15,16 +15,14 @@ import { TaskDetailService } from './task-detail.service';
   template: `
     @if (task(); as task) {
       @if (task.flags.length) {
-        <section class="mt-5" aria-labelledby="task-flags-heading">
+        <section class="mt-4 mb-5" aria-labelledby="task-flags-heading">
           <div class="mb-2 flex items-center gap-2">
             <svg
               lucideFlag
               size="17"
               class="text-amber-600"
               aria-hidden="true"></svg>
-            <h3
-              id="task-flags-heading"
-              class="text-foreground text-sm font-semibold">
+            <h3 id="task-flags-heading" class="text-foreground font-semibold">
               <span i18n="Section heading for flags raised against a task">
                 Flags
               </span>
@@ -35,7 +33,7 @@ import { TaskDetailService } from './task-detail.service';
           <div class="flex flex-col gap-2">
             @for (flag of task.flags; track flag.id) {
               <article
-                class="rounded-lg border border-amber-400/40 bg-amber-400/8 p-3">
+                class="rounded-sm border border-amber-400/40 bg-amber-400/8 p-3">
                 <div class="flex items-start justify-between gap-4">
                   <div class="min-w-0">
                     <p class="text-sm font-medium text-amber-800">
