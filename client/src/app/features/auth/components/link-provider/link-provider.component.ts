@@ -5,7 +5,7 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { AuthService } from '@app/core/auth/auth.service';
 import { Store } from '@ngrx/store';
-import { login } from '@app/core/store/auth/auth.actions';
+import { sessionEstablished } from '@app/core/store/auth/auth.actions';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { firstValueFrom } from 'rxjs';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
@@ -166,7 +166,7 @@ export class LinkProviderComponent {
       );
 
       clearPendingProviderLink();
-      this.store.dispatch(login.success({ user }));
+      this.store.dispatch(sessionEstablished({ user }));
       this.snackbar.open(
         $localize`:Confirmation shown after linking an external sign-in provider. PROVIDER is the provider name:${pending.provider}:PROVIDER: connected`
       );

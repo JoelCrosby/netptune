@@ -4,7 +4,6 @@ import {
   selectCurrentUser,
   selectHasPermission,
 } from '@app/core/store/auth/auth.selectors';
-import { logout } from '@core/store/auth/auth.actions';
 import { netptunePermissions } from '@core/auth/permissions';
 import { APPEARANCE_THEME } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
@@ -16,6 +15,7 @@ import {
   LucideSun,
   LucideUser,
 } from '@lucide/angular';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
@@ -112,6 +112,7 @@ import { LocaleSwitcherComponent } from './locale-switcher.component';
 })
 export class ProfileMenuComponent {
   private readonly store = inject(Store);
+  private readonly authCommands = inject(AuthCommandsService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly preferences = inject(UserPreferencesService);
@@ -163,6 +164,6 @@ export class ProfileMenuComponent {
 
   logOut(menu: DropdownMenuComponent) {
     menu.close();
-    this.store.dispatch(logout());
+    this.authCommands.logout();
   }
 }

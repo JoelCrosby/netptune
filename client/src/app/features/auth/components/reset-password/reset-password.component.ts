@@ -13,10 +13,8 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import { resetPassword } from '@app/core/store/auth/auth.actions';
 import { ResetPasswordRequest } from '@app/core/store/auth/auth.models';
-import { selectResetPasswordLoading } from '@app/core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
@@ -94,9 +92,9 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
 })
 export class ResetPasswordComponent {
   private activatedRoute = inject(ActivatedRoute);
-  private store = inject(Store);
+  private auth = inject(AuthCommandsService);
 
-  loading = this.store.selectSignal(selectResetPasswordLoading);
+  loading = this.auth.resetPasswordLoading;
   routeData = toSignal(this.activatedRoute.data);
 
   request = linkedSignal<ResetPasswordRequest>(() => {
@@ -140,7 +138,7 @@ export class ResetPasswordComponent {
         password,
       };
 
-      this.store.dispatch(resetPassword.init({ request }));
+      this.auth.resetPassword(request);
     });
   }
 }

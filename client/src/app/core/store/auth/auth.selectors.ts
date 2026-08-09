@@ -8,11 +8,6 @@ import { selectCurrentWorkspace } from '../workspaces/workspaces.selectors';
 
 const sessionRefreshBufferMs = 60_000;
 
-export const selectLoginLoading = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state.loginLoading
-);
-
 export const selectCurrentUser = createSelector(
   selectAuthFeature,
   (state: AuthState) => state.currentUser
@@ -32,11 +27,6 @@ export const selectRequiredCurrentUser = createSelector(
 export const selectCurrentUserId = createSelector(
   selectCurrentUser,
   (state?: UserResponse) => state?.userId
-);
-
-export const selectLoginError = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state.loginError
 );
 
 export const selectCurrentUserDisplayName = createSelector(
@@ -72,31 +62,6 @@ export const selectShouldRefreshSession = createSelector(
 
     return expiresAt - sessionRefreshBufferMs <= Date.now();
   }
-);
-
-export const selectIsConfirmEmailLoading = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state.confirmEmailLoading
-);
-
-export const selectRequestPasswordResetLoading = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state.requestPasswordResetLoading
-);
-
-export const selectResetPasswordLoading = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state.resetPasswordLoading
-);
-
-export const selectRegisterLoading = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => state.registerLoading
-);
-
-export const selectShowLoginError = createSelector(
-  selectAuthFeature,
-  (state: AuthState) => !!state.loginError
 );
 
 export const selectIsPublicViewer = createSelector(

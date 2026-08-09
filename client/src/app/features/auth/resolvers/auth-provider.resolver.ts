@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { login } from '@app/core/store/auth/auth.actions';
+import { sessionEstablished } from '@app/core/store/auth/auth.actions';
 import { LoginResponse } from '@app/core/store/auth/auth.models';
 import { Store } from '@ngrx/store';
 
@@ -44,7 +44,7 @@ export const authProvider: ResolveFn<boolean> = async (
     pictureUrl,
   };
 
-  store.dispatch(login.success({ user }));
+  store.dispatch(sessionEstablished({ user }));
 
   return true;
 };

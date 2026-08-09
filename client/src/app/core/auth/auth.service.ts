@@ -11,7 +11,8 @@ import { Store } from '@ngrx/store';
 import { catchError, firstValueFrom, of, tap } from 'rxjs';
 import { ClientResponse } from '../models/client-response';
 import { LoginRequest } from '../models/login-request';
-import { refreshTokenSuccess } from '../store/auth/auth.actions';
+import { sessionEstablished } from '../store/auth/auth.actions';
+import { loadWorkspaces } from '../store/workspaces/workspaces.actions';
 import {
   AuthCodeRequest,
   LinkProviderRequest,
@@ -32,7 +33,10 @@ export function provideAuthRefresh(): EnvironmentProviders {
 
     return firstValueFrom(
       authService.refresh().pipe(
-        tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
+        tap((user) => {
+          store.dispatch(sessionEstablished({ user }));
+          store.dispatch(loadWorkspaces.init());
+        }),
         catchError(() => of(null))
       )
     );

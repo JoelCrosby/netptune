@@ -9,9 +9,7 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
-import { requestPasswordReset } from '@app/core/store/auth/auth.actions';
-import { selectRequestPasswordResetLoading } from '@app/core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
@@ -73,9 +71,9 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
   `,
 })
 export class RequestPasswordResetComponent {
-  private store = inject(Store);
+  private auth = inject(AuthCommandsService);
 
-  loading = this.store.selectSignal(selectRequestPasswordResetLoading);
+  loading = this.auth.requestPasswordResetLoading;
 
   requestFormModel = signal({
     email: '',
@@ -95,7 +93,7 @@ export class RequestPasswordResetComponent {
   requestPasswordReset() {
     submit(this.requestForm, async () => {
       const email = this.requestForm.email().value().trim();
-      this.store.dispatch(requestPasswordReset.init({ email }));
+      this.auth.requestPasswordReset(email);
     });
   }
 }

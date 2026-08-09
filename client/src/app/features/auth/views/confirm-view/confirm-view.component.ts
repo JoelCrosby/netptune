@@ -2,10 +2,8 @@ import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ActivatedRoute } from '@angular/router';
-import { confirmEmail } from '@app/core/store/auth/auth.actions';
 import { AuthCodeRequest } from '@app/core/store/auth/auth.models';
-import { selectIsConfirmEmailLoading } from '@app/core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 
 @Component({
   selector: 'app-confirm-view',
@@ -14,9 +12,9 @@ import { Store } from '@ngrx/store';
 })
 export class ConfirmViewComponent {
   private activatedRoute = inject(ActivatedRoute);
-  private store = inject(Store);
+  private auth = inject(AuthCommandsService);
 
-  loading = this.store.selectSignal(selectIsConfirmEmailLoading);
+  loading = this.auth.confirmEmailLoading;
   routeData = toSignal(this.activatedRoute.data);
 
   constructor() {
@@ -25,6 +23,6 @@ export class ConfirmViewComponent {
 
     if (!request) return;
 
-    this.store.dispatch(confirmEmail.init({ request }));
+    this.auth.confirmEmail(request);
   }
 }

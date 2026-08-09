@@ -4,10 +4,9 @@ import { ChangePasswordRequest } from '@core/models/requests/change-password-req
 import { SetPasswordRequest } from '@core/models/requests/set-password-request';
 import { ProfileService } from '@core/services/profile.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { currentUser } from '@core/store/auth/auth.actions';
 import { getErrorMessage } from '@core/util/error-message';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
-import { Store } from '@ngrx/store';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
@@ -16,7 +15,7 @@ export class ProfileCommandsService {
   private readonly profile = inject(ProfileService);
   private readonly snackbar = inject(SnackbarService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
-  private readonly store = inject(Store);
+  private readonly authCommands = inject(AuthCommandsService);
 
   private readonly updating = signal(false);
   private readonly changingPassword = signal(false);
@@ -109,6 +108,6 @@ export class ProfileCommandsService {
   /* The avatar in the shell comes from the auth slice, not the profile resource. */
   private onProfileChanged() {
     this.workspaceRefresh.refresh(['profile']);
-    this.store.dispatch(currentUser.init());
+    this.authCommands.refreshCurrentUser();
   }
 }

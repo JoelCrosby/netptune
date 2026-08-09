@@ -19,7 +19,6 @@ import { provideNavigationService } from './app/core/services/navigation.service
 import { provideVersionCheck } from './app/core/services/version-check.service';
 import { provideNotificationEvents } from './app/core/sse/notification-sse.service';
 import { provideWorkspaceEvents } from './app/core/sse/workspace-events.service';
-import { AuthEffects } from './app/core/store/auth/auth.effects';
 import { SettingsEffects } from './app/core/store/settings/settings.effects';
 import { WorkspacesEffects } from './app/core/store/workspaces/workspaces.effects';
 
@@ -43,7 +42,7 @@ bootstrapApplication(AppComponent, {
     provideRouterStore({
       serializer: CustomSerializer,
     }),
-    provideEffects([AuthEffects, SettingsEffects, WorkspacesEffects]),
+    provideEffects([SettingsEffects, WorkspacesEffects]),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAuthRefresh(),
     provideNavigationService(),

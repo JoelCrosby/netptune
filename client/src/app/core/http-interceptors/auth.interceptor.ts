@@ -8,11 +8,12 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   logoutSuccess,
-  refreshTokenSuccess,
+  sessionEstablished,
 } from '@app/core/store/auth/auth.actions';
 import { selectHasAuthSession } from '@app/core/store/auth/auth.selectors';
 import { AuthService } from '@core/auth/auth.service';
 import { environment } from '@env/environment';
+import { loadWorkspaces } from '@app/core/store/workspaces/workspaces.actions';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
 import {
@@ -58,7 +59,10 @@ export const authInterceptor = (
   const handle401 = (req: HttpRequest<unknown>) => {
     if (!sessionRefreshRequest$) {
       sessionRefreshRequest$ = authService.refresh().pipe(
-        tap((user) => store.dispatch(refreshTokenSuccess({ user }))),
+        tap((user) => {
+          store.dispatch(sessionEstablished({ user }));
+          store.dispatch(loadWorkspaces.init());
+        }),
         finalize(() => {
           sessionRefreshRequest$ = null;
         }),

@@ -10,12 +10,7 @@ import {
 } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { ButtonLinkComponent } from '@app/static/components/button/button-link.component';
-import { login } from '@app/core/store/auth/auth.actions';
-import {
-  selectLoginLoading,
-  selectShowLoginError,
-} from '@app/core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
@@ -127,10 +122,10 @@ import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.compo
   `,
 })
 export class LoginComponent {
-  private store = inject(Store);
+  private auth = inject(AuthCommandsService);
 
-  loading = this.store.selectSignal(selectLoginLoading);
-  showLoginError = this.store.selectSignal(selectShowLoginError);
+  loading = this.auth.loginLoading;
+  showLoginError = this.auth.loginError;
 
   loginFormModel = signal({
     email: '',
@@ -160,15 +155,7 @@ export class LoginComponent {
       const password = this.loginForm.password().value();
       const turnstile = this.loginForm.turnstile().value();
 
-      this.store.dispatch(
-        login.init({
-          request: {
-            email,
-            password,
-            turnstile,
-          },
-        })
-      );
+      this.auth.login({ email, password, turnstile });
     });
   }
 

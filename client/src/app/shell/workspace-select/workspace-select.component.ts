@@ -17,7 +17,6 @@ import {
 import { debounce, form } from '@angular/forms/signals';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ShellService } from '@app/shell/shell.service';
-import { logout } from '@app/core/store/auth/auth.actions';
 import { Workspace } from '@core/models/workspace';
 import {
   selectAllWorkspaces,
@@ -25,6 +24,7 @@ import {
   selectCurrentWorkspaceId,
 } from '@core/store/workspaces/workspaces.selectors';
 import { filterObjectArray } from '@core/util/arrays';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { Store } from '@ngrx/store';
 import { KeyboardService } from '@static/services/keyboard.service';
 import { WorkspaceBadgeComponent } from './workspace-badge.component';
@@ -86,6 +86,7 @@ import { LucideChevronsUpDown } from '@lucide/angular';
 })
 export class WorkspaceSelectComponent implements OnDestroy {
   private store = inject(Store);
+  private authCommands = inject(AuthCommandsService);
   private keyboard = inject(KeyboardService);
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
@@ -281,7 +282,7 @@ export class WorkspaceSelectComponent implements OnDestroy {
 
   onlogOutClicked() {
     this.close();
-    this.store.dispatch(logout());
+    this.authCommands.logout();
   }
 
   ngOnDestroy() {

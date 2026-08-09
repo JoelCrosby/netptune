@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  OnDestroy,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   apply,
@@ -22,10 +15,8 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import * as AuthActions from '@app/core/store/auth/auth.actions';
 import { WorkspaceInvite } from '@app/core/store/auth/auth.models';
-import { selectRegisterLoading } from '@app/core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
@@ -127,8 +118,8 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     </app-auth-page-container>
   `,
 })
-export class RegisterComponent implements OnDestroy {
-  private store = inject(Store);
+export class RegisterComponent {
+  private auth = inject(AuthCommandsService);
   private activatedRoute = toSignal(inject(ActivatedRoute).data);
 
   invite = computed(() => {
@@ -142,7 +133,7 @@ export class RegisterComponent implements OnDestroy {
     return null;
   });
 
-  loading = this.store.selectSignal(selectRegisterLoading);
+  loading = this.auth.registerLoading;
 
   registerFormModel = signal({
     firstname: '',
@@ -210,10 +201,6 @@ export class RegisterComponent implements OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.store.dispatch(AuthActions.clearError({ error: 'registerError' }));
-  }
-
   register() {
     submit(this.registerForm, async () => {
       const firstname = this.registerForm.firstname().value().trim();
@@ -223,18 +210,14 @@ export class RegisterComponent implements OnDestroy {
       const turnstile = this.registerForm.turnstile().value();
       const inviteCode = this.invite()?.code;
 
-      this.store.dispatch(
-        AuthActions.register.init({
-          request: {
-            firstname,
-            lastname,
-            email,
-            password,
-            inviteCode,
-            turnstile,
-          },
-        })
-      );
+      this.auth.register({
+        firstname,
+        lastname,
+        email,
+        password,
+        inviteCode,
+        turnstile,
+      });
     });
   }
 
