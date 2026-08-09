@@ -16,10 +16,12 @@ import {
   LucideArrowLeft,
   LucideKeyRound,
   LucideMessagesSquare,
+  LucideGlobe,
   LucideSparkles,
   LucideWallet,
 } from '@lucide/angular';
 import { AiCredentialsComponent } from '@settings/components/ai-credentials/ai-credentials.component';
+import { SearchCredentialComponent } from '@settings/components/search-credential/search-credential.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
@@ -38,6 +40,7 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
   imports: [
     AiAssistantMessageComponent,
     AiCredentialsComponent,
+    SearchCredentialComponent,
     EmptyStateComponent,
     IconButtonComponent,
     IconTileComponent,
@@ -186,6 +189,19 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 
               <app-ai-credentials scope="workspace" />
             </section>
+
+            <section>
+              <div class="mb-4 flex min-w-0 items-center gap-3">
+                <app-icon-tile [icon]="searchIcon" />
+                <h2
+                  class="font-overpass text-base font-semibold"
+                  i18n="Section heading for the workspace web search provider">
+                  Web search
+                </h2>
+              </div>
+
+              <app-search-credential />
+            </section>
           }
 
           @if (hasSpend()) {
@@ -333,6 +349,7 @@ export class AssistantConversationsViewComponent {
 
   protected readonly assistantIcon = LucideSparkles;
   protected readonly keyIcon = LucideKeyRound;
+  protected readonly searchIcon = LucideGlobe;
   protected readonly spendIcon = LucideWallet;
   protected readonly conversationIcon = LucideMessagesSquare;
   protected readonly skeletonRows = Array.from({ length: 4 });

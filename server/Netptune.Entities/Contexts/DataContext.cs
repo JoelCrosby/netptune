@@ -64,6 +64,8 @@ public class DataContext : IdentityDbContext<AppUser>
     public DbSet<AiToolInvocation> AiToolInvocations { get; set; } = null!;
     public DbSet<AiChangeSet> AiChangeSets { get; set; } = null!;
     public DbSet<AiProposedChange> AiProposedChanges { get; set; } = null!;
+    public DbSet<AiWebDocument> AiWebDocuments { get; set; } = null!;
+    public DbSet<WorkspaceSearchCredential> WorkspaceSearchCredentials { get; set; } = null!;
 
     public DbSet<Notification> Notifications { get; set; } = null!;
     public DbSet<UserPreferenceValue> UserPreferenceValues { get; set; } = null!;

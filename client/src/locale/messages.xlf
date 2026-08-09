@@ -633,7 +633,7 @@
     </unit>
     <unit id="8821114980467455667">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:289,291</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:305,307</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:27,30</note>
         <note category="description">Counts tokens a conversation has cost</note>
       </notes>
@@ -652,7 +652,7 @@
     </unit>
     <unit id="8824506098366714045">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:172,174</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:175,177</note>
         <note category="description">Toggle that shares example values with the assistant</note>
       </notes>
       <segment>
@@ -765,6 +765,15 @@
       </notes>
       <segment>
         <source> Permissions </source>
+      </segment>
+    </unit>
+    <unit id="378112044291779678">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:379</note>
+        <note category="description">Shown after the search provider is removed</note>
+      </notes>
+      <segment>
+        <source>Search provider removed.</source>
       </segment>
     </unit>
     <unit id="3781527988196646385">
@@ -964,6 +973,15 @@
       </notes>
       <segment>
         <source>Upload Media</source>
+      </segment>
+    </unit>
+    <unit id="2254251805469944900">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:85,87</note>
+        <note category="description">Tooltip on the button that removes the search provider</note>
+      </notes>
+      <segment>
+        <source>Remove provider</source>
       </segment>
     </unit>
     <unit id="5162962829978601498">
@@ -1188,6 +1206,7 @@
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:339</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:361</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:270</note>
@@ -1769,6 +1788,7 @@
     <unit id="7198631316779176054">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:275</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:287</note>
         <note category="description">Placeholder shown when no key is stored</note>
       </notes>
       <segment>
@@ -1856,6 +1876,15 @@
       </notes>
       <segment>
         <source>Waiting for the assistant…</source>
+      </segment>
+    </unit>
+    <unit id="4145619247688235973">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:359</note>
+        <note category="description">Explains what removing the search provider does</note>
+      </notes>
+      <segment>
+        <source>The assistant will stop being able to search the web. It can still read pages from a link.</source>
       </segment>
     </unit>
     <unit id="414708731564173967">
@@ -1969,6 +1998,7 @@
     <unit id="8768927723338869419">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:89,91</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:64,66</note>
         <note category="description">Label preceding the masked API key</note>
       </notes>
       <segment>
@@ -2543,6 +2573,15 @@
         <source>Best day</source>
       </segment>
     </unit>
+    <unit id="1250336210630791344">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:222</note>
+        <note category="description">Hint describing the SearXNG search provider</note>
+      </notes>
+      <segment>
+        <source>A self-hosted instance with JSON output enabled. No key needed.</source>
+      </segment>
+    </unit>
     <unit id="1255339738217085471">
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:44,47</note>
@@ -2646,7 +2685,7 @@
     </unit>
     <unit id="2042627893306275814">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:71,73</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:74,76</note>
         <note category="description">Accessible label for the button that leaves a conversation</note>
       </notes>
       <segment>
@@ -2677,6 +2716,15 @@
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {Applying to 1 task.} other {Applying to <ph id="0" equiv="INTERPOLATION"/> tasks.}}</source>
+      </segment>
+    </unit>
+    <unit id="6755393728505925394">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:101,103</note>
+        <note category="description">Accessible label for the search provider selector</note>
+      </notes>
+      <segment>
+        <source>Search provider</source>
       </segment>
     </unit>
     <unit id="6817022269939421403">
@@ -2736,6 +2784,7 @@
     <unit id="5504590309962934202">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:119,121</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:124,126</note>
         <note category="description">Label for the API key input</note>
       </notes>
       <segment>
@@ -2798,7 +2847,7 @@
     </unit>
     <unit id="885182347182627513">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:153,155</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:156,158</note>
         <note category="description">Heading of the assistant data sampling setting</note>
       </notes>
       <segment>
@@ -3300,6 +3349,15 @@
         <source>One record per line</source>
       </segment>
     </unit>
+    <unit id="3082475149603784059">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:154,156</note>
+        <note category="description">Placeholder for the Google search engine id input</note>
+      </notes>
+      <segment>
+        <source>a1b2c3d4e5f6g7h8i</source>
+      </segment>
+    </unit>
     <unit id="5634840284625052531">
       <notes>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-sparkline.component.ts:40</note>
@@ -3730,6 +3788,15 @@
         <source> Back </source>
       </segment>
     </unit>
+    <unit id="3882696472447982545">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:191,194</note>
+        <note category="description">Button that stores the search provider</note>
+      </notes>
+      <segment>
+        <source> Save provider </source>
+      </segment>
+    </unit>
     <unit id="3885497195825665706">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:115,116</note>
@@ -3922,7 +3989,7 @@
     </unit>
     <unit id="1225327047686807431">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:160,163</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:163,166</note>
         <note category="description">Explains what turning off assistant data sampling does</note>
       </notes>
       <segment>
@@ -4500,6 +4567,15 @@
         <source>Recorded</source>
       </segment>
     </unit>
+    <unit id="751924494549380962">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:165,167</note>
+        <note category="description">Label for the SearXNG base URL input</note>
+      </notes>
+      <segment>
+        <source> Base URL </source>
+      </segment>
+    </unit>
     <unit id="762390656450107985">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:158</note>
@@ -4647,6 +4723,15 @@
       </notes>
       <segment>
         <source>Loading team workload</source>
+      </segment>
+    </unit>
+    <unit id="1672621016685744342">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:187,190</note>
+        <note category="description">Button that updates the stored search provider</note>
+      </notes>
+      <segment>
+        <source> Update provider </source>
       </segment>
     </unit>
     <unit id="1678559204833619774">
@@ -4849,7 +4934,7 @@
     </unit>
     <unit id="348464760083521708">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:183,187</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:186,190</note>
         <note category="description">Section heading for the shared workspace API keys</note>
       </notes>
       <segment>
@@ -5263,7 +5348,7 @@
     </unit>
     <unit id="4101852533995361725">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:285,287</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:301,303</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-history.component.ts:25,27</note>
         <note category="description">Counts messages in a stored conversation</note>
       </notes>
@@ -5951,6 +6036,16 @@
       </notes>
       <segment>
         <source>Previewed</source>
+      </segment>
+    </unit>
+    <unit id="4756842401099167454">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:334</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:349</note>
+        <note category="description">Shown when saving the search provider fails</note>
+      </notes>
+      <segment>
+        <source>The provider could not be saved.</source>
       </segment>
     </unit>
     <unit id="3193976279273491157">
@@ -6819,7 +6914,7 @@
     </unit>
     <unit id="4548722462586549001">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:425</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:442</note>
         <note category="description">Label for the number of tokens the assistant has used</note>
       </notes>
       <segment>
@@ -6846,7 +6941,7 @@
     </unit>
     <unit id="7284407085760520822">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:230,232</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:246,248</note>
         <note category="description">Heading of the assistant conversation list</note>
       </notes>
       <segment>
@@ -6961,7 +7056,7 @@
     </unit>
     <unit id="180305693599254202">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:57,61</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:60,64</note>
         <note category="description">Page title for the workspace assistant conversations</note>
       </notes>
       <segment>
@@ -7193,6 +7288,15 @@
       </notes>
       <segment>
         <source>Set estimate</source>
+      </segment>
+    </unit>
+    <unit id="4974625000015194391">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:214</note>
+        <note category="description">Hint describing the Google search provider</note>
+      </notes>
+      <segment>
+        <source>An API key and the id of a programmable search engine.</source>
       </segment>
     </unit>
     <unit id="4993066231165110063">
@@ -8245,6 +8349,15 @@
         <source>Any of</source>
       </segment>
     </unit>
+    <unit id="6157743857767016939">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:143,146</note>
+        <note category="description">Label for the Google search engine id input</note>
+      </notes>
+      <segment>
+        <source> Search engine id </source>
+      </segment>
+    </unit>
     <unit id="6158466471129936511">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:88</note>
@@ -8252,6 +8365,15 @@
       </notes>
       <segment>
         <source>None of</source>
+      </segment>
+    </unit>
+    <unit id="5621842545023812080">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:174,176</note>
+        <note category="description">Placeholder for the SearXNG base URL input</note>
+      </notes>
+      <segment>
+        <source>https://searxng.example.com</source>
       </segment>
     </unit>
     <unit id="5628308424165598052">
@@ -9403,6 +9525,7 @@
     <unit id="3477141043479115606">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:272</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:284</note>
         <note category="description">Placeholder shown when a key is already stored</note>
       </notes>
       <segment>
@@ -9588,7 +9711,7 @@
     </unit>
     <unit id="7329865395750709453">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:131,133</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:134,136</note>
         <note category="description">Explains what turning the assistant off does</note>
       </notes>
       <segment>
@@ -9772,7 +9895,7 @@
     </unit>
     <unit id="662925928705970482">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:210,212</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:226,228</note>
         <note category="description">Explains how assistant cost is worked out</note>
       </notes>
       <segment>
@@ -10036,7 +10159,7 @@
     </unit>
     <unit id="8222816683597787340">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:205,208</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:221,224</note>
         <note category="description">Section heading for what the assistant has cost the workspace</note>
       </notes>
       <segment>
@@ -10520,6 +10643,15 @@
         <source>roadmap</source>
       </segment>
     </unit>
+    <unit id="214787083175103202">
+      <notes>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:199,203</note>
+        <note category="description">Section heading for the workspace web search provider</note>
+      </notes>
+      <segment>
+        <source> Web search </source>
+      </segment>
+    </unit>
     <unit id="2148921956974186881">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:86,88</note>
@@ -10571,6 +10703,15 @@
       </notes>
       <segment>
         <source>Refresh calendar</source>
+      </segment>
+    </unit>
+    <unit id="6154668836448322809">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:384</note>
+        <note category="description">Shown when removing the search provider fails</note>
+      </notes>
+      <segment>
+        <source>The provider could not be removed.</source>
       </segment>
     </unit>
     <unit id="1022758522914475161">
@@ -10670,7 +10811,7 @@
     </unit>
     <unit id="6500565621649261493">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:143,144</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:146,147</note>
         <note category="description">Toggle that enables the assistant for a workspace</note>
       </notes>
       <segment>
@@ -10851,7 +10992,7 @@
     </unit>
     <unit id="3313172740302558016">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:96,98</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:99,101</note>
         <note category="description">Counts tokens written to the provider prompt cache</note>
       </notes>
       <segment>
@@ -11309,7 +11450,7 @@
     </unit>
     <unit id="2510741784888393227">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:429</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:446</note>
         <note category="description">Label for what the assistant has cost, priced from published model rates</note>
       </notes>
       <segment>
@@ -11332,6 +11473,15 @@
       </notes>
       <segment>
         <source>Deleted tasks show up here, where they can be restored.</source>
+      </segment>
+    </unit>
+    <unit id="5572257597829131111">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:358</note>
+        <note category="description">Title of the remove search provider confirmation</note>
+      </notes>
+      <segment>
+        <source>Remove search provider?</source>
       </segment>
     </unit>
     <unit id="6893314710170454949">
@@ -11549,7 +11699,7 @@
     </unit>
     <unit id="4435645098786961170">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:88,89</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:91,92</note>
         <note category="description">Counts tokens returned by the model</note>
       </notes>
       <segment>
@@ -12192,7 +12342,7 @@
     </unit>
     <unit id="2107380426080326188">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:421</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:438</note>
         <note category="description">Label for the number of assistant conversations</note>
       </notes>
       <segment>
@@ -12860,7 +13010,7 @@
     </unit>
     <unit id="4797214229335185452">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:91,94</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:94,97</note>
         <note category="description">Counts tokens read from the provider prompt cache</note>
       </notes>
       <segment>
@@ -13467,7 +13617,7 @@
     </unit>
     <unit id="3108472352698480006">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:305,307</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:321,323</note>
         <note category="description">Heading when no assistant conversations exist</note>
       </notes>
       <segment>
@@ -14101,7 +14251,7 @@
     </unit>
     <unit id="4026751160851308362">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:238,242</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:254,258</note>
         <note category="description">Explains what an admin sees on the assistant conversations page</note>
       </notes>
       <segment>
@@ -15329,6 +15479,15 @@
         <source>Delete Sprint</source>
       </segment>
     </unit>
+    <unit id="115639214090380471">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:206</note>
+        <note category="description">Hint describing the Brave search provider</note>
+      </notes>
+      <segment>
+        <source>An API key from the Brave Search API.</source>
+      </segment>
+    </unit>
     <unit id="4347094825344030699">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:58,59</note>
@@ -15356,6 +15515,15 @@
       </notes>
       <segment>
         <source>Filter by origin</source>
+      </segment>
+    </unit>
+    <unit id="4455504566532091550">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:46,51</note>
+        <note category="description">Explains what the workspace search provider is for</note>
+      </notes>
+      <segment>
+        <source> The assistant searches the web through this provider. Without one it can still read pages it is given a link to, but it cannot find them itself. </source>
       </segment>
     </unit>
     <unit id="2171902520766849476">
@@ -16002,6 +16170,15 @@
         <source> Remove sprint filter </source>
       </segment>
     </unit>
+    <unit id="8784622693944438705">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:95,97</note>
+        <note category="description">Label for the search provider</note>
+      </notes>
+      <segment>
+        <source> Provider </source>
+      </segment>
+    </unit>
     <unit id="7634806463979024086">
       <notes>
         <note category="location">src/app/features/storage/components/storage-header.component.ts:152</note>
@@ -16184,7 +16361,7 @@
     </unit>
     <unit id="6601864657708472888">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:126,128</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:129,131</note>
         <note category="description">Heading of the assistant access card</note>
       </notes>
       <segment>
@@ -16291,6 +16468,15 @@
         <source>user</source>
       </segment>
     </unit>
+    <unit id="1238372923050281145">
+      <notes>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:343</note>
+        <note category="description">Shown after the search provider is stored</note>
+      </notes>
+      <segment>
+        <source>Search provider saved.</source>
+      </segment>
+    </unit>
     <unit id="2049427639275424472">
       <notes>
         <note category="location">src/app/shell/profile-menu.component.ts:135</note>
@@ -16356,7 +16542,7 @@
     </unit>
     <unit id="4929778113156900100">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:25,29</note>
+        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:26,30</note>
         <note category="description">Label on the control that collapses the sidebar</note>
       </notes>
       <segment>
@@ -16365,7 +16551,7 @@
     </unit>
     <unit id="1359092845802014498">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:34</note>
+        <note category="location">src/app/shell/shell-sidebar-collapse.component.ts:35</note>
         <note category="description">Tooltip on the control that expands the collapsed sidebar</note>
       </notes>
       <segment>
@@ -16488,7 +16674,7 @@
     </unit>
     <unit id="7136018875175606726">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:86,87</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:89,90</note>
         <note category="description">Counts tokens sent to the model</note>
       </notes>
       <segment>
@@ -16497,7 +16683,7 @@
     </unit>
     <unit id="1536087519743707362">
       <notes>
-        <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:35,36</note>
+        <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:31,32</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:61,62</note>
         <note category="description">Accessible label for the button that hides a popup notice</note>
@@ -16762,6 +16948,7 @@
     <unit id="4814285799071780083">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:338</note>
+        <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:360</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="description">Confirms removing an API key</note>
       </notes>
@@ -16909,7 +17096,7 @@
     </unit>
     <unit id="622130541512871637">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:250,251</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:266,267</note>
         <note category="description">Accessible label while conversations load</note>
       </notes>
       <segment>
@@ -17081,7 +17268,7 @@
     </unit>
     <unit id="1978378776147370036">
       <notes>
-        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:309,311</note>
+        <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:325,327</note>
         <note category="description">Explains why the assistant conversation list is empty</note>
       </notes>
       <segment>

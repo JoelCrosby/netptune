@@ -14,7 +14,13 @@ public static class NetptuneAiConfiguration
 {
     public static IServiceCollection AddNetptuneAi(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<AiOptions>(configuration.GetSection(AiOptions.SectionName));
+        var section = configuration.GetSection(AiOptions.SectionName);
+
+        services.Configure<AiOptions>(section);
+
+        var webOptions = section.GetSection(nameof(AiOptions.Web)).Get<AiWebOptions>() ?? new AiWebOptions();
+
+        services.AddNetptuneAiWeb(webOptions);
 
         services.AddSingleton<IAiChatProvider, AnthropicChatProvider>();
         services.AddSingleton<IAiChatProvider, OpenAiChatProvider>();

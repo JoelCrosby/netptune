@@ -32,19 +32,35 @@ public static class AiEndpoints
         group.MapGet("/models", () => Results.Ok(AiModels.Catalog));
 
         group.MapGet("/credentials", HandleGetCredentials);
+
         group.MapPut("/credentials", HandleSaveCredential);
+
         group.MapDelete("/credentials/{credentialId:guid}", HandleDeleteCredential);
+
         group.MapGet("/credentials/availability", HandleGetCredentialAvailability);
 
         group.MapGet("/workspace-credentials", HandleGetWorkspaceCredentials)
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
+
         group.MapPut("/workspace-credentials", HandleSaveWorkspaceCredential)
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
+
         group.MapDelete("/workspace-credentials/{credentialId:guid}", HandleDeleteWorkspaceCredential)
             .RequireAuthorization(NetptunePermissions.Workspace.Update);
 
+        group.MapGet("/workspace-search-credential", HandleGetWorkspaceSearchCredential)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
+
+        group.MapPut("/workspace-search-credential", HandleSaveWorkspaceSearchCredential)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
+
+        group.MapDelete("/workspace-search-credential", HandleDeleteWorkspaceSearchCredential)
+            .RequireAuthorization(NetptunePermissions.Workspace.Update);
+
         group.MapGet("/conversations", HandleGetConversations);
+
         group.MapGet("/conversations/{conversationId:guid}", HandleGetConversation);
+
         group.MapDelete("/conversations/{conversationId:guid}", HandleDeleteConversation);
 
         group
@@ -55,12 +71,14 @@ public static class AiEndpoints
 
         group.MapGet("/admin/conversations", HandleGetWorkspaceConversations)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
+
         group.MapGet("/admin/conversations/{conversationId:guid}", HandleGetWorkspaceConversation)
             .RequireAuthorization(NetptunePermissions.Assistant.ReadAllConversations);
 
         group.MapGet("/conversations/{conversationId:guid}/change-set", HandleGetPendingChangeSet);
 
         group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
+
         group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
 
         group
@@ -112,6 +130,34 @@ public static class AiEndpoints
         var result = await mediator.Send(new GetAiCredentialAvailabilityQuery(), cancellationToken);
 
         return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetWorkspaceSearchCredential(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetWorkspaceSearchCredentialQuery(), cancellationToken);
+
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleSaveWorkspaceSearchCredential(
+        SaveWorkspaceSearchCredentialRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new SaveWorkspaceSearchCredentialCommand(request), cancellationToken);
+
+        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
+    }
+
+    private static async Task<IResult> HandleDeleteWorkspaceSearchCredential(
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteWorkspaceSearchCredentialCommand(), cancellationToken);
+
+        return result.IsSuccess ? Results.Ok(result) : Results.NotFound(result);
     }
 
     private static async Task<IResult> HandleGetWorkspaceCredentials(

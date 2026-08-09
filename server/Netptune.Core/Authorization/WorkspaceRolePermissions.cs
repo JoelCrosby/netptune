@@ -52,6 +52,7 @@ public static class WorkspaceRolePermissions
         NetptunePermissions.Storage.UploadMedia,
         NetptunePermissions.Files.Upload,
         NetptunePermissions.Files.DeleteOwn,
+        NetptunePermissions.Assistant.UseWeb,
     };
 
     private static readonly IReadOnlySet<string> AdminPermissions = new HashSet<string>(MemberPermissions)

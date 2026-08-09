@@ -87,6 +87,29 @@ The assistant runs on API keys supplied by users and workspace admins, so no pro
 | `Ai__MaxHistoryCharacters`    | `120000`        | Conversation replay budget. Older turns are dropped once a conversation exceeds it.     |
 | `RateLimiting__AiPermitLimit` | `20`            | Assistant messages and change-set applies allowed per user per minute.                  |
 
+Web research needs no server configuration. These settings only tune it.
+
+| Variable                          | Default                                            | Description                                                                            |
+| --------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `Ai__Web__MaxSearchResults`       | `10`                                               | Upper bound on results per search, whatever the model asks for.                        |
+| `Ai__Web__TimeoutSeconds`         | `20`                                               | Per-request timeout for fetches and searches.                                          |
+| `Ai__Web__MaxResponseBytes`       | `5242880`                                          | Bytes read from a response before the rest is discarded.                               |
+| `Ai__Web__MaxDocumentCharacters`  | `200000`                                           | Readable text kept per page after extraction.                                          |
+| `Ai__Web__MaxRedirects`           | `5`                                                | Redirect hops followed, each re-checked against the egress rules.                      |
+| `Ai__Web__DefaultPageCharacters`  | `6000`                                             | Characters returned per read when the model does not ask for a size.                   |
+| `Ai__Web__MaxPageCharacters`      | `20000`                                            | Ceiling on a single `read_web_document` call.                                          |
+| `Ai__Web__RetentionHours`         | `24`                                               | How long a fetched page stays readable before the job server deletes it.               |
+
+The search provider is not configured here — it is per workspace. An admin picks one under workspace settings → Assistant → Web search, and the choice covers every member. Brave Search takes an API key; Google Programmable Search takes an API key and a search engine id (`cx`); SearXNG takes the base URL of a self-hosted instance and no key at all, because it has none — you will need `json` in that instance's `search.formats`. Keys are encrypted with the same ASP.NET Data Protection purpose as the assistant's provider keys, so the same keyring caveat applies: lose it and the key must be re-entered. With no provider set up, `web_search` tells the model to ask an admin, while `web_fetch` keeps working on links it is given.
+
+Only the fetcher enforces the egress rules below. A search endpoint is set by an admin rather than chosen by the model, so a SearXNG instance on a private cluster address is reachable for search while `web_fetch` on that same address stays blocked.
+
+A fetched page is never returned whole. `web_fetch` strips scripts, navigation and other chrome, stores the readable text in `ai_web_documents`, and returns the opening few thousand characters with a `documentId`; the model pages through the rest with `read_web_document`. That keeps a research turn inside the same tool-result and history budgets as any other tool, instead of one long article filling the window. The stored rows are disposable — they expire after `Ai__Web__RetentionHours`, the job server sweeps them hourly, and an expired id simply tells the model to fetch again. They are excluded from workspace exports.
+
+Only public hosts are reachable. Fetches are limited to `http` and `https`, URLs carrying credentials are refused, and loopback, private, link-local, carrier-grade NAT and cloud metadata addresses are blocked — checked when the host resolves, again on every redirect hop, and once more on the socket itself so a DNS answer that changes in between cannot reach an internal service. Fetching is gated on `assistant.use_web`, granted to Member and above but not to Viewers, and never to anonymous visitors of a public workspace. That permission and the workspace assistant switch are the only gates — there is no deployment-level off switch, so a deployment that must not reach the internet at all should block it at the network, or revoke `assistant.use_web` from every role.
+
+Page content is data, not instruction. The tool description says so, and because every write tool only ever proposes a change for a member to review and apply, a page that tells the assistant to modify the workspace still cannot do it on its own.
+
 The two model settings are only fallbacks. The models users can actually pick come from a fixed catalogue served by `GET /api/ai/models` and defined in `AiModels.Catalog` (`server/Netptune.Core/Models/Ai/AiModels.cs`) — edit that list to offer different models. Users choose one per API key in personal settings, and can switch models mid-conversation from the assistant panel; switching to a model from the other provider moves the conversation to that provider, which needs a key for it. A conversation otherwise keeps the model it started with, so changing these settings affects new conversations only.
 
 Conversation titles are written by the model. After the first reply the assistant makes one short extra call — on the cheapest catalogue model for that provider, not the conversation's own model — and names the conversation from it. Its tokens are counted against that first assistant message, so the usage totals include it. If the call fails the title stays as the truncated first message, and `Ai__GenerateTitles=false` skips it entirely.

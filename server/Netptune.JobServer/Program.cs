@@ -59,6 +59,7 @@ builder.Services.AddNetptuneAutomation(builder.Configuration);
 builder.Services.AddHostedService<SearchSeedService>();
 builder.Services.AddHostedService<EventOutboxPublisher>();
 builder.Services.AddHostedService<ExportRetentionService>();
+builder.Services.AddHostedService<AiWebDocumentRetentionService>();
 
 builder.Services.AddNetptuneMessageQueue(
     builder.Configuration.GetNetptuneNatsConnectionString(),

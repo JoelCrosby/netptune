@@ -58,6 +58,8 @@ public static class TransferRedaction
         Redacted<AiToolInvocation>(TransferRedactionKeys.AiConversations),
         Redacted<AiChangeSet>(TransferRedactionKeys.AiConversations),
         Redacted<AiProposedChange>(TransferRedactionKeys.AiConversations),
+        Redacted<AiWebDocument>(TransferRedactionKeys.AiConversations),
+        Redacted<WorkspaceSearchCredential>(TransferRedactionKeys.AiCredentials),
         Redacted<AutomationRun>(TransferRedactionKeys.AutomationHistory),
         Redacted<AutomationActionResult>(TransferRedactionKeys.AutomationHistory),
         Redacted<ScheduledAutomationAction>(TransferRedactionKeys.AutomationHistory),

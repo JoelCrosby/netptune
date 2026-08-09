@@ -35,4 +35,39 @@ public class AssistantPermissionTests
     {
         NetptunePermissions.All.Should().Contain(NetptunePermissions.Assistant.ReadAllConversations);
     }
+
+    [Theory]
+    [InlineData(WorkspaceRole.Owner)]
+    [InlineData(WorkspaceRole.Admin)]
+    [InlineData(WorkspaceRole.Member)]
+    public void UseWeb_ShouldBeGranted_FromMemberUpwards(WorkspaceRole role)
+    {
+        var permissions = WorkspaceRolePermissions.GetDefaultPermissions(role);
+
+        permissions.Should().Contain(NetptunePermissions.Assistant.UseWeb);
+    }
+
+    [Fact]
+    public void UseWeb_ShouldNotBeGranted_ToViewers()
+    {
+        var permissions = WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer);
+
+        permissions.Should().NotContain(
+            NetptunePermissions.Assistant.UseWeb,
+            "outbound fetches leave the workspace and spend the caller's provider budget");
+    }
+
+    [Fact]
+    public void UseWeb_ShouldBeAKnownPermission()
+    {
+        NetptunePermissions.All.Should().Contain(NetptunePermissions.Assistant.UseWeb);
+    }
+
+    [Fact]
+    public void UseWeb_ShouldNotBeReadableByThePublic()
+    {
+        NetptunePermissions.PublicReadable.Should().NotContain(
+            NetptunePermissions.Assistant.UseWeb,
+            "an anonymous visitor to a public workspace must not be able to drive server-side fetches");
+    }
 }
