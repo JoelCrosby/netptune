@@ -2296,8 +2296,8 @@
     </unit>
     <unit id="5851560788527570644">
       <notes>
-        <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:37,38</note>
-        <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:39,41</note>
+        <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:48,49</note>
+        <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:50,52</note>
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:26,28</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,22</note>
@@ -2744,7 +2744,7 @@
     </unit>
     <unit id="5508901405364001090">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:40,45</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:34,39</note>
         <note category="description">Heading of the popup shown when the assistant replies while the chat is closed</note>
       </notes>
       <segment>
@@ -10273,6 +10273,15 @@
         <source>Export Board Tasks</source>
       </segment>
     </unit>
+    <unit id="7101514678290864976">
+      <notes>
+        <note category="location">src/app/entry/components/notification-bell/notification-popup.component.ts:33,38</note>
+        <note category="description">Button that opens the notification from the new notification popup</note>
+      </notes>
+      <segment>
+        <source> View </source>
+      </segment>
+    </unit>
     <unit id="7107218117130409950">
       <notes>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:38</note>
@@ -11180,7 +11189,7 @@
     </unit>
     <unit id="933200484361789257">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:64,70</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:61,67</note>
         <note category="description">Announced when the assistant has replied while the chat is closed</note>
       </notes>
       <segment>
@@ -12945,7 +12954,7 @@
       <notes>
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:44,47</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:41,44</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:273</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:308</note>
         <note category="location">src/app/workspace.routes.ts:78</note>
@@ -13526,7 +13535,7 @@
     </unit>
     <unit id="646405368100193319">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:31,36</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:25,31</note>
         <note category="description">Heading of the popup shown when an assistant turn failed while the chat was closed</note>
       </notes>
       <segment>
@@ -13661,7 +13670,7 @@
     </unit>
     <unit id="1002973190039508761">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:51,57</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:48,54</note>
         <note category="description">Tooltip on the button that opens the assistant. Translate the modifier key to its local name (for example Strg in German); leave the I as-is</note>
       </notes>
       <segment>
@@ -14110,7 +14119,7 @@
     </unit>
     <unit id="5944081365893210369">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:55,60</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:49,54</note>
         <note category="description">Button that opens the assistant from the new reply popup</note>
       </notes>
       <segment>
@@ -16047,6 +16056,15 @@
         <source>Go to Projects</source>
       </segment>
     </unit>
+    <unit id="2551493614342173748">
+      <notes>
+        <note category="location">src/app/entry/components/notification-bell/notification-popup.component.ts:21,24</note>
+        <note category="description">Heading of the popup shown when a notification arrives</note>
+      </notes>
+      <segment>
+        <source> New notification </source>
+      </segment>
+    </unit>
     <unit id="5123189455675344637">
       <notes>
         <note category="location">src/app/shell/global-commands.service.ts:56</note>
@@ -16479,10 +16497,10 @@
     </unit>
     <unit id="1536087519743707362">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-reply-popup.component.ts:67,68</note>
+        <note category="location">src/app/static/components/anchored-popup/anchored-popup-card.component.ts:35,36</note>
         <note category="location">src/app/static/components/banner/banner.component.ts:36,37</note>
         <note category="location">src/app/static/components/snackbar/snackbar.component.ts:61,62</note>
-        <note category="description">Accessible label for the button that hides the new reply popup</note>
+        <note category="description">Accessible label for the button that hides a popup notice</note>
       </notes>
       <segment>
         <source>Dismiss</source>

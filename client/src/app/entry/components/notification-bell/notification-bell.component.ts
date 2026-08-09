@@ -6,7 +6,10 @@ import {
   OnDestroy,
   TemplateRef,
   ViewContainerRef,
+  effect,
   inject,
+  signal,
+  untracked,
   viewChild,
   computed,
 } from '@angular/core';
@@ -14,13 +17,19 @@ import { SessionService } from '@core/services/session.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
+import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 import {
   recentNotificationsResource,
   unreadNotificationCountResource,
 } from '@core/resources/notification.resource';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { NotificationCommandsService } from '@core/services/notification-commands.service';
 import { LucideBell } from '@lucide/angular';
+import { anchoredPopup } from '@static/components/anchored-popup/anchored-popup';
 import { NotificationDropdownComponent } from './notification-dropdown.component';
+import { NotificationPopupComponent } from './notification-popup.component';
+
+const POPUP_TIMEOUT = 12000;
 
 @Component({
   selector: 'app-notification-bell',
@@ -29,9 +38,11 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
     TooltipDirective,
     LucideBell,
     NotificationDropdownComponent,
+    NotificationPopupComponent,
   ],
   template: `
     <button
+      #trigger
       app-icon-button
       i18n-aria-label="Accessible label for the notifications button"
       aria-label="Notifications"
@@ -57,6 +68,15 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
         (markAllAsRead)="markAllAsRead()"
         (viewAll)="onViewAll()" />
     </ng-template>
+
+    <ng-template #popupTemplate>
+      @if (arrived(); as notification) {
+        <app-notification-popup
+          [notification]="notification"
+          (opened)="openArrived(notification)"
+          (dismissed)="dismissPopup()" />
+      }
+    </ng-template>
   `,
 })
 export class NotificationBellComponent implements OnDestroy {
@@ -70,14 +90,88 @@ export class NotificationBellComponent implements OnDestroy {
   readonly authenticated = inject(SessionService).isAuthenticated;
   private readonly recent = recentNotificationsResource();
   private readonly unread = unreadNotificationCountResource();
+  private readonly workspaceId = inject(CurrentWorkspaceService).id;
 
   readonly notifications = this.recent.value;
   readonly unreadCount = this.unread.value;
   readonly loaded = computed(() => !this.recent.isLoading());
 
+  private readonly trigger = viewChild('trigger', { read: ElementRef });
   private readonly menuTemplate =
     viewChild.required<TemplateRef<unknown>>('menuTemplate');
+  private readonly popupTemplate =
+    viewChild.required<TemplateRef<unknown>>('popupTemplate');
   private overlayRef?: OverlayRef;
+
+  protected readonly arrived = signal<NotificationViewModel | null>(null);
+
+  private readonly popup = anchoredPopup({ timeout: POPUP_TIMEOUT });
+
+  private highestSeenId: number | null = null;
+  private seenWorkspaceId: number | undefined;
+
+  constructor() {
+    effect(() => {
+      const notifications = this.notifications();
+      const workspaceId = this.workspaceId();
+
+      if (this.recent.status() !== 'resolved') return;
+
+      untracked(() => this.onNotificationsResolved(notifications, workspaceId));
+    });
+  }
+
+  private onNotificationsResolved(
+    notifications: NotificationViewModel[],
+    workspaceId: number | undefined
+  ) {
+    const highestId = notifications.reduce((highest, notification) => {
+      return Math.max(highest, notification.id);
+    }, 0);
+
+    if (this.highestSeenId === null || this.seenWorkspaceId !== workspaceId) {
+      this.highestSeenId = highestId;
+      this.seenWorkspaceId = workspaceId;
+
+      return;
+    }
+
+    const previousHighestId = this.highestSeenId;
+
+    this.highestSeenId = Math.max(previousHighestId, highestId);
+
+    if (this.overlayRef?.hasAttached()) return;
+
+    const newest = notifications
+      .filter(
+        (notification) =>
+          notification.id > previousHighestId && !notification.isRead
+      )
+      .sort((left, right) => right.id - left.id)
+      .at(0);
+
+    const trigger = this.trigger();
+
+    if (!newest || !trigger) return;
+
+    this.arrived.set(newest);
+    this.popup.show(trigger, this.popupTemplate());
+  }
+
+  protected openArrived(notification: NotificationViewModel) {
+    this.dismissPopup();
+
+    if (!notification.isRead) {
+      this.notificationCommands.markAsRead(notification.id);
+    }
+
+    void this.router.navigateByUrl(notification.link);
+  }
+
+  protected dismissPopup() {
+    this.popup.hide();
+    this.arrived.set(null);
+  }
 
   toggleMenu() {
     if (this.overlayRef?.hasAttached()) {
@@ -88,6 +182,8 @@ export class NotificationBellComponent implements OnDestroy {
   }
 
   private openMenu() {
+    this.dismissPopup();
+
     const el = this.el.nativeElement.querySelector('button') as HTMLElement;
     const positionStrategy = this.overlay
       .position()
