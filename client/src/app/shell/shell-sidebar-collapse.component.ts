@@ -6,7 +6,8 @@ import { ShellService } from './shell.service';
 @Component({
   selector: 'app-shell-sidebar-collapse',
   host: {
-    class: 'block w-full border-side-bar-border border-t h-14 py-2 px-2',
+    class:
+      'block w-full border-side-bar-border border-t h-14 shrink-0 py-2 px-2',
   },
   template: `
     <div

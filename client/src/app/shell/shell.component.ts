@@ -77,7 +77,7 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
       </div>
     }
     <div
-      class="bg-background fixed grid h-screen w-screen grid-rows-[60px_auto] transition-all"
+      class="bg-background fixed grid h-screen w-screen grid-rows-[60px_minmax(0,1fr)] transition-all"
       [class.expanded]="shell.sideNavExpanded()"
       [class.collapsed]="shell.sideNavCollapsed()"
       [class.docked]="assistant.isDocked()">
