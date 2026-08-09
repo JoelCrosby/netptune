@@ -1,6 +1,5 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
 import { InlineEditHeadingComponent } from '@app/static/components/inline-edit-heading/inline-edit-heading.component';
-import { Store } from '@ngrx/store';
 import { TaskDetailService } from './task-detail.service';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
@@ -15,8 +14,6 @@ import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.sel
   imports: [InlineEditHeadingComponent],
 })
 export class TaskDetailHeaderComponent {
-  readonly store = inject(Store);
-
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;

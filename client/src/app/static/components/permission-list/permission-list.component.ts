@@ -5,7 +5,6 @@ import {
   PermissionMeta,
 } from '@core/auth/permission-items';
 import { LucideDynamicIcon } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { PERMISSONS } from '@app/core/auth/permissions';
 import { UserCommandsService } from '@core/services/user-commands.service';
@@ -54,7 +53,6 @@ interface PermissionGroup {
   `,
 })
 export class PermissionListComponent {
-  readonly store = inject(Store);
   private readonly userCommands = inject(UserCommandsService);
 
   readonly user = input<WorkspaceAppUser>();

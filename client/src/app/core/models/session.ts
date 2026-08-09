@@ -1,20 +1,4 @@
-import { UserPermissions } from '@app/core/models/user-permissions';
-
-export const authFeatureKey = 'auth';
-
-export interface AuthFeatureState {
-  [authFeatureKey]: AuthState;
-}
-
-export interface AuthState {
-  currentUser?: UserResponse;
-  isAuthenticated: boolean;
-  tokenExpires?: string;
-}
-
-export const initialState: AuthState = {
-  isAuthenticated: false,
-};
+import { UserPermissions } from '@core/models/user-permissions';
 
 export interface UserResponse {
   userId: string;

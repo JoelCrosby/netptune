@@ -11,12 +11,12 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { BoardComposerService } from '@core/services/board-composer.service';
 import { BoardSelectionService } from '@core/services/board-selection.service';
 import { BoardViewService } from '@core/services/board-view.service';
-import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { mouseMoveHandler } from '@boards/util/mouse-move-handler';
 import { Selected } from '@core/models/selected';
 import { Status } from '@core/models/status';
@@ -26,7 +26,6 @@ import {
 } from '@core/models/view-models/board-view';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
-import { Store } from '@ngrx/store';
 import { ScrollShadowVericalDirective } from '@static/directives/scroll-shadow-vertical.directive';
 import { fromEvent } from 'rxjs';
 import { BoardGroupCardComponent } from '../board-group-card/board-group-card.component';
@@ -121,7 +120,6 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
   `,
 })
 export class BoardGroupComponent implements OnDestroy, AfterViewInit {
-  private store = inject(Store);
   private boardView = inject(BoardViewService);
   private selection = inject(BoardSelectionService);
   private composer = inject(BoardComposerService);
@@ -142,7 +140,7 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   });
 
   focused = signal(false);
-  isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  isAuthenticated = inject(SessionService).isAuthenticated;
   isDragging = this.boardView.isDragging;
   private inlineActiveGroupId = this.composer.activeGroupId;
   isInlineActive = computed(

@@ -1,5 +1,6 @@
 import { httpResource } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { DEFAULT_PAGE_SIZE } from '@app/core/models/pagination';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { CommentsService } from '@app/core/services/comments.service';
@@ -7,7 +8,6 @@ import {
   selectCanCreateComment,
   selectCanDeleteComment,
 } from '@app/core/store/permissions/permissions.selectors';
-import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { CommentViewModel } from '@core/models/comment';
 import {
   AddCommentRequest,
@@ -16,7 +16,6 @@ import {
 import { workspaceUsersResource } from '@core/resources/user.resource';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
-import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
   CommentsListComponent,
@@ -48,12 +47,11 @@ import { TaskDetailService } from './task-detail.service';
   imports: [CommentsListComponent],
 })
 export class TaskDetailCommentsComponent {
-  store = inject(Store);
   commentsService = inject(CommentsService);
   confirmation = inject(ConfirmationService);
   snackbar = inject(SnackbarService);
 
-  user = this.store.selectSignal(selectCurrentUser);
+  user = inject(SessionService).currentUser;
   workspaceUsers = workspaceUsersResource();
 
   private readonly taskDetail = inject(TaskDetailService);

@@ -1,4 +1,5 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import {
   disabled,
   FormField,
@@ -8,9 +9,7 @@ import {
   submit,
   validate,
 } from '@angular/forms/signals';
-import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
-import { Store } from '@ngrx/store';
 import { loginMethodsResource } from '@core/resources/profile.resource';
 import { ProfileCommandsService } from '@core/services/profile-commands.service';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -111,8 +110,6 @@ import { IconTileComponent } from '@static/components/icon-tile.component';
 export class AccountPasswordComponent {
   protected readonly passwordIcon = LucideLock;
 
-  private store = inject(Store);
-
   // Undefined until the login methods have loaded, at which point the card
   // commits to either setting a first password or changing an existing one.
   private readonly profileCommands = inject(ProfileCommandsService);
@@ -202,7 +199,7 @@ export class AccountPasswordComponent {
   }
 
   private changePasswordClicked() {
-    const userId = this.store.selectSignal(selectCurrentUserId)();
+    const userId = inject(SessionService).currentUserId();
 
     if (!userId) return;
 

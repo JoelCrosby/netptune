@@ -1,12 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthPageContainerComponent } from '../auth-page-container/auth-page-container.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { AuthService } from '@app/core/auth/auth.service';
-import { Store } from '@ngrx/store';
-import { sessionEstablished } from '@app/core/store/auth/auth.actions';
-import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { firstValueFrom } from 'rxjs';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
 import {
@@ -133,12 +131,12 @@ import {
 })
 export class LinkProviderComponent {
   private route = inject(ActivatedRoute);
+  private session = inject(SessionService);
   private router = inject(Router);
   private authService = inject(AuthService);
-  private store = inject(Store);
   private snackbar = inject(SnackbarService);
 
-  isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  isAuthenticated = inject(SessionService).isAuthenticated;
   pendingLink = signal<PendingProviderLink | null>(this.getPendingLink());
   loading = signal(false);
   error = signal<string | null>(null);
@@ -166,7 +164,7 @@ export class LinkProviderComponent {
       );
 
       clearPendingProviderLink();
-      this.store.dispatch(sessionEstablished({ user }));
+      this.session.establish(user);
       this.snackbar.open(
         $localize`:Confirmation shown after linking an external sign-in provider. PROVIDER is the provider name:${pending.provider}:PROVIDER: connected`
       );

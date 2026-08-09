@@ -1,11 +1,10 @@
 import { Injectable, inject } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ExportJobProgressEvent } from '@core/models/view-models/export-job-view-model';
 import { ImportSessionProgressEvent } from '@core/models/view-models/import-session';
-import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
-import { Store } from '@ngrx/store';
 
 export interface TransferJobHandlers {
   onExport?: (progress: ExportJobProgressEvent) => void;
@@ -16,12 +15,9 @@ export interface TransferJobHandlers {
   providedIn: 'root',
 })
 export class TransferJobSseService {
-  private readonly store = inject(Store);
   private eventSource: EventSource | null = null;
 
-  private readonly isAuthenticated = this.store.selectSignal(
-    selectIsAuthenticated
-  );
+  private readonly isAuthenticated = inject(SessionService).isAuthenticated;
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   connect(handlers: TransferJobHandlers): void {

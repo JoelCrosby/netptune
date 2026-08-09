@@ -6,7 +6,6 @@ import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { LucideCheck } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
@@ -112,7 +111,6 @@ export interface TaskDetailDialogData {
 })
 export class TaskDetailDialogComponent {
   data = inject<TaskDetailDialogData>(DIALOG_DATA, { optional: false });
-  store = inject(Store);
   private dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
   private snackbar = inject(SnackbarService);
   private taskDetail = inject(TaskDetailService);

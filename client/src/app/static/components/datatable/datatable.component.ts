@@ -22,7 +22,6 @@ import { ClientResponse } from '@app/core/models/client-response';
 import { Page } from '@app/core/models/pagination';
 import { DialogService } from '@app/core/services/dialog.service';
 import { reloadOnWorkspaceChange } from '@core/util/reload-on-refresh';
-import { Store } from '@ngrx/store';
 import {
   LucideArrowDown,
   LucideArrowUp,
@@ -307,7 +306,6 @@ import {
 export class DatatableComponent<T = unknown> implements OnDestroy {
   injector = inject(Injector);
   dialog = inject(DialogService);
-  store = inject(Store);
   data = input.required<DatatableDataSource<T>>();
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });

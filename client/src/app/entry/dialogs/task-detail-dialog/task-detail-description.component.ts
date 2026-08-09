@@ -1,6 +1,5 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
-import { Store } from '@ngrx/store';
 import { EditorComponent } from '@static/components/editor/editor.component';
 import { TaskDetailService } from './task-detail.service';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
@@ -26,8 +25,6 @@ import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.sel
   imports: [EditorComponent],
 })
 export class TaskDetailDescriptionComponent {
-  readonly store = inject(Store);
-
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;

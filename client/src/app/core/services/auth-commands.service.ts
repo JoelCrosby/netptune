@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
@@ -6,19 +7,10 @@ import { hasPendingProviderLink } from '@core/auth/pending-provider-link';
 import { LoginRequest } from '@core/models/login-request';
 import { RegisterRequest } from '@core/models/register-request';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import {
-  currentUserLoaded,
-  logoutSuccess,
-  sessionEstablished,
-} from '@core/store/auth/auth.actions';
-import {
-  AuthCodeRequest,
-  ResetPasswordRequest,
-} from '@core/store/auth/auth.models';
-import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
+import { AuthCodeRequest, ResetPasswordRequest } from '@core/models/session';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { Store } from '@ngrx/store';
+import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, filter, finalize, switchMap, tap } from 'rxjs';
 
@@ -26,7 +18,9 @@ import { catchError, EMPTY, filter, finalize, switchMap, tap } from 'rxjs';
 export class AuthCommandsService {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
+  private readonly session = inject(SessionService);
+  private readonly currentWorkspace = inject(CurrentWorkspaceService);
+  private readonly workspaceList = inject(WorkspaceListService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly snackbar = inject(SnackbarService);
 
@@ -60,7 +54,7 @@ export class AuthCommandsService {
         finalize(() => this.loggingIn.set(false))
       )
       .subscribe((user) => {
-        this.store.dispatch(sessionEstablished({ user }));
+        this.session.establish(user);
 
         // Linking an external provider bounces through login, and the link has to
         // be finished before the workspace it was started from is any use.
@@ -88,7 +82,7 @@ export class AuthCommandsService {
         finalize(() => this.registering.set(false))
       )
       .subscribe((user) => {
-        this.store.dispatch(sessionEstablished({ user }));
+        this.session.establish(user);
         void this.router.navigate(['/workspaces']);
       });
   }
@@ -104,14 +98,14 @@ export class AuthCommandsService {
             $localize`:Confirmation shown after an action succeeds:Email confirmation code is invalid or expired`
           );
           void this.router.navigate(['/auth/login']);
-          this.store.dispatch(logoutSuccess());
+          this.endSession();
 
           return EMPTY;
         }),
         finalize(() => this.confirmingEmail.set(false))
       )
       .subscribe((user) => {
-        this.store.dispatch(sessionEstablished({ user }));
+        this.session.establish(user);
         void this.router.navigate(['/workspaces']);
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Email confirmed successfully`
@@ -148,14 +142,14 @@ export class AuthCommandsService {
             $localize`:Confirmation shown after an action succeeds:Reset password request is invalid or expired`
           );
           void this.router.navigate(['/auth/login']);
-          this.store.dispatch(logoutSuccess());
+          this.endSession();
 
           return EMPTY;
         }),
         finalize(() => this.resettingPassword.set(false))
       )
       .subscribe((user) => {
-        this.store.dispatch(sessionEstablished({ user }));
+        this.session.establish(user);
         void this.router.navigate(['/workspaces']);
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Password has been reset`
@@ -172,13 +166,20 @@ export class AuthCommandsService {
         tap(() => void this.router.navigate(['/auth/login'])),
         catchError(() => EMPTY)
       )
-      .subscribe(() => this.store.dispatch(logoutSuccess()));
+      .subscribe(() => this.endSession());
+  }
+
+  /** Drops everything the signed-in user could see, not just the session itself. */
+  endSession() {
+    this.session.clear();
+    this.currentWorkspace.set(undefined);
+    this.workspaceList.clear();
   }
 
   // The signed-in user carries their permissions, so anything that can change them
   // has to fetch the user again.
   refreshCurrentUser() {
-    const isAuthenticated = this.store.selectSignal(selectIsAuthenticated)();
+    const isAuthenticated = inject(SessionService).isAuthenticated();
     const workspace = inject(CurrentWorkspaceService).workspace();
 
     if (!isAuthenticated || !workspace) return;
@@ -186,7 +187,7 @@ export class AuthCommandsService {
     this.authService
       .currentUser()
       .pipe(catchError(() => EMPTY))
-      .subscribe((user) => this.store.dispatch(currentUserLoaded({ user })));
+      .subscribe((user) => this.session.setUser(user));
   }
 }
 

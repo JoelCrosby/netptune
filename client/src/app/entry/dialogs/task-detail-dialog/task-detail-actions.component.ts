@@ -4,7 +4,6 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { LucideSparkles, LucideTrash2 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { TaskDetailService } from './task-detail.service';
 
 @Component({
@@ -60,7 +59,6 @@ import { TaskDetailService } from './task-detail.service';
   ],
 })
 export class TaskDetailActionsComponent {
-  readonly store = inject(Store);
   readonly taskDetailService = inject(TaskDetailService);
 
   private readonly assistant = inject(AiAssistantService);

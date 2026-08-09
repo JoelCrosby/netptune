@@ -13,6 +13,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   apply,
@@ -26,9 +27,7 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { BoardComposerService } from '@core/services/board-composer.service';
 import { BoardViewService } from '@core/services/board-view.service';
-import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { AddProjectTaskRequest } from '@core/models/project-task';
-import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DocumentService } from '@static/services/document.service';
 import { sprintResource } from '@core/resources/sprint.resource';
@@ -91,7 +90,6 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 })
 export class BoardGroupTaskInlineComponent implements AfterViewInit {
   private document = inject(DocumentService);
-  private store = inject(Store);
   private boardView = inject(BoardViewService);
   private composer = inject(BoardComposerService);
   private boardCommands = inject(BoardGroupCommandsService);
@@ -104,7 +102,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
 
   currentWorkspace = inject(CurrentWorkspaceService).workspace;
   currentProjectId = computed(() => this.boardView.board()?.projectId);
-  currentUser = this.store.selectSignal(selectCurrentUser);
+  currentUser = inject(SessionService).currentUser;
   message = this.composer.warning;
   content = this.composer.content;
   isInlineDirty = this.composer.isDirty;

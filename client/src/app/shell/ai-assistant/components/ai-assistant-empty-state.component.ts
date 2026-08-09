@@ -1,6 +1,5 @@
 import { Component, computed, inject, output } from '@angular/core';
-import { selectCurrentUserDisplayName } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { SessionService } from '@core/services/session.service';
 import { LucideSparkles } from '@lucide/angular';
 
 @Component({
@@ -48,10 +47,7 @@ export class AiAssistantEmptyStateComponent {
     $localize`:Suggested first question in the assistant:Find tasks with no assignee`,
   ];
 
-  private readonly store = inject(Store);
-  private readonly displayName = this.store.selectSignal(
-    selectCurrentUserDisplayName
-  );
+  private readonly displayName = inject(SessionService).displayName;
 
   protected readonly greeting = computed(() => {
     const name = this.firstName();

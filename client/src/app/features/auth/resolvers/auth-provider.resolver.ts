@@ -1,14 +1,11 @@
 import { inject } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { sessionEstablished } from '@app/core/store/auth/auth.actions';
-import { LoginResponse } from '@app/core/store/auth/auth.models';
-import { Store } from '@ngrx/store';
+import { LoginResponse } from '@core/models/session';
 
 export const authProvider: ResolveFn<boolean> = async (
   route: ActivatedRouteSnapshot
 ): Promise<boolean> => {
-  const store = inject(Store);
-
   const expiresValue = route.queryParamMap.get('expires');
   const email = route.queryParamMap.get('email');
   const userId = route.queryParamMap.get('userId');
@@ -44,7 +41,7 @@ export const authProvider: ResolveFn<boolean> = async (
     pictureUrl,
   };
 
-  store.dispatch(sessionEstablished({ user }));
+  inject(SessionService).establish(user);
 
   return true;
 };

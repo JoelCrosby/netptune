@@ -7,14 +7,13 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
 import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
-import { Store } from '@ngrx/store';
 import { RealtimeClientIdService } from './realtime-client-id.service';
 
 /** Bursts of remote edits arrive as one event each, and each one costs a round of reloads. */
@@ -49,13 +48,10 @@ export function provideWorkspaceEvents(): EnvironmentProviders {
  */
 @Injectable({ providedIn: 'root' })
 export class WorkspaceEventsService {
-  private readonly store = inject(Store);
   private readonly realtimeClientId = inject(RealtimeClientIdService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
 
-  private readonly isAuthenticated = this.store.selectSignal(
-    selectIsAuthenticated
-  );
+  private readonly isAuthenticated = inject(SessionService).isAuthenticated;
 
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 

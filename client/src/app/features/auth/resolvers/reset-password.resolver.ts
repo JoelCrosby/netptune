@@ -1,15 +1,12 @@
 import { inject } from '@angular/core';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { clearUserInfo } from '@app/core/store/auth/auth.actions';
-import { AuthCodeRequest } from '@app/core/store/auth/auth.models';
-import { Store } from '@ngrx/store';
+import { AuthCodeRequest } from '@core/models/session';
 
 export const resetPassword: ResolveFn<AuthCodeRequest | null> = (
   route: ActivatedRouteSnapshot
 ) => {
-  const store = inject(Store);
-
-  store.dispatch(clearUserInfo());
+  inject(AuthCommandsService).endSession();
 
   const userId = route.queryParamMap.get('userId');
   const code = route.queryParamMap.get('code');

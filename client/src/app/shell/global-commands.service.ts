@@ -5,14 +5,13 @@ import {
   inject,
   untracked,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
 import { PERMISSONS } from '@core/auth/permissions';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { CommandRegistry } from '@core/services/command-registry.service';
 import { WorkspaceService } from '@core/services/workspace.service';
-import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
 
 @Injectable()
 export class GlobalCommandsService implements OnDestroy {
@@ -20,13 +19,12 @@ export class GlobalCommandsService implements OnDestroy {
   private registry = inject(CommandRegistry);
   private workspace = inject(WorkspaceService);
   private assistant = inject(AiAssistantService);
-  private store = inject(Store);
   private canReadAutomations = hasPermission(PERMISSONS.automations.read);
   private automationCommandRegistered = false;
   private canReadStorage = hasPermission(PERMISSONS.storage.read);
   private storageCommandRegistered = false;
   private assistantCommandRegistered = false;
-  private authenticated = this.store.selectSignal(selectIsAuthenticated);
+  private authenticated = inject(SessionService).isAuthenticated;
   private userCommandsRegistered = false;
 
   private readonly commandIds = [

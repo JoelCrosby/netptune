@@ -10,17 +10,16 @@ import {
   viewChild,
   computed,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IconButtonComponent } from '@app/static/components/button/icon-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
-import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
 import {
   recentNotificationsResource,
   unreadNotificationCountResource,
 } from '@core/resources/notification.resource';
 import { NotificationCommandsService } from '@core/services/notification-commands.service';
 import { LucideBell } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { NotificationDropdownComponent } from './notification-dropdown.component';
 
 @Component({
@@ -61,7 +60,6 @@ import { NotificationDropdownComponent } from './notification-dropdown.component
   `,
 })
 export class NotificationBellComponent implements OnDestroy {
-  private store = inject(Store);
   private notificationCommands = inject(NotificationCommandsService);
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
@@ -69,7 +67,7 @@ export class NotificationBellComponent implements OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  readonly authenticated = this.store.selectSignal(selectIsAuthenticated);
+  readonly authenticated = inject(SessionService).isAuthenticated;
   private readonly recent = recentNotificationsResource();
   private readonly unread = unreadNotificationCountResource();
 

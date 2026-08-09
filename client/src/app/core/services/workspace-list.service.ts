@@ -19,4 +19,8 @@ export class WorkspaceListService {
   reload() {
     this.resource.reload();
   }
+
+  clear() {
+    this.held.set(undefined);
+  }
 }

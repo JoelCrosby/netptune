@@ -14,8 +14,8 @@ import {
   linkedSignal,
   OnDestroy,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
-import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { BoardCommandsService } from '@core/services/board-commands.service';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import {
@@ -57,7 +57,6 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { InlineEditInputComponent } from '@static/components/inline-edit-input/inline-edit-input.component';
@@ -214,7 +213,6 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
   `,
 })
 export class BoardGroupsViewComponent implements OnDestroy {
-  private store = inject(Store);
   private boardCommands = inject(BoardCommandsService);
   private boardView = inject(BoardViewService);
   private selection = inject(BoardSelectionService);
@@ -226,7 +224,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
 
   private workspaceId = inject(CurrentWorkspaceService).slug;
 
-  isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  isAuthenticated = inject(SessionService).isAuthenticated;
 
   groups = this.selection.groups;
 

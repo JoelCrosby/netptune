@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { RouterLink } from '@angular/router';
 import { PageHeaderBackLinkComponent } from '@app/static/components/page-header/page-header-back-link.component';
-import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
 import { ButtonLinkComponent } from '@static/components/button/button-link.component';
 import { ShellService } from './shell.service';
 import { NotificationBellComponent } from '@app/entry/components/notification-bell/notification-bell.component';
@@ -53,9 +52,7 @@ import { AiAssistantButtonComponent } from './ai-assistant/ai-assistant-button.c
   `,
 })
 export class ShellNavbarComponent {
-  readonly store = inject(Store);
-
   shell = inject(ShellService);
 
-  readonly authenticated = this.store.selectSignal(selectIsAuthenticated);
+  readonly authenticated = inject(SessionService).isAuthenticated;
 }

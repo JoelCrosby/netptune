@@ -1,10 +1,6 @@
 import { Component, computed, inject, output } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
-import {
-  selectCurrentUser,
-  selectIsAuthenticated,
-} from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { currentSprintsResource } from '@core/resources/sprint.resource';
 import {
@@ -34,7 +30,6 @@ import {
   LucideUsers,
   LucideWorkflow,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { PERMISSONS } from '../core/auth/permissions';
 import { ShellMenuLinkListComponent } from './shell-menu-link-list.component';
@@ -96,8 +91,6 @@ const maxSprintLinks = 2;
   ],
 })
 export class ShellSidebarComponent {
-  private store = inject(Store);
-
   shell = inject(ShellService);
 
   readonly profileLink: ShellMenuLink = {
@@ -110,7 +103,7 @@ export class ShellSidebarComponent {
   currentSprints = this.currentSprintsRef.value;
   currentSprintsLoaded = computed(() => !this.currentSprintsRef.isLoading());
 
-  authenticated = this.store.selectSignal(selectIsAuthenticated);
+  authenticated = inject(SessionService).isAuthenticated;
 
   isAssistantAvailable = inject(SessionService).isAssistantAvailable;
 
@@ -379,7 +372,7 @@ export class ShellSidebarComponent {
     return links;
   });
 
-  user = this.store.selectSignal(selectCurrentUser);
+  user = inject(SessionService).currentUser;
   workspaceChange = output<Workspace>();
 
   onWorkspaceChange(workspace: Workspace) {

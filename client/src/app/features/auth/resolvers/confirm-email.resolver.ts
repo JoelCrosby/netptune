@@ -1,5 +1,5 @@
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { AuthCodeRequest } from '@app/core/store/auth/auth.models';
+import { AuthCodeRequest } from '@core/models/session';
 
 export const confirmEmail: ResolveFn<AuthCodeRequest | null> = (
   route: ActivatedRouteSnapshot

@@ -1,9 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
-import { Store } from '@ngrx/store';
 import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
-import { selectCurrentUserId } from '@core/store/auth/auth.selectors';
 import { PERMISSONS } from '@app/core/auth/permissions';
 import { Workspace } from '@core/models/workspace';
 import {
@@ -149,7 +148,6 @@ import { take } from 'rxjs/operators';
 })
 export class WorkspaceSettings {
   private workspaceCommands = inject(WorkspaceCommandsService);
-  private store = inject(Store);
 
   protected readonly visibilityIcon = LucideGlobe;
   protected readonly leaveIcon = LucideLogOut;
@@ -165,7 +163,7 @@ export class WorkspaceSettings {
 
   isPublic = computed(() => this.workspace()?.isPublic ?? false);
   workspace = inject(CurrentWorkspaceService).workspace;
-  private currentUserId = this.store.selectSignal(selectCurrentUserId);
+  private currentUserId = inject(SessionService).currentUserId;
 
   canUpdate = hasPermission(PERMISSONS.workspace.update);
   canDelete = hasPermission(PERMISSONS.workspace.delete);

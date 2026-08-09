@@ -5,7 +5,6 @@ import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
 import { LucideCheck } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
@@ -125,7 +124,6 @@ import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task
   providers: [TaskDetailService],
 })
 export class TaskDetailPageComponent {
-  store = inject(Store);
   router = inject(Router);
 
   entityType = EntityType.task;

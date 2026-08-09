@@ -5,22 +5,17 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
+import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { Router } from '@angular/router';
-import {
-  logoutSuccess,
-  sessionEstablished,
-} from '@app/core/store/auth/auth.actions';
-import { selectHasAuthSession } from '@app/core/store/auth/auth.selectors';
 import { AuthService } from '@core/auth/auth.service';
 import { environment } from '@env/environment';
-import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
 import {
   catchError,
   finalize,
-  first,
   shareReplay,
   switchMap,
   tap,
@@ -39,8 +34,9 @@ export const authInterceptor = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-  const store = inject(Store);
+  const authCommands = inject(AuthCommandsService);
   const currentWorkspace = inject(CurrentWorkspaceService);
+  const session = inject(SessionService);
   const workspaceList = inject(WorkspaceListService);
   const router = inject(Router);
   const workspaceService = inject(WorkspaceService);
@@ -62,7 +58,7 @@ export const authInterceptor = (
     if (!sessionRefreshRequest$) {
       sessionRefreshRequest$ = authService.refresh().pipe(
         tap((user) => {
-          store.dispatch(sessionEstablished({ user }));
+          session.establish(user);
           workspaceList.reload();
         }),
         finalize(() => {
@@ -73,8 +69,8 @@ export const authInterceptor = (
     }
 
     const sessionRefreshWithLogoutOnFailure$ = sessionRefreshRequest$.pipe(
-      catchError((err) => {
-        store.dispatch(logoutSuccess());
+      catchError((err: unknown) => {
+        authCommands.endSession();
         void router.navigate(['/auth/login']);
         return throwError(() => err);
       })
@@ -108,12 +104,9 @@ export const authInterceptor = (
     catchError((err: unknown) => {
       if (err instanceof HttpErrorResponse) {
         if (err.status === 401 && !isAuthManagementRequest(req)) {
-          return store.select(selectHasAuthSession).pipe(
-            first(),
-            switchMap((hasSession) =>
-              hasSession ? handle401(req) : throwError(() => err)
-            )
-          );
+          return session.hasAuthSession()
+            ? handle401(req)
+            : throwError(() => err);
         }
       }
 

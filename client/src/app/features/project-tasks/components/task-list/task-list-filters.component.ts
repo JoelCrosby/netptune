@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Selected } from '@core/models/selected';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
@@ -9,7 +9,6 @@ import { TaskListFlagsComponent } from './task-list-flags.component';
 import { TaskListSearchComponent } from './task-list-search.component';
 import { TaskListSelectionActionsComponent } from './task-list-selection-actions.component';
 import { TaskListStatusComponent } from './task-list-status.component';
-import { Store } from '@ngrx/store';
 import { PERMISSONS } from '@app/core/auth/permissions';
 
 @Component({
@@ -50,7 +49,6 @@ import { PERMISSONS } from '@app/core/auth/permissions';
 })
 export class TaskListFiltersComponent {
   readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
-  readonly store = inject(Store);
 
   readStatus = hasPermission(PERMISSONS.statuses.read);
 

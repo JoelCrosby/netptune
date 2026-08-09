@@ -6,7 +6,6 @@ import {
   TaskPropertiesComponent,
   TaskReporter,
 } from '@app/static/components/task-properties/task-properties.component';
-import { Store } from '@ngrx/store';
 import { TaskDetailService } from './task-detail.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
@@ -43,7 +42,6 @@ import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.sel
   `,
 })
 export class TaskDetailPropertiesComponent {
-  readonly store = inject(Store);
   readonly taskDetailService = inject(TaskDetailService);
   private readonly taskCommands = inject(TaskCommandsService);
   private readonly canUpdate = selectCanUpdateTask();

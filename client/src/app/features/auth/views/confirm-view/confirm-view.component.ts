@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { ActivatedRoute } from '@angular/router';
-import { AuthCodeRequest } from '@app/core/store/auth/auth.models';
+import { AuthCodeRequest } from '@core/models/session';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 
 @Component({

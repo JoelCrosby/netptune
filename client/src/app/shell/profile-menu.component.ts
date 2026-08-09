@@ -1,8 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { ThemeService } from '@core/services/theme.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { PERMISSONS } from '@core/auth/permissions';
 import { APPEARANCE_THEME } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
@@ -14,7 +14,6 @@ import {
   LucideUser,
 } from '@lucide/angular';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
@@ -109,13 +108,12 @@ import { LocaleSwitcherComponent } from './locale-switcher.component';
   `,
 })
 export class ProfileMenuComponent {
-  private readonly store = inject(Store);
   private readonly authCommands = inject(AuthCommandsService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly preferences = inject(UserPreferencesService);
 
-  readonly user = this.store.selectSignal(selectCurrentUser);
+  readonly user = inject(SessionService).currentUser;
   readonly effectiveTheme = inject(ThemeService).theme;
   readonly canReadWorkspace = hasPermission(PERMISSONS.workspace.read);
 

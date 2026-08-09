@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { UserResponse } from '@app/core/store/auth/auth.models';
+import { UserResponse } from '@core/models/session';
 import { CommentViewModel } from '@core/models/comment';
 import { AppUser } from '@core/models/appuser';
 

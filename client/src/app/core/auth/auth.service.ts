@@ -6,25 +6,24 @@ import {
   inject,
   provideAppInitializer,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { RegisterRequest } from '@app/core/models/register-request';
-import { Store } from '@ngrx/store';
 import { catchError, firstValueFrom, of, tap } from 'rxjs';
 import { ClientResponse } from '../models/client-response';
 import { LoginRequest } from '../models/login-request';
-import { sessionEstablished } from '../store/auth/auth.actions';
 import {
   AuthCodeRequest,
   LinkProviderRequest,
   LoginResponse,
   ResetPasswordRequest,
   UserResponse,
-} from '../store/auth/auth.models';
+} from '@core/models/session';
 
 export function provideAuthRefresh(): EnvironmentProviders {
   return provideAppInitializer(() => {
     const authService = inject(AuthService);
-    const store = inject(Store);
+    const session = inject(SessionService);
     const workspaceList = inject(WorkspaceListService);
     const location = inject(Location);
 
@@ -35,7 +34,7 @@ export function provideAuthRefresh(): EnvironmentProviders {
     return firstValueFrom(
       authService.refresh().pipe(
         tap((user) => {
-          store.dispatch(sessionEstablished({ user }));
+          session.establish(user);
           workspaceList.reload();
         }),
         catchError(() => of(null))

@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { Params, RouterLink } from '@angular/router';
-import { selectCurrentUserId } from '@core/store/auth/auth.selectors';
 import {
   TaskPriority,
   taskPriorityColors,
@@ -8,7 +8,6 @@ import {
 } from '@core/enums/task-priority';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
-import { Store } from '@ngrx/store';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
@@ -106,12 +105,11 @@ import { TaskStatusPillComponent } from '@static/components/task-status-pill.com
   `,
 })
 export class DashboardAssignedTasksComponent {
-  private store = inject(Store);
   private hub = inject(ProjectTasksHubService);
 
   readonly totalCount = signal<number | null>(null);
 
-  readonly currentUserId = this.store.selectSignal(selectCurrentUserId);
+  readonly currentUserId = inject(SessionService).currentUserId;
 
   private params = computed<Params>(() => {
     const userId = this.currentUserId();

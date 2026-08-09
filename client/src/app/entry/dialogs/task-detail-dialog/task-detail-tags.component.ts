@@ -6,7 +6,6 @@ import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.sel
 import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
-import { Store } from '@ngrx/store';
 import { TaskDetailService } from './task-detail.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 
@@ -33,8 +32,6 @@ import { TaskCommandsService } from '@core/services/task-commands.service';
   imports: [FormSelectTagsComponent, FormSelectTagsOptionComponent],
 })
 export class TaskDetailTagsComponent {
-  readonly store = inject(Store);
-
   readonly tags = httpResource<Tag[]>(
     () => ({
       url: 'api/tags/workspace',

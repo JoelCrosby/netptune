@@ -1,16 +1,14 @@
 import { httpResource } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { SessionService } from '@core/services/session.service';
 import { AppUser } from '../models/appuser';
 import { ClientResponse } from '../models/client-response';
 import { LoginMethods } from '../models/login-methods';
-import { selectCurrentUserId } from '../store/auth/auth.selectors';
 import { reloadOnRefresh } from '../util/reload-on-refresh';
 
 /* The signed-in user's own record, which no workspace permission gates. */
 export const profileResource = () => {
-  const store = inject(Store);
-  const userId = store.selectSignal(selectCurrentUserId);
+  const userId = inject(SessionService).currentUserId;
 
   const resource = httpResource<AppUser>(() => {
     const id = userId();

@@ -2,7 +2,6 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import angular from 'angular-eslint';
 import typescript from 'typescript-eslint';
-import ngrx from '@ngrx/eslint-plugin/v9';
 
 export default defineConfig([
   globalIgnores(['projects/**/*', '**/*.js']),
@@ -14,7 +13,6 @@ export default defineConfig([
       ...typescript.configs.strict,
       ...typescript.configs.stylistic,
       ...angular.configs.tsRecommended,
-      ...ngrx.configs.all
     ],
 
     languageOptions: {

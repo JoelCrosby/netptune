@@ -6,11 +6,9 @@ import {
   withComponentInputBinding,
   withPreloading,
 } from '@angular/router';
-import { provideStore } from '@ngrx/store';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { provideAuthRefresh } from './app/core/auth/auth.service';
-import { metaReducers, reducers } from './app/core/core.state';
 import { authInterceptor } from './app/core/http-interceptors/auth.interceptor';
 import { provideNavigationService } from './app/core/services/navigation.service';
 import { provideVersionCheck } from './app/core/services/version-check.service';
@@ -25,16 +23,6 @@ bootstrapApplication(AppComponent, {
       withComponentInputBinding(),
       withPreloading(PreloadAllModules)
     ),
-    provideStore(reducers, {
-      metaReducers,
-      runtimeChecks: {
-        strictStateImmutability: true,
-        strictActionImmutability: true,
-        strictStateSerializability: false,
-        strictActionSerializability: false,
-        strictActionTypeUniqueness: true,
-      },
-    }),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAuthRefresh(),
     provideNavigationService(),

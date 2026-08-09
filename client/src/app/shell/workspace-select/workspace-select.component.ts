@@ -14,15 +14,14 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { debounce, form } from '@angular/forms/signals';
-import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ShellService } from '@app/shell/shell.service';
 import { Workspace } from '@core/models/workspace';
 import { filterObjectArray } from '@core/util/arrays';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
-import { Store } from '@ngrx/store';
 import { KeyboardService } from '@static/services/keyboard.service';
 import { WorkspaceBadgeComponent } from './workspace-badge.component';
 import { WorkspaceSelectMenuComponent } from './workspace-select-menu.component';
@@ -82,7 +81,6 @@ import { LucideChevronsUpDown } from '@lucide/angular';
   ],
 })
 export class WorkspaceSelectComponent implements OnDestroy {
-  private store = inject(Store);
   private authCommands = inject(AuthCommandsService);
   private keyboard = inject(KeyboardService);
   private overlay = inject(Overlay);
@@ -103,7 +101,7 @@ export class WorkspaceSelectComponent implements OnDestroy {
   readonly currentWorkspace = inject(CurrentWorkspaceService).workspace;
   readonly workspaceId = inject(CurrentWorkspaceService).id;
 
-  readonly isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  readonly isAuthenticated = inject(SessionService).isAuthenticated;
 
   filteredOptions = computed(() => {
     const options = this.workspaces();

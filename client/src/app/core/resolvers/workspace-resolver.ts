@@ -1,18 +1,17 @@
 import { inject } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
 import { WorkspacesService } from '@core/services/workspaces-api.service';
-import { Store } from '@ngrx/store';
 import { Observable, of, throwError } from 'rxjs';
-import { first, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
 export const workspaceResovler: ResolveFn<Workspace> = (
   next: ActivatedRouteSnapshot
 ): Observable<Workspace> => {
-  const store = inject(Store);
   const currentWorkspace = inject(CurrentWorkspaceService);
+  const session = inject(SessionService);
   const workspaces = inject(WorkspacesService);
 
   const workspaceKey =
@@ -22,8 +21,7 @@ export const workspaceResovler: ResolveFn<Workspace> = (
     return throwError(() => new Error('workspace key null'));
   }
 
-  return store.select(selectIsAuthenticated).pipe(
-    first(),
+  return of(session.isAuthenticated()).pipe(
     switchMap((isAuthenticated) => {
       if (isAuthenticated) {
         const open = currentWorkspace.workspace();

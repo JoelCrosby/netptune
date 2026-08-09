@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { clearUserInfo } from '@app/core/store/auth/auth.actions';
-import { WorkspaceInvite } from '@app/core/store/auth/auth.models';
-import { Store } from '@ngrx/store';
+import { WorkspaceInvite } from '@core/models/session';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -11,10 +10,9 @@ export const registerInvite: ResolveFn<WorkspaceInvite> = (
   route: ActivatedRouteSnapshot
 ) => {
   {
-    const store = inject(Store);
     const http = inject(HttpClient);
 
-    store.dispatch(clearUserInfo());
+    inject(AuthCommandsService).endSession();
 
     const code = route.queryParamMap.get('code');
 

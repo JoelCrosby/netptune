@@ -29,7 +29,6 @@ import {
   LucideTrash2,
   LucideUndo2,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -351,7 +350,6 @@ const ResumableStages = [
 })
 export class DataTransferViewComponent {
   readonly http = inject(HttpClient);
-  readonly store = inject(Store);
   readonly transferEvents = inject(TransferJobSseService);
   readonly confirmation = inject(ConfirmationService);
   readonly destroyRef = inject(DestroyRef);

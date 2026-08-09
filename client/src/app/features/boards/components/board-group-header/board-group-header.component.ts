@@ -15,7 +15,6 @@ import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-board-group-header',
@@ -57,7 +56,6 @@ import { Store } from '@ngrx/store';
   `,
 })
 export class BoardGroupHeaderComponent {
-  readonly store = inject(Store);
   private preferences = inject(UserPreferencesService);
   private dialog = inject(DialogService);
 

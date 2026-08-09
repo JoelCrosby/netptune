@@ -1,16 +1,14 @@
 import { computed, inject, Injectable, linkedSignal } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { TaskFilterService } from '@core/services/task-filter.service';
-import { selectCurrentUserId } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
 
 @Injectable({ providedIn: 'root' })
 export class BoardComposerService {
-  private readonly store = inject(Store);
   private readonly boardView = inject(BoardViewService);
   private readonly filters = inject(TaskFilterService);
 
-  private readonly currentUserId = this.store.selectSignal(selectCurrentUserId);
+  private readonly currentUserId = inject(SessionService).currentUserId;
 
   private readonly openGroupId = linkedSignal<
     string | undefined,

@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { PermissionListComponent } from '@app/static/components/permission-list/permission-list.component';
-import { Store } from '@ngrx/store';
 import { LucideShieldCheck, LucideUserRoundX } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import {
@@ -11,7 +11,6 @@ import {
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { PERMISSONS } from '@app/core/auth/permissions';
-import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { WorkspaceAppUser } from '@core/models/appuser';
@@ -124,7 +123,6 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 export class UserDetailComponent {
   protected readonly permissionsIcon = LucideShieldCheck;
 
-  readonly store = inject(Store);
   private readonly userCommands = inject(UserCommandsService);
 
   readonly user = input<WorkspaceAppUser>();
@@ -135,7 +133,7 @@ export class UserDetailComponent {
     WorkspaceRole.admin,
   ];
   readonly canUpdateRole = hasPermission(PERMISSONS.members.updateRole);
-  readonly currentUserId = this.store.selectSignal(selectCurrentUserId);
+  readonly currentUserId = inject(SessionService).currentUserId;
 
   readonly isSelf = computed(() => {
     const user = this.user();

@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
 import { ClientResponse } from '@core/models/client-response';
-import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
 import { catchError, finalize, of, tap } from 'rxjs';
 
 export interface RecentItem {
@@ -23,11 +22,8 @@ type RecentItemsClientResponse = ClientResponse<RecentItemsResponse>;
 @Injectable({ providedIn: 'root' })
 export class RecentItemsService {
   private http = inject(HttpClient);
-  private store = inject(Store);
 
-  private readonly authenticated = this.store.selectSignal(
-    selectIsAuthenticated
-  );
+  private readonly authenticated = inject(SessionService).isAuthenticated;
 
   readonly items = signal<RecentItem[]>([]);
   readonly scope = signal<'workspace' | 'global'>('workspace');

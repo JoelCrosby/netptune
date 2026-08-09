@@ -15,7 +15,7 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
-import { WorkspaceInvite } from '@app/core/store/auth/auth.models';
+import { WorkspaceInvite } from '@core/models/session';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { FormErrorsComponent } from '@static/components/form-error/form-errors.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
