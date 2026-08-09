@@ -120,10 +120,25 @@ export class UserPreferencesService {
   }
 
   private applyPreferenceSideEffects(preference: ResolvedPreferenceValue) {
-    if (
-      preference.definition.key === APPEARANCE_THEME &&
-      typeof preference.effectiveValue === 'string'
-    ) {
+    const isTheme = preference.definition.key === APPEARANCE_THEME;
+
+    if (!isTheme) {
+      return;
+    }
+
+    /**
+     * A theme nobody chose falls back to the browser's preference rather than
+     * the definition's default, which would put every new account on light.
+     */
+    const hasChosenTheme = preference.source !== 'default';
+
+    if (!hasChosenTheme) {
+      this.theme.clear();
+
+      return;
+    }
+
+    if (typeof preference.effectiveValue === 'string') {
       this.theme.set(preference.effectiveValue);
     }
   }

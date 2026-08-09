@@ -9,7 +9,7 @@
 
     <script>
       (function () {
-        var theme = 'light';
+        var theme = null;
 
         try {
           var cached = JSON.parse(
@@ -19,6 +19,14 @@
             theme = cached;
           }
         } catch (e) {
+        }
+
+        if (!theme) {
+          var prefersDark =
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+          theme = prefersDark ? 'dark' : 'light';
         }
 
         document.documentElement.classList.add(theme);

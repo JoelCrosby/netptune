@@ -5,7 +5,7 @@ const themes = new Set(['light', 'dark']);
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  private readonly current = signal(readStoredTheme());
+  private readonly current = signal(initialTheme());
 
   readonly theme = this.current.asReadonly();
 
@@ -14,7 +14,16 @@ export class ThemeService {
   }
 
   set(theme: string) {
-    this.current.set(theme.toLowerCase());
+    const chosen = theme.toLowerCase();
+
+    this.current.set(chosen);
+    this.remember(chosen);
+  }
+
+  /** Nothing is chosen any more, so the browser's own preference decides again. */
+  clear() {
+    this.forget();
+    this.current.set(browserTheme());
   }
 
   private apply(theme: string) {
@@ -26,7 +35,14 @@ export class ThemeService {
     }
 
     classList.add(theme);
+  }
 
+  /**
+   * Only a chosen theme is cached. A theme that came from the browser is not,
+   * so a later change to that preference is picked up rather than overruled by
+   * what it happened to be on an earlier visit.
+   */
+  private remember(theme: string) {
     try {
       localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
     } catch {
@@ -34,16 +50,37 @@ export class ThemeService {
       // already applied; only the pre-paint cache is lost.
     }
   }
+
+  private forget() {
+    try {
+      localStorage.removeItem(THEME_STORAGE_KEY);
+    } catch {
+      // Nothing to undo — the cache simply stays as it was.
+    }
+  }
 }
 
 // index.html reads the same key before first paint, so the two have to agree.
-function readStoredTheme(): string {
+function initialTheme(): string {
+  return storedTheme() ?? browserTheme();
+}
+
+function storedTheme(): string | null {
   try {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
     const theme = stored ? (JSON.parse(stored) as string) : null;
 
-    return theme && themes.has(theme) ? theme : 'light';
+    return theme && themes.has(theme) ? theme : null;
   } catch {
-    return 'light';
+    return null;
   }
+}
+
+/** Whatever the operating system or browser is already set to. */
+function browserTheme(): string {
+  const prefersDark = window.matchMedia?.(
+    '(prefers-color-scheme: dark)'
+  ).matches;
+
+  return prefersDark ? 'dark' : 'light';
 }
