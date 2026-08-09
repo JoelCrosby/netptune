@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 using FluentAssertions;
 
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Authentication.Models;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Events;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Notifications;
 using Netptune.Entities.Contexts;
@@ -221,6 +223,30 @@ public sealed class NotificationsEndpointTests(NetptuneFixture fixture)
         (await ReadFlags(kept)).IsDeleted.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task Get_ShouldReturnTheMessageWrittenByTheRaisingEvent()
+    {
+        var message = $"Netptune says hello {Guid.NewGuid()}";
+        var notificationId = await SeedAutomationNotification(message);
+
+        var notifications = await GetNotificationsAsync();
+        var notification = notifications.Single(item => item.Id == notificationId);
+
+        notification.Message.Should().Be(message);
+        notification.ActivityType.Should().Be(ActivityType.AutomationNotification);
+    }
+
+    [Fact]
+    public async Task Get_ShouldReturnNoMessage_WhenTheRaisingEventWroteNone()
+    {
+        var seeded = await SeedNotifications(1);
+
+        var notifications = await GetNotificationsAsync();
+        var notification = notifications.Single(item => item.Id == seeded[0]);
+
+        notification.Message.Should().BeNull();
+    }
+
     private sealed record NotificationFlags(bool IsRead, bool IsDeleted);
 
     private async Task<NotificationFlags> ReadFlags(int notificationId)
@@ -272,6 +298,62 @@ public sealed class NotificationsEndpointTests(NetptuneFixture fixture)
         await context.SaveChangesAsync();
 
         return notifications.Select(item => item.Id).ToList();
+    }
+
+    // Mirrors what an automation notify action writes: the rendered message lives on the event record
+    // that raised the notification, not on the notification row.
+    private async Task<int> SeedAutomationNotification(string message)
+    {
+        using var scope = fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var workspace = await context.Workspaces.SingleAsync(item => item.Slug == "netptune");
+        var currentUser = await fixture.Client.GetFromJsonAsync<CurrentUserResponse>("api/auth/current-user");
+        var userId = currentUser!.UserId;
+        var taskId = await context.ProjectTasks
+            .Where(item => item.WorkspaceId == workspace.Id)
+            .Select(item => item.Id)
+            .FirstAsync();
+
+        var eventRecord = new EventRecord
+        {
+            EventId = Guid.NewGuid(),
+            WorkspaceId = workspace.Id,
+            ActorUserId = userId,
+            EventKey = EventKeys.EntityActivityRecorded,
+            SubjectType = EventEntityTypes.From(EntityType.Task),
+            SubjectId = taskId.ToString(),
+            OccurredAt = DateTime.UtcNow,
+            RecordedAt = DateTime.UtcNow,
+            RetentionClass = EventRetentionClasses.Audit,
+            Payload = JsonSerializer.SerializeToDocument(new
+            {
+                activityType = (int)ActivityType.AutomationNotification,
+                message,
+            }),
+        };
+
+        context.EventRecords.Add(eventRecord);
+
+        await context.SaveChangesAsync();
+
+        var notification = new Notification
+        {
+            UserId = userId,
+            EventRecordId = eventRecord.Id,
+            WorkspaceId = workspace.Id,
+            IsRead = false,
+            EntityType = EntityType.Task,
+            ActivityType = ActivityType.AutomationNotification,
+            CreatedByUserId = userId,
+            OwnerId = userId,
+        };
+
+        context.Notifications.Add(notification);
+
+        await context.SaveChangesAsync();
+
+        return notification.Id;
     }
 
     private async Task<IReadOnlyList<NotificationViewModel>> GetNotificationsAsync()

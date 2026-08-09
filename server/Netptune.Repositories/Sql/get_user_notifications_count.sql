@@ -5,6 +5,7 @@ WITH notification_feed AS (
     SELECT
           n.id
         , TRIM(u.firstname || ' ' || u.lastname) AS actorusername
+        , al.payload ->> 'message' AS message
         , COALESCE(pt.name, p.name, b.name, bg.name, s.name) AS entityname
         , CASE
             WHEN n.entity_type = @taskType    AND tp.key IS NOT NULL THEN tp.key || '-' || pt.project_scope_id::text
@@ -31,4 +32,5 @@ FROM notification_feed
 WHERE @search::text IS NULL
    OR actorusername ILIKE @search
    OR entityname ILIKE @search
-   OR entityidentifier ILIKE @search;
+   OR entityidentifier ILIKE @search
+   OR message ILIKE @search;

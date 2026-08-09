@@ -729,6 +729,13 @@ public class EventRecordRepository : Repository<DataContext, EventRecord, long>,
             return values.Count == 0 ? "Users changed" : $"Users: {visibleEmails}{suffix}";
         }
 
+        var message = GetPayloadValue(payload, "message");
+
+        if (message is not null)
+        {
+            return message;
+        }
+
         return "No additional details";
     }
 

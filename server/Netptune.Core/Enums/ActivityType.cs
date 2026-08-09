@@ -45,4 +45,5 @@ public enum ActivityType
     ImportFailed = 37,
     ExportCompleted = 38,
     ExportFailed = 39,
+    AutomationNotification = 40,
 }

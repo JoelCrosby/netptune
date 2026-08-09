@@ -65,7 +65,7 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
                 WorkspaceUserIds = audience,
                 ActorUserId = actorUserId,
                 WorkspaceId = task.WorkspaceId,
-                ActivityType = ActivityType.Modify,
+                ActivityType = ActivityType.AutomationNotification,
                 ExcludeActor = false,
             },
             cancellationToken);
@@ -76,7 +76,7 @@ internal sealed class NotifyTaskAssigneesHandler : IActionExecutionHandler
             IsRead = false,
             WorkspaceId = task.WorkspaceId,
             EntityType = EntityType.Task,
-            ActivityType = ActivityType.Modify,
+            ActivityType = ActivityType.AutomationNotification,
             CreatedByUserId = actorUserId,
             OwnerId = actorUserId,
         }).ToList();

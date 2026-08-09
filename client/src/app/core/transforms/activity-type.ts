@@ -154,6 +154,8 @@ export const activityTypeToString = (value: ActivityType): string => {
       return 'Export completed';
     case ActivityType.exportFailed:
       return 'Export failed';
+    case ActivityType.automationNotification:
+      return 'Automation notification';
     default:
       return '[UNKNOWN ACTIVITY TYPE]';
   }
@@ -161,11 +163,18 @@ export const activityTypeToString = (value: ActivityType): string => {
 
 /**
  * Whether a notification should name the entity it happened to. Transfer jobs are workspace scoped and
- * their summary already says everything, so "Import completed Workspace" is noise.
+ * their summary already says everything, so "Import completed Workspace" is noise. A notification that
+ * carries its own message is the same story — the message was written to be read on its own, and it
+ * usually names the task itself through a variable.
  */
-export const notificationNamesEntity = (
-  activityType: ActivityType
-): boolean => {
+export const notificationNamesEntity = (value: {
+  activityType: ActivityType;
+  message?: string | null;
+}): boolean => {
+  if (value.message) return false;
+
+  const { activityType } = value;
+
   return (
     activityType !== ActivityType.importCompleted &&
     activityType !== ActivityType.importFailed &&
@@ -187,7 +196,12 @@ export const notificationSummary = (value: {
   activityEntryId?: number | null;
   changedFields?: string[] | null;
   revisionCount?: number | null;
+  message?: string | null;
 }): string => {
+  // An automation notify action writes the sentence its author typed. Nothing derived from the activity
+  // type can say it better, so it wins outright.
+  if (value.message) return value.message;
+
   if (!value.activityEntryId) return activityTypeToString(value.activityType);
 
   const merged = mergedActivitySummary({

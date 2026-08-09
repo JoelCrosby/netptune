@@ -44,14 +44,13 @@ export class NotificationPopupComponent {
   protected readonly summary = computed(() => {
     const notification = this.notification();
 
+    const namesEntity = notificationNamesEntity(notification);
     const parts = [
       notification.actorUsername,
       notificationSummary(notification),
-      notificationNamesEntity(notification.activityType)
-        ? entityTypeToString(notification.entityType)
-        : null,
-      notification.entityIdentifier,
-      notification.entityName,
+      namesEntity ? entityTypeToString(notification.entityType) : null,
+      namesEntity ? notification.entityIdentifier : null,
+      namesEntity ? notification.entityName : null,
     ];
 
     return parts.filter(Boolean).join(' ');

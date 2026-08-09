@@ -207,7 +207,7 @@ internal sealed class NotifyTaskAssigneesAction : IAutomationAction
             RetentionClass = EventRetentionClasses.Audit,
             Payload = JsonSerializer.SerializeToDocument(new
             {
-                activityType = (int)ActivityType.Modify,
+                activityType = (int)ActivityType.AutomationNotification,
                 workspaceSlug = task.Workspace!.Slug,
                 projectSlug = task.Project?.Key,
                 automationRuleId = rule.Id,

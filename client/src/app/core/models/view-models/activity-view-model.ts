@@ -57,4 +57,5 @@ export enum ActivityType {
   importFailed = 37,
   exportCompleted = 38,
   exportFailed = 39,
+  automationNotification = 40,
 }

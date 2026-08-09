@@ -47,18 +47,18 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
           </div>
           <span class="text-foreground/70 text-sm">
             {{ notificationSummary(notification) }}
-            @if (notificationNamesEntity(notification.activityType)) {
+            @if (notificationNamesEntity(notification)) {
               {{ entityTypeToString(notification.entityType) }}
-            }
-            @if (notification.entityIdentifier) {
-              <span class="text-foreground/85 font-medium">
-                {{ notification.entityIdentifier }}
-              </span>
-            }
-            @if (notification.entityName) {
-              <span class="text-foreground/60">
-                {{ notification.entityName }}
-              </span>
+              @if (notification.entityIdentifier) {
+                <span class="text-foreground/85 font-medium">
+                  {{ notification.entityIdentifier }}
+                </span>
+              }
+              @if (notification.entityName) {
+                <span class="text-foreground/60">
+                  {{ notification.entityName }}
+                </span>
+              }
             }
           </span>
         </div>

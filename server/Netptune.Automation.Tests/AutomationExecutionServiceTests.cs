@@ -1397,6 +1397,7 @@ public sealed class AutomationExecutionServiceTests
         await using var scope = await Fixture.CreateScope();
 
         var scenario = await AutomationTestData.CreateScenario(scope.Db);
+
         await AutomationTestData.CreateNotifyRule(
             scope.Db,
             scenario,
@@ -1408,8 +1409,17 @@ public sealed class AutomationExecutionServiceTests
         var activityLog = await scope.Db.EventRecords
             .SingleAsync(record => record.EventKey == EventKeys.EntityActivityRecorded, TestContext.Current.CancellationToken);
         var message = activityLog.Payload.RootElement.GetProperty("message").GetString();
+        var notification = await scope.Db.Notifications.SingleAsync(TestContext.Current.CancellationToken);
 
         message.Should().Be($"{scenario.Project.Key}-{scenario.Task.ProjectScopeId} moved by Automation Rule");
+
+        activityLog.Payload.RootElement
+            .GetProperty("activityType")
+            .GetInt32()
+            .Should()
+            .Be((int)ActivityType.AutomationNotification);
+
+        notification.ActivityType.Should().Be(ActivityType.AutomationNotification);
     }
 
     [Fact]

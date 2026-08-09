@@ -21,6 +21,9 @@ WITH notification_feed AS (
         , n.activity_entry_id AS activityentryid
         , ae.changed_fields   AS changedfieldsarray
         , ae.revision_count   AS revisioncount
+        -- Events that carry their own sentence (automation notify actions) render it verbatim instead of
+        -- the summary the client derives from the activity type.
+        , al.payload ->> 'message' AS message
         , COALESCE(pt.name, p.name, b.name, bg.name, s.name) AS entityname
         , CASE
             WHEN n.entity_type = @taskType    AND tp.key IS NOT NULL THEN tp.key || '-' || pt.project_scope_id::text
@@ -62,5 +65,6 @@ WHERE @search::text IS NULL
    OR actorusername ILIKE @search
    OR entityname ILIKE @search
    OR entityidentifier ILIKE @search
+   OR message ILIKE @search
 ORDER BY createdat DESC
 OFFSET @skip LIMIT @take;

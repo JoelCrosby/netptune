@@ -69,16 +69,16 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
           [class.opacity-60]="notification.isRead"
           (click)="onOpen(notification)">
           {{ notificationSummary(notification) }}
-          @if (notificationNamesEntity(notification.activityType)) {
+          @if (notificationNamesEntity(notification)) {
             {{ entityTypeToString(notification.entityType) }}
-          }
-          @if (notification.entityIdentifier) {
-            <span class="font-medium">{{ notification.entityIdentifier }}</span>
-          }
-          @if (notification.entityName) {
-            <span class="text-foreground/60 ml-2">
-              {{ notification.entityName }}
-            </span>
+            @if (notification.entityIdentifier) {
+              <span class="font-medium">{{ notification.entityIdentifier }}</span>
+            }
+            @if (notification.entityName) {
+              <span class="text-foreground/60 ml-2">
+                {{ notification.entityName }}
+              </span>
+            }
           }
         </button>
       </ng-template>

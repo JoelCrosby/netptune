@@ -182,6 +182,7 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         ActivityType.ImportFailed => "Import failed",
         ActivityType.ExportCompleted => "Export completed",
         ActivityType.ExportFailed => "Export failed",
+        ActivityType.AutomationNotification => "Automation notification",
         _ => activityType.ToString(),
     };
 
