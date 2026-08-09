@@ -10,10 +10,6 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, tap } from 'rxjs';
 
-/**
- * The task the detail dialog or page is showing. It is provided by whichever of
- * those is open, so every section of the view reads the same one.
- */
 @Injectable()
 export class TaskDetailService {
   private readonly sprintsService = inject(SprintsService);

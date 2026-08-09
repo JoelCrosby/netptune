@@ -12,15 +12,6 @@ import { Store } from '@ngrx/store';
 
 const FILTER_PARAMS = ['term', 'tags', 'users', 'statusIds', 'sprintId'];
 
-/**
- * The task filters, which follow the user between the views that share them rather
- * than belonging to any one of them. They are held here and written into the URL of
- * every filterable route, which is what makes a filtered view linkable — and what
- * makes the views reload, since they all reload on navigation.
- *
- * A URL that names any filter wins outright: a link describes the whole filter, so
- * arriving on one must not inherit half of a previous view's.
- */
 @Injectable({ providedIn: 'root' })
 export class TaskFilterService {
   private readonly store = inject(Store);
@@ -89,6 +80,8 @@ export class TaskFilterService {
       if (!isFilterable) return;
 
       untracked(() => {
+        // A link describes the whole filter, so arriving on one must not inherit
+        // half of the previous view's.
         const isLinked = FILTER_PARAMS.some((param) => params.has(param));
 
         if (isLinked) {

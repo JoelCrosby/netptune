@@ -39,9 +39,8 @@ export interface CursorResourceRef<T> {
 }
 
 /**
- * A `permissionResource` for an endpoint that pages by cursor, where the view shows
- * the pages stacked rather than one at a time. Returning undefined from `request`
- * idles the resource and empties the list; changing it starts a new list.
+ * A `permissionResource` for an endpoint that pages by cursor, where the view stacks
+ * the pages. Returning undefined from `request` idles it; changing it starts a new list.
  */
 export function cursorResource<T>(
   request: () => CursorResourceRequest | undefined,

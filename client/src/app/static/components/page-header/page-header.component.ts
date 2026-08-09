@@ -1,9 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
-import { openSideMenu } from '@core/store/layout/layout.actions';
-import { selectIsMobileView } from '@core/store/layout/layout.selectors';
+import { LayoutService } from '@core/services/layout.service';
 import { HeaderAction } from '@core/types/header-action';
 import { LucideMenu } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '../button/flat-button.component';
 import { PageHeaderActionsComponent } from './page-header-actions.component';
 import { PageHeaderTitleComponent } from './page-header-title.component';
@@ -57,8 +55,6 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
   `,
 })
 export class PageHeaderComponent {
-  private store = inject(Store);
-
   readonly title = input<string | null>();
   readonly titleEditable = input(false);
   readonly count = input<number | null>();
@@ -69,9 +65,11 @@ export class PageHeaderComponent {
   readonly actionClick = output();
   readonly titleSubmitted = output<string>();
 
-  readonly showSideNavToggle = this.store.selectSignal(selectIsMobileView);
+  private readonly layout = inject(LayoutService);
+
+  readonly showSideNavToggle = this.layout.isMobileView;
 
   onOpenMenu() {
-    this.store.dispatch(openSideMenu());
+    this.layout.openSideMenu();
   }
 }

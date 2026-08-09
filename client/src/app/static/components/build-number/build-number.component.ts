@@ -1,7 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { loadBuildInfo } from '@core/store/meta/meta.actions';
-import { selectBuildInfo } from '@core/store/meta/meta.selectors';
-import { Store } from '@ngrx/store';
+import { Component, inject } from '@angular/core';
+import { BuildInfoService } from '@core/services/build-info.service';
 
 @Component({
   selector: 'app-build-number',
@@ -47,12 +45,6 @@ import { Store } from '@ngrx/store';
     }
   `,
 })
-export class BuildNumberComponent implements OnInit {
-  private store = inject(Store);
-
-  buildInfo = this.store.selectSignal(selectBuildInfo);
-
-  ngOnInit() {
-    this.store.dispatch(loadBuildInfo.init());
-  }
+export class BuildNumberComponent {
+  readonly buildInfo = inject(BuildInfoService).buildInfo;
 }

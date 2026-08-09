@@ -11,8 +11,7 @@ import {
 import { filter } from 'rxjs';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
-import { toggleSideMenu } from '@core/store/layout/layout.actions';
-import { selectSideMenuOpen } from '@core/store/layout/layout.selectors';
+import { LayoutService } from '@core/services/layout.service';
 import { Store } from '@ngrx/store';
 import { ShellSidebarComponent } from './shell-sidebar.component';
 import { ShellService } from './shell.service';
@@ -109,6 +108,8 @@ export class ShellComponent {
   private store = inject(Store);
   private router = inject(Router);
 
+  private layout = inject(LayoutService);
+
   shell = inject(ShellService);
   readonly assistant = inject(AiAssistantService);
   readonly globalCommands = inject(GlobalCommandsService);
@@ -117,7 +118,7 @@ export class ShellComponent {
   readonly lastWorkspace = inject(LastWorkspaceService);
 
   authenticated = this.store.selectSignal(selectIsAuthenticated);
-  sideMenuOpen = this.store.selectSignal(selectSideMenuOpen);
+  sideMenuOpen = this.layout.sideMenuOpen;
 
   readonly chunkLoading = signal(false);
 
@@ -143,7 +144,7 @@ export class ShellComponent {
   }
 
   onSidenavClosedStart() {
-    this.store.dispatch(toggleSideMenu());
+    this.layout.toggleSideMenu();
   }
 
   onWorkspaceChange(workspace: Workspace) {

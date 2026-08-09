@@ -22,7 +22,6 @@ import { AuthPageContainerComponent } from '../auth-page-container/auth-page-con
 import { LoginGithubComponent } from './login-github.component';
 import { LoginGoogleComponent } from './login-google.component';
 import { LoginMicrosoftComponent } from './login-microsoft.component';
-import { selectBuildInfo } from '@app/core/store/meta/meta.selectors';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
 import { AuthFormPanelComponent } from '../auth-form-panel/auth-form-panel.component';
@@ -132,7 +131,6 @@ export class LoginComponent {
 
   loading = this.store.selectSignal(selectLoginLoading);
   showLoginError = this.store.selectSignal(selectShowLoginError);
-  buildInfo = this.store.selectSignal(selectBuildInfo);
 
   loginFormModel = signal({
     email: '',
