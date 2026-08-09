@@ -1,5 +1,5 @@
 import { httpResource } from '@angular/common/http';
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import {
   ExportDefinitionViewModel,
   TransferCatalog,
@@ -14,7 +14,7 @@ export const transferCatalogResource = () => {
 
 export const exportDefinitionResource = () => {
   return permissionResource<ExportDefinitionViewModel[]>(
-    netptunePermissions.tasks.export,
+    PERMISSONS.tasks.export,
     () => ({ url: 'api/export/definitions' }),
     { defaultValue: [] }
   );

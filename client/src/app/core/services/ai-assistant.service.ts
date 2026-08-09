@@ -7,6 +7,8 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { AiCredentialAvailability } from '@core/models/ai-credential';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
@@ -29,8 +31,6 @@ import { CurrentProjectService } from '@core/services/current-project.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { selectIsAssistantAvailable } from '@core/store/auth/auth.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { buildClientContext } from '@core/util/ai-client-context';
 import { referenceKey } from '@core/util/ai-references';
 import {
@@ -38,7 +38,6 @@ import {
   refreshScopesForChanges,
 } from '@core/util/ai-refresh-scopes';
 import { environment } from '@env/environment';
-import { Store } from '@ngrx/store';
 
 export interface AiChatEntry {
   role: 'user' | 'assistant';
@@ -86,11 +85,8 @@ const RESUME_POLL_INTERVAL = 2000;
 
 @Injectable({ providedIn: 'root' })
 export class AiAssistantService {
-  private readonly store = inject(Store);
   private readonly workspace = inject(WorkspaceService);
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   readonly workspaceKey = computed(() => this.workspaceId() ?? null);
 
@@ -103,7 +99,7 @@ export class AiAssistantService {
   private readonly locale = inject(LOCALE_ID);
 
   readonly isOpen = signal(false);
-  readonly isAvailable = this.store.selectSignal(selectIsAssistantAvailable);
+  readonly isAvailable = inject(SessionService).isAssistantAvailable;
   readonly mode = signal<AiDisplayMode>(
     this.storage.getItem<AiDisplayMode>(MODE_STORAGE_KEY) ?? 'overlay'
   );

@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectPermissions } from '@app/core/store/auth/auth.selectors';
+import { SessionService } from '@core/services/session.service';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { BoardSelectionService } from '@core/services/board-selection.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -12,7 +12,6 @@ import {
   LucideTrash2,
   LucideUsers,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
 import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
@@ -71,7 +70,6 @@ import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-
   `,
 })
 export class BoardGroupsSelectionComponent {
-  private store = inject(Store);
   private dialog = inject(DialogService);
   private selection = inject(BoardSelectionService);
   private boardCommands = inject(BoardGroupCommandsService);
@@ -80,27 +78,27 @@ export class BoardGroupsSelectionComponent {
 
   selected = this.selection.taskIds;
   count = this.selection.count;
-  permissions = this.store.selectSignal(selectPermissions);
+  permissions = inject(SessionService).permissions;
 
   actions = computed(() => {
     const actions = [];
     const permissions = this.permissions();
 
-    if (permissions.has(netptunePermissions.tasks.delete)) {
+    if (permissions.has(PERMISSONS.tasks.delete)) {
       actions.push({
         label: $localize`:Action that deletes the selected tasks:Delete tasks`,
         action: this.onDeleteClicked.bind(this),
         icon: LucideTrash2,
       });
     }
-    if (permissions.has(netptunePermissions.tasks.move)) {
+    if (permissions.has(PERMISSONS.tasks.move)) {
       actions.push({
         label: $localize`:Action that moves the selected tasks to another board group:Move to group`,
         action: this.onMoveTasksClicked.bind(this),
         icon: LucideCombine,
       });
     }
-    if (permissions.has(netptunePermissions.tasks.reassign)) {
+    if (permissions.has(PERMISSONS.tasks.reassign)) {
       actions.push({
         label: $localize`:Action that reassigns the selected tasks to another person:Reassign`,
         action: this.onReassignTasksClicked.bind(this),

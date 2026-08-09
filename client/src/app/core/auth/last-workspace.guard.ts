@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { WorkspaceService } from '@core/services/workspace.service';
-import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
+import { WorkspacesService } from '@core/services/workspaces-api.service';
 import { Store } from '@ngrx/store';
 import { firstValueFrom } from 'rxjs';
 import { selectIsAuthenticated } from '../store/auth/auth.selectors';

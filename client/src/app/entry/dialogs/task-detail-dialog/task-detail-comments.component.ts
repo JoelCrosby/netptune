@@ -79,8 +79,8 @@ export class TaskDetailCommentsComponent {
     { defaultValue: [] }
   );
 
-  canCreateComment = selectCanCreateComment(this.store);
-  canDeleteComment = selectCanDeleteComment(this.store);
+  canCreateComment = selectCanCreateComment();
+  canDeleteComment = selectCanDeleteComment();
 
   constructor() {
     reloadOnRefresh(this.comments, ['comments']);

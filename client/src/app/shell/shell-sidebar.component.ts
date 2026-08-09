@@ -1,8 +1,8 @@
 import { Component, computed, inject, output } from '@angular/core';
+import { SessionService } from '@core/services/session.service';
+import { hasPermission } from '@core/auth/has-permission';
 import {
   selectCurrentUser,
-  selectHasPermission,
-  selectIsAssistantAvailable,
   selectIsAuthenticated,
 } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
@@ -36,7 +36,7 @@ import {
 } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { netptunePermissions } from '../core/auth/permissions';
+import { PERMISSONS } from '../core/auth/permissions';
 import { ShellMenuLinkListComponent } from './shell-menu-link-list.component';
 import {
   ShellMenuLink,
@@ -112,58 +112,23 @@ export class ShellSidebarComponent {
 
   authenticated = this.store.selectSignal(selectIsAuthenticated);
 
-  canReadMembers = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.read)
-  );
+  isAssistantAvailable = inject(SessionService).isAssistantAvailable;
 
-  canReadWorkspace = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.workspace.read)
-  );
+  canReadMembers = hasPermission(PERMISSONS.members.read);
+  canReadWorkspace = hasPermission(PERMISSONS.workspace.read);
+  canReadTags = hasPermission(PERMISSONS.tags.read);
+  canReadStatuses = hasPermission(PERMISSONS.statuses.read);
+  canReadRelationTypes = hasPermission(PERMISSONS.relationTypes.read);
 
-  canReadTags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tags.read)
-  );
-
-  canReadStatuses = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.statuses.read)
-  );
-
-  canReadRelationTypes = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.relationTypes.read)
-  );
-
-  canReadAssistantConversations = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.assistant.readAllConversations)
-  );
-
-  isAssistantAvailable = this.store.selectSignal(selectIsAssistantAvailable);
-
-  canReadServiceAccounts = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.serviceAccounts.read)
-  );
-
-  canExportData = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.export)
-  );
-
-  canReadAudit = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.audit.read)
-  );
-
-  canReadStorage = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.storage.read)
-  );
-
-  canReadSprints = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
-
-  canReadAutomations = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.automations.read)
-  );
-
-  canRestoreTasks = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.restore)
+  canReadServiceAccounts = hasPermission(PERMISSONS.serviceAccounts.read);
+  canExportData = hasPermission(PERMISSONS.tasks.export);
+  canReadAudit = hasPermission(PERMISSONS.audit.read);
+  canReadStorage = hasPermission(PERMISSONS.storage.read);
+  canReadSprints = hasPermission(PERMISSONS.sprints.read);
+  canReadAutomations = hasPermission(PERMISSONS.automations.read);
+  canRestoreTasks = hasPermission(PERMISSONS.tasks.restore);
+  canReadAssistantConversations = hasPermission(
+    PERMISSONS.assistant.readAllConversations
   );
 
   links = computed(() => {

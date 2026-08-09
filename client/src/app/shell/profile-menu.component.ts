@@ -1,11 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { ThemeService } from '@core/services/theme.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  selectCurrentUser,
-  selectHasPermission,
-} from '@app/core/store/auth/auth.selectors';
-import { netptunePermissions } from '@core/auth/permissions';
+import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@core/auth/permissions';
 import { APPEARANCE_THEME } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import {
@@ -119,9 +117,7 @@ export class ProfileMenuComponent {
 
   readonly user = this.store.selectSignal(selectCurrentUser);
   readonly effectiveTheme = inject(ThemeService).theme;
-  readonly canReadWorkspace = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.workspace.read)
-  );
+  readonly canReadWorkspace = hasPermission(PERMISSONS.workspace.read);
 
   readonly profileFallbackName = $localize`:profile menu heading|Heading of the profile menu when the account has no display name:Profile`;
 

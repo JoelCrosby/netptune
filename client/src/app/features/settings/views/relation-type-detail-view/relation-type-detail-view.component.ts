@@ -6,6 +6,8 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   apply,
   disabled,
@@ -16,7 +18,7 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { relationTypeUsageResource } from '@core/resources/entity-usage.resource';
 import { relationTypeResource } from '@core/resources/relation-type.resources';
@@ -28,8 +30,6 @@ import {
 } from '@core/models/relation-type';
 import { RelationTypeRelation } from '@core/models/task-relation';
 import { RelationTypesService } from '@core/services/relation-types.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { fallbackColor } from '@core/util/colors/colors';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import {
@@ -38,7 +38,6 @@ import {
   LucideSpline,
   LucideTrash2,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -317,7 +316,6 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
   `,
 })
 export class RelationTypeDetailViewComponent {
-  private readonly store = inject(Store);
   private readonly relationTypesService = inject(RelationTypesService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly router = inject(Router);
@@ -334,12 +332,8 @@ export class RelationTypeDetailViewComponent {
   readonly relationTypes = relationTypeResource();
   readonly usage = relationTypeUsageResource(this.relationTypeId);
 
-  readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
-  readonly canManage = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.relationTypes.manage)
-  );
+  readonly workspaceId = inject(CurrentWorkspaceService).slug;
+  readonly canManage = hasPermission(PERMISSONS.relationTypes.manage);
 
   readonly relationType = computed(() => {
     return this.relationTypes

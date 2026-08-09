@@ -1,5 +1,5 @@
 import { Signal } from '@angular/core';
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import {
   AuditActivityPoint,
@@ -25,7 +25,7 @@ export const auditFilterParams = (filter: AuditLogFilter) => {
 
 export const auditSummaryResource = (filter: Signal<AuditLogFilter>) => {
   return permissionResource<AuditActivityPoint[]>(
-    netptunePermissions.audit.read,
+    PERMISSONS.audit.read,
     () => ({ url: 'api/audit/summary', params: auditFilterParams(filter()) }),
     {
       defaultValue: [],

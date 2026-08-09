@@ -1,11 +1,10 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { Params, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
-import { Store } from '@ngrx/store';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
@@ -154,7 +153,6 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
   `,
 })
 export class SprintBacklogGroupComponent {
-  private store = inject(Store);
   private hub = inject(ProjectTasksHubService);
 
   readonly label = input.required<string>();
@@ -165,9 +163,7 @@ export class SprintBacklogGroupComponent {
   private readonly sprintCommands = inject(SprintCommandsService);
 
   readonly loading = this.sprintCommands.isUpdating;
-  readonly canManageTasks = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.manageTasks)
-  );
+  readonly canManageTasks = hasPermission(PERMISSONS.sprints.manageTasks);
 
   // Total backlog tasks for this group and whether its fetch has resolved,
   // pushed up from the datatable's own paginated fetch via its (loaded) output.

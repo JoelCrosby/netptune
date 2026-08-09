@@ -1,14 +1,13 @@
 import { Component, computed, inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
-  netptunePermissions,
+  PERMISSONS,
   Permission,
   publicReadablePermissions,
 } from '@core/auth/permissions';
 import { permissionLabel } from '@settings/components/service-accounts/service-account-permissions';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { setWorkspacePublicPermissions } from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
 
@@ -92,12 +91,10 @@ import { CheckboxComponent } from '@static/components/checkbox/checkbox.componen
   `,
 })
 export class WorkspacePublicAccessComponent {
-  private store = inject(Store);
+  private workspaceCommands = inject(WorkspaceCommandsService);
 
-  private workspace = this.store.selectSignal(selectCurrentWorkspace);
-  private canUpdate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.workspace.update)
-  );
+  private workspace = inject(CurrentWorkspaceService).workspace;
+  private canUpdate = hasPermission(PERMISSONS.workspace.update);
 
   readonly options = publicReadablePermissions.map((permission) => {
     return { key: permission, label: permissionLabel(permission) };
@@ -139,6 +136,6 @@ export class WorkspacePublicAccessComponent {
   }
 
   private save(permissions: Permission[]) {
-    this.store.dispatch(setWorkspacePublicPermissions({ permissions }));
+    this.workspaceCommands.setPublicPermissions(permissions);
   }
 }

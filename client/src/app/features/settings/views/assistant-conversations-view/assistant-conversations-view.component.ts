@@ -1,18 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { AiAssistantMessageComponent } from '@app/shell/ai-assistant/components/ai-assistant-message.component';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { AiConversationDetail } from '@core/models/ai-conversation';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
 import { ClientResponse } from '@core/models/client-response';
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
 import { toChatEntry } from '@core/services/ai-assistant.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { editWorkspace } from '@core/store/workspaces/workspaces.actions';
-import {
-  selectCurrentWorkspace,
-  selectCurrentWorkspaceIdentifier,
-} from '@core/store/workspaces/workspaces.selectors';
+import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
 import { referenceMap } from '@core/util/ai-references';
 import { formatCost, formatTokens, sumUsage } from '@core/util/ai-usage';
 import {
@@ -22,7 +19,6 @@ import {
   LucideSparkles,
   LucideWallet,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AiCredentialsComponent } from '@settings/components/ai-credentials/ai-credentials.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -328,8 +324,8 @@ import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
 })
 export class AssistantConversationsViewComponent {
   private readonly http = inject(HttpClient);
-  private readonly store = inject(Store);
-  private readonly workspace = this.store.selectSignal(selectCurrentWorkspace);
+  private workspaceCommands = inject(WorkspaceCommandsService);
+  private readonly workspace = inject(CurrentWorkspaceService).workspace;
 
   protected readonly conversations = aiWorkspaceConversationResource();
   protected readonly selected = signal<AiConversationDetail | null>(null);
@@ -341,9 +337,7 @@ export class AssistantConversationsViewComponent {
   protected readonly conversationIcon = LucideMessagesSquare;
   protected readonly skeletonRows = Array.from({ length: 4 });
 
-  private readonly workspaceIdentifier = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceIdentifier = inject(CurrentWorkspaceService).slug;
 
   protected readonly workspaceKey = computed(() => {
     return this.workspaceIdentifier() ?? null;
@@ -369,8 +363,8 @@ export class AssistantConversationsViewComponent {
     return referenceMap(messages.flatMap((message) => message.references));
   });
 
-  protected readonly canUpdateWorkspace = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.workspace.update)
+  protected readonly canUpdateWorkspace = hasPermission(
+    PERMISSONS.workspace.update
   );
 
   protected readonly assistantEnabled = computed(() => {
@@ -388,15 +382,11 @@ export class AssistantConversationsViewComponent {
       return;
     }
 
-    this.store.dispatch(
-      editWorkspace.init({
-        request: {
-          slug: current.slug,
-          metaInfo: current.metaInfo ?? {},
-          allowAssistantDataSampling: allowed,
-        },
-      })
-    );
+    this.workspaceCommands.edit({
+      slug: current.slug,
+      metaInfo: current.metaInfo ?? {},
+      allowAssistantDataSampling: allowed,
+    });
   }
 
   protected setAssistantEnabled(enabled: boolean) {
@@ -406,15 +396,11 @@ export class AssistantConversationsViewComponent {
       return;
     }
 
-    this.store.dispatch(
-      editWorkspace.init({
-        request: {
-          slug: current.slug,
-          metaInfo: current.metaInfo ?? {},
-          assistantEnabled: enabled,
-        },
-      })
-    );
+    this.workspaceCommands.edit({
+      slug: current.slug,
+      metaInfo: current.metaInfo ?? {},
+      assistantEnabled: enabled,
+    });
   }
 
   protected readonly workspaceUsage = computed(() => {

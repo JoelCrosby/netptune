@@ -1,12 +1,11 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { RouterLink } from '@angular/router';
 import {
   EntityUsage,
   UsageReferenceGroup,
   UsageReferenceKind,
 } from '@core/models/entity-usage';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-entity-usage-panel',
@@ -69,14 +68,10 @@ import { Store } from '@ngrx/store';
   `,
 })
 export class EntityUsagePanelComponent {
-  private readonly store = inject(Store);
-
   readonly usage = input<EntityUsage | undefined>();
 
   readonly referenceKind = UsageReferenceKind;
-  readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   readonly groups = computed<UsageReferenceGroup[]>(() => {
     return this.usage()?.references ?? [];

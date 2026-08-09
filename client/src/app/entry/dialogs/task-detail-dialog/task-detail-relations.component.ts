@@ -12,7 +12,6 @@ import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { colorSwatchClass } from '@core/util/colors/colors';
 import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -125,7 +124,6 @@ interface RelationGroup {
 })
 export class TaskDetailRelationsComponent {
   readonly colorSwatchClass = colorSwatchClass;
-  private readonly store = inject(Store);
   private readonly relationsService = inject(TaskRelationsService);
   private readonly dialog = inject(DialogService);
   private readonly snackbar = inject(SnackbarService);
@@ -137,7 +135,7 @@ export class TaskDetailRelationsComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   readonly task = this.taskDetail.task;
-  readonly canUpdate = selectCanUpdateTask(this.store);
+  readonly canUpdate = selectCanUpdateTask();
 
   readonly busy = linkedSignal({
     source: () => this.task()?.systemId,

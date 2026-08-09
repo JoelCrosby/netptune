@@ -1,5 +1,5 @@
 import { Signal } from '@angular/core';
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { EntityType } from '../models/entity-type';
 import { ActivityViewModel } from '../models/view-models/activity-view-model';
@@ -21,7 +21,7 @@ export const activityResource = (
 
       return { url: `api/activity/${feed.entityType}/${feed.entityId}` };
     },
-    netptunePermissions.activity.read,
+    PERMISSONS.activity.read,
     {
       trackBy: (activity) => activity.id,
       parse: (response) => {

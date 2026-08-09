@@ -1,8 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
 import { CurrentRouteService } from '@core/router/current-route.service';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import {
   currentSprintsResource,
@@ -16,7 +16,6 @@ import {
   LucideExternalLink,
   LucideFilterX,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { ButtonLinkComponent } from '@static/components/button/button-link.component';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
@@ -154,15 +153,12 @@ import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.c
   `,
 })
 export class CurrentSprintDropdownComponent {
-  private readonly store = inject(Store);
   private readonly sprintFilter = inject(SprintFilterService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
   isSprintFilterableRoute = inject(CurrentRouteService).isSprintFilterableRoute;
-  canReadSprints = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
+  canReadSprints = hasPermission(PERMISSONS.sprints.read);
   private readonly currentSprintsRef = currentSprintsResource();
   private readonly allSprintsRef = sprintResource([]);
 

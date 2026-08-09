@@ -1,23 +1,18 @@
 import { inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { CanActivateFn, Router } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
-import { first, map } from 'rxjs/operators';
+import { PERMISSONS } from '@core/auth/permissions';
 
 export const roadmapReadGuard: CanActivateFn = (route) => {
-  const store = inject(Store);
   const router = inject(Router);
   const workspace = route.pathFromRoot
     .map((snapshot) => snapshot.params['workspace'])
     .find(Boolean);
 
-  return store.select(selectHasPermission(netptunePermissions.tasks.read)).pipe(
-    first(),
-    map(
-      (allowed) =>
-        allowed ||
-        router.createUrlTree(workspace ? ['/', workspace, 'projects'] : ['/'])
-    )
+  const allowed = hasPermission(PERMISSONS.tasks.read)();
+
+  return (
+    allowed ||
+    router.createUrlTree(workspace ? ['/', workspace, 'projects'] : ['/'])
   );
 };

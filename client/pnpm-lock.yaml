@@ -74,15 +74,6 @@ importers:
       '@lucide/angular':
         specifier: ^1.23.0
         version: 1.23.0(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))
-      '@ngrx/effects':
-        specifier: 21.1.0
-        version: 21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@ngrx/store@21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(rxjs@7.8.2)
-      '@ngrx/entity':
-        specifier: 21.1.0
-        version: 21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@ngrx/store@21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(rxjs@7.8.2)
-      '@ngrx/operators':
-        specifier: ^21.1.1
-        version: 21.1.1(rxjs@7.8.2)
       '@ngrx/store':
         specifier: 21.1.0
         version: 21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2)
@@ -1373,20 +1364,6 @@ packages:
     resolution: {integrity: sha512-xJIPs+bYuc9ASBl+cvGsKbGrJmS6fAKaSZCnT0lhahT5rhA2VVy9/EcIgd2JhtEuFOJNx7UHNn/qiTPTY4nrQw==}
     engines: {node: '>= 10'}
 
-  '@ngrx/effects@21.1.0':
-    resolution: {integrity: sha512-Hh+PlV+xYP3i65XK2yOxpIQ9pP4T70gLpm6JIjBE02DumW+evr6LdUgeixfq5vaUS1kN3Rqvl24fNUDJKGkkZw==}
-    peerDependencies:
-      '@angular/core': ^21.0.0
-      '@ngrx/store': 21.1.0
-      rxjs: ^6.5.3 || ^7.5.0
-
-  '@ngrx/entity@21.1.0':
-    resolution: {integrity: sha512-V1Yy1FojDh3VY+Hxmn09iXQpoaF3iwWp8VoE41GV+p46Ar5jAdiiSast0IVoWjackzybaSLRd/YjlxV7q0/huQ==}
-    peerDependencies:
-      '@angular/core': ^21.0.0
-      '@ngrx/store': 21.1.0
-      rxjs: ^6.5.3 || ^7.5.0
-
   '@ngrx/eslint-plugin@21.1.1':
     resolution: {integrity: sha512-I2RzaBmEPuSDOE/TCwG8m0mMi7ETKo1j+1GRZ8JuhNDj+sEpzj5hQMnbLoVcRjcz2ctGJF6rFI9qADztzvg5wg==}
     peerDependencies:
@@ -1394,11 +1371,6 @@ packages:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '*'
       typescript-eslint: ^8.0.0
-
-  '@ngrx/operators@21.1.1':
-    resolution: {integrity: sha512-2ChT1rVi6w8xHrmIAqRFuvY7YLAJiH7idfmbimjOYHzJ7pgaz0+4WVqyCp9pv2UiDEXuvpUOvs3afgS5m1LDNQ==}
-    peerDependencies:
-      rxjs: ^6.5.3 || ^7.4.0
 
   '@ngrx/store@21.1.0':
     resolution: {integrity: sha512-XnpzqmmENOQGtIzFSDX4qq7zVB2WwfMZWoK78yt36lIeDvtgZuUvxyIiGo5mla7e7+KlsSAeNDUvi9zmqIezfw==}
@@ -4583,20 +4555,6 @@ snapshots:
       '@napi-rs/nice-win32-x64-msvc': 1.1.1
     optional: true
 
-  '@ngrx/effects@21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@ngrx/store@21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(rxjs@7.8.2)':
-    dependencies:
-      '@angular/core': 22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)
-      '@ngrx/store': 21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2)
-      rxjs: 7.8.2
-      tslib: 2.8.1
-
-  '@ngrx/entity@21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(@ngrx/store@21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(rxjs@7.8.2)':
-    dependencies:
-      '@angular/core': 22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)
-      '@ngrx/store': 21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2)
-      rxjs: 7.8.2
-      tslib: 2.8.1
-
   '@ngrx/eslint-plugin@21.1.1(@typescript-eslint/utils@8.63.0(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(typescript-eslint@8.63.0(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/utils': 8.63.0(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)
@@ -4604,11 +4562,6 @@ snapshots:
       strip-json-comments: 3.1.1
       typescript: 6.0.3
       typescript-eslint: 8.63.0(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)
-
-  '@ngrx/operators@21.1.1(rxjs@7.8.2)':
-    dependencies:
-      rxjs: 7.8.2
-      tslib: 2.8.1
 
   '@ngrx/store@21.1.0(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2)':
     dependencies:

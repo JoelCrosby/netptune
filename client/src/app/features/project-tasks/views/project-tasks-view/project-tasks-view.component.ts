@@ -1,14 +1,13 @@
 import { Component, OnDestroy, inject, signal } from '@angular/core';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { netptunePermissions } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { PERMISSONS } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { LucideFolderDown } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { TaskListComponent } from '@project-tasks/components/task-list/task-list.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -41,16 +40,13 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 })
 export class ProjectTasksViewComponent implements OnDestroy {
   dialog = inject(DialogService);
-  private store = inject(Store);
   private taskCommands = inject(TaskCommandsService);
   private hubService = inject(ProjectTasksHubService);
 
   readonly count = signal<number | null>(null);
 
-  workspaceId = this.store.selectSignal(selectCurrentWorkspaceIdentifier);
-  canCreateTasks = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.create)
-  );
+  workspaceId = inject(CurrentWorkspaceService).slug;
+  canCreateTasks = hasPermission(PERMISSONS.tasks.create);
 
   secondaryActions: HeaderAction[] = [
     {

@@ -6,9 +6,9 @@ import {
   output,
   viewChild,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { Params } from '@angular/router';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { DatatableCellTemplateDirective } from '@app/static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
@@ -31,7 +31,6 @@ import {
   LucidePlus,
   LucideTrash2,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
@@ -183,7 +182,6 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
   `,
 })
 export class TaskListComponent {
-  private store = inject(Store);
   private dialog = inject(DialogService);
   private projectTasksHubService = inject(ProjectTasksHubService);
 
@@ -213,15 +211,9 @@ export class TaskListComponent {
     );
   });
 
-  canCreate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.create)
-  );
-  canDelete = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.delete)
-  );
-  readFlags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.flags.read)
-  );
+  canCreate = hasPermission(PERMISSONS.tasks.create);
+  canDelete = hasPermission(PERMISSONS.tasks.delete);
+  readFlags = hasPermission(PERMISSONS.flags.read);
 
   taskRequestParams = computed(() => {
     const filters = this.filterRoute.filters();

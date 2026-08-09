@@ -1,22 +1,16 @@
 import { Component, computed, inject } from '@angular/core';
-import {
-  selectCurrentUserId,
-  selectHasPermission,
-} from '@core/store/auth/auth.selectors';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import {
-  deleteWorkspace,
-  leaveWorkspace,
-  toggleWorkspaceIsPublic,
-} from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
+import { hasPermission } from '@core/auth/has-permission';
+import { Store } from '@ngrx/store';
+import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { selectCurrentUserId } from '@core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { Workspace } from '@core/models/workspace';
 import {
   LucideGlobe,
   LucideLogOut,
   LucideTriangleAlert,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
@@ -154,6 +148,7 @@ import { take } from 'rxjs/operators';
   `,
 })
 export class WorkspaceSettings {
+  private workspaceCommands = inject(WorkspaceCommandsService);
   private store = inject(Store);
 
   protected readonly visibilityIcon = LucideGlobe;
@@ -169,15 +164,11 @@ export class WorkspaceSettings {
   private dialog = inject(DialogService);
 
   isPublic = computed(() => this.workspace()?.isPublic ?? false);
-  workspace = this.store.selectSignal(selectCurrentWorkspace);
+  workspace = inject(CurrentWorkspaceService).workspace;
   private currentUserId = this.store.selectSignal(selectCurrentUserId);
 
-  canUpdate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.workspace.update)
-  );
-  canDelete = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.workspace.delete)
-  );
+  canUpdate = hasPermission(PERMISSONS.workspace.update);
+  canDelete = hasPermission(PERMISSONS.workspace.delete);
 
   /** Mirrors the condition the public access panel renders under, so the card
    * does not leave an empty padded block when it has nothing to show. */
@@ -196,7 +187,7 @@ export class WorkspaceSettings {
 
     const isPublic = !workspace.isPublic;
 
-    this.store.dispatch(toggleWorkspaceIsPublic({ isPublic }));
+    this.workspaceCommands.setIsPublic(isPublic);
   }
 
   leave() {
@@ -204,7 +195,7 @@ export class WorkspaceSettings {
 
     if (!workspace?.slug) return;
 
-    this.store.dispatch(leaveWorkspace.init({ workspace }));
+    this.workspaceCommands.leave(workspace);
   }
 
   openDeleteDialog() {
@@ -224,7 +215,7 @@ export class WorkspaceSettings {
 
     dialogRef.closed.pipe(take(1)).subscribe((confirmed) => {
       if (confirmed) {
-        this.store.dispatch(deleteWorkspace.init({ workspace }));
+        this.workspaceCommands.delete(workspace);
       }
     });
   }

@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
 import {
@@ -11,8 +12,7 @@ import {
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import {
   LucideCheck,
   LucideFlag,
@@ -23,7 +23,6 @@ import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-board-group-card',
@@ -125,15 +124,11 @@ import { Store } from '@ngrx/store';
   `,
 })
 export class BoardGroupCardComponent {
-  private readonly store = inject(Store);
-
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
   readonly statusCategory = StatusCategory;
   readonly priority = computed(() => this.task().priority);
-  readonly readFlags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.flags.read)
-  );
+  readonly readFlags = hasPermission(PERMISSONS.flags.read);
 
   priorityVisible = computed(() => {
     const p = this.priority();

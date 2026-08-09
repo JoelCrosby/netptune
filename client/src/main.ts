@@ -6,7 +6,6 @@ import {
   withComponentInputBinding,
   withPreloading,
 } from '@angular/router';
-import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
@@ -15,9 +14,9 @@ import { metaReducers, reducers } from './app/core/core.state';
 import { authInterceptor } from './app/core/http-interceptors/auth.interceptor';
 import { provideNavigationService } from './app/core/services/navigation.service';
 import { provideVersionCheck } from './app/core/services/version-check.service';
+import { provideWorkspaceBranding } from './app/core/services/workspace-branding.service';
 import { provideNotificationEvents } from './app/core/sse/notification-sse.service';
 import { provideWorkspaceEvents } from './app/core/sse/workspace-events.service';
-import { WorkspacesEffects } from './app/core/store/workspaces/workspaces.effects';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -36,11 +35,11 @@ bootstrapApplication(AppComponent, {
         strictActionTypeUniqueness: true,
       },
     }),
-    provideEffects([WorkspacesEffects]),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAuthRefresh(),
     provideNavigationService(),
     provideVersionCheck(),
+    provideWorkspaceBranding(),
     provideWorkspaceEvents(),
     provideNotificationEvents(),
   ],

@@ -14,6 +14,7 @@ import {
   linkedSignal,
   OnDestroy,
 } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { BoardCommandsService } from '@core/services/board-commands.service';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
@@ -56,7 +57,6 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { Router } from '@angular/router';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -224,9 +224,7 @@ export class BoardGroupsViewComponent implements OnDestroy {
   private preferences = inject(UserPreferencesService);
   private router = inject(Router);
 
-  private workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private workspaceId = inject(CurrentWorkspaceService).slug;
 
   isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 

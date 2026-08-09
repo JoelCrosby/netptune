@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { selectAllWorkspaces } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
+import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { WorkspaceListItemComponent } from './workspace-list-item.component';
 
 @Component({
@@ -15,7 +14,5 @@ import { WorkspaceListItemComponent } from './workspace-list-item.component';
   `,
 })
 export class WorkspaceListComponent {
-  private store = inject(Store);
-
-  workspaces = this.store.selectSignal(selectAllWorkspaces);
+  workspaces = inject(WorkspaceListService).workspaces;
 }

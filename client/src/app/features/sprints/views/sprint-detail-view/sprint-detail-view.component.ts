@@ -1,15 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { sprintDetailResource } from '@core/resources/sprint.resource';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import {
@@ -22,7 +22,6 @@ import {
   LucideTrash2,
 } from '@lucide/angular';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
-import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
@@ -223,7 +222,6 @@ import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion
   `,
 })
 export class SprintDetailViewComponent {
-  private store = inject(Store);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private dialog = inject(DialogService);
@@ -245,12 +243,8 @@ export class SprintDetailViewComponent {
     () => this.sprintResourceRef.error() as HttpErrorResponse | undefined
   );
   readonly updateLoading = this.sprintCommands.isUpdating;
-  readonly canUpdate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.update)
-  );
-  readonly canManageTasks = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.manageTasks)
-  );
+  readonly canUpdate = hasPermission(PERMISSONS.sprints.update);
+  readonly canManageTasks = hasPermission(PERMISSONS.sprints.manageTasks);
 
   constructor() {
     this.route.paramMap

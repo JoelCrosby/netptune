@@ -31,7 +31,7 @@ export class TaskDetailDescriptionComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;
-  private readonly canUpdate = selectCanUpdateTask(this.store);
+  private readonly canUpdate = selectCanUpdateTask();
 
   isReadOnly = computed(() => !this.canUpdate());
   description = model(this.task()?.description ?? '');

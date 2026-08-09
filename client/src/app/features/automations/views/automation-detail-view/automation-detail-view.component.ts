@@ -1,13 +1,12 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusesService } from '@core/services/statuses.service';
 import { Status } from '@core/models/status';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
 import {
   LucideCirclePause,
   LucideCirclePlay,
@@ -188,7 +187,6 @@ export class AutomationDetailViewComponent {
   private snackbar = inject(SnackbarService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private store = inject(Store);
   private destroyRef = inject(DestroyRef);
 
   readonly rule = signal<AutomationRule | null>(null);
@@ -197,9 +195,7 @@ export class AutomationDetailViewComponent {
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal(false);
-  readonly canManage = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.automations.manage)
-  );
+  readonly canManage = hasPermission(PERMISSONS.automations.manage);
 
   constructor() {
     this.load();

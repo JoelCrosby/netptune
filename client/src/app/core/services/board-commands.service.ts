@@ -1,14 +1,13 @@
 import { inject, Injectable } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
 import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { BoardsService } from '@core/services/boards.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import { Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, switchMap } from 'rxjs';
 
@@ -19,11 +18,8 @@ export class BoardCommandsService {
   private readonly snackbar = inject(SnackbarService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
 
-  private readonly workspaceIdentifier = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceIdentifier = inject(CurrentWorkspaceService).slug;
 
   create(request: AddBoardRequest) {
     this.boards

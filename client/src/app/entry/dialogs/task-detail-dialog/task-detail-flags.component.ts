@@ -1,12 +1,11 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { FlagResolutionType } from '@core/enums/flag-resolution-type';
 import { TasksService } from '@app/core/store/tasks/tasks.service';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
 import { LucideCheck, LucideFlag, LucideX } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { finalize } from 'rxjs';
 import { TaskDetailService } from './task-detail.service';
 
@@ -105,7 +104,6 @@ import { TaskDetailService } from './task-detail.service';
   `,
 })
 export class TaskDetailFlagsComponent {
-  private readonly store = inject(Store);
   private readonly service = inject(TasksService);
   private readonly snackbar = inject(SnackbarService);
   private readonly destroyRef = inject(DestroyRef);
@@ -115,9 +113,7 @@ export class TaskDetailFlagsComponent {
 
   readonly task = this.taskDetail.task;
   readonly resolvingFlagId = signal<number | null>(null);
-  readonly canResolve = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.flags.resolve)
-  );
+  readonly canResolve = hasPermission(PERMISSONS.flags.resolve);
 
   resolve(taskId: number, flagId: number, resolution: FlagResolutionType) {
     this.resolvingFlagId.set(flagId);

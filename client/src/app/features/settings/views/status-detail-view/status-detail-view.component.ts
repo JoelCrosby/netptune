@@ -6,6 +6,8 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   apply,
   disabled,
@@ -16,7 +18,7 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { statusUsageResource } from '@core/resources/entity-usage.resource';
 import { statusResource } from '@core/resources/status.resources';
@@ -28,8 +30,6 @@ import {
 } from '@core/models/status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { StatusesService } from '@core/services/statuses.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { fallbackColor } from '@core/util/colors/colors';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import {
@@ -38,7 +38,6 @@ import {
   LucideShapes,
   LucideTrash2,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -288,7 +287,6 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
   `,
 })
 export class StatusDetailViewComponent {
-  private readonly store = inject(Store);
   private readonly statusesService = inject(StatusesService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly router = inject(Router);
@@ -305,12 +303,8 @@ export class StatusDetailViewComponent {
   readonly statuses = statusResource();
   readonly usage = statusUsageResource(this.statusId);
 
-  readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
-  readonly canManage = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.statuses.manage)
-  );
+  readonly workspaceId = inject(CurrentWorkspaceService).slug;
+  readonly canManage = hasPermission(PERMISSONS.statuses.manage);
 
   readonly status = computed(() => {
     return this.statuses

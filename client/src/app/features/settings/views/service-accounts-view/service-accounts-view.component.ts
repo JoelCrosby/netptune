@@ -6,8 +6,9 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import {
   ApiCredential,
   ApiCredentialCreated,
@@ -18,7 +19,6 @@ import {
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { ServiceAccountsService } from '@core/services/service-accounts.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import {
   LucideBot,
   LucideKeyRound,
@@ -28,7 +28,6 @@ import {
   LucideTrash,
   LucideX,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -364,7 +363,6 @@ export class ServiceAccountsViewComponent {
   private readonly dialog = inject(DialogService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly snackbar = inject(SnackbarService);
-  private readonly store = inject(Store);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly accounts = signal<ServiceAccount[]>([]);
@@ -377,18 +375,12 @@ export class ServiceAccountsViewComponent {
     )
   );
 
-  readonly canCreate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.serviceAccounts.create)
+  readonly canCreate = hasPermission(PERMISSONS.serviceAccounts.create);
+  readonly canManageCredentials = hasPermission(
+    PERMISSONS.serviceAccounts.manageCredentials
   );
-  readonly canManageCredentials = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.serviceAccounts.manageCredentials)
-  );
-  readonly canDelete = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.serviceAccounts.delete)
-  );
-  readonly canUpdate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.serviceAccounts.update)
-  );
+  readonly canDelete = hasPermission(PERMISSONS.serviceAccounts.delete);
+  readonly canUpdate = hasPermission(PERMISSONS.serviceAccounts.update);
 
   constructor() {
     this.load();

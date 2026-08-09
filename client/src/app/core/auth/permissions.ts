@@ -1,4 +1,4 @@
-export const netptunePermissions = {
+export const PERMISSONS = {
   workspace: {
     read: 'workspace.read',
     create: 'workspace.create',
@@ -124,18 +124,16 @@ export const netptunePermissions = {
 
 type Values<T> = T[keyof T];
 export type Permission = Values<{
-  [K in keyof typeof netptunePermissions]: Values<
-    (typeof netptunePermissions)[K]
-  >;
+  [K in keyof typeof PERMISSONS]: Values<(typeof PERMISSONS)[K]>;
 }>;
 
 export const publicReadablePermissions: Permission[] = [
-  netptunePermissions.projects.read,
-  netptunePermissions.tasks.read,
-  netptunePermissions.boards.read,
-  netptunePermissions.boardGroups.read,
-  netptunePermissions.sprints.read,
-  netptunePermissions.tags.read,
-  netptunePermissions.statuses.read,
-  netptunePermissions.relationTypes.read,
+  PERMISSONS.projects.read,
+  PERMISSONS.tasks.read,
+  PERMISSONS.boards.read,
+  PERMISSONS.boardGroups.read,
+  PERMISSONS.sprints.read,
+  PERMISSONS.tags.read,
+  PERMISSONS.statuses.read,
+  PERMISSONS.relationTypes.read,
 ];

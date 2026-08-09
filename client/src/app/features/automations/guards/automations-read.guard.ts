@@ -1,25 +1,18 @@
 import { inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { CanActivateFn, Router } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
-import { first, map } from 'rxjs/operators';
+import { PERMISSONS } from '@core/auth/permissions';
 
 export const automationsReadGuard: CanActivateFn = (route) => {
-  const store = inject(Store);
   const router = inject(Router);
   const workspace = route.pathFromRoot
     .map((snapshot) => snapshot.params['workspace'])
     .find(Boolean);
 
-  return store
-    .select(selectHasPermission(netptunePermissions.automations.read))
-    .pipe(
-      first(),
-      map(
-        (canRead) =>
-          canRead ||
-          router.createUrlTree(workspace ? ['/', workspace, 'projects'] : ['/'])
-      )
-    );
+  const allowed = hasPermission(PERMISSONS.automations.read)();
+
+  return (
+    allowed ||
+    router.createUrlTree(workspace ? ['/', workspace, 'projects'] : ['/'])
+  );
 };

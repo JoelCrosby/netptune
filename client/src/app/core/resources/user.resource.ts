@@ -1,18 +1,17 @@
 import { computed, inject, Signal } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { netptunePermissions } from '../auth/permissions';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { SessionService } from '@core/services/session.service';
+import { PERMISSONS } from '../auth/permissions';
 import { AssigneeViewModel } from '../models/view-models/board-view';
 import { WorkspaceAppUser } from '../models/appuser';
 import { ClientResponse } from '../models/client-response';
 import { MAX_PAGE_SIZE, Page } from '../models/pagination';
 import { WorkspaceRole } from '../enums/workspace-role';
-import { selectIsPublicViewer } from '../store/auth/auth.selectors';
-import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 import { permissionResource } from './permission-resource';
 
 export const userResource = () => {
   return permissionResource<ClientResponse<Page<WorkspaceAppUser>>>(
-    netptunePermissions.members.read,
+    PERMISSONS.members.read,
     () => ({
       url: 'api/users',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
@@ -22,7 +21,7 @@ export const userResource = () => {
 
 export const userDetailResource = (userId: Signal<string | undefined>) => {
   return permissionResource<WorkspaceAppUser>(
-    netptunePermissions.members.read,
+    PERMISSONS.members.read,
     () => {
       const id = userId();
 
@@ -33,12 +32,11 @@ export const userDetailResource = (userId: Signal<string | undefined>) => {
 };
 
 export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
-  const store = inject(Store);
-  const isPublicViewer = store.selectSignal(selectIsPublicViewer);
-  const workspaceKey = store.selectSignal(selectCurrentWorkspaceIdentifier);
+  const isPublicViewer = inject(SessionService).isPublicViewer;
+  const workspaceKey = inject(CurrentWorkspaceService).slug;
 
   const members = permissionResource<WorkspaceAppUser[]>(
-    netptunePermissions.members.read,
+    PERMISSONS.members.read,
     () => {
       if (isPublicViewer()) return undefined;
 
@@ -60,7 +58,7 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
   );
 
   const publicMembers = permissionResource<WorkspaceAppUser[]>(
-    netptunePermissions.tasks.read,
+    PERMISSONS.tasks.read,
     () => {
       const key = workspaceKey();
 

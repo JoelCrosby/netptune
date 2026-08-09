@@ -20,7 +20,7 @@ export class TaskDetailHeaderComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;
-  private readonly canUpdate = selectCanUpdateTask(this.store);
+  private readonly canUpdate = selectCanUpdateTask();
 
   isReadOnly = computed(() => !this.canUpdate());
 

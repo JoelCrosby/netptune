@@ -7,10 +7,10 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { refreshScopesForEntityTypes } from '@core/util/entity-refresh-scopes';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
@@ -57,9 +57,7 @@ export class WorkspaceEventsService {
     selectIsAuthenticated
   );
 
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   /** Presence is reported per group, so a view that shows who else is here claims one. */
   private readonly group = signal<string | null>(null);

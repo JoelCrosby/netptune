@@ -53,7 +53,7 @@ export class TaskDetailTagsComponent {
   selectedTags = linkedSignal(() => this.task()?.tags ?? []);
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 
-  canUpdate = selectCanUpdateTask(this.store);
+  canUpdate = selectCanUpdateTask();
 
   constructor() {
     reloadOnRefresh(this.tags, ['tags']);

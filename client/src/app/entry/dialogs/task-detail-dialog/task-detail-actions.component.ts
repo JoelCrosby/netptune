@@ -65,7 +65,7 @@ export class TaskDetailActionsComponent {
 
   private readonly assistant = inject(AiAssistantService);
 
-  canDeleteTask = selectCanDeleteTask(this.store);
+  canDeleteTask = selectCanDeleteTask();
 
   protected readonly canAskAssistant = computed(() => {
     return (

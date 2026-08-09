@@ -1,16 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { Params, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import { LucideSettings2, LucideTrash2 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
@@ -112,7 +111,6 @@ const emptyMessages: Record<SprintStatus, string> = {
   `,
 })
 export class SprintsViewComponent {
-  private store = inject(Store);
   private dialog = inject(DialogService);
   private confirmation = inject(ConfirmationService);
 
@@ -121,12 +119,8 @@ export class SprintsViewComponent {
 
   readonly loading = this.sprintsResource.isLoading;
   readonly sprints = this.sprintsResource.value;
-  readonly canCreate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.create)
-  );
-  readonly canUpdate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.update)
-  );
+  readonly canCreate = hasPermission(PERMISSONS.sprints.create);
+  readonly canUpdate = hasPermission(PERMISSONS.sprints.update);
 
   readonly selectedStatus = signal<StatusFilter>(SprintStatus.active);
 

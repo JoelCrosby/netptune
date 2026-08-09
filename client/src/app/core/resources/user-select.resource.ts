@@ -1,6 +1,6 @@
 import { HttpResourceRequest } from '@angular/common/http';
 import { Signal } from '@angular/core';
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { DEFAULT_PAGE_SIZE, Page } from '../models/pagination';
 import { UserSelectOption } from '../models/view-models/user-select-option';
@@ -13,7 +13,7 @@ export interface UserSelectQuery {
 
 export const userSelectResource = (query: Signal<UserSelectQuery>) => {
   return permissionResource<ClientResponse<Page<UserSelectOption>>>(
-    netptunePermissions.members.read,
+    PERMISSONS.members.read,
     () => buildRequest(query())
   );
 };

@@ -1,4 +1,4 @@
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { Page } from '../models/pagination';
 import { NotificationViewModel } from '../models/view-models/notification-view-model';
@@ -8,7 +8,7 @@ const RECENT_PAGE_SIZE = 10;
 
 export const recentNotificationsResource = () => {
   return permissionResource<NotificationViewModel[]>(
-    netptunePermissions.notifications.read,
+    PERMISSONS.notifications.read,
     () => ({
       url: 'api/notifications',
       params: { page: 1, pageSize: RECENT_PAGE_SIZE },
@@ -28,7 +28,7 @@ export const recentNotificationsResource = () => {
 
 export const unreadNotificationCountResource = () => {
   return permissionResource<number>(
-    netptunePermissions.notifications.read,
+    PERMISSONS.notifications.read,
     () => ({ url: 'api/notifications/unread-count' }),
     {
       defaultValue: 0,

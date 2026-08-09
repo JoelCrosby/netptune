@@ -1,13 +1,12 @@
 import { hostTimeZone } from '@core/util/dates';
 import { Component, computed, inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { ReportingGrouping, ReportingUnit } from '@core/models/reporting';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
-import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
@@ -185,7 +184,6 @@ export class ReportingViewComponent {
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
   private readonly params = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
   });
@@ -194,12 +192,8 @@ export class ReportingViewComponent {
   readonly projects = this.projectsResource.value;
   readonly sprintsResource = sprintResource([]);
   readonly sprints = this.sprintsResource.value;
-  readonly canReadMembers = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.read)
-  );
-  readonly canReadSprints = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
+  readonly canReadMembers = hasPermission(PERMISSONS.members.read);
+  readonly canReadSprints = hasPermission(PERMISSONS.sprints.read);
   readonly projectId = computed(() => this.numberParam('projectId'));
   readonly sprintId = computed(() => this.numberParam('sprintId'));
   readonly from = computed(() => this.params().get('from') ?? defaultFrom);

@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
 import { hasPendingProviderLink } from '@core/auth/pending-provider-link';
@@ -15,7 +16,6 @@ import {
   ResetPasswordRequest,
 } from '@core/store/auth/auth.models';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { Store } from '@ngrx/store';
@@ -179,7 +179,7 @@ export class AuthCommandsService {
   // has to fetch the user again.
   refreshCurrentUser() {
     const isAuthenticated = this.store.selectSignal(selectIsAuthenticated)();
-    const workspace = this.store.selectSignal(selectCurrentWorkspace)();
+    const workspace = inject(CurrentWorkspaceService).workspace();
 
     if (!isAuthenticated || !workspace) return;
 

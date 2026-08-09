@@ -14,15 +14,12 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { WorkspaceListService } from '@core/services/workspace-list.service';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { debounce, form } from '@angular/forms/signals';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ShellService } from '@app/shell/shell.service';
 import { Workspace } from '@core/models/workspace';
-import {
-  selectAllWorkspaces,
-  selectCurrentWorkspace,
-  selectCurrentWorkspaceId,
-} from '@core/store/workspaces/workspaces.selectors';
 import { filterObjectArray } from '@core/util/arrays';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { Store } from '@ngrx/store';
@@ -102,9 +99,9 @@ export class WorkspaceSelectComponent implements OnDestroy {
   readonly selectChange = output<Workspace>();
   readonly closed = output();
 
-  readonly workspaces = this.store.selectSignal(selectAllWorkspaces);
-  readonly currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
-  readonly workspaceId = this.store.selectSignal(selectCurrentWorkspaceId);
+  readonly workspaces = inject(WorkspaceListService).workspaces;
+  readonly currentWorkspace = inject(CurrentWorkspaceService).workspace;
+  readonly workspaceId = inject(CurrentWorkspaceService).id;
 
   readonly isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
 

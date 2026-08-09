@@ -3,14 +3,14 @@ import { ClientResponse } from '../models/client-response';
 import { SprintDetailViewModel } from '../models/view-models/sprint-detail-view-model';
 import { SprintViewModel } from '../models/view-models/sprint-view-model';
 import { SprintStatus } from '../enums/sprint-status';
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import { permissionResource } from './permission-resource';
 
 export const sprintResource = (
   statuses: SprintStatus[] = [SprintStatus.planning, SprintStatus.active]
 ) => {
   return permissionResource<SprintViewModel[]>(
-    netptunePermissions.sprints.read,
+    PERMISSONS.sprints.read,
     () => ({
       url: 'api/sprints',
       params: {
@@ -24,7 +24,7 @@ export const sprintResource = (
 
 export const currentSprintsResource = () => {
   return permissionResource<SprintViewModel[]>(
-    netptunePermissions.sprints.read,
+    PERMISSONS.sprints.read,
     () => ({
       url: 'api/sprints',
       params: { status: SprintStatus.active, take: 10 },
@@ -35,7 +35,7 @@ export const currentSprintsResource = () => {
 
 export const sprintDetailResource = (sprintId: Signal<number | undefined>) => {
   return permissionResource<SprintDetailViewModel | undefined>(
-    netptunePermissions.sprints.read,
+    PERMISSONS.sprints.read,
     () => {
       const id = sprintId();
 

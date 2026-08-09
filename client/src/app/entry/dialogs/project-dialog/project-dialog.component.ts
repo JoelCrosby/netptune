@@ -1,5 +1,6 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   apply,
   FormField,
@@ -11,8 +12,6 @@ import { FlatButtonComponent } from '@static/components/button/flat-button.compo
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { AddProjectRequest } from '@core/models/project';
 import { ProjectCommandsService } from '@core/services/project-commands.service';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
@@ -129,14 +128,13 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   `,
 })
 export class ProjectDialogComponent {
-  private store = inject(Store);
   private projectCommands = inject(ProjectCommandsService);
   private setupTemplates = inject(WorkspaceSetupTemplatesService);
   dialogRef = inject<DialogRef<ProjectDialogComponent>>(DialogRef);
   currentStep = signal(0);
   readonly finalStep = 2;
 
-  currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
+  currentWorkspace = inject(CurrentWorkspaceService).workspace;
 
   projectFormModel = signal({
     name: '',

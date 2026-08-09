@@ -5,18 +5,17 @@ import {
   linkedSignal,
   viewChild,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
 import { taskFilterRoute } from '@core/router/task-filter-route';
 import { TaskFilterRouteParams } from '@core/router/task-filter-route-params';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
-import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { SkeletonCalendarMonthComponent } from '@static/components/skeleton/skeleton-calendar-month.component';
@@ -124,7 +123,6 @@ import {
 export class CalendarViewComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
   private readonly dialog = inject(DialogService);
   private readonly planningMonth = viewChild(CalendarPlanningMonthComponent);
 
@@ -136,12 +134,8 @@ export class CalendarViewComponent {
   readonly projects = this.projectsResource.value;
   readonly sprintsResource = sprintResource([]);
   readonly sprints = this.sprintsResource.value;
-  readonly canUpdateTasks = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.update)
-  );
-  readonly canReadSprints = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
+  readonly canUpdateTasks = hasPermission(PERMISSONS.tasks.update);
+  readonly canReadSprints = hasPermission(PERMISSONS.sprints.read);
 
   readonly month = computed(() =>
     validCalendarMonth(this.params().get('month'))

@@ -5,10 +5,9 @@ import {
   Signal,
   untracked,
 } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { RefreshScope } from '@core/models/refresh-scope';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
 
 export interface ReloadableResource {
   reload(): boolean;
@@ -42,10 +41,7 @@ export function reloadOnRefresh(
 export function reloadOnWorkspaceChange(resource: ReloadableResource): void {
   assertInInjectionContext(reloadOnWorkspaceChange);
 
-  const store = inject(Store);
-  const workspaceIdentifier = store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  const workspaceIdentifier = inject(CurrentWorkspaceService).slug;
 
   onChange([workspaceIdentifier], () => resource.reload());
 }

@@ -1,13 +1,12 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusesService } from '@core/services/statuses.service';
 import { Status } from '@core/models/status';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
 import { LucidePlus, LucideWorkflow } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -120,7 +119,6 @@ export class AutomationsViewComponent {
   private confirmation = inject(ConfirmationService);
   private dialog = inject(DialogService);
   private snackbar = inject(SnackbarService);
-  private store = inject(Store);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
@@ -131,9 +129,7 @@ export class AutomationsViewComponent {
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly busyId = signal<number | null>(null);
-  readonly canManage = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.automations.manage)
-  );
+  readonly canManage = hasPermission(PERMISSONS.automations.manage);
 
   readonly count = computed(() =>
     this.loading() ? null : (this.summary()?.ruleCount ?? 0)

@@ -35,7 +35,7 @@ import {
   LucideUserX,
   LucideWorkflow,
 } from '@lucide/angular';
-import { netptunePermissions } from './permissions';
+import { PERMISSONS } from './permissions';
 
 export interface PermissionMeta {
   key: string;
@@ -44,8 +44,8 @@ export interface PermissionMeta {
 }
 
 export type PermissionLabels = {
-  [K in keyof typeof netptunePermissions]: {
-    [P in keyof (typeof netptunePermissions)[K]]: PermissionMeta;
+  [K in keyof typeof PERMISSONS]: {
+    [P in keyof (typeof PERMISSONS)[K]]: PermissionMeta;
   };
 };
 

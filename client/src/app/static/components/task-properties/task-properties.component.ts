@@ -1,13 +1,12 @@
-import { Component, inject, input, model, output } from '@angular/core';
-import { netptunePermissions } from '@core/auth/permissions';
+import { Component, input, model, output } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSONS } from '@core/auth/permissions';
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
 import {
   UserSelectOption,
   UserSelectValue,
 } from '@core/models/view-models/user-select-option';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { UserSelectComponent } from '@static/components/user-select/user-select.component';
 import { DatePickerComponent } from '@static/components/date-picker/date-picker.component';
@@ -167,8 +166,6 @@ export interface TaskReporter {
   `,
 })
 export class TaskPropertiesComponent {
-  private readonly store = inject(Store);
-
   readonly statusId = model<number | null>(null);
   readonly priority = model<TaskPriority | null>(null);
   readonly estimateType = input<EstimateType | null>(null);
@@ -190,18 +187,10 @@ export class TaskPropertiesComponent {
 
   readonly estimateChange = output<TaskEstimate>();
 
-  readonly readStatus = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.statuses.read)
-  );
-  readonly readSprints = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
-  readonly readProjects = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.projects.read)
-  );
-  readonly readMembers = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.read)
-  );
+  readonly readStatus = hasPermission(PERMISSONS.statuses.read);
+  readonly readSprints = hasPermission(PERMISSONS.sprints.read);
+  readonly readProjects = hasPermission(PERMISSONS.projects.read);
+  readonly readMembers = hasPermission(PERMISSONS.members.read);
 
   toggleAssignee(user: UserSelectOption) {
     const assignees = this.assignees();

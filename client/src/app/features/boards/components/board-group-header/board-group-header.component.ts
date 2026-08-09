@@ -1,4 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
 import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
 import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
@@ -9,8 +10,7 @@ import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-boar
 import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
 import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-filter-container.component';
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
@@ -73,13 +73,9 @@ export class BoardGroupHeaderComponent {
     return hiddenGroupIdsForBoard(value, boardId).length;
   });
 
-  readStatus = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.statuses.read)
-  );
+  readStatus = hasPermission(PERMISSONS.statuses.read);
 
-  readTags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tags.read)
-  );
+  readTags = hasPermission(PERMISSONS.tags.read);
 
   onManageGroupsClicked() {
     this.dialog.open(ManageBoardGroupsDialogComponent, {

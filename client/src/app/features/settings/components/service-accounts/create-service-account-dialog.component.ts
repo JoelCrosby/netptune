@@ -9,7 +9,7 @@ import {
   submit as submitForm,
   validate,
 } from '@angular/forms/signals';
-import { Permission, netptunePermissions } from '@core/auth/permissions';
+import { Permission, PERMISSONS } from '@core/auth/permissions';
 import {
   CreateApiCredentialRequest,
   CreateServiceAccountRequest,
@@ -43,11 +43,11 @@ export interface CreateServiceAccountWizardResult {
 }
 
 const defaultPermissions: Permission[] = [
-  netptunePermissions.projects.read,
-  netptunePermissions.statuses.read,
-  netptunePermissions.tasks.read,
-  netptunePermissions.tasks.create,
-  netptunePermissions.tasks.update,
+  PERMISSONS.projects.read,
+  PERMISSONS.statuses.read,
+  PERMISSONS.tasks.read,
+  PERMISSONS.tasks.create,
+  PERMISSONS.tasks.update,
 ];
 
 @Component({

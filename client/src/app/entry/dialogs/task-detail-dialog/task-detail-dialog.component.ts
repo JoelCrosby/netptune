@@ -1,5 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, effect, inject, untracked } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
@@ -19,8 +20,7 @@ import { TaskDetailPropertiesComponent } from './task-detail-properties.componen
 import { TaskDetailRelationsComponent } from './task-detail-relations.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
 import { TaskDetailService } from './task-detail.service';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { TaskDetailFilesComponent } from './task-detail-files.component';
 import { TaskDetailFlagsComponent } from './task-detail-flags.component';
 
@@ -124,25 +124,15 @@ export class TaskDetailDialogComponent {
 
   task = this.taskDetail.task;
 
-  readTags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tags.read)
-  );
+  readTags = hasPermission(PERMISSONS.tags.read);
 
-  readFiles = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.files.read)
-  );
+  readFiles = hasPermission(PERMISSONS.files.read);
 
-  readFlags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.flags.read)
-  );
+  readFlags = hasPermission(PERMISSONS.flags.read);
 
-  readComments = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.comments.read)
-  );
+  readComments = hasPermission(PERMISSONS.comments.read);
 
-  readActivity = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.activity.read)
-  );
+  readActivity = hasPermission(PERMISSONS.activity.read);
 
   constructor() {
     this.taskDetail.show(this.data.systemId);

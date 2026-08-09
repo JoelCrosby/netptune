@@ -1,5 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { netptunePermissions } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSONS } from '@core/auth/permissions';
 import { WorkspaceFileViewModel } from '@core/models/view-models/workspace-file-view-model';
 import { taskFilesResource } from '@core/resources/workspace-file.resource';
 import {
@@ -7,14 +8,12 @@ import {
   TaskFileUploadService,
 } from '@core/services/task-file-upload.service';
 import { WorkspaceFilesService } from '@core/services/workspace-files.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import {
   LucideDownload,
   LucideRotateCcw,
   LucideTrash2,
   LucideX,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { FileDropzoneComponent } from '@static/components/file-dropzone/file-dropzone.component';
 import { FileTypeIconComponent } from '@static/components/file-type-icon/file-type-icon.component';
 import { FileSizePipe } from '@static/pipes/file-size.pipe';
@@ -149,7 +148,6 @@ export class TaskDetailFilesComponent {
   private readonly filesResource = taskFilesResource(this.systemId);
   private readonly uploadService = inject(TaskFileUploadService);
   private readonly service = inject(WorkspaceFilesService);
-  private readonly store = inject(Store);
   private readonly mutationError = signal('');
 
   readonly uploads = this.uploadService.uploads;
@@ -178,9 +176,7 @@ export class TaskDetailFilesComponent {
     return this.filesResource.error() ? 'Files could not be loaded.' : '';
   });
 
-  readonly canUpload = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.files.upload)
-  );
+  readonly canUpload = hasPermission(PERMISSONS.files.upload);
 
   upload(files: File[]) {
     this.uploadService.upload(this.systemId(), files);

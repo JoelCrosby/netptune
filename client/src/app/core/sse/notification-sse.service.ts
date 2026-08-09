@@ -5,12 +5,12 @@ import {
   inject,
   provideAppInitializer,
 } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
-import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 /** No view owns the stream, so nothing else would construct the service that opens it. */
 export function provideNotificationEvents(): EnvironmentProviders {
@@ -31,9 +31,7 @@ export class NotificationSseService {
     selectIsAuthenticated
   );
 
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   constructor() {
     effect(() => {

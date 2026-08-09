@@ -1,33 +1,19 @@
 import { inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { CanActivateFn, Router } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
-import {
-  selectHasPermission,
-  selectIsAuthenticated,
-} from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { PERMISSONS } from '@core/auth/permissions';
+import { SessionService } from '@core/services/session.service';
 
 export const dashboardReadGuard: CanActivateFn = (route) => {
-  const store = inject(Store);
   const router = inject(Router);
+  const isAuthenticated = inject(SessionService).isAuthenticated();
+  const canRead = hasPermission(PERMISSONS.tasks.read)();
+
+  if (isAuthenticated && canRead) return true;
+
   const workspace = route.pathFromRoot
     .map((snapshot) => snapshot.params['workspace'])
     .find(Boolean) as string | undefined;
 
-  return combineLatest([
-    store.select(selectIsAuthenticated),
-    store.select(selectHasPermission(netptunePermissions.tasks.read)),
-  ]).pipe(
-    first(),
-    map(([isAuthenticated, canRead]) => {
-      const hasAccess = isAuthenticated && canRead;
-
-      return (
-        hasAccess ||
-        router.createUrlTree(workspace ? ['/', workspace, 'projects'] : ['/'])
-      );
-    })
-  );
+  return router.createUrlTree(workspace ? ['/', workspace, 'projects'] : ['/']);
 };

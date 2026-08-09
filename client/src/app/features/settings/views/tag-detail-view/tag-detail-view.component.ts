@@ -6,6 +6,8 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   apply,
   disabled,
@@ -14,14 +16,12 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { tagUsageResource } from '@core/resources/entity-usage.resource';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { TagsService } from '@core/services/tags.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import {
   LucideListChecks,
@@ -29,7 +29,6 @@ import {
   LucideTag,
   LucideTrash2,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -229,7 +228,6 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
   `,
 })
 export class TagDetailViewComponent {
-  private readonly store = inject(Store);
   private readonly tagsService = inject(TagsService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private readonly confirmation = inject(ConfirmationService);
@@ -246,15 +244,9 @@ export class TagDetailViewComponent {
 
   readonly usage = tagUsageResource(this.tagId);
 
-  readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
-  readonly canUpdate = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tags.update)
-  );
-  readonly canDelete = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tags.delete)
-  );
+  readonly workspaceId = inject(CurrentWorkspaceService).slug;
+  readonly canUpdate = hasPermission(PERMISSONS.tags.update);
+  readonly canDelete = hasPermission(PERMISSONS.tags.delete);
 
   readonly deleting = signal(false);
   readonly saving = signal(false);

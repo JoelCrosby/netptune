@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ExportJobProgressEvent } from '@core/models/view-models/export-job-view-model';
 import { ImportSessionProgressEvent } from '@core/models/view-models/import-session';
 import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { Logger } from '@core/util/logger';
 import { environment } from '@env/environment';
 import { Store } from '@ngrx/store';
@@ -22,9 +22,7 @@ export class TransferJobSseService {
   private readonly isAuthenticated = this.store.selectSignal(
     selectIsAuthenticated
   );
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   connect(handlers: TransferJobHandlers): void {
     if (!this.isAuthenticated()) return;

@@ -1,12 +1,11 @@
 import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
-import { Store } from '@ngrx/store';
 import { taskFilterRoute } from '@core/router/task-filter-route';
 import { TaskFilterRouteParams } from '@core/router/task-filter-route-params';
 import { TaskViewFiltersComponent } from '@shared/components/task-view-filters/task-view-filters.component';
@@ -149,7 +148,6 @@ const defaultTo = addDays(today, 45);
 export class RoadmapViewComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
   private readonly dialog = inject(DialogService);
   private readonly planningTimeline = viewChild(
     RoadmapPlanningTimelineComponent
@@ -164,12 +162,8 @@ export class RoadmapViewComponent {
   readonly sprintsResource = sprintResource([]);
   readonly sprints = this.sprintsResource.value;
 
-  readonly canUpdateTasks = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.update)
-  );
-  readonly canReadSprints = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
+  readonly canUpdateTasks = hasPermission(PERMISSONS.tasks.update);
+  readonly canReadSprints = hasPermission(PERMISSONS.sprints.read);
   readonly unscheduledReload = signal(0);
   readonly from = computed(() => this.params().get('from') ?? defaultFrom);
   readonly to = computed(() => this.params().get('to') ?? defaultTo);

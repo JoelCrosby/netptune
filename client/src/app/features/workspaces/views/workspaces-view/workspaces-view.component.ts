@@ -1,16 +1,9 @@
 import { Component, effect, inject, untracked } from '@angular/core';
+import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { WorkspaceListComponent } from '@app/features/workspaces/components/workspace-list.component';
 import { BuildNumberComponent } from '@app/static/components/build-number/build-number.component';
 import { DialogService } from '@core/services/dialog.service';
-import { loadWorkspaces } from '@core/store/workspaces/workspaces.actions';
-import {
-  selectAllWorkspaces,
-  selectWorkspacesLoaded,
-  selectWorkspacesLoading,
-  selectWorkspacesLoadingError,
-} from '@core/store/workspaces/workspaces.selectors';
 import { WorkspaceDialogComponent } from '@entry/dialogs/workspace-dialog/workspace-dialog.component';
-import { Store } from '@ngrx/store';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -53,17 +46,16 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
 })
 export class WorkspacesViewComponent {
   private dialog = inject(DialogService);
-  private store = inject(Store);
 
-  loading = this.store.selectSignal(selectWorkspacesLoading);
-  loadError = this.store.selectSignal(selectWorkspacesLoadingError);
-  protected loaded = this.store.selectSignal(selectWorkspacesLoaded);
-  private workspaces = this.store.selectSignal(selectAllWorkspaces);
+  private list = inject(WorkspaceListService);
+
+  loading = this.list.loading;
+  loadError = this.list.loadError;
+  protected loaded = this.list.loaded;
+  private workspaces = this.list.workspaces;
   private initialSetupOpened = false;
 
   constructor() {
-    this.store.dispatch(loadWorkspaces.init());
-
     effect(() => {
       if (
         !this.loaded() ||
@@ -79,7 +71,7 @@ export class WorkspacesViewComponent {
   }
 
   reload() {
-    this.store.dispatch(loadWorkspaces.init());
+    this.list.reload();
   }
 
   openWorkspaceDialog() {

@@ -1,7 +1,6 @@
-import { Component, computed, inject } from '@angular/core';
-import { netptunePermissions } from '@core/auth/permissions';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { Component, computed } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSONS } from '@core/auth/permissions';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { DashboardAssignedTasksComponent } from '../../components/dashboard-assigned-tasks.component';
@@ -65,15 +64,9 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
   `,
 })
 export class DashboardViewComponent {
-  private readonly store = inject(Store);
+  protected readonly canSeeWorkload = hasPermission(PERMISSONS.members.read);
 
-  protected readonly canSeeWorkload = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.read)
-  );
-
-  protected readonly canSeeVelocity = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
+  protected readonly canSeeVelocity = hasPermission(PERMISSONS.sprints.read);
 
   protected readonly velocitySpanClass = computed(() =>
     this.canSeeWorkload() ? '' : 'lg:col-span-2'

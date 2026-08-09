@@ -1,4 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import {
   netptunePermissionLabels,
   PermissionMeta,
@@ -6,8 +7,7 @@ import {
 import { LucideDynamicIcon } from '@lucide/angular';
 import { Store } from '@ngrx/store';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { WorkspaceAppUser } from '@core/models/appuser';
 
@@ -60,9 +60,7 @@ export class PermissionListComponent {
   readonly user = input<WorkspaceAppUser>();
   permissions = computed(() => this.user()?.permissions || []);
 
-  enabled = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.updatePermissions)
-  );
+  enabled = hasPermission(PERMISSONS.members.updatePermissions);
 
   readonly groups = computed<PermissionGroup[]>(() => {
     const permSet = new Set(this.permissions());

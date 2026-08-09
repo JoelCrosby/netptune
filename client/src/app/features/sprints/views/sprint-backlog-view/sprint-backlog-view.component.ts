@@ -1,15 +1,14 @@
-import { Component, computed, inject, viewChildren } from '@angular/core';
+import { Component, computed, viewChildren } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { Params } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { taskFilterRoute } from '@core/router/task-filter-route';
 import { workspaceUsersResource } from '@core/resources/user.resource';
-import { Store } from '@ngrx/store';
 import { TaskListFiltersComponent } from '@project-tasks/components/task-list/task-list-filters.component';
 import { LucideCalendarPlus, LucideListChecks } from '@lucide/angular';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -82,8 +81,6 @@ interface BacklogGroupConfig {
   `,
 })
 export class SprintBacklogViewComponent {
-  private store = inject(Store);
-
   protected readonly noticeIcon = LucideCalendarPlus;
 
   protected readonly emptyMessage = computed(() => {
@@ -106,9 +103,7 @@ export class SprintBacklogViewComponent {
     () => this.filterRoute.filters().users ?? []
   );
   readonly filtersActive = this.filterRoute.hasFilters;
-  readonly canManageTasks = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.manageTasks)
-  );
+  readonly canManageTasks = hasPermission(PERMISSONS.sprints.manageTasks);
 
   private backlogGroups = viewChildren(SprintBacklogGroupComponent);
 

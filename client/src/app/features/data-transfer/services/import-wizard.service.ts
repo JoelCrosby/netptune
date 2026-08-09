@@ -7,6 +7,7 @@ import {
   Injectable,
   signal,
 } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientResponse } from '@core/models/client-response';
 import { TransferField } from '@core/models/view-models/export-definition';
@@ -21,11 +22,6 @@ import {
 } from '@core/models/view-models/import-session';
 import { workspaceBoardsResource } from '@core/resources/board.resource';
 import { transferCatalogResource } from '@core/resources/transfer.resource';
-import {
-  selectCurrentWorkspace,
-  selectCurrentWorkspaceIdentifier,
-} from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
 
 const VendorNames: Record<number, string> = {
   1: 'Jira',
@@ -50,11 +46,8 @@ export class ImportWizardService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly store = inject(Store);
-  private readonly workspace = this.store.selectSignal(selectCurrentWorkspace);
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspace = inject(CurrentWorkspaceService).workspace;
+  private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   private readonly catalog = transferCatalogResource();
   private readonly boardsResource = workspaceBoardsResource();

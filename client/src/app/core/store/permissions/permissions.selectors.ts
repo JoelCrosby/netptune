@@ -1,27 +1,18 @@
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { Store } from '@ngrx/store';
+import { PERMISSONS } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
 
-export const selectCanCreateComment = (store: Store) => {
-  return store.selectSignal(
-    selectHasPermission(netptunePermissions.comments.create)
-  );
+export const selectCanCreateComment = () => {
+  return hasPermission(PERMISSONS.comments.create);
 };
 
-export const selectCanDeleteComment = (store: Store) => {
-  return store.selectSignal(
-    selectHasPermission(netptunePermissions.comments.deleteOwn)
-  );
+export const selectCanDeleteComment = () => {
+  return hasPermission(PERMISSONS.comments.deleteOwn);
 };
 
-export const selectCanUpdateTask = (store: Store) => {
-  return store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.update)
-  );
+export const selectCanUpdateTask = () => {
+  return hasPermission(PERMISSONS.tasks.update);
 };
 
-export const selectCanDeleteTask = (store: Store) => {
-  return store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.delete)
-  );
+export const selectCanDeleteTask = () => {
+  return hasPermission(PERMISSONS.tasks.delete);
 };

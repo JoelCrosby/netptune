@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { ExportFieldsStepComponent } from '@app/features/data-transfer/components/export-steps/export-fields-step.component';
 import { ExportFilterStepComponent } from '@app/features/data-transfer/components/export-steps/export-filter-step.component';
@@ -17,7 +18,6 @@ import {
 } from '@core/models/view-models/export-definition';
 import { ExportJobViewModel } from '@core/models/view-models/export-job-view-model';
 import { DialogService } from '@core/services/dialog.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import {
   SaveExportDefinitionDialogComponent,
   SaveExportDefinitionDialogResult,
@@ -29,7 +29,6 @@ import {
   LucideFileDown,
   LucidePlay,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
@@ -160,10 +159,7 @@ export class ExportWizardViewComponent {
   private readonly http = inject(HttpClient);
   private readonly dialog = inject(DialogService);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   protected readonly lastStepIndex = ExportLastStepIndex;
   protected readonly exportIcon = LucideFileDown;

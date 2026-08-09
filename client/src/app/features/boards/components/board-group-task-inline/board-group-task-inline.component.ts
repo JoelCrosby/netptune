@@ -13,6 +13,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   apply,
   debounce,
@@ -27,7 +28,6 @@ import { BoardComposerService } from '@core/services/board-composer.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { selectCurrentUser } from '@app/core/store/auth/auth.selectors';
 import { AddProjectTaskRequest } from '@core/models/project-task';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
 import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { DocumentService } from '@static/services/document.service';
@@ -102,7 +102,7 @@ export class BoardGroupTaskInlineComponent implements AfterViewInit {
   readonly boardGroupId = input.required<number>();
   readonly canceled = output();
 
-  currentWorkspace = this.store.selectSignal(selectCurrentWorkspace);
+  currentWorkspace = inject(CurrentWorkspaceService).workspace;
   currentProjectId = computed(() => this.boardView.board()?.projectId);
   currentUser = this.store.selectSignal(selectCurrentUser);
   message = this.composer.warning;

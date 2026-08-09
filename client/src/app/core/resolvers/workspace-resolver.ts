@@ -1,10 +1,9 @@
 import { inject } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { Workspace } from '@core/models/workspace';
-import { setCurrentWorkspace } from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
-import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
+import { WorkspacesService } from '@core/services/workspaces-api.service';
 import { Store } from '@ngrx/store';
 import { Observable, of, throwError } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
@@ -13,6 +12,7 @@ export const workspaceResovler: ResolveFn<Workspace> = (
   next: ActivatedRouteSnapshot
 ): Observable<Workspace> => {
   const store = inject(Store);
+  const currentWorkspace = inject(CurrentWorkspaceService);
   const workspaces = inject(WorkspacesService);
 
   const workspaceKey =
@@ -26,27 +26,18 @@ export const workspaceResovler: ResolveFn<Workspace> = (
     first(),
     switchMap((isAuthenticated) => {
       if (isAuthenticated) {
-        return store.select(selectCurrentWorkspace).pipe(
-          first(),
-          switchMap((workspace) => {
-            if (workspace?.slug === workspaceKey) return of(workspace);
+        const open = currentWorkspace.workspace();
 
-            return workspaces
-              .getBySlug(workspaceKey)
-              .pipe(
-                tap((workspace) =>
-                  store.dispatch(setCurrentWorkspace({ workspace }))
-                )
-              );
-          })
-        );
+        if (open?.slug === workspaceKey) return of(open);
+
+        return workspaces
+          .getBySlug(workspaceKey)
+          .pipe(tap((workspace) => currentWorkspace.set(workspace)));
       }
 
       return workspaces
         .getPublicBySlug(workspaceKey)
-        .pipe(
-          tap((workspace) => store.dispatch(setCurrentWorkspace({ workspace })))
-        );
+        .pipe(tap((workspace) => currentWorkspace.set(workspace)));
     })
   );
 };

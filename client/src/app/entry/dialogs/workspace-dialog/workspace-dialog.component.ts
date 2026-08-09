@@ -7,6 +7,7 @@ import {
   resource,
   signal,
 } from '@angular/core';
+import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
 import { ThemeService } from '@core/services/theme.service';
 import {
   debounce,
@@ -24,11 +25,9 @@ import { StrokedButtonComponent } from '@static/components/button/stroked-button
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { Workspace } from '@core/models/workspace';
-import * as Actions from '@core/store/workspaces/workspaces.actions';
-import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
+import { WorkspacesService } from '@core/services/workspaces-api.service';
 import { colorDictionary } from '@core/util/colors/colors';
 import { toUrlSlug } from '@core/util/strings';
-import { Store } from '@ngrx/store';
 import { LucideCheck } from '@lucide/angular';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -226,7 +225,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   `,
 })
 export class WorkspaceDialogComponent {
-  private store = inject(Store);
+  private workspaceCommands = inject(WorkspaceCommandsService);
   private workspaceServcie = inject(WorkspacesService);
   private setupTemplates = inject(WorkspaceSetupTemplatesService);
   private theme = inject(ThemeService).theme;
@@ -388,7 +387,7 @@ export class WorkspaceDialogComponent {
       },
     };
 
-    this.store.dispatch(Actions.editWorkspace.init({ request }));
+    this.workspaceCommands.edit(request);
   }
 
   setTemplate(templateKey: string) {
@@ -409,7 +408,7 @@ export class WorkspaceDialogComponent {
       templateKey: templateKey().value(),
     };
 
-    this.store.dispatch(Actions.createWorkspace.init({ request }));
+    this.workspaceCommands.create(request);
   }
 
   getColorLabel(value: string) {

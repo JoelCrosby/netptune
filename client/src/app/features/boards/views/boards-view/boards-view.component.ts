@@ -1,15 +1,14 @@
 import { Component, computed, inject } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { BoardsGridComponent } from '@boards/components/boards-grid/boards-grid.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
 import { workspaceBoardsResource } from '@core/resources/board.resource';
 import { DialogService } from '@core/services/dialog.service';
-import { Store } from '@ngrx/store';
 import { delayedLoading } from '@core/util/delayed-loading';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { netptunePermissions } from '@core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@core/auth/permissions';
 import { LucideKanban, LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -82,7 +81,6 @@ import { EmptyStateComponent } from '@static/components/empty-state/empty-state.
 })
 export class BoardsViewComponent {
   private dialog = inject(DialogService);
-  private store = inject(Store);
 
   readonly boardsResource = workspaceBoardsResource();
 
@@ -91,9 +89,7 @@ export class BoardsViewComponent {
   boards = this.boardsResource.value;
   count = computed(() => (this.loading() ? null : this.boards().length));
 
-  canCreateBoards = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.boards.create)
-  );
+  canCreateBoards = hasPermission(PERMISSONS.boards.create);
 
   onCreateBoardClicked() {
     this.dialog.open(CreateBoardComponent, {

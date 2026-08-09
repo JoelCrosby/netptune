@@ -1,4 +1,5 @@
 import { Component, effect, inject, input } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { PageLoadingComponent } from '@app/static/components/page-loading/page-loading.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
@@ -18,8 +19,7 @@ import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/ta
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
 import { PageContainerComponent } from '@app/static/components/page-container/page-container.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { netptunePermissions } from '@app/core/auth/permissions';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { Router } from '@angular/router';
 import { TaskDetailFilesComponent } from '@entry/dialogs/task-detail-dialog/task-detail-files.component';
 import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-flags.component';
@@ -138,25 +138,15 @@ export class TaskDetailPageComponent {
 
   systemId = input.required<string>();
 
-  readTags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tags.read)
-  );
+  readTags = hasPermission(PERMISSONS.tags.read);
 
-  readFiles = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.files.read)
-  );
+  readFiles = hasPermission(PERMISSONS.files.read);
 
-  readFlags = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.flags.read)
-  );
+  readFlags = hasPermission(PERMISSONS.flags.read);
 
-  readComments = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.comments.read)
-  );
+  readComments = hasPermission(PERMISSONS.comments.read);
 
-  readActivity = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.activity.read)
-  );
+  readActivity = hasPermission(PERMISSONS.activity.read);
 
   constructor() {
     effect(() => {

@@ -46,7 +46,7 @@ export class TaskDetailPropertiesComponent {
   readonly store = inject(Store);
   readonly taskDetailService = inject(TaskDetailService);
   private readonly taskCommands = inject(TaskCommandsService);
-  private readonly canUpdate = selectCanUpdateTask(this.store);
+  private readonly canUpdate = selectCanUpdateTask();
   readonly task = this.taskDetailService.task;
   readonly updateLoading = this.taskCommands.isEditing;
   readonly isReadOnly = computed(() => !this.canUpdate());

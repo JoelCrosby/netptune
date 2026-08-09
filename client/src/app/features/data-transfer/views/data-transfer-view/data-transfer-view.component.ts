@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { Router, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { ClientResponse } from '@core/models/client-response';
 import {
   ImportSessionProgressEvent,
@@ -360,16 +360,12 @@ export class DataTransferViewComponent {
   protected readonly exportIcon = LucideFileDown;
   protected readonly importIcon = LucideFileUp;
 
-  protected readonly canExport = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.export)
-  );
+  protected readonly canExport = hasPermission(PERMISSONS.tasks.export);
 
-  protected readonly canImport = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.tasks.import)
-  );
+  protected readonly canImport = hasPermission(PERMISSONS.tasks.import);
 
-  protected readonly canImportArchive = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.data.importArchive)
+  protected readonly canImportArchive = hasPermission(
+    PERMISSONS.data.importArchive
   );
 
   protected readonly undoing = signal<string | null>(null);

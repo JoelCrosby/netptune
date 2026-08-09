@@ -5,6 +5,8 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { Router } from '@angular/router';
 import {
   logoutSuccess,
@@ -13,7 +15,6 @@ import {
 import { selectHasAuthSession } from '@app/core/store/auth/auth.selectors';
 import { AuthService } from '@core/auth/auth.service';
 import { environment } from '@env/environment';
-import { loadWorkspaces } from '@app/core/store/workspaces/workspaces.actions';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
 import {
@@ -26,7 +27,6 @@ import {
 } from 'rxjs/operators';
 import { WorkspaceService } from '../services/workspace.service';
 import { RealtimeClientIdService } from '../sse/realtime-client-id.service';
-import { selectCurrentWorkspaceIdentifier } from '../store/workspaces/workspaces.selectors';
 
 let sessionRefreshRequest$: ReturnType<AuthService['refresh']> | null = null;
 
@@ -40,6 +40,8 @@ export const authInterceptor = (
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
   const store = inject(Store);
+  const currentWorkspace = inject(CurrentWorkspaceService);
+  const workspaceList = inject(WorkspaceListService);
   const router = inject(Router);
   const workspaceService = inject(WorkspaceService);
   const authService = inject(AuthService);
@@ -61,7 +63,7 @@ export const authInterceptor = (
       sessionRefreshRequest$ = authService.refresh().pipe(
         tap((user) => {
           store.dispatch(sessionEstablished({ user }));
-          store.dispatch(loadWorkspaces.init());
+          workspaceList.reload();
         }),
         finalize(() => {
           sessionRefreshRequest$ = null;
@@ -85,43 +87,37 @@ export const authInterceptor = (
     return next(req);
   }
 
-  return store.select(selectCurrentWorkspaceIdentifier).pipe(
-    first(),
-    switchMap((workspaceId) => {
-      req = req.clone({
-        headers: req.headers.set('X-Realtime-Client', realtimeClientId.value),
-        url: environment.apiEndpoint + req.url,
-        withCredentials: true,
-      });
+  const workspaceId = currentWorkspace.slug();
 
-      const workspaceRoute = workspaceService.getWorkspaceRoute();
-      const workspaceHeader = resolveWorkspaceHeader(
-        workspaceRoute,
-        workspaceId
-      );
+  req = req.clone({
+    headers: req.headers.set('X-Realtime-Client', realtimeClientId.value),
+    url: environment.apiEndpoint + req.url,
+    withCredentials: true,
+  });
 
-      if (workspaceHeader) {
-        req = req.clone({
-          headers: req.headers.set('workspace', workspaceHeader),
-        });
+  const workspaceRoute = workspaceService.getWorkspaceRoute();
+  const workspaceHeader = resolveWorkspaceHeader(workspaceRoute, workspaceId);
+
+  if (workspaceHeader) {
+    req = req.clone({
+      headers: req.headers.set('workspace', workspaceHeader),
+    });
+  }
+
+  return next(req).pipe(
+    catchError((err: unknown) => {
+      if (err instanceof HttpErrorResponse) {
+        if (err.status === 401 && !isAuthManagementRequest(req)) {
+          return store.select(selectHasAuthSession).pipe(
+            first(),
+            switchMap((hasSession) =>
+              hasSession ? handle401(req) : throwError(() => err)
+            )
+          );
+        }
       }
 
-      return next(req).pipe(
-        catchError((err: unknown) => {
-          if (err instanceof HttpErrorResponse) {
-            if (err.status === 401 && !isAuthManagementRequest(req)) {
-              return store.select(selectHasAuthSession).pipe(
-                first(),
-                switchMap((hasSession) =>
-                  hasSession ? handle401(req) : throwError(() => err)
-                )
-              );
-            }
-          }
-
-          return throwError(() => err);
-        })
-      );
+      return throwError(() => err);
     })
   );
 };

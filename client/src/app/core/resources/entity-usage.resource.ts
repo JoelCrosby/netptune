@@ -1,11 +1,11 @@
 import { Signal } from '@angular/core';
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import { EntityUsage } from '../models/entity-usage';
 import { permissionResource } from './permission-resource';
 
 export const statusUsageResource = (id: Signal<number | null>) => {
   return permissionResource<EntityUsage>(
-    netptunePermissions.statuses.read,
+    PERMISSONS.statuses.read,
     () => {
       const statusId = id();
 
@@ -19,7 +19,7 @@ export const statusUsageResource = (id: Signal<number | null>) => {
 
 export const tagUsageResource = (id: Signal<number | null>) => {
   return permissionResource<EntityUsage>(
-    netptunePermissions.tags.read,
+    PERMISSONS.tags.read,
     () => {
       const tagId = id();
 
@@ -30,14 +30,11 @@ export const tagUsageResource = (id: Signal<number | null>) => {
 };
 
 export const relationTypeUsageResource = (id: Signal<number | null>) => {
-  return permissionResource<EntityUsage>(
-    netptunePermissions.relationTypes.read,
-    () => {
-      const relationTypeId = id();
+  return permissionResource<EntityUsage>(PERMISSONS.relationTypes.read, () => {
+    const relationTypeId = id();
 
-      return relationTypeId === null
-        ? undefined
-        : { url: `api/relation-types/${relationTypeId}/usage` };
-    }
-  );
+    return relationTypeId === null
+      ? undefined
+      : { url: `api/relation-types/${relationTypeId}/usage` };
+  });
 };

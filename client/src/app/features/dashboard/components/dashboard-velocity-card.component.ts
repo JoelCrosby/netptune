@@ -1,12 +1,11 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, inject, linkedSignal } from '@angular/core';
-import { netptunePermissions } from '@core/auth/permissions';
+import { Component, computed, linkedSignal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSONS } from '@core/auth/permissions';
 import { VelocityReport } from '@core/models/reporting';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
 import { projectResource } from '@core/resources/project.resource';
 import { LucideGauge } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import {
@@ -80,13 +79,9 @@ const recentSprints = 8;
   `,
 })
 export class DashboardVelocityCardComponent {
-  private readonly store = inject(Store);
-
   protected readonly velocityIcon = LucideGauge;
 
-  readonly canRead = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.sprints.read)
-  );
+  readonly canRead = hasPermission(PERMISSONS.sprints.read);
 
   private readonly projectsResource = projectResource();
   private readonly projects = this.projectsResource.value;

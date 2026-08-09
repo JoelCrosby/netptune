@@ -1,6 +1,6 @@
 import { Signal } from '@angular/core';
 import { Params } from '@angular/router';
-import { netptunePermissions } from '../auth/permissions';
+import { PERMISSONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { BoardView } from '../models/view-models/board-view';
 import { stableResource } from './stable-resource';
@@ -10,7 +10,7 @@ export const boardViewResource = (
   params: Signal<Params>
 ) => {
   return stableResource<BoardView | undefined>(
-    netptunePermissions.boards.read,
+    PERMISSONS.boards.read,
     () => {
       const id = identifier();
 

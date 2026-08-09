@@ -4,15 +4,14 @@ import {
   HttpResourceRef,
   HttpResourceRequest,
 } from '@angular/common/http';
-import { assertInInjectionContext, inject, Signal } from '@angular/core';
+import { assertInInjectionContext, Signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { RefreshScope } from '@core/models/refresh-scope';
 import {
   reloadOnRefresh,
   reloadOnWorkspaceChange,
 } from '@core/util/reload-on-refresh';
-import { Store } from '@ngrx/store';
 import { Permission } from '../auth/permissions';
-import { selectHasPermission } from '../store/auth/auth.selectors';
 
 export type PermissionResourceRef<T> = HttpResourceRef<T> & {
   readonly canRead: Signal<boolean>;
@@ -42,8 +41,7 @@ export function permissionResource<T>(
 ): PermissionResourceRef<T | undefined> {
   assertInInjectionContext(permissionResource);
 
-  const store = inject(Store);
-  const canRead = store.selectSignal(selectHasPermission(permission));
+  const canRead = hasPermission(permission);
 
   const { refreshOn, ...resourceOptions } = options ?? {};
 

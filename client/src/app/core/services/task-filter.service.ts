@@ -1,4 +1,5 @@
 import { effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CurrentRouteService } from '@core/router/current-route.service';
@@ -7,14 +8,11 @@ import {
   parseTaskFilterRouteParams,
   TaskFilterRouteParams,
 } from '@core/router/task-filter-route-params';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
-import { Store } from '@ngrx/store';
 
 const FILTER_PARAMS = ['term', 'tags', 'users', 'statusIds', 'sprintId'];
 
 @Injectable({ providedIn: 'root' })
 export class TaskFilterService {
-  private readonly store = inject(Store);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -29,9 +27,7 @@ export class TaskFilterService {
   private readonly isFilterableRoute =
     inject(CurrentRouteService).isTaskFilterableRoute;
 
-  private readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  private readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   constructor() {
     this.forgetOnWorkspaceChange();

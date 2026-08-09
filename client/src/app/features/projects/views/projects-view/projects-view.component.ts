@@ -1,13 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Params, Router, RouterLink } from '@angular/router';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { projectResource } from '@core/resources/project.resource';
 import { DialogService } from '@core/services/dialog.service';
 import { ProjectCommandsService } from '@core/services/project-commands.service';
-import { selectCurrentWorkspaceIdentifier } from '@core/store/workspaces/workspaces.selectors';
 import { ProjectDialogComponent } from '@entry/dialogs/project-dialog/project-dialog.component';
 import {
   LucideFolderOpen,
@@ -15,7 +15,6 @@ import {
   LucidePlus,
   LucideTrash2,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
@@ -167,31 +166,22 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 export class ProjectsViewComponent {
   private dialog = inject(DialogService);
   private router = inject(Router);
-  private store = inject(Store);
   private projectCommands = inject(ProjectCommandsService);
 
   readonly projectsResource = projectResource();
   readonly loading = this.projectsResource.isLoading;
   readonly projects = this.projectsResource.value;
-  readonly workspaceId = this.store.selectSignal(
-    selectCurrentWorkspaceIdentifier
-  );
+  readonly workspaceId = inject(CurrentWorkspaceService).slug;
 
   readonly count = computed(() => {
     return this.loading() ? null : this.projects().length;
   });
 
-  readonly canCreateProjects = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.projects.create)
-  );
+  readonly canCreateProjects = hasPermission(PERMISSONS.projects.create);
 
-  readonly canUpdateProjects = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.projects.update)
-  );
+  readonly canUpdateProjects = hasPermission(PERMISSONS.projects.update);
 
-  readonly canDeleteProjects = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.projects.delete)
-  );
+  readonly canDeleteProjects = hasPermission(PERMISSONS.projects.delete);
 
   private readonly params = signal<Params>({});
 

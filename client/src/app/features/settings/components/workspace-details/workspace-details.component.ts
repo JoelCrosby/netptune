@@ -7,6 +7,8 @@ import {
   resource,
   signal,
 } from '@angular/core';
+import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   apply,
   debounce,
@@ -20,15 +22,12 @@ import {
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
-import * as Actions from '@core/store/workspaces/workspaces.actions';
-import { selectCurrentWorkspace } from '@core/store/workspaces/workspaces.selectors';
-import { WorkspacesService } from '@core/store/workspaces/workspaces.service';
+import { WorkspacesService } from '@core/services/workspaces-api.service';
 import {
   LucideBuilding2,
   LucideCheck,
   LucideTriangleAlert,
 } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { ColorSelectComponent } from '@static/components/color-select/color-select.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
@@ -123,13 +122,13 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
   `,
 })
 export class WorkspaceDetailsComponent {
-  private store = inject(Store);
+  private workspaceCommands = inject(WorkspaceCommandsService);
   private workspaceService = inject(WorkspacesService);
   private confirmation = inject(ConfirmationService);
 
   protected readonly detailsIcon = LucideBuilding2;
 
-  workspace = this.store.selectSignal(selectCurrentWorkspace);
+  workspace = inject(CurrentWorkspaceService).workspace;
 
   detailsFormModel = signal({
     name: '',
@@ -253,7 +252,7 @@ export class WorkspaceDetailsComponent {
         },
       };
 
-      this.store.dispatch(Actions.editWorkspace.init({ request }));
+      this.workspaceCommands.edit(request);
     });
   }
 }

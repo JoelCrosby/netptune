@@ -1,11 +1,10 @@
 import { Component, inject, output, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { RouterLink } from '@angular/router';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { LucideTrash2, LucideSend } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -91,15 +90,12 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
   `,
 })
 export class UserListComponent {
-  private store = inject(Store);
   private userCommands = inject(UserCommandsService);
 
   readonly countChange = output<number>();
   readonly workspaceRole = WorkspaceRole;
 
-  canReadUsers = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.read)
-  );
+  canReadUsers = hasPermission(PERMISSONS.members.read);
 
   readonly userData: DatatableDataSource<WorkspaceAppUser> = {
     key: 'user-list',

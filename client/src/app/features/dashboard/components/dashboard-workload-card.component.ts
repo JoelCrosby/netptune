@@ -1,5 +1,6 @@
 import { httpResource } from '@angular/common/http';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { WorkloadReport } from '@core/models/reporting';
 import { LucideUsers } from '@lucide/angular';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
@@ -9,9 +10,7 @@ import {
   StatStripComponent,
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
-import { Store } from '@ngrx/store';
-import { netptunePermissions } from '@core/auth/permissions';
-import { selectHasPermission } from '@core/store/auth/auth.selectors';
+import { PERMISSONS } from '@core/auth/permissions';
 import { WorkloadChartComponent } from './charts/workload-chart.component';
 
 const topAssignees = 8;
@@ -61,13 +60,9 @@ const topAssignees = 8;
   `,
 })
 export class DashboardWorkloadCardComponent {
-  private readonly store = inject(Store);
-
   protected readonly workloadIcon = LucideUsers;
 
-  readonly canRead = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.read)
-  );
+  readonly canRead = hasPermission(PERMISSONS.members.read);
 
   private readonly resource = httpResource<WorkloadReport>(() => {
     return this.canRead()

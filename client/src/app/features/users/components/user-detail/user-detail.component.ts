@@ -1,4 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { PermissionListComponent } from '@app/static/components/permission-list/permission-list.component';
 import { Store } from '@ngrx/store';
 import { LucideShieldCheck, LucideUserRoundX } from '@lucide/angular';
@@ -9,11 +10,8 @@ import {
 } from '@static/components/badge/badge.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
-import { netptunePermissions } from '@app/core/auth/permissions';
-import {
-  selectCurrentUserId,
-  selectHasPermission,
-} from '@app/core/store/auth/auth.selectors';
+import { PERMISSONS } from '@app/core/auth/permissions';
+import { selectCurrentUserId } from '@app/core/store/auth/auth.selectors';
 import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { WorkspaceAppUser } from '@core/models/appuser';
@@ -136,9 +134,7 @@ export class UserDetailComponent {
     WorkspaceRole.member,
     WorkspaceRole.admin,
   ];
-  readonly canUpdateRole = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.members.updateRole)
-  );
+  readonly canUpdateRole = hasPermission(PERMISSONS.members.updateRole);
   readonly currentUserId = this.store.selectSignal(selectCurrentUserId);
 
   readonly isSelf = computed(() => {

@@ -5,15 +5,13 @@ import {
   inject,
   untracked,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
-import { netptunePermissions } from '@core/auth/permissions';
+import { PERMISSONS } from '@core/auth/permissions';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { CommandRegistry } from '@core/services/command-registry.service';
 import { WorkspaceService } from '@core/services/workspace.service';
-import {
-  selectHasPermission,
-  selectIsAuthenticated,
-} from '@core/store/auth/auth.selectors';
+import { selectIsAuthenticated } from '@core/store/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 
 @Injectable()
@@ -23,13 +21,9 @@ export class GlobalCommandsService implements OnDestroy {
   private workspace = inject(WorkspaceService);
   private assistant = inject(AiAssistantService);
   private store = inject(Store);
-  private canReadAutomations = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.automations.read)
-  );
+  private canReadAutomations = hasPermission(PERMISSONS.automations.read);
   private automationCommandRegistered = false;
-  private canReadStorage = this.store.selectSignal(
-    selectHasPermission(netptunePermissions.storage.read)
-  );
+  private canReadStorage = hasPermission(PERMISSONS.storage.read);
   private storageCommandRegistered = false;
   private assistantCommandRegistered = false;
   private authenticated = this.store.selectSignal(selectIsAuthenticated);
