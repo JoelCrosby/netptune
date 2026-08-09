@@ -19,6 +19,7 @@ export enum AiStreamEventType {
   stopped = 9,
   historyCompacted = 10,
   usageUpdated = 11,
+  turnUsage = 12,
 }
 
 export interface AiStreamEvent {

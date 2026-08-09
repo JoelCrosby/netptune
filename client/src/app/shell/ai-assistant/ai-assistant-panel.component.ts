@@ -114,7 +114,9 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
                 }
 
                 @if (isThinking()) {
-                  <app-ai-assistant-thinking />
+                  <app-ai-assistant-thinking
+                    [elapsedMs]="assistant.turnElapsedMs()"
+                    [usage]="assistant.turnUsage()" />
                 }
               </div>
             }

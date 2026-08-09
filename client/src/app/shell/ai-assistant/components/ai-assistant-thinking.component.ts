@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
+import { AiTokenUsage } from '@core/models/ai-conversation';
+import { formatTokens, totalTokens } from '@core/util/ai-usage';
+import { formatElapsed } from '@core/util/duration';
+
+/** A clock reading "0s" says nothing, so it appears once there is a second to show. */
+const ELAPSED_FLOOR = 1000;
 
 @Component({
   selector: 'app-ai-assistant-thinking',
@@ -25,6 +31,38 @@ import { Component } from '@angular/core';
       i18n="Shown while the assistant is preparing its reply"
       >Thinking</span
     >
+
+    @if (progress(); as progress) {
+      <span class="text-muted/80 text-xs tabular-nums">{{ progress }}</span>
+    }
   `,
 })
-export class AiAssistantThinkingComponent {}
+export class AiAssistantThinkingComponent {
+  readonly elapsedMs = input(0);
+  readonly usage = input<AiTokenUsage | null>(null);
+
+  /**
+   * A count that keeps moving is what says the turn is alive. Tokens only land
+   * as the model finishes each call, so the clock carries the wait until then.
+   */
+  protected readonly progress = computed(() => {
+    const elapsedMs = this.elapsedMs();
+    const hasStarted = elapsedMs >= ELAPSED_FLOOR;
+
+    if (!hasStarted) {
+      return null;
+    }
+
+    const elapsed = formatElapsed(elapsedMs);
+    const usage = this.usage() ?? undefined;
+    const hasTokens = totalTokens(usage) > 0;
+
+    if (!hasTokens) {
+      return elapsed;
+    }
+
+    const tokens = formatTokens(usage);
+
+    return $localize`:Assistant progress while a reply is being prepared, for example "8s · 12.4k tokens":${elapsed}:elapsed: · ${tokens}:tokens: tokens`;
+  });
+}

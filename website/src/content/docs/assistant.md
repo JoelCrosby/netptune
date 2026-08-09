@@ -58,6 +58,8 @@ Reporting is the one worth calling out. The assistant reads the same flow, workl
 
 The assistant shows a running total above the message box — tokens used and estimated spend for the open conversation, priced from published model rates.
 
+While a reply is being prepared, the thinking line counts up how long the turn has been running and the tokens it has spent so far. The finished reply keeps the time it took.
+
 Workspace administrators see the same figures for the whole workspace, per member and per conversation, on the assistant settings page. Every conversation in the workspace can be read there in full.
 
 Nothing is billed through Netptune. The charge lands on whichever API key answered the request.

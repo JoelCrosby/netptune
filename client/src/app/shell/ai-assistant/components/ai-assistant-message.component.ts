@@ -2,13 +2,22 @@ import { Component, computed, input, output } from '@angular/core';
 import { AiEntityReference } from '@core/models/ai-conversation';
 import { AiChatEntry } from '@core/services/ai-assistant.service';
 import { parseAssistantMarkdown } from '@core/util/ai-markdown';
-import { LucidePencil, LucideRefreshCw, LucideWrench } from '@lucide/angular';
+import { formatElapsed } from '@core/util/duration';
+import {
+  LucideBrain,
+  LucidePencil,
+  LucideRefreshCw,
+  LucideWrench,
+} from '@lucide/angular';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
 
 interface AiToolChip {
   name: string;
   count: number;
 }
+
+/** Below a second there is nothing worth reporting. */
+const MINIMUM_REPORTED_DURATION = 1000;
 
 @Component({
   selector: 'app-ai-assistant-message',
@@ -17,12 +26,20 @@ interface AiToolChip {
     '[class.items-end]': 'isUser()',
   },
   imports: [
+    LucideBrain,
     LucidePencil,
     LucideRefreshCw,
     LucideWrench,
     AiAssistantMarkdownComponent,
   ],
   template: `
+    @if (thoughtFor(); as duration) {
+      <p class="text-muted flex items-center gap-1 text-xs">
+        <svg lucideBrain class="h-3 w-3"></svg>
+        {{ duration }}
+      </p>
+    }
+
     @if (tools().length > 0) {
       <div class="text-muted flex flex-wrap items-center gap-1.5 text-xs">
         <svg lucideWrench class="h-3 w-3"></svg>
@@ -101,6 +118,25 @@ export class AiAssistantMessageComponent {
   readonly edited = output();
 
   protected readonly isUser = computed(() => this.entry().role === 'user');
+
+  /** A reply that never arrived has no work to report, however long it took. */
+  protected readonly thoughtFor = computed(() => {
+    const entry = this.entry();
+    const durationMs = entry.durationMs ?? 0;
+    const isWorthReporting =
+      !this.isUser() &&
+      !entry.failed &&
+      !this.isStreaming() &&
+      durationMs >= MINIMUM_REPORTED_DURATION;
+
+    if (!isWorthReporting) {
+      return null;
+    }
+
+    const duration = formatElapsed(durationMs);
+
+    return $localize`:Shown above a finished reply, saying how long the assistant worked on it:Thought for ${duration}:duration:`;
+  });
 
   protected readonly isRetryable = computed(() => {
     return this.isLast() && !this.isUser() && !this.isStreaming();

@@ -218,6 +218,39 @@ public class AiConversationRunnerTests
         events.Should().NotContain(item => item.Type == AiStreamEventType.ReplyReset);
     }
 
+    [Fact]
+    public async Task Run_ShouldReportTokensSpent_AsEachProviderCallCompletes()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
+        var runner = CreateRunner([tool]);
+
+        Provider.CallToolOnce = "allowed_tool";
+        Provider.Usage = new AiUsage { InputTokens = 100, OutputTokens = 20 };
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+        var events = await Drain(runner, context);
+        var reported = events
+            .Where(item => item.Type == AiStreamEventType.TurnUsage)
+            .Select(item => item.Usage!.InputTokens + item.Usage.OutputTokens)
+            .ToList();
+
+        reported.Should().Equal(
+            [120, 240],
+            "the count covers every provider call the turn has made so far");
+    }
+
+    [Fact]
+    public async Task Run_ShouldNotReportTokensSpent_WhenTheProviderReportsNone()
+    {
+        var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
+        var runner = CreateRunner([tool]);
+
+        var context = CreateContext(NetptunePermissions.Tasks.Read);
+        var events = await Drain(runner, context);
+
+        events.Should().NotContain(item => item.Type == AiStreamEventType.TurnUsage);
+    }
+
     private AiConversationRunner CreateRunner(
         IReadOnlyList<IAiTool> tools,
         int maxToolIterations = 12,
@@ -277,6 +310,8 @@ public class AiConversationRunnerTests
 
         public string ReplyText { get; set; } = "hi";
 
+        public AiUsage Usage { get; set; } = new();
+
         public async IAsyncEnumerable<AiProviderStreamEvent> Stream(
             AiChatRequest request,
             string apiKey,
@@ -294,7 +329,7 @@ public class AiConversationRunnerTests
 
             if (!hasToolCall)
             {
-                yield return AiProviderStreamEvent.Completed(new AiChatTurn { Text = ReplyText });
+                yield return AiProviderStreamEvent.Completed(new AiChatTurn { Text = ReplyText, Usage = Usage });
 
                 yield break;
             }
@@ -302,6 +337,7 @@ public class AiConversationRunnerTests
             yield return AiProviderStreamEvent.Completed(new AiChatTurn
             {
                 Text = ReplyText,
+                Usage = Usage,
                 ToolCalls =
                 [
                     new AiToolCall

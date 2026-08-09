@@ -21,6 +21,7 @@ import {
   AiConversation,
   AiConversationDetail,
   AiEntityReference,
+  AiMessage,
   AiMessageRole,
   AiProposedChange,
   AiStreamEvent,
@@ -43,21 +44,48 @@ export interface AiChatEntry {
   role: 'user' | 'assistant';
   text: string;
   tools: string[];
+  /** How long the reply took, so it can say how long it thought. */
+  durationMs?: number;
   failed?: boolean;
   stopped?: boolean;
 }
 
-/** Shared so a stored transcript renders the same wherever it is read back. */
-export const toChatEntry = (message: {
-  role: AiMessageRole;
-  text?: string;
-  toolNames: string[];
-}): AiChatEntry => {
-  return {
-    role: message.role === AiMessageRole.user ? 'user' : 'assistant',
-    text: message.text ?? '',
-    tools: message.toolNames,
-  };
+/**
+ * Shared so a stored transcript renders the same wherever it is read back.
+ *
+ * A stored turn records no duration of its own, so a reply is timed from the
+ * question it answers — the question is written when the turn starts and the
+ * reply when it ends.
+ */
+export const toChatEntries = (messages: AiMessage[]): AiChatEntry[] => {
+  let askedAt: number | null = null;
+
+  return messages.map((message) => {
+    const isUser = message.role === AiMessageRole.user;
+    const writtenAt = Date.parse(message.createdAt);
+
+    if (isUser) {
+      askedAt = writtenAt;
+
+      return {
+        role: 'user',
+        text: message.text ?? '',
+        tools: message.toolNames,
+      };
+    }
+
+    const durationMs =
+      askedAt === null ? undefined : Math.max(0, writtenAt - askedAt);
+
+    askedAt = null;
+
+    return {
+      role: 'assistant',
+      text: message.text ?? '',
+      tools: message.toolNames,
+      durationMs,
+    };
+  });
 };
 
 interface AiWorkspaceSession {
@@ -82,6 +110,9 @@ const ASSISTANT_PAGE_PATTERN = /^\/[^/]+\/assistant$/;
 /** Matches the server's turn timeout — a reply cannot arrive after it. */
 const RESUME_TIMEOUT = 5 * 60 * 1000;
 const RESUME_POLL_INTERVAL = 2000;
+
+/** The clock is only ever read to the second, so it ticks no faster. */
+const ELAPSED_TICK = 1000;
 
 @Injectable({ providedIn: 'root' })
 export class AiAssistantService {
@@ -112,6 +143,15 @@ export class AiAssistantService {
   readonly droppedMessages = signal(0);
   readonly usage = signal<AiTokenUsage | null>(null);
   readonly isReplacingLastTurn = signal(false);
+
+  /**
+   * Tokens the turn in flight has spent, which is what a waiting user watches
+   * count up. The conversation total only follows once the turn is stored.
+   */
+  readonly turnUsage = signal<AiTokenUsage | null>(null);
+
+  /** How long the turn in flight has been running, ticked once a second. */
+  readonly turnElapsedMs = signal(0);
 
   private readonly transcriptViewers = signal(0);
 
@@ -163,6 +203,8 @@ export class AiAssistantService {
   private streamAbort: AbortController | null = null;
   private isStopping = false;
   private pendingSince: number | null = null;
+  private turnStartedAt: number | null = null;
+  private elapsedTimer: ReturnType<typeof setInterval> | null = null;
 
   private sessions: AiStoredSessions = this.readSessions();
 
@@ -324,6 +366,8 @@ export class AiAssistantService {
     this.isReplacingLastTurn.set(false);
     this.droppedMessages.set(0);
     this.usage.set(null);
+    this.turnUsage.set(null);
+    this.turnElapsedMs.set(0);
     this.pendingSince = null;
   }
 
@@ -341,6 +385,50 @@ export class AiAssistantService {
     this.isStreaming.set(false);
     this.isThinking.set(false);
     this.pendingTurnAt.set(null);
+    this.stopTurnClock();
+  }
+
+  private startTurnClock(startedAt: number) {
+    this.stopClock();
+
+    this.turnStartedAt = startedAt;
+    this.turnUsage.set(null);
+    this.turnElapsedMs.set(this.since(startedAt));
+
+    this.elapsedTimer = setInterval(() => {
+      this.turnElapsedMs.set(this.since(startedAt));
+    }, ELAPSED_TICK);
+  }
+
+  /** Answers how long the turn ran, so its reply can say how long it thought. */
+  private stopTurnClock(): number {
+    const startedAt = this.turnStartedAt;
+
+    this.stopClock();
+    this.turnStartedAt = null;
+
+    if (startedAt === null) {
+      return 0;
+    }
+
+    const elapsed = this.since(startedAt);
+
+    this.turnElapsedMs.set(elapsed);
+
+    return elapsed;
+  }
+
+  private stopClock() {
+    if (this.elapsedTimer === null) {
+      return;
+    }
+
+    clearInterval(this.elapsedTimer);
+    this.elapsedTimer = null;
+  }
+
+  private since(startedAt: number): number {
+    return Math.max(0, Date.now() - startedAt);
   }
 
   private async restoreSession(
@@ -480,7 +568,7 @@ export class AiAssistantService {
     this.conversationId.set(detail.conversation.id);
     this.conversationTitle.set(detail.conversation.title);
     this.selectedModel.set(detail.conversation.requestedModel ?? null);
-    this.entries.set(messages.map((message) => this.toEntry(message)));
+    this.entries.set(toChatEntries(messages));
     this.addReferences(messages.flatMap((message) => message.references));
     this.changeSet.set(detail.pendingChangeSet ?? null);
     this.excludedChangeIds.set(new Set());
@@ -514,6 +602,10 @@ export class AiAssistantService {
     this.isStreaming.set(true);
     this.isThinking.set(true);
 
+    // The turn started before this browser did, so the clock counts from the
+    // question rather than from the reload.
+    this.startTurnClock(startedAt);
+
     const token = ++this.turnToken;
 
     try {
@@ -526,6 +618,7 @@ export class AiAssistantService {
         this.isThinking.set(false);
         this.pendingTurnAt.set(null);
         this.pendingSince = null;
+        this.stopTurnClock();
         this.markReplyReceived();
       }
     }
@@ -595,14 +688,6 @@ export class AiAssistantService {
     }
 
     await this.loadConversations();
-  }
-
-  private toEntry(message: {
-    role: AiMessageRole;
-    text?: string;
-    toolNames: string[];
-  }): AiChatEntry {
-    return toChatEntry(message);
   }
 
   /**
@@ -760,6 +845,8 @@ export class AiAssistantService {
     this.showHistory.set(false);
     this.droppedMessages.set(0);
     this.usage.set(null);
+    this.turnUsage.set(null);
+    this.turnElapsedMs.set(0);
   }
 
   toggleChanges(changeIds: number[]) {
@@ -958,6 +1045,21 @@ export class AiAssistantService {
     return question;
   }
 
+  private markLastEntryDuration(durationMs: number) {
+    this.entries.update((current) => {
+      const next = [...current];
+      const last = next[next.length - 1];
+
+      if (!last || last.role !== 'assistant') {
+        return current;
+      }
+
+      next[next.length - 1] = { ...last, durationMs };
+
+      return next;
+    });
+  }
+
   private markLastEntryStopped() {
     this.entries.update((current) => {
       const next = [...current];
@@ -1024,12 +1126,15 @@ export class AiAssistantService {
       return;
     }
 
+    const startedAt = Date.now();
+
     this.forgetDraft(this.draftKey());
     this.appendEntry({ role: 'user', text: question, tools: [] });
     this.appendEntry({ role: 'assistant', text: '', tools: [] });
     this.isStreaming.set(true);
     this.isThinking.set(true);
-    this.pendingTurnAt.set(Date.now());
+    this.pendingTurnAt.set(startedAt);
+    this.startTurnClock(startedAt);
 
     const token = ++this.turnToken;
 
@@ -1049,11 +1154,14 @@ export class AiAssistantService {
       const isCurrent = this.turnToken === token;
 
       if (isCurrent) {
+        const elapsed = this.stopTurnClock();
+
         this.streamAbort = null;
         this.isStreaming.set(false);
         this.isThinking.set(false);
         this.pendingTurnAt.set(null);
         this.isStopping = false;
+        this.markLastEntryDuration(elapsed);
       }
     }
 
@@ -1296,6 +1404,12 @@ export class AiAssistantService {
 
     if (event.type === AiStreamEventType.usageUpdated && event.usage) {
       this.usage.set(event.usage);
+
+      return;
+    }
+
+    if (event.type === AiStreamEventType.turnUsage && event.usage) {
+      this.turnUsage.set(event.usage);
 
       return;
     }

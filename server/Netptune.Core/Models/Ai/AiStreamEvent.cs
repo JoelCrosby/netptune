@@ -16,6 +16,7 @@ public enum AiStreamEventType
     Stopped = 9,
     HistoryCompacted = 10,
     UsageUpdated = 11,
+    TurnUsage = 12,
 }
 
 public sealed record AiStreamEvent
@@ -43,6 +44,17 @@ public sealed record AiStreamEvent
         return new AiStreamEvent
         {
             Type = AiStreamEventType.UsageUpdated,
+            Usage = usage,
+        };
+    }
+
+    // Tokens the turn has spent so far, which the client counts up while it waits.
+    // The conversation total only follows once the turn is stored.
+    public static AiStreamEvent TurnUsage(AiTokenUsageViewModel usage)
+    {
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.TurnUsage,
             Usage = usage,
         };
     }

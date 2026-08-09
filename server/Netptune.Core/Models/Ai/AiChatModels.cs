@@ -53,6 +53,20 @@ public sealed record AiUsage
     public int CacheReadTokens { get; init; }
 
     public int CacheCreationTokens { get; init; }
+
+    public int TotalTokens => InputTokens + OutputTokens + CacheReadTokens + CacheCreationTokens;
+
+    // A turn can call the provider several times, so the tokens it spends accumulate.
+    public AiUsage Add(AiUsage usage)
+    {
+        return new AiUsage
+        {
+            InputTokens = InputTokens + usage.InputTokens,
+            OutputTokens = OutputTokens + usage.OutputTokens,
+            CacheReadTokens = CacheReadTokens + usage.CacheReadTokens,
+            CacheCreationTokens = CacheCreationTokens + usage.CacheCreationTokens,
+        };
+    }
 }
 
 public sealed record AiChatRequest

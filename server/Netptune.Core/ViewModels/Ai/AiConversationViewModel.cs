@@ -25,6 +25,17 @@ public sealed record AiTokenUsageViewModel
             Cost = AiModelPricing.Cost(model, InputTokens, OutputTokens, CacheReadTokens, CacheCreationTokens),
         };
     }
+
+    public static AiTokenUsageViewModel From(AiUsage usage)
+    {
+        return new AiTokenUsageViewModel
+        {
+            InputTokens = usage.InputTokens,
+            OutputTokens = usage.OutputTokens,
+            CacheReadTokens = usage.CacheReadTokens,
+            CacheCreationTokens = usage.CacheCreationTokens,
+        };
+    }
 }
 
 public sealed record AiConversationViewModel

@@ -6,6 +6,7 @@ using Netptune.Ai.Configuration;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.Ai;
 
 namespace Netptune.Ai.Execution;
 
@@ -38,6 +39,7 @@ public sealed class AiConversationRunner : IAiConversationRunner
         var messages = new List<AiChatMessage>(context.History);
         var iteration = 0;
         var hasCorrectedClaim = false;
+        var spent = new AiUsage();
 
         while (iteration < Options.MaxToolIterations)
         {
@@ -75,6 +77,15 @@ public sealed class AiConversationRunner : IAiConversationRunner
             }
 
             context.Turns.Add(turn);
+
+            spent = spent.Add(turn.Usage);
+
+            var hasReportedUsage = spent.TotalTokens > 0;
+
+            if (hasReportedUsage)
+            {
+                yield return AiStreamEvent.TurnUsage(AiTokenUsageViewModel.From(spent).WithCost(context.Model));
+            }
 
             var hasToolCalls = turn.ToolCalls.Count > 0;
 
