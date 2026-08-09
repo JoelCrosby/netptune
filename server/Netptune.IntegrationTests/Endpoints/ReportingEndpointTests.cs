@@ -158,6 +158,18 @@ public sealed class ReportingEndpointTests(NetptuneFixture fixture)
     }
 
     [Fact]
+    public async Task Burndown_ShouldReturnNotFound_ForSprintThatNeverStarted()
+    {
+        var project = await CreateProject();
+        var sprint = await CreateSprint(project.Id);
+
+        var response = await Client.GetAsync(
+            $"api/reports/sprints/{sprint.Id}/burndown?unit=Tasks&timeZone=UTC");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
     public async Task Burndown_ShouldReturnNotFound_ForSprintInAnotherWorkspace()
     {
         var project = await CreateProject();

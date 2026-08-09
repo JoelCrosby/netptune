@@ -171,9 +171,12 @@ public sealed class ReportingRepository : IReportingRepository
 
         var reportableSprint = sprint!;
 
+        // A sprint that never started, or that ran before the event ledger existed, has no
+        // burndown to report. That is the sprint's state rather than a fault in the request,
+        // so it reads as an absent report rather than a rejected one.
         if (reportableSprint.StartedAt is null)
         {
-            throw new InvalidReportingFilterException("This sprint has no recorded start baseline.");
+            return null;
         }
 
         var end = reportableSprint.CompletedAt ?? DateTime.UtcNow;
@@ -199,8 +202,12 @@ public sealed class ReportingRepository : IReportingRepository
             .OrderBy(record => record.OccurredAt).ThenBy(record => record.Id)
             .ToListAsync(cancellationToken);
 
-        var start = records.FirstOrDefault(record => record.SubjectType == "sprint" && ReadString(record.Payload, "state") == "started")
-            ?? throw new InvalidReportingFilterException("This sprint predates reporting coverage.");
+        var start = records.FirstOrDefault(record => record.SubjectType == "sprint" && ReadString(record.Payload, "state") == "started");
+
+        if (start is null)
+        {
+            return null;
+        }
 
         var members = ReadCommitment(start.Payload);
 

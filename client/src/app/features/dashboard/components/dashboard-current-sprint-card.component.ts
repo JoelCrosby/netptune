@@ -195,7 +195,12 @@ export class DashboardCurrentSprintCardComponent {
       : undefined;
   });
 
-  readonly burndownPoints = computed(() => this.burndown.value()?.points ?? []);
+  // Reading an errored resource throws, and this one is allowed to fail.
+  private readonly burndownReport = computed(() => {
+    return this.burndown.hasValue() ? this.burndown.value() : undefined;
+  });
+
+  readonly burndownPoints = computed(() => this.burndownReport()?.points ?? []);
 
   readonly progressPercent = computed(() => {
     const sprint = this.sprint();
@@ -214,7 +219,7 @@ export class DashboardCurrentSprintCardComponent {
       },
     ];
 
-    const report = this.burndown.value();
+    const report = this.burndownReport();
     if (report) {
       tiles.push({
         label: $localize`:Label shown in the interface:Scope`,
