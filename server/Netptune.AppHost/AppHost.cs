@@ -11,7 +11,6 @@ var cache = builder
 var postgres = builder
     .AddPostgres("postgres")
     .WithDataVolume()
-    .WithPgWeb()
     .WithDbGate(dbGate => dbGate.WithValkey(cache))
 
     .WithHostPort(5432)
