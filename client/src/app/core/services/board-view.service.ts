@@ -14,7 +14,7 @@ import { Status } from '@core/models/status';
 import { boardViewResource } from '@core/resources/board-view.resource';
 import { buildTaskFilterRouteParams } from '@core/router/task-filter-route-params';
 import { TaskFilterService } from '@core/services/task-filter.service';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { moveTaskInGroups, sortBySortOrder } from '@core/util/board-groups';
 
 @Injectable({ providedIn: 'root' })

@@ -4,7 +4,7 @@ import { CurrentWorkspaceService } from '@core/services/current-workspace.servic
 import { PERMISSONS } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { LucideFolderDown } from '@lucide/angular';

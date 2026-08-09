@@ -3,7 +3,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PERMISSONS } from '@app/core/auth/permissions';
 import { FlagResolutionType } from '@core/enums/flag-resolution-type';
-import { TasksService } from '@app/core/store/tasks/tasks.service';
+import { TasksService } from '@core/services/tasks.service';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
 import { LucideCheck, LucideFlag, LucideX } from '@lucide/angular';
 import { finalize } from 'rxjs';

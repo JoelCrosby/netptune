@@ -7,7 +7,7 @@ import {
   taskPriorityLabels,
 } from '@core/enums/task-priority';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {

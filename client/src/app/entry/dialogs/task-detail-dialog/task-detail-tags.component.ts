@@ -1,8 +1,9 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, inject, linkedSignal } from '@angular/core';
+import { PERMISSONS } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
 import { MAX_PAGE_SIZE } from '@app/core/models/pagination';
 import { Tag } from '@app/core/models/tag';
-import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 import { FormSelectTagsOptionComponent } from '@app/static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@app/static/components/form-select-tags/form-select-tags.component';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
@@ -50,7 +51,7 @@ export class TaskDetailTagsComponent {
   selectedTags = linkedSignal(() => this.task()?.tags ?? []);
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 
-  canUpdate = selectCanUpdateTask();
+  canUpdate = hasPermission(PERMISSONS.tasks.update);
 
   constructor() {
     reloadOnRefresh(this.tags, ['tags']);

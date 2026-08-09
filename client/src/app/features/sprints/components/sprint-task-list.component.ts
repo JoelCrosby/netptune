@@ -4,7 +4,7 @@ import { SprintStatus } from '@core/enums/sprint-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';

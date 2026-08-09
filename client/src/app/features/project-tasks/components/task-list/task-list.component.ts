@@ -38,7 +38,7 @@ import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.compo
 import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
 import { TaskListFiltersComponent } from './task-list-filters.component';
 import { taskFilterRoute } from '@core/router/task-filter-route';
-import { ProjectTasksHubService } from '@app/core/store/tasks/tasks.hub.service';
+import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { DatePipe } from '@angular/common';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 

@@ -1,13 +1,11 @@
 import { httpResource } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
+import { PERMISSONS } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
 import { SessionService } from '@core/services/session.service';
 import { DEFAULT_PAGE_SIZE } from '@app/core/models/pagination';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { CommentsService } from '@app/core/services/comments.service';
-import {
-  selectCanCreateComment,
-  selectCanDeleteComment,
-} from '@app/core/store/permissions/permissions.selectors';
 import { CommentViewModel } from '@core/models/comment';
 import {
   AddCommentRequest,
@@ -77,8 +75,8 @@ export class TaskDetailCommentsComponent {
     { defaultValue: [] }
   );
 
-  canCreateComment = selectCanCreateComment();
-  canDeleteComment = selectCanDeleteComment();
+  canCreateComment = hasPermission(PERMISSONS.comments.create);
+  canDeleteComment = hasPermission(PERMISSONS.comments.deleteOwn);
 
   constructor() {
     reloadOnRefresh(this.comments, ['comments']);

@@ -1,4 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
+import { PERMISSONS } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
 import { TaskPriority } from '@app/core/enums/task-priority';
 import { UserSelectValue } from '@app/core/models/view-models/user-select-option';
 import { TaskEstimate } from '@app/static/components/task-properties/task-estimate-select.component';
@@ -8,7 +10,6 @@ import {
 } from '@app/static/components/task-properties/task-properties.component';
 import { TaskDetailService } from './task-detail.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
-import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
 @Component({
   selector: 'app-task-detail-properties',
@@ -44,7 +45,7 @@ import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.sel
 export class TaskDetailPropertiesComponent {
   readonly taskDetailService = inject(TaskDetailService);
   private readonly taskCommands = inject(TaskCommandsService);
-  private readonly canUpdate = selectCanUpdateTask();
+  private readonly canUpdate = hasPermission(PERMISSONS.tasks.update);
   readonly task = this.taskDetailService.task;
   readonly updateLoading = this.taskCommands.isEditing;
   readonly isReadOnly = computed(() => !this.canUpdate());

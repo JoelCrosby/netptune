@@ -1,7 +1,8 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
+import { PERMISSONS } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
 import { InlineEditHeadingComponent } from '@app/static/components/inline-edit-heading/inline-edit-heading.component';
 import { TaskDetailService } from './task-detail.service';
-import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 
 @Component({
   selector: 'app-task-detail-header',
@@ -17,7 +18,7 @@ export class TaskDetailHeaderComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;
-  private readonly canUpdate = selectCanUpdateTask();
+  private readonly canUpdate = hasPermission(PERMISSONS.tasks.update);
 
   isReadOnly = computed(() => !this.canUpdate());
 

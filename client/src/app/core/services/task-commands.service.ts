@@ -7,7 +7,7 @@ import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { TasksService } from '@app/core/store/tasks/tasks.service';
+import { TasksService } from '@core/services/tasks.service';
 import { downloadFile } from '@core/util/download-helper';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';

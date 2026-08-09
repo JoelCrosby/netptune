@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
-import { selectCanDeleteTask } from '@app/core/store/permissions/permissions.selectors';
+import { PERMISSONS } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
 import { StrokedButtonComponent } from '@app/static/components/button/stroked-button.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
@@ -63,7 +64,7 @@ export class TaskDetailActionsComponent {
 
   private readonly assistant = inject(AiAssistantService);
 
-  canDeleteTask = selectCanDeleteTask();
+  canDeleteTask = hasPermission(PERMISSONS.tasks.delete);
 
   protected readonly canAskAssistant = computed(() => {
     return (

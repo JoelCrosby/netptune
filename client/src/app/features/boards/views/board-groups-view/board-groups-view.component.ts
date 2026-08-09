@@ -44,7 +44,7 @@ import {
   boardTaskSortForBoard,
   sortBoardViewTasks,
 } from '@boards/util/board-task-sort';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { HeaderAction } from '@core/types/header-action';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {

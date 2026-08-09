@@ -1,8 +1,9 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { httpResource } from '@angular/common/http';
 import { Component, computed, inject, linkedSignal } from '@angular/core';
+import { PERMISSONS } from '@core/auth/permissions';
+import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
-import { selectCanUpdateTask } from '@app/core/store/permissions/permissions.selectors';
 import { TaskRelation } from '@core/models/task-relation';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
@@ -135,7 +136,7 @@ export class TaskDetailRelationsComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   readonly task = this.taskDetail.task;
-  readonly canUpdate = selectCanUpdateTask();
+  readonly canUpdate = hasPermission(PERMISSONS.tasks.update);
 
   readonly busy = linkedSignal({
     source: () => this.task()?.systemId,

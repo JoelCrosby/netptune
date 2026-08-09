@@ -5,7 +5,7 @@ import { PERMISSONS } from '@core/auth/permissions';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
-import { ProjectTasksHubService } from '@core/store/tasks/tasks.hub.service';
+import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';

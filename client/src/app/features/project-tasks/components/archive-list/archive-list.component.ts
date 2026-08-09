@@ -14,7 +14,7 @@ import { DatatableDataSource } from '@app/static/components/datatable/datatable.
 import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { TaskArchiveService } from '@core/store/tasks/task-archive.service';
+import { TaskArchiveService } from '@core/services/task-archive.service';
 import { LucideArchiveRestore } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
