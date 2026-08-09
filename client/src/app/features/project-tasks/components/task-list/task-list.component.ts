@@ -18,6 +18,11 @@ import {
   DatatableMenuItem,
 } from '@app/static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
+import {
+  TaskPriority,
+  taskPriorityColors,
+  taskPriorityLabels,
+} from '@core/enums/task-priority';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
@@ -129,6 +134,22 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
           [name]="task.statusName"
           [color]="task.statusColor"
           [category]="task.statusCategory" />
+      </ng-template>
+
+      <ng-template appDatatableCell="priority" let-task>
+        @if (task.priority !== null && task.priority !== undefined) {
+          <span
+            class="text-sm font-medium"
+            [class]="priorityColor(task.priority)">
+            {{ priorityLabel(task.priority) }}
+          </span>
+        } @else {
+          <span
+            class="text-muted text-sm"
+            i18n="Shown in place of an empty value">
+            None
+          </span>
+        }
       </ng-template>
 
       <ng-template appDatatableCell="assignees" let-task>
@@ -245,6 +266,14 @@ export class TaskListComponent {
     return task.flags.map((flag) => flag.name);
   }
 
+  priorityLabel(priority: TaskPriority): string {
+    return taskPriorityLabels[priority];
+  }
+
+  priorityColor(priority: TaskPriority): string {
+    return taskPriorityColors[priority];
+  }
+
   private readonly deleteMenuItem: DatatableMenuItem<TaskViewModel> = {
     label: $localize`:Row action that deletes a task:Delete`,
     icon: LucideTrash2,
@@ -279,6 +308,13 @@ export class TaskListComponent {
         header: 'Status',
         sortKey: 'statusName',
         widthClass: 'w-48',
+      },
+      {
+        id: 'priority',
+        header: 'Priority',
+        accessor: 'priority',
+        sortable: true,
+        widthClass: 'w-32',
       },
       {
         id: 'assignees',

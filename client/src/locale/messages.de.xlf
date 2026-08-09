@@ -1486,7 +1486,7 @@
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:735</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:170</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:32,34</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:249</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:278</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:204</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:487</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:559</note>
@@ -6334,6 +6334,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:82,83</note>
         <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:99,101</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:150,153</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:109,111</note>
         <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:92,94</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:84,87</note>
@@ -6477,7 +6478,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:192,194</note>
         <note category="location">src/app/features/dashboard/components/dashboard-assigned-tasks.component.ts:76,79</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:122,125</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:127,130</note>
         <note category="description">Option placing the created task outside any sprint</note>
       </notes>
       <segment state="translated">
@@ -10679,8 +10680,8 @@
       <notes>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:76,78</note>
         <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:80,84</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:98,100</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:102,105</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:103,105</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:107,110</note>
         <note category="description">Accessible label for the icon marking a task that has comments</note>
       </notes>
       <segment state="translated">
@@ -11518,7 +11519,7 @@
     <unit id="8713901901396468144">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:72,75</note>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:141,144</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:162,165</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:121,124</note>
         <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:110,112</note>
         <note category="description">Shown when a task has nobody assigned</note>
@@ -12562,7 +12563,7 @@
     </unit>
     <unit id="8762534944604959180">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:71,73</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:76,78</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:242,243</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:183,184</note>
         <note category="description">Shown when the task list fails to load</note>
@@ -12574,7 +12575,7 @@
     </unit>
     <unit id="2630272244920413702">
       <notes>
-        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:176,178</note>
+        <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:197,199</note>
         <note category="description">Button that opens the create-task dialog</note>
       </notes>
       <segment state="translated">
