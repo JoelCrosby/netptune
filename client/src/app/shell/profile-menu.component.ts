@@ -1,4 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   selectCurrentUser,
@@ -7,7 +8,6 @@ import {
 import { netptunePermissions } from '@core/auth/permissions';
 import { APPEARANCE_THEME } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   LucideLogOut,
   LucideMoon,
@@ -118,7 +118,7 @@ export class ProfileMenuComponent {
   private readonly preferences = inject(UserPreferencesService);
 
   readonly user = this.store.selectSignal(selectCurrentUser);
-  readonly effectiveTheme = this.store.selectSignal(selectEffectiveTheme);
+  readonly effectiveTheme = inject(ThemeService).theme;
   readonly canReadWorkspace = this.store.selectSignal(
     selectHasPermission(netptunePermissions.workspace.read)
   );

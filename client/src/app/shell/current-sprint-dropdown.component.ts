@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { selectHasPermission } from '@app/core/store/auth/auth.selectors';
-import { selectIsSprintFilterableRoute } from '@core/core.route.selectors';
+import { CurrentRouteService } from '@core/router/current-route.service';
 import { netptunePermissions } from '@core/auth/permissions';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import {
@@ -159,9 +159,7 @@ export class CurrentSprintDropdownComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  isSprintFilterableRoute = this.store.selectSignal(
-    selectIsSprintFilterableRoute
-  );
+  isSprintFilterableRoute = inject(CurrentRouteService).isSprintFilterableRoute;
   canReadSprints = this.store.selectSignal(
     selectHasPermission(netptunePermissions.sprints.read)
   );

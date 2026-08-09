@@ -1,7 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { ThemeService } from '@core/services/theme.service';
 import { BurndownPoint } from '@core/models/reporting';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   formatReportValue,
   reportChartThemeSignal,
@@ -33,9 +32,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 export class SprintBurndownMiniChartComponent {
   readonly points = input.required<BurndownPoint[]>();
 
-  private readonly store = inject(Store);
-  private readonly effectiveTheme =
-    this.store.selectSignal(selectEffectiveTheme);
+  private readonly effectiveTheme = inject(ThemeService).theme;
   private readonly theme = reportChartThemeSignal();
 
   readonly series = computed(() => {

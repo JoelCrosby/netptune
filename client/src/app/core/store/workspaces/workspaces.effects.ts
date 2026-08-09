@@ -1,14 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { selectIsAuthenticated } from '@app/core/store/auth/auth.selectors';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { ThemeService } from '@core/services/theme.service';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { concatLatestFrom } from '@ngrx/operators';
-import { routerNavigatedAction } from '@ngrx/router-store';
 import { Action, Store } from '@ngrx/store';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { asyncScheduler, combineLatest, EMPTY, of } from 'rxjs';
@@ -22,7 +23,6 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 import * as actions from './workspaces.actions';
 import { selectCurrentWorkspace } from './workspaces.selectors';
@@ -33,6 +33,7 @@ import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-r
 @Injectable()
 export class WorkspacesEffects implements OnInitEffects {
   private store = inject(Store);
+  private theme = inject(ThemeService);
   private actions$ = inject<Actions<Action>>(Actions);
   private workspacesService = inject(WorkspacesService);
   private confirmation = inject(ConfirmationService);
@@ -50,9 +51,9 @@ export class WorkspacesEffects implements OnInitEffects {
   });
 
   selectWorkspaceOnRouteChange$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(routerNavigatedAction),
-      map(({ payload }) => getWorkspaceSlug(payload.routerState.url)),
+    return this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => getWorkspaceSlug(event.urlAfterRedirects)),
       filter((slug): slug is string => !!slug),
       distinctUntilChanged(),
       skip(1),
@@ -71,7 +72,7 @@ export class WorkspacesEffects implements OnInitEffects {
         this.store
           .select(selectCurrentWorkspace)
           .pipe(map((workspace) => workspace?.metaInfo?.color)),
-        this.store.select(selectEffectiveTheme),
+        toObservable(this.theme.theme),
       ]).pipe(
         distinctUntilChanged(
           ([colorA, themeA], [colorB, themeB]) =>

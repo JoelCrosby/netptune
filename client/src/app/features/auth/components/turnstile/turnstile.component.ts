@@ -8,9 +8,8 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import { environment } from '@env/environment';
-import { selectEffectiveTheme } from '@app/core/store/settings/settings.selectors';
-import { Store } from '@ngrx/store';
 import { TurnstileLoaderService } from './turnstile-loader.service';
 
 @Component({
@@ -30,10 +29,9 @@ import { TurnstileLoaderService } from './turnstile-loader.service';
   `,
 })
 export class TurnstileComponent implements AfterViewInit, OnDestroy {
-  private store = inject(Store);
   private turnstileLoader = inject(TurnstileLoaderService);
   private destroyed = false;
-  private effectiveTheme = this.store.selectSignal(selectEffectiveTheme);
+  private effectiveTheme = inject(ThemeService).theme;
   private turnstileElId?: string;
 
   @ViewChild('turnstileContainer')

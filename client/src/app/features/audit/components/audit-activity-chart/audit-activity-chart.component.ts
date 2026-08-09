@@ -1,13 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import { AuditFilterService } from '@audit/audit-filter.service';
 import { auditSummaryResource } from '@core/resources/audit.resource';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   REPORT_CHART_LABEL_STYLE,
   reportChartThemeSignal,
 } from '@core/util/chart-theme';
 import { LucideActivity } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { ChartCardComponent } from '@static/components/chart-card/chart-card.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
@@ -69,9 +68,7 @@ export class AuditActivityChartComponent {
 
   protected readonly summary = auditSummaryResource(this.filters.filter);
 
-  private readonly store = inject(Store);
-  private readonly effectiveTheme =
-    this.store.selectSignal(selectEffectiveTheme);
+  private readonly effectiveTheme = inject(ThemeService).theme;
   private readonly theme = reportChartThemeSignal();
 
   protected readonly activityIcon = LucideActivity;

@@ -1,14 +1,13 @@
 import { Component, ElementRef, effect, inject, input } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import { Router } from '@angular/router';
 import { BadgeComponent } from '@app/static/components/badge/badge.component';
 import { CardListItemComponent } from '@app/static/components/card/card-list-item.component';
 import { Workspace } from '@core/models/workspace';
 import { WorkspaceService } from '@core/services/workspace.service';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import { HeaderAction } from '@core/types/header-action';
 import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 import { LucidePanelsTopLeft } from '@lucide/angular';
-import { Store } from '@ngrx/store';
 import { FromNowPipe } from '@static/pipes/from-now.pipe';
 
 @Component({
@@ -53,14 +52,13 @@ import { FromNowPipe } from '@static/pipes/from-now.pipe';
   `,
 })
 export class WorkspaceListItemComponent {
-  private store = inject(Store);
   private workspaceService = inject(WorkspaceService);
   private router = inject(Router);
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   readonly workspace = input.required<Workspace>();
 
-  private theme = this.store.selectSignal(selectEffectiveTheme);
+  private theme = inject(ThemeService).theme;
 
   readonly actions: HeaderAction[] = [
     {

@@ -1,7 +1,7 @@
 import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import * as RouteSelectors from '@core/core.route.selectors';
+import { CurrentRouteService } from '@core/router/current-route.service';
 import {
   buildTaskFilterRouteParams,
   parseTaskFilterRouteParams,
@@ -26,9 +26,8 @@ export class TaskFilterService {
     initialValue: this.route.snapshot.queryParamMap,
   });
 
-  private readonly isFilterableRoute = this.store.selectSignal(
-    RouteSelectors.selectIsTaskFilterableRoute
-  );
+  private readonly isFilterableRoute =
+    inject(CurrentRouteService).isTaskFilterableRoute;
 
   private readonly workspaceId = this.store.selectSignal(
     selectCurrentWorkspaceIdentifier

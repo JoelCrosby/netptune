@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import {
   APPEARANCE_THEME,
   PreferenceDefinitionsResponse,
@@ -8,14 +9,12 @@ import {
   PreferenceValuesResponse,
   ResolvedPreferenceValue,
 } from '@core/models/user-preferences';
-import { changeTheme } from '@core/store/settings/settings.actions';
-import { Store } from '@ngrx/store';
 import { catchError, finalize, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserPreferencesService {
   private http = inject(HttpClient);
-  private store = inject(Store);
+  private readonly theme = inject(ThemeService);
 
   readonly definitions = signal<PreferenceDefinitionsResponse | null>(null);
   readonly values = signal<PreferenceValuesResponse | null>(null);
@@ -125,7 +124,7 @@ export class UserPreferencesService {
       preference.definition.key === APPEARANCE_THEME &&
       typeof preference.effectiveValue === 'string'
     ) {
-      this.store.dispatch(changeTheme({ theme: preference.effectiveValue }));
+      this.theme.set(preference.effectiveValue);
     }
   }
 }

@@ -7,19 +7,16 @@ import {
   withPreloading,
 } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
-import { provideRouterStore } from '@ngrx/router-store';
 import { provideStore } from '@ngrx/store';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { provideAuthRefresh } from './app/core/auth/auth.service';
 import { metaReducers, reducers } from './app/core/core.state';
 import { authInterceptor } from './app/core/http-interceptors/auth.interceptor';
-import { CustomSerializer } from './app/core/router/custom-serializer';
 import { provideNavigationService } from './app/core/services/navigation.service';
 import { provideVersionCheck } from './app/core/services/version-check.service';
 import { provideNotificationEvents } from './app/core/sse/notification-sse.service';
 import { provideWorkspaceEvents } from './app/core/sse/workspace-events.service';
-import { SettingsEffects } from './app/core/store/settings/settings.effects';
 import { WorkspacesEffects } from './app/core/store/workspaces/workspaces.effects';
 
 bootstrapApplication(AppComponent, {
@@ -39,10 +36,7 @@ bootstrapApplication(AppComponent, {
         strictActionTypeUniqueness: true,
       },
     }),
-    provideRouterStore({
-      serializer: CustomSerializer,
-    }),
-    provideEffects([SettingsEffects, WorkspacesEffects]),
+    provideEffects([WorkspacesEffects]),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAuthRefresh(),
     provideNavigationService(),

@@ -7,6 +7,7 @@ import {
   resource,
   signal,
 } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import {
   debounce,
   disabled,
@@ -42,7 +43,6 @@ import { StepComponent } from '@static/components/stepper/step.component';
 import { WorkspaceSetupTemplatesService } from '@core/services/workspace-setup-templates.service';
 import { SetupCreationSummaryComponent } from '../../components/setup-creation-summary/setup-creation-summary.component';
 import { LucideChevronLeft, LucideChevronRight } from '@lucide/angular';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
@@ -229,7 +229,7 @@ export class WorkspaceDialogComponent {
   private store = inject(Store);
   private workspaceServcie = inject(WorkspacesService);
   private setupTemplates = inject(WorkspaceSetupTemplatesService);
-  private theme = this.store.selectSignal(selectEffectiveTheme);
+  private theme = inject(ThemeService).theme;
 
   dialogRef = inject<DialogRef<WorkspaceDialogComponent>>(DialogRef);
   data = inject<Workspace>(DIALOG_DATA, { optional: true });

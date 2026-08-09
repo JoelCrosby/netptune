@@ -1,11 +1,10 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import { WorkloadRow } from '@core/models/reporting';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   REPORT_CHART_LABEL_STYLE,
   reportChartThemeSignal,
 } from '@core/util/chart-theme';
-import { Store } from '@ngrx/store';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
 /** Matches the other dashboard charts so cards in a row stay the same height. */
@@ -36,9 +35,7 @@ const maxBarPercent = 62;
 export class WorkloadChartComponent {
   readonly rows = input.required<readonly WorkloadRow[]>();
 
-  private readonly store = inject(Store);
-  private readonly effectiveTheme =
-    this.store.selectSignal(selectEffectiveTheme);
+  private readonly effectiveTheme = inject(ThemeService).theme;
   private readonly theme = reportChartThemeSignal();
 
   readonly series = computed(() => [

@@ -1,12 +1,11 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { ThemeService } from '@core/services/theme.service';
 import { CycleTimeBucket } from '@core/models/reporting';
-import { selectEffectiveTheme } from '@core/store/settings/settings.selectors';
 import {
   REPORT_CHART_LABEL_STYLE,
   formatReportValue,
   reportChartThemeSignal,
 } from '@core/util/chart-theme';
-import { Store } from '@ngrx/store';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
 @Component({
@@ -33,9 +32,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 export class CycleTimeChartComponent {
   readonly buckets = input.required<CycleTimeBucket[]>();
 
-  private readonly store = inject(Store);
-  private readonly effectiveTheme =
-    this.store.selectSignal(selectEffectiveTheme);
+  private readonly effectiveTheme = inject(ThemeService).theme;
   private readonly theme = reportChartThemeSignal();
 
   readonly series = computed(() => {
