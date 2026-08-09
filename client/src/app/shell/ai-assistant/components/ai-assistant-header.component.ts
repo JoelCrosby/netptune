@@ -7,7 +7,7 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
 
 @Component({
   selector: 'app-ai-assistant-header',
-  host: { class: 'border-border block border-b' },
+  host: { class: 'border-border block h-15 shrink-0 border-b' },
   imports: [
     LucideHistory,
     LucideSquarePen,
@@ -18,7 +18,7 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
   ],
   template: `
     <div
-      class="mx-auto flex w-full items-start justify-between gap-3 px-4 py-3"
+      class="mx-auto flex h-full w-full items-center justify-between gap-3 px-4"
       [class]="contentWidth()">
       <div class="min-w-0">
         <h2 class="font-overpass truncate text-[1.05rem] font-medium">
