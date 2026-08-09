@@ -3,6 +3,7 @@ using System.Text.Json;
 using Mediator;
 
 using Netptune.Core.Authorization;
+using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
 using Netptune.Handlers.Automations.Queries;
 
@@ -48,7 +49,14 @@ public sealed class ListAutomationRunsTool : IAiTool
             return AiToolExecution.Failed("A ruleId is required.");
         }
 
-        var result = await Mediator.Send(new GetAutomationRunsQuery(ruleId.Value), cancellationToken);
+        var take = AiToolSchema.GetInt(arguments, "take") ?? DefaultTake;
+        var page = new PageRequest
+        {
+            Page = 1,
+            PageSize = Math.Clamp(take, 1, 100),
+        };
+
+        var result = await Mediator.Send(new GetAutomationRunsQuery(ruleId.Value, page), cancellationToken);
 
         if (!result.IsSuccess || result.Payload is null)
         {
@@ -56,10 +64,7 @@ public sealed class ListAutomationRunsTool : IAiTool
                 result.Message ?? $"Automation rule {ruleId} was not found in this workspace.");
         }
 
-        var take = AiToolSchema.GetInt(arguments, "take") ?? DefaultTake;
-        var runs = result.Payload
-            .OrderByDescending(run => run.CreatedAt)
-            .Take(Math.Clamp(take, 1, 100))
+        var runs = result.Payload.Items
             .Select(run => new
             {
                 id = run.Id,

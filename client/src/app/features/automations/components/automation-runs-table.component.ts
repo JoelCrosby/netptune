@@ -1,4 +1,5 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input, signal, Signal } from '@angular/core';
+import { Params } from '@angular/router';
 import {
   actionTypeLabels,
   automationActionResultStatusLabels,
@@ -13,129 +14,133 @@ import {
   AutomationRun,
 } from '../models/automation.models';
 import { PrettyDatePipe } from '@static/pipes/pretty-date.pipe';
+import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
+import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import {
-  TableComponent,
-  TableEmptyCellDirective,
-  TableHeaderRowDirective,
-  TableHeadDirective,
-  TableRowDirective,
-} from '@static/components/table/table.component';
+  DatatableDataSource,
+  DatatableSort,
+} from '@static/components/datatable/datatable.types';
 
 @Component({
   selector: 'app-automation-runs-table',
-  imports: [
-    PrettyDatePipe,
-    TableComponent,
-    TableEmptyCellDirective,
-    TableHeaderRowDirective,
-    TableHeadDirective,
-    TableRowDirective,
-  ],
+  imports: [PrettyDatePipe, DatatableComponent, DatatableCellTemplateDirective],
   template: `
-    <app-table>
-      <thead appTableHead>
-        <tr appTableHeaderRow>
-          <th class="px-4 py-3" i18n="Column heading for the run time">Time</th>
-          <th class="px-4 py-3">
-            <span i18n="Column heading for the trigger">Trigger</span>
-          </th>
-          <th class="px-4 py-3">
-            <span i18n="Column heading for the task a run acted on">
-              Target
+    <app-datatable
+      i18n-errorMessage="Shown when the automation run history fails to load"
+      errorMessage="Automation runs could not be loaded."
+      i18n-emptyMessage="Empty state for the run history"
+      emptyMessage="No automation runs recorded yet."
+      i18n-itemLabel="Plural noun for automation runs, used by the paginator"
+      itemLabel="runs"
+      containerClass="overflow-x-auto"
+      tableClass="min-w-[900px]"
+      [data]="data()"
+      [sort]="sort()"
+      (sortChange)="sort.set($event)">
+      <ng-template appDatatableCell="createdAt" let-run>
+        <span class="text-foreground/70 font-mono text-xs whitespace-nowrap">
+          {{ run.createdAt | prettyDate }}
+        </span>
+      </ng-template>
+
+      <ng-template appDatatableCell="triggerType" let-run>
+        {{ triggerLabel(run.triggerType) }}
+      </ng-template>
+
+      <ng-template appDatatableCell="target" let-run>
+        <span class="text-foreground/70">{{ targetLabel(run) }}</span>
+      </ng-template>
+
+      <ng-template appDatatableCell="status" let-run>
+        <span
+          class="rounded px-2 py-0.5 text-xs font-medium"
+          [class]="statusClass(run.status)">
+          {{ statusLabel(run.status) }}
+        </span>
+      </ng-template>
+
+      <ng-template appDatatableCell="result" let-run>
+        <div class="text-foreground/70">
+          @if (run.message) {
+            <p class="mb-2 text-xs">{{ run.message }}</p>
+          }
+          @if (run.actionResults.length) {
+            <ol
+              class="space-y-1.5"
+              i18n-aria-label="Accessible name of the action result list"
+              aria-label="Action results">
+              @for (result of run.actionResults; track result.id) {
+                <li class="flex items-start gap-2 text-xs">
+                  <span
+                    class="bg-foreground/5 text-foreground/60 mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full font-mono">
+                    {{ $index + 1 }}
+                  </span>
+                  <span class="min-w-0 flex-1">
+                    <span class="text-foreground block font-medium">
+                      {{ actionLabel(result) }}
+                    </span>
+                    @if (result.message) {
+                      <span class="block">{{ result.message }}</span>
+                    }
+                  </span>
+                  <span
+                    class="shrink-0 rounded px-1.5 py-0.5 font-medium"
+                    [class]="actionStatusClass(result.status)">
+                    {{ actionStatusLabel(result.status) }}
+                    @if (durationLabel(result); as duration) {
+                      · {{ duration }}
+                    }
+                  </span>
+                </li>
+              }
+            </ol>
+          } @else {
+            <span
+              class="text-xs"
+              i18n="Shown when a run recorded no action results">
+              No action results recorded
             </span>
-          </th>
-          <th class="px-4 py-3">
-            <span i18n="Column heading for the run status">Status</span>
-          </th>
-          <th class="px-4 py-3">
-            <span i18n="Column heading for the run result">Result</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (run of runs(); track run.id) {
-          <tr appTableRow>
-            <td
-              class="text-foreground/70 px-4 py-2.5 font-mono text-xs whitespace-nowrap">
-              {{ run.createdAt | prettyDate }}
-            </td>
-            <td class="px-4 py-2.5">
-              {{ triggerLabel(run.triggerType) }}
-            </td>
-            <td class="text-foreground/70 px-4 py-2.5">
-              {{ targetLabel(run) }}
-            </td>
-            <td class="px-4 py-2.5">
-              <span
-                [class]="
-                  'rounded px-2 py-0.5 text-xs font-medium ' +
-                  statusClass(run.status)
-                ">
-                {{ statusLabel(run.status) }}
-              </span>
-            </td>
-            <td class="text-foreground/70 max-w-96 px-4 py-2.5">
-              @if (run.message) {
-                <p class="mb-2 text-xs">{{ run.message }}</p>
-              }
-              @if (run.actionResults.length) {
-                <ol
-                  class="space-y-1.5"
-                  i18n-aria-label="Accessible name of the action result list"
-                  aria-label="Action results">
-                  @for (result of run.actionResults; track result.id) {
-                    <li class="flex items-start gap-2 text-xs">
-                      <span
-                        class="bg-foreground/5 text-foreground/60 mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full font-mono">
-                        {{ $index + 1 }}
-                      </span>
-                      <span class="min-w-0 flex-1">
-                        <span class="text-foreground block font-medium">
-                          {{ actionLabel(result) }}
-                        </span>
-                        @if (result.message) {
-                          <span class="block">{{ result.message }}</span>
-                        }
-                      </span>
-                      <span
-                        [class]="
-                          'shrink-0 rounded px-1.5 py-0.5 font-medium ' +
-                          actionStatusClass(result.status)
-                        ">
-                        {{ actionStatusLabel(result.status) }}
-                        @if (durationLabel(result); as duration) {
-                          · {{ duration }}
-                        }
-                      </span>
-                    </li>
-                  }
-                </ol>
-              } @else {
-                <span
-                  class="text-xs"
-                  i18n="Shown when a run recorded no action results">
-                  No action results recorded
-                </span>
-              }
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td appTableEmptyCell colspan="5">
-              <span i18n="Empty state for the run history">
-                No automation runs recorded yet.
-              </span>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </app-table>
+          }
+        </div>
+      </ng-template>
+    </app-datatable>
   `,
 })
 export class AutomationRunsTableComponent {
-  readonly runs = input<AutomationRun[]>([]);
+  readonly ruleId = input.required<number>();
+  readonly reloadSignal = input<Signal<unknown>>();
+
+  readonly sort = signal<DatatableSort | null>({
+    sortBy: 'createdAt',
+    sortDirection: 'desc',
+  });
 
   statusClass = runStatusClass;
+
+  private readonly resourceParams = computed<Params>(() => ({}));
+
+  readonly data = computed<DatatableDataSource<AutomationRun>>(() => ({
+    key: 'automation-runs',
+    columns: [
+      { id: 'createdAt', header: 'Time', sortable: true, widthClass: 'w-44' },
+      {
+        id: 'triggerType',
+        header: 'Trigger',
+        sortable: true,
+        widthClass: 'w-48',
+      },
+      { id: 'target', header: 'Target', widthClass: 'w-40' },
+      { id: 'status', header: 'Status', sortable: true, widthClass: 'w-32' },
+      { id: 'result', header: 'Result', cellClass: 'max-w-96' },
+    ],
+    resource: {
+      url: `api/automations/${this.ruleId()}/runs`,
+      params: this.resourceParams,
+    },
+    rows: (response) => response?.payload?.items ?? [],
+    trackBy: (_: number, run: AutomationRun) => run.id,
+    reloadSignal: this.reloadSignal(),
+  }));
 
   actionLabel(result: AutomationActionResult): string {
     return actionTypeLabels[result.actionType];

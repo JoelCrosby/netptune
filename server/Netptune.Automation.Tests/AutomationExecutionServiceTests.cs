@@ -14,6 +14,7 @@ using Netptune.Core.Events.Tasks;
 using Netptune.Core.Meta;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Relationships;
+using Netptune.Core.Requests;
 using Netptune.Entities.Contexts;
 
 using Xunit;
@@ -331,11 +332,13 @@ public sealed class AutomationExecutionServiceTests
             .Should()
             .BeEquivalentTo([TaskChangeField.Status, TaskChangeField.Priority]);
 
-        var runHistory = await scope.UnitOfWork.Automations.GetRuns(
+        var runHistory = await scope.UnitOfWork.Automations.GetRunsPaged(
             rule.Id,
             scenario.Workspace.Id,
-            cancellationToken: TestContext.Current.CancellationToken);
-        var actionResult = runHistory.Should().ContainSingle().Subject.ActionResults.Should().ContainSingle().Subject;
+            new PageRequest(),
+            TestContext.Current.CancellationToken);
+        var historyRun = runHistory.Items.Should().ContainSingle().Subject;
+        var actionResult = historyRun.ActionResults.Should().ContainSingle().Subject;
 
         actionResult.AutomationActionId.Should().Be(configuredAction.Id);
         actionResult.ActionType.Should().Be(AutomationActionType.UpdateTask);

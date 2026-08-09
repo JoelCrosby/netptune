@@ -53,9 +53,13 @@ public static class AutomationsEndpoints
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> HandleGetRuns(int id, IMediator mediator, CancellationToken cancellationToken)
+    private static async Task<IResult> HandleGetRuns(
+        int id,
+        IMediator mediator,
+        [AsParameters] PageRequest page,
+        CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetAutomationRunsQuery(id), cancellationToken);
+        var result = await mediator.Send(new GetAutomationRunsQuery(id, page), cancellationToken);
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
     }
 

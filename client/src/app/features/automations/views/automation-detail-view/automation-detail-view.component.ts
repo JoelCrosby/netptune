@@ -32,6 +32,9 @@ import { AutomationRunsTableComponent } from '../../components/automation-runs-t
 import { AutomationRuleSummaryComponent } from '../../components/automation-rule-summary.component';
 import { AutomationRule, AutomationRun } from '../../models/automation.models';
 import { AutomationsService } from '../../services/automations.service';
+import { Page, PageQuery } from '@core/models/pagination';
+
+const latestRunQuery: PageQuery = { page: 1, pageSize: 1 };
 
 @Component({
   selector: 'app-automation-detail-view',
@@ -159,7 +162,10 @@ import { AutomationsService } from '../../services/automations.service';
             [actions]="rule.actions"
             [statuses]="statuses()" />
 
-          <app-automation-detail-stats [rule]="rule" [runs]="runs()" />
+          <app-automation-detail-stats
+            [rule]="rule"
+            [totalRuns]="totalRuns()"
+            [lastRun]="lastRun()" />
 
           <section class="flex flex-col gap-3">
             <div class="flex items-center justify-between">
@@ -168,11 +174,13 @@ import { AutomationsService } from '../../services/automations.service';
                   Run History
                 </span>
               </h2>
-              <button app-stroked-button type="button" (click)="load()">
+              <button app-stroked-button type="button" (click)="refreshRuns()">
                 <span i18n="Button that reloads the run history">Refresh</span>
               </button>
             </div>
-            <app-automation-runs-table [runs]="runs()" />
+            <app-automation-runs-table
+              [ruleId]="rule.id"
+              [reloadSignal]="reloadToken" />
           </section>
         </section>
       }
@@ -190,8 +198,10 @@ export class AutomationDetailViewComponent {
   private destroyRef = inject(DestroyRef);
 
   readonly rule = signal<AutomationRule | null>(null);
-  readonly runs = signal<AutomationRun[]>([]);
+  readonly totalRuns = signal(0);
+  readonly lastRun = signal<AutomationRun | null>(null);
   readonly statuses = signal<Status[]>([]);
+  readonly reloadToken = signal(0);
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal(false);
@@ -214,7 +224,7 @@ export class AutomationDetailViewComponent {
 
     forkJoin({
       rule: this.service.getRule(id),
-      runs: this.service.getRuns(id),
+      runs: this.service.getRuns(id, latestRunQuery),
       statuses: this.statusesService.get(),
     })
       .pipe(
@@ -224,11 +234,29 @@ export class AutomationDetailViewComponent {
       .subscribe({
         next: ({ rule, runs, statuses }) => {
           this.rule.set(rule);
-          this.runs.set(runs);
+          this.setRunSummary(runs);
           this.statuses.set(statuses);
         },
         error: () => this.error.set(true),
       });
+  }
+
+  refreshRuns() {
+    const id = this.ruleId();
+
+    if (!id) return;
+
+    this.reloadToken.update((token) => token + 1);
+
+    this.service
+      .getRuns(id, latestRunQuery)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((runs) => this.setRunSummary(runs));
+  }
+
+  private setRunSummary(runs: Page<AutomationRun>) {
+    this.totalRuns.set(runs.totalCount);
+    this.lastRun.set(runs.items[0] ?? null);
   }
 
   onDryRun(rule: AutomationRule) {

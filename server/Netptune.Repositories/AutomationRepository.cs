@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 using Dapper;
 
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
+using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Automations;
 using Netptune.Entities.Contexts;
@@ -326,49 +329,76 @@ public class AutomationRepository : WorkspaceEntityRepository<DataContext, Autom
         };
     }
 
-    public Task<List<AutomationRunViewModel>> GetRuns(
+    public async Task<PagedResponse<AutomationRunViewModel>> GetRunsPaged(
         int ruleId,
         int workspaceId,
-        int take = 50,
+        PageRequest request,
         CancellationToken cancellationToken = default)
     {
-        return Context.Set<AutomationRun>()
+        var pagination = request.GetPagination();
+        var query = Context.Set<AutomationRun>()
             .Where(run => run.AutomationRuleId == ruleId)
-            .Where(run => run.AutomationRule.WorkspaceId == workspaceId)
-            .OrderByDescending(run => run.CreatedAt)
-            .Take(Math.Clamp(take, 1, 100))
-            .Select(run => new AutomationRunViewModel
-            {
-                Id = run.Id,
-                AutomationRuleId = run.AutomationRuleId,
-                EntityId = run.EntityId,
-                EntityType = run.EntityType,
-                TriggerType = run.TriggerType,
-                Status = run.Status,
-                IdempotencyKey = run.IdempotencyKey,
-                Message = run.Message,
-                CreatedAt = run.CreatedAt,
-                ActionResults = run.ActionResults
-                    .OrderBy(result => result.SortOrder)
-                    .ThenBy(result => result.Id)
-                    .Select(result => new AutomationActionResultViewModel
-                    {
-                        Id = result.Id,
-                        AutomationActionId = result.AutomationActionId,
-                        ActionType = result.ActionType,
-                        SortOrder = result.SortOrder,
-                        Status = result.Status,
-                        IdempotencyKey = result.IdempotencyKey,
-                        StartedAt = result.StartedAt,
-                        CompletedAt = result.CompletedAt,
-                        Message = result.Message,
-                        Output = result.Output,
-                    })
-                    .ToList(),
-            })
+            .Where(run => run.AutomationRule.WorkspaceId == workspaceId);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var runs = await SortRuns(query, request)
+            .Skip(pagination.Skip)
+            .Take(pagination.PageSize)
+            .Select(RunProjection)
+            .AsSplitQuery()
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+
+        return new PagedResponse<AutomationRunViewModel>(runs, pagination.Page, pagination.PageSize, totalCount);
     }
+
+    private static IQueryable<AutomationRun> SortRuns(IQueryable<AutomationRun> query, PageRequest request)
+    {
+        var isDescending = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+
+        return request.SortBy?.ToLowerInvariant() switch
+        {
+            "triggertype" => isDescending
+                ? query.OrderByDescending(run => run.TriggerType).ThenByDescending(run => run.CreatedAt)
+                : query.OrderBy(run => run.TriggerType).ThenByDescending(run => run.CreatedAt),
+            "status" => isDescending
+                ? query.OrderByDescending(run => run.Status).ThenByDescending(run => run.CreatedAt)
+                : query.OrderBy(run => run.Status).ThenByDescending(run => run.CreatedAt),
+            "createdat" when !isDescending => query.OrderBy(run => run.CreatedAt),
+            _ => query.OrderByDescending(run => run.CreatedAt),
+        };
+    }
+
+    private static readonly Expression<Func<AutomationRun, AutomationRunViewModel>> RunProjection = run =>
+        new AutomationRunViewModel
+        {
+            Id = run.Id,
+            AutomationRuleId = run.AutomationRuleId,
+            EntityId = run.EntityId,
+            EntityType = run.EntityType,
+            TriggerType = run.TriggerType,
+            Status = run.Status,
+            IdempotencyKey = run.IdempotencyKey,
+            Message = run.Message,
+            CreatedAt = run.CreatedAt,
+            ActionResults = run.ActionResults
+                .OrderBy(result => result.SortOrder)
+                .ThenBy(result => result.Id)
+                .Select(result => new AutomationActionResultViewModel
+                {
+                    Id = result.Id,
+                    AutomationActionId = result.AutomationActionId,
+                    ActionType = result.ActionType,
+                    SortOrder = result.SortOrder,
+                    Status = result.Status,
+                    IdempotencyKey = result.IdempotencyKey,
+                    StartedAt = result.StartedAt,
+                    CompletedAt = result.CompletedAt,
+                    Message = result.Message,
+                    Output = result.Output,
+                })
+                .ToList(),
+        };
 
     public async Task<List<AutomationRunStats>> GetRunStats(
         IReadOnlyCollection<int> ruleIds,

@@ -611,10 +611,11 @@ public sealed class AutomationsEndpointTests(NetptuneFixture fixture)
 
         response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
 
-        var result = await response.Content.ReadFromJsonAsync<ClientResponse<List<AutomationRunViewModel>>>();
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<AutomationRunViewModel>>>();
 
         result.IsSuccess.Should().BeTrue();
-        result.Payload!.Should().ContainSingle(item => item.Id == run);
+        result.Payload!.TotalCount.Should().Be(1);
+        result.Payload!.Items.Should().ContainSingle(item => item.Id == run);
     }
 
     [Fact]

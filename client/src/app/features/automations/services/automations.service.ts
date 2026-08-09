@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
+import { appendPageParams, Page, PageQuery } from '@core/models/pagination';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import {
   AutomationDryRun,
@@ -28,9 +29,11 @@ export class AutomationsService {
       .pipe(unwrapClientReposne());
   }
 
-  getRuns(id: number) {
+  getRuns(id: number, query?: PageQuery) {
     return this.http
-      .get<ClientResponse<AutomationRun[]>>(`api/automations/${id}/runs`)
+      .get<ClientResponse<Page<AutomationRun>>>(`api/automations/${id}/runs`, {
+        params: appendPageParams(new HttpParams(), query),
+      })
       .pipe(unwrapClientReposne());
   }
 
