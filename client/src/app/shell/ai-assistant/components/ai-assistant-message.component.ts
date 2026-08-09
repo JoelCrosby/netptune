@@ -1,6 +1,6 @@
 import { Component, computed, input, output } from '@angular/core';
 import { AiEntityReference } from '@core/models/ai-conversation';
-import { AiChatEntry } from '@core/services/ai-assistant.service';
+import { AiChatEntry } from '@core/models/ai-chat-entry';
 import { parseAssistantMarkdown } from '@core/util/ai-markdown';
 import { formatElapsed } from '@core/util/duration';
 import {

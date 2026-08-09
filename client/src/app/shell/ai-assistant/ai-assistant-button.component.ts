@@ -9,6 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { AiPanelService } from '@core/services/ai-panel.service';
 import { summarizeAssistantMarkdown } from '@core/util/ai-markdown';
 import { LucideSparkles } from '@lucide/angular';
 import { anchoredPopup } from '@static/components/anchored-popup/anchored-popup';
@@ -27,14 +28,14 @@ const POPUP_TIMEOUT = 12000;
     AiAssistantReplyPopupComponent,
   ],
   template: `
-    @if (assistant.isAvailable()) {
+    @if (panel.isAvailable()) {
       <button
         #trigger
         app-icon-button
         type="button"
         class="relative rounded-full"
-        [class.text-primary]="assistant.isOpen()"
-        [attr.aria-pressed]="assistant.isOpen()"
+        [class.text-primary]="panel.isOpen()"
+        [attr.aria-pressed]="panel.isOpen()"
         i18n-aria-label="
           Accessible label for the button that opens the assistant
         "
@@ -46,10 +47,10 @@ const POPUP_TIMEOUT = 12000;
           key to its local name (for example Strg in German); leave the I as-is
         "
         appTooltip="Assistant · Ctrl I"
-        (click)="assistant.toggle()">
+        (click)="panel.toggle()">
         <svg lucideSparkles class="h-4 w-4"></svg>
 
-        @if (assistant.hasUnreadReply()) {
+        @if (panel.hasUnreadReply()) {
           <span
             aria-hidden="true"
             class="bg-primary border-background absolute top-1.5 right-1.5 h-2 w-2 rounded-full border"></span>
@@ -75,6 +76,7 @@ const POPUP_TIMEOUT = 12000;
 })
 export class AiAssistantButtonComponent {
   protected readonly assistant = inject(AiAssistantService);
+  protected readonly panel = inject(AiPanelService);
 
   private readonly trigger = viewChild('trigger', { read: ElementRef });
   private readonly popup = viewChild.required<TemplateRef<unknown>>('popup');
@@ -112,7 +114,7 @@ export class AiAssistantButtonComponent {
 
   constructor() {
     effect(() => {
-      const hasReply = this.assistant.hasUnreadReply();
+      const hasReply = this.panel.hasUnreadReply();
 
       if (!hasReply) {
         this.isDismissed.set(false);
@@ -133,7 +135,7 @@ export class AiAssistantButtonComponent {
 
   protected openChat() {
     this.hidePopup();
-    this.assistant.open();
+    this.panel.open();
   }
 
   protected dismissPopup() {

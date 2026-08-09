@@ -9,7 +9,7 @@ import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
 import { PERMISSONS } from '@core/auth/permissions';
-import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { AiPanelService } from '@core/services/ai-panel.service';
 import { CommandRegistry } from '@core/services/command-registry.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 
@@ -18,7 +18,7 @@ export class GlobalCommandsService implements OnDestroy {
   private router = inject(Router);
   private registry = inject(CommandRegistry);
   private workspace = inject(WorkspaceService);
-  private assistant = inject(AiAssistantService);
+  private panel = inject(AiPanelService);
   private canReadAutomations = hasPermission(PERMISSONS.automations.read);
   private automationCommandRegistered = false;
   private canReadStorage = hasPermission(PERMISSONS.storage.read);
@@ -131,7 +131,7 @@ export class GlobalCommandsService implements OnDestroy {
     });
 
     effect(() => {
-      const isAvailable = this.assistant.isAvailable();
+      const isAvailable = this.panel.isAvailable();
 
       if (isAvailable && !this.assistantCommandRegistered) {
         untracked(() =>
@@ -142,7 +142,7 @@ export class GlobalCommandsService implements OnDestroy {
               group: 'actions',
               icon: 'sparkles',
               keywords: ['assistant', 'ai', 'chat'],
-              execute: () => this.assistant.open(),
+              execute: () => this.panel.open(),
             },
           ])
         );

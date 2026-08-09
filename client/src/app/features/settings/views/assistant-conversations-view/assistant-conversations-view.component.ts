@@ -8,7 +8,7 @@ import { AiConversationDetail } from '@core/models/ai-conversation';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
 import { ClientResponse } from '@core/models/client-response';
 import { aiWorkspaceConversationResource } from '@core/resources/ai-workspace-conversation.resource';
-import { toChatEntries } from '@core/services/ai-assistant.service';
+import { toChatEntries } from '@core/models/ai-chat-entry';
 import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
 import { referenceMap } from '@core/util/ai-references';
 import { formatCost, formatTokens, sumUsage } from '@core/util/ai-usage';

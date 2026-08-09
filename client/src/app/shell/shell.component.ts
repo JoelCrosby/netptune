@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -18,6 +18,7 @@ import { ShellNavbarComponent } from './shell-navbar.component';
 import { AiAssistantComponent } from './ai-assistant/ai-assistant.component';
 import { AiAssistantPanelComponent } from './ai-assistant/ai-assistant-panel.component';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { AiPanelService } from '@core/services/ai-panel.service';
 import { CommandPaletteComponent } from './command-palette/command-palette.component';
 import { GlobalCommandsService } from './global-commands.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
@@ -42,10 +43,10 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
       grid-template-columns: 72px auto;
     }
     .expanded.docked {
-      grid-template-columns: 247px auto clamp(20rem, 28vw, 26rem);
+      grid-template-columns: 247px auto var(--assistant-dock-width);
     }
     .collapsed.docked {
-      grid-template-columns: 72px auto clamp(20rem, 28vw, 26rem);
+      grid-template-columns: 72px auto var(--assistant-dock-width);
     }
 
     @keyframes assistant-dock-in {
@@ -80,7 +81,9 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
       class="bg-background fixed grid h-screen w-screen grid-rows-[60px_minmax(0,1fr)] transition-all"
       [class.expanded]="shell.sideNavExpanded()"
       [class.collapsed]="shell.sideNavCollapsed()"
-      [class.docked]="assistant.isDocked()">
+      [class.docked]="panel.isDocked()"
+      [style.--assistant-dock-width]="dockWidth()"
+      [style.transition]="panel.isResizing() ? 'none' : null">
       @if (sideMenuOpen()) {
         <app-shell-sidebar
           class="col-start-1 row-span-2 row-start-1"
@@ -93,7 +96,7 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
         <router-outlet />
       </main>
 
-      @if (assistant.isDocked()) {
+      @if (panel.isDocked()) {
         <app-ai-assistant-panel
           class="assistant-dock border-border col-start-3 row-span-2 row-start-1 border-l" />
       }
@@ -109,6 +112,8 @@ export class ShellComponent {
   private layout = inject(LayoutService);
 
   shell = inject(ShellService);
+  readonly panel = inject(AiPanelService);
+  /** Held so the chat restores its workspace session for as long as the shell is up. */
   readonly assistant = inject(AiAssistantService);
   readonly globalCommands = inject(GlobalCommandsService);
   readonly commandShortcuts = inject(CommandShortcutService);
@@ -119,6 +124,10 @@ export class ShellComponent {
   sideMenuOpen = this.layout.sideMenuOpen;
 
   readonly chunkLoading = signal(false);
+
+  readonly dockWidth = computed(() => {
+    return `min(${this.panel.width()}px, 50vw)`;
+  });
 
   constructor() {
     if (this.authenticated()) {

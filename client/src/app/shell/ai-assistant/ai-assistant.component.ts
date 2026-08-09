@@ -10,7 +10,7 @@ import {
   inject,
   viewChild,
 } from '@angular/core';
-import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { AiPanelService } from '@core/services/ai-panel.service';
 import { AiAssistantPanelComponent } from './ai-assistant-panel.component';
 
 const NAVBAR_HEIGHT = '60px';
@@ -59,7 +59,7 @@ export class AiAssistantComponent implements OnDestroy {
   private readonly overlayRef: OverlayRef;
   private portal: TemplatePortal | null = null;
 
-  protected readonly assistant = inject(AiAssistantService);
+  protected readonly panel = inject(AiPanelService);
 
   constructor() {
     this.overlayRef = this.overlay.create({
@@ -70,12 +70,16 @@ export class AiAssistantComponent implements OnDestroy {
         .right(PANEL_MARGIN)
         .top(`calc(${NAVBAR_HEIGHT} + ${PANEL_MARGIN})`),
       scrollStrategy: this.overlay.scrollStrategies.noop(),
-      width: `min(calc(100vw - 2 * ${PANEL_MARGIN}), 26rem)`,
+      width: this.overlayWidth(),
       height: `calc(100% - ${NAVBAR_HEIGHT} - 2 * ${PANEL_MARGIN})`,
     });
 
     effect(() => {
-      const isOpen = this.assistant.isOverlayOpen();
+      this.overlayRef.updateSize({ width: this.overlayWidth() });
+    });
+
+    effect(() => {
+      const isOpen = this.panel.isOverlayOpen();
       const template = this.panelTmpl();
 
       if (!template) {
@@ -97,6 +101,10 @@ export class AiAssistantComponent implements OnDestroy {
     });
   }
 
+  private overlayWidth(): string {
+    return `min(calc(100vw - 2 * ${PANEL_MARGIN}), ${this.panel.width()}px)`;
+  }
+
   ngOnDestroy() {
     this.overlayRef.dispose();
   }
@@ -107,7 +115,7 @@ export class AiAssistantComponent implements OnDestroy {
 
     if (isToggle) {
       event.preventDefault();
-      this.assistant.toggle();
+      this.panel.toggle();
     }
   }
 }

@@ -13,10 +13,9 @@ import { AiDisplayMode } from '@core/models/ai-display-mode';
 import { LucideArrowDown } from '@lucide/angular';
 import { MessageScrollerDirective } from '@static/directives/message-scroller.directive';
 import { MessageScrollerItemDirective } from '@static/directives/message-scroller-item.directive';
-import {
-  AiChatEntry,
-  AiAssistantService,
-} from '@core/services/ai-assistant.service';
+import { AiChatEntry } from '@core/models/ai-chat-entry';
+import { AiAssistantService } from '@core/services/ai-assistant.service';
+import { AiPanelService } from '@core/services/ai-panel.service';
 import { AiAssistantChangeSetComponent } from './components/ai-assistant-change-set.component';
 import { AiAssistantComposerComponent } from './components/ai-assistant-composer.component';
 import { AiAssistantEmptyStateComponent } from './components/ai-assistant-empty-state.component';
@@ -24,6 +23,7 @@ import { AiAssistantHeaderComponent } from './components/ai-assistant-header.com
 import { AiAssistantHistoryComponent } from './components/ai-assistant-history.component';
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
+import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resize-handle.component';
 import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking.component';
 import { AiAssistantUsageComponent } from './components/ai-assistant-usage.component';
 
@@ -41,26 +41,34 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
     AiAssistantHistoryComponent,
     AiAssistantMessageComponent,
     AiAssistantMissingKeyComponent,
+    AiAssistantResizeHandleComponent,
     AiAssistantThinkingComponent,
     AiAssistantUsageComponent,
   ],
   template: `
     <div
-      class="text-foreground flex h-full w-full flex-col overflow-hidden"
+      class="text-foreground relative flex h-full w-full flex-col overflow-hidden"
       role="region"
       i18n-aria-label="Accessible name of the AI assistant panel"
       aria-label="AI assistant"
       [class.bg-card]="!isPage()">
+      @if (isDrawer()) {
+        <app-ai-assistant-resize-handle
+          [width]="panel.width()"
+          (widthChange)="panel.setWidth($event)"
+          (resizingChange)="panel.setResizing($event)" />
+      }
+
       <app-ai-assistant-header
         [title]="headerTitle()"
         [subtitle]="headerSubtitle()"
-        [mode]="assistant.mode()"
+        [mode]="panel.mode()"
         [contentWidth]="contentWidth()"
         [closable]="isDrawer()"
         (historyToggled)="toggleHistory()"
         (modeChange)="setMode($event)"
         (newChat)="startNew()"
-        (closed)="assistant.close()" />
+        (closed)="panel.close()" />
 
       <div class="relative flex min-h-0 flex-1 flex-col">
         <div
@@ -184,6 +192,7 @@ export class AiAssistantPanelComponent {
   private anchoredId: string | null = null;
 
   protected readonly assistant = inject(AiAssistantService);
+  protected readonly panel = inject(AiPanelService);
   protected readonly entries = computed(() => this.assistant.entries());
 
   protected readonly isDrawer = computed(() => this.variant() === 'drawer');
@@ -230,7 +239,7 @@ export class AiAssistantPanelComponent {
   });
 
   constructor() {
-    const stopWatching = this.assistant.watchTranscript();
+    const stopWatching = this.panel.watchTranscript();
 
     inject(DestroyRef).onDestroy(stopWatching);
 
@@ -286,7 +295,7 @@ export class AiAssistantPanelComponent {
   }
 
   protected setMode(mode: AiDisplayMode) {
-    this.assistant.setMode(mode);
+    this.panel.setMode(mode);
   }
 
   protected toggleHistory() {
