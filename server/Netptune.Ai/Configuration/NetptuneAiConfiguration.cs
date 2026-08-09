@@ -44,6 +44,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, GetTaskTool>();
         services.AddScoped<IAiTool, ListTaskCommentsTool>();
         services.AddScoped<IAiTool, ListTaskRelationsTool>();
+        services.AddScoped<IAiTool, ListRelationsTool>();
         services.AddScoped<IAiTool, GetCurrentSprintTool>();
         services.AddScoped<IAiTool, CreateSprintTool>();
         services.AddScoped<IAiTool, UpdateSprintTool>();
