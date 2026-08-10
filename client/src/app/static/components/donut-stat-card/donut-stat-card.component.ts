@@ -192,7 +192,7 @@ export class DonutStatCardComponent {
   readonly legend = { show: false };
   readonly dataLabels = { enabled: false };
   readonly tooltip = {
-    theme: 'dark',
+    theme: 'dark' as const,
     y: { formatter: (value: number) => this.formatValue(value) },
   };
 

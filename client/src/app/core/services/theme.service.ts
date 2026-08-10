@@ -1,7 +1,13 @@
 import { effect, Injectable, signal } from '@angular/core';
 
+export type Theme = 'light' | 'dark';
+
 const THEME_STORAGE_KEY = 'Netptune-settings.theme';
-const themes = new Set(['light', 'dark']);
+const themes = new Set<string>(['light', 'dark']);
+
+function isTheme(value: string): value is Theme {
+  return themes.has(value);
+}
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
@@ -16,17 +22,20 @@ export class ThemeService {
   set(theme: string) {
     const chosen = theme.toLowerCase();
 
+    if (!isTheme(chosen)) {
+      return;
+    }
+
     this.current.set(chosen);
     this.remember(chosen);
   }
 
-  /** Nothing is chosen any more, so the browser's own preference decides again. */
   clear() {
     this.forget();
     this.current.set(browserTheme());
   }
 
-  private apply(theme: string) {
+  private apply(theme: Theme) {
     const classList = document.documentElement.classList;
     const applied = Array.from(classList).filter((item) => themes.has(item));
 
@@ -37,12 +46,7 @@ export class ThemeService {
     classList.add(theme);
   }
 
-  /**
-   * Only a chosen theme is cached. A theme that came from the browser is not,
-   * so a later change to that preference is picked up rather than overruled by
-   * what it happened to be on an earlier visit.
-   */
-  private remember(theme: string) {
+  private remember(theme: Theme) {
     try {
       localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
     } catch {
@@ -60,24 +64,22 @@ export class ThemeService {
   }
 }
 
-// index.html reads the same key before first paint, so the two have to agree.
-function initialTheme(): string {
+function initialTheme(): Theme {
   return storedTheme() ?? browserTheme();
 }
 
-function storedTheme(): string | null {
+function storedTheme(): Theme | null {
   try {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
     const theme = stored ? (JSON.parse(stored) as string) : null;
 
-    return theme && themes.has(theme) ? theme : null;
+    return theme && isTheme(theme) ? theme : null;
   } catch {
     return null;
   }
 }
 
-/** Whatever the operating system or browser is already set to. */
-function browserTheme(): string {
+function browserTheme(): Theme {
   const prefersDark = window.matchMedia?.(
     '(prefers-color-scheme: dark)'
   ).matches;
