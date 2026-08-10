@@ -11,10 +11,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { AiPanelService } from '@core/services/ai-panel.service';
+import { animatedPresence } from '@core/util/animated-presence';
 import { AiAssistantPanelComponent } from './ai-assistant-panel.component';
 
 const NAVBAR_HEIGHT = '60px';
 const PANEL_MARGIN = '1rem';
+const PANEL_ANIMATION_MS = 180;
 
 @Component({
   selector: 'app-ai-assistant',
@@ -22,7 +24,8 @@ const PANEL_MARGIN = '1rem';
   template: `
     <ng-template #panelTmpl>
       <app-ai-assistant-panel
-        class="assistant-panel border-border w-full overflow-hidden rounded-2xl border shadow-lg" />
+        class="assistant-panel border-border w-full overflow-hidden rounded-2xl border shadow-lg"
+        [class.assistant-panel-leaving]="presence.isLeaving()" />
     </ng-template>
   `,
   styles: [
@@ -38,13 +41,30 @@ const PANEL_MARGIN = '1rem';
         }
       }
 
+      @keyframes assistant-panel-out {
+        from {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(1rem) scale(0.98);
+        }
+      }
+
       .assistant-panel {
         animation: assistant-panel-in 180ms ease-out;
         transform-origin: top right;
       }
 
+      .assistant-panel-leaving {
+        animation: assistant-panel-out 180ms ease-in forwards;
+        pointer-events: none;
+      }
+
       @media (prefers-reduced-motion: reduce) {
-        .assistant-panel {
+        .assistant-panel,
+        .assistant-panel-leaving {
           animation: none;
         }
       }
@@ -60,6 +80,11 @@ export class AiAssistantComponent implements OnDestroy {
   private portal: TemplatePortal | null = null;
 
   protected readonly panel = inject(AiPanelService);
+
+  protected readonly presence = animatedPresence(
+    this.panel.isOverlayOpen,
+    PANEL_ANIMATION_MS
+  );
 
   constructor() {
     this.overlayRef = this.overlay.create({
@@ -79,7 +104,7 @@ export class AiAssistantComponent implements OnDestroy {
     });
 
     effect(() => {
-      const isOpen = this.panel.isOverlayOpen();
+      const isOpen = this.presence.isPresent();
       const template = this.panelTmpl();
 
       if (!template) {

@@ -24,6 +24,9 @@ import { GlobalCommandsService } from './global-commands.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { CommandShortcutService } from './command-palette/command-shortcut.service';
+import { animatedPresence } from '@core/util/animated-presence';
+
+const DOCK_ANIMATION_MS = 180;
 
 @Component({
   providers: [ShellService, GlobalCommandsService, CommandShortcutService],
@@ -36,11 +39,16 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
     AiAssistantPanelComponent,
   ],
   styles: `
+    /* The dock track is always present so the column widths can interpolate
+       between the closed and open layouts instead of snapping. */
+    .shell-grid {
+      transition: grid-template-columns 180ms ease-out;
+    }
     .expanded {
-      grid-template-columns: 247px auto;
+      grid-template-columns: 247px auto 0px;
     }
     .collapsed {
-      grid-template-columns: 72px auto;
+      grid-template-columns: 72px auto 0px;
     }
     .expanded.docked {
       grid-template-columns: 247px auto var(--assistant-dock-width);
@@ -49,24 +57,17 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
       grid-template-columns: 72px auto var(--assistant-dock-width);
     }
 
-    @keyframes assistant-dock-in {
-      from {
-        opacity: 0;
-        clip-path: inset(0 0 0 100%);
-      }
-      to {
-        opacity: 1;
-        clip-path: inset(0 0 0 0);
-      }
+    .assistant-dock {
+      width: var(--assistant-dock-width);
     }
 
-    .assistant-dock {
-      animation: assistant-dock-in 180ms ease-out;
+    .assistant-dock-leaving {
+      pointer-events: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .assistant-dock {
-        animation: none;
+      .shell-grid {
+        transition: none;
       }
     }
   `,
@@ -78,7 +79,7 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
       </div>
     }
     <div
-      class="bg-background fixed grid h-screen w-screen grid-rows-[60px_minmax(0,1fr)] transition-all"
+      class="shell-grid bg-background fixed grid h-screen w-screen grid-rows-[60px_minmax(0,1fr)] overflow-hidden"
       [class.expanded]="shell.sideNavExpanded()"
       [class.collapsed]="shell.sideNavCollapsed()"
       [class.docked]="panel.isDocked()"
@@ -96,9 +97,10 @@ import { CommandShortcutService } from './command-palette/command-shortcut.servi
         <router-outlet />
       </main>
 
-      @if (panel.isDocked()) {
+      @if (dock.isPresent()) {
         <app-ai-assistant-panel
-          class="assistant-dock border-border col-start-3 row-span-2 row-start-1 border-l" />
+          class="assistant-dock border-border col-start-3 row-span-2 row-start-1 border-l"
+          [class.assistant-dock-leaving]="dock.isLeaving()" />
       }
     </div>
 
@@ -124,6 +126,8 @@ export class ShellComponent {
   sideMenuOpen = this.layout.sideMenuOpen;
 
   readonly chunkLoading = signal(false);
+
+  readonly dock = animatedPresence(this.panel.isDocked, DOCK_ANIMATION_MS);
 
   readonly dockWidth = computed(() => {
     return `min(${this.panel.width()}px, 50vw)`;
