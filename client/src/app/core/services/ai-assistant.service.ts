@@ -43,6 +43,7 @@ export class AiAssistantService {
 
   readonly entries = this.transcript.entries;
   readonly references = this.transcript.references;
+  readonly appliedChangeSets = this.transcript.appliedChangeSets;
   readonly droppedMessages = this.transcript.droppedMessages;
   readonly usage = this.transcript.usage;
   readonly transcriptVersion = this.transcript.version;
@@ -164,7 +165,7 @@ export class AiAssistantService {
       return;
     }
 
-    this.conversation.load(detail);
+    await this.conversation.load(detail);
   }
 
   async deleteConversation(conversationId: string) {
@@ -554,7 +555,7 @@ export class AiAssistantService {
       return;
     }
 
-    this.conversation.load(detail);
+    await this.conversation.load(detail);
 
     const startedAt = session.pendingTurnAt;
     const wasTurnInFlight =
@@ -633,7 +634,7 @@ export class AiAssistantService {
       const detail = await this.readReply(conversationId);
 
       if (detail) {
-        this.conversation.load(detail);
+        await this.conversation.load(detail);
 
         return;
       }

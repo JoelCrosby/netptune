@@ -198,8 +198,9 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         }
 
         var outcome = string.Join("\n", lines);
+        var guidance = "Use these ids for any follow-up work rather than searching for them.";
 
-        return $"I applied the change set. Use these ids for any follow-up work rather than searching for them.\n{outcome}";
+        return $"{AiChangeSetSummary.AppliedPrefix} {guidance}\n{outcome}";
     }
 
     private static string DescribeIdentifier(
@@ -616,7 +617,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
         var undone = results.Count(result => result.Status == AiChangeApplyStatus.Applied);
         var failed = results.Count - undone;
         var tail = failed == 0 ? string.Empty : $" {failed} could not be undone and are still in place.";
-        var summary = $"I undid the change set. {undone} of {results.Count} changes were reverted.{tail}";
+        var summary = $"{AiChangeSetSummary.UndonePrefix} {undone} of {results.Count} changes were reverted.{tail}";
 
         var conversation = await UnitOfWork.AiConversations.GetAsync(
             changeSet.ConversationId,

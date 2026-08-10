@@ -77,6 +77,8 @@ public static class AiEndpoints
 
         group.MapGet("/conversations/{conversationId:guid}/change-set", HandleGetPendingChangeSet);
 
+        group.MapGet("/conversations/{conversationId:guid}/change-sets", HandleGetConversationChangeSets);
+
         group.MapGet("/change-sets/{changeSetId:guid}", HandleGetChangeSet);
 
         group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
@@ -253,6 +255,16 @@ public static class AiEndpoints
         var result = await mediator.Send(new GetPendingAiChangeSetQuery(conversationId), cancellationToken);
 
         return result.IsNotFound ? Results.NotFound(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleGetConversationChangeSets(
+        Guid conversationId,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAiConversationChangeSetsQuery(conversationId), cancellationToken);
+
+        return Results.Ok(result);
     }
 
     private static async Task<IResult> HandleDiscardChangeSet(

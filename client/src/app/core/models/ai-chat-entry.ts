@@ -4,6 +4,8 @@ export interface AiChatEntry {
   role: 'user' | 'assistant';
   text: string;
   tools: string[];
+  /** Set on the message recording what applying a change set did, which is shown as a card. */
+  changeSetId?: string;
   /** How long the reply took, so it can say how long it thought. */
   durationMs?: number;
   failed?: boolean;
@@ -31,6 +33,7 @@ export const toChatEntries = (messages: AiMessage[]): AiChatEntry[] => {
         role: 'user',
         text: message.text ?? '',
         tools: message.toolNames,
+        changeSetId: message.changeSetId ?? undefined,
       };
     }
 

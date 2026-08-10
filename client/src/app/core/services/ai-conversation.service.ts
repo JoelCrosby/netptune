@@ -56,7 +56,7 @@ export class AiConversationService {
     this.title.set(conversation?.title ?? null);
   }
 
-  load(detail: AiConversationDetail) {
+  async load(detail: AiConversationDetail) {
     const messages = detail.messages;
     const last = messages[messages.length - 1];
     const isAwaitingReply = last?.role === AiMessageRole.user;
@@ -76,6 +76,24 @@ export class AiConversationService {
     this.transcript.droppedMessages.set(0);
     this.transcript.usage.set(detail.conversation.usage);
     this.changeSets.set(detail.pendingChangeSet ?? null);
+
+    await this.loadAppliedChangeSets(detail);
+  }
+
+  private async loadAppliedChangeSets(detail: AiConversationDetail) {
+    const hasOutcome = detail.messages.some((message) => !!message.changeSetId);
+
+    if (!hasOutcome) {
+      this.transcript.setAppliedChangeSets([]);
+
+      return;
+    }
+
+    const changeSets = await this.api.listConversationChangeSets(
+      detail.conversation.id
+    );
+
+    this.transcript.setAppliedChangeSets(changeSets);
   }
 
   startNew() {

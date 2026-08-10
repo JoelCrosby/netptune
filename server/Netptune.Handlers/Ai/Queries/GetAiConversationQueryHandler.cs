@@ -50,10 +50,16 @@ public sealed class GetAiConversationQueryHandler
         var invocations = await UnitOfWork.AiConversations.GetToolInvocations(conversation.Id, cancellationToken);
         var referencesByMessage = AiMessageReferences.Group(invocations);
         var pendingChangeSet = await ReadPendingChangeSet(conversation.Id, userId, workspaceId, cancellationToken);
+        var changeSets = await UnitOfWork.AiChangeSets.GetForConversation(
+            conversation.Id,
+            userId,
+            workspaceId,
+            cancellationToken);
+
         var detail = new AiConversationDetailViewModel
         {
             Conversation = GetAiConversationsQueryHandler.ToViewModel(conversation, messages),
-            Messages = messages.Select(message => ToViewModel(message, referencesByMessage)).ToList(),
+            Messages = AiMessageMapper.ToViewModels(messages, referencesByMessage, changeSets),
             PendingChangeSet = pendingChangeSet,
         };
 
@@ -80,24 +86,5 @@ public sealed class GetAiConversationQueryHandler
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
 
         return await AiChangeSetMapper.ToViewModel(changeSet, changes, UnitOfWork.Tasks, UndoCatalog, cancellationToken);
-    }
-
-    private static AiMessageViewModel ToViewModel(
-        AiMessage message,
-        IReadOnlyDictionary<long, List<AiEntityReference>> referencesByMessage)
-    {
-        var content = AiMessageContent.FromJsonDocument(message.Content);
-        var hasReferences = referencesByMessage.TryGetValue(message.Id, out var references);
-
-        return new AiMessageViewModel
-        {
-            Id = message.Id,
-            Sequence = message.Sequence,
-            Role = message.Role,
-            Text = content.Text,
-            ToolNames = content.ToolCalls.Select(call => call.Name).ToList(),
-            References = hasReferences ? references! : [],
-            CreatedAt = message.CreatedAt,
-        };
     }
 }

@@ -1,12 +1,17 @@
 import { Injectable, signal } from '@angular/core';
 import { AiChatEntry } from '@core/models/ai-chat-entry';
-import { AiEntityReference, AiTokenUsage } from '@core/models/ai-conversation';
+import {
+  AiChangeSet,
+  AiEntityReference,
+  AiTokenUsage,
+} from '@core/models/ai-conversation';
 import { referenceKey } from '@core/util/ai-references';
 
 @Injectable({ providedIn: 'root' })
 export class AiTranscriptService {
   readonly entries = signal<AiChatEntry[]>([]);
   readonly references = signal<Map<string, AiEntityReference>>(new Map());
+  readonly appliedChangeSets = signal<Map<string, AiChangeSet>>(new Map());
   readonly droppedMessages = signal(0);
   readonly usage = signal<AiTokenUsage | null>(null);
 
@@ -19,8 +24,17 @@ export class AiTranscriptService {
   clear() {
     this.entries.set([]);
     this.references.set(new Map());
+    this.appliedChangeSets.set(new Map());
     this.droppedMessages.set(0);
     this.usage.set(null);
+  }
+
+  setAppliedChangeSets(changeSets: AiChangeSet[]) {
+    const byId = changeSets.map((changeSet): [string, AiChangeSet] => {
+      return [changeSet.id, changeSet];
+    });
+
+    this.appliedChangeSets.set(new Map(byId));
   }
 
   bumpVersion() {
@@ -82,7 +96,7 @@ export class AiTranscriptService {
     for (let index = entries.length - 1; index >= 0; index -= 1) {
       const entry = entries[index];
 
-      if (entry.role === 'user') {
+      if (isQuestion(entry)) {
         return entry.text;
       }
     }
@@ -95,7 +109,7 @@ export class AiTranscriptService {
     const entries = this.entries();
     let index = entries.length - 1;
 
-    while (index >= 0 && entries[index].role !== 'user') {
+    while (index >= 0 && !isQuestion(entries[index])) {
       index -= 1;
     }
 
@@ -135,4 +149,9 @@ export class AiTranscriptService {
       return next;
     });
   }
+}
+
+/** The record of an applied change set is written as a user message, but it is not something to ask again. */
+function isQuestion(entry: AiChatEntry): boolean {
+  return entry.role === 'user' && entry.changeSetId === undefined;
 }

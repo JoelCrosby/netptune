@@ -45,28 +45,9 @@ public sealed class GetWorkspaceAiConversationQueryHandler
         var detail = new AiConversationDetailViewModel
         {
             Conversation = GetAiConversationsQueryHandler.ToViewModel(conversation, messages),
-            Messages = messages.Select(message => ToViewModel(message, referencesByMessage)).ToList(),
+            Messages = AiMessageMapper.ToViewModels(messages, referencesByMessage, []),
         };
 
         return ClientResponse<AiConversationDetailViewModel>.Success(detail);
-    }
-
-    private static AiMessageViewModel ToViewModel(
-        AiMessage message,
-        IReadOnlyDictionary<long, List<AiEntityReference>> referencesByMessage)
-    {
-        var content = AiMessageContent.FromJsonDocument(message.Content);
-        var hasReferences = referencesByMessage.TryGetValue(message.Id, out var references);
-
-        return new AiMessageViewModel
-        {
-            Id = message.Id,
-            Sequence = message.Sequence,
-            Role = message.Role,
-            Text = content.Text,
-            ToolNames = content.ToolCalls.Select(call => call.Name).ToList(),
-            References = hasReferences ? references! : [],
-            CreatedAt = message.CreatedAt,
-        };
     }
 }

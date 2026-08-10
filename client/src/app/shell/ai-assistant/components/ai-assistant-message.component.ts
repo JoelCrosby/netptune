@@ -1,14 +1,24 @@
-import { Component, computed, input, output } from '@angular/core';
-import { AiEntityReference } from '@core/models/ai-conversation';
+import { Component, computed, inject, input, output } from '@angular/core';
+import {
+  AiChangeApplyStatus,
+  AiChangeSet,
+  AiEntityReference,
+} from '@core/models/ai-conversation';
 import { AiChatEntry } from '@core/models/ai-chat-entry';
+import { DialogService } from '@core/services/dialog.service';
 import { parseAssistantMarkdown } from '@core/util/ai-markdown';
 import { formatElapsed } from '@core/util/duration';
 import {
   LucideBrain,
+  LucideListChecks,
   LucidePencil,
   LucideRefreshCw,
   LucideWrench,
 } from '@lucide/angular';
+import {
+  AiAppliedChangesData,
+  AiAssistantAppliedChangesDialogComponent,
+} from './ai-assistant-applied-changes-dialog.component';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
 
 interface AiToolChip {
@@ -27,6 +37,7 @@ const MINIMUM_REPORTED_DURATION = 1000;
   },
   imports: [
     LucideBrain,
+    LucideListChecks,
     LucidePencil,
     LucideRefreshCw,
     LucideWrench,
@@ -56,12 +67,27 @@ const MINIMUM_REPORTED_DURATION = 1000;
     }
 
     @if (isUser()) {
-      <p
-        class="bg-hover max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap">
-        {{ entry().text }}
-      </p>
+      @if (changeSet(); as applied) {
+        <button
+          type="button"
+          class="bg-hover hover:border-border flex max-w-[85%] items-center gap-2.5 rounded-2xl border border-transparent px-4 py-2.5 text-left text-sm transition-colors"
+          (click)="showChanges(applied)">
+          <svg lucideListChecks class="text-primary h-4 w-4 shrink-0"></svg>
+          <span>{{ changeSummary() }}</span>
+          <span
+            class="text-muted text-xs"
+            i18n="Button that opens the table of changes the assistant made">
+            View changes
+          </span>
+        </button>
+      } @else {
+        <p
+          class="bg-hover max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap">
+          {{ entry().text }}
+        </p>
+      }
 
-      @if (isLast()) {
+      @if (isLast() && !changeSet()) {
         <button
           type="button"
           class="text-muted hover:text-foreground flex items-center gap-1 text-xs"
@@ -110,6 +136,7 @@ const MINIMUM_REPORTED_DURATION = 1000;
 export class AiAssistantMessageComponent {
   readonly entry = input.required<AiChatEntry>();
   readonly references = input<Map<string, AiEntityReference>>(new Map());
+  readonly changeSets = input<Map<string, AiChangeSet>>(new Map());
   readonly workspace = input<string | null>(null);
   readonly isStreaming = input(false);
   readonly isLast = input(false);
@@ -117,7 +144,52 @@ export class AiAssistantMessageComponent {
   readonly retried = output();
   readonly edited = output();
 
+  private readonly dialog = inject(DialogService);
+
   protected readonly isUser = computed(() => this.entry().role === 'user');
+
+  protected readonly changeSet = computed(() => {
+    const changeSetId = this.entry().changeSetId;
+
+    if (changeSetId === undefined) {
+      return null;
+    }
+
+    return this.changeSets().get(changeSetId) ?? null;
+  });
+
+  protected readonly changeSummary = computed(() => {
+    const changeSet = this.changeSet();
+
+    if (changeSet === null) {
+      return '';
+    }
+
+    const total = changeSet.changes.length;
+    const isUndone = !!changeSet.undoneAt;
+
+    if (isUndone) {
+      return $localize`:Describes a change set that was taken back:${total}:TOTAL: changes undone`;
+    }
+
+    const applied = changeSet.changes.filter((change) => {
+      return change.applyStatus === AiChangeApplyStatus.applied;
+    }).length;
+
+    return $localize`:Describes what applying a change set did:${applied}:APPLIED: of ${total}:TOTAL: changes applied`;
+  });
+
+  protected showChanges(changeSet: AiChangeSet) {
+    const data: AiAppliedChangesData = {
+      changeSet,
+      workspace: this.workspace(),
+    };
+
+    this.dialog.open<unknown, AiAppliedChangesData>(
+      AiAssistantAppliedChangesDialogComponent,
+      { data, width: '68rem', maxWidth: '95vw' }
+    );
+  }
 
   /** A reply that never arrived has no work to report, however long it took. */
   protected readonly thoughtFor = computed(() => {

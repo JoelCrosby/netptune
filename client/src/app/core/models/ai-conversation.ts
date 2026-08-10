@@ -66,6 +66,7 @@ export interface AiMessage {
   text?: string;
   toolNames: string[];
   references: AiEntityReference[];
+  changeSetId?: string | null;
   createdAt: string;
 }
 

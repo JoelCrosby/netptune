@@ -114,6 +114,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
                     [scrollAnchor]="entry.role === 'user'"
                     [entry]="entry"
                     [references]="assistant.references()"
+                    [changeSets]="assistant.appliedChangeSets()"
                     [workspace]="assistant.workspaceKey()"
                     [isStreaming]="assistant.isStreaming() && $last"
                     [isLast]="$last && !assistant.isStreaming()"

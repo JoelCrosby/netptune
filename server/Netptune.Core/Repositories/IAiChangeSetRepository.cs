@@ -11,5 +11,9 @@ public interface IAiChangeSetRepository : IRepository<AiChangeSet, Guid>
 
     Task<AiChangeSet?> GetPending(Guid conversationId, string userId, int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<List<AiChangeSet>> GetForConversation(Guid conversationId, string userId, int workspaceId, CancellationToken cancellationToken = default);
+
     Task<List<AiProposedChange>> GetChanges(Guid changeSetId, CancellationToken cancellationToken = default);
+
+    Task<List<AiProposedChange>> GetChanges(List<Guid> changeSetIds, CancellationToken cancellationToken = default);
 }

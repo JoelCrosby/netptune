@@ -84,6 +84,22 @@ export class AiApiService {
     }
   }
 
+  async listConversationChangeSets(
+    conversationId: string
+  ): Promise<AiChangeSet[]> {
+    try {
+      const changeSets = await this.http
+        .get<AiChangeSet[]>(
+          `api/ai/conversations/${conversationId}/change-sets`
+        )
+        .toPromise();
+
+      return changeSets ?? [];
+    } catch {
+      return [];
+    }
+  }
+
   async readPendingChangeSet(
     conversationId: string
   ): Promise<AiChangeSet | null> {

@@ -71,6 +71,8 @@ public sealed record AiMessageViewModel
 
     public List<AiEntityReference> References { get; init; } = [];
 
+    public Guid? ChangeSetId { get; init; }
+
     public DateTime CreatedAt { get; init; }
 }
 

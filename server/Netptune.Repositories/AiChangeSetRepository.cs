@@ -51,12 +51,37 @@ public class AiChangeSetRepository(DataContext context, IDbConnectionFactory con
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public Task<List<AiChangeSet>> GetForConversation(
+        Guid conversationId,
+        string userId,
+        int workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .Where(changeSet =>
+                changeSet.ConversationId == conversationId &&
+                changeSet.UserId == userId &&
+                changeSet.WorkspaceId == workspaceId)
+            .OrderBy(changeSet => changeSet.MessageId)
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<List<AiProposedChange>> GetChanges(
         Guid changeSetId,
         CancellationToken cancellationToken = default)
     {
         return Context.AiProposedChanges
             .Where(change => change.ChangeSetId == changeSetId)
+            .OrderBy(change => change.Sequence)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<AiProposedChange>> GetChanges(
+        List<Guid> changeSetIds,
+        CancellationToken cancellationToken = default)
+    {
+        return Context.AiProposedChanges
+            .Where(change => changeSetIds.Contains(change.ChangeSetId))
             .OrderBy(change => change.Sequence)
             .ToListAsync(cancellationToken);
     }
