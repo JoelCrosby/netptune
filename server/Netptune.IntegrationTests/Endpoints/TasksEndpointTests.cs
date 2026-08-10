@@ -198,6 +198,36 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldFilterTasksByAssigneePresence_WhenHasAssigneeProvided()
+    {
+        var unassignedResponse = await Client.GetAsync("api/tasks?hasAssignee=false&pageSize=100");
+
+        unassignedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var unassignedResult = await unassignedResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        unassignedResult.IsSuccess.Should().BeTrue();
+        unassignedResult.Payload!.Items.Should().NotBeEmpty();
+        unassignedResult.Payload.Items.Should().OnlyContain(task => task.Assignees.Count == 0);
+
+        var assignedResponse = await Client.GetAsync("api/tasks?hasAssignee=true&pageSize=100");
+
+        assignedResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var assignedResult = await assignedResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        assignedResult.IsSuccess.Should().BeTrue();
+        assignedResult.Payload!.Items.Should().NotBeEmpty();
+        assignedResult.Payload.Items.Should().OnlyContain(task => task.Assignees.Count > 0);
+
+        var unfilteredResponse = await Client.GetAsync("api/tasks?pageSize=1");
+        var unfilteredResult = await unfilteredResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+        var totalCount = unfilteredResult.Payload!.TotalCount;
+
+        unassignedResult.Payload.TotalCount.Should().Be(totalCount - assignedResult.Payload.TotalCount);
+    }
+
+    [Fact]
     public async Task GetById_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/tasks/1");

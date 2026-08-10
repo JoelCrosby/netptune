@@ -29,4 +29,6 @@ public sealed class TaskFilter : PageRequest
     public bool? HasFlags { get; init; }
 
     public bool? HasTags { get; init; }
+
+    public bool? HasAssignee { get; init; }
 }

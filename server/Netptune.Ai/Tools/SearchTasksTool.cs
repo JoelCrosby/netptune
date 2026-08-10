@@ -26,7 +26,8 @@ public sealed class SearchTasksTool : IAiTool
 
     public string Description =>
         "Search tasks in the current workspace. Filter by free text, project, sprint, status, assignee or tags. "
-        + "Use hasTags false to find untagged tasks. Returns task id, name, status, assignee, tags and dates.";
+        + "Use hasTags false to find untagged tasks, and hasAssignee false to find unassigned tasks. "
+        + "Returns task id, name, status, assignee, tags and dates.";
 
     public AiToolKind Kind => AiToolKind.Read;
 
@@ -41,6 +42,7 @@ public sealed class SearchTasksTool : IAiTool
           "sprintId": { "type": "integer", "description": "Restrict results to a single sprint." },
           "statusId": { "type": "integer", "description": "Restrict results to a single status, from list_statuses." },
           "assigneeId": { "type": "string", "description": "Restrict results to one assignee, using a userId from list_members." },
+          "hasAssignee": { "type": "boolean", "description": "True for tasks with at least one assignee, false for tasks nobody is assigned to." },
           "noSprint": { "type": "boolean", "description": "Only tasks that are not in any sprint." },
           "hasFlags": { "type": "boolean", "description": "Only tasks carrying a flag." },
           "hasTags": { "type": "boolean", "description": "True for tasks carrying at least one tag, false for tasks with no tags at all." },
@@ -59,7 +61,7 @@ public sealed class SearchTasksTool : IAiTool
         var pageSize = Math.Clamp(requestedPageSize, 1, MaximumPageSize);
         var statusId = AiToolSchema.GetInt(arguments, "statusId");
         var assigneeId = AiToolSchema.GetString(arguments, "assigneeId")?.Trim();
-        var hasAssignee = !string.IsNullOrWhiteSpace(assigneeId);
+        var hasAssigneeId = !string.IsNullOrWhiteSpace(assigneeId);
         var requestedTags = AiTagVocabulary.ReadRequested(arguments);
         var resolvedTags = await ResolveTags(requestedTags, cancellationToken);
 
@@ -80,11 +82,12 @@ public sealed class SearchTasksTool : IAiTool
             ProjectId = AiToolSchema.GetInt(arguments, "projectId"),
             SprintId = AiToolSchema.GetInt(arguments, "sprintId"),
             StatusIds = statusId.HasValue ? [statusId.Value] : [],
-            Assignees = hasAssignee ? [assigneeId!] : [],
+            Assignees = hasAssigneeId ? [assigneeId!] : [],
             Tags = [.. resolvedTags.Matched],
             NoSprint = AiToolSchema.GetBool(arguments, "noSprint"),
             HasFlags = AiToolSchema.GetBool(arguments, "hasFlags"),
             HasTags = AiToolSchema.GetBool(arguments, "hasTags"),
+            HasAssignee = AiToolSchema.GetBool(arguments, "hasAssignee"),
             Page = 1,
             PageSize = pageSize,
         };

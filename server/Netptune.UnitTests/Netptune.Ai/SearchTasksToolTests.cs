@@ -49,6 +49,32 @@ public class SearchTasksToolTests
     }
 
     [Fact]
+    public async Task ShouldPassTheAssigneePresenceFilterThrough()
+    {
+        var captured = CaptureFilter();
+        var tool = new SearchTasksTool(Mediator);
+
+        var result = await tool.Execute(Arguments("""{"hasAssignee":false}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+        captured()!.HasAssignee.Should().BeFalse();
+        captured()!.Assignees.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ShouldLeaveTheAssigneePresenceFilterUnset_WhenItWasNotRequested()
+    {
+        var captured = CaptureFilter();
+        var tool = new SearchTasksTool(Mediator);
+
+        var result = await tool.Execute(Arguments("""{"assigneeId":"user-1"}"""), TestContext.Current.CancellationToken);
+
+        result.IsError.Should().BeFalse();
+        captured()!.HasAssignee.Should().BeNull();
+        captured()!.Assignees.Should().Equal("user-1");
+    }
+
+    [Fact]
     public async Task ShouldMatchRequestedTagsToWorkspaceCasing()
     {
         var captured = CaptureFilter();
