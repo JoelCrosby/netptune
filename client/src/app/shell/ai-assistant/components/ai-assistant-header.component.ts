@@ -24,7 +24,7 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
         <h2 class="font-overpass truncate text-[1.05rem] font-medium">
           {{ title() }}
         </h2>
-        <p class="text-muted truncate text-sm">{{ subtitle() }}</p>
+        <p class="text-muted truncate text-xs">{{ subtitle() }}</p>
       </div>
 
       <div class="flex shrink-0 items-center gap-1">

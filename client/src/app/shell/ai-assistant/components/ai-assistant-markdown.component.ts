@@ -59,11 +59,12 @@ import { referenceKey, referenceRoute } from '@core/util/ai-references';
           }
           @case ('table') {
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
+              <table
+                class="border-border my-4 block w-full overflow-hidden rounded border text-left text-xs">
                 <thead class="text-muted border-border border-b">
                   <tr>
                     @for (cell of block.head; track $index) {
-                      <th class="px-2 py-1 font-medium">
+                      <th class="px-3 py-2 font-medium">
                         <ng-container
                           *ngTemplateOutlet="
                             inlineList;
@@ -75,9 +76,10 @@ import { referenceKey, referenceRoute } from '@core/util/ai-references';
                 </thead>
                 <tbody>
                   @for (row of block.rows; track $index) {
-                    <tr class="border-border/60 border-b last:border-0">
+                    <tr
+                      class="border-border/60 bg-background border-b last:rounded-b last:border-0">
                       @for (cell of row; track $index) {
-                        <td class="px-2 py-1">
+                        <td class="px-3 py-2">
                           <ng-container
                             *ngTemplateOutlet="
                               inlineList;
