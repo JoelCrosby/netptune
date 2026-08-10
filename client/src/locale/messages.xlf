@@ -1683,7 +1683,7 @@
     </unit>
     <unit id="7007888444594131996">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:203</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:202</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1692,7 +1692,7 @@
     </unit>
     <unit id="5256927257860771053">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:177</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:176</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:73</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -1702,7 +1702,7 @@
     </unit>
     <unit id="62571336638745135">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:162</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:161</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1711,7 +1711,7 @@
     </unit>
     <unit id="9054551961119650411">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:192</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:191</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:93</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -12621,6 +12621,15 @@
         <source>There is no open assigned work for this selection.</source>
       </segment>
     </unit>
+    <unit id="8591821672433517944">
+      <notes>
+        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:33</note>
+        <note category="description">Shown when signing in through an external provider fails</note>
+      </notes>
+      <segment>
+        <source>Sign-in could not be completed. Please try again.</source>
+      </segment>
+    </unit>
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:49,52</note>
@@ -16852,6 +16861,15 @@
       </notes>
       <segment>
         <source>Drag to reorder</source>
+      </segment>
+    </unit>
+    <unit id="5671808005389453429">
+      <notes>
+        <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:17,20</note>
+        <note category="description">Shown while a provider sign-in completes</note>
+      </notes>
+      <segment>
+        <source> Signing you in… </source>
       </segment>
     </unit>
     <unit id="6361083805757447053">

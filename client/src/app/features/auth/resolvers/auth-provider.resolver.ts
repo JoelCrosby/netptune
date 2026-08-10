@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
+import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { LoginResponse } from '@core/models/session';
 
@@ -42,6 +43,7 @@ export const authProvider: ResolveFn<boolean> = async (
   };
 
   inject(SessionService).establish(user);
+  inject(WorkspaceListService).reload();
 
   return true;
 };
