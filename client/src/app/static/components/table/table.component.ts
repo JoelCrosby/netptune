@@ -266,7 +266,7 @@ export class TablePaginationComponent {
 @Directive({
   selector: 'thead[appTableHead]',
   host: {
-    class: 'border-border border-b',
+    class: 'border-border border-b bg-background rounded-t',
     '[class.sticky]': 'sticky',
     '[class.top-0]': 'sticky',
     '[class.z-10]': 'sticky',

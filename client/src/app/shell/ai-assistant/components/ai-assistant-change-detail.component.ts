@@ -43,13 +43,14 @@ interface AiCollectionRow {
   template: `
     @switch (kind()) {
       @case ('create') {
-        <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1">
+        <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-3 py-2">
           @for (row of rows(); track row.name) {
             <dt class="text-muted">{{ row.label }}</dt>
             <dd class="flex min-w-0 flex-wrap items-center gap-1">
               @if (row.isTyped) {
                 @for (value of row.afterValues; track value.display) {
-                  <span class="bg-foreground/10 rounded-full px-2 py-0.5">
+                  <span
+                    class="bg-foreground/10 flex items-center rounded-full px-2 py-1">
                     <app-ai-assistant-change-value
                       [value]="value"
                       [kind]="row.kind" />
@@ -96,7 +97,8 @@ interface AiCollectionRow {
             <div class="flex flex-wrap items-center gap-1">
               <span class="text-muted mr-0.5">{{ row.label }}</span>
               @for (value of row.diff.kept; track value.display) {
-                <span class="bg-foreground/10 rounded-full px-2 py-0.5">
+                <span
+                  class="bg-foreground/10 flex items-center rounded-full px-2 py-1">
                   <app-ai-assistant-change-value
                     [value]="value"
                     [kind]="row.kind" />

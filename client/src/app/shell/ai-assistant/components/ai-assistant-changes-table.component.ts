@@ -1,10 +1,11 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   AiChangeApplyStatus,
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import {
+  LucideChevronRight,
   LucideCircleAlert,
   LucideCircleCheck,
   LucideMinus,
@@ -20,7 +21,6 @@ import {
   TableEmptyCellDirective,
   TableHeadDirective,
   TableHeaderRowDirective,
-  TableRowDirective,
 } from '@static/components/table/table.component';
 import { changeRoute, entityLabel, isValid } from './ai-assistant-change-group';
 import {
@@ -40,6 +40,7 @@ interface AiChangeRow {
   route: string[] | null;
   isSelectable: boolean;
   isIncluded: boolean;
+  hasDetails: boolean;
   message: string | null;
 }
 
@@ -48,6 +49,7 @@ interface AiChangeRow {
   imports: [
     RouterLink,
     BadgeComponent,
+    LucideChevronRight,
     LucideCircleAlert,
     LucideCircleCheck,
     LucideMinus,
@@ -57,22 +59,28 @@ interface AiChangeRow {
     TableEmptyCellDirective,
     TableHeadDirective,
     TableHeaderRowDirective,
-    TableRowDirective,
     AiAssistantChangeDetailComponent,
   ],
   template: `
     <app-table tableClass="table-fixed">
       <colgroup>
+        <col class="w-9" />
         <col class="w-10" />
         <col class="w-24" />
         <col class="w-28" />
         <col class="w-64" />
-        <col class="w-40" />
         <col />
       </colgroup>
 
-      <thead appTableHead [sticky]="true">
-        <tr appTableHeaderRow class="bg-background">
+      <thead appTableHead>
+        <tr appTableHeaderRow>
+          <th class="py-3 pl-3">
+            <span
+              class="sr-only"
+              i18n="Screen-reader heading for the column that expands a change">
+              Details
+            </span>
+          </th>
           <th class="px-3 py-3">
             @if (isPending()) {
               <app-selection-checkbox
@@ -112,31 +120,51 @@ interface AiChangeRow {
               Change
             </span>
           </th>
-          <th class="px-3 py-3">
-            <span i18n="Column heading for the detail of a proposed change">
-              Details
-            </span>
-          </th>
         </tr>
       </thead>
 
       <tbody>
         @for (row of rows(); track row.change.id) {
           <tr
-            appTableRow
+            class="bg-card border-border hover:bg-card-hover transition-colors last:border-b-0"
+            [class.border-b]="!isExpanded(row)"
+            [class.cursor-pointer]="row.hasDetails"
             [class.opacity-60]="
               (!row.isIncluded && isPending()) || row.change.undoneAt
-            ">
-            <td class="px-3 py-3 align-top">
+            "
+            (click)="toggle(row)">
+            <td class="py-3 pl-3 align-middle">
+              @if (row.hasDetails) {
+                <button
+                  type="button"
+                  class="text-muted hover:text-foreground -ml-1 rounded p-1"
+                  [attr.aria-expanded]="isExpanded(row)"
+                  i18n-aria-label="
+                    Accessible label for the toggle that reveals what a proposed
+                    change contains
+                  "
+                  aria-label="Change details"
+                  (click)="toggle(row, $event)">
+                  <svg
+                    lucideChevronRight
+                    class="h-4 w-4 transition-transform"
+                    [class.rotate-90]="isExpanded(row)"></svg>
+                </button>
+              }
+            </td>
+
+            <td
+              class="px-3 py-3 align-middle"
+              (click)="stopPropagation($event)">
               @if (isPending()) {
                 <app-selection-checkbox
-                  class="mt-0.5 block"
+                  class="block"
                   [checked]="row.isIncluded"
                   [disabled]="!row.isSelectable"
                   [label]="row.change.summary"
                   (changed)="toggled.emit(row.change.id)" />
               } @else {
-                <span class="mt-0.5 flex h-4 w-4 items-center justify-center">
+                <span class="flex h-4 w-4 items-center justify-center">
                   @if (row.change.undoneAt) {
                     <svg lucideUndo2 class="text-muted h-4 w-4"></svg>
                   } @else {
@@ -158,42 +186,67 @@ interface AiChangeRow {
               }
             </td>
 
-            <td class="px-3 py-3 align-top">
+            <td class="px-3 py-3 align-middle">
               <app-badge [color]="row.tone">{{ row.action }}</app-badge>
             </td>
 
-            <td class="text-muted px-3 py-3 align-top text-xs">
-              {{ row.entity }}
+            <td class="text-muted px-3 py-3 align-middle text-xs">
+              <span class="block truncate">{{ row.entity }}</span>
             </td>
 
-            <td class="px-3 py-3 align-top">
+            <td class="px-3 py-3 align-middle">
               @if (row.target) {
                 @if (row.route; as route) {
-                  <a [routerLink]="route" class="break-words hover:underline">
+                  <a
+                    [routerLink]="route"
+                    class="block truncate hover:underline"
+                    [title]="row.target"
+                    (click)="stopPropagation($event)">
                     {{ row.target }}
                   </a>
                 } @else {
-                  <span class="break-words">{{ row.target }}</span>
+                  <span class="block truncate" [title]="row.target">
+                    {{ row.target }}
+                  </span>
                 }
               } @else {
                 <span class="text-muted" aria-hidden="true">—</span>
               }
             </td>
 
-            <td class="text-muted px-3 py-3 align-top text-xs">
-              {{ row.detail }}
-            </td>
+            <td class="px-3 py-3 align-middle">
+              <div class="flex min-w-0 items-center gap-2 text-xs">
+                <span class="text-muted truncate" [title]="row.detail">
+                  {{ row.detail }}
+                </span>
 
-            <td class="px-3 py-3 align-top">
-              <app-ai-assistant-change-detail [change]="row.change" />
-
-              @if (row.message) {
-                <p class="text-warn mt-1 text-xs break-words">
-                  {{ row.message }}
-                </p>
-              }
+                @if (row.message) {
+                  <span class="text-warn truncate" [title]="row.message">
+                    {{ row.message }}
+                  </span>
+                }
+              </div>
             </td>
           </tr>
+
+          @if (isExpanded(row)) {
+            <tr
+              class="bg-card border-border border-b last:border-b-0"
+              [class.opacity-60]="
+                (!row.isIncluded && isPending()) || row.change.undoneAt
+              ">
+              <td colspan="2"></td>
+              <td colspan="4" class="px-3 pt-0 pb-3">
+                @if (row.message) {
+                  <p class="text-warn mb-2 text-xs break-words">
+                    {{ row.message }}
+                  </p>
+                }
+
+                <app-ai-assistant-change-detail [change]="row.change" />
+              </td>
+            </tr>
+          }
         } @empty {
           <tr>
             <td
@@ -219,6 +272,8 @@ export class AiAssistantChangesTableComponent {
 
   protected readonly applyStatus = AiChangeApplyStatus;
 
+  private readonly expandedChangeIds = signal<Set<number>>(new Set());
+
   protected readonly rows = computed<AiChangeRow[]>(() => {
     const excluded = this.excludedChangeIds();
     const workspace = this.workspace();
@@ -226,6 +281,7 @@ export class AiAssistantChangesTableComponent {
     return this.changes().map((change) => {
       const isSelectable = isValid(change);
       const summary = changeSummary(change);
+      const message = this.message(change);
 
       return {
         change,
@@ -237,7 +293,8 @@ export class AiAssistantChangesTableComponent {
         route: changeRoute(change, workspace),
         isSelectable,
         isIncluded: isSelectable && !excluded.has(change.id),
-        message: this.message(change),
+        hasDetails: change.fields.length > 0 || message !== null,
+        message,
       };
     });
   });
@@ -252,6 +309,34 @@ export class AiAssistantChangesTableComponent {
 
     return selectable > 0 && included === selectable;
   });
+
+  protected isExpanded(row: AiChangeRow): boolean {
+    return this.expandedChangeIds().has(row.change.id);
+  }
+
+  protected stopPropagation(event: Event) {
+    event.stopPropagation();
+  }
+
+  protected toggle(row: AiChangeRow, event?: Event) {
+    event?.stopPropagation();
+
+    if (!row.hasDetails) {
+      return;
+    }
+
+    this.expandedChangeIds.update((current) => {
+      const next = new Set(current);
+
+      if (next.has(row.change.id)) {
+        next.delete(row.change.id);
+      } else {
+        next.add(row.change.id);
+      }
+
+      return next;
+    });
+  }
 
   private message(change: AiProposedChange): string | null {
     if (change.applyError) {

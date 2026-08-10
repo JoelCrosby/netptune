@@ -2063,7 +2063,7 @@
     </unit>
     <unit id="5830314630242453415">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:112,115</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:120,124</note>
         <note category="description">Column heading for the sentence describing a change</note>
       </notes>
       <segment>
@@ -6931,7 +6931,7 @@
     </unit>
     <unit id="2445414570210459149">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:107,110</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:115,118</note>
         <note category="description">Column heading for what a proposed change targets</note>
       </notes>
       <segment>
@@ -7645,6 +7645,7 @@
     <unit id="8315057288657960846">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:86,89</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:146,149</note>
         <note category="description">Accessible label for the toggle that reveals what a proposed change contains</note>
       </notes>
       <segment>
@@ -9519,7 +9520,7 @@
     </unit>
     <unit id="97940262148604706">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:97,100</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:105,108</note>
         <note category="description">Column heading for what a proposed change does</note>
       </notes>
       <segment>
@@ -11337,7 +11338,7 @@
     </unit>
     <unit id="117783198855509507">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:85,89</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:93,97</note>
         <note category="description">Accessible label for the checkbox that selects every proposed change</note>
       </notes>
       <segment>
@@ -11624,7 +11625,7 @@
     </unit>
     <unit id="5058386856247336582">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:91,94</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:99,102</note>
         <note category="description">Screen-reader heading for the change outcome column</note>
       </notes>
       <segment>
@@ -11670,7 +11671,7 @@
     </unit>
     <unit id="7840301863034787689">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:102,105</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:110,113</note>
         <note category="description">Column heading for the kind of entity a change targets</note>
       </notes>
       <segment>
@@ -13233,7 +13234,7 @@
     </unit>
     <unit id="3056025401856031391">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:203,207</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:241,245</note>
         <note category="description">Shown when a change set has no changes left to review</note>
       </notes>
       <segment>
@@ -13947,7 +13948,7 @@
     <unit id="5773144976658818508">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:223</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:273</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:342</note>
         <note category="description">Shown on a proposal that cannot be applied</note>
       </notes>
       <segment>
@@ -15972,8 +15973,8 @@
     </unit>
     <unit id="4423253549935469768">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:117,120</note>
-        <note category="description">Column heading for the detail of a proposed change</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-changes-table.component.ts:81,84</note>
+        <note category="description">Screen-reader heading for the column that expands a change</note>
       </notes>
       <segment>
         <source> Details </source>
