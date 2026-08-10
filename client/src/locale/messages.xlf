@@ -1218,7 +1218,7 @@
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:86,89</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:85,88</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:180,183</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:193,196</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:310</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:250</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:39,41</note>
@@ -1629,7 +1629,7 @@
     </unit>
     <unit id="721746833097626187">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:51</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:52</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1638,7 +1638,7 @@
     </unit>
     <unit id="6930203756458180911">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:69</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:70</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1656,7 +1656,7 @@
     </unit>
     <unit id="4229930832776293995">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:84</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:85</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1665,7 +1665,7 @@
     </unit>
     <unit id="4604808575920319467">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:112</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:113</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1674,7 +1674,7 @@
     </unit>
     <unit id="5735736609681878695">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:101</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:102</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1683,7 +1683,7 @@
     </unit>
     <unit id="7007888444594131996">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:184</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:203</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1692,7 +1692,7 @@
     </unit>
     <unit id="5256927257860771053">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:158</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:177</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:73</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -1702,7 +1702,7 @@
     </unit>
     <unit id="62571336638745135">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:143</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:162</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment>
@@ -1711,7 +1711,7 @@
     </unit>
     <unit id="9054551961119650411">
       <notes>
-        <note category="location">src/app/core/services/sprint-commands.service.ts:173</note>
+        <note category="location">src/app/core/services/sprint-commands.service.ts:192</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail.service.ts:93</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
@@ -2889,7 +2889,7 @@
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:42,47</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:94,100</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:45,58</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:52,64</note>
         <note category="description">Button that applies the bulk edit to the selected tasks</note>
       </notes>
       <segment>
@@ -7346,7 +7346,7 @@
     <unit id="1262014541474769532">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:309,312</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:102,105</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:113,115</note>
         <note category="description">Action that removes the task from its sprint</note>
       </notes>
       <segment>
@@ -13289,6 +13289,15 @@
         <source>Describe where this credential will be used.</source>
       </segment>
     </unit>
+    <unit id="1731238490956722669">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:213,217</note>
+        <note category="description">Shown while a sprint is being completed</note>
+      </notes>
+      <segment>
+        <source> Completing sprint… </source>
+      </segment>
+    </unit>
     <unit id="7617073660084768167">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:67,70</note>
@@ -15168,7 +15177,7 @@
     </unit>
     <unit id="763816024488593537">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:37,40</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:44,47</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:207,208</note>
         <note category="description">Title of the dialog for completing a sprint</note>
       </notes>
@@ -15176,9 +15185,9 @@
         <source> Complete Sprint </source>
       </segment>
     </unit>
-    <unit id="3298719612824645997">
+    <unit id="5192793564342034107">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:45,53</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:52,59</note>
       </notes>
       <segment>
         <source>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> incomplete task in this sprint. } other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"> <ph id="2" equiv="INTERPOLATION"/> </pc> incomplete tasks in this sprint. }}</source>
@@ -15195,7 +15204,7 @@
     </unit>
     <unit id="6534027096593338100">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:85,89</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:94,98</note>
         <note category="description">Asks what to do with unfinished tasks when completing a sprint</note>
       </notes>
       <segment>
@@ -15204,7 +15213,7 @@
     </unit>
     <unit id="7043963172820125185">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:95,97</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:104,106</note>
         <note category="description">Accessible label for the option that returns unfinished tasks to the backlog</note>
       </notes>
       <segment>
@@ -15222,7 +15231,7 @@
     </unit>
     <unit id="8363756509021548960">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:107,109</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:118,119</note>
         <note category="description">Explains the move-to-backlog option</note>
       </notes>
       <segment>
@@ -15231,7 +15240,7 @@
     </unit>
     <unit id="7417576377524669281">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:119,121</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:130,132</note>
         <note category="description">Accessible label for the option that moves unfinished tasks to another sprint</note>
       </notes>
       <segment>
@@ -15240,7 +15249,7 @@
     </unit>
     <unit id="6454357622264170625">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:128,131</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:140,143</note>
         <note category="description">Option that moves unfinished tasks into a different sprint</note>
       </notes>
       <segment>
@@ -15249,7 +15258,7 @@
     </unit>
     <unit id="609255866150735470">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:133,135</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:145,147</note>
         <note category="description">Explains the move-to-another-sprint option</note>
       </notes>
       <segment>
@@ -15267,7 +15276,7 @@
     </unit>
     <unit id="3259975990687926975">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:145,146</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:158,160</note>
         <note category="description">Label of the field choosing which sprint to move tasks into</note>
       </notes>
       <segment>
@@ -15287,7 +15296,7 @@
     </unit>
     <unit id="7473967539394647356">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:147,148</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:160,161</note>
         <note category="description">Placeholder in the target sprint picker</note>
       </notes>
       <segment>
@@ -15305,7 +15314,7 @@
     </unit>
     <unit id="1261958625862617754">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:162,165</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:175,177</note>
         <note category="description">Shown when there is no future sprint to move tasks into</note>
       </notes>
       <segment>
@@ -15314,7 +15323,7 @@
     </unit>
     <unit id="7030866728893584699">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:171,175</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:184,187</note>
         <note category="description">Shown when a sprint has no unfinished tasks left</note>
       </notes>
       <segment>
@@ -15323,7 +15332,7 @@
     </unit>
     <unit id="1860421182220689611">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:188,193</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:201,204</note>
         <note category="description">Button that completes the sprint</note>
       </notes>
       <segment>

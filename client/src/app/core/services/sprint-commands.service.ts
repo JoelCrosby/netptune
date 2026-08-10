@@ -13,6 +13,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
   catchError,
+  defer,
   EMPTY,
   finalize,
   forkJoin,
@@ -116,19 +117,36 @@ export class SprintCommandsService {
   }
 
   complete(sprintId: number) {
-    this.completeSprint(sprintId).subscribe((sprint) =>
-      this.onSprintChanged(sprint)
-    );
+    this.completeSprint(sprintId)
+      .pipe(catchError(() => EMPTY))
+      .subscribe((sprint) => this.onSprintChanged(sprint));
   }
 
   completeWithReassignment(
     sprintId: number,
     incompleteTaskIds: number[],
     targetSprintId?: number
-  ) {
-    this.reassignIncompleteTasks(sprintId, incompleteTaskIds, targetSprintId)
-      .pipe(switchMap(() => this.completeSprint(sprintId)))
-      .subscribe((sprint) => this.onSprintChanged(sprint));
+  ): Observable<SprintViewModel> {
+    return defer(() => {
+      this.updating.set(true);
+
+      return this.reassignIncompleteTasks(
+        sprintId,
+        incompleteTaskIds,
+        targetSprintId
+      );
+    }).pipe(
+      switchMap(() => this.completeSprint(sprintId)),
+      catchError((error: unknown) => {
+        this.snackbar.error(
+          getErrorMessage(error, COMPLETE_SPRINT_ERROR_FALLBACK)
+        );
+
+        return EMPTY;
+      }),
+      tap((sprint) => this.onSprintChanged(sprint)),
+      finalize(() => this.updating.set(false))
+    );
   }
 
   addTasks(sprintId: number, request: AddTasksToSprintRequest) {
@@ -183,8 +201,7 @@ export class SprintCommandsService {
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Sprint completed`
         )
-      ),
-      catchError(() => EMPTY)
+      )
     );
   }
 
@@ -224,3 +241,6 @@ export class SprintCommandsService {
 
 const START_SPRINT_ERROR_FALLBACK =
   'The sprint could not be started. Please try again.';
+
+const COMPLETE_SPRINT_ERROR_FALLBACK =
+  'The sprint could not be completed. Please try again.';

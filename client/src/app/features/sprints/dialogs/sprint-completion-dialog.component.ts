@@ -15,6 +15,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { SelectableCardComponent } from '@static/components/selectable-card/selectable-card.component';
+import { SpinnerComponent } from '@static/components/spinner/spinner.component';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -30,163 +31,189 @@ type MoveMode = 'backlog' | 'sprint';
     FormSelectComponent,
     FormSelectOptionComponent,
     SelectableCardComponent,
+    SpinnerComponent,
     BadgeComponent,
   ],
   template: `
-    <app-dialog-title i18n="Title of the dialog for completing a sprint">
-      Complete Sprint
-    </app-dialog-title>
+    <div class="relative" [attr.aria-busy]="isCompleting()">
+      <div
+        class="transition-opacity"
+        [class.opacity-40]="isCompleting()"
+        [attr.inert]="isCompleting() ? '' : null">
+        <app-dialog-title i18n="Title of the dialog for completing a sprint">
+          Complete Sprint
+        </app-dialog-title>
 
-    <div class="flex flex-col gap-4">
-      @if (incompleteTasks().length > 0) {
-        <p class="text-muted text-sm">
-          <ng-container
-            i18n="Count of unfinished tasks when completing a sprint">
-            {incompleteTasks().length, plural,
-              =1 {
-                <strong class="text-foreground">1</strong>
-                incomplete task in this sprint.
-              }
-              other {
-                <strong class="text-foreground">
-                  {{ incompleteTasks().length }}
-                </strong>
-                incomplete tasks in this sprint.
-              }
-            }
-          </ng-container>
-        </p>
-
-        <div class="border-border max-h-48 overflow-y-auto rounded-md border">
-          @for (task of incompleteTasks(); track task.id) {
-            <div
-              class="border-border flex items-center gap-3 border-b px-3 py-2 last:border-0">
-              <span class="text-muted w-16 shrink-0 text-xs font-medium">
-                {{ task.systemId }}
-              </span>
-              <span class="flex-1 truncate text-sm">{{ task.name }}</span>
-              <app-badge
-                shape="rounded"
-                [class]="
-                  'shrink-0 px-1.5 ' + statusBadgeClass(task.statusCategory)
-                ">
-                {{ task.statusName }}
-              </app-badge>
-            </div>
-          }
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <p class="text-sm font-medium">
-            <span
-              i18n="
-                Asks what to do with unfinished tasks when completing a sprint
-              ">
-              What should happen to these tasks?
-            </span>
-          </p>
-
-          <app-selectable-card
-            groupName="sprint-completion-task-destination"
-            i18n-accessibleLabel="
-              Accessible label for the option that returns unfinished tasks to
-              the backlog
-            "
-            accessibleLabel="Move incomplete tasks to backlog"
-            [selected]="moveMode() === 'backlog'"
-            (selectionChange)="moveMode.set('backlog')">
-            <div>
-              <p class="text-sm font-medium">
-                <span
-                  i18n="Option that returns unfinished tasks to the backlog">
-                  Move to backlog
-                </span>
-              </p>
-              <p class="text-muted text-xs">
-                <span i18n="Explains the move-to-backlog option">
-                  Unassign tasks from this sprint
-                </span>
-              </p>
-            </div>
-          </app-selectable-card>
-
-          <app-selectable-card
-            groupName="sprint-completion-task-destination"
-            i18n-accessibleLabel="
-              Accessible label for the option that moves unfinished tasks to
-              another sprint
-            "
-            accessibleLabel="Move incomplete tasks to another sprint"
-            [selected]="moveMode() === 'sprint'"
-            (selectionChange)="moveMode.set('sprint')">
-            <div>
-              <p class="text-sm font-medium">
-                <span
-                  i18n="
-                    Option that moves unfinished tasks into a different sprint
-                  ">
-                  Move to another sprint
-                </span>
-              </p>
-              <p class="text-muted text-xs">
-                <span i18n="Explains the move-to-another-sprint option">
-                  Add tasks to an upcoming sprint
-                </span>
-              </p>
-            </div>
-          </app-selectable-card>
-
-          @if (moveMode() === 'sprint') {
-            @if (planningSprints().length > 0) {
-              <app-form-select
-                i18n-label="
-                  Label of the field choosing which sprint to move tasks into
-                "
-                label="Target sprint"
-                i18n-placeholder="Placeholder in the target sprint picker"
-                placeholder="Select sprint"
-                [value]="targetSprintId() ?? null"
-                (changed)="targetSprintId.set($event)">
-                @for (sprint of planningSprints(); track sprint.id) {
-                  <app-form-select-option [value]="sprint.id!">
-                    {{ sprint.name }}
-                  </app-form-select-option>
+        <div class="flex flex-col gap-4">
+          @if (incompleteTasks().length > 0) {
+            <p class="text-muted text-sm">
+              <ng-container
+                i18n="Count of unfinished tasks when completing a sprint">
+                {incompleteTasks().length, plural,
+                  =1 {
+                    <strong class="text-foreground">1</strong>
+                    incomplete task in this sprint.
+                  }
+                  other {
+                    <strong class="text-foreground">
+                      {{ incompleteTasks().length }}
+                    </strong>
+                    incomplete tasks in this sprint.
+                  }
                 }
-              </app-form-select>
-            } @else {
-              <p class="text-muted text-sm">
+              </ng-container>
+            </p>
+
+            <div
+              class="border-border max-h-48 overflow-y-auto rounded-md border">
+              @for (task of incompleteTasks(); track task.id) {
+                <div
+                  class="border-border flex items-center gap-3 border-b px-3 py-2 last:border-0">
+                  <span class="text-muted w-16 shrink-0 text-xs font-medium">
+                    {{ task.systemId }}
+                  </span>
+                  <span class="flex-1 truncate text-sm">{{ task.name }}</span>
+                  <app-badge
+                    shape="rounded"
+                    [class]="
+                      'shrink-0 px-1.5 ' + statusBadgeClass(task.statusCategory)
+                    ">
+                    {{ task.statusName }}
+                  </app-badge>
+                </div>
+              }
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <p class="text-sm font-medium">
                 <span
                   i18n="
-                    Shown when there is no future sprint to move tasks into
+                    Asks what to do with unfinished tasks when completing a
+                    sprint
                   ">
-                  No upcoming sprints available.
+                  What should happen to these tasks?
                 </span>
               </p>
-            }
+
+              <app-selectable-card
+                groupName="sprint-completion-task-destination"
+                i18n-accessibleLabel="
+                  Accessible label for the option that returns unfinished tasks
+                  to the backlog
+                "
+                accessibleLabel="Move incomplete tasks to backlog"
+                [selected]="moveMode() === 'backlog'"
+                (selectionChange)="moveMode.set('backlog')">
+                <div>
+                  <p class="text-sm font-medium">
+                    <span
+                      i18n="
+                        Option that returns unfinished tasks to the backlog
+                      ">
+                      Move to backlog
+                    </span>
+                  </p>
+                  <p class="text-muted text-xs">
+                    <span i18n="Explains the move-to-backlog option">
+                      Unassign tasks from this sprint
+                    </span>
+                  </p>
+                </div>
+              </app-selectable-card>
+
+              <app-selectable-card
+                groupName="sprint-completion-task-destination"
+                i18n-accessibleLabel="
+                  Accessible label for the option that moves unfinished tasks to
+                  another sprint
+                "
+                accessibleLabel="Move incomplete tasks to another sprint"
+                [selected]="moveMode() === 'sprint'"
+                (selectionChange)="moveMode.set('sprint')">
+                <div>
+                  <p class="text-sm font-medium">
+                    <span
+                      i18n="
+                        Option that moves unfinished tasks into a different
+                        sprint
+                      ">
+                      Move to another sprint
+                    </span>
+                  </p>
+                  <p class="text-muted text-xs">
+                    <span i18n="Explains the move-to-another-sprint option">
+                      Add tasks to an upcoming sprint
+                    </span>
+                  </p>
+                </div>
+              </app-selectable-card>
+
+              @if (moveMode() === 'sprint') {
+                @if (planningSprints().length > 0) {
+                  <app-form-select
+                    i18n-label="
+                      Label of the field choosing which sprint to move tasks
+                      into
+                    "
+                    label="Target sprint"
+                    i18n-placeholder="Placeholder in the target sprint picker"
+                    placeholder="Select sprint"
+                    [value]="targetSprintId() ?? null"
+                    (changed)="targetSprintId.set($event)">
+                    @for (sprint of planningSprints(); track sprint.id) {
+                      <app-form-select-option [value]="sprint.id!">
+                        {{ sprint.name }}
+                      </app-form-select-option>
+                    }
+                  </app-form-select>
+                } @else {
+                  <p class="text-muted text-sm">
+                    <span
+                      i18n="
+                        Shown when there is no future sprint to move tasks into
+                      ">
+                      No upcoming sprints available.
+                    </span>
+                  </p>
+                }
+              }
+            </div>
+          } @else {
+            <p class="text-muted text-sm">
+              <span i18n="Shown when a sprint has no unfinished tasks left">
+                All tasks in this sprint are complete. Ready to close out the
+                sprint.
+              </span>
+            </p>
           }
         </div>
-      } @else {
-        <p class="text-muted text-sm">
-          <span i18n="Shown when a sprint has no unfinished tasks left">
-            All tasks in this sprint are complete. Ready to close out the
-            sprint.
-          </span>
-        </p>
-      }
-    </div>
 
-    <div app-dialog-actions align="end">
-      <button app-stroked-button type="button" (click)="dialogRef.close()">
-        <span i18n="Dismisses a dialog without acting">Cancel</span>
-      </button>
-      <button
-        app-flat-button
-        color="primary"
-        type="button"
-        [disabled]="confirmDisabled()"
-        (click)="onConfirm()">
-        <span i18n="Button that completes the sprint">Complete Sprint</span>
-      </button>
+        <div app-dialog-actions align="end">
+          <button app-stroked-button type="button" (click)="dialogRef.close()">
+            <span i18n="Dismisses a dialog without acting">Cancel</span>
+          </button>
+          <button
+            app-flat-button
+            color="primary"
+            type="button"
+            [disabled]="confirmDisabled()"
+            (click)="onConfirm()">
+            <span i18n="Button that completes the sprint">Complete Sprint</span>
+          </button>
+        </div>
+      </div>
+
+      @if (isCompleting()) {
+        <div
+          class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+          <app-spinner diameter="2.5rem" />
+          <p
+            class="text-muted text-sm"
+            i18n="Shown while a sprint is being completed">
+            Completing sprint…
+          </p>
+        </div>
+      }
     </div>
   `,
 })
@@ -199,6 +226,7 @@ export class SprintCompletionDialogComponent {
   private readonly sprintCommands = inject(SprintCommandsService);
 
   readonly updateLoading = this.sprintCommands.isUpdating;
+  readonly isCompleting = signal(false);
   readonly moveMode = signal<MoveMode>('backlog');
   readonly targetSprintId = signal<number | null>(null);
 
@@ -237,7 +265,7 @@ export class SprintCompletionDialogComponent {
   }
 
   onConfirm() {
-    if (!this.sprint.id) return;
+    if (!this.sprint.id || this.isCompleting()) return;
 
     const incompleteTaskIds = this.incompleteTasks().map((t) => t.id);
     const targetSprintId =
@@ -245,12 +273,23 @@ export class SprintCompletionDialogComponent {
         ? (this.targetSprintId() ?? undefined)
         : undefined;
 
-    this.sprintCommands.completeWithReassignment(
-      this.sprint.id,
-      incompleteTaskIds,
-      targetSprintId
-    );
+    this.setCompleting(true);
 
-    this.dialogRef.close();
+    this.sprintCommands
+      .completeWithReassignment(
+        this.sprint.id,
+        incompleteTaskIds,
+        targetSprintId
+      )
+      .subscribe({
+        next: () => this.dialogRef.close(),
+        complete: () => this.setCompleting(false),
+      });
+  }
+
+  /* Reassigning tasks and closing the sprint are several requests, and none of them can be taken back. */
+  private setCompleting(isCompleting: boolean) {
+    this.isCompleting.set(isCompleting);
+    this.dialogRef.disableClose = isCompleting;
   }
 }
