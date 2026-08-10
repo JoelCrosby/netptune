@@ -44,9 +44,9 @@ const DISPLAY_MODE_OPTIONS: DisplayModeOption[] = [
         type="button"
         class="rounded-full"
         aria-haspopup="menu"
-        appTooltip
         i18n-appTooltip="Tooltip on the assistant display mode selector"
         appTooltip="Display mode"
+        appTooltipPosition="bottom"
         (click)="menu.toggle(trigger)">
         <svg lucideLayoutTemplate class="h-4 w-4"></svg>
       </button>

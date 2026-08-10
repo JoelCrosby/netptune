@@ -32,9 +32,9 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
           app-icon-button
           type="button"
           class="rounded-full"
-          appTooltip
           i18n-appTooltip="Tooltip on the button that lists past conversations"
           appTooltip="Conversation history"
+          appTooltipPosition="bottom"
           (click)="historyToggled.emit()">
           <svg lucideHistory class="h-4 w-4"></svg>
         </button>
@@ -47,9 +47,9 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
           app-icon-button
           type="button"
           class="rounded-full"
-          appTooltip
           i18n-appTooltip="Tooltip on the button that starts a new chat"
           appTooltip="New chat"
+          appTooltipPosition="bottom"
           (click)="newChat.emit()">
           <svg lucideSquarePen class="h-4 w-4"></svg>
         </button>
@@ -59,9 +59,9 @@ import { AiAssistantModeMenuComponent } from './ai-assistant-mode-menu.component
             app-icon-button
             type="button"
             class="rounded-full"
-            appTooltip
             i18n-appTooltip="Tooltip on the button that closes the assistant"
             appTooltip="Close"
+            appTooltipPosition="bottom"
             (click)="closed.emit()">
             <svg lucideX class="h-4 w-4"></svg>
           </button>
