@@ -22,7 +22,7 @@ const PANEL_MARGIN = '1rem';
   template: `
     <ng-template #panelTmpl>
       <app-ai-assistant-panel
-        class="assistant-panel border-border overflow-hidden rounded-2xl border shadow-lg" />
+        class="assistant-panel border-border w-full overflow-hidden rounded-2xl border shadow-lg" />
     </ng-template>
   `,
   styles: [
