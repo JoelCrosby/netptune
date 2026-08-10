@@ -23,6 +23,7 @@ import { AiAssistantHeaderComponent } from './components/ai-assistant-header.com
 import { AiAssistantHistoryComponent } from './components/ai-assistant-history.component';
 import { AiAssistantMessageComponent } from './components/ai-assistant-message.component';
 import { AiAssistantMissingKeyComponent } from './components/ai-assistant-missing-key.component';
+import { AiQuestionResponse } from './components/ai-assistant-question.component';
 import { AiAssistantResizeHandleComponent } from './components/ai-assistant-resize-handle.component';
 import { AiAssistantThinkingComponent } from './components/ai-assistant-thinking.component';
 import { AiAssistantUsageComponent } from './components/ai-assistant-usage.component';
@@ -115,10 +116,12 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
                     [entry]="entry"
                     [references]="assistant.references()"
                     [changeSets]="assistant.appliedChangeSets()"
+                    [answers]="assistant.answers()"
                     [workspace]="assistant.workspaceKey()"
                     [isStreaming]="assistant.isStreaming() && $last"
                     [isLast]="$last && !assistant.isStreaming()"
                     (retried)="retry()"
+                    (answered)="answer($event)"
                     (edited)="assistant.editLastQuestion()" />
                 }
 
@@ -173,6 +176,7 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
         [selectedModel]="assistant.selectedModel()"
         [modelLabel]="assistant.selectedModelLabel()"
         [isStreaming]="assistant.isStreaming()"
+        [isAnswering]="assistant.pendingQuestion() !== null"
         [contentWidth]="contentWidth()"
         [draft]="assistant.draft()"
         (messageSent)="send($event)"
@@ -321,5 +325,13 @@ export class AiAssistantPanelComponent {
 
   protected retry() {
     void this.assistant.retryLastTurn();
+  }
+
+  protected answer(response: AiQuestionResponse) {
+    void this.assistant.answerQuestion(
+      response.question,
+      response.labels,
+      response.text
+    );
   }
 }

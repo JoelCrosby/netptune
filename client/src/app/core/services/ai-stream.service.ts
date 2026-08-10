@@ -1,6 +1,6 @@
 import { Service, LOCALE_ID, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AiStreamEvent } from '@core/models/ai-conversation';
+import { AiQuestionAnswer, AiStreamEvent } from '@core/models/ai-conversation';
 import { CurrentProjectService } from '@core/services/current-project.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -13,6 +13,7 @@ export interface AiTurnRequest {
   text: string;
   model: string | null;
   retry: boolean;
+  answer: AiQuestionAnswer | null;
 }
 
 const STREAM_PREFIX = 'data: ';
@@ -120,6 +121,7 @@ export class AiStreamService {
       model: request.model,
       locale: this.locale,
       retry: request.retry,
+      answer: request.answer,
       context: buildClientContext({
         url: this.router.url,
         project: this.currentProject(),

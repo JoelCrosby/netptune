@@ -54,6 +54,14 @@ Reporting is the one worth calling out. The assistant reads the same flow, workl
 - **Come back later.** Conversations are saved. Reopen one from history and carry on, or reload the page mid-answer — the reply is still written and waiting.
 - **Read it in your language.** Replies come back in the language the app is set to.
 
+## When it asks you something
+
+Where an answer genuinely changes what it would do, the assistant asks instead of guessing. The question arrives as a card of two to four options — pick one and it carries on from there.
+
+Nothing about the card is binding. "Something else" opens a box for an answer in your own words, and you can ignore the card entirely and type in the message box as usual; either way the assistant takes the reply and moves on. A question left behind stays in the transcript as a record of what it offered.
+
+It should not ask often. Anything the assistant can look up for itself — which task you meant, which sprint is running — it looks up.
+
 ## What it costs
 
 The assistant shows a running total above the message box — tokens used and estimated spend for the open conversation, priced from published model rates.

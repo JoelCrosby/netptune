@@ -17,6 +17,7 @@ public enum AiStreamEventType
     HistoryCompacted = 10,
     UsageUpdated = 11,
     TurnUsage = 12,
+    QuestionAsked = 13,
 }
 
 public sealed record AiStreamEvent
@@ -38,6 +39,17 @@ public sealed record AiStreamEvent
     public int? DroppedMessages { get; init; }
 
     public AiTokenUsageViewModel? Usage { get; init; }
+
+    public AiQuestion? Question { get; init; }
+
+    public static AiStreamEvent QuestionAsked(AiQuestion question)
+    {
+        return new AiStreamEvent
+        {
+            Type = AiStreamEventType.QuestionAsked,
+            Question = question,
+        };
+    }
 
     public static AiStreamEvent UsageUpdated(AiTokenUsageViewModel usage)
     {

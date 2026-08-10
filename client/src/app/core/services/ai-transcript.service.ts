@@ -1,8 +1,10 @@
-import { Service, signal } from '@angular/core';
+import { Service, computed, signal } from '@angular/core';
 import { AiChatEntry } from '@core/models/ai-chat-entry';
 import {
   AiChangeSet,
   AiEntityReference,
+  AiQuestion,
+  AiQuestionAnswer,
   AiTokenUsage,
 } from '@core/models/ai-conversation';
 import { referenceKey } from '@core/util/ai-references';
@@ -16,6 +18,20 @@ export class AiTranscriptService {
   readonly usage = signal<AiTokenUsage | null>(null);
 
   readonly version = signal(0);
+
+  readonly answers = computed(() => {
+    const byQuestion = new Map<string, AiQuestionAnswer>();
+
+    for (const entry of this.entries()) {
+      const answer = entry.answer;
+
+      if (answer) {
+        byQuestion.set(answer.questionId, answer);
+      }
+    }
+
+    return byQuestion;
+  });
 
   setEntries(entries: AiChatEntry[]) {
     this.entries.set(entries);
@@ -71,6 +87,10 @@ export class AiTranscriptService {
 
   appendTool(toolName: string) {
     this.updateLast((last) => ({ ...last, tools: [...last.tools, toolName] }));
+  }
+
+  attachQuestion(question: AiQuestion) {
+    this.updateReply((last) => ({ ...last, question }));
   }
 
   /** The harness discards a reply it caught claiming work it never did. */

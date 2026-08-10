@@ -87,6 +87,7 @@ export class AiAssistantComposerComponent {
   readonly modelLabel = input.required<string>();
   readonly isStreaming = input(false);
   readonly isReplacing = input(false);
+  readonly isAnswering = input(false);
   readonly disabled = input(false);
   readonly contentWidth = input('');
   readonly draft = input('');
@@ -106,6 +107,10 @@ export class AiAssistantComposerComponent {
   protected placeholder(): string {
     if (this.isStreaming()) {
       return $localize`:Placeholder while the assistant is replying:Waiting for the assistant…`;
+    }
+
+    if (this.isAnswering()) {
+      return $localize`:Placeholder while the assistant is waiting on an answer:Pick an option above, or answer here`;
     }
 
     return $localize`:Placeholder for the assistant message input:Ask about your workspace`;

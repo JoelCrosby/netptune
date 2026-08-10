@@ -20,6 +20,7 @@ export enum AiStreamEventType {
   historyCompacted = 10,
   usageUpdated = 11,
   turnUsage = 12,
+  questionAsked = 13,
 }
 
 export interface AiStreamEvent {
@@ -32,6 +33,26 @@ export interface AiStreamEvent {
   references?: AiEntityReference[];
   droppedMessages?: number;
   usage?: AiTokenUsage;
+  question?: AiQuestion;
+}
+
+export interface AiQuestionOption {
+  label: string;
+  description?: string | null;
+}
+
+export interface AiQuestion {
+  id: string;
+  text: string;
+  header?: string | null;
+  options: AiQuestionOption[];
+  multiSelect: boolean;
+}
+
+export interface AiQuestionAnswer {
+  questionId: string;
+  selectedLabels: string[];
+  text?: string | null;
 }
 
 export interface AiTokenUsage {
@@ -67,6 +88,8 @@ export interface AiMessage {
   toolNames: string[];
   references: AiEntityReference[];
   changeSetId?: string | null;
+  question?: AiQuestion | null;
+  answer?: AiQuestionAnswer | null;
   createdAt: string;
 }
 

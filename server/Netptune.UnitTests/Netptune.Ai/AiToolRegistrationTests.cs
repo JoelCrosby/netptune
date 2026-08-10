@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Ai.Configuration;
+using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
@@ -53,6 +54,34 @@ public class AiToolRegistrationTests
 
         tools.Should().NotBeEmpty("this guard is worthless if no tools resolve");
         unguarded.Should().BeEmpty("a tool with no required permission is offered to every workspace member");
+    }
+
+    [Fact]
+    public void TheQuestionTool_ShouldBeTheOnlyOneThatEndsATurn()
+    {
+        using var provider = CreateProvider();
+
+        var asking = provider.GetServices<IAiTool>()
+            .Where(tool => tool.Kind == AiToolKind.Question)
+            .Select(tool => tool.Name)
+            .ToList();
+
+        asking.Should().Equal(
+            ["ask_question"],
+            "the runner stops the turn on a pending question, so a second asking tool would be unreachable");
+    }
+
+    [Fact]
+    public void TheQuestionTool_ShouldBeOfferedToEveryMember()
+    {
+        using var provider = CreateProvider();
+
+        var tool = provider.GetServices<IAiTool>().Single(item => item.Kind == AiToolKind.Question);
+        var viewerPermissions = WorkspaceRolePermissions.GetDefaultPermissions(WorkspaceRole.Viewer);
+
+        tool.RequiredPermissions.Should().BeSubsetOf(
+            viewerPermissions,
+            "a viewer can chat with the assistant, so it must be able to ask them something");
     }
 
     [Fact]

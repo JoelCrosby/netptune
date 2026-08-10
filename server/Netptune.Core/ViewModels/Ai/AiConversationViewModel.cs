@@ -73,6 +73,10 @@ public sealed record AiMessageViewModel
 
     public Guid? ChangeSetId { get; init; }
 
+    public AiQuestion? Question { get; init; }
+
+    public AiQuestionAnswer? Answer { get; init; }
+
     public DateTime CreatedAt { get; init; }
 }
 

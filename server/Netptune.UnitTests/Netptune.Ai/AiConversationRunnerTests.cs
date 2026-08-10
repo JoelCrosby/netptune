@@ -22,6 +22,7 @@ public class AiConversationRunnerTests
 {
     private readonly StubChatProvider Provider = new();
     private readonly AiChangeSetBuilder ChangeSet = new();
+    private readonly AiQuestionSink Questions = new();
 
     [Fact]
     public async Task Run_ShouldOnlyOfferTools_WhenPermissionsAreHeld()
@@ -219,6 +220,42 @@ public class AiConversationRunnerTests
     }
 
     [Fact]
+    public async Task Run_ShouldEndTheTurn_WhenTheModelAsksTheUserSomething()
+    {
+        var runner = CreateRunner([new AskQuestionTool(Questions, ChangeSet)]);
+
+        Provider.AlwaysCallTool = "ask_question";
+        Provider.ToolArguments =
+            """{"question":"Which project?","options":[{"label":"Apollo"},{"label":"Internal tools"}]}""";
+
+        var context = CreateContext(NetptunePermissions.Workspace.Read);
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(1, "the answer arrives as a new turn, not another provider call");
+        events.Should().Contain(item => item.Type == AiStreamEventType.QuestionAsked);
+        events[^1].Type.Should().Be(AiStreamEventType.TurnCompleted);
+
+        var asked = events.Single(item => item.Type == AiStreamEventType.QuestionAsked);
+
+        asked.Question!.Text.Should().Be("Which project?");
+    }
+
+    [Fact]
+    public async Task Run_ShouldKeepGoing_WhenTheQuestionWasRefused()
+    {
+        var runner = CreateRunner([new AskQuestionTool(Questions, ChangeSet)]);
+
+        Provider.CallToolOnce = "ask_question";
+        Provider.ToolArguments = """{"question":"Which project?","options":[{"label":"Apollo"}]}""";
+
+        var context = CreateContext(NetptunePermissions.Workspace.Read);
+        var events = await Drain(runner, context);
+
+        Provider.RequestCount.Should().Be(2, "a rejected question leaves the model free to carry on");
+        events.Should().NotContain(item => item.Type == AiStreamEventType.QuestionAsked);
+    }
+
+    [Fact]
     public async Task Run_ShouldReportTokensSpent_AsEachProviderCallCompletes()
     {
         var tool = new StubTool("allowed_tool", NetptunePermissions.Tasks.Read);
@@ -266,7 +303,7 @@ public class AiConversationRunnerTests
             MaxToolResultCharacters = maxToolResultCharacters,
         });
 
-        return new AiConversationRunner(factory, new AiToolRegistry(tools), ChangeSet, options);
+        return new AiConversationRunner(factory, new AiToolRegistry(tools), ChangeSet, Questions, options);
     }
 
     private static AiRunContext CreateContext(params string[] permissions)
@@ -310,6 +347,8 @@ public class AiConversationRunnerTests
 
         public string ReplyText { get; set; } = "hi";
 
+        public string ToolArguments { get; set; } = "{}";
+
         public AiUsage Usage { get; set; } = new();
 
         public async IAsyncEnumerable<AiProviderStreamEvent> Stream(
@@ -344,7 +383,7 @@ public class AiConversationRunnerTests
                     {
                         Id = $"call-{RequestCount}",
                         Name = toolName!,
-                        Arguments = JsonDocument.Parse("{}"),
+                        Arguments = JsonDocument.Parse(ToolArguments),
                     },
                 ],
             });

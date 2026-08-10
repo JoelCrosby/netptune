@@ -15,17 +15,20 @@ public sealed class AiConversationRunner : IAiConversationRunner
     private readonly IAiChatProviderFactory ProviderFactory;
     private readonly IAiToolRegistry Tools;
     private readonly IAiChangeSetBuilder ChangeSet;
+    private readonly IAiQuestionSink Questions;
     private readonly AiOptions Options;
 
     public AiConversationRunner(
         IAiChatProviderFactory providerFactory,
         IAiToolRegistry tools,
         IAiChangeSetBuilder changeSet,
+        IAiQuestionSink questions,
         IOptions<AiOptions> options)
     {
         ProviderFactory = providerFactory;
         Tools = tools;
         ChangeSet = changeSet;
+        Questions = questions;
         Options = options.Value;
     }
 
@@ -157,6 +160,17 @@ public sealed class AiConversationRunner : IAiConversationRunner
             }
 
             messages.Add(new AiChatMessage { Role = AiMessageRole.Tool, ToolResults = results });
+
+            var question = Questions.Pending;
+
+            if (question is not null)
+            {
+                yield return AiStreamEvent.QuestionAsked(question);
+
+                yield return new AiStreamEvent { Type = AiStreamEventType.TurnCompleted };
+
+                yield break;
+            }
         }
 
         yield return AiStreamEvent.Failed("The assistant stopped after reaching the tool call limit.");

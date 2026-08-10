@@ -42,6 +42,10 @@ public sealed record AiChatMessage
     public List<AiToolResult> ToolResults { get; init; } = [];
 
     public JsonDocument? ProviderPayload { get; init; }
+
+    public AiQuestion? Question { get; init; }
+
+    public AiQuestionAnswer? Answer { get; init; }
 }
 
 public sealed record AiUsage

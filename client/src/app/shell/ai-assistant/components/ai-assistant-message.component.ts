@@ -3,6 +3,7 @@ import {
   AiChangeApplyStatus,
   AiChangeSet,
   AiEntityReference,
+  AiQuestionAnswer,
 } from '@core/models/ai-conversation';
 import { AiChatEntry } from '@core/models/ai-chat-entry';
 import { DialogService } from '@core/services/dialog.service';
@@ -20,6 +21,10 @@ import {
   AiAssistantAppliedChangesDialogComponent,
 } from './ai-assistant-applied-changes-dialog.component';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
+import {
+  AiAssistantQuestionComponent,
+  AiQuestionResponse,
+} from './ai-assistant-question.component';
 
 interface AiToolChip {
   name: string;
@@ -42,6 +47,7 @@ const MINIMUM_REPORTED_DURATION = 1000;
     LucideRefreshCw,
     LucideWrench,
     AiAssistantMarkdownComponent,
+    AiAssistantQuestionComponent,
   ],
   template: `
     @if (thoughtFor(); as duration) {
@@ -67,7 +73,12 @@ const MINIMUM_REPORTED_DURATION = 1000;
     }
 
     @if (isUser()) {
-      @if (changeSet(); as applied) {
+      @if (entry().answer; as answer) {
+        <p
+          class="bg-hover max-w-[85%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap">
+          {{ describeAnswer(answer) }}
+        </p>
+      } @else if (changeSet(); as applied) {
         <button
           type="button"
           class="bg-hover hover:border-border flex max-w-[85%] items-center gap-2.5 rounded-2xl border border-transparent px-4 py-2.5 text-left text-sm transition-colors"
@@ -87,7 +98,7 @@ const MINIMUM_REPORTED_DURATION = 1000;
         </p>
       }
 
-      @if (isLast() && !changeSet()) {
+      @if (isLast() && !changeSet() && !entry().answer) {
         <button
           type="button"
           class="text-muted hover:text-foreground flex items-center gap-1 text-xs"
@@ -104,6 +115,15 @@ const MINIMUM_REPORTED_DURATION = 1000;
         [blocks]="blocks()"
         [references]="references()"
         [workspace]="workspace()" />
+
+      @if (entry().question; as question) {
+        <app-ai-assistant-question
+          class="mt-1.5"
+          [question]="question"
+          [answer]="answers().get(question.id) ?? null"
+          [isActive]="isLast()"
+          (answered)="answered.emit($event)" />
+      }
 
       @if (entry().stopped) {
         <p
@@ -137,16 +157,22 @@ export class AiAssistantMessageComponent {
   readonly entry = input.required<AiChatEntry>();
   readonly references = input<Map<string, AiEntityReference>>(new Map());
   readonly changeSets = input<Map<string, AiChangeSet>>(new Map());
+  readonly answers = input<Map<string, AiQuestionAnswer>>(new Map());
   readonly workspace = input<string | null>(null);
   readonly isStreaming = input(false);
   readonly isLast = input(false);
 
   readonly retried = output();
   readonly edited = output();
+  readonly answered = output<AiQuestionResponse>();
 
   private readonly dialog = inject(DialogService);
 
   protected readonly isUser = computed(() => this.entry().role === 'user');
+
+  protected describeAnswer(answer: AiQuestionAnswer): string {
+    return answer.text ?? answer.selectedLabels.join(', ');
+  }
 
   protected readonly changeSet = computed(() => {
     const changeSetId = this.entry().changeSetId;

@@ -2,6 +2,8 @@ import { Service, computed, effect, inject, signal } from '@angular/core';
 import {
   AiConversationDetail,
   AiMessageRole,
+  AiQuestion,
+  AiQuestionAnswer,
   AiStreamEvent,
   AiStreamEventType,
 } from '@core/models/ai-conversation';
@@ -43,6 +45,7 @@ export class AiAssistantService {
 
   readonly entries = this.transcript.entries;
   readonly references = this.transcript.references;
+  readonly answers = this.transcript.answers;
   readonly appliedChangeSets = this.transcript.appliedChangeSets;
   readonly droppedMessages = this.transcript.droppedMessages;
   readonly usage = this.transcript.usage;
@@ -70,6 +73,18 @@ export class AiAssistantService {
   readonly isStreaming = signal(false);
   readonly isThinking = signal(false);
   readonly isReplacingLastTurn = signal(false);
+
+  /** Only the newest reply can be waiting on an answer — anything said after it moved the chat on. */
+  readonly pendingQuestion = computed(() => {
+    if (this.isStreaming()) {
+      return null;
+    }
+
+    const entries = this.entries();
+    const last = entries[entries.length - 1];
+
+    return last?.question ?? null;
+  });
 
   /**
    * Set while this browser has a turn in flight. A turn that failed clears it,
@@ -252,7 +267,33 @@ export class AiAssistantService {
     this.stream.cancel();
   }
 
-  async send(text: string, isRetry = false) {
+  async answerQuestion(
+    question: AiQuestion,
+    labels: string[],
+    text: string | null
+  ) {
+    const typed = text?.trim() ?? '';
+    const hasTyped = typed.length > 0;
+    const spoken = hasTyped ? typed : labels.join(', ');
+
+    if (spoken.length === 0) {
+      return;
+    }
+
+    const answer: AiQuestionAnswer = {
+      questionId: question.id,
+      selectedLabels: hasTyped ? [] : labels,
+      text: hasTyped ? typed : null,
+    };
+
+    await this.send(spoken, false, answer);
+  }
+
+  async send(
+    text: string,
+    isRetry = false,
+    answer: AiQuestionAnswer | null = null
+  ) {
     const trimmed = text.trim();
     const hasText = trimmed.length > 0;
 
@@ -270,7 +311,12 @@ export class AiAssistantService {
     const startedAt = Date.now();
 
     this.drafts.clearCurrent();
-    this.transcript.append({ role: 'user', text: question, tools: [] });
+    this.transcript.append({
+      role: 'user',
+      text: question,
+      tools: [],
+      answer: answer ?? undefined,
+    });
     this.transcript.append({ role: 'assistant', text: '', tools: [] });
     this.isStreaming.set(true);
     this.isThinking.set(true);
@@ -288,6 +334,7 @@ export class AiAssistantService {
           text: question,
           model: this.selectedModel(),
           retry: isRetry,
+          answer,
         },
         (event) => this.receive(event, token)
       );
@@ -407,6 +454,13 @@ export class AiAssistantService {
       event.references
     ) {
       this.transcript.addReferences(event.references);
+
+      return;
+    }
+
+    if (event.type === AiStreamEventType.questionAsked && event.question) {
+      this.isThinking.set(false);
+      this.transcript.attachQuestion(event.question);
 
       return;
     }

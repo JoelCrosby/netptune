@@ -33,6 +33,7 @@ public sealed class AiConversationService : IAiConversationService
     private readonly IAiChatProviderFactory ProviderFactory;
     private readonly IAiSystemPromptBuilder PromptBuilder;
     private readonly IAiChangeSetBuilder ChangeSetBuilder;
+    private readonly IAiQuestionSink Questions;
     private readonly IAiTitleGenerator Titles;
     private readonly IAiTurnRegistry Turns;
     private readonly AiOptions Options;
@@ -45,11 +46,13 @@ public sealed class AiConversationService : IAiConversationService
         IAiChatProviderFactory providerFactory,
         IAiSystemPromptBuilder promptBuilder,
         IAiChangeSetBuilder changeSetBuilder,
+        IAiQuestionSink questions,
         IAiTitleGenerator titles,
         IAiTurnRegistry turns,
         IOptions<AiOptions> options)
     {
         ChangeSetBuilder = changeSetBuilder;
+        Questions = questions;
         Titles = titles;
         Turns = turns;
         UnitOfWork = unitOfWork;
@@ -67,8 +70,9 @@ public sealed class AiConversationService : IAiConversationService
     {
         var text = request.Text.Trim();
         var hasText = text.Length > 0;
+        var hasAnswer = request.Answer is not null;
 
-        if (!hasText && !request.Retry)
+        if (!hasText && !hasAnswer && !request.Retry)
         {
             yield return AiStreamEvent.Failed("A message is required.");
 
@@ -167,7 +171,8 @@ public sealed class AiConversationService : IAiConversationService
             text = rewound;
         }
 
-        var compacted = await LoadHistory(conversation.Id, cancellationToken);
+        var loaded = await LoadHistory(conversation.Id, cancellationToken);
+        var compacted = loaded.Compacted;
         var history = WithRecap(compacted);
 
         if (compacted.DroppedMessages > 0)
@@ -175,7 +180,28 @@ public sealed class AiConversationService : IAiConversationService
             yield return AiStreamEvent.HistoryCompacted(compacted.DroppedMessages);
         }
 
-        var userMessage = new AiChatMessage { Role = AiMessageRole.User, Text = text };
+        var answer = ResolveAnswer(request.Answer, loaded.PendingQuestion);
+
+        if (answer is not null)
+        {
+            text = answer.Described;
+        }
+
+        var hasMessage = text.Length > 0;
+
+        if (!hasMessage)
+        {
+            yield return AiStreamEvent.Failed("A message is required.");
+
+            yield break;
+        }
+
+        var userMessage = new AiChatMessage
+        {
+            Role = AiMessageRole.User,
+            Text = text,
+            Answer = answer?.Answer,
+        };
 
         await PersistMessage(
             conversation,
@@ -546,14 +572,137 @@ public sealed class AiConversationService : IAiConversationService
         return $"{normalised[..MaximumTitleLength].TrimEnd()}…";
     }
 
-    private async Task<AiCompactedHistory> LoadHistory(Guid conversationId, CancellationToken cancellationToken)
+    private sealed record LoadedHistory(AiCompactedHistory Compacted, AiQuestion? PendingQuestion);
+
+    private async Task<LoadedHistory> LoadHistory(Guid conversationId, CancellationToken cancellationToken)
     {
         var messages = await UnitOfWork.AiConversations.GetMessages(conversationId, cancellationToken);
-        var history = messages
-            .Select(message => AiMessageContent.FromJsonDocument(message.Content).ToChatMessage(message.Role))
+        var contents = messages
+            .Select(message => AiMessageContent.FromJsonDocument(message.Content))
             .ToList();
 
-        return Compact(history, Options.MaxHistoryCharacters);
+        var replayed = contents
+            .Select((content, index) => content.ToChatMessage(messages[index].Role))
+            .ToList();
+
+        var history = DropUnansweredToolCalls(replayed);
+        var compacted = Compact(history, Options.MaxHistoryCharacters);
+        var pending = FindPendingQuestion(messages, contents);
+
+        return new LoadedHistory(compacted, pending);
+    }
+
+    // A question is only open while it is the last thing in the conversation. Anything said after it
+    // moved the conversation on, whether or not it was an answer.
+    private static AiQuestion? FindPendingQuestion(List<AiMessage> messages, List<AiMessageContent> contents)
+    {
+        var isEmpty = messages.Count == 0;
+
+        if (isEmpty)
+        {
+            return null;
+        }
+
+        var isAssistantLast = messages[^1].Role == AiMessageRole.Assistant;
+
+        if (!isAssistantLast)
+        {
+            return null;
+        }
+
+        return contents[^1].Question;
+    }
+
+    private sealed record ResolvedAnswer(AiQuestionAnswer Answer, string Described);
+
+    private static ResolvedAnswer? ResolveAnswer(AiAnswerRequest? requested, AiQuestion? question)
+    {
+        if (requested is null || question is null)
+        {
+            return null;
+        }
+
+        var isForPendingQuestion = requested.QuestionId == question.Id;
+
+        if (!isForPendingQuestion)
+        {
+            return null;
+        }
+
+        var typed = requested.Text?.Trim();
+        var hasTyped = !string.IsNullOrWhiteSpace(typed);
+
+        List<string> chosen = hasTyped ? [] : MatchOptions(requested.SelectedLabels, question);
+
+        var hasChoice = hasTyped || chosen.Count > 0;
+
+        if (!hasChoice)
+        {
+            return null;
+        }
+
+        var answer = new AiQuestionAnswer
+        {
+            QuestionId = question.Id,
+            SelectedLabels = chosen,
+            Text = hasTyped ? typed : null,
+        };
+
+        var described = answer.Describe(question);
+
+        return new ResolvedAnswer(answer, described);
+    }
+
+    // Only labels the assistant offered, so a card left open in another tab cannot answer with an option
+    // the question never had.
+    private static List<string> MatchOptions(List<string> selected, AiQuestion question)
+    {
+        return question.Options
+            .Select(option => option.Label)
+            .Where(label => selected.Contains(label, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    // A tool call replayed with nothing answering it is a tool_use block with no tool_result, which the
+    // provider rejects outright. Turns stored before the results were left out carry exactly that.
+    public static List<AiChatMessage> DropUnansweredToolCalls(List<AiChatMessage> history)
+    {
+        var replayable = new List<AiChatMessage>(history.Count);
+
+        for (var index = 0; index < history.Count; index++)
+        {
+            var message = history[index];
+            var hasToolCalls = message.ToolCalls.Count > 0;
+
+            if (!hasToolCalls)
+            {
+                replayable.Add(message);
+
+                continue;
+            }
+
+            var isAnswered = IsAnswered(history, index);
+
+            replayable.Add(isAnswered ? message : message with { ToolCalls = [] });
+        }
+
+        return replayable;
+    }
+
+    private static bool IsAnswered(List<AiChatMessage> history, int index)
+    {
+        var hasFollowingMessage = index + 1 < history.Count;
+
+        if (!hasFollowingMessage)
+        {
+            return false;
+        }
+
+        var answeredIds = history[index + 1].ToolResults
+            .Select(result => result.ToolCallId)
+            .ToHashSet(StringComparer.Ordinal);
+
+        return history[index].ToolCalls.All(call => answeredIds.Contains(call.Id));
     }
 
     public static List<AiChatMessage> TrimHistory(List<AiChatMessage> history, int maxCharacters)
@@ -715,6 +864,8 @@ public sealed class AiConversationService : IAiConversationService
 
         public AiChatTurn? Turn { get; init; }
 
+        public List<string> ToolsRun { get; init; } = [];
+
         public AiUsage ExtraUsage { get; init; } = new();
     }
 
@@ -724,7 +875,7 @@ public sealed class AiConversationService : IAiConversationService
         CancellationToken cancellationToken)
     {
         var sequence = await UnitOfWork.AiConversations.GetNextSequence(conversation.Id, cancellationToken);
-        var content = AiMessageContent.FromChatMessage(draft.Message);
+        var content = AiMessageContent.FromChatMessage(draft.Message) with { ToolsRun = draft.ToolsRun };
         var turn = draft.Turn;
         var usage = turn?.Usage ?? new AiUsage();
         var extra = draft.ExtraUsage;
@@ -762,13 +913,16 @@ public sealed class AiConversationService : IAiConversationService
         CancellationToken cancellationToken)
     {
         var lastTurn = context.Turns.LastOrDefault();
+
+        // Tool calls are left out on purpose: nothing persists the results that would answer them.
         var assistantMessage = new AiChatMessage
         {
             Role = AiMessageRole.Assistant,
             Text = assistantText,
-            ToolCalls = lastTurn?.ToolCalls ?? [],
+            Question = Questions.Pending,
         };
 
+        var toolsRun = context.Invocations.Select(invocation => invocation.ToolName).ToList();
         var assistantMessageId = await PersistMessage(
             conversation,
             new AiMessageDraft
@@ -776,6 +930,7 @@ public sealed class AiConversationService : IAiConversationService
                 Message = assistantMessage,
                 Role = AiMessageRole.Assistant,
                 Turn = lastTurn,
+                ToolsRun = toolsRun,
             },
             cancellationToken);
 

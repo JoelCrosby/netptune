@@ -38,13 +38,28 @@ public static class AiMessageMapper
                 Sequence = message.Sequence,
                 Role = message.Role,
                 Text = content.Text,
-                ToolNames = content.ToolCalls.Select(call => call.Name).ToList(),
+                ToolNames = ReadToolNames(content),
                 References = hasReferences ? references! : [],
                 ChangeSetId = isOutcome ? proposedChangeSetId : null,
+                Question = content.Question,
+                Answer = content.Answer,
                 CreatedAt = message.CreatedAt,
             });
         }
 
         return models;
+    }
+
+    // Turns stored before the tools they ran were recorded carry their last round's calls instead.
+    private static List<string> ReadToolNames(AiMessageContent content)
+    {
+        var hasToolsRun = content.ToolsRun.Count > 0;
+
+        if (hasToolsRun)
+        {
+            return content.ToolsRun;
+        }
+
+        return content.ToolCalls.Select(call => call.Name).ToList();
     }
 }

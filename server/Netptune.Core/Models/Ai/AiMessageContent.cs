@@ -31,6 +31,12 @@ public sealed record AiMessageContent
 
     public List<AiMessageContentToolResult> ToolResults { get; init; } = [];
 
+    public List<string> ToolsRun { get; init; } = [];
+
+    public AiQuestion? Question { get; init; }
+
+    public AiQuestionAnswer? Answer { get; init; }
+
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -58,6 +64,8 @@ public sealed record AiMessageContent
                     IsError = result.IsError,
                 })
                 .ToList(),
+            Question = message.Question,
+            Answer = message.Answer,
         };
     }
 
@@ -83,6 +91,8 @@ public sealed record AiMessageContent
                     IsError = result.IsError,
                 })
                 .ToList(),
+            Question = Question,
+            Answer = Answer,
         };
     }
 

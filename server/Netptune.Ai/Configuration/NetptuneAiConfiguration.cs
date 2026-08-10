@@ -75,6 +75,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiTool, ListMemberRolesTool>();
         services.AddScoped<IAiTool, ListTaskFilesTool>();
         services.AddScoped<IAiTool, ListWorkspaceFilesTool>();
+        services.AddScoped<IAiTool, AskQuestionTool>();
 
         services.AddScoped<IAiChangeHandler, CreateTaskChangeHandler>();
         services.AddScoped<IAiChangeHandler, UpdateTaskChangeHandler>();
@@ -102,6 +103,7 @@ public static class NetptuneAiConfiguration
         services.AddScoped<IAiChangeHandler, CreateBoardGroupChangeHandler>();
         services.AddScoped<IAiChangeHandler, UnlinkTasksChangeHandler>();
         services.AddScoped<IAiChangeSetBuilder, AiChangeSetBuilder>();
+        services.AddScoped<IAiQuestionSink, AiQuestionSink>();
         services.AddScoped<IAiToolRegistry, AiToolRegistry>();
 
         services.AddScoped<IAiConversationRunner, AiConversationRunner>();

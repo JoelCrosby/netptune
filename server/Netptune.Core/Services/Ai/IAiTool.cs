@@ -8,6 +8,7 @@ public enum AiToolKind
 {
     Read = 0,
     Write = 1,
+    Question = 2,
 }
 
 public sealed record AiToolExecution

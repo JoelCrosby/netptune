@@ -50,6 +50,13 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine("Only say you have proposed something after a propose_ tool call has actually returned in this turn.");
         prompt.AppendLine("Describing a change you never called a tool for leaves the user with nothing to review.");
         prompt.AppendLine();
+        prompt.AppendLine("ask_question puts a multiple choice question to the user.");
+        prompt.AppendLine("Ask only when their answer decides what you do next and no tool can tell you instead.");
+        prompt.AppendLine("Look it up first — never ask which task or project they mean when a search would say.");
+        prompt.AppendLine("Offer two to four options, each one a thing you would actually go on to do.");
+        prompt.AppendLine("Asking ends your turn, so ask nothing else and propose nothing in the same turn.");
+        prompt.AppendLine("Their answer arrives as their next message, and you carry on from there.");
+        prompt.AppendLine();
         prompt.AppendLine("Reference workspace entities with [[type:id|name]] so the client can link them.");
         prompt.AppendLine("Use task, project, sprint or board as the type, for example [[task:NPT-42|Fix the login page]].");
         prompt.AppendLine("Tasks use their systemId, everything else uses its numeric id, both exactly as a tool returned them.");

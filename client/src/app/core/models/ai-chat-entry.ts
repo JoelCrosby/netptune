@@ -1,4 +1,9 @@
-import { AiMessage, AiMessageRole } from '@core/models/ai-conversation';
+import {
+  AiMessage,
+  AiMessageRole,
+  AiQuestion,
+  AiQuestionAnswer,
+} from '@core/models/ai-conversation';
 
 export interface AiChatEntry {
   role: 'user' | 'assistant';
@@ -6,6 +11,10 @@ export interface AiChatEntry {
   tools: string[];
   /** Set on the message recording what applying a change set did, which is shown as a card. */
   changeSetId?: string;
+  /** Set on a reply that asked the user something, which is shown as a card of options. */
+  question?: AiQuestion;
+  /** Set on the message answering a question, which is shown as what was chosen. */
+  answer?: AiQuestionAnswer;
   /** How long the reply took, so it can say how long it thought. */
   durationMs?: number;
   failed?: boolean;
@@ -34,6 +43,7 @@ export const toChatEntries = (messages: AiMessage[]): AiChatEntry[] => {
         text: message.text ?? '',
         tools: message.toolNames,
         changeSetId: message.changeSetId ?? undefined,
+        answer: message.answer ?? undefined,
       };
     }
 
@@ -47,6 +57,7 @@ export const toChatEntries = (messages: AiMessage[]): AiChatEntry[] => {
       text: message.text ?? '',
       tools: message.toolNames,
       durationMs,
+      question: message.question ?? undefined,
     };
   });
 };

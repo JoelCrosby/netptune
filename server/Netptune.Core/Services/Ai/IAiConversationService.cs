@@ -20,11 +20,22 @@ public sealed record AiClientContext
     public string? TaskName { get; init; }
 }
 
+public sealed record AiAnswerRequest
+{
+    public Guid QuestionId { get; init; }
+
+    public List<string> SelectedLabels { get; init; } = [];
+
+    public string? Text { get; init; }
+}
+
 public sealed record AiSendMessageRequest
 {
     public Guid? ConversationId { get; init; }
 
     public required string Text { get; init; }
+
+    public AiAnswerRequest? Answer { get; init; }
 
     public AiProvider? Provider { get; init; }
 
