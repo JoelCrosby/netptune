@@ -1,10 +1,8 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { WorkspaceEventsService } from '@core/sse/workspace-events.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ProjectTasksHubService {
   private workspaceEvents = inject(WorkspaceEventsService);
   private workspaceRefresh = inject(WorkspaceRefreshService);

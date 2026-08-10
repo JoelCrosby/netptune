@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
 import { AddBoardRequest } from '@core/models/requests/add-board-request';
@@ -11,7 +11,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BoardCommandsService {
   private readonly boards = inject(BoardsService);
   private readonly confirmation = inject(ConfirmationService);

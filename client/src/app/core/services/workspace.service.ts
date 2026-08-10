@@ -1,9 +1,7 @@
 import { Location } from '@angular/common';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class WorkspaceService {
   private readonly location = inject(Location);
   private readonly nonWorkspaceRoutes = new Set(['auth', 'workspaces']);

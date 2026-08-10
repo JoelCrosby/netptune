@@ -1,9 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import { BannerConfig, BannerState } from './banner.models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class BannerService {
   readonly banner = signal<BannerState | null>(null);
 

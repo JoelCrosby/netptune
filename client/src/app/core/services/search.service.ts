@@ -1,6 +1,6 @@
 import { HttpParams, httpResource } from '@angular/common/http';
 import {
-  Injectable,
+  Service,
   ResourceStatus,
   computed,
   debounced,
@@ -21,7 +21,7 @@ const EMPTY_SEARCH_RESPONSE: SearchResponse = {
   processingTimeMs: 0,
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SearchService {
   private readonly request = signal<SearchRequest>({ query: '', types: [] });
   private readonly debouncedRequest = debounced(this.request, 400);

@@ -1,9 +1,9 @@
-import { computed, inject, Injectable, linkedSignal } from '@angular/core';
+import { computed, inject, Service, linkedSignal } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { TaskFilterService } from '@core/services/task-filter.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BoardComposerService {
   private readonly boardView = inject(BoardViewService);
   private readonly filters = inject(TaskFilterService);

@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { AddSprintRequest } from '@core/models/requests/add-sprint-request';
 import { AddTasksToSprintRequest } from '@core/models/requests/add-tasks-to-sprint-request';
@@ -23,7 +23,7 @@ import {
   tap,
 } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SprintCommandsService {
   private readonly sprints = inject(SprintsService);
   private readonly confirmation = inject(ConfirmationService);

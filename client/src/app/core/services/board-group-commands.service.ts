@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { AddBoardGroupRequest } from '@core/models/add-board-group-request';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest } from '@core/models/project-task';
@@ -20,7 +20,7 @@ import { MoveMatchingTasksDialogComponent } from '@entry/dialogs/move-matching-t
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, first, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BoardGroupCommandsService {
   private readonly tasksApi = inject(TasksService);
   private readonly boardView = inject(BoardViewService);

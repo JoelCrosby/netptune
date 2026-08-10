@@ -1,8 +1,8 @@
-import { computed, inject, Injectable, untracked } from '@angular/core';
+import { computed, inject, Service, untracked } from '@angular/core';
 import { TaskFilterService } from '@core/services/task-filter.service';
 
 /** The sprint slice of {@link TaskFilterService}, which several views read on its own. */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SprintFilterService {
   private readonly taskFilters = inject(TaskFilterService);
 

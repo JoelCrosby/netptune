@@ -1,6 +1,6 @@
 import {
   EnvironmentProviders,
-  Injectable,
+  Service,
   effect,
   inject,
   provideAppInitializer,
@@ -46,7 +46,7 @@ export function provideWorkspaceEvents(): EnvironmentProviders {
  * Holds the workspace event stream open for as long as a workspace is open, so a
  * view that never claimed a realtime group still sees other people's changes.
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WorkspaceEventsService {
   private readonly realtimeClientId = inject(RealtimeClientIdService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);

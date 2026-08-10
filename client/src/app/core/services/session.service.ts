@@ -1,11 +1,11 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { Permission } from '@core/auth/permissions';
 import { WorkspaceRole } from '@core/enums/workspace-role';
 import { LoginResponse, UserResponse } from '@core/models/session';
 import { UserPermissions } from '@core/models/user-permissions';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SessionService {
   private readonly currentWorkspace = inject(CurrentWorkspaceService);
 

@@ -1,5 +1,5 @@
 import { DOCUMENT, Location } from '@angular/common';
-import { inject, Injectable, LOCALE_ID } from '@angular/core';
+import { inject, Service, LOCALE_ID } from '@angular/core';
 import {
   defaultLocale,
   findLocale,
@@ -10,7 +10,7 @@ import {
 const localeCookieName = 'nt_locale';
 const localeCookieMaxAge = 60 * 60 * 24 * 365;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LocaleService {
   private readonly document = inject(DOCUMENT);
   private readonly location = inject(Location);

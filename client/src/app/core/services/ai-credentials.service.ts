@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   AiCredential,
   AiCredentialScope,
@@ -8,7 +8,7 @@ import {
 import { ClientResponse } from '@core/models/client-response';
 import { aiCredentialUrl } from '@core/resources/ai-credential.resource';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiCredentialsService {
   private readonly http = inject(HttpClient);
 

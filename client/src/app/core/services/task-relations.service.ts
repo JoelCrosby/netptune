@@ -1,14 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   CreateTaskRelationRequest,
   TaskRelation,
 } from '@core/models/task-relation';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TaskRelationsService {
   private http = inject(HttpClient);
 

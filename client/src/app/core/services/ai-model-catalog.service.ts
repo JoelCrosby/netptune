@@ -1,11 +1,11 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AiModelOption } from '@core/models/ai-model';
 import { AiApiService } from '@core/services/ai-api.service';
 
 const MODEL_STORAGE_KEY = 'ai-assistant.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiModelCatalogService {
   private readonly api = inject(AiApiService);
   private readonly storage = inject(LocalStorageService);

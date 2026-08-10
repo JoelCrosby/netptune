@@ -1,9 +1,9 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Service } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CurrentRouteService {
   private readonly router = inject(Router);
 

@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal, untracked } from '@angular/core';
+import { effect, inject, Service, signal, untracked } from '@angular/core';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import {
 
 const FILTER_PARAMS = ['term', 'tags', 'users', 'statusIds', 'sprintId'];
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TaskFilterService {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);

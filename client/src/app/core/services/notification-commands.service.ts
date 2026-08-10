@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { NotificationsService } from '@core/services/notifications.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
@@ -6,7 +6,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class NotificationCommandsService {
   private readonly notifications = inject(NotificationsService);
   private readonly confirmation = inject(ConfirmationService);

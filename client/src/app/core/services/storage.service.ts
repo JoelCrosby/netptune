@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { UploadResponse } from '@core/models/upload-result';
 import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class StorageService {
   private http = inject(HttpClient);
 

@@ -1,14 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { ClientResponse } from '@core/models/client-response';
 import { WorkspaceRole } from '@core/enums/workspace-role';
 import { appendPageParams, Page, PageQuery } from '@core/models/pagination';
 import { AssigneeViewModel } from '@core/models/view-models/board-view';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class UsersService {
   private http = inject(HttpClient);
 

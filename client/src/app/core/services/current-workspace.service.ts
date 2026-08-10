@@ -1,7 +1,7 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Service, signal } from '@angular/core';
 import { Workspace } from '@core/models/workspace';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CurrentWorkspaceService {
   private readonly current = signal<Workspace | undefined>(undefined);
 

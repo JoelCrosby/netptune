@@ -5,7 +5,7 @@ import {
   DialogRef,
 } from '@angular/cdk/dialog';
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable, StaticProvider, Type, inject } from '@angular/core';
+import { Service, StaticProvider, Type, inject } from '@angular/core';
 import { DialogContainerComponent } from '@static/components/dialog/dialog-container.component';
 import {
   DIALOG_WIZARD_TITLE,
@@ -19,7 +19,7 @@ export interface DialogWizardConfig<D, R, C> extends DialogConfig<
   title: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DialogService {
   private dialog = inject(Dialog);
 

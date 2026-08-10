@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
@@ -9,7 +9,7 @@ import { UpdateWorkspaceResponse } from '@core/models/update-workspace-response'
 import { Workspace } from '@core/models/workspace';
 import { throwError } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WorkspacesService {
   private http = inject(HttpClient);
 

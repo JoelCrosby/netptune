@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import { AiChatEntry } from '@core/models/ai-chat-entry';
 import {
   AiChangeSet,
@@ -7,7 +7,7 @@ import {
 } from '@core/models/ai-conversation';
 import { referenceKey } from '@core/util/ai-references';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiTranscriptService {
   readonly entries = signal<AiChatEntry[]>([]);
   readonly references = signal<Map<string, AiEntityReference>>(new Map());

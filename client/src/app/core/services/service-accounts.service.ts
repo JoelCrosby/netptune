@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   ApiCredentialCreated,
   CreateApiCredentialRequest,
@@ -8,7 +8,7 @@ import {
   UpdateServiceAccountRequest,
 } from '@core/models/service-account';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ServiceAccountsService {
   private readonly http = inject(HttpClient);
 

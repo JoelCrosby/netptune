@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 
 export interface AiWorkspaceSession {
@@ -13,7 +13,7 @@ type AiStoredSessions = Record<string, AiWorkspaceSession>;
 const SESSION_STORAGE_KEY = 'ai-assistant.sessions';
 const LEGACY_SESSION_STORAGE_KEY = 'ai-assistant.session';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiSessionService {
   private readonly storage = inject(LocalStorageService);
 

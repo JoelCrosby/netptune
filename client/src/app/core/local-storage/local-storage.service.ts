@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 const APP_PREFIX = 'Netptune-';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class LocalStorageService {
   static loadInitialState<TState extends object>() {
     return Object.keys(localStorage).reduce((state: TState, storageKey) => {

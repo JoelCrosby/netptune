@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 import { ThemeService } from '@core/services/theme.service';
 import {
   APPEARANCE_THEME,
@@ -11,7 +11,7 @@ import {
 } from '@core/models/user-preferences';
 import { catchError, finalize, of, tap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UserPreferencesService {
   private http = inject(HttpClient);
   private readonly theme = inject(ThemeService);

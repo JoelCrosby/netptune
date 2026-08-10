@@ -1,4 +1,4 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { Service, computed, effect, inject, signal } from '@angular/core';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AiConversationService } from '@core/services/ai-conversation.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -7,7 +7,7 @@ const DRAFT_STORAGE_KEY = 'ai-assistant.drafts';
 const DRAFT_PERSIST_DELAY = 400;
 const NEW_CONVERSATION_KEY = 'new';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiDraftService {
   private readonly storage = inject(LocalStorageService);
   private readonly workspaceId = inject(CurrentWorkspaceService).slug;

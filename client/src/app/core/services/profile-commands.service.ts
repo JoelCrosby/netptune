@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { AppUser } from '@core/models/appuser';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { SetPasswordRequest } from '@core/models/requests/set-password-request';
@@ -10,7 +10,7 @@ import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProfileCommandsService {
   private readonly profile = inject(ProfileService);
   private readonly snackbar = inject(SnackbarService);

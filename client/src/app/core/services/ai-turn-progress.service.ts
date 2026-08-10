@@ -1,11 +1,11 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import { AiTokenUsage } from '@core/models/ai-conversation';
 
 /** The clock is only ever read to the second, so it ticks no faster. */
 const ELAPSED_TICK = 1000;
 
 /** The conversation total only follows once a turn is stored, so a turn in flight counts its own. */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiTurnProgressService {
   readonly elapsedMs = signal(0);
   readonly usage = signal<AiTokenUsage | null>(null);

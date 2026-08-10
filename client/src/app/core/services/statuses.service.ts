@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { EntityType } from '@core/models/entity-type';
 import {
@@ -9,9 +9,7 @@ import {
   UpdateStatusRequest,
 } from '@core/models/status';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class StatusesService {
   private http = inject(HttpClient);
 

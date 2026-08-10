@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { AiCredentialAvailability } from '@core/models/ai-credential';
 import { AiModelOption } from '@core/models/ai-model';
 import { ClientResponse } from '@core/models/client-response';
@@ -11,7 +11,7 @@ import {
 
 export type AiChangeSetAction = 'apply' | 'retry' | 'undo' | 'discard';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiApiService {
   private readonly http = inject(HttpClient);
 

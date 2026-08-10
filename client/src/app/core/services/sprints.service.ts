@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { ClientResponse } from '@core/models/client-response';
 import { AddSprintRequest } from '@core/models/requests/add-sprint-request';
@@ -14,7 +14,7 @@ export interface SprintFilter {
   take?: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SprintsService {
   private http = inject(HttpClient);
 

@@ -1,10 +1,10 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { FileUploadResult } from '@core/models/view-models/workspace-file-view-model';
 import { firstValueFrom, Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WorkspaceFilesService {
   private readonly http = inject(HttpClient);
 

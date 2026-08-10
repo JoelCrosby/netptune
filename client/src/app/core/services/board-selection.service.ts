@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, linkedSignal } from '@angular/core';
+import { computed, inject, Service, linkedSignal } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import {
   BoardView,
@@ -8,7 +8,7 @@ import {
 import { BoardViewService } from '@core/services/board-view.service';
 import { getBulkTaskSelection } from '@core/util/board-groups';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BoardSelectionService {
   private readonly boardView = inject(BoardViewService);
 

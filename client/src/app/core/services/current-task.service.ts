@@ -1,7 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CurrentTaskService {
   private readonly open = signal<TaskViewModel | undefined>(undefined);
 

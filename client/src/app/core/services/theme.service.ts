@@ -1,4 +1,4 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { effect, Service, signal } from '@angular/core';
 
 export type Theme = 'light' | 'dark';
 
@@ -9,7 +9,7 @@ function isTheme(value: string): value is Theme {
   return themes.has(value);
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ThemeService {
   private readonly current = signal(initialTheme());
 

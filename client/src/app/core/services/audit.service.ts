@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { auditFilterParams } from '@core/resources/audit.resource';
 import { AuditLogFilter } from '@core/models/view-models/audit-log-view-model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AuditService {
   private http = inject(HttpClient);
 

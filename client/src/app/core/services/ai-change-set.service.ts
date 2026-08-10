@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Service, inject, signal } from '@angular/core';
 import {
   AiChangeSet,
   AiChangeSetStatus,
@@ -11,7 +11,7 @@ import {
   refreshScopesForChanges,
 } from '@core/util/ai-refresh-scopes';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiChangeSetService {
   private readonly api = inject(AiApiService);
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);

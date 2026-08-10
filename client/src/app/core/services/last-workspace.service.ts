@@ -1,10 +1,10 @@
-import { Injectable, effect, inject, signal, untracked } from '@angular/core';
+import { Service, effect, inject, signal, untracked } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { WORKSPACE_LAST_VISITED } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LastWorkspaceService {
   private preferences = inject(UserPreferencesService);
 

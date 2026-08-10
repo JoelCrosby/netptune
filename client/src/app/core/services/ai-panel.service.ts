@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Service, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '@core/local-storage/local-storage.service';
 import { AiDisplayMode } from '@core/models/ai-display-mode';
@@ -15,7 +15,7 @@ const MODE_STORAGE_KEY = 'ai-assistant.mode';
 const PANEL_WIDTH_STORAGE_KEY = 'ai-assistant.panel-width';
 const ASSISTANT_PAGE_PATTERN = /^\/[^/]+\/assistant$/;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiPanelService {
   private readonly router = inject(Router);
   private readonly storage = inject(LocalStorageService);

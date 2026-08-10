@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import {
   CreateRelationTypeRequest,
@@ -8,9 +8,7 @@ import {
   UpdateRelationTypeRequest,
 } from '@core/models/relation-type';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RelationTypesService {
   private http = inject(HttpClient);
 

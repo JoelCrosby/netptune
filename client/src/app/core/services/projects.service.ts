@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 import { AddProjectRequest } from '@core/models/project';
@@ -7,7 +7,7 @@ import { UpdateProjectRequest } from '@core/models/requests/upadte-project-reque
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProjectsService {
   private http = inject(HttpClient);
 

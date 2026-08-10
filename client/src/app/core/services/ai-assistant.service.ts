@@ -1,4 +1,4 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { Service, computed, effect, inject, signal } from '@angular/core';
 import {
   AiConversationDetail,
   AiMessageRole,
@@ -24,7 +24,7 @@ import { CurrentWorkspaceService } from '@core/services/current-workspace.servic
 const RESUME_TIMEOUT = 5 * 60 * 1000;
 const RESUME_POLL_INTERVAL = 2000;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiAssistantService {
   private readonly api = inject(AiApiService);
   private readonly panel = inject(AiPanelService);

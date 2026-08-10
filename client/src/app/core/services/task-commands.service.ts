@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { ProjectTask } from '@core/models/project-task';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
@@ -14,7 +14,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TaskCommandsService {
   private readonly tasksApi = inject(TasksService);
   private readonly confirmation = inject(ConfirmationService);

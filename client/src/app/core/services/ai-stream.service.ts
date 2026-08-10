@@ -1,4 +1,4 @@
-import { Injectable, LOCALE_ID, inject } from '@angular/core';
+import { Service, LOCALE_ID, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AiStreamEvent } from '@core/models/ai-conversation';
 import { CurrentProjectService } from '@core/services/current-project.service';
@@ -17,7 +17,7 @@ export interface AiTurnRequest {
 
 const STREAM_PREFIX = 'data: ';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiStreamService {
   private readonly router = inject(Router);
   private readonly workspace = inject(WorkspaceService);

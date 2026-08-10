@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { IsSlugUniqueResponse } from '@core/models/is-slug-unique-response';
 import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
@@ -8,7 +8,7 @@ import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
 import { BoardsViewModel } from '@core/models/view-models/boards-view-model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BoardsService {
   private http = inject(HttpClient);
 

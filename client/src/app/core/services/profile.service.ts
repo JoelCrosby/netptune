@@ -1,5 +1,5 @@
 import { AppUser } from '@core/models/appuser';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ChangePasswordRequest } from '@core/models/requests/change-password-request';
 import { ClientResponse } from '@core/models/client-response';
@@ -8,7 +8,7 @@ import { SetPasswordRequest } from '@core/models/requests/set-password-request';
 import { UploadResponse } from '@core/models/upload-result';
 import { map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProfileService {
   private http = inject(HttpClient);
 

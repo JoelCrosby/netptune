@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
   EnvironmentProviders,
-  Injectable,
+  Service,
   inject,
   provideAppInitializer,
 } from '@angular/core';
@@ -43,9 +43,7 @@ export function provideAuthRefresh(): EnvironmentProviders {
   });
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class AuthService {
   private http = inject(HttpClient);
 

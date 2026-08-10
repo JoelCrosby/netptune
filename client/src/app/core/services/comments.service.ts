@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { CommentViewModel } from '@core/models/comment';
 import {
@@ -7,9 +7,7 @@ import {
   UpdateCommentRequest,
 } from '@core/models/requests/add-comment-request';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class CommentsService {
   private http = inject(HttpClient);
 

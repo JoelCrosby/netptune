@@ -1,4 +1,4 @@
-import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
+import { Service, Signal, WritableSignal, signal } from '@angular/core';
 import { allRefreshScopes, RefreshScope } from '@core/models/refresh-scope';
 
 type ScopeVersions = Record<RefreshScope, WritableSignal<number>>;
@@ -9,7 +9,7 @@ function createVersions(): ScopeVersions {
   return Object.fromEntries(versions) as ScopeVersions;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WorkspaceRefreshService {
   private readonly versions = createVersions();
 

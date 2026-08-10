@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Permission } from '@core/auth/permissions';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AddWorkspaceRequest } from '@core/models/requests/add-workspace-request';
 import { UpdateWorkspaceRequest } from '@core/models/requests/update-workspace-request';
@@ -16,7 +16,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WorkspaceCommandsService {
   private readonly workspacesService = inject(WorkspacesService);
   private readonly list = inject(WorkspaceListService);

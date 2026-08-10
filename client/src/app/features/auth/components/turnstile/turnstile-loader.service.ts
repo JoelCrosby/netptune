@@ -1,8 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import type { TurnstileObject } from 'turnstile-types';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TurnstileLoaderService {
   private document = inject(DOCUMENT);
   private loadPromise?: Promise<TurnstileObject>;

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { Service, inject, signal } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { ClientResponse } from '@core/models/client-response';
 import { catchError, finalize, of, tap } from 'rxjs';
@@ -19,7 +19,7 @@ interface RecentItemsResponse {
 
 type RecentItemsClientResponse = ClientResponse<RecentItemsResponse>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RecentItemsService {
   private http = inject(HttpClient);
 

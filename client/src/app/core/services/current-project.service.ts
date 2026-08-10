@@ -1,8 +1,8 @@
-import { computed, Injectable } from '@angular/core';
+import { computed, Service } from '@angular/core';
 import { projectResource } from '@core/resources/project.resource';
 
 /** Always the workspace's first project — nothing in the app lets the user pick another. */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CurrentProjectService {
   private readonly projects = projectResource();
 

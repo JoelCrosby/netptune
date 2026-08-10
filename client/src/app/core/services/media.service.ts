@@ -1,5 +1,5 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ export enum MediaSize {
   xl = '1599.98px',
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MediaService {
   private breakpointObserver = inject(BreakpointObserver);
 

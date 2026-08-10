@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { Page } from '@core/models/pagination';
 import { NotificationViewModel } from '@core/models/view-models/notification-view-model';
 
 const RECENT_NOTIFICATIONS_PAGE_SIZE = 10;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class NotificationsService {
   private http = inject(HttpClient);
 

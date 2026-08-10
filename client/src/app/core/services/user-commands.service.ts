@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { WorkspaceRole } from '@core/enums/workspace-role';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { UsersService } from '@core/services/users.service';
@@ -9,7 +9,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UserCommandsService {
   private readonly users = inject(UsersService);
   private readonly confirmation = inject(ConfirmationService);

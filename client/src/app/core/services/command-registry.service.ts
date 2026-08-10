@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 
 export interface Command {
   id: string;
@@ -10,7 +10,7 @@ export interface Command {
   execute: () => void;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CommandRegistry {
   private readonly commands = signal<Command[]>([]);
 

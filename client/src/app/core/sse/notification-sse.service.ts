@@ -1,6 +1,6 @@
 import {
   EnvironmentProviders,
-  Injectable,
+  Service,
   effect,
   inject,
   provideAppInitializer,
@@ -18,9 +18,7 @@ export function provideNotificationEvents(): EnvironmentProviders {
   });
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class NotificationSseService {
   private readonly workspaceRefresh = inject(WorkspaceRefreshService);
   private eventSource: EventSource | null = null;

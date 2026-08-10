@@ -1,10 +1,10 @@
-import { DestroyRef, inject, Injectable, linkedSignal } from '@angular/core';
+import { DestroyRef, inject, Service, linkedSignal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { MediaService, MediaSize } from '@core/services/media.service';
 import { filter } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LayoutService {
   private readonly media = inject(MediaService);
   private readonly router = inject(Router);

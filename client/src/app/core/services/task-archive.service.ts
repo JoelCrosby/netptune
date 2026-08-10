@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
@@ -8,7 +8,7 @@ import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TaskArchiveService {
   private http = inject(HttpClient);
   private confirmation = inject(ConfirmationService);

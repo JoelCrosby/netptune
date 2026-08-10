@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -8,7 +8,7 @@ import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TagCommandsService {
   private readonly tags = inject(TagsService);
   private readonly confirmation = inject(ConfirmationService);

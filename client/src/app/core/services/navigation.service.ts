@@ -2,7 +2,7 @@ import {
   effect,
   EnvironmentProviders,
   inject,
-  Injectable,
+  Service,
   provideAppInitializer,
   signal,
 } from '@angular/core';
@@ -19,7 +19,7 @@ export function provideNavigationService(): EnvironmentProviders {
   });
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class NavigationService {
   router = inject(Router);
   title = inject(Title);

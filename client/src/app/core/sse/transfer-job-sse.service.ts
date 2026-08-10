@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ExportJobProgressEvent } from '@core/models/view-models/export-job-view-model';
@@ -11,9 +11,7 @@ export interface TransferJobHandlers {
   onImport?: (progress: ImportSessionProgressEvent) => void;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TransferJobSseService {
   private eventSource: EventSource | null = null;
 

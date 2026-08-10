@@ -2,14 +2,14 @@ import {
   EnvironmentProviders,
   effect,
   inject,
-  Injectable,
+  Service,
   provideAppInitializer,
 } from '@angular/core';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { ThemeService } from '@core/services/theme.service';
 import { workspaceBrandVariables } from '@core/util/colors/workspace-branding';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WorkspaceBrandingService {
   private readonly currentWorkspace = inject(CurrentWorkspaceService);
   private readonly theme = inject(ThemeService);

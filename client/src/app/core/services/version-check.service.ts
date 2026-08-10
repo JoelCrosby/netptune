@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import {
   EnvironmentProviders,
-  Injectable,
+  Service,
   NgZone,
   provideAppInitializer,
   inject,
@@ -23,7 +23,7 @@ export function provideVersionCheck(): EnvironmentProviders {
   });
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VersionCheckService {
   private readonly document = inject(DOCUMENT);
   private readonly zone = inject(NgZone);

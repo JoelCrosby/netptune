@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { AddProjectRequest } from '@core/models/project';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
@@ -10,7 +10,7 @@ import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dial
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, finalize, switchMap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProjectCommandsService {
   private readonly projects = inject(ProjectsService);
   private readonly confirmation = inject(ConfirmationService);

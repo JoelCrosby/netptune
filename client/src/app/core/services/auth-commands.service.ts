@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, filter, finalize, switchMap, tap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AuthCommandsService {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);

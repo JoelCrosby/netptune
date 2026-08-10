@@ -2,7 +2,7 @@ import {
   computed,
   effect,
   inject,
-  Injectable,
+  Service,
   linkedSignal,
   signal,
 } from '@angular/core';
@@ -17,7 +17,7 @@ import { TaskFilterService } from '@core/services/task-filter.service';
 import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { moveTaskInGroups, sortBySortOrder } from '@core/util/board-groups';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class BoardViewService {
   private readonly router = inject(Router);
   private readonly filters = inject(TaskFilterService);

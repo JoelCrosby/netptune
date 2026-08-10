@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { appendPageParams, MAX_PAGE_SIZE } from '@core/models/pagination';
 import {
@@ -11,9 +11,7 @@ import { UpdateTagRequest } from '@core/models/requests/update-tag-request';
 import { Tag } from '@core/models/tag';
 import { DeleteTagsRequest } from '@core/models/requests/delete-tag-request';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TagsService {
   private http = inject(HttpClient);
 

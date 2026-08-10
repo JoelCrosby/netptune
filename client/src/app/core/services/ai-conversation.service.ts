@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Service, inject, signal } from '@angular/core';
 import { toChatEntries } from '@core/models/ai-chat-entry';
 import {
   AiConversation,
@@ -10,7 +10,7 @@ import { AiChangeSetService } from '@core/services/ai-change-set.service';
 import { AiModelCatalogService } from '@core/services/ai-model-catalog.service';
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AiConversationService {
   private readonly api = inject(AiApiService);
   private readonly transcript = inject(AiTranscriptService);
