@@ -142,6 +142,20 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
             relation.TargetTaskId == targetTaskId, cancellationToken);
     }
 
+    public Task<List<int>> GetTargetsWithExistingSource(int relationTypeId, IReadOnlyCollection<int> targetTaskIds, CancellationToken cancellationToken = default)
+    {
+        if (targetTaskIds.Count == 0)
+        {
+            return Task.FromResult(new List<int>());
+        }
+
+        return Entities
+            .Where(relation => relation.RelationTypeId == relationTypeId && targetTaskIds.Contains(relation.TargetTaskId))
+            .Select(relation => relation.TargetTaskId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> WouldCreateCycle(int relationTypeId, int sourceTaskId, int targetTaskId, CancellationToken cancellationToken = default)
     {
         // The trivial cycle. The database also refuses this via a check constraint, but callers
@@ -156,6 +170,25 @@ public sealed class ProjectTaskRelationRepository : Repository<DataContext, Proj
             cancellationToken: cancellationToken);
 
         return await connection.ExecuteScalarAsync<bool>(command);
+    }
+
+    public async Task<List<int>> GetReachableTaskIds(int relationTypeId, IReadOnlyCollection<int> fromTaskIds, CancellationToken cancellationToken = default)
+    {
+        if (fromTaskIds.Count == 0)
+        {
+            return [];
+        }
+
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(
+            SqlScripts.GetReachableTasks,
+            new { RelationTypeId = relationTypeId, FromTaskIds = fromTaskIds.ToArray() },
+            cancellationToken: cancellationToken);
+
+        var taskIds = await connection.QueryAsync<int>(command);
+
+        return taskIds.ToList();
     }
 
     public Task<List<ProjectTaskRelation>> GetForTaskAndType(

@@ -34,3 +34,9 @@ export interface CreateTaskRelationRequest {
   targetSystemId: string;
   relationTypeId: number;
 }
+
+export interface AddTaskRelationRequest {
+  relatedSystemId: string;
+  relationTypeId: number;
+  taskIsSource: boolean;
+}

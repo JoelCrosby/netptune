@@ -20,11 +20,13 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { debounceTime } from 'rxjs/operators';
 
 export interface LinkTaskDialogData {
-  task: TaskViewModel;
+  // Absent while linking from the create-task dialog, where the task does not exist yet.
+  task?: TaskViewModel;
 }
 
 export interface LinkTaskDialogResult {
   relationTypeId: number;
+  relationType: RelationType;
   isForward: boolean;
   tasks: readonly TaskViewModel[];
 }
@@ -188,8 +190,9 @@ export class LinkTaskDialogComponent {
     const label = this.isForward()
       ? relationType.name
       : relationType.inverseName;
+    const subject = this.dialogData.task?.systemId ?? 'This task';
 
-    return `${this.dialogData.task.systemId} ${label} the tasks you select below.`;
+    return `${subject} ${label} the tasks you select below.`;
   });
 
   // Debounce so each keystroke doesn't trigger a server fetch.
@@ -201,9 +204,10 @@ export class LinkTaskDialogComponent {
   // excludeTaskId keeps the current task from being offered as something to link to itself.
   private params = computed<Params>(() => {
     const search = this.search().trim();
+    const excludeTaskId = this.dialogData.task?.id;
 
     return {
-      excludeTaskId: this.dialogData.task.id,
+      ...(excludeTaskId ? { excludeTaskId } : {}),
       ...(search ? { search } : {}),
     };
   });
@@ -241,6 +245,7 @@ export class LinkTaskDialogComponent {
 
     this.dialogRef.close({
       relationTypeId: relationType.id,
+      relationType,
       isForward: this.isForward(),
       tasks,
     });

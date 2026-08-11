@@ -19,15 +19,21 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly ITaskMutationPipeline TaskMutationPipeline;
+    private readonly ITaskReferenceResolver ReferenceResolver;
+    private readonly ITaskStatusResolver StatusResolver;
 
     public UpdateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        ITaskMutationPipeline taskMutationPipeline)
+        ITaskMutationPipeline taskMutationPipeline,
+        ITaskReferenceResolver referenceResolver,
+        ITaskStatusResolver statusResolver)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         TaskMutationPipeline = taskMutationPipeline;
+        ReferenceResolver = referenceResolver;
+        StatusResolver = statusResolver;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
@@ -57,42 +63,23 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
             return ClientResponse<TaskViewModel>.Failed(ProjectTaskSchedule.InvalidDateRangeMessage);
         }
 
-        var status = await ResolveStatus(req, workspaceId, cancellationToken);
+        var status = req.StatusId.HasValue
+            ? await StatusResolver.ResolveRequested(req.StatusId.Value, workspaceId, cancellationToken)
+            : null;
 
         if (req.StatusId.HasValue && status is null)
         {
             return ClientResponse<TaskViewModel>.Failed($"Status with id {req.StatusId.Value} was not found in the workspace");
         }
 
-        var assigneeIds = req.AssigneeIds?
-            .Where(id => !string.IsNullOrWhiteSpace(id))
-            .Distinct(StringComparer.Ordinal)
-            .ToList();
+        var assigneeUpdate = await ReferenceResolver.ResolveAssignees(req.AssigneeIds, workspaceId, cancellationToken);
 
-        if (req.AssigneeIds is not null)
+        if (!assigneeUpdate.IsValid)
         {
-            var containsInvalidAssignee = assigneeIds!.Count != req.AssigneeIds.Count;
-
-            if (containsInvalidAssignee)
-            {
-                return ClientResponse<TaskViewModel>.Failed("Assignee IDs cannot be empty or duplicated");
-            }
-
-            var assignees = await UnitOfWork.Users.IsUserInWorkspaceRange(
-                assigneeIds,
-                workspaceId,
-                cancellationToken);
-            var validAssigneeIds = assignees.Select(assignee => assignee.Id).ToHashSet(StringComparer.Ordinal);
-            var missingAssigneeIds = assigneeIds.Where(id => !validAssigneeIds.Contains(id)).ToList();
-
-            if (missingAssigneeIds.Count > 0)
-            {
-                return ClientResponse<TaskViewModel>.Failed(
-                    $"Assignees were not found in the workspace: {string.Join(", ", missingAssigneeIds)}");
-            }
+            return ClientResponse<TaskViewModel>.Failed(assigneeUpdate.Error);
         }
 
-        var tagUpdate = await ResolveTagUpdate(req.Tags, workspaceId, cancellationToken);
+        var tagUpdate = await ReferenceResolver.ResolveTags(req.Tags, workspaceId, cancellationToken);
 
         if (!tagUpdate.IsValid)
         {
@@ -122,12 +109,12 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
                 result.DueDate = req.DueDate;
             }
 
-            if (req.AssigneeIds is not null)
+            if (assigneeUpdate.ShouldUpdate)
             {
                 result.ProjectTaskAppUsers = ProjectTaskAppUser.MergeUsersIds(
                     result.Id,
                     result.ProjectTaskAppUsers,
-                    assigneeIds!).ToList();
+                    assigneeUpdate.UserIds).ToList();
             }
 
             if (tagUpdate.ShouldUpdate)
@@ -169,66 +156,5 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         }
 
         return ClientResponse<TaskViewModel>.Success(response);
-    }
-
-    private async Task<TagUpdateResolution> ResolveTagUpdate(
-        IReadOnlyCollection<string>? requestedTags,
-        int workspaceId,
-        CancellationToken cancellationToken)
-    {
-        if (requestedTags is null)
-        {
-            return new TagUpdateResolution(false, [], string.Empty);
-        }
-
-        var tagNames = requestedTags
-            .Select(tag => tag.Trim())
-            .Where(tag => !string.IsNullOrWhiteSpace(tag))
-            .Distinct(StringComparer.Ordinal)
-            .ToList();
-        var containsInvalidTag = tagNames.Count != requestedTags.Count;
-
-        if (containsInvalidTag)
-        {
-            return new TagUpdateResolution(false, [], "Tags cannot be empty or duplicated");
-        }
-
-        var tags = await UnitOfWork.Tags.GetTagsByValueInWorkspace(
-            workspaceId,
-            tagNames,
-            true,
-            cancellationToken);
-        var foundTagNames = tags.Select(tag => tag.Name).ToHashSet(StringComparer.Ordinal);
-        var missingTags = tagNames.Where(tag => !foundTagNames.Contains(tag)).ToList();
-
-        if (missingTags.Count > 0)
-        {
-            var error = $"Tags were not found in the workspace: {string.Join(", ", missingTags)}";
-
-            return new TagUpdateResolution(false, [], error);
-        }
-
-        return new TagUpdateResolution(true, tags, string.Empty);
-    }
-
-    private async Task<Status?> ResolveStatus(UpdateProjectTaskRequest request, int workspaceId, CancellationToken cancellationToken)
-    {
-
-        if (request.StatusId.HasValue)
-        {
-            var status = await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
-
-            return status;
-        }
-
-        return null;
-    }
-
-    private sealed record TagUpdateResolution(
-        bool ShouldUpdate,
-        IReadOnlyList<Tag> Tags,
-        string Error)
-    {
-        public bool IsValid => Error.Length == 0;
     }
 }

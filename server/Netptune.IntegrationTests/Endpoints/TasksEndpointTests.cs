@@ -16,6 +16,7 @@ using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Statuses;
+using Netptune.Core.ViewModels.Tags;
 using Netptune.Entities.Contexts;
 using Netptune.TestData;
 
@@ -900,6 +901,59 @@ public sealed class TasksEndpointTests
                 IsSystem = status.IsSystem,
             })
             .SingleAsync();
+    }
+
+    [Fact]
+    public async Task Create_ShouldAttachTagsAndEveryAssignee()
+    {
+        var tag = await GetWorkspaceTag();
+        var assignees = SeedData.Users.Take(2).Select(user => user.Id).ToList();
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Created with tags and assignees {Guid.NewGuid():N}",
+            Description = "Task used to verify tags and assignees sent with the create request",
+            ProjectId = 1,
+            AssigneeIds = assignees,
+            Tags = [tag],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        created.IsSuccess.Should().BeTrue();
+        created.Payload!.Tags.Should().Contain(tag);
+        created.Payload.Assignees.Select(assignee => assignee.Id).Should().BeEquivalentTo(assignees);
+    }
+
+    [Fact]
+    public async Task Create_ShouldReturnFailure_WhenTagDoesNotExistInTheWorkspace()
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Created with an unknown tag {Guid.NewGuid():N}",
+            Description = "Task used to verify unknown tags are refused",
+            ProjectId = 1,
+            Tags = ["definitely-not-a-workspace-tag"],
+        });
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("definitely-not-a-workspace-tag");
+    }
+
+    private async Task<string> GetWorkspaceTag()
+    {
+        var response = await Client.GetAsync("api/tags/workspace");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var tags = await response.Content.ReadFromJsonAsync<List<TagViewModel>>();
+
+        tags!.Should().NotBeEmpty();
+
+        return tags[0].Name;
     }
 
     private async Task<TaskViewModel> CreateDeletableTask()

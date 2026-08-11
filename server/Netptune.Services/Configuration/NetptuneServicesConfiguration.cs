@@ -8,12 +8,14 @@ using Netptune.Core.Services.Ai;
 using Netptune.Core.Services.Integration;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.Services.ProjectTasks;
+using Netptune.Core.Services.Relations;
 using Netptune.Core.Services.Reporting;
 using Netptune.Services.Activity;
 using Netptune.Services.Ai;
 using Netptune.Services.Integration;
 using Netptune.Services.Notifications;
 using Netptune.Services.ProjectTasks;
+using Netptune.Services.Relations;
 using Netptune.Services.Reporting;
 
 
@@ -42,6 +44,9 @@ public static class NetptuneServicesConfiguration
 
         services.AddTransient<IActivityLogger, ActivityLogger>();
         services.AddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
+        services.AddScoped<ITaskRelationLinker, TaskRelationLinker>();
+        services.AddScoped<ITaskReferenceResolver, TaskReferenceResolver>();
+        services.AddScoped<ITaskStatusResolver, TaskStatusResolver>();
         services.AddTransient<ITurnstileService, TurnstileService>();
 
         services.AddScoped<IAncestorService, AncestorService>();

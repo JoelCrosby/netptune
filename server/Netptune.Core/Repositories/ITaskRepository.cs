@@ -45,6 +45,8 @@ public interface ITaskRepository : IWorkspaceEntityRepository<ProjectTask, int>
 
     Task<TaskViewModel?> GetTaskViewModel(string systemId, string workspaceKey, CancellationToken cancellationToken = default);
 
+    Task<List<TaskViewModel>> GetTaskViewModels(IReadOnlyCollection<string> systemIds, string workspaceKey, CancellationToken cancellationToken = default);
+
     Task<PagedResponse<TaskViewModel>> GetTasksAsync(string workspaceKey, TaskFilter? filter = null, bool isReadonly = false, bool deleted = false, CancellationToken cancellationToken = default);
 
     Task<List<TaskStatusBreakdownItem>> GetTaskStatusBreakdownAsync(string workspaceKey, CancellationToken cancellationToken = default);

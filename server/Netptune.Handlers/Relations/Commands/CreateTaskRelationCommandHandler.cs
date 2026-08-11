@@ -61,7 +61,7 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
             return ClientResponse<TaskRelationViewModel>.Failed("A task cannot be related to itself.");
         }
 
-        var (source, target) = Orient(relationType.Category, requestingTask.Id, otherTask.Id);
+        var (source, target) = RelationTypeRules.Orient(relationType.Category, requestingTask.Id, otherTask.Id);
         var requestingIsSource = source == requestingTask.Id;
 
         ProjectTaskRelation? committedRelation = null;
@@ -142,29 +142,7 @@ public sealed class CreateTaskRelationCommandHandler : IRequestHandler<CreateTas
             options.EntityId = taskId;
             options.EntityType = EntityType.Task;
             options.Type = ActivityType.AddRelation;
-            options.Meta = new TaskRelationActivityMeta
-            {
-                RelationTypeId = view.RelationTypeId,
-                RelationTypeName = view.RelationTypeName,
-                Label = view.Label,
-                RelatedTaskId = view.RelatedTask.Id,
-                RelatedTaskSystemId = view.RelatedTask.SystemId,
-                RelatedTaskName = view.RelatedTask.Name,
-            };
+            options.Meta = TaskRelationActivityMeta.From(view);
         });
-    }
-
-    /// <summary>
-    /// Symmetric relations have no meaningful direction, so the pair is stored in a canonical order.
-    /// Without this, "A relates to B" and "B relates to A" would be two different rows and the
-    /// uniqueness index would not catch the duplicate.
-    /// </summary>
-    private static (int Source, int Target) Orient(RelationCategory category, int sourceTaskId, int targetTaskId)
-    {
-        if (!RelationTypeRules.IsSymmetric(category)) return (sourceTaskId, targetTaskId);
-
-        return sourceTaskId < targetTaskId
-            ? (sourceTaskId, targetTaskId)
-            : (targetTaskId, sourceTaskId);
     }
 }

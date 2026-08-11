@@ -26,6 +26,12 @@ public record AddProjectTaskRequest
 
     public string? AssigneeId { get; set; }
 
+    public List<string>? AssigneeIds { get; set; }
+
+    public List<string>? Tags { get; set; }
+
+    public List<AddTaskRelationRequest>? Relations { get; set; }
+
     public TaskPriority? Priority { get; set; }
 
     public EstimateType? EstimateType { get; set; }

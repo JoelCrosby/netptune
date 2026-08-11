@@ -19,7 +19,11 @@ public interface IProjectTaskRelationRepository : IRepository<ProjectTaskRelatio
 
     Task<bool> HasExistingSource(int relationTypeId, int targetTaskId, CancellationToken cancellationToken = default);
 
+    Task<List<int>> GetTargetsWithExistingSource(int relationTypeId, IReadOnlyCollection<int> targetTaskIds, CancellationToken cancellationToken = default);
+
     Task<bool> WouldCreateCycle(int relationTypeId, int sourceTaskId, int targetTaskId, CancellationToken cancellationToken = default);
+
+    Task<List<int>> GetReachableTaskIds(int relationTypeId, IReadOnlyCollection<int> fromTaskIds, CancellationToken cancellationToken = default);
 
     Task<List<ProjectTaskRelation>> GetForTaskAndType(int relationTypeId, int taskId, int? relatedTaskId, CancellationToken cancellationToken = default);
 

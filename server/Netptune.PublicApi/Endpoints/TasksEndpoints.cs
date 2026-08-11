@@ -31,7 +31,10 @@ public static class TasksEndpoints
 
         group.MapPost("/tasks", CreateTask)
             .WithSummary("Create a task")
-            .WithDescription("Creates a task in the credential's workspace.")
+            .WithDescription(
+                "Creates a task in the credential's workspace. Tag values must already exist in the workspace, and "
+                + "relations name an existing task by its key.")
+            .Produces(StatusCodes.Status403Forbidden)
             .RequireAuthorization(NetptunePermissions.Tasks.Create);
 
         group.MapPost("/tasks/bulk-update", BulkUpdateTasks)
@@ -73,11 +76,33 @@ public static class TasksEndpoints
         return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
     }
 
-    private static async Task<Results<Created<TaskViewModel>, BadRequest<ClientResponse<TaskViewModel>>>> CreateTask(
+    private static async Task<Results<Created<TaskViewModel>, BadRequest<ClientResponse<TaskViewModel>>, ForbidHttpResult>> CreateTask(
         IMediator mediator,
+        IAuthorizationService authorization,
+        HttpContext http,
         AddProjectTaskRequest request,
         CancellationToken cancellationToken)
     {
+        if (request.Tags is not null)
+        {
+            var canAssignTags = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Tags.Assign);
+
+            if (!canAssignTags.Succeeded)
+            {
+                return TypedResults.Forbid();
+            }
+        }
+
+        if (request.Relations is not null)
+        {
+            var canLinkTasks = await authorization.AuthorizeAsync(http.User, NetptunePermissions.Tasks.Update);
+
+            if (!canLinkTasks.Succeeded)
+            {
+                return TypedResults.Forbid();
+            }
+        }
+
         var result = await mediator.Send(new CreateTaskCommand(request), cancellationToken);
         return result.IsSuccess
             ? TypedResults.Created($"/api/v1/tasks/{result.Payload!.Id}", result.Payload)

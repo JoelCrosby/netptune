@@ -5,6 +5,7 @@ import { StatusCategory } from './status';
 import { AppUser } from './appuser';
 import { Basemodel } from './basemodel';
 import { Project } from './project';
+import { AddTaskRelationRequest } from './task-relation';
 import { Workspace } from './workspace';
 
 export interface ProjectTask extends Basemodel {
@@ -51,6 +52,10 @@ export interface AddProjectTaskRequest {
   sortOrder?: number;
 
   assigneeId?: string;
+  assigneeIds?: string[];
+
+  tags?: string[];
+  relations?: AddTaskRelationRequest[];
 
   priority?: TaskPriority;
   estimateType?: EstimateType;

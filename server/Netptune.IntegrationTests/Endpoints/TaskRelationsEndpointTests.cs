@@ -190,6 +190,125 @@ public sealed class TaskRelationsEndpointTests
         await Unlink(created.Payload!.Id);
     }
 
+    [Fact]
+    public async Task CreateTask_ShouldLinkRelations_InBothDirections()
+    {
+        var blocks = await GetRelationType("blocks");
+        var tasks = await GetTasks(2);
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Task created with links",
+            Description = "Task used to verify relations sent with the create request",
+            ProjectId = 1,
+            Relations =
+            [
+                new AddTaskRelationRequest
+                {
+                    RelatedSystemId = tasks[0].SystemId,
+                    RelationTypeId = blocks.Id,
+                },
+                new AddTaskRelationRequest
+                {
+                    RelatedSystemId = tasks[1].SystemId,
+                    RelationTypeId = blocks.Id,
+                    TaskIsSource = false,
+                },
+            ],
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        created.IsSuccess.Should().BeTrue();
+
+        var relations = await GetRelations(created.Payload!.SystemId);
+
+        relations.Should().ContainSingle(relation => relation.RelatedTask.SystemId == tasks[0].SystemId)
+            .Which.Label.Should().Be("Blocks");
+        relations.Should().ContainSingle(relation => relation.RelatedTask.SystemId == tasks[1].SystemId)
+            .Which.Label.Should().Be("Is Blocked By");
+
+        foreach (var relation in relations)
+        {
+            await Unlink(relation.Id);
+        }
+    }
+
+    [Fact]
+    public async Task CreateTask_ShouldRejectASecondParent_ForTheSameChild()
+    {
+        var parentOf = await GetRelationType("parent-of");
+        var child = (await GetTasks(1))[0];
+        var firstParent = await CreateTaskWithRelations("First parent", [
+            new AddTaskRelationRequest { RelatedSystemId = child.SystemId, RelationTypeId = parentOf.Id },
+        ]);
+
+        firstParent.IsSuccess.Should().BeTrue(firstParent.Message);
+
+        var secondParent = await CreateTaskWithRelations("Second parent", [
+            new AddTaskRelationRequest { RelatedSystemId = child.SystemId, RelationTypeId = parentOf.Id },
+        ]);
+
+        secondParent.IsSuccess.Should().BeFalse();
+        secondParent.Message.Should().Contain("only have one");
+
+        var relations = await GetRelations(child.SystemId);
+
+        foreach (var relation in relations)
+        {
+            await Unlink(relation.Id);
+        }
+    }
+
+    private async Task<ClientResponse<TaskViewModel>> CreateTaskWithRelations(
+        string name,
+        List<AddTaskRelationRequest> relations)
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"{name} {Guid.NewGuid():N}",
+            Description = "Task created to verify links sent with the create request",
+            ProjectId = 1,
+            Relations = relations,
+        });
+
+        return (await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>())!;
+    }
+
+    [Fact]
+    public async Task CreateTask_ShouldRejectTheWholeTask_WhenARelationCannotBeLinked()
+    {
+        var blocks = await GetRelationType("blocks");
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = "Task with an unresolvable link",
+            Description = "Task used to verify a rejected link leaves no task behind",
+            ProjectId = 1,
+            Relations =
+            [
+                new AddTaskRelationRequest
+                {
+                    RelatedSystemId = "NOPE-9999",
+                    RelationTypeId = blocks.Id,
+                },
+            ],
+        });
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("NOPE-9999");
+
+        var searchResponse = await Client.GetAsync("api/tasks?search=unresolvable link&pageSize=100");
+
+        searchResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var matches = await searchResponse.Content.ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>();
+
+        matches.Payload!.Items.Should().BeEmpty();
+    }
+
     private async Task<ClientResponse<TaskRelationViewModel>> Link(string sourceSystemId, string targetSystemId, int relationTypeId)
     {
         var response = await Client.PostAsJsonAsync("api/task-relations", new CreateTaskRelationRequest

@@ -1,6 +1,7 @@
 import { inject, Service, signal } from '@angular/core';
 import { ProjectTask } from '@core/models/project-task';
 import { AddProjectTaskRequest } from '@core/models/project-task';
+import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
@@ -25,18 +26,29 @@ export class TaskCommandsService {
 
   readonly isEditing = this.editing.asReadonly();
 
-  create(task: AddProjectTaskRequest) {
+  create(
+    task: AddProjectTaskRequest,
+    options?: {
+      onCreated?: (created: TaskViewModel) => void;
+      onFailed?: () => void;
+    }
+  ) {
     this.tasksApi
       .post(task)
       .pipe(
         unwrapClientReposne(),
-        catchError(() => EMPTY)
+        catchError(() => {
+          options?.onFailed?.();
+
+          return EMPTY;
+        })
       )
-      .subscribe(() => {
+      .subscribe((created) => {
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Task created`
         );
         this.refresh();
+        options?.onCreated?.(created);
       });
   }
 

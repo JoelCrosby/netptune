@@ -14,6 +14,7 @@ using Netptune.Core.Relations;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Relationships;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Automation.Persistence.Actions;
@@ -23,15 +24,18 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IEventRecordWriter EventRecords;
     private readonly IEventPublisher EventPublisher;
+    private readonly ITaskStatusResolver StatusResolver;
 
     public CreateTaskHandler(
         INetptuneUnitOfWork unitOfWork,
         IEventRecordWriter eventRecords,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        ITaskStatusResolver statusResolver)
     {
         UnitOfWork = unitOfWork;
         EventRecords = eventRecords;
         EventPublisher = eventPublisher;
+        StatusResolver = statusResolver;
     }
 
     public AutomationActionType Type => AutomationActionType.CreateTask;
@@ -173,7 +177,7 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
         }
 
         var statusId = contribution.StatusId ?? boardGroup.StatusId ?? project.DefaultStatusId;
-        var status = await ResolveStatus(statusId, workspaceId, cancellationToken);
+        var status = await StatusResolver.ResolveDefault(statusId, workspaceId, cancellationToken);
 
         if (status is null)
         {
@@ -250,31 +254,6 @@ internal sealed class CreateTaskHandler : IActionExecutionHandler
         }
 
         return await UnitOfWork.BoardGroups.GetTaskTarget(boardGroupId.Value, cancellationToken);
-    }
-
-    private async Task<Status?> ResolveStatus(int? statusId, int workspaceId, CancellationToken cancellationToken)
-    {
-        if (statusId.HasValue)
-        {
-            var status = await UnitOfWork.Statuses.GetInWorkspace(
-                statusId.Value,
-                workspaceId,
-                cancellationToken: cancellationToken);
-
-            if (status is not null)
-            {
-                return status;
-            }
-        }
-
-        var newStatus = await UnitOfWork.Statuses.GetTaskStatusByKey(workspaceId, "new", cancellationToken);
-
-        if (newStatus is not null)
-        {
-            return newStatus;
-        }
-
-        return await UnitOfWork.Statuses.GetFirstTaskStatus(workspaceId, cancellationToken);
     }
 
     private async Task<HashSet<string>> ResolveValidUserIds(

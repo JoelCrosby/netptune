@@ -39,8 +39,10 @@ public class UpdateTaskCommandHandlerTests
         Identity.GetCurrentUserId().Returns("user-1");
 
         var taskMutationPipeline = new TaskMutationPipeline(EventRecords, EventPublisher, Activity);
+        var referenceResolver = new TaskReferenceResolver(UnitOfWork);
+        var statusResolver = new TaskStatusResolver(UnitOfWork);
 
-        Handler = new(UnitOfWork, Identity, taskMutationPipeline);
+        Handler = new(UnitOfWork, Identity, taskMutationPipeline, referenceResolver, statusResolver);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)

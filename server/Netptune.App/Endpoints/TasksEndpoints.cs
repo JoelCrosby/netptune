@@ -1,5 +1,6 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Netptune.App.Services;
@@ -158,11 +159,32 @@ public static class TasksEndpoints
 
     public static async Task<IResult> HandlePost(
         IMediator mediator,
+        IAuthorizationService authorization,
         IBoardEventService boardEventService,
         HttpContext context,
         AddProjectTaskRequest request,
         CancellationToken cancellationToken)
     {
+        if (request.Tags is not null)
+        {
+            var canAssignTags = await authorization.AuthorizeAsync(context.User, NetptunePermissions.Tags.Assign);
+
+            if (!canAssignTags.Succeeded)
+            {
+                return Results.Forbid();
+            }
+        }
+
+        if (request.Relations is not null)
+        {
+            var canLinkTasks = await authorization.AuthorizeAsync(context.User, NetptunePermissions.Tasks.Update);
+
+            if (!canLinkTasks.Succeeded)
+            {
+                return Results.Forbid();
+            }
+        }
+
         var result = await mediator.Send(new CreateTaskCommand(request), cancellationToken);
 
         await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);

@@ -334,6 +334,58 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<List<TaskViewModel>> GetTaskViewModels(IReadOnlyCollection<string> systemIds, string workspaceKey, CancellationToken cancellationToken = default)
+    {
+        var references = systemIds
+            .Select(ParseSystemId)
+            .Where(reference => reference is not null)
+            .Select(reference => reference!.Value)
+            .ToList();
+
+        if (references.Count == 0)
+        {
+            return [];
+        }
+
+        // Postgres cannot match the (key, scope id) pairs as a set, so the query narrows to tasks
+        // whose key and scope id each appear somewhere in the request and the pairing is checked here.
+        var projectKeys = references.Select(reference => reference.ProjectKey).Distinct().ToList();
+        var projectScopeIds = references.Select(reference => reference.ProjectScopeId).Distinct().ToList();
+        var candidates = await Entities
+            .AsNoTracking()
+            .Where(task =>
+                task.Workspace!.Slug == workspaceKey &&
+                !task.IsDeleted &&
+                projectKeys.Contains(task.Project!.Key.ToLower()) &&
+                projectScopeIds.Contains(task.ProjectScopeId))
+            .Select(TaskToViewModel())
+            .ToListAsync(cancellationToken);
+        var requested = references.ToHashSet();
+
+        return candidates.Where(task => IsRequested(task, requested)).ToList();
+    }
+
+    private static bool IsRequested(TaskViewModel task, HashSet<TaskSystemIdReference> requested)
+    {
+        var reference = ParseSystemId(task.SystemId);
+
+        return reference is not null && requested.Contains(reference.Value);
+    }
+
+    private static TaskSystemIdReference? ParseSystemId(string systemId)
+    {
+        var parts = systemId.Split("-");
+
+        if (!int.TryParse(parts.LastOrDefault(), out var projectScopeId))
+        {
+            return null;
+        }
+
+        return new TaskSystemIdReference(parts[0].ToLower(), projectScopeId);
+    }
+
+    private readonly record struct TaskSystemIdReference(string ProjectKey, int ProjectScopeId);
+
     private IQueryable<ProjectTask>? GetTaskFromSystemId(string systemId, string workspaceKey, bool isReadonly = false)
     {
         var parts = systemId.Split("-");

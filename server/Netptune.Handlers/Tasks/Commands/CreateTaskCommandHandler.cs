@@ -11,6 +11,8 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
+using Netptune.Core.Services.Relations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 
@@ -25,19 +27,28 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
     private readonly IActivityLogger Activity;
     private readonly IEventPublisher EventPublisher;
     private readonly IEventRecordWriter EventRecords;
+    private readonly ITaskRelationLinker RelationLinker;
+    private readonly ITaskReferenceResolver ReferenceResolver;
+    private readonly ITaskStatusResolver StatusResolver;
 
     public CreateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         IActivityLogger activity,
         IEventPublisher eventPublisher,
-        IEventRecordWriter eventRecords)
+        IEventRecordWriter eventRecords,
+        ITaskRelationLinker relationLinker,
+        ITaskReferenceResolver referenceResolver,
+        ITaskStatusResolver statusResolver)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Activity = activity;
         EventPublisher = eventPublisher;
         EventRecords = eventRecords;
+        RelationLinker = relationLinker;
+        ReferenceResolver = referenceResolver;
+        StatusResolver = statusResolver;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
@@ -59,7 +70,6 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         }
 
         var user = await Identity.GetCurrentUser();
-        var userId = req.AssigneeId ?? user.Id;
         var project = await UnitOfWork.Projects.GetTaskCreationProject(req.ProjectId!.Value, workspaceId.Value, cancellationToken);
 
         if (project is null)
@@ -67,14 +77,45 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             return ClientResponse<TaskViewModel>.Failed($"Project with Id {req.ProjectId} not found");
         }
 
+        var requestedAssignees = ReadRequestedAssignees(req);
+        var assigneeResolution = await ReferenceResolver.ResolveAssignees(
+            requestedAssignees,
+            workspaceId.Value,
+            cancellationToken);
+
+        if (!assigneeResolution.IsValid)
+        {
+            return ClientResponse<TaskViewModel>.Failed(assigneeResolution.Error);
+        }
+
+        var tagResolution = await ReferenceResolver.ResolveTags(req.Tags, workspaceId.Value, cancellationToken);
+
+        if (!tagResolution.IsValid)
+        {
+            return ClientResponse<TaskViewModel>.Failed(tagResolution.Error);
+        }
+
+        // A task with nobody named still belongs to whoever raised it.
+        var hasNamedAssignee = assigneeResolution.UserIds.Count > 0;
+        IReadOnlyList<string> assigneeIds = hasNamedAssignee ? assigneeResolution.UserIds : [user.Id];
+
+        // Planned before the task row exists, so a rejected link cannot leave a task behind without it.
+        var relationPlan = await RelationLinker.Plan(new TaskRelationPlanRequest
+        {
+            WorkspaceId = workspaceId.Value,
+            WorkspaceKey = workspaceKey,
+            Links = req.Relations ?? [],
+        }, cancellationToken);
+
+        if (!relationPlan.IsValid)
+        {
+            return ClientResponse<TaskViewModel>.Failed(relationPlan.Error);
+        }
+
         await UnitOfWork.Statuses.EnsureNewTaskStatus(workspaceId.Value, user.Id, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
-        var status = await ResolveStatus(
-            req,
-            project,
-            workspaceId.Value,
-            cancellationToken);
+        var status = await ResolveStatus(req, project, workspaceId.Value, cancellationToken);
 
         if (status is null)
         {
@@ -108,7 +149,12 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             EstimateValue = req.EstimateValue,
             StartDate = req.StartDate,
             DueDate = req.DueDate,
-            ProjectTaskAppUsers = [new() { UserId = userId }],
+            ProjectTaskAppUsers = assigneeIds
+                .Select(assigneeId => new ProjectTaskAppUser { UserId = assigneeId })
+                .ToList(),
+            ProjectTaskTags = tagResolution.Tags
+                .Select(tag => new ProjectTaskTag { TagId = tag.Id })
+                .ToList(),
         };
 
         if (req.BoardGroupId.HasValue)
@@ -130,10 +176,15 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         task.ProjectScopeId = scopeId.Value;
 
         var result = await UnitOfWork.Tasks.AddAsync(task, cancellationToken);
+        var linkedRelations = new List<LinkedTaskRelation>();
 
         await UnitOfWork.Transaction(async () =>
         {
             await UnitOfWork.CompleteAsync(cancellationToken);
+
+            var links = await RelationLinker.Apply(relationPlan, result.Id, cancellationToken);
+
+            linkedRelations.AddRange(links);
 
             var creationReferences = new List<EventReferenceInput>
             {
@@ -236,7 +287,19 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
             ActorUserId = user.Id,
         });
 
+        await RelationLinker.Publish(linkedRelations, user.Id);
+
         return ClientResponse<TaskViewModel>.Success(response!);
+    }
+
+    private static List<string> ReadRequestedAssignees(AddProjectTaskRequest request)
+    {
+        if (request.AssigneeIds is not null)
+        {
+            return request.AssigneeIds;
+        }
+
+        return request.AssigneeId is null ? [] : [request.AssigneeId];
     }
 
     private async Task AddTaskToBoardGroup(int groupId, ProjectTask task, CancellationToken cancellationToken)
@@ -284,35 +347,19 @@ public sealed class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand
         });
     }
 
-    private async Task<Status?> ResolveStatus(AddProjectTaskRequest request, TaskCreationProject project, int workspaceId, CancellationToken cancellationToken)
+    // A status the request names is found or the create fails; without one the project's default leads
+    // the fallback chain.
+    private Task<Status?> ResolveStatus(
+        AddProjectTaskRequest request,
+        TaskCreationProject project,
+        int workspaceId,
+        CancellationToken cancellationToken)
     {
-
         if (request.StatusId.HasValue)
         {
-            var requestedStatus = await UnitOfWork.Statuses.GetInWorkspace(request.StatusId.Value, workspaceId, cancellationToken: cancellationToken);
-
-            return requestedStatus;
+            return StatusResolver.ResolveRequested(request.StatusId.Value, workspaceId, cancellationToken);
         }
 
-        if (project.DefaultStatusId.HasValue)
-        {
-            var status = await UnitOfWork.Statuses.GetInWorkspace(project.DefaultStatusId.Value, workspaceId, cancellationToken: cancellationToken);
-
-            if (status is not null)
-            {
-                return status;
-            }
-        }
-
-        var newStatus = await UnitOfWork.Statuses.GetTaskStatusByKey(workspaceId, "new", cancellationToken);
-
-        if (newStatus is not null)
-        {
-            return newStatus;
-        }
-
-        var firstStatus = await UnitOfWork.Statuses.GetFirstTaskStatus(workspaceId, cancellationToken);
-
-        return firstStatus;
+        return StatusResolver.ResolveDefault(project.DefaultStatusId, workspaceId, cancellationToken);
     }
 }
