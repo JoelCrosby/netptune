@@ -2943,7 +2943,7 @@
         <note category="location">src/app/entry/dialogs/create-relation-type-dialog/create-relation-type-dialog.component.ts:102,104</note>
         <note category="location">src/app/entry/dialogs/create-status-dialog/create-status-dialog.component.ts:79,81</note>
         <note category="location">src/app/entry/dialogs/create-tag-dialog/create-tag-dialog.component.ts:42,44</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:388,391</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:390,393</note>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:80,82</note>
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
@@ -3450,7 +3450,7 @@
     </unit>
     <unit id="6164296601931172481">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:132,134</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:133,135</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:25,27</note>
         <note category="location">src/app/shell/global-commands.service.ts:174</note>
         <note category="description">Title of the create-task dialog</note>
@@ -3484,7 +3484,7 @@
     </unit>
     <unit id="4739818603756173797">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:147,149</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:148,150</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:84</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:176</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:52,54</note>
@@ -3497,7 +3497,7 @@
     </unit>
     <unit id="4902817035128594900">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:174,177</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:175,178</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:66,67</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:12,16</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:104,107</note>
@@ -3520,7 +3520,7 @@
     </unit>
     <unit id="533409430255690539">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:180,182</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:181,183</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-description.component.ts:18,20</note>
         <note category="description">Placeholder in the empty task description editor</note>
       </notes>
@@ -3531,7 +3531,7 @@
     </unit>
     <unit id="5681661801164770412">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:369,374</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:371,376</note>
         <note category="description">Validation error when a task&apos;s start date is after its due date</note>
       </notes>
       <segment state="translated">
@@ -3541,7 +3541,7 @@
     </unit>
     <unit id="6672445733608764176">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:378,382</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:380,384</note>
         <note category="description">Validation error when no project is selected for a task</note>
       </notes>
       <segment state="translated">
@@ -3561,7 +3561,7 @@
     </unit>
     <unit id="6346359058786917733">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:395,400</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:397,402</note>
         <note category="description">Button that saves the new task</note>
       </notes>
       <segment state="translated">
@@ -3581,8 +3581,8 @@
     </unit>
     <unit id="8547576940529836596">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:517</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:529</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:520</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:532</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -3602,7 +3602,7 @@
     </unit>
     <unit id="9021131006692744653">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:536</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:539</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -3612,7 +3612,7 @@
     </unit>
     <unit id="704019817450663548">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:543</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:546</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -3622,7 +3622,7 @@
     </unit>
     <unit id="633922115206256018">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:550</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:553</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4358,8 +4358,8 @@
     </unit>
     <unit id="4116911651502837995">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:190,193</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:37,40</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:191,194</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:38,41</note>
         <note category="description">Heading for a task&apos;s files</note>
       </notes>
       <segment state="translated">
@@ -4369,7 +4369,7 @@
     </unit>
     <unit id="8107440182294518448">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:46,49</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:47,50</note>
         <note category="description">Button that stops in-progress file uploads</note>
       </notes>
       <segment state="translated">
@@ -4379,7 +4379,7 @@
     </unit>
     <unit id="7765958911112446269">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:53,56</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:54,57</note>
         <note category="description">Shown while a task&apos;s files are loading</note>
       </notes>
       <segment state="translated">
@@ -4399,7 +4399,7 @@
     </unit>
     <unit id="5171192616638755303">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:78,80</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:80,82</note>
         <note category="description">Button that retries a failed file upload</note>
       </notes>
       <segment state="translated">
@@ -4409,7 +4409,7 @@
     </unit>
     <unit id="1789680955834451263">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:114,116</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:116,118</note>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:189,191</note>
         <note category="description">Accessible label for the button that downloads an attached file</note>
       </notes>
@@ -4420,7 +4420,7 @@
     </unit>
     <unit id="6693349469471580292">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:125,127</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:127,129</note>
         <note category="location">src/app/features/storage/components/storage-list.component.ts:203,205</note>
         <note category="description">Accessible label for the button that deletes an attached file</note>
       </notes>
@@ -4431,7 +4431,7 @@
     </unit>
     <unit id="8598917078690004028">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:134,137</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-files.component.ts:136,139</note>
         <note category="description">Empty state when a task has no attached files</note>
       </notes>
       <segment state="translated">
@@ -4523,7 +4523,7 @@
     </unit>
     <unit id="3802104514603079488">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:284,286</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:286,288</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:57,62</note>
         <note category="description">Links a task to another</note>
       </notes>
@@ -4534,8 +4534,8 @@
     </unit>
     <unit id="1880237574877817137">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:318,320</note>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:323,325</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:320,322</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:325,327</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:102,104</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:106,108</note>
         <note category="description">Tooltip on the button that removes a task link</note>
@@ -4547,7 +4547,7 @@
     </unit>
     <unit id="5445703507341144559">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:336,338</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:338,340</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:120,126</note>
         <note category="description">Empty state when a task has no links to other tasks</note>
       </notes>
@@ -4578,7 +4578,7 @@
     </unit>
     <unit id="7886570921510760899">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:151,153</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:152,154</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:17,20</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:125</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:52</note>
@@ -4605,7 +4605,7 @@
     </unit>
     <unit id="2363693543054040821">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:158,160</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:159,161</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-tags.component.ts:22,24</note>
         <note category="description">Placeholder in the box for adding a tag to a task</note>
       </notes>
@@ -8581,6 +8581,16 @@
         <target>Téléversez un fichier CSV, TSV, Excel, JSON ou NDJSON. Jusqu&apos;à 50 Mo.</target>
       </segment>
     </unit>
+    <unit id="862395026592706702">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-uploads/workspace-uploads.component.ts:28,31</note>
+        <note category="description">Section heading for the workspace upload settings</note>
+      </notes>
+      <segment state="translated">
+        <source> Uploads </source>
+        <target> Téléversements </target>
+      </segment>
+    </unit>
     <unit id="8626022915953041009">
       <notes>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:51,54</note>
@@ -10112,6 +10122,16 @@
       <segment state="translated">
         <source>Link the task to the configured task</source>
         <target>Lier la tâche à la tâche configurée</target>
+      </segment>
+    </unit>
+    <unit id="8818632916733036686">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-uploads/workspace-uploads.component.ts:45,47</note>
+        <note category="description">Label of the maximum upload size field</note>
+      </notes>
+      <segment state="translated">
+        <source>Maximum file size</source>
+        <target>Taille de fichier maximale</target>
       </segment>
     </unit>
     <unit id="584050110232025320">
@@ -11704,6 +11724,16 @@
       <segment state="translated">
         <source>Task schedule updated</source>
         <target>Planification de la tâche mise à jour</target>
+      </segment>
+    </unit>
+    <unit id="5176597549410402824">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-uploads/workspace-uploads.component.ts:33,37</note>
+        <note category="description">Explains what the maximum upload size controls</note>
+      </notes>
+      <segment state="translated">
+        <source> The largest single file anyone in this workspace can attach to a task or embed in a description. Larger files are rejected before they are stored. </source>
+        <target> Le plus gros fichier que les membres de cet espace de travail peuvent joindre à une tâche ou intégrer dans une description. Les fichiers plus volumineux sont rejetés avant d&apos;être stockés. </target>
       </segment>
     </unit>
     <unit id="5176619016271356774">
@@ -16203,7 +16233,7 @@
     </unit>
     <unit id="6986361998419496765">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:274,276</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:276,278</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:114,117</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
@@ -17832,7 +17862,7 @@
     </unit>
     <unit id="221384062319096861">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:257,262</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:259,264</note>
         <note category="description">Shown when a new task was saved but some of its files did not upload</note>
       </notes>
       <segment state="translated">
@@ -18003,7 +18033,7 @@
     </unit>
     <unit id="6281284727431074654">
       <notes>
-        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:220,223</note>
+        <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:222,225</note>
         <note category="description">Accessible label for the button that takes a file off a task that has not been created yet</note>
       </notes>
       <segment state="translated">
@@ -18486,7 +18516,7 @@
     <unit id="6439365426343089851">
       <notes>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:25,29</note>
-        <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:19,22</note>
+        <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:233</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:295</note>
         <note category="description">Page title for general personal settings</note>

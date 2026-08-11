@@ -181,6 +181,15 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .SingleOrDefaultAsync(cancellationToken);
     }
 
+    public Task<long?> GetMaxUploadBytes(int workspaceId, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .AsNoTracking()
+            .Where(workspace => workspace.Id == workspaceId)
+            .Select(workspace => (long?)workspace.MaxUploadBytes)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<bool> TryReserveStorage(int workspaceId, long sizeBytes, CancellationToken cancellationToken = default)
     {
         var updated = await Entities

@@ -21,8 +21,6 @@ public sealed record UploadProfilePictureCommand : IRequest<ClientResponse<Uploa
 
 public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadProfilePictureCommand, ClientResponse<UploadResponse>>
 {
-    private const long MaxFileSize = 50L * 1024 * 1024;
-
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IStorageService Storage;
@@ -36,9 +34,11 @@ public sealed class UploadProfilePictureCommandHandler : IRequestHandler<UploadP
 
     public async ValueTask<ClientResponse<UploadResponse>> Handle(UploadProfilePictureCommand request, CancellationToken cancellationToken)
     {
-        if (request.Length > MaxFileSize)
+        if (request.Length > UploadLimits.ProfilePictureMaxBytes)
         {
-            return ClientResponse<UploadResponse>.Failed("Request file size exceeds maximum of 50 MiB.");
+            var limit = UploadLimits.Describe(UploadLimits.ProfilePictureMaxBytes);
+
+            return ClientResponse<UploadResponse>.Failed($"Request file size exceeds maximum of {limit}.");
         }
 
         var userId = Identity.GetCurrentUserId();

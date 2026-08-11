@@ -1,4 +1,5 @@
 ﻿using Netptune.Core.Meta;
+using Netptune.Core.Storage;
 
 namespace Netptune.Core.ViewModels.Workspace;
 
@@ -19,4 +20,6 @@ public class WorkspaceViewModel
     public bool AssistantEnabled { get; set; } = true;
 
     public bool AllowAssistantDataSampling { get; set; } = true;
+
+    public long MaxUploadBytes { get; set; } = UploadLimits.DefaultMaxUploadBytes;
 }

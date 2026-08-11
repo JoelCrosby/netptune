@@ -24,4 +24,6 @@ public record UpdateWorkspaceRequest
     public bool? AllowAssistantDataSampling { get; init; }
 
     public List<string>? PublicPermissions { get; init; }
+
+    public long? MaxUploadBytes { get; init; }
 }

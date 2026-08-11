@@ -1,7 +1,11 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Mvc;
+
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Storage;
 using Netptune.Handlers.Storage.Commands;
 using Netptune.Handlers.Storage.Queries;
 
@@ -9,13 +13,17 @@ namespace Netptune.App.Endpoints;
 
 public static class StorageEndpoints
 {
+    private const long ProfilePictureRequestBytes = UploadLimits.ProfilePictureMaxBytes + UploadLimits.RequestOverheadBytes;
+
     public static RouteGroupBuilder MapStorageEndpoints(this RouteGroupBuilder builder)
     {
         var group = builder.MapGroup("storage");
 
         group.MapPost("/profile-picture", HandleUploadProfilePicture)
+            .WithMetadata(new RequestSizeLimitAttribute(ProfilePictureRequestBytes))
             .RequireAuthorization(NetptunePermissions.Storage.UploadProfilePicture);
         group.MapPost("/media", HandleUploadMedia)
+            .WithMetadata(new RequestSizeLimitAttribute(UploadLimits.MaximumRequestBytes))
             .RequireAuthorization(NetptunePermissions.Storage.UploadMedia);
         group.MapGet("/usage", HandleGetUsage)
             .RequireAuthorization(NetptunePermissions.Storage.Read);
@@ -66,6 +74,10 @@ public static class StorageEndpoints
         {
             return Results.BadRequest("Multipart form data is required.");
         }
+
+        var maxFileSize = await mediator.Send(new GetWorkspaceUploadLimitQuery(), cancellationToken);
+
+        request.ApplyMaxFileSize(maxFileSize);
 
         var form = await request.ReadFormAsync(cancellationToken);
         var file = form.Files.FirstOrDefault();

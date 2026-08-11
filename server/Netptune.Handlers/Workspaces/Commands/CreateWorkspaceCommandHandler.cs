@@ -40,7 +40,7 @@ public sealed class CreateWorkspaceCommandHandler : IRequestHandler<CreateWorksp
             request.Request,
             user,
             UnitOfWork,
-            StorageOptions.DefaultWorkspaceLimitBytes,
+            StorageOptions,
             cancellationToken);
 
         if (result.IsSuccess && result.Payload is { } workspace)

@@ -10,6 +10,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Workspaces.Commands;
@@ -90,6 +91,7 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         result.AssistantEnabled = request.Request.AssistantEnabled ?? result.AssistantEnabled;
         result.AllowAssistantDataSampling = request.Request.AllowAssistantDataSampling ?? result.AllowAssistantDataSampling;
         result.PublicPermissions = ResolvePublicPermissions(result, request.Request);
+        result.MaxUploadBytes = ResolveMaxUploadBytes(result, request.Request);
         result.UpdatedAt = DateTime.UtcNow;
 
         if (changedFields.Count > 0)
@@ -112,6 +114,10 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         if (requestedSlug.IsRename)
         {
             await ForgetWorkspaceUnder(result.Id, previousSlug, cancellationToken);
+        }
+        else
+        {
+            WorkspaceCache.Remove(result.Slug);
         }
 
         var response = new UpdateWorkspaceResponse
@@ -196,6 +202,16 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         return workspace.PublicPermissions;
     }
 
+    private static long ResolveMaxUploadBytes(Workspace workspace, UpdateWorkspaceRequest request)
+    {
+        if (request.MaxUploadBytes is not { } requested)
+        {
+            return workspace.MaxUploadBytes;
+        }
+
+        return UploadLimits.Clamp(requested);
+    }
+
     private static List<string> GetChangedFields(Workspace workspace, UpdateWorkspaceRequest request)
     {
         var fields = new List<string>();
@@ -229,6 +245,16 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
             if (publicAccessChanged)
             {
                 fields.Add("public_access");
+            }
+        }
+
+        if (request.MaxUploadBytes is { } requestedMaxUpload)
+        {
+            var uploadLimitChanged = UploadLimits.Clamp(requestedMaxUpload) != workspace.MaxUploadBytes;
+
+            if (uploadLimitChanged)
+            {
+                fields.Add("upload_limit");
             }
         }
 

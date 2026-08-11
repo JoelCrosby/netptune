@@ -2,7 +2,9 @@ using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Netptune.App.Services;
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
+using Netptune.Core.Storage;
 using Netptune.Handlers.Storage.Commands;
 using Netptune.Handlers.Storage.Queries;
 
@@ -10,9 +12,6 @@ namespace Netptune.App.Endpoints;
 
 public static class WorkspaceFilesEndpoints
 {
-    private const long MaxFileSize = 50L * 1024 * 1024;
-    private const long MaxRequestSize = MaxFileSize + 1024 * 1024;
-
     public static IEndpointRouteBuilder MapWorkspaceFilesEndpoints(this IEndpointRouteBuilder builder)
     {
         var tasks = builder.MapGroup("tasks");
@@ -22,7 +21,7 @@ public static class WorkspaceFilesEndpoints
             .RequireAuthorization(NetptunePermissions.Tasks.Read, NetptunePermissions.Files.Read);
         tasks
             .MapPost("/{systemId}/files", UploadTaskFile)
-            .WithMetadata(new RequestSizeLimitAttribute(MaxRequestSize))
+            .WithMetadata(new RequestSizeLimitAttribute(UploadLimits.MaximumRequestBytes))
             .RequireAuthorization(NetptunePermissions.Tasks.Update, NetptunePermissions.Files.Upload);
         tasks
             .MapDelete("/{systemId}/files/{fileId:int}", DeleteTaskFile)
@@ -48,6 +47,10 @@ public static class WorkspaceFilesEndpoints
         {
             return Results.BadRequest("Multipart form data is required.");
         }
+
+        var maxFileSize = await mediator.Send(new GetWorkspaceUploadLimitQuery(), cancellationToken);
+
+        request.ApplyMaxFileSize(maxFileSize);
 
         var form = await request.ReadFormAsync(cancellationToken);
 

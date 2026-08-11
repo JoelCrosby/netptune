@@ -11,4 +11,5 @@ export interface UpdateWorkspaceRequest {
   assistantEnabled?: boolean;
   allowAssistantDataSampling?: boolean;
   publicPermissions?: Permission[];
+  maxUploadBytes?: number;
 }

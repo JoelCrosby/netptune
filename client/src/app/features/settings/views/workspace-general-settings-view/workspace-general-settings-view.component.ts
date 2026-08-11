@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { WorkspaceDetailsComponent } from '@settings/components/workspace-details/workspace-details.component';
 import { WorkspaceSettings } from '@settings/components/workspace-settings/workspace-settings.component';
+import { WorkspaceUploadsComponent } from '@settings/components/workspace-uploads/workspace-uploads.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 
@@ -11,6 +12,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
     PageHeaderComponent,
     WorkspaceDetailsComponent,
     WorkspaceSettings,
+    WorkspaceUploadsComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -20,6 +22,7 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
 
       <div class="flex flex-col gap-6">
         <app-workspace-details />
+        <app-workspace-uploads />
         <app-workspace-settings />
       </div>
     </app-page-container>

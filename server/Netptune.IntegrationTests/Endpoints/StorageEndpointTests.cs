@@ -5,6 +5,7 @@ using FluentAssertions;
 
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Storage;
 using Netptune.Core.ViewModels.Files;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Entities.Contexts;
@@ -198,6 +199,45 @@ public sealed class StorageEndpointTests
         finally
         {
             workspace.StorageLimitBytes = originalLimit;
+
+            await context.SaveChangesAsync();
+        }
+    }
+
+    [Fact]
+    public async Task TaskFile_ShouldRejectAFileOverTheWorkspaceUploadLimit()
+    {
+        using var scope = Fixture.CreateScope();
+
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var workspace = await context.Workspaces.SingleAsync(item => item.Slug == "netptune");
+        var originalLimit = workspace.MaxUploadBytes;
+
+        workspace.MaxUploadBytes = UploadLimits.MinimumMaxUploadBytes;
+
+        await context.SaveChangesAsync();
+
+        try
+        {
+            var tasksResponse = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>("api/tasks?pageSize=1");
+            var systemId = tasksResponse.Payload!.Items.Single().SystemId;
+            var oversized = new byte[UploadLimits.MinimumMaxUploadBytes + 1];
+
+            using var content = new MultipartFormDataContent();
+
+            content.Add(new ByteArrayContent(oversized), "files", "oversized.txt");
+
+            var response = await Client.PostAsync($"api/tasks/{systemId}/files", content);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var result = await response.Content.ReadFromJsonAsync<ClientResponse<FileUploadResult>>();
+
+            result.Payload.Should().Match<FileUploadResult>(item => !item.IsSuccess && item.Error!.Contains("exceeds the 1 MiB limit"));
+        }
+        finally
+        {
+            workspace.MaxUploadBytes = originalLimit;
 
             await context.SaveChangesAsync();
         }

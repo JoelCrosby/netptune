@@ -28,7 +28,6 @@ public sealed record UploadTaskFileCommand(string SystemId, TaskFileUpload File)
 
 public sealed class UploadTaskFileCommandHandler : IRequestHandler<UploadTaskFileCommand, ClientResponse<FileUploadResult>>
 {
-    private const long MaxFileSize = 50L * 1024 * 1024;
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IStorageService Storage;
@@ -76,12 +75,14 @@ public sealed class UploadTaskFileCommandHandler : IRequestHandler<UploadTaskFil
             return Failed(originalName, "The file is empty.");
         }
 
-        if (upload.Length > MaxFileSize)
+        var workspaceId = await Identity.GetWorkspaceId();
+        var maxUploadBytes = await WorkspaceUploadLimit.Resolve(UnitOfWork, workspaceId, cancellationToken);
+
+        if (upload.Length > maxUploadBytes)
         {
-            return Failed(originalName, "The file exceeds the 50 MiB limit.");
+            return Failed(originalName, $"The file exceeds the {UploadLimits.Describe(maxUploadBytes)} limit.");
         }
 
-        var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
 
         WorkspaceFile? entity = null;

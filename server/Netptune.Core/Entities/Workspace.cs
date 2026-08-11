@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Meta;
 using Netptune.Core.Relationships;
+using Netptune.Core.Storage;
 using Netptune.Core.ViewModels.Workspace;
 
 namespace Netptune.Core.Entities;
@@ -30,6 +31,8 @@ public record Workspace : AuditableEntity<int>
     public long StorageUsedBytes { get; set; }
 
     public long StorageLimitBytes { get; set; } = DefaultStorageLimitBytes;
+
+    public long MaxUploadBytes { get; set; } = UploadLimits.DefaultMaxUploadBytes;
 
     #region NavigationProperties
 
@@ -64,6 +67,7 @@ public record Workspace : AuditableEntity<int>
             IsPublic = IsPublic,
             AssistantEnabled = AssistantEnabled,
             AllowAssistantDataSampling = AllowAssistantDataSampling,
+            MaxUploadBytes = MaxUploadBytes,
         };
     }
 

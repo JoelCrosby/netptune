@@ -23,8 +23,6 @@ public sealed record UploadStorageMediaCommand : IRequest<ClientResponse<UploadR
 
 public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadStorageMediaCommand, ClientResponse<UploadResponse>>
 {
-    private const long MaxFileSize = 50L * 1024 * 1024;
-
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IStorageService Storage;
@@ -53,12 +51,14 @@ public sealed class UploadStorageMediaCommandHandler : IRequestHandler<UploadSto
             return ClientResponse<UploadResponse>.Failed("The file is empty.");
         }
 
-        if (request.Length > MaxFileSize)
+        var workspaceId = await Identity.GetWorkspaceId();
+        var maxUploadBytes = await WorkspaceUploadLimit.Resolve(UnitOfWork, workspaceId, cancellationToken);
+
+        if (request.Length > maxUploadBytes)
         {
-            return ClientResponse<UploadResponse>.Failed("The file exceeds the 50 MiB limit.");
+            return ClientResponse<UploadResponse>.Failed($"The file exceeds the {UploadLimits.Describe(maxUploadBytes)} limit.");
         }
 
-        var workspaceId = await Identity.GetWorkspaceId();
         var userId = Identity.GetCurrentUserId();
 
         WorkspaceFile? entity = null;

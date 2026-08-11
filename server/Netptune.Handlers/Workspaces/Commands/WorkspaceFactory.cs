@@ -1,10 +1,12 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
+using Netptune.Core.Models.Options;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Handlers.Onboarding.Templates;
@@ -17,7 +19,7 @@ internal static class WorkspaceFactory
         AddWorkspaceRequest request,
         AppUser user,
         INetptuneUnitOfWork unitOfWork,
-        long storageLimitBytes,
+        WorkspaceStorageOptions storageOptions,
         CancellationToken cancellationToken = default)
     {
         return unitOfWork.Transaction(async () =>
@@ -37,7 +39,8 @@ internal static class WorkspaceFactory
                 OwnerId = user.Id,
                 Slug = request.Slug.ToUrlSlug(),
                 MetaInfo = request.MetaInfo,
-                StorageLimitBytes = Math.Max(0, storageLimitBytes),
+                StorageLimitBytes = Math.Max(0, storageOptions.DefaultWorkspaceLimitBytes),
+                MaxUploadBytes = UploadLimits.Clamp(storageOptions.DefaultMaxUploadBytes),
             };
 
             var workspace = await unitOfWork.Workspaces.AddAsync(entity, cancellationToken);

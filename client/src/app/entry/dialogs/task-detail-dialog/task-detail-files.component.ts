@@ -3,6 +3,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSONS } from '@core/auth/permissions';
 import { WorkspaceFileViewModel } from '@core/models/view-models/workspace-file-view-model';
 import { taskFilesResource } from '@core/resources/workspace-file.resource';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
   TaskFileUploadItem,
   TaskFileUploadService,
@@ -58,6 +59,7 @@ import { FileSizePipe } from '@static/pipes/file-size.pipe';
       @if (canUpload()) {
         <app-file-dropzone
           [disabled]="uploading()"
+          [maxBytes]="maxUploadBytes()"
           (filesSelected)="upload($event)" />
       }
 
@@ -150,6 +152,7 @@ export class TaskDetailFilesComponent {
   private readonly service = inject(WorkspaceFilesService);
   private readonly mutationError = signal('');
 
+  readonly maxUploadBytes = inject(CurrentWorkspaceService).maxUploadBytes;
   readonly uploads = this.uploadService.uploads;
   readonly uploading = this.uploadService.uploading;
   readonly loading = this.filesResource.isLoading;

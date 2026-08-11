@@ -30,6 +30,7 @@ import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { UserSelectValue } from '@core/models/view-models/user-select-option';
 import { WorkspaceFileContentTypeGroup } from '@core/models/view-models/workspace-file-view-model';
 import { CurrentProjectService } from '@core/services/current-project.service';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SessionService } from '@core/services/session.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
@@ -192,6 +193,7 @@ const documentContentTypes = new Set([
 
               <app-file-dropzone
                 [disabled]="busy()"
+                [maxBytes]="maxUploadBytes()"
                 (filesSelected)="addFiles($event)" />
 
               <div class="mt-2 flex flex-col gap-1">
@@ -412,6 +414,7 @@ export class CreateTaskDialogComponent {
   });
 
   currentProjectId = inject(CurrentProjectService).currentId;
+  readonly maxUploadBytes = inject(CurrentWorkspaceService).maxUploadBytes;
 
   private readonly canReadTags = hasPermission(PERMISSONS.tags.read);
   private readonly canAssignTagsToTasks = hasPermission(PERMISSONS.tags.assign);

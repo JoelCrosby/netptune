@@ -40,6 +40,7 @@ public sealed class GetUserWorkspacesQueryHandler : IRequestHandler<GetUserWorks
                 IsPublic = workspace.IsPublic,
                 AssistantEnabled = workspace.AssistantEnabled,
                 AllowAssistantDataSampling = workspace.AllowAssistantDataSampling,
+                MaxUploadBytes = workspace.MaxUploadBytes,
                 CreatedAt = workspace.CreatedAt,
                 UpdatedAt = workspace.UpdatedAt,
                 IsLastVisited = lastVisitedSlug is not null

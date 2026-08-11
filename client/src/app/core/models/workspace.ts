@@ -15,6 +15,7 @@ export interface Workspace extends Basemodel {
   allowAssistantDataSampling?: boolean;
   isLastVisited?: boolean;
   publicPermissions?: Permission[];
+  maxUploadBytes?: number;
 }
 
 export interface WorkspaceMeta {

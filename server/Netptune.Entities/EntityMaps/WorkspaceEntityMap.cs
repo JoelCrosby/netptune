@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
+using Netptune.Core.Storage;
 using Netptune.Entities.EntityMaps.BaseMaps;
 
 namespace Netptune.Entities.EntityMaps;
@@ -52,6 +53,11 @@ public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
             .IsRequired();
 
         builder
+            .Property(workspace => workspace.MaxUploadBytes)
+            .HasDefaultValue(UploadLimits.DefaultMaxUploadBytes)
+            .IsRequired();
+
+        builder
             .Property(workspace => workspace.AssistantEnabled)
             .HasDefaultValue(true)
             .IsRequired();
@@ -65,6 +71,9 @@ public class WorkspaceEntityMap : AuditableEntityMap<Workspace, int>
         {
             table.HasCheckConstraint("ck_workspaces_storage_used_bytes", "storage_used_bytes >= 0");
             table.HasCheckConstraint("ck_workspaces_storage_limit_bytes", "storage_limit_bytes >= 0");
+            table.HasCheckConstraint(
+                "ck_workspaces_max_upload_bytes",
+                $"max_upload_bytes >= {UploadLimits.MinimumMaxUploadBytes} AND max_upload_bytes <= {UploadLimits.MaximumMaxUploadBytes}");
         });
 
         // (One-to-One) Workspace > Task

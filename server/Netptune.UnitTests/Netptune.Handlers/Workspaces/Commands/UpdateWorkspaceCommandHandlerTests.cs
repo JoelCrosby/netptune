@@ -7,6 +7,7 @@ using Netptune.Core.Cache;
 using Netptune.Core.Requests;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
+using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Workspaces.Commands;
 
@@ -374,6 +375,97 @@ public class UpdateWorkspaceCommandHandlerTests
             Arg.Is<EventWriteRequest<WorkspaceSettingsChangedPayload>>(eventRequest =>
                 eventRequest.Payload.Fields.SequenceEqual(new[] { "public_access" })),
             TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldClampTheUploadLimit_WhenTheRequestedSizeIsOutOfRange()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            MaxUploadBytes = UploadLimits.MaximumMaxUploadBytes * 4,
+        };
+        var workspace = AutoFixtures.Workspace with { MaxUploadBytes = UploadLimits.DefaultMaxUploadBytes };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.Payload!.Workspace.MaxUploadBytes.Should().Be(UploadLimits.MaximumMaxUploadBytes);
+    }
+
+    [Fact]
+    public async Task Update_ShouldKeepTheStoredUploadLimit_WhenTheRequestOmitsIt()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            Name = "Renamed workspace",
+        };
+        var workspace = AutoFixtures.Workspace with { MaxUploadBytes = 10L * 1024 * 1024 };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        var result = await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        result.Payload!.Workspace.MaxUploadBytes.Should().Be(10L * 1024 * 1024);
+    }
+
+    [Fact]
+    public async Task Update_ShouldEmitUploadLimitChange_WhenTheLimitChanges()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            MaxUploadBytes = 100L * 1024 * 1024,
+        };
+        var workspace = AutoFixtures.Workspace with
+        {
+            Id = 42,
+            MaxUploadBytes = UploadLimits.DefaultMaxUploadBytes,
+        };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        await EventRecords.Received(1).Append(
+            Arg.Is<EventWriteRequest<WorkspaceSettingsChangedPayload>>(eventRequest =>
+                eventRequest.Payload.Fields.SequenceEqual(new[] { "upload_limit" })),
+            TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Update_ShouldForgetTheCachedWorkspace_WhenTheSlugIsUnchanged()
+    {
+        var request = new UpdateWorkspaceRequest
+        {
+            Slug = "workspace",
+            MaxUploadBytes = 100L * 1024 * 1024,
+        };
+        var workspace = AutoFixtures.Workspace with { Slug = "workspace" };
+
+        Identity.GetCurrentUserId().Returns(AutoFixtures.AppUser.Id);
+        UnitOfWork.Workspaces.GetBySlug(
+                request.Slug,
+                cancellationToken: TestContext.Current.CancellationToken)
+            .Returns(workspace);
+
+        await Handler.Handle(new UpdateWorkspaceCommand(request), TestContext.Current.CancellationToken);
+
+        WorkspaceCache.Received(1).Remove("workspace");
     }
 
     [Fact]

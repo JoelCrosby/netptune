@@ -24,6 +24,8 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
 
     Task<WorkspaceStorageUsageViewModel?> GetStorageUsage(int workspaceId, CancellationToken cancellationToken = default);
 
+    Task<long?> GetMaxUploadBytes(int workspaceId, CancellationToken cancellationToken = default);
+
     Task<bool> TryReserveStorage(int workspaceId, long sizeBytes, CancellationToken cancellationToken = default);
 
     Task ReleaseStorage(int workspaceId, long sizeBytes, CancellationToken cancellationToken = default);
