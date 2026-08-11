@@ -11,7 +11,9 @@ import { Router } from '@angular/router';
 import { PERMISSONS } from '@core/auth/permissions';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { CommandRegistry } from '@core/services/command-registry.service';
+import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceService } from '@core/services/workspace.service';
+import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 
 @Injectable()
 export class GlobalCommandsService implements OnDestroy {
@@ -19,6 +21,9 @@ export class GlobalCommandsService implements OnDestroy {
   private registry = inject(CommandRegistry);
   private workspace = inject(WorkspaceService);
   private panel = inject(AiPanelService);
+  private dialog = inject(DialogService);
+  private canCreateTasks = hasPermission(PERMISSONS.tasks.create);
+  private createTaskCommandRegistered = false;
   private canReadAutomations = hasPermission(PERMISSONS.automations.read);
   private automationCommandRegistered = false;
   private canReadStorage = hasPermission(PERMISSONS.storage.read);
@@ -38,6 +43,7 @@ export class GlobalCommandsService implements OnDestroy {
     'nav.settings',
     'nav.storage',
     'actions.assistant',
+    'actions.createTask',
   ];
 
   constructor() {
@@ -158,6 +164,34 @@ export class GlobalCommandsService implements OnDestroy {
     });
 
     effect(() => {
+      const canCreate = this.canCreateTasks();
+
+      if (canCreate && !this.createTaskCommandRegistered) {
+        untracked(() =>
+          this.registry.register([
+            {
+              id: 'actions.createTask',
+              label: $localize`:Command palette action that opens the create-task dialog:Create Task`,
+              group: 'actions',
+              icon: 'circle-plus',
+              shortcut: ['c', 't'],
+              keywords: ['create', 'task', 'new', 'add'],
+              execute: () => this.createTask(),
+            },
+          ])
+        );
+
+        this.createTaskCommandRegistered = true;
+      }
+
+      if (!canCreate && this.createTaskCommandRegistered) {
+        untracked(() => this.registry.unregister(['actions.createTask']));
+
+        this.createTaskCommandRegistered = false;
+      }
+    });
+
+    effect(() => {
       const canRead = this.canReadAutomations();
 
       if (canRead && !this.automationCommandRegistered) {
@@ -213,6 +247,12 @@ export class GlobalCommandsService implements OnDestroy {
 
   ngOnDestroy() {
     this.registry.unregister(this.commandIds);
+  }
+
+  private createTask() {
+    this.dialog.open(CreateTaskDialogComponent, {
+      width: CreateTaskDialogComponent.width,
+    });
   }
 
   private navigate(path: string) {

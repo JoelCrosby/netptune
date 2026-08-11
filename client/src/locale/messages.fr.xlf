@@ -2858,7 +2858,7 @@
     </unit>
     <unit id="7480444655465895778">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:141</note>
+        <note category="location">src/app/shell/global-commands.service.ts:147</note>
         <note category="description">Command palette action that opens the AI assistant</note>
       </notes>
       <segment state="translated">
@@ -3452,6 +3452,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/create-task-dialog/create-task-dialog.component.ts:52,54</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:25,27</note>
+        <note category="location">src/app/shell/global-commands.service.ts:174</note>
         <note category="description">Title of the create-task dialog</note>
       </notes>
       <segment state="translated">
@@ -18085,7 +18086,7 @@
     </unit>
     <unit id="2547653457651632153">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:47</note>
+        <note category="location">src/app/shell/global-commands.service.ts:53</note>
         <note category="description">Command palette action that navigates to the project list</note>
       </notes>
       <segment state="translated">
@@ -18105,7 +18106,7 @@
     </unit>
     <unit id="5123189455675344637">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:56</note>
+        <note category="location">src/app/shell/global-commands.service.ts:62</note>
         <note category="description">Command palette action that navigates to the task list</note>
       </notes>
       <segment state="translated">
@@ -18115,7 +18116,7 @@
     </unit>
     <unit id="5086261568382990197">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:65</note>
+        <note category="location">src/app/shell/global-commands.service.ts:71</note>
         <note category="description">Command palette action that navigates to the board list</note>
       </notes>
       <segment state="translated">
@@ -18135,7 +18136,7 @@
     </unit>
     <unit id="2627358752486456707">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:74</note>
+        <note category="location">src/app/shell/global-commands.service.ts:80</note>
         <note category="description">Command palette action that navigates to the sprint list</note>
       </notes>
       <segment state="translated">
@@ -18145,7 +18146,7 @@
     </unit>
     <unit id="178520337056147266">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:91</note>
+        <note category="location">src/app/shell/global-commands.service.ts:97</note>
         <note category="description">Command palette action that navigates to the dashboard</note>
       </notes>
       <segment state="translated">
@@ -18155,7 +18156,7 @@
     </unit>
     <unit id="2117590223216089367">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:100</note>
+        <note category="location">src/app/shell/global-commands.service.ts:106</note>
         <note category="description">Command palette action that navigates to the member list</note>
       </notes>
       <segment state="translated">
@@ -18165,7 +18166,7 @@
     </unit>
     <unit id="7783914774924915188">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:108</note>
+        <note category="location">src/app/shell/global-commands.service.ts:114</note>
         <note category="description">Command palette action that navigates to settings</note>
       </notes>
       <segment state="translated">
@@ -18175,7 +18176,7 @@
     </unit>
     <unit id="5354615118655779282">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:168</note>
+        <note category="location">src/app/shell/global-commands.service.ts:202</note>
         <note category="description">Command palette action that navigates to the automation list</note>
       </notes>
       <segment state="translated">
@@ -18205,7 +18206,7 @@
     </unit>
     <unit id="5387282719521675016">
       <notes>
-        <note category="location">src/app/shell/global-commands.service.ts:194</note>
+        <note category="location">src/app/shell/global-commands.service.ts:228</note>
         <note category="description">Command palette action that navigates to file storage</note>
       </notes>
       <segment state="translated">
