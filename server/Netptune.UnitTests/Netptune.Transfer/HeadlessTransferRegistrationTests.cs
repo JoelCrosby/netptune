@@ -58,7 +58,7 @@ public class HeadlessTransferRegistrationTests
     }
 
     [Fact]
-    public void Identity_ShouldResolveTheActorTheQueuedMessageNamed()
+    public async Task Identity_ShouldResolveTheActorTheQueuedMessageNamed()
     {
         using var provider = CreateJobServerProvider();
         using var scope = provider.CreateScope();
@@ -72,7 +72,7 @@ public class HeadlessTransferRegistrationTests
         {
             identity.GetCurrentUserId().Should().Be("user-7");
             identity.GetWorkspaceKey().Should().Be("netptune");
-            identity.GetWorkspaceId().GetAwaiter().GetResult().Should().Be(3);
+            (await identity.GetWorkspaceId()).Should().Be(3);
         }
 
         identity.TryGetCurrentUserId().Should().BeNull("the scope was disposed");
