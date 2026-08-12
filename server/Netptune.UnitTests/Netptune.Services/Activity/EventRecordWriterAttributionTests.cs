@@ -33,7 +33,7 @@ public class EventRecordWriterAttributionTests
     public async Task Append_ShouldAttributeToTheUser_WhenNoAssistantScopeIsActive()
     {
         var writer = CreateWriter();
-        var record = await writer.Append(CreateRequest(), CancellationToken.None);
+        var record = await writer.Append(CreateRequest(), TestContext.Current.CancellationToken);
 
         record.OriginType.Should().Be(EventOriginType.User);
         record.Agent.Should().BeNull();
@@ -47,7 +47,7 @@ public class EventRecordWriterAttributionTests
 
         using (AiExecution.Begin("claude-opus-5", correlationId))
         {
-            var record = await writer.Append(CreateRequest(), CancellationToken.None);
+            var record = await writer.Append(CreateRequest(), TestContext.Current.CancellationToken);
 
             record.OriginType.Should().Be(EventOriginType.Assistant);
             record.Agent.Should().Be("claude-opus-5");
@@ -62,10 +62,10 @@ public class EventRecordWriterAttributionTests
 
         using (AiExecution.Begin("claude-opus-5", Guid.NewGuid()))
         {
-            await writer.Append(CreateRequest(), CancellationToken.None);
+            await writer.Append(CreateRequest(), TestContext.Current.CancellationToken);
         }
 
-        var record = await writer.Append(CreateRequest(), CancellationToken.None);
+        var record = await writer.Append(CreateRequest(), TestContext.Current.CancellationToken);
 
         record.OriginType.Should().Be(EventOriginType.User);
         record.Agent.Should().BeNull();

@@ -97,7 +97,7 @@ public class AiChangeSetApplierTests
             }));
 
         var applier = CreateApplier();
-        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         await apply.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -110,7 +110,7 @@ public class AiChangeSetApplierTests
             .Returns(Task.FromResult<AiChangeSet?>(null));
 
         var applier = CreateApplier();
-        var result = await applier.Apply(Guid.NewGuid(), new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var result = await applier.Apply(Guid.NewGuid(), new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         result.Should().BeNull();
     }
@@ -125,7 +125,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Read);
 
         var applier = CreateApplier();
-        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         await apply.Should().ThrowAsync<UnauthorizedAccessException>();
     }
@@ -141,7 +141,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Create);
 
         var applier = CreateApplier();
-        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var apply = () => applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         await apply.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -158,7 +158,7 @@ public class AiChangeSetApplierTests
 
         var applier = CreateApplier();
         var request = new ApplyAiChangeSetRequest { ChangeIds = [selected.Id] };
-        var result = await applier.Apply(changeSet.Id, request, CancellationToken.None);
+        var result = await applier.Apply(changeSet.Id, request, TestContext.Current.CancellationToken);
 
         result!.Results.Should().ContainSingle(item => item.ChangeId == selected.Id);
         unselected.ApplyStatus.Should().Be(AiChangeApplyStatus.Skipped);
@@ -176,7 +176,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Create);
 
         var applier = CreateApplier();
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         result!.Results.Should().BeEmpty();
         invalid.ApplyStatus.Should().Be(AiChangeApplyStatus.Skipped);
@@ -203,7 +203,7 @@ public class AiChangeSetApplierTests
             NullLogger<AiChangeSetApplier>.Instance,
             []);
 
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         result!.Results.Should().ContainSingle();
         result.Results[0].Status.Should().Be(AiChangeApplyStatus.Failed);
@@ -281,7 +281,7 @@ public class AiChangeSetApplierTests
         GivenCreatedTask(7);
 
         var applier = CreateApplier();
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         result!.Results.Select(item => item.ChangeId).Should().Equal(
             [prerequisite.Id, dependent.Id],
@@ -303,7 +303,7 @@ public class AiChangeSetApplierTests
         GivenCreatedTask(7);
 
         var applier = CreateApplier();
-        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        var result = await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
         var outcome = result!.Results.Single();
 
         outcome.Status.Should().Be(AiChangeApplyStatus.Skipped);
@@ -323,7 +323,7 @@ public class AiChangeSetApplierTests
 
         var applier = CreateApplier();
 
-        await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), CancellationToken.None);
+        await applier.Apply(changeSet.Id, new ApplyAiChangeSetRequest(), TestContext.Current.CancellationToken);
 
         await Conversations
             .Received(1)
@@ -372,7 +372,7 @@ public class AiChangeSetApplierTests
             .Returns(ClientResponse.Success);
 
         var applier = CreateApplier();
-        var result = await applier.Undo(changeSet.Id, CancellationToken.None);
+        var result = await applier.Undo(changeSet.Id, TestContext.Current.CancellationToken);
 
         result!.Results.Single().Status.Should().Be(AiChangeApplyStatus.Applied);
         change.UndoneAt.Should().NotBeNull("an undone change must not be undone twice");
@@ -398,7 +398,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Create);
 
         var applier = CreateApplier();
-        var undo = async () => await applier.Undo(changeSet.Id, CancellationToken.None);
+        var undo = async () => await applier.Undo(changeSet.Id, TestContext.Current.CancellationToken);
 
         await undo.Should().ThrowAsync<UnauthorizedAccessException>(
             "creating a task and deleting it again are different permissions");
@@ -414,7 +414,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Delete);
 
         var applier = CreateApplier();
-        var undo = async () => await applier.Undo(changeSet.Id, CancellationToken.None);
+        var undo = async () => await applier.Undo(changeSet.Id, TestContext.Current.CancellationToken);
 
         await undo.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -438,7 +438,7 @@ public class AiChangeSetApplierTests
             .Returns(ClientResponse.Failed("The task is locked."));
 
         var applier = CreateApplier();
-        var result = await applier.Undo(changeSet.Id, CancellationToken.None);
+        var result = await applier.Undo(changeSet.Id, TestContext.Current.CancellationToken);
         var outcome = result!.Results.Single();
 
         outcome.Status.Should().Be(AiChangeApplyStatus.Failed);
@@ -466,7 +466,7 @@ public class AiChangeSetApplierTests
         GivenCreatedTask(12);
 
         var applier = CreateApplier();
-        var result = await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+        var result = await applier.RetryFailed(changeSet.Id, TestContext.Current.CancellationToken);
 
         result!.Results.Select(item => item.ChangeId).Should().Equal([failed.Id]);
         failed.ApplyStatus.Should().Be(AiChangeApplyStatus.Applied);
@@ -498,7 +498,7 @@ public class AiChangeSetApplierTests
         GivenCreatedTask(31);
 
         var applier = CreateApplier();
-        var result = await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+        var result = await applier.RetryFailed(changeSet.Id, TestContext.Current.CancellationToken);
 
         result!.Results.Single().Status.Should().Be(
             AiChangeApplyStatus.Applied,
@@ -519,7 +519,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Create);
 
         var applier = CreateApplier();
-        var retry = async () => await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+        var retry = async () => await applier.RetryFailed(changeSet.Id, TestContext.Current.CancellationToken);
 
         await retry.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -539,7 +539,7 @@ public class AiChangeSetApplierTests
         GivenPermissions(NetptunePermissions.Tasks.Create);
 
         var applier = CreateApplier();
-        var retry = async () => await applier.RetryFailed(changeSet.Id, CancellationToken.None);
+        var retry = async () => await applier.RetryFailed(changeSet.Id, TestContext.Current.CancellationToken);
 
         await retry.Should().ThrowAsync<InvalidOperationException>(
             "putting changes back after an undo would contradict the undo");

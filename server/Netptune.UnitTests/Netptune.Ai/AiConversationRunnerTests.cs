@@ -323,7 +323,7 @@ public class AiConversationRunnerTests
     {
         var events = new List<AiStreamEvent>();
 
-        await foreach (var streamEvent in runner.Run(context, CancellationToken.None))
+        await foreach (var streamEvent in runner.Run(context, TestContext.Current.CancellationToken))
         {
             events.Add(streamEvent);
         }
