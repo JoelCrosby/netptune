@@ -16,4 +16,9 @@ public static class ServiceCollectionExtensions
         services.Configure(action);
         services.AddSingleton<IStorageService, S3StorageService>();
     }
+
+    public static void AddWorkspaceFileReconciler(this IServiceCollection services)
+    {
+        services.AddScoped<WorkspaceFileReconciler>();
+    }
 }

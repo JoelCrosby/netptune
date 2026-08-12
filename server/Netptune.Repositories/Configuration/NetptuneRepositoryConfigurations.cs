@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.UnitOfWork;
 using Netptune.Transfer.Repositories;
+using Netptune.Repositories.Common;
 using Netptune.Repositories.ConnectionFactories;
 using Netptune.Repositories.UnitOfWork;
 
@@ -26,6 +27,7 @@ public static class NetptuneRepositoryConfigurations
 
         services.AddScoped<IDbConnectionFactory>(_ => new NetptuneConnectionFactory(netptuneRepositoryOptions.ConnectionString));
         services.AddScoped<INetptuneUnitOfWork, NetptuneUnitOfWork>();
+        services.AddScoped<IAdvisoryLock, PostgresAdvisoryLock>();
 
         services.AddScoped<IExportJobRepository, ExportJobRepository>();
         services.AddScoped<IExportDefinitionRepository, ExportDefinitionRepository>();
