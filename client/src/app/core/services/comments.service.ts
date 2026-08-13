@@ -28,4 +28,18 @@ export class CommentsService {
   delete(commentId: number) {
     return this.http.delete<ClientResponse>(`api/comments/${commentId}`);
   }
+
+  addReaction(commentId: number, value: string) {
+    return this.http.post<ClientResponse<CommentViewModel>>(
+      `api/comments/${commentId}/reactions`,
+      { value }
+    );
+  }
+
+  removeReaction(commentId: number, value: string) {
+    return this.http.delete<ClientResponse<CommentViewModel>>(
+      `api/comments/${commentId}/reactions`,
+      { params: { value } }
+    );
+  }
 }

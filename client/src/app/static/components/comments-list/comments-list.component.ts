@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   inject,
   input,
   output,
@@ -25,6 +26,11 @@ import { AvatarComponent } from '../avatar/avatar.component';
 import { FlatButtonComponent } from '../button/flat-button.component';
 import { StrokedButtonComponent } from '../button/stroked-button.component';
 import {
+  ReactionButtonComponent,
+  ReactionGroup,
+} from '../reaction-button/reaction-button.component';
+import { ReactionPickerComponent } from '../reaction-picker/reaction-picker.component';
+import {
   MentionInputComponent,
   MentionSubmitEvent,
 } from '../mention-input/mention-input.component';
@@ -36,6 +42,17 @@ export interface CommentSubmitEvent {
 
 export interface CommentUpdateEvent extends CommentSubmitEvent {
   comment: CommentViewModel;
+}
+
+export interface CommentReactionEvent {
+  comment: CommentViewModel;
+  value: string;
+  reacted: boolean;
+}
+
+interface CommentReactions {
+  groups: ReactionGroup[];
+  selected: string[];
 }
 
 @Component({
@@ -51,6 +68,8 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
     LucideTrash2,
     FlatButtonComponent,
     StrokedButtonComponent,
+    ReactionButtonComponent,
+    ReactionPickerComponent,
     FromNowPipe,
   ],
   template: `
@@ -135,6 +154,33 @@ export interface CommentUpdateEvent extends CommentSubmitEvent {
                   class="text-sm font-normal"
                   [innerHTML]="renderBody(comment.body)"></span>
               }
+
+              @if (canReact() || commentReactions()[comment.id].groups.length) {
+                <div class="mt-1.5 flex flex-row flex-wrap items-center gap-1">
+                  @for (
+                    group of commentReactions()[comment.id].groups;
+                    track group.value
+                  ) {
+                    <app-reaction-button
+                      [reaction]="group"
+                      [disabled]="!canReact()"
+                      (reactionToggle)="
+                        toggleReaction(comment, group.value, group.reacted)
+                      "></app-reaction-button>
+                  }
+                  @if (canReact()) {
+                    <app-reaction-picker
+                      [selected]="commentReactions()[comment.id].selected"
+                      (reactionSelect)="
+                        toggleReaction(
+                          comment,
+                          $event,
+                          hasReacted(comment, $event)
+                        )
+                      "></app-reaction-picker>
+                  }
+                </div>
+              }
             </div>
 
             @if (canEditComment(comment) || canDeleteComment(comment)) {
@@ -191,14 +237,27 @@ export class CommentsListComponent {
   readonly canDeleteAny = input<boolean>(false);
   readonly canCreate = input<boolean>(false);
   readonly canEdit = input<boolean>(false);
+  readonly canReact = input<boolean>(false);
 
   readonly deleteComment = output<CommentViewModel>();
   readonly commentSubmit = output<CommentSubmitEvent>();
   readonly updateComment = output<CommentUpdateEvent>();
+  readonly toggleCommentReaction = output<CommentReactionEvent>();
   readonly lucideMessageSquare = LucideMessageSquare;
   readonly editingCommentId = signal<number | null>(null);
   readonly editText = signal('');
   readonly editMentionIds = signal<string[]>([]);
+
+  readonly commentReactions = computed<Record<number, CommentReactions>>(() => {
+    const userId = this.user()?.userId;
+    const reactions: Record<number, CommentReactions> = {};
+
+    for (const comment of this.comments() ?? []) {
+      reactions[comment.id] = groupReactions(comment, userId);
+    }
+
+    return reactions;
+  });
 
   onMentionSubmit(event: MentionSubmitEvent) {
     this.commentSubmit.emit({ text: event.text, mentions: event.mentions });
@@ -225,6 +284,20 @@ export class CommentsListComponent {
     this.cancelEditing();
   }
 
+  hasReacted(comment: CommentViewModel, value: string) {
+    const userId = this.user()?.userId;
+
+    return comment.reactions.some((reaction) => {
+      return reaction.value === value && reaction.userId === userId;
+    });
+  }
+
+  toggleReaction(comment: CommentViewModel, value: string, reacted: boolean) {
+    if (!this.canReact()) return;
+
+    this.toggleCommentReaction.emit({ comment, value, reacted });
+  }
+
   canEditComment(comment: CommentViewModel) {
     return this.canEdit() && comment.userId === this.user()?.userId;
   }
@@ -249,4 +322,30 @@ export class CommentsListComponent {
 
     return this.sanitizer.sanitize(SecurityContext.HTML, withMentions) ?? '';
   }
+}
+
+function groupReactions(
+  comment: CommentViewModel,
+  userId: string | undefined
+): CommentReactions {
+  const groups = new Map<string, ReactionGroup>();
+
+  for (const reaction of comment.reactions ?? []) {
+    const group = groups.get(reaction.value) ?? {
+      value: reaction.value,
+      count: 0,
+      reacted: false,
+    };
+
+    group.count += 1;
+    group.reacted = group.reacted || reaction.userId === userId;
+    groups.set(reaction.value, group);
+  }
+
+  const all = [...groups.values()];
+
+  return {
+    groups: all,
+    selected: all.filter((group) => group.reacted).map((group) => group.value),
+  };
 }

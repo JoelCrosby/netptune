@@ -2,6 +2,8 @@ using Mediator;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Responses.Common;
+using Netptune.Core.ViewModels.Comments;
 using Netptune.Handlers.Comments.Commands;
 using Netptune.Handlers.Comments.Queries;
 
@@ -17,6 +19,8 @@ public static class CommentsEndpoints
         group.MapPost("/task", HandlePostTaskComment).RequireAuthorization(NetptunePermissions.Comments.Create);
         group.MapPut("/{id:int}", HandleUpdate).RequireAuthorization(NetptunePermissions.Comments.Create);
         group.MapDelete("/{id:int}", HandleDelete).RequireAuthorization(NetptunePermissions.Comments.Read);
+        group.MapPost("/{id:int}/reactions", HandleAddReaction).RequireAuthorization(NetptunePermissions.Comments.Create);
+        group.MapDelete("/{id:int}/reactions", HandleRemoveReaction).RequireAuthorization(NetptunePermissions.Comments.Create);
 
         return group;
     }
@@ -72,6 +76,37 @@ public static class CommentsEndpoints
         if (result.IsForbidden)
         {
             return Results.Forbid();
+        }
+
+        if (!result.IsSuccess)
+        {
+            return Results.BadRequest(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleAddReaction(IMediator mediator, int id, CommentReactionRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new AddCommentReactionCommand(id, request), cancellationToken);
+
+        return ToReactionResult(result);
+    }
+
+    public static async Task<IResult> HandleRemoveReaction(IMediator mediator, int id, string value,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RemoveCommentReactionCommand(id, value), cancellationToken);
+
+        return ToReactionResult(result);
+    }
+
+    private static IResult ToReactionResult(ClientResponse<CommentViewModel> result)
+    {
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
         }
 
         if (!result.IsSuccess)

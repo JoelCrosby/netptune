@@ -22,6 +22,6 @@ export interface CommentViewModel {
 }
 
 export interface Reaction {
-  id: number;
   value: string;
+  userId: string;
 }

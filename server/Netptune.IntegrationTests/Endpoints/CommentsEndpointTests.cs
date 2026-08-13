@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Constants;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Requests;
@@ -165,6 +166,93 @@ public sealed class CommentsEndpointTests
         var result = await response.Content.ReadFromJsonAsync<ClientResponse>();
 
         result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task AddReaction_ShouldReturnCommentWithReaction_WhenValueIsSupported()
+    {
+        var commentId = await CreateComment("Comment to react to");
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/comments/{commentId}/reactions",
+            new CommentReactionRequest { Value = ReactionValues.ThumbsUp });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Reactions.Should().ContainSingle(reaction => reaction.Value == ReactionValues.ThumbsUp);
+    }
+
+    [Fact]
+    public async Task AddReaction_ShouldBeIdempotent_WhenCalledTwiceWithTheSameValue()
+    {
+        var commentId = await CreateComment("Comment to react to twice");
+        var request = new CommentReactionRequest { Value = ReactionValues.Rocket };
+
+        await Client.PostAsJsonAsync($"api/comments/{commentId}/reactions", request);
+        var response = await Client.PostAsJsonAsync($"api/comments/{commentId}/reactions", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>();
+
+        result.Payload!.Reactions.Should().ContainSingle(reaction => reaction.Value == ReactionValues.Rocket);
+    }
+
+    [Fact]
+    public async Task AddReaction_ShouldReturnBadRequest_WhenValueIsNotSupported()
+    {
+        var commentId = await CreateComment("Comment with an unsupported reaction");
+
+        var response = await Client.PostAsJsonAsync(
+            $"api/comments/{commentId}/reactions",
+            new CommentReactionRequest { Value = "not-an-emoji" });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task AddReaction_ShouldReturnNotFound_WhenCommentDoesNotExist()
+    {
+        var response = await Client.PostAsJsonAsync(
+            "api/comments/1000/reactions",
+            new CommentReactionRequest { Value = ReactionValues.ThumbsUp });
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task RemoveReaction_ShouldReturnCommentWithoutReaction()
+    {
+        var commentId = await CreateComment("Comment to un-react to");
+        var value = Uri.EscapeDataString(ReactionValues.Celebrate);
+
+        await Client.PostAsJsonAsync(
+            $"api/comments/{commentId}/reactions",
+            new CommentReactionRequest { Value = ReactionValues.Celebrate });
+
+        var response = await Client.DeleteAsync($"api/comments/{commentId}/reactions?value={value}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Reactions.Should().BeEmpty();
+    }
+
+    private async Task<int> CreateComment(string body)
+    {
+        var response = await Client.PostAsJsonAsync("api/comments/task", new AddCommentRequest
+        {
+            Comment = body,
+            SystemId = "neo-1",
+        });
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<CommentViewModel>>();
+
+        return created.Payload!.Id;
     }
 
     private async Task<Netptune.Core.Entities.EventRecord?> GetCommentEvent(string eventKey, int commentId)

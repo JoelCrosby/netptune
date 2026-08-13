@@ -16,6 +16,7 @@ import { reloadOnRefresh } from '@core/util/reload-on-refresh';
 import { unwrapClientReposne } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
+  CommentReactionEvent,
   CommentsListComponent,
   CommentSubmitEvent,
   CommentUpdateEvent,
@@ -38,9 +39,11 @@ import { TaskDetailService } from './task-detail.service';
       (commentSubmit)="onCommentSubmit($event)"
       (updateComment)="onUpdateComment($event)"
       (deleteComment)="onDeleteCommentClicked($event)"
+      (toggleCommentReaction)="onToggleReaction($event)"
       [canDelete]="canDeleteComment()"
       [canEdit]="canCreateComment()"
-      [canCreate]="canCreateComment()"></app-comments-list>
+      [canCreate]="canCreateComment()"
+      [canReact]="canCreateComment()"></app-comments-list>
   `,
   imports: [CommentsListComponent],
 })
@@ -123,6 +126,24 @@ export class TaskDetailCommentsComponent {
       .subscribe();
   }
 
+  onToggleReaction(event: CommentReactionEvent) {
+    const request = event.reacted
+      ? this.commentsService.removeReaction(event.comment.id, event.value)
+      : this.commentsService.addReaction(event.comment.id, event.value);
+
+    request
+      .pipe(
+        unwrapClientReposne(),
+        tap((comment) => this.replaceComment(comment)),
+        catchError(() => {
+          this.comments.reload();
+
+          return EMPTY;
+        })
+      )
+      .subscribe();
+  }
+
   onUpdateComment(event: CommentUpdateEvent) {
     const request: UpdateCommentRequest = {
       comment: event.text,
@@ -142,6 +163,14 @@ export class TaskDetailCommentsComponent {
         catchError(() => EMPTY)
       )
       .subscribe();
+  }
+
+  private replaceComment(updated: CommentViewModel) {
+    this.comments.update((comments) => {
+      return comments.map((comment) => {
+        return comment.id === updated.id ? updated : comment;
+      });
+    });
   }
 }
 
