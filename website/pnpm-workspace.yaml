@@ -1,8 +1,0 @@
-allowBuilds:
-  lmdb: true
-  esbuild: true
-  msgpackr-extract: false
-  '@parcel/watcher': false
-minimumReleaseAgeExclude:
-  - vite@8.1.0
-  - '@solidjs/start@2.0.0-rc.9'
