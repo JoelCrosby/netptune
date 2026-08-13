@@ -1323,7 +1323,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:189,191</note>
         <note category="location">src/app/entry/dialogs/link-task-dialog/link-task-dialog.component.ts:123,126</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:112,115</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:150</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:179</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:80,82</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:304</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:277</note>
@@ -1510,7 +1510,7 @@
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
         <note category="location">src/app/core/services/task-commands.service.ts:168</note>
         <note category="location">src/app/core/services/task-commands.service.ts:176</note>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:149</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:178</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:303</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:276</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:712</note>
@@ -2986,7 +2986,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/board-group-dialog/board-group-dialog.component.ts:91</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:77,81</note>
-        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:129,131</note>
+        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:148,150</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:88,92</note>
         <note category="description">Confirms and stores an edit</note>
       </notes>
@@ -4288,7 +4288,7 @@
     </unit>
     <unit id="3807699453257291879">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:32,35</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:33,36</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
       <segment state="translated">
@@ -4298,7 +4298,7 @@
     </unit>
     <unit id="4313782791271467411">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:117</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:120</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4318,7 +4318,7 @@
     </unit>
     <unit id="7248378588975188090">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:138</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:159</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -4338,7 +4338,7 @@
     </unit>
     <unit id="4813239392166088334">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:151</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:180</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4348,7 +4348,7 @@
     </unit>
     <unit id="9136333277025964285">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:152</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:181</note>
         <note category="description">Title of a dialog or section</note>
       </notes>
       <segment state="translated">
@@ -5226,6 +5226,16 @@
       <segment state="translated">
         <source>Correlation ID</source>
         <target>ID de correlación</target>
+      </segment>
+    </unit>
+    <unit id="9028314484187319935">
+      <notes>
+        <note category="location">src/app/static/components/reaction-picker/reaction-picker.component.ts:29,31</note>
+        <note category="description">Accessible label for the button that opens the emoji picker for reacting to a comment</note>
+      </notes>
+      <segment state="translated">
+        <source>Add Reaction</source>
+        <target>Añadir reacción</target>
       </segment>
     </unit>
     <unit id="6411779152025321277">
@@ -10646,7 +10656,7 @@
     <unit id="2330577642930707695">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:81,84</note>
-        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:121,123</note>
+        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:140,142</note>
         <note category="description">Dismisses a dialog without acting</note>
       </notes>
       <segment state="translated">
@@ -18683,7 +18693,7 @@
     </unit>
     <unit id="3485671316713233453">
       <notes>
-        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:96,105</note>
+        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:115,124</note>
         <note category="description">Marker appended after a comment&apos;s timestamp when the comment has been edited. The leading space is part of the message and separates it from the timestamp — keep it, along with the middle dot</note>
       </notes>
       <segment state="translated">
@@ -18693,7 +18703,7 @@
     </unit>
     <unit id="1150323560908371371">
       <notes>
-        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:113,116</note>
+        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:132,135</note>
         <note category="description">Placeholder in the comment edit box. The @ character triggers the mention picker and must be kept</note>
       </notes>
       <segment state="translated">
@@ -18703,7 +18713,7 @@
     </unit>
     <unit id="4759094176152960587">
       <notes>
-        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:148,150</note>
+        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:194,196</note>
         <note category="description">Accessible label for the button that opens a comment&apos;s action menu</note>
       </notes>
       <segment state="translated">
@@ -18713,7 +18723,7 @@
     </unit>
     <unit id="8587947756059708753">
       <notes>
-        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:159,160</note>
+        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:205,206</note>
         <note category="description">Menu item that starts editing a comment</note>
       </notes>
       <segment state="translated">
@@ -18723,7 +18733,7 @@
     </unit>
     <unit id="7924102435705786746">
       <notes>
-        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:171,172</note>
+        <note category="location">src/app/static/components/comments-list/comments-list.component.ts:217,218</note>
         <note category="description">Menu item that deletes a comment</note>
       </notes>
       <segment state="translated">
