@@ -1,0 +1,19 @@
+{{- /* maxUnavailable, not minAvailable — at one replica the latter blocks node drains outright. */}}
+{{- range $component := list "api" "public-api" "client" "website" "activity" "jobs" }}
+---
+apiVersion: "policy/v1"
+kind: "PodDisruptionBudget"
+metadata:
+  name: "{{ $component }}-pdb"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "{{ $component }}"
+    app.kubernetes.io/instance: "{{ $.Release.Name }}"
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "netptune-app"
+      app.kubernetes.io/component: "{{ $component }}"
+      app.kubernetes.io/instance: "{{ $.Release.Name }}"
+{{- end }}

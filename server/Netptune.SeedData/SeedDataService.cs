@@ -40,25 +40,30 @@ public sealed class SeedDataService : IHostedService
         var seedContext = new SeedContext();
         var phases = seeders.GroupBy(s => s.Phase).OrderBy(g => g.Key);
 
-        await dbContext.Database.BeginTransactionAsync(ct);
+        var strategy = dbContext.Database.CreateExecutionStrategy();
 
-        try
+        await strategy.ExecuteAsync(async () =>
         {
-            foreach (var phase in phases)
+            await dbContext.Database.BeginTransactionAsync(ct);
+
+            try
             {
-                foreach (var seeder in phase)
-                    await seeder.SeedAsync(dbContext, seedContext, ct);
+                foreach (var phase in phases)
+                {
+                    foreach (var seeder in phase)
+                        await seeder.SeedAsync(dbContext, seedContext, ct);
 
-                await dbContext.SaveChangesAsync(ct);
+                    await dbContext.SaveChangesAsync(ct);
+                }
+
+                await dbContext.Database.CommitTransactionAsync(ct);
             }
-
-            await dbContext.Database.CommitTransactionAsync(ct);
-        }
-        catch
-        {
-            await dbContext.Database.RollbackTransactionAsync(ct);
-            throw;
-        }
+            catch
+            {
+                await dbContext.Database.RollbackTransactionAsync(ct);
+                throw;
+            }
+        });
 
         timer.Stop();
 

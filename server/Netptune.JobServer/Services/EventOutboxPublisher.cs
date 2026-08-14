@@ -58,35 +58,40 @@ public sealed class EventOutboxPublisher : BackgroundService
         using var scope = ScopeFactory.CreateScope();
 
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
-        var now = DateTime.UtcNow;
-        var leaseId = Guid.NewGuid();
+        var strategy = context.Database.CreateExecutionStrategy();
 
-        await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
-
-        var rows = await context.EventOutbox
-            .FromSqlInterpolated($$"""
-                SELECT *
-                FROM event_outbox
-                WHERE available_at <= {{now}}
-                  AND dead_lettered_at IS NULL
-                  AND (lease_expires_at IS NULL OR lease_expires_at < {{now}})
-                ORDER BY available_at, event_record_id
-                LIMIT {{BatchSize}}
-                FOR UPDATE SKIP LOCKED
-                """)
-            .ToListAsync(cancellationToken);
-
-        foreach (var row in rows)
+        return await strategy.ExecuteAsync(async () =>
         {
-            row.LeaseId = leaseId;
-            row.LeaseExpiresAt = now.Add(LeaseDuration);
-            row.AttemptCount++;
-        }
+            var now = DateTime.UtcNow;
+            var leaseId = Guid.NewGuid();
 
-        await context.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
+            await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 
-        return rows.Select(row => new OutboxClaim(row.EventRecordId, leaseId)).ToList();
+            var rows = await context.EventOutbox
+                .FromSqlInterpolated($$"""
+                    SELECT *
+                    FROM event_outbox
+                    WHERE available_at <= {{now}}
+                      AND dead_lettered_at IS NULL
+                      AND (lease_expires_at IS NULL OR lease_expires_at < {{now}})
+                    ORDER BY available_at, event_record_id
+                    LIMIT {{BatchSize}}
+                    FOR UPDATE SKIP LOCKED
+                    """)
+                .ToListAsync(cancellationToken);
+
+            foreach (var row in rows)
+            {
+                row.LeaseId = leaseId;
+                row.LeaseExpiresAt = now.Add(LeaseDuration);
+                row.AttemptCount++;
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+
+            return rows.Select(row => new OutboxClaim(row.EventRecordId, leaseId)).ToList();
+        });
     }
 
     private async Task Publish(OutboxClaim claim, CancellationToken cancellationToken)

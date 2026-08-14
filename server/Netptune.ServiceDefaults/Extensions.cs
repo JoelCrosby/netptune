@@ -17,6 +17,7 @@ public static class Extensions
 {
     private const string LivenessEndpointPath = "/health/live";
     private const string ReadinessEndpointPath = "/health/ready";
+    private const string DependencyEndpointPath = "/health/deps";
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
@@ -67,6 +68,7 @@ public static class Extensions
                         t.Filter = context =>
                             !context.Request.Path.StartsWithSegments(LivenessEndpointPath)
                             && !context.Request.Path.StartsWithSegments(ReadinessEndpointPath)
+                            && !context.Request.Path.StartsWithSegments(DependencyEndpointPath)
                     )
                     .AddHttpClientInstrumentation()
                     .AddNpgsql()
@@ -105,7 +107,14 @@ public static class Extensions
             Predicate = r => r.Tags.Contains("live")
         });
 
+        // Excludes the datastore checks: they are shared, so one blip would mark every replica
+        // unready at once. The startup probe uses the dependency endpoint below instead.
         app.MapHealthChecks(ReadinessEndpointPath, new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
+
+        app.MapHealthChecks(DependencyEndpointPath, new HealthCheckOptions
         {
             Predicate = r => r.Tags.Contains("ready") || r.Tags.Contains("live")
         });

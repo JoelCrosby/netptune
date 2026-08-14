@@ -4,12 +4,6 @@ using Netptune.Core.Repositories.Common;
 
 namespace Netptune.Repositories.Common;
 
-/// <summary>
-/// Base unit of work class
-/// The implementation of this class should instantiate and hold reference to all repositories to provide data access to your application
-/// </summary>
-/// <typeparam name="TContext">Db context from entity framework</typeparam>
-/// <typeparam name="TDbConnectionFactory">Dc connection factory to proper database</typeparam>
 public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
     where TContext : DbContext
     where TDbConnectionFactory : IDbConnectionFactory
@@ -23,83 +17,68 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
         ConnectionFactory = connectionFactory;
     }
 
-    /// <summary>
-    /// Execute all the database changes.
-    /// </summary>
-    /// <returns>Number of changes</returns>
-    public int Complete()
-    {
-        return Context.SaveChanges();
-    }
-
-    /// <summary>
-    /// Execute all the database changes asynchronous.
-    /// </summary>
-    /// <returns>Number of changes</returns>
     public async Task<int> CompleteAsync(CancellationToken cancellationToken = default)
     {
         return await Context.SaveChangesAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// Executes the passed function in a single transaction.
-    /// After completion commits the changes, if it fails it rolls the changes back
-    /// </summary>
-    /// <param name="callback"></param>
-    /// <param name="disableChangeDetection"></param>
     public async Task Transaction(Func<Task> callback, bool disableChangeDetection = false)
     {
-        await using var transaction = await Context.Database.BeginTransactionAsync();
+        // The retrying execution strategy rejects a transaction it did not open itself. The callback
+        // still runs at most once — UnitOfWorkTransactionException is not retryable.
+        var strategy = Context.Database.CreateExecutionStrategy();
 
-        try
+        await strategy.ExecuteAsync(async () =>
         {
-            Context.ChangeTracker.AutoDetectChangesEnabled = !disableChangeDetection;
+            await using var transaction = await Context.Database.BeginTransactionAsync();
 
-            await callback();
-            // Commit transaction if all commands succeed, transaction will auto-rollback
-            // when disposed if either commands fails
-            await transaction.CommitAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new UnitOfWorkTransactionException(
-                "UnitOfWork Transaction Failed. See Inner exception for details.", ex);
-        }
-        finally
-        {
-            Context.ChangeTracker.AutoDetectChangesEnabled = true;
-        }
+            try
+            {
+                Context.ChangeTracker.AutoDetectChangesEnabled = !disableChangeDetection;
+
+                await callback();
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new UnitOfWorkTransactionException(
+                    "UnitOfWork Transaction Failed. See Inner exception for details.", ex);
+            }
+            finally
+            {
+                Context.ChangeTracker.AutoDetectChangesEnabled = true;
+            }
+        });
     }
 
-    /// <summary>
-    /// Executes the passed function in a single transaction.
-    /// After completion commits the changes, if it fails it rolls the changes back
-    /// </summary>
-    /// <param name="callback"></param>
-    /// <param name="disableChangeDetection"></param>
     public async Task<TResult> Transaction<TResult>(Func<Task<TResult>> callback, bool disableChangeDetection = false)
     {
-        await using var transaction = await Context.Database.BeginTransactionAsync();
+        var strategy = Context.Database.CreateExecutionStrategy();
 
-        try
+        return await strategy.ExecuteAsync(async () =>
         {
-            Context.ChangeTracker.AutoDetectChangesEnabled = !disableChangeDetection;
+            await using var transaction = await Context.Database.BeginTransactionAsync();
 
-            var result = await callback();
-            // Commit transaction if all commands succeed, transaction will auto-rollback
-            // when disposed if either commands fails
-            await transaction.CommitAsync();
+            try
+            {
+                Context.ChangeTracker.AutoDetectChangesEnabled = !disableChangeDetection;
 
-            return result;
-        }
-        catch (Exception ex)
-        {
-            throw new UnitOfWorkTransactionException("UnitOfWork Transaction Failed. See Inner exception for details.", ex);
-        }
-        finally
-        {
-            Context.ChangeTracker.AutoDetectChangesEnabled = true;
-        }
+                var result = await callback();
+
+                await transaction.CommitAsync();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new UnitOfWorkTransactionException("UnitOfWork Transaction Failed. See Inner exception for details.", ex);
+            }
+            finally
+            {
+                Context.ChangeTracker.AutoDetectChangesEnabled = true;
+            }
+        });
     }
 }
 

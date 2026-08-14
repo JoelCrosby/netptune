@@ -50,6 +50,7 @@ public static class NetptuneEntitiesConfiguration
                     npgsql.MapEnum<SprintStatus>();
                     npgsql.MapEnum<WorkspaceFilePurpose>();
                     npgsql.MapEnum<WorkspaceFileStatus>();
+                    npgsql.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(5), errorCodesToAdd: null);
                 })
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(new EventRecordImmutabilityInterceptor());

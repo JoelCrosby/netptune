@@ -73,7 +73,18 @@ website:
   image: "ghcr.io/joelcrosby/netptune-website:latest"
   host: "www.netptune.co.uk"
 
+csp:
+  # false falls back to Content-Security-Policy-Report-Only.
+  enforce: true
+  # Inline theme script in client/src/index.html. The deploy workflow fails if these drift apart.
+  inlineScriptHash: "sha256-Xf1P9Pt1xDF+tqqaPz5CBGIfX8iE7pa1FDF+9b643N8="
+
+networkPolicies:
+  enabled: false
+
 parameters:
+  compression:
+    minResponseBodyBytes: 1024
   cache:
     # Under the memory limit, so valkey evicts before the kernel OOM-kills it.
     maxmemory: "320mb"

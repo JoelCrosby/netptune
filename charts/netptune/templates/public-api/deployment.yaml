@@ -42,7 +42,7 @@ spec:
           imagePullPolicy: "Always"
           startupProbe:
             httpGet:
-              path: "/health/ready"
+              path: "/health/deps"
               port: "http"
             initialDelaySeconds: 15
             periodSeconds: 5

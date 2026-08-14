@@ -1,5 +1,6 @@
 using System.Diagnostics;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -39,49 +40,55 @@ public sealed class DataSeedService : IHostedService
         var boardGroups = BoardGroupSeeder.Generate(users, boards);
         var tasks = TaskSeeder.Generate(users, projects, statuses);
 
-        try
+        await context.Database.EnsureCreatedAsync(ct);
+
+        var strategy = context.Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
         {
-            await context.Database.EnsureCreatedAsync(ct);
-            await context.Database.BeginTransactionAsync(ct);
+            try
+            {
+                await context.Database.BeginTransactionAsync(ct);
 
-            await context.Users.AddRangeAsync(users, ct);
-            await context.Workspaces.AddRangeAsync(workspaces, ct);
-            await context.WorkspaceAppUsers.AddRangeAsync(workspaceUsers, ct);
-            await context.Statuses.AddRangeAsync(statuses, ct);
-            await context.RelationTypes.AddRangeAsync(relationTypes, ct);
-            await context.Boards.AddRangeAsync(boards, ct);
-            await context.BoardGroups.AddRangeAsync(boardGroups, ct);
-            await context.Projects.AddRangeAsync(projects, ct);
-            await context.ProjectTasks.AddRangeAsync(tasks, ct);
+                await context.Users.AddRangeAsync(users, ct);
+                await context.Workspaces.AddRangeAsync(workspaces, ct);
+                await context.WorkspaceAppUsers.AddRangeAsync(workspaceUsers, ct);
+                await context.Statuses.AddRangeAsync(statuses, ct);
+                await context.RelationTypes.AddRangeAsync(relationTypes, ct);
+                await context.Boards.AddRangeAsync(boards, ct);
+                await context.BoardGroups.AddRangeAsync(boardGroups, ct);
+                await context.Projects.AddRangeAsync(projects, ct);
+                await context.ProjectTasks.AddRangeAsync(tasks, ct);
 
-            await context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync(ct);
 
-            var activityLogs = EventRecordSeeder.Generate(tasks, users, workspaces);
-            var comments = CommentSeeder.Generate(tasks, users);
-            var tags = TagSeeder.Generate(users, tasks);
-            var taskTags = TaskTagSeeder.Generate(tags, tasks, users);
+                var activityLogs = EventRecordSeeder.Generate(tasks, users, workspaces);
+                var comments = CommentSeeder.Generate(tasks, users);
+                var tags = TagSeeder.Generate(users, tasks);
+                var taskTags = TaskTagSeeder.Generate(tags, tasks, users);
 
-            await context.EventRecords.AddRangeAsync(activityLogs, ct);
-            await context.Comments.AddRangeAsync(comments, ct);
-            await context.Tags.AddRangeAsync(tags, ct);
-            await context.ProjectTaskTags.AddRangeAsync(taskTags, ct);
+                await context.EventRecords.AddRangeAsync(activityLogs, ct);
+                await context.Comments.AddRangeAsync(comments, ct);
+                await context.Tags.AddRangeAsync(tags, ct);
+                await context.ProjectTaskTags.AddRangeAsync(taskTags, ct);
 
-            await context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync(ct);
 
-            var notifications = NotificationSeeder.Generate(activityLogs, workspaces, workspaceUsers);
-            var activityEntries = ActivityEntrySeeder.Generate(activityLogs, users, workspaces);
+                var notifications = NotificationSeeder.Generate(activityLogs, workspaces, workspaceUsers);
+                var activityEntries = ActivityEntrySeeder.Generate(activityLogs, users, workspaces);
 
-            await context.Notifications.AddRangeAsync(notifications, ct);
-            await context.ActivityEntries.AddRangeAsync(activityEntries, ct);
+                await context.Notifications.AddRangeAsync(notifications, ct);
+                await context.ActivityEntries.AddRangeAsync(activityEntries, ct);
 
-            await context.SaveChangesAsync(ct);
-            await context.Database.CommitTransactionAsync(ct);
-        }
-        catch
-        {
-            await context.Database.RollbackTransactionAsync(ct);
-            throw;
-        }
+                await context.SaveChangesAsync(ct);
+                await context.Database.CommitTransactionAsync(ct);
+            }
+            catch
+            {
+                await context.Database.RollbackTransactionAsync(ct);
+                throw;
+            }
+        });
 
         timer.Stop();
 

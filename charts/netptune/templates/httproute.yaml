@@ -29,6 +29,11 @@ spec:
             group: traefik.io
             kind: Middleware
             name: body-size-limit
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: compress
       backendRefs:
         - name: public-api-service
           port: {{ .Values.parameters.publicApi.port_http | int }}
@@ -67,6 +72,11 @@ spec:
             group: traefik.io
             kind: Middleware
             name: body-size-limit
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: compress
       backendRefs:
         - name: api-service
           port: {{ .Values.parameters.api.port_http | int }}
@@ -113,6 +123,11 @@ spec:
             group: traefik.io
             kind: Middleware
             name: body-size-limit
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: compress
       backendRefs:
         - name: public-api-service
           port: {{ .Values.parameters.publicApi.port_http | int }}
@@ -151,6 +166,11 @@ spec:
             group: traefik.io
             kind: Middleware
             name: body-size-limit
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: compress
       backendRefs:
         - name: api-service
           port: {{ .Values.parameters.api.port_http | int }}
