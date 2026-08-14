@@ -450,6 +450,42 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Resolve image tags
+        id: images
+        run: |
+          # Last commit that touched each source, not this commit — a charts-only push rebuilds
+          # nothing, so the current sha would name images that were never pushed.
+          {
+            echo "server=sha-$(git log -1 --format=%H -- server/)"
+            echo "client=sha-$(git log -1 --format=%H -- client/)"
+            echo "website=sha-$(git log -1 --format=%H -- website/)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Verify CSP inline script hash
+        run: |
+          # A stale hash fails silently in the browser, so fail the deploy instead.
+          python3 - <<'PY'
+          import base64, hashlib, re, sys
+
+          html = open('client/src/index.html', encoding='utf-8').read()
+          inline = re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', html, re.S)
+
+          if len(inline) != 1:
+              sys.exit(f'expected exactly one inline script in index.html, found {len(inline)}')
+
+          digest = base64.b64encode(hashlib.sha256(inline[0].encode()).digest()).decode()
+          expected = f'sha256-{digest}'
+
+          values = open('charts/netptune/values.yaml', encoding='utf-8').read()
+
+          if expected not in values:
+              sys.exit(f'csp.inlineScriptHash in values.yaml is stale; expected {expected}')
+
+          print(f'CSP inline script hash matches: {expected}')
+          PY
 
       - name: Set up Helm
         uses: azure/setup-helm@v5
@@ -469,6 +505,12 @@ jobs:
             --timeout 10m \
             --kubeconfig kubeconfig.yaml \
             --namespace default \
+            --set "parameters.api.api_image=${{ env.REGISTRY }}/${{ env.APP_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
+            --set "parameters.publicApi.public_api_image=${{ env.REGISTRY }}/${{ env.PUBLIC_API_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
+            --set "parameters.jobs.jobs_image=${{ env.REGISTRY }}/${{ env.JOBS_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
+            --set "parameters.activity.activity_image=${{ env.REGISTRY }}/${{ env.ACTIVITY_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
+            --set "parameters.client.client_image=${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}:${{ steps.images.outputs.client }}" \
+            --set "website.image=${{ env.REGISTRY }}/${{ env.WEBSITE_IMAGE_NAME }}:${{ steps.images.outputs.website }}" \
             --set ingress.enabled=true \
             --set "ingress.host=netptune.co.uk" \
             --set "ingress.publicApiHost=api.netptune.co.uk" \
@@ -528,36 +570,3 @@ jobs:
             --set "secrets.aspire.cookie_secret=${{ secrets.ASPIRE_COOKIE_SECRET }}" \
             --set "secrets.aspire.otlp_api_key=${{ secrets.ASPIRE_OTLP_API_KEY }}"
 
-      - name: Restart deployments
-        env:
-          SERVER_CHANGED: ${{ needs.changes.outputs.server }}
-          CLIENT_CHANGED: ${{ needs.changes.outputs.client }}
-          WEBSITE_CHANGED: ${{ needs.changes.outputs.website }}
-          CHARTS_CHANGED: ${{ needs.changes.outputs.charts }}
-        run: |
-          deployments=()
-
-          if [[ "$SERVER_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then
-            deployments+=(api-deployment public-api-deployment jobs-deployment activity-deployment)
-          fi
-
-          if [[ "$CLIENT_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then
-            deployments+=(client-deployment)
-          fi
-
-          if [[ "$WEBSITE_CHANGED" == "true" || "$CHARTS_CHANGED" == "true" ]]; then
-            deployments+=(website-deployment)
-          fi
-
-          if [[ "${#deployments[@]}" -eq 0 ]]; then
-            echo "No application deployments need a restart."
-            exit 0
-          fi
-
-          for deployment in "${deployments[@]}"; do
-            kubectl --kubeconfig kubeconfig.yaml --namespace default rollout restart "deployment/$deployment"
-          done
-
-          for deployment in "${deployments[@]}"; do
-            kubectl --kubeconfig kubeconfig.yaml --namespace default rollout status "deployment/$deployment" --timeout 5m
-          done
