@@ -43,6 +43,27 @@ spec:
             - name: "postgres-data"
               mountPath: "/var/lib/postgresql/data"
           imagePullPolicy: "IfNotPresent"
+          startupProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          # Memory only — the node pool has no spare CPU to reserve against.
+          resources:
+{{- toYaml .Values.parameters.postgres.resources | nindent 12 }}
   updateStrategy:
     type: "RollingUpdate"
     rollingUpdate:

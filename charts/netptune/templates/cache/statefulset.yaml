@@ -22,6 +22,8 @@ spec:
         app.kubernetes.io/component: "cache"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
     spec:
+      securityContext:
+        fsGroup: 999
       containers:
         - command:
             - "/bin/sh"
@@ -30,15 +32,55 @@ spec:
           envFrom:
             - secretRef:
                 name: "cache-secrets"
+          # This also holds the DataProtection key ring, which is written without a TTL and cannot be
+          # regenerated. volatile-lru evicts only keys that have a TTL, so it spares the ring where
+          # allkeys-lru would not; appendonly keeps it across a reschedule.
           args:
             - "-c"
-            - "valkey-server --requirepass $VALKEY_PASSWORD"
+            - >-
+              valkey-server
+              --requirepass $VALKEY_PASSWORD
+              --dir /data
+              --appendonly yes
+              --maxmemory {{ .Values.parameters.cache.maxmemory }}
+              --maxmemory-policy volatile-lru
           ports:
             - name: "tcp"
               protocol: "TCP"
               containerPort: 6379
+          volumeMounts:
+            - name: "cache-data"
+              mountPath: "/data"
           imagePullPolicy: "IfNotPresent"
+          startupProbe:
+            exec:
+              command: ["/bin/sh", "-c", "valkey-cli --no-auth-warning -a \"$VALKEY_PASSWORD\" ping"]
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "valkey-cli --no-auth-warning -a \"$VALKEY_PASSWORD\" ping"]
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "valkey-cli --no-auth-warning -a \"$VALKEY_PASSWORD\" ping"]
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+{{- toYaml .Values.parameters.cache.resources | nindent 12 }}
   updateStrategy:
     type: "RollingUpdate"
     rollingUpdate:
       maxUnavailable: 1
+  volumeClaimTemplates:
+    - metadata:
+        name: "cache-data"
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.cache.size }}"

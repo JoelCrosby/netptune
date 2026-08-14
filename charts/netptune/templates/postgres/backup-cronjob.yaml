@@ -1,0 +1,136 @@
+{{- if .Values.parameters.postgres.backup.enabled }}
+---
+# Own secret, defaulting to the API's S3 values, so backups can later be moved to a bucket whose
+# credentials cannot delete objects.
+apiVersion: "v1"
+kind: "Secret"
+metadata:
+  name: "postgres-backup-secrets"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "postgres-backup"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+stringData:
+  AWS_ACCESS_KEY_ID: "{{ .Values.secrets.postgresBackup.s3_access_key_id | default .Values.secrets.api.s3_access_key_id }}"
+  AWS_SECRET_ACCESS_KEY: "{{ .Values.secrets.postgresBackup.s3_secret_access_key | default .Values.secrets.api.s3_secret_access_key }}"
+  AWS_DEFAULT_REGION: "{{ .Values.secrets.postgresBackup.s3_region | default .Values.secrets.api.s3_region }}"
+  BACKUP_BUCKET: "{{ .Values.secrets.postgresBackup.s3_bucket_name | default .Values.secrets.api.s3_bucket_name }}"
+  PGPASSWORD: "{{ .Values.secrets.postgres.postgres_password }}"
+type: "Opaque"
+---
+# Dump and upload are split across two images so neither has to carry the other's tooling. The
+# initContainer runs to completion first, so the upload cannot see a partial dump.
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "postgres-backup-cronjob"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "postgres-backup"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+spec:
+  schedule: "{{ .Values.parameters.postgres.backup.schedule }}"
+  concurrencyPolicy: "Forbid"
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: "netptune-app"
+            app.kubernetes.io/component: "postgres-backup"
+            app.kubernetes.io/instance: "{{ .Release.Name }}"
+        spec:
+          restartPolicy: "Never"
+          # Lets the root-run AWS CLI container read what the dump container wrote to the emptyDir.
+          securityContext:
+            fsGroup: 999
+          volumes:
+            - name: "backup-scratch"
+              emptyDir:
+                sizeLimit: "{{ .Values.parameters.postgres.backup.scratchSizeLimit }}"
+          initContainers:
+            - name: "dump"
+              image: "{{ .Values.parameters.postgres.backup.pgImage }}"
+              imagePullPolicy: "IfNotPresent"
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  set -eu
+
+                  pg_dump \
+                    --host="postgres-service" \
+                    --username="$POSTGRES_USER" \
+                    --dbname="netptune" \
+                    --format=custom \
+                    --compress=6 \
+                    --file=/backup/netptune.dump
+
+                  # A half-written dump still leaves a file behind. Walking the archive's table of
+                  # contents fails here rather than uploading it over a good backup.
+                  pg_restore --list /backup/netptune.dump > /dev/null
+
+                  echo "dump ok: $(stat -c %s /backup/netptune.dump) bytes"
+              env:
+                - name: "PGCONNECT_TIMEOUT"
+                  value: "30"
+              envFrom:
+                - configMapRef:
+                    name: "postgres-config"
+                - secretRef:
+                    name: "postgres-backup-secrets"
+              volumeMounts:
+                - name: "backup-scratch"
+                  mountPath: "/backup"
+              resources:
+{{- toYaml .Values.parameters.postgres.backup.resources | nindent 16 }}
+          containers:
+            - name: "upload"
+              image: "{{ .Values.parameters.postgres.backup.awsCliImage }}"
+              imagePullPolicy: "IfNotPresent"
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  set -eu
+
+                  timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+                  destination="s3://$BACKUP_BUCKET/$BACKUP_PREFIX/netptune-$timestamp.dump"
+
+                  aws s3 cp /backup/netptune.dump "$destination" --only-show-errors
+                  echo "uploaded $destination"
+
+                  # Aged on the listing's date column, not the key. Keys are matched against the
+                  # expected name first, so an unrelated object sharing the prefix is never deleted.
+                  cutoff="$(date -u -d "$RETENTION_DAYS days ago" +%Y-%m-%d)"
+
+                  aws s3 ls "s3://$BACKUP_BUCKET/$BACKUP_PREFIX/" | while read -r date _time _size key; do
+                    case "$key" in
+                      netptune-*.dump) ;;
+                      *) continue ;;
+                    esac
+
+                    if [ "$date" \< "$cutoff" ]; then
+                      aws s3 rm "s3://$BACKUP_BUCKET/$BACKUP_PREFIX/$key" --only-show-errors
+                      echo "pruned $key"
+                    fi
+                  done
+              env:
+                - name: "BACKUP_PREFIX"
+                  value: "{{ .Values.parameters.postgres.backup.s3Prefix }}"
+                - name: "RETENTION_DAYS"
+                  value: "{{ .Values.parameters.postgres.backup.retentionDays }}"
+              envFrom:
+                - secretRef:
+                    name: "postgres-backup-secrets"
+              volumeMounts:
+                - name: "backup-scratch"
+                  mountPath: "/backup"
+                  readOnly: true
+              resources:
+{{- toYaml .Values.parameters.postgres.backup.resources | nindent 16 }}
+{{- end }}

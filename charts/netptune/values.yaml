@@ -10,17 +10,21 @@ ingress:
 persistence:
   postgres:
     size: "40Gi"
+  cache:
+    # 40Gi is the provider's minimum block-storage size, not a capacity estimate.
+    size: "40Gi"
   meilisearch:
     size: "40Gi"
   nats:
     size: "40Gi"
 
+adminAccess:
+  github_user: "joelcrosby"
+
 headlamp:
   enabled: true
   image: "ghcr.io/headlamp-k8s/headlamp:latest"
   host: "headlamp.netptune.co.uk"
-  oauth2:
-    allowed_email_domain: "live.co.uk"
 
 oauth2Proxy:
   image: "quay.io/oauth2-proxy/oauth2-proxy:v7.15.3"
@@ -39,8 +43,6 @@ aspire:
   enabled: true
   image: "mcr.microsoft.com/dotnet/aspire-dashboard:13.4.2"
   host: "aspire.netptune.co.uk"
-  oauth2:
-    allowed_email_domain: "live.co.uk"
   resources:
     requests:
       cpu: "50m"
@@ -72,6 +74,34 @@ website:
   host: "www.netptune.co.uk"
 
 parameters:
+  cache:
+    # Under the memory limit, so valkey evicts before the kernel OOM-kills it.
+    maxmemory: "320mb"
+    resources:
+      requests:
+        memory: "128Mi"
+      limits:
+        memory: "512Mi"
+  postgres:
+    resources:
+      requests:
+        memory: "384Mi"
+      limits:
+        memory: "1Gi"
+    backup:
+      enabled: true
+      schedule: "0 2 * * *"
+      retentionDays: 30
+      s3Prefix: "postgres-backups"
+      # Holds one compressed pg_dump; the job fails once the emptyDir fills.
+      scratchSizeLimit: "8Gi"
+      pgImage: "docker.io/library/postgres:18"
+      awsCliImage: "docker.io/amazon/aws-cli:2.32.9"
+      resources:
+        requests:
+          memory: "128Mi"
+        limits:
+          memory: "512Mi"
   jobs:
     replicas: 1
     port_http: 8080
@@ -165,6 +195,13 @@ secrets:
     otlp_api_key: ""
   postgres:
     postgres_password: ""
+  # Each falls back to the matching secrets.api value when left empty. Set them to point backups at
+  # a separate bucket whose credentials cannot delete objects.
+  postgresBackup:
+    s3_bucket_name: ""
+    s3_region: ""
+    s3_access_key_id: ""
+    s3_secret_access_key: ""
   meilisearch:
     master_key: ""
   cache:
