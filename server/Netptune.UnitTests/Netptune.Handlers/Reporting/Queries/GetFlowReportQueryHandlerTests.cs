@@ -1,5 +1,6 @@
 using FluentAssertions;
 
+using Netptune.Core.Exceptions;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services.Reporting;

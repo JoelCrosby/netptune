@@ -32,9 +32,9 @@
   <Project Path="Netptune.Entities/Netptune.Entities.csproj" />
   <Project Path="Netptune.Events/Netptune.Events.csproj" />
   <Project Path="Netptune.Export/Netptune.Export.csproj" />
-    <Project Path="Netptune.Transfer/Netptune.Transfer.csproj" />
+  <Project Path="Netptune.Transfer/Netptune.Transfer.csproj" />
   <Project Path="Netptune.Handlers/Netptune.Handlers.csproj" />
-  <Project Path="Netptune.Identity\Netptune.Identity.csproj" />
+  <Project Path="Netptune.Identity/Netptune.Identity.csproj" />
   <Project Path="Netptune.Import/Netptune.Import.csproj" />
   <Project Path="Netptune.JobServer/Netptune.JobServer.csproj" />
   <Project Path="Netptune.Messaging/Netptune.Messaging.csproj" />

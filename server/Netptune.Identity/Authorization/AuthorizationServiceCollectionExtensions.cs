@@ -10,7 +10,7 @@ namespace Netptune.Identity.Authorization;
 
 public static class AuthorizationServiceCollectionExtensions
 {
-    public static void AddNeptuneAuthorization(
+    public static IServiceCollection AddNetptuneAuthorization(
         this IServiceCollection services,
         string authenticationScheme = AuthenticationSchemes.Smart)
     {
@@ -53,5 +53,7 @@ public static class AuthorizationServiceCollectionExtensions
 
         services.AddScoped<IAuthorizationHandler, WorkspaceAuthorizationHandler>();
         services.AddScoped<IAuthorizationHandler, WorkspacePermissionResourceAuthorizationHandler>();
+
+        return services;
     }
 }

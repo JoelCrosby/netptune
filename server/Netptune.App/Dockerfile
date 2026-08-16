@@ -34,7 +34,7 @@ RUN dotnet publish "Netptune.App.csproj" \
     /p:SourceRevisionId="${COMMIT}+${GITHUB_REF}+${BUILD_NUMBER}+${RUN_ID}"
 
 FROM base AS final
-EXPOSE 4800/tcp
+EXPOSE 7400/tcp
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Netptune.App.dll"]

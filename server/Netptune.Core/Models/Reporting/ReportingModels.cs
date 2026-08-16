@@ -173,5 +173,3 @@ public sealed record VelocityPoint
 
     public int DifferentUnitEstimateCount { get; init; }
 }
-
-public sealed class InvalidReportingFilterException(string message) : Exception(message);

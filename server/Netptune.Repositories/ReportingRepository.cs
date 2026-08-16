@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Exceptions;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Repositories;
 using Netptune.Core.Services.Reporting;

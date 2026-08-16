@@ -14,7 +14,7 @@ namespace Netptune.Events;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddNetptuneMessageQueue(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddNetptuneMessageQueue(this IServiceCollection services, string connectionString)
     {
         var serializer = new NatsJsonContextSerializerRegistry(NatsJsonContext.Default);
 
@@ -32,9 +32,11 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<EventStream>();
         services.AddSingleton<IEventPublisher, EventPublisher>();
+
+        return services;
     }
 
-    public static void AddNetptuneMessageQueue(
+    public static IServiceCollection AddNetptuneMessageQueue(
         this IServiceCollection services,
         string connectionString,
         IConfiguration configuration,
@@ -46,9 +48,11 @@ public static class ServiceCollectionExtensions
 
             options.DurableName = durableName;
         });
+
+        return services;
     }
 
-    public static void AddNetptuneMessageQueue(
+    public static IServiceCollection AddNetptuneMessageQueue(
         this IServiceCollection services,
         string connectionString,
         Action<EventConsumerOptions> configure)
@@ -66,6 +70,8 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<EventMessageProcessor>();
         services.AddHostedService<EventConsumerService>();
+
+        return services;
     }
 
     public static IServiceCollection AddCanonicalEventConsumer(this IServiceCollection services)

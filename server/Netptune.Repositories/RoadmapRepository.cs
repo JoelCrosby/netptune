@@ -4,6 +4,7 @@ using System.Text.Json;
 using Dapper;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Exceptions;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Models.Roadmap;
 using Netptune.Core.Repositories;

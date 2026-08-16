@@ -42,8 +42,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
-builder.Services.AddNeptuneAuthorization(AuthenticationSchemes.ApiKey);
-builder.Services.AddNeptuneApiKeyAuthentication();
+builder.Services.AddNetptuneAuthorization(AuthenticationSchemes.ApiKey);
+builder.Services.AddNetptuneApiKeyAuthentication();
 
 builder.AddNetptuneCache(options => options.Connection = redisConnectionString);
 

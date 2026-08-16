@@ -25,7 +25,7 @@ public static class AuthenticationServiceCollectionExtensions
             .AddDefaultTokenProviders();
     }
 
-    public static void AddNeptuneAuthentication(this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
+    public static IServiceCollection AddNetptuneAuthentication(this IServiceCollection services, Action<NetptuneAuthenticationOptions> action)
     {
         var authenticationOptions = ConfigureServices(services, action);
 
@@ -180,9 +180,11 @@ public static class AuthenticationServiceCollectionExtensions
 
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddTransient<INetptuneAuthService, NetptuneAuthService>();
+
+        return services;
     }
 
-    public static void AddNeptuneApiKeyAuthentication(this IServiceCollection services)
+    public static IServiceCollection AddNetptuneApiKeyAuthentication(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
 
@@ -196,6 +198,8 @@ public static class AuthenticationServiceCollectionExtensions
                 _ => { });
 
         services.AddScoped<IIdentityService, IdentityService>();
+
+        return services;
     }
 
     private static NetptuneAuthenticationOptions ConfigureServices(

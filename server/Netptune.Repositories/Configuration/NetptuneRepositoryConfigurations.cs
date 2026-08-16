@@ -11,7 +11,7 @@ namespace Netptune.Repositories.Configuration;
 
 public static class NetptuneRepositoryConfigurations
 {
-    public static void AddNetptuneRepository(this IServiceCollection services, Action<NetptuneRepositoryOptions> optionsAction)
+    public static IServiceCollection AddNetptuneRepository(this IServiceCollection services, Action<NetptuneRepositoryOptions> optionsAction)
     {
 
         if (optionsAction is null)
@@ -34,5 +34,7 @@ public static class NetptuneRepositoryConfigurations
         services.AddScoped<ITransferRepository, TransferRepository>();
         services.AddScoped<IArchiveRepository, ArchiveRepository>();
         services.AddScoped<IImportSessionRepository, ImportSessionRepository>();
+
+        return services;
     }
 }

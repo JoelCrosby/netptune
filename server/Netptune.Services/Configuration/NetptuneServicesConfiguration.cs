@@ -23,7 +23,7 @@ namespace Netptune.Services.Configuration;
 
 public static class NetptuneServicesConfiguration
 {
-    public static void AddNetptuneServices(this IServiceCollection services, Action<HostingOptions> action)
+    public static IServiceCollection AddNetptuneServices(this IServiceCollection services, Action<HostingOptions> action)
     {
         ConfigureServices(services, action);
 
@@ -52,6 +52,8 @@ public static class NetptuneServicesConfiguration
         services.AddScoped<IAncestorService, AncestorService>();
         services.AddSingleton<IAiCredentialProtector, AiCredentialProtector>();
         services.AddScoped<IAiExecutionContext, AiExecutionContext>();
+
+        return services;
     }
 
     public static IServiceCollection AddNetptuneEventRecording(this IServiceCollection services)

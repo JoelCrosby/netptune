@@ -82,8 +82,8 @@ builder.Services.AddSingleton<ITransferJobEventService, TransferJobEventService>
 builder.Services.AddSingleton<IPreferenceDefinitionRegistry, PreferenceDefinitionRegistry>();
 
 builder.Services.AddNetptuneIdentity().AddNetptuneIdentityEntities();
-builder.Services.AddNeptuneAuthorization();
-builder.Services.AddNeptuneAuthentication(options =>
+builder.Services.AddNetptuneAuthorization();
+builder.Services.AddNetptuneAuthentication(options =>
 {
     options.Issuer = configuration.GetRequiredValue("Tokens:Issuer");
     options.Audience = configuration.GetRequiredValue("Tokens:Audience");
