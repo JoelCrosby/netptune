@@ -31,6 +31,15 @@ using Netptune.Storage;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+// On by default in Development only. This host registers every dependency the shared handler
+// assembly needs, so a miswired registration should fail the pod's startup probe in production
+// rather than surface as a 500 on whichever request happens to reach the broken handler first.
+builder.Host.UseDefaultServiceProvider(options =>
+{
+    options.ValidateOnBuild = true;
+    options.ValidateScopes = true;
+});
+
 builder.AddServiceDefaults();
 
 var connectionString = configuration.GetNetptuneConnectionString("netptune");

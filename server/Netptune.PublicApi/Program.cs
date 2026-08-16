@@ -20,9 +20,9 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-// Mediator generates registrations for the entire shared Netptune.Handlers assembly.
-// This host maps only its public subset, so app-only handler dependencies must not
-// prevent the independently hosted API from starting in Development.
+// Mediator registers every handler in the shared Netptune.Handlers assembly, including the
+// app-only ones whose dependencies this slim host never wires up. PublicApiContainerTests
+// pins exactly which services those are, so the gap cannot widen unnoticed.
 builder.Host.UseDefaultServiceProvider(options => options.ValidateOnBuild = false);
 
 builder.AddServiceDefaults();

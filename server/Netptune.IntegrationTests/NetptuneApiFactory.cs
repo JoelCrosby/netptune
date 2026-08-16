@@ -55,6 +55,8 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
     public IServiceProvider Services => WebApplicationFactory.Services;
 
+    public IServiceProvider PublicApiServices => PublicApiApplicationFactory.Services;
+
     public NetptuneFixture()
     {
         CacheContainer.StartAsync().Wait();
