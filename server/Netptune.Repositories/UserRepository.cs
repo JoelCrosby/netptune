@@ -184,22 +184,6 @@ public class UserRepository : Repository<DataContext, AppUser, string>, IUserRep
         };
     }
 
-    public Task<List<AppUser>> GetUsers(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)
-    {
-        pageRequest ??= new PageRequest();
-        var pagination = pageRequest.GetPagination(PaginationDefaults.MaxAdminPageSize);
-
-        return Entities
-            .Where(user => user.UserType == AppUserType.User)
-            .OrderBy(x => x.Firstname)
-            .ThenBy(x => x.Lastname)
-            .ThenBy(x => x.Id)
-            .Skip(pagination.Skip)
-            .Take(pagination.PageSize)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
-    }
-
     public Task<WorkspaceRole?> GetUserWorkspaceRole(string userId, string workspaceKey, CancellationToken cancellationToken = default)
     {
         return Context.WorkspaceAppUsers

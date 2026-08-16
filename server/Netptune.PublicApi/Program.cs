@@ -77,7 +77,7 @@ app.MapGroup("/api/v1")
     .MapPublicApiV1Endpoints();
 
 app.MapDefaultEndpoints();
-app.MapOpenApi();
+app.MapOpenApi().AllowAnonymous();
 
 app.MapScalarApiReference("/docs", options => options
     .WithTitle("Netptune Public API")

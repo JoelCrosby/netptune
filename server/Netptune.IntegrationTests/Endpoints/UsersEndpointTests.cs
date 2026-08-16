@@ -222,38 +222,6 @@ public sealed class UsersEndpointTests
     }
 
     [Fact]
-    public async Task GetByEmail_ShouldReturnCorrectly_WhenInputValid()
-    {
-        var response = await Client.GetAsync($"api/users/get-by-email?email={SeedData.Users.First().Email}");
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var result = await response.Content.ReadFromJsonAsync<UserViewModel>();
-
-        result.Should().NotBeNull();
-    }
-
-    [Fact]
-    public async Task GetByEmail_ShouldReturnNotFound_WhenInputDoesNotExist()
-    {
-        var response = await Client.GetAsync("api/users/get-by-email?email=not-an-email");
-
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-    }
-
-    [Fact]
-    public async Task GetAll_ShouldReturnCorrectly_WhenInputValid()
-    {
-        var response = await Client.GetAsync("api/users/all");
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var result = await response.Content.ReadFromJsonAsync<List<UserViewModel>>();
-
-        result.Should().NotBeEmpty();
-    }
-
-    [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
         var currentUser = await Client.GetFromJsonAsync<CurrentUserResponse>("api/auth/current-user");

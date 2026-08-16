@@ -7,7 +7,9 @@ public static class PublicEndpoints
 {
     public static RouteGroupBuilder MapPublicEndpoints(this RouteGroupBuilder builder)
     {
-        var group = builder.MapGroup("public");
+        // Reached before sign-in, so an invite link can show the workspace it belongs to.
+        var group = builder.MapGroup("public")
+            .AllowAnonymous();
 
         group.MapGet("/workspaces/{workspaceKey}", HandleGetWorkspace);
         group.MapGet("/workspaces/{workspaceKey}/members", HandleGetWorkspaceMembers);

@@ -105,19 +105,19 @@ public static class Extensions
         app.MapHealthChecks(LivenessEndpointPath, new HealthCheckOptions
         {
             Predicate = r => r.Tags.Contains("live")
-        });
+        }).AllowAnonymous();
 
         // Excludes the datastore checks: they are shared, so one blip would mark every replica
         // unready at once. The startup probe uses the dependency endpoint below instead.
         app.MapHealthChecks(ReadinessEndpointPath, new HealthCheckOptions
         {
             Predicate = r => r.Tags.Contains("live")
-        });
+        }).AllowAnonymous();
 
         app.MapHealthChecks(DependencyEndpointPath, new HealthCheckOptions
         {
             Predicate = r => r.Tags.Contains("ready") || r.Tags.Contains("live")
-        });
+        }).AllowAnonymous();
 
         return app;
     }

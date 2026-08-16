@@ -12,8 +12,10 @@ public static class MetaEndpoints
     {
         var group = builder.MapGroup("meta");
 
-        group.MapGet("/build-info", HandleGetBuildInfo);
-        group.MapGet("/uri-meta-info", HandleGetUriMetaInfo);
+        // The login page renders the build number before anyone has signed in.
+        group.MapGet("/build-info", HandleGetBuildInfo).AllowAnonymous();
+
+        group.MapGet("/uri-meta-info", HandleGetUriMetaInfo).RequireAuthorization();
 
         return group;
     }

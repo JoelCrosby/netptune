@@ -21,8 +21,6 @@ public static class UsersEndpoints
         group.MapPost("/remove", HandleRemoveUserFromWorkspace).RequireAuthorization(NetptunePermissions.Members.Remove);
         group.MapPost("/toggle-permission", HandleTogglePermission).RequireAuthorization(NetptunePermissions.Members.UpdatePermission);
         group.MapPut("/role", HandleUpdateRole).RequireAuthorization(NetptunePermissions.Members.UpdateRole);
-        group.MapGet("/get-by-email", HandleGetUserByEmail).RequireAuthorization(NetptunePermissions.Members.Read);
-        group.MapGet("/all", HandleGetAll).RequireAuthorization(NetptunePermissions.Members.Read);
 
         return group;
     }
@@ -79,26 +77,6 @@ public static class UsersEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new RemoveUsersFromWorkspaceCommand(request.EmailAddresses), cancellationToken);
-
-        return Results.Ok(result);
-    }
-
-    public static async Task<IResult> HandleGetUserByEmail(IMediator mediator, string email,
-        CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new GetUserByEmailQuery(email), cancellationToken);
-
-        if (result is null) return Results.NotFound();
-
-        return Results.Ok(result);
-    }
-
-    public static async Task<IResult> HandleGetAll(
-        IMediator mediator,
-        [AsParameters] PageRequest page,
-        CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new GetAllUsersQuery(page), cancellationToken);
 
         return Results.Ok(result);
     }

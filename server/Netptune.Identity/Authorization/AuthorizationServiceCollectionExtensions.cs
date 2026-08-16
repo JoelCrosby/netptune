@@ -18,11 +18,17 @@ public static class AuthorizationServiceCollectionExtensions
             options.AuthenticationScheme = authenticationScheme);
         services.AddSingleton<IAuthorizationPolicyProvider, NetptuneAuthorizationPolicyProvider>();
 
+        var authenticatedUser = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .AddAuthenticationSchemes(authenticationScheme)
+            .Build();
+
         services.AddAuthorizationBuilder()
-            .SetDefaultPolicy(new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .AddAuthenticationSchemes(authenticationScheme)
-                .Build())
+            .SetDefaultPolicy(authenticatedUser)
+
+            // Endpoints carrying no authorization metadata fall back to requiring a signed-in
+            // caller, so a route that forgets RequireAuthorization fails closed rather than open.
+            .SetFallbackPolicy(authenticatedUser)
             .AddPolicy(AuthenticationSchemes.Github, builder => builder
                 .RequireAuthenticatedUser()
                 .AddAuthenticationSchemes(AuthenticationSchemes.Github)
