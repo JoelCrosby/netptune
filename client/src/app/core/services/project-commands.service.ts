@@ -5,7 +5,7 @@ import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { ProjectsService } from '@core/services/projects.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, finalize, switchMap } from 'rxjs';
@@ -24,7 +24,7 @@ export class ProjectCommandsService {
   create(request: AddProjectRequest) {
     this.projects
       .post(request)
-      .pipe(unwrapClientReposne())
+      .pipe(unwrapClientResponse())
       .subscribe(() => this.workspaceRefresh.refresh(['projects']));
   }
 
@@ -34,7 +34,7 @@ export class ProjectCommandsService {
     this.projects
       .put(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         finalize(() => this.updating.set(false))
       )
       .subscribe(() => {
@@ -52,7 +52,7 @@ export class ProjectCommandsService {
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.projects.delete(project).pipe(unwrapClientReposne());
+          return this.projects.delete(project).pipe(unwrapClientResponse());
         })
       )
       .subscribe(() => {

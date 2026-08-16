@@ -1,7 +1,7 @@
 import { Component, OnDestroy, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
@@ -46,7 +46,7 @@ export class ProjectTasksViewComponent implements OnDestroy {
   readonly count = signal<number | null>(null);
 
   workspaceId = inject(CurrentWorkspaceService).slug;
-  canCreateTasks = hasPermission(PERMISSONS.tasks.create);
+  canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
 
   secondaryActions: HeaderAction[] = [
     {

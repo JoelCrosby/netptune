@@ -12,7 +12,7 @@ import {
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import {
   LucideCheck,
   LucideFlag,
@@ -128,7 +128,7 @@ export class BoardGroupCardComponent {
   readonly groupId = input.required<number>();
   readonly statusCategory = StatusCategory;
   readonly priority = computed(() => this.task().priority);
-  readonly readFlags = hasPermission(PERMISSONS.flags.read);
+  readonly readFlags = hasPermission(PERMISSIONS.flags.read);
 
   priorityVisible = computed(() => {
     const p = this.priority();

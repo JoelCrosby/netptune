@@ -1,5 +1,5 @@
 import { Component, computed } from '@angular/core';
-import { statusResource } from '@app/core/resources/status.resources';
+import { statusResource } from '@app/core/resources/status.resource';
 import { taskFilterRoute } from '@core/router/task-filter-route';
 import { StatusFilterComponent } from '@static/components/status-filter/status-filter.component';
 

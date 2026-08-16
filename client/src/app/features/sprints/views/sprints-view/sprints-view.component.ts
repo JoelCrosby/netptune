@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Params, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -119,8 +119,8 @@ export class SprintsViewComponent {
 
   readonly loading = this.sprintsResource.isLoading;
   readonly sprints = this.sprintsResource.value;
-  readonly canCreate = hasPermission(PERMISSONS.sprints.create);
-  readonly canUpdate = hasPermission(PERMISSONS.sprints.update);
+  readonly canCreate = hasPermission(PERMISSIONS.sprints.create);
+  readonly canUpdate = hasPermission(PERMISSIONS.sprints.update);
 
   readonly selectedStatus = signal<StatusFilter>(SprintStatus.active);
 

@@ -11,7 +11,7 @@ import {
 import { Permission } from '../auth/permissions';
 import { DEFAULT_PAGE_SIZE } from '../models/pagination';
 import { RefreshScope } from '../models/refresh-scope';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 /** Cursor-paged endpoints report where the next page starts in this header. */
 const CURSOR_HEADER = 'X-Next-Cursor';

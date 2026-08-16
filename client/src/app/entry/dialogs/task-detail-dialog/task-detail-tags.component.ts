@@ -1,6 +1,6 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, inject, linkedSignal } from '@angular/core';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { MAX_PAGE_SIZE } from '@app/core/models/pagination';
 import { Tag } from '@app/core/models/tag';
@@ -51,7 +51,7 @@ export class TaskDetailTagsComponent {
   selectedTags = linkedSignal(() => this.task()?.tags ?? []);
   tagNames = computed(() => this.tags.value().map((tag) => tag.name));
 
-  canUpdate = hasPermission(PERMISSONS.tasks.update);
+  canUpdate = hasPermission(PERMISSIONS.tasks.update);
 
   constructor() {
     reloadOnRefresh(this.tags, ['tags']);

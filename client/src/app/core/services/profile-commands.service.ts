@@ -5,7 +5,7 @@ import { SetPasswordRequest } from '@core/models/requests/set-password-request';
 import { ProfileService } from '@core/services/profile.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { getErrorMessage } from '@core/util/error-message';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize } from 'rxjs';
@@ -37,7 +37,7 @@ export class ProfileCommandsService {
     this.profile
       .put(profile)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY),
         finalize(() => this.updating.set(false))
       )
@@ -53,7 +53,7 @@ export class ProfileCommandsService {
     this.profile
       .uploadProfilePicture(data)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => this.onProfileChanged());
@@ -66,9 +66,9 @@ export class ProfileCommandsService {
     this.profile
       .changePassword(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError((error: unknown) => {
-          /* Not the raw message: unwrapClientReposne prefixes it, and getErrorMessage strips that. */
+          /* Not the raw message: unwrapClientResponse prefixes it, and getErrorMessage strips that. */
           this.changePasswordFailure.set(getErrorMessage(error));
 
           return EMPTY;
@@ -89,7 +89,7 @@ export class ProfileCommandsService {
     this.profile
       .setPassword(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError((error: unknown) => {
           this.setPasswordFailure.set(getErrorMessage(error));
 

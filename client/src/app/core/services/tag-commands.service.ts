@@ -4,7 +4,7 @@ import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { TagsService } from '@core/services/tags.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 
@@ -18,7 +18,7 @@ export class TagCommandsService {
     this.tags
       .post({ tag: name })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => this.refresh());
@@ -28,7 +28,7 @@ export class TagCommandsService {
     this.tags
       .patch({ currentValue, newValue })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => this.refresh());
@@ -41,7 +41,7 @@ export class TagCommandsService {
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tags.delete({ tags }).pipe(unwrapClientReposne());
+          return this.tags.delete({ tags }).pipe(unwrapClientResponse());
         }),
         catchError(() => EMPTY)
       )
@@ -52,7 +52,7 @@ export class TagCommandsService {
     this.tags
       .postToTask(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => this.refresh());
@@ -62,7 +62,7 @@ export class TagCommandsService {
     this.tags
       .deleteFromTask(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => this.refresh());

@@ -1,11 +1,11 @@
 import { Signal } from '@angular/core';
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import {
   AuditActivityPoint,
   AuditLogFilter,
 } from '../models/view-models/audit-log-view-model';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 export const auditFilterParams = (filter: AuditLogFilter) => {
   const params: Record<string, string | number> = {};
@@ -25,7 +25,7 @@ export const auditFilterParams = (filter: AuditLogFilter) => {
 
 export const auditSummaryResource = (filter: Signal<AuditLogFilter>) => {
   return permissionResource<AuditActivityPoint[]>(
-    PERMISSONS.audit.read,
+    PERMISSIONS.audit.read,
     () => ({ url: 'api/audit/summary', params: auditFilterParams(filter()) }),
     {
       defaultValue: [],

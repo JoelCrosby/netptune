@@ -1,7 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { Selected } from '@core/models/selected';
 import { Tag } from '@core/models/tag';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import { userResource } from '@core/resources/user.resource';
 import {

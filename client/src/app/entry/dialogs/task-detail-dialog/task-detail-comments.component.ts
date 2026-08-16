@@ -1,6 +1,6 @@
 import { httpResource } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { SessionService } from '@core/services/session.service';
 import { DEFAULT_PAGE_SIZE } from '@app/core/models/pagination';
@@ -13,7 +13,7 @@ import {
 } from '@core/models/requests/add-comment-request';
 import { workspaceUsersResource } from '@core/resources/user.resource';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
   CommentReactionEvent,
@@ -78,8 +78,8 @@ export class TaskDetailCommentsComponent {
     { defaultValue: [] }
   );
 
-  canCreateComment = hasPermission(PERMISSONS.comments.create);
-  canDeleteComment = hasPermission(PERMISSONS.comments.deleteOwn);
+  canCreateComment = hasPermission(PERMISSIONS.comments.create);
+  canDeleteComment = hasPermission(PERMISSIONS.comments.deleteOwn);
 
   constructor() {
     reloadOnRefresh(this.comments, ['comments']);
@@ -101,7 +101,7 @@ export class TaskDetailCommentsComponent {
     this.commentsService
       .postToTask(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         tap(() => this.comments.reload()),
         catchError(() => EMPTY)
       )
@@ -114,7 +114,7 @@ export class TaskDetailCommentsComponent {
       .pipe(
         filter(Boolean),
         switchMap(() => this.commentsService.delete(comment.id)),
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         tap(() => {
           this.snackbar.open(
             $localize`:Confirmation shown after an action succeeds:Comment deleted`
@@ -133,7 +133,7 @@ export class TaskDetailCommentsComponent {
 
     request
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         tap((comment) => this.replaceComment(comment)),
         catchError(() => {
           this.comments.reload();
@@ -153,7 +153,7 @@ export class TaskDetailCommentsComponent {
     this.commentsService
       .update(event.comment.id, request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         tap(() => {
           this.snackbar.open(
             $localize`:Confirmation shown after an action succeeds:Comment updated`

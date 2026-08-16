@@ -2,7 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CurrentRouteService } from '@core/router/current-route.service';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import {
   currentSprintsResource,
@@ -158,7 +158,7 @@ export class CurrentSprintDropdownComponent {
   private readonly route = inject(ActivatedRoute);
 
   isSprintFilterableRoute = inject(CurrentRouteService).isSprintFilterableRoute;
-  canReadSprints = hasPermission(PERMISSONS.sprints.read);
+  canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   private readonly currentSprintsRef = currentSprintsResource();
   private readonly allSprintsRef = sprintResource([]);
 

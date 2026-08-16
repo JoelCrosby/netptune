@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { DialogService } from '@core/services/dialog.service';
 import { StatusesService } from '@core/services/statuses.service';
@@ -205,7 +205,7 @@ export class AutomationDetailViewComponent {
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal(false);
-  readonly canManage = hasPermission(PERMISSONS.automations.manage);
+  readonly canManage = hasPermission(PERMISSIONS.automations.manage);
 
   constructor() {
     this.load();

@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { DialogContentComponent } from '@app/static/components/dialog-content/dialog-content.component';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';

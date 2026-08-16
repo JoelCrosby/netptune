@@ -4,7 +4,7 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { UsersService } from '@core/services/users.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { getErrorMessage } from '@core/util/error-message';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, switchMap } from 'rxjs';
@@ -74,7 +74,7 @@ export class UserCommandsService {
   updateRole(userId: string, role: WorkspaceRole) {
     this.users
       .updateWorkspaceRole(userId, role)
-      .pipe(unwrapClientReposne(), this.reportFailure(ROLE_FAILED))
+      .pipe(unwrapClientResponse(), this.reportFailure(ROLE_FAILED))
       .subscribe(() => {
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Workspace role updated`

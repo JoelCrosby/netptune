@@ -8,7 +8,7 @@ import { LoginRequest } from '@core/models/login-request';
 import { RegisterRequest } from '@core/models/register-request';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { AuthCodeRequest, ResetPasswordRequest } from '@core/models/session';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -119,7 +119,7 @@ export class AuthCommandsService {
     this.authService
       .requestPasswordReset(email)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY),
         finalize(() => this.requestingPasswordReset.set(false))
       )

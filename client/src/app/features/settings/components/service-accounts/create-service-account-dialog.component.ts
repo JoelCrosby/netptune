@@ -9,7 +9,7 @@ import {
   submit as submitForm,
   validate,
 } from '@angular/forms/signals';
-import { Permission, PERMISSONS } from '@core/auth/permissions';
+import { Permission, PERMISSIONS } from '@core/auth/permissions';
 import {
   CreateApiCredentialRequest,
   CreateServiceAccountRequest,
@@ -43,11 +43,11 @@ export interface CreateServiceAccountWizardResult {
 }
 
 const defaultPermissions: Permission[] = [
-  PERMISSONS.projects.read,
-  PERMISSONS.statuses.read,
-  PERMISSONS.tasks.read,
-  PERMISSONS.tasks.create,
-  PERMISSONS.tasks.update,
+  PERMISSIONS.projects.read,
+  PERMISSIONS.statuses.read,
+  PERMISSIONS.tasks.read,
+  PERMISSIONS.tasks.create,
+  PERMISSIONS.tasks.update,
 ];
 
 @Component({

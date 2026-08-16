@@ -9,7 +9,7 @@ import { SprintsService } from '@core/services/sprints.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { getErrorMessage } from '@core/util/error-message';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import {
   catchError,
@@ -43,7 +43,7 @@ export class SprintCommandsService {
     this.sprints
       .post(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY),
         finalize(() => this.creating.set(false))
       )
@@ -61,7 +61,7 @@ export class SprintCommandsService {
     this.sprints
       .put(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY),
         finalize(() => this.updating.set(false))
       )
@@ -77,7 +77,7 @@ export class SprintCommandsService {
     this.sprints
       .delete(sprintId)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -96,7 +96,7 @@ export class SprintCommandsService {
     this.sprints
       .start(sprintId)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError((error: unknown) => {
           void this.confirmation.open({
             title: $localize`:Title of a confirmation dialog:Unable to Start Sprint`,
@@ -153,7 +153,7 @@ export class SprintCommandsService {
     this.sprints
       .addTasks(sprintId, request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -168,7 +168,7 @@ export class SprintCommandsService {
     this.sprints
       .addTasks(sprintId, { taskIds: [taskId] })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -183,7 +183,7 @@ export class SprintCommandsService {
     this.sprints
       .removeTask(sprintId, taskId)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -196,7 +196,7 @@ export class SprintCommandsService {
 
   private completeSprint(sprintId: number): Observable<SprintViewModel> {
     return this.sprints.complete(sprintId).pipe(
-      unwrapClientReposne(),
+      unwrapClientResponse(),
       tap(() =>
         this.snackbar.open(
           $localize`:Confirmation shown after an action succeeds:Sprint completed`
@@ -215,12 +215,12 @@ export class SprintCommandsService {
     if (targetSprintId !== undefined) {
       return this.sprints
         .addTasks(targetSprintId, { taskIds })
-        .pipe(unwrapClientReposne());
+        .pipe(unwrapClientResponse());
     }
 
     return forkJoin(
       taskIds.map((taskId) =>
-        this.sprints.removeTask(sprintId, taskId).pipe(unwrapClientReposne())
+        this.sprints.removeTask(sprintId, taskId).pipe(unwrapClientResponse())
       )
     );
   }

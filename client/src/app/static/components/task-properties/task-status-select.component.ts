@@ -1,6 +1,6 @@
 import { Component, computed, input, model } from '@angular/core';
 import { Status } from '@core/models/status';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { ChipListboxComponent } from '@static/components/chip/chip-listbox.component';
 import { ChipOptionComponent } from '@static/components/chip/chip-option.component';
 import { ColorSwatchComponent } from '@static/components/color-swatch/color-swatch.component';

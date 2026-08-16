@@ -3,7 +3,7 @@ import { Page } from '@core/models/pagination';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export const unwrapClientReposne =
+export const unwrapClientResponse =
   <T>() =>
   <P = unknown>(
     source: Observable<T extends ClientResponse<P> ? T : null>
@@ -22,7 +22,7 @@ export const unwrapClientReposne =
       })
     );
 
-export const unwrapClientPageReposne =
+export const unwrapClientPageResponse =
   <T>() =>
   <P = unknown>(
     source: Observable<T extends ClientResponse<Page<P>> ? T : null>

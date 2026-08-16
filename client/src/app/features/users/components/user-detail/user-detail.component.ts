@@ -10,7 +10,7 @@ import {
 } from '@static/components/badge/badge.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { WorkspaceAppUser } from '@core/models/appuser';
@@ -132,7 +132,7 @@ export class UserDetailComponent {
     WorkspaceRole.member,
     WorkspaceRole.admin,
   ];
-  readonly canUpdateRole = hasPermission(PERMISSONS.members.updateRole);
+  readonly canUpdateRole = hasPermission(PERMISSIONS.members.updateRole);
   readonly currentUserId = inject(SessionService).currentUserId;
 
   readonly isSelf = computed(() => {

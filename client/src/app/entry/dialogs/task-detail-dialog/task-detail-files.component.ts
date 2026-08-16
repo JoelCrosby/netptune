@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { WorkspaceFileViewModel } from '@core/models/view-models/workspace-file-view-model';
 import { taskFilesResource } from '@core/resources/workspace-file.resource';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -179,7 +179,7 @@ export class TaskDetailFilesComponent {
     return this.filesResource.error() ? 'Files could not be loaded.' : '';
   });
 
-  readonly canUpload = hasPermission(PERMISSONS.files.upload);
+  readonly canUpload = hasPermission(PERMISSIONS.files.upload);
 
   upload(files: File[]) {
     this.uploadService.upload(this.systemId(), files);

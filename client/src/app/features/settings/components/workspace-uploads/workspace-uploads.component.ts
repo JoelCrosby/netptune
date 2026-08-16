@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
 import { formatBytes } from '@core/util/bytes';
@@ -64,7 +64,7 @@ export class WorkspaceUploadsComponent {
   protected readonly formatBytes = formatBytes;
   protected readonly uploadIcon = LucideUpload;
 
-  readonly canUpdate = hasPermission(PERMISSONS.workspace.update);
+  readonly canUpdate = hasPermission(PERMISSIONS.workspace.update);
   readonly saving = this.workspaceCommands.editLoading;
   readonly maxUploadBytes = this.currentWorkspace.maxUploadBytes;
 

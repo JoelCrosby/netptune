@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { DashboardAssignedTasksComponent } from '../../components/dashboard-assigned-tasks.component';
@@ -64,9 +64,9 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
   `,
 })
 export class DashboardViewComponent {
-  protected readonly canSeeWorkload = hasPermission(PERMISSONS.members.read);
+  protected readonly canSeeWorkload = hasPermission(PERMISSIONS.members.read);
 
-  protected readonly canSeeVelocity = hasPermission(PERMISSONS.sprints.read);
+  protected readonly canSeeVelocity = hasPermission(PERMISSIONS.sprints.read);
 
   protected readonly velocitySpanClass = computed(() =>
     this.canSeeWorkload() ? '' : 'lg:col-span-2'

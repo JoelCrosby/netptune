@@ -18,10 +18,10 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { statusUsageResource } from '@core/resources/entity-usage.resource';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import {
   Status,
   StatusCategory,
@@ -304,7 +304,7 @@ export class StatusDetailViewComponent {
   readonly usage = statusUsageResource(this.statusId);
 
   readonly workspaceId = inject(CurrentWorkspaceService).slug;
-  readonly canManage = hasPermission(PERMISSONS.statuses.manage);
+  readonly canManage = hasPermission(PERMISSIONS.statuses.manage);
 
   readonly status = computed(() => {
     return this.statuses

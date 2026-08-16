@@ -5,7 +5,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateTaskDialogComponent } from '@app/entry/dialogs/create-task-dialog/create-task-dialog.component';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { ConfirmationService } from '@core/services/confirmation.service';
@@ -243,8 +243,8 @@ export class SprintDetailViewComponent {
     () => this.sprintResourceRef.error() as HttpErrorResponse | undefined
   );
   readonly updateLoading = this.sprintCommands.isUpdating;
-  readonly canUpdate = hasPermission(PERMISSONS.sprints.update);
-  readonly canManageTasks = hasPermission(PERMISSONS.sprints.manageTasks);
+  readonly canUpdate = hasPermission(PERMISSIONS.sprints.update);
+  readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
   constructor() {
     this.route.paramMap

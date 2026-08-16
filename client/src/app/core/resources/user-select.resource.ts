@@ -1,10 +1,10 @@
 import { HttpResourceRequest } from '@angular/common/http';
 import { Signal } from '@angular/core';
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { DEFAULT_PAGE_SIZE, Page } from '../models/pagination';
 import { UserSelectOption } from '../models/view-models/user-select-option';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 export interface UserSelectQuery {
   search: string;
@@ -13,7 +13,7 @@ export interface UserSelectQuery {
 
 export const userSelectResource = (query: Signal<UserSelectQuery>) => {
   return permissionResource<ClientResponse<Page<UserSelectOption>>>(
-    PERMISSONS.members.read,
+    PERMISSIONS.members.read,
     () => buildRequest(query())
   );
 };

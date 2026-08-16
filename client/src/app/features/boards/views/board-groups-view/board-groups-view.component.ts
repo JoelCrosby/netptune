@@ -37,7 +37,7 @@ import {
 } from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component';
 import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
 import {

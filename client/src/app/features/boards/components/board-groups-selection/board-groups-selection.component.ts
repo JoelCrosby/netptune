@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import { BoardSelectionService } from '@core/services/board-selection.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -84,21 +84,21 @@ export class BoardGroupsSelectionComponent {
     const actions = [];
     const permissions = this.permissions();
 
-    if (permissions.has(PERMISSONS.tasks.delete)) {
+    if (permissions.has(PERMISSIONS.tasks.delete)) {
       actions.push({
         label: $localize`:Action that deletes the selected tasks:Delete tasks`,
         action: this.onDeleteClicked.bind(this),
         icon: LucideTrash2,
       });
     }
-    if (permissions.has(PERMISSONS.tasks.move)) {
+    if (permissions.has(PERMISSIONS.tasks.move)) {
       actions.push({
         label: $localize`:Action that moves the selected tasks to another board group:Move to group`,
         action: this.onMoveTasksClicked.bind(this),
         icon: LucideCombine,
       });
     }
-    if (permissions.has(PERMISSONS.tasks.reassign)) {
+    if (permissions.has(PERMISSIONS.tasks.reassign)) {
       actions.push({
         label: $localize`:Action that reassigns the selected tasks to another person:Reassign`,
         action: this.onReassignTasksClicked.bind(this),

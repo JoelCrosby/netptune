@@ -1,6 +1,6 @@
 import { Component, input, model, output } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
 import {
@@ -187,10 +187,10 @@ export class TaskPropertiesComponent {
 
   readonly estimateChange = output<TaskEstimate>();
 
-  readonly readStatus = hasPermission(PERMISSONS.statuses.read);
-  readonly readSprints = hasPermission(PERMISSONS.sprints.read);
-  readonly readProjects = hasPermission(PERMISSONS.projects.read);
-  readonly readMembers = hasPermission(PERMISSONS.members.read);
+  readonly readStatus = hasPermission(PERMISSIONS.statuses.read);
+  readonly readSprints = hasPermission(PERMISSIONS.sprints.read);
+  readonly readProjects = hasPermission(PERMISSIONS.projects.read);
+  readonly readMembers = hasPermission(PERMISSIONS.members.read);
 
   toggleAssignee(user: UserSelectOption) {
     const assignees = this.assignees();

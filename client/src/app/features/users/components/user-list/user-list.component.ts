@@ -1,7 +1,7 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { RouterLink } from '@angular/router';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { WorkspaceAppUser } from '@core/models/appuser';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { LucideTrash2, LucideSend } from '@lucide/angular';
@@ -95,7 +95,7 @@ export class UserListComponent {
   readonly countChange = output<number>();
   readonly workspaceRole = WorkspaceRole;
 
-  canReadUsers = hasPermission(PERMISSONS.members.read);
+  canReadUsers = hasPermission(PERMISSIONS.members.read);
 
   readonly userData: DatatableDataSource<WorkspaceAppUser> = {
     key: 'user-list',

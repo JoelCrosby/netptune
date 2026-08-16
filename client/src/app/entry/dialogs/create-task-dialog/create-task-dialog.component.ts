@@ -18,7 +18,7 @@ import {
 } from '@angular/forms/signals';
 import { EditorComponent } from '@app/static/components/editor/editor.component';
 import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { EstimateType } from '@core/enums/estimate-type';
 import { TaskPriority } from '@core/enums/task-priority';
 import { MAX_PAGE_SIZE } from '@core/models/pagination';
@@ -416,10 +416,10 @@ export class CreateTaskDialogComponent {
   currentProjectId = inject(CurrentProjectService).currentId;
   readonly maxUploadBytes = inject(CurrentWorkspaceService).maxUploadBytes;
 
-  private readonly canReadTags = hasPermission(PERMISSONS.tags.read);
-  private readonly canAssignTagsToTasks = hasPermission(PERMISSONS.tags.assign);
-  readonly canUploadFiles = hasPermission(PERMISSONS.files.upload);
-  readonly canLinkTasks = hasPermission(PERMISSONS.tasks.update);
+  private readonly canReadTags = hasPermission(PERMISSIONS.tags.read);
+  private readonly canAssignTagsToTasks = hasPermission(PERMISSIONS.tags.assign);
+  readonly canUploadFiles = hasPermission(PERMISSIONS.files.upload);
+  readonly canLinkTasks = hasPermission(PERMISSIONS.tasks.update);
 
   // Picking tags means both listing the workspace's tags and being allowed to attach one.
   readonly canAssignTags = computed(() => {

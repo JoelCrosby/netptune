@@ -6,7 +6,7 @@ import {
 } from '@core/auth/permission-items';
 import { LucideDynamicIcon } from '@lucide/angular';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { UserCommandsService } from '@core/services/user-commands.service';
 import { WorkspaceAppUser } from '@core/models/appuser';
 
@@ -58,7 +58,7 @@ export class PermissionListComponent {
   readonly user = input<WorkspaceAppUser>();
   permissions = computed(() => this.user()?.permissions || []);
 
-  enabled = hasPermission(PERMISSONS.members.updatePermissions);
+  enabled = hasPermission(PERMISSIONS.members.updatePermissions);
 
   readonly groups = computed<PermissionGroup[]>(() => {
     const permSet = new Set(this.permissions());

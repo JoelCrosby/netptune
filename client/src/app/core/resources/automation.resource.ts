@@ -1,13 +1,13 @@
 import { Signal } from '@angular/core';
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 export const automationRuleResource = <TRule>(
   ruleId: Signal<number | null>
 ) => {
   return permissionResource<ClientResponse<TRule>>(
-    PERMISSONS.automations.read,
+    PERMISSIONS.automations.read,
     () => {
       const id = ruleId();
 

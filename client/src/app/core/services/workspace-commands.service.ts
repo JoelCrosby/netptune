@@ -11,7 +11,7 @@ import { CurrentWorkspaceService } from '@core/services/current-workspace.servic
 import { WorkspaceListService } from '@core/services/workspace-list.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { WorkspacesService } from '@core/services/workspaces-api.service';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
@@ -38,7 +38,7 @@ export class WorkspaceCommandsService {
     this.workspacesService
       .post(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY),
         finalize(() => this.creating.set(false))
       )
@@ -51,7 +51,7 @@ export class WorkspaceCommandsService {
     this.workspacesService
       .put(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError((error: HttpErrorResponse | Error) => {
           this.snackbar.error(editWorkspaceFailureMessage(error));
 
@@ -112,7 +112,7 @@ export class WorkspaceCommandsService {
               metaInfo: workspace.metaInfo ?? {},
               isPublic,
             })
-            .pipe(unwrapClientReposne());
+            .pipe(unwrapClientResponse());
         }),
         catchError((error: HttpErrorResponse | Error) => {
           this.snackbar.error(editWorkspaceFailureMessage(error));
@@ -135,7 +135,7 @@ export class WorkspaceCommandsService {
         publicPermissions: permissions,
       })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError((error: HttpErrorResponse | Error) => {
           this.snackbar.error(editWorkspaceFailureMessage(error));
 

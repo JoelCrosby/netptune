@@ -9,7 +9,7 @@ import { TaskListFlagsComponent } from './task-list-flags.component';
 import { TaskListSearchComponent } from './task-list-search.component';
 import { TaskListSelectionActionsComponent } from './task-list-selection-actions.component';
 import { TaskListStatusComponent } from './task-list-status.component';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 
 @Component({
   selector: 'app-task-list-filters',
@@ -50,9 +50,9 @@ import { PERMISSONS } from '@app/core/auth/permissions';
 export class TaskListFiltersComponent {
   readonly assigneeOptions = input<Selected<AssigneeViewModel>[] | null>(null);
 
-  readStatus = hasPermission(PERMISSONS.statuses.read);
+  readStatus = hasPermission(PERMISSIONS.statuses.read);
 
-  readTags = hasPermission(PERMISSONS.tags.read);
+  readTags = hasPermission(PERMISSIONS.tags.read);
 
-  readFlags = hasPermission(PERMISSONS.flags.read);
+  readFlags = hasPermission(PERMISSIONS.flags.read);
 }

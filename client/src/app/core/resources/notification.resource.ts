@@ -1,14 +1,14 @@
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { Page } from '../models/pagination';
 import { NotificationViewModel } from '../models/view-models/notification-view-model';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 const RECENT_PAGE_SIZE = 10;
 
 export const recentNotificationsResource = () => {
   return permissionResource<NotificationViewModel[]>(
-    PERMISSONS.notifications.read,
+    PERMISSIONS.notifications.read,
     () => ({
       url: 'api/notifications',
       params: { page: 1, pageSize: RECENT_PAGE_SIZE },
@@ -28,7 +28,7 @@ export const recentNotificationsResource = () => {
 
 export const unreadNotificationCountResource = () => {
   return permissionResource<number>(
-    PERMISSONS.notifications.read,
+    PERMISSIONS.notifications.read,
     () => ({ url: 'api/notifications/unread-count' }),
     {
       defaultValue: 0,

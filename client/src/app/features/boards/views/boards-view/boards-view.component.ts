@@ -8,7 +8,7 @@ import { delayedLoading } from '@core/util/delayed-loading';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { SkeletonCardGridComponent } from '@static/components/skeleton/skeleton-card-grid.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { LucideKanban, LucidePlus } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
@@ -89,7 +89,7 @@ export class BoardsViewComponent {
   boards = this.boardsResource.value;
   count = computed(() => (this.loading() ? null : this.boards().length));
 
-  canCreateBoards = hasPermission(PERMISSONS.boards.create);
+  canCreateBoards = hasPermission(PERMISSIONS.boards.create);
 
   onCreateBoardClicked() {
     this.dialog.open(CreateBoardComponent, {

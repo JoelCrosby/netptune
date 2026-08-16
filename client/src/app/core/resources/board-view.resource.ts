@@ -1,16 +1,16 @@
 import { Signal } from '@angular/core';
 import { Params } from '@angular/router';
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { BoardView } from '../models/view-models/board-view';
-import { stableResource } from './stable-resource';
+import { stableResource } from './stable.resource';
 
 export const boardViewResource = (
   identifier: Signal<string | undefined>,
   params: Signal<Params>
 ) => {
   return stableResource<BoardView | undefined>(
-    PERMISSONS.boards.read,
+    PERMISSIONS.boards.read,
     () => {
       const id = identifier();
 

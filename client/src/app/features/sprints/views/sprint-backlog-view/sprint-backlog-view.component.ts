@@ -1,7 +1,7 @@
 import { Component, computed, viewChildren } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Params } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
@@ -103,7 +103,7 @@ export class SprintBacklogViewComponent {
     () => this.filterRoute.filters().users ?? []
   );
   readonly filtersActive = this.filterRoute.hasFilters;
-  readonly canManageTasks = hasPermission(PERMISSONS.sprints.manageTasks);
+  readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
   private backlogGroups = viewChildren(SprintBacklogGroupComponent);
 

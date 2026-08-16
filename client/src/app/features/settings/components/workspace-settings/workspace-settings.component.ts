@@ -3,7 +3,7 @@ import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { Workspace } from '@core/models/workspace';
 import {
   LucideGlobe,
@@ -165,8 +165,8 @@ export class WorkspaceSettings {
   workspace = inject(CurrentWorkspaceService).workspace;
   private currentUserId = inject(SessionService).currentUserId;
 
-  canUpdate = hasPermission(PERMISSONS.workspace.update);
-  canDelete = hasPermission(PERMISSONS.workspace.delete);
+  canUpdate = hasPermission(PERMISSIONS.workspace.update);
+  canDelete = hasPermission(PERMISSIONS.workspace.delete);
 
   /** Mirrors the condition the public access panel renders under, so the card
    * does not leave an empty padded block when it has nothing to show. */

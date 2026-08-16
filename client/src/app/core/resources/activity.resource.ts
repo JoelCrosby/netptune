@@ -1,9 +1,9 @@
 import { Signal } from '@angular/core';
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { ClientResponse } from '../models/client-response';
 import { EntityType } from '../models/entity-type';
 import { ActivityViewModel } from '../models/view-models/activity-view-model';
-import { cursorResource } from './cursor-resource';
+import { cursorResource } from './cursor.resource';
 
 export interface ActivityFeedRequest {
   entityType: EntityType;
@@ -21,7 +21,7 @@ export const activityResource = (
 
       return { url: `api/activity/${feed.entityType}/${feed.entityId}` };
     },
-    PERMISSONS.activity.read,
+    PERMISSIONS.activity.read,
     {
       trackBy: (activity) => activity.id,
       parse: (response) => {

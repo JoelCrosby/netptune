@@ -6,7 +6,7 @@ import { UpdateBoardRequest } from '@core/models/requests/update-board-request';
 import { BoardsService } from '@core/services/boards.service';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, switchMap } from 'rxjs';
@@ -24,14 +24,14 @@ export class BoardCommandsService {
   create(request: AddBoardRequest) {
     this.boards
       .post(request)
-      .pipe(unwrapClientReposne())
+      .pipe(unwrapClientResponse())
       .subscribe(() => this.workspaceRefresh.refresh(['boards']));
   }
 
   update(request: UpdateBoardRequest) {
     this.boards
       .put(request)
-      .pipe(unwrapClientReposne())
+      .pipe(unwrapClientResponse())
       .subscribe(() =>
         this.workspaceRefresh.refresh(['boards', 'boardGroups'])
       );
@@ -44,7 +44,7 @@ export class BoardCommandsService {
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.boards.delete(boardId).pipe(unwrapClientReposne());
+          return this.boards.delete(boardId).pipe(unwrapClientResponse());
         })
       )
       .subscribe(() => this.onDeleted());

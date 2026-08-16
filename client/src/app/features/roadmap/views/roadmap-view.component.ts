@@ -2,7 +2,7 @@ import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { DialogService } from '@core/services/dialog.service';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
@@ -162,8 +162,8 @@ export class RoadmapViewComponent {
   readonly sprintsResource = sprintResource([]);
   readonly sprints = this.sprintsResource.value;
 
-  readonly canUpdateTasks = hasPermission(PERMISSONS.tasks.update);
-  readonly canReadSprints = hasPermission(PERMISSONS.sprints.read);
+  readonly canUpdateTasks = hasPermission(PERMISSIONS.tasks.update);
+  readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   readonly unscheduledReload = signal(0);
   readonly from = computed(() => this.params().get('from') ?? defaultFrom);
   readonly to = computed(() => this.params().get('to') ?? defaultTo);

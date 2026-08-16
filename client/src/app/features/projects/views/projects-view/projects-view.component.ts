@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { Params, Router, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { projectResource } from '@core/resources/project.resource';
 import { DialogService } from '@core/services/dialog.service';
@@ -177,11 +177,11 @@ export class ProjectsViewComponent {
     return this.loading() ? null : this.projects().length;
   });
 
-  readonly canCreateProjects = hasPermission(PERMISSONS.projects.create);
+  readonly canCreateProjects = hasPermission(PERMISSIONS.projects.create);
 
-  readonly canUpdateProjects = hasPermission(PERMISSONS.projects.update);
+  readonly canUpdateProjects = hasPermission(PERMISSIONS.projects.update);
 
-  readonly canDeleteProjects = hasPermission(PERMISSONS.projects.delete);
+  readonly canDeleteProjects = hasPermission(PERMISSIONS.projects.delete);
 
   private readonly params = signal<Params>({});
 

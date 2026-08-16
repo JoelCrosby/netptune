@@ -1,11 +1,11 @@
 import { Signal } from '@angular/core';
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { EntityUsage } from '../models/entity-usage';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 export const statusUsageResource = (id: Signal<number | null>) => {
   return permissionResource<EntityUsage>(
-    PERMISSONS.statuses.read,
+    PERMISSIONS.statuses.read,
     () => {
       const statusId = id();
 
@@ -19,7 +19,7 @@ export const statusUsageResource = (id: Signal<number | null>) => {
 
 export const tagUsageResource = (id: Signal<number | null>) => {
   return permissionResource<EntityUsage>(
-    PERMISSONS.tags.read,
+    PERMISSIONS.tags.read,
     () => {
       const tagId = id();
 
@@ -30,7 +30,7 @@ export const tagUsageResource = (id: Signal<number | null>) => {
 };
 
 export const relationTypeUsageResource = (id: Signal<number | null>) => {
-  return permissionResource<EntityUsage>(PERMISSONS.relationTypes.read, () => {
+  return permissionResource<EntityUsage>(PERMISSIONS.relationTypes.read, () => {
     const relationTypeId = id();
 
     return relationTypeId === null

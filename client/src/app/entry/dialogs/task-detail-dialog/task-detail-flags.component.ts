@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { FlagResolutionType } from '@core/enums/flag-resolution-type';
 import { TasksService } from '@core/services/tasks.service';
 import { SnackbarService } from '@app/static/components/snackbar/snackbar.service';
@@ -111,7 +111,7 @@ export class TaskDetailFlagsComponent {
 
   readonly task = this.taskDetail.task;
   readonly resolvingFlagId = signal<number | null>(null);
-  readonly canResolve = hasPermission(PERMISSONS.flags.resolve);
+  readonly canResolve = hasPermission(PERMISSIONS.flags.resolve);
 
   resolve(taskId: number, flagId: number, resolution: FlagResolutionType) {
     this.resolvingFlagId.set(flagId);

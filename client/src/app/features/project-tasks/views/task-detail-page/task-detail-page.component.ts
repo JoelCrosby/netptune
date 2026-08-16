@@ -18,7 +18,7 @@ import { TaskDetailActionsComponent } from '@entry/dialogs/task-detail-dialog/ta
 import { TaskDetailService } from '@entry/dialogs/task-detail-dialog/task-detail.service';
 import { PageContainerComponent } from '@app/static/components/page-container/page-container.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { Router } from '@angular/router';
 import { TaskDetailFilesComponent } from '@entry/dialogs/task-detail-dialog/task-detail-files.component';
 import { TaskDetailFlagsComponent } from '@entry/dialogs/task-detail-dialog/task-detail-flags.component';
@@ -136,15 +136,15 @@ export class TaskDetailPageComponent {
 
   systemId = input.required<string>();
 
-  readTags = hasPermission(PERMISSONS.tags.read);
+  readTags = hasPermission(PERMISSIONS.tags.read);
 
-  readFiles = hasPermission(PERMISSONS.files.read);
+  readFiles = hasPermission(PERMISSIONS.files.read);
 
-  readFlags = hasPermission(PERMISSONS.flags.read);
+  readFlags = hasPermission(PERMISSIONS.flags.read);
 
-  readComments = hasPermission(PERMISSONS.comments.read);
+  readComments = hasPermission(PERMISSIONS.comments.read);
 
-  readActivity = hasPermission(PERMISSONS.activity.read);
+  readActivity = hasPermission(PERMISSIONS.activity.read);
 
   constructor() {
     effect(() => {

@@ -14,7 +14,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { TasksService } from '@core/services/tasks.service';
 import { downloadFile } from '@core/util/download-helper';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { MoveMatchingTasksDialogComponent } from '@entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
@@ -35,7 +35,7 @@ export class BoardGroupCommandsService {
     this.tasksApi
       .addBoardGroup(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe((boardGroup) => {
@@ -52,7 +52,7 @@ export class BoardGroupCommandsService {
     this.tasksApi
       .putGroup(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe((boardGroup) => {
@@ -94,7 +94,7 @@ export class BoardGroupCommandsService {
         sprintId: task.sprintId ?? this.composer.sprintId(),
       })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -135,7 +135,7 @@ export class BoardGroupCommandsService {
         taskIds: this.selection.taskIds(),
       })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -155,7 +155,7 @@ export class BoardGroupCommandsService {
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tasksApi.deleteMultiple(ids).pipe(unwrapClientReposne());
+          return this.tasksApi.deleteMultiple(ids).pipe(unwrapClientResponse());
         }),
         catchError(() => EMPTY)
       )
@@ -192,7 +192,7 @@ export class BoardGroupCommandsService {
         taskIds,
       })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {

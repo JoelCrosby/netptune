@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, model } from '@angular/core';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { TaskViewModel } from '@app/core/models/view-models/project-task-dto';
 import { EditorComponent } from '@static/components/editor/editor.component';
@@ -29,7 +29,7 @@ export class TaskDetailDescriptionComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   task = this.taskDetail.task;
-  private readonly canUpdate = hasPermission(PERMISSONS.tasks.update);
+  private readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
 
   isReadOnly = computed(() => !this.canUpdate());
   description = model(this.task()?.description ?? '');

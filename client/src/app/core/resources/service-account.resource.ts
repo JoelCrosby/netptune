@@ -1,10 +1,10 @@
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { ServiceAccount } from '../models/service-account';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 export const serviceAccountResource = () => {
   return permissionResource<ServiceAccount[]>(
-    PERMISSONS.serviceAccounts.read,
+    PERMISSIONS.serviceAccounts.read,
     () => ({ url: 'api/service-accounts' }),
     { defaultValue: [] }
   );

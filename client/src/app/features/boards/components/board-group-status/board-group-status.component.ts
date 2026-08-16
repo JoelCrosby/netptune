@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { statusResource } from '@app/core/resources/status.resources';
+import { statusResource } from '@app/core/resources/status.resource';
 import { TaskFilterService } from '@core/services/task-filter.service';
 import { StatusFilterComponent } from '@static/components/status-filter/status-filter.component';
 

@@ -8,7 +8,7 @@ import {
 import { hasPermission } from '@core/auth/has-permission';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { ScheduledTask } from '@core/models/scheduled-task';
 import { DialogService } from '@core/services/dialog.service';
 import { taskFilterRoute } from '@core/router/task-filter-route';
@@ -134,8 +134,8 @@ export class CalendarViewComponent {
   readonly projects = this.projectsResource.value;
   readonly sprintsResource = sprintResource([]);
   readonly sprints = this.sprintsResource.value;
-  readonly canUpdateTasks = hasPermission(PERMISSONS.tasks.update);
-  readonly canReadSprints = hasPermission(PERMISSONS.sprints.read);
+  readonly canUpdateTasks = hasPermission(PERMISSIONS.tasks.update);
+  readonly canReadSprints = hasPermission(PERMISSIONS.sprints.read);
 
   readonly month = computed(() =>
     validCalendarMonth(this.params().get('month'))

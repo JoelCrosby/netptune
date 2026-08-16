@@ -6,7 +6,7 @@ import { SprintsService } from '@core/services/sprints.service';
 import { CurrentTaskService } from '@core/services/current-task.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, tap } from 'rxjs';
 
@@ -67,7 +67,7 @@ export class TaskDetailService {
     this.sprintsService
       .addTasks(sprintId, { taskIds: [task.id] })
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         tap(() => {
           this.snackbar.open(
             $localize`:Confirmation shown after an action succeeds:Task added to sprint`
@@ -87,7 +87,7 @@ export class TaskDetailService {
     this.sprintsService
       .removeTask(task.sprintId, task.id)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         tap(() => {
           this.snackbar.open(
             $localize`:Confirmation shown after an action succeeds:Task removed from sprint`

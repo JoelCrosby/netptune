@@ -19,7 +19,7 @@ import { TaskDetailPropertiesComponent } from './task-detail-properties.componen
 import { TaskDetailRelationsComponent } from './task-detail-relations.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
 import { TaskDetailService } from './task-detail.service';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { TaskDetailFilesComponent } from './task-detail-files.component';
 import { TaskDetailFlagsComponent } from './task-detail-flags.component';
 
@@ -122,15 +122,15 @@ export class TaskDetailDialogComponent {
 
   task = this.taskDetail.task;
 
-  readTags = hasPermission(PERMISSONS.tags.read);
+  readTags = hasPermission(PERMISSIONS.tags.read);
 
-  readFiles = hasPermission(PERMISSONS.files.read);
+  readFiles = hasPermission(PERMISSIONS.files.read);
 
-  readFlags = hasPermission(PERMISSONS.flags.read);
+  readFlags = hasPermission(PERMISSIONS.flags.read);
 
-  readComments = hasPermission(PERMISSONS.comments.read);
+  readComments = hasPermission(PERMISSIONS.comments.read);
 
-  readActivity = hasPermission(PERMISSONS.activity.read);
+  readActivity = hasPermission(PERMISSIONS.activity.read);
 
   constructor() {
     this.taskDetail.show(this.data.systemId);

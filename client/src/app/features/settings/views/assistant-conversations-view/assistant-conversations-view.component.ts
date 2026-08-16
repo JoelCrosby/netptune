@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { AiAssistantMessageComponent } from '@app/shell/ai-assistant/components/ai-assistant-message.component';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { AiConversationDetail } from '@core/models/ai-conversation';
 import { AiWorkspaceConversation } from '@core/models/ai-workspace-conversation';
 import { ClientResponse } from '@core/models/client-response';
@@ -381,7 +381,7 @@ export class AssistantConversationsViewComponent {
   });
 
   protected readonly canUpdateWorkspace = hasPermission(
-    PERMISSONS.workspace.update
+    PERMISSIONS.workspace.update
   );
 
   protected readonly assistantEnabled = computed(() => {

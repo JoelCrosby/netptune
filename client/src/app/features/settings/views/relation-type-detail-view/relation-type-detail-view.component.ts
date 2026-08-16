@@ -18,10 +18,10 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { relationTypeUsageResource } from '@core/resources/entity-usage.resource';
-import { relationTypeResource } from '@core/resources/relation-type.resources';
+import { relationTypeResource } from '@core/resources/relation-type.resource';
 import {
   RelationCategory,
   RelationType,
@@ -333,7 +333,7 @@ export class RelationTypeDetailViewComponent {
   readonly usage = relationTypeUsageResource(this.relationTypeId);
 
   readonly workspaceId = inject(CurrentWorkspaceService).slug;
-  readonly canManage = hasPermission(PERMISSONS.relationTypes.manage);
+  readonly canManage = hasPermission(PERMISSIONS.relationTypes.manage);
 
   readonly relationType = computed(() => {
     return this.relationTypes

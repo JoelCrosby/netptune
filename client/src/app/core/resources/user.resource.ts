@@ -1,17 +1,17 @@
 import { computed, inject, Signal } from '@angular/core';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { SessionService } from '@core/services/session.service';
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { AssigneeViewModel } from '../models/view-models/board-view';
 import { WorkspaceAppUser } from '../models/appuser';
 import { ClientResponse } from '../models/client-response';
 import { MAX_PAGE_SIZE, Page } from '../models/pagination';
 import { WorkspaceRole } from '../enums/workspace-role';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 export const userResource = () => {
   return permissionResource<ClientResponse<Page<WorkspaceAppUser>>>(
-    PERMISSONS.members.read,
+    PERMISSIONS.members.read,
     () => ({
       url: 'api/users',
       params: { page: 1, pageSize: MAX_PAGE_SIZE },
@@ -21,7 +21,7 @@ export const userResource = () => {
 
 export const userDetailResource = (userId: Signal<string | undefined>) => {
   return permissionResource<WorkspaceAppUser>(
-    PERMISSONS.members.read,
+    PERMISSIONS.members.read,
     () => {
       const id = userId();
 
@@ -36,7 +36,7 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
   const workspaceKey = inject(CurrentWorkspaceService).slug;
 
   const members = permissionResource<WorkspaceAppUser[]>(
-    PERMISSONS.members.read,
+    PERMISSIONS.members.read,
     () => {
       if (isPublicViewer()) return undefined;
 
@@ -58,7 +58,7 @@ export const workspaceUsersResource = (): Signal<WorkspaceAppUser[]> => {
   );
 
   const publicMembers = permissionResource<WorkspaceAppUser[]>(
-    PERMISSONS.tasks.read,
+    PERMISSIONS.tasks.read,
     () => {
       const key = workspaceKey();
 

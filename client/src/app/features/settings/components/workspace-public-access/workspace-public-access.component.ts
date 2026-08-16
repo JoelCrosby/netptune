@@ -3,7 +3,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { WorkspaceCommandsService } from '@core/services/workspace-commands.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import {
-  PERMISSONS,
+  PERMISSIONS,
   Permission,
   publicReadablePermissions,
 } from '@core/auth/permissions';
@@ -94,7 +94,7 @@ export class WorkspacePublicAccessComponent {
   private workspaceCommands = inject(WorkspaceCommandsService);
 
   private workspace = inject(CurrentWorkspaceService).workspace;
-  private canUpdate = hasPermission(PERMISSONS.workspace.update);
+  private canUpdate = hasPermission(PERMISSIONS.workspace.update);
 
   readonly options = publicReadablePermissions.map((permission) => {
     return { key: permission, label: permissionLabel(permission) };

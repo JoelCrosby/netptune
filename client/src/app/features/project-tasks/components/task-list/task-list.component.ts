@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Params } from '@angular/router';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { DatatableCellTemplateDirective } from '@app/static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
@@ -232,9 +232,9 @@ export class TaskListComponent {
     );
   });
 
-  canCreate = hasPermission(PERMISSONS.tasks.create);
-  canDelete = hasPermission(PERMISSONS.tasks.delete);
-  readFlags = hasPermission(PERMISSONS.flags.read);
+  canCreate = hasPermission(PERMISSIONS.tasks.create);
+  canDelete = hasPermission(PERMISSIONS.tasks.delete);
+  readFlags = hasPermission(PERMISSIONS.flags.read);
 
   taskRequestParams = computed(() => {
     const filters = this.filterRoute.filters();

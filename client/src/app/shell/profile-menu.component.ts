@@ -3,7 +3,7 @@ import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { ThemeService } from '@core/services/theme.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { APPEARANCE_THEME } from '@core/models/user-preferences';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import {
@@ -115,7 +115,7 @@ export class ProfileMenuComponent {
 
   readonly user = inject(SessionService).currentUser;
   readonly effectiveTheme = inject(ThemeService).theme;
-  readonly canReadWorkspace = hasPermission(PERMISSONS.workspace.read);
+  readonly canReadWorkspace = hasPermission(PERMISSIONS.workspace.read);
 
   readonly profileFallbackName = $localize`:profile menu heading|Heading of the profile menu when the account has no display name:Profile`;
 

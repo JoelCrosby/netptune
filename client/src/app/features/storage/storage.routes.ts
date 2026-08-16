@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { workspaceSettingsGuard } from '@settings/guards/workspace-settings.guard';
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [workspaceSettingsGuard],
-    data: { permission: PERMISSONS.storage.read },
+    data: { permission: PERMISSIONS.storage.read },
     loadComponent: () =>
       import('./views/storage-view.component').then(
         (m) => m.StorageViewComponent

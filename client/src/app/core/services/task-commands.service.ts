@@ -10,7 +10,7 @@ import { ConfirmationService } from '@core/services/confirmation.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import { TasksService } from '@core/services/tasks.service';
 import { downloadFile } from '@core/util/download-helper';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
@@ -36,7 +36,7 @@ export class TaskCommandsService {
     this.tasksApi
       .post(task)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => {
           options?.onFailed?.();
 
@@ -61,7 +61,7 @@ export class TaskCommandsService {
     this.tasksApi
       .put(task)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY),
         finalize(() => this.editing.set(false))
       )
@@ -80,7 +80,7 @@ export class TaskCommandsService {
     this.tasksApi
       .bulkUpdate(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => {
@@ -98,7 +98,7 @@ export class TaskCommandsService {
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tasksApi.delete(task).pipe(unwrapClientReposne());
+          return this.tasksApi.delete(task).pipe(unwrapClientResponse());
         }),
         catchError(() => EMPTY)
       )
@@ -118,7 +118,7 @@ export class TaskCommandsService {
         switchMap((confirmed) => {
           if (!confirmed) return EMPTY;
 
-          return this.tasksApi.deleteMultiple(ids).pipe(unwrapClientReposne());
+          return this.tasksApi.deleteMultiple(ids).pipe(unwrapClientResponse());
         }),
         catchError(() => EMPTY)
       )
@@ -134,7 +134,7 @@ export class TaskCommandsService {
     this.tasksApi
       .addTagToTask(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => this.workspaceRefresh.refresh(['tasks', 'tags']));
@@ -144,7 +144,7 @@ export class TaskCommandsService {
     this.tasksApi
       .deleteTagFromTask(request)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         catchError(() => EMPTY)
       )
       .subscribe(() => this.workspaceRefresh.refresh(['tasks', 'tags']));

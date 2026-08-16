@@ -1,16 +1,16 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { httpResource } from '@angular/common/http';
 import { Component, computed, inject, linkedSignal } from '@angular/core';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
 import { TaskRelation } from '@core/models/task-relation';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import { TaskRelationsService } from '@core/services/task-relations.service';
-import { retainWhileLoading } from '@core/resources/stable-resource';
+import { retainWhileLoading } from '@core/resources/stable.resource';
 import { reloadOnRefresh } from '@core/util/reload-on-refresh';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { colorSwatchClass } from '@core/util/colors/colors';
 import { LucideLink2, LucidePlus, LucideX } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
@@ -136,7 +136,7 @@ export class TaskDetailRelationsComponent {
   private readonly taskDetail = inject(TaskDetailService);
 
   readonly task = this.taskDetail.task;
-  readonly canUpdate = hasPermission(PERMISSONS.tasks.update);
+  readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
 
   readonly busy = linkedSignal({
     source: () => this.task()?.systemId,
@@ -266,7 +266,7 @@ export class TaskDetailRelationsComponent {
     this.relationsService
       .delete(relation.id)
       .pipe(
-        unwrapClientReposne(),
+        unwrapClientResponse(),
         tap(() => {
           this.busy.set(false);
           this.relations.reload();

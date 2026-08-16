@@ -16,7 +16,7 @@ import {
   submit,
 } from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { ConfirmationService } from '@core/services/confirmation.service';
 import { tagUsageResource } from '@core/resources/entity-usage.resource';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
@@ -245,8 +245,8 @@ export class TagDetailViewComponent {
   readonly usage = tagUsageResource(this.tagId);
 
   readonly workspaceId = inject(CurrentWorkspaceService).slug;
-  readonly canUpdate = hasPermission(PERMISSONS.tags.update);
-  readonly canDelete = hasPermission(PERMISSONS.tags.delete);
+  readonly canUpdate = hasPermission(PERMISSIONS.tags.update);
+  readonly canDelete = hasPermission(PERMISSIONS.tags.delete);
 
   readonly deleting = signal(false);
   readonly saving = signal(false);

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 
 export const projectDetailGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot
@@ -11,7 +11,7 @@ export const projectDetailGuard: CanActivateFn = (
 
   if (!projectKey) return false;
 
-  const canUpdate = hasPermission(PERMISSONS.projects.update)();
+  const canUpdate = hasPermission(PERMISSIONS.projects.update)();
 
   if (canUpdate) return true;
 

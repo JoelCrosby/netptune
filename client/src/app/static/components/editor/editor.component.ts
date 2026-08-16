@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StorageService } from '@core/services/storage.service';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import Attaches from '@editorjs/attaches';
 import Checklist from '@editorjs/checklist';
 import Code from '@editorjs/code';
@@ -291,7 +291,7 @@ export class EditorComponent
 
   async uploadFile(data: File) {
     const response = await firstValueFrom(
-      this.storage.uploadMedia(data).pipe(unwrapClientReposne())
+      this.storage.uploadMedia(data).pipe(unwrapClientResponse())
     ).catch(() => null);
 
     if (!response) {

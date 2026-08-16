@@ -5,7 +5,7 @@ import { Params } from '@angular/router';
 import { FormField, form, required } from '@angular/forms/signals';
 import { RelationType, isSymmetricCategory } from '@core/models/relation-type';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
-import { relationTypeResource } from '@core/resources/relation-type.resources';
+import { relationTypeResource } from '@core/resources/relation-type.resource';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';

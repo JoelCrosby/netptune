@@ -10,7 +10,7 @@ import { FormSelectOptionComponent } from '@static/components/form-select/form-s
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
 export interface BoardGroupDialogData {

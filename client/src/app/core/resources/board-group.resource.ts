@@ -1,10 +1,10 @@
-import { PERMISSONS } from '../auth/permissions';
+import { PERMISSIONS } from '../auth/permissions';
 import { AutomationBoardGroupOption } from '../models/automation-board-group-option';
-import { permissionResource } from './permission-resource';
+import { permissionResource } from './permission.resource';
 
 export const boardGroupOptionsResource = () => {
   return permissionResource<AutomationBoardGroupOption[]>(
-    PERMISSONS.boardGroups.read,
+    PERMISSIONS.boardGroups.read,
     () => ({ url: 'api/boardgroups/options' }),
     { defaultValue: [], refreshOn: ['boardGroups'] }
   );

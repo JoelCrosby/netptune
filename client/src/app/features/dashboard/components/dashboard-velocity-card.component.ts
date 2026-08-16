@@ -1,7 +1,7 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, linkedSignal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { VelocityReport } from '@core/models/reporting';
 import { ProjectViewModel } from '@core/models/view-models/project-view-model';
 import { projectResource } from '@core/resources/project.resource';
@@ -81,7 +81,7 @@ const recentSprints = 8;
 export class DashboardVelocityCardComponent {
   protected readonly velocityIcon = LucideGauge;
 
-  readonly canRead = hasPermission(PERMISSONS.sprints.read);
+  readonly canRead = hasPermission(PERMISSIONS.sprints.read);
 
   private readonly projectsResource = projectResource();
   private readonly projects = this.projectsResource.value;

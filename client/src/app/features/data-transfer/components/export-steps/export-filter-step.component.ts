@@ -5,7 +5,7 @@ import {
 } from '@app/features/data-transfer/services/export-wizard.service';
 import { workspaceBoardsResource } from '@core/resources/board.resource';
 import { projectResource } from '@core/resources/project.resource';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import {
   FilterFacetComponent,

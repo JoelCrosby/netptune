@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { appendPageParams, Page, PageQuery } from '@core/models/pagination';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import {
   AutomationDryRun,
   AutomationManualRun,
@@ -20,13 +20,13 @@ export class AutomationsService {
   getSummary() {
     return this.http
       .get<ClientResponse<AutomationRuleSummary>>('api/automations/summary')
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   getRule(id: number) {
     return this.http
       .get<ClientResponse<AutomationRule>>(`api/automations/${id}`)
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   getRuns(id: number, query?: PageQuery) {
@@ -34,7 +34,7 @@ export class AutomationsService {
       .get<ClientResponse<Page<AutomationRun>>>(`api/automations/${id}/runs`, {
         params: appendPageParams(new HttpParams(), query),
       })
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   dryRun(id: number, taskId: number) {
@@ -42,7 +42,7 @@ export class AutomationsService {
       .get<ClientResponse<AutomationDryRun>>(
         `api/automations/${id}/dry-run/${taskId}`
       )
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   runNow(id: number, taskIds: number[]) {
@@ -50,7 +50,7 @@ export class AutomationsService {
       .post<ClientResponse<AutomationManualRun>>(`api/automations/${id}/run`, {
         taskIds,
       })
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   clone(id: number, name: string) {
@@ -58,37 +58,37 @@ export class AutomationsService {
       .post<ClientResponse<AutomationRule>>(`api/automations/${id}/clone`, {
         name,
       })
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   create(request: AutomationRuleRequest) {
     return this.http
       .post<ClientResponse<AutomationRule>>('api/automations', request)
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   update(id: number, request: AutomationRuleRequest) {
     return this.http
       .put<ClientResponse<AutomationRule>>(`api/automations/${id}`, request)
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   enable(id: number) {
     return this.http
       .post<ClientResponse>(`api/automations/${id}/enable`, null)
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   disable(id: number) {
     return this.http
       .post<ClientResponse>(`api/automations/${id}/disable`, null)
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 
   delete(id: number) {
     return this.http
       .delete<ClientResponse>(`api/automations/${id}`)
-      .pipe(unwrapClientReposne());
+      .pipe(unwrapClientResponse());
   }
 }
 

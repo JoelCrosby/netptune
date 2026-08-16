@@ -12,7 +12,7 @@ import { ProjectViewModel } from '@app/core/models/view-models/project-view-mode
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { ProjectCommandsService } from '@core/services/project-commands.service';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';

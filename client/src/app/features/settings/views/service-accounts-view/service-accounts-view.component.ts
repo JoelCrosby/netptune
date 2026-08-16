@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import {
   ApiCredential,
   ApiCredentialCreated,
@@ -375,12 +375,12 @@ export class ServiceAccountsViewComponent {
     )
   );
 
-  readonly canCreate = hasPermission(PERMISSONS.serviceAccounts.create);
+  readonly canCreate = hasPermission(PERMISSIONS.serviceAccounts.create);
   readonly canManageCredentials = hasPermission(
-    PERMISSONS.serviceAccounts.manageCredentials
+    PERMISSIONS.serviceAccounts.manageCredentials
   );
-  readonly canDelete = hasPermission(PERMISSONS.serviceAccounts.delete);
-  readonly canUpdate = hasPermission(PERMISSONS.serviceAccounts.update);
+  readonly canDelete = hasPermission(PERMISSIONS.serviceAccounts.delete);
+  readonly canUpdate = hasPermission(PERMISSIONS.serviceAccounts.update);
 
   constructor() {
     this.load();

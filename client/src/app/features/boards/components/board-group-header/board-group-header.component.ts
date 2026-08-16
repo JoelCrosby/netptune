@@ -10,7 +10,7 @@ import { ManageBoardGroupsDialogComponent } from '@boards/components/manage-boar
 import { hiddenGroupIdsForBoard } from '@boards/util/hidden-board-groups';
 import { TagFilterContainerComponent } from '@shared/components/tag-filter/tag-filter-container.component';
 import { BoardGroupHeaderSeperatorComponent } from './board-group-header-seperator.component';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { BoardViewService } from '@core/services/board-view.service';
 import { BOARDS_HIDDEN_GROUP_IDS } from '@core/models/user-preferences';
 import { DialogService } from '@core/services/dialog.service';
@@ -71,9 +71,9 @@ export class BoardGroupHeaderComponent {
     return hiddenGroupIdsForBoard(value, boardId).length;
   });
 
-  readStatus = hasPermission(PERMISSONS.statuses.read);
+  readStatus = hasPermission(PERMISSIONS.statuses.read);
 
-  readTags = hasPermission(PERMISSONS.tags.read);
+  readTags = hasPermission(PERMISSIONS.tags.read);
 
   onManageGroupsClicked() {
     this.dialog.open(ManageBoardGroupsDialogComponent, {

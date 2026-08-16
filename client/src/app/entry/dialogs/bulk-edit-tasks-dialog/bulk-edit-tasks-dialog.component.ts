@@ -5,7 +5,7 @@ import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { estimateTypeOptions } from '@core/enums/estimate-type';
 import { taskPriorityOptions } from '@core/enums/task-priority';
-import { statusResource } from '@core/resources/status.resources';
+import { statusResource } from '@core/resources/status.resource';
 import { projectResource } from '@core/resources/project.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { userResource } from '@core/resources/user.resource';

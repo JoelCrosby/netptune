@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Params, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { SprintViewModel } from '@core/models/view-models/sprint-view-model';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
@@ -163,7 +163,7 @@ export class SprintBacklogGroupComponent {
   private readonly sprintCommands = inject(SprintCommandsService);
 
   readonly loading = this.sprintCommands.isUpdating;
-  readonly canManageTasks = hasPermission(PERMISSONS.sprints.manageTasks);
+  readonly canManageTasks = hasPermission(PERMISSIONS.sprints.manageTasks);
 
   // Total backlog tasks for this group and whether its fetch has resolved,
   // pushed up from the datatable's own paginated fetch via its (loaded) output.

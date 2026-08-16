@@ -31,7 +31,7 @@ import {
   LucideWorkflow,
 } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
-import { PERMISSONS } from '../core/auth/permissions';
+import { PERMISSIONS } from '../core/auth/permissions';
 import { ShellMenuLinkListComponent } from './shell-menu-link-list.component';
 import {
   ShellMenuLink,
@@ -107,21 +107,21 @@ export class ShellSidebarComponent {
 
   isAssistantAvailable = inject(SessionService).isAssistantAvailable;
 
-  canReadMembers = hasPermission(PERMISSONS.members.read);
-  canReadWorkspace = hasPermission(PERMISSONS.workspace.read);
-  canReadTags = hasPermission(PERMISSONS.tags.read);
-  canReadStatuses = hasPermission(PERMISSONS.statuses.read);
-  canReadRelationTypes = hasPermission(PERMISSONS.relationTypes.read);
+  canReadMembers = hasPermission(PERMISSIONS.members.read);
+  canReadWorkspace = hasPermission(PERMISSIONS.workspace.read);
+  canReadTags = hasPermission(PERMISSIONS.tags.read);
+  canReadStatuses = hasPermission(PERMISSIONS.statuses.read);
+  canReadRelationTypes = hasPermission(PERMISSIONS.relationTypes.read);
 
-  canReadServiceAccounts = hasPermission(PERMISSONS.serviceAccounts.read);
-  canExportData = hasPermission(PERMISSONS.tasks.export);
-  canReadAudit = hasPermission(PERMISSONS.audit.read);
-  canReadStorage = hasPermission(PERMISSONS.storage.read);
-  canReadSprints = hasPermission(PERMISSONS.sprints.read);
-  canReadAutomations = hasPermission(PERMISSONS.automations.read);
-  canRestoreTasks = hasPermission(PERMISSONS.tasks.restore);
+  canReadServiceAccounts = hasPermission(PERMISSIONS.serviceAccounts.read);
+  canExportData = hasPermission(PERMISSIONS.tasks.export);
+  canReadAudit = hasPermission(PERMISSIONS.audit.read);
+  canReadStorage = hasPermission(PERMISSIONS.storage.read);
+  canReadSprints = hasPermission(PERMISSIONS.sprints.read);
+  canReadAutomations = hasPermission(PERMISSIONS.automations.read);
+  canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
   canReadAssistantConversations = hasPermission(
-    PERMISSONS.assistant.readAllConversations
+    PERMISSIONS.assistant.readAllConversations
   );
 
   links = computed(() => {

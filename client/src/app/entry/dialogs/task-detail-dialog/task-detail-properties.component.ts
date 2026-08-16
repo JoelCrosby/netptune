@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { hasPermission } from '@core/auth/has-permission';
 import { TaskPriority } from '@app/core/enums/task-priority';
 import { UserSelectValue } from '@app/core/models/view-models/user-select-option';
@@ -45,7 +45,7 @@ import { TaskCommandsService } from '@core/services/task-commands.service';
 export class TaskDetailPropertiesComponent {
   readonly taskDetailService = inject(TaskDetailService);
   private readonly taskCommands = inject(TaskCommandsService);
-  private readonly canUpdate = hasPermission(PERMISSONS.tasks.update);
+  private readonly canUpdate = hasPermission(PERMISSIONS.tasks.update);
   readonly task = this.taskDetailService.task;
   readonly updateLoading = this.taskCommands.isEditing;
   readonly isReadOnly = computed(() => !this.canUpdate());

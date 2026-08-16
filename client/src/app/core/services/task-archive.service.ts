@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { ClientResponse } from '@core/models/client-response';
 import { ConfirmationService } from '@core/services/confirmation.service';
-import { unwrapClientReposne } from '@core/util/rxjs-operators';
+import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { EMPTY, Observable } from 'rxjs';
@@ -20,7 +20,7 @@ export class TaskArchiveService {
         if (!confirmed) return EMPTY;
 
         return this.http.post<ClientResponse>('api/tasks/restore', ids).pipe(
-          unwrapClientReposne(),
+          unwrapClientResponse(),
           tap(() =>
             this.snackbar.open(
               ids.length === 1

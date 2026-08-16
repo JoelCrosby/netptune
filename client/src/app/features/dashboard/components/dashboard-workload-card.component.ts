@@ -10,7 +10,7 @@ import {
   StatStripComponent,
   StatStripItem,
 } from '@static/components/stat-strip/stat-strip.component';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { WorkloadChartComponent } from './charts/workload-chart.component';
 
 const topAssignees = 8;
@@ -62,7 +62,7 @@ const topAssignees = 8;
 export class DashboardWorkloadCardComponent {
   protected readonly workloadIcon = LucideUsers;
 
-  readonly canRead = hasPermission(PERMISSONS.members.read);
+  readonly canRead = hasPermission(PERMISSIONS.members.read);
 
   private readonly resource = httpResource<WorkloadReport>(() => {
     return this.canRead()

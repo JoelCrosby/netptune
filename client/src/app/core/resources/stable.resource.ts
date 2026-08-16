@@ -10,7 +10,7 @@ import { Permission } from '../auth/permissions';
 import {
   permissionResource,
   PermissionResourceOptions,
-} from './permission-resource';
+} from './permission.resource';
 
 export interface StableResourceRef<T> {
   /** Writable, so a view can show an edit before the server has agreed to it. */

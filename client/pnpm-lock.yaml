@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  ng-apexcharts: 179a9fef2bb11123e1a21f6bef3f12b53b4ef46e2a6d19b547d35470127e050b
+
 importers:
 
   .:
@@ -100,7 +103,7 @@ importers:
         version: 18.0.7
       ng-apexcharts:
         specifier: ^3.0.0
-        version: 3.0.0(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(apexcharts@6.8.0)(rxjs@7.8.2)
+        version: 3.0.0(patch_hash=179a9fef2bb11123e1a21f6bef3f12b53b4ef46e2a6d19b547d35470127e050b)(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(apexcharts@6.8.0)(rxjs@7.8.2)
       postcss:
         specifier: ^8.5.16
         version: 8.5.16
@@ -5953,7 +5956,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  ng-apexcharts@3.0.0(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(apexcharts@6.8.0)(rxjs@7.8.2):
+  ng-apexcharts@3.0.0(patch_hash=179a9fef2bb11123e1a21f6bef3f12b53b4ef46e2a6d19b547d35470127e050b)(@angular/common@22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(apexcharts@6.8.0)(rxjs@7.8.2):
     dependencies:
       '@angular/common': 22.0.6(@angular/core@22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2))(rxjs@7.8.2)
       '@angular/core': 22.0.6(@angular/compiler@22.0.6)(rxjs@7.8.2)

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router, RouterLink } from '@angular/router';
-import { PERMISSONS } from '@app/core/auth/permissions';
+import { PERMISSIONS } from '@app/core/auth/permissions';
 import { ClientResponse } from '@core/models/client-response';
 import {
   ImportSessionProgressEvent,
@@ -358,12 +358,12 @@ export class DataTransferViewComponent {
   protected readonly exportIcon = LucideFileDown;
   protected readonly importIcon = LucideFileUp;
 
-  protected readonly canExport = hasPermission(PERMISSONS.tasks.export);
+  protected readonly canExport = hasPermission(PERMISSIONS.tasks.export);
 
-  protected readonly canImport = hasPermission(PERMISSONS.tasks.import);
+  protected readonly canImport = hasPermission(PERMISSIONS.tasks.import);
 
   protected readonly canImportArchive = hasPermission(
-    PERMISSONS.data.importArchive
+    PERMISSIONS.data.importArchive
   );
 
   protected readonly undoing = signal<string | null>(null);

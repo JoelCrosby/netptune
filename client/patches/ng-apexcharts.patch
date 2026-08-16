@@ -1,0 +1,22 @@
+diff --git a/fesm2022/ng-apexcharts.mjs b/fesm2022/ng-apexcharts.mjs
+index 256b10a330005315d438211d6605a448f10cdf31..8ca837c1f16780982a53ff30ac603130feee86ce 100644
+--- a/fesm2022/ng-apexcharts.mjs
++++ b/fesm2022/ng-apexcharts.mjs
+@@ -342,7 +342,7 @@ class ChartSSRService {
+     }
+     /** @internal Extracted to allow spying in unit tests without importing actual SSR bundle. */
+     importSSRModule() {
+-        return import('apexcharts/ssr');
++        return Promise.reject(new Error('apexcharts/ssr is not bundled: this app has no SSR. Remove the ng-apexcharts patch if server-side rendering is added.'));
+     }
+     async renderToHTML(options, ssrOptions = {}) {
+         const { default: ApexCharts } = await this.importSSRModule();
+@@ -497,7 +497,7 @@ class ChartHydrateComponent {
+     }
+     /** @internal Extracted to allow spying in unit tests without importing actual SSR/hydrate bundle. */
+     importClientModule() {
+-        return import('apexcharts/ssr');
++        return Promise.reject(new Error('apexcharts/ssr is not bundled: this app has no SSR. Remove the ng-apexcharts patch if server-side rendering is added.'));
+     }
+     ngOnDestroy() {
+         this.chartObj?.destroy();

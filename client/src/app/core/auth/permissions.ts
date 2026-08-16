@@ -1,4 +1,4 @@
-export const PERMISSONS = {
+export const PERMISSIONS = {
   workspace: {
     read: 'workspace.read',
     create: 'workspace.create',
@@ -124,16 +124,16 @@ export const PERMISSONS = {
 
 type Values<T> = T[keyof T];
 export type Permission = Values<{
-  [K in keyof typeof PERMISSONS]: Values<(typeof PERMISSONS)[K]>;
+  [K in keyof typeof PERMISSIONS]: Values<(typeof PERMISSIONS)[K]>;
 }>;
 
 export const publicReadablePermissions: Permission[] = [
-  PERMISSONS.projects.read,
-  PERMISSONS.tasks.read,
-  PERMISSONS.boards.read,
-  PERMISSONS.boardGroups.read,
-  PERMISSONS.sprints.read,
-  PERMISSONS.tags.read,
-  PERMISSONS.statuses.read,
-  PERMISSONS.relationTypes.read,
+  PERMISSIONS.projects.read,
+  PERMISSIONS.tasks.read,
+  PERMISSIONS.boards.read,
+  PERMISSIONS.boardGroups.read,
+  PERMISSIONS.sprints.read,
+  PERMISSIONS.tags.read,
+  PERMISSIONS.statuses.read,
+  PERMISSIONS.relationTypes.read,
 ];

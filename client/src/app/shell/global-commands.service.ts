@@ -8,7 +8,7 @@ import {
 import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { Router } from '@angular/router';
-import { PERMISSONS } from '@core/auth/permissions';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { CommandRegistry } from '@core/services/command-registry.service';
 import { DialogService } from '@core/services/dialog.service';
@@ -22,11 +22,11 @@ export class GlobalCommandsService implements OnDestroy {
   private workspace = inject(WorkspaceService);
   private panel = inject(AiPanelService);
   private dialog = inject(DialogService);
-  private canCreateTasks = hasPermission(PERMISSONS.tasks.create);
+  private canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
   private createTaskCommandRegistered = false;
-  private canReadAutomations = hasPermission(PERMISSONS.automations.read);
+  private canReadAutomations = hasPermission(PERMISSIONS.automations.read);
   private automationCommandRegistered = false;
-  private canReadStorage = hasPermission(PERMISSONS.storage.read);
+  private canReadStorage = hasPermission(PERMISSIONS.storage.read);
   private storageCommandRegistered = false;
   private assistantCommandRegistered = false;
   private authenticated = inject(SessionService).isAuthenticated;
