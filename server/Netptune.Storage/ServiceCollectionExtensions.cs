@@ -10,10 +10,11 @@ public static class ServiceCollectionExtensions
     {
         if (action == null) throw new ArgumentNullException(nameof(action));
 
-        var options = new S3StorageOptions();
-        action(options);
+        services.AddOptions<S3StorageOptions>()
+            .Configure(action)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        services.Configure(action);
         services.AddSingleton<IStorageService, S3StorageService>();
     }
 

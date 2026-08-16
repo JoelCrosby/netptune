@@ -12,10 +12,11 @@ public static class ServiceCollectionExtensions
     {
         if (action == null) throw new ArgumentNullException(nameof(action));
 
-        var options = new CloudflareEmailOptions();
-        action(options);
+        services.AddOptions<CloudflareEmailOptions>()
+            .Configure(action)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        services.Configure(action);
         services.AddHttpClient();
         services.AddTransient<IEmailService, CloudflareEmailService>();
 
@@ -26,10 +27,11 @@ public static class ServiceCollectionExtensions
     {
         if (action == null) throw new ArgumentNullException(nameof(action));
 
-        var options = new SendGridEmailOptions();
-        action(options);
+        services.AddOptions<SendGridEmailOptions>()
+            .Configure(action)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        services.Configure(action);
         services.AddTransient<IEmailService, SendGridEmailService>();
 
         services.AddRazorLightRenderer();
