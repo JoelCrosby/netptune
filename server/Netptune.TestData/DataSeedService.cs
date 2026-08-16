@@ -38,6 +38,7 @@ public sealed class DataSeedService : IHostedService
         var projects = ProjectSeeder.Generate(users, workspaces, statuses);
         var boards = BoardSeeder.Generate(users, projects);
         var boardGroups = BoardGroupSeeder.Generate(users, boards);
+        var sprints = SprintSeeder.Generate(projects);
         var tasks = TaskSeeder.Generate(users, projects, statuses);
 
         await context.Database.EnsureCreatedAsync(ct);
@@ -58,6 +59,7 @@ public sealed class DataSeedService : IHostedService
                 await context.Boards.AddRangeAsync(boards, ct);
                 await context.BoardGroups.AddRangeAsync(boardGroups, ct);
                 await context.Projects.AddRangeAsync(projects, ct);
+                await context.Sprints.AddRangeAsync(sprints, ct);
                 await context.ProjectTasks.AddRangeAsync(tasks, ct);
 
                 await context.SaveChangesAsync(ct);
