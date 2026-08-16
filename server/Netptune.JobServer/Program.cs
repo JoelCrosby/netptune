@@ -12,6 +12,7 @@ using Netptune.JobServer.Services;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
+using Netptune.ServiceDefaults.Middleware;
 using Netptune.Services.Configuration;
 using Netptune.Storage;
 
@@ -75,6 +76,8 @@ builder.Services.AddMediator(options =>
 });
 
 var app = builder.Build();
+
+app.UseNetptuneRequestDefaults();
 
 app.MapDefaultEndpoints();
 app.Run();

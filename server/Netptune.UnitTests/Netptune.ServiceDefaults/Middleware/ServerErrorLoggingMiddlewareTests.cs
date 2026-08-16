@@ -3,11 +3,11 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-using Netptune.App.Middleware;
+using Netptune.ServiceDefaults.Middleware;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.App.Middleware;
+namespace Netptune.UnitTests.Netptune.ServiceDefaults.Middleware;
 
 public class ServerErrorLoggingMiddlewareTests
 {

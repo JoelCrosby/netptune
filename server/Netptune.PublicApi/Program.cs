@@ -12,6 +12,7 @@ using Netptune.PublicApi.Endpoints;
 using Netptune.PublicApi.Middleware;
 using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
+using Netptune.ServiceDefaults.Middleware;
 using Netptune.Services.Configuration;
 
 using Scalar.AspNetCore;
@@ -66,6 +67,7 @@ builder.Services.AddPublicApiOpenApi();
 
 var app = builder.Build();
 
+app.UseNetptuneRequestDefaults();
 app.UseForwardedHeaders();
 app.UseMiddleware<PreAuthenticationRateLimiterMiddleware>();
 app.UseAuthentication();

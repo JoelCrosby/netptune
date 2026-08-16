@@ -1,8 +1,10 @@
 using System.Text.Json;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace Netptune.App.Middleware;
+namespace Netptune.ServiceDefaults.Middleware;
 
 public class ServerErrorLoggingMiddleware(RequestDelegate next)
 {

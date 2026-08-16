@@ -29,7 +29,6 @@
     <ProjectReference Include="..\Netptune.Export\Netptune.Export.csproj" />
     <ProjectReference Include="..\Netptune.Import\Netptune.Import.csproj" />
     <ProjectReference Include="..\Netptune.TestData\Netptune.TestData.csproj" />
-    <ProjectReference Include="..\Netptune.JobServer\Netptune.JobServer.csproj" />
   </ItemGroup>
 
 </Project>

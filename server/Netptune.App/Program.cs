@@ -20,6 +20,7 @@ using Netptune.Handlers;
 using Netptune.Messaging;
 using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
+using Netptune.ServiceDefaults.Middleware;
 using Netptune.Identity.Authentication;
 using Netptune.Identity.Authorization;
 using Netptune.Search;
@@ -142,9 +143,8 @@ builder.Services.AddNetptuneWorkspaceStorage(configuration);
 
 var app = builder.Build();
 
-app.UseCorrelationId();
+app.UseNetptuneRequestDefaults();
 app.UseForwardedHeaders();
-app.UseServerErrorLogging();
 
 app.UseRouting();
 

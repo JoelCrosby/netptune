@@ -6,6 +6,7 @@ using Netptune.Entities.Configuration;
 using Netptune.Events;
 using Netptune.Repositories.Configuration;
 using Netptune.ServiceDefaults;
+using Netptune.ServiceDefaults.Middleware;
 using Netptune.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,8 @@ builder.Services.AddMediator(options =>
 });
 
 var app = builder.Build();
+
+app.UseNetptuneRequestDefaults();
 
 app.MapDefaultEndpoints();
 app.Run();

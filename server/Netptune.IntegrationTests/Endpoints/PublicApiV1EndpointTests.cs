@@ -64,6 +64,16 @@ public sealed class PublicApiV1EndpointTests
     }
 
     [Fact]
+    public async Task Request_ShouldReturnACorrelationId()
+    {
+        var client = Fixture.CreateUnauthenticatedPublicApiClient();
+
+        var response = await client.GetAsync("api/v1/tasks", TestContext.Current.CancellationToken);
+
+        response.Headers.Should().ContainKey("X-Correlation-Id");
+    }
+
+    [Fact]
     public async Task Request_ShouldReturnUnauthorized_WhenTheCredentialIsNotRecognised()
     {
         var client = Fixture.CreatePublicApiClient("ntp_not-a-real-credential");
