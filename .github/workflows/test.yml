@@ -9,6 +9,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.x"
+
+      - name: Restore
+        run: dotnet restore Netptune.slnx
+
+      - name: Build
+        run: dotnet build Netptune.slnx --no-restore --configuration Release
+
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -56,3 +77,27 @@ jobs:
 
       - name: Test
         run: dotnet test --project Netptune.IntegrationTests/Netptune.IntegrationTests.csproj --no-build --configuration Release
+
+  automation-tests:
+    name: Automation Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.x"
+
+      - name: Restore
+        run: dotnet restore Netptune.Automation.Tests/Netptune.Automation.Tests.csproj
+
+      - name: Build
+        run: dotnet build Netptune.Automation.Tests/Netptune.Automation.Tests.csproj --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --project Netptune.Automation.Tests/Netptune.Automation.Tests.csproj --no-build --configuration Release
