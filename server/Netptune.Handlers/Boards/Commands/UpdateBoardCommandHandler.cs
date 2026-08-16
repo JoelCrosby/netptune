@@ -3,6 +3,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
@@ -14,11 +15,13 @@ public sealed record UpdateBoardCommand(UpdateBoardRequest Request) : IRequest<C
 public sealed class UpdateBoardCommandHandler : IRequestHandler<UpdateBoardCommand, ClientResponse<BoardViewModel>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
 
-    public UpdateBoardCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    public UpdateBoardCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
+        Identity = identity;
         Activity = activity;
     }
 
@@ -28,7 +31,8 @@ public sealed class UpdateBoardCommandHandler : IRequestHandler<UpdateBoardComma
 
         if (!req.Id.HasValue) throw new Exception($"{nameof(req.Id)} is required");
 
-        var result = await UnitOfWork.Boards.GetAsync(req.Id.Value, cancellationToken: cancellationToken);
+        var workspaceId = await Identity.GetWorkspaceId();
+        var result = await UnitOfWork.Boards.GetInWorkspace(req.Id.Value, workspaceId, cancellationToken: cancellationToken);
 
         if (result is null) return ClientResponse<BoardViewModel>.NotFound;
 

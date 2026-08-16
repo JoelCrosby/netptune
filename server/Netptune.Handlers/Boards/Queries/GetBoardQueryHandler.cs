@@ -1,5 +1,6 @@
 using Mediator;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
 
@@ -10,15 +11,18 @@ public sealed record GetBoardQuery(int Id) : IRequest<ClientResponse<BoardViewMo
 public sealed class GetBoardQueryHandler : IRequestHandler<GetBoardQuery, ClientResponse<BoardViewModel>>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly IIdentityService Identity;
 
-    public GetBoardQueryHandler(INetptuneUnitOfWork unitOfWork)
+    public GetBoardQueryHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity)
     {
         UnitOfWork = unitOfWork;
+        Identity = identity;
     }
 
     public async ValueTask<ClientResponse<BoardViewModel>> Handle(GetBoardQuery request, CancellationToken cancellationToken)
     {
-        var result = await UnitOfWork.Boards.GetAsync(request.Id, true, cancellationToken);
+        var workspaceId = await Identity.GetWorkspaceId();
+        var result = await UnitOfWork.Boards.GetInWorkspace(request.Id, workspaceId, true, cancellationToken);
 
         if (result is null) return ClientResponse<BoardViewModel>.NotFound;
 

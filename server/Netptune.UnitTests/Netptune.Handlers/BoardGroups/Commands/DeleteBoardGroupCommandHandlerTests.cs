@@ -14,6 +14,8 @@ namespace Netptune.UnitTests.Netptune.Handlers.BoardGroups.Commands;
 
 public class DeleteBoardGroupCommandHandlerTests
 {
+    private const int WorkspaceId = 7;
+
     private readonly DeleteBoardGroupCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
@@ -21,14 +23,28 @@ public class DeleteBoardGroupCommandHandlerTests
 
     public DeleteBoardGroupCommandHandlerTests()
     {
+        Identity.GetWorkspaceId().Returns(WorkspaceId);
+
         Handler = new(UnitOfWork, Identity, Activity);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldScopeLookupToCallerWorkspace()
+    {
+        Identity.GetCurrentUserId().Returns("userId");
+        UnitOfWork.BoardGroups.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+
+        await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
+
+        await UnitOfWork.BoardGroups.Received(1).GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken);
+        await UnitOfWork.BoardGroups.Received(0).GetAsync(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.BoardGroups.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
         var result = await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 
@@ -39,7 +55,7 @@ public class DeleteBoardGroupCommandHandlerTests
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
+        UnitOfWork.BoardGroups.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.BoardGroup);
 
         await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 
@@ -50,7 +66,7 @@ public class DeleteBoardGroupCommandHandlerTests
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.BoardGroups.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 
@@ -61,7 +77,7 @@ public class DeleteBoardGroupCommandHandlerTests
     public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
         Identity.GetCurrentUserId().Returns("userId");
-        UnitOfWork.BoardGroups.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.BoardGroups.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteBoardGroupCommand(1), TestContext.Current.CancellationToken);
 

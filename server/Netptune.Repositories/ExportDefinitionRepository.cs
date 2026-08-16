@@ -23,7 +23,7 @@ public sealed class ExportDefinitionRepository : WorkspaceEntityRepository<DataC
             .ToListAsync(cancellationToken);
     }
 
-    public Task<ExportDefinition?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public override Task<ExportDefinition?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         var query = Entities.Where(definition => definition.Id == id && definition.WorkspaceId == workspaceId && !definition.IsDeleted);
 

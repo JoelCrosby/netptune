@@ -15,6 +15,14 @@ public abstract class WorkspaceEntityRepository<TContext, TEntity, TId>
     {
     }
 
+    public virtual Task<TEntity?> GetInWorkspace(TId id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
+    {
+        return Entities
+            .IsReadonly(isReadonly)
+            .Where(entity => entity.WorkspaceId == workspaceId)
+            .FirstOrDefaultAsync(EqualsPredicate(id), cancellationToken);
+    }
+
     public Task<List<TEntity>> GetAllInWorkspace(int workspaceId, bool includeDeleted = false, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities

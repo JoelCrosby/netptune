@@ -95,7 +95,7 @@ public sealed class WorkspaceFileRepository : WorkspaceEntityRepository<DataCont
             .ToListAsync(cancellationToken);
     }
 
-    public Task<WorkspaceFile?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public override Task<WorkspaceFile?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .IsReadonly(isReadonly)

@@ -14,15 +14,15 @@ public static class UsersEndpoints
 
         group.MapGet("/", HandleGetWorkspaceUsers).RequireAuthorization(NetptunePermissions.Members.Read);
         group.MapGet("/select", HandleGetUserSelectOptions).RequireAuthorization(NetptunePermissions.Members.Read);
-        group.MapGet("/{id}", HandleGetUser);
+        group.MapGet("/{id}", HandleGetUser).RequireAuthorization(NetptunePermissions.Members.Read);
         group.MapPut("/{id}", HandleUpdateUser).RequireAuthorization(NetptunePermissions.Members.UpdateProfile);
         group.MapPost("/invite", HandleInvite).RequireAuthorization(NetptunePermissions.Members.Invite);
         group.MapPost("/resend-invite", HandleResendInvite).RequireAuthorization(NetptunePermissions.Members.Invite);
         group.MapPost("/remove", HandleRemoveUserFromWorkspace).RequireAuthorization(NetptunePermissions.Members.Remove);
         group.MapPost("/toggle-permission", HandleTogglePermission).RequireAuthorization(NetptunePermissions.Members.UpdatePermission);
         group.MapPut("/role", HandleUpdateRole).RequireAuthorization(NetptunePermissions.Members.UpdateRole);
-        group.MapGet("/get-by-email", HandleGetUserByEmail);
-        group.MapGet("/all", HandleGetAll);
+        group.MapGet("/get-by-email", HandleGetUserByEmail).RequireAuthorization(NetptunePermissions.Members.Read);
+        group.MapGet("/all", HandleGetAll).RequireAuthorization(NetptunePermissions.Members.Read);
 
         return group;
     }

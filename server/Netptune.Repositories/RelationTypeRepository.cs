@@ -79,7 +79,7 @@ public sealed class RelationTypeRepository : WorkspaceEntityRepository<DataConte
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<RelationType?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public override Task<RelationType?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(relationType => relationType.Id == id && relationType.WorkspaceId == workspaceId && !relationType.IsDeleted)

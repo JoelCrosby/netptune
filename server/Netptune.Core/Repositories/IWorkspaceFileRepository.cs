@@ -12,8 +12,6 @@ public interface IWorkspaceFileRepository : IWorkspaceEntityRepository<Workspace
 
     Task<IReadOnlyList<WorkspaceFileViewModel>> GetTaskFiles(int workspaceId, int taskId, string currentUserId, bool canDeleteAny, CancellationToken cancellationToken = default);
 
-    Task<WorkspaceFile?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
-
     Task<WorkspaceFile?> GetByContentId(string contentId, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<WorkspaceFileViewModel?> GetViewModel(int id, string currentUserId, bool canDeleteAny, CancellationToken cancellationToken = default);

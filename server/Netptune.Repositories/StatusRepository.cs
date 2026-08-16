@@ -84,7 +84,7 @@ public sealed class StatusRepository : WorkspaceEntityRepository<DataContext, St
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<Status?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
+    public override Task<Status?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         return Entities
             .Where(status => status.Id == id && status.WorkspaceId == workspaceId && !status.IsDeleted)

@@ -14,8 +14,6 @@ public interface IStatusRepository : IWorkspaceEntityRepository<Status, int>
 
     Task<Dictionary<int, int>> GetTaskCounts(int workspaceId, CancellationToken cancellationToken = default);
 
-    Task<Status?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
-
     Task<Status?> GetTaskStatusByKey(int workspaceId, string key, CancellationToken cancellationToken = default);
 
     Task<Status?> GetFirstTaskStatus(int workspaceId, CancellationToken cancellationToken = default);

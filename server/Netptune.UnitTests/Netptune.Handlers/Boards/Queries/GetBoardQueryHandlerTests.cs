@@ -1,5 +1,6 @@
 using FluentAssertions;
 
+using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Boards.Queries;
 
@@ -12,19 +13,24 @@ namespace Netptune.UnitTests.Netptune.Handlers.Boards.Queries;
 
 public class GetBoardQueryHandlerTests
 {
+    private const int WorkspaceId = 7;
+
     private readonly GetBoardQueryHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
 
     public GetBoardQueryHandlerTests()
     {
-        Handler = new(UnitOfWork);
+        Identity.GetWorkspaceId().Returns(WorkspaceId);
+
+        Handler = new(UnitOfWork, Identity);
     }
 
     [Fact]
     public async Task GetBoard_ShouldReturnCorrectly_WhenInputValid()
     {
         var board = AutoFixtures.Board;
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
+        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
 
         var result = await Handler.Handle(new GetBoardQuery(1), TestContext.Current.CancellationToken);
 
@@ -34,7 +40,7 @@ public class GetBoardQueryHandlerTests
     [Fact]
     public async Task GetBoard_ShouldReturnFailure_WhenNotFound()
     {
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new GetBoardQuery(1), TestContext.Current.CancellationToken);
 

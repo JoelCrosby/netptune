@@ -7,7 +7,5 @@ public interface IExportDefinitionRepository : IWorkspaceEntityRepository<Export
 {
     Task<List<ExportDefinition>> GetVisibleInWorkspace(int workspaceId, string currentUserId, CancellationToken cancellationToken = default);
 
-    Task<ExportDefinition?> GetInWorkspace(int id, int workspaceId, bool isReadonly = false, CancellationToken cancellationToken = default);
-
     Task<bool> NameExists(int workspaceId, string name, int? excludeId, CancellationToken cancellationToken = default);
 }

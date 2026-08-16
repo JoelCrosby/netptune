@@ -14,6 +14,8 @@ namespace Netptune.UnitTests.Netptune.Handlers.Projects.Commands;
 
 public class DeleteProjectCommandHandlerTests
 {
+    private const int WorkspaceId = 7;
+
     private readonly DeleteProjectCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
@@ -21,13 +23,26 @@ public class DeleteProjectCommandHandlerTests
 
     public DeleteProjectCommandHandlerTests()
     {
+        Identity.GetWorkspaceId().Returns(WorkspaceId);
+
         Handler = new(UnitOfWork, Identity, Activity);
+    }
+
+    [Fact]
+    public async Task Delete_ShouldScopeLookupToCallerWorkspace()
+    {
+        UnitOfWork.Projects.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
+
+        await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
+
+        await UnitOfWork.Projects.Received(1).GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken);
+        await UnitOfWork.Projects.Received(0).GetAsync(Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Delete_ShouldReturnSuccess_WhenValidId()
     {
-        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
+        UnitOfWork.Projects.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
         var result = await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
@@ -37,7 +52,7 @@ public class DeleteProjectCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldCallCompleteAsync_WhenValidId()
     {
-        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
+        UnitOfWork.Projects.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).Returns(AutoFixtures.Project);
 
         await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
@@ -47,7 +62,7 @@ public class DeleteProjectCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldReturnFailure_WhenInvalidId()
     {
-        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Projects.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
@@ -57,7 +72,7 @@ public class DeleteProjectCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldNotCallDeletePermanent_WhenInvalidId()
     {
-        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Projects.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 
@@ -67,7 +82,7 @@ public class DeleteProjectCommandHandlerTests
     [Fact]
     public async Task Delete_ShouldNotCallCompleteAsync_WhenInvalidId()
     {
-        UnitOfWork.Projects.GetAsync(1, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Projects.GetInWorkspace(1, WorkspaceId, cancellationToken: TestContext.Current.CancellationToken).ReturnsNull();
 
         await Handler.Handle(new DeleteProjectCommand(1), TestContext.Current.CancellationToken);
 

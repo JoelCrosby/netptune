@@ -24,7 +24,8 @@ public sealed class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectC
 
     public async ValueTask<ClientResponse> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
     {
-        var project = await UnitOfWork.Projects.GetAsync(request.Id, cancellationToken: cancellationToken);
+        var workspaceId = await Identity.GetWorkspaceId();
+        var project = await UnitOfWork.Projects.GetInWorkspace(request.Id, workspaceId, cancellationToken: cancellationToken);
         var userId = Identity.GetCurrentUserId();
 
         if (project is null) return ClientResponse.NotFound;

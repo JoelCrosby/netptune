@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using Netptune.Core.Authentication.Models;
 using Netptune.Core.Authorization;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -255,7 +256,8 @@ public sealed class UsersEndpointTests
     [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
-        var userId = SeedData.Users.First().Id;
+        var currentUser = await Client.GetFromJsonAsync<CurrentUserResponse>("api/auth/current-user");
+        var userId = currentUser!.UserId;
         var request = new UpdateUserRequest
         {
             Id = userId,
@@ -291,6 +293,30 @@ public sealed class UsersEndpointTests
         var response = await Client.PutAsJsonAsync($"api/users/{userId}", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Update_ShouldReturnNotFound_WhenTargetIsAnotherUser()
+    {
+        var currentUser = await Client.GetFromJsonAsync<CurrentUserResponse>("api/auth/current-user");
+        var otherUserId = SeedData.Users.First(user => user.Id != currentUser!.UserId).Id;
+        var request = new UpdateUserRequest
+        {
+            Id = otherUserId,
+            Firstname = "Should Not Apply",
+            Lastname = "Should Not Apply",
+        };
+
+        var response = await Client.PutAsJsonAsync($"api/users/{otherUserId}", request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var otherUser = await context.Users.AsNoTracking()
+            .FirstAsync(user => user.Id == otherUserId, TestContext.Current.CancellationToken);
+
+        otherUser.Firstname.Should().NotBe(request.Firstname);
     }
 
     [Fact]

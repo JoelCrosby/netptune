@@ -5,6 +5,7 @@ using FluentAssertions;
 using Netptune.Core.Encoding;
 using Netptune.Core.Meta;
 using Netptune.Core.Requests;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Boards.Commands;
@@ -18,14 +19,19 @@ namespace Netptune.UnitTests.Netptune.Handlers.Boards.Commands;
 
 public class UpdateBoardCommandHandlerTests
 {
+    private const int WorkspaceId = 7;
+
     private readonly Fixture Fixture = new();
     private readonly UpdateBoardCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
 
     public UpdateBoardCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Identity.GetWorkspaceId().Returns(WorkspaceId);
+
+        Handler = new(UnitOfWork, Identity, Activity);
     }
 
     [Fact]
@@ -36,7 +42,7 @@ public class UpdateBoardCommandHandlerTests
             .Create();
         var board = AutoFixtures.Board;
 
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
+        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
 
         var result = await Handler.Handle(new UpdateBoardCommand(request), TestContext.Current.CancellationToken);
 
@@ -52,7 +58,7 @@ public class UpdateBoardCommandHandlerTests
     public async Task Update_ShouldCallCompleteAsync_WhenInputValid()
     {
         var request = Fixture.Build<UpdateBoardRequest>().Create();
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
+        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(AutoFixtures.Board);
 
         await Handler.Handle(new UpdateBoardCommand(request), TestContext.Current.CancellationToken);
 
@@ -63,7 +69,7 @@ public class UpdateBoardCommandHandlerTests
     public async Task Update_ShouldReturnFailure_WhenNotFound()
     {
         var request = Fixture.Build<UpdateBoardRequest>().Create();
-        UnitOfWork.Boards.GetAsync(Arg.Any<int>(), Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
+        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).ReturnsNull();
 
         var result = await Handler.Handle(new UpdateBoardCommand(request), TestContext.Current.CancellationToken);
 
