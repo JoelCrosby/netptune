@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Netptune.Automation\Netptune.Automation.csproj" />
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.Handlers\Netptune.Handlers.csproj" />
+    <ProjectReference Include="..\Netptune.Messaging\Netptune.Messaging.csproj" />
     <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
     <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Export\Netptune.Export.csproj" />

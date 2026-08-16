@@ -3,11 +3,6 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <UserSecretsId>db9b879b-2e9c-473b-a319-3ee3a0ea36c6</UserSecretsId>
-
-    <!-- RazorLight compiles the email templates at runtime and needs the reference assemblies. -->
-    <PreserveCompilationContext>true</PreserveCompilationContext>
-    <PreserveCompilationReferences>true</PreserveCompilationReferences>
-
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
