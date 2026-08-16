@@ -1,0 +1,2 @@
+# Text files are stored and checked out with LF, whatever core.autocrlf a clone happens to have.
+* text=auto eol=lf

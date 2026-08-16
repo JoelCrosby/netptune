@@ -19,7 +19,7 @@ trim_trailing_whitespace = true
 indent_size = 4
 
 # New line preferences
-end_of_line = crlf
+end_of_line = lf
 
 #### .NET Coding Conventions ####
 
