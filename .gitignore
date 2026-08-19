@@ -244,5 +244,8 @@ pgdata/
 # Helm values
 charts/**/values.secret.yaml
 
+# Vendored Helm subcharts (pinned by Chart.lock, restored with `helm dependency update`)
+charts/*/charts/
+
 # Claude Code
 .claude/

@@ -7,7 +7,7 @@ on:
       - "server/**"
       - "client/**"
       - "website/**"
-      - "charts/**"
+      - "charts/netptune/**"
       - ".github/workflows/deploy-charts.yml"
 
 concurrency:
@@ -62,7 +62,7 @@ jobs:
               server/*) server=true ;;
               client/*) client=true ;;
               website/*) website=true ;;
-              charts/*) charts=true ;;
+              charts/netptune/*) charts=true ;;
             esac
           done < <(git diff --name-only "$before" "$after")
 

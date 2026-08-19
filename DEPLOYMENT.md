@@ -37,6 +37,27 @@ helm upgrade --install netptune-app charts/netptune/ \
 
 See [charts/netptune/values.yaml](charts/netptune/values.yaml) for the full set of configurable values.
 
+## Traefik ingress
+
+Traefik terminates TLS for the cluster and serves the Gateway API resources the app chart
+creates. It is a **separate release in its own namespace**, not part of `netptune-app`, and
+CI does not deploy it — changes here are applied by hand.
+
+`charts/traefik/` wraps the upstream chart as a pinned dependency so its values are version
+controlled rather than living only in the cluster.
+
+```bash
+helm dependency update charts/traefik/
+helm upgrade --install traefik charts/traefik/ --namespace traefik
+```
+
+The release name must stay `traefik`. The upstream chart derives its resource names from it,
+so renaming would orphan the running Deployment, Service and the Vultr load balancer that
+Cloudflare points at.
+
+The vendored subchart under `charts/traefik/charts/` is gitignored; `Chart.lock` pins the
+version and `helm dependency update` restores it.
+
 ## Local Development
 
 The server projects use [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/) for local orchestration. Docker is required.

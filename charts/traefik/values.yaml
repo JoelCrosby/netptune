@@ -1,0 +1,52 @@
+# Values for the upstream Traefik chart, pinned as a dependency in Chart.yaml.
+#
+# This release is deployed separately from netptune-app, into the traefik namespace:
+#
+#   helm dependency update charts/traefik/
+#   helm upgrade --install traefik charts/traefik/ --namespace traefik
+#
+# The release name must stay "traefik" — the upstream chart derives resource names
+# from it, and renaming would orphan the existing Deployment, Service and LoadBalancer.
+
+traefik:
+  # Netptune routes through Gateway API (see charts/netptune/templates/gateway.yaml
+  # and httproute.yaml), not through Ingress objects.
+  providers:
+    kubernetesGateway:
+      enabled: true
+    kubernetesIngress:
+      enabled: false
+
+  # Provisions the Vultr load balancer that Cloudflare treats as the origin.
+  service:
+    type: LoadBalancer
+
+  # Traefik previously ran with no resource requests at all, which put it in the
+  # BestEffort QoS class — first in line to be CPU starved. On a saturated node that
+  # produced a restart loop and Cloudflare 520/525 responses, because Traefik is the
+  # origin's TLS terminator. A request moves it to Burstable and lets the scheduler
+  # place it somewhere with real headroom. No CPU limit on purpose: throttling an
+  # ingress under load is worse than letting it burst.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+  # Chart defaults are timeoutSeconds 2 on both probes with readiness failureThreshold 1,
+  # so a single slow response pulled Traefik out of the Service endpoints and three killed
+  # the container. These values tolerate a busy node without hiding a genuinely dead pod.
+  readinessProbe:
+    failureThreshold: 3
+    timeoutSeconds: 5
+  livenessProbe:
+    failureThreshold: 5
+    timeoutSeconds: 5
+
+  # A second replica is the change that would have prevented the outage entirely, but the
+  # current vc2-1c-2gb pool has no node with 100m of unreserved CPU besides the one Traefik
+  # is on, so a second pod would sit Pending. Raise this to 2 with required anti-affinity
+  # once the cluster moves to larger nodes.
+  deployment:
+    replicas: 1

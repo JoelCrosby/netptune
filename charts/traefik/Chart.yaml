@@ -1,0 +1,16 @@
+apiVersion: "v2"
+name: "netptune-traefik"
+version: "0.1.0"
+kubeVersion: ">= 1.18.0-0"
+description: "Traefik ingress for Netptune — wraps the upstream chart so its values are version controlled"
+type: "application"
+keywords:
+  - "traefik"
+  - "ingress"
+  - "kubernetes"
+appVersion: "3.6.13"
+deprecated: false
+dependencies:
+  - name: "traefik"
+    version: "39.0.8"
+    repository: "https://traefik.github.io/charts"
