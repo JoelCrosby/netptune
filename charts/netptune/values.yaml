@@ -152,7 +152,7 @@ parameters:
       scaleDownStabilizationSeconds: 300
     resources:
       requests:
-        cpu: "200m"
+        cpu: "50m"
         memory: "256Mi"
       limits:
         memory: "512Mi"
@@ -169,7 +169,7 @@ parameters:
       scaleDownStabilizationSeconds: 300
     resources:
       requests:
-        cpu: "200m"
+        cpu: "50m"
         memory: "256Mi"
       limits:
         memory: "512Mi"

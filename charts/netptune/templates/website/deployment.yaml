@@ -41,8 +41,10 @@ spec:
       app.kubernetes.io/instance: "{{ .Release.Name }}"
   replicas: {{ .Values.website.replicas | int }}
   revisionHistoryLimit: 3
+  {{- /* maxSurge 0: at one replica the cluster has no spare CPU for a surge pod, so a
+       surge-based rollout cannot schedule. Restore maxSurge 1 once nodes have headroom. */}}
   strategy:
     rollingUpdate:
-      maxSurge: 1
+      maxSurge: 0
       maxUnavailable: 1
     type: "RollingUpdate"
