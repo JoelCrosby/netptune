@@ -1,6 +1,12 @@
 name: Deploy
 
 on:
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: "Rebuild and redeploy every image regardless of what changed"
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths:
@@ -15,13 +21,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  # Image names are built from changes.outputs.owner, which is lowercased —
+  # github.repository_owner is not, and OCI repository names must be.
   REGISTRY: ghcr.io
-  APP_IMAGE_NAME: ${{ github.repository_owner }}/netptune
-  PUBLIC_API_IMAGE_NAME: ${{ github.repository_owner }}/netptune-public-api
-  CLIENT_IMAGE_NAME: ${{ github.repository_owner }}/netptune-client
-  JOBS_IMAGE_NAME: ${{ github.repository_owner }}/netptune-jobs
-  ACTIVITY_IMAGE_NAME: ${{ github.repository_owner }}/netptune-activity
-  WEBSITE_IMAGE_NAME: ${{ github.repository_owner }}/netptune-website
 
 jobs:
   changes:
@@ -35,6 +37,10 @@ jobs:
       website: ${{ steps.filter.outputs.website }}
       charts: ${{ steps.filter.outputs.charts }}
       deploy: ${{ steps.filter.outputs.deploy }}
+      server_sha: ${{ steps.filter.outputs.server_sha }}
+      client_sha: ${{ steps.filter.outputs.client_sha }}
+      website_sha: ${{ steps.filter.outputs.website_sha }}
+      owner: ${{ steps.filter.outputs.owner }}
 
     steps:
       - name: Checkout
@@ -66,17 +72,36 @@ jobs:
             esac
           done < <(git diff --name-only "$before" "$after")
 
+          # A manual run with force_build rebuilds and redeploys everything, which is how
+          # images get rebuilt when only the workflow or charts changed.
+          if [[ "${{ inputs.force_build }}" == "true" ]]; then
+            server=true
+            client=true
+            website=true
+          fi
+
           deploy=false
           if [[ "$server" == true || "$client" == true || "$website" == true || "$charts" == true ]]; then
             deploy=true
           fi
 
+          # Images are tagged with the last commit that touched their source, not with the
+          # head of the push. A push batching several commits leaves the source commit off
+          # the head, so tagging by github.sha produced tags the deploy could never resolve.
+          # Build and deploy both read the values below, so they agree by construction.
+          #
+          # OCI repository names must be lowercase and github.repository_owner is not
+          # (JoelCrosby); metadata-action lowercases silently but helm --set does not.
           {
             echo "server=$server"
             echo "client=$client"
             echo "website=$website"
             echo "charts=$charts"
             echo "deploy=$deploy"
+            echo "owner=${GITHUB_REPOSITORY_OWNER,,}"
+            echo "server_sha=sha-$(git log -1 --format=%H -- server/)"
+            echo "client_sha=sha-$(git log -1 --format=%H -- client/)"
+            echo "website_sha=sha-$(git log -1 --format=%H -- website/)"
           } >> "$GITHUB_OUTPUT"
 
   test-server:
@@ -145,9 +170,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.APP_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune
           tags: |
-            type=sha,format=long
+            type=raw,value=${{ needs.changes.outputs.server_sha }}
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -198,9 +223,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.JOBS_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-jobs
           tags: |
-            type=sha,format=long
+            type=raw,value=${{ needs.changes.outputs.server_sha }}
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -251,9 +276,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.PUBLIC_API_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-public-api
           tags: |
-            type=sha,format=long
+            type=raw,value=${{ needs.changes.outputs.server_sha }}
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -304,9 +329,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.ACTIVITY_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-activity
           tags: |
-            type=sha,format=long
+            type=raw,value=${{ needs.changes.outputs.server_sha }}
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -357,9 +382,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-client
           tags: |
-            type=sha,format=long
+            type=raw,value=${{ needs.changes.outputs.client_sha }}
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -410,9 +435,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.WEBSITE_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-website
           tags: |
-            type=sha,format=long
+            type=raw,value=${{ needs.changes.outputs.website_sha }}
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -453,16 +478,32 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Resolve image tags
-        id: images
+      - name: Verify images exist
         run: |
-          # Last commit that touched each source, not this commit — a charts-only push rebuilds
-          # nothing, so the current sha would name images that were never pushed.
-          {
-            echo "server=sha-$(git log -1 --format=%H -- server/)"
-            echo "client=sha-$(git log -1 --format=%H -- client/)"
-            echo "website=sha-$(git log -1 --format=%H -- website/)"
-          } >> "$GITHUB_OUTPUT"
+          # Helm reports a missing image as six deployments timing out after ten minutes.
+          # Checking the manifests first turns that into an immediate, legible failure.
+          owner="${{ needs.changes.outputs.owner }}"
+          for ref in \
+            "netptune:${{ needs.changes.outputs.server_sha }}" \
+            "netptune-public-api:${{ needs.changes.outputs.server_sha }}" \
+            "netptune-jobs:${{ needs.changes.outputs.server_sha }}" \
+            "netptune-activity:${{ needs.changes.outputs.server_sha }}" \
+            "netptune-client:${{ needs.changes.outputs.client_sha }}" \
+            "netptune-website:${{ needs.changes.outputs.website_sha }}"; do
+            repo="${ref%%:*}"
+            tag="${ref##*:}"
+            token="$(curl -fsSL "https://ghcr.io/token?scope=repository:$owner/$repo:pull&service=ghcr.io" | jq -r .token)"
+            status="$(curl -sSL -o /dev/null -w '%{http_code}' \
+              -H "Authorization: Bearer $token" \
+              -H "Accept: application/vnd.oci.image.index.v1+json" \
+              -H "Accept: application/vnd.docker.distribution.manifest.list.v2+json" \
+              "https://ghcr.io/v2/$owner/$repo/manifests/$tag")"
+            if [[ "$status" != "200" ]]; then
+              echo "::error::ghcr.io/$owner/$repo:$tag is missing (HTTP $status). Re-run with force_build to rebuild it."
+              exit 1
+            fi
+            echo "ok ghcr.io/$owner/$repo:$tag"
+          done
 
       - name: Verify CSP inline script hash
         run: |
@@ -505,12 +546,12 @@ jobs:
             --timeout 10m \
             --kubeconfig kubeconfig.yaml \
             --namespace default \
-            --set "parameters.api.api_image=${{ env.REGISTRY }}/${{ env.APP_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
-            --set "parameters.publicApi.public_api_image=${{ env.REGISTRY }}/${{ env.PUBLIC_API_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
-            --set "parameters.jobs.jobs_image=${{ env.REGISTRY }}/${{ env.JOBS_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
-            --set "parameters.activity.activity_image=${{ env.REGISTRY }}/${{ env.ACTIVITY_IMAGE_NAME }}:${{ steps.images.outputs.server }}" \
-            --set "parameters.client.client_image=${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}:${{ steps.images.outputs.client }}" \
-            --set "website.image=${{ env.REGISTRY }}/${{ env.WEBSITE_IMAGE_NAME }}:${{ steps.images.outputs.website }}" \
+            --set "parameters.api.api_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune:${{ needs.changes.outputs.server_sha }}" \
+            --set "parameters.publicApi.public_api_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-public-api:${{ needs.changes.outputs.server_sha }}" \
+            --set "parameters.jobs.jobs_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-jobs:${{ needs.changes.outputs.server_sha }}" \
+            --set "parameters.activity.activity_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-activity:${{ needs.changes.outputs.server_sha }}" \
+            --set "parameters.client.client_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-client:${{ needs.changes.outputs.client_sha }}" \
+            --set "website.image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-website:${{ needs.changes.outputs.website_sha }}" \
             --set ingress.enabled=true \
             --set "ingress.host=netptune.co.uk" \
             --set "ingress.publicApiHost=api.netptune.co.uk" \
