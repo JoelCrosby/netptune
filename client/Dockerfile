@@ -9,6 +9,9 @@ WORKDIR /client
 COPY package*.json ./
 COPY pnpm-workspace.yaml ./
 COPY pnpm-lock.yaml ./
+# pnpm-workspace.yaml declares a patchedDependencies entry, so the patch has to be
+# present before install — not with the rest of the source in the COPY . . below.
+COPY patches ./patches
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile

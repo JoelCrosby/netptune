@@ -2,7 +2,6 @@ FROM node:26-alpine AS build
 RUN apk upgrade --no-cache && npm install -g pnpm
 WORKDIR /src
 COPY package*.json ./
-COPY pnpm-workspace.yaml ./
 COPY pnpm-lock.yaml ./
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
