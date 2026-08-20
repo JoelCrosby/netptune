@@ -19,7 +19,7 @@ persistence:
     size: "40Gi"
 
 adminAccess:
-  github_user: "joelcrosby"
+  github_user: "JoelCrosby"
 
 headlamp:
   enabled: true
