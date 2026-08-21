@@ -1,4 +1,5 @@
 using Netptune.Activity;
+using Netptune.Activity.Services;
 using Netptune.Cache;
 using Netptune.Core.Events;
 using Netptune.Core.Extensions;
@@ -46,6 +47,18 @@ builder.Services.AddMediator(options =>
 });
 
 var app = builder.Build();
+
+// `--job retention` runs the audit archive once and exits: nothing below this point runs, so the web server,
+// the NATS consumer and the merge sweeper are all absent from this mode. Scheduled by the platform —
+// charts/netptune/templates/activity/retention-cronjob.yaml.
+if (string.Equals(builder.Configuration["job"], "retention", StringComparison.OrdinalIgnoreCase))
+{
+    using var scope = app.Services.CreateScope();
+
+    await scope.ServiceProvider.GetRequiredService<AuditRetentionJob>().RunAsync(CancellationToken.None);
+
+    return;
+}
 
 app.UseNetptuneRequestDefaults();
 

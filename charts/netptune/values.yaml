@@ -127,6 +127,8 @@ parameters:
     retention:
       enabled: true
       schedule: "0 3 * * *"
+      # Upper bound on a single run, so a hung job cannot hold the Forbid slot indefinitely.
+      activeDeadlineSeconds: 3600
       resources:
         requests:
           cpu: "50m"

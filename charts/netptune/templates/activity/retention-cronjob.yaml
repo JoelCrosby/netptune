@@ -20,6 +20,9 @@ spec:
   jobTemplate:
     spec:
       backoffLimit: 3
+      # concurrencyPolicy Forbid means a run that never ends holds the active slot and every later
+      # schedule is skipped. A hung run once blocked archival for 32 days; this bounds it to an hour.
+      activeDeadlineSeconds: {{ .Values.parameters.activity.retention.activeDeadlineSeconds | int }}
       template:
         metadata:
           labels:
