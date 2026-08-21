@@ -5,6 +5,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Events;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -142,6 +143,16 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
                     oldTask.StatusId,
                     boardGroup.StatusId.Value);
             }
+
+            var workspaceKey = Identity.GetWorkspaceKey();
+
+            await EventPublisher.Dispatch(new SearchIndexEvent
+            {
+                Operation = SearchIndexOperation.Index,
+                EntityType = "task",
+                EntityIds = taskIds,
+                WorkspaceSlug = workspaceKey,
+            });
         }
 
         return ClientResponse.Success;

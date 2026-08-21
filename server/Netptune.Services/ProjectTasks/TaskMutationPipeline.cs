@@ -2,6 +2,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Entities;
 using Netptune.Core.Events;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.ProjectTasks;
@@ -101,6 +102,30 @@ public sealed class TaskMutationPipeline : ITaskMutationPipeline
         {
             await EventPublisher.Dispatch(outcome.Message!);
         }
+
+        await Reindex(current, hasChanges);
+    }
+
+    // every task update — the update command, the assistant's change sets, automation rules — records
+    // its mutation here, so the search index is refreshed from the one place rather than from each
+    // handler that happens to remember
+    private async Task Reindex(TaskViewModel current, bool hasChanges)
+    {
+        var hasWorkspaceSlug = !string.IsNullOrWhiteSpace(current.WorkspaceKey);
+        var shouldReindex = hasChanges && hasWorkspaceSlug;
+
+        if (!shouldReindex)
+        {
+            return;
+        }
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Index,
+            EntityType = "task",
+            EntityIds = [current.Id],
+            WorkspaceSlug = current.WorkspaceKey,
+        });
     }
 
     private async Task AppendReportingEvent(

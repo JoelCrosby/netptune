@@ -5,10 +5,12 @@ using Microsoft.Extensions.Logging;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Tasks.Commands;
@@ -21,17 +23,20 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
     private readonly IIdentityService Identity;
     private readonly ILogger<BulkUpdateTasksCommandHandler> Logger;
     private readonly IEventRecordWriter EventRecords;
+    private readonly IEventPublisher EventPublisher;
 
     public BulkUpdateTasksCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         ILogger<BulkUpdateTasksCommandHandler> logger,
-        IEventRecordWriter eventRecords)
+        IEventRecordWriter eventRecords,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Logger = logger;
         EventRecords = eventRecords;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse> Handle(BulkUpdateTasksCommand command, CancellationToken cancellationToken)
@@ -335,6 +340,14 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             }
 
             await UnitOfWork.CompleteAsync(cancellationToken);
+        });
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Index,
+            EntityType = "task",
+            EntityIds = taskIds,
+            WorkspaceSlug = workspaceKey,
         });
 
         return ClientResponse.Success;

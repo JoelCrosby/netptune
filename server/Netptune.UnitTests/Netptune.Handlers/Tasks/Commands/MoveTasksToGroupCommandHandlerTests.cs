@@ -7,6 +7,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -33,6 +34,7 @@ public class MoveTasksToGroupCommandHandlerTests
     public MoveTasksToGroupCommandHandlerTests()
     {
         Identity.GetCurrentUserId().Returns("user-1");
+        Identity.GetWorkspaceKey().Returns("workspace");
         Handler = new(
             UnitOfWork,
             Activity,
@@ -119,6 +121,32 @@ public class MoveTasksToGroupCommandHandlerTests
             message.Changes.Any(change =>
                 change.Field == TaskChangeField.Status &&
                 change.NewValue == "5")));
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldDispatchSearchIndexEvent_WhenGroupHasStatus()
+    {
+        var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
+        SetupHandlerDependencies(request, groupStatusId: 5);
+
+        await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(searchEvent =>
+            searchEvent.Operation == SearchIndexOperation.Index &&
+            searchEvent.EntityType == "task" &&
+            searchEvent.WorkspaceSlug == "workspace" &&
+            searchEvent.EntityIds.SequenceEqual(request.TaskIds)));
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldNotDispatchSearchIndexEvent_WhenGroupHasNoStatus()
+    {
+        var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
+        SetupHandlerDependencies(request, groupStatusId: null);
+
+        await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await EventPublisher.DidNotReceive().Dispatch(Arg.Any<SearchIndexEvent>());
     }
 
     [Fact]

@@ -4,6 +4,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Events;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Ordering;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
@@ -143,6 +144,14 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
                 oldTask.WorkspaceId.Value,
                 oldTask.StatusId,
                 boardGroup.StatusId.Value);
+
+            await EventPublisher.Dispatch(new SearchIndexEvent
+            {
+                Operation = SearchIndexOperation.Index,
+                EntityType = "task",
+                EntityIds = [oldTask.Id],
+                WorkspaceSlug = oldTask.WorkspaceKey,
+            });
         }
 
         return ClientResponse.Success;

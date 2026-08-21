@@ -1,8 +1,10 @@
 using Mediator;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 
@@ -14,11 +16,19 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IActivityLogger Activity;
+    private readonly IIdentityService Identity;
+    private readonly IEventPublisher EventPublisher;
 
-    public ReassignTasksCommandHandler(INetptuneUnitOfWork unitOfWork, IActivityLogger activity)
+    public ReassignTasksCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        IActivityLogger activity,
+        IIdentityService identity,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
+        Identity = identity;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse> Handle(ReassignTasksCommand request, CancellationToken cancellationToken)
@@ -37,6 +47,16 @@ public sealed class ReassignTasksCommandHandler : IRequestHandler<ReassignTasksC
             options.Type = ActivityType.Assign;
             options.Meta = new AssignActivityMeta { AssigneeId = req.AssigneeId };
             options.RecipientUserIds = [req.AssigneeId];
+        });
+
+        var workspaceKey = Identity.GetWorkspaceKey();
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Index,
+            EntityType = "task",
+            EntityIds = taskIds,
+            WorkspaceSlug = workspaceKey,
         });
 
         return ClientResponse.Success;

@@ -4,7 +4,9 @@ using FluentAssertions;
 
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
+using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
@@ -21,10 +23,14 @@ public class ReassignTasksCommandHandlerTests
     private readonly ReassignTasksCommandHandler Handler;
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
+    private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
 
     public ReassignTasksCommandHandlerTests()
     {
-        Handler = new(UnitOfWork, Activity);
+        Identity.GetWorkspaceKey().Returns("workspace");
+
+        Handler = new(UnitOfWork, Activity, Identity, EventPublisher);
     }
 
     [Fact]
@@ -64,6 +70,24 @@ public class ReassignTasksCommandHandlerTests
             CapturesRecipient(configure, request.AssigneeId)));
     }
 
+    [Fact]
+    public async Task ReassignTasks_ShouldDispatchSearchIndexEvent_ForTheReassignedTasks()
+    {
+        var request = Fixture.Build<ReassignTasksRequest>().With(r => r.TaskIds, [1, 2, 3]).Create();
+
+        UnitOfWork.Tasks
+            .GetTaskIdsInBoard(request.BoardId, TestContext.Current.CancellationToken)
+            .Returns(new List<int> { 1, 2 });
+
+        await Handler.Handle(new ReassignTasksCommand(request), TestContext.Current.CancellationToken);
+
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(searchEvent =>
+            searchEvent.Operation == SearchIndexOperation.Index &&
+            searchEvent.EntityType == "task" &&
+            searchEvent.WorkspaceSlug == "workspace" &&
+            searchEvent.EntityIds.SequenceEqual(new[] { 1, 2 })));
+    }
+
     private static bool CapturesRecipient(
         Action<ActivityMultipleOptions<AssignActivityMeta>> configure,
         string assigneeId)
@@ -73,4 +97,5 @@ public class ReassignTasksCommandHandlerTests
 
         return options.RecipientUserIds?.SequenceEqual([assigneeId]) == true;
     }
+
 }

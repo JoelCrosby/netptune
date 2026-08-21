@@ -7,6 +7,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
@@ -42,7 +43,7 @@ public class UpdateTaskCommandHandlerTests
         var referenceResolver = new TaskReferenceResolver(UnitOfWork);
         var statusResolver = new TaskStatusResolver(UnitOfWork);
 
-        Handler = new(UnitOfWork, Identity, taskMutationPipeline, referenceResolver, statusResolver, EventPublisher);
+        Handler = new(UnitOfWork, Identity, taskMutationPipeline, referenceResolver, statusResolver);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)
@@ -176,6 +177,58 @@ public class UpdateTaskCommandHandlerTests
         result.Payload.Priority.Should().Be(request.Priority);
         result.Payload.EstimateType.Should().Be(request.EstimateType);
         result.Payload.EstimateValue.Should().Be(request.EstimateValue);
+    }
+
+    [Fact]
+    public async Task Update_ShouldDispatchSearchIndexEvent_WhenTheTaskChanged()
+    {
+        var request = Fixture.Build<UpdateProjectTaskRequest>().Create();
+        var task = AutoFixtures.ProjectTask;
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = request.Name!,
+            Description = request.Description,
+            WorkspaceKey = "workspace",
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        await EventPublisher.Received(1).Dispatch(Arg.Is<SearchIndexEvent>(searchEvent =>
+            searchEvent.Operation == SearchIndexOperation.Index &&
+            searchEvent.EntityType == "task" &&
+            searchEvent.WorkspaceSlug == "workspace" &&
+            searchEvent.EntityIds.SequenceEqual(new[] { task.Id })));
+    }
+
+    [Fact]
+    public async Task Update_ShouldNotDispatchSearchIndexEvent_WhenNothingChanged()
+    {
+        var task = AutoFixtures.ProjectTask;
+        var request = new UpdateProjectTaskRequest { Id = task.Id };
+        var viewModel = new TaskViewModel
+        {
+            Id = task.Id,
+            Name = task.Name,
+            Description = task.Description,
+            StatusId = task.StatusId,
+            ProjectId = task.ProjectId,
+            Priority = task.Priority,
+            EstimateType = task.EstimateType,
+            EstimateValue = task.EstimateValue,
+            StartDate = task.StartDate,
+            DueDate = task.DueDate,
+            WorkspaceId = task.WorkspaceId,
+            WorkspaceKey = "workspace",
+        };
+
+        SetupHandlerDependencies(request, task, viewModel);
+
+        await Handler.Handle(new UpdateTaskCommand(request), TestContext.Current.CancellationToken);
+
+        await EventPublisher.DidNotReceive().Dispatch(Arg.Any<SearchIndexEvent>());
     }
 
     [Fact]
