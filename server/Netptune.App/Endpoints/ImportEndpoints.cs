@@ -1,5 +1,6 @@
 using Mediator;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 
@@ -80,14 +81,22 @@ public static class ImportEndpoints
         return group;
     }
 
-    private static Task<IResult> HandlePreviewArchive(
+    private static async Task<IResult> HandlePreviewArchive(
         IMediator mediator,
+        IAuthorizationService authorization,
         HttpRequest request,
         string? mode,
         string? targetSlug,
         CancellationToken cancellationToken)
     {
-        return WithArchive(request, mode, targetSlug, false, async archive =>
+        var cloneRefusal = await RefuseUnauthorizedClone(authorization, request, mode);
+
+        if (cloneRefusal is not null)
+        {
+            return cloneRefusal;
+        }
+
+        return await WithArchive(request, mode, targetSlug, false, async archive =>
         {
             var result = await mediator.Send(new PreviewArchiveImportCommand(archive), cancellationToken);
 
@@ -95,20 +104,50 @@ public static class ImportEndpoints
         });
     }
 
-    private static Task<IResult> HandleImportArchive(
+    private static async Task<IResult> HandleImportArchive(
         IMediator mediator,
+        IAuthorizationService authorization,
         HttpRequest request,
         string? mode,
         string? targetSlug,
         bool? inviteUnmatchedMembers,
         CancellationToken cancellationToken)
     {
-        return WithArchive(request, mode, targetSlug, inviteUnmatchedMembers ?? false, async archive =>
+        var cloneRefusal = await RefuseUnauthorizedClone(authorization, request, mode);
+
+        if (cloneRefusal is not null)
+        {
+            return cloneRefusal;
+        }
+
+        return await WithArchive(request, mode, targetSlug, inviteUnmatchedMembers ?? false, async archive =>
         {
             var result = await mediator.Send(new ImportArchiveCommand(archive), cancellationToken);
 
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
         });
+    }
+
+    private static async Task<IResult?> RefuseUnauthorizedClone(
+        IAuthorizationService authorization,
+        HttpRequest request,
+        string? mode)
+    {
+        var isClone = ParseMode(mode) == ArchiveImportMode.Clone;
+
+        if (!isClone)
+        {
+            return null;
+        }
+
+        var cloneAuthorization = await authorization.AuthorizeAsync(request.HttpContext.User, NetptunePermissions.Workspace.Create);
+
+        return cloneAuthorization.Succeeded ? null : Results.Forbid();
+    }
+
+    private static ArchiveImportMode ParseMode(string? mode)
+    {
+        return Enum.TryParse<ArchiveImportMode>(mode, true, out var value) ? value : ArchiveImportMode.Clone;
     }
 
     // Spools the upload to a temporary file: reading a zip means seeking, which an upload stream does
@@ -125,7 +164,7 @@ public static class ImportEndpoints
             return Results.BadRequest("Multipart form data is required.");
         }
 
-        var parsedMode = Enum.TryParse<ArchiveImportMode>(mode, true, out var value) ? value : ArchiveImportMode.Clone;
+        var parsedMode = ParseMode(mode);
 
         if (parsedMode == ArchiveImportMode.Clone && string.IsNullOrWhiteSpace(targetSlug))
         {

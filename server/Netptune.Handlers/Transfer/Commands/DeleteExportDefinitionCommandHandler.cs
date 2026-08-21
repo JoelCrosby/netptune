@@ -1,6 +1,7 @@
 using Netptune.Transfer.Repositories;
 using Mediator;
 
+using Netptune.Core.Cache;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
@@ -14,13 +15,15 @@ public sealed class DeleteExportDefinitionCommandHandler : IRequestHandler<Delet
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IExportDefinitionRepository ExportDefinitions;
     private readonly IIdentityService Identity;
+    private readonly IWorkspacePermissionCache PermissionCache;
 
     public DeleteExportDefinitionCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity,
-        IExportDefinitionRepository exportDefinitions)
+        IExportDefinitionRepository exportDefinitions, IWorkspacePermissionCache permissionCache)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ExportDefinitions = exportDefinitions;
+        PermissionCache = permissionCache;
     }
 
     public async ValueTask<ClientResponse> Handle(DeleteExportDefinitionCommand request, CancellationToken cancellationToken)
@@ -33,7 +36,21 @@ public sealed class DeleteExportDefinitionCommandHandler : IRequestHandler<Delet
             return ClientResponse.NotFound;
         }
 
-        definition.Delete(Identity.GetCurrentUserId());
+        var userId = Identity.GetCurrentUserId();
+        var isWorkspaceWide = definition.IsShared || definition.OwnerId != userId;
+
+        if (isWorkspaceWide)
+        {
+            var workspaceKey = Identity.TryGetWorkspaceKey();
+            var canManage = await ExportDefinitionPermissions.CanManage(PermissionCache, userId, workspaceKey);
+
+            if (!canManage)
+            {
+                return ClientResponse.Forbidden;
+            }
+        }
+
+        definition.Delete(userId);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

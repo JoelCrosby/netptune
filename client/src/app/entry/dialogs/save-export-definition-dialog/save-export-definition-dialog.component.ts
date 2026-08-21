@@ -1,6 +1,8 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, inject, signal } from '@angular/core';
 import { apply, FormField, form, submit } from '@angular/forms/signals';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -43,20 +45,22 @@ export interface SaveExportDefinitionDialogResult {
         hint="You will see this name when starting an export."
         maxLength="128" />
 
-      <app-setting-row
-        class="border-border rounded border px-4! py-3!"
-        i18n-label="Label of the option that shares a saved export"
-        label="Share with the workspace"
-        i18n-hint="Explains what sharing a saved export does"
-        hint="Everyone who can export will be able to use it.">
-        <app-switch
-          [checked]="isShared()"
-          i18n-ariaLabel="
-            Accessible label for the option that shares a saved export
-          "
-          ariaLabel="Share with the workspace"
-          (changed)="isShared.set($event)" />
-      </app-setting-row>
+      @if (canShare()) {
+        <app-setting-row
+          class="border-border rounded border px-4! py-3!"
+          i18n-label="Label of the option that shares a saved export"
+          label="Share with the workspace"
+          i18n-hint="Explains what sharing a saved export does"
+          hint="Everyone who can export will be able to use it.">
+          <app-switch
+            [checked]="isShared()"
+            i18n-ariaLabel="
+              Accessible label for the option that shares a saved export
+            "
+            ariaLabel="Share with the workspace"
+            (changed)="isShared.set($event)" />
+        </app-setting-row>
+      }
     </form>
 
     <div app-dialog-actions align="end">
@@ -80,7 +84,11 @@ export class SaveExportDefinitionDialogComponent {
       >
     >(DialogRef);
 
-  readonly isShared = signal(true);
+  protected readonly canShare = hasPermission(
+    PERMISSIONS.data.manageDefinitions
+  );
+
+  readonly isShared = signal(this.canShare());
 
   readonly definitionFormModel = signal({
     name: '',

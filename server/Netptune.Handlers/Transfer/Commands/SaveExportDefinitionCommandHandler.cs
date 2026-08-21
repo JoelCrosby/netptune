@@ -4,6 +4,7 @@ using System.Text.Json;
 
 using Mediator;
 
+using Netptune.Core.Cache;
 using Netptune.Core.Encoding;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -33,13 +34,15 @@ public sealed class SaveExportDefinitionCommandHandler : IRequestHandler<SaveExp
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IExportDefinitionRepository ExportDefinitions;
     private readonly IIdentityService Identity;
+    private readonly IWorkspacePermissionCache PermissionCache;
 
     public SaveExportDefinitionCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity,
-        IExportDefinitionRepository exportDefinitions)
+        IExportDefinitionRepository exportDefinitions, IWorkspacePermissionCache permissionCache)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         ExportDefinitions = exportDefinitions;
+        PermissionCache = permissionCache;
     }
 
     public async ValueTask<ClientResponse<ExportDefinitionViewModel>> Handle(SaveExportDefinitionCommand request, CancellationToken cancellationToken)
@@ -76,6 +79,21 @@ public sealed class SaveExportDefinitionCommandHandler : IRequestHandler<SaveExp
             return ClientResponse<ExportDefinitionViewModel>.NotFound;
         }
 
+        var isNew = definition.Id == 0;
+        var isOwn = isNew || definition.OwnerId == userId;
+        var isWorkspaceWide = input.IsShared || definition.IsShared || !isOwn;
+
+        if (isWorkspaceWide)
+        {
+            var workspaceKey = Identity.TryGetWorkspaceKey();
+            var canManage = await ExportDefinitionPermissions.CanManage(PermissionCache, userId, workspaceKey);
+
+            if (!canManage)
+            {
+                return ClientResponse<ExportDefinitionViewModel>.Forbidden;
+            }
+        }
+
         definition.Name = name;
         definition.Description = input.Description;
         definition.RecordType = input.Definition.RecordType;
@@ -84,7 +102,7 @@ public sealed class SaveExportDefinitionCommandHandler : IRequestHandler<SaveExp
         definition.IsShared = input.IsShared;
         definition.ModifiedByUserId = userId;
 
-        if (definition.Id == 0)
+        if (isNew)
         {
             definition.WorkspaceId = workspaceId;
             definition.CreatedByUserId = userId;

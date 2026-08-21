@@ -1,4 +1,6 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import {
   defaultExportOptions,
   emptyExportFilter,
@@ -32,7 +34,21 @@ export class ExportWizardService {
   readonly catalog = transferCatalogResource();
   readonly savedDefinitions = exportDefinitionResource();
 
+  readonly canExportArchive = hasPermission(PERMISSIONS.data.exportArchive);
+
   readonly isArchive = computed(() => this.format() === ExportFormat.archive);
+
+  readonly visibleDefinitions = computed(() => {
+    const saved = this.savedDefinitions.value();
+
+    if (this.canExportArchive()) {
+      return saved;
+    }
+
+    return saved.filter(
+      (definition) => definition.definition?.format !== ExportFormat.archive
+    );
+  });
 
   readonly definition = computed<ExportDefinitionModel>(() => {
     return {
@@ -150,6 +166,8 @@ export class ExportWizardService {
   }
 
   selectArchive() {
+    if (!this.canExportArchive()) return;
+
     this.recordType.set('workspace');
     this.format.set(ExportFormat.archive);
     this.setFields([]);
@@ -176,6 +194,11 @@ export class ExportWizardService {
   }
 
   load(definition: ExportDefinitionModel) {
+    const isForbiddenArchive =
+      definition.format === ExportFormat.archive && !this.canExportArchive();
+
+    if (isForbiddenArchive) return;
+
     this.recordType.set(definition.recordType);
     this.format.set(definition.format);
     this.fields.set([...definition.fields]);

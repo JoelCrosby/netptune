@@ -23,21 +23,23 @@ import { SelectableCardComponent } from '@static/components/selectable-card/sele
       description="Choose the records this export contains." />
 
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      <app-selectable-card
-        groupName="export-record-type"
-        variant="feature"
-        i18n-accessibleLabel="
-          Accessible label for the whole-workspace archive card
-        "
-        accessibleLabel="Export the entire workspace as an archive"
-        i18n-heading="Card that exports a whole workspace as an archive"
-        heading="Entire workspace"
-        i18n-description="Explains what a whole-workspace archive contains"
-        description="Portable .nptz archive"
-        [selected]="wizard.isArchive()"
-        (selectionChange)="wizard.selectArchive()">
-        <svg selectableCardIcon lucideArchive class="h-5 w-5"></svg>
-      </app-selectable-card>
+      @if (wizard.canExportArchive()) {
+        <app-selectable-card
+          groupName="export-record-type"
+          variant="feature"
+          i18n-accessibleLabel="
+            Accessible label for the whole-workspace archive card
+          "
+          accessibleLabel="Export the entire workspace as an archive"
+          i18n-heading="Card that exports a whole workspace as an archive"
+          heading="Entire workspace"
+          i18n-description="Explains what a whole-workspace archive contains"
+          description="Portable .nptz archive"
+          [selected]="wizard.isArchive()"
+          (selectionChange)="wizard.selectArchive()">
+          <svg selectableCardIcon lucideArchive class="h-5 w-5"></svg>
+        </app-selectable-card>
+      }
 
       @for (
         recordType of wizard.standaloneRecordTypes();
@@ -56,7 +58,7 @@ import { SelectableCardComponent } from '@static/components/selectable-card/sele
       }
     </div>
 
-    @if (wizard.savedDefinitions.value().length > 0) {
+    @if (wizard.visibleDefinitions().length > 0) {
       <app-section-header
         class="mt-8"
         i18n-heading="Heading of the saved export list"
@@ -65,7 +67,7 @@ import { SelectableCardComponent } from '@static/components/selectable-card/sele
         description="Load a setup you have saved before." />
 
       <div class="flex flex-wrap gap-2">
-        @for (saved of wizard.savedDefinitions.value(); track saved.id) {
+        @for (saved of wizard.visibleDefinitions(); track saved.id) {
           <button
             app-stroked-button
             type="button"

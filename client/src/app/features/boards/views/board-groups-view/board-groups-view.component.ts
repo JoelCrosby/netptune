@@ -14,6 +14,8 @@ import {
   linkedSignal,
   OnDestroy,
 } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { BoardCommandsService } from '@core/services/board-commands.service';
@@ -116,7 +118,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
         <app-page-header
           [title]="boardName()"
           [titleEditable]="isAuthenticated()"
-          [overflowActions]="isAuthenticated() ? secondaryActions : []"
+          [overflowActions]="isAuthenticated() ? secondaryActions() : []"
           (titleSubmitted)="onTitleSubmitted($event)">
           <div class="flex flex-wrap items-center gap-3">
             <app-board-group-header />
@@ -286,33 +288,47 @@ export class BoardGroupsViewComponent implements OnDestroy {
     );
   });
 
-  secondaryActions: HeaderAction[] = [
-    {
-      label: $localize`:Overflow action that edits the board:Edit Board`,
-      click: () => this.onEditBoardClicked(),
-      icon: LucideSettings2,
-    },
-    {
-      label: $localize`:Overflow action that opens the manage-groups dialog:Manage Groups`,
-      click: () => this.onManageGroupsClicked(),
-      icon: LucideEyeOff,
-    },
-    {
-      label: $localize`:Overflow action that opens the CSV task import dialog:Import Tasks`,
-      click: () => this.onImportTasksClicked(),
-      icon: LucideFileUp,
-    },
-    {
-      label: $localize`:Overflow action that downloads the board tasks as CSV:Export Board Tasks`,
-      click: () => this.onExportTasksClicked(),
-      icon: LucideFileDown,
-    },
-    {
+  private canImportTasks = hasPermission(PERMISSIONS.tasks.import);
+  private canExportTasks = hasPermission(PERMISSIONS.tasks.export);
+
+  secondaryActions = computed<HeaderAction[]>(() => {
+    const actions: HeaderAction[] = [
+      {
+        label: $localize`:Overflow action that edits the board:Edit Board`,
+        click: () => this.onEditBoardClicked(),
+        icon: LucideSettings2,
+      },
+      {
+        label: $localize`:Overflow action that opens the manage-groups dialog:Manage Groups`,
+        click: () => this.onManageGroupsClicked(),
+        icon: LucideEyeOff,
+      },
+    ];
+
+    if (this.canImportTasks()) {
+      actions.push({
+        label: $localize`:Overflow action that opens the CSV task import dialog:Import Tasks`,
+        click: () => this.onImportTasksClicked(),
+        icon: LucideFileUp,
+      });
+    }
+
+    if (this.canExportTasks()) {
+      actions.push({
+        label: $localize`:Overflow action that downloads the board tasks as CSV:Export Board Tasks`,
+        click: () => this.onExportTasksClicked(),
+        icon: LucideFileDown,
+      });
+    }
+
+    actions.push({
       label: $localize`:Overflow action that deletes the board:Delete Board`,
       click: () => this.onDeleteBoardClicked(),
       icon: LucideDelete,
-    },
-  ];
+    });
+
+    return actions;
+  });
 
   constructor() {
     // Navigating between boards reuses this component, so the open board has to

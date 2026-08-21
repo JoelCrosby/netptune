@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
 import { PERMISSIONS } from '@core/auth/permissions';
@@ -25,13 +25,13 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           actionTitle="Create Task"
           (actionClick)="showAddModal()"
           [count]="count()"
-          [overflowActions]="secondaryActions" />
+          [overflowActions]="secondaryActions()" />
       } @else {
         <app-page-header
           i18n-title="Page title for the task list"
           title="Tasks"
           [count]="count()"
-          [overflowActions]="secondaryActions" />
+          [overflowActions]="secondaryActions()" />
       }
 
       <app-task-list (countChange)="count.set($event)" />
@@ -48,13 +48,19 @@ export class ProjectTasksViewComponent implements OnDestroy {
   workspaceId = inject(CurrentWorkspaceService).slug;
   canCreateTasks = hasPermission(PERMISSIONS.tasks.create);
 
-  secondaryActions: HeaderAction[] = [
-    {
-      label: $localize`:Overflow action that downloads the task list as CSV:Export Tasks`,
-      click: () => this.onExportTasksClicked(),
-      icon: LucideFolderDown,
-    },
-  ];
+  private canExportTasks = hasPermission(PERMISSIONS.tasks.export);
+
+  secondaryActions = computed<HeaderAction[]>(() => {
+    if (!this.canExportTasks()) return [];
+
+    return [
+      {
+        label: $localize`:Overflow action that downloads the task list as CSV:Export Tasks`,
+        click: () => this.onExportTasksClicked(),
+        icon: LucideFolderDown,
+      },
+    ];
+  });
 
   constructor() {
     const identifier = this.workspaceId();

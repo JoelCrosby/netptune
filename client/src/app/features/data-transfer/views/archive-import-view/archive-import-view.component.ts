@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { ClientResponse } from '@core/models/client-response';
 import {
   ArchiveImportMode,
@@ -85,13 +87,15 @@ const MaxArchiveBytes = 2 * 1024 * 1024 * 1024;
               i18n="Label for where an archive is imported into">
               Destination
             </span>
-            <app-segmented-control
-              [options]="modes"
-              [(value)]="mode"
-              i18n-ariaLabel="
-                Accessible label for the archive destination choice
-              "
-              ariaLabel="Archive destination" />
+            @if (modes().length > 1) {
+              <app-segmented-control
+                [options]="modes()"
+                [(value)]="mode"
+                i18n-ariaLabel="
+                  Accessible label for the archive destination choice
+                "
+                ariaLabel="Archive destination" />
+            }
             <span class="text-muted text-xs">
               @if (mode() === 'clone') {
                 <ng-container i18n="Explains what cloning an archive does">
@@ -278,19 +282,35 @@ export class ArchiveImportViewComponent {
   protected readonly maxBytes = MaxArchiveBytes;
   protected readonly acceptedExtensions = '.nptz,.zip';
 
-  protected readonly modes: SegmentedOption<ArchiveImportMode>[] = [
-    {
-      value: 'clone',
-      label: $localize`:Archive destination that creates a workspace:New workspace`,
-    },
-    {
-      value: 'restore',
-      label: $localize`:Archive destination that fills the current workspace:This workspace`,
-    },
-  ];
+  private readonly canCloneWorkspace = hasPermission(
+    PERMISSIONS.workspace.create
+  );
+
+  protected readonly modes = computed<SegmentedOption<ArchiveImportMode>[]>(
+    () => {
+      const restore: SegmentedOption<ArchiveImportMode> = {
+        value: 'restore',
+        label: $localize`:Archive destination that fills the current workspace:This workspace`,
+      };
+
+      if (!this.canCloneWorkspace()) {
+        return [restore];
+      }
+
+      return [
+        {
+          value: 'clone',
+          label: $localize`:Archive destination that creates a workspace:New workspace`,
+        },
+        restore,
+      ];
+    }
+  );
 
   protected readonly file = signal<File | null>(null);
-  protected readonly mode = signal<ArchiveImportMode>('clone');
+  protected readonly mode = signal<ArchiveImportMode>(
+    this.canCloneWorkspace() ? 'clone' : 'restore'
+  );
   protected readonly targetSlug = signal('');
   protected readonly inviteUnmatchedMembers = signal(false);
 

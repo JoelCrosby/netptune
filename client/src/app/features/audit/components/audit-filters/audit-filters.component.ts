@@ -1,4 +1,6 @@
 import { Component, inject, output, signal } from '@angular/core';
+import { hasPermission } from '@core/auth/has-permission';
+import { PERMISSIONS } from '@core/auth/permissions';
 import { AuditLogFilter } from '@core/models/view-models/audit-log-view-model';
 import { AuditService } from '@core/services/audit.service';
 import { LucideDownload } from '@lucide/angular';
@@ -38,22 +40,26 @@ import { AuditDateFilterComponent } from './audit-date-filter.component';
         <span i18n="Button that clears the filters">Reset</span>
       </button>
 
-      <button
-        app-flat-button
-        type="button"
-        class="ml-auto gap-2"
-        (click)="onExport()">
-        <svg lucideDownload class="h-4 w-4"></svg>
-        <span i18n="Button that downloads the audit log as CSV">
-          Export CSV
-        </span>
-      </button>
+      @if (canExport()) {
+        <button
+          app-flat-button
+          type="button"
+          class="ml-auto gap-2"
+          (click)="onExport()">
+          <svg lucideDownload class="h-4 w-4"></svg>
+          <span i18n="Button that downloads the audit log as CSV">
+            Export CSV
+          </span>
+        </button>
+      }
     </div>
   `,
 })
 export class AuditFiltersComponent {
   private filters = inject(AuditFilterService);
   private auditService = inject(AuditService);
+
+  protected readonly canExport = hasPermission(PERMISSIONS.audit.export);
 
   fromDate = signal<string>('');
   toDate = signal<string>('');

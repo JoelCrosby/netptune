@@ -95,11 +95,13 @@ const ResumableStages = [
         i18n-title="Page title for the workspace import and export page"
         title="Data" />
 
-      <app-tab-group
-        class="mb-6 block"
-        [tabs]="tabs"
-        [value]="selectedTab()"
-        (changed)="onTabChanged($event)" />
+      @if (tabs().length > 1) {
+        <app-tab-group
+          class="mb-6 block"
+          [tabs]="tabs()"
+          [value]="selectedTab()"
+          (changed)="onTabChanged($event)" />
+      }
 
       @if (selectedTab() === 'exports') {
         <app-panel>
@@ -368,21 +370,38 @@ export class DataTransferViewComponent {
 
   protected readonly undoing = signal<string | null>(null);
 
-  protected readonly selectedTab = signal<DataTab>('exports');
+  protected readonly tabs = computed<TabItem[]>(() => {
+    const tabs: TabItem[] = [
+      {
+        label: $localize`:Tab that shows the workspace export history:Exports`,
+        value: 'exports',
+      },
+    ];
 
-  protected readonly tabs: TabItem[] = [
-    {
-      label: $localize`:Tab that shows the workspace export history:Exports`,
-      value: 'exports',
-    },
-    {
-      label: $localize`:Tab that shows the workspace import history:Imports`,
-      value: 'imports',
-    },
-  ];
+    if (this.canImport()) {
+      tabs.push({
+        label: $localize`:Tab that shows the workspace import history:Imports`,
+        value: 'imports',
+      });
+    }
+
+    return tabs;
+  });
+
+  private readonly requestedTab = signal<DataTab>('exports');
+
+  protected readonly selectedTab = computed<DataTab>(() => {
+    const requested = this.requestedTab();
+
+    if (requested === 'imports' && !this.canImport()) {
+      return 'exports';
+    }
+
+    return requested;
+  });
 
   protected onTabChanged(value: string | number | null) {
-    this.selectedTab.set(value === 'imports' ? 'imports' : 'exports');
+    this.requestedTab.set(value === 'imports' ? 'imports' : 'exports');
   }
 
   private readonly reloadToken = signal(0);

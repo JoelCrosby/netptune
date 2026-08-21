@@ -100,6 +100,11 @@ public static class ExportEndpoints
             return Results.NotFound(result);
         }
 
+        if (result.IsForbidden)
+        {
+            return Results.Forbid();
+        }
+
         if (!result.IsSuccess)
         {
             return Results.BadRequest(result);
@@ -118,6 +123,11 @@ public static class ExportEndpoints
         if (result.IsNotFound)
         {
             return Results.NotFound(result);
+        }
+
+        if (result.IsForbidden)
+        {
+            return Results.Forbid();
         }
 
         return Results.Ok(result);
