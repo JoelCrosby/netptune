@@ -21,6 +21,7 @@ RUN for file in $(ls *.csproj); do \
     done
 COPY server/*.slnx .
 COPY server/Directory.Packages.props .
+COPY server/Directory.Build.props .
 RUN dotnet restore
 
 # copy everything else
