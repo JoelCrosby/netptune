@@ -42,6 +42,8 @@ public sealed class TestAuthenticationHandler : AuthenticationHandler<Authentica
             .Include(u => u.Workspace)
             .Include(u => u.User)
             .Where(u => u.Workspace.Slug == "netptune" && u.User.UserType == AppUserType.User)
+            .OrderBy(u => u.Role == WorkspaceRole.Owner ? 0 : 1)
+            .ThenBy(u => u.UserId)
             .Select(u => u.User)
             .FirstOrDefaultAsync();
 
