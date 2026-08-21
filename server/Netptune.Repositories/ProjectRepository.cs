@@ -205,23 +205,37 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             .ToListAsync(cancellationToken);
     }
 
-    public Task<string> GenerateProjectKey(string projectName, int workspaceId, CancellationToken cancellationToken = default)
+    public async Task<string> GenerateProjectKey(string projectName, int workspaceId, CancellationToken cancellationToken = default)
     {
-        const int keyLength = 4;
-        var key = projectName[..keyLength].ToLowerInvariant();
+        const int preferredKeyLength = 4;
+        const string fallbackStem = "proj";
 
-        async Task<string> TryGetKey(string currentKey, int currentKeyLength)
+        var normalized = projectName.Trim().ToLowerInvariant();
+        var stem = normalized.Length == 0 ? fallbackStem : normalized;
+        var startingLength = Math.Min(preferredKeyLength, stem.Length);
+
+        for (var length = startingLength; length <= stem.Length; length++)
         {
-            while (true)
+            var candidate = stem[..length];
+            var isAvailable = await IsProjectKeyAvailable(candidate, workspaceId, cancellationToken);
+
+            if (isAvailable)
             {
-                var isAvailable = await IsProjectKeyAvailable(currentKey, workspaceId, cancellationToken);
-                if (isAvailable) return currentKey;
-                var nextKey = projectName[..(currentKeyLength + 1)].ToLowerInvariant();
-                currentKey = nextKey;
-                currentKeyLength++;
+                return candidate;
             }
         }
 
-        return TryGetKey(key, keyLength);
+        var numberedStem = stem[..startingLength];
+
+        for (var suffix = 2; ; suffix++)
+        {
+            var candidate = $"{numberedStem}-{suffix}";
+            var isAvailable = await IsProjectKeyAvailable(candidate, workspaceId, cancellationToken);
+
+            if (isAvailable)
+            {
+                return candidate;
+            }
+        }
     }
 }

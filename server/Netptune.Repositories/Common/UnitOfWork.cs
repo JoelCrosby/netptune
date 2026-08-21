@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Exceptions;
 using Netptune.Core.Repositories.Common;
+
+using Npgsql;
 
 namespace Netptune.Repositories.Common;
 
@@ -24,8 +27,6 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
 
     public async Task Transaction(Func<Task> callback, bool disableChangeDetection = false)
     {
-        // The retrying execution strategy rejects a transaction it did not open itself. The callback
-        // still runs at most once — UnitOfWorkTransactionException is not retryable.
         var strategy = Context.Database.CreateExecutionStrategy();
 
         await strategy.ExecuteAsync(async () =>
@@ -42,8 +43,7 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
             }
             catch (Exception ex)
             {
-                throw new UnitOfWorkTransactionException(
-                    "UnitOfWork Transaction Failed. See Inner exception for details.", ex);
+                throw ToTransactionException(ex);
             }
             finally
             {
@@ -72,13 +72,41 @@ public abstract class UnitOfWork<TContext, TDbConnectionFactory> : IUnitOfWork
             }
             catch (Exception ex)
             {
-                throw new UnitOfWorkTransactionException("UnitOfWork Transaction Failed. See Inner exception for details.", ex);
+                throw ToTransactionException(ex);
             }
             finally
             {
                 Context.ChangeTracker.AutoDetectChangesEnabled = true;
             }
         });
+    }
+
+    private static Exception ToTransactionException(Exception exception)
+    {
+        var uniqueViolation = FindUniqueViolation(exception);
+
+        if (uniqueViolation is not null)
+        {
+            return new UniqueConstraintException(uniqueViolation.ConstraintName, exception);
+        }
+
+        return new UnitOfWorkTransactionException(
+            "UnitOfWork Transaction Failed. See Inner exception for details.", exception);
+    }
+
+    private static PostgresException? FindUniqueViolation(Exception? exception)
+    {
+        while (exception is not null)
+        {
+            if (exception is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation } postgres)
+            {
+                return postgres;
+            }
+
+            exception = exception.InnerException;
+        }
+
+        return null;
     }
 }
 

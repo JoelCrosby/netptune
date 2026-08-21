@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 
+using Netptune.Core.Services.Realtime;
+
 namespace Netptune.App.Services;
 
 [JsonSerializable(typeof(WorkspaceEvent))]

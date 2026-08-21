@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Handlers.Tags.Commands;
 using Netptune.Handlers.Tags.Queries;
 using Netptune.Handlers.Tasks.Queries;
+using Netptune.PublicApi.Configuration;
 using Netptune.PublicApi.Requests;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -27,17 +29,20 @@ public static class TagsEndpoints
         group.MapPost("/tags", CreateTag)
             .WithSummary("Create a tag")
             .WithDescription("Adds a tag to the credential's workspace so tasks can be tagged with it.")
-            .RequireAuthorization(NetptunePermissions.Tags.Create);
+            .RequireAuthorization(NetptunePermissions.Tags.Create)
+            .Broadcasts(WorkspaceEventScopes.Tag);
 
         group.MapPatch("/tags/{tag}", RenameTag)
             .WithSummary("Rename a tag")
             .WithDescription("Renames a tag across every task in the workspace that carries it.")
-            .RequireAuthorization(NetptunePermissions.Tags.Update);
+            .RequireAuthorization(NetptunePermissions.Tags.Update)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
         group.MapDelete("/tags/{tag}", DeleteTag)
             .WithSummary("Delete a tag")
             .WithDescription("Removes a tag from the workspace and from every task that carries it.")
-            .RequireAuthorization(NetptunePermissions.Tags.Delete);
+            .RequireAuthorization(NetptunePermissions.Tags.Delete)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
         group.MapGet("/tasks/{id:int}/tags", GetTaskTags)
             .WithSummary("List the tags on a task")
@@ -47,12 +52,14 @@ public static class TagsEndpoints
         group.MapPut("/tasks/{id:int}/tags/{tag}", AddTagToTask)
             .WithSummary("Add a tag to a task")
             .WithDescription("Applies a tag to a task, creating the tag in the workspace when it does not exist yet.")
-            .RequireAuthorization(NetptunePermissions.Tags.Assign);
+            .RequireAuthorization(NetptunePermissions.Tags.Assign)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
         group.MapDelete("/tasks/{id:int}/tags/{tag}", RemoveTagFromTask)
             .WithSummary("Remove a tag from a task")
             .WithDescription("Removes a tag from a task, leaving the tag in the workspace.")
-            .RequireAuthorization(NetptunePermissions.Tags.Assign);
+            .RequireAuthorization(NetptunePermissions.Tags.Assign)
+            .Broadcasts(WorkspaceEventScopes.Tag, WorkspaceEventScopes.Task);
 
         return group;
     }

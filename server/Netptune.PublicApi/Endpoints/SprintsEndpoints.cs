@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Handlers.Sprints.Commands;
 using Netptune.Handlers.Sprints.Queries;
+using Netptune.PublicApi.Configuration;
 
 namespace Netptune.PublicApi.Endpoints;
 
@@ -28,27 +30,32 @@ public static class SprintsEndpoints
         group.MapPost("/sprints", CreateSprint)
             .WithSummary("Create a sprint")
             .WithDescription("Creates a sprint in the credential's workspace.")
-            .RequireAuthorization(NetptunePermissions.Sprints.Create);
+            .RequireAuthorization(NetptunePermissions.Sprints.Create)
+            .Broadcasts(WorkspaceEventScopes.Sprint);
 
         group.MapPatch("/sprints/{id:int}", UpdateSprint)
             .WithSummary("Update a sprint")
             .WithDescription("Updates the supplied fields on an existing sprint.")
-            .RequireAuthorization(NetptunePermissions.Sprints.Update);
+            .RequireAuthorization(NetptunePermissions.Sprints.Update)
+            .Broadcasts(WorkspaceEventScopes.Sprint);
 
         group.MapDelete("/sprints/{id:int}", DeleteSprint)
             .WithSummary("Delete a sprint")
             .WithDescription("Deletes a planning or cancelled sprint.")
-            .RequireAuthorization(NetptunePermissions.Sprints.Delete);
+            .RequireAuthorization(NetptunePermissions.Sprints.Delete)
+            .Broadcasts(WorkspaceEventScopes.Sprint);
 
         group.MapPost("/sprints/{id:int}/tasks", AddTasks)
             .WithSummary("Add tasks to a sprint")
             .WithDescription("Adds existing tasks from the sprint's project to a planning or active sprint.")
-            .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks);
+            .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
 
         group.MapDelete("/sprints/{id:int}/tasks/{taskId:int}", RemoveTask)
             .WithSummary("Remove a task from a sprint")
             .WithDescription("Removes an existing task from a planning or active sprint.")
-            .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks);
+            .RequireAuthorization(NetptunePermissions.Sprints.ManageTasks)
+            .Broadcasts(WorkspaceEventScopes.Sprint, WorkspaceEventScopes.Task);
 
         return group;
     }

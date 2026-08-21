@@ -13,6 +13,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Ai;
 using Netptune.Entities.Contexts;
 using Netptune.IntegrationTests.TestServices;

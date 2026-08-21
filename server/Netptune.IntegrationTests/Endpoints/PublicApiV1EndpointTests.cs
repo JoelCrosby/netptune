@@ -4,11 +4,14 @@ using System.Text.Json;
 
 using FluentAssertions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Authorization;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Core.ViewModels.Relations;
@@ -21,6 +24,8 @@ using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Statuses;
 using Netptune.Core.ViewModels.Users;
+
+using StackExchange.Redis;
 
 using Xunit;
 
@@ -434,6 +439,82 @@ public sealed class PublicApiV1EndpointTests
 
 
     [Fact]
+    public async Task CreateProject_ShouldDeriveADistinctKey_WhenNamesShareALeadingPrefix()
+    {
+        var client = await CreateClient();
+        var sharedName = $"Shared prefix project {Guid.NewGuid():N}";
+
+        var first = await client.PostAsJsonAsync("api/v1/projects", new AddProjectRequest
+        {
+            Name = sharedName,
+            MetaInfo = new() { Color = "blue" },
+        }, TestContext.Current.CancellationToken);
+
+        first.StatusCode.Should().Be(HttpStatusCode.Created, await first.Content.ReadAsStringAsync());
+
+        var second = await client.PostAsJsonAsync("api/v1/projects", new AddProjectRequest
+        {
+            Name = sharedName,
+            MetaInfo = new() { Color = "blue" },
+        }, TestContext.Current.CancellationToken);
+
+        second.StatusCode.Should().Be(HttpStatusCode.Created, await second.Content.ReadAsStringAsync());
+
+        var firstProject = (await first.Content.ReadFromJsonAsync<ProjectViewModel>(TestContext.Current.CancellationToken))!;
+        var secondProject = (await second.Content.ReadFromJsonAsync<ProjectViewModel>(TestContext.Current.CancellationToken))!;
+
+        secondProject.Key.Should().NotBe(firstProject.Key);
+    }
+
+    [Fact]
+    public async Task CreateProject_ShouldSucceed_ForANameShorterThanAProjectKey()
+    {
+        var client = await CreateClient();
+
+        var response = await client.PostAsJsonAsync("api/v1/projects", new AddProjectRequest
+        {
+            Name = "ab",
+            MetaInfo = new() { Color = "blue" },
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.Created, HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task CreateTask_ShouldBroadcastAWorkspaceEvent_SoOpenClientsSeeIt()
+    {
+        var client = await CreateClient();
+        var connection = Fixture.PublicApiServices.GetRequiredService<IConnectionMultiplexer>();
+        var channel = RedisChannel.Literal(IWorkspaceEventPublisher.ChannelName);
+        var received = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        var queue = await connection.GetSubscriber().SubscribeAsync(channel);
+
+        queue.OnMessage(message => received.TrySetResult(message.Message.ToString()));
+
+        try
+        {
+            await CreateTask(client);
+
+            var completed = await Task.WhenAny(received.Task, Task.Delay(TimeSpan.FromSeconds(10)));
+
+            completed.Should().Be(received.Task, "creating a task should publish a workspace event");
+
+            var published = JsonSerializer.Deserialize<JsonElement>(await received.Task);
+
+            published.GetProperty("scopes").EnumerateArray()
+                .Select(scope => scope.GetString())
+                .Should().Contain(WorkspaceEventScopes.Task);
+
+            published.GetProperty("workspace").GetString().Should().NotBeNullOrWhiteSpace();
+        }
+        finally
+        {
+            await connection.GetSubscriber().UnsubscribeAsync(channel);
+        }
+    }
+
+    [Fact]
     public async Task OpenApiDocument_ShouldDescribeEveryPublishedRoute()
     {
         var client = Fixture.CreateUnauthenticatedPublicApiClient();
@@ -518,11 +599,8 @@ public sealed class PublicApiV1EndpointTests
 
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
 
-        var boards = await client.GetFromJsonAsync<List<BoardViewModel>>(
-            "api/v1/boards?pageSize=100",
-            TestContext.Current.CancellationToken);
-
-        boards.Should().NotContain(item => item.Id == board.Id);
+        (await client.GetAsync($"api/v1/boards/{board.Id}", TestContext.Current.CancellationToken))
+            .StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -559,6 +637,9 @@ public sealed class PublicApiV1EndpointTests
         var deleteResponse = await client.DeleteAsync($"api/v1/board-groups/{group.Id}", TestContext.Current.CancellationToken);
 
         deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+
+        (await client.GetAsync($"api/v1/board-groups/{group.Id}", TestContext.Current.CancellationToken))
+            .StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -715,6 +796,12 @@ public sealed class PublicApiV1EndpointTests
 
         unlinkResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await unlinkResponse.Content.ReadAsStringAsync());
 
+        var usageResponse = await client.GetAsync(
+            $"api/v1/relation-types/{relationType.Id}/usage",
+            TestContext.Current.CancellationToken);
+
+        usageResponse.StatusCode.Should().Be(HttpStatusCode.OK, await usageResponse.Content.ReadAsStringAsync());
+
         var deleteTypeResponse = await client.DeleteAsync(
             $"api/v1/relation-types/{relationType.Id}",
             TestContext.Current.CancellationToken);
@@ -749,7 +836,7 @@ public sealed class PublicApiV1EndpointTests
     }
 
     [Fact]
-    public async Task StatusLifecycle_ShouldCreateUpdateAndDelete()
+    public async Task StatusLifecycle_ShouldCreateUpdateReportUsageAndDelete()
     {
         var client = await CreateClient();
 
@@ -770,6 +857,10 @@ public sealed class PublicApiV1EndpointTests
         }, TestContext.Current.CancellationToken);
 
         updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync());
+
+        var usageResponse = await client.GetAsync($"api/v1/statuses/{status.Id}/usage", TestContext.Current.CancellationToken);
+
+        usageResponse.StatusCode.Should().Be(HttpStatusCode.OK, await usageResponse.Content.ReadAsStringAsync());
 
         var deleteResponse = await client.DeleteAsync($"api/v1/statuses/{status.Id}", TestContext.Current.CancellationToken);
 

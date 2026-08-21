@@ -21,7 +21,7 @@ public sealed class PublicApiContainerTests
         "Netptune.Core.Preferences.IPreferenceDefinitionRegistry",
         "Netptune.Core.Services.Ai.IAiTurnRegistry",
         "Netptune.Core.Services.Ai.IAiUndoCatalog",
-        "Netptune.Core.Services.Automations.IAutomationActionRegistry",
+        "Netptune.Core.Services.Automations.IAutomationTriggerEvaluator",
         "Netptune.Core.Services.IStorageService",
         "Netptune.Transfer.Services.IArchiveImporter",
         "Netptune.Transfer.Services.IExportRunner",

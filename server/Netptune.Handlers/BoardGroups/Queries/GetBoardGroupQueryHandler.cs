@@ -21,7 +21,8 @@ public sealed class GetBoardGroupQueryHandler : IRequestHandler<GetBoardGroupQue
     public async ValueTask<BoardGroup?> Handle(GetBoardGroupQuery request, CancellationToken cancellationToken)
     {
         var workspaceId = await Identity.GetWorkspaceId();
+        var result = await UnitOfWork.BoardGroups.GetInWorkspace(request.Id, workspaceId, true, cancellationToken);
 
-        return await UnitOfWork.BoardGroups.GetInWorkspace(request.Id, workspaceId, true, cancellationToken);
+        return result is { IsDeleted: false } ? result : null;
     }
 }

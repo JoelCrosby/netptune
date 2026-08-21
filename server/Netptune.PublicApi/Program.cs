@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
 
+using Netptune.Automation.Actions;
 using Netptune.Cache;
 using Netptune.Core.Extensions;
 using Netptune.Entities.Configuration;
@@ -63,6 +64,7 @@ builder.Services.AddNetptuneServices(options =>
 
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 builder.Services.AddNetptuneHandlers();
+builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddPublicApiRateLimiter();
 builder.Services.AddValidation();
 builder.Services.AddPublicApiOpenApi();

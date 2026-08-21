@@ -2,6 +2,7 @@ using Mediator;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Realtime;
 using Netptune.Handlers.BoardGroups.Commands;
 using Netptune.Handlers.BoardGroups.Queries;
 

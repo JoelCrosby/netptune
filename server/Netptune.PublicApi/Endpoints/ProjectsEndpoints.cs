@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Handlers.Projects.Commands;
 using Netptune.Handlers.Projects.Queries;
+using Netptune.PublicApi.Configuration;
 using Netptune.PublicApi.Requests;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -29,17 +31,20 @@ public static class ProjectsEndpoints
         group.MapPost("/projects", CreateProject)
             .WithSummary("Create a project")
             .WithDescription("Creates a project in the credential's workspace.")
-            .RequireAuthorization(NetptunePermissions.Projects.Create);
+            .RequireAuthorization(NetptunePermissions.Projects.Create)
+            .Broadcasts(WorkspaceEventScopes.Project);
 
         group.MapPatch("/projects/{id:int}", UpdateProject)
             .WithSummary("Update a project")
             .WithDescription("Updates the supplied fields on an existing project.")
-            .RequireAuthorization(NetptunePermissions.Projects.Update);
+            .RequireAuthorization(NetptunePermissions.Projects.Update)
+            .Broadcasts(WorkspaceEventScopes.Project);
 
         group.MapDelete("/projects/{id:int}", DeleteProject)
             .WithSummary("Delete a project")
             .WithDescription("Deletes a project along with the boards and tasks belonging to it.")
-            .RequireAuthorization(NetptunePermissions.Projects.Delete);
+            .RequireAuthorization(NetptunePermissions.Projects.Delete)
+            .Broadcasts(WorkspaceEventScopes.Project, WorkspaceEventScopes.Board, WorkspaceEventScopes.Task);
 
         return group;
     }

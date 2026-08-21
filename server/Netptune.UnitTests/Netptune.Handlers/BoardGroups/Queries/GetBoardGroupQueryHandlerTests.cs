@@ -29,6 +29,7 @@ public class GetBoardGroupQueryHandlerTests
     public async Task GetBoardGroup_ShouldReturnCorrectly_WhenInputValid()
     {
         var boardGroup = AutoFixtures.BoardGroup;
+        boardGroup.IsDeleted = false;
 
         UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
 
@@ -36,5 +37,18 @@ public class GetBoardGroupQueryHandlerTests
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(boardGroup);
+    }
+
+    [Fact]
+    public async Task GetBoardGroup_ShouldReturnNull_WhenTheBoardGroupIsDeleted()
+    {
+        var boardGroup = AutoFixtures.BoardGroup;
+        boardGroup.IsDeleted = true;
+
+        UnitOfWork.BoardGroups.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(boardGroup);
+
+        var result = await Handler.Handle(new GetBoardGroupQuery(1), TestContext.Current.CancellationToken);
+
+        result.Should().BeNull();
     }
 }

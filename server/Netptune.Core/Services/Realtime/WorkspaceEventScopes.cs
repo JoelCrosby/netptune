@@ -1,7 +1,5 @@
-namespace Netptune.App.Services;
+namespace Netptune.Core.Services.Realtime;
 
-// The entity kinds a workspace event can name. The client turns each one into the views it
-// invalidates, so these strings match the entity types the assistant already reports.
 public static class WorkspaceEventScopes
 {
     public const string Task = "task";

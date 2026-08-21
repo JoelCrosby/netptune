@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Handlers.BoardGroups.Commands;
 using Netptune.Handlers.BoardGroups.Queries;
+using Netptune.PublicApi.Configuration;
 using Netptune.PublicApi.Requests;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -31,19 +33,22 @@ public static class BoardGroupsEndpoints
         group.MapPost("/board-groups", CreateBoardGroup)
             .WithSummary("Create a board group")
             .WithDescription("Adds a column to an existing board, optionally bound to a workspace status.")
-            .RequireAuthorization(NetptunePermissions.BoardGroups.Create);
+            .RequireAuthorization(NetptunePermissions.BoardGroups.Create)
+            .Broadcasts(WorkspaceEventScopes.Board);
 
         group.MapPatch("/board-groups/{id:int}", UpdateBoardGroup)
             .WithSummary("Update a board group")
             .WithDescription(
                 "Updates the supplied fields on an existing board column. Send clearStatus to unbind the column from "
                 + "its status rather than leaving it unchanged.")
-            .RequireAuthorization(NetptunePermissions.BoardGroups.Update);
+            .RequireAuthorization(NetptunePermissions.BoardGroups.Update)
+            .Broadcasts(WorkspaceEventScopes.Board);
 
         group.MapDelete("/board-groups/{id:int}", DeleteBoardGroup)
             .WithSummary("Delete a board group")
             .WithDescription("Deletes a board column.")
-            .RequireAuthorization(NetptunePermissions.BoardGroups.Delete);
+            .RequireAuthorization(NetptunePermissions.BoardGroups.Delete)
+            .Broadcasts(WorkspaceEventScopes.Board);
 
         return group;
     }

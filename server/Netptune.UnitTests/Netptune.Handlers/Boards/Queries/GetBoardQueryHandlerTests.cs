@@ -30,11 +30,26 @@ public class GetBoardQueryHandlerTests
     public async Task GetBoard_ShouldReturnCorrectly_WhenInputValid()
     {
         var board = AutoFixtures.Board;
+        board.IsDeleted = false;
+
         UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
 
         var result = await Handler.Handle(new GetBoardQuery(1), TestContext.Current.CancellationToken);
 
         result.IsSuccess.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetBoard_ShouldReturnNotFound_WhenTheBoardIsDeleted()
+    {
+        var board = AutoFixtures.Board;
+        board.IsDeleted = true;
+
+        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
+
+        var result = await Handler.Handle(new GetBoardQuery(1), TestContext.Current.CancellationToken);
+
+        result.IsNotFound.Should().BeTrue();
     }
 
     [Fact]

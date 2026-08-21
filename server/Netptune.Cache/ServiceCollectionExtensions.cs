@@ -6,6 +6,7 @@ using Netptune.Cache.Redis;
 using Netptune.Core.Cache;
 using Netptune.Core.Cache.Common;
 using Netptune.Core.Services.Notifications;
+using Netptune.Core.Services.Realtime;
 using Netptune.Transfer.Services;
 
 using StackExchange.Redis;
@@ -26,6 +27,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ICacheProvider, RedisCache>();
         services.TryAddSingleton<INotificationEventPublisher, RedisNotificationEventPublisher>();
         services.TryAddSingleton<ITransferJobNotifier, RedisTransferJobNotifier>();
+        services.TryAddSingleton<IWorkspaceEventPublisher, RedisWorkspaceEventPublisher>();
 
         services.AddScoped<IUserCache, UserCache>();
         services.AddScoped<IWorkspaceUserCache, WorkspaceUserCache>();

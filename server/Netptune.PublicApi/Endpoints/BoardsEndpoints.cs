@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Handlers.Boards.Commands;
 using Netptune.Handlers.Boards.Queries;
+using Netptune.PublicApi.Configuration;
 using Netptune.PublicApi.Requests;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -38,17 +40,20 @@ public static class BoardsEndpoints
         group.MapPost("/boards", CreateBoard)
             .WithSummary("Create a board")
             .WithDescription("Creates a board in an existing project. The identifier must be unique in the workspace.")
-            .RequireAuthorization(NetptunePermissions.Boards.Create);
+            .RequireAuthorization(NetptunePermissions.Boards.Create)
+            .Broadcasts(WorkspaceEventScopes.Board);
 
         group.MapPatch("/boards/{id:int}", UpdateBoard)
             .WithSummary("Update a board")
             .WithDescription("Updates the supplied fields on an existing board.")
-            .RequireAuthorization(NetptunePermissions.Boards.Update);
+            .RequireAuthorization(NetptunePermissions.Boards.Update)
+            .Broadcasts(WorkspaceEventScopes.Board);
 
         group.MapDelete("/boards/{id:int}", DeleteBoard)
             .WithSummary("Delete a board")
             .WithDescription("Deletes a board and the columns belonging to it.")
-            .RequireAuthorization(NetptunePermissions.Boards.Delete);
+            .RequireAuthorization(NetptunePermissions.Boards.Delete)
+            .Broadcasts(WorkspaceEventScopes.Board);
 
         return group;
     }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 
 using Netptune.App.Services;
+using Netptune.Core.Services.Realtime;
 
 using NSubstitute;
 

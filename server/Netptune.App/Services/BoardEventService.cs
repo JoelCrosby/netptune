@@ -2,20 +2,11 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading.Channels;
 
+using Netptune.Core.Services.Realtime;
+
 using StackExchange.Redis;
 
 namespace Netptune.App.Services;
-
-public sealed record WorkspaceEvent
-{
-    public required string Workspace { get; init; }
-
-    public required string SourceClientId { get; init; }
-
-    public string[] Scopes { get; init; } = [];
-
-    public DateTimeOffset CreatedAt { get; init; }
-}
 
 public sealed record WorkspaceUpdateFrame
 {
@@ -58,11 +49,12 @@ public sealed record PresenceMessage
 public sealed class BoardEventService : IBoardEventService, IHostedService
 {
     private const int ConnectionQueueCapacity = 32;
-    private static readonly RedisChannel WorkspaceEventChannel = RedisChannel.Literal("workspace-events");
+    private static readonly RedisChannel WorkspaceEventChannel = RedisChannel.Literal(IWorkspaceEventPublisher.ChannelName);
     private static readonly RedisChannel PresenceChannel = RedisChannel.Literal("board-presence");
 
     private readonly ILogger<BoardEventService> Logger;
     private readonly ISubscriber Subscriber;
+    private readonly IWorkspaceEventPublisher EventPublisher;
     private readonly ConcurrentDictionary<string, LocalConnection> Connections = new();
     private readonly Dictionary<PresenceGroup, Dictionary<string, HashSet<string>>> Presence = [];
     private readonly object PresenceLock = new();
@@ -76,10 +68,14 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
         public required Channel<string> Outbound { get; init; }
     }
 
-    public BoardEventService(ILogger<BoardEventService> logger, IConnectionMultiplexer connection)
+    public BoardEventService(
+        ILogger<BoardEventService> logger,
+        IConnectionMultiplexer connection,
+        IWorkspaceEventPublisher eventPublisher)
     {
         Logger = logger;
         Subscriber = connection.GetSubscriber();
+        EventPublisher = eventPublisher;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -153,16 +149,7 @@ public sealed class BoardEventService : IBoardEventService, IHostedService
 
     public Task BroadcastAsync(string workspace, string sourceClientId, string[] scopes)
     {
-        var message = new WorkspaceEvent
-        {
-            Workspace = workspace,
-            SourceClientId = sourceClientId,
-            Scopes = scopes,
-            CreatedAt = DateTimeOffset.UtcNow,
-        };
-        var json = JsonSerializer.Serialize(message, BoardEventSerializerContext.Default.WorkspaceEvent);
-
-        return Subscriber.PublishAsync(WorkspaceEventChannel, json);
+        return EventPublisher.PublishAsync(workspace, sourceClientId, scopes);
     }
 
     private void HandleWorkspaceEvent(ChannelMessage message)

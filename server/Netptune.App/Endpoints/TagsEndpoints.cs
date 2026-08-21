@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
+using Netptune.Core.Services.Realtime;
 using Netptune.Handlers.Tags.Commands;
 using Netptune.Handlers.Tags.Queries;
 

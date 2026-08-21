@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Flags.Commands;
 using Netptune.Handlers.Flags.Queries;
 using Netptune.Handlers.Tasks.Commands;
 using Netptune.Handlers.Tasks.Queries;
+using Netptune.PublicApi.Configuration;
 using Netptune.PublicApi.Requests;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -48,7 +50,8 @@ public static class TasksEndpoints
                 "Creates a task in the credential's workspace. Tag values must already exist in the workspace, and "
                 + "relations name an existing task by its key.")
             .Produces(StatusCodes.Status403Forbidden)
-            .RequireAuthorization(NetptunePermissions.Tasks.Create);
+            .RequireAuthorization(NetptunePermissions.Tasks.Create)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPost("/tasks/bulk-update", BulkUpdateTasks)
             .WithSummary("Bulk update tasks")
@@ -56,24 +59,28 @@ public static class TasksEndpoints
                 "Updates the supplied fields on multiple tasks in the credential's workspace. "
                 + "Supply boardGroupId to move them into a board column, from GET /board-groups.")
             .Produces(StatusCodes.Status403Forbidden)
-            .RequireAuthorization(NetptunePermissions.Tasks.Update);
+            .RequireAuthorization(NetptunePermissions.Tasks.Update)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPost("/tasks/restore", RestoreTasks)
             .WithSummary("Restore archived tasks")
             .WithDescription("Restores previously deleted tasks, returning them to their board.")
-            .RequireAuthorization(NetptunePermissions.Tasks.Restore);
+            .RequireAuthorization(NetptunePermissions.Tasks.Restore)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPost("/tasks/reassign", ReassignTasks)
             .WithSummary("Reassign tasks")
             .WithDescription("Replaces the assignees on the supplied tasks with a single assignee.")
-            .RequireAuthorization(NetptunePermissions.Tasks.Reassign);
+            .RequireAuthorization(NetptunePermissions.Tasks.Reassign)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPost("/tasks/move", MoveTasks)
             .WithSummary("Move tasks between board columns")
             .WithDescription(
                 "Moves the supplied tasks into a board column. Supply sortOrder to place a single task at a "
                 + "position within the column rather than appending it.")
-            .RequireAuthorization(NetptunePermissions.Tasks.Move);
+            .RequireAuthorization(NetptunePermissions.Tasks.Move)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPatch("/tasks/{id:int}", UpdateTask)
             .WithSummary("Update a task")
@@ -81,12 +88,14 @@ public static class TasksEndpoints
                 "Updates the supplied fields on an existing task. Tag values must already exist in the credential's "
                 + "workspace. Supply boardGroupId to move the task into a board column, from GET /board-groups.")
             .Produces(StatusCodes.Status403Forbidden)
-            .RequireAuthorization(NetptunePermissions.Tasks.Update);
+            .RequireAuthorization(NetptunePermissions.Tasks.Update)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapDelete("/tasks/{id:int}", DeleteTask)
             .WithSummary("Delete a task")
             .WithDescription("Archives a task. Archived tasks stay restorable through POST /tasks/restore.")
-            .RequireAuthorization(NetptunePermissions.Tasks.Delete);
+            .RequireAuthorization(NetptunePermissions.Tasks.Delete)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapGet("/tasks/{id:int}/flags", GetTaskFlags)
             .WithSummary("List the flags raised on a task")
@@ -96,7 +105,8 @@ public static class TasksEndpoints
         group.MapPut("/tasks/{id:int}/flags/{flagId:int}/resolution", ResolveTaskFlag)
             .WithSummary("Resolve a flag on a task")
             .WithDescription("Records how a flag raised against a task was resolved.")
-            .RequireAuthorization(NetptunePermissions.Flags.Resolve);
+            .RequireAuthorization(NetptunePermissions.Flags.Resolve)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         return group;
     }

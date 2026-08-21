@@ -1,6 +1,7 @@
 using Mediator;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Exceptions;
 using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -28,6 +29,21 @@ public sealed class CreateProjectCommandHandler : IRequestHandler<CreateProjectC
     }
 
     public async ValueTask<ClientResponse<ProjectViewModel>> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await CreateProject(request, cancellationToken);
+        }
+        catch (UniqueConstraintException)
+        {
+            return ClientResponse<ProjectViewModel>.Failed(
+                "A project with a conflicting name already exists in this workspace.");
+        }
+    }
+
+    private async Task<ClientResponse<ProjectViewModel>> CreateProject(
+        CreateProjectCommand request,
+        CancellationToken cancellationToken)
     {
         return await UnitOfWork.Transaction(async () =>
         {

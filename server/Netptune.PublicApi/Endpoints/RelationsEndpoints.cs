@@ -5,13 +5,16 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Relations;
 using Netptune.Core.ViewModels.RelationTypes;
+using Netptune.Core.ViewModels.Usage;
 using Netptune.Handlers.RelationTypes.Commands;
 using Netptune.Handlers.RelationTypes.Queries;
 using Netptune.Handlers.Relations.Commands;
 using Netptune.Handlers.Relations.Queries;
 using Netptune.Handlers.Tasks.Queries;
+using Netptune.PublicApi.Configuration;
 
 namespace Netptune.PublicApi.Endpoints;
 
@@ -31,25 +34,36 @@ public static class RelationsEndpoints
             .WithDescription("Returns a page of the task links created with a relation type.")
             .RequireAuthorization(NetptunePermissions.RelationTypes.Read);
 
+        group.MapGet("/relation-types/{id:int}/usage", GetRelationTypeUsage)
+            .WithSummary("Get relation type usage")
+            .WithDescription(
+                "Reports what still references a relation type, including automation rules, so you can tell "
+                + "whether deleting it is safe.")
+            .RequireAuthorization(NetptunePermissions.RelationTypes.Read);
+
         group.MapPost("/relation-types", CreateRelationType)
             .WithSummary("Create a relation type")
             .WithDescription("Adds a relation type to the credential's workspace.")
-            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
+            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPatch("/relation-types/{id:int}", UpdateRelationType)
             .WithSummary("Update a relation type")
             .WithDescription("Updates the supplied fields on an existing relation type.")
-            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
+            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapDelete("/relation-types/{id:int}", DeleteRelationType)
             .WithSummary("Delete a relation type")
             .WithDescription("Deletes a relation type and the task links created with it.")
-            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
+            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapPost("/relation-types/reorder", ReorderRelationTypes)
             .WithSummary("Reorder relation types")
             .WithDescription("Replaces the display order of the workspace's relation types with the supplied order.")
-            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage);
+            .RequireAuthorization(NetptunePermissions.RelationTypes.Manage)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapGet("/tasks/{id:int}/relations", GetTaskRelations)
             .WithSummary("List the tasks linked to a task")
@@ -61,12 +75,14 @@ public static class RelationsEndpoints
             .WithDescription(
                 "Links a task to another task in the same workspace, naming the related task by its key. "
                 + "Set taskIsSource to false to reverse the direction of the link.")
-            .RequireAuthorization(NetptunePermissions.Tasks.Update);
+            .RequireAuthorization(NetptunePermissions.Tasks.Update)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         group.MapDelete("/task-relations/{id:int}", DeleteTaskRelation)
             .WithSummary("Remove a link between two tasks")
             .WithDescription("Deletes a task relation by its numeric identifier.")
-            .RequireAuthorization(NetptunePermissions.Tasks.Update);
+            .RequireAuthorization(NetptunePermissions.Tasks.Update)
+            .Broadcasts(WorkspaceEventScopes.Task);
 
         return group;
     }
@@ -87,6 +103,16 @@ public static class RelationsEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetRelationsForTypeQuery(id, page), cancellationToken);
+
+        return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
+    }
+
+    private static async Task<Results<Ok<EntityUsageViewModel>, NotFound>> GetRelationTypeUsage(
+        IMediator mediator,
+        int id,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetRelationTypeUsageQuery(id), cancellationToken);
 
         return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
     }

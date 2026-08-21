@@ -24,7 +24,7 @@ public sealed class GetBoardQueryHandler : IRequestHandler<GetBoardQuery, Client
         var workspaceId = await Identity.GetWorkspaceId();
         var result = await UnitOfWork.Boards.GetInWorkspace(request.Id, workspaceId, true, cancellationToken);
 
-        if (result is null) return ClientResponse<BoardViewModel>.NotFound;
+        if (result is null or { IsDeleted: true }) return ClientResponse<BoardViewModel>.NotFound;
 
         return ClientResponse<BoardViewModel>.Success(result.ToViewModel());
     }

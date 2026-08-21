@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Handlers.Comments.Commands;
 using Netptune.Handlers.Comments.Queries;
 using Netptune.Handlers.Tasks.Queries;
+using Netptune.PublicApi.Configuration;
 using Netptune.PublicApi.Requests;
 
 namespace Netptune.PublicApi.Endpoints;
@@ -27,13 +29,15 @@ public static class CommentsEndpoints
             .WithDescription(
                 "Adds a comment to a task, authored by the service account the credential belongs to. "
                 + "Mentions name workspace members by their user id.")
-            .RequireAuthorization(NetptunePermissions.Comments.Create);
+            .RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment, WorkspaceEventScopes.Task);
 
         group.MapPatch("/comments/{id:int}", UpdateComment)
             .WithSummary("Update a comment")
             .WithDescription("Replaces the body of a comment the credential's service account authored.")
             .Produces(StatusCodes.Status403Forbidden)
-            .RequireAuthorization(NetptunePermissions.Comments.Create);
+            .RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment);
 
         group.MapDelete("/comments/{id:int}", DeleteComment)
             .WithSummary("Delete a comment")
@@ -41,17 +45,20 @@ public static class CommentsEndpoints
                 "Deletes a comment the credential's service account authored. Deleting a comment somebody else "
                 + "wrote additionally needs comments.delete_any.")
             .Produces(StatusCodes.Status403Forbidden)
-            .RequireAuthorization(NetptunePermissions.Comments.DeleteOwn);
+            .RequireAuthorization(NetptunePermissions.Comments.DeleteOwn)
+            .Broadcasts(WorkspaceEventScopes.Comment, WorkspaceEventScopes.Task);
 
         group.MapPut("/comments/{id:int}/reactions/{value}", AddCommentReaction)
             .WithSummary("React to a comment")
             .WithDescription("Adds an emoji reaction to a comment on behalf of the credential's service account.")
-            .RequireAuthorization(NetptunePermissions.Comments.Create);
+            .RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment);
 
         group.MapDelete("/comments/{id:int}/reactions/{value}", RemoveCommentReaction)
             .WithSummary("Remove a reaction from a comment")
             .WithDescription("Removes an emoji reaction the credential's service account added.")
-            .RequireAuthorization(NetptunePermissions.Comments.Create);
+            .RequireAuthorization(NetptunePermissions.Comments.Create)
+            .Broadcasts(WorkspaceEventScopes.Comment);
 
         return group;
     }
