@@ -50,7 +50,7 @@ spec:
         namespaces:
           from: Same
     {{- end }}
-    {{- if .Values.headlamp.enabled }}
+    {{- if and .Values.headlamp.enabled .Values.headlamp.public }}
     - name: https-headlamp
       port: 8443
       protocol: HTTPS

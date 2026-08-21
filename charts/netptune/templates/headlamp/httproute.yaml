@@ -1,4 +1,4 @@
-{{- if .Values.headlamp.enabled }}
+{{- if and .Values.headlamp.enabled .Values.headlamp.public }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute

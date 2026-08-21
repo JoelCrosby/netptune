@@ -1,0 +1,29 @@
+{{- if and .Values.headlamp.enabled .Values.headlamp.tailscale.enabled }}
+---
+# Reaches headlamp-deployment directly rather than through oauth2-proxy: the proxy's redirect-url and
+# cookie-domain are pinned to headlamp.host, so it cannot serve a tailnet hostname. On the tailnet the
+# gate is Tailscale identity and ACLs instead.
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "headlamp-tailscale"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "headlamp"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "{{ .Values.headlamp.tailscale.hostname }}"
+spec:
+  type: "LoadBalancer"
+  loadBalancerClass: "tailscale.com/tailscale"
+  selector:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "headlamp"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+  ports:
+    - name: "http"
+      protocol: "TCP"
+      port: 80
+      targetPort: 4466
+{{- end }}

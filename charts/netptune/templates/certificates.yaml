@@ -54,7 +54,7 @@ spec:
   dnsNames:
     - "{{ .Values.ingress.appHost }}"
 {{- end }}
-{{- if and .Values.headlamp.enabled .Values.ingress.tls.enabled }}
+{{- if and .Values.headlamp.enabled .Values.headlamp.public .Values.ingress.tls.enabled }}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
