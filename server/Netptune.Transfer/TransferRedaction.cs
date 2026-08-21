@@ -1,6 +1,7 @@
 using Netptune.Transfer.Entities;
 using System.Collections.Frozen;
 
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 using Netptune.Core.Entities;
@@ -60,6 +61,9 @@ public static class TransferRedaction
         Redacted<AiProposedChange>(TransferRedactionKeys.AiConversations),
         Redacted<AiWebDocument>(TransferRedactionKeys.AiConversations),
         Redacted<WorkspaceSearchCredential>(TransferRedactionKeys.AiCredentials),
+        // Raw key material for the data protection ring. Exporting it would hand over the means to
+        // decrypt every credential in the archive, so it never leaves the system.
+        Redacted<DataProtectionKey>(TransferRedactionKeys.EncryptionKeys),
         Redacted<AutomationRun>(TransferRedactionKeys.AutomationHistory),
         Redacted<AutomationActionResult>(TransferRedactionKeys.AutomationHistory),
         Redacted<ScheduledAutomationAction>(TransferRedactionKeys.AutomationHistory),
