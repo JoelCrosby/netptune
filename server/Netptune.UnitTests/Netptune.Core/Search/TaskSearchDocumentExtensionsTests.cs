@@ -35,4 +35,42 @@ public sealed class TaskSearchDocumentExtensionsTests
         serialized.Should().NotContain("ProjectKey");
         serialized.Should().NotContain("OLD-7");
     }
+
+    [Fact]
+    public void ToSearchDocument_ShouldIndexEditorDescriptionsAsPlainText()
+    {
+        var task = new TaskViewModel
+        {
+            Id = 42,
+            Name = "Indexed task",
+            SystemId = "ACME-7",
+            StatusName = "Todo",
+            Description = """
+                {"time":1755000000000,"blocks":[{"id":"s8yaTRa7jF","type":"paragraph","data":{"text":"Rotate the&nbsp;<code>signing</code> key"}}],"version":"2.31.6"}
+                """,
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+
+        var document = task.ToSearchDocument("workspace");
+
+        document.Description.Should().Be("Rotate the signing key");
+    }
+
+    [Fact]
+    public void ToSearchDocument_ShouldIndexPlainTextDescriptionsUnchanged()
+    {
+        var task = new TaskViewModel
+        {
+            Id = 43,
+            Name = "Legacy task",
+            SystemId = "ACME-8",
+            StatusName = "Todo",
+            Description = "Rotate the signing key",
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+
+        var document = task.ToSearchDocument("workspace");
+
+        document.Description.Should().Be("Rotate the signing key");
+    }
 }

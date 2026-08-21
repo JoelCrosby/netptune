@@ -1,3 +1,4 @@
+using Netptune.Core.Utilities;
 using Netptune.Core.ViewModels.ProjectTasks;
 
 namespace Netptune.Core.Models.Search;
@@ -11,7 +12,7 @@ public static class TaskSearchDocumentExtensions
             Id = $"task_{task.Id}",
             TaskId = task.Id,
             Title = task.Name,
-            Description = task.Description,
+            Description = RichTextExtractor.ToPlainText(task.Description),
             WorkspaceSlug = workspaceSlug,
             Status = task.StatusName,
             Priority = task.Priority?.ToString(),

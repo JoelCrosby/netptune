@@ -2,10 +2,12 @@ using Mediator;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Models.ProjectTasks;
+using Netptune.Core.Models.Search;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.Activity;
 using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
@@ -21,19 +23,22 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
     private readonly ITaskMutationPipeline TaskMutationPipeline;
     private readonly ITaskReferenceResolver ReferenceResolver;
     private readonly ITaskStatusResolver StatusResolver;
+    private readonly IEventPublisher EventPublisher;
 
     public UpdateTaskCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         ITaskMutationPipeline taskMutationPipeline,
         ITaskReferenceResolver referenceResolver,
-        ITaskStatusResolver statusResolver)
+        ITaskStatusResolver statusResolver,
+        IEventPublisher eventPublisher)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         TaskMutationPipeline = taskMutationPipeline;
         ReferenceResolver = referenceResolver;
         StatusResolver = statusResolver;
+        EventPublisher = eventPublisher;
     }
 
     public async ValueTask<ClientResponse<TaskViewModel>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
@@ -154,6 +159,14 @@ public sealed class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand
         {
             await TaskMutationPipeline.Publish(mutationOutcome);
         }
+
+        await EventPublisher.Dispatch(new SearchIndexEvent
+        {
+            Operation = SearchIndexOperation.Index,
+            EntityType = "task",
+            EntityIds = [response.Id],
+            WorkspaceSlug = response.WorkspaceKey,
+        });
 
         return ClientResponse<TaskViewModel>.Success(response);
     }

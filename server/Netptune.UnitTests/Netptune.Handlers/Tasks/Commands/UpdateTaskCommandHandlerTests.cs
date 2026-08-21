@@ -42,7 +42,7 @@ public class UpdateTaskCommandHandlerTests
         var referenceResolver = new TaskReferenceResolver(UnitOfWork);
         var statusResolver = new TaskStatusResolver(UnitOfWork);
 
-        Handler = new(UnitOfWork, Identity, taskMutationPipeline, referenceResolver, statusResolver);
+        Handler = new(UnitOfWork, Identity, taskMutationPipeline, referenceResolver, statusResolver, EventPublisher);
     }
 
     private ProjectTask BuildTask(TaskPriority? priority = null, EstimateType? estimateType = null, decimal? estimateValue = null)
