@@ -1,4 +1,5 @@
 using Netptune.Transfer.Entities;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +14,11 @@ using Netptune.Entities.Interceptors;
 
 namespace Netptune.Entities.Contexts;
 
-public class DataContext : IdentityDbContext<AppUser>
+public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
 {
+    // Data protection
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
+
     // Auth
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
     public DbSet<ServiceAccount> ServiceAccounts { get; set; } = null!;
