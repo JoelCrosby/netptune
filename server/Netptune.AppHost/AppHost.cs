@@ -67,6 +67,8 @@ var publicApi = builder
     .WithCache(cache)
     .WithPostgres(postgresdb)
     .WithNats(nats)
+    .WaitFor(meilisearch)
+    .WithReference(meilisearch)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();

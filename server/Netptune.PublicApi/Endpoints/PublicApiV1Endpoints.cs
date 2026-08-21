@@ -14,12 +14,19 @@ public static class PublicApiV1Endpoints
                 AuthenticationSchemes = AuthenticationSchemes.ApiKey,
             });
 
+        group.MapWorkspaceEndpoints();
         group.MapProjectsEndpoints();
         group.MapAssigneesEndpoints();
+        group.MapBoardsEndpoints();
         group.MapBoardGroupsEndpoints();
         group.MapSprintsEndpoints();
         group.MapStatusesEndpoints();
+        group.MapTagsEndpoints();
+        group.MapRelationsEndpoints();
         group.MapTasksEndpoints();
+        group.MapCommentsEndpoints();
+        group.MapSearchEndpoints();
+        group.MapReportingEndpoints();
 
         return group;
     }

@@ -11,6 +11,7 @@ using Netptune.PublicApi.Configuration;
 using Netptune.PublicApi.Endpoints;
 using Netptune.PublicApi.Middleware;
 using Netptune.Repositories.Configuration;
+using Netptune.Search;
 using Netptune.ServiceDefaults;
 using Netptune.ServiceDefaults.Middleware;
 using Netptune.Services.Configuration;
@@ -46,6 +47,7 @@ builder.Services.AddNetptuneAuthorization(AuthenticationSchemes.ApiKey);
 builder.Services.AddNetptuneApiKeyAuthentication();
 
 builder.AddNetptuneCache(options => options.Connection = redisConnectionString);
+builder.AddNetptuneSearch();
 
 builder.Services.AddHealthChecks()
     .AddNpgSql(connectionString, name: "postgres", tags: ["ready"])

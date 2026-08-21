@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 using FluentAssertions;
 
@@ -9,6 +10,11 @@ using Netptune.Core.Requests;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
+using Netptune.Core.ViewModels.Comments;
+using Netptune.Core.ViewModels.Relations;
+using Netptune.Core.ViewModels.RelationTypes;
+using Netptune.Core.ViewModels.Tags;
+using Netptune.Core.ViewModels.Workspace;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ServiceAccounts;
@@ -51,6 +57,31 @@ public sealed class PublicApiV1EndpointTests
         NetptunePermissions.Tasks.Move,
         NetptunePermissions.Tags.Assign,
         NetptunePermissions.BoardGroups.Read,
+        NetptunePermissions.Workspace.Read,
+        NetptunePermissions.Projects.Create,
+        NetptunePermissions.Projects.Update,
+        NetptunePermissions.Projects.Delete,
+        NetptunePermissions.Boards.Read,
+        NetptunePermissions.Boards.Create,
+        NetptunePermissions.Boards.Update,
+        NetptunePermissions.Boards.Delete,
+        NetptunePermissions.BoardGroups.Create,
+        NetptunePermissions.BoardGroups.Update,
+        NetptunePermissions.BoardGroups.Delete,
+        NetptunePermissions.Tags.Read,
+        NetptunePermissions.Tags.Create,
+        NetptunePermissions.Tags.Update,
+        NetptunePermissions.Tags.Delete,
+        NetptunePermissions.Comments.Read,
+        NetptunePermissions.Comments.Create,
+        NetptunePermissions.Comments.DeleteOwn,
+        NetptunePermissions.RelationTypes.Read,
+        NetptunePermissions.RelationTypes.Manage,
+        NetptunePermissions.Statuses.Manage,
+        NetptunePermissions.Tasks.Delete,
+        NetptunePermissions.Tasks.Restore,
+        NetptunePermissions.Tasks.Reassign,
+        NetptunePermissions.Flags.Read,
     ];
 
     [Fact]
@@ -399,6 +430,511 @@ public sealed class PublicApiV1EndpointTests
         target.Should().NotBeNull("the test project needs a second board column to move tasks into");
 
         return target;
+    }
+
+
+    [Fact]
+    public async Task OpenApiDocument_ShouldDescribeEveryPublishedRoute()
+    {
+        var client = Fixture.CreateUnauthenticatedPublicApiClient();
+
+        var response = await client.GetAsync("openapi/v1.json", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var document = await response.Content.ReadFromJsonAsync<JsonElement>(TestContext.Current.CancellationToken);
+        var paths = document.GetProperty("paths");
+
+        var described = paths.EnumerateObject().Select(path => path.Name).ToList();
+
+        described.Should().Contain(
+        [
+            "/api/v1/workspace",
+            "/api/v1/boards",
+            "/api/v1/board-groups",
+            "/api/v1/tags",
+            "/api/v1/relation-types",
+            "/api/v1/comments/{id}",
+            "/api/v1/search",
+            "/api/v1/reports/flow",
+        ]);
+    }
+
+    [Fact]
+    public async Task GetWorkspace_ShouldReturnTheCredentialsWorkspace()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/v1/workspace", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var workspace = await response.Content.ReadFromJsonAsync<WorkspaceViewModel>(TestContext.Current.CancellationToken);
+
+        workspace!.Slug.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task GetBoards_ShouldReturnTheWorkspaceBoards()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/v1/boards?pageSize=100", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var boards = await response.Content.ReadFromJsonAsync<List<BoardViewModel>>(TestContext.Current.CancellationToken);
+
+        boards.Should().NotBeNull();
+        boards.Should().OnlyContain(board => board.ProjectId > 0);
+    }
+
+    [Fact]
+    public async Task BoardLifecycle_ShouldCreateReadUpdateAndDelete()
+    {
+        var client = await CreateClient();
+        var board = await CreateBoard(client);
+
+        var getResponse = await client.GetAsync($"api/v1/boards/{board.Id}", TestContext.Current.CancellationToken);
+
+        getResponse.StatusCode.Should().Be(HttpStatusCode.OK, await getResponse.Content.ReadAsStringAsync());
+
+        var viewResponse = await client.GetAsync($"api/v1/boards/{board.Identifier}/view", TestContext.Current.CancellationToken);
+
+        viewResponse.StatusCode.Should().Be(HttpStatusCode.OK, await viewResponse.Content.ReadAsStringAsync());
+
+        var updateResponse = await client.PatchAsJsonAsync($"api/v1/boards/{board.Id}", new
+        {
+            name = "Public API board renamed",
+        }, TestContext.Current.CancellationToken);
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync());
+
+        var updated = (await updateResponse.Content.ReadFromJsonAsync<BoardViewModel>(TestContext.Current.CancellationToken))!;
+
+        updated.Name.Should().Be("Public API board renamed");
+
+        var deleteResponse = await client.DeleteAsync($"api/v1/boards/{board.Id}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+
+        var boards = await client.GetFromJsonAsync<List<BoardViewModel>>(
+            "api/v1/boards?pageSize=100",
+            TestContext.Current.CancellationToken);
+
+        boards.Should().NotContain(item => item.Id == board.Id);
+    }
+
+    [Fact]
+    public async Task BoardGroupLifecycle_ShouldCreateReadUpdateAndDelete()
+    {
+        var client = await CreateClient();
+        var board = await CreateBoard(client);
+
+        var createResponse = await client.PostAsJsonAsync("api/v1/board-groups", new AddBoardGroupRequest
+        {
+            Name = "Public API column",
+            BoardId = board.Id,
+        }, TestContext.Current.CancellationToken);
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created, await createResponse.Content.ReadAsStringAsync());
+
+        var group = (await createResponse.Content.ReadFromJsonAsync<BoardGroupViewModel>(TestContext.Current.CancellationToken))!;
+
+        var getResponse = await client.GetAsync($"api/v1/board-groups/{group.Id}", TestContext.Current.CancellationToken);
+
+        getResponse.StatusCode.Should().Be(HttpStatusCode.OK, await getResponse.Content.ReadAsStringAsync());
+
+        var updateResponse = await client.PatchAsJsonAsync($"api/v1/board-groups/{group.Id}", new
+        {
+            name = "Public API column renamed",
+        }, TestContext.Current.CancellationToken);
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync());
+
+        var updated = (await updateResponse.Content.ReadFromJsonAsync<BoardGroupViewModel>(TestContext.Current.CancellationToken))!;
+
+        updated.Name.Should().Be("Public API column renamed");
+
+        var deleteResponse = await client.DeleteAsync($"api/v1/board-groups/{group.Id}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task TagLifecycle_ShouldCreateAssignListRenameAndDelete()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+        var tag = $"public-api-{Guid.NewGuid():N}"[..20];
+
+
+        var createResponse = await client.PostAsJsonAsync("api/v1/tags", new AddTagRequest
+        {
+            Tag = tag,
+        }, TestContext.Current.CancellationToken);
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created, await createResponse.Content.ReadAsStringAsync());
+
+        var created = (await createResponse.Content.ReadFromJsonAsync<TagViewModel>(TestContext.Current.CancellationToken))!;
+
+        tag = created.Name;
+
+        var listResponse = await client.GetAsync("api/v1/tags?pageSize=100", TestContext.Current.CancellationToken);
+
+        listResponse.StatusCode.Should().Be(HttpStatusCode.OK, await listResponse.Content.ReadAsStringAsync());
+
+        var tags = await listResponse.Content.ReadFromJsonAsync<List<TagViewModel>>(TestContext.Current.CancellationToken);
+
+        tags.Should().Contain(item => item.Name == tag);
+
+        var assignResponse = await client.PutAsync($"api/v1/tasks/{task.Id}/tags/{tag}", null, TestContext.Current.CancellationToken);
+
+        assignResponse.StatusCode.Should().Be(HttpStatusCode.OK, await assignResponse.Content.ReadAsStringAsync());
+
+        var taskTagsResponse = await client.GetAsync($"api/v1/tasks/{task.Id}/tags", TestContext.Current.CancellationToken);
+
+        taskTagsResponse.StatusCode.Should().Be(HttpStatusCode.OK, await taskTagsResponse.Content.ReadAsStringAsync());
+
+        var taskTags = await taskTagsResponse.Content.ReadFromJsonAsync<List<TagViewModel>>(TestContext.Current.CancellationToken);
+
+        taskTags.Should().Contain(item => item.Name == tag);
+
+        var renamed = $"{tag}-renamed";
+
+        var renameResponse = await client.PatchAsJsonAsync($"api/v1/tags/{tag}", new
+        {
+            newValue = renamed,
+        }, TestContext.Current.CancellationToken);
+
+        renameResponse.StatusCode.Should().Be(HttpStatusCode.OK, await renameResponse.Content.ReadAsStringAsync());
+
+        var removeResponse = await client.DeleteAsync(
+            $"api/v1/tasks/{task.Id}/tags/{renamed}",
+            TestContext.Current.CancellationToken);
+
+        removeResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await removeResponse.Content.ReadAsStringAsync());
+
+        var deleteResponse = await client.DeleteAsync($"api/v1/tags/{renamed}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task CommentLifecycle_ShouldCreateListUpdateReactAndDelete()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+
+        var createResponse = await client.PostAsJsonAsync($"api/v1/tasks/{task.Id}/comments", new
+        {
+            comment = "Created by the public API integration test.",
+        }, TestContext.Current.CancellationToken);
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created, await createResponse.Content.ReadAsStringAsync());
+
+        var comment = (await createResponse.Content.ReadFromJsonAsync<CommentViewModel>(TestContext.Current.CancellationToken))!;
+
+        var listResponse = await client.GetAsync($"api/v1/tasks/{task.Id}/comments", TestContext.Current.CancellationToken);
+
+        listResponse.StatusCode.Should().Be(HttpStatusCode.OK, await listResponse.Content.ReadAsStringAsync());
+
+        var comments = await listResponse.Content.ReadFromJsonAsync<List<CommentViewModel>>(TestContext.Current.CancellationToken);
+
+        comments.Should().Contain(item => item.Id == comment.Id);
+
+        var updateResponse = await client.PatchAsJsonAsync($"api/v1/comments/{comment.Id}", new
+        {
+            comment = "Updated by the public API integration test.",
+        }, TestContext.Current.CancellationToken);
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync());
+
+        var reactResponse = await client.PutAsync(
+            $"api/v1/comments/{comment.Id}/reactions/{Uri.EscapeDataString("👍")}",
+            null,
+            TestContext.Current.CancellationToken);
+
+        reactResponse.StatusCode.Should().Be(HttpStatusCode.OK, await reactResponse.Content.ReadAsStringAsync());
+
+        var unreactResponse = await client.DeleteAsync(
+            $"api/v1/comments/{comment.Id}/reactions/{Uri.EscapeDataString("👍")}",
+            TestContext.Current.CancellationToken);
+
+        unreactResponse.StatusCode.Should().Be(HttpStatusCode.OK, await unreactResponse.Content.ReadAsStringAsync());
+
+        var deleteResponse = await client.DeleteAsync($"api/v1/comments/{comment.Id}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task RelationLifecycle_ShouldCreateATypeLinkTwoTasksAndUnlinkThem()
+    {
+        var client = await CreateClient();
+        var source = await CreateTask(client);
+        var target = await CreateTask(client);
+
+        var createTypeResponse = await client.PostAsJsonAsync("api/v1/relation-types", new CreateRelationTypeRequest
+        {
+            Name = $"Public API relates to {Guid.NewGuid():N}"[..40],
+            InverseName = "Public API related from",
+        }, TestContext.Current.CancellationToken);
+
+        createTypeResponse.StatusCode.Should().Be(HttpStatusCode.Created, await createTypeResponse.Content.ReadAsStringAsync());
+
+        var relationType = (await createTypeResponse.Content.ReadFromJsonAsync<RelationTypeViewModel>(TestContext.Current.CancellationToken))!;
+
+        var typesResponse = await client.GetAsync("api/v1/relation-types", TestContext.Current.CancellationToken);
+
+        typesResponse.StatusCode.Should().Be(HttpStatusCode.OK, await typesResponse.Content.ReadAsStringAsync());
+
+        var types = await typesResponse.Content.ReadFromJsonAsync<List<RelationTypeViewModel>>(TestContext.Current.CancellationToken);
+
+        types.Should().Contain(item => item.Id == relationType.Id);
+
+        var linkResponse = await client.PostAsJsonAsync($"api/v1/tasks/{source.Id}/relations", new AddTaskRelationRequest
+        {
+            RelatedSystemId = target.SystemId,
+            RelationTypeId = relationType.Id,
+        }, TestContext.Current.CancellationToken);
+
+        linkResponse.StatusCode.Should().Be(HttpStatusCode.Created, await linkResponse.Content.ReadAsStringAsync());
+
+        var relation = (await linkResponse.Content.ReadFromJsonAsync<TaskRelationViewModel>(TestContext.Current.CancellationToken))!;
+
+        var relationsResponse = await client.GetAsync($"api/v1/tasks/{source.Id}/relations", TestContext.Current.CancellationToken);
+
+        relationsResponse.StatusCode.Should().Be(HttpStatusCode.OK, await relationsResponse.Content.ReadAsStringAsync());
+
+        var relations = await relationsResponse.Content.ReadFromJsonAsync<List<TaskRelationViewModel>>(TestContext.Current.CancellationToken);
+
+        relations.Should().Contain(item => item.Id == relation.Id);
+
+        var unlinkResponse = await client.DeleteAsync($"api/v1/task-relations/{relation.Id}", TestContext.Current.CancellationToken);
+
+        unlinkResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await unlinkResponse.Content.ReadAsStringAsync());
+
+        var deleteTypeResponse = await client.DeleteAsync(
+            $"api/v1/relation-types/{relationType.Id}",
+            TestContext.Current.CancellationToken);
+
+        deleteTypeResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteTypeResponse.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task ProjectLifecycle_ShouldCreateReadUpdateAndDelete()
+    {
+        var client = await CreateClient();
+        var project = await CreateProject(client);
+
+        var getResponse = await client.GetAsync($"api/v1/projects/{project.Key}", TestContext.Current.CancellationToken);
+
+        getResponse.StatusCode.Should().Be(HttpStatusCode.OK, await getResponse.Content.ReadAsStringAsync());
+
+        var updateResponse = await client.PatchAsJsonAsync($"api/v1/projects/{project.Id}", new
+        {
+            description = "Updated by the public API integration test.",
+        }, TestContext.Current.CancellationToken);
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync());
+
+        var updated = (await updateResponse.Content.ReadFromJsonAsync<ProjectViewModel>(TestContext.Current.CancellationToken))!;
+
+        updated.Description.Should().Be("Updated by the public API integration test.");
+
+        var deleteResponse = await client.DeleteAsync($"api/v1/projects/{project.Id}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task StatusLifecycle_ShouldCreateUpdateAndDelete()
+    {
+        var client = await CreateClient();
+
+        var createResponse = await client.PostAsJsonAsync("api/v1/statuses", new CreateStatusRequest
+        {
+            Name = $"Public API status {Guid.NewGuid():N}"[..30],
+            Category = StatusCategory.Backlog,
+        }, TestContext.Current.CancellationToken);
+
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created, await createResponse.Content.ReadAsStringAsync());
+
+        var status = (await createResponse.Content.ReadFromJsonAsync<StatusViewModel>(TestContext.Current.CancellationToken))!;
+
+        var updateResponse = await client.PatchAsJsonAsync($"api/v1/statuses/{status.Id}", new
+        {
+            name = "Public API status renamed",
+            category = StatusCategory.Backlog,
+        }, TestContext.Current.CancellationToken);
+
+        updateResponse.StatusCode.Should().Be(HttpStatusCode.OK, await updateResponse.Content.ReadAsStringAsync());
+
+        var deleteResponse = await client.DeleteAsync($"api/v1/statuses/{status.Id}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task DeleteTask_ShouldArchiveTheTask_AndRestoreShouldBringItBack()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+
+        var deleteResponse = await client.DeleteAsync($"api/v1/tasks/{task.Id}", TestContext.Current.CancellationToken);
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await deleteResponse.Content.ReadAsStringAsync());
+
+        var archivedResponse = await client.GetAsync("api/v1/tasks/archived?pageSize=100", TestContext.Current.CancellationToken);
+
+        archivedResponse.StatusCode.Should().Be(HttpStatusCode.OK, await archivedResponse.Content.ReadAsStringAsync());
+
+        var archived = await archivedResponse.Content
+            .ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(TestContext.Current.CancellationToken);
+
+        archived!.Payload!.Items.Should().Contain(item => item.Id == task.Id);
+
+        var restoreResponse = await client.PostAsJsonAsync("api/v1/tasks/restore", new
+        {
+            taskIds = new[] { task.Id },
+        }, TestContext.Current.CancellationToken);
+
+        restoreResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, await restoreResponse.Content.ReadAsStringAsync());
+
+        (await client.GetAsync($"api/v1/tasks/{task.Id}", TestContext.Current.CancellationToken))
+            .StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task MoveTasks_ShouldPlaceTheTaskInTheSuppliedBoardGroup()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+        var boardGroup = await GetFirstBoardGroup(client);
+
+        var response = await client.PostAsJsonAsync("api/v1/tasks/move", new
+        {
+            taskIds = new[] { task.Id },
+            boardGroupId = boardGroup.Id,
+            position = 0,
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent, await response.Content.ReadAsStringAsync());
+
+        var moved = await client.GetFromJsonAsync<TaskViewModel>(
+            $"api/v1/tasks/{task.Id}",
+            TestContext.Current.CancellationToken);
+
+        moved!.BoardGroupId.Should().Be(boardGroup.Id);
+    }
+
+    [Fact]
+    public async Task GetStatusBreakdown_ShouldReturnTheWorkspaceBreakdown()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/v1/tasks/status-breakdown", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task GetTaskFlags_ShouldReturnTheFlagsRaisedAgainstATask()
+    {
+        var client = await CreateClient();
+        var task = await CreateTask(client);
+
+        var response = await client.GetAsync($"api/v1/tasks/{task.Id}/flags", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Theory]
+    [InlineData("api/v1/reports/flow")]
+    [InlineData("api/v1/reports/workload")]
+    public async Task Reports_ShouldReturnOk(string route)
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync(route, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task GetVelocityReport_ShouldReturnOk_ForTheTestProject()
+    {
+        var client = await CreateClient();
+        var setup = await GetSetup();
+
+        var response = await client.GetAsync(
+            $"api/v1/reports/velocity?projectId={setup.ProjectId}",
+            TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task Search_ShouldRejectAnEmptyTerm()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/v1/search?q=", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task Search_ShouldReturnOk_ForATerm()
+    {
+        var client = await CreateClient();
+
+        var response = await client.GetAsync("api/v1/search?q=public&limit=5", TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task<BoardViewModel> CreateBoard(HttpClient client)
+    {
+        var project = await CreateProject(client);
+        var identifier = $"pub-{Guid.NewGuid():N}"[..12];
+
+        var response = await client.PostAsJsonAsync("api/v1/boards", new AddBoardRequest
+        {
+            Name = "Public API board",
+            Identifier = identifier,
+            ProjectId = project.Id,
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Created, await response.Content.ReadAsStringAsync());
+
+        return (await response.Content.ReadFromJsonAsync<BoardViewModel>(TestContext.Current.CancellationToken))!;
+    }
+
+    private async Task<ProjectViewModel> CreateProject(HttpClient client)
+    {
+        var response = await client.PostAsJsonAsync("api/v1/projects", new AddProjectRequest
+        {
+            Name = $"{Guid.NewGuid():N} public API created project",
+            Description = "Created by the public API integration test.",
+            MetaInfo = new() { Color = "green" },
+        }, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Created, await response.Content.ReadAsStringAsync());
+
+        return (await response.Content.ReadFromJsonAsync<ProjectViewModel>(TestContext.Current.CancellationToken))!;
+    }
+
+    private async Task<BoardGroupOptionViewModel> GetFirstBoardGroup(HttpClient client)
+    {
+        var groups = await client.GetFromJsonAsync<List<BoardGroupOptionViewModel>>(
+            "api/v1/board-groups",
+            TestContext.Current.CancellationToken);
+
+        groups.Should().NotBeNullOrEmpty();
+
+        return groups![0];
     }
 
     private async Task<HttpClient> CreateClient()
