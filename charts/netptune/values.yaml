@@ -25,10 +25,7 @@ headlamp:
   enabled: true
   image: "ghcr.io/headlamp-k8s/headlamp:latest"
   host: "headlamp.netptune.co.uk"
-  # Headlamp's service account is bound to cluster-admin, so its only gate is whatever fronts it.
-  # Set public to false once the tailnet route is confirmed working — that drops the HTTPRoute,
-  # the oauth2-proxy in front of it, the certificate and the gateway listener.
-  public: true
+  public: false
   tailscale:
     enabled: true
     hostname: "netptune-headlamp"
