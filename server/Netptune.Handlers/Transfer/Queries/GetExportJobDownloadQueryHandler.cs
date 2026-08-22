@@ -1,5 +1,3 @@
-using Netptune.Transfer.Repositories;
-using Netptune.Transfer.Enums;
 using Mediator;
 
 using Microsoft.Extensions.Options;
@@ -8,6 +6,8 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
 using Netptune.Transfer;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Repositories;
 
 namespace Netptune.Handlers.Transfer.Queries;
 

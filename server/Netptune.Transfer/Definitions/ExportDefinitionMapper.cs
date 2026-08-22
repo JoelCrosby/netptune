@@ -1,11 +1,10 @@
-using Netptune.Transfer.Entities;
 using System.Text.Json;
 
 using Netptune.Core.Encoding;
-using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Entities;
 using Netptune.Transfer.ViewModels;
 
-namespace Netptune.Handlers.Transfer;
+namespace Netptune.Transfer.Definitions;
 
 public static class ExportDefinitionMapper
 {

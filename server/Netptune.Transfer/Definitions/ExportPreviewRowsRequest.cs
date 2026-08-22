@@ -1,6 +1,6 @@
-using Netptune.Transfer.Enums;
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
+using Netptune.Transfer.Enums;
 
 namespace Netptune.Transfer.Definitions;
 

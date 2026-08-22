@@ -1,6 +1,7 @@
-using Netptune.Transfer.Enums;
 using System.Globalization;
 using System.Text.RegularExpressions;
+
+using Netptune.Transfer.Enums;
 
 namespace Netptune.Transfer.Mapping;
 

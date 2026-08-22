@@ -1,12 +1,11 @@
 using Netptune.Core.Enums;
 using Netptune.Core.UnitOfWork;
-using Netptune.Transfer.Mapping;
 
-namespace Netptune.Handlers.Transfer;
+namespace Netptune.Transfer.Mapping;
 
 // The workspace values an import mapping is allowed to land on. The heuristic suggester and the
 // assistant both need the same picture, so they read it from here rather than each assembling its own.
-internal static class ImportVocabularyReader
+public static class ImportVocabularyReader
 {
     public static async Task<ImportSuggestionVocabulary> Read(
         INetptuneUnitOfWork unitOfWork,

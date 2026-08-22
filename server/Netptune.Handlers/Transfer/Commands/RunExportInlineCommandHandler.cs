@@ -1,4 +1,3 @@
-using Netptune.Transfer.Enums;
 using Mediator;
 
 using Microsoft.Extensions.Options;
@@ -7,10 +6,11 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
-using Netptune.Transfer.Services;
+using Netptune.Core.UnitOfWork;
 using Netptune.Transfer;
 using Netptune.Transfer.Definitions;
-using Netptune.Core.UnitOfWork;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Services;
 
 namespace Netptune.Handlers.Transfer.Commands;
 

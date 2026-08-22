@@ -1,10 +1,11 @@
-using Netptune.Transfer.Repositories;
 using Mediator;
 
 using Netptune.Core.Cache;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
+using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Repositories;
 
 namespace Netptune.Handlers.Transfer.Commands;
 

@@ -1,9 +1,9 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
 
-namespace Netptune.Handlers.Transfer;
+namespace Netptune.Transfer.Definitions;
 
-internal static class ExportDefinitionPermissions
+public static class ExportDefinitionPermissions
 {
     public static async Task<bool> CanManage(IWorkspacePermissionCache permissionCache, string userId, string? workspaceKey)
     {
