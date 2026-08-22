@@ -417,7 +417,9 @@ export class CreateTaskDialogComponent {
   readonly maxUploadBytes = inject(CurrentWorkspaceService).maxUploadBytes;
 
   private readonly canReadTags = hasPermission(PERMISSIONS.tags.read);
-  private readonly canAssignTagsToTasks = hasPermission(PERMISSIONS.tags.assign);
+  private readonly canAssignTagsToTasks = hasPermission(
+    PERMISSIONS.tags.assign
+  );
   readonly canUploadFiles = hasPermission(PERMISSIONS.files.upload);
   readonly canLinkTasks = hasPermission(PERMISSIONS.tasks.update);
 

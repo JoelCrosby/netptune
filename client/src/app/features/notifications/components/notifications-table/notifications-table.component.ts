@@ -72,7 +72,9 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
           @if (notificationNamesEntity(notification)) {
             {{ entityTypeToString(notification.entityType) }}
             @if (notification.entityIdentifier) {
-              <span class="font-medium">{{ notification.entityIdentifier }}</span>
+              <span class="font-medium">{{
+                notification.entityIdentifier
+              }}</span>
             }
             @if (notification.entityName) {
               <span class="text-foreground/60 ml-2">
