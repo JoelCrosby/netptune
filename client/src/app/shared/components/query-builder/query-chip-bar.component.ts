@@ -77,7 +77,7 @@ const valuesByOperator: Record<TaskQueryGroupOperator, GroupOperatorValue> = {
             (valueChange)="setOperatorValue($event)" />
         </div>
 
-        <div class="bg-foreground/10 h-[22px] w-px shrink-0"></div>
+        <div class="bg-foreground/10 h-5.5 w-px shrink-0"></div>
       }
 
       @for (condition of group().conditions; track $index; let index = $index) {

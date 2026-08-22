@@ -1,50 +1,41 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
+  computed,
   effect,
-  inject,
   input,
   model,
   output,
   signal,
-  untracked,
   viewChild,
 } from '@angular/core';
-import { DocumentService } from '@static/services/document.service';
 
 @Component({
   selector: 'app-inline-edit-input',
   imports: [],
   host: {
+    class: 'block',
     '[class.edit-active]': 'isEditActive()',
   },
   template: `
-    <div class="w-full rounded">
-      @if (isEditActive()) {
-        <input
-          #input
-          type="text"
-          class="inline-edit-input box-border w-full border-0 bg-transparent p-1 text-inherit transition-all duration-200 [font:inherit]"
-          [value]="value()"
-          [readonly]="readonly()"
-          [disabled]="disabled()"
-          [class.active-border]="activeBorder()"
-          (input)="onInput($event)"
-          (keyup.enter)="onSubmit(input.value)" />
-      } @else {
-        <div class="border-2 border-transparent p-1 [font:inherit]">
-          {{ value() }}
-        </div>
-      }
-    </div>
+    <div
+      #editable
+      class="hover:bg-hover box-border min-h-lh w-fit max-w-full rounded border-2 border-solid p-1 wrap-break-word transition-[min-width,background-color,border-color] duration-200 ease-out outline-none [font:inherit]"
+      [attr.tabindex]="isInteractive() ? 0 : null"
+      [attr.contenteditable]="isEditActive() ? 'plaintext-only' : null"
+      [attr.aria-readonly]="isInteractive() ? null : 'true'"
+      [style.min-width]="isEditActive() ? '16rem' : '0'"
+      [style.border-color]="borderColor()"
+      [class.cursor-text]="isInteractive()"
+      (mousedown)="onMouseDown()"
+      (focus)="startEditing()"
+      (blur)="onBlur()"
+      (input)="onContentInput()"
+      (keydown.enter)="onEnter($event)"
+      (keydown.escape)="onEscape()"></div>
   `,
 })
 export class InlineEditInputComponent {
-  private elementRef = inject(ElementRef);
-  private cd = inject(ChangeDetectorRef);
-  private document = inject(DocumentService);
-
   readonly value = model<string | null | undefined>('');
   readonly touched = model<boolean>(false);
   readonly disabled = input<boolean>(false);
@@ -53,66 +44,120 @@ export class InlineEditInputComponent {
   readonly activeBorder = input<boolean | string | null>();
   readonly readonly = input<boolean>(false);
 
-  readonly input = viewChild.required<ElementRef>('input');
   readonly submitted = output<string>();
+
+  readonly editableRef = viewChild<ElementRef>('editable');
+
   isEditActive = signal(false);
 
-  private editingFrom = '';
+  readonly isInteractive = computed(() => !this.disabled() && !this.readonly());
+
+  readonly borderColor = computed(() => {
+    if (!this.isEditActive() || !this.activeBorder()) return 'transparent';
+
+    return 'var(--primary)';
+  });
+
+  private originalValue = '';
+  private clickedIn = false;
 
   constructor() {
+    // Sync external value changes into the DOM while not editing
     effect(() => {
-      const el = this.document.documentClicked();
-      untracked(() => this.handleDocumentClick(el));
+      const val = this.value();
+      const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
+
+      if (el && !this.isEditActive()) {
+        el.innerText = val ?? '';
+      }
+    });
+
+    // Move cursor to end when editing starts via keyboard/programmatic focus
+    effect(() => {
+      const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
+
+      if (el && this.isEditActive() && !this.clickedIn) {
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+
+      this.clickedIn = false;
     });
   }
 
-  onInput(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
-
-    this.value.set(value);
+  onMouseDown() {
+    this.clickedIn = true;
   }
 
-  handleDocumentClick(target: EventTarget) {
-    if (this.isEditActive()) {
-      if (!this.elementRef.nativeElement.contains(target)) {
-        // Clicking away commits rather than discards: the next click is usually the Save button, and
-        // silently dropping what was just typed loses the edit.
-        return this.commit();
-      }
-    } else {
-      if (this.elementRef.nativeElement.contains(target)) {
-        this.editingFrom = this.value() ?? '';
-        this.isEditActive.set(true);
-        this.focusInput();
-      }
+  startEditing() {
+    if (!this.isInteractive() || this.isEditActive()) {
+      return;
     }
+
+    this.originalValue = this.value() ?? '';
+    this.isEditActive.set(true);
   }
 
-  focusInput() {
-    this.cd.detectChanges();
-    const textarea = this.input();
+  onContentInput() {
+    this.touched.set(true);
+  }
 
-    if (textarea) {
-      textarea?.nativeElement.focus();
+  onBlur() {
+    if (!this.isEditActive()) {
+      return;
     }
+
+    this.touched.set(true);
+
+    // Blurring commits rather than discards: the next click is usually the Save button, and
+    // silently dropping what was just typed loses the edit.
+    this.commit(this.readEditable());
   }
 
-  onSubmit(value: string) {
-    this.value.set(value);
-    this.editingFrom = value;
-    this.submitted.emit(value);
+  onEnter(event: Event) {
+    event.preventDefault();
+    this.commit(this.readEditable());
+    this.blurEditable();
+  }
+
+  onEscape() {
+    const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
+
+    if (el) {
+      el.innerText = this.originalValue;
+    }
+
+    this.value.set(this.originalValue);
     this.isEditActive.set(false);
+
+    this.blurEditable();
   }
 
-  private commit() {
-    const value = this.value() ?? '';
-    const changed = value !== this.editingFrom;
+  private readEditable(): string {
+    const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
 
+    return el?.innerText?.trim() ?? '';
+  }
+
+  private blurEditable() {
+    const el = this.editableRef()?.nativeElement as HTMLElement | undefined;
+
+    el?.blur();
+  }
+
+  private commit(val: string) {
+    const changed = val !== this.originalValue;
+
+    this.value.set(val);
+    this.originalValue = val;
     this.isEditActive.set(false);
 
     if (changed) {
-      this.submitted.emit(value);
+      this.submitted.emit(val);
     }
   }
 }
