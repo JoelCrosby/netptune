@@ -13,6 +13,7 @@ using Netptune.Transfer.Records;
 using Netptune.Export;
 
 using Xunit;
+using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Export;
 

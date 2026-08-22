@@ -1,3 +1,4 @@
+using Netptune.Core.Constants;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
@@ -6,9 +7,6 @@ namespace Netptune.Core.Models.Automations;
 
 public sealed record AutomationConditionGroup
 {
-    private const int MaximumDepth = 4;
-    private const int MaximumConditionCount = 50;
-
     public AutomationConditionGroupOperator Operator { get; init; }
 
     public List<AutomationFieldCondition> Conditions { get; init; } = [];
@@ -102,18 +100,18 @@ public sealed record AutomationConditionGroup
             return new ConditionGroupValidationResult(error, 0);
         }
 
-        if (depth > MaximumDepth)
+        if (depth > ConditionGroupLimits.MaximumDepth)
         {
-            var error = $"Condition groups cannot be nested more than {MaximumDepth} levels.";
+            var error = $"Condition groups cannot be nested more than {ConditionGroupLimits.MaximumDepth} levels.";
 
             return new ConditionGroupValidationResult(error, 0);
         }
 
         var conditionCount = Conditions.Count;
 
-        if (conditionCount > MaximumConditionCount)
+        if (conditionCount > ConditionGroupLimits.MaximumConditionCount)
         {
-            var error = $"Automations cannot have more than {MaximumConditionCount} field conditions.";
+            var error = $"Automations cannot have more than {ConditionGroupLimits.MaximumConditionCount} field conditions.";
 
             return new ConditionGroupValidationResult(error, conditionCount);
         }
@@ -150,9 +148,9 @@ public sealed record AutomationConditionGroup
 
             conditionCount += result.ConditionCount;
 
-            if (conditionCount > MaximumConditionCount)
+            if (conditionCount > ConditionGroupLimits.MaximumConditionCount)
             {
-                var error = $"Automations cannot have more than {MaximumConditionCount} field conditions.";
+                var error = $"Automations cannot have more than {ConditionGroupLimits.MaximumConditionCount} field conditions.";
 
                 return new ConditionGroupValidationResult(error, conditionCount);
             }

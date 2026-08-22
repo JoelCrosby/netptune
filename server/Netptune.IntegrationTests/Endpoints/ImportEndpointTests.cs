@@ -12,6 +12,7 @@ using Netptune.Transfer.Mapping;
 using Netptune.Transfer.ViewModels;
 
 using Xunit;
+using Netptune.Core.Constants;
 
 namespace Netptune.IntegrationTests.Endpoints;
 

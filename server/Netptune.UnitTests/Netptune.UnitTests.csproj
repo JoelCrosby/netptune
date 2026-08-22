@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
+    <ProjectReference Include="..\Netptune.Query\Netptune.Query.csproj" />
     <ProjectReference Include="..\Netptune.Activity\Netptune.Activity.csproj" />
     <ProjectReference Include="..\Netptune.Ai\Netptune.Ai.csproj" />
     <ProjectReference Include="..\Netptune.Automation\Netptune.Automation.csproj" />

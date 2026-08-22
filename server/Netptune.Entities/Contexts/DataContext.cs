@@ -56,6 +56,8 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     // Data transfer
     public DbSet<ExportJob> ExportJobs { get; set; } = null!;
     public DbSet<ExportDefinition> ExportDefinitions { get; set; } = null!;
+
+    public DbSet<TaskView> TaskViews { get; set; } = null!;
     public DbSet<ImportSession> ImportSessions { get; set; } = null!;
     public DbSet<ImportSessionEntry> ImportSessionEntries { get; set; } = null!;
     public DbSet<ImportDefinition> ImportDefinitions { get; set; } = null!;

@@ -61,8 +61,6 @@ public static class TransferRedaction
         Redacted<AiProposedChange>(TransferRedactionKeys.AiConversations),
         Redacted<AiWebDocument>(TransferRedactionKeys.AiConversations),
         Redacted<WorkspaceSearchCredential>(TransferRedactionKeys.AiCredentials),
-        // Raw key material for the data protection ring. Exporting it would hand over the means to
-        // decrypt every credential in the archive, so it never leaves the system.
         Redacted<DataProtectionKey>(TransferRedactionKeys.EncryptionKeys),
         Redacted<AutomationRun>(TransferRedactionKeys.AutomationHistory),
         Redacted<AutomationActionResult>(TransferRedactionKeys.AutomationHistory),
@@ -80,6 +78,7 @@ public static class TransferRedaction
         Redacted<ImportSession>(TransferRedactionKeys.TransferHistory),
         Redacted<ImportSessionEntry>(TransferRedactionKeys.TransferHistory),
         Redacted<ImportDefinition>(TransferRedactionKeys.TransferHistory),
+        Redacted<TaskView>(TransferRedactionKeys.SavedViews),
     ];
 
     private static readonly FrozenDictionary<Type, TransferEntityClassification> ClassificationsByType =

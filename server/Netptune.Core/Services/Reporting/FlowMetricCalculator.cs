@@ -1,4 +1,5 @@
 using Netptune.Core.Models.Reporting;
+using Netptune.Core.Utilities;
 
 namespace Netptune.Core.Services.Reporting;
 
@@ -136,9 +137,7 @@ public static class FlowMetricCalculator
         TimeZoneInfo timeZone,
         ReportingGrouping grouping)
     {
-        var localDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(
-            DateTime.SpecifyKind(value, DateTimeKind.Utc),
-            timeZone));
+        var localDate = WorkspaceTime.ToLocalDate(value, timeZone);
 
         if (grouping == ReportingGrouping.Day)
         {

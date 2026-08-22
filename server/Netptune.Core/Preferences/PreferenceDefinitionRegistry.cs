@@ -35,6 +35,12 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         },
         new()
         {
+            Key = "views",
+            Label = "Views",
+            Order = 18,
+        },
+        new()
+        {
             Key = "workspace",
             Label = "Workspace",
             Order = 25,
@@ -91,6 +97,18 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
             // own hidden set within a single workspace-scoped preference.
             ValueType = "number-array-map",
             DefaultValue = JsonSerializer.SerializeToElement(new Dictionary<string, int[]>()),
+            AllowedScopes = [PreferenceScopes.Workspace],
+            Internal = true,
+            Order = 10,
+        },
+        new()
+        {
+            Key = PreferenceKeys.ViewsPinnedIds,
+            GroupKey = "views",
+            Label = "Pinned views",
+            ControlType = "hidden",
+            ValueType = "number-array",
+            DefaultValue = JsonSerializer.SerializeToElement(Array.Empty<int>()),
             AllowedScopes = [PreferenceScopes.Workspace],
             Internal = true,
             Order = 10,

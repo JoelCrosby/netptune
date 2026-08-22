@@ -138,6 +138,15 @@ public static class NetptunePermissions
         public const string Manage = "relation_types.manage";
     }
 
+    public static class TaskViews
+    {
+        public const string Read = "task_views.read";
+        public const string Create = "task_views.create";
+        public const string Update = "task_views.update";
+        public const string Delete = "task_views.delete";
+        public const string ManageShared = "task_views.manage_shared";
+    }
+
     public static class Activity
     {
         public const string Read = "activity.read";

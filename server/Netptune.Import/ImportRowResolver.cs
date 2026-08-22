@@ -1,9 +1,10 @@
 using Netptune.Transfer.Enums;
-using System.Globalization;
 
 using Netptune.Core.Enums;
+using Netptune.Core.Utilities;
 using Netptune.Transfer;
 using Netptune.Transfer.Mapping;
+using Netptune.Core.Constants;
 
 namespace Netptune.Import;
 
@@ -178,7 +179,7 @@ public sealed class ImportRowResolver
             return null;
         }
 
-        var parsed = DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime);
+        var parsed = FieldValueParser.TryParseDate(value, out var date);
 
         if (!parsed)
         {
@@ -188,7 +189,7 @@ public sealed class ImportRowResolver
             return null;
         }
 
-        return DateOnly.FromDateTime(dateTime);
+        return date;
     }
 
     private decimal? Number(ImportRow row, string fieldKey, List<ImportRowDiagnostic> diagnostics)
@@ -200,7 +201,7 @@ public sealed class ImportRowResolver
             return null;
         }
 
-        var parsed = decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var number);
+        var parsed = FieldValueParser.TryParseDecimal(value, out var number);
 
         if (!parsed)
         {
@@ -222,7 +223,7 @@ public sealed class ImportRowResolver
             return null;
         }
 
-        var parsed = Enum.TryParse<TaskPriority>(value, true, out var priority);
+        var parsed = FieldValueParser.TryParseEnum<TaskPriority>(value, out var priority);
 
         if (!parsed)
         {

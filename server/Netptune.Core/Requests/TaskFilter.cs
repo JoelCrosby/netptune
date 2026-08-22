@@ -2,7 +2,7 @@ using Netptune.Core.Enums;
 
 namespace Netptune.Core.Requests;
 
-public sealed class TaskFilter : PageRequest
+public class TaskFilter : PageRequest
 {
     public int? ProjectId { get; init; }
 

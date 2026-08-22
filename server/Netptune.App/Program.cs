@@ -27,6 +27,7 @@ using Netptune.Search;
 using Netptune.Services.Configuration;
 
 using Netptune.Storage;
+using Netptune.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -144,6 +145,7 @@ builder.Services.AddNetptuneAi(builder.Configuration);
 builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddNetptuneAutomationTriggers();
 builder.Services.AddNetptuneHandlers();
+builder.Services.AddNetptuneQuery();
 
 builder.Services.AddNetptuneRateLimiter(builder.Configuration);
 
@@ -201,6 +203,7 @@ apiGroup.MapCommandPaletteEndpoints();
 apiGroup.MapServiceAccountsEndpoints();
 apiGroup.MapAiEndpoints();
 
+apiGroup.MapTaskViewEndpoints();
 apiGroup.MapExportEndpoints();
 apiGroup.MapImportEndpoints();
 

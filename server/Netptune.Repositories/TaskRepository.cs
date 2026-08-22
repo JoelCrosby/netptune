@@ -8,6 +8,7 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
+using Netptune.Query.Tasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -20,6 +21,7 @@ using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
 using Netptune.Repositories.Sql;
+using Netptune.Query.Compilation;
 
 namespace Netptune.Repositories;
 
@@ -424,13 +426,14 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
         var taskOrder = GetTaskOrderBy(filter);
         var rowOrder = GetTaskRowOrderBy(filter);
 
+        var compilation = await CompileQuery(filter as TaskQueryFilter, workspaceKey, cancellationToken);
+
         var sql = SqlScripts.GetTasks
             .Replace("{taskOrder}", taskOrder)
-            .Replace("{rowOrder}", rowOrder);
+            .Replace("{rowOrder}", rowOrder)
+            .Replace("{queryPredicate}", compilation.Predicate);
 
-        using var connection = ConnectionFactory.StartConnection();
-
-        var rows = await connection.QueryAsync<TaskViewRowMap>(new CommandDefinition(sql, new
+        var parameters = new DynamicParameters(new
         {
             workspaceKey,
             projectId = filter.ProjectId,
@@ -452,7 +455,13 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             taskEntityType = EntityType.Task,
             pageSize = pagination.PageSize,
             skip = pagination.Skip,
-        }, cancellationToken: cancellationToken));
+        });
+
+        parameters.AddDynamicParams(compilation.Parameters);
+
+        using var connection = ConnectionFactory.StartConnection();
+
+        var rows = await connection.QueryAsync<TaskViewRowMap>(new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
 
         var rowList = rows.ToList();
         var totalCount = rowList.FirstOrDefault()?.Total_Count ?? 0;
@@ -478,6 +487,33 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             cancellationToken: cancellationToken));
 
         return rows.ToList();
+    }
+
+    private async Task<QueryCompilation> CompileQuery(
+        TaskQueryFilter? filter,
+        string workspaceKey,
+        CancellationToken cancellationToken)
+    {
+        var query = filter?.Query;
+
+        if (query is null)
+        {
+            return QueryCompiler.Compile(TaskFieldCatalog.Instance, null, QueryCompilationContext.ForWorkspace(null, DateTime.UtcNow));
+        }
+
+        var timeZoneId = await GetWorkspaceTimeZone(workspaceKey, cancellationToken);
+        var context = QueryCompilationContext.ForWorkspace(timeZoneId, DateTime.UtcNow);
+
+        return QueryCompiler.Compile(TaskFieldCatalog.Instance, query, context);
+    }
+
+    private Task<string?> GetWorkspaceTimeZone(string workspaceKey, CancellationToken cancellationToken)
+    {
+        return Context.Workspaces
+            .AsNoTracking()
+            .Where(workspace => workspace.Slug == workspaceKey)
+            .Select(workspace => workspace.MetaInfo!.TimeZone)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     private static string GetTaskOrderBy(TaskFilter filter)
@@ -521,6 +557,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             "sprint" => "s.name",
             "status" => "st.name",
             "priority" => "pt.priority",
+            "estimateValue" => "pt.estimate_value",
+            "startDate" => "pt.start_date",
+            "dueDate" => "pt.due_date",
             "createdAt" => "pt.created_at",
             "updatedAt" => "pt.updated_at",
             "assignees" => "assignee_count",
@@ -540,6 +579,9 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             "sprint" => "ft.sprint_name",
             "status" => "ft.status_name",
             "priority" => "ft.priority",
+            "estimateValue" => "ft.estimate_value",
+            "startDate" => "ft.start_date",
+            "dueDate" => "ft.due_date",
             "createdAt" => "ft.created_at",
             "updatedAt" => "ft.updated_at",
             "assignees" => "ft.assignee_count",

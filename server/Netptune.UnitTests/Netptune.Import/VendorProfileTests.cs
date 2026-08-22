@@ -9,6 +9,7 @@ using Netptune.Import.Vendors;
 using Netptune.TestData;
 
 using Xunit;
+using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Import;
 

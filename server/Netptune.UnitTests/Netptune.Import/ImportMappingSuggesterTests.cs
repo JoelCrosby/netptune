@@ -6,6 +6,7 @@ using Netptune.Transfer.Mapping;
 using Netptune.Import;
 
 using Xunit;
+using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Import;
 

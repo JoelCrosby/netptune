@@ -85,7 +85,7 @@ public sealed class UserPreferencesEndpointTests
         result.Groups
             .Select(group => group.Key)
             .Should()
-            .Equal("appearance", "commandPalette", "boards", "notifications", "workspace");
+            .Equal("appearance", "commandPalette", "boards", "views", "notifications", "workspace");
         preferences
             .Should()
             .Contain(preference => preference.Definition.Key == PreferenceKeys.AppearanceTheme);
@@ -95,6 +95,9 @@ public sealed class UserPreferencesEndpointTests
         preferences
             .Should()
             .Contain(preference => preference.Definition.Key == PreferenceKeys.BoardHiddenGroupIds);
+        preferences
+            .Should()
+            .Contain(preference => preference.Definition.Key == PreferenceKeys.ViewsPinnedIds);
         preferences
             .Should()
             .Contain(preference => preference.Definition.Key == PreferenceKeys.NotificationEvent(ActivityType.Mention));

@@ -39,6 +39,7 @@
   <Project Path="Netptune.JobServer/Netptune.JobServer.csproj" />
   <Project Path="Netptune.Messaging/Netptune.Messaging.csproj" />
   <Project Path="Netptune.PublicApi/Netptune.PublicApi.csproj" />
+  <Project Path="Netptune.Query/Netptune.Query.csproj" />
   <Project Path="Netptune.Repositories/Netptune.Repositories.csproj" />
   <Project Path="Netptune.Search/Netptune.Search.csproj" />
   <Project Path="Netptune.ServiceDefaults/Netptune.ServiceDefaults.csproj" />

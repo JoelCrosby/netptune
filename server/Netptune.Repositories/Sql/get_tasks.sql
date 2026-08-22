@@ -1,6 +1,8 @@
 -- Filtered, sorted, paginated task list for TaskRepository.GetTasksAsync.
 -- {taskOrder} and {rowOrder} are replaced at runtime with whitelisted ORDER BY
 -- expressions (see GetTaskOrderBy / GetTaskRowOrderBy) before execution.
+-- {queryPredicate} is replaced with the saved-view predicate emitted by
+-- QueryCompiler, and defaults to TRUE when the filter carries no query.
 -- count(*) OVER() carries the unpaged total on every row.
 WITH filtered_tasks AS (
     SELECT pt.id
@@ -79,6 +81,7 @@ WITH filtered_tasks AS (
              LEFT JOIN users d ON pt.deleted_by_user_id = d.id
     WHERE w.slug = @workspaceKey
       AND pt.is_deleted = @deleted
+      AND {queryPredicate}
       AND (@projectId IS NULL OR pt.project_id = @projectId)
       AND (@sprintId IS NULL OR pt.sprint_id = @sprintId)
       AND (@excludeSprintId IS NULL OR pt.sprint_id IS NULL OR pt.sprint_id != @excludeSprintId)

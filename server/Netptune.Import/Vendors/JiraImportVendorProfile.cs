@@ -4,6 +4,7 @@ using Netptune.Transfer;
 using Netptune.Transfer.Mapping;
 
 using static Netptune.Import.Vendors.VendorMappingBuilder;
+using Netptune.Core.Constants;
 
 namespace Netptune.Import.Vendors;
 

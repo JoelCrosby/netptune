@@ -19,6 +19,7 @@ using Netptune.Transfer.Repositories;
 using Netptune.Transfer.Services;
 
 using Xunit;
+using Netptune.Core.Constants;
 
 namespace Netptune.IntegrationTests.Endpoints;
 

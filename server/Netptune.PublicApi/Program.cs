@@ -18,6 +18,7 @@ using Netptune.ServiceDefaults.Middleware;
 using Netptune.Services.Configuration;
 
 using Scalar.AspNetCore;
+using Netptune.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -64,6 +65,7 @@ builder.Services.AddNetptuneServices(options =>
 
 builder.Services.AddNetptuneMessageQueue(natsConnectionString);
 builder.Services.AddNetptuneHandlers();
+builder.Services.AddNetptuneQuery();
 builder.Services.AddNetptuneAutomationActions();
 builder.Services.AddPublicApiRateLimiter();
 builder.Services.AddValidation();

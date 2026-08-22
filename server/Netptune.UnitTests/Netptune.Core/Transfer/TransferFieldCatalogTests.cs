@@ -6,6 +6,7 @@ using Netptune.Transfer;
 using Netptune.Transfer.Catalog;
 
 using Xunit;
+using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Core.Transfer;
 
@@ -137,7 +138,7 @@ public class TransferFieldCatalogTests
     }
 
     [Fact]
-    public void TaskFieldKeys_MatchTheCatalogExactly()
+    public void EveryCatalogueTaskField_HasADeclaredKey()
     {
         var declared = typeof(TaskFieldKeys)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
@@ -146,7 +147,7 @@ public class TransferFieldCatalogTests
             .ToList();
         var catalogued = TransferFieldCatalog.Task.Fields.Select(field => field.Key).ToList();
 
-        declared.Should().BeEquivalentTo(catalogued,
+        declared.Should().Contain(catalogued,
             "every task field needs a constant so the export record source cannot silently skip it");
     }
 

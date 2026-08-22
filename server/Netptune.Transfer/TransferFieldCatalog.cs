@@ -1,6 +1,7 @@
 using System.Collections.Frozen;
 
 using Netptune.Transfer.Catalog;
+using Netptune.Core.Constants;
 
 namespace Netptune.Transfer;
 
