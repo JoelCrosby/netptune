@@ -50,6 +50,8 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
           {{ actionTitle() }}
         </button>
       }
+
+      <ng-content />
     </div>
   `,
   imports: [

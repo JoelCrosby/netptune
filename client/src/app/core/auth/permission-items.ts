@@ -16,6 +16,7 @@ import {
   LucideIconInput,
   LucideImage,
   LucideLayoutDashboard,
+  LucideListFilter,
   LucideMessageCircle,
   LucideMessageCirclePlus,
   LucideMessageCircleX,
@@ -225,6 +226,33 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'tasks.import',
       label: $localize`:Name of a workspace permission:Import Tasks`,
       icon: LucideUpload,
+    },
+  },
+  taskViews: {
+    read: {
+      key: 'task_views.read',
+      label: $localize`:Name of a workspace permission:View Task Views`,
+      icon: LucideListFilter,
+    },
+    create: {
+      key: 'task_views.create',
+      label: $localize`:Name of a workspace permission:Create Task Views`,
+      icon: LucideCirclePlus,
+    },
+    update: {
+      key: 'task_views.update',
+      label: $localize`:Name of a workspace permission:Edit Task Views`,
+      icon: LucideFilePen,
+    },
+    delete: {
+      key: 'task_views.delete',
+      label: $localize`:Name of a workspace permission:Delete Task Views`,
+      icon: LucideTrash2,
+    },
+    manageShared: {
+      key: 'task_views.manage_shared',
+      label: $localize`:Name of a workspace permission:Manage Shared Task Views`,
+      icon: LucideUsers,
     },
   },
   data: {

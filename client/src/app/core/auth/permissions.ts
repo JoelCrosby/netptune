@@ -44,6 +44,13 @@ export const PERMISSIONS = {
     export: 'tasks.export',
     import: 'tasks.import',
   },
+  taskViews: {
+    read: 'task_views.read',
+    create: 'task_views.create',
+    update: 'task_views.update',
+    delete: 'task_views.delete',
+    manageShared: 'task_views.manage_shared',
+  },
   data: {
     export: 'data.export',
     import: 'data.import',

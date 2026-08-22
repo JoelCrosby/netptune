@@ -1,4 +1,6 @@
-import { Directive } from '@angular/core';
+import { computed, Directive, input } from '@angular/core';
+
+export type FormControlDensity = 'default' | 'compact';
 
 @Directive({
   selector: 'input[appFormInput], textarea[appFormInput], select[appFormInput]',
@@ -12,11 +14,22 @@ export class FormControlInputDirective {}
 @Directive({
   selector: '[appFormLabel]',
   host: {
-    class:
-      'block mb-[.4rem] w-[inherit] max-w-[inherit] text-[15px] font-medium tracking-[.125px] text-foreground/60',
+    '[class]': 'hostClass()',
   },
 })
-export class FormControlLabelDirective {}
+export class FormControlLabelDirective {
+  readonly variant = input<FormControlDensity>('default');
+
+  protected readonly hostClass = computed(() => {
+    const base = 'block w-[inherit] max-w-[inherit] font-medium';
+
+    if (this.variant() === 'compact') {
+      return `${base} mb-1.5 text-xs tracking-[.04em] uppercase text-foreground/45`;
+    }
+
+    return `${base} mb-[.4rem] text-[15px] tracking-[.125px] text-foreground/60`;
+  });
+}
 
 @Directive({
   selector: '[appFormHint]',

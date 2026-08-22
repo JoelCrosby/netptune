@@ -3,6 +3,8 @@ import { SessionService } from '@core/services/session.service';
 import { hasPermission } from '@core/auth/has-permission';
 import { Workspace } from '@core/models/workspace';
 import { currentSprintsResource } from '@core/resources/sprint.resource';
+import { PinnedViewsService } from '@app/features/task-views/services/pinned-views.service';
+import { taskViewsResource } from '@app/features/task-views/resources/task-view.resource';
 import {
   LucideArchive,
   LucideBell,
@@ -15,6 +17,7 @@ import {
   LucideLayoutDashboard,
   LucideLayoutGrid,
   LucideListChecks,
+  LucideListFilter,
   LucideLogs,
   LucideHardDrive,
   LucideSettings,
@@ -99,6 +102,8 @@ export class ShellSidebarComponent {
   };
 
   private readonly currentSprintsRef = currentSprintsResource();
+  private readonly taskViewsRef = taskViewsResource();
+  private readonly pinnedViews = inject(PinnedViewsService);
 
   currentSprints = this.currentSprintsRef.value;
   currentSprintsLoaded = computed(() => !this.currentSprintsRef.isLoading());
@@ -119,6 +124,7 @@ export class ShellSidebarComponent {
   canReadStorage = hasPermission(PERMISSIONS.storage.read);
   canReadSprints = hasPermission(PERMISSIONS.sprints.read);
   canReadAutomations = hasPermission(PERMISSIONS.automations.read);
+  canReadTaskViews = hasPermission(PERMISSIONS.taskViews.read);
   canRestoreTasks = hasPermission(PERMISSIONS.tasks.restore);
   canReadAssistantConversations = hasPermission(
     PERMISSIONS.assistant.readAllConversations
@@ -204,6 +210,15 @@ export class ShellSidebarComponent {
       }
     );
 
+    if (this.canReadTaskViews()) {
+      links.push({
+        label: $localize`:Sidebar link to the saved task view list:Views`,
+        value: ['./views'],
+        icon: LucideListFilter,
+        children: this.pinnedViewLinks(),
+      });
+    }
+
     if (this.canReadMembers()) {
       links.push({
         label: $localize`:Sidebar link to the workspace member list:Users`,
@@ -222,6 +237,25 @@ export class ShellSidebarComponent {
 
     return links;
   });
+
+  // A view somebody unshared or deleted disappears from the sidebar on the next load rather than
+  // leaving a link that 404s, because the pinned ids are matched against what the list actually returns.
+  private pinnedViewLinks(): ShellMenuLink[] | undefined {
+    const pinnedIds = this.pinnedViews.pinnedIds();
+
+    if (!pinnedIds.length) return undefined;
+
+    const links = this.taskViewsRef
+      .value()
+      .filter((view) => pinnedIds.includes(view.id))
+      .map((view) => ({
+        label: view.name,
+        value: ['./views', view.slug],
+        icon: LucideListFilter,
+      }));
+
+    return links.length ? links : undefined;
+  }
 
   private workspaceSettingsLinks = computed(() => {
     if (!this.authenticated()) return [];

@@ -7,14 +7,14 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { FormControlDensity } from './form-control.directives';
 
 @Component({
   selector: 'app-form-control-field',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: ` <ng-content /> `,
   host: {
-    class:
-      'flex w-[inherit] max-w-[inherit] flex-row items-center rounded-sm border-2 bg-form-field-background transition-colors duration-200 ease-out',
+    '[class]': 'hostClass()',
     '[style.borderColor]': 'borderColor()',
     '(focusin)': 'focused.set(true)',
     '(focusout)': 'focused.set(false)',
@@ -23,6 +23,18 @@ import {
 export class FormControlFieldComponent {
   readonly invalid = input(false, { transform: (value: unknown) => !!value });
   readonly active = input(false, { transform: (value: unknown) => !!value });
+  readonly density = input<FormControlDensity>('default');
+
+  protected readonly hostClass = computed(() => {
+    const base =
+      'flex w-[inherit] max-w-[inherit] flex-row items-center bg-form-field-background transition-colors duration-200 ease-out';
+
+    if (this.density() === 'compact') {
+      return `${base} h-[38px] rounded-lg border`;
+    }
+
+    return `${base} rounded-sm border-2`;
+  });
 
   readonly el: HTMLElement = inject(ElementRef).nativeElement;
 
@@ -37,6 +49,8 @@ export class FormControlFieldComponent {
       return 'var(--primary)';
     }
 
-    return 'color-mix(in oklab, var(--foreground) 30%, transparent)';
+    const idleOpacity = this.density() === 'compact' ? 15 : 30;
+
+    return `color-mix(in oklab, var(--foreground) ${idleOpacity}%, transparent)`;
   });
 }

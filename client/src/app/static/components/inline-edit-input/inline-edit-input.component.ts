@@ -57,6 +57,8 @@ export class InlineEditInputComponent {
   readonly submitted = output<string>();
   isEditActive = signal(false);
 
+  private editingFrom = '';
+
   constructor() {
     effect(() => {
       const el = this.document.documentClicked();
@@ -74,10 +76,13 @@ export class InlineEditInputComponent {
   handleDocumentClick(target: EventTarget) {
     if (this.isEditActive()) {
       if (!this.elementRef.nativeElement.contains(target)) {
-        return this.isEditActive.set(false);
+        // Clicking away commits rather than discards: the next click is usually the Save button, and
+        // silently dropping what was just typed loses the edit.
+        return this.commit();
       }
     } else {
       if (this.elementRef.nativeElement.contains(target)) {
+        this.editingFrom = this.value() ?? '';
         this.isEditActive.set(true);
         this.focusInput();
       }
@@ -94,7 +99,20 @@ export class InlineEditInputComponent {
   }
 
   onSubmit(value: string) {
+    this.value.set(value);
+    this.editingFrom = value;
     this.submitted.emit(value);
     this.isEditActive.set(false);
+  }
+
+  private commit() {
+    const value = this.value() ?? '';
+    const changed = value !== this.editingFrom;
+
+    this.isEditActive.set(false);
+
+    if (changed) {
+      this.submitted.emit(value);
+    }
   }
 }

@@ -4,6 +4,7 @@ import { LucideDynamicIcon, LucideIconInput } from '@lucide/angular';
 import { AbstractFormValueControl } from '../abstract-form-value-control';
 import { FormControlFieldComponent } from '../form-control/form-control-field.component';
 import {
+  FormControlDensity,
   FormControlHintDirective,
   FormControlInputDirective,
   FormControlLabelDirective,
@@ -29,12 +30,13 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
       class="nept-form-control mb-[1.4rem] w-[inherit]"
       [class.mb-0!]="noMargin()">
       @if (label()) {
-        <label [for]="name()" appFormLabel>
+        <label [for]="name()" appFormLabel [variant]="density()">
           {{ label() }}
         </label>
       }
 
       <app-form-control-field
+        [density]="density()"
         [invalid]="touched() && invalid()"
         [active]="pending()">
         @if (prefix()) {
@@ -71,6 +73,7 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
             [attr.placeholder]="placeholder()"
             [attr.aria-invalid]="ariaInvalid()"
             [attr.aria-describedby]="describedBy(!!hint())"
+            [class.leading-none]="density() === 'compact'"
             [style.padding]="prefix() ? '0 .8rem 0 0' : '0 .8rem'"
             (input)="onInputchange($event)"
             (blur)="touched.set(true)" />
@@ -99,7 +102,7 @@ import { DatePickerComponent } from '../date-picker/date-picker.component';
         </div>
       }
 
-      <div class="mt-[.4rem]">
+      <div class="mt-[.4rem] empty:mt-0">
         <ng-content />
       </div>
     </div>
@@ -122,6 +125,7 @@ export class FormInputComponent extends AbstractFormValueControl {
   );
   readonly pending = input(false);
   readonly noMargin = input(false);
+  readonly density = input<FormControlDensity>('default');
 
   readonly input = viewChild<ElementRef>('input');
 

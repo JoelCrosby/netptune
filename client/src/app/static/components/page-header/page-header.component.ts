@@ -49,7 +49,9 @@ import { PageHeaderTitleComponent } from './page-header-title.component';
           [secondaryActions]="secondaryActions()"
           [overflowActions]="overflowActions()"
           [actionTitle]="actionTitle()"
-          (actionClick)="actionClick.emit()" />
+          (actionClick)="actionClick.emit()">
+          <ng-content select="[pageHeaderActions]" />
+        </app-page-header-actions>
       </div>
     </header>
   `,

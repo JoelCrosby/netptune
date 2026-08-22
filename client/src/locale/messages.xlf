@@ -13,7 +13,7 @@
     </unit>
     <unit id="6097221033230214756">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:56</note>
+        <note category="location">src/app/core/auth/permission-items.ts:57</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -40,7 +40,7 @@
     </unit>
     <unit id="8049735056636703804">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:61</note>
+        <note category="location">src/app/core/auth/permission-items.ts:62</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:28,31</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:79</note>
         <note category="description">Name of a workspace permission</note>
@@ -51,7 +51,7 @@
     </unit>
     <unit id="8228130641173001405">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:66</note>
+        <note category="location">src/app/core/auth/permission-items.ts:67</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -60,7 +60,7 @@
     </unit>
     <unit id="7702646444963497962">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:477</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:496</note>
         <note category="description">Column heading for who ran an import</note>
       </notes>
       <segment>
@@ -78,7 +78,7 @@
     </unit>
     <unit id="7713123645366708778">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:611</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:630</note>
         <note category="description">An import whose file has been read</note>
       </notes>
       <segment>
@@ -87,7 +87,7 @@
     </unit>
     <unit id="8576643134711566154">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:71</note>
+        <note category="location">src/app/core/auth/permission-items.ts:72</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -96,7 +96,7 @@
     </unit>
     <unit id="3561573022652726148">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:76</note>
+        <note category="location">src/app/core/auth/permission-items.ts:77</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -114,7 +114,7 @@
     </unit>
     <unit id="1761054140906700185">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:83</note>
+        <note category="location">src/app/core/auth/permission-items.ts:84</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -142,7 +142,7 @@
     </unit>
     <unit id="185504950006603388">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:88</note>
+        <note category="location">src/app/core/auth/permission-items.ts:89</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -151,7 +151,7 @@
     </unit>
     <unit id="3817505261985538845">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:93</note>
+        <note category="location">src/app/core/auth/permission-items.ts:94</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -169,7 +169,7 @@
     </unit>
     <unit id="5277744923448150585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:98</note>
+        <note category="location">src/app/core/auth/permission-items.ts:99</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -178,7 +178,7 @@
     </unit>
     <unit id="2799785023614626500">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:103</note>
+        <note category="location">src/app/core/auth/permission-items.ts:104</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -187,7 +187,7 @@
     </unit>
     <unit id="3798028332869343379">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:108</note>
+        <note category="location">src/app/core/auth/permission-items.ts:109</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -196,7 +196,7 @@
     </unit>
     <unit id="6075892571566060535">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:115</note>
+        <note category="location">src/app/core/auth/permission-items.ts:116</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -223,7 +223,7 @@
     </unit>
     <unit id="1726548551961127827">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:120</note>
+        <note category="location">src/app/core/auth/permission-items.ts:121</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -232,7 +232,7 @@
     </unit>
     <unit id="3373039778816479588">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:125</note>
+        <note category="location">src/app/core/auth/permission-items.ts:126</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -241,7 +241,7 @@
     </unit>
     <unit id="3374948136939487779">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:338</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:358</note>
         <note category="description">Storage a workspace has left</note>
       </notes>
       <segment>
@@ -250,7 +250,7 @@
     </unit>
     <unit id="1204089050920081335">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:130</note>
+        <note category="location">src/app/core/auth/permission-items.ts:131</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -259,7 +259,7 @@
     </unit>
     <unit id="1570107404481300948">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:250,251</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:252,253</note>
         <note category="description">Shown when the import history fails to load</note>
       </notes>
       <segment>
@@ -268,7 +268,7 @@
     </unit>
     <unit id="1575435135569882153">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:137</note>
+        <note category="location">src/app/core/auth/permission-items.ts:138</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -286,7 +286,7 @@
     </unit>
     <unit id="8199152735148472244">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:142</note>
+        <note category="location">src/app/core/auth/permission-items.ts:143</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -295,7 +295,7 @@
     </unit>
     <unit id="8888203649499721040">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:147</note>
+        <note category="location">src/app/core/auth/permission-items.ts:148</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -304,11 +304,20 @@
     </unit>
     <unit id="551552314018962417">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:152</note>
+        <note category="location">src/app/core/auth/permission-items.ts:153</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
         <source>Delete Boards</source>
+      </segment>
+    </unit>
+    <unit id="5516954416544435229">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:254</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Manage Shared Task Views</source>
       </segment>
     </unit>
     <unit id="551825878782946048">
@@ -331,7 +340,7 @@
     </unit>
     <unit id="2819840741711369608">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:65,67</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:67,69</note>
         <note category="description">Explains what a saved export does</note>
       </notes>
       <segment>
@@ -340,7 +349,7 @@
     </unit>
     <unit id="2819959485156980302">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:159</note>
+        <note category="location">src/app/core/auth/permission-items.ts:160</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -349,7 +358,7 @@
     </unit>
     <unit id="5321164057411888974">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:623</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:642</note>
         <note category="description">An import that has been rolled back</note>
       </notes>
       <segment>
@@ -358,7 +367,7 @@
     </unit>
     <unit id="5322626006494247041">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:164</note>
+        <note category="location">src/app/core/auth/permission-items.ts:165</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -376,7 +385,7 @@
     </unit>
     <unit id="6390571285331619884">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:169</note>
+        <note category="location">src/app/core/auth/permission-items.ts:170</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -385,7 +394,7 @@
     </unit>
     <unit id="4529090892145486687">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:174</note>
+        <note category="location">src/app/core/auth/permission-items.ts:175</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -394,7 +403,7 @@
     </unit>
     <unit id="6329198644372548025">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:181</note>
+        <note category="location">src/app/core/auth/permission-items.ts:182</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -403,7 +412,7 @@
     </unit>
     <unit id="2736232235410300078">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:186</note>
+        <note category="location">src/app/core/auth/permission-items.ts:187</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -422,7 +431,7 @@
     </unit>
     <unit id="6985320992724229617">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:191</note>
+        <note category="location">src/app/core/auth/permission-items.ts:192</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -431,7 +440,7 @@
     </unit>
     <unit id="7985187851588850736">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:196</note>
+        <note category="location">src/app/core/auth/permission-items.ts:197</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -440,7 +449,7 @@
     </unit>
     <unit id="8433465645307144784">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:201</note>
+        <note category="location">src/app/core/auth/permission-items.ts:202</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -459,7 +468,7 @@
     </unit>
     <unit id="22852633810459681">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:206</note>
+        <note category="location">src/app/core/auth/permission-items.ts:207</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -468,7 +477,7 @@
     </unit>
     <unit id="7528868572765139441">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:211</note>
+        <note category="location">src/app/core/auth/permission-items.ts:212</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -486,7 +495,7 @@
     </unit>
     <unit id="8992597512682859829">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:216</note>
+        <note category="location">src/app/core/auth/permission-items.ts:217</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -495,8 +504,8 @@
     </unit>
     <unit id="2145525847134662630">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:221</note>
-        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:53</note>
+        <note category="location">src/app/core/auth/permission-items.ts:222</note>
+        <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:58</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -505,8 +514,8 @@
     </unit>
     <unit id="7884294193521928458">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:226</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:301</note>
+        <note category="location">src/app/core/auth/permission-items.ts:227</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:310</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -515,7 +524,7 @@
     </unit>
     <unit id="886870364473177759">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:260</note>
+        <note category="location">src/app/core/auth/permission-items.ts:288</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -524,7 +533,7 @@
     </unit>
     <unit id="4382007774315374200">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:265</note>
+        <note category="location">src/app/core/auth/permission-items.ts:293</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -579,7 +588,7 @@
     </unit>
     <unit id="5179126202645575816">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:270</note>
+        <note category="location">src/app/core/auth/permission-items.ts:298</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -588,7 +597,7 @@
     </unit>
     <unit id="31482867150839515">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:275</note>
+        <note category="location">src/app/core/auth/permission-items.ts:303</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -597,7 +606,7 @@
     </unit>
     <unit id="3002689292416921946">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:280</note>
+        <note category="location">src/app/core/auth/permission-items.ts:308</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -606,7 +615,7 @@
     </unit>
     <unit id="338954840845347808">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:226,227</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:228,229</note>
         <note category="description">Explains how long an import stays undoable</note>
       </notes>
       <segment>
@@ -615,7 +624,7 @@
     </unit>
     <unit id="3398156745191610421">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:287</note>
+        <note category="location">src/app/core/auth/permission-items.ts:315</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -624,7 +633,7 @@
     </unit>
     <unit id="5157376787376464663">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:292</note>
+        <note category="location">src/app/core/auth/permission-items.ts:320</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -643,7 +652,7 @@
     </unit>
     <unit id="8823075031689391120">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:297</note>
+        <note category="location">src/app/core/auth/permission-items.ts:325</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -659,9 +668,18 @@
         <source>Share example values with the assistant</source>
       </segment>
     </unit>
+    <unit id="8826454553473999816">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:20</note>
+        <note category="description">Joins query conditions in an all-of group, with surrounding spaces</note>
+      </notes>
+      <segment>
+        <source> and </source>
+      </segment>
+    </unit>
     <unit id="8933548881178191171">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:302</note>
+        <note category="location">src/app/core/auth/permission-items.ts:330</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -670,7 +688,7 @@
     </unit>
     <unit id="5659725016755840642">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:309</note>
+        <note category="location">src/app/core/auth/permission-items.ts:337</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -679,7 +697,7 @@
     </unit>
     <unit id="5800916510887895585">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:314</note>
+        <note category="location">src/app/core/auth/permission-items.ts:342</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -697,7 +715,7 @@
     </unit>
     <unit id="8144780536536072093">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:319</note>
+        <note category="location">src/app/core/auth/permission-items.ts:347</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -706,7 +724,7 @@
     </unit>
     <unit id="7216658744747223519">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:324</note>
+        <note category="location">src/app/core/auth/permission-items.ts:352</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -715,7 +733,7 @@
     </unit>
     <unit id="3949141401593763883">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:329</note>
+        <note category="location">src/app/core/auth/permission-items.ts:357</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -724,7 +742,7 @@
     </unit>
     <unit id="4217244185667688873">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:336</note>
+        <note category="location">src/app/core/auth/permission-items.ts:364</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -733,7 +751,7 @@
     </unit>
     <unit id="2967407594735372079">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:341</note>
+        <note category="location">src/app/core/auth/permission-items.ts:369</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -742,7 +760,7 @@
     </unit>
     <unit id="6120183880516360710">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:348</note>
+        <note category="location">src/app/core/auth/permission-items.ts:376</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -751,7 +769,7 @@
     </unit>
     <unit id="5258368564796629743">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:353</note>
+        <note category="location">src/app/core/auth/permission-items.ts:381</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -778,7 +796,7 @@
     </unit>
     <unit id="3781527988196646385">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:360</note>
+        <note category="location">src/app/core/auth/permission-items.ts:388</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -787,7 +805,7 @@
     </unit>
     <unit id="7041821873420776665">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:367</note>
+        <note category="location">src/app/core/auth/permission-items.ts:395</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -796,16 +814,25 @@
     </unit>
     <unit id="4885466789264460695">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:372</note>
+        <note category="location">src/app/core/auth/permission-items.ts:400</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
         <source>Export Audit Log</source>
       </segment>
     </unit>
+    <unit id="3220852476952327677">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:21</note>
+        <note category="description">Joins query conditions in an any-of group, with surrounding spaces</note>
+      </notes>
+      <segment>
+        <source> or </source>
+      </segment>
+    </unit>
     <unit id="3223868158732972286">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:379</note>
+        <note category="location">src/app/core/auth/permission-items.ts:407</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -814,7 +841,7 @@
     </unit>
     <unit id="4288759217931050376">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:384</note>
+        <note category="location">src/app/core/auth/permission-items.ts:412</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -823,7 +850,7 @@
     </unit>
     <unit id="3510542800119420038">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:391</note>
+        <note category="location">src/app/core/auth/permission-items.ts:419</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -841,7 +868,7 @@
     </unit>
     <unit id="5307305327820813211">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:396</note>
+        <note category="location">src/app/core/auth/permission-items.ts:424</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -850,7 +877,7 @@
     </unit>
     <unit id="7544555877603826527">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:410</note>
+        <note category="location">src/app/core/auth/permission-items.ts:438</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -867,9 +894,18 @@
         <source>Assistant model</source>
       </segment>
     </unit>
+    <unit id="7549003559091431913">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:209,212</note>
+        <note category="description">Label after the number of tasks a query matches</note>
+      </notes>
+      <segment>
+        <source> matching tasks </source>
+      </segment>
+    </unit>
     <unit id="9018075259180774811">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:415</note>
+        <note category="location">src/app/core/auth/permission-items.ts:443</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -878,11 +914,23 @@
     </unit>
     <unit id="2122122363042197554">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:422</note>
+        <note category="location">src/app/core/auth/permission-items.ts:450</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
         <source>View Service Accounts</source>
+      </segment>
+    </unit>
+    <unit id="2123659921722214537">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:59</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:67,70</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
+        <note category="location">src/app/workspace.routes.ts:42</note>
+        <note category="description">Page title for the saved task view list</note>
+      </notes>
+      <segment>
+        <source>Views</source>
       </segment>
     </unit>
     <unit id="5860895315722028345">
@@ -896,7 +944,7 @@
     </unit>
     <unit id="5867014445190639814">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:427</note>
+        <note category="location">src/app/core/auth/permission-items.ts:455</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -914,16 +962,26 @@
     </unit>
     <unit id="3664214651312931514">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:432</note>
+        <note category="location">src/app/core/auth/permission-items.ts:460</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
         <source>Edit Service Accounts</source>
       </segment>
     </unit>
+    <unit id="2838129566011107043">
+      <notes>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:107,111</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:49,51</note>
+        <note category="description">Button that adds a query condition</note>
+      </notes>
+      <segment>
+        <source>Condition</source>
+      </segment>
+    </unit>
     <unit id="2839504544577956852">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:437</note>
+        <note category="location">src/app/core/auth/permission-items.ts:465</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -932,7 +990,7 @@
     </unit>
     <unit id="1618471987006077444">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:442</note>
+        <note category="location">src/app/core/auth/permission-items.ts:470</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -959,7 +1017,7 @@
     </unit>
     <unit id="6572526459338060111">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:449</note>
+        <note category="location">src/app/core/auth/permission-items.ts:477</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -968,7 +1026,7 @@
     </unit>
     <unit id="2248388072026596689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:454</note>
+        <note category="location">src/app/core/auth/permission-items.ts:482</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -986,7 +1044,7 @@
     </unit>
     <unit id="5162962829978601498">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:459</note>
+        <note category="location">src/app/core/auth/permission-items.ts:487</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -995,7 +1053,7 @@
     </unit>
     <unit id="6247029488700953689">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:464</note>
+        <note category="location">src/app/core/auth/permission-items.ts:492</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1004,7 +1062,7 @@
     </unit>
     <unit id="8604673556809626581">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:233</note>
+        <note category="location">src/app/core/auth/permission-items.ts:261</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1013,7 +1071,7 @@
     </unit>
     <unit id="8604924961258321909">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:471</note>
+        <note category="location">src/app/core/auth/permission-items.ts:499</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1022,7 +1080,7 @@
     </unit>
     <unit id="3975259698791708574">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:476</note>
+        <note category="location">src/app/core/auth/permission-items.ts:504</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1040,7 +1098,7 @@
     </unit>
     <unit id="1848580203082626434">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:481</note>
+        <note category="location">src/app/core/auth/permission-items.ts:509</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1049,7 +1107,7 @@
     </unit>
     <unit id="7346727647887816962">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:711</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:730</note>
         <note category="description">Warns that deleting an export also removes its file</note>
       </notes>
       <segment>
@@ -1058,7 +1116,7 @@
     </unit>
     <unit id="734924568623984342">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:486</note>
+        <note category="location">src/app/core/auth/permission-items.ts:514</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -1201,8 +1259,8 @@
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:713</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:736</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:732</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:755</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:339</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
@@ -1251,7 +1309,7 @@
     </unit>
     <unit id="2184282850413747842">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:34,35</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:35,36</note>
         <note category="description">Card that exports a whole workspace as an archive</note>
       </notes>
       <segment>
@@ -1332,6 +1390,15 @@
         <source>Logout</source>
       </segment>
     </unit>
+    <unit id="4683971466135928572">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:73,74</note>
+        <note category="description">Shown when a saved view cannot be found</note>
+      </notes>
+      <segment>
+        <source>This view could not be found</source>
+      </segment>
+    </unit>
     <unit id="4686852710008865123">
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:197</note>
@@ -1369,8 +1436,8 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:178</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:303</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:276</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:712</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:735</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:731</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:754</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:170</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:32,34</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:278</note>
@@ -1383,6 +1450,7 @@
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:309</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:249</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:241</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:32</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -1411,7 +1479,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:311</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:325</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment>
@@ -1502,7 +1570,7 @@
     </unit>
     <unit id="8635746088325217941">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:432</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:452</note>
         <note category="description">Shown when an archive could not be read or imported</note>
       </notes>
       <segment>
@@ -1511,7 +1579,7 @@
     </unit>
     <unit id="8641685480888184389">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:181,183</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:185,187</note>
         <note category="description">Heading above the schema changes an archive import applies</note>
       </notes>
       <segment>
@@ -1538,11 +1606,21 @@
     </unit>
     <unit id="5495168454905214621">
       <notes>
-        <note category="location">src/app/features/data-transfer/services/export-wizard.service.ts:68</note>
+        <note category="location">src/app/features/data-transfer/services/export-wizard.service.ts:84</note>
         <note category="description">Explains why an export cannot leave the field step</note>
       </notes>
       <segment>
         <source>Choose at least one field to export.</source>
+      </segment>
+    </unit>
+    <unit id="7286430803380181008">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:109</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:10</note>
+        <note category="description">Column heading for the task reference</note>
+      </notes>
+      <segment>
+        <source>Id</source>
       </segment>
     </unit>
     <unit id="7286578348594697265">
@@ -1718,6 +1796,15 @@
         <source>Tasks added to sprint</source>
       </segment>
     </unit>
+    <unit id="6264002090847080538">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:239</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Create Task Views</source>
+      </segment>
+    </unit>
     <unit id="9054551961119650411">
       <notes>
         <note category="location">src/app/core/services/sprint-commands.service.ts:191</note>
@@ -1793,6 +1880,15 @@
       </notes>
       <segment>
         <source>via</source>
+      </segment>
+    </unit>
+    <unit id="718435595344345097">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:16</note>
+        <note category="description">Query operator matching values at or below a number or date</note>
+      </notes>
+      <segment>
+        <source>is on or before</source>
       </segment>
     </unit>
     <unit id="7190478463652380023">
@@ -1906,6 +2002,16 @@
         <source>Waiting for the assistant…</source>
       </segment>
     </unit>
+    <unit id="4140474966837806672">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:129,131</note>
+        <note category="location">src/app/shared/components/query-builder/query-status.component.ts:24,26</note>
+        <note category="description">Prefix of the plain-language query summary</note>
+      </notes>
+      <segment>
+        <source> Shows tasks where </source>
+      </segment>
+    </unit>
     <unit id="4145619247688235973">
       <notes>
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:359</note>
@@ -1994,6 +2100,15 @@
       </notes>
       <segment>
         <source>Resume Import</source>
+      </segment>
+    </unit>
+    <unit id="1293241675469976608">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:244</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Edit Task Views</source>
       </segment>
     </unit>
     <unit id="1293575230061580250">
@@ -2136,8 +2251,8 @@
     </unit>
     <unit id="2956098160626271284">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:565</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:617</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:584</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:636</note>
         <note category="description">An export that is being produced</note>
       </notes>
       <segment>
@@ -2182,7 +2297,7 @@
     </unit>
     <unit id="7055914640394142544">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:141,144</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:145,148</note>
         <note category="description">Button that reads an archive without importing it</note>
       </notes>
       <segment>
@@ -2200,7 +2315,7 @@
     </unit>
     <unit id="6746921307284578995">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:125,126</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:127,128</note>
         <note category="description">Shown when the export history fails to load</note>
       </notes>
       <segment>
@@ -2281,7 +2396,7 @@
     </unit>
     <unit id="2067835143104615152">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:64,67</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:66,69</note>
         <note category="description">Explains what an archive import accepts</note>
       </notes>
       <segment>
@@ -2295,6 +2410,15 @@
       </notes>
       <segment>
         <source>Amber</source>
+      </segment>
+    </unit>
+    <unit id="2078671361451337260">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:146,148</note>
+        <note category="description">Heading shown when a saved view no longer compiles</note>
+      </notes>
+      <segment>
+        <source> This view needs attention </source>
       </segment>
     </unit>
     <unit id="8598918991528773310">
@@ -2359,9 +2483,9 @@
         <note category="location">src/app/features/notifications/notifications.routes.ts:12</note>
         <note category="location">src/app/features/notifications/views/notifications-view/notifications-view.component.ts:26,28</note>
         <note category="location">src/app/features/settings/views/personal-notification-settings-view/personal-notification-settings-view.component.ts:20,22</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:300</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:322</note>
-        <note category="location">src/app/workspace.routes.ts:84</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:356</note>
+        <note category="location">src/app/workspace.routes.ts:90</note>
         <note category="description">Accessible label for the notifications button</note>
       </notes>
       <segment>
@@ -2407,7 +2531,7 @@
     </unit>
     <unit id="4043049091728011235">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:571</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:590</note>
         <note category="description">An export a member stopped</note>
       </notes>
       <segment>
@@ -2468,13 +2592,22 @@
         <source> Ready to create </source>
       </segment>
     </unit>
+    <unit id="2241133417281406824">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:107,109</note>
+        <note category="description">Toolbar button showing how many columns a view shows</note>
+      </notes>
+      <segment>
+        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ visibleCount() }}"/> columns </source>
+      </segment>
+    </unit>
     <unit id="2244471832629453998">
       <notes>
         <note category="location">src/app/entry/components/setup-creation-summary/setup-creation-summary.component.ts:58</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:220</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:918</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:72</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:349</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:383</note>
         <note category="description">The workspace entity, shown in setup copy</note>
       </notes>
       <segment>
@@ -2493,6 +2626,8 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:378</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:300</note>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:46</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:114</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:47</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:18</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:38</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:144,146</note>
@@ -2636,9 +2771,11 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:46</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:398</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:417</note>
         <note category="location">src/app/features/settings/settings.routes.ts:81</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:98,101</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:111</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:25</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:22</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:29</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:81,83</note>
@@ -2668,7 +2805,7 @@
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:80,82</note>
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:43,45</note>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:65,68</note>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:64,66</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
@@ -2784,6 +2921,8 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:74,76</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:49</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:31</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:113</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:40</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:30</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:93,95</note>
         <note category="description">Label of the priority field</note>
@@ -2809,6 +2948,8 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:54</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:148</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:67,70</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:115</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:55</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:37</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:155,157</note>
@@ -2876,6 +3017,8 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:95</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:385</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:307</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:112</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:33</note>
         <note category="description">Label of the assignees field</note>
       </notes>
       <segment>
@@ -2987,8 +3130,8 @@
         <note category="location">src/app/entry/dialogs/edit-tag-dialog/edit-tag-dialog.component.ts:65</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:55</note>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:152</note>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:42</note>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:93</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:44</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:101</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:89,91</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:136</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:250</note>
@@ -3018,6 +3161,8 @@
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:42,43</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:101</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:142</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:110</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:18</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:27</note>
         <note category="description">Label of the name field</note>
       </notes>
@@ -3185,6 +3330,7 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:95,98</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:168,171</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:141,144</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:120,122</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:28</note>
         <note category="description">Label of the task description editor</note>
       </notes>
@@ -3236,6 +3382,15 @@
       </notes>
       <segment>
         <source>Save Task</source>
+      </segment>
+    </unit>
+    <unit id="6353362142589022681">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:9</note>
+        <note category="description">Query operator excluding text anywhere in a field</note>
+      </notes>
+      <segment>
+        <source>does not contain</source>
       </segment>
     </unit>
     <unit id="8545695896746073499">
@@ -3305,7 +3460,7 @@
     </unit>
     <unit id="6006142956490189252">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:710</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:729</note>
         <note category="description">Title of the dialog that confirms deleting an export</note>
       </notes>
       <segment>
@@ -3357,6 +3512,15 @@
       </notes>
       <segment>
         <source>Color</source>
+      </segment>
+    </unit>
+    <unit id="9012859797411084017">
+      <notes>
+        <note category="location">src/app/features/task-views/util/stale-references.ts:28</note>
+        <note category="description">Shown when a saved view names a field the workspace no longer has</note>
+      </notes>
+      <segment>
+        <source>&apos;<ph id="0" equiv="fieldKey" disp="condition.field"/>&apos; is no longer a task field.</source>
       </segment>
     </unit>
     <unit id="9013345619407100866">
@@ -3526,6 +3690,15 @@
         <source>Email is required.</source>
       </segment>
     </unit>
+    <unit id="2110223804478113558">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:200,203</note>
+        <note category="description">Shown while the query result count is being recounted</note>
+      </notes>
+      <segment>
+        <source> Counting… </source>
+      </segment>
+    </unit>
     <unit id="2112768397949905814">
       <notes>
         <note category="location">src/app/entry/dialogs/invite-dialog/invite-dialog.component.ts:96</note>
@@ -3541,7 +3714,7 @@
     </unit>
     <unit id="8390210831451931366">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:128</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:130</note>
         <note category="description">Names the rows of the export history table</note>
       </notes>
       <segment>
@@ -4082,7 +4255,7 @@
     </unit>
     <unit id="3911323019910272488">
       <notes>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:51,53</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:54,56</note>
         <note category="description">Explains what sharing a saved export does</note>
       </notes>
       <segment>
@@ -4093,7 +4266,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-relations.component.ts:48,51</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:65,66</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:257</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:291</note>
         <note category="description">Section heading for links between tasks</note>
       </notes>
       <segment>
@@ -4159,7 +4332,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:52</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:241</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:275</note>
         <note category="description">Section heading for a task&apos;s tags</note>
       </notes>
       <segment>
@@ -4283,6 +4456,15 @@
         <source> Next </source>
       </segment>
     </unit>
+    <unit id="3971949003366430322">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:5</note>
+        <note category="description">Query operator excluding an exact value</note>
+      </notes>
+      <segment>
+        <source>is not</source>
+      </segment>
+    </unit>
     <unit id="4846490305955266167">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:220,223</note>
@@ -4324,10 +4506,11 @@
     </unit>
     <unit id="5203279511751768967">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:26,28</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:28,30</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:99,100</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:392</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:94,95</note>
         <note category="description">Label of the start-date filter</note>
       </notes>
       <segment>
@@ -4345,10 +4528,11 @@
     </unit>
     <unit id="1640609344969975994">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:32,34</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:34,36</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:107,108</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:402</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:102,103</note>
         <note category="description">Label of the end-date filter</note>
       </notes>
       <segment>
@@ -4357,7 +4541,7 @@
     </unit>
     <unit id="8829497237648100098">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:35,37</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:37,39</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:24</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:91,92</note>
         <note category="description">Button that applies the filters</note>
@@ -4377,7 +4561,7 @@
     </unit>
     <unit id="7808756054397155068">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:38,42</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:40,43</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:76,78</note>
         <note category="description">Button that clears the filters</note>
       </notes>
@@ -4387,7 +4571,7 @@
     </unit>
     <unit id="2014694668412418346">
       <notes>
-        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:48,52</note>
+        <note category="location">src/app/features/audit/components/audit-filters/audit-filters.component.ts:51,54</note>
         <note category="description">Button that downloads the audit log as CSV</note>
       </notes>
       <segment>
@@ -4410,6 +4594,15 @@
       </notes>
       <segment>
         <source>Audit events could not be loaded.</source>
+      </segment>
+    </unit>
+    <unit id="261745436712600632">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:60,63</note>
+        <note category="description">Heading of the sort menu</note>
+      </notes>
+      <segment>
+        <source> Sort by </source>
       </segment>
     </unit>
     <unit id="1428367413098223987">
@@ -4477,7 +4670,7 @@
     </unit>
     <unit id="598339358518319281">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:118,121</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:122,125</note>
         <note category="description">Explains what the new workspace slug is used for</note>
       </notes>
       <segment>
@@ -4596,7 +4789,7 @@
     <unit id="1510127051184371993">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:144</note>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:330</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:350</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -4675,6 +4868,16 @@
         <source>Actor ID</source>
       </segment>
     </unit>
+    <unit id="6143795228406387052">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:86,88</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:94,98</note>
+        <note category="description">Button that copies a shareable link to a view</note>
+      </notes>
+      <segment>
+        <source> Copy link </source>
+      </segment>
+    </unit>
     <unit id="9216117865911519658">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:168</note>
@@ -4697,7 +4900,7 @@
     <unit id="8650499415827640724">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:183</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:465</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:484</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment>
@@ -4818,8 +5021,8 @@
     <unit id="1678559204833619774">
       <notes>
         <note category="location">src/app/features/audit/views/audit-view/audit-view.component.ts:23,25</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:338</note>
-        <note category="location">src/app/workspace.routes.ts:96</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:372</note>
+        <note category="location">src/app/workspace.routes.ts:102</note>
         <note category="description">Page title for the workspace audit log</note>
       </notes>
       <segment>
@@ -4929,8 +5132,8 @@
     </unit>
     <unit id="7933350213373266585">
       <notes>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:34,37</note>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,74</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:36,39</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:72,78</note>
         <note category="description">Title of the save-export-definition dialog</note>
       </notes>
       <segment>
@@ -5031,6 +5234,15 @@
       </notes>
       <segment>
         <source>Select all</source>
+      </segment>
+    </unit>
+    <unit id="1494629498718440079">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:249</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>Delete Task Views</source>
       </segment>
     </unit>
     <unit id="149974019994124409">
@@ -5264,7 +5476,7 @@
     </unit>
     <unit id="7769760824505957468">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:36,38</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:37,39</note>
         <note category="description">Explains what a whole-workspace archive contains</note>
       </notes>
       <segment>
@@ -5384,7 +5596,7 @@
     </unit>
     <unit id="8562778474158270448">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:625</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:644</note>
         <note category="description">An import nobody finished configuring</note>
       </notes>
       <segment>
@@ -5475,6 +5687,15 @@
       </notes>
       <segment>
         <source>Comment</source>
+      </segment>
+    </unit>
+    <unit id="4762376336950167226">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:207</note>
+        <note category="description">Button that removes a view from the sidebar</note>
+      </notes>
+      <segment>
+        <source>Unpin from sidebar</source>
       </segment>
     </unit>
     <unit id="4766402403585838311">
@@ -5574,10 +5795,20 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:308,309</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:168,169</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:168</note>
         <note category="description">Delay unit: days</note>
       </notes>
       <segment>
         <source>Days</source>
+      </segment>
+    </unit>
+    <unit id="329406837759048287">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:137,139</note>
+        <note category="description">Badge marking a view shared with the workspace</note>
+      </notes>
+      <segment>
+        <source> Shared </source>
       </segment>
     </unit>
     <unit id="3294074259061472947">
@@ -5665,6 +5896,7 @@
     <unit id="1784168874629208042">
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:52,55</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:69,72</note>
         <note category="description">Word before the all/any operator in a condition group</note>
       </notes>
       <segment>
@@ -5719,10 +5951,20 @@
     <unit id="4820528532769775314">
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:142</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:37,38</note>
         <note category="description">Label of the field field</note>
       </notes>
       <segment>
         <source>Field</source>
+      </segment>
+    </unit>
+    <unit id="4827228128561377686">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:153,155</note>
+        <note category="description">Heading of the empty saved view list</note>
+      </notes>
+      <segment>
+        <source>No views yet</source>
       </segment>
     </unit>
     <unit id="1179184907489210406">
@@ -5738,6 +5980,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:172,173</note>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:174,175</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:68,70</note>
         <note category="description">Accessible label for the button that removes a condition</note>
       </notes>
       <segment>
@@ -5775,6 +6018,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:258</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:27</note>
         <note category="description">Condition group operator requiring every condition to match</note>
       </notes>
       <segment>
@@ -5784,6 +6028,7 @@
     <unit id="3184700926171002527">
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:262</note>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:28</note>
         <note category="description">Condition group operator requiring at least one condition to match</note>
       </notes>
       <segment>
@@ -5795,6 +6040,7 @@
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:266</note>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:222</note>
         <note category="location">src/app/features/sprints/pipes/sprint-backlog-priority-label.pipe.ts:12</note>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:29</note>
         <note category="description">Condition group operator requiring no condition to match</note>
       </notes>
       <segment>
@@ -5817,6 +6063,15 @@
       </notes>
       <segment>
         <source>Team workload</source>
+      </segment>
+    </unit>
+    <unit id="6967575591272937015">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:48</note>
+        <note category="description">Summary fragment standing in for a nested group with no conditions</note>
+      </notes>
+      <segment>
+        <source>nothing</source>
       </segment>
     </unit>
     <unit id="4774743033649921775">
@@ -6112,7 +6367,7 @@
     </unit>
     <unit id="4754993936947658096">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:615</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:634</note>
         <note category="description">An import that has been dry-run</note>
       </notes>
       <segment>
@@ -6195,6 +6450,15 @@
         <source>Undo</source>
       </segment>
     </unit>
+    <unit id="5776694882834042535">
+      <notes>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:148,150</note>
+        <note category="description">Accessible label for the button that removes a query group</note>
+      </notes>
+      <segment>
+        <source>Remove query group</source>
+      </segment>
+    </unit>
     <unit id="2720971549202639735">
       <notes>
         <note category="location">src/app/features/automations/components/automation-dry-run-effects.component.ts:62,65</note>
@@ -6254,7 +6518,7 @@
     </unit>
     <unit id="655114862670279052">
       <notes>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:43,47</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:45,48</note>
         <note category="description">Explains what a saved export name is for</note>
       </notes>
       <segment>
@@ -6270,12 +6534,24 @@
         <source>This workspace has no projects yet.</source>
       </segment>
     </unit>
+    <unit id="6554042910841979279">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:14</note>
+        <note category="description">Query operator matching values at or above a number or date</note>
+      </notes>
+      <segment>
+        <source>is on or after</source>
+      </segment>
+    </unit>
     <unit id="6555318547274416232">
       <notes>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:69,70</note>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:82,83</note>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:95</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:254,255</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:66</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:80,81</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:171</note>
         <note category="description">Label of the value field</note>
       </notes>
       <segment>
@@ -6370,7 +6646,7 @@
     </unit>
     <unit id="6423210280939340786">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:567</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:586</note>
         <note category="description">An export that finished and can be downloaded</note>
       </notes>
       <segment>
@@ -6420,6 +6696,15 @@
       </notes>
       <segment>
         <source>Low</source>
+      </segment>
+    </unit>
+    <unit id="5979951160895696674">
+      <notes>
+        <note category="location">src/app/features/task-views/util/stale-references.ts:45</note>
+        <note category="description">Shown when a saved view references an entity that has been deleted</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="fieldName" disp="field.name"/> no longer has an option for &apos;<ph id="1" equiv="value" disp="value"/>&apos;.</source>
       </segment>
     </unit>
     <unit id="5982496808088686844">
@@ -6490,12 +6775,21 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-editor.component.ts:45</note>
         <note category="location">src/app/features/users/views/users-view/users-view.component.html:5</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:209</note>
-        <note category="location">src/app/workspace.routes.ts:90</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:224</note>
+        <note category="location">src/app/workspace.routes.ts:96</note>
         <note category="description">Label of the users field</note>
       </notes>
       <segment>
         <source>Users</source>
+      </segment>
+    </unit>
+    <unit id="8171377612720992766">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:261</note>
+        <note category="description">Shown when a view could not be deleted</note>
+      </notes>
+      <segment>
+        <source>View could not be deleted</source>
       </segment>
     </unit>
     <unit id="8175487656067850245">
@@ -6664,8 +6958,8 @@
     </unit>
     <unit id="151590427979424193">
       <notes>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:49,50</note>
-        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:57,59</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:52,53</note>
+        <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:60,62</note>
         <note category="description">Label of the option that shares a saved export</note>
       </notes>
       <segment>
@@ -6692,7 +6986,7 @@
     </unit>
     <unit id="1525443335158357208">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:728</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:747</note>
         <note category="description">Warns that deleting a committed import gives up undo</note>
       </notes>
       <segment>
@@ -6753,6 +7047,15 @@
         <source>Choose a task</source>
       </segment>
     </unit>
+    <unit id="6911785432558160839">
+      <notes>
+        <note category="location">src/app/core/auth/permission-items.ts:234</note>
+        <note category="description">Name of a workspace permission</note>
+      </notes>
+      <segment>
+        <source>View Task Views</source>
+      </segment>
+    </unit>
     <unit id="6914161425970763792">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:172</note>
@@ -6764,7 +7067,7 @@
     </unit>
     <unit id="6914923766677741984">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:321</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:341</note>
         <note category="description">Name of the workspace an archive came from</note>
       </notes>
       <segment>
@@ -6920,7 +7223,7 @@
     </unit>
     <unit id="1859319211482500914">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:148,151</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:152,155</note>
         <note category="description">Shown while an archive is being read or imported</note>
       </notes>
       <segment>
@@ -6957,7 +7260,7 @@
     </unit>
     <unit id="7343458434870773763">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:454</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:473</note>
         <note category="description">Column heading for the state of an import</note>
       </notes>
       <segment>
@@ -7025,6 +7328,15 @@
       </notes>
       <segment>
         <source> No action results recorded </source>
+      </segment>
+    </unit>
+    <unit id="1955727073588719535">
+      <notes>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:75,77</note>
+        <note category="description">Accessible name of the query group operator control</note>
+      </notes>
+      <segment>
+        <source>Query group logic</source>
       </segment>
     </unit>
     <unit id="1955910042786275230">
@@ -7126,7 +7438,7 @@
     </unit>
     <unit id="7046128589684724143">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:177,179</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:179,181</note>
         <note category="description">Accessible label for the export download button</note>
       </notes>
       <segment>
@@ -7399,7 +7711,7 @@
     </unit>
     <unit id="8951117304119903136">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:214,215</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:216,217</note>
         <note category="description">Explains when export rows start appearing</note>
       </notes>
       <segment>
@@ -7778,6 +8090,24 @@
         <source>Upload a CSV, TSV, Excel, JSON or NDJSON file. Up to 50 MB.</source>
       </segment>
     </unit>
+    <unit id="862193009858945810">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:362</note>
+        <note category="description">Shown when a query is too large to share as a link</note>
+      </notes>
+      <segment>
+        <source>This query is too large to share as a link</source>
+      </segment>
+    </unit>
+    <unit id="862315084299301566">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:75,77</note>
+        <note category="description">Advice shown when a saved view is missing</note>
+      </notes>
+      <segment>
+        <source>It may have been deleted, or it may be private to somebody else.</source>
+      </segment>
+    </unit>
     <unit id="862395026592706702">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-uploads/workspace-uploads.component.ts:28,31</note>
@@ -7785,6 +8115,15 @@
       </notes>
       <segment>
         <source> Uploads </source>
+      </segment>
+    </unit>
+    <unit id="8623978917681527907">
+      <notes>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:116,121</note>
+        <note category="description">Button that adds a nested query group</note>
+      </notes>
+      <segment>
+        <source>Group</source>
       </segment>
     </unit>
     <unit id="8626022915953041009">
@@ -7919,8 +8258,8 @@
     <unit id="5727110993298059160">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:138</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:415</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:471</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:434</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:490</note>
         <note category="description">Counts the rows found in an import file</note>
       </notes>
       <segment>
@@ -8109,7 +8448,7 @@
     </unit>
     <unit id="8375416460166159043">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:253</note>
+        <note category="location">src/app/core/auth/permission-items.ts:281</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -8161,6 +8500,15 @@
         <source>All subtasks complete</source>
       </segment>
     </unit>
+    <unit id="3712427397909119671">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:141,143</note>
+        <note category="description">Checkbox that shares a view with the whole workspace</note>
+      </notes>
+      <segment>
+        <source> Share with the workspace </source>
+      </segment>
+    </unit>
     <unit id="3715596725146409911">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:48</note>
@@ -8207,6 +8555,16 @@
       </notes>
       <segment>
         <source>Update task</source>
+      </segment>
+    </unit>
+    <unit id="5234544449365538384">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:358</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:384</note>
+        <note category="description">Shown when a shareable view link could not be copied</note>
+      </notes>
+      <segment>
+        <source>Link could not be copied</source>
       </segment>
     </unit>
     <unit id="2337485514607640701">
@@ -8272,6 +8630,15 @@
         <source>Manage task relation</source>
       </segment>
     </unit>
+    <unit id="249911539328381860">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:239</note>
+        <note category="description">Title of the delete-view confirmation</note>
+      </notes>
+      <segment>
+        <source>Delete view?</source>
+      </segment>
+    </unit>
     <unit id="1790106018092279624">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:72</note>
@@ -8302,7 +8669,7 @@
     </unit>
     <unit id="7159058201233906638">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:249,251</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:253,255</note>
         <note category="description">Heading above problems an archive import worked around</note>
       </notes>
       <segment>
@@ -8321,6 +8688,7 @@
     <unit id="326106955650253946">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:75</note>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:8</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment>
@@ -8348,6 +8716,7 @@
     <unit id="5325481293405718739">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:76</note>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:11</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment>
@@ -8357,6 +8726,7 @@
     <unit id="6166785695326182482">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:77</note>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:12</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment>
@@ -8565,6 +8935,15 @@
         <source>The user whose change ran the rule</source>
       </segment>
     </unit>
+    <unit id="4493603856796380932">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:416</note>
+        <note category="description">Confirmation that a view was saved</note>
+      </notes>
+      <segment>
+        <source>View saved</source>
+      </segment>
+    </unit>
     <unit id="4497346320249564712">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:44,46</note>
@@ -8590,6 +8969,15 @@
       </notes>
       <segment>
         <source>Chosen workspace roles</source>
+      </segment>
+    </unit>
+    <unit id="8733170707271532124">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:106,108</note>
+        <note category="description">Button that saves a view</note>
+      </notes>
+      <segment>
+        <source>Save view</source>
       </segment>
     </unit>
     <unit id="517909520157314265">
@@ -8652,8 +9040,8 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:151</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:161</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:569</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:621</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:588</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:640</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment>
@@ -8882,7 +9270,7 @@
     </unit>
     <unit id="2889403419663447889">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:98,100</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:102,104</note>
         <note category="description">Explains what cloning an archive does</note>
       </notes>
       <segment>
@@ -8905,6 +9293,15 @@
       </notes>
       <segment>
         <source>runs</source>
+      </segment>
+    </unit>
+    <unit id="740511649555229880">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:113,115</note>
+        <note category="description">Accessible label for the button that deletes a view</note>
+      </notes>
+      <segment>
+        <source>Delete view</source>
       </segment>
     </unit>
     <unit id="7408548108482203185">
@@ -9107,8 +9504,8 @@
     </unit>
     <unit id="2825093609304249365">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:483</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:609</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:502</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:628</note>
         <note category="description">Column heading for when an import was uploaded</note>
       </notes>
       <segment>
@@ -9153,7 +9550,7 @@
     </unit>
     <unit id="5151267613413369127">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:63,64</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:65,66</note>
         <note category="description">Heading of the saved export list</note>
       </notes>
       <segment>
@@ -9178,6 +9575,15 @@
         <source>Maximum file size</source>
       </segment>
     </unit>
+    <unit id="5840053709154100532">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:10</note>
+        <note category="description">Query operator matching the start of a field</note>
+      </notes>
+      <segment>
+        <source>starts with</source>
+      </segment>
+    </unit>
     <unit id="584050110232025320">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:733</note>
@@ -9187,9 +9593,18 @@
         <source>Create task &quot;<ph id="0" equiv="NAME" disp="name"/>&quot;</source>
       </segment>
     </unit>
+    <unit id="5842054613959121821">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:46,49</note>
+        <note category="description">Shown while a query preview is loading</note>
+      </notes>
+      <segment>
+        <source> Running the query… </source>
+      </segment>
+    </unit>
     <unit id="5846098745343293658">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:733</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:752</note>
         <note category="description">Title of the dialog that confirms deleting an import</note>
       </notes>
       <segment>
@@ -9225,7 +9640,7 @@
     </unit>
     <unit id="5299848504608789238">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:262,265</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:266,269</note>
         <note category="description">Link to the workspace an archive import produced</note>
       </notes>
       <segment>
@@ -9409,6 +9824,7 @@
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207,208</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:197</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:114,117</note>
         <note category="description">Button that edits the automation</note>
       </notes>
       <segment>
@@ -9427,7 +9843,7 @@
     </unit>
     <unit id="3650965204243552982">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:116,118</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:118,120</note>
         <note category="description">Button that opens the guided export builder</note>
       </notes>
       <segment>
@@ -9453,6 +9869,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:107,109</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:88,90</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:62,64</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:77,79</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:38,41</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
@@ -9478,6 +9895,15 @@
         <source> Fix the underlying problem before enabling it again, or it will be disabled once more. </source>
       </segment>
     </unit>
+    <unit id="253720644207702428">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:164,166</note>
+        <note category="description">Shown when a saved view matches no tasks</note>
+      </notes>
+      <segment>
+        <source>No tasks match this view.</source>
+      </segment>
+    </unit>
     <unit id="8451136300262007554">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:143,145</note>
@@ -9489,7 +9915,7 @@
     </unit>
     <unit id="8455204924704616723">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:460</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:479</note>
         <note category="description">Column heading for the file an import came from</note>
       </notes>
       <segment>
@@ -9516,7 +9942,7 @@
     </unit>
     <unit id="5044351709300326566">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:342,343</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:344,345</note>
         <note category="description">Explains when import rows start appearing</note>
       </notes>
       <segment>
@@ -9648,11 +10074,20 @@
         <source> Cancel </source>
       </segment>
     </unit>
+    <unit id="2330979404051267952">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:60,62</note>
+        <note category="description">Button that opens the create-view form</note>
+      </notes>
+      <segment>
+        <source>Create View</source>
+      </segment>
+    </unit>
     <unit id="4930506384627295710">
       <notes>
         <note category="location">src/app/features/automations/views/automation-form-view/automation-form-view.component.ts:103,104</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:363</note>
-        <note category="location">src/app/workspace.routes.ts:108</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:397</note>
+        <note category="location">src/app/workspace.routes.ts:114</note>
         <note category="description">Title of the settings step</note>
       </notes>
       <segment>
@@ -9661,7 +10096,7 @@
     </unit>
     <unit id="383181061702648553">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:563</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:582</note>
         <note category="description">An export that has not started yet</note>
       </notes>
       <segment>
@@ -9726,8 +10161,8 @@
       <notes>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:55,56</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:63,67</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:217</note>
-        <note category="location">src/app/workspace.routes.ts:42</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:232</note>
+        <note category="location">src/app/workspace.routes.ts:48</note>
         <note category="description">Page title for the automation list</note>
       </notes>
       <segment>
@@ -9763,7 +10198,7 @@
     </unit>
     <unit id="6059141090474409438">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:196,198</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:200,202</note>
         <note category="description">Heading above archive members with no Netptune account</note>
       </notes>
       <segment>
@@ -9956,7 +10391,7 @@
     </unit>
     <unit id="9008042675195737518">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:284</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:303</note>
         <note category="description">Archive destination that creates a workspace</note>
       </notes>
       <segment>
@@ -10044,6 +10479,15 @@
         <source>Create Sprint</source>
       </segment>
     </unit>
+    <unit id="6839573905580765842">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:430</note>
+        <note category="description">Default name for a copy of somebody else&apos;s view</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="viewName" disp="name"/> (copy)</source>
+      </segment>
+    </unit>
     <unit id="6839740256703554925">
       <notes>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:40,41</note>
@@ -10109,7 +10553,7 @@
     <unit id="146442697456175258">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:97,100</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:281</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:315</note>
         <note category="description">Page title for the workspace import and export page</note>
       </notes>
       <segment>
@@ -10123,7 +10567,7 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33,34</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:140</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:146</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
         <note category="description">Stat label for the number of tasks on a board</note>
       </notes>
@@ -10151,7 +10595,7 @@
     </unit>
     <unit id="7171889468809878081">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:340,341</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:342,343</note>
         <note category="description">Heading when a workspace has never imported anything</note>
       </notes>
       <segment>
@@ -10179,7 +10623,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:119</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:291</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:297</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment>
@@ -10338,6 +10782,8 @@
     <unit id="397098723873502323">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:139,144</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:154,157</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:98,100</note>
         <note category="description">Closes a dialog once the user has finished</note>
       </notes>
       <segment>
@@ -10390,6 +10836,15 @@
         <source> <ph id="0" equiv="COUNT" disp="{{ taskCount() // i18n(ph=&quot;COUNT&quot;) }}"/> tasks </source>
       </segment>
     </unit>
+    <unit id="103862121239127059">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:17</note>
+        <note category="description">Query operator matching a range</note>
+      </notes>
+      <segment>
+        <source>is between</source>
+      </segment>
+    </unit>
     <unit id="1043424849189591173">
       <notes>
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:85,91</note>
@@ -10440,7 +10895,7 @@
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:32</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:98</note>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:326</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:346</note>
         <note category="description">Sort option ordering by creation date</note>
       </notes>
       <segment>
@@ -10460,6 +10915,8 @@
       <notes>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:33</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:102</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:118</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:79</note>
         <note category="description">Sort option ordering by last-changed date</note>
       </notes>
       <segment>
@@ -10468,7 +10925,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:184,185</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:186,187</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment>
@@ -10477,7 +10934,7 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:196,197</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:198,199</note>
         <note category="description">Tooltip on the button that deletes a board group</note>
       </notes>
       <segment>
@@ -10486,7 +10943,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:296</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:302</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment>
@@ -10495,7 +10952,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:306</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:318</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment>
@@ -10516,8 +10973,8 @@
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:38</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:154</note>
-        <note category="location">src/app/workspace.routes.ts:48</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:160</note>
+        <note category="location">src/app/workspace.routes.ts:54</note>
         <note category="description">Page title for the board list</note>
       </notes>
       <segment>
@@ -10576,6 +11033,15 @@
       </notes>
       <segment>
         <source> Drop here </source>
+      </segment>
+    </unit>
+    <unit id="3415268673952706297">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:208</note>
+        <note category="description">Button that adds a view to the sidebar</note>
+      </notes>
+      <segment>
+        <source>Pin to sidebar</source>
       </segment>
     </unit>
     <unit id="3423740992676752364">
@@ -10649,6 +11115,7 @@
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:37,39</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:54,56</note>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:45,47</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:163</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
       </notes>
       <segment>
@@ -10657,7 +11124,7 @@
     </unit>
     <unit id="8713752143619372030">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:189,191</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:191,193</note>
         <note category="description">Accessible label for the export cancel button</note>
       </notes>
       <segment>
@@ -10670,6 +11137,7 @@
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:162,165</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:121,124</note>
         <note category="location">src/app/features/sprints/components/sprint-backlog-group.component.ts:110,112</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:197,199</note>
         <note category="description">Shown when a task has nobody assigned</note>
       </notes>
       <segment>
@@ -10687,7 +11155,7 @@
     </unit>
     <unit id="5111678686685775324">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:116,117</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:120,121</note>
         <note category="description">Label of the slug for the workspace an archive creates</note>
       </notes>
       <segment>
@@ -10840,7 +11308,7 @@
     </unit>
     <unit id="1023931309557040065">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:315,317</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:317,319</note>
         <note category="description">Accessible label for the import undo button</note>
       </notes>
       <segment>
@@ -10859,11 +11327,20 @@
     </unit>
     <unit id="7070451801438959154">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:85</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:87</note>
         <note category="description">Counts the fields a record type can export</note>
       </notes>
       <segment>
         <source><ph id="0" equiv="count" disp="count"/> fields</source>
+      </segment>
+    </unit>
+    <unit id="7072343265709417707">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:34</note>
+        <note category="description">Summary shown when a query has no conditions and therefore matches nothing</note>
+      </notes>
+      <segment>
+        <source>No conditions yet, so this view matches no tasks.</source>
       </segment>
     </unit>
     <unit id="7077495639998556235">
@@ -10916,8 +11393,8 @@
     <unit id="3825802286872185103">
       <notes>
         <note category="location">src/app/features/calendar/views/calendar-view/calendar-view.component.ts:53,56</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:196</note>
-        <note category="location">src/app/workspace.routes.ts:72</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:202</note>
+        <note category="location">src/app/workspace.routes.ts:78</note>
         <note category="description">Page title for the calendar</note>
       </notes>
       <segment>
@@ -11023,6 +11500,15 @@
       </notes>
       <segment>
         <source>View sprint</source>
+      </segment>
+    </unit>
+    <unit id="4557203537565915133">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:13</note>
+        <note category="description">Query operator matching values above a number or date</note>
+      </notes>
+      <segment>
+        <source>is after</source>
       </segment>
     </unit>
     <unit id="4557563402390787256">
@@ -11141,6 +11627,15 @@
         <source>Tasks by status</source>
       </segment>
     </unit>
+    <unit id="3874723711759777451">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:265</note>
+        <note category="description">Default name of a new saved task view</note>
+      </notes>
+      <segment>
+        <source>Untitled view</source>
+      </segment>
+    </unit>
     <unit id="3448462145758383019">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35</note>
@@ -11163,7 +11658,7 @@
     <unit id="6570363013146073520">
       <notes>
         <note category="location">src/app/features/dashboard/views/dashboard-view/dashboard-view.component.ts:35,37</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:132</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:138</note>
         <note category="location">src/app/workspace.routes.ts:25</note>
         <note category="description">Page title for the dashboard</note>
       </notes>
@@ -11208,6 +11703,15 @@
         <source> Delete </source>
       </segment>
     </unit>
+    <unit id="4951986255869916102">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:240</note>
+        <note category="description">Body of the delete-view confirmation</note>
+      </notes>
+      <segment>
+        <source>This removes the view for everyone it is shared with. The tasks it lists are not affected.</source>
+      </segment>
+    </unit>
     <unit id="4953883075448493084">
       <notes>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:43,44</note>
@@ -11242,6 +11746,15 @@
       </notes>
       <segment>
         <source>Open tasks per assignee</source>
+      </segment>
+    </unit>
+    <unit id="3511613860007553891">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:18</note>
+        <note category="description">Query operator matching a date within the coming days</note>
+      </notes>
+      <segment>
+        <source>is in the next</source>
       </segment>
     </unit>
     <unit id="3512180719745660914">
@@ -11343,6 +11856,15 @@
         <source> No external accounts linked. </source>
       </segment>
     </unit>
+    <unit id="3929281485914893910">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:23</note>
+        <note category="description">Joins the two ends of a range in a query summary</note>
+      </notes>
+      <segment>
+        <source>and</source>
+      </segment>
+    </unit>
     <unit id="5912956176604656702">
       <notes>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:19,22</note>
@@ -11369,6 +11891,15 @@
       </notes>
       <segment>
         <source>Preview</source>
+      </segment>
+    </unit>
+    <unit id="1297926277686322973">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:130,133</note>
+        <note category="description">Label of the view visibility field</note>
+      </notes>
+      <segment>
+        <source> Visibility </source>
       </segment>
     </unit>
     <unit id="1021386700199278951">
@@ -11464,8 +11995,8 @@
     <unit id="4915431133669985304">
       <notes>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:30,33</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:97</note>
-        <note category="location">src/app/workspace.routes.ts:114</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:100</note>
+        <note category="location">src/app/workspace.routes.ts:120</note>
         <note category="description">Page title for the user profile</note>
       </notes>
       <segment>
@@ -11538,7 +12069,7 @@
     </unit>
     <unit id="2194591546577080727">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:613</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:632</note>
         <note category="description">An import whose columns have been mapped</note>
       </notes>
       <segment>
@@ -11563,6 +12094,15 @@
         <source>Velocity appears once a sprint has been completed.</source>
       </segment>
     </unit>
+    <unit id="2198416125360313173">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:6</note>
+        <note category="description">Query operator matching any of several values</note>
+      </notes>
+      <segment>
+        <source>is any of</source>
+      </segment>
+    </unit>
     <unit id="2510741784888393227">
       <notes>
         <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:446</note>
@@ -11574,7 +12114,7 @@
     </unit>
     <unit id="2511878039894643291">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:654</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:673</note>
         <note category="description">Summary of how many rows an import created, updated and skipped</note>
       </notes>
       <segment>
@@ -11657,10 +12197,10 @@
     </unit>
     <unit id="1055686627716339120">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:63</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:65</note>
         <note category="location">src/app/features/project-tasks/project-tasks.routes.ts:13</note>
         <note category="location">src/app/features/project-tasks/views/archive-view/archive-view.component.ts:14,16</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:146</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:152</note>
         <note category="description">Heading of the archive file panel</note>
       </notes>
       <segment>
@@ -11705,7 +12245,7 @@
     </unit>
     <unit id="5058483321290632814">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:200,202</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:202,204</note>
         <note category="description">Accessible label for the export delete button</note>
       </notes>
       <segment>
@@ -11796,7 +12336,7 @@
     </unit>
     <unit id="4433209389805860491">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:328,330</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:330,332</note>
         <note category="description">Accessible label for the import delete button</note>
       </notes>
       <segment>
@@ -11853,7 +12393,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:52,54</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:53,54</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,65</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:186</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:192</note>
         <note category="location">src/app/workspace.routes.ts:30</note>
         <note category="description">Filter heading for projects</note>
       </notes>
@@ -12074,7 +12614,7 @@
     </unit>
     <unit id="1908512735041572726">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:94,96</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:97,99</note>
         <note category="description">Accessible label for the archive destination choice</note>
       </notes>
       <segment>
@@ -12142,6 +12682,15 @@
       </notes>
       <segment>
         <source>with the next recorded change</source>
+      </segment>
+    </unit>
+    <unit id="4105895757984243460">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:256</note>
+        <note category="description">Confirmation that a view was deleted</note>
+      </notes>
+      <segment>
+        <source>View deleted</source>
       </segment>
     </unit>
     <unit id="4107438817414896014">
@@ -12274,7 +12823,7 @@
     <unit id="2873196070623992437">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:40</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:619</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:638</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:257</note>
         <note category="description">Series name for work a sprint took on</note>
       </notes>
@@ -12403,7 +12952,7 @@
     </unit>
     <unit id="380334853194915857">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:243</note>
+        <note category="location">src/app/core/auth/permission-items.ts:271</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -12457,7 +13006,7 @@
     </unit>
     <unit id="2105499142972466940">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:111,113</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:113,115</note>
         <note category="description">Explains how long an export stays downloadable</note>
       </notes>
       <segment>
@@ -12527,6 +13076,15 @@
         <source>Current workload</source>
       </segment>
     </unit>
+    <unit id="7828234979822398725">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:116,119</note>
+        <note category="description">Heading of the view column picker</note>
+      </notes>
+      <segment>
+        <source> Columns </source>
+      </segment>
+    </unit>
     <unit id="7831424791501412228">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:38,41</note>
@@ -12547,7 +13105,7 @@
     </unit>
     <unit id="2768015041703766826">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:729</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:748</note>
         <note category="description">Warns that deleting an import also removes its file</note>
       </notes>
       <segment>
@@ -12666,7 +13224,7 @@
     </unit>
     <unit id="7676264272581225206">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:102,104</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:106,108</note>
         <note category="description">Explains what restoring an archive does</note>
       </notes>
       <segment>
@@ -12714,8 +13272,8 @@
     <unit id="1868606282505332204">
       <notes>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:49,52</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:201</note>
-        <note category="location">src/app/workspace.routes.ts:60</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:207</note>
+        <note category="location">src/app/workspace.routes.ts:66</note>
         <note category="description">Page title for the reporting views</note>
       </notes>
       <segment>
@@ -12848,6 +13406,15 @@
         <source>Filter roadmap by sprint</source>
       </segment>
     </unit>
+    <unit id="2432489152925764943">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:165,169</note>
+        <note category="description">Explains why the share control is unavailable to this user</note>
+      </notes>
+      <segment>
+        <source> Sharing a view with the workspace needs the shared-views permission. </source>
+      </segment>
+    </unit>
     <unit id="216244952523508517">
       <notes>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:121,123</note>
@@ -12880,7 +13447,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:28</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:34</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:130</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:409</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:428</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:97,98</note>
         <note category="description">Heading of the export format step</note>
       </notes>
@@ -12906,6 +13473,17 @@
       </notes>
       <segment>
         <source>Next date range</source>
+      </segment>
+    </unit>
+    <unit id="7877652424749844964">
+      <notes>
+        <note category="location">src/app/features/task-views/task-views.routes.ts:21</note>
+        <note category="location">src/app/features/task-views/task-views.routes.ts:30</note>
+        <note category="location">src/app/features/task-views/task-views.routes.ts:39</note>
+        <note category="description">Link back to the view list from a single view</note>
+      </notes>
+      <segment>
+        <source>Back to Views</source>
       </segment>
     </unit>
     <unit id="1286983255645370171">
@@ -13014,8 +13592,8 @@
     <unit id="6215048040341403789">
       <notes>
         <note category="location">src/app/features/roadmap/views/roadmap-view.component.ts:54,57</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:191</note>
-        <note category="location">src/app/workspace.routes.ts:66</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:197</note>
+        <note category="location">src/app/workspace.routes.ts:72</note>
         <note category="description">Page title for the roadmap</note>
       </notes>
       <segment>
@@ -13072,7 +13650,7 @@
     <unit id="8237455330254721018">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:26,27</note>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:166,168</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:170,172</note>
         <note category="description">Heading of the archive contents step</note>
       </notes>
       <segment>
@@ -13108,7 +13686,7 @@
     </unit>
     <unit id="4782869372248003542">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:212,213</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:214,215</note>
         <note category="description">Heading when a workspace has never exported anything</note>
       </notes>
       <segment>
@@ -13135,7 +13713,7 @@
     </unit>
     <unit id="4789305091394342628">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:56,60</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:58,62</note>
         <note category="location">src/app/features/settings/settings.routes.ts:130</note>
         <note category="description">Page title for the workspace archive import</note>
       </notes>
@@ -13159,6 +13737,16 @@
       </notes>
       <segment>
         <source>cached</source>
+      </segment>
+    </unit>
+    <unit id="4799153980390902924">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:116</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:63</note>
+        <note category="description">Column heading for the task due date</note>
+      </notes>
+      <segment>
+        <source>Due</source>
       </segment>
     </unit>
     <unit id="5996034691240231656">
@@ -13226,6 +13814,15 @@
         <source>Nothing references it, so it is safe to change or remove.</source>
       </segment>
     </unit>
+    <unit id="9094260555748931453">
+      <notes>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:144,146</note>
+        <note category="description">Chip summary of several picked values</note>
+      </notes>
+      <segment>
+        <source><ph id="0" equiv="values" disp="labels .slice(0, 2) .join(&apos;, &apos;)"/> +<ph id="1" equiv="overflowCount" disp="labels.length - 2"/></source>
+      </segment>
+    </unit>
     <unit id="4360572750174855478">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/api-credential-secret-dialog.component.ts:24,28</note>
@@ -13237,7 +13834,7 @@
     </unit>
     <unit id="4361277139424921954">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:86,88</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:88,90</note>
         <note category="description">Label for where an archive is imported into</note>
       </notes>
       <segment>
@@ -13249,13 +13846,22 @@
         <note category="location">src/app/features/assistant/assistant.routes.ts:12</note>
         <note category="location">src/app/features/settings/views/personal-assistant-settings-view/personal-assistant-settings-view.component.ts:17,21</note>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-button.component.ts:42,45</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:273</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:308</note>
-        <note category="location">src/app/workspace.routes.ts:78</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:307</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:342</note>
+        <note category="location">src/app/workspace.routes.ts:84</note>
         <note category="description">Page title for the assistant chat page</note>
       </notes>
       <segment>
         <source>Assistant</source>
+      </segment>
+    </unit>
+    <unit id="436231775780502366">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:157,158</note>
+        <note category="description">Explains what saved task views do, on the empty state</note>
+      </notes>
+      <segment>
+        <source>A view pairs a saved query with the columns and sort you want to read it in, and can be kept private or shared with the workspace.</source>
       </segment>
     </unit>
     <unit id="4363498861095963216">
@@ -13528,7 +14134,7 @@
     </unit>
     <unit id="7264838797878508480">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:238</note>
+        <note category="location">src/app/core/auth/permission-items.ts:266</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -13556,7 +14162,7 @@
     </unit>
     <unit id="8539475658034343762">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:130,133</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:134,137</note>
         <note category="description">Label of the archive member invite toggle</note>
       </notes>
       <segment>
@@ -13899,6 +14505,16 @@
         <source> Field </source>
       </segment>
     </unit>
+    <unit id="892073694820881630">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:353</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:379</note>
+        <note category="description">Confirmation that a shareable view link was copied</note>
+      </notes>
+      <segment>
+        <source>Link copied</source>
+      </segment>
+    </unit>
     <unit id="8921855151408700743">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:111,115</note>
@@ -13933,6 +14549,15 @@
       </notes>
       <segment>
         <source>Could not verify Identifier availability</source>
+      </segment>
+    </unit>
+    <unit id="4481497787765929776">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:91,93</note>
+        <note category="description">Descending sort direction</note>
+      </notes>
+      <segment>
+        <source>Descending ↓</source>
       </segment>
     </unit>
     <unit id="2385248808412253609">
@@ -14227,7 +14852,7 @@
     </unit>
     <unit id="2200828314484557158">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:240,243</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:244,247</note>
         <note category="description">Heading of the finished archive import panel</note>
       </notes>
       <segment>
@@ -14365,6 +14990,15 @@
         <source> Create workspace identities for agents and integrations without sharing a user login. </source>
       </segment>
     </unit>
+    <unit id="1932018563020322214">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:20</note>
+        <note category="description">Query operator matching tasks past their due date</note>
+      </notes>
+      <segment>
+        <source>is overdue</source>
+      </segment>
+    </unit>
     <unit id="5727676672309093168">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:109</note>
@@ -14395,7 +15029,7 @@
     </unit>
     <unit id="4023379316864867526">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:240,242</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:242,244</note>
         <note category="description">Button that opens the guided import builder</note>
       </notes>
       <segment>
@@ -14483,6 +15117,15 @@
         <source> Create credential </source>
       </segment>
     </unit>
+    <unit id="8679924729501771276">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:22</note>
+        <note category="description">Prefix for a query fragment that must not match</note>
+      </notes>
+      <segment>
+        <source>not</source>
+      </segment>
+    </unit>
     <unit id="1967521248845505958">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:173,174</note>
@@ -14523,6 +15166,8 @@
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:156,159</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:255</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:68,71</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:193</note>
         <note category="description">Model option that defers to the server default</note>
       </notes>
       <segment>
@@ -14531,7 +15176,7 @@
     </unit>
     <unit id="3285053667163564021">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:211,213</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:215,217</note>
         <note category="description">Heading above the reasons an archive cannot be imported</note>
       </notes>
       <segment>
@@ -14639,7 +15284,7 @@
     </unit>
     <unit id="2943033819969004159">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:429</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:448</note>
         <note category="description">Column heading for when an export was requested</note>
       </notes>
       <segment>
@@ -14773,6 +15418,15 @@
         <source>Revoke</source>
       </segment>
     </unit>
+    <unit id="2813509377700861100">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:50,54</note>
+        <note category="description">Shown when a query preview matches no tasks</note>
+      </notes>
+      <segment>
+        <source> No tasks match this query yet. </source>
+      </segment>
+    </unit>
     <unit id="2819197521571556241">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:620</note>
@@ -14811,7 +15465,7 @@
     </unit>
     <unit id="464749780222721589">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:573</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:592</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:651</note>
         <note category="description">An export whose file has been removed</note>
       </notes>
@@ -15049,6 +15703,15 @@
         <source>No tasks in this sprint.</source>
       </segment>
     </unit>
+    <unit id="8211774880361154235">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:167,169</note>
+        <note category="description">Button that opens the create-view form</note>
+      </notes>
+      <segment>
+        <source> Create View </source>
+      </segment>
+    </unit>
     <unit id="8212177249756365917">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-task-list.component.ts:98,101</note>
@@ -15060,7 +15723,7 @@
     </unit>
     <unit id="8960678085928120824">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:253</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:255</note>
         <note category="description">Names the rows of the import history table</note>
       </notes>
       <segment>
@@ -15096,8 +15759,8 @@
     </unit>
     <unit id="5014242337218423887">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:228,230</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:232,234</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:232,234</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:234,236</note>
         <note category="description">Button that commits an archive import</note>
       </notes>
       <segment>
@@ -15133,10 +15796,30 @@
         <source> Save Status </source>
       </segment>
     </unit>
+    <unit id="5028777105388019087">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:81,85</note>
+        <note category="description">Button that opens the view details drawer</note>
+      </notes>
+      <segment>
+        <source>Details</source>
+      </segment>
+    </unit>
+    <unit id="5034825036213860607">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:7</note>
+        <note category="description">Query operator excluding several values</note>
+      </notes>
+      <segment>
+        <source>is none of</source>
+      </segment>
+    </unit>
     <unit id="5162686434580248853">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:73,74</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:56,57</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-table.component.ts:117</note>
+        <note category="location">src/app/features/task-views/util/task-view-columns.ts:71</note>
         <note category="description">Label of the sprint start date field</note>
       </notes>
       <segment>
@@ -15194,7 +15877,7 @@
     </unit>
     <unit id="2247746632525326951">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:288</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:293</note>
         <note category="location">src/app/features/settings/components/notification-preferences/notification-preferences.component.ts:35</note>
         <note category="description">Archive destination that fills the current workspace</note>
       </notes>
@@ -15214,7 +15897,7 @@
     </unit>
     <unit id="4612184659246432792">
       <notes>
-        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:32,33</note>
+        <note category="location">src/app/features/data-transfer/components/export-steps/export-what-step.component.ts:33,34</note>
         <note category="description">Accessible label for the whole-workspace archive card</note>
       </notes>
       <segment>
@@ -15365,6 +16048,15 @@
         <source> Add tasks to an upcoming sprint </source>
       </segment>
     </unit>
+    <unit id="580124269805283452">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:93,95</note>
+        <note category="description">Ascending sort direction</note>
+      </notes>
+      <segment>
+        <source>Ascending ↑</source>
+      </segment>
+    </unit>
     <unit id="3259201493560941662">
       <notes>
         <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:145,147</note>
@@ -15385,7 +16077,7 @@
     </unit>
     <unit id="7462301153729425254">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:404</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:423</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:66,69</note>
         <note category="location">src/app/features/settings/settings.routes.ts:116</note>
         <note category="description">Column heading for what an export contains</note>
@@ -15430,6 +16122,15 @@
         <source> All tasks in this sprint are complete. Ready to close out the sprint. </source>
       </segment>
     </unit>
+    <unit id="7036284206110282007">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:24</note>
+        <note category="description">Unit after a relative day count in a query summary</note>
+      </notes>
+      <segment>
+        <source>days</source>
+      </segment>
+    </unit>
     <unit id="1860421182220689611">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:201,204</note>
@@ -15455,6 +16156,15 @@
       </notes>
       <segment>
         <source>This import could not be undone.</source>
+      </segment>
+    </unit>
+    <unit id="4475093671158329161">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:103,107</note>
+        <note category="description">Button that adds a view to the sidebar</note>
+      </notes>
+      <segment>
+        <source>Pin</source>
       </segment>
     </unit>
     <unit id="3410379442094172650">
@@ -15487,7 +16197,7 @@
     <unit id="5194912054053114732">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:41,43</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:175</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:181</note>
         <note category="description">Page title for the sprint backlog</note>
       </notes>
       <segment>
@@ -15511,6 +16221,15 @@
       </notes>
       <segment>
         <source>Other</source>
+      </segment>
+    </unit>
+    <unit id="8698832098739933868">
+      <notes>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:67,69</note>
+        <note category="description">Placeholder text: Choose one or more values</note>
+      </notes>
+      <segment>
+        <source>Choose one or more values</source>
       </segment>
     </unit>
     <unit id="8123881768100361598">
@@ -15552,8 +16271,8 @@
     </unit>
     <unit id="7607713563510753803">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:225</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:379</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:227</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:383</note>
         <note category="description">Heading of the import history panel</note>
       </notes>
       <segment>
@@ -15567,6 +16286,15 @@
       </notes>
       <segment>
         <source> Assign Existing Tasks </source>
+      </segment>
+    </unit>
+    <unit id="760986369763309193">
+      <notes>
+        <note category="location">src/app/features/task-views/util/query-explanation.ts:25</note>
+        <note category="description">Joins values in a set-membership query summary, with a trailing space</note>
+      </notes>
+      <segment>
+        <source>, </source>
       </segment>
     </unit>
     <unit id="2465583616985358329">
@@ -15654,8 +16382,8 @@
     <unit id="4347094825344030699">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:58,59</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:170</note>
-        <note category="location">src/app/workspace.routes.ts:54</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:176</note>
+        <note category="location">src/app/workspace.routes.ts:60</note>
         <note category="description">Page title for the sprint list</note>
       </notes>
       <segment>
@@ -15745,7 +16473,7 @@
     </unit>
     <unit id="45739481977493163">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:422</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:441</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:144</note>
         <note category="description">Column heading for the size of an export file</note>
       </notes>
@@ -15756,8 +16484,8 @@
     <unit id="57403663622654391">
       <notes>
         <note category="location">src/app/features/storage/components/storage-header.component.ts:39,42</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:330</note>
-        <note category="location">src/app/workspace.routes.ts:102</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:364</note>
+        <note category="location">src/app/workspace.routes.ts:108</note>
         <note category="description">Page title for workspace file storage</note>
       </notes>
       <segment>
@@ -15917,6 +16645,15 @@
         <source>Resend invite</source>
       </segment>
     </unit>
+    <unit id="6387682075038243709">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163,165</note>
+        <note category="description">Accessible label for the button that moves a column later</note>
+      </notes>
+      <segment>
+        <source>Move column down</source>
+      </segment>
+    </unit>
     <unit id="228120404428462173">
       <notes>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:129</note>
@@ -16036,7 +16773,7 @@
     </unit>
     <unit id="3341156395496259696">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:248</note>
+        <note category="location">src/app/core/auth/permission-items.ts:276</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -16506,7 +17243,7 @@
     </unit>
     <unit id="5383274518270102702">
       <notes>
-        <note category="location">src/app/core/auth/permission-items.ts:403</note>
+        <note category="location">src/app/core/auth/permission-items.ts:431</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment>
@@ -16533,7 +17270,7 @@
     </unit>
     <unit id="5389189004241549939">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:125,127</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:129,131</note>
         <note category="description">Label of the archive member invite toggle</note>
       </notes>
       <segment>
@@ -16583,6 +17320,15 @@
       </notes>
       <segment>
         <source> Automation rules </source>
+      </segment>
+    </unit>
+    <unit id="5797079666713956753">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:99,101</note>
+        <note category="description">Button that removes a view from the sidebar</note>
+      </notes>
+      <segment>
+        <source> Unpin </source>
       </segment>
     </unit>
     <unit id="5799438277111148696">
@@ -16743,8 +17489,8 @@
       <notes>
         <note category="location">src/app/features/settings/views/personal-general-settings-view/personal-general-settings-view.component.ts:25,29</note>
         <note category="location">src/app/features/settings/views/workspace-general-settings-view/workspace-general-settings-view.component.ts:21,24</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:233</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:295</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:267</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:329</note>
         <note category="description">Page title for general personal settings</note>
       </notes>
       <segment>
@@ -16755,7 +17501,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:72,74</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:64,65</note>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:249</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:283</note>
         <note category="description">Filter heading for statuses</note>
       </notes>
       <segment>
@@ -16764,7 +17510,7 @@
     </unit>
     <unit id="788903633413068121">
       <notes>
-        <note category="location">src/app/shell/shell-sidebar.component.ts:265</note>
+        <note category="location">src/app/shell/shell-sidebar.component.ts:299</note>
         <note category="description">Sidebar link to workspace service account settings</note>
       </notes>
       <segment>
@@ -16796,6 +17542,24 @@
       </notes>
       <segment>
         <source>Mapping</source>
+      </segment>
+    </unit>
+    <unit id="6499373490791057157">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:19</note>
+        <note category="description">Query operator matching a date within the past days</note>
+      </notes>
+      <segment>
+        <source>is in the last</source>
+      </segment>
+    </unit>
+    <unit id="6499828313169795693">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:75,76</note>
+        <note category="description">Shown when the saved view list fails to load</note>
+      </notes>
+      <segment>
+        <source>Views could not be loaded</source>
       </segment>
     </unit>
     <unit id="4191696363237060749">
@@ -16900,6 +17664,15 @@
         <source> · edited </source>
       </segment>
     </unit>
+    <unit id="114923036829185897">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:15</note>
+        <note category="description">Query operator matching values below a number or date</note>
+      </notes>
+      <segment>
+        <source>is before</source>
+      </segment>
+    </unit>
     <unit id="1150323560908371371">
       <notes>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:132,135</note>
@@ -16983,7 +17756,7 @@
     </unit>
     <unit id="6361083805757447053">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:334</note>
+        <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:354</note>
         <note category="description">Size of an archive file</note>
       </notes>
       <segment>
@@ -16997,6 +17770,15 @@
       </notes>
       <segment>
         <source>Customize columns</source>
+      </segment>
+    </unit>
+    <unit id="3676095562960762035">
+      <notes>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:4</note>
+        <note category="description">Query operator matching an exact value</note>
+      </notes>
+      <segment>
+        <source>is</source>
       </segment>
     </unit>
     <unit id="3687716071175862785">
@@ -17015,6 +17797,15 @@
       </notes>
       <segment>
         <source> Select all rows </source>
+      </segment>
+    </unit>
+    <unit id="7975467617398451139">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:177,180</note>
+        <note category="description">Shown when editing a shared view the user cannot change</note>
+      </notes>
+      <segment>
+        <source> You cannot change this shared view, so saving creates your own copy of it. </source>
       </segment>
     </unit>
     <unit id="3844444380870280621">
@@ -17135,10 +17926,20 @@
         <source> <ph id="0" equiv="SIZE" disp="{{ formatBytes(remainingBytes()!) // i18n(ph=&quot;SIZE&quot;) }}"/> remaining </source>
       </segment>
     </unit>
+    <unit id="4866997247833302800">
+      <notes>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:151,153</note>
+        <note category="description">Accessible label for the button that moves a column earlier</note>
+      </notes>
+      <segment>
+        <source>Move column up</source>
+      </segment>
+    </unit>
     <unit id="4814285799071780083">
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:338</note>
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:360</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:89,92</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="description">Confirms removing an API key</note>
       </notes>
@@ -17222,8 +18023,8 @@
     </unit>
     <unit id="1890894168383710137">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:110</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:375</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:112</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:376</note>
         <note category="description">Heading of the export history panel</note>
       </notes>
       <segment>
@@ -17250,7 +18051,7 @@
     </unit>
     <unit id="2388737961552785761">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:302,303</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:304,305</note>
         <note category="description">Accessible label for the import resume link</note>
       </notes>
       <segment>

@@ -30,7 +30,11 @@ import { IconTileComponent } from '../icon-tile.component';
         </div>
       </header>
 
-      <div class="flex flex-1 flex-col justify-center px-6 py-5">
+      <div
+        class="flex flex-1 flex-col"
+        [class.justify-center]="!flush()"
+        [class.px-6]="!flush()"
+        [class.py-5]="!flush()">
         <ng-content />
       </div>
     </section>
@@ -41,4 +45,5 @@ export class ChartCardComponent {
   readonly title = input.required<string>();
   readonly description = input('');
   readonly clipContent = input(true);
+  readonly flush = input(false);
 }
