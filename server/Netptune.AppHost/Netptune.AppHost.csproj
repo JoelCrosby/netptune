@@ -1,9 +1,15 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.4.6">
+<Project Sdk="Aspire.AppHost.Sdk/13.5.2">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <UserSecretsId>85434c8f-aeb2-41af-aed3-b06a781d8580</UserSecretsId>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+
+    <!-- ASPIRE010 (new in 13.5) nags that AspireUseCliBundle is false. Leaving it false keeps DCP and
+         the dashboard coming from the restored NuGet packages, so a plain `dotnet build` needs no
+         Aspire CLI on the machine - which is what CI does. Turning it on would push that resolution
+         onto the installed CLI instead. -->
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
