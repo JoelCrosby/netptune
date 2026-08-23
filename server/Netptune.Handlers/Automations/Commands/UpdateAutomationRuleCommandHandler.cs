@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Automation.Rules;
 using Netptune.Core.Cache;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests;

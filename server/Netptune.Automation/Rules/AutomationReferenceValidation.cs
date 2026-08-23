@@ -1,9 +1,9 @@
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
-internal static class AutomationReferenceValidation
+public static class AutomationReferenceValidation
 {
     public static async Task<string?> Validate(AutomationValidationContext context, CancellationToken cancellationToken)
     {

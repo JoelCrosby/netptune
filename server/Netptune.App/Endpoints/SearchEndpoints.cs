@@ -1,7 +1,8 @@
 using Mediator;
 
 using Netptune.Core.Authorization;
-using Netptune.Handlers.Search;
+using Netptune.Handlers.Search.Commands;
+using Netptune.Handlers.Search.Queries;
 
 namespace Netptune.App.Endpoints;
 

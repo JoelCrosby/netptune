@@ -2,7 +2,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.ViewModels.Automations;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
 internal sealed record AutomationRuleReferences
 {

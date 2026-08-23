@@ -1,8 +1,10 @@
 using Netptune.Core.Services;
 using Netptune.Transfer.Services;
 
-namespace Netptune.Handlers.Transfer.Commands;
+namespace Netptune.Transfer.Archive;
 
+// The archive upload as it arrives from the endpoint, before the caller's identity has been resolved
+// into the user and workspace the import runs against.
 public sealed record ImportArchiveRequest
 {
     public required Stream Archive { get; init; }
@@ -12,20 +14,17 @@ public sealed record ImportArchiveRequest
     public string? TargetSlug { get; init; }
 
     public bool InviteUnmatchedMembers { get; init; }
-}
 
-internal static class ArchiveImportRequestFactory
-{
-    public static async Task<ArchiveImportRequest> Build(ImportArchiveRequest request, IIdentityService identity)
+    public async Task<ArchiveImportRequest> Resolve(IIdentityService identity)
     {
         return new ArchiveImportRequest
         {
-            Archive = request.Archive,
+            Archive = Archive,
             UserId = identity.GetCurrentUserId(),
-            Mode = request.Mode,
+            Mode = Mode,
             WorkspaceId = await identity.GetWorkspaceId(),
-            TargetSlug = request.TargetSlug,
-            InviteUnmatchedMembers = request.InviteUnmatchedMembers,
+            TargetSlug = TargetSlug,
+            InviteUnmatchedMembers = InviteUnmatchedMembers,
         };
     }
 }

@@ -3,7 +3,7 @@ using Netptune.Core.Models.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Automations;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
 public static class AutomationRuleReferenceAnalyzer
 {

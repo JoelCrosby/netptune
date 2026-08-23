@@ -1,12 +1,11 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events;
 
-namespace Netptune.Handlers.Comments;
+namespace Netptune.Core.Events.Comments;
 
-internal sealed record CommentEventContext(int WorkspaceId, int TaskId, int CommentId);
+public sealed record CommentEventContext(int WorkspaceId, int TaskId, int CommentId);
 
-internal static class CommentEvents
+public static class CommentEvents
 {
     public static EventWriteRequest<CommentEventPayload> Create(
         CommentEventContext context,

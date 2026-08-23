@@ -5,7 +5,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Search;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Handlers.Search;
+namespace Netptune.Handlers.Search.Commands;
 
 public sealed record ReindexCommand : IRequest;
 

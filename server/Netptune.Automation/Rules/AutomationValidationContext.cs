@@ -3,9 +3,9 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
-internal sealed record AutomationValidationContext
+public sealed record AutomationValidationContext
 {
     public required AutomationRuleRequest Request { get; init; }
 

@@ -1,11 +1,11 @@
 using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Handlers.Storage;
+namespace Netptune.Storage;
 
-internal static class WorkspaceUploadLimit
+public static class WorkspaceUploadLimit
 {
-    internal static async Task<long> Resolve(INetptuneUnitOfWork unitOfWork, int workspaceId, CancellationToken cancellationToken)
+    public static async Task<long> Resolve(INetptuneUnitOfWork unitOfWork, int workspaceId, CancellationToken cancellationToken)
     {
         var configured = await unitOfWork.Workspaces.GetMaxUploadBytes(workspaceId, cancellationToken);
 

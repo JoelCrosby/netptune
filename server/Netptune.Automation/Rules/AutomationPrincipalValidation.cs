@@ -1,9 +1,9 @@
 using Netptune.Core.Authorization;
 using Netptune.Core.Services.Automations;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
-internal static class AutomationPrincipalValidation
+public static class AutomationPrincipalValidation
 {
     public static async Task<string?> Validate(
         AutomationValidationContext context,

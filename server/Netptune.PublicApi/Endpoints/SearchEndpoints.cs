@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.ViewModels.Search;
-using Netptune.Handlers.Search;
+using Netptune.Handlers.Search.Queries;
 
 namespace Netptune.PublicApi.Endpoints;
 

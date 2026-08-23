@@ -27,7 +27,7 @@ public sealed class ImportArchiveCommandHandler
         ImportArchiveCommand request,
         CancellationToken cancellationToken)
     {
-        var built = await ArchiveImportRequestFactory.Build(request.Request, Identity);
+        var built = await request.Request.Resolve(Identity);
 
         try
         {

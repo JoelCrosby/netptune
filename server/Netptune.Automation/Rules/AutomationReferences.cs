@@ -5,9 +5,9 @@ using Netptune.Core.Models.Usage;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.ViewModels.Automations;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
-internal sealed record AutomationReferenceSubject
+public sealed record AutomationReferenceSubject
 {
     public UsageSubjectKind Kind { get; init; }
 
@@ -16,7 +16,7 @@ internal sealed record AutomationReferenceSubject
     public string Name { get; init; } = null!;
 }
 
-internal static class AutomationReferences
+public static class AutomationReferences
 {
     public static List<UsageReference> Find(
         List<AutomationRule> rules,

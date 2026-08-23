@@ -1,10 +1,9 @@
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Usage;
-using Netptune.Core.ViewModels.Usage;
 
-namespace Netptune.Handlers.Usage;
+namespace Netptune.Core.ViewModels.Usage;
 
-internal static class UsageReferences
+public static class UsageReferences
 {
     public static List<UsageReferenceGroupViewModel> Build(
         params (UsageReferenceKind Kind, List<UsageReference> Items)[] groups)

@@ -1,13 +1,12 @@
 using Mediator;
 
+using Netptune.Automation.Rules;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Usage;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Usage;
-using Netptune.Handlers.Automations;
-using Netptune.Handlers.Usage;
 
 namespace Netptune.Handlers.Statuses.Queries;
 

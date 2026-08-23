@@ -1,5 +1,6 @@
 using Mediator;
 
+using Netptune.Automation.Rules;
 using Netptune.Core.Models.Automations;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;

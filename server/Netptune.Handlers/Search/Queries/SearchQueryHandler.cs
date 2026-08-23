@@ -6,7 +6,7 @@ using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Search;
 
-namespace Netptune.Handlers.Search;
+namespace Netptune.Handlers.Search.Queries;
 
 public sealed record SearchQuery(string Q, string[]? Types = null, int Limit = 20) : IRequest<SearchResponse>;
 

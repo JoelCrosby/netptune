@@ -7,13 +7,13 @@ using Netptune.Core.Services.Search;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Search;
-using Netptune.Handlers.Search;
+using Netptune.Handlers.Search.Queries;
 
 using NSubstitute;
 
 using Xunit;
 
-namespace Netptune.UnitTests.Netptune.Handlers.Search;
+namespace Netptune.UnitTests.Netptune.Handlers.Search.Queries;
 
 public sealed class SearchQueryHandlerTests
 {

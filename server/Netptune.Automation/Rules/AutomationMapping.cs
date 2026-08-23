@@ -8,9 +8,9 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services.Automations;
 using Netptune.Core.ViewModels.Automations;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
-internal static class AutomationMapping
+public static class AutomationMapping
 {
     public static AutomationRuleViewModel ToViewModel(this AutomationRule rule, IAutomationActionRegistry actionRegistry)
     {

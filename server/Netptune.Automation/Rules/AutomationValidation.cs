@@ -1,9 +1,9 @@
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Automations;
 
-namespace Netptune.Handlers.Automations;
+namespace Netptune.Automation.Rules;
 
-internal static class AutomationValidation
+public static class AutomationValidation
 {
     public static string? Validate(AutomationRuleRequest request, IAutomationActionRegistry actionRegistry)
     {
