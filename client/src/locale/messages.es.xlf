@@ -7627,6 +7627,16 @@
         <target> Notifica </target>
       </segment>
     </unit>
+    <unit id="9114014874327219131">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:62,66</note>
+        <note category="description">Accessible label for the board card selection checkbox</note>
+      </notes>
+      <segment state="translated">
+        <source>Select task</source>
+        <target>Seleccionar tarea</target>
+      </segment>
+    </unit>
     <unit id="3181866262913879267">
       <notes>
         <note category="location">src/app/features/automations/components/automation-notify-preview.component.ts:45,47</note>
@@ -11471,8 +11481,8 @@
     </unit>
     <unit id="2700504957203898501">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:76,78</note>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:80,84</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:95,97</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:99,103</note>
         <note category="location">src/app/static/components/task-name.component.ts:46,47</note>
         <note category="location">src/app/static/components/task-name.component.ts:48,51</note>
         <note category="description">Accessible label for the icon marking a task that has comments</note>

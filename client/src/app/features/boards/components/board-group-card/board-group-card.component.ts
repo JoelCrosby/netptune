@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 import { EstimateType, formatEstimate } from '@core/enums/estimate-type';
@@ -12,6 +12,7 @@ import {
 import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
+import { BoardSelectionService } from '@core/services/board-selection.service';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import {
   LucideCheck,
@@ -23,9 +24,34 @@ import { BadgeComponent } from '@static/components/badge/badge.component';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
+import { SelectionCheckboxComponent } from '@static/components/checkbox/selection-checkbox.component';
 
 @Component({
   selector: 'app-board-group-card',
+  styles: [
+    `
+      @keyframes selection-checkbox-in {
+        from {
+          opacity: 0;
+          transform: scale(0.85);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .selection-checkbox {
+        animation: selection-checkbox-in 140ms ease-out;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .selection-checkbox {
+          animation: none;
+        }
+      }
+    `,
+  ],
   imports: [
     AvatarComponent,
     BadgeComponent,
@@ -37,13 +63,30 @@ import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.compo
     TooltipDirective,
     SprintBadgeComponent,
     TaskFlagBadgeComponent,
+    SelectionCheckboxComponent,
   ],
   template: `
     <div
-      class="border-border bg-board-group-card mb-[.3rem] flex min-h-24 flex-col items-start overflow-hidden rounded-sm border p-2! text-[14px] tracking-[.1px] shadow-sm"
-      [class.bg-primary/25]="task().selected"
-      [class.border-bg-primary]="task().selected"
-      [ngClass]="priorityClasses()">
+      class="border-border bg-board-group-card relative mb-[.3rem] flex min-h-24 flex-col items-start overflow-hidden rounded-sm border p-2! text-[14px] tracking-[.1px] shadow-sm"
+      [ngClass]="cardClasses()">
+      @if (selectionActive()) {
+        <div
+          class="selection-checkbox absolute top-1 right-1 z-10 flex items-center rounded-[4px] p-1"
+          (click)="onCheckboxClicked($event)">
+          <span
+            class="bg-board-group-card absolute inset-0 rounded-[4px]"></span>
+          <span
+            class="absolute inset-0 rounded-[4px]"
+            [ngClass]="overlayClasses()"></span>
+
+          <app-selection-checkbox
+            class="relative"
+            [checked]="!!task().selected"
+            i18n-label="Accessible label for the board card selection checkbox"
+            label="Select task" />
+        </div>
+      }
+
       <div class="mb-0 leading-[1.4rem] select-none">{{ task().name }}</div>
 
       <div class="mt-4 flex flex-row flex-wrap">
@@ -124,6 +167,9 @@ import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.compo
   `,
 })
 export class BoardGroupCardComponent {
+  private readonly selection = inject(BoardSelectionService);
+
+  readonly selectionActive = computed(() => this.selection.count() > 0);
   readonly task = input.required<Selected<BoardViewTask>>();
   readonly groupId = input.required<number>();
   readonly statusCategory = StatusCategory;
@@ -140,10 +186,35 @@ export class BoardGroupCardComponent {
     return taskPriorityColors[p];
   });
 
-  priorityClasses = computed(() => {
-    const p = this.priority() ?? TaskPriority.none;
-    return { [taskPriorityCardColors[p]]: true };
+  // The priority tint uses important utilities, so a selected card has to drop
+  // them entirely rather than try to layer the selection colour on top.
+  cardClasses = computed(() => {
+    if (this.task().selected) {
+      return 'bg-primary/25! border-primary!';
+    }
+
+    return taskPriorityCardColors[this.priority() ?? TaskPriority.none];
   });
+
+  // The checkbox sits over the card content, so it carries the same background
+  // layers as the card itself to keep the text behind it masked.
+  overlayClasses = computed(() => {
+    if (this.task().selected) {
+      return 'bg-primary/25';
+    }
+
+    return taskPriorityCardColors[this.priority() ?? TaskPriority.none];
+  });
+
+  onCheckboxClicked(event: MouseEvent) {
+    event.stopPropagation();
+
+    if (this.task().selected) {
+      this.selection.deselect(this.task().id);
+    } else {
+      this.selection.select(this.task().id);
+    }
+  }
 
   priorityLabel = computed(() => {
     const p = this.priority() ?? TaskPriority.none;
