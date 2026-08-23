@@ -2889,7 +2889,7 @@
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:82</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:65,66</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:26,29</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:22,25</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:82</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:379</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:301</note>
@@ -3447,8 +3447,8 @@
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:69,70</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:106</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:44</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:39</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:123</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:65,67</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:147</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:92,93</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:399</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:55,57</note>
@@ -3646,7 +3646,7 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:45</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:43,45</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:70,73</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:103,105</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:60,62</note>
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:95,98</note>
@@ -4337,7 +4337,7 @@
     <unit id="3412242050628541814">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:60,63</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:69,72</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:87,90</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:44</note>
         <note category="description">Label of the source repository URL field</note>
       </notes>
@@ -4821,6 +4821,16 @@
       <segment state="translated">
         <source>Identifier</source>
         <target>Identificador</target>
+      </segment>
+    </unit>
+    <unit id="1603950823783231568">
+      <notes>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:96,97</note>
+        <note category="description">Explains what the default task status field controls</note>
+      </notes>
+      <segment state="translated">
+        <source>New tasks in this project start with this status.</source>
+        <target>Las tareas nuevas de este proyecto empiezan con este estado.</target>
       </segment>
     </unit>
     <unit id="1611064920330567973">
@@ -10961,7 +10971,7 @@
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:106,108</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:74,76</note>
         <note category="location">src/app/features/profile/views/profile-view/profile-view.component.ts:39,42</note>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:35,37</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:56,58</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:101,103</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:107,109</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:88,90</note>
@@ -11824,7 +11834,7 @@
     <unit id="4319441956121197474">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:123</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:89,92</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:111,114</note>
         <note category="description">Button that saves edits to the board</note>
       </notes>
       <segment state="translated">
@@ -13613,23 +13623,13 @@
     </unit>
     <unit id="9187323536893515910">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:50,52</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:116</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:77,79</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:140</note>
         <note category="description">Label of the project key field</note>
       </notes>
       <segment state="translated">
         <source>Project ID</source>
         <target>ID del proyecto</target>
-      </segment>
-    </unit>
-    <unit id="7839129225542195420">
-      <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:56,58</note>
-        <note category="description">Explains where the project key appears</note>
-      </notes>
-      <segment state="translated">
-        <source> The Project ID is displayed as the first part of task&apos;s ID </source>
-        <target> El ID del proyecto se muestra como la primera parte del ID de una tarea </target>
       </segment>
     </unit>
     <unit id="7840301863034787689">
@@ -13662,19 +13662,9 @@
         <target>Acota la exportación. Si no marcas nada se incluye todo.</target>
       </segment>
     </unit>
-    <unit id="820331289830799665">
-      <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:61,63</note>
-        <note category="description">Constraints on the project key</note>
-      </notes>
-      <segment state="translated">
-        <source> max 6 characters. should be unique to workspace </source>
-        <target> máximo 6 caracteres. debe ser único en el espacio de trabajo </target>
-      </segment>
-    </unit>
     <unit id="7122750425312910877">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:76,77</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:94,95</note>
         <note category="description">Label of the default task status field</note>
       </notes>
       <segment state="translated">
@@ -13734,7 +13724,7 @@
     </unit>
     <unit id="3953140809261219704">
       <notes>
-        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:33,34</note>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:54,55</note>
         <note category="description">Shown when a project fails to load</note>
       </notes>
       <segment state="translated">
@@ -14799,6 +14789,16 @@
       <segment state="translated">
         <source>Daily</source>
         <target>Diario</target>
+      </segment>
+    </unit>
+    <unit id="928541574822142523">
+      <notes>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:82,85</note>
+        <note category="description">Explains where the project key appears and what it may contain</note>
+      </notes>
+      <segment state="translated">
+        <source>Shown as the first part of every task ID. Up to 6 characters, unique to this workspace.</source>
+        <target>Se muestra como la primera parte de cada ID de tarea. Máximo 6 caracteres, único en este espacio de trabajo.</target>
       </segment>
     </unit>
     <unit id="928838138686087140">
@@ -15980,6 +15980,16 @@
       <segment state="translated">
         <source>There are no conversations</source>
         <target>No hay conversaciones</target>
+      </segment>
+    </unit>
+    <unit id="3234223246962552425">
+      <notes>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:48,51</note>
+        <note category="description">Section heading for the project detail form</note>
+      </notes>
+      <segment state="translated">
+        <source> Project details </source>
+        <target> Detalles del proyecto </target>
       </segment>
     </unit>
     <unit id="3235487491166357848">
@@ -18276,6 +18286,16 @@
         <target>Contenido incrustado</target>
       </segment>
     </unit>
+    <unit id="5416102266216743499">
+      <notes>
+        <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:29,30</note>
+        <note category="description">Accessible label while a project loads</note>
+      </notes>
+      <segment state="translated">
+        <source>Loading project</source>
+        <target>Cargando proyecto</target>
+      </segment>
+    </unit>
     <unit id="5423991647761194551">
       <notes>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:139</note>
@@ -20326,6 +20346,16 @@
       <segment state="translated">
         <source>Resize due date</source>
         <target>Ajustar la fecha de vencimiento</target>
+      </segment>
+    </unit>
+    <unit id="8529304273497332253">
+      <notes>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:53,56</note>
+        <note category="description">Explains what the project detail form controls</note>
+      </notes>
+      <segment state="translated">
+        <source> How this project is named, identified and where its new tasks start. </source>
+        <target> Cómo se nombra e identifica este proyecto y con qué empiezan sus tareas nuevas. </target>
       </segment>
     </unit>
   </file>

@@ -13,7 +13,9 @@ import { FlatButtonComponent } from '@app/static/components/button/flat-button.c
 import { UpdateProjectRequest } from '@core/models/requests/upadte-project-request';
 import { ProjectCommandsService } from '@core/services/project-commands.service';
 import { statusResource } from '@core/resources/status.resource';
+import { LucideFolderOpen } from '@lucide/angular';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
+import { IconTileComponent } from '@static/components/icon-tile.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
@@ -27,53 +29,71 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FormSelectOptionComponent,
     FormTextAreaComponent,
     FlatButtonComponent,
+    IconTileComponent,
     FormField,
   ],
+  host: { class: 'block' },
   template: `
-    <div>
-      <form class="w-full max-w-lg" (submit)="updateClicked($event)">
+    <form
+      class="border-border bg-card overflow-hidden rounded-lg border shadow-sm"
+      (submit)="updateClicked($event)">
+      <header class="border-border border-b px-6 py-5">
+        <div class="flex min-w-0 items-center gap-3">
+          <app-icon-tile [icon]="detailsIcon" />
+
+          <div class="min-w-0">
+            <h2
+              class="font-overpass text-base font-semibold"
+              i18n="Section heading for the project detail form">
+              Project details
+            </h2>
+            <p
+              class="text-muted mt-1 text-sm"
+              i18n="Explains what the project detail form controls">
+              How this project is named, identified and where its new tasks
+              start.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <div class="grid max-w-2xl gap-4 px-6 py-5">
         <app-form-input
           [formField]="projectForm.name"
           i18n-label="Label of the name field"
           label="Name"
-          maxLength="1024"></app-form-input>
+          maxLength="1024" />
+
         <app-form-textarea
           [formField]="projectForm.description"
           i18n-label="Label of the description field"
           label="Description"
-          rows="6"></app-form-textarea>
-        <div class="border-border my-8 border-b-2"></div>
-        <div class="flex items-center">
-          <app-form-input
-            [formField]="projectForm.key"
-            i18n-label="Label of the project key field"
-            label="Project ID"
-            class="w-30"
-            maxLength="6"></app-form-input>
-          <div>
-            <small class="block px-[1.4rem] opacity-60">
-              <span i18n="Explains where the project key appears">
-                The Project ID is displayed as the first part of task's ID
-              </span>
-            </small>
-            <small class="block px-[1.4rem] opacity-60">
-              <span i18n="Constraints on the project key">
-                max 6 characters. should be unique to workspace
-              </span>
-            </small>
-          </div>
-        </div>
+          rows="6" />
+
+        <app-form-input
+          class="max-w-64"
+          [formField]="projectForm.key"
+          i18n-label="Label of the project key field"
+          label="Project ID"
+          maxLength="6"
+          i18n-hint="
+            Explains where the project key appears and what it may contain
+          "
+          hint="Shown as the first part of every task ID. Up to 6 characters, unique to this workspace." />
+
         <app-form-input
           [formField]="projectForm.repositoryUrl"
           i18n-label="Label of the source repository URL field"
           label="Repository URL"
-          maxLength="1024"></app-form-input>
+          maxLength="1024" />
 
         @if (statuses.value()) {
           <app-form-select
             [formField]="projectForm.defaultStatusId"
             i18n-label="Label of the default task status field"
-            label="Default task status">
+            label="Default task status"
+            i18n-hint="Explains what the default task status field controls"
+            hint="New tasks in this project start with this status.">
             @for (status of statuses.value(); track status.id) {
               <app-form-select-option [value]="status.id">
                 {{ status.name }}
@@ -81,19 +101,23 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
             }
           </app-form-select>
         }
+      </div>
 
+      <footer class="border-border border-t px-6 py-4">
         <button
           app-flat-button
-          color="primary"
+          type="submit"
           [disabled]="projectForm().disabled()">
           <span i18n="Button that saves the project details">Save Changes</span>
         </button>
-      </form>
-    </div>
+      </footer>
+    </form>
   `,
 })
 export class ProjectDetailComponent {
   private projectCommands = inject(ProjectCommandsService);
+
+  protected readonly detailsIcon = LucideFolderOpen;
 
   project = input<ProjectViewModel>();
   loading = this.projectCommands.isUpdating;
