@@ -177,17 +177,18 @@ import { AutomationEnabledBadgeComponent } from './automation-enabled-badge.comp
         }
       </ng-template>
 
-      <app-empty-state
-        appDatatableEmpty
-        compact
-        [title]="
-          filtersActive()
-            ? 'No automations match these filters'
-            : 'No automations yet'
-        "
-        [description]="
-          filtersActive() ? 'Try a different search or filter.' : ''
-        " />
+      <ng-template appDatatableEmpty>
+        <app-empty-state
+          compact
+          [title]="
+            filtersActive()
+              ? 'No automations match these filters'
+              : 'No automations yet'
+          "
+          [description]="
+            filtersActive() ? 'Try a different search or filter.' : ''
+          " />
+      </ng-template>
     </app-datatable>
   `,
 })

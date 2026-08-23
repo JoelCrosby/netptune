@@ -207,15 +207,18 @@ const ResumableStages = [
               </div>
             </ng-template>
 
-            <app-empty-state
-              appDatatableEmpty
-              compact
-              i18n-title="Heading when a workspace has never exported anything"
-              title="No exports yet"
-              i18n-description="Explains when export rows start appearing"
-              description="Exports you run appear here with a download link.">
-              <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
-            </app-empty-state>
+            <ng-template appDatatableEmpty>
+              <app-empty-state
+                compact
+                i18n-title="
+                  Heading when a workspace has never exported anything
+                "
+                title="No exports yet"
+                i18n-description="Explains when export rows start appearing"
+                description="Exports you run appear here with a download link.">
+                <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
+              </app-empty-state>
+            </ng-template>
           </app-datatable>
         </app-panel>
       } @else {
@@ -335,15 +338,18 @@ const ResumableStages = [
               </div>
             </ng-template>
 
-            <app-empty-state
-              appDatatableEmpty
-              compact
-              i18n-title="Heading when a workspace has never imported anything"
-              title="No imports yet"
-              i18n-description="Explains when import rows start appearing"
-              description="Files you import appear here with their results.">
-              <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
-            </app-empty-state>
+            <ng-template appDatatableEmpty>
+              <app-empty-state
+                compact
+                i18n-title="
+                  Heading when a workspace has never imported anything
+                "
+                title="No imports yet"
+                i18n-description="Explains when import rows start appearing"
+                description="Files you import appear here with their results.">
+                <svg emptyStateIcon lucideDatabase class="h-8 w-8"></svg>
+              </app-empty-state>
+            </ng-template>
           </app-datatable>
         </app-panel>
       }

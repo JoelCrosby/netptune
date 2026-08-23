@@ -110,13 +110,14 @@ import { TooltipDirective } from '@static/directives/tooltip.directive';
         }
       </ng-template>
 
-      <app-empty-state
-        appDatatableEmpty
-        compact
-        i18n-title="Empty state when there are no notifications"
-        title="You're all caught up"
-        i18n-description="Explains what the notification list will contain"
-        description="New notifications show up here." />
+      <ng-template appDatatableEmpty>
+        <app-empty-state
+          compact
+          i18n-title="Empty state when there are no notifications"
+          title="You're all caught up"
+          i18n-description="Explains what the notification list will contain"
+          description="New notifications show up here." />
+      </ng-template>
     </app-datatable>
   `,
 })

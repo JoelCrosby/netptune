@@ -4,6 +4,7 @@ import {
   Component,
   Injector,
   OnDestroy,
+  TemplateRef,
   booleanAttribute,
   computed,
   contentChild,
@@ -47,6 +48,7 @@ import { DatatableEmptyDirective } from './datatable-empty.directive';
 import {
   DatatableAccessor,
   DatatableCellContext,
+  DatatableCellRenderer,
   DatatableColumn,
   DatatableColumnPreference,
   DatatableDataSource,
@@ -54,6 +56,7 @@ import {
   DatatableRowClass,
   DatatableSort,
   DatatableSortDirection,
+  isLocalDataSource,
 } from './datatable.types';
 
 @Component({
@@ -72,6 +75,7 @@ import {
     MenuItemComponent,
     TablePaginationComponent,
   ],
+  host: { class: 'flex min-h-0 flex-col', '[class.flex-1]': 'fill()' },
   template: `
     <div [class]="mergedContainerClass()">
       <table [class]="mergedTableClass()">
@@ -202,7 +206,8 @@ import {
             }
           } @else {
             @for (row of visibleRows(); track trackRow($index, row)) {
-              <tr [class]="resolvedRowClass(row, $index)">
+              @let rowIndex = $index;
+              <tr [class]="resolvedRowClass(row, rowIndex)">
                 @if (showUtilityColumn()) {
                   <td class="px-2 align-middle">
                     @if (showMenuColumn()) {
@@ -247,7 +252,7 @@ import {
                     (mousedown)="rangeSelectActive = $event.shiftKey">
                     <app-checkbox
                       [checked]="isSelected(row)"
-                      (changed)="toggleRow(row, $event, $index)">
+                      (changed)="toggleRow(row, $event, rowIndex)">
                       <span
                         class="sr-only"
                         i18n="
@@ -260,13 +265,17 @@ import {
                   </td>
                 }
                 @for (column of visibleColumns(); track column.id) {
-                  <td [class]="resolvedCellClass(row, column, $index)">
+                  <td [class]="resolvedCellClass(row, column, rowIndex)">
                     @if (cellTemplate(column.id); as template) {
                       <ng-container
                         [ngTemplateOutlet]="template.templateRef"
                         [ngTemplateOutletContext]="
-                          cellContext(row, column, $index)
+                          cellContext(row, column, rowIndex)
                         " />
+                    } @else if (column.cell; as cell) {
+                      <ng-container
+                        [ngComponentOutlet]="cell.component"
+                        [ngComponentOutletInputs]="cellInputs(row, cell)" />
                     } @else {
                       {{ formattedCellValue(row, column) }}
                     }
@@ -278,8 +287,9 @@ import {
                 <td
                   [class]="mergedEmptyCellClass()"
                   [attr.colspan]="emptyColumnSpan()">
-                  <ng-content select="[appDatatableEmpty]" />
-                  @if (!emptyState()) {
+                  @if (emptyTemplate(); as template) {
+                    <ng-container [ngTemplateOutlet]="template" />
+                  } @else {
                     {{ emptyMessage() }}
                   }
                 </td>
@@ -292,15 +302,17 @@ import {
       </table>
     </div>
 
-    <app-table-pagination
-      [itemLabel]="itemLabel()"
-      [page]="currentPage()"
-      [pageSize]="pageSize()"
-      [pageSizeOptions]="[25, 50, 100]"
-      [totalItems]="totalCount()"
-      [totalPages]="totalPages()"
-      (pageChange)="goToPage($event)"
-      (pageSizeChange)="setPageSize($event)" />
+    @if (showPagination()) {
+      <app-table-pagination
+        [itemLabel]="itemLabel()"
+        [page]="currentPage()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[25, 50, 100]"
+        [totalItems]="totalCount()"
+        [totalPages]="totalPages()"
+        (pageChange)="goToPage($event)"
+        (pageSizeChange)="setPageSize($event)" />
+    }
   `,
 })
 export class DatatableComponent<T = unknown> implements OnDestroy {
@@ -310,6 +322,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   selection = input(false, { transform: booleanAttribute });
   customizableColumns = input(false, { transform: booleanAttribute });
   containerClass = input('');
+  fill = input(false, { transform: booleanAttribute });
   rounded = input(true, { transform: booleanAttribute });
   tableClass = input('');
   headerClass = input('');
@@ -328,11 +341,27 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   currentPage = signal(1);
   pageSize = signal(50);
 
+  localSource = computed(() => {
+    const source = this.data();
+
+    return isLocalDataSource(source) ? source : null;
+  });
+
+  showPagination = computed(() => this.localSource() === null);
+
   totalCount = computed(() => {
+    const local = this.localSource();
+
+    if (local) {
+      return local.totalCount?.() ?? local.items().length;
+    }
+
     return this.resourceRef.value()?.payload?.totalCount ?? 0;
   });
 
   totalPages = computed(() => {
+    if (this.localSource()) return 1;
+
     return this.resourceRef.value()?.payload?.totalPages ?? 0;
   });
 
@@ -340,16 +369,31 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   classes = classes;
   lastResolvedRows = signal<readonly T[]>([]);
 
+  // Cell and empty templates normally arrive as content. A component that wraps
+  // the datatable cannot rely on those being re-projected, so it collects them
+  // from its own content and forwards them through these inputs instead.
+  projectedCellTemplates = input<readonly DatatableCellTemplateDirective<T>[]>(
+    []
+  );
+  projectedEmptyTemplate = input<TemplateRef<unknown> | null>(null);
+
   cellTemplates = contentChildren<DatatableCellTemplateDirective<T>>(
     DatatableCellTemplateDirective
   );
 
   emptyState = contentChild<DatatableEmptyDirective>(DatatableEmptyDirective);
 
+  emptyTemplate = computed(() => {
+    return (
+      this.projectedEmptyTemplate() ?? this.emptyState()?.templateRef ?? null
+    );
+  });
+
   mergedContainerClass = computed(() => {
     const corners = this.rounded() ? '' : 'rounded-none';
+    const fill = this.fill() ? 'min-h-0 flex-1 overflow-auto' : '';
 
-    return twMerge(classes.container, corners, this.containerClass());
+    return twMerge(classes.container, corners, fill, this.containerClass());
   });
 
   mergedTableClass = computed(() => {
@@ -367,15 +411,25 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   });
 
   cellTemplateMap = computed(() => {
+    const templates = [
+      ...this.cellTemplates(),
+      ...this.projectedCellTemplates(),
+    ];
+
     return new Map(
-      this.cellTemplates().map((template) => [template.columnId(), template])
+      templates.map((template) => [template.columnId(), template])
     );
   });
 
-  resourceRef = httpResource<ClientResponse<Page<T>>>(() => ({
-    url: this.data().resource.url,
-    params: this.buildParams(),
-  }));
+  resourceRef = httpResource<ClientResponse<Page<T>>>(() => {
+    const source = this.data();
+
+    if (isLocalDataSource(source)) {
+      return undefined;
+    }
+
+    return { url: source.resource.url, params: this.buildParams() };
+  });
 
   columns = computed(() => this.data().columns);
   showMenuColumn = computed(() => Boolean(this.data().menu?.length));
@@ -399,8 +453,9 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   });
 
   buildParams = computed<Params>(() => {
+    const source = this.data();
     const sort = this.sort();
-    const params = this.data().resource.params();
+    const params = isLocalDataSource(source) ? {} : source.resource.params();
 
     const result: Record<string, string | number> = {
       pageSize: this.pageSize(),
@@ -419,9 +474,19 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     return result;
   });
 
-  resourceLoading = computed(() => this.resourceRef?.isLoading() ?? false);
+  resourceLoading = computed(() => {
+    const local = this.localSource();
 
-  loadFailed = computed(() => this.resourceRef.error() !== undefined);
+    if (local) return local.loading?.() ?? false;
+
+    return this.resourceRef?.isLoading() ?? false;
+  });
+
+  loadFailed = computed(() => {
+    if (this.localSource()) return false;
+
+    return this.resourceRef.error() !== undefined;
+  });
 
   delayedResourceLoading = delayedLoading(this.resourceLoading);
 
@@ -435,13 +500,18 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     return Array.from({ length: this.skeletonRows() });
   });
 
-  currentRows = computed(() => {
+  currentRows = computed<readonly T[]>(() => {
+    const source = this.data();
+
+    if (isLocalDataSource(source)) {
+      return source.items();
+    }
+
     const resource = this.resourceRef;
-    const dataSource = this.data();
     const response = resource?.hasValue() ? resource.value() : undefined;
 
-    if (dataSource.rows) {
-      return dataSource.rows(response);
+    if (source.rows) {
+      return source.rows(response);
     }
 
     return Array.isArray(response) ? (response as readonly T[]) : [];
@@ -459,12 +529,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
   selectionModel = signal(new Map<string | number, T>());
   selectedRows = computed(() => Array.from(this.selectionModel().values()));
-
-  // Tracks whether the shift key was held at the start of the current click so
-  // toggleRow can extend the selection as a range. Set on mousedown, which
-  // always fires before the checkbox change event.
   rangeSelectActive = false;
-  // Index of the last row toggled without shift; used as the range anchor.
   rangeAnchor: number | null = null;
 
   allSelected = computed(() => {
@@ -494,7 +559,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     effect(() => {
       if (this.resourceLoading()) return;
 
-      const hasValue = this.resourceRef.hasValue();
+      const hasValue = this.localSource() ? true : this.resourceRef.hasValue();
 
       this.loaded.emit({
         totalCount: hasValue ? this.totalCount() : 0,
@@ -503,7 +568,11 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
     });
 
     effect(() => {
-      const reload = this.data().reloadSignal;
+      const source = this.data();
+
+      if (isLocalDataSource(source)) return;
+
+      const reload = source.reloadSignal;
 
       if (!reload) {
         return;
@@ -530,21 +599,28 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   }
 
   reload() {
+    if (this.localSource()) return;
+
     this.resourceRef.reload();
+  }
+
+  sortKeyFor(column: DatatableColumn<T>): string {
+    return column.sortKey ?? column.id;
   }
 
   toggleSort(column: DatatableColumn<T>) {
     if (!this.isSortable(column)) return;
 
+    const sortBy = this.sortKeyFor(column);
     const sort = this.sort();
 
-    if (sort?.sortBy !== column.id) {
-      this.sort.set({ sortBy: column.id, sortDirection: 'asc' });
+    if (sort?.sortBy !== sortBy) {
+      this.sort.set({ sortBy, sortDirection: 'asc' });
       return;
     }
 
     if (sort.sortDirection === 'asc') {
-      this.sort.set({ sortBy: column.id, sortDirection: 'desc' });
+      this.sort.set({ sortBy, sortDirection: 'desc' });
       return;
     }
 
@@ -653,7 +729,7 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
   sortDirection(column: DatatableColumn<T>): DatatableSortDirection | null {
     const sort = this.sort();
 
-    return sort?.sortBy === column.id ? sort.sortDirection : null;
+    return sort?.sortBy === this.sortKeyFor(column) ? sort.sortDirection : null;
   }
 
   ariaSort(column: DatatableColumn<T>) {
@@ -681,6 +757,10 @@ export class DatatableComponent<T = unknown> implements OnDestroy {
 
   cellTemplate(columnId: string) {
     return this.cellTemplateMap().get(columnId) ?? null;
+  }
+
+  cellInputs(row: T, cell: DatatableCellRenderer<T>): Record<string, unknown> {
+    return cell.inputs ? cell.inputs(row) : { row };
   }
 
   selectMenuItem(

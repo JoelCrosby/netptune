@@ -207,15 +207,16 @@ const contentTypeGroups: readonly WorkspaceFileContentTypeGroup[] = [
         </div>
       </ng-template>
 
-      <app-empty-state
-        appDatatableEmpty
-        compact
-        i18n-title="Empty state for the file list"
-        title="No files match the current filters."
-        i18n-description="Advice on the empty file list"
-        description="Try changing or clearing the filters.">
-        <svg emptyStateIcon lucideFiles class="h-8 w-8"></svg>
-      </app-empty-state>
+      <ng-template appDatatableEmpty>
+        <app-empty-state
+          compact
+          i18n-title="Empty state for the file list"
+          title="No files match the current filters."
+          i18n-description="Advice on the empty file list"
+          description="Try changing or clearing the filters.">
+          <svg emptyStateIcon lucideFiles class="h-8 w-8"></svg>
+        </app-empty-state>
+      </ng-template>
     </app-datatable>
   `,
 })

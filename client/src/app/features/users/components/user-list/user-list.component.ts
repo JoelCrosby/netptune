@@ -79,13 +79,14 @@ import { WorkspaceRole, workspaceRoleLabels } from '@core/enums/workspace-role';
         }
       </ng-template>
 
-      <app-empty-state
-        appDatatableEmpty
-        compact
-        i18n-title="Empty state for the member list"
-        title="No users to show"
-        i18n-description="Advice on the empty member list"
-        description="Invite people to this workspace to see them here." />
+      <ng-template appDatatableEmpty>
+        <app-empty-state
+          compact
+          i18n-title="Empty state for the member list"
+          title="No users to show"
+          i18n-description="Advice on the empty member list"
+          description="Invite people to this workspace to see them here." />
+      </ng-template>
     </app-datatable>
   `,
 })

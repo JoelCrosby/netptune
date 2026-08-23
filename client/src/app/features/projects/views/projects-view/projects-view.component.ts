@@ -135,30 +135,31 @@ import { PageHeaderComponent } from '@static/components/page-header/page-header.
           </span>
         </ng-template>
 
-        <app-empty-state
-          appDatatableEmpty
-          compact
-          i18n-title="Heading of the empty project list"
-          title="There are currently no projects."
-          i18n-description="
-            Explains what a project is for, on the empty project list
-          "
-          description="Create your first project to organise related boards and tasks.">
-          <svg emptyStateIcon size="38" lucideFolderOpen></svg>
+        <ng-template appDatatableEmpty>
+          <app-empty-state
+            compact
+            i18n-title="Heading of the empty project list"
+            title="There are currently no projects."
+            i18n-description="
+              Explains what a project is for, on the empty project list
+            "
+            description="Create your first project to organise related boards and tasks.">
+            <svg emptyStateIcon size="38" lucideFolderOpen></svg>
 
-          @if (canCreateProjects()) {
-            <button
-              emptyStateAction
-              app-flat-button
-              type="button"
-              (click)="showAddModal()">
-              <svg size="20" lucidePlus></svg>
-              <span i18n="Button that opens the create-project dialog">
-                Create Project
-              </span>
-            </button>
-          }
-        </app-empty-state>
+            @if (canCreateProjects()) {
+              <button
+                emptyStateAction
+                app-flat-button
+                type="button"
+                (click)="showAddModal()">
+                <svg size="20" lucidePlus></svg>
+                <span i18n="Button that opens the create-project dialog">
+                  Create Project
+                </span>
+              </button>
+            }
+          </app-empty-state>
+        </ng-template>
       </app-datatable>
     </app-page-container>
   `,

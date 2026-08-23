@@ -268,17 +268,18 @@ import { EMPTY, finalize, firstValueFrom, switchMap } from 'rxjs';
                 </div>
               </ng-template>
 
-              <app-empty-state
-                appDatatableEmpty
-                compact
-                i18n-title="Heading of an empty task list on a usage page"
-                title="No tasks use this yet."
-                i18n-description="
-                  Explains that nothing currently uses the item being viewed
-                "
-                description="Nothing references it, so it is safe to change or remove.">
-                <svg emptyStateIcon size="38" lucideListChecks></svg>
-              </app-empty-state>
+              <ng-template appDatatableEmpty>
+                <app-empty-state
+                  compact
+                  i18n-title="Heading of an empty task list on a usage page"
+                  title="No tasks use this yet."
+                  i18n-description="
+                    Explains that nothing currently uses the item being viewed
+                  "
+                  description="Nothing references it, so it is safe to change or remove.">
+                  <svg emptyStateIcon size="38" lucideListChecks></svg>
+                </app-empty-state>
+              </ng-template>
             </app-datatable>
           </app-panel>
         }
