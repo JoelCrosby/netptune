@@ -4,19 +4,14 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Params } from '@angular/router';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
-import { BadgeComponent } from '@static/components/badge/badge.component';
+import { taskColumns } from '@core/tasks/task-columns';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
-import { DatatableComponent } from '@static/components/datatable/datatable.component';
-import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
+import { TaskTableComponent } from '@static/components/task-table.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { debounceTime } from 'rxjs/operators';
-import { SprintBacklogStatusBadgeClassPipe } from '../pipes/sprint-backlog-status-badge-class.pipe';
-import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-label.pipe';
 
 export interface SprintAddTaskDialogData {
   sprintId: number;
@@ -31,12 +26,7 @@ export interface SprintAddTaskDialogData {
     FlatButtonComponent,
     StrokedButtonComponent,
     FormInputComponent,
-    DatatableComponent,
-    DatatableCellTemplateDirective,
-    TaskScopeIdComponent,
-    BadgeComponent,
-    SprintBacklogStatusBadgeClassPipe,
-    SprintBacklogStatusLabelPipe,
+    TaskTableComponent,
   ],
   template: `
     <app-dialog-title
@@ -53,31 +43,18 @@ export interface SprintAddTaskDialogData {
         [value]="searchInput()"
         (valueChange)="searchInput.set($event)" />
 
-      <app-datatable
+      <app-task-table
         containerClass="h-[420px] overflow-y-auto overflow-x-hidden"
+        key="sprint-add-tasks"
+        url="api/tasks"
         tableClass="table-fixed"
         i18n-emptyMessage="Shown when no tasks match the add-to-sprint search"
         emptyMessage="No tasks available to add."
-        [data]="data"
+        [columns]="columns"
+        [params]="params"
         [selection]="true"
         [stickyHeader]="true"
-        (selectionChanged)="selected.set($event)">
-        <ng-template appDatatableCell="systemId" let-task>
-          <app-task-scope-id [id]="task.systemId" />
-        </ng-template>
-
-        <ng-template appDatatableCell="name" let-task>
-          <span class="block truncate font-medium">{{ task.name }}</span>
-        </ng-template>
-
-        <ng-template appDatatableCell="status" let-task>
-          <app-badge
-            shape="rounded"
-            [class]="task.statusCategory | sprintBacklogStatusBadgeClass">
-            {{ task.statusName | sprintBacklogStatusLabel }}
-          </app-badge>
-        </ng-template>
-      </app-datatable>
+        (selectionChanged)="selected.set($event)" />
     </div>
 
     <div app-dialog-actions align="end">
@@ -121,7 +98,7 @@ export class SprintAddTaskDialogComponent {
 
   // excludeSprintId returns tasks in the project that aren't already in this
   // sprint — the same set the old inline dropdown offered.
-  private params = computed<Params>(() => {
+  readonly params = computed<Params>(() => {
     const search = this.search().trim();
 
     return {
@@ -131,26 +108,10 @@ export class SprintAddTaskDialogComponent {
     };
   });
 
-  readonly data: DatatableDataSource<TaskViewModel> = {
-    key: 'sprint-add-tasks',
-    columns: [
-      { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
-      {
-        id: 'name',
-        header: 'Task',
-        accessor: 'name',
-        sortable: true,
-        cellClass: 'min-w-0',
-      },
-      { id: 'status', header: 'Status', sortable: true, widthClass: 'w-40' },
-    ],
-    resource: {
-      url: 'api/tasks',
-      params: this.params,
-    },
-    rows: (response) => response?.payload?.items ?? [],
-    trackBy: (_: number, task: TaskViewModel) => task.id,
-  };
+  readonly columns = taskColumns<TaskViewModel>(
+    ['systemId', 'name', 'status'],
+    { overrides: { name: { cellClass: 'min-w-0' } } }
+  );
 
   add() {
     const taskIds = this.selected()

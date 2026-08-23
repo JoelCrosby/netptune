@@ -1,91 +1,32 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { Params, RouterLink } from '@angular/router';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
-import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
-import { BadgeComponent } from '@static/components/badge/badge.component';
+import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
-import { DatatableComponent } from '@static/components/datatable/datatable.component';
-import {
-  DatatableColumn,
-  DatatableDataSource,
-} from '@static/components/datatable/datatable.types';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { SprintBacklogPriorityClassPipe } from '../pipes/sprint-backlog-priority-class.pipe';
-import { SprintBacklogPriorityLabelPipe } from '../pipes/sprint-backlog-priority-label.pipe';
-import { SprintBacklogStatusBadgeClassPipe } from '../pipes/sprint-backlog-status-badge-class.pipe';
-import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-label.pipe';
+import { DatatableColumn } from '@static/components/datatable/datatable.types';
+import { TaskTableComponent } from '@static/components/task-table.component';
 
 @Component({
   selector: 'app-sprint-task-list',
   imports: [
-    RouterLink,
     StrokedButtonComponent,
-    TaskScopeIdComponent,
-    BadgeComponent,
-    DatatableComponent,
     DatatableCellTemplateDirective,
-    SprintBacklogStatusBadgeClassPipe,
-    SprintBacklogStatusLabelPipe,
-    SprintBacklogPriorityClassPipe,
-    SprintBacklogPriorityLabelPipe,
+    TaskTableComponent,
   ],
   template: `
-    <app-datatable
+    <app-task-table
       containerClass="overflow-auto rounded-lg shadow-sm"
+      key="sprint-tasks"
+      url="api/tasks"
       tableClass="min-w-[820px] table-fixed"
-      headerClass="bg-card-header text-muted uppercase"
       i18n-emptyMessage="Empty state for the sprint task list"
       emptyMessage="No tasks in this sprint."
-      i18n-itemLabel="Plural noun for tasks, used in the row summary"
-      itemLabel="tasks"
-      [data]="data()"
+      [columns]="columns()"
+      [params]="params"
       [stickyHeader]="true">
-      <ng-template appDatatableCell="systemId" let-task>
-        <app-task-scope-id [id]="task.systemId" />
-      </ng-template>
-
-      <ng-template appDatatableCell="name" let-task>
-        <a
-          class="block w-full truncate font-medium hover:underline"
-          [routerLink]="['../../tasks', task.systemId]">
-          {{ task.name }}
-        </a>
-      </ng-template>
-
-      <ng-template appDatatableCell="projectName" let-task>
-        <span class="text-muted block truncate text-sm">
-          {{ task.projectName }}
-        </span>
-      </ng-template>
-
-      <ng-template appDatatableCell="status" let-task>
-        <app-badge
-          shape="rounded"
-          [class]="task.statusCategory | sprintBacklogStatusBadgeClass">
-          {{ task.statusName | sprintBacklogStatusLabel }}
-        </app-badge>
-      </ng-template>
-
-      <ng-template appDatatableCell="priority" let-task>
-        @if (task.priority !== null && task.priority !== undefined) {
-          <span
-            class="text-sm font-medium"
-            [class]="task.priority | sprintBacklogPriorityClass">
-            {{ task.priority | sprintBacklogPriorityLabel }}
-          </span>
-        } @else {
-          <span
-            class="text-muted text-sm"
-            i18n="Shown in place of an empty value">
-            None
-          </span>
-        }
-      </ng-template>
-
       <ng-template appDatatableCell="actions" let-task>
         <button
           app-stroked-button
@@ -99,12 +40,10 @@ import { SprintBacklogStatusLabelPipe } from '../pipes/sprint-backlog-status-lab
           </span>
         </button>
       </ng-template>
-    </app-datatable>
+    </app-task-table>
   `,
 })
 export class SprintTaskListComponent {
-  private hub = inject(ProjectTasksHubService);
-
   readonly sprint = input.required<SprintDetailViewModel>();
   readonly canManage = input.required<boolean>();
 
@@ -112,24 +51,23 @@ export class SprintTaskListComponent {
   private readonly sprintCommands = inject(SprintCommandsService);
 
   readonly updateLoading = this.sprintCommands.isUpdating;
-  readonly canEditSprintTasks = computed(
-    () => this.canManage() && this.sprint().status !== SprintStatus.completed
-  );
+  readonly canEditSprintTasks = computed(() => {
+    return this.canManage() && this.sprint().status !== SprintStatus.completed;
+  });
 
-  private params = computed<Params>(() => ({ sprintId: this.sprint().id }));
+  readonly params = computed(() => ({ sprintId: this.sprint().id }));
 
-  private readonly baseColumns: DatatableColumn<TaskViewModel>[] = [
-    { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
-    { id: 'name', header: 'Task', accessor: 'name', sortable: true },
+  private readonly baseColumns = taskColumns<TaskViewModel>(
+    ['systemId', 'name', 'project', 'status', 'priority'],
     {
-      id: 'projectName',
-      header: 'Project',
-      sortable: true,
-      widthClass: 'w-48',
-    },
-    { id: 'status', header: 'Status', sortable: true, widthClass: 'w-40' },
-    { id: 'priority', header: 'Priority', sortable: true, widthClass: 'w-32' },
-  ];
+      overrides: {
+        name: taskNameCell<TaskViewModel>({
+          link: (task) => ['../../tasks', task.systemId],
+        }),
+        project: { widthClass: 'w-48' },
+      },
+    }
+  );
 
   private readonly actionsColumn: DatatableColumn<TaskViewModel> = {
     id: 'actions',
@@ -138,19 +76,11 @@ export class SprintTaskListComponent {
     align: 'end',
   };
 
-  readonly data = computed<DatatableDataSource<TaskViewModel>>(() => ({
-    key: 'sprint-tasks',
-    columns: this.canEditSprintTasks()
+  readonly columns = computed<DatatableColumn<TaskViewModel>[]>(() => {
+    return this.canEditSprintTasks()
       ? [...this.baseColumns, this.actionsColumn]
-      : this.baseColumns,
-    resource: {
-      url: 'api/tasks',
-      params: this.params,
-    },
-    rows: (response) => response?.payload?.items ?? [],
-    trackBy: (_: number, task: TaskViewModel) => task.id,
-    reloadSignal: this.hub.updateVersion,
-  }));
+      : this.baseColumns;
+  });
 
   onRemoveTask(taskId?: number) {
     const sprintId = this.sprint().id;

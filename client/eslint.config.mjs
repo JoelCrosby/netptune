@@ -126,6 +126,8 @@ export default defineConfig([
             'scope',
             // property-name references (which field of a data object to read)
             'idKey', 'labelKey',
+            // table identity and API endpoints, not prose
+            'key', 'url',
           ],
         },
       ],

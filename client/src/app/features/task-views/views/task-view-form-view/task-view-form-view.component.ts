@@ -32,10 +32,11 @@ import { taskQueryPreviewResource } from '../../resources/task-query-preview.res
 import { TaskViewsService } from '../../services/task-views.service';
 import { decodeQuery, encodeQuery } from '../../util/query-url';
 import {
-  allTaskViewColumns,
-  defaultColumnPreferences,
-} from '../../util/task-view-columns';
-import { TaskViewPreviewTableComponent } from '../../components/task-view-preview-table.component';
+  allTaskColumns,
+  defaultTaskColumnPreferences,
+  visibleTaskColumns,
+} from '@core/tasks/task-columns';
+import { TaskTableComponent } from '@static/components/task-table.component';
 import { TaskViewDisplayMenuComponent } from '../../components/task-view-display-menu.component';
 
 /**
@@ -56,7 +57,7 @@ import { TaskViewDisplayMenuComponent } from '../../components/task-view-display
     FormInputComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
-    TaskViewPreviewTableComponent,
+    TaskTableComponent,
     TaskViewDisplayMenuComponent,
     LucideLink,
     LucideSave,
@@ -223,11 +224,17 @@ import { TaskViewDisplayMenuComponent } from '../../components/task-view-display
             (sortDirectionChange)="sortDirection.set($event)" />
         </div>
 
-        <app-task-view-preview-table
-          class="border-border bg-card mb-6 min-h-0 flex-1 overflow-auto rounded-b-xl border"
-          [rows]="previewRows()"
-          [loading]="previewLoading()"
-          [preferences]="columns()" />
+        <app-task-table
+          class="mb-6"
+          containerClass="rounded-t-none rounded-b-xl"
+          key="task-view-preview"
+          i18n-emptyMessage="Shown when a query preview matches no tasks"
+          emptyMessage="No tasks match this query yet."
+          [fill]="true"
+          [columns]="previewColumns()"
+          [items]="previewRows"
+          [loading]="previewLoading"
+          [stickyHeader]="true" />
       }
     </app-page-container>
   `,
@@ -238,7 +245,13 @@ export class TaskViewFormViewComponent {
   private readonly snackbar = inject(SnackbarService);
   private readonly service = inject(TaskViewsService);
 
-  readonly availableColumns = allTaskViewColumns();
+  readonly availableColumns = allTaskColumns<TaskViewModel>();
+
+  // The preview renders exactly what the saved view will, so it uses the same
+  // catalog columns filtered to the ones the editor has switched on.
+  readonly previewColumns = computed(() => {
+    return visibleTaskColumns<TaskViewModel>(this.columns());
+  });
 
   readonly detailsOpen = signal(false);
 
@@ -268,7 +281,7 @@ export class TaskViewFormViewComponent {
   readonly isShared = signal(false);
   readonly query = signal<TaskQueryGroup>(emptyQueryGroup());
   readonly columns = signal<DatatableColumnPreference[]>(
-    defaultColumnPreferences()
+    defaultTaskColumnPreferences()
   );
   readonly sortBy = signal('');
   readonly sortDirection = signal('desc');
@@ -340,7 +353,7 @@ export class TaskViewFormViewComponent {
 
       const saved = view.definition?.display.columns ?? [];
 
-      this.columns.set(saved.length ? saved : defaultColumnPreferences());
+      this.columns.set(saved.length ? saved : defaultTaskColumnPreferences());
     });
 
     // A q parameter replaces the query outright, whether the editor was opened on a saved view or

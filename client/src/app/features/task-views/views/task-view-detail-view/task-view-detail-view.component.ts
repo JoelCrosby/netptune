@@ -1,13 +1,10 @@
-import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
-import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
-import { colorSwatchClass } from '@core/util/colors/colors';
-import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { taskNameCell, visibleTaskColumns } from '@core/tasks/task-columns';
 import {
   LucideLink,
   LucidePencil,
@@ -15,15 +12,10 @@ import {
   LucidePinOff,
   LucideTriangleAlert,
 } from '@lucide/angular';
-import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
-import { DatatableComponent } from '@static/components/datatable/datatable.component';
-import {
-  DatatableColumn,
-  DatatableDataSource,
-} from '@static/components/datatable/datatable.types';
+import { DatatableColumn } from '@static/components/datatable/datatable.types';
+import { TaskTableComponent } from '@static/components/task-table.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
@@ -31,15 +23,11 @@ import { PageLoadingComponent } from '@static/components/page-loading/page-loadi
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { QueryFieldOptionsService } from '../../services/query-field-options.service';
 import { PinnedViewsService } from '../../services/pinned-views.service';
-import {
-  TaskQueryValidationError,
-  TaskViewResult,
-} from '../../models/task-view.models';
+import { TaskQueryValidationError } from '../../models/task-view.models';
 import {
   taskQueryCatalogResource,
   taskViewResource,
 } from '../../resources/task-view.resource';
-import { taskViewColumns } from '../../util/task-view-columns';
 import { findStaleReferences } from '../../util/stale-references';
 import { explainQuery } from '../../util/query-explanation';
 
@@ -47,14 +35,11 @@ import { explainQuery } from '../../util/query-explanation';
   selector: 'app-task-view-detail-view',
   imports: [
     RouterLink,
-    DatePipe,
-    AvatarStackComponent,
     PageContainerComponent,
     PageHeaderComponent,
     PageLoadingComponent,
     ErrorStateComponent,
-    DatatableComponent,
-    DatatableCellTemplateDirective,
+    TaskTableComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     LucideLink,
@@ -154,87 +139,30 @@ import { explainQuery } from '../../util/query-explanation';
             </div>
           }
 
-          <app-datatable
+          <app-task-table
             containerClass="overflow-auto rounded-lg shadow-sm"
-            tableClass="min-w-[860px]"
-            headerClass="bg-card-header text-muted uppercase"
             i18n-itemLabel="Plural noun for tasks, used in the row summary"
             itemLabel="tasks"
             i18n-emptyMessage="Shown when a saved view matches no tasks"
             emptyMessage="No tasks match this view."
+            tableClass="min-w-[860px]"
+            [key]="tableKey()"
+            [url]="tableUrl()"
+            [params]="params"
+            [columns]="columns()"
             [customizableColumns]="true"
-            [data]="data()"
-            (loaded)="onLoaded($event)">
-            <ng-template appDatatableCell="systemId" let-task>
-              <span class="text-muted font-mono">{{ task.systemId }}</span>
-            </ng-template>
-
-            <ng-template appDatatableCell="name" let-task>
-              <a
-                class="font-medium hover:underline"
-                [routerLink]="['/', task.workspaceKey, 'tasks', task.systemId]">
-                {{ task.name }}
-              </a>
-            </ng-template>
-
-            <ng-template appDatatableCell="status" let-task>
-              <span class="inline-flex items-center gap-1.5">
-                <span
-                  [class]="
-                    'h-2 w-2 rounded-full ' + colorSwatchClass(task.statusColor)
-                  "></span>
-                <span>{{ task.statusName }}</span>
-              </span>
-            </ng-template>
-
-            <ng-template appDatatableCell="assignees" let-task>
-              @if (task.assignees.length) {
-                <app-avatar-stack [avatars]="task.assignees" />
-              } @else {
-                <span
-                  class="text-muted"
-                  i18n="Shown when a task has nobody assigned">
-                  Unassigned
-                </span>
-              }
-            </ng-template>
-
-            <ng-template appDatatableCell="priority" let-task>
-              <span>{{ priorityLabel(task.priority) }}</span>
-            </ng-template>
-
-            <ng-template appDatatableCell="dueDate" let-task>
-              <span class="whitespace-nowrap">
-                {{ task.dueDate | date: 'mediumDate' }}
-              </span>
-            </ng-template>
-
-            <ng-template appDatatableCell="startDate" let-task>
-              <span class="whitespace-nowrap">
-                {{ task.startDate | date: 'mediumDate' }}
-              </span>
-            </ng-template>
-
-            <ng-template appDatatableCell="updatedAt" let-task>
-              <span class="whitespace-nowrap">
-                {{ task.updatedAt | date: 'mediumDate' }}
-              </span>
-            </ng-template>
-          </app-datatable>
+            (loaded)="onLoaded($event)" />
         </div>
       }
     </app-page-container>
   `,
 })
 export class TaskViewDetailViewComponent {
-  readonly colorSwatchClass = colorSwatchClass;
-
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackbar = inject(SnackbarService);
   private readonly fieldOptions = inject(QueryFieldOptionsService);
   private readonly pinned = inject(PinnedViewsService);
-  private readonly hub = inject(ProjectTasksHubService);
 
   private readonly routeParams = toSignal(this.route.params, {
     initialValue: {} as Params,
@@ -288,7 +216,7 @@ export class TaskViewDetailViewComponent {
     });
   });
 
-  private readonly params = computed(() => {
+  readonly params = computed(() => {
     const display = this.view()?.definition?.display;
     const sortBy = display?.sortBy ?? undefined;
     const sortDirection = display?.sortDirection ?? undefined;
@@ -296,35 +224,24 @@ export class TaskViewDetailViewComponent {
     return { sortBy, sortDirection };
   });
 
-  readonly data = computed<DatatableDataSource<TaskViewModel>>(() => {
-    const slug = this.viewSlug();
+  readonly tableKey = computed(() => `task-view-${this.viewSlug()}`);
 
-    return {
-      key: `task-view-${slug}`,
-      columns: this.columns(),
-      resource: {
-        url: `api/task-views/${slug}/tasks`,
-        params: this.params,
-      },
-      rows: (response) => {
-        const payload = response?.payload as TaskViewResult | undefined;
-
-        return payload?.items ?? [];
-      },
-      trackBy: (_: number, task: TaskViewModel) => task.id,
-      reloadSignal: this.hub.updateVersion,
-    };
+  readonly tableUrl = computed(() => {
+    return `api/task-views/${this.viewSlug()}/tasks`;
   });
 
-  private readonly columns = computed<DatatableColumn<TaskViewModel>[]>(() => {
-    return taskViewColumns(this.view()?.definition?.display.columns ?? []);
+  readonly columns = computed<DatatableColumn<TaskViewModel>[]>(() => {
+    return visibleTaskColumns<TaskViewModel>(
+      this.view()?.definition?.display.columns ?? [],
+      {
+        overrides: {
+          name: taskNameCell<TaskViewModel>({
+            link: (task) => ['/', task.workspaceKey, 'tasks', task.systemId],
+          }),
+        },
+      }
+    );
   });
-
-  priorityLabel(priority: TaskPriority | null | undefined): string {
-    if (priority === null || priority === undefined) return '';
-
-    return taskPriorityLabels[priority];
-  }
 
   isPinned(): boolean {
     const id = this.view()?.id;

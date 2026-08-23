@@ -6,16 +6,14 @@ import { FormField, form, required } from '@angular/forms/signals';
 import { RelationType, isSymmetricCategory } from '@core/models/relation-type';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { relationTypeResource } from '@core/resources/relation-type.resource';
+import { taskColumns } from '@core/tasks/task-columns';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
-import { DatatableComponent } from '@static/components/datatable/datatable.component';
-import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { DialogTitleComponent } from '@static/components/dialog-title/dialog-title.component';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
+import { TaskTableComponent } from '@static/components/task-table.component';
 import { DialogActionsDirective } from '@static/directives/dialog-actions.directive';
 import { debounceTime } from 'rxjs/operators';
 
@@ -42,9 +40,7 @@ export interface LinkTaskDialogResult {
     FormInputComponent,
     FormSelectComponent,
     FormSelectOptionComponent,
-    DatatableComponent,
-    DatatableCellTemplateDirective,
-    TaskScopeIdComponent,
+    TaskTableComponent,
   ],
   template: `
     <app-dialog-title i18n="Title of the dialog for linking tasks together">
@@ -93,29 +89,18 @@ export interface LinkTaskDialogResult {
         [value]="searchInput()"
         (valueChange)="searchInput.set($event)" />
 
-      <app-datatable
+      <app-task-table
         containerClass="h-[380px] overflow-y-auto overflow-x-hidden"
+        key="link-tasks"
+        url="api/tasks"
         tableClass="table-fixed"
         i18n-emptyMessage="Shown when no tasks match the link search"
         emptyMessage="No tasks available to link."
-        [data]="data"
+        [columns]="columns"
+        [params]="params"
         [selection]="true"
         [stickyHeader]="true"
-        (selectionChanged)="selected.set($event)">
-        <ng-template appDatatableCell="systemId" let-task>
-          <app-task-scope-id [id]="task.systemId" />
-        </ng-template>
-
-        <ng-template appDatatableCell="name" let-task>
-          <span class="block truncate font-medium">{{ task.name }}</span>
-        </ng-template>
-
-        <ng-template appDatatableCell="status" let-task>
-          <span class="text-muted text-xs">
-            {{ task.statusName }}
-          </span>
-        </ng-template>
-      </app-datatable>
+        (selectionChanged)="selected.set($event)" />
     </div>
 
     <div app-dialog-actions align="end">
@@ -202,7 +187,7 @@ export class LinkTaskDialogComponent {
   );
 
   // excludeTaskId keeps the current task from being offered as something to link to itself.
-  private params = computed<Params>(() => {
+  readonly params = computed<Params>(() => {
     const search = this.search().trim();
     const excludeTaskId = this.dialogData.task?.id;
 
@@ -212,26 +197,10 @@ export class LinkTaskDialogComponent {
     };
   });
 
-  readonly data: DatatableDataSource<TaskViewModel> = {
-    key: 'link-tasks',
-    columns: [
-      { id: 'systemId', header: 'Key', sortable: true, widthClass: 'w-28' },
-      {
-        id: 'name',
-        header: 'Task',
-        accessor: 'name',
-        sortable: true,
-        cellClass: 'min-w-0',
-      },
-      { id: 'status', header: 'Status', sortable: true, widthClass: 'w-40' },
-    ],
-    resource: {
-      url: 'api/tasks',
-      params: this.params,
-    },
-    rows: (response) => response?.payload?.items ?? [],
-    trackBy: (_: number, task: TaskViewModel) => task.id,
-  };
+  readonly columns = taskColumns<TaskViewModel>(
+    ['systemId', 'name', 'status'],
+    { overrides: { name: { cellClass: 'min-w-0' } } }
+  );
 
   private isForward() {
     return this.isSymmetric() ? true : this.linkForm.isForward().value();

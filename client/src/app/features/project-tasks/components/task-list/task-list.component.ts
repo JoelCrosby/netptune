@@ -10,42 +10,24 @@ import { hasPermission } from '@core/auth/has-permission';
 import { Params } from '@angular/router';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { FlatButtonComponent } from '@app/static/components/button/flat-button.component';
-import { DatatableCellTemplateDirective } from '@app/static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
-import { DatatableComponent } from '@app/static/components/datatable/datatable.component';
 import {
-  DatatableDataSource,
+  DatatableColumn,
   DatatableMenuItem,
 } from '@app/static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
-import {
-  TaskPriority,
-  taskPriorityColors,
-  taskPriorityLabels,
-} from '@core/enums/task-priority';
+import { TaskTableComponent } from '@app/static/components/task-table.component';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { DialogService } from '@core/services/dialog.service';
 import { SprintFilterService } from '@core/services/sprint-filter.service';
 import { TaskCommandsService } from '@core/services/task-commands.service';
 import { TaskSelectionService } from '@core/services/task-selection.service';
+import { taskColumns, taskNameCell } from '@core/tasks/task-columns';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
 import { TaskDetailDialogComponent } from '@entry/dialogs/task-detail-dialog/task-detail-dialog.component';
-import {
-  LucideListChecks,
-  LucideMessageSquareText,
-  LucidePlus,
-  LucideTrash2,
-} from '@lucide/angular';
-import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
-import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
-import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
-import { TaskStatusPillComponent } from '@static/components/task-status-pill.component';
+import { LucideListChecks, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { TaskListFiltersComponent } from './task-list-filters.component';
 import { taskFilterRoute } from '@core/router/task-filter-route';
-import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
-import { DatePipe } from '@angular/common';
-import { TooltipDirective } from '@app/static/directives/tooltip.directive';
 
 @Component({
   selector: 'app-task-list',
@@ -53,162 +35,68 @@ import { TooltipDirective } from '@app/static/directives/tooltip.directive';
     FlatButtonComponent,
     LucideListChecks,
     LucidePlus,
-    LucideMessageSquareText,
-    AvatarStackComponent,
-    TaskStatusPillComponent,
-    SprintBadgeComponent,
-    TaskScopeIdComponent,
-    DatatableCellTemplateDirective,
-    DatatableComponent,
     DatatableEmptyDirective,
     EmptyStateComponent,
     TaskListFiltersComponent,
-    DatePipe,
-    TooltipDirective,
-    TaskFlagBadgeComponent,
+    TaskTableComponent,
   ],
-  providers: [],
+  host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
-    <app-task-list-filters />
+    <app-task-list-filters class="shrink-0" />
 
-    <app-datatable
+    <app-task-table
+      #table
       i18n-errorMessage="Shown when the task list fails to load"
       errorMessage="Tasks could not be loaded."
-      #datatable
-      containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
+      key="task-list"
+      url="api/tasks"
       tableClass="min-w-[760px] table-fixed"
-      [data]="taskData()"
+      [fill]="true"
+      [columns]="columns()"
+      [params]="taskRequestParams"
+      [menu]="menu()"
       [selection]="canDelete()"
       [customizableColumns]="true"
       [stickyHeader]="true"
       (selectionChanged)="onSelectionChanged($event)"
       (loaded)="onLoaded($event)">
-      <ng-template appDatatableCell="systemId" let-task>
-        <app-task-scope-id [id]="task.systemId" />
-      </ng-template>
+      <ng-template appDatatableEmpty>
+        <app-empty-state
+          [title]="
+            filtersActive()
+              ? 'No tasks match these filters.'
+              : 'There are currently no tasks.'
+          "
+          [description]="
+            filtersActive()
+              ? ''
+              : 'Use the Create Task button to create your first task and get started.'
+          ">
+          <svg emptyStateIcon size="38" lucideListChecks></svg>
 
-      <ng-template appDatatableCell="name" let-task>
-        <button
-          class="block flex w-full cursor-pointer items-center gap-2 truncate text-left font-medium hover:underline"
-          type="button"
-          (click)="titleClicked(task)">
-          {{ task.name }}
-          @if (task.hasComments) {
-            <svg
-              lucideMessageSquareText
-              class="text-muted h-4 w-4"
-              i18n-aria-label="
-                Accessible label for the icon marking a task that has comments
-              "
-              aria-label="Has comments"
-              i18n-appTooltip="
-                Tooltip on the icon marking a task that has comments
-              "
-              appTooltip="Has comments"></svg>
+          @if (canCreate() && !filtersActive()) {
+            <button
+              emptyStateAction
+              app-flat-button
+              type="button"
+              (click)="createTaskClicked()">
+              <svg size="20" lucidePlus></svg>
+              <span i18n="Button that opens the create-task dialog">
+                Create Task
+              </span>
+            </button>
           }
-          @if (readFlags()) {
-            <app-task-flag-badge
-              [count]="task.flags.length"
-              [names]="flagNames(task)" />
-          }
-        </button>
+        </app-empty-state>
       </ng-template>
-
-      <ng-template appDatatableCell="sprint" let-task>
-        @if (task.sprintName) {
-          <app-sprint-badge
-            class="max-w-40"
-            [name]="task.sprintName"
-            [status]="task.sprintStatus" />
-        } @else {
-          <span
-            class="text-muted text-sm"
-            i18n="Shown when a task is not in any sprint">
-            Backlog
-          </span>
-        }
-      </ng-template>
-
-      <ng-template appDatatableCell="status" let-task>
-        <app-task-status-pill
-          [name]="task.statusName"
-          [color]="task.statusColor"
-          [category]="task.statusCategory" />
-      </ng-template>
-
-      <ng-template appDatatableCell="priority" let-task>
-        @if (task.priority !== null && task.priority !== undefined) {
-          <span
-            class="text-sm font-medium"
-            [class]="priorityColor(task.priority)">
-            {{ priorityLabel(task.priority) }}
-          </span>
-        } @else {
-          <span
-            class="text-muted text-sm"
-            i18n="Shown in place of an empty value">
-            None
-          </span>
-        }
-      </ng-template>
-
-      <ng-template appDatatableCell="assignees" let-task>
-        @if (task.assignees.length) {
-          <app-avatar-stack [avatars]="task.assignees" />
-        } @else {
-          <span
-            class="text-muted text-sm"
-            i18n="Shown when a task has nobody assigned">
-            Unassigned
-          </span>
-        }
-      </ng-template>
-
-      <ng-template appDatatableCell="updatedAt" let-task>
-        <span
-          class="text-muted text-sm"
-          [appTooltip]="task.updatedAt | date: 'medium'">
-          {{ task.updatedAt | date }}
-        </span>
-      </ng-template>
-
-      <app-empty-state
-        appDatatableEmpty
-        [title]="
-          filtersActive()
-            ? 'No tasks match these filters.'
-            : 'There are currently no tasks.'
-        "
-        [description]="
-          filtersActive()
-            ? ''
-            : 'Use the Create Task button to create your first task and get started.'
-        ">
-        <svg emptyStateIcon size="38" lucideListChecks></svg>
-
-        @if (canCreate() && !filtersActive()) {
-          <button
-            emptyStateAction
-            app-flat-button
-            type="button"
-            (click)="createTaskClicked()">
-            <svg size="20" lucidePlus></svg>
-            <span i18n="Button that opens the create-task dialog">
-              Create Task
-            </span>
-          </button>
-        }
-      </app-empty-state>
-    </app-datatable>
+    </app-task-table>
   `,
 })
 export class TaskListComponent {
   private dialog = inject(DialogService);
-  private projectTasksHubService = inject(ProjectTasksHubService);
 
   private readonly sprintFilter = inject(SprintFilterService);
 
-  private datatable = viewChild(DatatableComponent<TaskViewModel>);
+  private table = viewChild(TaskTableComponent<TaskViewModel>);
 
   readonly countChange = output<number>();
 
@@ -262,17 +150,36 @@ export class TaskListComponent {
     return queryParams;
   });
 
-  flagNames(task: TaskViewModel): string[] {
-    return task.flags.map((flag) => flag.name);
-  }
+  readonly columns = computed<DatatableColumn<TaskViewModel>[]>(() => {
+    const readFlags = this.readFlags();
 
-  priorityLabel(priority: TaskPriority): string {
-    return taskPriorityLabels[priority];
-  }
+    return taskColumns<TaskViewModel>(
+      [
+        'systemId',
+        'name',
+        'sprint',
+        'status',
+        'priority',
+        'assignees',
+        'updatedAt',
+      ],
+      {
+        overrides: {
+          name: taskNameCell<TaskViewModel>({
+            action: (task) => this.titleClicked(task),
+            showComments: true,
+            flagNames: (task) => {
+              if (!readFlags) return [];
 
-  priorityColor(priority: TaskPriority): string {
-    return taskPriorityColors[priority];
-  }
+              return task.flags.map((flag) => flag.name);
+            },
+          }),
+          sprint: { widthClass: 'w-38' },
+          status: { widthClass: 'w-48' },
+        },
+      }
+    );
+  });
 
   private readonly deleteMenuItem: DatatableMenuItem<TaskViewModel> = {
     label: $localize`:Row action that deletes a task:Delete`,
@@ -280,71 +187,16 @@ export class TaskListComponent {
     onClick: (task) => this.deleteClicked(task),
   };
 
-  readonly taskData = computed<DatatableDataSource<TaskViewModel>>(() => ({
-    key: 'task-list',
-    columns: [
-      {
-        id: 'systemId',
-        header: 'Key',
-        accessor: 'systemId',
-        sortable: true,
-        widthClass: 'w-28',
-      },
-      {
-        id: 'name',
-        header: 'Task',
-        accessor: 'name',
-        sortable: true,
-        cellClass: 'min-w-64',
-      },
-      {
-        id: 'sprint',
-        header: 'Sprint',
-        sortKey: 'sprintName',
-        widthClass: 'w-38',
-      },
-      {
-        id: 'status',
-        header: 'Status',
-        sortKey: 'statusName',
-        widthClass: 'w-48',
-      },
-      {
-        id: 'priority',
-        header: 'Priority',
-        accessor: 'priority',
-        sortable: true,
-        widthClass: 'w-32',
-      },
-      {
-        id: 'assignees',
-        header: 'Assignees',
-        sortKey: 'assignees',
-        widthClass: 'w-40',
-      },
-      {
-        id: 'updatedAt',
-        header: 'Updated',
-        sortKey: 'updatedAt',
-        widthClass: 'w-40',
-      },
-    ],
-    resource: {
-      url: 'api/tasks',
-      params: this.taskRequestParams,
-    },
-    rows: (response) => response?.payload?.items ?? [],
-    trackBy: (_: number, task: TaskViewModel) => task.id,
-    menu: this.canDelete() ? [this.deleteMenuItem] : [],
-    reloadSignal: this.projectTasksHubService.updateVersion,
-  }));
+  readonly menu = computed<DatatableMenuItem<TaskViewModel>[]>(() => {
+    return this.canDelete() ? [this.deleteMenuItem] : [];
+  });
 
   constructor() {
     this.taskSelection.clear();
 
     effect(() => {
       if (this.selection().length === 0) {
-        this.datatable()?.clearSelection();
+        this.table()?.clearSelection();
       }
     });
   }

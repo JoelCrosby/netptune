@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -9,33 +8,33 @@ import {
 } from '@angular/core';
 import { DatatableCellTemplateDirective } from '@app/static/components/datatable/datatable-cell-template.directive';
 import { DatatableEmptyDirective } from '@app/static/components/datatable/datatable-empty.directive';
-import { DatatableComponent } from '@app/static/components/datatable/datatable.component';
-import { DatatableDataSource } from '@app/static/components/datatable/datatable.types';
+import {
+  DatatableColumn,
+  DatatableMenuItem,
+} from '@app/static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@app/static/components/empty-state/empty-state.component';
-import { TooltipDirective } from '@app/static/directives/tooltip.directive';
+import { TaskTableComponent } from '@app/static/components/task-table.component';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { TaskArchiveService } from '@core/services/task-archive.service';
+import { taskColumns } from '@core/tasks/task-columns';
 import { LucideArchiveRestore } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
-import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 
 @Component({
   selector: 'app-archive-list',
   imports: [
     AvatarComponent,
     DatatableCellTemplateDirective,
-    DatatableComponent,
     DatatableEmptyDirective,
     EmptyStateComponent,
-    DatePipe,
     LucideArchiveRestore,
     StrokedButtonComponent,
-    TaskScopeIdComponent,
-    TooltipDirective,
+    TaskTableComponent,
   ],
+  host: { class: 'flex min-h-0 flex-1 flex-col' },
   template: `
-    <div class="mb-4 flex h-10 items-center">
+    <div class="mb-4 flex h-10 shrink-0 items-center">
       @if (selectedCount() > 0) {
         <div class="ml-auto flex flex-row items-center gap-4">
           <span class="text-muted px-2 text-sm">
@@ -60,26 +59,22 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
       }
     </div>
 
-    <app-datatable
+    <app-task-table
+      #table
       i18n-errorMessage="Shown when the archived task list fails to load"
       errorMessage="Archived tasks could not be loaded."
-      #datatable
-      containerClass="h-[calc(100vh-312px)] min-h-160 overflow-auto"
+      key="task-archive"
+      url="api/tasks/archive"
       tableClass="min-w-[760px] table-fixed"
-      [data]="taskData"
+      [fill]="true"
+      [columns]="columns"
+      [menu]="menu"
+      [reloadSignal]="reloadVersion"
       [selection]="true"
       [customizableColumns]="true"
       [stickyHeader]="true"
       (selectionChanged)="selection.set($event)"
       (loaded)="onLoaded($event)">
-      <ng-template appDatatableCell="systemId" let-task>
-        <app-task-scope-id [id]="task.systemId" />
-      </ng-template>
-
-      <ng-template appDatatableCell="name" let-task>
-        <span class="block truncate font-medium">{{ task.name }}</span>
-      </ng-template>
-
       <ng-template appDatatableCell="deletedBy" let-task>
         @if (task.deletedByUsername) {
           <div class="flex items-center gap-2">
@@ -99,88 +94,56 @@ import { TaskScopeIdComponent } from '@static/components/task-scope-id.component
         }
       </ng-template>
 
-      <ng-template appDatatableCell="updatedAt" let-task>
-        <span
-          class="text-muted text-sm"
-          [appTooltip]="task.updatedAt | date: 'medium'">
-          {{ task.updatedAt | date }}
-        </span>
+      <ng-template appDatatableEmpty>
+        <app-empty-state
+          i18n-title="Heading of the empty archive list"
+          title="There are currently no deleted tasks."
+          i18n-description="Explains what the archive list will contain"
+          description="Deleted tasks show up here, where they can be restored.">
+          <svg emptyStateIcon size="38" lucideArchiveRestore></svg>
+        </app-empty-state>
       </ng-template>
-
-      <app-empty-state
-        appDatatableEmpty
-        i18n-title="Heading of the empty archive list"
-        title="There are currently no deleted tasks."
-        i18n-description="Explains what the archive list will contain"
-        description="Deleted tasks show up here, where they can be restored.">
-        <svg emptyStateIcon size="38" lucideArchiveRestore></svg>
-      </app-empty-state>
-    </app-datatable>
+    </app-task-table>
   `,
 })
 export class ArchiveListComponent {
   private archiveService = inject(TaskArchiveService);
 
-  private datatable = viewChild(DatatableComponent<TaskViewModel>);
+  private table = viewChild(TaskTableComponent<TaskViewModel>);
   readonly countChange = output<number>();
 
   readonly selection = signal<TaskViewModel[]>([]);
   readonly selectedCount = computed(() => this.selection().length);
 
-  private readonly reloadVersion = signal(0);
-  private readonly requestParams = signal({});
+  readonly reloadVersion = signal(0);
 
-  taskData: DatatableDataSource<TaskViewModel> = {
-    key: 'task-archive',
-    columns: [
-      {
-        id: 'systemId',
-        header: 'Key',
-        accessor: 'systemId',
-        sortable: true,
-        widthClass: 'w-28',
-      },
-      {
-        id: 'name',
-        header: 'Task',
-        accessor: 'name',
-        sortable: true,
-        cellClass: 'min-w-64',
-      },
-      {
-        id: 'projectName',
-        header: 'Project',
-        accessor: 'projectName',
-        sortKey: 'projectName',
-        widthClass: 'w-48',
-      },
-      {
-        id: 'deletedBy',
-        header: 'Deleted by',
-        widthClass: 'w-48',
-      },
-      {
-        id: 'updatedAt',
-        header: 'Deleted',
-        sortKey: 'updatedAt',
-        widthClass: 'w-40',
-      },
-    ],
-    resource: {
-      url: 'api/tasks/archive',
-      params: this.requestParams,
-    },
-    rows: (response) => response?.payload?.items ?? [],
-    trackBy: (_: number, task: TaskViewModel) => task.id,
-    menu: [
-      {
-        label: $localize`:Row action that restores an archived task:Restore`,
-        icon: LucideArchiveRestore,
-        onClick: (task) => this.restore([task.id]),
-      },
-    ],
-    reloadSignal: this.reloadVersion,
+  private readonly deletedByColumn: DatatableColumn<TaskViewModel> = {
+    id: 'deletedBy',
+    header: $localize`:Column heading for who deleted a task:Deleted by`,
+    widthClass: 'w-48',
   };
+
+  readonly columns: DatatableColumn<TaskViewModel>[] = [
+    ...taskColumns<TaskViewModel>(['systemId', 'name', 'project'], {
+      overrides: { project: { widthClass: 'w-48' } },
+    }),
+    this.deletedByColumn,
+    ...taskColumns<TaskViewModel>(['updatedAt'], {
+      overrides: {
+        updatedAt: {
+          header: $localize`:Column heading for when a task was deleted:Deleted`,
+        },
+      },
+    }),
+  ];
+
+  readonly menu: DatatableMenuItem<TaskViewModel>[] = [
+    {
+      label: $localize`:Row action that restores an archived task:Restore`,
+      icon: LucideArchiveRestore,
+      onClick: (task) => this.restore([task.id]),
+    },
+  ];
 
   onLoaded(event: { totalCount: number; hasValue: boolean }) {
     if (event.hasValue) {
@@ -196,7 +159,7 @@ export class ArchiveListComponent {
     if (ids.length === 0) return;
 
     this.archiveService.restore(ids).subscribe(() => {
-      this.datatable()?.clearSelection();
+      this.table()?.clearSelection();
       this.selection.set([]);
       this.reloadVersion.update((version) => version + 1);
     });

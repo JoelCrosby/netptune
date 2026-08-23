@@ -1,21 +1,17 @@
 import { Component, Signal, computed, input, output } from '@angular/core';
 import { Params } from '@angular/router';
 import { ScheduledTask } from '@core/models/scheduled-task';
-import { colorSwatchClass } from '@core/util/colors/colors';
-import { AvatarStackComponent } from '@static/components/avatar-stack/avatar-stack.component';
+import { taskColumns } from '@core/tasks/task-columns';
 import { DatatableCellTemplateDirective } from '@static/components/datatable/datatable-cell-template.directive';
-import { DatatableComponent } from '@static/components/datatable/datatable.component';
-import { DatatableDataSource } from '@static/components/datatable/datatable.types';
+import { scrollHeights } from '@static/components/datatable/datatable-classes';
+import { DatatableColumn } from '@static/components/datatable/datatable.types';
+import { TaskTableComponent } from '@static/components/task-table.component';
 import { calendarDayLabel } from '../../utils/calendar-range';
 import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
 
 @Component({
   selector: 'app-calendar-selected-day-table',
-  imports: [
-    AvatarStackComponent,
-    DatatableCellTemplateDirective,
-    DatatableComponent,
-  ],
+  imports: [DatatableCellTemplateDirective, TaskTableComponent],
   template: `
     <section
       class="border-border bg-card border-t"
@@ -26,16 +22,21 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
         {{ dateLabel() }}
       </h2>
 
-      <app-datatable
-        containerClass="max-h-44 overflow-auto border-0 rounded-none"
+      <app-task-table
+        key="calendar-selected-day-tasks"
+        url="api/calendar/tasks"
         tableClass="text-xs"
         emptyCellClass="py-5"
         i18n-emptyMessage="Empty state for the selected calendar day"
         emptyMessage="No scheduled tasks for this day."
         i18n-itemLabel="Plural noun for tasks, used in the selection summary"
         itemLabel="tasks"
-        [stickyHeader]="true"
-        [data]="data()">
+        [containerClass]="containerClasses"
+        [rounded]="false"
+        [columns]="columns"
+        [params]="params"
+        [reloadSignal]="reloadSignal()"
+        [stickyHeader]="true">
         <ng-template appDatatableCell="name" let-task>
           <button
             type="button"
@@ -45,41 +46,13 @@ import { taskEndsOn, taskStartsOn } from '../../utils/calendar-tasks';
             {{ task.name }}
           </button>
         </ng-template>
-
-        <ng-template appDatatableCell="systemId" let-task>
-          <span class="text-muted-foreground font-mono">
-            {{ task.systemId }}
-          </span>
-        </ng-template>
-
-        <ng-template appDatatableCell="statusName" let-task>
-          <span class="inline-flex items-center gap-1.5">
-            <span
-              [class]="
-                'h-2 w-2 rounded-full ' + colorSwatchClass(task.statusColor)
-              "></span>
-            <span>{{ task.statusName }}</span>
-          </span>
-        </ng-template>
-
-        <ng-template appDatatableCell="assignees" let-task>
-          @if (task.assignees.length > 0) {
-            <app-avatar-stack [avatars]="task.assignees" />
-          } @else {
-            <span
-              class="text-muted-foreground"
-              i18n="Shown when a task has nobody assigned">
-              Unassigned
-            </span>
-          }
-        </ng-template>
-      </app-datatable>
+      </app-task-table>
     </section>
   `,
   styles: ``,
 })
 export class CalendarSelectedDayTableComponent {
-  readonly colorSwatchClass = colorSwatchClass;
+  readonly containerClasses = `${scrollHeights.compact} border-0`;
   readonly date = input.required<string>();
   readonly projectId = input<number>();
   readonly sprintId = input<number>();
@@ -91,7 +64,7 @@ export class CalendarSelectedDayTableComponent {
   readonly taskSelected = output<ScheduledTask>();
 
   readonly dateLabel = computed(() => calendarDayLabel(this.date()));
-  private readonly params = computed<Params>(() => ({
+  readonly params = computed<Params>(() => ({
     date: this.date(),
     projectId: this.projectId(),
     sprintId: this.sprintId(),
@@ -100,61 +73,26 @@ export class CalendarSelectedDayTableComponent {
     tags: this.tagNames(),
     statusIds: this.statusIds(),
   }));
-  readonly data = computed<DatatableDataSource<ScheduledTask>>(() => ({
-    key: 'calendar-selected-day-tasks',
-    columns: [
-      {
-        id: 'systemId',
-        header: 'Key',
-        accessor: 'systemId',
-        sortable: true,
-        widthClass: 'w-28',
+  private readonly scheduleColumn: DatatableColumn<ScheduledTask> = {
+    id: 'schedule',
+    header: $localize`:schedule column heading|Column heading for the dates a task is scheduled on:Schedule`,
+    accessor: (task) => scheduleLabel(task),
+    sortable: true,
+    widthClass: 'w-52',
+  };
+
+  // The calendar endpoint names its status sort field statusName rather than
+  // status, so the catalog column carries an endpoint-specific sort key here.
+  readonly columns: DatatableColumn<ScheduledTask>[] = [
+    ...taskColumns<ScheduledTask>(['systemId', 'name', 'project', 'status'], {
+      overrides: {
+        name: { cellClass: 'min-w-48' },
+        status: { sortKey: 'statusName' },
       },
-      {
-        id: 'name',
-        header: 'Task',
-        accessor: 'name',
-        sortable: true,
-        cellClass: 'min-w-48',
-      },
-      {
-        id: 'projectName',
-        header: 'Project',
-        accessor: 'projectName',
-        sortable: true,
-        widthClass: 'w-44',
-      },
-      {
-        id: 'statusName',
-        header: 'Status',
-        accessor: 'statusName',
-        sortable: true,
-        widthClass: 'w-40',
-      },
-      {
-        id: 'schedule',
-        header: 'Schedule',
-        accessor: (task) => scheduleLabel(task),
-        sortable: true,
-        widthClass: 'w-52',
-      },
-      {
-        id: 'assignees',
-        header: 'Assignees',
-        accessor: (task) =>
-          task.assignees.map((assignee) => assignee.displayName).join(', '),
-        sortable: true,
-        widthClass: 'w-40',
-      },
-    ],
-    resource: {
-      url: 'api/calendar/tasks',
-      params: this.params,
-    },
-    rows: (response) => response?.payload?.items ?? [],
-    trackBy: (_index, task) => task.id,
-    reloadSignal: this.reloadSignal(),
-  }));
+    }),
+    this.scheduleColumn,
+    ...taskColumns<ScheduledTask>(['assignees']),
+  ];
 
   protected openTaskLabel(task: ScheduledTask): string {
     return `Open ${task.systemId}, ${task.name}`;
