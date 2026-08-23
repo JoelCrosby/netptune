@@ -5,16 +5,26 @@ import {
   taskPriorityLabels,
 } from '@core/enums/task-priority';
 
+export type TaskPrioritySize = 'small' | 'medium';
+
+const sizeClasses: Record<TaskPrioritySize, string> = {
+  small: 'text-xs',
+  medium: 'text-sm',
+};
+
 @Component({
   selector: 'app-task-priority',
   imports: [],
   template: `
     @if (hasPriority()) {
-      <span class="text-sm font-medium" [class]="colorClass()">
+      <span class="font-medium" [class]="sizeClass() + ' ' + colorClass()">
         {{ label() }}
       </span>
     } @else {
-      <span class="text-muted text-sm" i18n="Shown in place of an empty value">
+      <span
+        class="text-muted"
+        [class]="sizeClass()"
+        i18n="Shown in place of an empty value">
         None
       </span>
     }
@@ -22,6 +32,9 @@ import {
 })
 export class TaskPriorityComponent {
   readonly priority = input<TaskPriority | null | undefined>(null);
+  readonly size = input<TaskPrioritySize>('medium');
+
+  readonly sizeClass = computed(() => sizeClasses[this.size()]);
 
   // TaskPriority.none is 0, so this cannot lean on truthiness.
   readonly hasPriority = computed(() => {

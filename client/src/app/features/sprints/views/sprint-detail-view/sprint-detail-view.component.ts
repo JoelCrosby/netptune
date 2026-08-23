@@ -294,7 +294,7 @@ export class SprintDetailViewComponent {
   onComplete(sprint: SprintDetailViewModel) {
     if (!sprint.id) return;
     this.dialog.open(SprintCompletionDialogComponent, {
-      width: '520px',
+      width: '900px',
       data: sprint,
     });
   }

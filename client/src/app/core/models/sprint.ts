@@ -6,6 +6,7 @@ export interface Sprint extends Basemodel {
   goal?: string | null;
   status: SprintStatus;
   startDate: string;
+  startedAt?: string | null;
   endDate: string;
   completedAt?: string | null;
   projectId: number;
