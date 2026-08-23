@@ -13,6 +13,7 @@ import {
   LucideUsers,
   LucideX,
 } from '@lucide/angular';
+import { ToolbarButtonComponent } from '@static/components/button/toolbar-button.component';
 import { KeyboardService } from '@static/services/keyboard.service';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
@@ -26,7 +27,7 @@ interface SelectionAction {
 
 @Component({
   selector: 'app-board-groups-selection',
-  imports: [LucideDynamicIcon, LucideX],
+  imports: [LucideDynamicIcon, LucideX, ToolbarButtonComponent],
   styles: [
     `
       /* Animates the individual translate/scale properties rather than
@@ -83,13 +84,8 @@ interface SelectionAction {
 
           @for (action of actions(); track action.label) {
             <button
-              type="button"
-              class="flex h-9 cursor-pointer appearance-none items-center gap-2 rounded-lg px-3 text-sm font-medium whitespace-nowrap transition-colors duration-140 ease-in-out outline-none"
-              [class]="
-                action.destructive
-                  ? 'text-warn hover:bg-warn/10'
-                  : 'text-foreground/80 hover:bg-foreground/10 hover:text-foreground'
-              "
+              app-toolbar-button
+              [color]="action.destructive ? 'warn' : 'neutral'"
               (click)="action.action()">
               <svg [lucideIcon]="action.icon" class="h-4 w-4"></svg>
               <span>{{ action.label }}</span>
@@ -99,10 +95,7 @@ interface SelectionAction {
 
         <span class="bg-border mx-1 h-6 w-px" aria-hidden="true"></span>
 
-        <button
-          type="button"
-          class="text-foreground/60 hover:bg-foreground/10 hover:text-foreground flex h-9 cursor-pointer appearance-none items-center gap-2 rounded-lg px-3 text-sm font-medium whitespace-nowrap transition-colors duration-140 ease-in-out outline-none"
-          (click)="onClearClicked()">
+        <button app-toolbar-button (click)="onClearClicked()">
           <svg lucideX class="h-4 w-4"></svg>
           <span i18n="Button that clears the task selection">Clear</span>
           <kbd

@@ -250,3 +250,22 @@ export const iconButtonVariants = cva(
     },
   }
 );
+
+export const toolbarButtonVariants = cva(
+  'inline-flex h-9 cursor-pointer select-none items-center gap-2 rounded-lg px-3 text-sm font-medium whitespace-nowrap transition-colors duration-140 ease-in-out focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      color: {
+        primary: 'text-primary hover:bg-primary/10 focus-visible:ring-primary',
+        warn: 'text-warn hover:bg-warn/10 focus-visible:ring-warn',
+        neutral:
+          'text-foreground/80 hover:bg-foreground/10 hover:text-foreground focus-visible:ring-foreground',
+        contrast:
+          'text-foreground hover:bg-foreground/10 focus-visible:ring-foreground',
+      },
+    },
+    defaultVariants: {
+      color: 'neutral',
+    },
+  }
+);
