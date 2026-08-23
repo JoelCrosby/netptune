@@ -58,7 +58,7 @@ import { QueryConditionEditorComponent } from './query-condition-editor.componen
 
       <button
         type="button"
-        class="text-foreground/35 hover:text-warn hover:bg-warn/10 flex h-full w-[30px] items-center justify-center border-l border-white/[0.07] transition-colors"
+        class="text-foreground/35 hover:text-warn hover:bg-warn/10 border-border flex h-full w-[30px] items-center justify-center border-l transition-colors"
         i18n-aria-label="
           Accessible label for the button that removes a condition
         "

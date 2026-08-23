@@ -6,16 +6,16 @@ function storageKey(key: string): string {
   return `${STORAGE_PREFIX}${key}`;
 }
 
-/**
- * Merges saved preferences with the column definitions currently declared by
- * the host. Saved columns keep their order and visibility; columns added since
- * the preferences were saved are appended (visible by default); preferences
- * referencing columns that no longer exist are dropped.
- */
+export interface ReconcileColumnOptions {
+  newColumnsVisible?: boolean;
+}
+
 export function reconcileColumnPreferences<T>(
   columns: readonly DatatableColumn<T>[],
-  preferences: readonly DatatableColumnPreference[] | null
+  preferences: readonly DatatableColumnPreference[] | null,
+  options: ReconcileColumnOptions = {}
 ): DatatableColumnPreference[] {
+  const { newColumnsVisible = true } = options;
   const byId = new Map(columns.map((column) => [column.id, column]));
   const seen = new Set<string>();
   const result: DatatableColumnPreference[] = [];
@@ -29,7 +29,7 @@ export function reconcileColumnPreferences<T>(
 
   for (const column of columns) {
     if (!seen.has(column.id)) {
-      result.push({ id: column.id, visible: true });
+      result.push({ id: column.id, visible: newColumnsVisible });
     }
   }
 

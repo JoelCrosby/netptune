@@ -9,7 +9,7 @@ import { StrokedButtonComponent } from '../button/stroked-button.component';
 @Component({
   selector: 'app-page-header-actions',
   template: `
-    <div class="flex flex-row items-center gap-4">
+    <div class="flex flex-row flex-wrap items-center gap-4">
       @for (action of secondaryActions(); track action) {
         <button
           app-flat-button

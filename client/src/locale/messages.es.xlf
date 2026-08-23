@@ -510,6 +510,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:126</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:142</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:96,97</note>
         <note category="description">Counts the columns an export will contain</note>
       </notes>
       <segment state="initial">
@@ -994,7 +995,7 @@
     </unit>
     <unit id="7549003559091431913">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:210,213</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-toolbar.component.ts:34,39</note>
         <note category="description">Label after the number of tasks a query matches</note>
       </notes>
       <segment state="translated">
@@ -1024,8 +1025,7 @@
     </unit>
     <unit id="2123659921722214537">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:68</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:76,79</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:43,44</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:215</note>
         <note category="location">src/app/workspace.routes.ts:42</note>
         <note category="description">Page title for the saved task view list</note>
@@ -1077,7 +1077,7 @@
     </unit>
     <unit id="2838129566011107043">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:107,111</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:112,116</note>
         <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:49,51</note>
         <note category="description">Button that adds a query condition</note>
       </notes>
@@ -1601,7 +1601,7 @@
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:309</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:249</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:360</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:150</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-kind.ts:32</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
@@ -2204,10 +2204,10 @@
     </unit>
     <unit id="4140474966837806672">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:114,116</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:208,210</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:126,128</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:115,117</note>
         <note category="location">src/app/shared/components/query-builder/query-status.component.ts:19,21</note>
-        <note category="description">Prefix of the plain-language query summary</note>
+        <note category="description">Eyebrow above the plain-language query summary</note>
       </notes>
       <segment state="translated">
         <source> Shows tasks where </source>
@@ -2658,14 +2658,14 @@
         <target>Ámbar</target>
       </segment>
     </unit>
-    <unit id="2078671361451337260">
+    <unit id="5958306903625377545">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:131,133</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:126,127</note>
         <note category="description">Heading shown when a saved view no longer compiles</note>
       </notes>
       <segment state="translated">
-        <source> This view needs attention </source>
-        <target> Esta vista necesita atención </target>
+        <source>This view needs attention</source>
+        <target>Esta vista necesita atención</target>
       </segment>
     </unit>
     <unit id="8598918991528773310">
@@ -2855,16 +2855,6 @@
       <segment state="translated">
         <source> Ready to create </source>
         <target>Listo para crear</target>
-      </segment>
-    </unit>
-    <unit id="2241133417281406824">
-      <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:107,109</note>
-        <note category="description">Toolbar button showing how many columns a view shows</note>
-      </notes>
-      <segment state="translated">
-        <source> <ph id="0" equiv="INTERPOLATION" disp="{{ visibleCount() }}"/> columns </source>
-        <target> <ph id="0" equiv="INTERPOLATION" disp="{{ visibleCount() }}"/> columnas </target>
       </segment>
     </unit>
     <unit id="2244471832629453998">
@@ -3652,7 +3642,7 @@
         <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:95,98</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:168,171</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:141,144</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:121,123</note>
+        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:31,33</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:28</note>
         <note category="description">Label of the task description editor</note>
       </notes>
@@ -4063,7 +4053,7 @@
     </unit>
     <unit id="2110223804478113558">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:201,204</note>
+        <note category="location">src/app/features/task-views/components/task-view-preview-toolbar.component.ts:27,30</note>
         <note category="description">Shown while the query result count is being recounted</note>
       </notes>
       <segment state="translated">
@@ -5070,14 +5060,14 @@
         <target>No se pudieron cargar los eventos de auditoría.</target>
       </segment>
     </unit>
-    <unit id="261745436712600632">
+    <unit id="7699622144571229146">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:60,63</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:50,51</note>
         <note category="description">Heading of the sort menu</note>
       </notes>
       <segment state="translated">
-        <source> Sort by </source>
-        <target> Ordenar por </target>
+        <source>Sort by</source>
+        <target>Ordenar por</target>
       </segment>
     </unit>
     <unit id="1428367413098223987">
@@ -5192,7 +5182,8 @@
     </unit>
     <unit id="5989040236984882526">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:327</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:204</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:174</note>
         <note category="description">Number of columns a saved view displays. COUNT is how many there are</note>
       </notes>
       <segment state="translated">
@@ -5384,8 +5375,8 @@
     </unit>
     <unit id="6143795228406387052">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:71,73</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:95,99</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:71,75</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:88,92</note>
         <note category="description">Button that copies a shareable link to a view</note>
       </notes>
       <segment state="translated">
@@ -6293,7 +6284,7 @@
     </unit>
     <unit id="4762376336950167226">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:304</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:173</note>
         <note category="description">Button that removes a view from the sidebar</note>
       </notes>
       <segment state="translated">
@@ -6418,7 +6409,7 @@
     </unit>
     <unit id="329406837759048287">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:139,140</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:61,63</note>
         <note category="description">Badge marking a view shared with the workspace</note>
       </notes>
       <segment state="translated">
@@ -6520,7 +6511,7 @@
     <unit id="1784168874629208042">
       <notes>
         <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:52,55</note>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:69,72</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:72,75</note>
         <note category="description">Word before the all/any operator in a condition group</note>
       </notes>
       <segment state="translated">
@@ -6591,7 +6582,7 @@
     </unit>
     <unit id="4827228128561377686">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:247,249</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:77,79</note>
         <note category="description">Heading of the empty saved view list</note>
       </notes>
       <segment state="translated">
@@ -6633,7 +6624,7 @@
     </unit>
     <unit id="7937380552660364144">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:317</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:194</note>
         <note category="description">Number of filters on a saved view. COUNT is how many there are</note>
       </notes>
       <segment state="translated">
@@ -6886,7 +6877,7 @@
     </unit>
     <unit id="1946568146736450576">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:312</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:189</note>
         <note category="description">Shown on a saved view that filters nothing out</note>
       </notes>
       <segment state="translated">
@@ -7148,7 +7139,7 @@
     </unit>
     <unit id="5776694882834042535">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:148,150</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:157,159</note>
         <note category="description">Accessible label for the button that removes a query group</note>
       </notes>
       <segment state="translated">
@@ -7412,7 +7403,7 @@
     </unit>
     <unit id="8023561518384670313">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:326</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:203</note>
         <note category="description">Shown on a saved view that displays one column</note>
       </notes>
       <segment state="translated">
@@ -7526,7 +7517,7 @@
     </unit>
     <unit id="8171377612720992766">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:380</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:170</note>
         <note category="description">Shown when a view could not be deleted</note>
       </notes>
       <segment state="translated">
@@ -7557,12 +7548,12 @@
     </unit>
     <unit id="4941019389369938795">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:84,86</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:52,55</note>
         <note category="description">Accessible label while the saved view list loads</note>
       </notes>
       <segment state="translated">
         <source>Loading views</source>
-        <target>Cargando vistas</target>
+        <target>Cargando las vistas</target>
       </segment>
     </unit>
     <unit id="4943579562117131898">
@@ -7678,7 +7669,7 @@
     </unit>
     <unit id="139060283234317043">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:148,149</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:67,69</note>
         <note category="description">Badge marking a view only its owner can see</note>
       </notes>
       <segment state="translated">
@@ -8153,7 +8144,7 @@
     </unit>
     <unit id="1955727073588719535">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:75,77</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:78,80</note>
         <note category="description">Accessible name of the query group operator control</note>
       </notes>
       <segment state="translated">
@@ -9005,7 +8996,7 @@
     </unit>
     <unit id="862193009858945810">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:375</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:283</note>
         <note category="description">Shown when a query is too large to share as a link</note>
       </notes>
       <segment state="translated">
@@ -9035,7 +9026,7 @@
     </unit>
     <unit id="8623978917681527907">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:116,121</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:123,128</note>
         <note category="description">Button that adds a nested query group</note>
       </notes>
       <segment state="translated">
@@ -9460,7 +9451,7 @@
     </unit>
     <unit id="3712427397909119671">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:142,144</note>
+        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:51,54</note>
         <note category="description">Checkbox that shares a view with the whole workspace</note>
       </notes>
       <segment state="translated">
@@ -9523,8 +9514,8 @@
     </unit>
     <unit id="5234544449365538384">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:275</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:397</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:259</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:305</note>
         <note category="description">Shown when a shareable view link could not be copied</note>
       </notes>
       <segment state="translated">
@@ -9604,7 +9595,7 @@
     </unit>
     <unit id="249911539328381860">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:358</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:148</note>
         <note category="description">Title of the delete-view confirmation</note>
       </notes>
       <segment state="translated">
@@ -9942,7 +9933,7 @@
     </unit>
     <unit id="4493603856796380932">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:429</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:337</note>
         <note category="description">Confirmation that a view was saved</note>
       </notes>
       <segment state="translated">
@@ -9982,7 +9973,7 @@
     </unit>
     <unit id="8733170707271532124">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:107,109</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:101,103</note>
         <note category="description">Button that saves a view</note>
       </notes>
       <segment state="translated">
@@ -10351,7 +10342,7 @@
     </unit>
     <unit id="740511649555229880">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:189,191</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:107,109</note>
         <note category="description">Accessible label for the button that deletes a view</note>
       </notes>
       <segment state="translated">
@@ -10927,7 +10918,7 @@
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:207,208</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:169,170</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:197</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:99,102</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:101,104</note>
         <note category="description">Button that edits the automation</note>
       </notes>
       <segment state="translated">
@@ -10976,7 +10967,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:107,109</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:88,90</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:62,64</note>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:111,113</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:58,60</note>
         <note category="location">src/app/features/workspaces/views/workspaces-view/workspaces-view.component.ts:38,41</note>
         <note category="description">Advice shown when a page fails to load</note>
       </notes>
@@ -11007,7 +10998,7 @@
     </unit>
     <unit id="253720644207702428">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:147,149</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:140,142</note>
         <note category="description">Shown when a saved view matches no tasks</note>
       </notes>
       <segment state="translated">
@@ -11205,7 +11196,7 @@
     </unit>
     <unit id="2330979404051267952">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:69,71</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:129</note>
         <note category="description">Button that opens the create-view form</note>
       </notes>
       <segment state="translated">
@@ -11654,7 +11645,7 @@
     </unit>
     <unit id="6839573905580765842">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:443</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:351</note>
         <note category="description">Default name for a copy of somebody else&apos;s view</note>
       </notes>
       <segment state="translated">
@@ -11987,7 +11978,7 @@
     <unit id="397098723873502323">
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:139,144</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:155,158</note>
+        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:63,67</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:95,97</note>
         <note category="description">Closes a dialog once the user has finished</note>
       </notes>
@@ -12268,7 +12259,7 @@
     </unit>
     <unit id="3415268673952706297">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:305</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:174</note>
         <note category="description">Button that adds a view to the sidebar</note>
       </notes>
       <segment state="translated">
@@ -12353,7 +12344,7 @@
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:34,35</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:44,45</note>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:146</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:139</note>
         <note category="location">src/app/static/components/task-table.component.ts:85</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
       </notes>
@@ -12918,7 +12909,7 @@
     </unit>
     <unit id="3874723711759777451">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:278</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:186</note>
         <note category="description">Default name of a new saved task view</note>
       </notes>
       <segment state="translated">
@@ -13003,7 +12994,7 @@
     </unit>
     <unit id="4951986255869916102">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:359</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:149</note>
         <note category="description">Body of the delete-view confirmation</note>
       </notes>
       <segment state="translated">
@@ -13214,7 +13205,7 @@
     </unit>
     <unit id="1297926277686322973">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:131,134</note>
+        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:41,44</note>
         <note category="description">Label of the view visibility field</note>
       </notes>
       <segment state="translated">
@@ -14072,7 +14063,7 @@
     </unit>
     <unit id="4105895757984243460">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:375</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:165</note>
         <note category="description">Confirmation that a view was deleted</note>
       </notes>
       <segment state="translated">
@@ -14505,16 +14496,6 @@
         <target>Carga de trabajo actual</target>
       </segment>
     </unit>
-    <unit id="7828234979822398725">
-      <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:116,119</note>
-        <note category="description">Heading of the view column picker</note>
-      </notes>
-      <segment state="translated">
-        <source> Columns </source>
-        <target> Columnas </target>
-      </segment>
-    </unit>
     <unit id="7831424791501412228">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:38,41</note>
@@ -14883,7 +14864,7 @@
     </unit>
     <unit id="2432489152925764943">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:166,170</note>
+        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:70,76</note>
         <note category="description">Explains why the share control is unavailable to this user</note>
       </notes>
       <segment state="translated">
@@ -15262,7 +15243,7 @@
     </unit>
     <unit id="5992426859749036765">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:316</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:193</note>
         <note category="description">Shown on a saved view with exactly one filter</note>
       </notes>
       <segment state="translated">
@@ -15389,7 +15370,7 @@
     </unit>
     <unit id="436231775780502366">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:251,252</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:81,82</note>
         <note category="description">Explains what saved task views do, on the empty state</note>
       </notes>
       <segment state="translated">
@@ -15552,6 +15533,16 @@
         <target>Ámbitos de la credencial</target>
       </segment>
     </unit>
+    <unit id="7619560701830330401">
+      <notes>
+        <note category="location">src/app/static/components/skeleton/skeleton-card-grid.component.ts:38</note>
+        <note category="description">Accessible label while a grid of cards loads</note>
+      </notes>
+      <segment state="translated">
+        <source>Loading</source>
+        <target>Cargando</target>
+      </segment>
+    </unit>
     <unit id="4374197485677367703">
       <notes>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:75,80</note>
@@ -15595,7 +15586,7 @@
     </unit>
     <unit id="6724823079373170961">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:158,159</note>
+        <note category="location">src/app/features/task-views/components/task-view-card.component.ts:76,78</note>
         <note category="description">Badge marking a view pinned to the sidebar</note>
       </notes>
       <segment state="translated">
@@ -16129,8 +16120,8 @@
     </unit>
     <unit id="892073694820881630">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:270</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:392</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:254</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:300</note>
         <note category="description">Confirmation that a shareable view link was copied</note>
       </notes>
       <segment state="translated">
@@ -16180,7 +16171,7 @@
     </unit>
     <unit id="4481497787765929776">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:91,93</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:82,84</note>
         <note category="description">Descending sort direction</note>
       </notes>
       <segment state="initial">
@@ -16860,8 +16851,8 @@
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:156,159</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:255</note>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:68,71</note>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:193</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:61,64</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163</note>
         <note category="description">Model option that defers to the server default</note>
       </notes>
       <segment state="translated">
@@ -17142,7 +17133,7 @@
     </unit>
     <unit id="8991032674812724530">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:232,234</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:140,142</note>
         <note category="description">Shown when a query preview matches no tasks</note>
       </notes>
       <segment state="translated">
@@ -17458,7 +17449,7 @@
     </unit>
     <unit id="8211774880361154235">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:261,263</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:91,93</note>
         <note category="description">Button that opens the create-view form</note>
       </notes>
       <segment state="translated">
@@ -17561,7 +17552,7 @@
     </unit>
     <unit id="5028777105388019087">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:82,86</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:75,79</note>
         <note category="description">Button that opens the view details drawer</note>
       </notes>
       <segment state="translated">
@@ -17839,7 +17830,7 @@
     </unit>
     <unit id="580124269805283452">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:93,95</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:84,87</note>
         <note category="description">Ascending sort direction</note>
       </notes>
       <segment state="initial">
@@ -17961,7 +17952,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:88,92</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:89,93</note>
         <note category="description">Button that adds a view to the sidebar</note>
       </notes>
       <segment state="translated">
@@ -18521,7 +18512,7 @@
     </unit>
     <unit id="6387682075038243709">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:163,165</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:131,133</note>
         <note category="description">Accessible label for the button that moves a column later</note>
       </notes>
       <segment state="translated">
@@ -19273,7 +19264,7 @@
     </unit>
     <unit id="5797079666713956753">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:84,86</note>
+        <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:85,87</note>
         <note category="description">Button that removes a view from the sidebar</note>
       </notes>
       <segment state="translated">
@@ -19529,7 +19520,7 @@
     </unit>
     <unit id="6499828313169795693">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:109,110</note>
+        <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:56,57</note>
         <note category="description">Shown when the saved view list fails to load</note>
       </notes>
       <segment state="translated">
@@ -19802,7 +19793,7 @@
     </unit>
     <unit id="7975467617398451139">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:178,181</note>
+        <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:78,84</note>
         <note category="description">Shown when editing a shared view the user cannot change</note>
       </notes>
       <segment state="translated">
@@ -19943,7 +19934,7 @@
     </unit>
     <unit id="4866997247833302800">
       <notes>
-        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:151,153</note>
+        <note category="location">src/app/features/task-views/components/task-view-display-menu.component.ts:118,120</note>
         <note category="description">Accessible label for the button that moves a column earlier</note>
       </notes>
       <segment state="translated">

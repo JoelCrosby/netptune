@@ -19,8 +19,9 @@ import {
   TaskQueryValidationError,
 } from '@app/features/task-views/models/task-view.models';
 import { QueryFieldOptionsService } from '@app/features/task-views/services/query-field-options.service';
-import { explainQuery } from '@app/features/task-views/util/query-explanation';
 import { LucideLayersPlus, LucidePlus, LucideX } from '@lucide/angular';
+import { IconButtonComponent } from '@static/components/button/icon-button.component';
+import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import {
   SegmentedControlComponent,
   SegmentedOption,
@@ -50,7 +51,9 @@ const valuesByOperator: Record<TaskQueryGroupOperator, GroupOperatorValue> = {
 @Component({
   selector: 'app-query-chip-bar',
   imports: [
+    IconButtonComponent,
     SegmentedControlComponent,
+    StrokedButtonComponent,
     QueryChipComponent,
     QueryStatusComponent,
     LucidePlus,
@@ -99,8 +102,10 @@ const valuesByOperator: Record<TaskQueryGroupOperator, GroupOperatorValue> = {
       }
 
       <button
+        app-stroked-button
+        color="neutral"
+        [class]="addButtonClass"
         type="button"
-        class="text-foreground/60 hover:border-primary/70 hover:text-primary flex h-9 items-center gap-1.5 rounded-[9px] border border-dashed border-white/20 px-3 text-sm transition-colors disabled:pointer-events-none disabled:opacity-50"
         [disabled]="atConditionLimit()"
         (click)="addCondition()">
         <svg lucidePlus class="h-3.5 w-3.5"></svg>
@@ -108,8 +113,10 @@ const valuesByOperator: Record<TaskQueryGroupOperator, GroupOperatorValue> = {
       </button>
 
       <button
+        app-stroked-button
+        color="neutral"
+        [class]="addButtonClass"
         type="button"
-        class="text-foreground/60 hover:border-primary/70 hover:text-primary flex h-9 items-center gap-1.5 rounded-[9px] border border-dashed border-white/20 px-3 text-sm transition-colors disabled:pointer-events-none disabled:opacity-50"
         [disabled]="atDepthLimit()"
         (click)="addGroup()">
         <svg lucideLayersPlus class="h-3.5 w-3.5"></svg>
@@ -140,8 +147,10 @@ const valuesByOperator: Record<TaskQueryGroupOperator, GroupOperatorValue> = {
           (groupChange)="setGroup(groupIndex, $event)" />
 
         <button
+          app-icon-button
+          color="warn"
+          class="h-7 w-7 shrink-0 rounded-md"
           type="button"
-          class="text-foreground/35 hover:text-warn hover:bg-warn/10 flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors"
           i18n-aria-label="
             Accessible label for the button that removes a query group
           "
@@ -178,6 +187,9 @@ export class QueryChipBarComponent {
     },
   ];
 
+  // Dashed outline marks these as "add something", which no button variant covers.
+  readonly addButtonClass = 'h-9 gap-1.5 rounded-[9px] border-dashed px-3';
+
   readonly group = model.required<TaskQueryGroup>();
   readonly catalog = input.required<TaskQueryCatalog>();
   readonly errors = input<TaskQueryValidationError[]>([]);
@@ -194,18 +206,7 @@ export class QueryChipBarComponent {
   );
 
   readonly summary = computed(() => {
-    const catalog = this.catalog();
-
-    return explainQuery(this.group(), {
-      catalog,
-      labelFor: (fieldKey, value) => {
-        const field = catalog.fields.find(
-          (candidate) => candidate.key === fieldKey
-        );
-
-        return this.fieldOptions.labelFor(field, value);
-      },
-    });
+    return this.fieldOptions.explain(this.group(), this.catalog());
   });
 
   readonly messages = computed(() => {

@@ -6,10 +6,6 @@ import { PERMISSIONS } from '@core/auth/permissions';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { QueryChipBarComponent } from '@shared/components/query-builder/query-chip-bar.component';
 import { LucideLink, LucideSave, LucideSettings2 } from '@lucide/angular';
-import { CheckboxComponent } from '@static/components/checkbox/checkbox.component';
-import { FormControlFieldComponent } from '@static/components/form-control/form-control-field.component';
-import { FormControlLabelDirective } from '@static/components/form-control/form-control.directives';
-import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
 import { DatatableColumnPreference } from '@static/components/datatable/datatable.types';
@@ -37,7 +33,8 @@ import {
   visibleTaskColumns,
 } from '@core/tasks/task-columns';
 import { TaskTableComponent } from '@static/components/task-table.component';
-import { TaskViewDisplayMenuComponent } from '../../components/task-view-display-menu.component';
+import { TaskViewDetailsDrawerComponent } from '../../components/task-view-details-drawer.component';
+import { TaskViewPreviewToolbarComponent } from '../../components/task-view-preview-toolbar.component';
 
 /**
  * One-column editor: query on top, results underneath. The split/stacked layout toggle is gone —
@@ -51,14 +48,11 @@ import { TaskViewDisplayMenuComponent } from '../../components/task-view-display
     PageHeaderComponent,
     PageLoadingComponent,
     QueryChipBarComponent,
-    CheckboxComponent,
-    FormControlFieldComponent,
-    FormControlLabelDirective,
-    FormInputComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     TaskTableComponent,
-    TaskViewDisplayMenuComponent,
+    TaskViewDetailsDrawerComponent,
+    TaskViewPreviewToolbarComponent,
     LucideLink,
     LucideSave,
     LucideSettings2,
@@ -69,117 +63,55 @@ import { TaskViewDisplayMenuComponent } from '../../components/task-view-display
         [title]="name()"
         [titleEditable]="true"
         (titleSubmitted)="name.set($event)">
-        <div pageHeaderActions class="flex flex-wrap items-center gap-2">
-          <button
-            app-stroked-button
-            color="neutral"
-            class="h-9 gap-2"
-            type="button"
-            [class.text-primary]="detailsOpen()"
-            (click)="detailsOpen.set(!detailsOpen())">
-            <svg lucideSettings2 class="h-4 w-4"></svg>
-            <span i18n="Button that opens the view details drawer"
-              >Details</span
-            >
-          </button>
+        <button
+          pageHeaderActions
+          app-stroked-button
+          color="neutral"
+          class="h-9 gap-2"
+          type="button"
+          [class.text-primary]="detailsOpen()"
+          (click)="detailsOpen.set(!detailsOpen())">
+          <svg lucideSettings2 class="h-4 w-4"></svg>
+          <span i18n="Button that opens the view details drawer">Details</span>
+        </button>
 
-          <button
-            app-stroked-button
-            color="neutral"
-            class="h-9 gap-2"
-            type="button"
-            [disabled]="!shareableQuery()"
-            (click)="onCopyQueryLink()">
-            <svg lucideLink class="h-4 w-4"></svg>
-            <span i18n="Button that copies a link carrying the built query">
-              Copy link
-            </span>
-          </button>
+        <button
+          pageHeaderActions
+          app-stroked-button
+          color="neutral"
+          class="h-9 gap-2"
+          type="button"
+          [disabled]="!shareableQuery()"
+          (click)="onCopyQueryLink()">
+          <svg lucideLink class="h-4 w-4"></svg>
+          <span i18n="Button that copies a link carrying the built query">
+            Copy link
+          </span>
+        </button>
 
-          <button
-            app-flat-button
-            color="primary"
-            class="h-9 gap-2"
-            type="button"
-            [disabled]="!canSave()"
-            (click)="onSave()">
-            <svg lucideSave class="h-4 w-4"></svg>
-            <span i18n="Button that saves a view">Save view</span>
-          </button>
-        </div>
+        <button
+          pageHeaderActions
+          app-flat-button
+          color="primary"
+          class="h-9 gap-2"
+          type="button"
+          [disabled]="!canSave()"
+          (click)="onSave()">
+          <svg lucideSave class="h-4 w-4"></svg>
+          <span i18n="Button that saves a view">Save view</span>
+        </button>
       </app-page-header>
 
       @if (loading()) {
         <app-page-loading />
       } @else {
         @if (detailsOpen()) {
-          <div
-            class="border-border bg-card mb-3 grid items-end gap-4 rounded-xl border px-[18px] py-4 md:grid-cols-[1fr_1fr_auto]">
-            <app-form-input
-              density="compact"
-              i18n-label="Label of the view description field"
-              label="Description"
-              name="view-description"
-              [noMargin]="true"
-              [(value)]="description" />
-
-            <div>
-              <span
-                appFormLabel
-                variant="compact"
-                i18n="Label of the view visibility field">
-                Visibility
-              </span>
-
-              <app-form-control-field density="compact">
-                <app-checkbox
-                  class="w-full px-3 text-sm"
-                  [checked]="isShared()"
-                  [disabled]="!canManageShared()"
-                  (checkedChange)="isShared.set($event)">
-                  <span
-                    i18n="Checkbox that shares a view with the whole workspace">
-                    Share with the workspace
-                  </span>
-                </app-checkbox>
-              </app-form-control-field>
-            </div>
-
-            <button
-              app-stroked-button
-              color="neutral"
-              class="h-9.5 rounded-lg"
-              type="button"
-              (click)="detailsOpen.set(false)">
-              <span i18n="Button that closes the view details drawer"
-                >Done</span
-              >
-            </button>
-          </div>
-
-          @if (!canManageShared()) {
-            <p class="text-foreground/50 mb-3 text-xs">
-              <span
-                i18n="
-                  Explains why the share control is unavailable to this user
-                ">
-                Sharing a view with the workspace needs the shared-views
-                permission.
-              </span>
-            </p>
-          }
-
-          @if (savesAsCopy()) {
-            <div
-              class="border-primary/40 bg-primary/5 mb-3 rounded-md border px-3 py-2 text-sm"
-              role="status">
-              <span
-                i18n="Shown when editing a shared view the user cannot change">
-                You cannot change this shared view, so saving creates your own
-                copy of it.
-              </span>
-            </div>
-          }
+          <app-task-view-details-drawer
+            [(description)]="description"
+            [(isShared)]="isShared"
+            [canManageShared]="canManageShared()"
+            [savesAsCopy]="savesAsCopy()"
+            (closed)="detailsOpen.set(false)" />
         }
 
         <div
@@ -191,38 +123,14 @@ import { TaskViewDisplayMenuComponent } from '../../components/task-view-display
             (groupChange)="query.set($event)" />
         </div>
 
-        <div
-          class="border-border bg-card-header flex shrink-0 items-center gap-3 border-x border-t px-4 py-2.5">
-          <p class="text-sm" role="status" aria-live="polite">
-            @if (previewLoading()) {
-              <span
-                class="text-foreground/38"
-                i18n="Shown while the query result count is being recounted">
-                Counting…
-              </span>
-            } @else {
-              <span class="text-foreground font-medium">
-                {{ previewCount() }}
-              </span>
-              <span
-                class="text-foreground/38"
-                i18n="Label after the number of tasks a query matches">
-                matching tasks
-              </span>
-            }
-          </p>
-
-          <app-task-view-display-menu
-            class="ml-auto"
-            [columns]="availableColumns"
-            [preferences]="columns()"
-            [sortableFields]="sortableFields()"
-            [sortBy]="sortBy()"
-            [sortDirection]="sortDirection()"
-            (preferencesChange)="columns.set($event)"
-            (sortByChange)="sortBy.set($event)"
-            (sortDirectionChange)="sortDirection.set($event)" />
-        </div>
+        <app-task-view-preview-toolbar
+          [loading]="previewLoading()"
+          [count]="previewCount()"
+          [availableColumns]="availableColumns"
+          [sortableFields]="sortableFields()"
+          [(preferences)]="columns"
+          [(sortBy)]="sortBy"
+          [(sortDirection)]="sortDirection" />
 
         <app-task-table
           class="mb-6"

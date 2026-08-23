@@ -14,6 +14,7 @@ import {
 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { CalloutComponent } from '@static/components/callout/callout.component';
 import { DatatableColumn } from '@static/components/datatable/datatable.types';
 import { TaskTableComponent } from '@static/components/task-table.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
@@ -29,7 +30,6 @@ import {
   taskViewResource,
 } from '../../resources/task-view.resource';
 import { findStaleReferences } from '../../util/stale-references';
-import { explainQuery } from '../../util/query-explanation';
 
 @Component({
   selector: 'app-task-view-detail-view',
@@ -40,13 +40,13 @@ import { explainQuery } from '../../util/query-explanation';
     PageLoadingComponent,
     ErrorStateComponent,
     TaskTableComponent,
+    CalloutComponent,
     FlatButtonComponent,
     StrokedButtonComponent,
     LucideLink,
     LucidePencil,
     LucidePin,
     LucidePinOff,
-    LucideTriangleAlert,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -60,46 +60,47 @@ import { explainQuery } from '../../util/query-explanation';
           description="It may have been deleted, or it may be private to somebody else." />
       } @else if (view(); as view) {
         <app-page-header [title]="view.name" [count]="totalCount()">
-          <div pageHeaderActions class="flex flex-wrap items-center gap-2">
-            <button
-              app-stroked-button
-              class="gap-2"
-              type="button"
-              (click)="onCopyLink()">
-              <svg lucideLink class="h-4 w-4"></svg>
-              <span i18n="Button that copies a shareable link to a view">
-                Copy link
+          <button
+            pageHeaderActions
+            app-stroked-button
+            class="gap-2"
+            type="button"
+            (click)="onCopyLink()">
+            <svg lucideLink class="h-4 w-4"></svg>
+            <span i18n="Button that copies a shareable link to a view">
+              Copy link
+            </span>
+          </button>
+
+          <button
+            pageHeaderActions
+            app-stroked-button
+            class="gap-2"
+            type="button"
+            [attr.aria-pressed]="isPinned()"
+            (click)="onTogglePin()">
+            @if (isPinned()) {
+              <svg lucidePin class="text-primary h-4 w-4"></svg>
+              <span i18n="Button that removes a view from the sidebar">
+                Unpin
               </span>
-            </button>
-
-            <button
-              app-stroked-button
-              class="gap-2"
-              type="button"
-              [attr.aria-pressed]="isPinned()"
-              (click)="onTogglePin()">
-              @if (isPinned()) {
-                <svg lucidePin class="text-primary h-4 w-4"></svg>
-                <span i18n="Button that removes a view from the sidebar">
-                  Unpin
-                </span>
-              } @else {
-                <svg lucidePinOff class="h-4 w-4"></svg>
-                <span i18n="Button that adds a view to the sidebar">Pin</span>
-              }
-            </button>
-
-            @if (view.canEdit && canUpdate()) {
-              <a
-                app-flat-button
-                color="primary"
-                class="gap-2"
-                [routerLink]="['edit']">
-                <svg lucidePencil class="h-4 w-4"></svg>
-                <span i18n="Button that opens the edit-view form">Edit</span>
-              </a>
+            } @else {
+              <svg lucidePinOff class="h-4 w-4"></svg>
+              <span i18n="Button that adds a view to the sidebar">Pin</span>
             }
-          </div>
+          </button>
+
+          @if (view.canEdit && canUpdate()) {
+            <a
+              pageHeaderActions
+              app-flat-button
+              color="primary"
+              class="gap-2"
+              [routerLink]="['edit']">
+              <svg lucidePencil class="h-4 w-4"></svg>
+              <span i18n="Button that opens the edit-view form">Edit</span>
+            </a>
+          }
         </app-page-header>
 
         <div class="flex flex-col gap-4">
@@ -117,26 +118,18 @@ import { explainQuery } from '../../util/query-explanation';
           </p>
 
           @if (errors().length) {
-            <div
-              class="border-warn/40 bg-warn/5 flex items-start gap-2 rounded-md border px-3 py-2 text-sm"
-              role="alert">
-              <svg
-                lucideTriangleAlert
-                class="text-warn mt-0.5 h-4 w-4 shrink-0"
-                aria-hidden="true"></svg>
-              <div class="min-w-0">
-                <p
-                  class="font-medium"
-                  i18n="Heading shown when a saved view no longer compiles">
-                  This view needs attention
-                </p>
-                <ul class="text-foreground/70 mt-1 list-disc pl-4">
-                  @for (error of errors(); track error.path) {
-                    <li>{{ error.message }}</li>
-                  }
-                </ul>
-              </div>
-            </div>
+            <app-callout
+              color="warn"
+              role="alert"
+              [icon]="warningIcon"
+              i18n-title="Heading shown when a saved view no longer compiles"
+              title="This view needs attention">
+              <ul class="text-foreground/70 mt-1 list-disc pl-4">
+                @for (error of errors(); track error.path) {
+                  <li>{{ error.message }}</li>
+                }
+              </ul>
+            </app-callout>
           }
 
           <app-task-table
@@ -197,23 +190,14 @@ export class TaskViewDetailViewComponent {
 
   readonly canUpdate = hasPermission(PERMISSIONS.taskViews.update);
 
+  protected readonly warningIcon = LucideTriangleAlert;
+
   readonly summary = computed(() => {
     const query = this.view()?.definition?.query;
 
     if (!query) return '';
 
-    const catalog = this.catalogRef.value();
-
-    return explainQuery(query, {
-      catalog,
-      labelFor: (fieldKey, value) => {
-        const field = catalog.fields.find(
-          (candidate) => candidate.key === fieldKey
-        );
-
-        return this.fieldOptions.labelFor(field, value);
-      },
-    });
+    return this.fieldOptions.explain(query, this.catalogRef.value());
   });
 
   readonly params = computed(() => {

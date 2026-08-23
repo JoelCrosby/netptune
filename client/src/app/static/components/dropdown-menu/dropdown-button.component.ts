@@ -27,7 +27,17 @@ import {
       <svg lucideChevronDown class="h-4 w-4 shrink-0 opacity-70"></svg>
     </button>
 
-    <app-dropdown-menu #menu [xPosition]="xPosition()">
+    <app-dropdown-menu
+      #menu
+      [xPosition]="xPosition()"
+      [panelRole]="panelRole()">
+      @if (menuLabel(); as menuLabel) {
+        <p
+          class="text-foreground/40 mx-2 mt-1.5 mb-2 text-[11px] font-semibold tracking-[0.06em] uppercase">
+          {{ menuLabel }}
+        </p>
+      }
+
       <ng-content />
     </app-dropdown-menu>
   `,
@@ -39,6 +49,9 @@ export class DropdownButtonComponent {
   readonly disabled = input(false);
   readonly buttonClass = input('');
   readonly xPosition = input<DropdownMenuXPosition>('after');
+  readonly panelRole = input('menu');
+  /** Heading shown above the menu contents, for a panel whose trigger shows a value rather than a name. */
+  readonly menuLabel = input<string>();
 
   private readonly menu = viewChild.required(DropdownMenuComponent);
 

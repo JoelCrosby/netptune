@@ -10,9 +10,12 @@ import { tagResource } from '@core/resources/tag.resource';
 import { workspaceUsersResource } from '@core/resources/user.resource';
 import { SprintStatus } from '@core/enums/sprint-status';
 import {
+  TaskQueryCatalog,
   TaskQueryField,
+  TaskQueryGroup,
   TaskQueryOptionSource,
 } from '../models/task-view.models';
+import { explainQuery } from '../util/query-explanation';
 
 export interface QueryFieldOption {
   value: string;
@@ -99,6 +102,21 @@ export class QueryFieldOptionsService {
     const match = options.find((option) => option.value === value);
 
     return match?.label ?? value;
+  }
+
+  // Every caller of explainQuery needs the same field lookup to turn stored ids back into names,
+  // so the two are bound together here rather than repeated at each call site.
+  explain(group: TaskQueryGroup, catalog: TaskQueryCatalog): string {
+    return explainQuery(group, {
+      catalog,
+      labelFor: (fieldKey, value) => {
+        const field = catalog.fields.find(
+          (candidate) => candidate.key === fieldKey
+        );
+
+        return this.labelFor(field, value);
+      },
+    });
   }
 
   // Each relation type yields two options, because "blocks" and "blocked by" are the same
