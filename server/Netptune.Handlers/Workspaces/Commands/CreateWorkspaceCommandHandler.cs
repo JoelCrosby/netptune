@@ -7,6 +7,7 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Core.Models.Options;
+using Netptune.Services.Workspaces;
 using Microsoft.Extensions.Options;
 
 namespace Netptune.Handlers.Workspaces.Commands;

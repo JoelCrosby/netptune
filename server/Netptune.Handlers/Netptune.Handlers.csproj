@@ -20,6 +20,7 @@
     <ProjectReference Include="..\Netptune.Automation\Netptune.Automation.csproj" />
     <ProjectReference Include="..\Netptune.Core\Netptune.Core.csproj" />
     <ProjectReference Include="..\Netptune.Query\Netptune.Query.csproj" />
+    <ProjectReference Include="..\Netptune.Services\Netptune.Services.csproj" />
     <ProjectReference Include="..\Netptune.Storage\Netptune.Storage.csproj" />
     <ProjectReference Include="..\Netptune.Transfer\Netptune.Transfer.csproj" />
   </ItemGroup>

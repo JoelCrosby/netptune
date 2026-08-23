@@ -9,7 +9,7 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Boards;
-using Netptune.Handlers.Onboarding.Templates;
+using Netptune.Services.Onboarding;
 
 namespace Netptune.Handlers.Boards.Commands;
 

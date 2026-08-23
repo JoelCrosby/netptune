@@ -6,7 +6,7 @@ using Netptune.Ai.Execution;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
-using Netptune.Handlers.Ai.Queries;
+using Netptune.Core.ViewModels.Ai;
 
 using Xunit;
 

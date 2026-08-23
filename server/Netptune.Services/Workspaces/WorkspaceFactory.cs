@@ -9,13 +9,13 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
-using Netptune.Handlers.Onboarding.Templates;
+using Netptune.Services.Onboarding;
 
-namespace Netptune.Handlers.Workspaces.Commands;
+namespace Netptune.Services.Workspaces;
 
-internal static class WorkspaceFactory
+public static class WorkspaceFactory
 {
-    internal static Task<ClientResponse<WorkspaceViewModel>> CreateAsync(
+    public static Task<ClientResponse<WorkspaceViewModel>> CreateAsync(
         AddWorkspaceRequest request,
         AppUser user,
         INetptuneUnitOfWork unitOfWork,

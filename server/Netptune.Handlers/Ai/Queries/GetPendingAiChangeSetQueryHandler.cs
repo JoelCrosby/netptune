@@ -45,12 +45,9 @@ public sealed class GetPendingAiChangeSetQueryHandler
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
-        var model = await AiChangeSetMapper.ToViewModel(
-            changeSet,
-            changes,
-            UnitOfWork.Tasks,
-            UndoCatalog,
-            cancellationToken);
+        var taskIds = AiChangeSetMapper.CollectTaskIds(changes);
+        var tasks = await UnitOfWork.Tasks.GetTaskViewModels(taskIds, cancellationToken);
+        var model = AiChangeSetMapper.ToViewModel(changeSet, changes, tasks, UndoCatalog);
 
         return ClientResponse<AiChangeSetViewModel>.Success(model);
     }

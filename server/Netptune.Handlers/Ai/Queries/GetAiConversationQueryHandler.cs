@@ -84,7 +84,9 @@ public sealed class GetAiConversationQueryHandler
         }
 
         var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
+        var taskIds = AiChangeSetMapper.CollectTaskIds(changes);
+        var tasks = await UnitOfWork.Tasks.GetTaskViewModels(taskIds, cancellationToken);
 
-        return await AiChangeSetMapper.ToViewModel(changeSet, changes, UnitOfWork.Tasks, UndoCatalog, cancellationToken);
+        return AiChangeSetMapper.ToViewModel(changeSet, changes, tasks, UndoCatalog);
     }
 }

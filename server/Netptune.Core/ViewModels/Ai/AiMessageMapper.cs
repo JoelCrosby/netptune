@@ -1,9 +1,8 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
-using Netptune.Core.ViewModels.Ai;
 
-namespace Netptune.Handlers.Ai.Queries;
+namespace Netptune.Core.ViewModels.Ai;
 
 public static class AiMessageMapper
 {

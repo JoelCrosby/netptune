@@ -1,9 +1,8 @@
 using System.Text.Json;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Models.Ai;
 
-namespace Netptune.Handlers.Ai.Queries;
+namespace Netptune.Core.Models.Ai;
 
 public static class AiMessageReferences
 {

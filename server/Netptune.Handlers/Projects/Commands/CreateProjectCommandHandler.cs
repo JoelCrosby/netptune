@@ -9,7 +9,7 @@ using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Projects;
-using Netptune.Handlers.Onboarding.Templates;
+using Netptune.Services.Onboarding;
 
 namespace Netptune.Handlers.Projects.Commands;
 

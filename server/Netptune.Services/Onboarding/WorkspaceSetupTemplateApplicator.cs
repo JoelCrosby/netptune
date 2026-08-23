@@ -4,11 +4,11 @@ using Netptune.Core.Onboarding.Templates;
 using Netptune.Core.Tags;
 using Netptune.Core.UnitOfWork;
 
-namespace Netptune.Handlers.Onboarding.Templates;
+namespace Netptune.Services.Onboarding;
 
-internal static class WorkspaceSetupTemplateApplicator
+public static class WorkspaceSetupTemplateApplicator
 {
-    internal static async Task ApplyWorkspaceDefaultsAsync(
+    public static async Task ApplyWorkspaceDefaultsAsync(
         WorkspaceSetupTemplateDefinition template,
         int workspaceId,
         string ownerId,
@@ -55,7 +55,7 @@ internal static class WorkspaceSetupTemplateApplicator
         await unitOfWork.CompleteAsync(cancellationToken);
     }
 
-    internal static async Task<IReadOnlyList<CreateBoardGroupOptions>> ResolveBoardGroupsAsync(
+    public static async Task<IReadOnlyList<CreateBoardGroupOptions>> ResolveBoardGroupsAsync(
         WorkspaceSetupTemplateDefinition template,
         int workspaceId,
         INetptuneUnitOfWork unitOfWork,

@@ -1,24 +1,34 @@
 using System.Text.Json;
 
 using Netptune.Core.Entities;
-using Netptune.Core.Repositories;
 using Netptune.Core.Services.Ai;
-using Netptune.Core.ViewModels.Ai;
+using Netptune.Core.ViewModels.ProjectTasks;
 
-namespace Netptune.Handlers.Ai.Queries;
+namespace Netptune.Core.ViewModels.Ai;
 
 public static class AiChangeSetMapper
 {
     private const string TaskEntityType = "task";
 
-    public static async Task<AiChangeSetViewModel> ToViewModel(
+    // The task ids a change set points at, so the caller can read the matching tasks before mapping.
+    public static List<int> CollectTaskIds(IEnumerable<AiProposedChange> changes)
+    {
+        return changes
+            .Where(change => string.Equals(change.EntityType, TaskEntityType, StringComparison.Ordinal))
+            .Select(change => change.AppliedEntityId ?? change.EntityId)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .Distinct()
+            .ToList();
+    }
+
+    public static AiChangeSetViewModel ToViewModel(
         AiChangeSet changeSet,
         List<AiProposedChange> changes,
-        ITaskRepository tasks,
-        IAiUndoCatalog undoCatalog,
-        CancellationToken cancellationToken)
+        IReadOnlyCollection<TaskViewModel> tasks,
+        IAiUndoCatalog undoCatalog)
     {
-        var systemIds = await ReadTaskSystemIds(changes, tasks, cancellationToken);
+        var systemIds = tasks.ToDictionary(task => task.Id, task => task.SystemId);
 
         return new AiChangeSetViewModel
         {
@@ -29,29 +39,6 @@ public static class AiChangeSetMapper
             UndoneAt = changeSet.UndoneAt,
             Changes = changes.Select(change => ToViewModel(change, systemIds, undoCatalog)).ToList(),
         };
-    }
-
-    private static async Task<Dictionary<int, string>> ReadTaskSystemIds(
-        List<AiProposedChange> changes,
-        ITaskRepository tasks,
-        CancellationToken cancellationToken)
-    {
-        var taskIds = changes
-            .Where(change => string.Equals(change.EntityType, TaskEntityType, StringComparison.Ordinal))
-            .Select(change => change.AppliedEntityId ?? change.EntityId)
-            .Where(id => id.HasValue)
-            .Select(id => id!.Value)
-            .Distinct()
-            .ToList();
-
-        if (taskIds.Count == 0)
-        {
-            return [];
-        }
-
-        var models = await tasks.GetTaskViewModels(taskIds, cancellationToken);
-
-        return models.ToDictionary(model => model.Id, model => model.SystemId);
     }
 
     private static AiProposedChangeViewModel ToViewModel(
