@@ -53,7 +53,7 @@ import {
         title="Calendar" />
 
       <section
-        class="border-border bg-card flex h-[calc(100vh-180px)] min-h-0 flex-none flex-col overflow-hidden rounded-lg border max-[600px]:h-[calc(100vh-154px)]">
+        class="border-border bg-card flex h-[calc(100vh-180px)] min-h-0 flex-none flex-col overflow-hidden rounded-lg border shadow-sm max-[600px]:h-[calc(100vh-154px)]">
         <app-calendar-toolbar
           [monthLabel]="range().label"
           [projectId]="projectId()"

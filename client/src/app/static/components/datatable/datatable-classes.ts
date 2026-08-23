@@ -1,7 +1,7 @@
 // prettier-ignore
 
 export const classes = {
-  container: 'border-border rounded border custom-scroll',
+  container: 'border-border rounded border custom-scroll shadow-sm',
   table: 'w-full text-sm custom-scroll',
   header: 'bg-card-header text-muted border-border border-b rounded-t text-left text-xs font-medium tracking-wide uppercase',
   headerCell: 'px-4 py-3',
