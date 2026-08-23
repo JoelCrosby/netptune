@@ -368,9 +368,9 @@ public class QueryCompilerTests
         compilation.Predicate.Should().Be("(pt.status_id = @q0 AND FALSE)");
     }
 
-    // Compilation binds values the validator is assumed to have accepted. Skipping that step used to
-    // surface as an InvalidCastException on a set membership, or as a predicate quietly built from a
-    // default date; these pin the loud failure instead.
+    // Compilation binds values the validator is assumed to have accepted. A value that skipped it must
+    // fail loudly here rather than surface as an InvalidCastException on a set membership, or as a
+    // predicate quietly built from a default date.
     [Theory]
     [InlineData(QueryOperator.Equals, "not-a-number")]
     [InlineData(QueryOperator.GreaterThan, "not-a-number")]

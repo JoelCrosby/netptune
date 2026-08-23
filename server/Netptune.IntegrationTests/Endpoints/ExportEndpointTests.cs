@@ -72,9 +72,8 @@ public sealed class ExportEndpointTests
     [Fact]
     public async Task RunInline_ShouldFindATask_WhenTheBoardFilterMatchesAnyOfItsPlacements()
     {
-        // A task can sit in groups on more than one board. The filter used to narrow each task to its
-        // earliest placement and compare only that board, so scoping an export to the other board
-        // dropped the task entirely.
+        // A task can sit in groups on more than one board, and the filter matches against every
+        // placement rather than a single one.
         var placement = await PlaceATaskOnTwoBoards();
         var content = await RunScopedToBoard(placement.SecondBoardIdentifier);
         var row = FindRow(content, placement.SystemId);
@@ -132,7 +131,7 @@ public sealed class ExportEndpointTests
         var project = await unitOfWork.Projects.GetAsync(first.ProjectId, cancellationToken: token);
 
         // Saved one at a time so the placement on the first board is unambiguously the earlier of the
-        // two, which is the ordering that used to decide the filter.
+        // two, which is the placement an unfiltered export reports.
         await Place(unitOfWork, task.Id, firstGroup.Id, token);
         await Place(unitOfWork, task.Id, secondGroup.Id, token);
 
@@ -204,8 +203,8 @@ public sealed class ExportEndpointTests
     public async Task Preview_ShouldResolveEveryRequestedField_NotJustTheSingleWordColumns()
     {
         // get_transfer_tasks.sql returns snake_case columns. Dapper matches case-insensitively but does
-        // not bridge underscores, so mapping straight onto a PascalCase row type silently emptied every
-        // multi-word column — the preview kept its shape and lost project, status and the dates.
+        // not bridge underscores, so mapping straight onto a PascalCase row type empties every multi-word
+        // column without failing — the preview keeps its shape and loses project, status and the dates.
         var definition = TaskDefinition(ExportFormat.Csv) with
         {
             Fields =
@@ -283,7 +282,7 @@ public sealed class ExportEndpointTests
     public async Task Download_ShouldReturnTheSignedUrl_RatherThanRedirectingToIt()
     {
         // A redirect can only be followed by a top level navigation, and a navigation cannot carry the
-        // workspace header the permission check needs, so redirecting made every download a 403.
+        // workspace header the permission check needs, so redirecting would make every download a 403.
         var publicId = await SeedCompletedJob();
         var response = await Client.GetAsync($"api/export/jobs/{publicId}/download");
 

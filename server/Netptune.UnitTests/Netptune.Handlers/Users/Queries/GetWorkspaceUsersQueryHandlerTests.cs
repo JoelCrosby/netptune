@@ -16,9 +16,9 @@ using Xunit;
 
 namespace Netptune.UnitTests.Netptune.Handlers.Users.Queries;
 
-// Merging members with pending invites, de-duplication, sorting and pagination now all
-// happen inside get_workspace_users_paged.sql (covered by integration tests). These unit
-// tests verify the handler resolves the workspace and faithfully maps the paged result.
+// Merging members with pending invites, de-duplication, sorting and pagination all happen
+// inside get_workspace_users_paged.sql (covered by integration tests). These unit tests
+// verify the handler resolves the workspace and faithfully maps the paged result.
 public class GetWorkspaceUsersQueryHandlerTests
 {
     private readonly GetWorkspaceUsersQueryHandler Handler;

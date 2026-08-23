@@ -73,8 +73,8 @@ public sealed class ImportApplierTests
     [Fact]
     public async Task Commit_ShouldNumberASecondImportPastTheFirst()
     {
-        // The numbers used to come from a cursor seeded when the import loaded, so a second run into the
-        // same project started again at the same number and collided with the first run's rows.
+        // Task numbers are reserved against the project's current counter at commit time, not against a
+        // cursor captured when the session loaded.
         await using var scope = Fixture.Services.CreateAsyncScope();
 
         var token = TestContext.Current.CancellationToken;

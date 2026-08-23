@@ -88,8 +88,6 @@ public sealed class ImportEndpointTests
     [Fact]
     public async Task Preview_ShouldWarnWhenAPriorityCannotBeParsed()
     {
-        // A priority that does not match the enum used to be dropped in silence, unlike an unparseable
-        // date or number, so the field just arrived empty with nothing to explain it.
         var import = """
             Name,priority
             urgent work,Highest
