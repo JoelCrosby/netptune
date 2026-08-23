@@ -12,16 +12,23 @@ import { BadgeComponent } from './badge/badge.component';
       @if (category() === statusCategory.done) {
         <svg lucideCheck class="h-3.5 w-3.5"></svg>
       }
-      {{ name() }}
+      {{ displayName() }}
     </app-badge>
   `,
 })
 export class TaskStatusPillComponent {
-  readonly name = input.required<string>();
+  readonly name = input.required<string | null | undefined>();
   readonly color = input<string | null>();
   readonly category = input<StatusCategory | null>(null);
 
   readonly statusCategory = StatusCategory;
+
+  readonly displayName = computed(() => {
+    return (
+      this.name() ??
+      $localize`:Shown in place of a value that is not known:Unknown`
+    );
+  });
 
   readonly pillClasses = computed(() => {
     if (this.color()) {
