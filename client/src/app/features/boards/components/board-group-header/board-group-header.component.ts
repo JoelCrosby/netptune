@@ -2,7 +2,6 @@ import { Component, computed, inject } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { BoardGroupUsersComponent } from '@boards/components/board-group-users/board-group-users.component';
 import { BoardGroupsSearchComponent } from '@boards/components/board-groups-search/board-groups-search.component';
-import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
 import { BoardGroupSortComponent } from '@boards/components/board-group-sort/board-group-sort.component';
 import { BoardGroupStatusComponent } from '@boards/components/board-group-status/board-group-status.component';
 import { BoardGroupHiddenNoticeComponent } from '@boards/components/board-group-hidden-notice/board-group-hidden-notice.component';
@@ -24,7 +23,6 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
     TagFilterContainerComponent,
     BoardGroupStatusComponent,
     BoardGroupSortComponent,
-    BoardGroupsSelectionComponent,
     BoardGroupHeaderSeperatorComponent,
     BoardGroupHiddenNoticeComponent,
   ],
@@ -50,8 +48,6 @@ import { UserPreferencesService } from '@core/services/user-preferences.service'
       <app-board-group-hidden-notice
         [count]="hiddenCount()"
         (manage)="onManageGroupsClicked()" />
-
-      <app-board-groups-selection />
     </div>
   `,
 })

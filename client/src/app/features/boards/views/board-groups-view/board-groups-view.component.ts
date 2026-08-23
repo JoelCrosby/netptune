@@ -26,6 +26,7 @@ import {
 } from '@core/services/board-selection.service';
 import { BoardViewService } from '@core/services/board-view.service';
 import { BoardGroupHeaderComponent } from '@boards/components/board-group-header/board-group-header.component';
+import { BoardGroupsSelectionComponent } from '@boards/components/board-groups-selection/board-groups-selection.component';
 import { BoardGroupStatusDotComponent } from '@boards/components/board-group-status-dot/board-group-status-dot.component';
 import { BoardGroupComponent } from '@boards/components/board-group/board-group.component';
 import { CreateBoardComponent } from '@boards/components/create-board/create-board.component';
@@ -96,6 +97,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
     PageContainerComponent,
     PageHeaderComponent,
     BoardGroupHeaderComponent,
+    BoardGroupsSelectionComponent,
     CdkDropList,
     ScrollShadowDirective,
     BoardGroupComponent,
@@ -211,6 +213,8 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
           </div>
         }
       }
+
+      <app-board-groups-selection />
     </app-page-container>
   `,
 })

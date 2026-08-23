@@ -572,7 +572,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:227</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:310</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:314</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -1633,7 +1633,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:325</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:329</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -3328,7 +3328,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:194,199</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:124,129</note>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:42,47</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:71,73</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:52,64</note>
@@ -7629,7 +7629,7 @@
     </unit>
     <unit id="9114014874327219131">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:62,66</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:86,90</note>
         <note category="description">Accessible label for the board card selection checkbox</note>
       </notes>
       <segment state="translated">
@@ -9839,6 +9839,16 @@
         <target>Auslösender Benutzer</target>
       </segment>
     </unit>
+    <unit id="6647181806898890269">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:119</note>
+        <note category="description">Keyboard key that clears the task selection, shown as a hint</note>
+      </notes>
+      <segment state="translated">
+        <source>Esc</source>
+        <target>Esc</target>
+      </segment>
+    </unit>
     <unit id="9121649969550864187">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:98</note>
@@ -10318,6 +10328,16 @@
       <segment state="initial">
         <source> A new workspace is created from the archive. </source>
         <target> Aus dem Archiv wird ein neuer Arbeitsbereich erstellt. </target>
+      </segment>
+    </unit>
+    <unit id="2893417064141576408">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:62,65</note>
+        <note category="description">Accessible label for the bar holding actions for the selected tasks</note>
+      </notes>
+      <segment state="translated">
+        <source>Selected task actions</source>
+        <target>Aktionen für ausgewählte Aufgaben</target>
       </segment>
     </unit>
     <unit id="5433782699501161466">
@@ -11098,6 +11118,15 @@
         <target>Aktualisieren</target>
       </segment>
     </unit>
+    <unit id="7397230302063222654">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:71,72</note>
+      </notes>
+      <segment state="translated">
+        <source>{VAR_PLURAL, plural, =1 {task selected} other {tasks selected}}</source>
+        <target>{VAR_PLURAL, plural, =1 {Aufgabe ausgewählt} other {Aufgaben ausgewählt}}</target>
+      </segment>
+    </unit>
     <unit id="7399447739064801797">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:286</note>
@@ -11481,8 +11510,8 @@
     </unit>
     <unit id="2700504957203898501">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:95,97</note>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:99,103</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:119,121</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:123,127</note>
         <note category="location">src/app/static/components/task-name.component.ts:46,47</note>
         <note category="location">src/app/static/components/task-name.component.ts:48,51</note>
         <note category="description">Accessible label for the icon marking a task that has comments</note>
@@ -11663,25 +11692,6 @@
         <target><ph id="0" equiv="viewName" disp="name"/> (Kopie)</target>
       </segment>
     </unit>
-    <unit id="6839740256703554925">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:40,41</note>
-        <note category="description">Tooltip on the button that clears the task selection</note>
-      </notes>
-      <segment state="translated">
-        <source>Clear Task Selection</source>
-        <target>Aufgabenauswahl aufheben</target>
-      </segment>
-    </unit>
-    <unit id="1105006800742396938">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:42,46</note>
-      </notes>
-      <segment state="translated">
-        <source>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> task selected} other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"><ph id="2" equiv="INTERPOLATION"/></pc> tasks selected}}</source>
-        <target>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> Aufgabe ausgewählt} other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"><ph id="2" equiv="INTERPOLATION"/></pc> Aufgaben ausgewählt}}</target>
-      </segment>
-    </unit>
     <unit id="1198375666409252436">
       <notes>
         <note category="location">src/app/features/settings/components/workspace-settings/workspace-settings.component.ts:89,91</note>
@@ -11692,19 +11702,9 @@
         <target> Workspace verlassen </target>
       </segment>
     </unit>
-    <unit id="119867477199510044">
-      <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:54,56</note>
-        <note category="description">Button that opens actions for the selected tasks</note>
-      </notes>
-      <segment state="translated">
-        <source>Task actions</source>
-        <target>Aufgabenaktionen</target>
-      </segment>
-    </unit>
     <unit id="1075015891055978279">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:89</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:145</note>
         <note category="description">Action that deletes the selected tasks</note>
       </notes>
       <segment state="translated">
@@ -11714,7 +11714,7 @@
     </unit>
     <unit id="2080795702464659362">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:96</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:131</note>
         <note category="description">Action that moves the selected tasks to another board group</note>
       </notes>
       <segment state="translated">
@@ -11724,7 +11724,7 @@
     </unit>
     <unit id="1463922540752409787">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:103</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:138</note>
         <note category="description">Action that reassigns the selected tasks to another person</note>
       </notes>
       <segment state="translated">
@@ -11812,7 +11812,7 @@
     <unit id="5810814854864452102">
       <notes>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:119</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:297</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:301</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -12145,7 +12145,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:186,187</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:188,189</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -12155,7 +12155,7 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:198,199</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:200,201</note>
         <note category="description">Tooltip on the button that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -12165,7 +12165,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:302</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:306</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -12175,7 +12175,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:318</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:322</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -16047,11 +16047,12 @@
     </unit>
     <unit id="8700121026680200191">
       <notes>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:102,104</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,65</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
         <note category="location">src/app/static/components/filter-facet/filter-facet.component.ts:57,60</note>
-        <note category="description">Button that removes a preference override</note>
+        <note category="description">Button that clears the task selection</note>
       </notes>
       <segment state="translated">
         <source>Clear</source>

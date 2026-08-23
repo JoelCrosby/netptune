@@ -1,4 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
+import { Component, computed, effect, inject, untracked } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
@@ -7,64 +8,108 @@ import { DialogService } from '@core/services/dialog.service';
 import {
   LucideCombine,
   LucideDynamicIcon,
-  LucideEllipsis,
-  LucideListX,
+  LucideIconInput,
   LucideTrash2,
   LucideUsers,
+  LucideX,
 } from '@lucide/angular';
-import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
-import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
-import { FilterActionButtonComponent } from '@static/components/filter-action-button/filter-action-button.component';
-import { TooltipDirective } from '@static/directives/tooltip.directive';
+import { KeyboardService } from '@static/services/keyboard.service';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
 
+interface SelectionAction {
+  label: string;
+  icon: LucideIconInput;
+  destructive?: boolean;
+  action: () => void;
+}
+
 @Component({
   selector: 'app-board-groups-selection',
-  imports: [
-    TooltipDirective,
-    LucideListX,
-    LucideDynamicIcon,
-    FilterActionButtonComponent,
-    DropdownMenuComponent,
-    MenuItemComponent,
+  imports: [LucideDynamicIcon, LucideX],
+  styles: [
+    `
+      /* Animates the individual translate/scale properties rather than
+         transform: the -translate-x-1/2 utility sets translate, and a
+         transform would compose with it instead of replacing it. */
+      @keyframes selection-bar-in {
+        from {
+          opacity: 0;
+          translate: -50% 12px;
+          scale: 0.98;
+        }
+        to {
+          opacity: 1;
+          translate: -50% 0;
+          scale: 1;
+        }
+      }
+
+      .selection-bar {
+        animation: selection-bar-in 160ms ease-out;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .selection-bar {
+          animation: none;
+        }
+      }
+    `,
   ],
   template: `
     @if (count(); as count) {
       <div
-        class="border-primary/40 bg-primary/10 text-primary flex flex-row items-center gap-1 rounded-lg border px-1 py-0.5">
-        <button
-          class="hover:bg-primary/20 flex h-8 cursor-pointer appearance-none flex-row items-center gap-2 rounded-sm px-4 transition-[background-color,color] duration-140 ease-in-out outline-none"
-          (click)="onClearClicked()"
-          i18n-appTooltip="Tooltip on the button that clears the task selection"
-          appTooltip="Clear Task Selection">
-          <ng-container i18n="Count of selected tasks shown above the board">
-            {count, plural,
-              =1 {<strong>1</strong> task selected}
-              other {<strong>{{ count }}</strong> tasks selected}
-            }
-          </ng-container>
-          <svg lucideListX size="18" class="close-btn"></svg>
-        </button>
+        class="selection-bar border-border bg-dialog-background fixed bottom-6 left-1/2 z-40 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center gap-1 rounded-xl border p-1.5 shadow-lg"
+        role="region"
+        i18n-aria-label="
+          Accessible label for the bar holding actions for the selected tasks
+        "
+        aria-label="Selected task actions">
+        <div class="flex items-center gap-2 pr-2 pl-2">
+          <span
+            class="bg-primary text-primary-foreground flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs font-semibold"
+            aria-hidden="true">
+            {{ count }}
+          </span>
+          <span class="text-foreground text-sm whitespace-nowrap">
+            <ng-container i18n="Label for the number of selected tasks">
+              {count, plural, =1 {task selected} other {tasks selected}}
+            </ng-container>
+          </span>
+        </div>
 
         @if (actions().length) {
-          <span #trigger>
-            <app-filter-action-button
-              i18n-label="Button that opens actions for the selected tasks"
-              label="Task actions"
-              [icon]="lucideEllipsis"
-              (action)="menu.toggle(trigger)" />
-          </span>
+          <span class="bg-border mx-1 h-6 w-px" aria-hidden="true"></span>
 
-          <app-dropdown-menu #menu xPosition="before">
-            @for (action of actions(); track action.label) {
-              <button app-menu-item (click)="menu.close(); action.action()">
-                <svg [lucideIcon]="action.icon" class="h-4 w-4"></svg>
-                <span>{{ action.label }}</span>
-              </button>
-            }
-          </app-dropdown-menu>
+          @for (action of actions(); track action.label) {
+            <button
+              type="button"
+              class="flex h-9 cursor-pointer appearance-none items-center gap-2 rounded-lg px-3 text-sm font-medium whitespace-nowrap transition-colors duration-140 ease-in-out outline-none"
+              [class]="
+                action.destructive
+                  ? 'text-warn hover:bg-warn/10'
+                  : 'text-foreground/80 hover:bg-foreground/10 hover:text-foreground'
+              "
+              (click)="action.action()">
+              <svg [lucideIcon]="action.icon" class="h-4 w-4"></svg>
+              <span>{{ action.label }}</span>
+            </button>
+          }
         }
+
+        <span class="bg-border mx-1 h-6 w-px" aria-hidden="true"></span>
+
+        <button
+          type="button"
+          class="text-foreground/60 hover:bg-foreground/10 hover:text-foreground flex h-9 cursor-pointer appearance-none items-center gap-2 rounded-lg px-3 text-sm font-medium whitespace-nowrap transition-colors duration-140 ease-in-out outline-none"
+          (click)="onClearClicked()">
+          <svg lucideX class="h-4 w-4"></svg>
+          <span i18n="Button that clears the task selection">Clear</span>
+          <kbd
+            class="border-border text-foreground/50 rounded border px-1.5 py-0.5 text-[10px] font-medium">
+            {{ escapeKeyLabel }}
+          </kbd>
+        </button>
       </div>
     }
   `,
@@ -73,24 +118,19 @@ export class BoardGroupsSelectionComponent {
   private dialog = inject(DialogService);
   private selection = inject(BoardSelectionService);
   private boardCommands = inject(BoardGroupCommandsService);
+  private keyboard = inject(KeyboardService);
+  private cdkDialog = inject(Dialog);
 
-  readonly lucideEllipsis = LucideEllipsis;
+  readonly escapeKeyLabel = $localize`:Keyboard key that clears the task selection, shown as a hint:Esc`;
 
   selected = this.selection.taskIds;
   count = this.selection.count;
   permissions = inject(SessionService).permissions;
 
-  actions = computed(() => {
-    const actions = [];
+  actions = computed<SelectionAction[]>(() => {
+    const actions: SelectionAction[] = [];
     const permissions = this.permissions();
 
-    if (permissions.has(PERMISSIONS.tasks.delete)) {
-      actions.push({
-        label: $localize`:Action that deletes the selected tasks:Delete tasks`,
-        action: this.onDeleteClicked.bind(this),
-        icon: LucideTrash2,
-      });
-    }
     if (permissions.has(PERMISSIONS.tasks.move)) {
       actions.push({
         label: $localize`:Action that moves the selected tasks to another board group:Move to group`,
@@ -105,9 +145,51 @@ export class BoardGroupsSelectionComponent {
         icon: LucideUsers,
       });
     }
+    if (permissions.has(PERMISSIONS.tasks.delete)) {
+      actions.push({
+        label: $localize`:Action that deletes the selected tasks:Delete tasks`,
+        action: this.onDeleteClicked.bind(this),
+        icon: LucideTrash2,
+        destructive: true,
+      });
+    }
 
     return actions;
   });
+
+  constructor() {
+    effect(() => {
+      const event = this.keyboard.keyDown();
+
+      if (event?.key !== 'Escape' || !this.escapeClearsSelection(event)) {
+        return;
+      }
+
+      untracked(() => {
+        if (this.count()) {
+          this.selection.clear();
+        }
+      });
+    });
+  }
+
+  // Escape belongs to whatever is on top: an open dialog closes, a field being
+  // edited reverts, and only a bare board clears the selection.
+  private escapeClearsSelection(event: KeyboardEvent) {
+    if (this.cdkDialog.openDialogs.length) {
+      return false;
+    }
+
+    const target = event.target as HTMLElement | null;
+
+    if (!target) {
+      return true;
+    }
+
+    const tag = target.tagName;
+
+    return tag !== 'INPUT' && tag !== 'TEXTAREA' && !target.isContentEditable;
+  }
 
   onClearClicked() {
     this.selection.clear();
