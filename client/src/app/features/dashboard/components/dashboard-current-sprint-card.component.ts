@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
 import { Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -7,13 +6,11 @@ import { ClientResponse } from '@core/models/client-response';
 import { SprintBurndownReport } from '@core/models/reporting';
 import { SprintDetailViewModel } from '@core/models/view-models/sprint-detail-view-model';
 import { hostTimeZone } from '@core/util/dates';
-import { LucideCalendarClock, LucideCalendarOff } from '@lucide/angular';
+import { LucideCalendarOff } from '@lucide/angular';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
 import { ProgressBarComponent } from '@static/components/progress-bar/progress-bar.component';
+import { SprintIdentityComponent } from '@static/components/sprint-identity.component';
 import { SkeletonComponent } from '@static/components/skeleton/skeleton.component';
-import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.component';
-import { SprintStatusBadgeComponent } from '@static/components/sprint-status-badge.component';
 import {
   StatStripComponent,
   StatStripItem,
@@ -23,16 +20,13 @@ import { SprintBurndownSparklineComponent } from './sprint-burndown-sparkline.co
 @Component({
   selector: 'app-dashboard-current-sprint-card',
   imports: [
-    DatePipe,
     EmptyStateComponent,
-    IconTileComponent,
     LucideCalendarOff,
     ProgressBarComponent,
     RouterLink,
     SkeletonComponent,
+    SprintIdentityComponent,
     SprintBurndownSparklineComponent,
-    SprintDaysBadgeComponent,
-    SprintStatusBadgeComponent,
     StatStripComponent,
   ],
   template: `
@@ -62,36 +56,13 @@ import { SprintBurndownSparklineComponent } from './sprint-burndown-sparkline.co
         class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
         <header
           class="border-border flex flex-wrap items-start justify-between gap-x-4 gap-y-3 border-b px-6 py-5">
-          <div class="flex min-w-0 items-start gap-3">
-            <app-icon-tile [icon]="sprintIcon" />
-
-            <div class="min-w-0">
-              <p
-                class="text-muted text-xs font-semibold tracking-wide uppercase"
-                i18n="Heading of the dashboard current-sprint card">
-                Current sprint
-              </p>
-
-              <div class="mt-1 flex flex-wrap items-center gap-2">
-                <a
-                  class="font-overpass text-foreground truncate text-lg font-semibold hover:underline"
-                  [routerLink]="['../sprints', sprint.id]">
-                  {{ sprint.name }}
-                </a>
-                <app-sprint-status-badge [status]="sprint.status" />
-                <app-sprint-days-badge
-                  [status]="sprint.status"
-                  [endDate]="sprint.endDate" />
-              </div>
-
-              <p class="text-muted mt-1 text-sm">
-                <span class="font-medium">{{ sprint.projectName }}</span>
-                &nbsp;·&nbsp;
-                {{ sprint.startDate | date: 'mediumDate' }} –
-                {{ sprint.endDate | date: 'mediumDate' }}
-              </p>
-            </div>
-          </div>
+          <app-sprint-identity
+            class="min-w-0"
+            i18n-eyebrow="Heading of the dashboard current-sprint card"
+            eyebrow="Current sprint"
+            [headingLevel]="2"
+            [sprint]="sprint"
+            [link]="['../sprints', sprint.id]" />
 
           <a
             class="text-primary shrink-0 text-sm font-medium hover:underline"
@@ -177,7 +148,6 @@ export class DashboardCurrentSprintCardComponent {
     ClientResponse<SprintDetailViewModel | null>
   >(() => 'api/sprints/current');
 
-  protected readonly sprintIcon = LucideCalendarClock;
   protected readonly skeletonTiles = Array.from({ length: 3 });
 
   readonly sprint = computed(() => this.resource.value()?.payload ?? null);

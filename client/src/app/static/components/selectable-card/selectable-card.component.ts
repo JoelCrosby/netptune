@@ -1,11 +1,15 @@
 import { booleanAttribute, Component, input, output } from '@angular/core';
-import { LucideCheck } from '@lucide/angular';
+import {
+  LucideCheck,
+  LucideDynamicIcon,
+  type LucideIconInput,
+} from '@lucide/angular';
 
 export type SelectableCardVariant = 'default' | 'feature';
 
 @Component({
   selector: 'app-selectable-card',
-  imports: [LucideCheck],
+  imports: [LucideCheck, LucideDynamicIcon],
   host: { class: 'block' },
   template: `
     <div class="relative h-full">
@@ -83,7 +87,23 @@ export type SelectableCardVariant = 'default' | 'feature';
           </span>
 
           <div class="flex min-w-0 flex-1 items-center gap-3">
+            @if (heading()) {
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium">{{ heading() }}</p>
+                @if (description()) {
+                  <p class="text-muted text-xs">{{ description() }}</p>
+                }
+              </div>
+            }
+
             <ng-content />
+
+            @if (icon(); as icon) {
+              <svg
+                [lucideIcon]="icon"
+                class="text-muted h-4 w-4 shrink-0"
+                aria-hidden="true"></svg>
+            }
           </div>
         </div>
       }
@@ -99,6 +119,7 @@ export class SelectableCardComponent {
   readonly heading = input('');
   readonly description = input('');
   readonly badge = input('');
+  readonly icon = input<LucideIconInput>();
 
   readonly selectionChange = output();
 }

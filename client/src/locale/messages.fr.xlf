@@ -681,17 +681,6 @@
         <target>Gérer les tâches de sprint</target>
       </segment>
     </unit>
-    <unit id="3387705505469073896">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:369,371</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:387,389</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:407,409</note>
-      </notes>
-      <segment state="initial">
-        <source>{VAR_PLURAL, plural, =1 {1 task} other {<ph id="0" equiv="INTERPOLATION"/> tasks}}</source>
-        <target>{VAR_PLURAL, plural, =1 {1 tâche} other {<ph id="0" equiv="INTERPOLATION"/> tâches}}</target>
-      </segment>
-    </unit>
     <unit id="338954840845347808">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:231,232</note>
@@ -861,6 +850,16 @@
       <segment state="translated">
         <source>View Relation Types</source>
         <target>Voir les types de relation</target>
+      </segment>
+    </unit>
+    <unit id="6120896617621566677">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:365</note>
+        <note category="description">Task count. COUNT is the number of tasks</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="COUNT" disp="count"/> tasks</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> tâches</target>
       </segment>
     </unit>
     <unit id="5258368564796629743">
@@ -1422,8 +1421,8 @@
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:86,89</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:419,422</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:310</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:171,174</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:282</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:250</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:39,41</note>
         <note category="location">src/app/static/components/datatable/datatable-columns-dialog.component.ts:85,87</note>
@@ -1609,7 +1608,7 @@
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:461</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:181,182</note>
         <note category="location">src/app/features/settings/views/tag-detail-view/tag-detail-view.component.ts:363</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:309</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:281</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:202</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:249</note>
         <note category="location">src/app/features/task-views/views/task-views-view/task-views-view.component.ts:150</note>
@@ -1892,6 +1891,16 @@
       <segment state="translated">
         <source>Are you sure you wish to delete this project</source>
         <target>Voulez-vous vraiment supprimer ce projet</target>
+      </segment>
+    </unit>
+    <unit id="8847265383518864339">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:275</note>
+        <note category="description">Explains the move-to-another-sprint option when completing a sprint. COUNT is the number of tasks</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="COUNT" disp="count"/> tasks will be added to the sprint you pick</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> tâches seront ajoutées au sprint choisi</target>
       </segment>
     </unit>
     <unit id="721746833097626187">
@@ -3015,16 +3024,6 @@
         <target>Modèle de flux de travail</target>
       </segment>
     </unit>
-    <unit id="7492937473377326131">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:382,395</note>
-        <note category="description">Restates what completing a sprint will do to its unfinished tasks. SPRINT is the sprint being closed and TARGET the sprint they move into</note>
-      </notes>
-      <segment state="initial">
-        <source> Completing closes <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/> and moves <ph id="1" equiv="ICU" disp="{incompleteTasks().length, plural, =1 {1 task} other {{{ incompleteTasks().length }} tasks} }" subFlows="5105875162200964153"/> to <ph id="2" equiv="TARGET" disp="{{ targetName // i18n(ph=&quot;TARGET&quot;) }}"/>. </source>
-        <target> La clôture ferme <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/> et déplace <ph id="1" equiv="ICU" disp="{incompleteTasks().length, plural, =1 {1 task} other {{{ incompleteTasks().length }} tasks} }" subFlows="5105875162200964153"/> vers <ph id="2" equiv="TARGET" disp="{{ targetName // i18n(ph=&quot;TARGET&quot;) }}"/>. </target>
-      </segment>
-    </unit>
     <unit id="7494201798156075724">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:98</note>
@@ -3253,7 +3252,7 @@
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:114</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:54</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:148</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:67,70</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:60,63</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:19</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:37</note>
         <note category="location">src/app/static/components/task-properties/task-properties.component.ts:155,157</note>
@@ -3351,10 +3350,8 @@
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:124,129</note>
         <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:77,79</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:132,144</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:242,249</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:280,287</note>
         <note category="description">Button that applies the bulk edit to the selected tasks</note>
       </notes>
       <segment state="translated">
@@ -3502,7 +3499,7 @@
     </unit>
     <unit id="694553946899296600">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:166,167</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:137,138</note>
         <note category="description">Empty state when no sprint is running</note>
       </notes>
       <segment state="translated">
@@ -3828,16 +3825,6 @@
         <target>Supprimer cet export ?</target>
       </segment>
     </unit>
-    <unit id="6015720976738698806">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:353,357</note>
-        <note category="description">Restates what completing a sprint will do when nothing is left over. SPRINT is the sprint name</note>
-      </notes>
-      <segment state="initial">
-        <source> Completing closes <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/>. Nothing carries over. </source>
-        <target> La clôture ferme <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/>. Rien n’est reporté. </target>
-      </segment>
-    </unit>
     <unit id="6016227634594385356">
       <notes>
         <note category="location">src/app/entry/dialogs/edit-relation-type-dialog/edit-relation-type-dialog.component.ts:46,49</note>
@@ -4002,7 +3989,7 @@
     </unit>
     <unit id="309913524869284964">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:319,321</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:141,144</note>
         <note category="description">Shown when there is no future sprint to move tasks into</note>
       </notes>
       <segment state="initial">
@@ -4571,6 +4558,16 @@
       <segment state="translated">
         <source>Delete Comment</source>
         <target>Supprimer le commentaire</target>
+      </segment>
+    </unit>
+    <unit id="9144018025997282770">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:295</note>
+        <note category="description">Restates what completing a sprint will do before a target sprint is chosen. SPRINT is the sprint name and TASKS a task count</note>
+      </notes>
+      <segment state="initial">
+        <source>Completing closes <ph id="0" equiv="SPRINT" disp="sprintName"/> and moves <ph id="1" equiv="TASKS" disp="tasks"/> to the sprint you pick.</source>
+        <target>La clôture ferme <ph id="0" equiv="SPRINT" disp="sprintName"/> et déplace <ph id="1" equiv="TASKS" disp="tasks"/> vers le sprint choisi.</target>
       </segment>
     </unit>
     <unit id="4116911651502837995">
@@ -5247,7 +5244,7 @@
     </unit>
     <unit id="3307214558906712688">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:651</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:95</note>
         <note category="description">Heading above the in-progress tasks leaving a sprint</note>
       </notes>
       <segment state="initial">
@@ -5809,6 +5806,16 @@
       <segment state="translated">
         <source>Password</source>
         <target>Mot de passe</target>
+      </segment>
+    </unit>
+    <unit id="1447132902979783175">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:96,98</note>
+        <note category="description">Option that returns unfinished tasks to the backlog</note>
+      </notes>
+      <segment state="initial">
+        <source>Move to backlog</source>
+        <target>Déplacer vers le backlog</target>
       </segment>
     </unit>
     <unit id="348464760083521708">
@@ -6441,7 +6448,7 @@
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:304,305</note>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:242</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:125,126</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:678</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:370</note>
         <note category="description">Delay unit: hours</note>
       </notes>
       <segment state="translated">
@@ -7632,7 +7639,7 @@
     </unit>
     <unit id="4946687580398284029">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:110,116</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:81,87</note>
         <note category="location">src/app/features/sprints/components/sprint-progress-summary.component.ts:30,36</note>
         <note category="description">Sprint completion. PERCENT is a whole number</note>
       </notes>
@@ -7902,15 +7909,6 @@
         <target>Consulter les vues de tâches</target>
       </segment>
     </unit>
-    <unit id="6912196389492751061">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:280,283</note>
-      </notes>
-      <segment state="initial">
-        <source>{VAR_PLURAL, plural, =1 {1 task will be added to the sprint you pick} other {<ph id="0" equiv="INTERPOLATION"/> tasks will be added to the sprint you pick }}</source>
-        <target>{VAR_PLURAL, plural, =1 {1 tâche sera ajoutée au sprint choisi} other {<ph id="0" equiv="INTERPOLATION"/> tâches seront ajoutées au sprint choisi }}</target>
-      </segment>
-    </unit>
     <unit id="6914161425970763792">
       <notes>
         <note category="location">src/app/features/automations/components/automation-relation-editor.component.ts:172</note>
@@ -7939,16 +7937,6 @@
       <segment state="translated">
         <source>Loading storage usage</source>
         <target>Chargement de l&apos;utilisation du stockage</target>
-      </segment>
-    </unit>
-    <unit id="6917791301220820328">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:628</note>
-        <note category="description">Task count of a sprint offered as a move target</note>
-      </notes>
-      <segment state="initial">
-        <source><ph id="0" equiv="PH" disp="sprint.taskCount"/> tasks</source>
-        <target><ph id="0" equiv="PH" disp="sprint.taskCount"/> tâches</target>
       </segment>
     </unit>
     <unit id="6179875935234779828">
@@ -8106,7 +8094,7 @@
     </unit>
     <unit id="1859131936150262113">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:659</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:103</note>
         <note category="description">Heading above the inactive tasks leaving a sprint</note>
       </notes>
       <segment state="initial">
@@ -8298,7 +8286,7 @@
     <unit id="5590086849807274701">
       <notes>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:65</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:225</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:195</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:45</note>
         <note category="description">Label of the scope field</note>
       </notes>
@@ -8657,7 +8645,6 @@
     <unit id="1262014541474769532">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:309,312</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:233,235</note>
         <note category="description">Action that removes the task from its sprint</note>
       </notes>
       <segment state="translated">
@@ -9566,7 +9553,7 @@
     <unit id="1845447508284521819">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:50</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:264</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:234</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:34</note>
         <note category="description">Task field that an automation can watch for changes</note>
       </notes>
@@ -9965,7 +9952,7 @@
     <unit id="1780950485960518731">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:118</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:33</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:44</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:116</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
@@ -10046,7 +10033,7 @@
     </unit>
     <unit id="4497346320249564712">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:44,46</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:38,40</note>
         <note category="description">Accessible label while the current sprint loads</note>
       </notes>
       <segment state="translated">
@@ -11203,7 +11190,7 @@
     </unit>
     <unit id="1113643161886640414">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:515</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:80</note>
         <note category="description">Estimate still open when completing a sprint. AMOUNT is a total such as 26pts</note>
       </notes>
       <segment state="initial">
@@ -11913,9 +11900,19 @@
         <target>Modifier le tableau</target>
       </segment>
     </unit>
+    <unit id="5812672283480848863">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:283</note>
+        <note category="description">Restates what completing a sprint will do when nothing is left over. SPRINT is the sprint name</note>
+      </notes>
+      <segment state="initial">
+        <source>Completing closes <ph id="0" equiv="SPRINT" disp="sprintName"/>. Nothing carries over.</source>
+        <target>La clôture ferme <ph id="0" equiv="SPRINT" disp="sprintName"/>. Rien n’est reporté.</target>
+      </segment>
+    </unit>
     <unit id="5254622645701859101">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:679</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:371</note>
         <note category="description">Stat label for the story points estimated in a sprint</note>
       </notes>
       <segment state="initial">
@@ -12258,7 +12255,7 @@
     </unit>
     <unit id="988304486579068029">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:653</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:97</note>
         <note category="description">Heading above the not-started tasks leaving a sprint</note>
       </notes>
       <segment state="initial">
@@ -12852,9 +12849,8 @@
     </unit>
     <unit id="2135927702447694694">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:72,75</note>
         <note category="location">src/app/shell/current-sprint-dropdown.component.ts:66,70</note>
-        <note category="description">Heading of the dashboard current-sprint card</note>
+        <note category="description">Heading above the list of currently active sprints</note>
       </notes>
       <segment state="translated">
         <source> Current sprint </source>
@@ -12884,7 +12880,7 @@
     </unit>
     <unit id="3154469957623598339">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:99,101</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:70,72</note>
         <note category="description">Link to the current sprint</note>
       </notes>
       <segment state="translated">
@@ -12904,7 +12900,7 @@
     </unit>
     <unit id="4557563402390787256">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:124,131</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:95,102</note>
         <note category="description">Sprint task progress. DONE is finished tasks and TOTAL the total</note>
       </notes>
       <segment state="translated">
@@ -12924,7 +12920,7 @@
     </unit>
     <unit id="3806717211639406056">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:155,157</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:126,128</note>
         <note category="description">Link to the sprint burndown report</note>
       </notes>
       <segment state="translated">
@@ -12934,7 +12930,7 @@
     </unit>
     <unit id="991066160113599649">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:217</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:187</note>
         <note category="location">src/app/features/dashboard/components/sprint-burndown-mini-chart.component.ts:42</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:116,118</note>
         <note category="description">Label shown in the interface</note>
@@ -12948,11 +12944,11 @@
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/throughput-chart.component.ts:40</note>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:44</note>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:237</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:207</note>
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:197</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:269</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:521</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:219</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:161</note>
         <note category="description">Series name for tasks finished each day</note>
       </notes>
@@ -13044,8 +13040,8 @@
     <unit id="3448462145758383019">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:25</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:530</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:36</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:228</note>
         <note category="description">Centre label showing the total task count</note>
       </notes>
       <segment state="translated">
@@ -13502,7 +13498,7 @@
     </unit>
     <unit id="1258729180612470994">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:125,127</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:98,100</note>
         <note category="description">Tooltip on the button that asks the assistant about this sprint</note>
       </notes>
       <segment state="translated">
@@ -14317,6 +14313,16 @@
         <target>Tâches ouvertes</target>
       </segment>
     </unit>
+    <unit id="1363265228413206205">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:289</note>
+        <note category="description">Restates what completing a sprint will do to its unfinished tasks. SPRINT is the sprint name and TASKS a task count</note>
+      </notes>
+      <segment state="initial">
+        <source>Completing closes <ph id="0" equiv="SPRINT" disp="sprintName"/> and returns <ph id="1" equiv="TASKS" disp="tasks"/> to the backlog.</source>
+        <target>La clôture ferme <ph id="0" equiv="SPRINT" disp="sprintName"/> et renvoie <ph id="1" equiv="TASKS" disp="tasks"/> dans le backlog.</target>
+      </segment>
+    </unit>
     <unit id="1366412932937395612">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-mapping-step.component.ts:55,60</note>
@@ -14935,6 +14941,16 @@
       <segment state="translated">
         <source>I understand that existing links to this workspace will break.</source>
         <target>Je comprends que les liens existants vers cet espace de travail seront rompus.</target>
+      </segment>
+    </unit>
+    <unit id="7504275186513649991">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:298</note>
+        <note category="description">Restates what completing a sprint will do to its unfinished tasks. SPRINT is the sprint being closed, TASKS a task count and TARGET the sprint they move into</note>
+      </notes>
+      <segment state="initial">
+        <source>Completing closes <ph id="0" equiv="SPRINT" disp="sprintName"/> and moves <ph id="1" equiv="TASKS" disp="tasks"/> to <ph id="2" equiv="TARGET" disp="targetName"/>.</source>
+        <target>La clôture ferme <ph id="0" equiv="SPRINT" disp="sprintName"/> et déplace <ph id="1" equiv="TASKS" disp="tasks"/> vers <ph id="2" equiv="TARGET" disp="targetName"/>.</target>
       </segment>
     </unit>
     <unit id="7504698115177073591">
@@ -15637,14 +15653,14 @@
         <target>Décrivez où cet identifiant sera utilisé.</target>
       </segment>
     </unit>
-    <unit id="1731238490956722669">
+    <unit id="3239270770893861727">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:439,443</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:194</note>
         <note category="description">Shown while a sprint is being completed</note>
       </notes>
       <segment state="translated">
-        <source> Completing sprint… </source>
-        <target> Fin du sprint en cours… </target>
+        <source>Completing sprint…</source>
+        <target>Fin du sprint en cours…</target>
       </segment>
     </unit>
     <unit id="7617073660084768167">
@@ -16478,7 +16494,7 @@
     </unit>
     <unit id="5715720410918886861">
       <notes>
-        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:168,169</note>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:139,140</note>
         <note category="description">Advice shown when no sprint is running</note>
       </notes>
       <segment state="translated">
@@ -16953,16 +16969,6 @@
         <target>Projets qui l&apos;utilisent comme statut par défaut</target>
       </segment>
     </unit>
-    <unit id="7274865168935124743">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:364,374</note>
-        <note category="description">Restates what completing a sprint will do to its unfinished tasks. SPRINT is the sprint name</note>
-      </notes>
-      <segment state="initial">
-        <source> Completing closes <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/> and returns <ph id="1" equiv="ICU" disp="{incompleteTasks().length, plural, =1 {1 task} other {{{ incompleteTasks().length }} tasks} }" subFlows="5105875162200964153"/> to the backlog. </source>
-        <target> La clôture ferme <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/> et renvoie <ph id="1" equiv="ICU" disp="{incompleteTasks().length, plural, =1 {1 task} other {{{ incompleteTasks().length }} tasks} }" subFlows="5105875162200964153"/> dans le backlog. </target>
-      </segment>
-    </unit>
     <unit id="7279697022989713952">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:189,190</note>
@@ -17108,7 +17114,7 @@
     </unit>
     <unit id="2929655947743447381">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:175,177</note>
+        <note category="location">src/app/static/components/task-compact-row.component.ts:30,34</note>
         <note category="description">Marks a task whose due date has passed</note>
       </notes>
       <segment state="initial">
@@ -17534,10 +17540,10 @@
     </unit>
     <unit id="5280218112746407598">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:29</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:655</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:99</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:40</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:112</note>
-        <note category="description">Stat label for tasks not started yet</note>
+        <note category="description">Heading above the newly created tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
         <source>New</source>
@@ -17546,7 +17552,7 @@
     </unit>
     <unit id="8384225360105280028">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:37</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:48</note>
         <note category="description">Stat label for finished tasks</note>
       </notes>
       <segment state="translated">
@@ -17582,6 +17588,16 @@
       <segment state="translated">
         <source> <ph id="0" equiv="DONE" disp="{{ sprint().doneTaskCount // i18n(ph=&quot;DONE&quot;) }}"/> / <ph id="1" equiv="TOTAL" disp="{{ sprint().taskCount // i18n(ph=&quot;TOTAL&quot;) }}"/> complete </source>
         <target><ph id="0" equiv="DONE" disp="{{ sprint().doneTaskCount // i18n(ph=&quot;DONE&quot;) }}"/> / <ph id="1" equiv="TOTAL" disp="{{ sprint().taskCount // i18n(ph=&quot;TOTAL&quot;) }}"/> terminées</target>
+      </segment>
+    </unit>
+    <unit id="2166025810086747679">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:267</note>
+        <note category="description">Explains the move-to-backlog option when completing a sprint. COUNT is the number of tasks</note>
+      </notes>
+      <segment state="initial">
+        <source><ph id="0" equiv="COUNT" disp="count"/> tasks will be unassigned from this sprint</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> tâches seront retirées de ce sprint</target>
       </segment>
     </unit>
     <unit id="2169543080106889901">
@@ -17709,8 +17725,8 @@
     </unit>
     <unit id="5031687880128878913">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:627</note>
-        <note category="description">Task count of a sprint offered as a move target</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:364</note>
+        <note category="description">Task count</note>
       </notes>
       <segment state="initial">
         <source>1 task</source>
@@ -17887,7 +17903,7 @@
     </unit>
     <unit id="7636820810130095488">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:336,340</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:154,158</note>
         <note category="description">Shown when a sprint has no unfinished tasks left. TOTAL is the task count</note>
       </notes>
       <segment state="initial">
@@ -17897,8 +17913,8 @@
     </unit>
     <unit id="763816024488593537">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:85,88</note>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:207,208</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:59,61</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:180,181</note>
         <note category="description">Title of the dialog for completing a sprint</note>
       </notes>
       <segment state="translated">
@@ -17906,12 +17922,12 @@
         <target>Terminer le sprint</target>
       </segment>
     </unit>
-    <unit id="1894805224738998057">
+    <unit id="1310824757926803504">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:132,139</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,29</note>
       </notes>
       <segment state="initial">
-        <source>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> incomplete task } other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"> <ph id="2" equiv="INTERPOLATION"/> </pc> incomplete tasks }}</source>
+        <source>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> incomplete task} other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"><ph id="2" equiv="INTERPOLATION"/></pc> incomplete tasks }}</source>
         <target>{VAR_PLURAL, plural, =1 {<pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other">1</pc> tâche inachevée } other {<pc id="1" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other"> <ph id="2" equiv="INTERPOLATION"/> </pc> tâches inachevées }}</target>
       </segment>
     </unit>
@@ -17927,7 +17943,7 @@
     </unit>
     <unit id="6534027096593338100">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:214,218</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:84,88</note>
         <note category="description">Asks what to do with unfinished tasks when completing a sprint</note>
       </notes>
       <segment state="translated">
@@ -17937,7 +17953,7 @@
     </unit>
     <unit id="7043963172820125185">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:224,226</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:94,96</note>
         <note category="description">Accessible label for the option that returns unfinished tasks to the backlog</note>
       </notes>
       <segment state="translated">
@@ -17957,7 +17973,7 @@
     </unit>
     <unit id="7417576377524669281">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:261,263</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:108,111</note>
         <note category="description">Accessible label for the option that moves unfinished tasks to another sprint</note>
       </notes>
       <segment state="translated">
@@ -17965,13 +17981,13 @@
         <target>Déplacer les tâches inachevées vers un autre sprint</target>
       </segment>
     </unit>
-    <unit id="6454357622264170625">
+    <unit id="7522207935236729201">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:271,274</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:112,114</note>
         <note category="description">Option that moves unfinished tasks into a different sprint</note>
       </notes>
       <segment state="translated">
-        <source> Move to another sprint </source>
+        <source>Move to another sprint</source>
         <target>Déplacer vers un autre sprint</target>
       </segment>
     </unit>
@@ -17997,7 +18013,7 @@
     </unit>
     <unit id="3259975990687926975">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:302,304</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:124,125</note>
         <note category="description">Label of the field choosing which sprint to move tasks into</note>
       </notes>
       <segment state="translated">
@@ -18019,7 +18035,7 @@
     </unit>
     <unit id="7473967539394647356">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:304,305</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:126,127</note>
         <note category="description">Placeholder in the target sprint picker</note>
       </notes>
       <segment state="translated">
@@ -18049,7 +18065,7 @@
     </unit>
     <unit id="1860421182220689611">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:427,430</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:179,182</note>
         <note category="description">Button that completes the sprint</note>
       </notes>
       <segment state="translated">
@@ -18119,7 +18135,7 @@
     </unit>
     <unit id="5194912054053114732">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:657</note>
+        <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:101</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:41,43</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:181</note>
         <note category="description">Heading above the backlog tasks leaving a sprint</note>
@@ -18173,7 +18189,7 @@
     </unit>
     <unit id="8124076252558546675">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:136,138</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:109,111</note>
         <note category="description">Tooltip on the button that edits the sprint</note>
       </notes>
       <segment state="translated">
@@ -18183,7 +18199,7 @@
     </unit>
     <unit id="6222783490221982219">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:144,146</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:117,119</note>
         <note category="description">Tooltip on the button that deletes the sprint</note>
       </notes>
       <segment state="translated">
@@ -18193,7 +18209,7 @@
     </unit>
     <unit id="1183305546671848577">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:160,162</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:133,135</note>
         <note category="description">Tooltip on the button that adds existing tasks to the sprint</note>
       </notes>
       <segment state="translated">
@@ -18214,7 +18230,7 @@
     </unit>
     <unit id="7609408325154938991">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:168,172</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:141,145</note>
         <note category="description">Button that opens the dialog for adding existing tasks to the sprint</note>
       </notes>
       <segment state="translated">
@@ -18234,7 +18250,7 @@
     </unit>
     <unit id="2465583616985358329">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:178,180</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:151,153</note>
         <note category="description">Tooltip on the button that creates a task in the sprint</note>
       </notes>
       <segment state="translated">
@@ -18274,7 +18290,7 @@
     </unit>
     <unit id="4013607694293243242">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:182,184</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:155,157</note>
         <note category="description">Button that creates a new task in the sprint</note>
       </notes>
       <segment state="translated">
@@ -18284,7 +18300,7 @@
     </unit>
     <unit id="4741538562127389826">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:194,196</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:167,169</note>
         <note category="description">Button that starts the sprint</note>
       </notes>
       <segment state="translated">
@@ -18304,7 +18320,7 @@
     </unit>
     <unit id="1152778269115350205">
       <notes>
-        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:307</note>
+        <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:279</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:247</note>
         <note category="description">Title of the confirmation dialog for deleting a sprint</note>
       </notes>
@@ -18580,7 +18596,7 @@
     </unit>
     <unit id="3457112670535282063">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:525</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:223</note>
         <note category="description">Stat label for tasks moving out of a sprint being completed</note>
       </notes>
       <segment state="initial">
@@ -19799,16 +19815,6 @@
         <target>Modifier le commentaire — saisissez @ pour mentionner</target>
       </segment>
     </unit>
-    <unit id="4758276203206925434">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:402,412</note>
-        <note category="description">Restates what completing a sprint will do before a target sprint is chosen. SPRINT is the sprint name</note>
-      </notes>
-      <segment state="initial">
-        <source> Completing closes <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/> and moves <ph id="1" equiv="ICU" disp="{incompleteTasks().length, plural, =1 {1 task} other {{{ incompleteTasks().length }} tasks} }" subFlows="5105875162200964153"/> to the sprint you pick. </source>
-        <target> La clôture ferme <ph id="0" equiv="SPRINT" disp="{{ sprint.name // i18n(ph=&quot;SPRINT&quot;) }}"/> et déplace <ph id="1" equiv="ICU" disp="{incompleteTasks().length, plural, =1 {1 task} other {{{ incompleteTasks().length }} tasks} }" subFlows="5105875162200964153"/> vers le sprint choisi. </target>
-      </segment>
-    </unit>
     <unit id="4759094176152960587">
       <notes>
         <note category="location">src/app/static/components/comments-list/comments-list.component.ts:194,196</note>
@@ -19959,15 +19965,6 @@
         <target>Actions de la ligne</target>
       </segment>
     </unit>
-    <unit id="3844491107053474652">
-      <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:242,245</note>
-      </notes>
-      <segment state="initial">
-        <source>{VAR_PLURAL, plural, =1 {1 task will be unassigned from this sprint} other {<ph id="0" equiv="INTERPOLATION"/> tasks will be unassigned from this sprint }}</source>
-        <target>{VAR_PLURAL, plural, =1 {1 tâche sera retirée de ce sprint} other {<ph id="0" equiv="INTERPOLATION"/> tâches seront retirées de ce sprint }}</target>
-      </segment>
-    </unit>
     <unit id="4505486805842266349">
       <notes>
         <note category="location">src/app/static/components/datatable/datatable.component.ts:262,265</note>
@@ -20016,6 +20013,16 @@
       <segment state="translated">
         <source>No completed sprints yet.</source>
         <target>Aucun sprint terminé pour le moment.</target>
+      </segment>
+    </unit>
+    <unit id="6398593380004333688">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:274</note>
+        <note category="description">Explains the move-to-another-sprint option when completing a sprint</note>
+      </notes>
+      <segment state="initial">
+        <source>1 task will be added to the sprint you pick</source>
+        <target>1 tâche sera ajoutée au sprint choisi</target>
       </segment>
     </unit>
     <unit id="6398639872378040675">
@@ -20446,6 +20453,16 @@
         <target><ph id="0" equiv="tokens" disp="tokens"/> jetons · <ph id="1" equiv="cost" disp="cost"/></target>
       </segment>
     </unit>
+    <unit id="9194597009662429193">
+      <notes>
+        <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:62,64</note>
+        <note category="description">Heading of the dashboard current-sprint card</note>
+      </notes>
+      <segment state="initial">
+        <source>Current sprint</source>
+        <target>Sprint en cours</target>
+      </segment>
+    </unit>
     <unit id="9195124130913900158">
       <notes>
         <note category="location">src/app/static/components/task-properties/task-status-select.component.ts:32,34</note>
@@ -20484,6 +20501,16 @@
       <segment>
         <source> This export is too large to download directly and will run in the background. </source>
         <target> Cet export est trop volumineux pour un téléchargement direct et sera exécuté en arrière-plan. </target>
+      </segment>
+    </unit>
+    <unit id="199641702958317154">
+      <notes>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:266</note>
+        <note category="description">Explains the move-to-backlog option when completing a sprint</note>
+      </notes>
+      <segment state="initial">
+        <source>1 task will be unassigned from this sprint</source>
+        <target>1 tâche sera retirée de ce sprint</target>
       </segment>
     </unit>
     <unit id="8524579610338244684">

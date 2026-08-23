@@ -10,33 +10,38 @@ import { SprintProgressSummaryComponent } from './sprint-progress-summary.compon
   template: `
     <section
       class="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
-      <app-sprint-progress-summary [sprint]="sprint()" [stats]="stats()" />
+      <app-sprint-progress-summary
+        [sprint]="sprint()"
+        [stats]="resolvedStats()" />
     </section>
   `,
 })
 export class SprintStatsComponent {
   readonly sprint = input.required<SprintDetailViewModel>();
+  readonly stats = input<readonly StatStripItem[] | null>(null);
 
-  protected readonly stats = computed<StatStripItem[]>(() => {
-    const sprint = this.sprint();
-
-    return [
-      {
-        label: $localize`:Stat label for the total number of tasks in a sprint:Total`,
-        value: sprint.taskCount,
-      },
-      {
-        label: $localize`:Stat label for tasks not started yet:New`,
-        value: sprint.newTaskCount,
-      },
-      {
-        label: $localize`:Stat label for tasks being worked on:In Progress`,
-        value: sprint.activeTaskCount,
-      },
-      {
-        label: $localize`:Stat label for finished tasks:Complete`,
-        value: sprint.doneTaskCount,
-      },
-    ];
+  protected readonly resolvedStats = computed(() => {
+    return this.stats() ?? taskCountStats(this.sprint());
   });
+}
+
+function taskCountStats(sprint: SprintDetailViewModel): StatStripItem[] {
+  return [
+    {
+      label: $localize`:Stat label for the total number of tasks in a sprint:Total`,
+      value: sprint.taskCount,
+    },
+    {
+      label: $localize`:Stat label for tasks not started yet:New`,
+      value: sprint.newTaskCount,
+    },
+    {
+      label: $localize`:Stat label for tasks being worked on:In Progress`,
+      value: sprint.activeTaskCount,
+    },
+    {
+      label: $localize`:Stat label for finished tasks:Complete`,
+      value: sprint.doneTaskCount,
+    },
+  ];
 }

@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, inject, signal } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
@@ -13,7 +12,6 @@ import { DialogService } from '@core/services/dialog.service';
 import { sprintDetailResource } from '@core/resources/sprint.resource';
 import { SprintCommandsService } from '@core/services/sprint-commands.service';
 import {
-  LucideCalendarClock,
   LucideCheck,
   LucideListPlus,
   LucideSettings2,
@@ -28,10 +26,8 @@ import { PageContainerComponent } from '@static/components/page-container/page-c
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { ErrorStateComponent } from '@static/components/error-state/error-state.component';
 import { PageLoadingComponent } from '@static/components/page-loading/page-loading.component';
-import { IconTileComponent } from '@static/components/icon-tile.component';
-import { SprintDaysBadgeComponent } from '@static/components/sprint-days-badge.component';
-import { SprintStatusBadgeComponent } from '@static/components/sprint-status-badge.component';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+import { SprintIdentityComponent } from '@static/components/sprint-identity.component';
 import { SprintStatsComponent } from '../../components/sprint-stats.component';
 import { SprintTaskListComponent } from '../../components/sprint-task-list.component';
 import { EditSprintDialogComponent } from '../../dialogs/edit-sprint-dialog.component';
@@ -41,7 +37,6 @@ import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion
 @Component({
   selector: 'app-sprint-detail-view',
   imports: [
-    DatePipe,
     ErrorStateComponent,
     PageContainerComponent,
     PageHeaderComponent,
@@ -54,11 +49,9 @@ import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion
     LucideSparkles,
     LucideTrash2,
     LucideCheck,
+    SprintIdentityComponent,
     SprintStatsComponent,
     SprintTaskListComponent,
-    SprintStatusBadgeComponent,
-    IconTileComponent,
-    SprintDaysBadgeComponent,
   ],
   template: `
     <app-page-container [centerPage]="true" [marginBottom]="true">
@@ -86,32 +79,12 @@ import { SprintCompletionDialogComponent } from '../../dialogs/sprint-completion
         <section class="flex flex-col gap-6">
           <header
             class="border-border bg-card flex flex-wrap items-start justify-between gap-x-4 gap-y-4 rounded-lg border px-6 py-5 shadow-sm">
-            <div class="flex min-w-0 flex-1 items-start gap-3">
-              <app-icon-tile [icon]="sprintIcon" />
-
-              <div class="min-w-0">
-                <div class="flex flex-wrap items-center gap-2">
-                  <h1 class="font-overpass truncate text-xl font-semibold">
-                    {{ sprint.name }}
-                  </h1>
-                  <app-sprint-status-badge [status]="sprint.status" />
-                  <app-sprint-days-badge
-                    [status]="sprint.status"
-                    [endDate]="sprint.endDate" />
-                </div>
-
-                <p class="text-muted mt-1 text-sm">
-                  <span class="font-medium">{{ sprint.projectName }}</span>
-                  &nbsp;·&nbsp;
-                  {{ sprint.startDate | date: 'mediumDate' }} –
-                  {{ sprint.endDate | date: 'mediumDate' }}
-                </p>
-
-                @if (sprint.goal) {
-                  <p class="text-muted mt-2 text-sm">{{ sprint.goal }}</p>
-                }
-              </div>
-            </div>
+            <app-sprint-identity
+              class="min-w-0 flex-1"
+              size="large"
+              showGoal
+              [headingLevel]="1"
+              [sprint]="sprint" />
 
             <div class="flex shrink-0 flex-wrap items-center gap-2">
               @if (assistant.isAvailable()) {
@@ -228,7 +201,6 @@ export class SprintDetailViewComponent {
   private confirmation = inject(ConfirmationService);
 
   protected readonly assistant = inject(AiAssistantService);
-  protected readonly sprintIcon = LucideCalendarClock;
 
   readonly sprintStatus = SprintStatus;
   readonly sprintId = signal<number | null>(null);
