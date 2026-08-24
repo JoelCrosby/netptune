@@ -18,6 +18,7 @@ import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { SessionService } from '@core/services/session.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { BoardBackgroundService } from '@core/services/board-background.service';
 import { BoardCommandsService } from '@core/services/board-commands.service';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
 import {
@@ -49,6 +50,7 @@ import {
 } from '@boards/util/board-task-sort';
 import { ProjectTasksHubService } from '@core/services/tasks-hub.service';
 import { HeaderAction } from '@core/types/header-action';
+import { brandingImageUrl } from '@core/util/branding';
 import { getNewSortOrder } from '@core/util/sort-order-helper';
 import {
   LucideDelete,
@@ -119,6 +121,7 @@ import { ScrollShadowDirective } from '@static/directives/scroll-shadow.directiv
       @if (boardGroupsLoaded()) {
         <app-page-header
           [title]="boardName()"
+          [logoUrl]="boardLogoUrl()"
           [titleEditable]="isAuthenticated()"
           [overflowActions]="isAuthenticated() ? secondaryActions() : []"
           (titleSubmitted)="onTitleSubmitted($event)">
@@ -229,8 +232,16 @@ export class BoardGroupsViewComponent implements OnDestroy {
   private router = inject(Router);
 
   private workspaceId = inject(CurrentWorkspaceService).slug;
+  private boardBackground = inject(BoardBackgroundService);
 
   isAuthenticated = inject(SessionService).isAuthenticated;
+
+  boardLogoUrl = computed(() => {
+    return brandingImageUrl(
+      this.workspaceId(),
+      this.board()?.metaInfo?.logoFileId
+    );
+  });
 
   groups = this.selection.groups;
 
@@ -343,11 +354,21 @@ export class BoardGroupsViewComponent implements OnDestroy {
       this.boardView.open(identifier);
       this.hubService.addToGroup(identifier);
     });
+
+    effect(() => {
+      const backgroundUrl = brandingImageUrl(
+        this.workspaceId(),
+        this.board()?.metaInfo?.backgroundFileId
+      );
+
+      this.boardBackground.set(backgroundUrl);
+    });
   }
 
   ngOnDestroy() {
     this.boardView.close();
     this.hubService.leaveGroup();
+    this.boardBackground.clear();
   }
 
   onTitleSubmitted(title: string) {

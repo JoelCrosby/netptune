@@ -16,6 +16,7 @@ import { statusResource } from '@core/resources/status.resource';
 import { LucideFolderOpen } from '@lucide/angular';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
+import { ProjectBrandingComponent } from '@projects/components/project-branding/project-branding.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
@@ -30,6 +31,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     FormTextAreaComponent,
     FlatButtonComponent,
     IconTileComponent,
+    ProjectBrandingComponent,
     FormField,
   ],
   host: { class: 'block' },
@@ -57,50 +59,54 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         </div>
       </header>
 
-      <div class="grid max-w-2xl gap-4 px-6 py-5">
-        <app-form-input
-          [formField]="projectForm.name"
-          i18n-label="Label of the name field"
-          label="Name"
-          maxLength="1024" />
+      <div class="grid gap-6 px-6 py-5 lg:grid-cols-2 lg:gap-10">
+        <div class="grid max-w-2xl content-start gap-4">
+          <app-form-input
+            [formField]="projectForm.name"
+            i18n-label="Label of the name field"
+            label="Name"
+            maxLength="1024" />
 
-        <app-form-textarea
-          [formField]="projectForm.description"
-          i18n-label="Label of the description field"
-          label="Description"
-          rows="6" />
+          <app-form-textarea
+            [formField]="projectForm.description"
+            i18n-label="Label of the description field"
+            label="Description"
+            rows="6" />
 
-        <app-form-input
-          class="max-w-64"
-          [formField]="projectForm.key"
-          i18n-label="Label of the project key field"
-          label="Project ID"
-          maxLength="6"
-          i18n-hint="
-            Explains where the project key appears and what it may contain
-          "
-          hint="Shown as the first part of every task ID. Up to 6 characters, unique to this workspace." />
+          <app-form-input
+            class="max-w-64"
+            [formField]="projectForm.key"
+            i18n-label="Label of the project key field"
+            label="Project ID"
+            maxLength="6"
+            i18n-hint="
+              Explains where the project key appears and what it may contain
+            "
+            hint="Shown as the first part of every task ID. Up to 6 characters, unique to this workspace." />
 
-        <app-form-input
-          [formField]="projectForm.repositoryUrl"
-          i18n-label="Label of the source repository URL field"
-          label="Repository URL"
-          maxLength="1024" />
+          <app-form-input
+            [formField]="projectForm.repositoryUrl"
+            i18n-label="Label of the source repository URL field"
+            label="Repository URL"
+            maxLength="1024" />
 
-        @if (statuses.value()) {
-          <app-form-select
-            [formField]="projectForm.defaultStatusId"
-            i18n-label="Label of the default task status field"
-            label="Default task status"
-            i18n-hint="Explains what the default task status field controls"
-            hint="New tasks in this project start with this status.">
-            @for (status of statuses.value(); track status.id) {
-              <app-form-select-option [value]="status.id">
-                {{ status.name }}
-              </app-form-select-option>
-            }
-          </app-form-select>
-        }
+          @if (statuses.value()) {
+            <app-form-select
+              [formField]="projectForm.defaultStatusId"
+              i18n-label="Label of the default task status field"
+              label="Default task status"
+              i18n-hint="Explains what the default task status field controls"
+              hint="New tasks in this project start with this status.">
+              @for (status of statuses.value(); track status.id) {
+                <app-form-select-option [value]="status.id">
+                  {{ status.name }}
+                </app-form-select-option>
+              }
+            </app-form-select>
+          }
+        </div>
+
+        <app-project-branding [project]="project()" />
       </div>
 
       <footer class="border-border border-t px-6 py-4">

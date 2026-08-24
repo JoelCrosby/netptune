@@ -66,6 +66,7 @@ public record Project : WorkspaceEntity<int>
             CreatedAt = CreatedAt,
             DefaultBoardIdentifier = identifier,
             Color = MetaInfo?.Color,
+            LogoFileId = MetaInfo?.LogoFileId,
             DefaultStatusId = DefaultStatusId,
             DefaultStatusName = DefaultStatus?.Name,
         };

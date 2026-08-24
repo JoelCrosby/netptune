@@ -15,4 +15,6 @@ export enum BoardType {
 
 export interface BoardMeta {
   color?: string;
+  logoFileId?: string | null;
+  backgroundFileId?: string | null;
 }

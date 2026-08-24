@@ -14,6 +14,7 @@ import {
 import { SessionService } from '@core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BoardGroupCommandsService } from '@core/services/board-group-commands.service';
+import { BoardBackgroundService } from '@core/services/board-background.service';
 import { BoardComposerService } from '@core/services/board-composer.service';
 import { BoardSelectionService } from '@core/services/board-selection.service';
 import { BoardViewService } from '@core/services/board-view.service';
@@ -35,6 +36,12 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
 @Component({
   selector: 'app-board-group',
   styles: `
+    .board-group-surface.translucent {
+      background-color: rgba(var(--board-group-rgb), 0.82);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+    }
+
     .cdk-drag-placeholder {
       opacity: 0.2;
     }
@@ -65,7 +72,8 @@ import { StrokedButtonComponent } from '@app/static/components/button/stroked-bu
   ],
   template: `
     <div
-      class="border-border bg-board-group relative flex h-full flex-1 flex-col rounded border">
+      class="board-group-surface border-border bg-board-group relative flex h-full flex-1 flex-col rounded border"
+      [class.translucent]="hasBoardBackground()">
       <ng-content />
 
       <div #container class="h-full flex-1">
@@ -125,7 +133,12 @@ export class BoardGroupComponent implements OnDestroy, AfterViewInit {
   private composer = inject(BoardComposerService);
   private boardCommands = inject(BoardGroupCommandsService);
   private dialog = inject(DialogService);
+  private boardBackground = inject(BoardBackgroundService);
   private destroyRef = inject(DestroyRef);
+
+  readonly hasBoardBackground = computed(() => {
+    return this.boardBackground.imageUrl() !== null;
+  });
 
   readonly dragListId = input.required<string>();
   readonly group = input.required<BoardViewGroup>();

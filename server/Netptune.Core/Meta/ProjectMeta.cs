@@ -11,4 +11,6 @@ public class ProjectMeta
         get => _color;
         set => _color = NamedColors.Normalize(value);
     }
+
+    public string? LogoFileId { get; set; }
 }

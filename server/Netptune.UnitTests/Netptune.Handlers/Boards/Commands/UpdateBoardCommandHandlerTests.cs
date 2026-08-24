@@ -51,7 +51,31 @@ public class UpdateBoardCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Payload!.Name.Should().Be(request.Name);
         result.Payload.Identifier.Should().Be(request.Identifier!.ToUrlSlug());
-        result.Payload.MetaInfo.Should().BeEquivalentTo(request.Meta);
+        result.Payload.MetaInfo!.Color.Should().Be("blue");
+    }
+
+    [Fact]
+    public async Task Update_ShouldKeepBrandingImages_WhenTheRequestMetaOmitsThem()
+    {
+        var request = Fixture.Build<UpdateBoardRequest>()
+            .With(x => x.Meta, new BoardMeta { Color = "blue" })
+            .Create();
+        var board = AutoFixtures.Board;
+
+        board.MetaInfo = new BoardMeta
+        {
+            Color = "red",
+            LogoFileId = "logo-content-id",
+            BackgroundFileId = "background-content-id",
+        };
+
+        UnitOfWork.Boards.GetInWorkspace(Arg.Any<int>(), WorkspaceId, Arg.Any<bool>(), TestContext.Current.CancellationToken).Returns(board);
+
+        var result = await Handler.Handle(new UpdateBoardCommand(request), TestContext.Current.CancellationToken);
+
+        result.Payload!.MetaInfo!.Color.Should().Be("blue");
+        result.Payload.MetaInfo.LogoFileId.Should().Be("logo-content-id");
+        result.Payload.MetaInfo.BackgroundFileId.Should().Be("background-content-id");
     }
 
     [Fact]

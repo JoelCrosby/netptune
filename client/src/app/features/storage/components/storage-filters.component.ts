@@ -111,6 +111,10 @@ export class StorageFiltersComponent {
       label: $localize`:Label shown in the interface:Inline media`,
       value: WorkspaceFilePurpose.inlineMedia,
     },
+    {
+      label: $localize`:Label shown in the interface:Logos and backgrounds`,
+      value: WorkspaceFilePurpose.branding,
+    },
   ];
 
   protected readonly contentTypeOptions: readonly SelectMenuOption<

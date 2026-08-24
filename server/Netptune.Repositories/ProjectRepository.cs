@@ -186,6 +186,7 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
             UpdatedAt = x.UpdatedAt,
             CreatedAt = x.CreatedAt,
             Color = x.MetaInfo != null ? x.MetaInfo.Color : null,
+            LogoFileId = x.MetaInfo != null ? x.MetaInfo.LogoFileId : null,
             DefaultStatusId = x.DefaultStatusId,
             DefaultStatusName = x.DefaultStatus == null ? null : x.DefaultStatus.Name,
             DefaultBoardIdentifier = x.ProjectBoards
@@ -237,5 +238,17 @@ public class ProjectRepository : WorkspaceEntityRepository<DataContext, Project,
                 return candidate;
             }
         }
+    }
+
+    public async Task SetBrandingFile(int projectId, int workspaceId, string metaKey, string? fileId, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(
+            SqlScripts.SetProjectBrandingFile,
+            new { ProjectId = projectId, WorkspaceId = workspaceId, MetaKey = metaKey, FileId = fileId },
+            cancellationToken: cancellationToken);
+
+        await connection.ExecuteAsync(command);
     }
 }

@@ -15,6 +15,8 @@ using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
 
+using Netptune.Repositories.Sql;
+
 namespace Netptune.Repositories;
 
 public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int>, IBoardRepository
@@ -224,5 +226,17 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
     public Task<bool> Exists(string identifier, CancellationToken cancellationToken = default)
     {
         return Entities.AnyAsync(board => board.Identifier == identifier, cancellationToken);
+    }
+
+    public async Task SetBrandingFile(int boardId, int workspaceId, string metaKey, string? fileId, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(
+            SqlScripts.SetBoardBrandingFile,
+            new { BoardId = boardId, WorkspaceId = workspaceId, MetaKey = metaKey, FileId = fileId },
+            cancellationToken: cancellationToken);
+
+        await connection.ExecuteAsync(command);
     }
 }

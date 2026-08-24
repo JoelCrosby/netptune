@@ -6,6 +6,7 @@ using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
+using Netptune.Core.Meta;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
@@ -86,7 +87,7 @@ public sealed class UpdateWorkspaceCommandHandler : IRequestHandler<UpdateWorksp
         result.Name = request.Request.Name ?? result.Name;
         result.Description = request.Request.Description ?? result.Description;
         result.ModifiedByUserId = userId;
-        result.MetaInfo = request.Request.MetaInfo ?? result.MetaInfo;
+        result.MetaInfo = MetaMerge.Apply(result.MetaInfo, request.Request.MetaInfo);
         result.IsPublic = request.Request.IsPublic ?? result.IsPublic;
         result.AssistantEnabled = request.Request.AssistantEnabled ?? result.AssistantEnabled;
         result.AllowAssistantDataSampling = request.Request.AllowAssistantDataSampling ?? result.AllowAssistantDataSampling;

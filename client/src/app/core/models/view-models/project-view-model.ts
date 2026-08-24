@@ -12,4 +12,5 @@ export interface ProjectViewModel {
   defaultBoardIdentifier: string;
   defaultStatusId?: number | null;
   defaultStatusName?: string | null;
+  logoFileId?: string | null;
 }

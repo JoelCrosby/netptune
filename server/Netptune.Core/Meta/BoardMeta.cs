@@ -11,4 +11,8 @@ public class BoardMeta
         get => _color;
         set => _color = NamedColors.Normalize(value);
     }
+
+    public string? LogoFileId { get; set; }
+
+    public string? BackgroundFileId { get; set; }
 }

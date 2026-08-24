@@ -1,4 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { SessionService } from '@core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -21,6 +27,7 @@ import { AiAssistantService } from '@core/services/ai-assistant.service';
 import { AiPanelService } from '@core/services/ai-panel.service';
 import { CommandPaletteComponent } from './command-palette/command-palette.component';
 import { GlobalCommandsService } from './global-commands.service';
+import { BoardBackgroundService } from '@core/services/board-background.service';
 import { LastWorkspaceService } from '@core/services/last-workspace.service';
 import { UserPreferencesService } from '@core/services/user-preferences.service';
 import { CommandShortcutService } from './command-palette/command-shortcut.service';
@@ -93,7 +100,20 @@ const DOCK_ANIMATION_MS = 180;
       <app-shell-navbar />
 
       <main
-        class="col-start-2 row-start-2 scrollbar-gutter-stable overflow-y-auto">
+        class="relative isolate col-start-2 row-start-2 overflow-y-auto"
+        [class.scrollbar-gutter-stable]="!boardBackground.imageUrl()">
+        @if (boardBackground.imageUrl(); as backgroundUrl) {
+          <img
+            [src]="backgroundUrl"
+            alt=""
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-out motion-reduce:transition-none"
+            [class.opacity-100]="boardBackgroundLoaded()"
+            (load)="boardBackgroundLoaded.set(true)" />
+          <div
+            aria-hidden="true"
+            class="bg-background/80 pointer-events-none absolute inset-0 -z-10"></div>
+        }
         <router-outlet />
       </main>
 
@@ -115,12 +135,17 @@ export class ShellComponent {
 
   shell = inject(ShellService);
   readonly panel = inject(AiPanelService);
-  /** Held so the chat restores its workspace session for as long as the shell is up. */
   readonly assistant = inject(AiAssistantService);
   readonly globalCommands = inject(GlobalCommandsService);
   readonly commandShortcuts = inject(CommandShortcutService);
   readonly preferences = inject(UserPreferencesService);
   readonly lastWorkspace = inject(LastWorkspaceService);
+  readonly boardBackground = inject(BoardBackgroundService);
+
+  readonly boardBackgroundLoaded = linkedSignal<string | null, boolean>({
+    source: () => this.boardBackground.imageUrl(),
+    computation: () => false,
+  });
 
   authenticated = inject(SessionService).isAuthenticated;
   sideMenuOpen = this.layout.sideMenuOpen;

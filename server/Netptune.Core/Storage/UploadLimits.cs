@@ -8,12 +8,10 @@ public static class UploadLimits
 
     public const long MaximumMaxUploadBytes = 512L * 1024 * 1024;
 
-    // A profile picture belongs to the user rather than to any one workspace, so it is not covered
-    // by the per-workspace limit.
     public const long ProfilePictureMaxBytes = DefaultMaxUploadBytes;
 
-    // Multipart boundaries and headers ride along with the file, so the transport limit has to sit
-    // above the file limit or an upload of exactly the maximum size is rejected before it is read.
+    public const long BrandingImageMaxBytes = 10L * 1024 * 1024;
+
     public const long RequestOverheadBytes = 1024 * 1024;
 
     public const long MaximumRequestBytes = MaximumMaxUploadBytes + RequestOverheadBytes;

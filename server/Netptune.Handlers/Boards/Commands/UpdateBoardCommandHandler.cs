@@ -1,6 +1,7 @@
 using Mediator;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
+using Netptune.Core.Meta;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -38,7 +39,7 @@ public sealed class UpdateBoardCommandHandler : IRequestHandler<UpdateBoardComma
 
         result.Name = req.Name ?? result.Name;
         result.Identifier = req.Identifier?.ToUrlSlug() ?? result.Identifier;
-        result.MetaInfo = req.Meta ?? result.MetaInfo;
+        result.MetaInfo = MetaMerge.Apply(result.MetaInfo, req.Meta);
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

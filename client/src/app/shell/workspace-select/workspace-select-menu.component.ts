@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { Field, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { Workspace } from '@core/models/workspace';
+import { brandingImageUrl } from '@core/util/branding';
 import {
   LucideCheck,
   LucideGalleryVerticalEnd,
@@ -23,6 +24,7 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
             class="border-border flex items-center gap-2.5 border-b px-3 py-2.5">
             <app-workspace-badge
               [color]="workspace.metaInfo?.color"
+              [logoUrl]="logoUrl(workspace)"
               [letter]="workspace.name[0]" />
 
             <div class="min-w-0">
@@ -60,6 +62,7 @@ import { WorkspaceSelectOptionComponent } from './workspace-select-option.compon
               (click)="optionSelect.emit(option)">
               <app-workspace-badge
                 [color]="option.metaInfo?.color"
+                [logoUrl]="logoUrl(option)"
                 [letter]="option.name[0]" />
               <span class="flex-1 truncate">{{ option.name }}</span>
 
@@ -113,4 +116,8 @@ export class WorkspaceSelectMenuComponent {
 
   readonly optionSelect = output<Workspace>();
   readonly logout = output();
+
+  protected logoUrl(workspace: Workspace): string | null {
+    return brandingImageUrl(workspace.slug, workspace.metaInfo?.logoFileId);
+  }
 }

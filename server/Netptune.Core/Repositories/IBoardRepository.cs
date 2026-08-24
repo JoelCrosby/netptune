@@ -27,4 +27,6 @@ public interface IBoardRepository : IWorkspaceEntityRepository<Board, int>
     Task<BoardViewModel?> GetViewModel(int id, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<bool> Exists(string identifier, CancellationToken cancellationToken = default);
+
+    Task SetBrandingFile(int boardId, int workspaceId, string metaKey, string? fileId, CancellationToken cancellationToken = default);
 }

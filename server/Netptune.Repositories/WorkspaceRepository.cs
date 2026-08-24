@@ -1,3 +1,4 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
@@ -8,6 +9,8 @@ using Netptune.Core.Enums;
 using Netptune.Core.ViewModels.Files;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+
+using Netptune.Repositories.Sql;
 
 namespace Netptune.Repositories;
 
@@ -231,5 +234,17 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
         await Entities
             .Where(workspace => workspace.Id == id)
             .ExecuteUpdateAsync(setters => setters.SetProperty(workspace => workspace.StorageUsedBytes, sizeBytes), cancellationToken);
+    }
+
+    public async Task SetBrandingFile(int workspaceId, string metaKey, string? fileId, CancellationToken cancellationToken = default)
+    {
+        using var connection = ConnectionFactory.StartConnection();
+
+        var command = new CommandDefinition(
+            SqlScripts.SetWorkspaceBrandingFile,
+            new { WorkspaceId = workspaceId, MetaKey = metaKey, FileId = fileId },
+            cancellationToken: cancellationToken);
+
+        await connection.ExecuteAsync(command);
     }
 }

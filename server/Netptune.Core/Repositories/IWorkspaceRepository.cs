@@ -35,4 +35,6 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
     Task<Workspace?> GetForStorageUpdate(int id, CancellationToken cancellationToken = default);
 
     Task SetStorageUsage(int id, long sizeBytes, CancellationToken cancellationToken = default);
+
+    Task SetBrandingFile(int workspaceId, string metaKey, string? fileId, CancellationToken cancellationToken = default);
 }

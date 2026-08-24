@@ -35,6 +35,7 @@ import { DialogActionsDirective } from '@static/directives/dialog-actions.direct
 import { DialogCloseDirective } from '@static/directives/dialog-close.directive';
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { BoardBrandingComponent } from '@boards/components/board-branding/board-branding.component';
 import { SetupTemplatePickerComponent } from '@app/entry/components/setup-template-picker/setup-template-picker.component';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
@@ -81,6 +82,15 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
           [selectedKey]="boardForm.templateKey().value()"
           (selectedKeyChange)="setTemplate($event)" />
       }
+
+      @if (editingBoardId; as boardId) {
+        <app-board-branding
+          [boardId]="boardId"
+          [initialLogoFileId]="data?.metaInfo?.logoFileId ?? null"
+          [initialBackgroundFileId]="
+            data?.metaInfo?.backgroundFileId ?? null
+          " />
+      }
     </form>
 
     <div app-dialog-actions align="end">
@@ -104,6 +114,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     StrokedButtonComponent,
     FlatButtonComponent,
     SetupTemplatePickerComponent,
+    BoardBrandingComponent,
   ],
 })
 export class CreateBoardComponent {
@@ -118,6 +129,8 @@ export class CreateBoardComponent {
   readonly titleLabel = this.isEditMode
     ? $localize`:Title of the edit-board dialog:Edit Board`
     : $localize`:Title of the create-board dialog:Create Board`;
+
+  readonly editingBoardId = this.isEditMode ? (this.data?.id ?? null) : null;
 
   readonly submitLabel = this.isEditMode
     ? $localize`:Button that saves edits to the board:Save Changes`

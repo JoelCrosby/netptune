@@ -23,4 +23,5 @@ export interface AddProjectRequest {
 
 export interface ProjectMetaInfo {
   color: string;
+  logoFileId?: string | null;
 }

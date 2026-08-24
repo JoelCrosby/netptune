@@ -29,4 +29,6 @@ public interface IProjectRepository : IWorkspaceEntityRepository<Project, int>
     Task<string> GenerateProjectKey(string projectName, int workspaceId, CancellationToken cancellationToken = default);
 
     Task<List<string>> GetProjectMemberIds(int projectId, CancellationToken cancellationToken = default);
+
+    Task SetBrandingFile(int projectId, int workspaceId, string metaKey, string? fileId, CancellationToken cancellationToken = default);
 }

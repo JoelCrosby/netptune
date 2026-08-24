@@ -4,4 +4,5 @@ public enum WorkspaceFilePurpose
 {
     TaskFile = 0,
     InlineMedia = 1,
+    Branding = 2,
 }

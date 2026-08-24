@@ -19,4 +19,6 @@ public class WorkspaceMeta
         get => _timeZone;
         set => _timeZone = TimeZones.IsValid(value) ? value : TimeZones.Default;
     }
+
+    public string? LogoFileId { get; set; }
 }

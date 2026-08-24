@@ -1,5 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { BoardViewModel } from '@core/models/view-models/board-view-model';
+import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
+import { brandingImageUrl } from '@core/util/branding';
 import { colorBackgroundClass } from '@core/util/colors/colors';
 import { LucideChartColumnBig } from '@lucide/angular';
 import { IconTileComponent } from '@static/components/icon-tile.component';
@@ -10,10 +12,6 @@ interface BoardStat {
   value: string | number;
 }
 
-/**
- * Deliberately not `app-stat-strip`: that is sized for full-width cards, and its
- * `text-lg` values wrap inside a grid tile this narrow.
- */
 @Component({
   selector: 'app-boards-grid-card',
   providers: [FromNowPipe],
@@ -23,7 +21,14 @@ interface BoardStat {
     <article
       class="border-border bg-card hover:border-primary/40 flex h-full min-h-38 flex-col overflow-hidden rounded-lg border shadow-sm transition-colors">
       <div class="flex flex-1 items-start gap-3 px-5 py-4">
-        <app-icon-tile [icon]="boardIcon" [class]="tileClass()" />
+        @if (logoUrl(); as url) {
+          <img
+            [src]="url"
+            [alt]="board().name"
+            class="border-border h-9 w-9 shrink-0 rounded-lg border object-cover" />
+        } @else {
+          <app-icon-tile [icon]="boardIcon" [class]="tileClass()" />
+        }
 
         <h3 class="font-overpass min-w-0 truncate text-base font-semibold">
           {{ board().name }}
@@ -51,6 +56,14 @@ export class BoardsGridCardComponent {
   readonly board = input.required<BoardViewModel>();
 
   private readonly fromNow = inject(FromNowPipe);
+  private readonly workspaceSlug = inject(CurrentWorkspaceService).slug;
+
+  protected readonly logoUrl = computed(() => {
+    return brandingImageUrl(
+      this.workspaceSlug(),
+      this.board().metaInfo?.logoFileId
+    );
+  });
 
   protected readonly boardIcon = LucideChartColumnBig;
 

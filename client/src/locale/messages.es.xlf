@@ -357,7 +357,7 @@
     </unit>
     <unit id="551825878782946048">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:267</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:273</note>
         <note category="description">Body of a confirmation dialog listing what breaks when a workspace identifier changes</note>
       </notes>
       <segment state="translated">
@@ -572,7 +572,7 @@
     <unit id="7884294193521928458">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:227</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:314</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:325</note>
         <note category="description">Name of a workspace permission</note>
       </notes>
       <segment state="translated">
@@ -854,7 +854,7 @@
     </unit>
     <unit id="6120896617621566677">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:365</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:358</note>
         <note category="description">Task count. COUNT is the number of tasks</note>
       </notes>
       <segment state="initial">
@@ -1412,7 +1412,7 @@
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:361</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-api-credential-dialog.component.ts:93,96</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:163,166</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:270</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:276</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:489</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:560</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:604</note>
@@ -1421,7 +1421,7 @@
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:86,89</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:69,72</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:62,65</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:171,174</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:164,167</note>
         <note category="location">src/app/features/sprints/views/sprint-detail-view/sprint-detail-view.component.ts:282</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:250</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-composer.component.ts:39,41</note>
@@ -1477,7 +1477,7 @@
     </unit>
     <unit id="6404445332132473818">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:265</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:271</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1643,7 +1643,7 @@
     <unit id="8878271828886295802">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:67</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:329</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:340</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1895,7 +1895,7 @@
     </unit>
     <unit id="8847265383518864339">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:275</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:268</note>
         <note category="description">Explains the move-to-another-sprint option when completing a sprint. COUNT is the number of tasks</note>
       </notes>
       <segment state="initial">
@@ -2256,7 +2256,7 @@
     </unit>
     <unit id="414887388288176527">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:123</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:127</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -2789,12 +2789,22 @@
     </unit>
     <unit id="4064937437199233155">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:269</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:275</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
         <source>Change identifier</source>
         <target>Cambiar identificador</target>
+      </segment>
+    </unit>
+    <unit id="4066912743050102899">
+      <notes>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:115</note>
+        <note category="description">Label shown in the interface</note>
+      </notes>
+      <segment state="translated">
+        <source>Logos and backgrounds</source>
+        <target>Logotipos y fondos</target>
       </segment>
     </unit>
     <unit id="4040806670191010035">
@@ -2898,7 +2908,7 @@
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:112,113</note>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/automations/components/automation-settings-editor.component.ts:82</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:65,66</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:66,67</note>
         <note category="location">src/app/features/projects/views/project-detail-view/project-detail-view.component.ts:22,25</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:82</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:379</note>
@@ -3100,7 +3110,7 @@
         <note category="location">src/app/entry/dialogs/save-export-definition-dialog/save-export-definition-dialog.component.ts:68,70</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:115,117</note>
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:88,90</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:98,100</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-applied-changes-dialog.component.ts:41,46</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:64,65</note>
         <note category="description">Dismisses a dialog without saving</note>
@@ -3457,14 +3467,14 @@
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:69,70</note>
         <note category="location">src/app/features/automations/dialogs/automation-clone-dialog.component.ts:106</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:44</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:65,67</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:147</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:68,70</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:153</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:92,93</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:399</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:55,57</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:208</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:78,80</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:145</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:81,83</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:151</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:145</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:371</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:96,98</note>
@@ -3478,7 +3488,7 @@
         <note category="location">src/app/features/sprints/dialogs/create-sprint-dialog.component.ts:133</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:42,43</note>
         <note category="location">src/app/features/sprints/dialogs/edit-sprint-dialog.component.ts:101</note>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:142</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:146</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:27</note>
         <note category="description">Label of the name field</note>
       </notes>
@@ -3551,7 +3561,7 @@
     </unit>
     <unit id="424356320420294719">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:120</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:124</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -3614,7 +3624,7 @@
     </unit>
     <unit id="4733307402565258070">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:125</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:129</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -3656,10 +3666,10 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:153,156</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:48,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:45</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:70,73</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:73,76</note>
         <note category="location">src/app/features/settings/components/service-accounts/create-service-account-dialog.component.ts:103,105</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:60,62</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:95,98</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:98,101</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:168,171</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:141,144</note>
         <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:31,33</note>
@@ -3863,8 +3873,8 @@
         <note category="location">src/app/entry/dialogs/edit-status-dialog/edit-status-dialog.component.ts:64,67</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:110,113</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:159,161</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:77,79</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:101,104</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:78,80</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:104,107</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:174,177</note>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:93,95</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:147,150</note>
@@ -3989,7 +3999,7 @@
     </unit>
     <unit id="309913524869284964">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:141,144</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:134,137</note>
         <note category="description">Shown when there is no future sprint to move tasks into</note>
       </notes>
       <segment state="initial">
@@ -4357,7 +4367,7 @@
     <unit id="3412242050628541814">
       <notes>
         <note category="location">src/app/entry/dialogs/project-dialog/project-dialog.component.ts:60,63</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:87,90</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:90,93</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:44</note>
         <note category="description">Label of the source repository URL field</note>
       </notes>
@@ -4562,7 +4572,7 @@
     </unit>
     <unit id="9144018025997282770">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:295</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:288</note>
         <note category="description">Restates what completing a sprint will do before a target sprint is chosen. SPRINT is the sprint name and TASKS a task count</note>
       </notes>
       <segment state="initial">
@@ -4844,8 +4854,8 @@
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:141,143</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:183,185</note>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:257</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:83,85</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:152</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:86,88</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:158</note>
         <note category="description">Label of the workspace URL identifier field</note>
       </notes>
       <segment state="translated">
@@ -4855,7 +4865,7 @@
     </unit>
     <unit id="1603950823783231568">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:96,97</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:99,100</note>
         <note category="description">Explains what the default task status field controls</note>
       </notes>
       <segment state="translated">
@@ -4878,7 +4888,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:119,122</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:172,177</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:117,120</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:123,126</note>
         <note category="description">Button that saves edits to the workspace</note>
       </notes>
       <segment state="translated">
@@ -4969,8 +4979,8 @@
     <unit id="6807439652660785540">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:290</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:179</note>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:186</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:192</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:192</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -4981,7 +4991,7 @@
     <unit id="8398928552891290802">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:295</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:184</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:197</note>
         <note category="description">Body of a dialog or validation message</note>
       </notes>
       <segment state="translated">
@@ -5810,7 +5820,7 @@
     </unit>
     <unit id="1447132902979783175">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:96,98</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:89,91</note>
         <note category="description">Option that returns unfinished tasks to the backlog</note>
       </notes>
       <segment state="initial">
@@ -6329,6 +6339,16 @@
         <target>Eliminar acción</target>
       </segment>
     </unit>
+    <unit id="1304817289455064169">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:27,28</note>
+        <note category="description">Alt text for the board logo preview</note>
+      </notes>
+      <segment state="translated">
+        <source>Board logo</source>
+        <target>Logotipo del tablero</target>
+      </segment>
+    </unit>
     <unit id="2662644497259948010">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:193,194</note>
@@ -6350,6 +6370,16 @@
       <segment state="translated">
         <source>Unpin from sidebar</source>
         <target>Dejar de fijar en la barra lateral</target>
+      </segment>
+    </unit>
+    <unit id="4764218454049191113">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:22,24</note>
+        <note category="description">Label of the board logo picker</note>
+      </notes>
+      <segment state="translated">
+        <source>Board Logo</source>
+        <target>Logotipo del tablero</target>
       </segment>
     </unit>
     <unit id="4766402403585838311">
@@ -6448,7 +6478,7 @@
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:304,305</note>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:242</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:125,126</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:370</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:363</note>
         <note category="description">Delay unit: hours</note>
       </notes>
       <segment state="translated">
@@ -7053,6 +7083,16 @@
         <target>Vincular con la tarea desencadenante</target>
       </segment>
     </unit>
+    <unit id="5901109136841373457">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:48,50</note>
+        <note category="description">Alt text for the board background image preview</note>
+      </notes>
+      <segment state="translated">
+        <source>Board background</source>
+        <target>Fondo del tablero</target>
+      </segment>
+    </unit>
     <unit id="2960069153368727992">
       <notes>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:229,231</note>
@@ -7401,6 +7441,16 @@
         <target>Añadido</target>
       </segment>
     </unit>
+    <unit id="2318416617601405241">
+      <notes>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:101,103</note>
+        <note category="description">Hint under an image picker. SIZE is a formatted byte limit such as 10 MiB</note>
+      </notes>
+      <segment state="translated">
+        <source> PNG, JPEG, WebP, GIF or AVIF · drag and drop or choose a file · <ph id="0" equiv="INTERPOLATION" disp="{{ maxBytesLabel }}"/> maximum </source>
+        <target> PNG, JPEG, WebP, GIF o AVIF · arrastra y suelta o elige un archivo · <ph id="0" equiv="INTERPOLATION" disp="{{ maxBytesLabel }}"/> máximo </target>
+      </segment>
+    </unit>
     <unit id="5406093358072761930">
       <notes>
         <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:158</note>
@@ -7640,7 +7690,7 @@
     <unit id="4946687580398284029">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-current-sprint-card.component.ts:81,87</note>
-        <note category="location">src/app/features/sprints/components/sprint-progress-summary.component.ts:30,36</note>
+        <note category="location">src/app/features/sprints/components/sprint-progress-summary.component.ts:19,25</note>
         <note category="description">Sprint completion. PERCENT is a whole number</note>
       </notes>
       <segment state="translated">
@@ -8463,7 +8513,7 @@
     </unit>
     <unit id="7114722244395904206">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:67,70</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:69,72</note>
         <note category="description">Explains what the workspace detail form controls</note>
       </notes>
       <segment state="translated">
@@ -8503,7 +8553,7 @@
     </unit>
     <unit id="1267184118353244642">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:266</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:272</note>
         <note category="description">Body of a confirmation dialog. CURRENT and NEXT are the old and new workspace identifiers</note>
       </notes>
       <segment state="translated">
@@ -8950,6 +9000,16 @@
       <segment>
         <source> Undo this import </source>
         <target> Deshacer esta importación </target>
+      </segment>
+    </unit>
+    <unit id="4419785925408189157">
+      <notes>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:73,75</note>
+        <note category="description">Button that replaces an already uploaded image</note>
+      </notes>
+      <segment state="translated">
+        <source> Replace </source>
+        <target> Reemplazar </target>
       </segment>
     </unit>
     <unit id="4701747457278336568">
@@ -9952,7 +10012,7 @@
     <unit id="1780950485960518731">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:118</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:44</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:39</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:116</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
@@ -10568,6 +10628,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> is removed</source>
         <target><ph id="0" equiv="SUBJECT" disp="value.trim() || field"/> se elimina</target>
+      </segment>
+    </unit>
+    <unit id="6197183619710382830">
+      <notes>
+        <note category="location">src/app/features/projects/components/project-branding/project-branding.component.ts:27,29</note>
+        <note category="description">Alt text for the project logo preview</note>
+      </notes>
+      <segment state="translated">
+        <source>Project logo</source>
+        <target>Logotipo del proyecto</target>
       </segment>
     </unit>
     <unit id="619731489205106073">
@@ -11744,7 +11814,7 @@
     </unit>
     <unit id="6996270126255502228">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:110,112</note>
+        <note category="location">src/app/features/boards/components/board-group/board-group.component.ts:118,120</note>
         <note category="description">Button that adds a task to this board group</note>
       </notes>
       <segment state="translated">
@@ -11825,7 +11895,7 @@
     </unit>
     <unit id="6904866445262015585">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:66</note>
+        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:83</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:24</note>
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33,34</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
@@ -11841,7 +11911,7 @@
     </unit>
     <unit id="3553216189604488439">
       <notes>
-        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:70</note>
+        <note category="location">src/app/features/boards/components/boards-grid/boards-grid-card.component.ts:87</note>
         <note category="description">Stat label for when a board was last changed</note>
       </notes>
       <segment state="translated">
@@ -11851,7 +11921,7 @@
     </unit>
     <unit id="7170240979381321210">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board-group/create-board-group.component.ts:17,21</note>
+        <note category="location">src/app/features/boards/components/create-board-group/create-board-group.component.ts:29,33</note>
         <note category="description">Button that creates a board group</note>
       </notes>
       <segment state="translated">
@@ -11871,7 +11941,7 @@
     </unit>
     <unit id="5787327883657253628">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:50,51</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:51,52</note>
         <note category="description">Label of the board name field</note>
       </notes>
       <segment state="translated">
@@ -11881,7 +11951,7 @@
     </unit>
     <unit id="1611891243024655805">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:56,58</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:57,59</note>
         <note category="description">Label of the board URL identifier field</note>
       </notes>
       <segment state="translated">
@@ -11891,8 +11961,8 @@
     </unit>
     <unit id="5810814854864452102">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:119</note>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:301</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:130</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:312</note>
         <note category="description">Title of the edit-board dialog</note>
       </notes>
       <segment state="translated">
@@ -11902,7 +11972,7 @@
     </unit>
     <unit id="5812672283480848863">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:283</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:276</note>
         <note category="description">Restates what completing a sprint will do when nothing is left over. SPRINT is the sprint name</note>
       </notes>
       <segment state="initial">
@@ -11912,7 +11982,7 @@
     </unit>
     <unit id="5254622645701859101">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:371</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:364</note>
         <note category="description">Stat label for the story points estimated in a sprint</note>
       </notes>
       <segment state="initial">
@@ -11922,8 +11992,8 @@
     </unit>
     <unit id="5254986591758472931">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:120</note>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:124</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:131</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:137</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:39,41</note>
         <note category="description">Title of the create-board dialog</note>
       </notes>
@@ -11934,8 +12004,8 @@
     </unit>
     <unit id="4319441956121197474">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:123</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:111,114</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:136</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:117,120</note>
         <note category="description">Button that saves edits to the board</note>
       </notes>
       <segment state="translated">
@@ -11945,7 +12015,7 @@
     </unit>
     <unit id="8257779685263061072">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:138</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:151</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board name is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -11955,7 +12025,7 @@
     </unit>
     <unit id="2534295129536831583">
       <notes>
-        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:145</note>
+        <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:158</note>
         <note category="description">Field name used inside validation messages, e.g. &quot;Board identifier is required.&quot;</note>
       </notes>
       <segment state="translated">
@@ -12245,7 +12315,7 @@
     </unit>
     <unit id="9210705833797356375">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:188,189</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:191,192</note>
         <note category="description">Tooltip on the button that edits a board group</note>
       </notes>
       <segment state="translated">
@@ -12265,7 +12335,7 @@
     </unit>
     <unit id="989480357041643523">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:200,201</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:203,204</note>
         <note category="description">Tooltip on the button that deletes a board group</note>
       </notes>
       <segment state="translated">
@@ -12275,7 +12345,7 @@
     </unit>
     <unit id="1779801045860441380">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:306</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:317</note>
         <note category="description">Overflow action that opens the manage-groups dialog</note>
       </notes>
       <segment state="translated">
@@ -12285,7 +12355,7 @@
     </unit>
     <unit id="6413760592493508393">
       <notes>
-        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:322</note>
+        <note category="location">src/app/features/boards/views/board-groups-view/board-groups-view.component.ts:333</note>
         <note category="description">Overflow action that downloads the board tasks as CSV</note>
       </notes>
       <segment state="translated">
@@ -12948,7 +13018,7 @@
         <note category="location">src/app/features/dashboard/components/dashboard-throughput-card.component.ts:86</note>
         <note category="location">src/app/features/reporting/components/flow-report.component.ts:197</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:269</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:219</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:212</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:161</note>
         <note category="description">Series name for tasks finished each day</note>
       </notes>
@@ -13040,8 +13110,8 @@
     <unit id="3448462145758383019">
       <notes>
         <note category="location">src/app/features/dashboard/components/dashboard-status-breakdown-card.component.ts:35</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:36</note>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:228</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:31</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:221</note>
         <note category="description">Centre label showing the total task count</note>
       </notes>
       <segment state="translated">
@@ -13354,6 +13424,16 @@
         <target> Seleccionar imagen </target>
       </segment>
     </unit>
+    <unit id="984317232812925706">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-branding/workspace-branding.component.ts:26,28</note>
+        <note category="description">Alt text for the workspace logo preview</note>
+      </notes>
+      <segment state="translated">
+        <source>Workspace logo</source>
+        <target>Logotipo del espacio de trabajo</target>
+      </segment>
+    </unit>
     <unit id="4842432534148275616">
       <notes>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:58,63</note>
@@ -13517,6 +13597,16 @@
         <target>Desconocido</target>
       </segment>
     </unit>
+    <unit id="2741832896127216449">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-branding/workspace-branding.component.ts:32,37</note>
+        <note category="description">Explains where the workspace logo appears</note>
+      </notes>
+      <segment state="translated">
+        <source> Shown beside the workspace name in the sidebar and the workspace switcher. Counts towards this workspace&apos;s storage allowance. </source>
+        <target> Se muestra junto al nombre del espacio de trabajo en la barra lateral y en el selector de espacios de trabajo. Se descuenta del límite de almacenamiento de este espacio de trabajo. </target>
+      </segment>
+    </unit>
     <unit id="2194591546577080727">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:638</note>
@@ -13555,6 +13645,16 @@
       <segment state="translated">
         <source>is any of</source>
         <target>es alguno de</target>
+      </segment>
+    </unit>
+    <unit id="2501989539336327542">
+      <notes>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:77,80</note>
+        <note category="description">Button that opens the image picker</note>
+      </notes>
+      <segment state="translated">
+        <source>Upload image</source>
+        <target>Subir imagen</target>
       </segment>
     </unit>
     <unit id="2510741784888393227">
@@ -13735,8 +13835,8 @@
     </unit>
     <unit id="9187323536893515910">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:77,79</note>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:140</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:80,82</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:146</note>
         <note category="description">Label of the project key field</note>
       </notes>
       <segment state="translated">
@@ -13776,7 +13876,7 @@
     </unit>
     <unit id="7122750425312910877">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:94,95</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:97,98</note>
         <note category="description">Label of the default task status field</note>
       </notes>
       <segment state="translated">
@@ -14315,7 +14415,7 @@
     </unit>
     <unit id="1363265228413206205">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:289</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:282</note>
         <note category="description">Restates what completing a sprint will do to its unfinished tasks. SPRINT is the sprint name and TASKS a task count</note>
       </notes>
       <segment state="initial">
@@ -14905,7 +15005,7 @@
     </unit>
     <unit id="928541574822142523">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:82,85</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:85,88</note>
         <note category="description">Explains where the project key appears and what it may contain</note>
       </notes>
       <segment state="translated">
@@ -14935,7 +15035,7 @@
     </unit>
     <unit id="7501850844985876036">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:268</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:274</note>
         <note category="description">Checkbox a user must tick to confirm a dangerous action</note>
       </notes>
       <segment state="translated">
@@ -14945,7 +15045,7 @@
     </unit>
     <unit id="7504275186513649991">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:298</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:291</note>
         <note category="description">Restates what completing a sprint will do to its unfinished tasks. SPRINT is the sprint being closed, TASKS a task count and TARGET the sprint they move into</note>
       </notes>
       <segment state="initial">
@@ -15655,7 +15755,7 @@
     </unit>
     <unit id="3239270770893861727">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:194</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:187</note>
         <note category="description">Shown while a sprint is being completed</note>
       </notes>
       <segment state="translated">
@@ -16116,7 +16216,7 @@
     </unit>
     <unit id="3234223246962552425">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:48,51</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:50,53</note>
         <note category="description">Section heading for the project detail form</note>
       </notes>
       <segment state="translated">
@@ -16202,7 +16302,7 @@
     </unit>
     <unit id="9109938174492852826">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:62,65</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:64,67</note>
         <note category="description">Section heading for the workspace detail form</note>
       </notes>
       <segment state="initial">
@@ -16232,7 +16332,7 @@
     </unit>
     <unit id="7333095346036961883">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:90,93</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:93,96</note>
         <note category="description">Warns that changing the workspace identifier breaks existing links</note>
       </notes>
       <segment state="translated">
@@ -16242,7 +16342,7 @@
     </unit>
     <unit id="3894039560161506093">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:106,108</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:109,111</note>
         <note category="description">Label of the workspace time zone field</note>
       </notes>
       <segment state="translated">
@@ -16273,7 +16373,7 @@
     </unit>
     <unit id="8921855151408700743">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:111,115</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:114,120</note>
         <note category="description">Hint under the time zone field. Europe/London is a literal IANA zone name</note>
       </notes>
       <segment state="translated">
@@ -16303,7 +16403,7 @@
     </unit>
     <unit id="9052706340903358762">
       <notes>
-        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:191</note>
+        <note category="location">src/app/features/settings/components/workspace-details/workspace-details.component.ts:197</note>
         <note category="description">Shown when the workspace identifier availability check fails</note>
       </notes>
       <segment state="translated">
@@ -16532,6 +16632,16 @@
         <target>Estados del espacio de trabajo</target>
       </segment>
     </unit>
+    <unit id="6017543453915220413">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:36,40</note>
+        <note category="description">Label of the board background image picker</note>
+      </notes>
+      <segment state="translated">
+        <source> Board Background </source>
+        <target> Fondo del tablero </target>
+      </segment>
+    </unit>
     <unit id="6017786801241064671">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:88</note>
@@ -16735,6 +16845,16 @@
       <segment state="translated">
         <source>Move down</source>
         <target>Bajar</target>
+      </segment>
+    </unit>
+    <unit id="241133425066737749">
+      <notes>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:187</note>
+        <note category="description">Validation error when a chosen image is too large. SIZE is a formatted byte limit</note>
+      </notes>
+      <segment state="translated">
+        <source>The image must be smaller than <ph id="0" equiv="SIZE" disp="this.maxBytesLabel"/>.</source>
+        <target>La imagen debe ser menor que <ph id="0" equiv="SIZE" disp="this.maxBytesLabel"/>.</target>
       </segment>
     </unit>
     <unit id="2412502577182752913">
@@ -17355,6 +17475,16 @@
         <target>Activos</target>
       </segment>
     </unit>
+    <unit id="8207875327947940735">
+      <notes>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:179</note>
+        <note category="description">Validation error when a chosen file is not a supported image</note>
+      </notes>
+      <segment state="translated">
+        <source>Choose a PNG, JPEG, WebP, GIF or AVIF image.</source>
+        <target>Elige una imagen PNG, JPEG, WebP, GIF o AVIF.</target>
+      </segment>
+    </unit>
     <unit id="8208675890777914624">
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:30</note>
@@ -17541,7 +17671,7 @@
     <unit id="5280218112746407598">
       <notes>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:99</note>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:40</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:35</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:112</note>
         <note category="description">Heading above the newly created tasks leaving a sprint</note>
       </notes>
@@ -17552,7 +17682,7 @@
     </unit>
     <unit id="8384225360105280028">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:48</note>
+        <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:43</note>
         <note category="description">Stat label for finished tasks</note>
       </notes>
       <segment state="translated">
@@ -17582,7 +17712,7 @@
     </unit>
     <unit id="3602788914563459016">
       <notes>
-        <note category="location">src/app/features/sprints/components/sprint-progress-summary.component.ts:43,50</note>
+        <note category="location">src/app/features/sprints/components/sprint-progress-summary.component.ts:32,39</note>
         <note category="description">Sprint progress. DONE is the finished task count and TOTAL the total</note>
       </notes>
       <segment state="translated">
@@ -17592,7 +17722,7 @@
     </unit>
     <unit id="2166025810086747679">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:267</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:260</note>
         <note category="description">Explains the move-to-backlog option when completing a sprint. COUNT is the number of tasks</note>
       </notes>
       <segment state="initial">
@@ -17725,7 +17855,7 @@
     </unit>
     <unit id="5031687880128878913">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:364</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:357</note>
         <note category="description">Task count</note>
       </notes>
       <segment state="initial">
@@ -17903,7 +18033,7 @@
     </unit>
     <unit id="7636820810130095488">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:154,158</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:147,151</note>
         <note category="description">Shown when a sprint has no unfinished tasks left. TOTAL is the task count</note>
       </notes>
       <segment state="initial">
@@ -17941,9 +18071,19 @@
         <target>Esta importación también creará</target>
       </segment>
     </unit>
+    <unit id="6110137744071395040">
+      <notes>
+        <note category="location">src/app/features/projects/components/project-branding/project-branding.component.ts:33,38</note>
+        <note category="description">Explains where the project logo appears</note>
+      </notes>
+      <segment state="translated">
+        <source> Shown beside the project wherever it is listed. Counts towards this workspace&apos;s storage allowance. </source>
+        <target> Se muestra junto al proyecto dondequiera que aparezca. Se descuenta del límite de almacenamiento de este espacio de trabajo. </target>
+      </segment>
+    </unit>
     <unit id="6534027096593338100">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:84,88</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:77,81</note>
         <note category="description">Asks what to do with unfinished tasks when completing a sprint</note>
       </notes>
       <segment state="translated">
@@ -17953,7 +18093,7 @@
     </unit>
     <unit id="7043963172820125185">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:94,96</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:87,89</note>
         <note category="description">Accessible label for the option that returns unfinished tasks to the backlog</note>
       </notes>
       <segment state="translated">
@@ -17973,7 +18113,7 @@
     </unit>
     <unit id="7417576377524669281">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:108,111</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:101,104</note>
         <note category="description">Accessible label for the option that moves unfinished tasks to another sprint</note>
       </notes>
       <segment state="translated">
@@ -17983,7 +18123,7 @@
     </unit>
     <unit id="7522207935236729201">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:112,114</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:105,107</note>
         <note category="description">Option that moves unfinished tasks into a different sprint</note>
       </notes>
       <segment state="translated">
@@ -18013,7 +18153,7 @@
     </unit>
     <unit id="3259975990687926975">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:124,125</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:117,118</note>
         <note category="description">Label of the field choosing which sprint to move tasks into</note>
       </notes>
       <segment state="translated">
@@ -18035,7 +18175,7 @@
     </unit>
     <unit id="7473967539394647356">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:126,127</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:119,120</note>
         <note category="description">Placeholder in the target sprint picker</note>
       </notes>
       <segment state="translated">
@@ -18065,7 +18205,7 @@
     </unit>
     <unit id="1860421182220689611">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:179,182</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:172,175</note>
         <note category="description">Button that completes the sprint</note>
       </notes>
       <segment state="translated">
@@ -18158,7 +18298,7 @@
     <unit id="8693603235657020323">
       <notes>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:120</note>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:132</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:136</note>
         <note category="description">Backlog group heading for tasks in any other status</note>
       </notes>
       <segment state="translated">
@@ -18433,7 +18573,7 @@
     </unit>
     <unit id="5423991647761194551">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:139</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:143</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -18454,7 +18594,7 @@
     <unit id="45739481977493163">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:447</note>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:144</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:148</note>
         <note category="description">Column heading for the size of an export file</note>
       </notes>
       <segment state="translated">
@@ -18596,7 +18736,7 @@
     </unit>
     <unit id="3457112670535282063">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:223</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:216</note>
         <note category="description">Stat label for tasks moving out of a sprint being completed</note>
       </notes>
       <segment state="initial">
@@ -18676,7 +18816,7 @@
     </unit>
     <unit id="228120404428462173">
       <notes>
-        <note category="location">src/app/features/storage/components/storage-filters.component.ts:129</note>
+        <note category="location">src/app/features/storage/components/storage-filters.component.ts:133</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -18862,6 +19002,16 @@
       <segment state="translated">
         <source> Clear filters </source>
         <target> Borrar filtros </target>
+      </segment>
+    </unit>
+    <unit id="8420607717802107601">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-branding/board-branding.component.ts:42,45</note>
+        <note category="description">Explains where the board background image appears</note>
+      </notes>
+      <segment state="translated">
+        <source> Fills the background of this board&apos;s page. </source>
+        <target> Rellena el fondo de la página de este tablero. </target>
       </segment>
     </unit>
     <unit id="8420929075694258422">
@@ -19634,7 +19784,7 @@
     </unit>
     <unit id="6480721176754917879">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:38,41</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:40,43</note>
         <note category="description">Shown when no workspace matches the search term</note>
       </notes>
       <segment state="translated">
@@ -19694,7 +19844,7 @@
     </unit>
     <unit id="4192963686165639179">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:48,50</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:50,52</note>
         <note category="location">src/app/static/components/user-select/user-select.component.ts:95,97</note>
         <note category="description">Placeholder in the workspace search box</note>
       </notes>
@@ -19705,7 +19855,7 @@
     </unit>
     <unit id="3451492603028845941">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:77,80</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:80,83</note>
         <note category="description">Workspace menu action that opens the workspace picker</note>
       </notes>
       <segment state="translated">
@@ -19715,7 +19865,7 @@
     </unit>
     <unit id="7504940227782988572">
       <notes>
-        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:86,89</note>
+        <note category="location">src/app/shell/workspace-select/workspace-select-menu.component.ts:89,92</note>
         <note category="description">Workspace menu action that signs the user out</note>
       </notes>
       <segment state="translated">
@@ -19885,6 +20035,16 @@
         <target>Arrastrar para reordenar</target>
       </segment>
     </unit>
+    <unit id="2015617246830582054">
+      <notes>
+        <note category="location">src/app/features/settings/components/workspace-branding/workspace-branding.component.ts:21,24</note>
+        <note category="description">Label of the workspace logo picker</note>
+      </notes>
+      <segment state="translated">
+        <source>Workspace Logo</source>
+        <target> Logotipo del espacio de trabajo </target>
+      </segment>
+    </unit>
     <unit id="5671808005389453429">
       <notes>
         <note category="location">src/app/features/auth/components/auth-provider/auth-provider.component.ts:17,20</note>
@@ -20017,7 +20177,7 @@
     </unit>
     <unit id="6398593380004333688">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:274</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:267</note>
         <note category="description">Explains the move-to-another-sprint option when completing a sprint</note>
       </notes>
       <segment state="initial">
@@ -20112,6 +20272,7 @@
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:360</note>
         <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:86,89</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
+        <note category="location">src/app/static/components/image-upload/image-upload.component.ts:90,93</note>
         <note category="description">Confirms removing an API key</note>
       </notes>
       <segment state="translated">
@@ -20131,7 +20292,7 @@
     </unit>
     <unit id="8105546289218525943">
       <notes>
-        <note category="location">src/app/static/components/page-header/page-header-title.component.ts:20,25</note>
+        <note category="location">src/app/static/components/page-header/page-header-title.component.ts:26,31</note>
         <note category="description">Accessible label for the badge showing how many items the page lists</note>
       </notes>
       <segment state="translated">
@@ -20443,6 +20604,16 @@
         <target>Sin sprint</target>
       </segment>
     </unit>
+    <unit id="203971007584568092">
+      <notes>
+        <note category="location">src/app/features/projects/components/project-branding/project-branding.component.ts:22,25</note>
+        <note category="description">Label of the project logo picker</note>
+      </notes>
+      <segment state="translated">
+        <source>Project Logo</source>
+        <target> Logotipo del proyecto </target>
+      </segment>
+    </unit>
     <unit id="610756099298959676">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-usage.component.ts:35</note>
@@ -20505,7 +20676,7 @@
     </unit>
     <unit id="199641702958317154">
       <notes>
-        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:266</note>
+        <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:259</note>
         <note category="description">Explains the move-to-backlog option when completing a sprint</note>
       </notes>
       <segment state="initial">
@@ -20525,7 +20696,7 @@
     </unit>
     <unit id="8529304273497332253">
       <notes>
-        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:53,56</note>
+        <note category="location">src/app/features/projects/components/project-detail/project-detail.component.ts:55,58</note>
         <note category="description">Explains what the project detail form controls</note>
       </notes>
       <segment state="translated">

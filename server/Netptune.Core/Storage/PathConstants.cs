@@ -9,6 +9,11 @@ public static class PathConstants
         return $"workspace/{workspaceIdentifier}/media/task/";
     }
 
+    public static string BrandingPath(int workspaceId)
+    {
+        return $"workspace/{workspaceId}/branding/";
+    }
+
     public static string ExportPath(string workspaceIdentifier)
     {
         return $"workspace/{workspaceIdentifier}/exports/";

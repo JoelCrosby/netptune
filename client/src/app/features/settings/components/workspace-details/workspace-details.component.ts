@@ -33,6 +33,7 @@ import { ColorSelectComponent } from '@static/components/color-select/color-sele
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormTextAreaComponent } from '@static/components/form-textarea/form-textarea.component';
 import { IconTileComponent } from '@static/components/icon-tile.component';
+import { WorkspaceBrandingComponent } from '@settings/components/workspace-branding/workspace-branding.component';
 import { firstValueFrom, map } from 'rxjs';
 import { requiredTextSchema } from '@core/util/forms/validation.schemas';
 
@@ -45,6 +46,7 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
     ColorSelectComponent,
     FlatButtonComponent,
     IconTileComponent,
+    WorkspaceBrandingComponent,
   ],
   host: { class: 'block' },
   template: `
@@ -70,45 +72,49 @@ import { requiredTextSchema } from '@core/util/forms/validation.schemas';
         </div>
       </header>
 
-      <div class="grid max-w-2xl gap-4 px-6 py-5">
-        <app-form-input
-          [formField]="detailsForm.name"
-          i18n-label="Label of the name field"
-          label="Name"
-          maxLength="1024" />
+      <div class="grid gap-6 px-6 py-5 lg:grid-cols-2 lg:gap-10">
+        <div class="grid max-w-2xl content-start gap-4">
+          <app-form-input
+            [formField]="detailsForm.name"
+            i18n-label="Label of the name field"
+            label="Name"
+            maxLength="1024" />
 
-        <app-form-input
-          [formField]="detailsForm.identifier"
-          i18n-label="Label of the workspace URL identifier field"
-          label="Identifier"
-          maxLength="1024"
-          [icon]="identifierIcon()"
-          [loading]="detailsForm.identifier().pending()"
-          i18n-hint="
-            Warns that changing the workspace identifier breaks existing links
-          "
-          hint="Changing the identifier changes the workspace URL and will break existing shared links." />
+          <app-form-input
+            [formField]="detailsForm.identifier"
+            i18n-label="Label of the workspace URL identifier field"
+            label="Identifier"
+            maxLength="1024"
+            [icon]="identifierIcon()"
+            [loading]="detailsForm.identifier().pending()"
+            i18n-hint="
+              Warns that changing the workspace identifier breaks existing links
+            "
+            hint="Changing the identifier changes the workspace URL and will break existing shared links." />
 
-        <app-form-textarea
-          [formField]="detailsForm.description"
-          i18n-label="Label of the description field"
-          label="Description"
-          maxLength="4096" />
+          <app-form-textarea
+            [formField]="detailsForm.description"
+            i18n-label="Label of the description field"
+            label="Description"
+            maxLength="4096" />
 
-        <app-color-select
-          [formField]="detailsForm.color"
-          i18n-label="Label of the colour picker field"
-          label="Color" />
+          <app-color-select
+            [formField]="detailsForm.color"
+            i18n-label="Label of the colour picker field"
+            label="Color" />
 
-        <app-form-input
-          [formField]="detailsForm.timeZone"
-          i18n-label="Label of the workspace time zone field"
-          label="Timezone"
-          i18n-hint="
-            Hint under the time zone field. Europe/London is a literal IANA zone
-            name
-          "
-          hint="Use an IANA timezone, for example Europe/London." />
+          <app-form-input
+            [formField]="detailsForm.timeZone"
+            i18n-label="Label of the workspace time zone field"
+            label="Timezone"
+            i18n-hint="
+              Hint under the time zone field. Europe/London is a literal IANA
+              zone name
+            "
+            hint="Use an IANA timezone, for example Europe/London." />
+        </div>
+
+        <app-workspace-branding />
       </div>
 
       <footer class="border-border border-t px-6 py-4">

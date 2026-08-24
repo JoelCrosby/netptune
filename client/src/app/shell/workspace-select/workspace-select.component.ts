@@ -20,6 +20,7 @@ import { CurrentWorkspaceService } from '@core/services/current-workspace.servic
 import { debounce, form } from '@angular/forms/signals';
 import { ShellService } from '@app/shell/shell.service';
 import { Workspace } from '@core/models/workspace';
+import { brandingImageUrl } from '@core/util/branding';
 import { filterObjectArray } from '@core/util/arrays';
 import { AuthCommandsService } from '@core/services/auth-commands.service';
 import { KeyboardService } from '@static/services/keyboard.service';
@@ -45,6 +46,7 @@ import { LucideChevronsUpDown } from '@lucide/angular';
       @if (currentWorkspace(); as workspace) {
         <app-workspace-badge
           [color]="workspace.metaInfo?.color"
+          [logoUrl]="currentLogoUrl()"
           [letter]="workspace.name[0]" />
         @if (shell.sideNavExpanded()) {
           <span class="min-w-0 flex-1 select-none">
@@ -102,6 +104,12 @@ export class WorkspaceSelectComponent implements OnDestroy {
   readonly workspaceId = inject(CurrentWorkspaceService).id;
 
   readonly isAuthenticated = inject(SessionService).isAuthenticated;
+
+  readonly currentLogoUrl = computed(() => {
+    const workspace = this.currentWorkspace();
+
+    return brandingImageUrl(workspace?.slug, workspace?.metaInfo?.logoFileId);
+  });
 
   filteredOptions = computed(() => {
     const options = this.workspaces();

@@ -26,6 +26,8 @@ public class ProjectViewModel
 
     public string? Color { get; set; }
 
+    public string? LogoFileId { get; set; }
+
     public int? DefaultStatusId { get; set; }
 
     public string? DefaultStatusName { get; set; }

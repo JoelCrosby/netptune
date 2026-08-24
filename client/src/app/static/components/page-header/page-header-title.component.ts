@@ -5,6 +5,12 @@ import { InlineEditInputComponent } from '../inline-edit-input/inline-edit-input
   selector: 'app-page-header-title',
   template: `
     <div class="flex h-full flex-row items-center justify-start">
+      @if (logoUrl(); as url) {
+        <img
+          [src]="url"
+          [alt]="title() ?? ''"
+          class="border-border mr-3 h-9 w-9 shrink-0 rounded-lg border object-cover" />
+      }
       @if (!titleEditable()) {
         <h1
           class="page-header-title font-overpass m-0 text-[2rem] font-normal max-[600px]:text-[1.4rem]">
@@ -41,6 +47,7 @@ export class PageHeaderTitleComponent {
   readonly title = input<string | null>();
   readonly titleEditable = input(false);
   readonly count = input<number | null>();
+  readonly logoUrl = input<string | null>(null);
 
   readonly titleSubmitted = output<string>();
 }

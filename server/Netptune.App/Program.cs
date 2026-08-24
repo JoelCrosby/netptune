@@ -178,6 +178,7 @@ apiGroup.MapAutomationsEndpoints();
 apiGroup.MapAuthEndpoints();
 apiGroup.MapBoardGroupsEndpoints();
 apiGroup.MapBoardsEndpoints();
+apiGroup.MapBrandingEndpoints();
 apiGroup.MapCommentsEndpoints();
 apiGroup.MapMetaEndpoints();
 apiGroup.MapProjectsEndpoints();

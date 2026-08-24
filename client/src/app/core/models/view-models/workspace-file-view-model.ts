@@ -3,6 +3,7 @@ import { PageQuery } from '../pagination';
 export enum WorkspaceFilePurpose {
   taskFile = 0,
   inlineMedia = 1,
+  branding = 2,
 }
 
 export type WorkspaceFileContentTypeGroup =
