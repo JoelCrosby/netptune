@@ -29,6 +29,7 @@ public class DataContext : IdentityDbContext<AppUser>, IDataProtectionKeyContext
     public DbSet<Project> Projects { get; set; } = null!;
     public DbSet<Workspace> Workspaces { get; set; } = null!;
     public DbSet<Flag> Flags { get; set; } = null!;
+    public DbSet<TaskPin> TaskPins { get; set; } = null!;
     public DbSet<ProjectTask> ProjectTasks { get; set; } = null!;
     public DbSet<Status> Statuses { get; set; } = null!;
     public DbSet<RelationType> RelationTypes { get; set; } = null!;

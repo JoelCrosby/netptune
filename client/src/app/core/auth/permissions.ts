@@ -43,6 +43,7 @@ export const PERMISSIONS = {
     reassign: 'tasks.reassign',
     export: 'tasks.export',
     import: 'tasks.import',
+    pinWorkspace: 'tasks.pin_workspace',
   },
   taskViews: {
     read: 'task_views.read',

@@ -42,6 +42,12 @@ export const routes: Routes = [
         data: { title: $localize`:Page title for the saved task view list:Views` },
       },
       {
+        path: 'pinned',
+        loadChildren: () => import('./features/pins/pins.routes').then((m) => m.routes),
+        runGuardsAndResolvers: 'always',
+        data: { title: $localize`:Page title for the pinned task list:Pinned` },
+      },
+      {
         path: 'automations',
         loadChildren: () => import('./features/automations/automations.routes').then((m) => m.routes),
         runGuardsAndResolvers: 'always',

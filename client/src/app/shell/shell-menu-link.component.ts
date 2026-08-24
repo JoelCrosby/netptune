@@ -16,6 +16,7 @@ export interface ShellMenuLink {
   children?: ShellMenuLink[];
   overviewLabel?: string;
   overviewIcon?: LucideIconInput;
+  count?: number;
 }
 
 @Component({
@@ -53,6 +54,13 @@ export interface ShellMenuLink {
               {{ link.label }}
             </span>
 
+            @if (link.count) {
+              <span
+                class="bg-primary/18 text-primary inline-flex h-[18px] min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums">
+                {{ link.count }}
+              </span>
+            }
+
             <svg
               lucideChevronRight
               class="mr-3 h-4 w-4 flex-none text-white/60 transition-transform"
@@ -75,9 +83,16 @@ export interface ShellMenuLink {
             <ng-content />
 
             @if (shell.sideNavExpanded()) {
-              <span class="truncate transition-all transition-discrete">
+              <span class="flex-1 truncate transition-all transition-discrete">
                 {{ link.label }}
               </span>
+
+              @if (link.count) {
+                <span
+                  class="bg-primary/18 text-primary mr-3 inline-flex h-[18px] min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums">
+                  {{ link.count }}
+                </span>
+              }
             }
           </a>
         }

@@ -94,6 +94,18 @@ SELECT lt.task_id
            WHERE ptt.project_task_id = lt.task_id
        ), '{}')           AS tags
      , COALESCE((
+           SELECT array_agg(DISTINCT tp.scope ORDER BY tp.scope)
+           FROM task_pins tp
+           WHERE tp.project_task_id = lt.task_id
+             AND NOT tp.is_deleted
+             AND (tp.scope <> 0 OR tp.created_by_user_id = @currentUserId)
+             AND (
+                  (tp.scope = 0 AND tp.scope_entity_id = lt.workspace_id)
+               OR (tp.scope = 1 AND tp.scope_entity_id = @boardId)
+               OR (tp.scope = 2 AND tp.scope_entity_id = lt.project_id)
+               OR (tp.scope = 3 AND tp.scope_entity_id = lt.workspace_id))
+       ), '{}')           AS pinned_scopes
+     , COALESCE((
            SELECT json_agg(json_build_object(
                        'id', u.id,
                        'firstname', u.firstname,

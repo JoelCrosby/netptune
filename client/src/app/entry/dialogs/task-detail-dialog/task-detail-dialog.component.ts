@@ -1,11 +1,27 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, effect, inject, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  untracked,
+  viewChild,
+} from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
 import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
-import { LucideCheck } from '@lucide/angular';
+import { LucideCheck, LucidePin } from '@lucide/angular';
+import { TaskPin, TaskPinScope } from '@core/models/task-pin';
+import { pinnedTasksResource } from '@core/resources/task-pin.resource';
+import { BoardViewService } from '@core/services/board-view.service';
+import { PinCommandsService } from '@core/services/pin-commands.service';
+import {
+  PinScopeMenuComponent,
+  PinScopeTarget,
+} from '@app/features/pins/components/pin-scope-menu.component';
+import { SplitButtonComponent } from '@static/components/button/split-button.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
 import { SprintBadgeComponent } from '@static/components/sprint-badge.component';
 import { TaskDates } from '@static/components/task-dates/task-dates.component';
@@ -46,6 +62,21 @@ export interface TaskDetailDialogData {
               <svg lucideCheck class="h-4 w-4 text-green-500"></svg>
             }
             <app-task-scope-id [id]="task.systemId" />
+            <app-split-button
+              #pinButton
+              [icon]="pinIcon"
+              [label]="pinLabel()"
+              [menuLabel]="pinMenuLabel"
+              [iconFilled]="isPinned()"
+              [pressed]="isPinned()"
+              (activated)="onPinScopeToggled(personalScope)">
+              <app-pin-scope-menu
+                class="w-72"
+                [pins]="pins()"
+                [target]="pinTarget()"
+                (toggled)="onPinScopeToggled($event); pinButton.closeMenu()"
+                (unpinAll)="onUnpinAll(); pinButton.closeMenu()" />
+            </app-split-button>
             @if (readActivity()) {
               <app-activity-menu
                 [entityType]="entityType"
@@ -92,6 +123,8 @@ export interface TaskDetailDialogData {
   imports: [
     LucideCheck,
     ActivityMenuComponent,
+    PinScopeMenuComponent,
+    SplitButtonComponent,
     DialogActionsDirective,
     SpinnerComponent,
     SprintBadgeComponent,
@@ -114,6 +147,10 @@ export class TaskDetailDialogComponent {
   private dialogRef = inject<DialogRef<TaskDetailDialogComponent>>(DialogRef);
   private snackbar = inject(SnackbarService);
   private taskDetail = inject(TaskDetailService);
+  private pinCommands = inject(PinCommandsService);
+  private boardView = inject(BoardViewService);
+  private pinsRef = pinnedTasksResource();
+  private pinButton = viewChild(SplitButtonComponent);
 
   public static width = '972px';
 
@@ -130,10 +167,82 @@ export class TaskDetailDialogComponent {
 
   readComments = hasPermission(PERMISSIONS.comments.read);
 
+  onPinScopeToggled(scope: TaskPinScope) {
+    const taskId = this.task()?.id;
+
+    if (!taskId) return;
+
+    const existing = this.pins().find((pin) => pin.scope === scope);
+
+    if (existing) {
+      this.pinCommands.unpin(existing);
+
+      return;
+    }
+
+    this.pinCommands.pin({
+      taskId,
+      scope,
+      scopeEntityId: this.scopeEntityId(scope),
+    });
+  }
+
+  onUnpinAll() {
+    this.pinCommands.unpinEverywhere(this.pins());
+  }
+
+  private scopeEntityId(scope: TaskPinScope) {
+    const target = this.pinTarget();
+
+    if (scope === TaskPinScope.board) return target.boardId;
+    if (scope === TaskPinScope.project) return target.projectId;
+
+    return null;
+  }
+
   readActivity = hasPermission(PERMISSIONS.activity.read);
+
+  pinIcon = LucidePin;
+  personalScope = TaskPinScope.user;
+  pinMenuLabel = $localize`:Accessible label for the control that opens the pin scope menu:Choose where to pin`;
+
+  pins = computed<TaskPin[]>(() => {
+    const taskId = this.task()?.id;
+    const pinned = this.pinsRef.value() ?? [];
+
+    return pinned.find((entry) => entry.task.id === taskId)?.pins ?? [];
+  });
+
+  isPinned = computed(() => this.pins().length > 0);
+
+  pinLabel = computed(() => {
+    if (this.isPinned()) {
+      return $localize`:Label on the pin control when the task is already pinned:Pinned`;
+    }
+
+    return $localize`:Label on the control that pins a task:Pin`;
+  });
+
+  pinTarget = computed<PinScopeTarget>(() => {
+    const task = this.task();
+    const board = this.boardView.board();
+
+    return {
+      boardId: board?.id ?? null,
+      boardName: board?.name ?? null,
+      projectId: task?.projectId ?? null,
+      projectName: task?.projectName ?? null,
+    };
+  });
 
   constructor() {
     this.taskDetail.show(this.data.systemId);
+
+    effect(() => {
+      this.pinCommands.scopeMenuRequested();
+
+      untracked(() => this.pinButton()?.openMenu());
+    });
 
     effect(() => {
       const wasRemoved = this.taskDetail.loadError()?.status === 404;

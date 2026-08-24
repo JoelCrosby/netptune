@@ -1,5 +1,7 @@
 using FluentAssertions;
 
+using Netptune.Core.Enums;
+using Netptune.Core.Repositories;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
@@ -20,12 +22,16 @@ public class DeleteProjectCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IActivityLogger Activity = Substitute.For<IActivityLogger>();
+    private readonly ITaskPinRepository TaskPins = Substitute.For<ITaskPinRepository>();
 
     public DeleteProjectCommandHandlerTests()
     {
         Identity.GetWorkspaceId().Returns(WorkspaceId);
+        TaskPins
+            .GetForScopeEntity(Arg.Any<int>(), Arg.Any<TaskPinScope>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns([]);
 
-        Handler = new(UnitOfWork, Identity, Activity);
+        Handler = new(UnitOfWork, TaskPins, Identity, Activity);
     }
 
     [Fact]

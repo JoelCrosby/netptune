@@ -3,6 +3,7 @@ import { TaskPriority } from '@core/enums/task-priority';
 import { SprintStatus } from '@core/enums/sprint-status';
 import { StatusCategory } from '../status';
 import { AppUser } from '../appuser';
+import { TaskPinScope } from '../task-pin';
 import { BoardViewModel } from './board-view-model';
 
 export interface BoardView {
@@ -47,6 +48,7 @@ export interface BoardViewTask {
   projectId: number;
   workspaceId: number;
   workspaceKey: string;
+  pinnedScopes: TaskPinScope[];
 }
 
 export interface AssigneeViewModel {

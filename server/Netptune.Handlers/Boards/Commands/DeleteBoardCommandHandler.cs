@@ -1,5 +1,6 @@
 using Mediator;
 using Netptune.Core.Enums;
+using Netptune.Core.Repositories;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
@@ -12,12 +13,18 @@ public sealed record DeleteBoardCommand(int Id) : IRequest<ClientResponse>;
 public sealed class DeleteBoardCommandHandler : IRequestHandler<DeleteBoardCommand, ClientResponse>
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
+    private readonly ITaskPinRepository TaskPins;
     private readonly IIdentityService Identity;
     private readonly IActivityLogger Activity;
 
-    public DeleteBoardCommandHandler(INetptuneUnitOfWork unitOfWork, IIdentityService identity, IActivityLogger activity)
+    public DeleteBoardCommandHandler(
+        INetptuneUnitOfWork unitOfWork,
+        ITaskPinRepository taskPins,
+        IIdentityService identity,
+        IActivityLogger activity)
     {
         UnitOfWork = unitOfWork;
+        TaskPins = taskPins;
         Identity = identity;
         Activity = activity;
     }
@@ -32,6 +39,13 @@ public sealed class DeleteBoardCommandHandler : IRequestHandler<DeleteBoardComma
         var userId = Identity.GetCurrentUserId();
 
         board.Delete(userId);
+
+        var pins = await TaskPins.GetForScopeEntity(workspaceId, TaskPinScope.Board, board.Id, cancellationToken);
+
+        foreach (var pin in pins)
+        {
+            pin.Delete(userId);
+        }
 
         await UnitOfWork.CompleteAsync(cancellationToken);
 

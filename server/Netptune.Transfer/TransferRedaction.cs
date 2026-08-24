@@ -79,6 +79,7 @@ public static class TransferRedaction
         Redacted<ImportSessionEntry>(TransferRedactionKeys.TransferHistory),
         Redacted<ImportDefinition>(TransferRedactionKeys.TransferHistory),
         Redacted<TaskView>(TransferRedactionKeys.SavedViews),
+        Redacted<TaskPin>(TransferRedactionKeys.SavedViews),
     ];
 
     private static readonly FrozenDictionary<Type, TransferEntityClassification> ClassificationsByType =

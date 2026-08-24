@@ -29,8 +29,10 @@ public sealed class GetBoardViewQueryHandler : IRequestHandler<GetBoardViewQuery
 
         var boardId = nullableBoardId.Value;
 
+        var currentUserId = Identity.GetCurrentUserId();
         var groups = await UnitOfWork.BoardGroups.GetBoardViewGroups(
             boardId,
+            currentUserId,
             request.Filter?.Term,
             request.Filter?.SprintId,
             cancellationToken);

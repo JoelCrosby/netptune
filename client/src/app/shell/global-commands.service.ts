@@ -14,6 +14,9 @@ import { CommandRegistry } from '@core/services/command-registry.service';
 import { DialogService } from '@core/services/dialog.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { CreateTaskDialogComponent } from '@entry/dialogs/create-task-dialog/create-task-dialog.component';
+import { CurrentTaskService } from '@core/services/current-task.service';
+import { PinCommandsService } from '@core/services/pin-commands.service';
+import { KeyboardService } from '@static/services/keyboard.service';
 
 @Injectable()
 export class GlobalCommandsService implements OnDestroy {
@@ -31,6 +34,9 @@ export class GlobalCommandsService implements OnDestroy {
   private assistantCommandRegistered = false;
   private authenticated = inject(SessionService).isAuthenticated;
   private userCommandsRegistered = false;
+  private keyboard = inject(KeyboardService);
+  private currentTask = inject(CurrentTaskService);
+  private pinCommands = inject(PinCommandsService);
 
   private readonly commandIds = [
     'nav.dashboard',
@@ -243,10 +249,41 @@ export class GlobalCommandsService implements OnDestroy {
         this.storageCommandRegistered = false;
       }
     });
+
+    this.registerPinShortcuts();
   }
 
   ngOnDestroy() {
     this.registry.unregister(this.commandIds);
+  }
+
+  private registerPinShortcuts() {
+    effect(() => {
+      const event = this.keyboard.keyDown();
+
+      if (!event || event.key.toLowerCase() !== 'p') return;
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+      const typing = isTypingTarget(event);
+
+      if (typing) return;
+
+      untracked(() => {
+        const task = this.currentTask.task();
+
+        if (!task) return;
+
+        event.preventDefault();
+
+        if (event.shiftKey) {
+          this.pinCommands.requestScopeMenu();
+
+          return;
+        }
+
+        this.pinCommands.pinForSelf(task.id);
+      });
+    });
   }
 
   private createTask() {
@@ -261,4 +298,14 @@ export class GlobalCommandsService implements OnDestroy {
       void this.router.navigate(['/', ws, path]);
     }
   }
+}
+
+function isTypingTarget(event: KeyboardEvent): boolean {
+  const target = event.target as HTMLElement | null;
+
+  if (!target) return false;
+
+  const tag = target.tagName;
+
+  return tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable;
 }

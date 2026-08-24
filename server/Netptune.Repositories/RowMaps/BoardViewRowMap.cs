@@ -56,6 +56,8 @@ public class BoardViewRowMap
 
     public string[] Tags { get; set; } = [];
 
+    public int[] Pinned_Scopes { get; set; } = [];
+
     public bool Has_Comments { get; set; }
 
     public int Flag_Count { get; set; }

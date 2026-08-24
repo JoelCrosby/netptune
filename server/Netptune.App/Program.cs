@@ -205,6 +205,7 @@ apiGroup.MapServiceAccountsEndpoints();
 apiGroup.MapAiEndpoints();
 
 apiGroup.MapTaskViewEndpoints();
+apiGroup.MapPinsEndpoints();
 apiGroup.MapExportEndpoints();
 apiGroup.MapImportEndpoints();
 

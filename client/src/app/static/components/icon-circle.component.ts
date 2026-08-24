@@ -9,7 +9,12 @@ export type IconCircleSize = 'small' | 'medium';
   selector: 'app-icon-circle',
   imports: [LucideDynamicIcon],
   template: `
-    <span [class]="circleClass()" aria-hidden="true">
+    <span
+      [class]="circleClass()"
+      [attr.role]="label() ? 'img' : null"
+      [attr.aria-label]="label() || null"
+      [attr.aria-hidden]="label() ? null : 'true'"
+      [attr.title]="label() || null">
       <svg [lucideIcon]="icon()" [class]="iconClass()"></svg>
     </span>
   `,
@@ -19,6 +24,9 @@ export class IconCircleComponent {
   readonly icon = input.required<LucideIconInput>();
   readonly appearance = input<IconCircleAppearance>('soft');
   readonly size = input<IconCircleSize>('medium');
+  readonly filled = input(false);
+  /** Names what the icon stands for. Without it the circle is decorative and hidden from readers. */
+  readonly label = input('');
   readonly class = input('');
 
   readonly circleClass = computed(() =>
@@ -33,6 +41,9 @@ export class IconCircleComponent {
   );
 
   readonly iconClass = computed(() =>
-    this.size() === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4'
+    cn(
+      this.size() === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4',
+      this.filled() ? 'fill-current' : ''
+    )
   );
 }

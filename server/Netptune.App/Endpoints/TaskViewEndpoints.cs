@@ -1,7 +1,7 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
-using Netptune.Core.Responses.Common;
 using Netptune.Handlers.TaskViews.Commands;
 using Netptune.Handlers.TaskViews.Queries;
 using Netptune.Query.Views;
@@ -103,7 +103,7 @@ public static class TaskViewEndpoints
     {
         var result = await mediator.Send(new SaveTaskViewCommand(request with { Id = null }), cancellationToken);
 
-        return ToResult(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleUpdate(
@@ -113,7 +113,7 @@ public static class TaskViewEndpoints
     {
         var result = await mediator.Send(new SaveTaskViewCommand(request), cancellationToken);
 
-        return ToResult(result);
+        return result.ToResult();
     }
 
     private static async Task<IResult> HandleDelete(IMediator mediator, string slug, CancellationToken cancellationToken)
@@ -128,26 +128,6 @@ public static class TaskViewEndpoints
         if (result.IsForbidden)
         {
             return Results.Forbid();
-        }
-
-        return Results.Ok(result);
-    }
-
-    private static IResult ToResult(ClientResponse<TaskViewViewModel> result)
-    {
-        if (result.IsNotFound)
-        {
-            return Results.NotFound(result);
-        }
-
-        if (result.IsForbidden)
-        {
-            return Results.Forbid();
-        }
-
-        if (!result.IsSuccess)
-        {
-            return Results.BadRequest(result);
         }
 
         return Results.Ok(result);

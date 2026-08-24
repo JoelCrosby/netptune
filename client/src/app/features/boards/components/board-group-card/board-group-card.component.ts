@@ -13,11 +13,13 @@ import { Selected } from '@core/models/selected';
 import { StatusCategory } from '@core/models/status';
 import { BoardViewTask } from '@core/models/view-models/board-view';
 import { BoardSelectionService } from '@core/services/board-selection.service';
+import { pinScopeMarkerLabel } from '@core/util/pin-scope';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import {
   LucideCheck,
   LucideFlag,
   LucideMessageSquareText,
+  LucidePin,
 } from '@lucide/angular';
 import { AvatarComponent } from '@static/components/avatar/avatar.component';
 import { BadgeComponent } from '@static/components/badge/badge.component';
@@ -25,6 +27,7 @@ import { SprintBadgeComponent } from '@static/components/sprint-badge.component'
 import { TaskScopeIdComponent } from '@static/components/task-scope-id.component';
 import { TaskFlagBadgeComponent } from '@static/components/task-flag-badge.component';
 import { SelectionCheckboxComponent } from '@static/components/checkbox/selection-checkbox.component';
+import { IconCircleComponent } from '@static/components/icon-circle.component';
 
 @Component({
   selector: 'app-board-group-card',
@@ -64,6 +67,7 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
     SprintBadgeComponent,
     TaskFlagBadgeComponent,
     SelectionCheckboxComponent,
+    IconCircleComponent,
   ],
   template: `
     <div
@@ -87,7 +91,18 @@ import { SelectionCheckboxComponent } from '@static/components/checkbox/selectio
         </div>
       }
 
-      <div class="mb-0 leading-[1.4rem] select-none">{{ task().name }}</div>
+      @if (pinned() && !selectionActive()) {
+        <app-icon-circle
+          class="bg-primary/16 absolute top-1.5 right-1.5 z-10 h-5.5 w-5.5"
+          size="small"
+          [icon]="pinIcon"
+          [filled]="true"
+          [label]="pinLabel()" />
+      }
+
+      <div class="mb-0 leading-[1.4rem] select-none" [class.pr-7]="pinned()">
+        {{ task().name }}
+      </div>
 
       <div class="mt-4 flex flex-row flex-wrap">
         @if (task().sprintName) {
@@ -175,6 +190,18 @@ export class BoardGroupCardComponent {
   readonly statusCategory = StatusCategory;
   readonly priority = computed(() => this.task().priority);
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
+  readonly pinIcon = LucidePin;
+  readonly pinned = computed(() => this.task().pinnedScopes.length > 0);
+
+  readonly pinLabel = computed(() => {
+    const scopes = this.task().pinnedScopes;
+
+    if (scopes.length === 1) {
+      return pinScopeMarkerLabel(scopes[0]);
+    }
+
+    return $localize`:Tooltip on a task pinned at more than one scope:Pinned at several scopes`;
+  });
 
   priorityVisible = computed(() => {
     const p = this.priority();
@@ -193,7 +220,14 @@ export class BoardGroupCardComponent {
       return 'bg-primary/25! border-primary!';
     }
 
-    return taskPriorityCardColors[this.priority() ?? TaskPriority.none];
+    const priorityClasses =
+      taskPriorityCardColors[this.priority() ?? TaskPriority.none];
+
+    if (this.pinned()) {
+      return `${priorityClasses} border-primary/45!`;
+    }
+
+    return priorityClasses;
   });
 
   // The checkbox sits over the card content, so it carries the same background

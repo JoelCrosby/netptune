@@ -22,6 +22,7 @@ import {
   LucideMessageCircleX,
   LucideMoveRight,
   LucidePencil,
+  LucidePin,
   LucideShield,
   LucideShieldX,
   LucideSquareX,
@@ -226,6 +227,11 @@ export const netptunePermissionLabels: PermissionLabels = {
       key: 'tasks.import',
       label: $localize`:Name of a workspace permission:Import Tasks`,
       icon: LucideUpload,
+    },
+    pinWorkspace: {
+      key: 'tasks.pin_workspace',
+      label: $localize`:Name of a workspace permission:Pin Tasks for the Workspace`,
+      icon: LucidePin,
     },
   },
   taskViews: {

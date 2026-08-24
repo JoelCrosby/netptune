@@ -44,6 +44,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
     public async Task<List<BoardViewGroup>?> GetBoardViewGroups(
         int boardId,
+        string currentUserId,
         string? searchTerm = null,
         int? sprintId = null,
         CancellationToken cancellationToken = default)
@@ -60,7 +61,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
         var results = await connection.QueryMultipleAsync(new CommandDefinition(
             SqlScripts.GetBoardView,
-            new { boardId, searchPhrase, searchPattern, sprintId, taskEntityType = EntityType.Task },
+            new { boardId, currentUserId, searchPhrase, searchPattern, sprintId, taskEntityType = EntityType.Task },
             cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewRowMap>();
@@ -119,6 +120,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 WorkspaceId = row.Workspace_Id,
                 WorkspaceKey = meta.Workspace_Identifier,
                 Assignees = ParseAssignees(row.Assignees),
+                PinnedScopes = row.Pinned_Scopes.Select(scope => (TaskPinScope)scope).ToList(),
             });
         }
 

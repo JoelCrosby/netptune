@@ -7,6 +7,7 @@ import { DashboardAssignedTasksComponent } from '../../components/dashboard-assi
 import { DashboardCurrentSprintCardComponent } from '../../components/dashboard-current-sprint-card.component';
 import { DashboardCycleTimeCardComponent } from '../../components/dashboard-cycle-time-card.component';
 import { DashboardNotificationsCardComponent } from '../../components/dashboard-notifications-card.component';
+import { DashboardPinnedCardComponent } from '../../components/dashboard-pinned-card.component';
 import { DashboardStatusBreakdownCardComponent } from '../../components/dashboard-status-breakdown-card.component';
 import { DashboardThroughputCardComponent } from '../../components/dashboard-throughput-card.component';
 import { DashboardVelocityCardComponent } from '../../components/dashboard-velocity-card.component';
@@ -22,6 +23,7 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
     DashboardCurrentSprintCardComponent,
     DashboardCycleTimeCardComponent,
     DashboardNotificationsCardComponent,
+    DashboardPinnedCardComponent,
     DashboardStatusBreakdownCardComponent,
     DashboardThroughputCardComponent,
     DashboardVelocityCardComponent,
@@ -35,6 +37,8 @@ import { DashboardFlowService } from '../../services/dashboard-flow.service';
         title="Dashboard" />
 
       <div class="flex flex-col gap-8">
+        <app-dashboard-pinned-card />
+
         <app-dashboard-current-sprint-card />
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">

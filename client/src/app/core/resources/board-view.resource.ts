@@ -19,7 +19,7 @@ export const boardViewResource = (
       return { url: `api/boards/view/${id}`, params: params() };
     },
     {
-      refreshOn: ['tasks', 'boardGroups'],
+      refreshOn: ['tasks', 'boardGroups', 'pins'],
       parse: (response) => (response as ClientResponse<BoardView>).payload,
     }
   );

@@ -80,4 +80,6 @@ public class BoardViewTask
     public int WorkspaceId { get; set; }
 
     public string WorkspaceKey { get; set; } = null!;
+
+    public List<TaskPinScope> PinnedScopes { get; set; } = [];
 }

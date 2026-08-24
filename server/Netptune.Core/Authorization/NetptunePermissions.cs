@@ -98,6 +98,7 @@ public static class NetptunePermissions
         public const string Reassign = "tasks.reassign";
         public const string Export = "tasks.export";
         public const string Import = "tasks.import";
+        public const string PinWorkspace = "tasks.pin_workspace";
     }
 
     public static class Sprints

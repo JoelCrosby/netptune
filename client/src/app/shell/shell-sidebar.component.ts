@@ -5,6 +5,9 @@ import { Workspace } from '@core/models/workspace';
 import { currentSprintsResource } from '@core/resources/sprint.resource';
 import { PinnedViewsService } from '@app/features/task-views/services/pinned-views.service';
 import { taskViewsResource } from '@app/features/task-views/resources/task-view.resource';
+import { pinnedTasksResource } from '@core/resources/task-pin.resource';
+import { TaskPin, TaskPinScope } from '@core/models/task-pin';
+import { pinScopeGroupName, pinScopeIcons } from '@core/util/pin-scope';
 import {
   LucideArchive,
   LucideBell,
@@ -18,6 +21,7 @@ import {
   LucideLayoutGrid,
   LucideListChecks,
   LucideListFilter,
+  LucidePin,
   LucideLogs,
   LucideHardDrive,
   LucideSettings,
@@ -103,6 +107,7 @@ export class ShellSidebarComponent {
 
   private readonly currentSprintsRef = currentSprintsResource();
   private readonly taskViewsRef = taskViewsResource();
+  private readonly pinnedTasksRef = pinnedTasksResource();
   private readonly pinnedViews = inject(PinnedViewsService);
 
   currentSprints = this.currentSprintsRef.value;
@@ -219,6 +224,18 @@ export class ShellSidebarComponent {
       });
     }
 
+    const pinnedTaskCount = this.pinnedTasksRef.value().length;
+
+    if (pinnedTaskCount) {
+      links.push({
+        label: $localize`:Sidebar link to the pinned task list:Pinned`,
+        value: ['./pinned'],
+        icon: LucidePin,
+        count: pinnedTaskCount,
+        children: this.pinnedScopeLinks(),
+      });
+    }
+
     if (this.canReadMembers()) {
       links.push({
         label: $localize`:Sidebar link to the workspace member list:Users`,
@@ -237,6 +254,39 @@ export class ShellSidebarComponent {
 
     return links;
   });
+
+  private readonly pins = computed<TaskPin[]>(() => {
+    return this.pinnedTasksRef.value().flatMap((pinned) => pinned.pins);
+  });
+
+  private pinnedScopeLinks(): ShellMenuLink[] | undefined {
+    const groups = new Map<string, PinScopeGroup>();
+
+    for (const pin of this.pins()) {
+      const key = `${pin.scope}:${pin.scopeEntityId}`;
+      const existing = groups.get(key);
+
+      if (existing) {
+        existing.count += 1;
+        continue;
+      }
+
+      groups.set(key, {
+        scope: pin.scope,
+        label: pinScopeGroupName(pin.scope, pin.scopeName),
+        count: 1,
+      });
+    }
+
+    const links = [...groups.values()].sort(byPinScope).map((group) => ({
+      label: group.label,
+      value: ['./pinned'],
+      icon: pinScopeIcons[group.scope],
+      count: group.count,
+    }));
+
+    return links.length ? links : undefined;
+  }
 
   // A view somebody unshared or deleted disappears from the sidebar on the next load rather than
   // leaving a link that 404s, because the pinned ids are matched against what the list actually returns.
@@ -412,4 +462,25 @@ export class ShellSidebarComponent {
   onWorkspaceChange(workspace: Workspace) {
     this.workspaceChange.emit(workspace);
   }
+}
+
+interface PinScopeGroup {
+  scope: TaskPinScope;
+  label: string;
+  count: number;
+}
+
+const pinScopeWeight: Record<TaskPinScope, number> = {
+  [TaskPinScope.user]: 0,
+  [TaskPinScope.board]: 1,
+  [TaskPinScope.project]: 2,
+  [TaskPinScope.workspace]: 3,
+};
+
+function byPinScope(left: PinScopeGroup, right: PinScopeGroup): number {
+  const weight = pinScopeWeight[left.scope] - pinScopeWeight[right.scope];
+
+  if (weight !== 0) return weight;
+
+  return left.label.localeCompare(right.label);
 }

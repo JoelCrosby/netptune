@@ -33,6 +33,7 @@ public static class NetptuneRepositoryConfigurations
         services.AddScoped<IExportJobRepository, ExportJobRepository>();
         services.AddScoped<IExportDefinitionRepository, ExportDefinitionRepository>();
         services.AddScoped<ITaskViewRepository, TaskViewRepository>();
+        services.AddScoped<ITaskPinRepository, TaskPinRepository>();
 
         services.AddScoped<ITransferRepository, TransferRepository>();
         services.AddScoped<IArchiveRepository, ArchiveRepository>();
