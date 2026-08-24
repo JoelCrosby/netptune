@@ -4,6 +4,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { hasPermission } from '@core/auth/has-permission';
 import { PERMISSIONS } from '@core/auth/permissions';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
+import { QueryBuilderGroup } from '@shared/components/query-builder/query-builder.models';
 import { QueryChipBarComponent } from '@shared/components/query-builder/query-chip-bar.component';
 import { LucideLink, LucideSave, LucideSettings2 } from '@lucide/angular';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
@@ -20,10 +21,16 @@ import {
   TaskViewResult,
   emptyQueryGroup,
 } from '../../models/task-view.models';
+import { emptyTaskQueryMessage } from '../../models/task-query-copy';
+import {
+  fromBuilderGroup,
+  toBuilderGroup,
+} from '../../models/task-query-builder';
 import {
   taskQueryCatalogResource,
   taskViewResource,
 } from '../../resources/task-view.resource';
+import { QueryFieldOptionsService } from '../../services/query-field-options.service';
 import { taskQueryPreviewResource } from '../../resources/task-query-preview.resource';
 import { TaskViewsService } from '../../services/task-views.service';
 import { decodeQuery, encodeQuery } from '../../util/query-url';
@@ -117,10 +124,13 @@ import { TaskViewPreviewToolbarComponent } from '../../components/task-view-prev
         <div
           class="border-border bg-card shrink-0 rounded-t-xl border border-b-0 px-4 py-3.5">
           <app-query-chip-bar
-            [group]="query()"
-            [catalog]="catalog()"
+            [group]="builderQuery()"
+            [catalog]="builderCatalog()"
             [errors]="previewErrors()"
-            (groupChange)="query.set($event)" />
+            i18n-summaryPrefix="Prefix of the plain-language query summary"
+            summaryPrefix="Shows tasks where"
+            [emptySummary]="emptySummary"
+            (groupChange)="setQuery($event)" />
         </div>
 
         <app-task-view-preview-toolbar
@@ -152,6 +162,7 @@ export class TaskViewFormViewComponent {
   private readonly router = inject(Router);
   private readonly snackbar = inject(SnackbarService);
   private readonly service = inject(TaskViewsService);
+  private readonly fieldOptions = inject(QueryFieldOptionsService);
 
   readonly availableColumns = allTaskColumns<TaskViewModel>();
 
@@ -188,6 +199,17 @@ export class TaskViewFormViewComponent {
   readonly description = signal('');
   readonly isShared = signal(false);
   readonly query = signal<TaskQueryGroup>(emptyQueryGroup());
+
+  readonly emptySummary = emptyTaskQueryMessage;
+
+  // The chip bar speaks the shared builder vocabulary, so the view's own query crosses over on the
+  // way in and back again on every edit.
+  readonly builderCatalog = computed(() => {
+    return this.fieldOptions.builderCatalog(this.catalog());
+  });
+
+  readonly builderQuery = computed(() => toBuilderGroup(this.query()));
+
   readonly columns = signal<DatatableColumnPreference[]>(
     defaultTaskColumnPreferences()
   );
@@ -273,6 +295,10 @@ export class TaskViewFormViewComponent {
         this.query.set(decoded);
       }
     });
+  }
+
+  setQuery(group: QueryBuilderGroup) {
+    this.query.set(fromBuilderGroup(group));
   }
 
   onCopyQueryLink() {

@@ -1,23 +1,20 @@
-import { Component, computed, inject, input, model } from '@angular/core';
-import {
-  acceptsManyValues,
-  isRelativeDayOperator,
-  operatorArity,
-  taskQueryOperatorLabels,
-} from '@app/features/task-views/models/task-query-copy';
-import {
-  TaskQueryCatalog,
-  TaskQueryCondition,
-  TaskQueryField,
-  TaskQueryOperator,
-  TaskQueryValueType,
-} from '@app/features/task-views/models/task-view.models';
-import { QueryFieldOptionsService } from '@app/features/task-views/services/query-field-options.service';
+import { Component, computed, input, model } from '@angular/core';
+import { LucideDynamicIcon } from '@lucide/angular';
 import { FormInputComponent } from '@static/components/form-input/form-input.component';
 import { FormSelectOptionComponent } from '@static/components/form-select/form-select-option.component';
 import { FormSelectComponent } from '@static/components/form-select/form-select.component';
 import { FormSelectTagsOptionComponent } from '@static/components/form-select-tags/form-select-tags-option.component';
 import { FormSelectTagsComponent } from '@static/components/form-select-tags/form-select-tags.component';
+import {
+  findQueryField,
+  findQueryOperator,
+  newQueryCondition,
+  operatorValueCount,
+  QueryBuilderCatalog,
+  QueryBuilderCondition,
+  QueryBuilderField,
+  QueryBuilderOperator,
+} from './query-builder.models';
 
 @Component({
   selector: 'app-query-condition-editor',
@@ -27,6 +24,7 @@ import { FormSelectTagsComponent } from '@static/components/form-select-tags/for
     FormSelectOptionComponent,
     FormSelectTagsComponent,
     FormSelectTagsOptionComponent,
+    LucideDynamicIcon,
   ],
   template: `
     <div
@@ -50,9 +48,19 @@ import { FormSelectTagsComponent } from '@static/components/form-select-tags/for
         [noMargin]="true"
         [value]="condition().operator"
         (valueChange)="setOperator($event)">
-        @for (option of operatorOptions(); track option) {
-          <app-form-select-option [value]="option">
-            {{ operatorLabel(option) }}
+        @for (option of operatorOptions(); track option.key) {
+          <app-form-select-option [value]="option.key">
+            @if (option.icon) {
+              <span class="flex items-center gap-2">
+                <svg
+                  [lucideIcon]="option.icon"
+                  class="text-primary h-4 w-4 shrink-0"
+                  aria-hidden="true"></svg>
+                <span>{{ option.label }}</span>
+              </span>
+            } @else {
+              {{ option.label }}
+            }
           </app-form-select-option>
         }
       </app-form-select>
@@ -75,8 +83,7 @@ import { FormSelectTagsComponent } from '@static/components/form-select-tags/for
         </app-form-select-tags>
       } @else if (valueOptions().length) {
         <app-form-select
-          i18n-label="Label of the query builder value picker"
-          label="Value"
+          [label]="valueLabel()"
           [noMargin]="true"
           [value]="valueAt(0)"
           (valueChange)="setValueAt(0, $event)">
@@ -119,67 +126,45 @@ import { FormSelectTagsComponent } from '@static/components/form-select-tags/for
   `,
 })
 export class QueryConditionEditorComponent {
-  private readonly fieldOptions = inject(QueryFieldOptionsService);
+  readonly catalog = input.required<QueryBuilderCatalog>();
+  readonly condition = model.required<QueryBuilderCondition>();
 
-  readonly catalog = input.required<TaskQueryCatalog>();
-  readonly condition = model.required<TaskQueryCondition>();
+  readonly field = computed<QueryBuilderField | undefined>(() => {
+    return findQueryField(this.catalog(), this.condition().field);
+  });
 
-  readonly field = computed<TaskQueryField | undefined>(() => {
-    return this.catalog().fields.find(
-      (candidate) => candidate.key === this.condition().field
-    );
+  readonly operator = computed<QueryBuilderOperator | undefined>(() => {
+    return findQueryOperator(this.field(), this.condition().operator);
   });
 
   readonly operatorOptions = computed(() => this.field()?.operators ?? []);
 
-  readonly valueOptions = computed(() => {
-    return this.fieldOptions.optionsFor(this.field());
-  });
+  readonly valueOptions = computed(() => this.field()?.options ?? []);
 
-  readonly takesNoValue = computed(() => {
-    return operatorArity(this.condition().operator) === 0;
-  });
+  readonly takesNoValue = computed(() => this.valueCount() === 0);
 
-  readonly takesManyValues = computed(() => {
-    return acceptsManyValues(this.condition().operator);
-  });
+  readonly takesManyValues = computed(() => !!this.operator()?.acceptsMany);
 
-  readonly takesRange = computed(() => {
-    return this.condition().operator === TaskQueryOperator.between;
-  });
+  readonly takesRange = computed(() => this.valueCount() === 2);
 
   readonly inputName = computed(() => `query-${this.condition().field}`);
 
   readonly inputType = computed(() => {
-    if (isRelativeDayOperator(this.condition().operator)) return 'number';
-
-    const valueType = this.field()?.valueType;
-    const isDate =
-      valueType === TaskQueryValueType.date ||
-      valueType === TaskQueryValueType.timestamp;
-
-    if (isDate) return 'date';
-
-    return valueType === TaskQueryValueType.number ? 'number' : 'text';
+    return this.operator()?.inputType ?? this.field()?.inputType ?? 'text';
   });
 
   readonly valueLabel = computed(() => {
-    if (isRelativeDayOperator(this.condition().operator)) {
-      return $localize`:Label of the day-count field in the query builder:Days`;
-    }
-
-    return $localize`:Label of the query builder value picker:Value`;
+    return (
+      this.operator()?.valueLabel ??
+      $localize`:Label of the query builder value picker:Value`
+    );
   });
 
   readonly valuePlaceholder = computed(() => {
-    if (isRelativeDayOperator(this.condition().operator)) return '7';
-
-    return '';
+    return (
+      this.operator()?.valuePlaceholder ?? this.field()?.valuePlaceholder ?? ''
+    );
   });
-
-  operatorLabel(operator: TaskQueryOperator): string {
-    return taskQueryOperatorLabels[operator];
-  }
 
   valueAt(index: number): string {
     return this.condition().values[index] ?? '';
@@ -188,20 +173,21 @@ export class QueryConditionEditorComponent {
   setField(fieldKey: string | null) {
     if (fieldKey === null) return;
 
-    const field = this.catalog().fields.find(
-      (candidate) => candidate.key === fieldKey
-    );
-    const operator = field?.operators[0] ?? TaskQueryOperator.equals;
+    const field = findQueryField(this.catalog(), fieldKey);
 
-    this.condition.set({ field: fieldKey, operator, values: [] });
+    if (!field) return;
+
+    this.condition.set(newQueryCondition(field));
   }
 
-  setOperator(operator: TaskQueryOperator | null) {
-    if (operator === null) return;
+  setOperator(operatorKey: string | null) {
+    if (operatorKey === null) return;
+
+    const operator = findQueryOperator(this.field(), operatorKey);
 
     this.condition.update((condition) => ({
       ...condition,
-      operator,
+      operator: operatorKey,
       values: carryValues(condition.values, operator),
     }));
   }
@@ -211,31 +197,37 @@ export class QueryConditionEditorComponent {
   }
 
   setValueAt(index: number, value: string | null) {
+    const limit = valueLimit(this.operator());
+
     this.condition.update((condition) => {
       const values = [...condition.values];
 
       values[index] = value ?? '';
 
-      return {
-        ...condition,
-        values: values.slice(0, arityFor(condition.operator)),
-      };
+      return { ...condition, values: values.slice(0, limit) };
     });
+  }
+
+  private valueCount(): number {
+    return operatorValueCount(this.operator());
   }
 }
 
-function arityFor(operator: TaskQueryOperator): number {
-  return acceptsManyValues(operator)
+function valueLimit(operator: QueryBuilderOperator | undefined): number {
+  return operator?.acceptsMany
     ? Number.MAX_SAFE_INTEGER
-    : operatorArity(operator);
+    : operatorValueCount(operator);
 }
 
-function carryValues(values: string[], operator: TaskQueryOperator): string[] {
-  const arity = operatorArity(operator);
+function carryValues(
+  values: string[],
+  operator: QueryBuilderOperator | undefined
+): string[] {
+  const arity = operatorValueCount(operator);
 
   if (arity === 0) return [];
 
-  if (acceptsManyValues(operator)) return values;
+  if (operator?.acceptsMany) return values;
 
   return values.slice(0, arity);
 }

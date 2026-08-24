@@ -1,4 +1,4 @@
-import { TaskQueryGroupOperator, TaskQueryOperator } from './task-view.models';
+import { TaskQueryOperator } from './task-view.models';
 
 export const taskQueryOperatorLabels: Record<TaskQueryOperator, string> = {
   [TaskQueryOperator.equals]: $localize`:Query operator matching an exact value:is`,
@@ -20,23 +20,7 @@ export const taskQueryOperatorLabels: Record<TaskQueryOperator, string> = {
   [TaskQueryOperator.isOverdue]: $localize`:Query operator matching tasks past their due date:is overdue`,
 };
 
-export const taskQueryGroupOperatorLabels: Record<
-  TaskQueryGroupOperator,
-  string
-> = {
-  [TaskQueryGroupOperator.all]: $localize`:Group operator requiring every condition to match:All`,
-  [TaskQueryGroupOperator.any]: $localize`:Group operator requiring at least one condition to match:Any`,
-  [TaskQueryGroupOperator.none]: $localize`:Group operator requiring no condition to match:None`,
-};
-
-export const taskQueryGroupOperatorCodes: Record<
-  TaskQueryGroupOperator,
-  string
-> = {
-  [TaskQueryGroupOperator.all]: 'AND',
-  [TaskQueryGroupOperator.any]: 'OR',
-  [TaskQueryGroupOperator.none]: 'NOT',
-};
+export const emptyTaskQueryMessage = $localize`:Summary shown when a query has no conditions and therefore matches nothing:No conditions yet, so this view matches no tasks.`;
 
 export function operatorArity(operator: TaskQueryOperator): number {
   switch (operator) {

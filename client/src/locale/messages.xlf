@@ -698,7 +698,7 @@
     </unit>
     <unit id="8826454553473999816">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:20</note>
+        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:12</note>
         <note category="description">Joins query conditions in an all-of group, with surrounding spaces</note>
       </notes>
       <segment>
@@ -880,7 +880,7 @@
     </unit>
     <unit id="3220852476952327677">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:21</note>
+        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:13</note>
         <note category="description">Joins query conditions in an any-of group, with surrounding spaces</note>
       </notes>
       <segment>
@@ -989,6 +989,15 @@
         <source>Views</source>
       </segment>
     </unit>
+    <unit id="2128755808672960949">
+      <notes>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:332</note>
+        <note category="description">Placeholder for the value of an assignee condition</note>
+      </notes>
+      <segment>
+        <source>User ID</source>
+      </segment>
+    </unit>
     <unit id="5860895315722028345">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-empty-state.component.ts:57</note>
@@ -1027,8 +1036,8 @@
     </unit>
     <unit id="2838129566011107043">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:112,116</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:49,51</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:107,111</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:47,49</note>
         <note category="description">Button that adds a query condition</note>
       </notes>
       <segment>
@@ -2089,7 +2098,6 @@
       <notes>
         <note category="location">src/app/features/task-views/components/task-view-card.component.ts:126,128</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:115,117</note>
-        <note category="location">src/app/shared/components/query-builder/query-status.component.ts:19,21</note>
         <note category="description">Eyebrow above the plain-language query summary</note>
       </notes>
       <segment>
@@ -3093,7 +3101,7 @@
     <unit id="7238645691627834742">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:170,173</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:239</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:313</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:122,123</note>
         <note category="description">Label of the story points field</note>
       </notes>
@@ -4673,7 +4681,7 @@
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:99,100</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:43</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:393</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:94,95</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:101,102</note>
         <note category="description">Label of the start-date filter</note>
       </notes>
       <segment>
@@ -4695,7 +4703,7 @@
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:107,108</note>
         <note category="location">src/app/features/roadmap/components/roadmap-filters.component.ts:52</note>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:403</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:102,103</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:109,110</note>
         <note category="description">Label of the end-date filter</note>
       </notes>
       <segment>
@@ -5071,7 +5079,7 @@
     <unit id="6143795228406387052">
       <notes>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:71,75</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:88,92</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:95,99</note>
         <note category="description">Button that copies a shareable link to a view</note>
       </notes>
       <segment>
@@ -5217,6 +5225,15 @@
       </notes>
       <segment>
         <source>Loading team workload</source>
+      </segment>
+    </unit>
+    <unit id="1668810922434203660">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:103</note>
+        <note category="description">Shown when an automation rule has conditions but none are filled in yet</note>
+      </notes>
+      <segment>
+        <source>No conditions yet, so every matching task continues.</source>
       </segment>
     </unit>
     <unit id="1672621016685744342">
@@ -5927,6 +5944,15 @@
         <source>Comment</source>
       </segment>
     </unit>
+    <unit id="4762313540524254925">
+      <notes>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:67,69</note>
+        <note category="description">Prefix of the plain-language summary of an automation&apos;s conditions</note>
+      </notes>
+      <segment>
+        <source>Continues only when</source>
+      </segment>
+    </unit>
     <unit id="4762376336950167226">
       <notes>
         <note category="location">src/app/features/task-views/components/task-view-card.component.ts:173</note>
@@ -5952,6 +5978,15 @@
       </notes>
       <segment>
         <source>Flag name</source>
+      </segment>
+    </unit>
+    <unit id="4767390997683770016">
+      <notes>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:328</note>
+        <note category="description">Placeholder for the value of a tag condition</note>
+      </notes>
+      <segment>
+        <source>Tag name</source>
       </segment>
     </unit>
     <unit id="7577628836870551599">
@@ -6030,7 +6065,7 @@
     <unit id="8070396816726827304">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:304,305</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:242</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:315</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:125,126</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:363</note>
         <note category="description">Delay unit: hours</note>
@@ -6043,7 +6078,7 @@
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:308,309</note>
         <note category="location">src/app/features/automations/components/automation-create-task-editor.component.ts:168,169</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:168</note>
+        <note category="location">src/app/features/task-views/models/task-query-builder.ts:127</note>
         <note category="description">Delay unit: days</note>
       </notes>
       <segment>
@@ -6143,64 +6178,26 @@
     </unit>
     <unit id="1784168874629208042">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:52,55</note>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:72,75</note>
-        <note category="description">Word before the all/any operator in a condition group</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:67,70</note>
+        <note category="description">Prefix of the query group logic control</note>
       </notes>
       <segment>
         <source> Match </source>
       </segment>
     </unit>
-    <unit id="8101862945202706301">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:60,61</note>
-        <note category="description">Accessible name of the condition group operator control</note>
-      </notes>
-      <segment>
-        <source>Condition group logic</source>
-      </segment>
-    </unit>
-    <unit id="4300213143657923719">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:80,83</note>
-        <note category="description">Word after the all/any operator in a condition group</note>
-      </notes>
-      <segment>
-        <source> of the following </source>
-      </segment>
-    </unit>
     <unit id="1509364563909331398">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:91,93</note>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:47,49</note>
         <note category="description">Button that removes every condition</note>
       </notes>
       <segment>
         <source> Clear conditions </source>
       </segment>
     </unit>
-    <unit id="2413552298303576271">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:102,103</note>
-        <note category="description">Accessible label for the button that removes a condition group</note>
-      </notes>
-      <segment>
-        <source>Remove condition group</source>
-      </segment>
-    </unit>
-    <unit id="5328130296868153120">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:104,106</note>
-        <note category="description">Tooltip on the button that removes a condition group</note>
-      </notes>
-      <segment>
-        <source>Remove group</source>
-      </segment>
-    </unit>
     <unit id="4820528532769775314">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:142</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:37,38</note>
-        <note category="description">Label of the field field</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:35,36</note>
+        <note category="description">Label of the query builder field picker</note>
       </notes>
       <segment>
         <source>Field</source>
@@ -6215,33 +6212,13 @@
         <source>No views yet</source>
       </segment>
     </unit>
-    <unit id="1179184907489210406">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:159,161</note>
-        <note category="description">Label of the condition group operator control</note>
-      </notes>
-      <segment>
-        <source>Operator</source>
-      </segment>
-    </unit>
     <unit id="124664468810153826">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:172,173</note>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:174,175</note>
-        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:65,67</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:61,63</note>
         <note category="description">Accessible label for the button that removes a condition</note>
       </notes>
       <segment>
         <source>Remove condition</source>
-      </segment>
-    </unit>
-    <unit id="7936728594313811136">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:202,204</note>
-        <note category="description">Empty state for a condition group</note>
-      </notes>
-      <segment>
-        <source> This group is empty. Add a condition or a nested group. </source>
       </segment>
     </unit>
     <unit id="7937380552660364144">
@@ -6253,30 +6230,11 @@
         <source><ph id="0" equiv="COUNT" disp="count"/> filters</source>
       </segment>
     </unit>
-    <unit id="6042741729082435492">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:214,217</note>
-        <note category="description">Button that adds a condition</note>
-      </notes>
-      <segment>
-        <source>Add condition</source>
-      </segment>
-    </unit>
-    <unit id="4639694143921574893">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:230,232</note>
-        <note category="description">Button that adds a nested condition group</note>
-      </notes>
-      <segment>
-        <source> Add group </source>
-      </segment>
-    </unit>
     <unit id="1616102757855967475">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:258</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:27</note>
-        <note category="description">Condition group operator requiring every condition to match</note>
+        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:79</note>
+        <note category="description">Filter showing sprints in any state</note>
       </notes>
       <segment>
         <source>All</source>
@@ -6284,9 +6242,8 @@
     </unit>
     <unit id="3184700926171002527">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:262</note>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:28</note>
-        <note category="description">Condition group operator requiring at least one condition to match</note>
+        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:80</note>
+        <note category="description">Group operator requiring at least one condition to match</note>
       </notes>
       <segment>
         <source>Any</source>
@@ -6294,10 +6251,9 @@
     </unit>
     <unit id="6252070156626006029">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-condition-group-editor.component.ts:266</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:222</note>
-        <note category="location">src/app/features/task-views/models/task-query-copy.ts:29</note>
-        <note category="description">Condition group operator requiring no condition to match</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:295</note>
+        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:81</note>
+        <note category="description">Task priority level, none</note>
       </notes>
       <segment>
         <source>None</source>
@@ -6305,7 +6261,7 @@
     </unit>
     <unit id="6954556789590369221">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:29,32</note>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:31,34</note>
         <note category="description">Heading of the conditions section — the &apos;if&apos; part of the rule</note>
       </notes>
       <segment>
@@ -6323,7 +6279,7 @@
     </unit>
     <unit id="6967575591272937015">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:48</note>
+        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:37</note>
         <note category="description">Summary fragment standing in for a nested group with no conditions</note>
       </notes>
       <segment>
@@ -6332,7 +6288,7 @@
     </unit>
     <unit id="4774743033649921775">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:34,37</note>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:36,38</note>
         <note category="description">Marks the conditions section as not required</note>
       </notes>
       <segment>
@@ -6341,7 +6297,7 @@
     </unit>
     <unit id="2328696596056212838">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:40,42</note>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:54,56</note>
         <note category="description">Explains what conditions do</note>
       </notes>
       <segment>
@@ -6350,7 +6306,7 @@
     </unit>
     <unit id="6329462270747108666">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:58,60</note>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:76,78</note>
         <note category="description">Shown when a rule has no conditions</note>
       </notes>
       <segment>
@@ -6359,7 +6315,7 @@
     </unit>
     <unit id="6182962540012657075">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:63,65</note>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:81,83</note>
         <note category="description">Advises when conditions are needed</note>
       </notes>
       <segment>
@@ -6386,7 +6342,7 @@
     </unit>
     <unit id="8755955868589563514">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:72,74</note>
+        <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:90,92</note>
         <note category="description">Button that starts adding conditions</note>
       </notes>
       <segment>
@@ -6721,7 +6677,7 @@
     </unit>
     <unit id="5776694882834042535">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:157,159</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:152,154</note>
         <note category="description">Accessible label for the button that removes a query group</note>
       </notes>
       <segment>
@@ -6823,74 +6779,40 @@
     </unit>
     <unit id="6555318547274416232">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:69,70</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:82,83</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:95</note>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:254,255</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:66</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:80,81</note>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:171</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:74</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:159</note>
         <note category="description">Label of the value field</note>
       </notes>
       <segment>
         <source>Value</source>
       </segment>
     </unit>
-    <unit id="323927603333354926">
+    <unit id="7048712132697913811">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:123</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:176</note>
-        <note category="description">Condition operator matching any change</note>
-      </notes>
-      <segment>
-        <source>Any change</source>
-      </segment>
-    </unit>
-    <unit id="4819820046450429300">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:128</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:217</note>
         <note category="description">Condition operator matching when a value is present</note>
       </notes>
       <segment>
-        <source>Includes</source>
+        <source>includes</source>
       </segment>
     </unit>
-    <unit id="2577805265513604258">
+    <unit id="6486513770809055431">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:133</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:223</note>
         <note category="description">Condition operator matching when a value is absent</note>
       </notes>
       <segment>
-        <source>Does not include</source>
+        <source>does not include</source>
       </segment>
     </unit>
-    <unit id="7994685157449797742">
+    <unit id="1796650376639485937">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:138</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:229</note>
         <note category="description">Condition operator matching a substring</note>
       </notes>
       <segment>
-        <source>Contains text</source>
-      </segment>
-    </unit>
-    <unit id="8162880175636339241">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:143</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:202</note>
-        <note category="description">Condition operator matching an empty field</note>
-      </notes>
-      <segment>
-        <source>Is empty</source>
-      </segment>
-    </unit>
-    <unit id="3888218784483467418">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:148</note>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:207</note>
-        <note category="description">Condition operator matching a non-empty field</note>
-      </notes>
-      <segment>
-        <source>Is not empty</source>
+        <source>contains text</source>
       </segment>
     </unit>
     <unit id="231459167716648305">
@@ -6904,9 +6826,8 @@
     </unit>
     <unit id="231679111972850796">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:153</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:261</note>
-        <note category="description">Condition operator matching an added value</note>
+        <note category="description">Stat label for scope added mid-sprint</note>
       </notes>
       <segment>
         <source>Added</source>
@@ -6923,9 +6844,8 @@
     </unit>
     <unit id="5406093358072761930">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:158</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:265</note>
-        <note category="description">Condition operator matching a removed value</note>
+        <note category="description">Stat label for scope removed mid-sprint</note>
       </notes>
       <segment>
         <source>Removed</source>
@@ -6940,24 +6860,6 @@
         <source>Ready</source>
       </segment>
     </unit>
-    <unit id="6424246633820870206">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:181</note>
-        <note category="description">Condition operator matching an exact value</note>
-      </notes>
-      <segment>
-        <source>Equals</source>
-      </segment>
-    </unit>
-    <unit id="1774660967840840670">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:186</note>
-        <note category="description">Condition operator matching anything but a value</note>
-      </notes>
-      <segment>
-        <source>Does not equal</source>
-      </segment>
-    </unit>
     <unit id="1776590029606700905">
       <notes>
         <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:36,38</note>
@@ -6965,15 +6867,6 @@
       </notes>
       <segment>
         <source>Loading activity</source>
-      </segment>
-    </unit>
-    <unit id="6238291467288576076">
-      <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:194</note>
-        <note category="description">Condition operator matching a substring</note>
-      </notes>
-      <segment>
-        <source>Contains</source>
       </segment>
     </unit>
     <unit id="8023561518384670313">
@@ -6987,7 +6880,7 @@
     </unit>
     <unit id="802458941707537739">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:223</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:296</note>
         <note category="description">Task priority level, low</note>
       </notes>
       <segment>
@@ -7005,7 +6898,7 @@
     </unit>
     <unit id="5982496808088686844">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:225</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:299</note>
         <note category="description">Task priority level, medium</note>
       </notes>
       <segment>
@@ -7014,9 +6907,9 @@
     </unit>
     <unit id="8063651736083474594">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:228</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:119</note>
-        <note category="description">Task priority level, high</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:301</note>
+        <note category="description">Example value shown in the notification preview</note>
       </notes>
       <segment>
         <source>High</source>
@@ -7024,7 +6917,7 @@
     </unit>
     <unit id="2437478124199610198">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:230</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
         <note category="description">Task priority level, critical</note>
       </notes>
       <segment>
@@ -7033,7 +6926,7 @@
     </unit>
     <unit id="4696525146008503803">
       <notes>
-        <note category="location">src/app/features/automations/components/automation-field-condition-editor.component.ts:244</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:318</note>
         <note category="description">Estimation unit, t-shirt sizes</note>
       </notes>
       <segment>
@@ -7664,7 +7557,7 @@
     </unit>
     <unit id="1955727073588719535">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:78,80</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:73,75</note>
         <note category="description">Accessible name of the query group operator control</note>
       </notes>
       <segment>
@@ -8468,7 +8361,7 @@
     </unit>
     <unit id="862193009858945810">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:283</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:309</note>
         <note category="description">Shown when a query is too large to share as a link</note>
       </notes>
       <segment>
@@ -8495,7 +8388,7 @@
     </unit>
     <unit id="8623978917681527907">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:123,128</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip-bar.component.ts:118,123</note>
         <note category="description">Button that adds a nested query group</note>
       </notes>
       <segment>
@@ -8954,7 +8847,7 @@
     <unit id="5234544449365538384">
       <notes>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:259</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:305</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:331</note>
         <note category="description">Shown when a shareable view link could not be copied</note>
       </notes>
       <segment>
@@ -9349,7 +9242,7 @@
     </unit>
     <unit id="4493603856796380932">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:337</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:363</note>
         <note category="description">Confirmation that a view was saved</note>
       </notes>
       <segment>
@@ -9385,7 +9278,7 @@
     </unit>
     <unit id="8733170707271532124">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:101,103</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:108,110</note>
         <note category="description">Button that saves a view</note>
       </notes>
       <segment>
@@ -10938,7 +10831,7 @@
     </unit>
     <unit id="6839573905580765842">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:351</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:377</note>
         <note category="description">Default name for a copy of somebody else&apos;s view</note>
       </notes>
       <segment>
@@ -11232,7 +11125,7 @@
       <notes>
         <note category="location">src/app/features/boards/components/manage-board-groups-dialog/manage-board-groups-dialog.component.ts:139,144</note>
         <note category="location">src/app/features/task-views/components/task-view-details-drawer.component.ts:63,67</note>
-        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:95,97</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:91,93</note>
         <note category="description">Closes a dialog once the user has finished</note>
       </notes>
       <segment>
@@ -11789,7 +11682,7 @@
     </unit>
     <unit id="7072343265709417707">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:34</note>
+        <note category="location">src/app/features/task-views/models/task-query-copy.ts:23</note>
         <note category="description">Summary shown when a query has no conditions and therefore matches nothing</note>
       </notes>
       <segment>
@@ -12082,7 +11975,7 @@
     </unit>
     <unit id="3874723711759777451">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:186</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:197</note>
         <note category="description">Default name of a new saved task view</note>
       </notes>
       <segment>
@@ -12313,7 +12206,7 @@
     </unit>
     <unit id="3929281485914893910">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:23</note>
+        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:15</note>
         <note category="description">Joins the two ends of a range in a query summary</note>
       </notes>
       <segment>
@@ -14326,7 +14219,7 @@
     </unit>
     <unit id="9094260555748931453">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:143,145</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:138,140</note>
         <note category="description">Chip summary of several picked values</note>
       </notes>
       <segment>
@@ -15056,7 +14949,7 @@
     <unit id="892073694820881630">
       <notes>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:254</note>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:300</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:326</note>
         <note category="description">Confirmation that a shareable view link was copied</note>
       </notes>
       <segment>
@@ -15685,7 +15578,7 @@
     </unit>
     <unit id="8679924729501771276">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:22</note>
+        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:14</note>
         <note category="description">Prefix for a query fragment that must not match</note>
       </notes>
       <segment>
@@ -16004,7 +15897,7 @@
     </unit>
     <unit id="8991032674812724530">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:140,142</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:150,152</note>
         <note category="description">Shown when a query preview matches no tasks</note>
       </notes>
       <segment>
@@ -16410,7 +16303,7 @@
     </unit>
     <unit id="5028777105388019087">
       <notes>
-        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:75,79</note>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:82,86</note>
         <note category="description">Button that opens the view details drawer</note>
       </notes>
       <segment>
@@ -16735,7 +16628,7 @@
     </unit>
     <unit id="7036284206110282007">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:24</note>
+        <note category="location">src/app/features/task-views/models/task-query-builder.ts:56</note>
         <note category="description">Unit after a relative day count in a query summary</note>
       </notes>
       <segment>
@@ -16838,7 +16731,7 @@
     </unit>
     <unit id="8698832098739933868">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:67,69</note>
+        <note category="location">src/app/shared/components/query-builder/query-condition-editor.component.ts:75,77</note>
         <note category="description">Placeholder text: Choose one or more values</note>
       </notes>
       <segment>
@@ -16903,7 +16796,7 @@
     </unit>
     <unit id="760986369763309193">
       <notes>
-        <note category="location">src/app/features/task-views/util/query-explanation.ts:25</note>
+        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:16</note>
         <note category="description">Joins values in a set-membership query summary, with a trailing space</note>
       </notes>
       <segment>
@@ -17395,6 +17288,15 @@
       </notes>
       <segment>
         <source>Your workspaces could not be loaded</source>
+      </segment>
+    </unit>
+    <unit id="3323062521847000288">
+      <notes>
+        <note category="location">src/app/features/task-views/views/task-view-form-view/task-view-form-view.component.ts:131,133</note>
+        <note category="description">Prefix of the plain-language query summary</note>
+      </notes>
+      <segment>
+        <source>Shows tasks where</source>
       </segment>
     </unit>
     <unit id="3329470854233050194">
@@ -18648,7 +18550,7 @@
       <notes>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:338</note>
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:360</note>
-        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:86,89</note>
+        <note category="location">src/app/shared/components/query-builder/query-chip.component.ts:82,85</note>
         <note category="location">src/app/static/components/form-select-tags/form-select-tags.component.ts:74,77</note>
         <note category="location">src/app/static/components/image-upload/image-upload.component.ts:90,93</note>
         <note category="location">src/app/static/components/task-chip.component.ts:59</note>

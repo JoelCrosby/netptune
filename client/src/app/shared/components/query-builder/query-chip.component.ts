@@ -2,27 +2,23 @@ import {
   Component,
   computed,
   ElementRef,
-  inject,
   input,
   model,
   output,
   viewChild,
 } from '@angular/core';
-import {
-  acceptsManyValues,
-  operatorArity,
-  taskQueryOperatorLabels,
-} from '@app/features/task-views/models/task-query-copy';
-import {
-  TaskQueryCatalog,
-  TaskQueryCondition,
-  TaskQueryField,
-  TaskQueryOperator,
-} from '@app/features/task-views/models/task-view.models';
-import { QueryFieldOptionsService } from '@app/features/task-views/services/query-field-options.service';
 import { LucideTrash2, LucideX } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
+import {
+  findQueryField,
+  findQueryOperator,
+  operatorValueCount,
+  QueryBuilderCatalog,
+  QueryBuilderCondition,
+  QueryBuilderField,
+  queryOptionLabel,
+} from './query-builder.models';
 import { QueryConditionEditorComponent } from './query-condition-editor.component';
 
 @Component({
@@ -100,44 +96,43 @@ import { QueryConditionEditorComponent } from './query-condition-editor.componen
   `,
 })
 export class QueryChipComponent {
-  private readonly fieldOptions = inject(QueryFieldOptionsService);
-
-  readonly catalog = input.required<TaskQueryCatalog>();
+  readonly catalog = input.required<QueryBuilderCatalog>();
   readonly invalid = input(false);
-  readonly condition = model.required<TaskQueryCondition>();
+  readonly condition = model.required<QueryBuilderCondition>();
   readonly removed = output();
 
   readonly origin = viewChild.required<ElementRef<HTMLElement>>('origin');
 
-  readonly field = computed<TaskQueryField | undefined>(() => {
-    return this.catalog().fields.find(
-      (candidate) => candidate.key === this.condition().field
-    );
+  readonly field = computed<QueryBuilderField | undefined>(() => {
+    return findQueryField(this.catalog(), this.condition().field);
   });
 
   readonly fieldName = computed(
     () => this.field()?.name ?? this.condition().field
   );
 
-  readonly operatorLabel = computed(
-    () => taskQueryOperatorLabels[this.condition().operator]
-  );
+  readonly operator = computed(() => {
+    return findQueryOperator(this.field(), this.condition().operator);
+  });
+
+  readonly operatorLabel = computed(() => this.operator()?.label ?? '');
 
   readonly valueLabel = computed(() => {
     const condition = this.condition();
-    const arity = operatorArity(condition.operator);
+    const operator = this.operator();
+    const arity = operatorValueCount(operator);
 
     if (arity === 0) return '';
 
     const labels = condition.values.map((value) =>
-      this.fieldOptions.labelFor(this.field(), value)
+      queryOptionLabel(this.field(), value)
     );
 
-    if (condition.operator === TaskQueryOperator.between) {
+    if (arity === 2) {
       return `${labels[0] ?? '…'} – ${labels[1] ?? '…'}`;
     }
 
-    if (acceptsManyValues(condition.operator)) {
+    if (operator?.acceptsMany) {
       // Three names in a chip is already long; the rest are counted rather than listed.
       return labels.length > 3
         ? $localize`:Chip summary of several picked values:${labels
@@ -146,7 +141,9 @@ export class QueryChipComponent {
         : labels.join(', ');
     }
 
-    return labels[0] || '…';
+    const value = labels[0] || '…';
+
+    return operator?.valueSuffix ? `${value} ${operator.valueSuffix}` : value;
   });
 
   readonly ariaLabel = computed(() => {

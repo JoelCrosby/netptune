@@ -9,13 +9,16 @@ import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
 import { workspaceUsersResource } from '@core/resources/user.resource';
 import { SprintStatus } from '@core/enums/sprint-status';
+import { QueryBuilderCatalog } from '@shared/components/query-builder/query-builder.models';
+import { explainQueryGroup } from '@shared/components/query-builder/query-explanation';
+import { emptyTaskQueryMessage } from '../models/task-query-copy';
+import { toBuilderCatalog, toBuilderGroup } from '../models/task-query-builder';
 import {
   TaskQueryCatalog,
   TaskQueryField,
   TaskQueryGroup,
   TaskQueryOptionSource,
 } from '../models/task-view.models';
-import { explainQuery } from '../util/query-explanation';
 
 export interface QueryFieldOption {
   value: string;
@@ -104,19 +107,19 @@ export class QueryFieldOptionsService {
     return match?.label ?? value;
   }
 
-  // Every caller of explainQuery needs the same field lookup to turn stored ids back into names,
-  // so the two are bound together here rather than repeated at each call site.
-  explain(group: TaskQueryGroup, catalog: TaskQueryCatalog): string {
-    return explainQuery(group, {
-      catalog,
-      labelFor: (fieldKey, value) => {
-        const field = catalog.fields.find(
-          (candidate) => candidate.key === fieldKey
-        );
+  // The shared query builder edits and explains a query through a catalog that already carries its
+  // own option lists, so resolving those lists is this service's half of the bargain.
+  builderCatalog(catalog: TaskQueryCatalog): QueryBuilderCatalog {
+    return toBuilderCatalog(catalog, (field) => this.optionsFor(field));
+  }
 
-        return this.labelFor(field, value);
-      },
-    });
+  explain(group: TaskQueryGroup, catalog: TaskQueryCatalog): string {
+    const summary = explainQueryGroup(
+      toBuilderGroup(group),
+      this.builderCatalog(catalog)
+    );
+
+    return summary || emptyTaskQueryMessage;
   }
 
   // Each relation type yields two options, because "blocks" and "blocked by" are the same

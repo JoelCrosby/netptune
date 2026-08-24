@@ -1,24 +1,4 @@
-import {
-  Component,
-  computed,
-  forwardRef,
-  inject,
-  input,
-  model,
-} from '@angular/core';
-import {
-  taskQueryGroupOperatorCodes,
-  taskQueryGroupOperatorLabels,
-} from '@app/features/task-views/models/task-query-copy';
-import {
-  TaskQueryCatalog,
-  TaskQueryCondition,
-  TaskQueryGroup,
-  TaskQueryGroupOperator,
-  TaskQueryOperator,
-  TaskQueryValidationError,
-} from '@app/features/task-views/models/task-view.models';
-import { QueryFieldOptionsService } from '@app/features/task-views/services/query-field-options.service';
+import { Component, computed, forwardRef, input, model } from '@angular/core';
 import { LucideLayersPlus, LucidePlus, LucideX } from '@lucide/angular';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
@@ -26,27 +6,42 @@ import {
   SegmentedControlComponent,
   SegmentedOption,
 } from '@static/components/segmented-control/segmented-control.component';
+import {
+  emptyQueryBuilderGroup,
+  newQueryCondition,
+  QueryBuilderCatalog,
+  QueryBuilderCondition,
+  QueryBuilderError,
+  QueryBuilderGroup,
+  QueryBuilderGroupOperator,
+  queryBuilderGroupOperatorCodes,
+  queryBuilderGroupOperatorLabels,
+} from './query-builder.models';
+import { explainQueryGroup } from './query-explanation';
 import { QueryChipComponent } from './query-chip.component';
 import { QueryStatusComponent } from './query-status.component';
 
 type GroupOperatorValue = 'all' | 'any' | 'none';
 
-const operatorsByValue: Record<GroupOperatorValue, TaskQueryGroupOperator> = {
-  all: TaskQueryGroupOperator.all,
-  any: TaskQueryGroupOperator.any,
-  none: TaskQueryGroupOperator.none,
-};
+const operatorsByValue: Record<GroupOperatorValue, QueryBuilderGroupOperator> =
+  {
+    all: QueryBuilderGroupOperator.all,
+    any: QueryBuilderGroupOperator.any,
+    none: QueryBuilderGroupOperator.none,
+  };
 
-const valuesByOperator: Record<TaskQueryGroupOperator, GroupOperatorValue> = {
-  [TaskQueryGroupOperator.all]: 'all',
-  [TaskQueryGroupOperator.any]: 'any',
-  [TaskQueryGroupOperator.none]: 'none',
-};
+const valuesByOperator: Record<QueryBuilderGroupOperator, GroupOperatorValue> =
+  {
+    [QueryBuilderGroupOperator.all]: 'all',
+    [QueryBuilderGroupOperator.any]: 'any',
+    [QueryBuilderGroupOperator.none]: 'none',
+  };
 
 /**
- * Flat replacement for the stacked query builder: the whole query reads as one line of tokens.
- * Conditions are chips, nested groups are indented chip clusters, and every editor lives in a
- * popover so the query never pushes the preview off screen.
+ * Flat query builder: the whole query reads as one line of tokens. Conditions are chips, nested
+ * groups are indented chip clusters, and every editor lives in a popover so the query never pushes
+ * what it filters off screen. The catalog decides which fields and operators exist, so the same
+ * component edits a saved view's query and an automation rule's conditions.
  */
 @Component({
   selector: 'app-query-chip-bar',
@@ -165,48 +160,57 @@ const valuesByOperator: Record<TaskQueryGroupOperator, GroupOperatorValue> = {
       <app-query-status
         class="mt-3"
         [messages]="messages()"
+        [prefix]="statusPrefix()"
         [summary]="summary()" />
     }
   `,
 })
 export class QueryChipBarComponent {
-  private readonly fieldOptions = inject(QueryFieldOptionsService);
-
   readonly operatorOptions: SegmentedOption<GroupOperatorValue>[] = [
     {
       value: 'all',
-      label: taskQueryGroupOperatorLabels[TaskQueryGroupOperator.all],
+      label: queryBuilderGroupOperatorLabels[QueryBuilderGroupOperator.all],
     },
     {
       value: 'any',
-      label: taskQueryGroupOperatorLabels[TaskQueryGroupOperator.any],
+      label: queryBuilderGroupOperatorLabels[QueryBuilderGroupOperator.any],
     },
     {
       value: 'none',
-      label: taskQueryGroupOperatorLabels[TaskQueryGroupOperator.none],
+      label: queryBuilderGroupOperatorLabels[QueryBuilderGroupOperator.none],
     },
   ];
 
   // Dashed outline marks these as "add something", which no button variant covers.
   readonly addButtonClass = 'h-9 gap-1.5 rounded-[9px] border-dashed px-3';
 
-  readonly group = model.required<TaskQueryGroup>();
-  readonly catalog = input.required<TaskQueryCatalog>();
-  readonly errors = input<TaskQueryValidationError[]>([]);
+  readonly group = model.required<QueryBuilderGroup>();
+  readonly catalog = input.required<QueryBuilderCatalog>();
+  readonly errors = input<QueryBuilderError[]>([]);
   readonly path = input('query');
   readonly depth = input(1);
   readonly nested = input(false);
+  // What the summary line reads as. Both belong to the caller, because only it knows what the
+  // query selects: tasks a view lists, or tasks an automation is allowed to act on.
+  readonly summaryPrefix = input('');
+  readonly emptySummary = input('');
 
   readonly operatorValue = computed(
     () => valuesByOperator[this.group().operator]
   );
 
   readonly joiner = computed(
-    () => taskQueryGroupOperatorCodes[this.group().operator]
+    () => queryBuilderGroupOperatorCodes[this.group().operator]
   );
 
-  readonly summary = computed(() => {
-    return this.fieldOptions.explain(this.group(), this.catalog());
+  private readonly explanation = computed(() => {
+    return explainQueryGroup(this.group(), this.catalog());
+  });
+
+  readonly summary = computed(() => this.explanation() || this.emptySummary());
+
+  readonly statusPrefix = computed(() => {
+    return this.explanation() ? this.summaryPrefix() : '';
   });
 
   readonly messages = computed(() => {
@@ -218,9 +222,11 @@ export class QueryChipBarComponent {
   }
 
   atConditionLimit(): boolean {
-    return (
-      this.group().conditions.length >= this.catalog().maximumConditionCount
-    );
+    const limit = this.catalog().maximumConditionCount;
+
+    if (limit === undefined) return false;
+
+    return this.group().conditions.length >= limit;
   }
 
   errorFor(conditionIndex: number): string | null {
@@ -242,15 +248,9 @@ export class QueryChipBarComponent {
 
     if (!field) return;
 
-    const condition: TaskQueryCondition = {
-      field: field.key,
-      operator: field.operators[0] ?? TaskQueryOperator.equals,
-      values: [],
-    };
-
     this.group.update((group) => ({
       ...group,
-      conditions: [...group.conditions, condition],
+      conditions: [...group.conditions, newQueryCondition(field)],
     }));
   }
 
@@ -263,7 +263,7 @@ export class QueryChipBarComponent {
     }));
   }
 
-  setCondition(index: number, condition: TaskQueryCondition) {
+  setCondition(index: number, condition: QueryBuilderCondition) {
     this.group.update((group) => ({
       ...group,
       conditions: group.conditions.map((item, itemIndex) => {
@@ -275,11 +275,7 @@ export class QueryChipBarComponent {
   addGroup() {
     if (this.atDepthLimit()) return;
 
-    const nestedGroup: TaskQueryGroup = {
-      operator: TaskQueryGroupOperator.any,
-      conditions: [],
-      groups: [],
-    };
+    const nestedGroup = emptyQueryBuilderGroup(QueryBuilderGroupOperator.any);
 
     this.group.update((group) => ({
       ...group,
@@ -294,7 +290,7 @@ export class QueryChipBarComponent {
     }));
   }
 
-  setGroup(index: number, nestedGroup: TaskQueryGroup) {
+  setGroup(index: number, nestedGroup: QueryBuilderGroup) {
     this.group.update((group) => ({
       ...group,
       groups: group.groups.map((item, itemIndex) => {

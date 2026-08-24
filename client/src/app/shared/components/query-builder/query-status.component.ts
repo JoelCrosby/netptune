@@ -13,11 +13,9 @@ import { FormErrorComponent } from '@static/components/form-error/form-error.com
         }
       } @else {
         <p class="text-foreground/45 text-[13px] leading-normal" role="status">
-          <span
-            class="text-foreground/30"
-            i18n="Prefix of the plain-language query summary">
-            Shows tasks where
-          </span>
+          @if (prefix()) {
+            <span class="text-foreground/30">{{ prefix() }}</span>
+          }
           {{ summary() }}
         </p>
       }
@@ -27,4 +25,5 @@ import { FormErrorComponent } from '@static/components/form-error/form-error.com
 export class QueryStatusComponent {
   readonly messages = input<string[]>([]);
   readonly summary = input('');
+  readonly prefix = input('');
 }
