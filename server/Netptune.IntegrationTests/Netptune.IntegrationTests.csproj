@@ -31,7 +31,7 @@
     <ProjectReference Include="..\Netptune.Import\Netptune.Import.csproj" />
     <ProjectReference Include="..\Netptune.App\Netptune.App.csproj" />
     <ProjectReference Include="..\Netptune.Identity\Netptune.Identity.csproj" />
-    <ProjectReference Include="..\Netptune.PublicApi\Netptune.PublicApi.csproj" />
+    <ProjectReference Include="..\Netptune.Api\Netptune.Api.csproj" />
     <ProjectReference Include="..\Netptune.TestData\Netptune.TestData.csproj" />
   </ItemGroup>
 

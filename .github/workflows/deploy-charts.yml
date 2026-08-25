@@ -245,8 +245,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  build-public-api:
-    name: Build Public API Image
+  build-api:
+    name: Build API Image
     needs: [changes, test-server]
     if: ${{ always() && needs.changes.outputs.server == 'true' && needs.test-server.result == 'success' }}
     runs-on: ubuntu-latest
@@ -276,7 +276,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-public-api
+          images: ${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-api
           tags: |
             type=raw,value=${{ needs.changes.outputs.server_sha }}
             type=ref,event=branch
@@ -286,7 +286,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: server/Netptune.PublicApi/Dockerfile
+          file: server/Netptune.Api/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -457,14 +457,14 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: [changes, test-server, build-app, build-public-api, build-jobs, build-activity, build-client, build-website]
+    needs: [changes, test-server, build-app, build-api, build-jobs, build-activity, build-client, build-website]
     if: |
       ${{
         always() &&
         needs.changes.outputs.deploy == 'true' &&
         (needs.test-server.result == 'success' || needs.test-server.result == 'skipped') &&
         (needs.build-app.result == 'success' || needs.build-app.result == 'skipped') &&
-        (needs.build-public-api.result == 'success' || needs.build-public-api.result == 'skipped') &&
+        (needs.build-api.result == 'success' || needs.build-api.result == 'skipped') &&
         (needs.build-jobs.result == 'success' || needs.build-jobs.result == 'skipped') &&
         (needs.build-activity.result == 'success' || needs.build-activity.result == 'skipped') &&
         (needs.build-client.result == 'success' || needs.build-client.result == 'skipped') &&
@@ -485,7 +485,7 @@ jobs:
           owner="${{ needs.changes.outputs.owner }}"
           for ref in \
             "netptune:${{ needs.changes.outputs.server_sha }}" \
-            "netptune-public-api:${{ needs.changes.outputs.server_sha }}" \
+            "netptune-api:${{ needs.changes.outputs.server_sha }}" \
             "netptune-jobs:${{ needs.changes.outputs.server_sha }}" \
             "netptune-activity:${{ needs.changes.outputs.server_sha }}" \
             "netptune-client:${{ needs.changes.outputs.client_sha }}" \
@@ -546,43 +546,43 @@ jobs:
             --timeout 10m \
             --kubeconfig kubeconfig.yaml \
             --namespace default \
-            --set "parameters.api.api_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune:${{ needs.changes.outputs.server_sha }}" \
-            --set "parameters.publicApi.public_api_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-public-api:${{ needs.changes.outputs.server_sha }}" \
+            --set "parameters.app.app_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune:${{ needs.changes.outputs.server_sha }}" \
+            --set "parameters.api.api_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-api:${{ needs.changes.outputs.server_sha }}" \
             --set "parameters.jobs.jobs_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-jobs:${{ needs.changes.outputs.server_sha }}" \
             --set "parameters.activity.activity_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-activity:${{ needs.changes.outputs.server_sha }}" \
             --set "parameters.client.client_image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-client:${{ needs.changes.outputs.client_sha }}" \
             --set "website.image=${{ env.REGISTRY }}/${{ needs.changes.outputs.owner }}/netptune-website:${{ needs.changes.outputs.website_sha }}" \
             --set ingress.enabled=true \
             --set "ingress.host=netptune.co.uk" \
-            --set "ingress.publicApiHost=api.netptune.co.uk" \
+            --set "ingress.apiHost=api.netptune.co.uk" \
             --set ingress.tls.enabled=true \
             --set "ingress.tls.email=${{ secrets.TLS_EMAIL }}" \
-            --set "parameters.client.api_url=http://api-service:7400" \
+            --set "parameters.client.api_url=http://app-service:7400" \
             --set "secrets.postgres.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.meilisearch.master_key=${{ secrets.NETPTUNE_MEILISEARCH_MASTER_KEY }}" \
             --set "secrets.cache.cache_password=${{ secrets.CACHE_PASSWORD }}" \
+            --set "secrets.app.cache_password=${{ secrets.CACHE_PASSWORD }}" \
+            --set "secrets.app.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
+            --set "secrets.app.signing_key=${{ secrets.SIGNING_KEY }}" \
+            --set "secrets.app.github_client_id=${{ secrets.NETPTUNE_GITHUB_CLIENT_ID }}" \
+            --set "secrets.app.github_secret=${{ secrets.NETPTUNE_GITHUB_SECRET }}" \
+            --set "secrets.app.github_callback=${{ secrets.NETPTUNE_GITHUB_CALLBACK }}" \
+            --set "secrets.app.google_client_id=${{ secrets.NETPTUNE_GOOGLE_CLIENT_ID }}" \
+            --set "secrets.app.google_secret=${{ secrets.NETPTUNE_GOOGLE_SECRET }}" \
+            --set "secrets.app.google_callback=${{ secrets.NETPTUNE_GOOGLE_CALLBACK }}" \
+            --set "secrets.app.microsoft_client_id=${{ secrets.NETPTUNE_MICROSOFT_CLIENT_ID }}" \
+            --set "secrets.app.microsoft_secret=${{ secrets.NETPTUNE_MICROSOFT_SECRET }}" \
+            --set "secrets.app.microsoft_callback=${{ secrets.NETPTUNE_MICROSOFT_CALLBACK }}" \
+            --set "secrets.app.sendgrid_api_key=${{ secrets.SENDGRID_API_KEY }}" \
+            --set "secrets.app.s3_bucket_name=${{ secrets.S3_BUCKET_NAME }}" \
+            --set "secrets.app.s3_region=${{ secrets.S3_REGION }}" \
+            --set "secrets.app.s3_access_key_id=${{ secrets.S3_ACCESS_KEY_ID }}" \
+            --set "secrets.app.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
+            --set "secrets.app.turnstile_secret_key=${{ secrets.NETPTUNE_TURNSTILE_SECRET_KEY }}" \
+            --set "secrets.app.cloudflare_email_token=${{ secrets.NETPTUNE_CLOUDFLARE_EMAIL_TOKEN }}" \
+            --set "secrets.app.cloudflare_account_id=${{ secrets.NETPTUNE_CLOUDFLARE_ACCOUNT_ID }}" \
             --set "secrets.api.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.api.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
-            --set "secrets.api.signing_key=${{ secrets.SIGNING_KEY }}" \
-            --set "secrets.api.github_client_id=${{ secrets.NETPTUNE_GITHUB_CLIENT_ID }}" \
-            --set "secrets.api.github_secret=${{ secrets.NETPTUNE_GITHUB_SECRET }}" \
-            --set "secrets.api.github_callback=${{ secrets.NETPTUNE_GITHUB_CALLBACK }}" \
-            --set "secrets.api.google_client_id=${{ secrets.NETPTUNE_GOOGLE_CLIENT_ID }}" \
-            --set "secrets.api.google_secret=${{ secrets.NETPTUNE_GOOGLE_SECRET }}" \
-            --set "secrets.api.google_callback=${{ secrets.NETPTUNE_GOOGLE_CALLBACK }}" \
-            --set "secrets.api.microsoft_client_id=${{ secrets.NETPTUNE_MICROSOFT_CLIENT_ID }}" \
-            --set "secrets.api.microsoft_secret=${{ secrets.NETPTUNE_MICROSOFT_SECRET }}" \
-            --set "secrets.api.microsoft_callback=${{ secrets.NETPTUNE_MICROSOFT_CALLBACK }}" \
-            --set "secrets.api.sendgrid_api_key=${{ secrets.SENDGRID_API_KEY }}" \
-            --set "secrets.api.s3_bucket_name=${{ secrets.S3_BUCKET_NAME }}" \
-            --set "secrets.api.s3_region=${{ secrets.S3_REGION }}" \
-            --set "secrets.api.s3_access_key_id=${{ secrets.S3_ACCESS_KEY_ID }}" \
-            --set "secrets.api.s3_secret_access_key=${{ secrets.S3_SECRET_ACCESS_KEY }}" \
-            --set "secrets.api.turnstile_secret_key=${{ secrets.NETPTUNE_TURNSTILE_SECRET_KEY }}" \
-            --set "secrets.api.cloudflare_email_token=${{ secrets.NETPTUNE_CLOUDFLARE_EMAIL_TOKEN }}" \
-            --set "secrets.api.cloudflare_account_id=${{ secrets.NETPTUNE_CLOUDFLARE_ACCOUNT_ID }}" \
-            --set "secrets.publicApi.cache_password=${{ secrets.CACHE_PASSWORD }}" \
-            --set "secrets.publicApi.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.jobs.cache_password=${{ secrets.CACHE_PASSWORD }}" \
             --set "secrets.jobs.postgres_password=${{ secrets.POSTGRES_PASSWORD }}" \
             --set "secrets.jobs.signing_key=${{ secrets.SIGNING_KEY }}" \

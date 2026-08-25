@@ -11,10 +11,10 @@ metadata:
     app.kubernetes.io/component: "postgres-backup"
     app.kubernetes.io/instance: "{{ .Release.Name }}"
 stringData:
-  AWS_ACCESS_KEY_ID: "{{ .Values.secrets.postgresBackup.s3_access_key_id | default .Values.secrets.api.s3_access_key_id }}"
-  AWS_SECRET_ACCESS_KEY: "{{ .Values.secrets.postgresBackup.s3_secret_access_key | default .Values.secrets.api.s3_secret_access_key }}"
-  AWS_DEFAULT_REGION: "{{ .Values.secrets.postgresBackup.s3_region | default .Values.secrets.api.s3_region }}"
-  BACKUP_BUCKET: "{{ .Values.secrets.postgresBackup.s3_bucket_name | default .Values.secrets.api.s3_bucket_name }}"
+  AWS_ACCESS_KEY_ID: "{{ .Values.secrets.postgresBackup.s3_access_key_id | default .Values.secrets.app.s3_access_key_id }}"
+  AWS_SECRET_ACCESS_KEY: "{{ .Values.secrets.postgresBackup.s3_secret_access_key | default .Values.secrets.app.s3_secret_access_key }}"
+  AWS_DEFAULT_REGION: "{{ .Values.secrets.postgresBackup.s3_region | default .Values.secrets.app.s3_region }}"
+  BACKUP_BUCKET: "{{ .Values.secrets.postgresBackup.s3_bucket_name | default .Values.secrets.app.s3_bucket_name }}"
   PGPASSWORD: "{{ .Values.secrets.postgres.postgres_password }}"
 type: "Opaque"
 ---

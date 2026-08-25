@@ -58,7 +58,7 @@ export const features: Feature[] = [
     icon: Braces,
     title: 'An API built for integrations',
     description:
-      'Connect internal tools through scoped service accounts, revocable credentials, and a documented public API.',
+      'Connect internal tools through scoped service accounts, revocable credentials, and a documented API.',
   },
   {
     icon: LayoutTemplate,

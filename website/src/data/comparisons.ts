@@ -29,6 +29,6 @@ export const comparisons: Comparison[] = [
     competitor: 'Integration ready',
     headline: 'Automate without sharing a human login.',
     description:
-      'Scoped service accounts, revocable credentials, OpenAPI documentation, and an independently scalable public API keep integrations explicit.',
+      'Scoped service accounts, revocable credentials, OpenAPI documentation, and an independently scalable API keep integrations explicit.',
   },
 ];

@@ -1,40 +1,40 @@
 {{- if .Values.parameters.api.autoscaling.enabled }}
 ---
-apiVersion: "autoscaling/v2"
-kind: "HorizontalPodAutoscaler"
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: "api-hpa"
+  name: api-hpa
   labels:
     app.kubernetes.io/name: "netptune-app"
     app.kubernetes.io/component: "api"
     app.kubernetes.io/instance: "{{ .Release.Name }}"
 spec:
   scaleTargetRef:
-    apiVersion: "apps/v1"
-    kind: "Deployment"
-    name: "api-deployment"
-  minReplicas: {{ .Values.parameters.api.autoscaling.minReplicas | int }}
-  maxReplicas: {{ .Values.parameters.api.autoscaling.maxReplicas | int }}
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-deployment
+  minReplicas: {{ .Values.parameters.api.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.parameters.api.autoscaling.maxReplicas }}
   metrics:
-    - type: "Resource"
+    - type: Resource
       resource:
-        name: "cpu"
+        name: cpu
         target:
-          type: "Utilization"
-          averageUtilization: {{ .Values.parameters.api.autoscaling.targetCPUUtilizationPercentage | int }}
+          type: Utilization
+          averageUtilization: {{ .Values.parameters.api.autoscaling.targetCPUUtilizationPercentage }}
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: {{ .Values.parameters.api.autoscaling.scaleUpStabilizationSeconds | int }}
-      selectPolicy: "Max"
+      stabilizationWindowSeconds: {{ .Values.parameters.api.autoscaling.scaleUpStabilizationSeconds }}
+      selectPolicy: Max
       policies:
-        - type: "Pods"
+        - type: Pods
           value: 1
           periodSeconds: 60
     scaleDown:
-      stabilizationWindowSeconds: {{ .Values.parameters.api.autoscaling.scaleDownStabilizationSeconds | int }}
-      selectPolicy: "Max"
+      stabilizationWindowSeconds: {{ .Values.parameters.api.autoscaling.scaleDownStabilizationSeconds }}
+      selectPolicy: Max
       policies:
-        - type: "Pods"
+        - type: Pods
           value: 1
           periodSeconds: 60
 {{- end }}

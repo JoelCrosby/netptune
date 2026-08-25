@@ -14,7 +14,7 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: 'Documentation', href: '/docs' },
       { label: 'AI assistant', href: '/docs/assistant' },
-      { label: 'Public API', href: '/docs/public-api' },
+      { label: 'API', href: '/docs/api' },
       { label: 'Docker Compose status', href: '/docs/docker-compose' },
       { label: 'Kubernetes / Helm', href: '/docs/kubernetes' },
     ],

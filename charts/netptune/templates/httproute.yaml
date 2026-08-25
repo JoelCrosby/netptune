@@ -35,8 +35,8 @@ spec:
             kind: Middleware
             name: compress
       backendRefs:
-        - name: public-api-service
-          port: {{ .Values.parameters.publicApi.port_http | int }}
+        - name: api-service
+          port: {{ .Values.parameters.api.port_http | int }}
     # Server sent event streams. The buffering middleware (body-size-limit) buffers
     # responses as well as requests, which never flushes an open stream, so these
     # endpoints must bypass it.
@@ -53,8 +53,8 @@ spec:
             kind: Middleware
             name: security-headers
       backendRefs:
-        - name: api-service
-          port: {{ .Values.parameters.api.port_http | int }}
+        - name: app-service
+          port: {{ .Values.parameters.app.port_http | int }}
     - matches:
         - path:
             type: PathPrefix
@@ -78,8 +78,8 @@ spec:
             kind: Middleware
             name: compress
       backendRefs:
-        - name: api-service
-          port: {{ .Values.parameters.api.port_http | int }}
+        - name: app-service
+          port: {{ .Values.parameters.app.port_http | int }}
     - matches:
         - path:
             type: PathPrefix
@@ -129,8 +129,8 @@ spec:
             kind: Middleware
             name: compress
       backendRefs:
-        - name: public-api-service
-          port: {{ .Values.parameters.publicApi.port_http | int }}
+        - name: api-service
+          port: {{ .Values.parameters.api.port_http | int }}
     # Server sent event streams. The buffering middleware (body-size-limit) buffers
     # responses as well as requests, which never flushes an open stream, so these
     # endpoints must bypass it.
@@ -147,8 +147,8 @@ spec:
             kind: Middleware
             name: security-headers
       backendRefs:
-        - name: api-service
-          port: {{ .Values.parameters.api.port_http | int }}
+        - name: app-service
+          port: {{ .Values.parameters.app.port_http | int }}
     - matches:
         - path:
             type: PathPrefix
@@ -172,8 +172,8 @@ spec:
             kind: Middleware
             name: compress
       backendRefs:
-        - name: api-service
-          port: {{ .Values.parameters.api.port_http | int }}
+        - name: app-service
+          port: {{ .Values.parameters.app.port_http | int }}
     - matches:
         - path:
             type: PathPrefix

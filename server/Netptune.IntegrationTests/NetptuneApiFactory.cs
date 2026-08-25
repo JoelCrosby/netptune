@@ -12,7 +12,7 @@ using Netptune.Core.Authorization;
 using Netptune.App.Utility;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
-using Netptune.PublicApi.Configuration;
+using Netptune.Api.Configuration;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
 using Netptune.Identity.Authorization.Requirements;
@@ -49,13 +49,13 @@ public sealed class NetptuneFixture : IAsyncLifetime
         .Build();
 
     private WebApplicationFactory<BuildInfo> WebApplicationFactory { get; }
-    private WebApplicationFactory<PreAuthenticationRateLimiter> PublicApiApplicationFactory { get; }
+    private WebApplicationFactory<PreAuthenticationRateLimiter> ApiApplicationFactory { get; }
 
     public HttpClient Client { get; }
 
     public IServiceProvider Services => WebApplicationFactory.Services;
 
-    public IServiceProvider PublicApiServices => PublicApiApplicationFactory.Services;
+    public IServiceProvider ApiServices => ApiApplicationFactory.Services;
 
     public NetptuneFixture()
     {
@@ -73,7 +73,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
 
         Environment.SetEnvironmentVariable("RateLimiting__ApiPermitLimit", "100000");
 
-        PublicApiApplicationFactory = new WebApplicationFactory<PreAuthenticationRateLimiter>();
+        ApiApplicationFactory = new WebApplicationFactory<PreAuthenticationRateLimiter>();
 
         WebApplicationFactory = new WebApplicationFactory<BuildInfo>()
             .WithWebHostBuilder(builder =>
@@ -175,7 +175,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
         await SearchContainer.DisposeAsync().ConfigureAwait(false);
 
         await WebApplicationFactory.DisposeAsync().ConfigureAwait(false);
-        await PublicApiApplicationFactory.DisposeAsync().ConfigureAwait(false);
+        await ApiApplicationFactory.DisposeAsync().ConfigureAwait(false);
     }
 
     public ValueTask InitializeAsync()
@@ -205,18 +205,18 @@ public sealed class NetptuneFixture : IAsyncLifetime
         return client;
     }
 
-    public HttpClient CreatePublicApiClient(string apiKey)
+    public HttpClient CreateApiClient(string apiKey)
     {
-        var client = PublicApiApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
+        var client = ApiApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
 
         client.DefaultRequestHeaders.Authorization = new("ApiKey", apiKey);
 
         return client;
     }
 
-    public HttpClient CreateUnauthenticatedPublicApiClient()
+    public HttpClient CreateUnauthenticatedApiClient()
     {
-        return PublicApiApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
+        return ApiApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler());
     }
 
     public IServiceScope CreateScope() => WebApplicationFactory.Services.CreateScope();

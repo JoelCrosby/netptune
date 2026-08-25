@@ -333,7 +333,7 @@ public sealed class TasksEndpointTests
         var inProgressStatus = await GetStatus("in-progress");
         var createResponse = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
         {
-            Name = "Public API tag replacement",
+            Name = "API tag replacement",
             Description = "Task used to verify tag replacement persistence",
             StatusId = inProgressStatus.Id,
             ProjectId = 1,

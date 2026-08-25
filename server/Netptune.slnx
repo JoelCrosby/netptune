@@ -26,6 +26,7 @@
   <Project Path="Netptune.App/Netptune.App.csproj" />
   <Project Path="Netptune.AppHost/Netptune.AppHost.csproj" />
   <Project Path="Netptune.Ai/Netptune.Ai.csproj" />
+  <Project Path="Netptune.Api/Netptune.Api.csproj" />
   <Project Path="Netptune.Automation/Netptune.Automation.csproj" />
   <Project Path="Netptune.Cache/Netptune.Cache.csproj" />
   <Project Path="Netptune.Core/Netptune.Core.csproj" />
@@ -38,7 +39,6 @@
   <Project Path="Netptune.Import/Netptune.Import.csproj" />
   <Project Path="Netptune.JobServer/Netptune.JobServer.csproj" />
   <Project Path="Netptune.Messaging/Netptune.Messaging.csproj" />
-  <Project Path="Netptune.PublicApi/Netptune.PublicApi.csproj" />
   <Project Path="Netptune.Query/Netptune.Query.csproj" />
   <Project Path="Netptune.Repositories/Netptune.Repositories.csproj" />
   <Project Path="Netptune.Search/Netptune.Search.csproj" />

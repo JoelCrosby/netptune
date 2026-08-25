@@ -1,5 +1,5 @@
 {{- /* maxUnavailable, not minAvailable — at one replica the latter blocks node drains outright. */}}
-{{- range $component := list "api" "public-api" "client" "website" "activity" "jobs" }}
+{{- range $component := list "app" "api" "client" "website" "activity" "jobs" }}
 ---
 apiVersion: "policy/v1"
 kind: "PodDisruptionBudget"

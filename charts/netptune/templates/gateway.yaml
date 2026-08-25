@@ -38,14 +38,14 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
-    - name: https-public-api
+    - name: https-api
       port: 8443
       protocol: HTTPS
-      hostname: "{{ .Values.ingress.publicApiHost }}"
+      hostname: "{{ .Values.ingress.apiHost }}"
       tls:
         mode: Terminate
         certificateRefs:
-          - name: "netptune-public-api-tls"
+          - name: "netptune-api-tls"
       allowedRoutes:
         namespaces:
           from: Same

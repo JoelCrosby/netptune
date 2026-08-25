@@ -138,7 +138,7 @@ The assistant's tables are created with the rest of the schema when the API firs
 
 The API processes `X-Forwarded-For`, `X-Forwarded-Proto`, and `X-Forwarded-Host` and clears the default known-proxy restrictions.
 
-The public API uses the same PostgreSQL, Valkey, NATS, forwarded-header, and OTLP settings under `config.publicApi` and `secrets.publicApi`. Its chart port is `7600`; it does not require JWT signing or third-party OAuth secrets because it accepts API credentials only.
+The API uses the same PostgreSQL, Valkey, NATS, forwarded-header, and OTLP settings under `config.api` and `secrets.api`. Its chart port is `7600`; it does not require JWT signing or third-party OAuth secrets because it accepts API credentials only.
 
 ## Jobs service
 

@@ -2,7 +2,7 @@ ingress:
   enabled: true
   host: "netptune.co.uk"
   appHost: "app.netptune.co.uk"
-  publicApiHost: "api.netptune.co.uk"
+  apiHost: "api.netptune.co.uk"
   tls:
     enabled: true
     email: ""
@@ -147,7 +147,7 @@ parameters:
         memory: "512Mi"
     port_http: 8080
     activity_image: "ghcr.io/joelcrosby/netptune-activity:latest"
-  api:
+  app:
     replicas: 1
     autoscaling:
       enabled: true
@@ -163,8 +163,8 @@ parameters:
       limits:
         memory: "512Mi"
     port_http: 7400
-    api_image: "ghcr.io/joelcrosby/netptune:latest"
-  publicApi:
+    app_image: "ghcr.io/joelcrosby/netptune:latest"
+  api:
     replicas: 1
     autoscaling:
       enabled: true
@@ -180,7 +180,7 @@ parameters:
       limits:
         memory: "512Mi"
     port_http: 7600
-    public_api_image: "ghcr.io/joelcrosby/netptune-public-api:latest"
+    api_image: "ghcr.io/joelcrosby/netptune-api:latest"
   client:
     replicas: 1
     autoscaling:
@@ -195,7 +195,7 @@ parameters:
       limits:
         memory: "128Mi"
     client_image: "ghcr.io/joelcrosby/netptune-client:latest"
-    api_url: "http://api-service:7400"
+    api_url: "http://app-service:7400"
 secrets:
   headlamp:
     github_client_id: ""
@@ -212,7 +212,7 @@ secrets:
     otlp_api_key: ""
   postgres:
     postgres_password: ""
-  # Each falls back to the matching secrets.api value when left empty. Set them to point backups at
+  # Each falls back to the matching secrets.app value when left empty. Set them to point backups at
   # a separate bucket whose credentials cannot delete objects.
   postgresBackup:
     s3_bucket_name: ""
@@ -242,7 +242,7 @@ secrets:
     s3_region: ""
     s3_access_key_id: ""
     s3_secret_access_key: ""
-  api:
+  app:
     cache_password: ""
     postgres_password: ""
     signing_key: ""
@@ -263,7 +263,7 @@ secrets:
     turnstile_secret_key: ""
     cloudflare_email_token: ""
     cloudflare_account_id: ""
-  publicApi:
+  api:
     cache_password: ""
     postgres_password: ""
 config:
@@ -293,7 +293,7 @@ config:
     POSTGRESDB_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres-service:5432/netptune"
     POSTGRESDB_DATABASENAME: "netptune"
     ConnectionStrings__nats: "nats://nats-service:4222"
-  api:
+  app:
     OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
     ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
     ASPNETCORE_URLS: "http://0.0.0.0:7400"
@@ -305,7 +305,7 @@ config:
     POSTGRESDB_JDBCCONNECTIONSTRING: "jdbc:postgresql://postgres-service:5432/netptune"
     POSTGRESDB_DATABASENAME: "netptune"
     ConnectionStrings__nats: "nats://nats-service:4222"
-  publicApi:
+  api:
     OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
     ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
     ASPNETCORE_URLS: "http://0.0.0.0:7600"

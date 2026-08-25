@@ -10,7 +10,7 @@ export default createHandler(() => (
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta
             name="description"
-            content="Netptune is an open source, self-hostable project management app with kanban boards, sprints, calendar and roadmap planning, automations, reporting, and a public API."
+            content="Netptune is an open source, self-hostable project management app with kanban boards, sprints, calendar and roadmap planning, automations, reporting, and an API."
           />
           <meta property="og:type" content="website" />
           <meta property="og:site_name" content="Netptune" />

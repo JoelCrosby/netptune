@@ -6,7 +6,7 @@ export default function ExternalServicesPage() {
     <MarkdownDoc
       source={source}
       prev={{ href: '/docs/configuration', label: 'Configuration' }}
-      next={{ href: '/docs/public-api', label: 'Public API' }}
+      next={{ href: '/docs/api', label: 'API' }}
     />
   );
 }

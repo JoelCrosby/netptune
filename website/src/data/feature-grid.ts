@@ -81,7 +81,7 @@ export const featureGridItems: Feature[] = [
   },
   {
     icon: Braces,
-    title: 'Public API',
+    title: 'API',
     description: 'Integrate projects, statuses, sprints, and tasks',
   },
   {

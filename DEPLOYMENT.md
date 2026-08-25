@@ -18,21 +18,21 @@ helm upgrade --install netptune-app charts/netptune/ \
   --namespace default \
   --set ingress.enabled=true \
   --set "ingress.host=your-domain.com" \
-  --set "ingress.publicApiHost=api.your-domain.com" \
+  --set "ingress.apiHost=api.your-domain.com" \
   --set ingress.tls.enabled=true \
   --set "ingress.tls.email=your@email.com" \
   --set "secrets.postgres.postgres_password=<password>" \
   --set "secrets.cache.cache_password=<password>" \
-  --set "secrets.publicApi.cache_password=<password>" \
-  --set "secrets.publicApi.postgres_password=<password>" \
-  --set "secrets.api.signing_key=<jwt-signing-key>" \
-  --set "secrets.api.github_client_id=<github-client-id>" \
-  --set "secrets.api.github_secret=<github-secret>" \
-  --set "secrets.api.sendgrid_api_key=<sendgrid-key>" \
-  --set "secrets.api.s3_bucket_name=<bucket>" \
-  --set "secrets.api.s3_region=<region>" \
-  --set "secrets.api.s3_access_key_id=<key-id>" \
-  --set "secrets.api.s3_secret_access_key=<secret>"
+  --set "secrets.api.cache_password=<password>" \
+  --set "secrets.api.postgres_password=<password>" \
+  --set "secrets.app.signing_key=<jwt-signing-key>" \
+  --set "secrets.app.github_client_id=<github-client-id>" \
+  --set "secrets.app.github_secret=<github-secret>" \
+  --set "secrets.app.sendgrid_api_key=<sendgrid-key>" \
+  --set "secrets.app.s3_bucket_name=<bucket>" \
+  --set "secrets.app.s3_region=<region>" \
+  --set "secrets.app.s3_access_key_id=<key-id>" \
+  --set "secrets.app.s3_secret_access_key=<secret>"
 ```
 
 See [charts/netptune/values.yaml](charts/netptune/values.yaml) for the full set of configurable values.
@@ -63,7 +63,7 @@ version and `helm dependency update` restores it.
 The server projects use [.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/) for local orchestration. Docker is required.
 
 ```bash
-# Start the full backend stack (app API, public API, jobs, Postgres, Redis, NATS)
+# Start the full backend stack (app, API, jobs, Postgres, Redis, NATS)
 cd server
 dotnet run --project Netptune.AppHost
 

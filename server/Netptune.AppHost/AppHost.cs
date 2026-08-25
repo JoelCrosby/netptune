@@ -50,8 +50,8 @@ var activity = builder
     .WithPostgres(postgresdb)
     .WithNats(nats);
 
-var api = builder
-    .AddProject<Projects.Netptune_App>("api")
+var app = builder
+    .AddProject<Projects.Netptune_App>("app")
     .WaitForCompletion(seedData)
     .WithJobServer(jobs)
     .WithCache(cache)
@@ -61,8 +61,8 @@ var api = builder
     .WithReference(meilisearch)
     .WithExternalHttpEndpoints();
 
-var publicApi = builder
-    .AddProject<Projects.Netptune_PublicApi>("public-api")
+var api = builder
+    .AddProject<Projects.Netptune_Api>("api")
     .WaitForCompletion(seedData)
     .WithCache(cache)
     .WithPostgres(postgresdb)

@@ -1,0 +1,31 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "app-config"
+  labels:
+    app.kubernetes.io/name: "netptune-app"
+    app.kubernetes.io/component: "app"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+data:
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: "{{ .Values.config.app.ASPNETCORE_FORWARDEDHEADERS_ENABLED }}"
+  HTTP_PORTS: "{{ .Values.parameters.app.port_http }}"
+  ASPNETCORE_URLS: "{{ .Values.config.app.ASPNETCORE_URLS }}"
+  JOBS_HTTP: "http://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  services__jobs__http__0: "http://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  JOBS_HTTPS: "https://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  services__jobs__https__0: "https://jobs-service:{{ .Values.parameters.jobs.port_http }}"
+  CACHE_HOST: "{{ .Values.config.app.CACHE_HOST }}"
+  CACHE_PORT: "{{ .Values.config.app.CACHE_PORT }}"
+  POSTGRESDB_HOST: "{{ .Values.config.app.POSTGRESDB_HOST }}"
+  POSTGRESDB_PORT: "{{ .Values.config.app.POSTGRESDB_PORT }}"
+  POSTGRESDB_USERNAME: "{{ .Values.config.app.POSTGRESDB_USERNAME }}"
+  POSTGRESDB_JDBCCONNECTIONSTRING: "{{ .Values.config.app.POSTGRESDB_JDBCCONNECTIONSTRING }}"
+  POSTGRESDB_DATABASENAME: "{{ .Values.config.app.POSTGRESDB_DATABASENAME }}"
+  ConnectionStrings__nats: "{{ .Values.config.app.ConnectionStrings__nats }}"
+{{- if .Values.aspire.enabled }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard-service:18889"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+  OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "{{ .Values.config.app.OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY }}"
+  OTEL_SERVICE_NAME: "netptune-app"
+{{- end }}
