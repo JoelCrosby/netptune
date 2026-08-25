@@ -904,6 +904,224 @@ public sealed class TasksEndpointTests
     }
 
     [Fact]
+    public async Task AddToBoard_ShouldPlaceTheTaskOnASecondBoard_WithoutLeavingTheFirst()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var originalPlacement = task.Placements.Should().ContainSingle().Subject;
+        var board = await CreateBoard();
+
+        var response = await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest
+        {
+            BoardId = board.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Placements.Should().HaveCount(2);
+        result.Payload.Placements.Should().Contain(placement => placement.BoardId == originalPlacement.BoardId);
+        result.Payload.Placements.Should().Contain(placement => placement.BoardId == board.Id);
+    }
+
+    [Fact]
+    public async Task AddToBoard_ShouldShowTheTaskOnBothBoardViews()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+
+        var response = await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest
+        {
+            BoardId = board.Id,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var originalIdentifier = task.Placements[0].BoardIdentifier;
+        var originalView = await GetBoardView(originalIdentifier);
+        var secondView = await GetBoardView(board.Identifier);
+
+        originalView.Groups.SelectMany(group => group.Tasks).Should().Contain(item => item.Id == task.Id);
+        secondView.Groups.SelectMany(group => group.Tasks).Should().Contain(item => item.Id == task.Id);
+    }
+
+    [Fact]
+    public async Task AddToBoard_ShouldReportTheBoardCountOnTheCard()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+
+        await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest { BoardId = board.Id });
+
+        var view = await GetBoardView(board.Identifier);
+        var card = view.Groups.SelectMany(group => group.Tasks).Single(item => item.Id == task.Id);
+
+        card.BoardCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task AddToBoard_ShouldReturnFailure_WhenTheTaskIsAlreadyOnTheBoard()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+
+        await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest { BoardId = board.Id });
+
+        var response = await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest
+        {
+            BoardId = board.Id,
+        });
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("already on board");
+    }
+
+    [Fact]
+    public async Task RemoveFromBoard_ShouldLeaveTheRemainingPlacementsIntact()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var originalPlacement = task.Placements.Should().ContainSingle().Subject;
+        var board = await CreateBoard();
+
+        await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest { BoardId = board.Id });
+
+        var response = await Client.DeleteAsync($"api/tasks/{task.Id}/boards/{board.Id}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result.IsSuccess.Should().BeTrue();
+        result.Payload!.Placements.Should().ContainSingle()
+            .Which.BoardId.Should().Be(originalPlacement.BoardId);
+    }
+
+    [Fact]
+    public async Task RemoveFromBoard_ShouldReturnFailure_WhenTheTaskIsNotOnTheBoard()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var board = await CreateBoard();
+
+        var response = await Client.DeleteAsync($"api/tasks/{task.Id}/boards/{board.Id}");
+        var result = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("not on board");
+    }
+
+    [Fact]
+    public async Task MoveTaskInGroup_ShouldLeaveOtherBoardsAlone()
+    {
+        var task = await CreateTaskOnDefaultBoard();
+        var originalPlacement = task.Placements.Should().ContainSingle().Subject;
+        var board = await CreateBoard();
+
+        var added = await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest
+        {
+            BoardId = board.Id,
+        });
+
+        var addedResult = await added.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+        var secondPlacement = addedResult.Payload!.Placements.Single(placement => placement.BoardId == board.Id);
+        var secondView = await GetBoardView(board.Identifier);
+        var targetGroup = secondView.Groups.First(group => group.Id != secondPlacement.BoardGroupId);
+
+        var response = await Client.PostAsJsonAsync("api/tasks/move-task-in-group", new MoveTaskInGroupRequest
+        {
+            TaskId = task.Id,
+            OldGroupId = secondPlacement.BoardGroupId,
+            NewGroupId = targetGroup.Id,
+            PreviousIndex = 0,
+            CurrentIndex = 0,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var reloaded = await GetTask(task.Id);
+
+        reloaded.Placements.Should().HaveCount(2);
+        reloaded.Placements.Should().Contain(placement =>
+            placement.BoardId == originalPlacement.BoardId
+            && placement.BoardGroupId == originalPlacement.BoardGroupId);
+        reloaded.Placements.Should().Contain(placement => placement.BoardGroupId == targetGroup.Id);
+    }
+
+    [Fact]
+    public async Task DeleteBoardGroup_ShouldRelocateItsTasksRatherThanStrandingThem()
+    {
+        var board = await CreateBoard();
+        var view = await GetBoardView(board.Identifier);
+        var doomedGroup = view.Groups.Last();
+        var task = await CreateTaskOnDefaultBoard();
+
+        await Client.PostAsJsonAsync($"api/tasks/{task.Id}/boards", new AddTaskToBoardRequest
+        {
+            BoardId = board.Id,
+            BoardGroupId = doomedGroup.Id,
+        });
+
+        var deleteResponse = await Client.DeleteAsync($"api/boardgroups/{doomedGroup.Id}");
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK, await deleteResponse.Content.ReadAsStringAsync());
+
+        var reloaded = await GetTask(task.Id);
+        var placement = reloaded.Placements.Should().Contain(item => item.BoardId == board.Id).Which;
+
+        placement.BoardGroupId.Should().NotBe(doomedGroup.Id);
+    }
+
+    private async Task<TaskViewModel> CreateTaskOnDefaultBoard()
+    {
+        var response = await Client.PostAsJsonAsync("api/tasks", new AddProjectTaskRequest
+        {
+            Name = $"Multi board task {Guid.NewGuid():N}",
+            Description = "Task used to verify board placement",
+            ProjectId = 1,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>();
+
+        created.IsSuccess.Should().BeTrue();
+
+        return created.Payload!;
+    }
+
+    private async Task<BoardViewModel> CreateBoard()
+    {
+        var identifier = $"mb-{Guid.NewGuid():N}"[..12];
+        var response = await Client.PostAsJsonAsync("api/boards", new AddBoardRequest
+        {
+            Name = $"Multi board {identifier}",
+            Identifier = identifier,
+            ProjectId = 1,
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+
+        var created = await response.Content.ReadFromJsonAsync<ClientResponse<BoardViewModel>>();
+
+        created.IsSuccess.Should().BeTrue();
+
+        return created.Payload!;
+    }
+
+    private async Task<TaskViewModel> GetTask(int taskId)
+    {
+        var response = await Client.GetAsync($"api/tasks/{taskId}");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var task = await response.Content.ReadFromJsonAsync<TaskViewModel>();
+
+        return task!;
+    }
+
+    [Fact]
     public async Task Create_ShouldAttachTagsAndEveryAssignee()
     {
         var tag = await GetWorkspaceTag();

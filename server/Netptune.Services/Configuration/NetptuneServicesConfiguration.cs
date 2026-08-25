@@ -44,6 +44,7 @@ public static class NetptuneServicesConfiguration
 
         services.AddTransient<IActivityLogger, ActivityLogger>();
         services.AddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
+        services.AddScoped<ITaskPlacementService, TaskPlacementService>();
         services.AddScoped<ITaskRelationLinker, TaskRelationLinker>();
         services.AddScoped<ITaskReferenceResolver, TaskReferenceResolver>();
         services.AddScoped<ITaskStatusResolver, TaskStatusResolver>();

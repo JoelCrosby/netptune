@@ -6,6 +6,7 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
@@ -24,6 +25,7 @@ public class BulkUpdateTasksCommandHandlerTests
     private readonly INetptuneUnitOfWork UnitOfWork = Substitute.For<INetptuneUnitOfWork>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
+    private readonly ITaskPlacementService Placement = Substitute.For<ITaskPlacementService>();
 
     public BulkUpdateTasksCommandHandlerTests()
     {
@@ -36,7 +38,8 @@ public class BulkUpdateTasksCommandHandlerTests
             Identity,
             Substitute.For<ILogger<BulkUpdateTasksCommandHandler>>(),
             Substitute.For<IEventRecordWriter>(),
-            EventPublisher);
+            EventPublisher,
+            Placement);
     }
 
     [Fact]

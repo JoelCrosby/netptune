@@ -30,10 +30,10 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .ToListAsync(cancellationToken);
     }
 
-    public Task<ProjectTaskInBoardGroup?> GetProjectTaskInGroup(int taskId, CancellationToken cancellationToken = default)
+    public Task<ProjectTaskInBoardGroup?> GetPlacementOnBoard(int taskId, int boardId, CancellationToken cancellationToken = default)
     {
         return Entities
-            .Where(entity => entity.ProjectTaskId == taskId)
+            .Where(entity => entity.ProjectTaskId == taskId && entity.BoardGroup!.BoardId == boardId)
             .OrderBy(entity => entity.SortOrder)
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -61,10 +61,48 @@ public class TaskInGroupRepository : Repository<DataContext, ProjectTaskInBoardG
             .ExecuteDeleteAsync(cancellationToken);
     }
 
+    public async Task DeleteTasksFromBoard(IEnumerable<int> taskIds, int boardId, CancellationToken cancellationToken = default)
+    {
+        var taskIdList = taskIds.ToList();
+
+        if (taskIdList.Count == 0)
+        {
+            return;
+        }
+
+        await Entities
+            .Where(entity => taskIdList.Contains(entity.ProjectTaskId) && entity.BoardGroup!.BoardId == boardId)
+            .ExecuteDeleteAsync(cancellationToken);
+    }
+
     public async Task DeleteTaskFromGroup(int taskId, int groupId, CancellationToken cancellationToken = default)
     {
         await Entities
             .Where(entity => entity.ProjectTaskId == taskId && entity.BoardGroupId == groupId)
+            .ExecuteDeleteAsync(cancellationToken);
+    }
+
+    public async Task MovePlacementsToGroup(int fromGroupId, int toGroupId, double baseSortOrder, CancellationToken cancellationToken = default)
+    {
+        // The (group, task) alternate key rejects the update outright when the task already sits in
+        // the target group, so those rows are dropped rather than merged.
+        await Entities
+            .Where(entity => entity.BoardGroupId == fromGroupId)
+            .Where(entity => Entities.Any(target =>
+                target.BoardGroupId == toGroupId && target.ProjectTaskId == entity.ProjectTaskId))
+            .ExecuteDeleteAsync(cancellationToken);
+
+        await Entities
+            .Where(entity => entity.BoardGroupId == fromGroupId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(entity => entity.BoardGroupId, toGroupId)
+                .SetProperty(entity => entity.SortOrder, entity => baseSortOrder + entity.SortOrder), cancellationToken);
+    }
+
+    public async Task DeletePlacementsInGroup(int groupId, CancellationToken cancellationToken = default)
+    {
+        await Entities
+            .Where(entity => entity.BoardGroupId == groupId)
             .ExecuteDeleteAsync(cancellationToken);
     }
 

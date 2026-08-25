@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Text.Json;
 
 using Dapper;
 
@@ -641,6 +642,7 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 DeletedByIsServiceAccount = row.Deleted_By_User_Type == AppUserType.ServiceAccount,
                 ProjectName = row.Project_Name ?? string.Empty,
                 HasComments = row.Has_Comments,
+                Placements = ParsePlacements(row.Placements),
                 Tags = [],
                 Assignees = [],
             };
@@ -651,6 +653,31 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
             result.Add(task);
 
             return result;
+        });
+    }
+
+    private static readonly JsonSerializerOptions PlacementJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
+    private static List<BoardPlacementViewModel> ParsePlacements(string placementsJson)
+    {
+        var placements = JsonSerializer.Deserialize<List<TaskPlacementRowMap>>(placementsJson, PlacementJsonOptions);
+
+        if (placements is null)
+        {
+            return [];
+        }
+
+        return placements.ConvertAll(placement => new BoardPlacementViewModel
+        {
+            BoardId = placement.Board_Id,
+            BoardName = placement.Board_Name,
+            BoardIdentifier = placement.Board_Identifier,
+            BoardGroupId = placement.Board_Group_Id,
+            BoardGroupName = placement.Board_Group_Name,
+            SortOrder = placement.Sort_Order,
         });
     }
 
@@ -710,6 +737,21 @@ public class TaskRepository : WorkspaceEntityRepository<DataContext, ProjectTask
                 .Where(taskInGroup => taskInGroup.ProjectTaskId == x.Id)
                 .Select(taskInGroup => (double?)taskInGroup.SortOrder)
                 .FirstOrDefault() ?? 0D,
+            Placements = Context.ProjectTaskInBoardGroups
+                .Where(taskInGroup => taskInGroup.ProjectTaskId == x.Id
+                    && !taskInGroup.BoardGroup!.IsDeleted
+                    && !taskInGroup.BoardGroup.Board!.IsDeleted)
+                .OrderBy(taskInGroup => taskInGroup.BoardGroup!.Board!.Name)
+                .Select(taskInGroup => new BoardPlacementViewModel
+                {
+                    BoardId = taskInGroup.BoardGroup!.BoardId,
+                    BoardName = taskInGroup.BoardGroup.Board!.Name,
+                    BoardIdentifier = taskInGroup.BoardGroup.Board.Identifier,
+                    BoardGroupId = taskInGroup.BoardGroupId,
+                    BoardGroupName = taskInGroup.BoardGroup.Name,
+                    SortOrder = taskInGroup.SortOrder,
+                })
+                .ToList(),
             SprintName = x.Sprint == null ? null : x.Sprint.Name,
             SprintStatus = x.Sprint == null ? null : x.Sprint.Status,
             WorkspaceId = x.WorkspaceId,

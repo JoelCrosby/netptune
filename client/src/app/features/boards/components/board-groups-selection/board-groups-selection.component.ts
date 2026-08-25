@@ -9,6 +9,7 @@ import {
   LucideCombine,
   LucideDynamicIcon,
   LucideIconInput,
+  LucideKanban,
   LucideTrash2,
   LucideUsers,
   LucideX,
@@ -131,6 +132,13 @@ export class BoardGroupsSelectionComponent {
         icon: LucideCombine,
       });
     }
+    if (permissions.has(PERMISSIONS.tasks.move)) {
+      actions.push({
+        label: $localize`:Action that takes the selected tasks off the board being viewed:Remove from board`,
+        action: this.onRemoveFromBoardClicked.bind(this),
+        icon: LucideKanban,
+      });
+    }
     if (permissions.has(PERMISSIONS.tasks.reassign)) {
       actions.push({
         label: $localize`:Action that reassigns the selected tasks to another person:Reassign`,
@@ -190,6 +198,10 @@ export class BoardGroupsSelectionComponent {
 
   onDeleteClicked() {
     this.boardCommands.deleteSelectedTasks();
+  }
+
+  onRemoveFromBoardClicked() {
+    this.boardCommands.removeSelectedTasksFromBoard();
   }
 
   onMoveTasksClicked() {

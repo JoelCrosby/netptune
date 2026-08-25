@@ -917,7 +917,7 @@ public sealed class PublicApiV1EndpointTests
             $"api/v1/tasks/{task.Id}",
             TestContext.Current.CancellationToken);
 
-        moved!.BoardGroupId.Should().Be(boardGroup.Id);
+        moved!.Placements.Should().ContainSingle(placement => placement.BoardGroupId == boardGroup.Id);
     }
 
     [Fact]

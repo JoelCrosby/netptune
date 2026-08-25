@@ -87,6 +87,13 @@ SELECT lt.task_id
              AND f.entity_id = lt.task_id
              AND NOT f.is_deleted
        )                    AS flag_count
+     , (
+           SELECT COUNT(DISTINCT bg_count.board_id)::integer
+           FROM project_task_in_board_groups ptibg_count
+                    INNER JOIN board_groups bg_count on ptibg_count.board_group_id = bg_count.id AND NOT bg_count.is_deleted
+                    INNER JOIN boards b_count on bg_count.board_id = b_count.id AND NOT b_count.is_deleted
+           WHERE ptibg_count.project_task_id = lt.task_id
+       )                    AS board_count
      , COALESCE((
            SELECT array_agg(t.name ORDER BY t.name)
            FROM project_task_tags ptt

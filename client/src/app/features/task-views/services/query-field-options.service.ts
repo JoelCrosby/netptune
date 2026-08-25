@@ -4,6 +4,7 @@ import { TaskPriority, taskPriorityLabels } from '@core/enums/task-priority';
 import { StatusCategory, statusCategoryLabels } from '@core/models/status';
 import { projectResource } from '@core/resources/project.resource';
 import { relationTypeResource } from '@core/resources/relation-type.resource';
+import { workspaceBoardsResource } from '@core/resources/board.resource';
 import { sprintResource } from '@core/resources/sprint.resource';
 import { statusResource } from '@core/resources/status.resource';
 import { tagResource } from '@core/resources/tag.resource';
@@ -31,6 +32,7 @@ export class QueryFieldOptionsService {
   private readonly tags = tagResource().value;
   private readonly projects = projectResource().value;
   private readonly relationTypes = relationTypeResource().value;
+  private readonly boards = workspaceBoardsResource().value;
   private readonly members = workspaceUsersResource();
   private readonly sprints = sprintResource([
     SprintStatus.planning,
@@ -87,6 +89,16 @@ export class QueryFieldOptionsService {
     sources.set(
       'tags',
       this.tags().map((tag) => ({ value: tag.name, label: tag.name }))
+    );
+
+    sources.set(
+      'boards',
+      this.boards().flatMap((project) => {
+        return project.boards.map((board) => ({
+          value: String(board.id),
+          label: board.name,
+        }));
+      })
     );
 
     sources.set('relation-types', this.relationTypeOptions());

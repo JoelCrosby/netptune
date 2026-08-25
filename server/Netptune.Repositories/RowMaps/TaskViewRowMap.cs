@@ -75,6 +75,8 @@ public sealed class TaskViewRowMap
 
     public string? Project_Name { get; init; }
 
+    public string Placements { get; init; } = "[]";
+
     public string? Tag { get; init; }
 
     public bool Has_Comments { get; init; }
@@ -88,4 +90,19 @@ public sealed class TaskViewRowMap
     public string? Assignee_Picture_Url { get; init; }
 
     public AppUserType? Assignee_User_Type { get; init; }
+}
+
+public sealed class TaskPlacementRowMap
+{
+    public int Board_Id { get; init; }
+
+    public string Board_Name { get; init; } = null!;
+
+    public string Board_Identifier { get; init; } = null!;
+
+    public int Board_Group_Id { get; init; }
+
+    public string Board_Group_Name { get; init; } = null!;
+
+    public double Sort_Order { get; init; }
 }

@@ -49,6 +49,7 @@ export interface BoardViewTask {
   workspaceId: number;
   workspaceKey: string;
   pinnedScopes: TaskPinScope[];
+  boardCount: number;
 }
 
 export interface AssigneeViewModel {

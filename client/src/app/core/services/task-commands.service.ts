@@ -3,6 +3,7 @@ import { ProjectTask } from '@core/models/project-task';
 import { AddProjectTaskRequest } from '@core/models/project-task';
 import { TaskViewModel } from '@core/models/view-models/project-task-dto';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
+import { AddTaskToBoardRequest } from '@core/models/requests/add-task-to-board-request';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { UpdateProjectTaskRequest } from '@core/models/requests/update-project-task-request';
@@ -157,6 +158,46 @@ export class TaskCommandsService {
       .subscribe(
         (response) => void downloadFile(response.file, response.filename)
       );
+  }
+
+  addToBoard(
+    taskId: number,
+    request: AddTaskToBoardRequest,
+    options?: { onPlaced?: () => void }
+  ) {
+    this.tasksApi
+      .addTaskToBoard(taskId, request)
+      .pipe(
+        unwrapClientResponse(),
+        catchError(() => EMPTY)
+      )
+      .subscribe(() => {
+        this.snackbar.open(
+          $localize`:Confirmation shown after an action succeeds:Task added to board`
+        );
+        this.refresh();
+        options?.onPlaced?.();
+      });
+  }
+
+  removeFromBoard(
+    taskId: number,
+    boardId: number,
+    options?: { onRemoved?: () => void }
+  ) {
+    this.tasksApi
+      .removeTaskFromBoard(taskId, boardId)
+      .pipe(
+        unwrapClientResponse(),
+        catchError(() => EMPTY)
+      )
+      .subscribe(() => {
+        this.snackbar.open(
+          $localize`:Confirmation shown after an action succeeds:Task removed from board`
+        );
+        this.refresh();
+        options?.onRemoved?.();
+      });
   }
 
   private refresh() {

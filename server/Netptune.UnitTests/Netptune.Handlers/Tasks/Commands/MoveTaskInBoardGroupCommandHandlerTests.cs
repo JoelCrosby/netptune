@@ -8,6 +8,7 @@ using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Tasks.Commands;
@@ -26,6 +27,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
+    private readonly ITaskPlacementService Placement = Substitute.For<ITaskPlacementService>();
 
     public MoveTaskInBoardGroupCommandHandlerTests()
     {
@@ -35,7 +37,8 @@ public class MoveTaskInBoardGroupCommandHandlerTests
             Activity,
             EventPublisher,
             Identity,
-            EventRecords);
+            EventRecords,
+            Placement);
     }
 
     private void SetupTransfer(MoveTaskInGroupRequest request, ProjectTaskInBoardGroup taskInGroup, int? groupStatusId = null)
@@ -46,6 +49,7 @@ public class MoveTaskInBoardGroupCommandHandlerTests
             {
                 Id = request.NewGroupId,
                 Name = AutoFixtures.BoardGroup.Name,
+                BoardId = 1,
                 MaxSortOrder = 7,
                 WorkspaceId = 1,
                 StatusId = groupStatusId,

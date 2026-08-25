@@ -18,7 +18,7 @@ import { unwrapClientResponse } from '@core/util/rxjs-operators';
 import { ConfirmDialogOptions } from '@entry/dialogs/confirm-dialog/confirm-dialog.component';
 import { MoveMatchingTasksDialogComponent } from '@entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component';
 import { SnackbarService } from '@static/components/snackbar/snackbar.service';
-import { catchError, EMPTY, first, switchMap } from 'rxjs';
+import { catchError, EMPTY, first, forkJoin, switchMap } from 'rxjs';
 
 @Service()
 export class BoardGroupCommandsService {
@@ -167,6 +167,35 @@ export class BoardGroupCommandsService {
       });
   }
 
+  removeSelectedTasksFromBoard() {
+    const boardId = this.boardView.board()?.id;
+    const taskIds = this.selection.taskIds();
+
+    if (!boardId || !taskIds.length) return;
+
+    this.confirmation
+      .open(REMOVE_FROM_BOARD_CONFIRMATION)
+      .pipe(
+        switchMap((confirmed) => {
+          if (!confirmed) return EMPTY;
+
+          const removals = taskIds.map((taskId) => {
+            return this.tasksApi.removeTaskFromBoard(taskId, boardId);
+          });
+
+          return forkJoin(removals);
+        }),
+        catchError(() => EMPTY)
+      )
+      .subscribe(() => {
+        this.snackbar.open(
+          $localize`:Confirmation shown after an action succeeds:Tasks removed from board`
+        );
+        this.selection.clear();
+        this.refresh();
+      });
+  }
+
   exportTasks() {
     const identifier = this.boardView.identifier();
 
@@ -252,6 +281,13 @@ const DELETE_CONFIRMATION: ConfirmDialogOptions = {
   cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
   message: $localize`:Body of a confirmation dialog:Are you sure you want to delete this group?`,
   title: $localize`:Title of a confirmation dialog:Delete Group`,
+};
+
+const REMOVE_FROM_BOARD_CONFIRMATION: ConfirmDialogOptions = {
+  acceptLabel: $localize`:Confirms the action in a dialog:Remove From Board`,
+  cancelLabel: $localize`:Dismisses a dialog without acting:Cancel`,
+  message: $localize`:Body of a confirmation dialog:Are you sure you want to take the selected tasks off this board? They stay on any other board they are on.`,
+  title: $localize`:Title of a confirmation dialog:Remove From Board`,
 };
 
 const DELETE_SELECTED_TASKS_CONFIRMATION: ConfirmDialogOptions = {

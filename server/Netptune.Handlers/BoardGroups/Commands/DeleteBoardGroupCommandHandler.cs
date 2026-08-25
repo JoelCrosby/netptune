@@ -33,6 +33,7 @@ public sealed class DeleteBoardGroupCommandHandler : IRequestHandler<DeleteBoard
 
         boardGroup.Delete(userId);
 
+        await RelocatePlacements(boardGroup.Id, boardGroup.BoardId, cancellationToken);
         await UnitOfWork.CompleteAsync(cancellationToken);
 
         Activity.Log(options =>
@@ -43,5 +44,21 @@ public sealed class DeleteBoardGroupCommandHandler : IRequestHandler<DeleteBoard
         });
 
         return ClientResponse.Success;
+    }
+
+    private async Task RelocatePlacements(int groupId, int boardId, CancellationToken cancellationToken)
+    {
+        var fallback = await UnitOfWork.BoardGroups.GetFallbackTaskTarget(boardId, groupId, cancellationToken);
+
+        if (fallback is null)
+        {
+            await UnitOfWork.ProjectTasksInGroups.DeletePlacementsInGroup(groupId, cancellationToken);
+
+            return;
+        }
+
+        var baseSortOrder = fallback!.MaxSortOrder + 1;
+
+        await UnitOfWork.ProjectTasksInGroups.MovePlacementsToGroup(groupId, fallback.Id, baseSortOrder, cancellationToken);
     }
 }

@@ -103,6 +103,14 @@ public sealed class TaskReferenceValidator
                     return sprints.Select(sprint => sprint.Id.ToString()).ToHashSet();
                 }
 
+            case QueryOptionSources.Boards:
+                {
+                    var projectBoards = await UnitOfWork.Boards.GetBoardViewModels(scope.WorkspaceKey, cancellationToken);
+                    var boards = projectBoards.SelectMany(project => project.Boards);
+
+                    return boards.Select(board => board.Id.ToString()).ToHashSet();
+                }
+
             case QueryOptionSources.Members:
                 {
                     var userIds = await UnitOfWork.WorkspaceUsers.GetWorkspaceUserIds(scope.WorkspaceId, cancellationToken);

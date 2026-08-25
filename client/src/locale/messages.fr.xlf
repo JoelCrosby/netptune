@@ -425,6 +425,16 @@
         <target>Créer les groupes de tableau</target>
       </segment>
     </unit>
+    <unit id="5322873861888163184">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:44,48</note>
+        <note category="description">Button that puts this task on another board</note>
+      </notes>
+      <segment state="translated">
+        <source> Add to board </source>
+        <target> Ajouter au tableau </target>
+      </segment>
+    </unit>
     <unit id="5323231108109170943">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:126</note>
@@ -984,6 +994,16 @@
         <target> ou </target>
       </segment>
     </unit>
+    <unit id="3222861994325757867">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:33,36</note>
+        <note category="description">Section heading for the boards a task appears on</note>
+      </notes>
+      <segment state="translated">
+        <source> Boards </source>
+        <target> Tableaux </target>
+      </segment>
+    </unit>
     <unit id="3223868158732972286">
       <notes>
         <note category="location">src/app/core/auth/permission-items.ts:413</note>
@@ -1099,7 +1119,7 @@
     </unit>
     <unit id="2128755808672960949">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:332</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:321</note>
         <note category="description">Placeholder for the value of an assignee condition</note>
       </notes>
       <segment state="translated">
@@ -1454,15 +1474,16 @@
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:196</note>
         <note category="location">src/app/core/services/board-commands.service.ts:65</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:252</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:259</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:281</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:288</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:295</note>
         <note category="location">src/app/core/services/confirmation.service.ts:12</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:75</note>
         <note category="location">src/app/core/services/project-commands.service.ts:69</note>
         <note category="location">src/app/core/services/tag-commands.service.ts:78</note>
         <note category="location">src/app/core/services/task-archive.service.ts:40</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:169</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:177</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:210</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:218</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:215</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:225</note>
         <note category="location">src/app/core/services/workspace-commands.service.ts:235</note>
@@ -1662,10 +1683,10 @@
     <unit id="7022070615528435141">
       <notes>
         <note category="location">src/app/core/services/board-commands.service.ts:64</note>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:251</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:280</note>
         <note category="location">src/app/core/services/notification-commands.service.ts:74</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:168</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:176</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:209</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:217</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:178</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:303</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:276</note>
@@ -1726,7 +1747,7 @@
     <unit id="5887960889618527515">
       <notes>
         <note category="location">src/app/core/services/board-group-commands.service.ts:102</note>
-        <note category="location">src/app/core/services/task-commands.service.ts:48</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:49</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1756,7 +1777,7 @@
     </unit>
     <unit id="2856093664313447266">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:200</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:229</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -1786,7 +1807,7 @@
     </unit>
     <unit id="171368812856780023">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:253</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:282</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1796,7 +1817,7 @@
     </unit>
     <unit id="3596210590059423029">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:254</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:283</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1806,7 +1827,7 @@
     </unit>
     <unit id="8634240575353261228">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:258</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:294</note>
         <note category="description">Confirms the action in a dialog</note>
       </notes>
       <segment state="translated">
@@ -1836,7 +1857,7 @@
     </unit>
     <unit id="1935533427606827690">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:260</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:296</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -1846,7 +1867,7 @@
     </unit>
     <unit id="5480361778944446991">
       <notes>
-        <note category="location">src/app/core/services/board-group-commands.service.ts:261</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:297</note>
         <note category="description">Title of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2133,7 +2154,7 @@
     </unit>
     <unit id="6419601202667262693">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:71</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:72</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2143,7 +2164,7 @@
     </unit>
     <unit id="8473956176297638892">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:88</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:89</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2184,7 +2205,7 @@
     </unit>
     <unit id="7190478463652380023">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:107</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:108</note>
         <note category="description">Confirmation shown after an action succeeds</note>
       </notes>
       <segment state="translated">
@@ -2215,7 +2236,7 @@
     </unit>
     <unit id="1316502449942805709">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:170</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:211</note>
         <note category="description">Body of a confirmation dialog</note>
       </notes>
       <segment state="translated">
@@ -2235,7 +2256,7 @@
     </unit>
     <unit id="1614669751334500006">
       <notes>
-        <note category="location">src/app/core/services/task-commands.service.ts:171</note>
+        <note category="location">src/app/core/services/task-commands.service.ts:212</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:44,45</note>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-actions.component.ts:46,48</note>
         <note category="description">Title of a confirmation dialog</note>
@@ -3424,7 +3445,7 @@
     <unit id="7238645691627834742">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:170,173</note>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:313</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:302</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:122,123</note>
         <note category="description">Label of the story points field</note>
       </notes>
@@ -3474,7 +3495,7 @@
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:194,199</note>
         <note category="location">src/app/entry/dialogs/move-matching-tasks-dialog/move-matching-tasks-dialog.component.ts:124,129</note>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:77,79</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:78,80</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:86,97</note>
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:25,33</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-add-task-dialog.component.ts:71,77</note>
@@ -3653,6 +3674,16 @@
       <segment state="translated">
         <source>Inverse name</source>
         <target>Nom inverse</target>
+      </segment>
+    </unit>
+    <unit id="5335611991466155594">
+      <notes>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:289</note>
+        <note category="description">Body of a confirmation dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Are you sure you want to take the selected tasks off this board? They stay on any other board they are on.</source>
+      <target>Voulez-vous vraiment retirer les tâches sélectionnées de ce tableau ? Elles restent sur les autres tableaux où elles figurent.</target>
       </segment>
     </unit>
     <unit id="8977816019303133202">
@@ -3887,6 +3918,16 @@
       <segment state="translated">
         <source>Remove key?</source>
         <target>Supprimer la clé ?</target>
+      </segment>
+    </unit>
+    <unit id="8552023238663754615">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:215</note>
+        <note category="description">Tooltip on the icon marking a task that sits on more than one board</note>
+      </notes>
+      <segment state="translated">
+        <source>On <ph id="0" equiv="COUNT" disp="count"/> boards</source>
+      <target>Sur <ph id="0" equiv="COUNT" disp="count"/> tableaux</target>
       </segment>
     </unit>
     <unit id="9021131006692744653">
@@ -4151,6 +4192,16 @@
       <segment state="translated">
         <source> Edit Tag </source>
         <target>Modifier l&apos;étiquette</target>
+      </segment>
+    </unit>
+    <unit id="2972165246341808110">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:93,97</note>
+        <note category="description">Empty state when a task is not on any board</note>
+      </notes>
+      <segment state="translated">
+        <source> Not on any board </source>
+        <target> Sur aucun tableau </target>
       </segment>
     </unit>
     <unit id="2978952726539914975">
@@ -5766,6 +5817,16 @@
         <target>Chargement de la charge de l&apos;équipe</target>
       </segment>
     </unit>
+    <unit id="166657180724463675">
+      <notes>
+        <note category="location">src/app/core/services/task-commands.service.ts:176</note>
+        <note category="description">Confirmation shown after an action succeeds</note>
+      </notes>
+      <segment state="translated">
+        <source>Task added to board</source>
+        <target>Tâche ajoutée au tableau</target>
+      </segment>
+    </unit>
     <unit id="1668810922434203660">
       <notes>
         <note category="location">src/app/features/automations/components/automation-conditions-editor.component.ts:103</note>
@@ -6601,7 +6662,7 @@
     </unit>
     <unit id="4767390997683770016">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:328</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:317</note>
         <note category="description">Placeholder for the value of a tag condition</note>
       </notes>
       <segment state="translated">
@@ -6693,7 +6754,7 @@
     <unit id="8070396816726827304">
       <notes>
         <note category="location">src/app/features/automations/components/automation-actions-editor.component.ts:304,305</note>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:315</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:125,126</note>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:363</note>
         <note category="description">Delay unit: hours</note>
@@ -6747,7 +6808,7 @@
     </unit>
     <unit id="7997648753385248331">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:254</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:257</note>
         <note category="description">Shown when the open task no longer exists</note>
       </notes>
       <segment state="translated">
@@ -6879,7 +6940,7 @@
     <unit id="1616102757855967475">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
-        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:79</note>
+        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
         <note category="description">Filter showing sprints in any state</note>
       </notes>
       <segment state="translated">
@@ -6889,7 +6950,7 @@
     </unit>
     <unit id="3184700926171002527">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:80</note>
+        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:73</note>
         <note category="description">Group operator requiring at least one condition to match</note>
       </notes>
       <segment state="translated">
@@ -6899,8 +6960,8 @@
     </unit>
     <unit id="6252070156626006029">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:295</note>
-        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:81</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:284</note>
+        <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:74</note>
         <note category="description">Task priority level, none</note>
       </notes>
       <segment state="translated">
@@ -6930,7 +6991,7 @@
     </unit>
     <unit id="6967575591272937015">
       <notes>
-        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:37</note>
+        <note category="location">src/app/shared/components/query-builder/query-explanation.ts:33</note>
         <note category="description">Summary fragment standing in for a nested group with no conditions</note>
       </notes>
       <segment state="translated">
@@ -7328,6 +7389,16 @@
         <target>Dernière exécution</target>
       </segment>
     </unit>
+    <unit id="6579848493072578871">
+      <notes>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:192</note>
+        <note category="description">Confirmation shown after an action succeeds</note>
+      </notes>
+      <segment state="translated">
+        <source>Tasks removed from board</source>
+      <target>Tâches retirées du tableau</target>
+      </segment>
+    </unit>
     <unit id="5549200569091145892">
       <notes>
         <note category="location">src/app/features/automations/components/automation-dry-run-effects.component.ts:18,22</note>
@@ -7495,7 +7566,7 @@
     </unit>
     <unit id="7048712132697913811">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:217</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:206</note>
         <note category="description">Condition operator matching when a value is present</note>
       </notes>
       <segment state="initial">
@@ -7505,7 +7576,7 @@
     </unit>
     <unit id="6486513770809055431">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:223</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:212</note>
         <note category="description">Condition operator matching when a value is absent</note>
       </notes>
       <segment state="initial">
@@ -7515,7 +7586,7 @@
     </unit>
     <unit id="1796650376639485937">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:229</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:218</note>
         <note category="description">Condition operator matching a substring</note>
       </notes>
       <segment state="initial">
@@ -7595,7 +7666,7 @@
     </unit>
     <unit id="802458941707537739">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:296</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:285</note>
         <note category="description">Task priority level, low</note>
       </notes>
       <segment state="translated">
@@ -7615,7 +7686,7 @@
     </unit>
     <unit id="5982496808088686844">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:299</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:288</note>
         <note category="description">Task priority level, medium</note>
       </notes>
       <segment state="translated">
@@ -7626,7 +7697,7 @@
     <unit id="8063651736083474594">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:119</note>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:301</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:290</note>
         <note category="description">Example value shown in the notification preview</note>
       </notes>
       <segment state="translated">
@@ -7636,7 +7707,7 @@
     </unit>
     <unit id="2437478124199610198">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:304</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:293</note>
         <note category="description">Task priority level, critical</note>
       </notes>
       <segment state="translated">
@@ -7646,7 +7717,7 @@
     </unit>
     <unit id="4696525146008503803">
       <notes>
-        <note category="location">src/app/features/automations/models/automation-query-builder.ts:318</note>
+        <note category="location">src/app/features/automations/models/automation-query-builder.ts:307</note>
         <note category="description">Estimation unit, t-shirt sizes</note>
       </notes>
       <segment state="translated">
@@ -7811,7 +7882,7 @@
     </unit>
     <unit id="9114014874327219131">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:90,94</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:92,96</note>
         <note category="description">Accessible label for the board card selection checkbox</note>
       </notes>
       <segment state="translated">
@@ -8612,6 +8683,17 @@
         <target>Laissez vide pour conserver la description actuelle</target>
       </segment>
     </unit>
+    <unit id="175649209422679045">
+      <notes>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:287</note>
+        <note category="location">src/app/core/services/board-group-commands.service.ts:290</note>
+        <note category="description">Confirms the action in a dialog</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove From Board</source>
+      <target>Retirer du tableau</target>
+      </segment>
+    </unit>
     <unit id="1756946564393679789">
       <notes>
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:119,121</note>
@@ -8999,7 +9081,7 @@
     </unit>
     <unit id="8617231936234975611">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:203</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:225</note>
         <note category="description">Tooltip on a task pinned at more than one scope</note>
       </notes>
       <segment state="translated">
@@ -10102,7 +10184,7 @@
     </unit>
     <unit id="6647181806898890269">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:117</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:118</note>
         <note category="description">Keyboard key that clears the task selection, shown as a hint</note>
       </notes>
       <segment state="translated">
@@ -10603,7 +10685,7 @@
     </unit>
     <unit id="2893417064141576408">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:68,71</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:69,72</note>
         <note category="description">Accessible label for the bar holding actions for the selected tasks</note>
       </notes>
       <segment state="translated">
@@ -11411,7 +11493,7 @@
     </unit>
     <unit id="7397230302063222654">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:77,78</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:78,79</note>
       </notes>
       <segment state="translated">
         <source>{VAR_PLURAL, plural, =1 {task selected} other {tasks selected}}</source>
@@ -11801,8 +11883,8 @@
     </unit>
     <unit id="2700504957203898501">
       <notes>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:134,136</note>
-        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:138,142</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:136,138</note>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:140,144</note>
         <note category="location">src/app/static/components/task-name.component.ts:46,47</note>
         <note category="location">src/app/static/components/task-name.component.ts:48,51</note>
         <note category="description">Accessible label for the icon marking a task that has comments</note>
@@ -11995,7 +12077,7 @@
     </unit>
     <unit id="1075015891055978279">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:143</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:151</note>
         <note category="description">Action that deletes the selected tasks</note>
       </notes>
       <segment state="translated">
@@ -12005,7 +12087,7 @@
     </unit>
     <unit id="2080795702464659362">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:129</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:130</note>
         <note category="description">Action that moves the selected tasks to another board group</note>
       </notes>
       <segment state="translated">
@@ -12015,7 +12097,7 @@
     </unit>
     <unit id="1463922540752409787">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:136</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:144</note>
         <note category="description">Action that reassigns the selected tasks to another person</note>
       </notes>
       <segment state="translated">
@@ -14908,6 +14990,16 @@
         <target>Les tâches terminées apparaîtront ici au fur et à mesure.</target>
       </segment>
     </unit>
+    <unit id="2779111500617013409">
+      <notes>
+        <note category="location">src/app/features/boards/components/board-group-card/board-group-card.component.ts:155,159</note>
+        <note category="description">Accessible label for the icon marking a task that sits on more than one board</note>
+      </notes>
+      <segment state="translated">
+        <source>On several boards</source>
+      <target>Sur plusieurs tableaux</target>
+      </segment>
+    </unit>
     <unit id="4257828580066254399">
       <notes>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:53,54</note>
@@ -15002,7 +15094,7 @@
     </unit>
     <unit id="4810719754522561546">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:207</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:210</note>
         <note category="description">Accessible label for the control that opens the pin scope menu</note>
       </notes>
       <segment state="translated">
@@ -16450,7 +16542,7 @@
     </unit>
     <unit id="8700121026680200191">
       <notes>
-        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:100,102</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:101,103</note>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:61,65</note>
         <note category="location">src/app/features/settings/components/service-accounts/edit-service-account-dialog.component.ts:113,116</note>
         <note category="location">src/app/features/settings/components/service-accounts/permission-grid.component.ts:46,51</note>
@@ -16651,6 +16743,16 @@
       <segment state="translated">
         <source> Change the password you use to sign in. </source>
         <target> Changez le mot de passe que vous utilisez pour vous connecter. </target>
+      </segment>
+    </unit>
+    <unit id="1005445972395556557">
+      <notes>
+        <note category="location">src/app/core/services/task-commands.service.ts:196</note>
+        <note category="description">Confirmation shown after an action succeeds</note>
+      </notes>
+      <segment state="translated">
+        <source>Task removed from board</source>
+        <target>Tâche retirée du tableau</target>
       </segment>
     </unit>
     <unit id="1005858772988721003">
@@ -17677,6 +17779,18 @@
         <target>assistant</target>
       </segment>
     </unit>
+    <unit id="8513834699710731594">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:79,81</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-boards.component.ts:83,85</note>
+        <note category="location">src/app/features/boards/components/board-groups-selection/board-groups-selection.component.ts:137</note>
+        <note category="description">Tooltip on the button that takes a task off a board</note>
+      </notes>
+      <segment state="translated">
+        <source>Remove from board</source>
+        <target>Retirer du tableau</target>
+      </segment>
+    </unit>
     <unit id="851501460099408919">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:666</note>
@@ -18437,7 +18551,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:223</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:226</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:89,93</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
@@ -18819,7 +18933,7 @@
     </unit>
     <unit id="5743757503664322992">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:220</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:223</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:46,47</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:60,62</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:231</note>

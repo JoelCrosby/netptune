@@ -6,11 +6,11 @@ using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Search;
-using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Tasks.Commands;
@@ -24,19 +24,22 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
     private readonly IEventRecordWriter EventRecords;
+    private readonly ITaskPlacementService Placement;
 
     public MoveTasksToGroupCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IActivityLogger activity,
         IEventPublisher eventPublisher,
         IIdentityService identity,
-        IEventRecordWriter eventRecords)
+        IEventRecordWriter eventRecords,
+        ITaskPlacementService placement)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
         EventPublisher = eventPublisher;
         Identity = identity;
         EventRecords = eventRecords;
+        Placement = placement;
     }
 
     public async ValueTask<ClientResponse> Handle(MoveTasksToGroupCommand request, CancellationToken cancellationToken)
@@ -110,18 +113,7 @@ public sealed class MoveTasksToGroupCommandHandler : IRequestHandler<MoveTasksTo
                 }
             }
 
-            await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(taskIds, cancellationToken);
-
-            var baseSortOrder = await UnitOfWork.BoardGroups.GetMaxTaskSortOrder(boardGroup.Id, cancellationToken) + 1;
-
-            var taskInGroups = taskIds.Select((id, index) => new ProjectTaskInBoardGroup
-            {
-                BoardGroupId = boardGroup.Id,
-                ProjectTaskId = id,
-                SortOrder = baseSortOrder + index,
-            });
-
-            await UnitOfWork.ProjectTasksInGroups.AddRangeAsync(taskInGroups, cancellationToken);
+            await Placement.PlaceMany(taskIds, boardGroup, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
         });
 

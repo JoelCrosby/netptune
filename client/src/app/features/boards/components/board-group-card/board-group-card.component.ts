@@ -18,6 +18,7 @@ import { PERMISSIONS } from '@app/core/auth/permissions';
 import {
   LucideCheck,
   LucideFlag,
+  LucideKanban,
   LucideMessageSquareText,
   LucidePin,
 } from '@lucide/angular';
@@ -62,6 +63,7 @@ import { IconCircleComponent } from '@static/components/icon-circle.component';
     LucideFlag,
     LucideCheck,
     LucideMessageSquareText,
+    LucideKanban,
     NgClass,
     TooltipDirective,
     SprintBadgeComponent,
@@ -142,6 +144,18 @@ import { IconCircleComponent } from '@static/components/icon-circle.component';
             <app-task-flag-badge [count]="task().flagCount" />
           }
 
+          @if (onMultipleBoards()) {
+            <svg
+              lucideKanban
+              class="text-muted h-4 w-4"
+              i18n-aria-label="
+                Accessible label for the icon marking a task that sits on more
+                than one board
+              "
+              aria-label="On several boards"
+              [appTooltip]="boardCountLabel()"></svg>
+          }
+
           @if (task().statusCategory === statusCategory.done) {
             <svg lucideCheck class="text-green-500"></svg>
           }
@@ -192,6 +206,14 @@ export class BoardGroupCardComponent {
   readonly readFlags = hasPermission(PERMISSIONS.flags.read);
   readonly pinIcon = LucidePin;
   readonly pinned = computed(() => this.task().pinnedScopes.length > 0);
+
+  readonly onMultipleBoards = computed(() => this.task().boardCount > 1);
+
+  readonly boardCountLabel = computed(() => {
+    const count = this.task().boardCount;
+
+    return $localize`:Tooltip on the icon marking a task that sits on more than one board:On ${count}:COUNT: boards`;
+  });
 
   readonly pinLabel = computed(() => {
     const scopes = this.task().pinnedScopes;

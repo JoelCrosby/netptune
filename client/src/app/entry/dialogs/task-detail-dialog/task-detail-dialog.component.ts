@@ -38,6 +38,7 @@ import { TaskDetailService } from './task-detail.service';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { TaskDetailFilesComponent } from './task-detail-files.component';
 import { TaskDetailFlagsComponent } from './task-detail-flags.component';
+import { TaskDetailBoardsComponent } from './task-detail-boards.component';
 
 export interface TaskDetailDialogData {
   systemId: string;
@@ -100,6 +101,7 @@ export interface TaskDetailDialogData {
               <app-task-detail-files [systemId]="task.systemId" />
             }
             <app-task-detail-relations />
+            <app-task-detail-boards />
             @if (readComments()) {
               <app-task-detail-comments />
             }
@@ -134,6 +136,7 @@ export interface TaskDetailDialogData {
     TaskDetailHeaderComponent,
     TaskDetailDescriptionComponent,
     TaskDetailRelationsComponent,
+    TaskDetailBoardsComponent,
     TaskDetailCommentsComponent,
     TaskDetailTagsComponent,
     TaskDetailActionsComponent,

@@ -34,6 +34,8 @@ public static class TasksEndpoints
         group.MapDelete("/{id}", HandleDeleteById).RequireAuthorization(NetptunePermissions.Tasks.Delete);
         group.MapPost("/move-task-in-group", HandleMoveTaskInGroup).RequireAuthorization(NetptunePermissions.Tasks.Move);
         group.MapPost("/move-tasks-to-group", HandleMoveTasksToGroup).RequireAuthorization(NetptunePermissions.Tasks.Move);
+        group.MapPost("/{taskId:int}/boards", HandleAddTaskToBoard).RequireAuthorization(NetptunePermissions.Tasks.Move);
+        group.MapDelete("/{taskId:int}/boards/{boardId:int}", HandleRemoveTaskFromBoard).RequireAuthorization(NetptunePermissions.Tasks.Move);
         group.MapPost("/reassign-tasks", HandleReassignTasks).RequireAuthorization(NetptunePermissions.Tasks.Reassign);
         group.MapPost("/bulk-update", HandleBulkUpdate).RequireAuthorization(NetptunePermissions.Tasks.Update);
         group.MapPost("/restore", HandleRestoreTasks).RequireAuthorization(NetptunePermissions.Tasks.Restore);
@@ -249,6 +251,41 @@ public static class TasksEndpoints
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new MoveTasksToGroupCommand(request), cancellationToken);
+
+        if (result.IsNotFound) return Results.NotFound(result);
+
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleAddTaskToBoard(
+        IMediator mediator,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        int taskId,
+        AddTaskToBoardRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new AddTaskToBoardCommand(taskId, request.BoardId, request.BoardGroupId);
+        var result = await mediator.Send(command, cancellationToken);
+
+        if (result.IsNotFound) return Results.NotFound(result);
+
+        await boardEventService.BroadcastRequestAsync(context, WorkspaceEventScopes.Task);
+
+        return Results.Ok(result);
+    }
+
+    public static async Task<IResult> HandleRemoveTaskFromBoard(
+        IMediator mediator,
+        IBoardEventService boardEventService,
+        HttpContext context,
+        int taskId,
+        int boardId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RemoveTaskFromBoardCommand(taskId, boardId), cancellationToken);
 
         if (result.IsNotFound) return Results.NotFound(result);
 

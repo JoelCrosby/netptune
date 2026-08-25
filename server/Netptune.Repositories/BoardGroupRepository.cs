@@ -121,6 +121,7 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 WorkspaceKey = meta.Workspace_Identifier,
                 Assignees = ParseAssignees(row.Assignees),
                 PinnedScopes = row.Pinned_Scopes.Select(scope => (TaskPinScope)scope).ToList(),
+                BoardCount = row.Board_Count,
             });
         }
 
@@ -147,20 +148,6 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         });
     }
 
-    public Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default)
-    {
-        var query = Entities
-
-            .Where(group => group.TasksInGroups
-                .Select(x => x.ProjectTaskId)
-                .Contains(taskId))
-
-            .Include(group => group.TasksInGroups)
-            .ThenInclude(relational => relational.ProjectTask);
-
-        return query.ToReadonlyListAsync(isReadonly, cancellationToken);
-    }
-
     public Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false, CancellationToken cancellationToken = default)
     {
         var query = Context.ProjectTaskInBoardGroups
@@ -172,33 +159,27 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
 
     public Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default)
     {
-        return Entities
-            .Where(group => group.Id == groupId && !group.IsDeleted)
-            .AsNoTracking()
-            .Select(group => new BoardGroupTaskTarget
-            {
-                Id = group.Id,
-                Name = group.Name,
-                MaxSortOrder = Context.ProjectTaskInBoardGroups
-                    .Where(taskInGroup => taskInGroup.BoardGroupId == group.Id)
-                    .Max(taskInGroup => (double?)taskInGroup.SortOrder) ?? 0D,
-                WorkspaceId = group.WorkspaceId,
-                StatusId = group.StatusId,
-                ProjectId = group.Board != null ? group.Board.ProjectId : null,
-                BoardIdentifier = group.Board != null ? group.Board.Identifier : null,
-            })
-            .FirstOrDefaultAsync(cancellationToken);
+        var query = Entities.Where(group => group.Id == groupId && !group.IsDeleted);
+
+        return ProjectTaskTarget(query).FirstOrDefaultAsync(cancellationToken);
     }
 
     public Task<BoardGroupTaskTarget?> GetDefaultTaskTarget(int projectId, CancellationToken cancellationToken = default)
     {
-        return Entities
+        var query = Entities
             .Where(group => !group.IsDeleted)
             .Where(group => group.Board != null
                 && group.Board.ProjectId == projectId
                 && group.Board.BoardType == BoardType.Default
                 && !group.Board.IsDeleted)
-            .OrderBy(group => group.SortOrder)
+            .OrderBy(group => group.SortOrder);
+
+        return ProjectTaskTarget(query).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    private IQueryable<BoardGroupTaskTarget> ProjectTaskTarget(IQueryable<BoardGroup> query)
+    {
+        return query
             .AsNoTracking()
             .Select(group => new BoardGroupTaskTarget
             {
@@ -210,9 +191,9 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
                 WorkspaceId = group.WorkspaceId,
                 StatusId = group.StatusId,
                 ProjectId = group.Board != null ? group.Board.ProjectId : null,
+                BoardId = group.BoardId,
                 BoardIdentifier = group.Board != null ? group.Board.Identifier : null,
-            })
-            .FirstOrDefaultAsync(cancellationToken);
+            });
     }
 
     public Task<List<BoardGroupOptionViewModel>> GetOptionsInWorkspace(
@@ -262,25 +243,22 @@ public class BoardGroupRepository : WorkspaceEntityRepository<DataContext, Board
         return sortOrders.Max() + 1;
     }
 
-    public async Task<int?> GetBoardGroupIdForTask(int projectTaskId, CancellationToken cancellationToken = default)
+    public Task<BoardGroupTaskTarget?> GetStatusTaskTarget(int boardId, int statusId, CancellationToken cancellationToken = default)
     {
-        var results = await Context.ProjectTaskInBoardGroups
-            .AsNoTracking()
-            .Where(x => x.ProjectTaskId == projectTaskId)
-            .Select(x => x.BoardGroupId)
-            .ToListAsync(cancellationToken);
+        var query = Entities
+            .Where(group => !group.IsDeleted && group.BoardId == boardId && group.StatusId == statusId)
+            .OrderBy(group => group.SortOrder);
 
-        return results.Count > 0 ? results.Single() : null;
+        return ProjectTaskTarget(query).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<int?> GetTaskAncestors(int projectTaskId)
+    public Task<BoardGroupTaskTarget?> GetFallbackTaskTarget(int boardId, int? excludeGroupId = null, CancellationToken cancellationToken = default)
     {
-        var results = await Context.ProjectTaskInBoardGroups
-            .AsNoTracking()
-            .Where(x => x.ProjectTaskId == projectTaskId)
-            .Select(x => x.BoardGroupId)
-            .ToListAsync();
+        var query = Entities
+            .Where(group => !group.IsDeleted && group.BoardId == boardId)
+            .Where(group => excludeGroupId == null || group.Id != excludeGroupId)
+            .OrderBy(group => group.SortOrder);
 
-        return results.Count > 0 ? results.Single() : null;
+        return ProjectTaskTarget(query).FirstOrDefaultAsync(cancellationToken);
     }
 }

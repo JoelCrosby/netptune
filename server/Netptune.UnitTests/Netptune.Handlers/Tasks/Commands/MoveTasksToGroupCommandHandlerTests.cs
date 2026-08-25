@@ -12,6 +12,7 @@ using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
 
@@ -30,6 +31,7 @@ public class MoveTasksToGroupCommandHandlerTests
     private readonly IEventPublisher EventPublisher = Substitute.For<IEventPublisher>();
     private readonly IIdentityService Identity = Substitute.For<IIdentityService>();
     private readonly IEventRecordWriter EventRecords = Substitute.For<IEventRecordWriter>();
+    private readonly ITaskPlacementService Placement = Substitute.For<ITaskPlacementService>();
 
     public MoveTasksToGroupCommandHandlerTests()
     {
@@ -40,7 +42,8 @@ public class MoveTasksToGroupCommandHandlerTests
             Activity,
             EventPublisher,
             Identity,
-            EventRecords);
+            EventRecords,
+            Placement);
     }
 
     private void SetupHandlerDependencies(MoveTasksToGroupRequest request, int? groupStatusId = null)
@@ -51,6 +54,7 @@ public class MoveTasksToGroupCommandHandlerTests
             {
                 Id = request.NewGroupId.Value,
                 Name = AutoFixtures.BoardGroup.Name,
+                BoardId = 1,
                 MaxSortOrder = 7,
                 WorkspaceId = 1,
                 StatusId = groupStatusId,
@@ -157,12 +161,23 @@ public class MoveTasksToGroupCommandHandlerTests
 
         await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
 
-        await UnitOfWork.ProjectTasksInGroups.Received(1).DeleteAllByTaskId(
+        await Placement.Received(1).PlaceMany(
+            Arg.Any<IReadOnlyList<int>>(),
+            Arg.Is<BoardGroupTaskTarget>(target => target.Id == request.NewGroupId!.Value),
+            TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task MoveTasksToGroup_ShouldLeavePlacementsOnOtherBoardsIntact_WhenInputValid()
+    {
+        var request = Fixture.Build<MoveTasksToGroupRequest>().Create();
+        SetupHandlerDependencies(request);
+
+        await Handler.Handle(new MoveTasksToGroupCommand(request), TestContext.Current.CancellationToken);
+
+        await UnitOfWork.ProjectTasksInGroups.DidNotReceive().DeleteAllByTaskId(
             Arg.Any<IEnumerable<int>>(),
-            TestContext.Current.CancellationToken);
-        await UnitOfWork.ProjectTasksInGroups.Received(1).AddRangeAsync(
-            Arg.Any<IEnumerable<ProjectTaskInBoardGroup>>(),
-            TestContext.Current.CancellationToken);
+            Arg.Any<CancellationToken>());
     }
 
     [Fact]

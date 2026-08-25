@@ -16,6 +16,7 @@ public static class TaskFieldKeys
     public const string Project = "task.project";
     public const string Sprint = "task.sprint";
     public const string BoardGroup = "task.board_group";
+    public const string Board = "task.board";
     public const string Owner = "task.owner";
     public const string Assignees = "task.assignees";
     public const string Tags = "task.tags";

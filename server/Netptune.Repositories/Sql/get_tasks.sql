@@ -140,6 +140,23 @@ WITH filtered_tasks AS (
     ORDER BY {taskOrder}
     LIMIT @pageSize
     OFFSET @skip
+),
+-- Joined to the already-paginated CTE so it runs at most @pageSize times, and kept out of the
+-- row-expanding tag/assignee join below so it is not re-evaluated per expanded row.
+task_placements AS (
+    SELECT ptibg.project_task_id
+         , json_agg(json_build_object(
+                   'board_id', b.id,
+                   'board_name', b.name,
+                   'board_identifier', b.identifier,
+                   'board_group_id', bg.id,
+                   'board_group_name', bg.name,
+                   'sort_order', ptibg.sort_order) ORDER BY b.name, bg.sort_order) AS placements
+    FROM filtered_tasks ft
+             INNER JOIN project_task_in_board_groups ptibg ON ptibg.project_task_id = ft.id
+             INNER JOIN board_groups bg ON ptibg.board_group_id = bg.id AND NOT bg.is_deleted
+             INNER JOIN boards b ON bg.board_id = b.id AND NOT b.is_deleted
+    GROUP BY ptibg.project_task_id
 )
 SELECT ft.total_count
      , ft.id AS task_id
@@ -176,6 +193,7 @@ SELECT ft.total_count
      , ft.project_key
      , ft.project_name
      , ft.has_comments
+     , COALESCE(tp.placements, '[]') AS placements
      , t.name AS tag
      , u.id AS assignee_id
      , u.firstname AS assignee_firstname
@@ -183,6 +201,7 @@ SELECT ft.total_count
      , u.picture_url AS assignee_picture_url
      , u.user_type AS assignee_user_type
 FROM filtered_tasks ft
+         LEFT JOIN task_placements tp ON ft.id = tp.project_task_id
          LEFT JOIN project_task_tags ptt ON ft.id = ptt.project_task_id
          LEFT JOIN tags t ON ptt.tag_id = t.id AND NOT t.is_deleted
          LEFT JOIN project_task_app_users ptau ON ft.id = ptau.project_task_id

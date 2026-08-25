@@ -62,6 +62,8 @@ public class BoardViewRowMap
 
     public int Flag_Count { get; set; }
 
+    public int Board_Count { get; set; }
+
     public string Assignees { get; set; } = "[]";
 }
 

@@ -43,6 +43,7 @@ export type TaskQueryOptionSource =
   | 'estimate-types'
   | 'projects'
   | 'sprints'
+  | 'boards'
   | 'members'
   | 'tags'
   | 'relation-types';

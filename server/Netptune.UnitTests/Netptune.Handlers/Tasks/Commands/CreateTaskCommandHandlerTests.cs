@@ -143,6 +143,7 @@ public class CreateTaskCommandHandlerTests
             {
                 Id = request.BoardGroupId.Value,
                 Name = "Group",
+                BoardId = 1,
                 MaxSortOrder = 7,
             });
 
@@ -185,6 +186,7 @@ public class CreateTaskCommandHandlerTests
             {
                 Id = request.BoardGroupId.Value,
                 Name = "Group",
+                BoardId = 1,
                 MaxSortOrder = 7,
             });
 
@@ -246,6 +248,7 @@ public class CreateTaskCommandHandlerTests
             {
                 Id = request.BoardGroupId.Value,
                 Name = "Group",
+                BoardId = 1,
                 MaxSortOrder = 7,
             });
 
@@ -494,6 +497,7 @@ public class CreateTaskCommandHandlerTests
             {
                 Id = request.BoardGroupId.Value,
                 Name = "Group",
+                BoardId = 1,
                 MaxSortOrder = 7,
             });
 
@@ -526,6 +530,7 @@ public class CreateTaskCommandHandlerTests
             {
                 Id = request.BoardGroupId.Value,
                 Name = "Group",
+                BoardId = 1,
                 MaxSortOrder = 7,
             });
 

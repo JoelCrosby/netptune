@@ -82,4 +82,6 @@ public class BoardViewTask
     public string WorkspaceKey { get; set; } = null!;
 
     public List<TaskPinScope> PinnedScopes { get; set; } = [];
+
+    public int BoardCount { get; set; }
 }

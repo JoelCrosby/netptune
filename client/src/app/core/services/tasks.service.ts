@@ -6,6 +6,7 @@ import { ClientResponse } from '@core/models/client-response';
 import { MoveTaskInGroupRequest } from '@core/models/move-task-in-group-request';
 import { AddProjectTaskRequest, ProjectTask } from '@core/models/project-task';
 import { AddTagToTaskRequest } from '@core/models/requests/add-tag-request';
+import { AddTaskToBoardRequest } from '@core/models/requests/add-task-to-board-request';
 import { BulkUpdateTasksRequest } from '@core/models/requests/bulk-update-tasks-request';
 import { DeleteTagFromTaskRequest } from '@core/models/requests/delete-tag-from-task-request';
 import { MoveTasksToGroupRequest } from '@core/models/requests/move-tasks-to-group-request';
@@ -81,6 +82,19 @@ export class TasksService {
 
   deleteBoardGroup(boardGroupId: number) {
     return this.http.delete<ClientResponse>(`api/boardgroups/${boardGroupId}`);
+  }
+
+  addTaskToBoard(taskId: number, request: AddTaskToBoardRequest) {
+    return this.http.post<ClientResponse<TaskViewModel>>(
+      `api/tasks/${taskId}/boards`,
+      request
+    );
+  }
+
+  removeTaskFromBoard(taskId: number, boardId: number) {
+    return this.http.delete<ClientResponse<TaskViewModel>>(
+      `api/tasks/${taskId}/boards/${boardId}`
+    );
   }
 
   moveTasksToGroup(request: MoveTasksToGroupRequest) {

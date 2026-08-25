@@ -1,8 +1,10 @@
 using Mediator;
 
+using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Tasks.Commands;
@@ -14,15 +16,18 @@ public sealed class MoveTasksToBoardGroupCommandHandler : IRequestHandler<MoveTa
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly IIdentityService Identity;
     private readonly IMediator Mediator;
+    private readonly ITaskPlacementService Placement;
 
     public MoveTasksToBoardGroupCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
-        IMediator mediator)
+        IMediator mediator,
+        ITaskPlacementService placement)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Mediator = mediator;
+        Placement = placement;
     }
 
     public async ValueTask<ClientResponse> Handle(
@@ -60,6 +65,8 @@ public sealed class MoveTasksToBoardGroupCommandHandler : IRequestHandler<MoveTa
             return ClientResponse.Failed($"Board group “{target.Name}” belongs to a different project.");
         }
 
+        await EnsureOnBoard(request.TaskIds, target, cancellationToken);
+
         var moveRequest = new MoveTasksToGroupRequest
         {
             BoardId = target.BoardIdentifier!,
@@ -68,5 +75,22 @@ public sealed class MoveTasksToBoardGroupCommandHandler : IRequestHandler<MoveTa
         };
 
         return await Mediator.Send(new MoveTasksToGroupCommand(moveRequest), cancellationToken);
+    }
+
+    private async Task EnsureOnBoard(
+        List<int> taskIds,
+        BoardGroupTaskTarget target,
+        CancellationToken cancellationToken)
+    {
+        var taskIdsInBoard = await UnitOfWork.Tasks.GetTaskIdsInBoard(target.BoardIdentifier!, cancellationToken);
+        var missingTaskIds = taskIds.Distinct().Where(taskId => !taskIdsInBoard.Contains(taskId)).ToList();
+
+        if (missingTaskIds.Count == 0)
+        {
+            return;
+        }
+
+        await Placement.PlaceMany(missingTaskIds, target, cancellationToken);
+        await UnitOfWork.CompleteAsync(cancellationToken);
     }
 }

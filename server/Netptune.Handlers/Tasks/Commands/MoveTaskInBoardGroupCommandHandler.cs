@@ -6,11 +6,11 @@ using Netptune.Core.Events.Tasks;
 using Netptune.Core.Events;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Ordering;
-using Netptune.Core.Relationships;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Tasks.Commands;
@@ -24,19 +24,22 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
     private readonly IEventPublisher EventPublisher;
     private readonly IIdentityService Identity;
     private readonly IEventRecordWriter EventRecords;
+    private readonly ITaskPlacementService Placement;
 
     public MoveTaskInBoardGroupCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IActivityLogger activity,
         IEventPublisher eventPublisher,
         IIdentityService identity,
-        IEventRecordWriter eventRecords)
+        IEventRecordWriter eventRecords,
+        ITaskPlacementService placement)
     {
         UnitOfWork = unitOfWork;
         Activity = activity;
         EventPublisher = eventPublisher;
         Identity = identity;
         EventRecords = eventRecords;
+        Placement = placement;
     }
 
     public async ValueTask<ClientResponse> Handle(MoveTaskInBoardGroupCommand request, CancellationToken cancellationToken)
@@ -93,16 +96,7 @@ public sealed class MoveTaskInBoardGroupCommandHandler : IRequestHandler<MoveTas
                 }
             }
 
-            await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId(new[] { request.TaskId }, cancellationToken);
-
-            var newRelational = new ProjectTaskInBoardGroup
-            {
-                ProjectTaskId = request.TaskId,
-                BoardGroupId = request.NewGroupId,
-                SortOrder = -1,
-            };
-
-            await UnitOfWork.ProjectTasksInGroups.AddAsync(newRelational, cancellationToken);
+            await Placement.Place(request.TaskId, newGroup, cancellationToken);
             await UnitOfWork.CompleteAsync(cancellationToken);
 
             return newGroup;

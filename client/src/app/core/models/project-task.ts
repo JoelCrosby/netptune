@@ -8,6 +8,15 @@ import { Project } from './project';
 import { AddTaskRelationRequest } from './task-relation';
 import { Workspace } from './workspace';
 
+export interface BoardPlacement {
+  boardId: number;
+  boardName: string;
+  boardIdentifier: string;
+  boardGroupId: number;
+  boardGroupName: string;
+  sortOrder: number;
+}
+
 export interface ProjectTask extends Basemodel {
   name: string;
   description: string;
@@ -30,6 +39,7 @@ export interface ProjectTask extends Basemodel {
 
   sprintId?: number | null;
   boardGroupId?: number | null;
+  placements: BoardPlacement[];
   sprintName?: string | null;
   sprintStatus?: SprintStatus | null;
 

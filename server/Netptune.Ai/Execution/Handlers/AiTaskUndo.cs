@@ -6,6 +6,7 @@ using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests;
 using Netptune.Core.Services.Ai;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Handlers.Sprints.Commands;
 using Netptune.Handlers.Tasks.Commands;
 using Netptune.Handlers.Tasks.Queries;
@@ -39,6 +40,15 @@ public sealed record AiTaskSnapshot
     public int? SprintId { get; init; }
 
     public int? BoardGroupId { get; init; }
+
+    public List<AiTaskPlacementSnapshot> Placements { get; init; } = [];
+}
+
+public sealed record AiTaskPlacementSnapshot
+{
+    public int BoardId { get; init; }
+
+    public int BoardGroupId { get; init; }
 }
 
 public static class AiTaskUndo
@@ -80,6 +90,11 @@ public static class AiTaskUndo
             DueDate = task.DueDate,
             SprintId = task.SprintId,
             BoardGroupId = task.BoardGroupId,
+            Placements = task.Placements.ConvertAll(placement => new AiTaskPlacementSnapshot
+            {
+                BoardId = placement.BoardId,
+                BoardGroupId = placement.BoardGroupId,
+            }),
         };
 
         return JsonSerializer.SerializeToDocument(snapshot, SerializerOptions);
@@ -134,7 +149,7 @@ public static class AiTaskUndo
             return AiChangeUndoResult.Failure(change, sprintError);
         }
 
-        var groupError = await RestoreBoardGroup(mediator, snapshot, current.BoardGroupId, cancellationToken);
+        var groupError = await RestorePlacements(mediator, snapshot, current, cancellationToken);
 
         if (groupError is not null)
         {
@@ -174,15 +189,85 @@ public static class AiTaskUndo
         return removal.IsSuccess ? null : removal.Message ?? "The task could not be taken back out of the sprint.";
     }
 
-    private static async Task<string?> RestoreBoardGroup(
+    private static async Task<string?> RestorePlacements(
         IMediator mediator,
         AiTaskSnapshot snapshot,
-        int? currentBoardGroupId,
+        TaskViewModel current,
         CancellationToken cancellationToken)
     {
-        var isUnchanged = currentBoardGroupId == snapshot.BoardGroupId;
+        // Payloads captured before placements were recorded name one board group and say nothing about
+        // the boards the task was on, so they can only put that one group back.
+        var isLegacyPayload = snapshot.Placements.Count == 0;
 
-        if (isUnchanged || !snapshot.BoardGroupId.HasValue)
+        if (isLegacyPayload)
+        {
+            return await RestoreSingleBoardGroup(mediator, snapshot, current, cancellationToken);
+        }
+
+        foreach (var placement in snapshot.Placements)
+        {
+            var error = await RestorePlacement(mediator, snapshot.TaskId, placement, current, cancellationToken);
+
+            if (error is not null)
+            {
+                return error;
+            }
+        }
+
+        var snapshotBoardIds = snapshot.Placements.Select(placement => placement.BoardId).ToHashSet();
+        var addedBoardIds = current.Placements
+            .Select(placement => placement.BoardId)
+            .Where(boardId => !snapshotBoardIds.Contains(boardId))
+            .ToList();
+
+        foreach (var boardId in addedBoardIds)
+        {
+            var response = await mediator.Send(
+                new RemoveTaskFromBoardCommand(snapshot.TaskId, boardId),
+                cancellationToken);
+
+            if (!response.IsSuccess)
+            {
+                return response.Message ?? "The task could not be taken back off a board.";
+            }
+        }
+
+        return null;
+    }
+
+    private static async Task<string?> RestorePlacement(
+        IMediator mediator,
+        int taskId,
+        AiTaskPlacementSnapshot placement,
+        TaskViewModel current,
+        CancellationToken cancellationToken)
+    {
+        var currentGroupId = current.Placements
+            .Where(existing => existing.BoardId == placement.BoardId)
+            .Select(existing => (int?)existing.BoardGroupId)
+            .FirstOrDefault();
+
+        if (currentGroupId == placement.BoardGroupId)
+        {
+            return null;
+        }
+
+        var response = await mediator.Send(
+            new MoveTasksToBoardGroupCommand([taskId], placement.BoardGroupId),
+            cancellationToken);
+
+        return response.IsSuccess ? null : response.Message ?? "The task could not be put back in its board group.";
+    }
+
+    private static async Task<string?> RestoreSingleBoardGroup(
+        IMediator mediator,
+        AiTaskSnapshot snapshot,
+        TaskViewModel current,
+        CancellationToken cancellationToken)
+    {
+        var isAlreadyPlaced = current.Placements.Any(placement => placement.BoardGroupId == snapshot.BoardGroupId);
+
+        if (isAlreadyPlaced || !snapshot.BoardGroupId.HasValue)
         {
             return null;
         }

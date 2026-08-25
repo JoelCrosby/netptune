@@ -13,19 +13,19 @@ public interface IBoardGroupRepository : IWorkspaceEntityRepository<BoardGroup, 
 
     Task<List<BoardViewGroup>?> GetBoardViewGroups(int boardId, string currentUserId, string? searchTerm = null, int? sprintId = null, CancellationToken cancellationToken = default);
 
-    Task<List<BoardGroup>> GetBoardGroupsForProjectTask(int taskId, bool isReadonly = false, CancellationToken cancellationToken = default);
-
     Task<List<ProjectTask>> GetTasksInGroup(int groupId, bool isReadonly = false, CancellationToken cancellationToken = default);
 
     Task<BoardGroupTaskTarget?> GetTaskTarget(int groupId, CancellationToken cancellationToken = default);
 
     Task<BoardGroupTaskTarget?> GetDefaultTaskTarget(int projectId, CancellationToken cancellationToken = default);
 
+    Task<BoardGroupTaskTarget?> GetStatusTaskTarget(int boardId, int statusId, CancellationToken cancellationToken = default);
+
+    Task<BoardGroupTaskTarget?> GetFallbackTaskTarget(int boardId, int? excludeGroupId = null, CancellationToken cancellationToken = default);
+
     Task<List<BoardGroupOptionViewModel>> GetOptionsInWorkspace(int workspaceId, CancellationToken cancellationToken = default);
 
     Task<double> GetMaxTaskSortOrder(int groupId, CancellationToken cancellationToken = default);
 
     ValueTask<double> GetBoardGroupDefaultSortOrder(int boardId, CancellationToken cancellationToken = default);
-
-    Task<int?> GetBoardGroupIdForTask(int projectTaskId, CancellationToken cancellationToken = default);
 }

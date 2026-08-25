@@ -72,6 +72,7 @@ public static class ServiceCollectionExtensions
         services.AddNetptuneAutomationActions();
         services.TryAddScoped<ITaskMutationPipeline, TaskMutationPipeline>();
         services.TryAddScoped<ITaskStatusResolver, TaskStatusResolver>();
+        services.TryAddScoped<ITaskPlacementService, TaskPlacementService>();
 
         services.AddSingleton(Options.Create(options));
         services.TryAddSingleton(Options.Create(new LimitsOptions()));

@@ -54,6 +54,8 @@ public record TaskViewModel
 
     public int? BoardGroupId { get; set; }
 
+    public List<BoardPlacementViewModel> Placements { get; set; } = [];
+
     public string? SprintName { get; set; }
 
     public SprintStatus? SprintStatus { get; set; }

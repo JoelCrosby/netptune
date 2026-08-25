@@ -122,6 +122,17 @@ public sealed class TaskFieldCatalog : IQueryFieldCatalog
         },
         new QueryField
         {
+            Key = TaskFieldKeys.Board,
+            Name = "Board",
+            ValueType = QueryValueType.Collection,
+            Operators = QueryOperatorSets.Collection,
+            ParameterType = QueryParameterType.Integer,
+            Compiler = new TaskBoardCompiler(),
+            OptionSource = QueryOptionSources.Boards,
+            IsMultiValued = true,
+        },
+        new QueryField
+        {
             Key = TaskFieldKeys.Owner,
             Name = "Owner",
             ValueType = QueryValueType.Enum,

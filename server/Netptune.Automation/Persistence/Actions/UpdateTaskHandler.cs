@@ -21,15 +21,18 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
 {
     private readonly INetptuneUnitOfWork UnitOfWork;
     private readonly ITaskMutationPipeline TaskMutationPipeline;
+    private readonly ITaskPlacementService Placement;
     private readonly ILogger<UpdateTaskHandler> Logger;
 
     public UpdateTaskHandler(
         INetptuneUnitOfWork unitOfWork,
         ITaskMutationPipeline taskMutationPipeline,
+        ITaskPlacementService placement,
         ILogger<UpdateTaskHandler> logger)
     {
         UnitOfWork = unitOfWork;
         TaskMutationPipeline = taskMutationPipeline;
+        Placement = placement;
         Logger = logger;
     }
 
@@ -318,23 +321,7 @@ internal sealed class UpdateTaskHandler : IActionExecutionHandler
             return false;
         }
 
-        var currentGroup = await UnitOfWork.ProjectTasksInGroups.GetProjectTaskInGroup(taskId, cancellationToken);
-        var alreadyInGroup = currentGroup?.BoardGroupId == boardGroup.Id;
-
-        if (alreadyInGroup)
-        {
-            return false;
-        }
-
-        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId([taskId], cancellationToken);
-        await UnitOfWork.ProjectTasksInGroups.AddAsync(new ProjectTaskInBoardGroup
-        {
-            ProjectTaskId = taskId,
-            BoardGroupId = boardGroup.Id,
-            SortOrder = boardGroup.MaxSortOrder + 1,
-        }, cancellationToken);
-
-        return true;
+        return await Placement.Place(taskId, boardGroup, cancellationToken);
     }
 
     private static List<string> GetReferencedUserIds(AutomationTaskUpdateContribution contribution)

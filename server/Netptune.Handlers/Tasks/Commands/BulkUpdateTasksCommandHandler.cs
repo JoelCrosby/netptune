@@ -11,6 +11,7 @@ using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Handlers.Tasks.Commands;
@@ -24,19 +25,22 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
     private readonly ILogger<BulkUpdateTasksCommandHandler> Logger;
     private readonly IEventRecordWriter EventRecords;
     private readonly IEventPublisher EventPublisher;
+    private readonly ITaskPlacementService Placement;
 
     public BulkUpdateTasksCommandHandler(
         INetptuneUnitOfWork unitOfWork,
         IIdentityService identity,
         ILogger<BulkUpdateTasksCommandHandler> logger,
         IEventRecordWriter eventRecords,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        ITaskPlacementService placement)
     {
         UnitOfWork = unitOfWork;
         Identity = identity;
         Logger = logger;
         EventRecords = eventRecords;
         EventPublisher = eventPublisher;
+        Placement = placement;
     }
 
     public async ValueTask<ClientResponse> Handle(BulkUpdateTasksCommand command, CancellationToken cancellationToken)
@@ -423,13 +427,6 @@ public sealed class BulkUpdateTasksCommandHandler : IRequestHandler<BulkUpdateTa
             return;
         }
 
-        await UnitOfWork.ProjectTasksInGroups.DeleteAllByTaskId([task.Id], cancellationToken);
-
-        await UnitOfWork.ProjectTasksInGroups.AddAsync(new ProjectTaskInBoardGroup
-        {
-            BoardGroupId = group.Id,
-            ProjectTaskId = task.Id,
-            SortOrder = group.MaxSortOrder + 1,
-        }, cancellationToken);
+        await Placement.ReplaceAllPlacements(task.Id, group, cancellationToken);
     }
 }
