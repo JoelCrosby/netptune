@@ -16,6 +16,7 @@ import {
   LucideChartNoAxesColumn,
   LucideChartGantt,
   LucideChartSpline,
+  LucideCog,
   LucideGitFork,
   LucideLayoutDashboard,
   LucideLayoutGrid,
@@ -368,6 +369,22 @@ export class ShellSidebarComponent {
       });
     }
 
+    if (this.canReadStorage()) {
+      links.push({
+        label: $localize`:Sidebar link to uploaded file storage:Storage`,
+        value: ['./storage'],
+        icon: LucideHardDrive,
+      });
+    }
+
+    if (this.canReadAudit()) {
+      links.push({
+        label: $localize`:Sidebar link to the workspace audit log:Audit Log`,
+        value: ['./audit'],
+        icon: LucideShield,
+      });
+    }
+
     return links;
   });
 
@@ -381,9 +398,14 @@ export class ShellSidebarComponent {
         icon: LucideSlidersHorizontal,
       },
       {
-        label: $localize`:Sidebar link to personal notification settings:Notifications`,
-        value: ['./settings/personal/notifications'],
+        label: $localize`:Sidebar link to the notification list:Notifications`,
+        value: ['./notifications'],
         icon: LucideBell,
+      },
+      {
+        label: $localize`:Sidebar link to personal notification preference settings:Notification Preferences`,
+        value: ['./settings/personal/notifications'],
+        icon: LucideCog,
       },
     ];
 
@@ -400,30 +422,6 @@ export class ShellSidebarComponent {
 
   bottomLinks = computed(() => {
     const links: ShellMenuLink[] = [];
-
-    if (this.authenticated()) {
-      links.push({
-        label: $localize`:Sidebar link to the notification list:Notifications`,
-        value: ['./notifications'],
-        icon: LucideBell,
-      });
-    }
-
-    if (this.canReadStorage()) {
-      links.push({
-        label: $localize`:Sidebar link to uploaded file storage:Storage`,
-        value: ['./storage'],
-        icon: LucideHardDrive,
-      });
-    }
-
-    if (this.canReadAudit()) {
-      links.push({
-        label: $localize`:Sidebar link to the workspace audit log:Audit Log`,
-        value: ['./audit'],
-        icon: LucideShield,
-      });
-    }
 
     const [defaultWorkspaceSettingsLink, ...workspaceSettingsChildren] =
       this.workspaceSettingsLinks();
