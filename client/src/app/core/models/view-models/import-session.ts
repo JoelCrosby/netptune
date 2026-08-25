@@ -10,6 +10,15 @@ export enum ImportStage {
   abandoned = 8,
 }
 
+export enum ImportSourceKind {
+  csv = 0,
+  tsv = 1,
+  xlsx = 2,
+  json = 3,
+  ndjson = 4,
+  archive = 5,
+}
+
 export enum ImportDiagnosticSeverity {
   error = 0,
   warning = 1,
@@ -26,7 +35,7 @@ export enum ImportRowAction {
 export interface ImportSessionViewModel {
   publicId: string;
   stage: ImportStage;
-  sourceKind: number;
+  sourceKind: ImportSourceKind;
   vendorProfile: number;
   originalName: string;
   sizeBytes: number;

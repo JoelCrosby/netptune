@@ -7,6 +7,7 @@ import { ClientResponse } from '@core/models/client-response';
 import {
   ImportSessionProgressEvent,
   ImportSessionViewModel,
+  ImportSourceKind,
   ImportStage,
 } from '@core/models/view-models/import-session';
 import {
@@ -37,6 +38,10 @@ import { DatatableEmptyDirective } from '@static/components/datatable/datatable-
 import { DatatableComponent } from '@static/components/datatable/datatable.component';
 import { DatatableDataSource } from '@static/components/datatable/datatable.types';
 import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import {
+  FileTypeIconComponent,
+  FileTypeIconGroup,
+} from '@static/components/file-type-icon/file-type-icon.component';
 import { PageContainerComponent } from '@static/components/page-container/page-container.component';
 import { PageHeaderComponent } from '@static/components/page-header/page-header.component';
 import { PanelHeaderComponent } from '@static/components/panel-header.component';
@@ -70,6 +75,7 @@ const ResumableStages = [
     DatatableEmptyDirective,
     EmptyStateComponent,
     FileSizePipe,
+    FileTypeIconComponent,
     FlatButtonComponent,
     IconButtonComponent,
     LucideBan,
@@ -137,18 +143,26 @@ const ResumableStages = [
             </ng-template>
 
             <ng-template appDatatableCell="name" let-job>
-              <span class="block truncate font-medium">
-                {{ job.name ?? job.fileName ?? job.recordType }}
-              </span>
-              @if (job.error) {
-                <span class="text-warn block truncate text-xs">
-                  {{ job.error }}
-                </span>
-              } @else if (isRunning(job)) {
-                <span class="text-muted block truncate text-xs">
-                  {{ job.progressMessage }} · {{ job.progressPercent }}%
-                </span>
-              }
+              <div class="flex min-w-0 items-center gap-3">
+                <app-file-type-icon
+                  size="small"
+                  [group]="fileIconGroup(job.format)" />
+
+                <div class="min-w-0">
+                  <span class="block truncate font-medium">
+                    {{ job.name ?? job.fileName ?? job.recordType }}
+                  </span>
+                  @if (job.error) {
+                    <span class="text-warn block truncate text-xs">
+                      {{ job.error }}
+                    </span>
+                  } @else if (isRunning(job)) {
+                    <span class="text-muted block truncate text-xs">
+                      {{ job.progressMessage }} · {{ job.progressPercent }}%
+                    </span>
+                  }
+                </div>
+              </div>
             </ng-template>
 
             <ng-template appDatatableCell="format" let-job>
@@ -265,18 +279,27 @@ const ResumableStages = [
             </ng-template>
 
             <ng-template appDatatableCell="originalName" let-session>
-              <span class="block truncate font-medium">
-                {{ session.originalName }}
-              </span>
-              @if (session.error) {
-                <span class="text-warn block truncate text-xs">
-                  {{ session.error }}
-                </span>
-              } @else if (isImportRunning(session)) {
-                <span class="text-muted block truncate text-xs">
-                  {{ session.progressMessage }} · {{ session.progressPercent }}%
-                </span>
-              }
+              <div class="flex min-w-0 items-center gap-3">
+                <app-file-type-icon
+                  size="small"
+                  [group]="fileIconGroup(session.sourceKind)" />
+
+                <div class="min-w-0">
+                  <span class="block truncate font-medium">
+                    {{ session.originalName }}
+                  </span>
+                  @if (session.error) {
+                    <span class="text-warn block truncate text-xs">
+                      {{ session.error }}
+                    </span>
+                  } @else if (isImportRunning(session)) {
+                    <span class="text-muted block truncate text-xs">
+                      {{ session.progressMessage }} ·
+                      {{ session.progressPercent }}%
+                    </span>
+                  }
+                </div>
+              </div>
             </ng-template>
 
             <ng-template appDatatableCell="targetRecordType" let-session>
@@ -677,6 +700,26 @@ export class DataTransferViewComponent {
     }
 
     return $localize`:Summary of how many rows an import created, updated and skipped:${session.created}:created: created · ${session.updated}:updated: updated · ${session.skipped}:skipped: skipped`;
+  }
+
+  // Export formats and import source kinds share the same numeric values, so
+  // one mapping covers both tables.
+  protected fileIconGroup(
+    format: ExportFormat | ImportSourceKind
+  ): FileTypeIconGroup {
+    switch (format) {
+      case ExportFormat.csv:
+      case ExportFormat.tsv:
+      case ExportFormat.xlsx:
+        return 'spreadsheet';
+      case ExportFormat.json:
+      case ExportFormat.ndjson:
+        return 'data';
+      case ExportFormat.archive:
+        return 'archive';
+      default:
+        return 'other';
+    }
   }
 
   protected formatLabel(job: ExportJobViewModel): string {
