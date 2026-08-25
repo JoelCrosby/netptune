@@ -1,5 +1,4 @@
 import { Component, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
   EstimateType,
   estimateTypeLabels,
@@ -9,6 +8,7 @@ import {
 import { LucideChevronDown } from '@lucide/angular';
 import { DropdownMenuComponent } from '@static/components/dropdown-menu/dropdown-menu.component';
 import { MenuItemComponent } from '@static/components/dropdown-menu/menu-item.component';
+import { NumberInputComponent } from '@static/components/number-input/number-input.component';
 
 export interface TaskEstimate {
   estimateType: EstimateType | null;
@@ -20,7 +20,7 @@ export interface TaskEstimate {
   imports: [
     DropdownMenuComponent,
     MenuItemComponent,
-    FormsModule,
+    NumberInputComponent,
     LucideChevronDown,
   ],
   template: `
@@ -76,14 +76,15 @@ export interface TaskEstimate {
           }
         </app-dropdown-menu>
       } @else {
-        <input
-          type="number"
-          min="0"
-          class="w-20 rounded-sm border border-neutral-200 bg-transparent px-4 py-2 text-sm disabled:border-transparent dark:border-neutral-700"
-          placeholder="—"
+        <app-number-input
+          class="w-32"
+          [min]="0"
+          [ariaLabel]="
+            estimateTypeLabels[estimateType() ?? EstimateType.storyPoints]
+          "
           [disabled]="disabled()"
-          [ngModel]="estimateValue()"
-          (ngModelChange)="selectEstimateValue($event)" />
+          [value]="estimateValue()"
+          (valueChange)="selectEstimateValue($event)" />
       }
     </div>
   `,

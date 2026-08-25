@@ -76,7 +76,7 @@
     </unit>
     <unit id="7702646444963497962">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:502</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:525</note>
         <note category="description">Column heading for who ran an import</note>
       </notes>
       <segment state="initial">
@@ -96,7 +96,7 @@
     </unit>
     <unit id="7713123645366708778">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:636</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:659</note>
         <note category="description">An import whose file has been read</note>
       </notes>
       <segment state="initial">
@@ -297,7 +297,7 @@
     </unit>
     <unit id="1570107404481300948">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:255,256</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:269,270</note>
         <note category="description">Shown when the import history fails to load</note>
       </notes>
       <segment state="initial">
@@ -407,7 +407,7 @@
     </unit>
     <unit id="5321164057411888974">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:648</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:671</note>
         <note category="description">An import that has been rolled back</note>
       </notes>
       <segment state="initial">
@@ -723,7 +723,7 @@
     </unit>
     <unit id="338954840845347808">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:231,232</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:245,246</note>
         <note category="description">Explains how long an import stays undoable</note>
       </notes>
       <segment state="initial">
@@ -1330,7 +1330,7 @@
     </unit>
     <unit id="7346727647887816962">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:736</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:779</note>
         <note category="description">Warns that deleting an export also removes its file</note>
       </notes>
       <segment state="initial">
@@ -1497,8 +1497,8 @@
         <note category="location">src/app/features/boards/components/move-tasks-dialog/move-tasks-dialog.component.ts:76,79</note>
         <note category="location">src/app/features/boards/components/reassign-tasks-dialog/reassign-tasks-dialog.component.ts:62,65</note>
         <note category="location">src/app/features/calendar/dialogs/calendar-move-task-dialog.component.ts:61,64</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:738</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:761</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:781</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:804</note>
         <note category="location">src/app/features/profile/components/select-profile-image-dialog/select-profile-image-dialog.component.ts:54,56</note>
         <note category="location">src/app/features/settings/components/ai-credentials/ai-credentials.component.ts:339</note>
         <note category="location">src/app/features/settings/components/delete-workspace-dialog/delete-workspace-dialog.component.ts:59,62</note>
@@ -1690,8 +1690,8 @@
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:178</note>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:303</note>
         <note category="location">src/app/features/automations/views/automations-view/automations-view.component.ts:276</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:737</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:760</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:780</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:803</note>
         <note category="location">src/app/features/notifications/components/notifications-table/notifications-table.component.ts:173</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list-selection-actions.component.ts:32,34</note>
         <note category="location">src/app/features/project-tasks/components/task-list/task-list.component.ts:185</note>
@@ -2612,8 +2612,8 @@
     </unit>
     <unit id="2956098160626271284">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:590</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:642</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:613</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:665</note>
         <note category="description">An export that is being produced</note>
       </notes>
       <segment>
@@ -2693,7 +2693,7 @@
     </unit>
     <unit id="6746921307284578995">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:127,128</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:133,134</note>
         <note category="description">Shown when the export history fails to load</note>
       </notes>
       <segment>
@@ -2942,7 +2942,7 @@
     </unit>
     <unit id="4043049091728011235">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:596</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:619</note>
         <note category="description">An export a member stopped</note>
       </notes>
       <segment>
@@ -3200,7 +3200,7 @@
         <note category="location">src/app/features/automations/components/automation-task-update-editor.component.ts:49,50</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:46</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:30</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:423</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:446</note>
         <note category="location">src/app/features/settings/settings.routes.ts:81</note>
         <note category="location">src/app/features/settings/views/status-detail-view/status-detail-view.component.ts:98,101</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:22</note>
@@ -3683,7 +3683,7 @@
       </notes>
       <segment state="translated">
         <source>Are you sure you want to take the selected tasks off this board? They stay on any other board they are on.</source>
-      <target>Voulez-vous vraiment retirer les tâches sélectionnées de ce tableau ? Elles restent sur les autres tableaux où elles figurent.</target>
+        <target>Voulez-vous vraiment retirer les tâches sélectionnées de ce tableau ? Elles restent sur les autres tableaux où elles figurent.</target>
       </segment>
     </unit>
     <unit id="8977816019303133202">
@@ -3927,7 +3927,7 @@
       </notes>
       <segment state="translated">
         <source>On <ph id="0" equiv="COUNT" disp="count"/> boards</source>
-      <target>Sur <ph id="0" equiv="COUNT" disp="count"/> tableaux</target>
+        <target>Sur <ph id="0" equiv="COUNT" disp="count"/> tableaux</target>
       </segment>
     </unit>
     <unit id="9021131006692744653">
@@ -3984,7 +3984,7 @@
     </unit>
     <unit id="6006142956490189252">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:735</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:778</note>
         <note category="description">Title of the dialog that confirms deleting an export</note>
       </notes>
       <segment state="initial">
@@ -4294,7 +4294,7 @@
     </unit>
     <unit id="8390210831451931366">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:130</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:136</note>
         <note category="description">Names the rows of the export history table</note>
       </notes>
       <segment>
@@ -5685,7 +5685,7 @@
     <unit id="8650499415827640724">
       <notes>
         <note category="location">src/app/features/audit/dialogs/audit-log-detail-dialog.component.ts:183</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:490</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:513</note>
         <note category="description">Label shown in the interface</note>
       </notes>
       <segment state="translated">
@@ -6507,7 +6507,7 @@
     </unit>
     <unit id="8562778474158270448">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:650</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:673</note>
         <note category="description">An import nobody finished configuring</note>
       </notes>
       <segment state="initial">
@@ -7337,7 +7337,7 @@
     </unit>
     <unit id="4754993936947658096">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:640</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:663</note>
         <note category="description">An import that has been dry-run</note>
       </notes>
       <segment state="initial">
@@ -7396,7 +7396,7 @@
       </notes>
       <segment state="translated">
         <source>Tasks removed from board</source>
-      <target>Tâches retirées du tableau</target>
+        <target>Tâches retirées du tableau</target>
       </segment>
     </unit>
     <unit id="5549200569091145892">
@@ -7636,7 +7636,7 @@
     </unit>
     <unit id="6423210280939340786">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:592</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:615</note>
         <note category="description">An export that finished and can be downloaded</note>
       </notes>
       <segment>
@@ -8023,7 +8023,7 @@
     </unit>
     <unit id="1525443335158357208">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:753</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:796</note>
         <note category="description">Warns that deleting a committed import gives up undo</note>
       </notes>
       <segment state="initial">
@@ -8337,7 +8337,7 @@
     </unit>
     <unit id="7343458434870773763">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:479</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:502</note>
         <note category="description">Column heading for the state of an import</note>
       </notes>
       <segment state="initial">
@@ -8534,7 +8534,7 @@
     </unit>
     <unit id="7046128589684724143">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:179,181</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:193,195</note>
         <note category="description">Accessible label for the export download button</note>
       </notes>
       <segment>
@@ -8691,7 +8691,7 @@
       </notes>
       <segment state="translated">
         <source>Remove From Board</source>
-      <target>Retirer du tableau</target>
+        <target>Retirer du tableau</target>
       </segment>
     </unit>
     <unit id="1756946564393679789">
@@ -8825,6 +8825,16 @@
         <target>Les vôtres <ph id="0" equiv="COUNT" disp="yours"/></target>
       </segment>
     </unit>
+    <unit id="4968263455294794170">
+      <notes>
+        <note category="location">src/app/static/components/number-input/number-input.component.ts:26,28</note>
+        <note category="description">Accessible label for the button that lowers a number</note>
+      </notes>
+      <segment state="translated">
+        <source>Decrease</source>
+        <target>Diminuer</target>
+      </segment>
+    </unit>
     <unit id="4974625000015194391">
       <notes>
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:214</note>
@@ -8877,7 +8887,7 @@
     </unit>
     <unit id="8951117304119903136">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:218,219</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:232,233</note>
         <note category="description">Explains when export rows start appearing</note>
       </notes>
       <segment>
@@ -9513,8 +9523,8 @@
     <unit id="5727110993298059160">
       <notes>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-source-step.component.ts:138</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:440</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:496</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:463</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:519</note>
         <note category="description">Counts the rows found in an import file</note>
       </notes>
       <segment>
@@ -10420,8 +10430,8 @@
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:151</note>
         <note category="location">src/app/features/automations/models/automation-copy.ts:161</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:594</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:646</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:617</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:669</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment state="translated">
@@ -10965,8 +10975,8 @@
     </unit>
     <unit id="2825093609304249365">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:508</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:634</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:531</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:657</note>
         <note category="description">Column heading for when an import was uploaded</note>
       </notes>
       <segment state="initial">
@@ -11066,7 +11076,7 @@
     </unit>
     <unit id="5846098745343293658">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:758</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:801</note>
         <note category="description">Title of the dialog that confirms deleting an import</note>
       </notes>
       <segment state="initial">
@@ -11332,7 +11342,7 @@
     </unit>
     <unit id="3650965204243552982">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:118,120</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:124,126</note>
         <note category="description">Button that opens the guided export builder</note>
       </notes>
       <segment state="initial">
@@ -11411,7 +11421,7 @@
     </unit>
     <unit id="8455204924704616723">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:485</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:508</note>
         <note category="description">Column heading for the file an import came from</note>
       </notes>
       <segment state="initial">
@@ -11441,7 +11451,7 @@
     </unit>
     <unit id="5044351709300326566">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:349,350</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:372,373</note>
         <note category="description">Explains when import rows start appearing</note>
       </notes>
       <segment state="initial">
@@ -11630,7 +11640,7 @@
     </unit>
     <unit id="383181061702648553">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:588</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:611</note>
         <note category="description">An export that has not started yet</note>
       </notes>
       <segment>
@@ -12107,7 +12117,7 @@
     </unit>
     <unit id="146442697456175258">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:97,100</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:103,106</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:365</note>
         <note category="description">Page title for the workspace import and export page</note>
       </notes>
@@ -12154,7 +12164,7 @@
     </unit>
     <unit id="7171889468809878081">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:347,348</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:370,371</note>
         <note category="description">Heading when a workspace has never imported anything</note>
       </notes>
       <segment state="initial">
@@ -12768,7 +12778,7 @@
     </unit>
     <unit id="8713752143619372030">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:191,193</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:205,207</note>
         <note category="description">Accessible label for the export cancel button</note>
       </notes>
       <segment>
@@ -12967,7 +12977,7 @@
     </unit>
     <unit id="1023931309557040065">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:320,322</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:343,345</note>
         <note category="description">Accessible label for the import undo button</note>
       </notes>
       <segment state="initial">
@@ -13832,7 +13842,7 @@
     </unit>
     <unit id="2194591546577080727">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:638</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:661</note>
         <note category="description">An import whose columns have been mapped</note>
       </notes>
       <segment state="initial">
@@ -13892,7 +13902,7 @@
     </unit>
     <unit id="2511878039894643291">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:679</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:702</note>
         <note category="description">Summary of how many rows an import created, updated and skipped</note>
       </notes>
       <segment state="initial">
@@ -14038,7 +14048,7 @@
     </unit>
     <unit id="5058483321290632814">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:202,204</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:216,218</note>
         <note category="description">Accessible label for the export delete button</note>
       </notes>
       <segment state="initial">
@@ -14119,7 +14129,7 @@
     </unit>
     <unit id="4433209389805860491">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:333,335</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:356,358</note>
         <note category="description">Accessible label for the import delete button</note>
       </notes>
       <segment state="initial">
@@ -14669,7 +14679,7 @@
     <unit id="2873196070623992437">
       <notes>
         <note category="location">src/app/features/dashboard/components/charts/velocity-chart.component.ts:40</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:644</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:667</note>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:257</note>
         <note category="description">Series name for work a sprint took on</note>
       </notes>
@@ -14850,6 +14860,16 @@
         <target><ph id="0" equiv="DAYS" disp="this.flow.trailingDays"/> derniers jours</target>
       </segment>
     </unit>
+    <unit id="3932146926843084642">
+      <notes>
+        <note category="location">src/app/static/components/number-input/number-input.component.ts:51,53</note>
+        <note category="description">Accessible label for the button that raises a number</note>
+      </notes>
+      <segment state="translated">
+        <source>Increase</source>
+        <target>Augmenter</target>
+      </segment>
+    </unit>
     <unit id="3938527502818260365">
       <notes>
         <note category="location">src/app/features/audit/components/audit-activity-chart/audit-activity-chart.component.ts:59,60</note>
@@ -14872,7 +14892,7 @@
     </unit>
     <unit id="2105499142972466940">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:113,115</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:119,121</note>
         <note category="description">Explains how long an export stays downloadable</note>
       </notes>
       <segment>
@@ -14972,7 +14992,7 @@
     </unit>
     <unit id="2768015041703766826">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:754</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:797</note>
         <note category="description">Warns that deleting an import also removes its file</note>
       </notes>
       <segment state="initial">
@@ -14997,7 +15017,7 @@
       </notes>
       <segment state="translated">
         <source>On several boards</source>
-      <target>Sur plusieurs tableaux</target>
+        <target>Sur plusieurs tableaux</target>
       </segment>
     </unit>
     <unit id="4257828580066254399">
@@ -15401,7 +15421,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:28</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-format-step.component.ts:34</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-review-step.component.ts:130</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:434</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:457</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:97,98</note>
         <note category="description">Heading of the export format step</note>
       </notes>
@@ -15666,7 +15686,7 @@
     </unit>
     <unit id="4782869372248003542">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:216,217</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:230,231</note>
         <note category="description">Heading when a workspace has never exported anything</note>
       </notes>
       <segment>
@@ -17235,7 +17255,7 @@
     </unit>
     <unit id="4023379316864867526">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:245,247</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:259,261</note>
         <note category="description">Button that opens the guided import builder</note>
       </notes>
       <segment state="initial">
@@ -17538,7 +17558,7 @@
     </unit>
     <unit id="2943033819969004159">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:454</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:477</note>
         <note category="description">Column heading for when an export was requested</note>
       </notes>
       <segment>
@@ -17739,7 +17759,7 @@
     </unit>
     <unit id="464749780222721589">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:598</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:621</note>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:651</note>
         <note category="description">An export whose file has been removed</note>
       </notes>
@@ -18058,7 +18078,7 @@
     </unit>
     <unit id="8960678085928120824">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:258</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:272</note>
         <note category="description">Names the rows of the import history table</note>
       </notes>
       <segment state="initial">
@@ -18109,7 +18129,7 @@
     <unit id="5014242337218423887">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:232,234</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:237,239</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:251,253</note>
         <note category="description">Button that commits an archive import</note>
       </notes>
       <segment state="initial">
@@ -18479,7 +18499,7 @@
     </unit>
     <unit id="7462301153729425254">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:429</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:452</note>
         <note category="location">src/app/features/data-transfer/views/export-wizard-view/export-wizard-view.component.ts:66,69</note>
         <note category="location">src/app/features/settings/settings.routes.ts:116</note>
         <note category="description">Column heading for what an export contains</note>
@@ -18676,8 +18696,8 @@
     </unit>
     <unit id="7607713563510753803">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:230</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:389</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:244</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:412</note>
         <note category="description">Heading of the import history panel</note>
       </notes>
       <segment state="initial">
@@ -18910,7 +18930,7 @@
     </unit>
     <unit id="45739481977493163">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:447</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:470</note>
         <note category="location">src/app/features/storage/components/storage-filters.component.ts:148</note>
         <note category="description">Column heading for the size of an export file</note>
       </notes>
@@ -20738,8 +20758,8 @@
     </unit>
     <unit id="1890894168383710137">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:112</note>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:382</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:118</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:405</note>
         <note category="description">Heading of the export history panel</note>
       </notes>
       <segment>
@@ -20769,7 +20789,7 @@
     </unit>
     <unit id="2388737961552785761">
       <notes>
-        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:307,308</note>
+        <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:330,331</note>
         <note category="description">Accessible label for the import resume link</note>
       </notes>
       <segment state="initial">
