@@ -33,6 +33,90 @@
       })();
     </script>
 
+    <style>
+      html.light {
+        color-scheme: light;
+        background: #fafafb;
+      }
+
+      html.dark {
+        color-scheme: dark;
+        background: #000;
+      }
+
+      #app-loader {
+        --loader-surface: var(--background, #fafafb);
+        --loader-accent: var(--primary, #673ab7);
+
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--loader-surface);
+        transition: opacity 200ms ease-out;
+      }
+
+      html.dark #app-loader {
+        --loader-surface: var(--background, #000);
+        --loader-accent: var(--primary, #b39ddb);
+      }
+
+      #app-loader.app-loader-dismissed {
+        opacity: 0;
+      }
+
+      .app-loader-spinner {
+        position: relative;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(
+          to right,
+          var(--loader-accent) 10%,
+          rgba(129, 55, 241, 0) 42%
+        );
+        animation: app-loader-spin 1.4s infinite linear;
+      }
+
+      .app-loader-spinner::before,
+      .app-loader-spinner::after {
+        content: '';
+        position: absolute;
+      }
+
+      .app-loader-spinner::before {
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 50%;
+        border-radius: 100% 0 0;
+        background: var(--loader-accent);
+      }
+
+      .app-loader-spinner::after {
+        inset: 0;
+        width: 75%;
+        height: 75%;
+        margin: auto;
+        border-radius: 50%;
+        background: var(--loader-surface);
+      }
+
+      @keyframes app-loader-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .app-loader-spinner {
+          animation-duration: 3s;
+        }
+      }
+    </style>
+
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       rel="preconnect"
@@ -91,6 +175,10 @@
       rel="stylesheet" />
   </head>
   <body>
+    <div id="app-loader" role="status" aria-label="Loading">
+      <div class="app-loader-spinner"></div>
+    </div>
+
     <app-root></app-root>
   </body>
 </html>
