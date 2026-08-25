@@ -42,13 +42,12 @@ public sealed class AiSystemPromptBuilder : IAiSystemPromptBuilder
         prompt.AppendLine();
         prompt.AppendLine("Tools whose name starts with propose_ do not change anything on their own.");
         prompt.AppendLine("They add an entry to a change set the user reviews and applies themselves.");
-        prompt.AppendLine("Never tell the user a change has been made — say what you have proposed and that it awaits their approval.");
+        prompt.AppendLine("Once a propose_ tool has returned, say what you proposed and that it awaits their approval, never that it is done.");
+        prompt.AppendLine("With none called, simply answer — never disclaim a proposal you did not make or describe the state of the change set.");
         prompt.AppendLine("Look up real ids with the read tools before proposing a change against them.");
         prompt.AppendLine("A proposal that creates something answers with a handle such as ref:1.");
         prompt.AppendLine("Pass that handle as taskRef or sprintRef to configure an entity the same change set is still creating.");
         prompt.AppendLine("Applying orders the changes so a handle always resolves, and skips anything whose entity failed.");
-        prompt.AppendLine("Only say you have proposed something after a propose_ tool call has actually returned in this turn.");
-        prompt.AppendLine("Describing a change you never called a tool for leaves the user with nothing to review.");
         prompt.AppendLine();
         prompt.AppendLine("ask_question puts a multiple choice question to the user.");
         prompt.AppendLine("Ask only when their answer decides what you do next and no tool can tell you instead.");

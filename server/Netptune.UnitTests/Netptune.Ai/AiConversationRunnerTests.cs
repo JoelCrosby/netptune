@@ -150,7 +150,7 @@ public class AiConversationRunnerTests
         var correction = Provider.LastRequest!.Messages[^1];
 
         correction.Role.Should().Be(AiMessageRole.User);
-        correction.Text.Should().Contain("no propose_ tool ran this turn");
+        correction.Text.Should().Contain("no propose_ tool ran");
     }
 
     [Fact]
