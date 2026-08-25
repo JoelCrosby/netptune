@@ -8,7 +8,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { hasPermission } from '@core/auth/has-permission';
-import { SpinnerComponent } from '@app/static/components/spinner/spinner.component';
 import { EntityType } from '@core/models/entity-type';
 import { StatusCategory } from '@core/models/status';
 import { ActivityMenuComponent } from '@entry/components/activity-menu/activity-menu.component';
@@ -35,6 +34,7 @@ import { TaskDetailPropertiesComponent } from './task-detail-properties.componen
 import { TaskDetailRelationsComponent } from './task-detail-relations.component';
 import { TaskDetailTagsComponent } from './task-detail-tags.component';
 import { TaskDetailService } from './task-detail.service';
+import { TaskDetailSkeletonComponent } from './task-detail-skeleton.component';
 import { PERMISSIONS } from '@app/core/auth/permissions';
 import { TaskDetailFilesComponent } from './task-detail-files.component';
 import { TaskDetailFlagsComponent } from './task-detail-flags.component';
@@ -117,9 +117,7 @@ export interface TaskDetailDialogData {
         <app-task-dates [task]="task" />
       </div>
     } @else {
-      <div class="flex h-243.5 flex-col items-center justify-center">
-        <app-spinner diameter="64" />
-      </div>
+      <app-task-detail-skeleton />
     }
   `,
   imports: [
@@ -128,7 +126,6 @@ export interface TaskDetailDialogData {
     PinScopeMenuComponent,
     SplitButtonComponent,
     DialogActionsDirective,
-    SpinnerComponent,
     SprintBadgeComponent,
     TaskDates,
     TaskScopeIdComponent,
@@ -142,6 +139,7 @@ export interface TaskDetailDialogData {
     TaskDetailActionsComponent,
     TaskDetailFilesComponent,
     TaskDetailFlagsComponent,
+    TaskDetailSkeletonComponent,
   ],
   providers: [TaskDetailService],
 })

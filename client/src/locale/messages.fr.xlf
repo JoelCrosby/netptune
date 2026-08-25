@@ -6807,7 +6807,7 @@
     </unit>
     <unit id="7997648753385248331">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:257</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:255</note>
         <note category="description">Shown when the open task no longer exists</note>
       </notes>
       <segment state="translated">
@@ -9233,6 +9233,16 @@
       <segment state="translated">
         <source>Change details</source>
         <target>Détails de la modification</target>
+      </segment>
+    </unit>
+    <unit id="8318489133130094433">
+      <notes>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:73</note>
+        <note category="description">Accessible label shown while a task loads</note>
+      </notes>
+      <segment state="translated">
+        <source>Loading task</source>
+        <target>Chargement de la tâche</target>
       </segment>
     </unit>
     <unit id="1583399193111493692">
@@ -15113,7 +15123,7 @@
     </unit>
     <unit id="4810719754522561546">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:210</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:208</note>
         <note category="description">Accessible label for the control that opens the pin scope menu</note>
       </notes>
       <segment state="translated">
@@ -18570,7 +18580,7 @@
     </unit>
     <unit id="4475093671158329161">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:226</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:224</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:89,93</note>
         <note category="description">Label on the control that pins a task</note>
       </notes>
@@ -18952,7 +18962,7 @@
     </unit>
     <unit id="5743757503664322992">
       <notes>
-        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:223</note>
+        <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-dialog.component.ts:221</note>
         <note category="location">src/app/features/dashboard/components/dashboard-pinned-card.component.ts:46,47</note>
         <note category="location">src/app/features/pins/views/pinned-view/pinned-view.component.ts:60,62</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:232</note>
