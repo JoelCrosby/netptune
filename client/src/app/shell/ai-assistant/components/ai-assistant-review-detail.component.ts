@@ -91,7 +91,7 @@ const isTextField = (field: AiChangeField): boolean => {
             <app-button
               variant="outlined"
               color="neutral"
-              class="h-10 px-3.5 text-sm"
+              class="h-10 rounded-lg px-3.5 text-sm"
               (click)="editStarted.emit(name)">
               <svg lucidePencil class="h-4 w-4"></svg>
               <span i18n="Button that edits the value a change proposes">
@@ -102,7 +102,7 @@ const isTextField = (field: AiChangeField): boolean => {
           <app-button
             variant="outlined"
             color="neutral"
-            class="h-10 px-3.5 text-sm"
+            class="h-10 rounded-lg px-3.5 text-sm"
             (click)="revised.emit(change().id)">
             <svg lucideMessageSquare class="h-4 w-4"></svg>
             <span i18n="Button that asks the assistant to rework one change">
@@ -114,7 +114,7 @@ const isTextField = (field: AiChangeField): boolean => {
           <app-button
             variant="outlined"
             color="primary"
-            class="h-10 px-4 text-sm font-medium"
+            class="border-primary/40 bg-primary/10 hover:bg-primary/15 h-10 rounded-lg px-4 text-sm font-medium"
             [disabled]="isApplying()"
             (click)="applied.emit(change().id)">
             <svg lucideCheck class="h-4 w-4" strokeWidth="2.2"></svg>

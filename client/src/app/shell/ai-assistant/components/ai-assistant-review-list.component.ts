@@ -76,10 +76,12 @@ interface AiReviewGroup {
         @if (group.isOpen) {
           @for (row of group.rows; track row.change.id) {
             <div
-              class="hover:bg-hover bg-background flex cursor-pointer items-start gap-2.5 border-l-2 py-3 pr-4 pl-3 transition-colors"
-              [class.border-primary]="row.isSelected"
-              [class.bg-primary-selected]="row.isSelected"
-              [class.border-transparent]="!row.isSelected"
+              class="hover:bg-hover flex cursor-pointer items-start gap-2.5 border-l-2 py-3 pr-4 pl-3 transition-colors"
+              [class]="
+                row.isSelected
+                  ? 'border-primary bg-primary/10'
+                  : 'bg-background border-transparent'
+              "
               [class.opacity-50]="
                 (isPending() && !row.isIncluded) || row.change.undoneAt
               "

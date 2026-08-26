@@ -8,13 +8,6 @@ export interface SegmentedOption<T extends string = string> {
   count?: number;
 }
 
-/**
- * `pill` reads as one switch, `outlined` as a switch that has to hold its own against a busy
- * toolbar, and `chips` as separate filters that happen to be mutually exclusive.
- *
- * The outlined radii are concentric on purpose: the 2px inset means the inner corner has to be
- * 2px tighter than the outer one, or the selected segment bulges out of the box around it.
- */
 export type SegmentedVariant = 'pill' | 'outlined' | 'chips';
 
 const groupVariants = cva('', {
@@ -22,7 +15,7 @@ const groupVariants = cva('', {
     variant: {
       pill: 'bg-hover inline-flex rounded-full p-0.5 text-xs',
       outlined:
-        'border-border bg-card flex items-center gap-0.5 rounded border p-0.5 text-sm',
+        'border-border bg-card flex items-center gap-0.5 rounded-[10px] border p-1 text-sm',
       chips: 'flex items-center gap-1.5 text-sm',
     },
   },
@@ -37,7 +30,7 @@ const optionVariants = cva(
     variants: {
       variant: {
         pill: 'rounded-full px-3 py-1.5',
-        outlined: 'hover:bg-hover rounded-md px-3 py-1.5',
+        outlined: 'rounded-lg px-3 py-1.5',
         chips:
           'border-border hover:bg-hover inline-flex h-9 items-center rounded-full border px-3.5',
       },
@@ -60,9 +53,15 @@ const optionVariants = cva(
       {
         variant: 'outlined',
         selected: true,
-        class: 'bg-primary-selected text-foreground',
+        class:
+          'border-primary/40 bg-primary/10 text-primary hover:bg-primary/15',
       },
-      { variant: 'outlined', selected: false, class: 'text-muted' },
+      {
+        variant: 'outlined',
+        selected: false,
+        class:
+          'hover:bg-hover hover:text-foreground border-transparent text-muted',
+      },
       { variant: 'chips', selected: true, class: 'border-primary bg-hover' },
       { variant: 'chips', selected: false, class: 'text-muted' },
     ],

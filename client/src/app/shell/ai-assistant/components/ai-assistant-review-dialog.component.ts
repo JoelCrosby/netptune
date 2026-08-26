@@ -53,11 +53,6 @@ const isTextField = (field: AiChangeField): boolean => {
   return field.kind === AiChangeValueKind.text;
 };
 
-/**
- * Full screen review of a change set, laid out the way a source control view
- * lays out a commit: what changed on the left, the diff of the selection on the
- * right, the decision along the bottom.
- */
 @Component({
   selector: 'app-ai-assistant-review-dialog',
   host: {
@@ -102,7 +97,7 @@ const isTextField = (field: AiChangeField): boolean => {
 
     <div class="border-border flex items-center gap-3 border-b px-4 py-2.5">
       <app-filter-input
-        class="min-w-[360px]"
+        class="min-w-90"
         [value]="query()"
         (valueChange)="query.set($event)"
         [placeholder]="filterPlaceholder" />
