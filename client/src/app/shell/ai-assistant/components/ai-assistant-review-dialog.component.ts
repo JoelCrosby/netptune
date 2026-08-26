@@ -35,16 +35,18 @@ import {
 } from './ai-assistant-review-detail.component';
 import { AiAssistantReviewListComponent } from './ai-assistant-review-list.component';
 
-type AiReviewFilter = 'all' | 'created' | 'updated' | 'removed' | 'blocked';
+export type AiReviewFilter =
+  'all' | 'created' | 'updated' | 'removed' | 'blocked' | 'failed';
 
 /**
- * Opening the review without data reviews the conversation's live change set.
+ * Opening the review without a change set reviews the conversation's live one.
  * A change set handed in is a record of what already happened, so the surface
  * reads it back without offering a decision.
  */
 export interface AiReviewData {
-  changeSet: AiChangeSet;
-  workspace: string | null;
+  changeSet?: AiChangeSet;
+  workspace?: string | null;
+  filter?: AiReviewFilter;
 }
 
 const MODE_KEY = 'netptune.ai.review.mode';
@@ -351,10 +353,12 @@ export class AiAssistantReviewDialogComponent {
   });
 
   /** A change set handed in is history: it is read back, never decided on. */
-  protected readonly isReadOnly = this.data !== null;
+  protected readonly isReadOnly = !!this.data?.changeSet;
 
   protected readonly selectedChangeId = signal<number | null>(null);
-  protected readonly filter = signal<AiReviewFilter>('all');
+  protected readonly filter = signal<AiReviewFilter>(
+    this.data?.filter ?? 'all'
+  );
   protected readonly query = signal('');
   protected readonly collapsedKeys = signal<Set<string>>(new Set());
   protected readonly editingField = signal<string | null>(null);
@@ -382,7 +386,11 @@ export class AiAssistantReviewDialogComponent {
   });
 
   protected readonly workspace = computed(() => {
-    return this.data ? this.data.workspace : this.assistant.workspaceKey();
+    if (this.isReadOnly) {
+      return this.data?.workspace ?? null;
+    }
+
+    return this.assistant.workspaceKey();
   });
 
   protected readonly changes = computed(() => {
@@ -476,7 +484,8 @@ export class AiAssistantReviewDialogComponent {
           .length;
       };
 
-      return [
+      const failed = count('failed');
+      const options: SegmentedOption<AiReviewFilter>[] = [
         {
           value: 'all',
           label: $localize`:Review filter showing every change:All`,
@@ -501,6 +510,19 @@ export class AiAssistantReviewDialogComponent {
           value: 'blocked',
           label: $localize`:Review filter showing changes that cannot be applied:Blocked`,
           count: count('blocked'),
+        },
+      ];
+
+      if (failed === 0) {
+        return options;
+      }
+
+      return [
+        ...options,
+        {
+          value: 'failed' as AiReviewFilter,
+          label: $localize`:Review filter showing changes that could not be applied:Failed`,
+          count: failed,
         },
       ];
     }
@@ -557,6 +579,14 @@ export class AiAssistantReviewDialogComponent {
   });
 
   constructor() {
+    effect(() => {
+      const isStale = this.filter() === 'failed' && this.failedCount() === 0;
+
+      if (isStale) {
+        this.filter.set('all');
+      }
+    });
+
     effect(() => {
       const selected = this.selectedChange();
 
@@ -763,6 +793,10 @@ export class AiAssistantReviewDialogComponent {
 
     if (filter === 'blocked') {
       return !isValid(change);
+    }
+
+    if (filter === 'failed') {
+      return change.applyStatus === AiChangeApplyStatus.failed;
     }
 
     const letter = changeLetter(change);

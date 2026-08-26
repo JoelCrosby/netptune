@@ -84,16 +84,6 @@
         <target>Von</target>
       </segment>
     </unit>
-    <unit id="7706632081301226281">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:335</note>
-        <note category="description">Shown after changes were applied</note>
-      </notes>
-      <segment state="translated">
-        <source>These changes have been applied.</source>
-        <target>Diese Änderungen wurden angewendet.</target>
-      </segment>
-    </unit>
     <unit id="7713123645366708778">
       <notes>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:659</note>
@@ -497,7 +487,7 @@
     </unit>
     <unit id="2739290873356276814">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:665</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:682</note>
         <note category="description">Seeds the composer with a request to rework one proposed change</note>
       </notes>
       <segment state="translated">
@@ -652,8 +642,8 @@
     </unit>
     <unit id="4391289919356861627">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:121,122</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:307,308</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:208,210</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:304,305</note>
         <note category="description">Button that applies the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -1648,6 +1638,16 @@
         <target>Berichte</target>
       </segment>
     </unit>
+    <unit id="3796011392456695248">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:104</note>
+        <note category="description">Digest phrase for entities moved between projects</note>
+      </notes>
+      <segment state="translated">
+        <source>Projects changed</source>
+        <target>Projekte geändert</target>
+      </segment>
+    </unit>
     <unit id="3797778920049399855">
       <notes>
         <note category="location">src/app/core/services/auth-commands.service.ts:195</note>
@@ -1797,7 +1797,7 @@
     </unit>
     <unit id="996642948903085680">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:541</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:558</note>
         <note category="description">Counts the proposals that will be applied</note>
       </notes>
       <segment state="initial">
@@ -2730,6 +2730,16 @@
         <target>Die Exporte konnten nicht geladen werden.</target>
       </segment>
     </unit>
+    <unit id="6748127730716383269">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:250,255</note>
+        <note category="description">Button that opens the review filtered to the changes that could not be applied</note>
+      </notes>
+      <segment state="translated">
+        <source> Review failed </source>
+        <target>Fehlgeschlagene prüfen</target>
+      </segment>
+    </unit>
     <unit id="674855581046452024">
       <notes>
         <note category="location">src/app/core/util/colors/colors.ts:154</note>
@@ -2901,6 +2911,16 @@
         <target>Mehr laden</target>
       </segment>
     </unit>
+    <unit id="5688982299645354660">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:94</note>
+        <note category="description">Digest phrase for rewritten descriptions</note>
+      </notes>
+      <segment state="translated">
+        <source>Descriptions rewritten</source>
+        <target>Beschreibungen neu geschrieben</target>
+      </segment>
+    </unit>
     <unit id="5851560788527570644">
       <notes>
         <note category="location">src/app/entry/components/notification-bell/notification-bell.component.ts:48,49</note>
@@ -3026,6 +3046,26 @@
       <segment state="translated">
         <source> View all notifications </source>
         <target>Alle Benachrichtigungen anzeigen</target>
+      </segment>
+    </unit>
+    <unit id="4894416840865719051">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:106</note>
+        <note category="description">Digest phrase for entities moved between board groups</note>
+      </notes>
+      <segment state="translated">
+        <source>Board groups changed</source>
+        <target>Board-Gruppen geändert</target>
+      </segment>
+    </unit>
+    <unit id="4895686043848455884">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:109</note>
+        <note category="description">Digest phrase for resolved flags</note>
+      </notes>
+      <segment state="translated">
+        <source>Flags resolved</source>
+        <target>Markierungen aufgelöst</target>
       </segment>
     </unit>
     <unit id="489777157606363152">
@@ -3277,7 +3317,7 @@
         <note category="location">src/app/features/automations/dialogs/automation-dry-run-dialog.component.ts:258,263</note>
         <note category="location">src/app/features/boards/components/create-board/create-board.component.ts:98,100</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:64,65</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:342,346</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:339,343</note>
         <note category="description">Dismisses a dialog without saving</note>
       </notes>
       <segment state="translated">
@@ -3553,6 +3593,16 @@
         <target>{VAR_PLURAL, plural, =1 {Auf 1 Aufgabe anwenden} other {Auf <ph id="0" equiv="INTERPOLATION"/> Aufgaben anwenden}}</target>
       </segment>
     </unit>
+    <unit id="7004542764820586045">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:228</note>
+        <note category="description">Digest row covering entities a change set removes</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> removed</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> entfernt</target>
+      </segment>
+    </unit>
     <unit id="5720456130115183258">
       <notes>
         <note category="location">src/app/entry/dialogs/bulk-edit-tasks-dialog/bulk-edit-tasks-dialog.component.ts:243</note>
@@ -3694,7 +3744,7 @@
     </unit>
     <unit id="6947960783690563673">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:261,263</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:258,260</note>
         <note category="description">Keyboard hint for including a change</note>
       </notes>
       <segment state="translated">
@@ -3788,6 +3838,7 @@
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:25</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:71,73</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:118</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -3939,7 +3990,7 @@
     </unit>
     <unit id="6355874628025541354">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:241,244</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:238,241</note>
         <note category="description">Keyboard key that moves down the review list. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -4174,8 +4225,8 @@
     </unit>
     <unit id="5635707779811339571">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:316</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:551</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:401</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:568</note>
         <note category="description">Shown after applied proposals were taken back</note>
       </notes>
       <segment state="translated">
@@ -4521,8 +4572,7 @@
     </unit>
     <unit id="5311439953585427905">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:73,75</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:145,147</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:142,144</note>
         <note category="description">Button that clears every selected change</note>
       </notes>
       <segment state="translated">
@@ -4548,6 +4598,16 @@
       <segment state="translated">
         <source> Task </source>
         <target>Aufgabe</target>
+      </segment>
+    </unit>
+    <unit id="559742050509979926">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:315</note>
+        <note category="description">Digest row prefix before the names a change set creates</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="ENTITIES" disp="entities"/> created —</source>
+        <target><ph id="0" equiv="ENTITIES" disp="entities"/> erstellt —</target>
       </segment>
     </unit>
     <unit id="5598953039091088212">
@@ -4749,6 +4809,7 @@
     <unit id="3807699453257291879">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-comments.component.ts:33,36</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:84</note>
         <note category="description">Section heading for a task&apos;s comments</note>
       </notes>
       <segment state="translated">
@@ -5055,6 +5116,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:83,84</note>
         <note category="location">src/app/features/settings/views/tags-view/tags-view.component.ts:52</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:36</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:85</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:326</note>
         <note category="description">Section heading for a task&apos;s tags</note>
       </notes>
@@ -5094,6 +5156,16 @@
         <target>Arbeitsbereich bearbeiten</target>
       </segment>
     </unit>
+    <unit id="1215136168573441022">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:343</note>
+        <note category="description">One change cannot be applied</note>
+      </notes>
+      <segment state="translated">
+        <source>1 change</source>
+        <target>1 Änderung</target>
+      </segment>
+    </unit>
     <unit id="4164796296331721280">
       <notes>
         <note category="location">src/app/entry/dialogs/workspace-dialog/workspace-dialog.component.ts:94,96</note>
@@ -5111,7 +5183,7 @@
     </unit>
     <unit id="4166637194006456845">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:373</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:372</note>
         <note category="description">Accessible label for the diff layout switch</note>
       </notes>
       <segment state="translated">
@@ -5291,7 +5363,7 @@
     </unit>
     <unit id="163701335564941353">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:382</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:381</note>
         <note category="description">Title of the full screen review of proposed changes</note>
       </notes>
       <segment state="translated">
@@ -6168,8 +6240,7 @@
     <unit id="1494518490116523821">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-fields-step.component.ts:80,83</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:77,80</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:149,152</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:146,149</note>
         <note category="description">Button that selects every exportable field</note>
       </notes>
       <segment state="translated">
@@ -6238,14 +6309,14 @@
         <target>Dieser Import hat sich eine Weile nicht bewegt. Er läuft auf dem Job-Server — prüfen Sie, ob dieser läuft.</target>
       </segment>
     </unit>
-    <unit id="6336423730887058961">
+    <unit id="6335842502353691526">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:326</note>
-        <note category="description">Shown after a change set was partly applied</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:224</note>
+        <note category="description">Digest row covering entities a change set creates</note>
       </notes>
       <segment state="translated">
-        <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="changes.length"/> changes were applied. <ph id="2" equiv="FAILED" disp="failed"/> failed.</source>
-        <target><ph id="0" equiv="APPLIED" disp="applied"/> von <ph id="1" equiv="TOTAL" disp="changes.length"/> Änderungen wurden angewendet. <ph id="2" equiv="FAILED" disp="failed"/> sind fehlgeschlagen.</target>
+        <source><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> created</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> erstellt</target>
       </segment>
     </unit>
     <unit id="6336655282869661216">
@@ -6387,7 +6458,7 @@
     </unit>
     <unit id="5341318787086825007">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:177,181</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:174,178</note>
         <note category="description">Single letter marking a change that creates something. It labels the rows in the list, so leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -6897,7 +6968,7 @@
     </unit>
     <unit id="7997497639597459089">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:159,161</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:261,263</note>
         <note category="description">Button that takes back an applied change set</note>
       </notes>
       <segment state="translated">
@@ -7038,7 +7109,7 @@
     </unit>
     <unit id="7943935000920929978">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:188,192</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:185,189</note>
         <note category="description">Single letter marking a change that updates something. It labels the rows in the list, so leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -7050,7 +7121,7 @@
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:166</note>
         <note category="location">src/app/shared/components/query-builder/query-builder.models.ts:72</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:487</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:491</note>
         <note category="description">Filter showing sprints in any state</note>
       </notes>
       <segment state="translated">
@@ -7111,7 +7182,7 @@
     </unit>
     <unit id="4771541703055633807">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:281,284</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:278,281</note>
         <note category="description">Keyboard hint for applying the selected changes</note>
       </notes>
       <segment state="translated">
@@ -7352,8 +7423,8 @@
     </unit>
     <unit id="2403173893058410061">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:88,92</note>
-        <note category="description">Button that opens the detailed table of proposed changes</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:62,66</note>
+        <note category="description">Button that opens the full screen review of the changes</note>
       </notes>
       <segment state="translated">
         <source> Review all </source>
@@ -7402,6 +7473,16 @@
       <segment state="translated">
         <source>Board background</source>
         <target>Board-Hintergrund</target>
+      </segment>
+    </unit>
+    <unit id="5904337364744457239">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:322</note>
+        <note category="description">Digest row prefix before the entities a field was changed on</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="PHRASE" disp="phrase"/> on</source>
+        <target><ph id="0" equiv="PHRASE" disp="phrase"/> bei</target>
       </segment>
     </unit>
     <unit id="2960069153368727992">
@@ -7561,7 +7642,7 @@
     </unit>
     <unit id="5775346636203685655">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:332,336</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:329,333</note>
         <note category="description">Button that takes back an applied change set</note>
       </notes>
       <segment state="translated">
@@ -7757,7 +7838,7 @@
     <unit id="5406093358072761930">
       <notes>
         <note category="location">src/app/features/reporting/components/sprint-report.component.ts:265</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:502</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:506</note>
         <note category="description">Stat label for scope removed mid-sprint</note>
       </notes>
       <segment state="translated">
@@ -8638,20 +8719,9 @@
         <target>Geltungsbereich</target>
       </segment>
     </unit>
-    <unit id="5591872322950422209">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:114,115</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:132,133</note>
-        <note category="description">Shown when a change removes a value</note>
-      </notes>
-      <segment state="translated">
-        <source> cleared </source>
-        <target>entfernt</target>
-      </segment>
-    </unit>
     <unit id="1802075020846609586">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:243</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:242</note>
         <note category="description">Assistant subtitle above the conversation</note>
       </notes>
       <segment state="translated">
@@ -8802,7 +8872,7 @@
     </unit>
     <unit id="1049706183293561301">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:278,280</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:275,277</note>
         <note category="description">Symbol for the return key. Leave the symbol as-is</note>
       </notes>
       <segment state="translated">
@@ -9020,6 +9090,16 @@
       <segment state="translated">
         <source>An API key and the id of a programmable search engine.</source>
         <target>Ein API-Schlüssel und die ID einer programmierbaren Suchmaschine.</target>
+      </segment>
+    </unit>
+    <unit id="4975748273657042999">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:124</note>
+        <note category="description">Plural of the entity a digest row counts, mid sentence</note>
+      </notes>
+      <segment state="translated">
+        <source>tags</source>
+        <target>Tags</target>
       </segment>
     </unit>
     <unit id="4993066231165110063">
@@ -9392,6 +9472,16 @@
         <target> Tage vor dem Sprint-Enddatum </target>
       </segment>
     </unit>
+    <unit id="4704705744112109737">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:408</note>
+        <note category="description">Field line above a block of text a change clears</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="FIELD" disp="label"/> cleared</source>
+        <target><ph id="0" equiv="FIELD" disp="label"/> gelöscht</target>
+      </segment>
+    </unit>
     <unit id="8305060666501284978">
       <notes>
         <note category="location">src/app/features/automations/components/automation-trigger-editor.component.ts:197,199</note>
@@ -9402,16 +9492,6 @@
         <target> Die Aktionen werden einmal für jede Aufgabe im Sprint ausgeführt. </target>
       </segment>
     </unit>
-    <unit id="8315057288657960846">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:86,89</note>
-        <note category="description">Accessible label for the toggle that reveals what a proposed change contains</note>
-      </notes>
-      <segment state="translated">
-        <source>Change details</source>
-        <target>Details der Änderung</target>
-      </segment>
-    </unit>
     <unit id="8318489133130094433">
       <notes>
         <note category="location">src/app/entry/dialogs/task-detail-dialog/task-detail-skeleton.component.ts:73</note>
@@ -9420,6 +9500,16 @@
       <segment state="translated">
         <source>Loading task</source>
         <target>Aufgabe wird geladen</target>
+      </segment>
+    </unit>
+    <unit id="8319828380413297276">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:105</note>
+        <note category="description">Digest phrase for entities moved between boards</note>
+      </notes>
+      <segment state="translated">
+        <source>Boards changed</source>
+        <target>Boards geändert</target>
       </segment>
     </unit>
     <unit id="1583399193111493692">
@@ -9870,7 +9960,7 @@
     </unit>
     <unit id="3278205153911408159">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:521</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:538</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-diff.component.ts:247</note>
         <note category="description">Diff layout with one column</note>
       </notes>
@@ -10185,7 +10275,7 @@
     </unit>
     <unit id="7151632936989469818">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:235</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:234</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-header.component.ts:51,53</note>
         <note category="description">Header of a conversation that has not started yet</note>
       </notes>
@@ -10290,7 +10380,7 @@
     <unit id="5873012413476626725">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:79</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:204,207</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:201,204</note>
         <note category="description">Operator used in an automation condition</note>
       </notes>
       <segment state="translated">
@@ -10630,6 +10720,7 @@
         <note category="location">src/app/features/automations/models/automation-copy.ts:161</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:617</note>
         <note category="location">src/app/features/data-transfer/views/data-transfer-view/data-transfer-view.component.ts:669</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:524</note>
         <note category="description">Outcome status of an automation run</note>
       </notes>
       <segment state="translated">
@@ -10639,7 +10730,7 @@
     </unit>
     <unit id="7258010665968228997">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:55,58</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:50,53</note>
         <note category="description">Heading above the list of proposed workspace changes</note>
       </notes>
       <segment state="translated">
@@ -10988,6 +11079,16 @@
       <segment state="translated">
         <source><ph id="0" equiv="FIELD" disp="field"/> has any change</source>
         <target><ph id="0" equiv="FIELD" disp="field"/> hat eine beliebige Änderung</target>
+      </segment>
+    </unit>
+    <unit id="8008785386100703750">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:316</note>
+        <note category="description">Digest row prefix before the names a change set removes</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="ENTITIES" disp="entities"/> removed —</source>
+        <target><ph id="0" equiv="ENTITIES" disp="entities"/> entfernt —</target>
       </segment>
     </unit>
     <unit id="8016346957345422197">
@@ -11372,6 +11473,16 @@
         <target>Die Aufgabe nach <ph id="0" equiv="COUNT" disp="amount"/> Stunden löschen</target>
       </segment>
     </unit>
+    <unit id="1321876410505541181">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:100</note>
+        <note category="description">Digest phrase for moved due dates</note>
+      </notes>
+      <segment state="translated">
+        <source>Due dates changed</source>
+        <target>Fälligkeitsdaten geändert</target>
+      </segment>
+    </unit>
     <unit id="5176622981716622911">
       <notes>
         <note category="location">src/app/features/automations/models/automation-copy.ts:762</note>
@@ -11414,7 +11525,7 @@
     </unit>
     <unit id="7387635272539030076">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:179,181</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:176,178</note>
         <note category="description">Legend for changes that create something</note>
       </notes>
       <segment state="translated">
@@ -11656,6 +11767,16 @@
         <target>Datei</target>
       </segment>
     </unit>
+    <unit id="4308396666254841731">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:360</note>
+        <note category="description">Accessible label of the button that applies the selected changes</note>
+      </notes>
+      <segment state="translated">
+        <source>Apply <ph id="0" equiv="SELECTED" disp="selected"/> changes</source>
+        <target><ph id="0" equiv="SELECTED" disp="selected"/> Änderungen anwenden</target>
+      </segment>
+    </unit>
     <unit id="4308895016686267984">
       <notes>
         <note category="location">src/app/features/automations/views/automation-detail-view/automation-detail-view.component.ts:153,155</note>
@@ -11792,7 +11913,7 @@
     </unit>
     <unit id="2847261689301738134">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:191,194</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:188,191</note>
         <note category="description">Legend for changes that update something</note>
       </notes>
       <segment state="translated">
@@ -11802,7 +11923,7 @@
     </unit>
     <unit id="8091027299239292755">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:379</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:378</note>
         <note category="description">Title of the full screen view of changes already made</note>
       </notes>
       <segment state="translated">
@@ -12134,8 +12255,7 @@
     </unit>
     <unit id="3131851492199185855">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:146,148</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:319,321</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:316,318</note>
         <note category="description">Button that runs the changes that failed again</note>
       </notes>
       <segment state="translated">
@@ -12361,6 +12481,7 @@
         <note category="location">src/app/features/project-tasks/views/project-tasks-view/project-tasks-view.component.ts:33,34</note>
         <note category="location">src/app/features/reporting/components/workload-report.component.ts:73,75</note>
         <note category="location">src/app/features/reporting/views/reporting-view/reporting-view.component.ts:119,120</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:78</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:152</note>
         <note category="location">src/app/workspace.routes.ts:36</note>
         <note category="description">Stat label for the number of tasks on a board</note>
@@ -12720,6 +12841,16 @@
         <target>Wählen Sie die Person, der die ausgewählten Aufgaben zugewiesen werden sollen</target>
       </segment>
     </unit>
+    <unit id="2224870262790308698">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:96</note>
+        <note category="description">Digest phrase for re-prioritised entities</note>
+      </notes>
+      <segment state="translated">
+        <source>Priorities changed</source>
+        <target>Prioritäten geändert</target>
+      </segment>
+    </unit>
     <unit id="2231567984326326581">
       <notes>
         <note category="location">src/app/features/data-transfer/services/import-wizard.service.ts:384</note>
@@ -12767,7 +12898,7 @@
         <note category="location">src/app/core/tasks/task-columns.ts:163</note>
         <note category="location">src/app/features/boards/util/board-task-sort.ts:33</note>
         <note category="location">src/app/features/data-transfer/components/import-steps/import-run-step.component.ts:102</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:497</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:501</note>
         <note category="description">Column heading for when the task last changed</note>
       </notes>
       <segment state="translated">
@@ -12840,6 +12971,7 @@
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:38</note>
         <note category="location">src/app/features/boards/views/boards-view/boards-view.component.ts:46,49</note>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:63,64</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:81</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:166</note>
         <note category="location">src/app/workspace.routes.ts:60</note>
         <note category="description">Page title for the board list</note>
@@ -12997,6 +13129,7 @@
         <note category="location">src/app/features/calendar/components/calendar-selected-day-table/calendar-selected-day-table.component.ts:34,35</note>
         <note category="location">src/app/features/roadmap/components/roadmap-unscheduled.component.ts:44,45</note>
         <note category="location">src/app/features/task-views/views/task-view-detail-view/task-view-detail-view.component.ts:139</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:117</note>
         <note category="location">src/app/static/components/task-table.component.ts:85</note>
         <note category="description">Plural noun for tasks, used in the selection summary</note>
       </notes>
@@ -13149,6 +13282,16 @@
         <target>Vorheriger Monat</target>
       </segment>
     </unit>
+    <unit id="6040548209741947776">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:97</note>
+        <note category="description">Digest phrase for re-estimated entities</note>
+      </notes>
+      <segment state="translated">
+        <source>Estimates changed</source>
+        <target>Schätzungen geändert</target>
+      </segment>
+    </unit>
     <unit id="6048892649018070225">
       <notes>
         <note category="location">src/app/features/calendar/components/calendar-toolbar/calendar-toolbar.component.ts:124,127</note>
@@ -13245,6 +13388,16 @@
         <target><ph id="0" equiv="count" disp="count"/> Felder</target>
       </segment>
     </unit>
+    <unit id="707142582892974455">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:401</note>
+        <note category="description">Field line above a rewritten block of text</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="FIELD" disp="label"/> rewritten</source>
+        <target><ph id="0" equiv="FIELD" disp="label"/> neu geschrieben</target>
+      </segment>
+    </unit>
     <unit id="7072343265709417707">
       <notes>
         <note category="location">src/app/features/task-views/models/task-query-copy.ts:23</note>
@@ -13288,8 +13441,7 @@
     </unit>
     <unit id="3823219296477075982">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:130,133</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:298,301</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:295,298</note>
         <note category="description">Button that discards the proposed changes</note>
       </notes>
       <segment state="translated">
@@ -13507,6 +13659,16 @@
       <segment state="translated">
         <source>Receive <ph id="0" equiv="EVENT" disp="label"/> notifications</source>
         <target>Benachrichtigungen zu <ph id="0" equiv="EVENT" disp="label"/> erhalten</target>
+      </segment>
+    </unit>
+    <unit id="1164625214886901365">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:120</note>
+        <note category="description">Plural of the entity a digest row counts, mid sentence</note>
+      </notes>
+      <segment state="translated">
+        <source>boards</source>
+        <target>Boards</target>
       </segment>
     </unit>
     <unit id="1166473993510000594">
@@ -13936,6 +14098,16 @@
         <target> Bild ändern </target>
       </segment>
     </unit>
+    <unit id="117954017715534854">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:123</note>
+        <note category="description">Plural of the entity a digest row counts, mid sentence</note>
+      </notes>
+      <segment state="translated">
+        <source>comments</source>
+        <target>Kommentare</target>
+      </segment>
+    </unit>
     <unit id="4878739351848976503">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:304,306</note>
@@ -14159,6 +14331,16 @@
         <target>Gelöschte Aufgaben erscheinen hier und können wiederhergestellt werden.</target>
       </segment>
     </unit>
+    <unit id="5571346430797610353">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:103</note>
+        <note category="description">Digest phrase for entities moved between sprints</note>
+      </notes>
+      <segment state="translated">
+        <source>Sprints changed</source>
+        <target>Sprints geändert</target>
+      </segment>
+    </unit>
     <unit id="5572257597829131111">
       <notes>
         <note category="location">src/app/features/settings/components/search-credential/search-credential.component.ts:358</note>
@@ -14207,6 +14389,16 @@
       <segment state="translated">
         <source> Bulk edit </source>
         <target>Sammelbearbeitung</target>
+      </segment>
+    </unit>
+    <unit id="8056244872949744314">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:409</note>
+        <note category="description">Shown after a change set was partly applied</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="total"/> applied · <ph id="2" equiv="FAILED" disp="failed"/> failed</source>
+        <target><ph id="0" equiv="APPLIED" disp="applied"/> von <ph id="1" equiv="TOTAL" disp="total"/> angewendet · <ph id="2" equiv="FAILED" disp="failed"/> fehlgeschlagen</target>
       </segment>
     </unit>
     <unit id="8762534944604959180">
@@ -14316,6 +14508,16 @@
         <target>Überall lesbar</target>
       </segment>
     </unit>
+    <unit id="7845037814436869393">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:121</note>
+        <note category="description">Plural of the entity a digest row counts, mid sentence</note>
+      </notes>
+      <segment state="translated">
+        <source>board groups</source>
+        <target>Board-Gruppen</target>
+      </segment>
+    </unit>
     <unit id="8202154820002793003">
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:25,27</note>
@@ -14411,6 +14613,7 @@
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:52,54</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:53,54</note>
         <note category="location">src/app/features/projects/views/projects-view/projects-view.component.ts:61,65</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:79</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:198</note>
         <note category="location">src/app/workspace.routes.ts:30</note>
         <note category="description">Filter heading for projects</note>
@@ -14654,6 +14857,16 @@
         <target> Median </target>
       </segment>
     </unit>
+    <unit id="1902863645498591519">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:413</note>
+        <note category="description">Shown after a single change was applied</note>
+      </notes>
+      <segment state="translated">
+        <source>1 change applied</source>
+        <target>1 Änderung angewendet</target>
+      </segment>
+    </unit>
     <unit id="1908512735041572726">
       <notes>
         <note category="location">src/app/features/data-transfer/views/archive-import-view/archive-import-view.component.ts:97,99</note>
@@ -14662,6 +14875,16 @@
       <segment state="initial">
         <source>Archive destination</source>
         <target>Archivziel</target>
+      </segment>
+    </unit>
+    <unit id="1910138309601579744">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:147</note>
+        <note category="description">Digest phrase for a field with no phrasing of its own</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="FIELD" disp="label"/> changed</source>
+        <target><ph id="0" equiv="FIELD" disp="label"/> geändert</target>
       </segment>
     </unit>
     <unit id="1916606088857978146">
@@ -14877,7 +15100,7 @@
     </unit>
     <unit id="1364951183871731535">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:252,255</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:249,252</note>
         <note category="description">Keyboard hint for moving through the review list</note>
       </notes>
       <segment state="translated">
@@ -15394,7 +15617,7 @@
     <unit id="7679272376567925786">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-message.component.ts:205</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:561</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:578</note>
         <note category="description">Describes what applying a change set did</note>
       </notes>
       <segment state="translated">
@@ -15442,6 +15665,16 @@
       <segment state="translated">
         <source>Reports</source>
         <target>Berichte</target>
+      </segment>
+    </unit>
+    <unit id="1874095910893592675">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:346</note>
+        <note category="description">Number of changes that cannot be applied</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="BLOCKED" disp="blocked"/> changes</source>
+        <target><ph id="0" equiv="BLOCKED" disp="blocked"/> Änderungen</target>
       </segment>
     </unit>
     <unit id="3030881843197844043">
@@ -15616,7 +15849,7 @@
     </unit>
     <unit id="2434944824726929798">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:517</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:534</note>
         <note category="description">Diff layout with two columns</note>
       </notes>
       <segment state="translated">
@@ -15751,6 +15984,16 @@
       <segment state="translated">
         <source>Task timeline</source>
         <target>Aufgaben-Zeitleiste</target>
+      </segment>
+    </unit>
+    <unit id="4576799472569236789">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:101</note>
+        <note category="description">Digest phrase for reassigned entities</note>
+      </notes>
+      <segment state="translated">
+        <source>Assignees changed</source>
+        <target>Zugewiesene Personen geändert</target>
       </segment>
     </unit>
     <unit id="4578192247039196794">
@@ -15963,16 +16206,6 @@
         <target>Archiv importieren</target>
       </segment>
     </unit>
-    <unit id="4791834581881654412">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:332</note>
-        <note category="description">Shown after some changes were left out</note>
-      </notes>
-      <segment state="translated">
-        <source><ph id="0" equiv="APPLIED" disp="applied"/> of <ph id="1" equiv="TOTAL" disp="changes.length"/> changes were applied.</source>
-        <target><ph id="0" equiv="APPLIED" disp="applied"/> von <ph id="1" equiv="TOTAL" disp="changes.length"/> Änderungen wurden angewendet.</target>
-      </segment>
-    </unit>
     <unit id="4797214229335185452">
       <notes>
         <note category="location">src/app/features/settings/views/assistant-conversations-view/assistant-conversations-view.component.ts:94,97</note>
@@ -16023,6 +16256,16 @@
         <target>Tag-Details</target>
       </segment>
     </unit>
+    <unit id="575235426807014003">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:108</note>
+        <note category="description">Digest phrase for added comments</note>
+      </notes>
+      <segment state="translated">
+        <source>Comments added</source>
+        <target>Kommentare hinzugefügt</target>
+      </segment>
+    </unit>
     <unit id="3437679369074503203">
       <notes>
         <note category="location">src/app/features/settings/components/preference-list/preference-list.component.ts:73</note>
@@ -16055,7 +16298,7 @@
     </unit>
     <unit id="9080564422139929268">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:201,205</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:198,202</note>
         <note category="description">Single letter marking a change that removes something. It labels the rows in the list, so leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -16065,7 +16308,7 @@
     </unit>
     <unit id="9081463435738465430">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:507</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:511</note>
         <note category="description">Review filter showing changes that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -16107,7 +16350,7 @@
     </unit>
     <unit id="9095134843628689709">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:272,274</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:269,271</note>
         <note category="description">Keyboard hint for editing a change</note>
       </notes>
       <segment state="translated">
@@ -16222,7 +16465,7 @@
     </unit>
     <unit id="8638195718204770647">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:374</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:373</note>
         <note category="description">Shown when there is no change to review</note>
       </notes>
       <segment state="translated">
@@ -16232,7 +16475,7 @@
     </unit>
     <unit id="3056025401856031391">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:161,166</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:181,186</note>
         <note category="description">Shown when a change set has no changes left to review</note>
       </notes>
       <segment state="translated">
@@ -17005,7 +17248,7 @@
     </unit>
     <unit id="6848079532028484128">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:88,90</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:85,87</note>
         <note category="description">Accessible label for the button that closes the review</note>
       </notes>
       <segment state="translated">
@@ -17105,7 +17348,6 @@
     </unit>
     <unit id="5773144976658818508">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-list.component.ts:223</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:226</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-detail.component.ts:237</note>
         <note category="description">Shown on a proposal that cannot be applied</note>
@@ -17205,6 +17447,16 @@
         <target>Arbeitsbereich-Tags</target>
       </segment>
     </unit>
+    <unit id="1354313797361897990">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:122</note>
+        <note category="description">Plural of the entity a digest row counts, mid sentence</note>
+      </notes>
+      <segment state="translated">
+        <source>statuses</source>
+        <target>Status</target>
+      </segment>
+    </unit>
     <unit id="1354796016404134182">
       <notes>
         <note category="location">src/app/features/settings/settings.routes.ts:74</note>
@@ -17245,16 +17497,6 @@
         <target>Dienstkonten des Arbeitsbereichs</target>
       </segment>
     </unit>
-    <unit id="1531509541211048627">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:260</note>
-        <note category="description">Opens a dialog with the changes not shown inline</note>
-      </notes>
-      <segment state="translated">
-        <source>+<ph id="0" equiv="HIDDEN" disp="hidden"/> more changes</source>
-        <target>+<ph id="0" equiv="HIDDEN" disp="hidden"/> weitere Änderungen</target>
-      </segment>
-    </unit>
     <unit id="1534534589646989824">
       <notes>
         <note category="location">src/app/features/settings/views/relation-types-view/relation-types-view.component.ts:76,84</note>
@@ -17285,10 +17527,20 @@
         <target>Beziehungstypen konnten nicht geladen werden</target>
       </segment>
     </unit>
+    <unit id="5000711107816438890">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:405</note>
+        <note category="description">Field line above a block of text a change adds</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="FIELD" disp="label"/> added</source>
+        <target><ph id="0" equiv="FIELD" disp="label"/> hinzugefügt</target>
+      </segment>
+    </unit>
     <unit id="5000740075940518750">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:308</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:545</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:394</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:562</note>
         <note category="description">Shown after proposals were discarded</note>
       </notes>
       <segment state="translated">
@@ -17386,6 +17638,16 @@
       <segment state="translated">
         <source>Status details</source>
         <target>Statusdetails</target>
+      </segment>
+    </unit>
+    <unit id="6830487786685101321">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:323</note>
+        <note category="description">Counts the entities one digest row covers</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="covered"/></source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="covered"/></target>
       </segment>
     </unit>
     <unit id="6830953190149975920">
@@ -17583,6 +17845,16 @@
         <target> Chat öffnen </target>
       </segment>
     </unit>
+    <unit id="5945229716887536509">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:93</note>
+        <note category="description">Digest phrase for renamed entities</note>
+      </notes>
+      <segment state="translated">
+        <source>Names changed</source>
+        <target>Namen geändert</target>
+      </segment>
+    </unit>
     <unit id="5949868576384453504">
       <notes>
         <note category="location">src/app/features/settings/views/service-accounts-view/service-accounts-view.component.ts:109,111</note>
@@ -17663,6 +17935,16 @@
         <target>Dienstkonto bearbeiten</target>
       </segment>
     </unit>
+    <unit id="1968423120890399505">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:220,223</note>
+        <note category="description">Button that discards the proposed changes</note>
+      </notes>
+      <segment state="translated">
+        <source> Discard </source>
+        <target>Verwerfen</target>
+      </segment>
+    </unit>
     <unit id="1968929439039756040">
       <notes>
         <note category="location">src/app/features/settings/components/entity-usage-panel.component.ts:24,26</note>
@@ -17671,6 +17953,16 @@
       <segment state="translated">
         <source> Projects using it as their default status </source>
         <target>Projekte, die ihn als Standardstatus verwenden</target>
+      </segment>
+    </unit>
+    <unit id="72760277315735644">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:286</note>
+        <note category="description">Accessible label of the block holding the proposed changes</note>
+      </notes>
+      <segment state="translated">
+        <source>Proposed changes</source>
+        <target>Vorgeschlagene Änderungen</target>
       </segment>
     </unit>
     <unit id="7279697022989713952">
@@ -18143,7 +18435,7 @@
     </unit>
     <unit id="6920187614613605770">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:558</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:575</note>
         <note category="description">Shown after a change set was partly applied</note>
       </notes>
       <segment state="translated">
@@ -18289,7 +18581,7 @@
         <note category="location">src/app/features/sprints/components/sprint-carry-over-list.component.ts:99</note>
         <note category="location">src/app/features/sprints/components/sprint-stats.component.ts:35</note>
         <note category="location">src/app/features/sprints/views/sprint-backlog-view/sprint-backlog-view.component.ts:112</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:492</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:496</note>
         <note category="description">Heading above the newly created tasks leaving a sprint</note>
       </notes>
       <segment state="translated">
@@ -18668,6 +18960,16 @@
         <target>{VAR_PLURAL, plural, =0 {Aufgaben hinzufügen} =1 {1 Aufgabe hinzufügen} other {<ph id="0" equiv="INTERPOLATION"/> Aufgaben hinzufügen}}</target>
       </segment>
     </unit>
+    <unit id="720498085522302459">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:82</note>
+        <note category="description">Plural of the entity a proposed change targets</note>
+      </notes>
+      <segment state="translated">
+        <source>Board groups</source>
+        <target>Board-Gruppen</target>
+      </segment>
+    </unit>
     <unit id="7636820810130095488">
       <notes>
         <note category="location">src/app/features/sprints/dialogs/sprint-completion-dialog.component.ts:147,151</note>
@@ -18820,6 +19122,17 @@
         <target>Sprint auswählen</target>
       </segment>
     </unit>
+    <unit id="2021375731542005347">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:351</note>
+        <note category="description">Follows the count when a single change cannot be applied</note>
+        <note category="meaning">one blocked change</note>
+      </notes>
+      <segment state="translated">
+        <source>cannot be applied</source>
+        <target>kann nicht angewendet werden</target>
+      </segment>
+    </unit>
     <unit id="126074860850048964">
       <notes>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-group.ts:32</note>
@@ -18958,6 +19271,7 @@
       <notes>
         <note category="location">src/app/core/util/ai-client-context.ts:23</note>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:75,76</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:119</note>
         <note category="description">Names the screen the user is on</note>
       </notes>
       <segment state="translated">
@@ -18977,7 +19291,7 @@
     </unit>
     <unit id="8127725951732050615">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:259,261</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:256,258</note>
         <note category="description">Name of the space bar. Translate it to its local name</note>
       </notes>
       <segment state="translated">
@@ -19003,6 +19317,16 @@
       <segment state="translated">
         <source>Add existing tasks to this sprint</source>
         <target>Bestehende Aufgaben zu diesem Sprint hinzufügen</target>
+      </segment>
+    </unit>
+    <unit id="7607115716895222831">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:98</note>
+        <note category="description">Digest phrase for moved start dates</note>
+      </notes>
+      <segment state="translated">
+        <source>Start dates changed</source>
+        <target>Startdaten geändert</target>
       </segment>
     </unit>
     <unit id="7607713563510753803">
@@ -19058,7 +19382,7 @@
     </unit>
     <unit id="4007569097635901294">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:240</note>
+        <note category="location">src/app/shell/ai-assistant/ai-assistant-panel.component.ts:239</note>
         <note category="description">Assistant subtitle while a reply is streaming</note>
       </notes>
       <segment state="translated">
@@ -19130,6 +19454,7 @@
     <unit id="4347094825344030699">
       <notes>
         <note category="location">src/app/features/sprints/views/sprints-view/sprints-view.component.ts:58,59</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:80</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:182</note>
         <note category="location">src/app/workspace.routes.ts:66</note>
         <note category="description">Page title for the sprint list</note>
@@ -19191,7 +19516,7 @@
     </unit>
     <unit id="4901555042063443017">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:270,272</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:267,269</note>
         <note category="description">Keyboard key that edits the selected change. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -19418,7 +19743,7 @@
     </unit>
     <unit id="345994992360406582">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:533</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:550</note>
         <note category="description">Counts the changes and the entities they touch</note>
       </notes>
       <segment state="translated">
@@ -19438,7 +19763,7 @@
     </unit>
     <unit id="8178416786371438773">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:375</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:374</note>
         <note category="description">Explains the empty review surface</note>
       </notes>
       <segment state="translated">
@@ -19646,6 +19971,16 @@
         <target>Arbeitsbereichsarchiv exportieren</target>
       </segment>
     </unit>
+    <unit id="3344440141652738609">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:95</note>
+        <note category="description">Digest phrase for moved entities</note>
+      </notes>
+      <segment state="translated">
+        <source>Statuses changed</source>
+        <target>Status geändert</target>
+      </segment>
+    </unit>
     <unit id="3348547714642337740">
       <notes>
         <note category="location">src/app/shared/components/task-view-filters/task-view-filters.component.ts:34,36</note>
@@ -19776,6 +20111,16 @@
         <target> Die Aufgabe wurde erstellt, aber einige Dateien wurden nicht hochgeladen. Schließen Sie diesen Dialog und fügen Sie sie über die Aufgabe hinzu. </target>
       </segment>
     </unit>
+    <unit id="2217519786318593047">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:107</note>
+        <note category="description">Digest phrase for rewritten goals</note>
+      </notes>
+      <segment state="translated">
+        <source>Goals rewritten</source>
+        <target>Ziele neu geschrieben</target>
+      </segment>
+    </unit>
     <unit id="417521324376034489">
       <notes>
         <note category="location">src/app/shell/command-palette/command-palette-button.component.ts:30,38</note>
@@ -19824,16 +20169,6 @@
       <segment state="translated">
         <source>No results found.</source>
         <target>Keine Ergebnisse gefunden.</target>
-      </segment>
-    </unit>
-    <unit id="2711241297570613337">
-      <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:298</note>
-        <note category="description">Summarises a collapsed set of proposals awaiting a decision</note>
-      </notes>
-      <segment state="translated">
-        <source><ph id="0" equiv="TOTAL" disp="total"/> awaiting review</source>
-        <target><ph id="0" equiv="TOTAL" disp="total"/> zur Prüfung offen</target>
       </segment>
     </unit>
     <unit id="2718977986022591344">
@@ -19947,6 +20282,16 @@
         <target>Datei entfernen</target>
       </segment>
     </unit>
+    <unit id="6282078456350219045">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:416</note>
+        <note category="description">Shown after changes were applied</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="APPLIED" disp="applied"/> changes applied</source>
+        <target><ph id="0" equiv="APPLIED" disp="applied"/> Änderungen angewendet</target>
+      </segment>
+    </unit>
     <unit id="628468315033128728">
       <notes>
         <note category="location">src/app/features/settings/views/relation-type-detail-view/relation-type-detail-view.component.ts:487</note>
@@ -19976,6 +20321,17 @@
       <segment state="translated">
         <source> Open <ph id="0" equiv="SPRINT_NAME" disp="{{ selectedSprint.name // i18n(ph=&quot;SPRINT_NAME&quot;) }}"/> </source>
         <target><ph id="0" equiv="SPRINT_NAME" disp="{{ selectedSprint.name // i18n(ph=&quot;SPRINT_NAME&quot;) }}"/> öffnen</target>
+      </segment>
+    </unit>
+    <unit id="8296629752539852838">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-set.component.ts:354</note>
+        <note category="description">Follows the number of changes that cannot be applied</note>
+        <note category="meaning">many blocked changes</note>
+      </notes>
+      <segment state="translated">
+        <source>cannot be applied</source>
+        <target>können nicht angewendet werden</target>
       </segment>
     </unit>
     <unit id="8781538086699105202">
@@ -20292,8 +20648,8 @@
     </unit>
     <unit id="23718004345171053">
       <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:370</note>
         <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:371</note>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:372</note>
         <note category="description">Placeholder of the field that filters the review list</note>
       </notes>
       <segment state="translated">
@@ -20470,6 +20826,7 @@
       <notes>
         <note category="location">src/app/features/data-transfer/components/export-steps/export-filter-step.component.ts:72,74</note>
         <note category="location">src/app/features/settings/views/statuses-view/statuses-view.component.ts:64,65</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:83</note>
         <note category="location">src/app/shell/shell-sidebar.component.ts:334</note>
         <note category="description">Filter heading for statuses</note>
       </notes>
@@ -20507,6 +20864,16 @@
       <segment state="translated">
         <source> No results found... </source>
         <target>Keine Ergebnisse gefunden...</target>
+      </segment>
+    </unit>
+    <unit id="6483401023416572043">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:99</note>
+        <note category="description">Digest phrase for moved end dates</note>
+      </notes>
+      <segment state="translated">
+        <source>End dates changed</source>
+        <target>Enddaten geändert</target>
       </segment>
     </unit>
     <unit id="6496945047527833233">
@@ -20702,9 +21069,19 @@
         <target>Kommentar bearbeiten</target>
       </segment>
     </unit>
+    <unit id="8588844461292688626">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:102</note>
+        <note category="description">Digest phrase for retagged entities</note>
+      </notes>
+      <segment state="translated">
+        <source>Tags set</source>
+        <target>Tags gesetzt</target>
+      </segment>
+    </unit>
     <unit id="7923105806433235005">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:249,251</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:246,248</note>
         <note category="description">Keyboard key that moves up the review list. Leave the letter as-is</note>
       </notes>
       <segment state="translated">
@@ -20734,7 +21111,7 @@
     </unit>
     <unit id="2092538451231698356">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:151,159</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-list.component.ts:171,179</note>
         <note category="description">Accessible label on the marker shown beside a change that cannot be applied</note>
       </notes>
       <segment state="translated">
@@ -20874,7 +21251,7 @@
     </unit>
     <unit id="450937500922433442">
       <notes>
-        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:525</note>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-review-dialog.component.ts:542</note>
         <note category="description">Diff layout highlighting changed words</note>
       </notes>
       <segment state="translated">
@@ -21001,6 +21378,16 @@
       <segment state="translated">
         <source>Choose files</source>
         <target>Dateien auswählen</target>
+      </segment>
+    </unit>
+    <unit id="7927544787807387052">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:351</note>
+        <note category="description">Digest row covering the changes not itemised above</note>
+      </notes>
+      <segment state="translated">
+        <source>… and <ph id="0" equiv="COUNT" disp="count"/> other changes</source>
+        <target>… und <ph id="0" equiv="COUNT" disp="count"/> weitere Änderungen</target>
       </segment>
     </unit>
     <unit id="4865868083675132195">
@@ -21311,6 +21698,16 @@
       <segment state="translated">
         <source> Size </source>
         <target>Größe</target>
+      </segment>
+    </unit>
+    <unit id="2391767489498755087">
+      <notes>
+        <note category="location">src/app/shell/ai-assistant/components/ai-assistant-change-summary.ts:231</note>
+        <note category="description">Digest row covering entities a change set updates</note>
+      </notes>
+      <segment state="translated">
+        <source><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> updated</source>
+        <target><ph id="0" equiv="COUNT" disp="count"/> <ph id="1" equiv="ENTITIES" disp="entities"/> geändert</target>
       </segment>
     </unit>
     <unit id="2395695896327760676">

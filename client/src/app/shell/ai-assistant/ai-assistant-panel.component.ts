@@ -155,13 +155,11 @@ import { AiAssistantUsageComponent } from './components/ai-assistant-usage.compo
           [excludedChangeIds]="assistant.excludedChangeIds()"
           [isApplying]="assistant.isApplying()"
           [contentWidth]="contentWidth()"
-          [workspace]="assistant.workspaceKey()"
           (toggled)="assistant.toggleChange($event)"
           (selectionChanged)="assistant.toggleChanges($event)"
           (applied)="apply()"
           (discarded)="discard()"
-          (undone)="undo()"
-          (retried)="retryChanges()" />
+          (undone)="undo()" />
       }
 
       @if (spend(); as usage) {
@@ -293,10 +291,6 @@ export class AiAssistantPanelComponent {
 
   protected undo() {
     void this.assistant.undoChangeSet();
-  }
-
-  protected retryChanges() {
-    void this.assistant.retryFailedChanges();
   }
 
   protected setMode(mode: AiDisplayMode) {
