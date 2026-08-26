@@ -23,7 +23,7 @@ import {
   isValid,
 } from './ai-assistant-change-group';
 import { AiAssistantChangeListComponent } from './ai-assistant-change-list.component';
-import { AiAssistantChangesDialogComponent } from './ai-assistant-changes-dialog.component';
+import { AiAssistantReviewDialogComponent } from './ai-assistant-review-dialog.component';
 
 /** Enough to read at a glance without pushing the composer off the screen. */
 const INLINE_CHANGE_LIMIT = 3;
@@ -340,9 +340,11 @@ export class AiAssistantChangeSetComponent {
   }
 
   protected showAll() {
-    this.dialog.open(AiAssistantChangesDialogComponent, {
-      width: '68rem',
-      maxWidth: '95vw',
+    this.dialog.open(AiAssistantReviewDialogComponent, {
+      width: '100vw',
+      maxWidth: '100vw',
+      height: '100vh',
+      panelClass: 'np-review-dialog',
     });
   }
 

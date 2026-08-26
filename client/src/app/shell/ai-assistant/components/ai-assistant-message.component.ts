@@ -16,15 +16,15 @@ import {
   LucideRefreshCw,
   LucideWrench,
 } from '@lucide/angular';
-import {
-  AiAppliedChangesData,
-  AiAssistantAppliedChangesDialogComponent,
-} from './ai-assistant-applied-changes-dialog.component';
 import { AiAssistantMarkdownComponent } from './ai-assistant-markdown.component';
 import {
   AiAssistantQuestionComponent,
   AiQuestionResponse,
 } from './ai-assistant-question.component';
+import {
+  AiAssistantReviewDialogComponent,
+  AiReviewData,
+} from './ai-assistant-review-dialog.component';
 
 interface AiToolChip {
   name: string;
@@ -206,15 +206,18 @@ export class AiAssistantMessageComponent {
   });
 
   protected showChanges(changeSet: AiChangeSet) {
-    const data: AiAppliedChangesData = {
+    const data: AiReviewData = {
       changeSet,
       workspace: this.workspace(),
     };
 
-    this.dialog.open<unknown, AiAppliedChangesData>(
-      AiAssistantAppliedChangesDialogComponent,
-      { data, width: '68rem', maxWidth: '95vw' }
-    );
+    this.dialog.open<unknown, AiReviewData>(AiAssistantReviewDialogComponent, {
+      data,
+      width: '100vw',
+      maxWidth: '100vw',
+      height: '100vh',
+      panelClass: 'np-review-dialog',
+    });
   }
 
   /** A reply that never arrived has no work to report, however long it took. */

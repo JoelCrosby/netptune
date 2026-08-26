@@ -53,6 +53,13 @@
   --color-status-bar: var(--status-bar);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-change-added: var(--change-added);
+  --color-change-modified: var(--change-modified);
+  --color-change-removed: var(--change-removed);
+  --color-diff-add: var(--diff-add);
+  --color-diff-del: var(--diff-del);
+  --color-diff-add-word: var(--diff-add-word);
+  --color-diff-del-word: var(--diff-del-word);
   --color-destructive: var(--destructive);
   --color-popover-foreground: var(--popover-foreground);
   --color-accent-foreground: var(--accent-foreground);
@@ -178,6 +185,14 @@
   --card-selected: var(--primary);
   --card-shadow: rgba(0, 0, 0, .1);
 
+  --change-added: #3f7d4c;
+  --change-modified: #96651c;
+  --change-removed: #b4331d;
+  --diff-add: rgba(155, 185, 85, 0.16);
+  --diff-del: rgba(200, 0, 0, 0.1);
+  --diff-add-word: rgba(155, 185, 85, 0.34);
+  --diff-del-word: rgba(200, 0, 0, 0.2);
+
   --editor-code-background: #fbfbfb;
   --editor-link-border: #c9c9cc7a;
   --editor-link-background: #fff;
@@ -237,6 +252,14 @@
   --card-warn-hover: #694040;
   --card-selected: var(--primary);
   --card-shadow: rgba(0, 0, 0, .2);
+
+  --change-added: #81b88b;
+  --change-modified: #e2c08d;
+  --change-removed: #c74e39;
+  --diff-add: rgba(155, 185, 85, 0.16);
+  --diff-del: rgba(255, 0, 0, 0.14);
+  --diff-add-word: rgba(155, 185, 85, 0.36);
+  --diff-del-word: rgba(255, 0, 0, 0.3);
 
   --editor-code-background: #060606;
   --editor-link-border: #3e3e3e;
