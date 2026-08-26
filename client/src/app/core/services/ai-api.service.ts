@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { AiCredentialAvailability } from '@core/models/ai-credential';
 import { AiModelOption } from '@core/models/ai-model';
 import { ClientResponse } from '@core/models/client-response';
@@ -38,25 +39,25 @@ export class AiApiService {
   private readonly http = inject(HttpClient);
 
   async listModels(): Promise<AiModelOption[]> {
-    const models = await this.http
-      .get<AiModelOption[]>('api/ai/models')
-      .toPromise();
+    const models = await firstValueFrom(
+      this.http.get<AiModelOption[]>('api/ai/models')
+    );
 
     return models ?? [];
   }
 
   async readCredentialAvailability(): Promise<AiCredentialAvailability | null> {
-    const availability = await this.http
-      .get<AiCredentialAvailability>('api/ai/credentials/availability')
-      .toPromise();
+    const availability = await firstValueFrom(
+      this.http.get<AiCredentialAvailability>('api/ai/credentials/availability')
+    );
 
     return availability ?? null;
   }
 
   async listConversations(): Promise<AiConversation[]> {
-    const conversations = await this.http
-      .get<AiConversation[]>('api/ai/conversations')
-      .toPromise();
+    const conversations = await firstValueFrom(
+      this.http.get<AiConversation[]>('api/ai/conversations')
+    );
 
     return conversations ?? [];
   }
@@ -65,11 +66,11 @@ export class AiApiService {
     conversationId: string
   ): Promise<AiConversationDetail | null> {
     try {
-      const response = await this.http
-        .get<ClientResponse<AiConversationDetail>>(
+      const response = await firstValueFrom(
+        this.http.get<ClientResponse<AiConversationDetail>>(
           `api/ai/conversations/${conversationId}`
         )
-        .toPromise();
+      );
 
       return response?.payload ?? null;
     } catch {
@@ -78,16 +79,16 @@ export class AiApiService {
   }
 
   async deleteConversation(conversationId: string) {
-    await this.http
-      .delete(`api/ai/conversations/${conversationId}`)
-      .toPromise();
+    await firstValueFrom(
+      this.http.delete(`api/ai/conversations/${conversationId}`)
+    );
   }
 
   async stopConversation(conversationId: string) {
     try {
-      await this.http
-        .post(`api/ai/conversations/${conversationId}/stop`, {})
-        .toPromise();
+      await firstValueFrom(
+        this.http.post(`api/ai/conversations/${conversationId}/stop`, {})
+      );
     } catch {
       /* The turn ends on its own once the server notices. */
     }
@@ -95,9 +96,11 @@ export class AiApiService {
 
   async readChangeSet(changeSetId: string): Promise<AiChangeSet | null> {
     try {
-      const response = await this.http
-        .get<ClientResponse<AiChangeSet>>(`api/ai/change-sets/${changeSetId}`)
-        .toPromise();
+      const response = await firstValueFrom(
+        this.http.get<ClientResponse<AiChangeSet>>(
+          `api/ai/change-sets/${changeSetId}`
+        )
+      );
 
       return response?.payload ?? null;
     } catch {
@@ -110,11 +113,11 @@ export class AiApiService {
     conversationId: string
   ): Promise<AiChangeSet[]> {
     try {
-      const changeSets = await this.http
-        .get<AiChangeSet[]>(
+      const changeSets = await firstValueFrom(
+        this.http.get<AiChangeSet[]>(
           `api/ai/conversations/${conversationId}/change-sets`
         )
-        .toPromise();
+      );
 
       return changeSets ?? [];
     } catch {
@@ -126,11 +129,11 @@ export class AiApiService {
     conversationId: string
   ): Promise<AiChangeSet | null> {
     try {
-      const response = await this.http
-        .get<ClientResponse<AiChangeSet>>(
+      const response = await firstValueFrom(
+        this.http.get<ClientResponse<AiChangeSet>>(
           `api/ai/conversations/${conversationId}/change-set`
         )
-        .toPromise();
+      );
 
       return response?.payload ?? null;
     } catch {
@@ -144,12 +147,12 @@ export class AiApiService {
     fields: AiChangeFieldEdit[]
   ): Promise<AiChangeEditResult> {
     try {
-      const response = await this.http
-        .patch<ClientResponse<AiChangeSet>>(
+      const response = await firstValueFrom(
+        this.http.patch<ClientResponse<AiChangeSet>>(
           `api/ai/change-sets/${changeSetId}/changes/${changeId}`,
           { fields }
         )
-        .toPromise();
+      );
 
       return { changeSet: response?.payload ?? null, error: null };
     } catch (error) {
@@ -162,8 +165,8 @@ export class AiApiService {
     action: AiChangeSetAction,
     body: object = {}
   ) {
-    await this.http
-      .post(`api/ai/change-sets/${changeSetId}/${action}`, body)
-      .toPromise();
+    await firstValueFrom(
+      this.http.post(`api/ai/change-sets/${changeSetId}/${action}`, body)
+    );
   }
 }
