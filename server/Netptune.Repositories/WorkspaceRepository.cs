@@ -2,12 +2,15 @@ using Dapper;
 
 using Microsoft.EntityFrameworkCore;
 
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Workspaces;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Files;
+using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.Sql;
@@ -145,6 +148,58 @@ public class WorkspaceRepository : AuditableRepository<DataContext, Workspace, i
             .Skip(pagination.Skip)
             .Take(pagination.PageSize)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Dictionary<int, WorkspaceMemberSummary>> GetMemberSummaries(
+        IReadOnlyCollection<int> workspaceIds,
+        int maxMembers,
+        CancellationToken cancellationToken = default)
+    {
+        if (workspaceIds.Count == 0) return [];
+
+        var ids = workspaceIds.ToList();
+
+        var counts = await Context.WorkspaceAppUsers
+            .Where(member => ids.Contains(member.WorkspaceId))
+            .GroupBy(member => member.WorkspaceId)
+            .Select(group => new
+            {
+                WorkspaceId = group.Key,
+                MemberCount = group.Count(),
+            })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        var samples = await Context.Workspaces
+            .Where(workspace => ids.Contains(workspace.Id))
+            .Select(workspace => new
+            {
+                WorkspaceId = workspace.Id,
+                Members = Context.WorkspaceAppUsers
+                    .Where(member => member.WorkspaceId == workspace.Id)
+                    .OrderBy(member => member.Id)
+                    .Take(maxMembers)
+                    .Select(member => new AssigneeViewModel
+                    {
+                        Id = member.User.Id,
+                        DisplayName = string.IsNullOrEmpty(member.User.Firstname) && string.IsNullOrEmpty(member.User.Lastname)
+                            ? member.User.UserName!
+                            : member.User.Firstname + " " + member.User.Lastname,
+                        PictureUrl = member.User.PictureUrl,
+                        IsServiceAccount = member.User.UserType == AppUserType.ServiceAccount,
+                    })
+                    .ToList(),
+            })
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        var memberLookup = samples.ToDictionary(row => row.WorkspaceId, row => row.Members);
+
+        return counts.ToDictionary(row => row.WorkspaceId, row => new WorkspaceMemberSummary
+        {
+            MemberCount = row.MemberCount,
+            Members = memberLookup.GetValueOrDefault(row.WorkspaceId, []),
+        });
     }
 
     public Task<List<Workspace>> GetWorkspaces(CancellationToken cancellationToken = default, PageRequest? pageRequest = null)

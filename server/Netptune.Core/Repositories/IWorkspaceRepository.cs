@@ -1,4 +1,5 @@
 using Netptune.Core.Entities;
+using Netptune.Core.Models.Workspaces;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.ViewModels.Files;
@@ -16,6 +17,8 @@ public interface IWorkspaceRepository : IRepository<Workspace, int>
     Task<List<Workspace>> GetUserWorkspaces(string userId, CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
 
     Task<List<Workspace>> GetWorkspaces(CancellationToken cancellationToken = default, PageRequest? pageRequest = null);
+
+    Task<Dictionary<int, WorkspaceMemberSummary>> GetMemberSummaries(IReadOnlyCollection<int> workspaceIds, int maxMembers, CancellationToken cancellationToken = default);
 
     Task<bool> Exists(string slug, CancellationToken cancellationToken = default);
 

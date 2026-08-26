@@ -30,6 +30,13 @@ export class UserPreferencesService {
       .find((preference) => preference.definition.key === key)?.effectiveValue;
   }
 
+  /** Loads the values once, for callers that render outside the app shell. */
+  ensureLoaded() {
+    if (this.loaded()) return;
+
+    this.load();
+  }
+
   load() {
     if (this.loading()) return;
 

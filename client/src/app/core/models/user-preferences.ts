@@ -7,6 +7,7 @@ export const BOARDS_HIDDEN_GROUP_IDS = 'boards.hiddenGroupIds';
 export const BOARDS_TASK_SORT = 'boards.taskSort';
 export const VIEWS_PINNED_IDS = 'views.pinnedIds';
 export const WORKSPACE_LAST_VISITED = 'workspace.lastVisited';
+export const WORKSPACES_PINNED_IDS = 'workspaces.pinnedIds';
 
 export type PreferenceScope = 'global' | 'workspace';
 

@@ -12,6 +12,7 @@ public static class PreferenceKeys
     public const string BoardTaskSort = "boards.taskSort";
     public const string ViewsPinnedIds = "views.pinnedIds";
     public const string WorkspaceLastVisited = "workspace.lastVisited";
+    public const string WorkspacesPinnedIds = "workspaces.pinnedIds";
 
     public static string NotificationEvent(ActivityType activityType)
     {

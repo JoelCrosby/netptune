@@ -129,6 +129,20 @@ public sealed class PreferenceDefinitionRegistry : IPreferenceDefinitionRegistry
         },
         new()
         {
+            Key = PreferenceKeys.WorkspacesPinnedIds,
+            GroupKey = "workspace",
+            Label = "Pinned workspaces",
+            ControlType = "hidden",
+            // Ids of the workspaces the user pinned to the top of the workspace picker.
+            // Global rather than workspace-scoped — the picker runs outside any workspace.
+            ValueType = "number-array",
+            DefaultValue = JsonSerializer.SerializeToElement(Array.Empty<int>()),
+            AllowedScopes = [PreferenceScopes.Global],
+            Internal = true,
+            Order = 20,
+        },
+        new()
+        {
             Key = PreferenceKeys.WorkspaceLastVisited,
             GroupKey = "workspace",
             Label = "Last visited workspace",

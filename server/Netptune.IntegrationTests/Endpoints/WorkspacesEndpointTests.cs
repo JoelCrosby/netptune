@@ -36,6 +36,21 @@ public sealed class WorkspacesEndpointTests
     }
 
     [Fact]
+    public async Task Get_ShouldIncludeMemberSummary_WhenInputValid()
+    {
+        var response = await Client.GetAsync("api/workspaces");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var result = await response.Content.ReadFromJsonAsync<List<UserWorkspaceViewModel>>();
+
+        result.Should().NotBeNull();
+        result.Should().OnlyContain(workspace => workspace.MemberCount > 0);
+        result.Should().OnlyContain(workspace => workspace.Members.Count > 0);
+        result.Should().OnlyContain(workspace => workspace.Members.Count <= workspace.MemberCount);
+    }
+
+    [Fact]
     public async Task GetByKey_ShouldReturnCorrectly_WhenInputValid()
     {
         var response = await Client.GetAsync("api/workspaces/netptune");
