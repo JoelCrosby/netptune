@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { LucideSearch } from '@lucide/angular';
+import { KeyboardKeyComponent } from '@static/components/keyboard-key/keyboard-key.component';
 import { CommandPaletteService } from './command-palette.service';
 
 @Component({
   selector: 'app-command-palette-button',
-  imports: [LucideSearch],
+  imports: [LucideSearch, KeyboardKeyComponent],
   template: `
     <button
       type="button"
@@ -20,14 +21,14 @@ import { CommandPaletteService } from './command-palette.service';
         i18n="Label on the button that opens the command palette">
         Search
       </span>
-      <kbd
-        class="bg-muted/10 ml-auto hidden rounded px-1 py-0.5 font-mono text-xs sm:inline"
+      <app-keyboard-key
+        class="ml-auto hidden sm:inline-flex"
         i18n="
           Keyboard shortcut hint for the command palette. Translate the modifier
           key to its local name (for example Strg in German); leave the K as-is
         ">
         Ctrl K
-      </kbd>
+      </app-keyboard-key>
     </button>
   `,
 })

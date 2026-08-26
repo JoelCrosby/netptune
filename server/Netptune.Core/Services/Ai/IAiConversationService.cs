@@ -29,6 +29,15 @@ public sealed record AiAnswerRequest
     public string? Text { get; init; }
 }
 
+// Points the assistant at one proposal it already made, so a request to rework it does not
+// depend on the reviewer describing which change they mean.
+public sealed record AiReviseRequest
+{
+    public Guid ChangeSetId { get; init; }
+
+    public long ChangeId { get; init; }
+}
+
 public sealed record AiSendMessageRequest
 {
     public Guid? ConversationId { get; init; }
@@ -46,6 +55,8 @@ public sealed record AiSendMessageRequest
     public string? Locale { get; init; }
 
     public bool Retry { get; init; }
+
+    public AiReviseRequest? Revise { get; init; }
 }
 
 public interface IAiConversationService

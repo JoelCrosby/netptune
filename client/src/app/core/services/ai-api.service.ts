@@ -11,6 +11,28 @@ import {
 
 export type AiChangeSetAction = 'apply' | 'retry' | 'undo' | 'discard';
 
+export interface AiChangeFieldEdit {
+  name: string;
+  value: string;
+}
+
+export interface AiChangeEditResult {
+  changeSet: AiChangeSet | null;
+  error: string | null;
+}
+
+/** The handler turns a rejected edit into a message; anything else is a bare failure. */
+const readEditError = (error: unknown): string => {
+  const response = error as { error?: ClientResponse<unknown> };
+  const message = response.error?.message;
+
+  if (typeof message === 'string' && message.length > 0) {
+    return message;
+  }
+
+  return $localize`:Shown when an edit to a proposed change is refused:That change could not be edited.`;
+};
+
 @Service()
 export class AiApiService {
   private readonly http = inject(HttpClient);
@@ -113,6 +135,25 @@ export class AiApiService {
       return response?.payload ?? null;
     } catch {
       return null;
+    }
+  }
+
+  async updateChange(
+    changeSetId: string,
+    changeId: number,
+    fields: AiChangeFieldEdit[]
+  ): Promise<AiChangeEditResult> {
+    try {
+      const response = await this.http
+        .patch<ClientResponse<AiChangeSet>>(
+          `api/ai/change-sets/${changeSetId}/changes/${changeId}`,
+          { fields }
+        )
+        .toPromise();
+
+      return { changeSet: response?.payload ?? null, error: null };
+    } catch (error) {
+      return { changeSet: null, error: readEditError(error) };
     }
   }
 

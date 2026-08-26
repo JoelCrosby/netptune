@@ -8,12 +8,18 @@ import { WorkspaceService } from '@core/services/workspace.service';
 import { buildClientContext } from '@core/util/ai-client-context';
 import { environment } from '@env/environment';
 
+export interface AiReviseTarget {
+  changeSetId: string;
+  changeId: number;
+}
+
 export interface AiTurnRequest {
   conversationId: string | null;
   text: string;
   model: string | null;
   retry: boolean;
   answer: AiQuestionAnswer | null;
+  revise: AiReviseTarget | null;
 }
 
 const STREAM_PREFIX = 'data: ';
@@ -122,6 +128,7 @@ export class AiStreamService {
       locale: this.locale,
       retry: request.retry,
       answer: request.answer,
+      revise: request.revise,
       context: buildClientContext({
         url: this.router.url,
         project: this.currentProject(),

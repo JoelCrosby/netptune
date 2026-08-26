@@ -2,15 +2,25 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import {
   AiChangeApplyStatus,
+  AiChangeField,
   AiChangeSet,
   AiChangeSetStatus,
+  AiChangeValueKind,
   AiProposedChange,
 } from '@core/models/ai-conversation';
 import { AiAssistantService } from '@core/services/ai-assistant.service';
-import { LucideSearch, LucideX } from '@lucide/angular';
+import { LucideX } from '@lucide/angular';
+import { ButtonComponent } from '@static/components/button/button.component';
 import { FlatButtonComponent } from '@static/components/button/flat-button.component';
 import { IconButtonComponent } from '@static/components/button/icon-button.component';
 import { StrokedButtonComponent } from '@static/components/button/stroked-button.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
+import { FilterInputComponent } from '@static/components/filter-input/filter-input.component';
+import { KeyboardKeyComponent } from '@static/components/keyboard-key/keyboard-key.component';
+import {
+  SegmentedControlComponent,
+  SegmentedOption,
+} from '@static/components/segmented-control/segmented-control.component';
 import {
   AiChangeGroup,
   groupChanges,
@@ -19,16 +29,13 @@ import {
 } from './ai-assistant-change-group';
 import { changeSummary } from './ai-assistant-change-kind';
 import { AiDiffMode, changeLetter } from './ai-assistant-diff';
-import { AiAssistantReviewDetailComponent } from './ai-assistant-review-detail.component';
+import {
+  AiAssistantReviewDetailComponent,
+  AiFieldEdit,
+} from './ai-assistant-review-detail.component';
 import { AiAssistantReviewListComponent } from './ai-assistant-review-list.component';
 
 type AiReviewFilter = 'all' | 'created' | 'updated' | 'removed' | 'blocked';
-
-interface AiReviewFilterOption {
-  id: AiReviewFilter;
-  label: string;
-  count: number;
-}
 
 /**
  * Opening the review without data reviews the conversation's live change set.
@@ -42,6 +49,10 @@ export interface AiReviewData {
 
 const MODE_KEY = 'netptune.ai.review.mode';
 
+const isTextField = (field: AiChangeField): boolean => {
+  return field.kind === AiChangeValueKind.text;
+};
+
 /**
  * Full screen review of a change set, laid out the way a source control view
  * lays out a commit: what changed on the left, the diff of the selection on the
@@ -54,11 +65,15 @@ const MODE_KEY = 'netptune.ai.review.mode';
     '(document:keydown)': 'onKeydown($event)',
   },
   imports: [
-    LucideSearch,
     LucideX,
+    ButtonComponent,
     FlatButtonComponent,
     IconButtonComponent,
     StrokedButtonComponent,
+    EmptyStateComponent,
+    FilterInputComponent,
+    KeyboardKeyComponent,
+    SegmentedControlComponent,
     AiAssistantReviewDetailComponent,
     AiAssistantReviewListComponent,
   ],
@@ -86,77 +101,32 @@ const MODE_KEY = 'netptune.ai.review.mode';
     </header>
 
     <div class="border-border flex items-center gap-3 border-b px-3 py-2">
-      <label
-        class="border-border bg-card focus-within:ring-primary/40 flex h-7 min-w-[220px] items-center gap-1.5 rounded-md border px-2.5 focus-within:ring-2">
-        <svg lucideSearch class="text-muted h-3.5 w-3.5 shrink-0"></svg>
-        <input
-          type="search"
-          class="text-foreground w-full bg-transparent text-xs outline-none"
-          [value]="query()"
-          i18n-placeholder="
-            Placeholder of the field that filters the review list
-          "
-          placeholder="Filter changes"
-          i18n-aria-label="
-            Accessible label for the field that filters the review list
-          "
-          aria-label="Filter changes"
-          (input)="setQuery($event)" />
-      </label>
+      <app-filter-input
+        class="min-w-[220px]"
+        [value]="query()"
+        (valueChange)="query.set($event)"
+        [placeholder]="filterPlaceholder" />
 
-      <div class="flex items-center gap-1">
-        @for (option of filters(); track option.id) {
-          <button
-            type="button"
-            class="border-border hover:bg-hover inline-flex h-[26px] items-center gap-1.5 rounded-full border px-2.5 text-xs transition-colors"
-            [class.border-primary]="filter() === option.id"
-            [class.bg-hover]="filter() === option.id"
-            [class.text-muted]="filter() !== option.id"
-            [attr.aria-pressed]="filter() === option.id"
-            (click)="filter.set(option.id)">
-            <span>{{ option.label }}</span>
-            <span class="opacity-70">{{ option.count }}</span>
-          </button>
-        }
-      </div>
+      <app-segmented-control
+        [options]="filters()"
+        [value]="filter()"
+        (valueChange)="filter.set($event)"
+        [ariaLabel]="filterGroupLabel" />
 
       <span class="flex-1"></span>
 
-      <div
-        class="border-border bg-card flex items-center gap-0.5 rounded-md border p-0.5"
-        role="group"
-        i18n-aria-label="Accessible label for the diff layout switch"
-        aria-label="Diff layout">
-        @for (option of modes(); track option.id) {
-          <button
-            type="button"
-            class="hover:bg-hover rounded px-2.5 py-1 text-xs transition-colors"
-            [class.bg-primary-selected]="mode() === option.id"
-            [class.text-primary]="mode() === option.id"
-            [class.text-muted]="mode() !== option.id"
-            [attr.aria-pressed]="mode() === option.id"
-            (click)="setMode(option.id)">
-            {{ option.label }}
-          </button>
-        }
-      </div>
+      <app-segmented-control
+        [options]="modes()"
+        [value]="mode()"
+        (valueChange)="setMode($event)"
+        [ariaLabel]="modeGroupLabel" />
     </div>
 
     @if (groups().length === 0) {
-      <div
-        class="flex flex-1 flex-col items-center justify-center gap-2.5 px-16 text-center">
-        <p
-          class="m-0 text-[15px]"
-          i18n="Shown when there is no change to review">
-          There is nothing to review.
-        </p>
-        <p
-          class="text-muted m-0 max-w-[36ch] text-[13px]"
-          i18n="Explains the empty review surface">
-          Ask the assistant to propose changes and they will show up here for
-          approval.
-        </p>
-      </div>
+      <app-empty-state
+        class="flex flex-1 items-center justify-center"
+        [title]="emptyTitle"
+        [description]="emptyDescription" />
     } @else {
       <main class="grid min-h-0 flex-1 grid-cols-[360px_minmax(0,1fr)]">
         <div class="border-border bg-card flex min-h-0 flex-col border-r">
@@ -164,9 +134,9 @@ const MODE_KEY = 'netptune.ai.review.mode';
             class="border-border flex items-center justify-between gap-2 border-b px-3 py-2">
             <span class="text-muted text-xs">{{ listSummary() }}</span>
             @if (isPending() && selectableCount() > 1) {
-              <button
-                type="button"
-                class="text-muted hover:text-foreground text-xs"
+              <app-button
+                color="neutral"
+                class="-my-1 h-7 px-2 text-xs"
                 (click)="toggleAll()">
                 @if (isEveryChangeSelected()) {
                   <span i18n="Button that clears every selected change">
@@ -177,7 +147,7 @@ const MODE_KEY = 'netptune.ai.review.mode';
                     >Select all</span
                   >
                 }
-              </button>
+              </app-button>
             }
           </div>
 
@@ -243,8 +213,13 @@ const MODE_KEY = 'netptune.ai.review.mode';
             [isApplying]="assistant.isApplying()"
             [canRevise]="!isReadOnly"
             [workspace]="workspace()"
+            [editingField]="editingField()"
+            [editError]="editError()"
+            [isSaving]="assistant.isEditingChange()"
             (applied)="applyOne($event)"
-            (edited)="editChange($event)"
+            (editStarted)="startEditing($event)"
+            (editCancelled)="stopEditing()"
+            (saved)="saveEdit(change.id, $event)"
             (revised)="reviseChange($event)" />
         }
       </main>
@@ -255,51 +230,46 @@ const MODE_KEY = 'netptune.ai.review.mode';
       @if (isPending()) {
         <div class="text-muted flex items-center gap-3.5 text-[11px]">
           <span class="flex items-center gap-1.5">
-            <kbd
-              class="border-border font-avatar rounded-sm border px-1.5"
+            <app-keyboard-key
               i18n="
                 Keyboard key that moves down the review list. Leave the letter
                 as-is
               ">
               j
-            </kbd>
-            <kbd
-              class="border-border font-avatar rounded-sm border px-1.5"
+            </app-keyboard-key>
+            <app-keyboard-key
               i18n="
                 Keyboard key that moves up the review list. Leave the letter
                 as-is
               ">
               k
-            </kbd>
+            </app-keyboard-key>
             <span i18n="Keyboard hint for moving through the review list">
               move
             </span>
           </span>
           <span class="flex items-center gap-1.5">
-            <kbd
-              class="border-border font-avatar rounded-sm border px-1.5"
+            <app-keyboard-key
               i18n="Name of the space bar. Translate it to its local name">
               space
-            </kbd>
+            </app-keyboard-key>
             <span i18n="Keyboard hint for including a change">include</span>
           </span>
           <span class="flex items-center gap-1.5">
-            <kbd
-              class="border-border font-avatar rounded-sm border px-1.5"
+            <app-keyboard-key
               i18n="
                 Keyboard key that edits the selected change. Leave the letter
                 as-is
               ">
               e
-            </kbd>
+            </app-keyboard-key>
             <span i18n="Keyboard hint for editing a change">edit</span>
           </span>
           <span class="flex items-center gap-1.5">
-            <kbd
-              class="border-border font-avatar rounded-sm border px-1.5"
+            <app-keyboard-key
               i18n="Symbol for the return key. Leave the symbol as-is">
               &#9166;
-            </kbd>
+            </app-keyboard-key>
             <span i18n="Keyboard hint for applying the selected changes">
               apply selected
             </span>
@@ -374,9 +344,17 @@ export class AiAssistantReviewDialogComponent {
   protected readonly filter = signal<AiReviewFilter>('all');
   protected readonly query = signal('');
   protected readonly collapsedKeys = signal<Set<string>>(new Set());
+  protected readonly editingField = signal<string | null>(null);
+  protected readonly editError = signal<string | null>(null);
   protected readonly mode = signal<AiDiffMode>(this.storedMode());
 
   protected readonly conversationTitle = this.assistant.conversationTitle;
+
+  protected readonly filterPlaceholder = $localize`:Placeholder of the field that filters the review list:Filter changes`;
+  protected readonly filterGroupLabel = $localize`:Accessible label for the switch that narrows the review list:Filter changes`;
+  protected readonly modeGroupLabel = $localize`:Accessible label for the diff layout switch:Diff layout`;
+  protected readonly emptyTitle = $localize`:Shown when there is no change to review:There is nothing to review.`;
+  protected readonly emptyDescription = $localize`:Explains the empty review surface:Ask the assistant to propose changes and they will show up here for approval.`;
 
   protected readonly title = computed(() => {
     if (this.isReadOnly) {
@@ -477,53 +455,55 @@ export class AiAssistantReviewDialogComponent {
     });
   });
 
-  protected readonly filters = computed<AiReviewFilterOption[]>(() => {
-    const changes = this.changes();
-    const count = (filter: AiReviewFilter) => {
-      return changes.filter((change) => this.matchesFilter(change, filter))
-        .length;
-    };
+  protected readonly filters = computed<SegmentedOption<AiReviewFilter>[]>(
+    () => {
+      const changes = this.changes();
+      const count = (filter: AiReviewFilter) => {
+        return changes.filter((change) => this.matchesFilter(change, filter))
+          .length;
+      };
 
-    return [
-      {
-        id: 'all',
-        label: $localize`:Review filter showing every change:All`,
-        count: changes.length,
-      },
-      {
-        id: 'created',
-        label: $localize`:Review filter showing creations:New`,
-        count: count('created'),
-      },
-      {
-        id: 'updated',
-        label: $localize`:Review filter showing updates:Updated`,
-        count: count('updated'),
-      },
-      {
-        id: 'removed',
-        label: $localize`:Review filter showing deletions:Removed`,
-        count: count('removed'),
-      },
-      {
-        id: 'blocked',
-        label: $localize`:Review filter showing changes that cannot be applied:Blocked`,
-        count: count('blocked'),
-      },
-    ];
-  });
+      return [
+        {
+          value: 'all',
+          label: $localize`:Review filter showing every change:All`,
+          count: changes.length,
+        },
+        {
+          value: 'created',
+          label: $localize`:Review filter showing creations:New`,
+          count: count('created'),
+        },
+        {
+          value: 'updated',
+          label: $localize`:Review filter showing updates:Updated`,
+          count: count('updated'),
+        },
+        {
+          value: 'removed',
+          label: $localize`:Review filter showing deletions:Removed`,
+          count: count('removed'),
+        },
+        {
+          value: 'blocked',
+          label: $localize`:Review filter showing changes that cannot be applied:Blocked`,
+          count: count('blocked'),
+        },
+      ];
+    }
+  );
 
-  protected readonly modes = computed(() => [
+  protected readonly modes = computed<SegmentedOption<AiDiffMode>[]>(() => [
     {
-      id: 'split' as AiDiffMode,
+      value: 'split' as AiDiffMode,
       label: $localize`:Diff layout with two columns:Split`,
     },
     {
-      id: 'unified' as AiDiffMode,
+      value: 'unified' as AiDiffMode,
       label: $localize`:Diff layout with one column:Unified`,
     },
     {
-      id: 'inline' as AiDiffMode,
+      value: 'inline' as AiDiffMode,
       label: $localize`:Diff layout highlighting changed words:Inline`,
     },
   ]);
@@ -569,6 +549,8 @@ export class AiAssistantReviewDialogComponent {
 
       if (selected && selected.id !== this.selectedChangeId()) {
         this.selectedChangeId.set(selected.id);
+        this.editingField.set(null);
+        this.editError.set(null);
       }
     });
   }
@@ -631,26 +613,28 @@ export class AiAssistantReviewDialogComponent {
     await this.assistant.applyChangeSet();
   }
 
-  /**
-   * TODO: an inline editor needs a service call that rewrites a proposal before
-   * it is applied. Until that lands, the reviewer is handed the composer with
-   * the change quoted so the correction is one sentence away.
-   */
-  protected editChange(changeId: number) {
-    this.seedComposer(
-      changeId,
-      $localize`:Seeds the composer with a correction to one proposed change:Change this proposal instead: `
-    );
+  protected startEditing(name: string) {
+    this.editError.set(null);
+    this.editingField.set(name);
   }
 
+  protected stopEditing() {
+    this.editError.set(null);
+    this.editingField.set(null);
+  }
+
+  protected async saveEdit(changeId: number, edit: AiFieldEdit) {
+    const error = await this.assistant.updateChange(changeId, [edit]);
+
+    this.editError.set(error);
+
+    if (error === null) {
+      this.editingField.set(null);
+    }
+  }
+
+  /** The correction itself is typed in the composer; the change goes with it as context. */
   protected reviseChange(changeId: number) {
-    this.seedComposer(
-      changeId,
-      $localize`:Seeds the composer with a request to rework one proposed change:Rework this proposal: `
-    );
-  }
-
-  private seedComposer(changeId: number, prefix: string) {
     const change = this.changes().find(
       (candidate) => candidate.id === changeId
     );
@@ -660,8 +644,12 @@ export class AiAssistantReviewDialogComponent {
     }
 
     const target = changeSummary(change).target ?? change.summary;
+    const prefix = $localize`:Seeds the composer with a request to rework one proposed change:Rework this proposal: `;
 
-    this.assistant.setDraft(`${prefix}${changeLetter(change)} ${target} — `);
+    this.assistant.reviseChange(
+      changeId,
+      `${prefix}${changeLetter(change)} ${target} — `
+    );
     this.close();
   }
 
@@ -719,8 +707,13 @@ export class AiAssistantReviewDialogComponent {
       return;
     }
 
-    if (event.key === 'e' && !this.isReadOnly) {
-      this.editChange(selected.id);
+    if (event.key === 'e' && this.isPending()) {
+      const field = selected.fields.find(isTextField);
+
+      if (field) {
+        this.startEditing(field.name);
+      }
+
       event.preventDefault();
 
       return;

@@ -7,7 +7,7 @@ import {
   AiStreamEvent,
   AiStreamEventType,
 } from '@core/models/ai-conversation';
-import { AiApiService } from '@core/services/ai-api.service';
+import { AiApiService, AiChangeFieldEdit } from '@core/services/ai-api.service';
 import { AiChangeSetService } from '@core/services/ai-change-set.service';
 import { AiConversationService } from '@core/services/ai-conversation.service';
 import { AiDraftService } from '@core/services/ai-draft.service';
@@ -17,7 +17,7 @@ import {
   AiSessionService,
   AiWorkspaceSession,
 } from '@core/services/ai-session.service';
-import { AiStreamService } from '@core/services/ai-stream.service';
+import { AiReviseTarget, AiStreamService } from '@core/services/ai-stream.service';
 import { AiTranscriptService } from '@core/services/ai-transcript.service';
 import { AiTurnProgressService } from '@core/services/ai-turn-progress.service';
 import { CurrentWorkspaceService } from '@core/services/current-workspace.service';
@@ -59,6 +59,7 @@ export class AiAssistantService {
   readonly changeSet = this.changeSets.changeSet;
   readonly excludedChangeIds = this.changeSets.excludedChangeIds;
   readonly isApplying = this.changeSets.isApplying;
+  readonly isEditingChange = this.changeSets.isEditing;
 
   readonly models = this.catalog.models;
   readonly selectedModel = this.catalog.selectedModel;
@@ -92,6 +93,7 @@ export class AiAssistantService {
    * stopped — both leave the user message as the last thing on the server.
    */
   private readonly pendingTurnAt = signal<number | null>(null);
+  private readonly reviseTarget = signal<AiReviseTarget | null>(null);
 
   private activeWorkspace: string | null = null;
   private isSwitchingWorkspace = false;
@@ -147,6 +149,25 @@ export class AiAssistantService {
 
   toggleChanges(changeIds: number[]) {
     this.changeSets.toggleChanges(changeIds);
+  }
+
+  async updateChange(changeId: number, fields: AiChangeFieldEdit[]) {
+    return this.changeSets.updateChange(changeId, fields);
+  }
+
+  /**
+   * The reviewer asks for a rework from the review surface and types the correction in the
+   * composer, so the change they picked has to survive until the next turn goes out.
+   */
+  reviseChange(changeId: number, seed: string) {
+    const changeSet = this.changeSets.changeSet();
+
+    if (!changeSet) {
+      return;
+    }
+
+    this.reviseTarget.set({ changeSetId: changeSet.id, changeId });
+    this.setDraft(seed);
   }
 
   async applyChangeSet() {
@@ -324,7 +345,9 @@ export class AiAssistantService {
     this.progress.start(startedAt);
 
     const token = ++this.turnToken;
+    const revise = this.reviseTarget();
 
+    this.reviseTarget.set(null);
     this.isStopping = false;
 
     try {
@@ -335,6 +358,7 @@ export class AiAssistantService {
           model: this.selectedModel(),
           retry: isRetry,
           answer,
+          revise,
         },
         (event) => this.receive(event, token)
       );

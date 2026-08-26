@@ -20,11 +20,11 @@ public sealed record AiProposedChange : KeyedEntity<long>
 
     public string? RefKey { get; init; }
 
-    public required string Summary { get; init; }
+    public required string Summary { get; set; }
 
-    public JsonDocument Fields { get; init; } = JsonDocument.Parse("[]");
+    public JsonDocument Fields { get; set; } = JsonDocument.Parse("[]");
 
-    public JsonDocument Payload { get; init; } = JsonDocument.Parse("{}");
+    public JsonDocument Payload { get; set; } = JsonDocument.Parse("{}");
 
     public AiChangeValidationStatus ValidationStatus { get; init; }
 

@@ -15,6 +15,7 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { ToolbarButtonComponent } from '@static/components/button/toolbar-button.component';
+import { KeyboardKeyComponent } from '@static/components/keyboard-key/keyboard-key.component';
 import { KeyboardService } from '@static/services/keyboard.service';
 import { MoveTasksDialogComponent } from '../move-tasks-dialog/move-tasks-dialog.component';
 import { ReassignTasksDialogComponent } from '../reassign-tasks-dialog/reassign-tasks-dialog.component';
@@ -28,7 +29,12 @@ interface SelectionAction {
 
 @Component({
   selector: 'app-board-groups-selection',
-  imports: [LucideDynamicIcon, LucideX, ToolbarButtonComponent],
+  imports: [
+    LucideDynamicIcon,
+    LucideX,
+    ToolbarButtonComponent,
+    KeyboardKeyComponent,
+  ],
   styles: [
     `
       /* Animates the individual translate/scale properties rather than
@@ -99,10 +105,7 @@ interface SelectionAction {
         <button app-toolbar-button (click)="onClearClicked()">
           <svg lucideX class="h-4 w-4"></svg>
           <span i18n="Button that clears the task selection">Clear</span>
-          <kbd
-            class="border-border text-foreground/50 rounded border px-1.5 py-0.5 text-[10px] font-medium">
-            {{ escapeKeyLabel }}
-          </kbd>
+          <app-keyboard-key>{{ escapeKeyLabel }}</app-keyboard-key>
         </button>
       </div>
     }

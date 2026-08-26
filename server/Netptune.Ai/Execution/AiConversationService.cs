@@ -12,6 +12,7 @@ using Netptune.Core.Models.Ai;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
 using Netptune.Core.UnitOfWork;
+using Netptune.Core.ViewModels.Ai;
 
 namespace Netptune.Ai.Execution;
 
@@ -208,7 +209,9 @@ public sealed class AiConversationService : IAiConversationService
             new AiMessageDraft { Message = userMessage, Role = AiMessageRole.User },
             cancellationToken);
 
-        history.Add(WithClientContext(userMessage, request.Context));
+        var revised = await DescribeRevisedChange(request.Revise, userId, workspaceId, cancellationToken);
+
+        history.Add(WithContext(userMessage, request.Context, revised));
 
         var apiKey = Protector.Unprotect(credential.Secret);
         var language = AiLanguage.Describe(request.Locale);
@@ -372,16 +375,91 @@ public sealed class AiConversationService : IAiConversationService
         await UnitOfWork.AiConversations.AddMessageUsage(assistantMessageId, title.Usage, cancellationToken);
     }
 
-    private static AiChatMessage WithClientContext(AiChatMessage message, AiClientContext? clientContext)
+    private static AiChatMessage WithContext(
+        AiChatMessage message,
+        AiClientContext? clientContext,
+        string? revised)
     {
-        var described = DescribeClientContext(clientContext);
+        var viewing = DescribeClientContext(clientContext);
+        var text = new StringBuilder(message.Text);
 
-        if (described is null)
+        if (viewing is not null)
+        {
+            text.Append($"\n\n<viewing>\n{viewing}\n</viewing>");
+        }
+
+        if (revised is not null)
+        {
+            text.Append($"\n\n<revising>\n{revised}\n</revising>");
+        }
+
+        var hasContext = viewing is not null || revised is not null;
+
+        if (!hasContext)
         {
             return message;
         }
 
-        return message with { Text = $"{message.Text}\n\n<viewing>\n{described}\n</viewing>" };
+        return message with { Text = text.ToString() };
+    }
+
+    // The reviewer picked one proposal off the review surface. Restating what it does, rather than
+    // its id, keeps the assistant working from the same reading the reviewer had.
+    private async Task<string?> DescribeRevisedChange(
+        AiReviseRequest? revise,
+        string userId,
+        int workspaceId,
+        CancellationToken cancellationToken)
+    {
+        if (revise is null)
+        {
+            return null;
+        }
+
+        var changeSet = await UnitOfWork.AiChangeSets.GetOwned(
+            revise.ChangeSetId,
+            userId,
+            workspaceId,
+            cancellationToken);
+
+        if (changeSet is null)
+        {
+            return null;
+        }
+
+        var changes = await UnitOfWork.AiChangeSets.GetChanges(changeSet.Id, cancellationToken);
+        var change = changes.FirstOrDefault(candidate => candidate.Id == revise.ChangeId);
+
+        if (change is null)
+        {
+            return null;
+        }
+
+        var lines = new List<string>
+        {
+            "The user is asking you to rework this proposal, which you made earlier in this conversation.",
+            $"tool: {change.ToolName}",
+            $"summary: {change.Summary}",
+        };
+
+        AddContextLine(lines, "entity", Describe(change.EntityType, change.EntityId));
+
+        foreach (var field in AiChangeFieldSerializer.Deserialize(change.Fields))
+        {
+            AddContextLine(lines, $"field {field.Name}", DescribeFieldChange(field));
+        }
+
+        lines.Add("Propose a replacement with the corrections the user asks for. Do not repeat the proposal unchanged.");
+
+        return string.Join("\n", lines);
+    }
+
+    private static string DescribeFieldChange(AiChangeFieldViewModel field)
+    {
+        var before = string.IsNullOrWhiteSpace(field.Before) ? "(none)" : field.Before;
+        var after = string.IsNullOrWhiteSpace(field.After) ? "(none)" : field.After;
+
+        return $"{before} -> {after}";
     }
 
     private static string? DescribeClientContext(AiClientContext? clientContext)

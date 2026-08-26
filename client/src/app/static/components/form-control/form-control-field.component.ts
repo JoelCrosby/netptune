@@ -7,6 +7,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { cn } from '../button/button.variants';
 import { FormControlDensity } from './form-control.directives';
 
 @Component({
@@ -24,16 +25,17 @@ export class FormControlFieldComponent {
   readonly invalid = input(false, { transform: (value: unknown) => !!value });
   readonly active = input(false, { transform: (value: unknown) => !!value });
   readonly density = input<FormControlDensity>('default');
+  readonly class = input('');
 
   protected readonly hostClass = computed(() => {
     const base =
       'flex w-[inherit] max-w-[inherit] flex-row items-center bg-form-field-background transition-colors duration-200 ease-out';
+    const shape =
+      this.density() === 'compact'
+        ? 'h-[38px] rounded-lg border'
+        : 'rounded-sm border-2';
 
-    if (this.density() === 'compact') {
-      return `${base} h-[38px] rounded-lg border`;
-    }
-
-    return `${base} rounded-sm border-2`;
+    return cn(base, shape, this.class());
   });
 
   readonly el: HTMLElement = inject(ElementRef).nativeElement;

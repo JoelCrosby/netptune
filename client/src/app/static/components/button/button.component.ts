@@ -19,7 +19,7 @@ export type {
     <button
       [type]="type()"
       [disabled]="disabled() || null"
-      class="hover:bg-primary/60 inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 border-0 bg-transparent font-[inherit] text-inherit outline-none disabled:cursor-not-allowed disabled:opacity-40">
+      class="inline-flex h-full w-full cursor-pointer items-center justify-center gap-2 border-0 bg-transparent font-[inherit] text-inherit outline-none disabled:cursor-not-allowed disabled:opacity-40">
       <ng-content />
     </button>
   `,

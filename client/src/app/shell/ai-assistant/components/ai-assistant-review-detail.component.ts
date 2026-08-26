@@ -1,6 +1,10 @@
 import { Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AiProposedChange } from '@core/models/ai-conversation';
+import {
+  AiChangeField,
+  AiChangeValueKind,
+  AiProposedChange,
+} from '@core/models/ai-conversation';
 import {
   LucideCheck,
   LucideExternalLink,
@@ -12,6 +16,10 @@ import {
   BadgeColor,
   BadgeComponent,
 } from '@static/components/badge/badge.component';
+import { ButtonComponent } from '@static/components/button/button.component';
+import { ButtonLinkComponent } from '@static/components/button/button-link.component';
+import { CalloutComponent } from '@static/components/callout/callout.component';
+import { EmptyStateComponent } from '@static/components/empty-state/empty-state.component';
 import { changeRoute, entityLabel, isValid } from './ai-assistant-change-group';
 import {
   changeAction,
@@ -21,6 +29,15 @@ import {
 import { AiDiffMode } from './ai-assistant-diff';
 import { AiAssistantReviewDiffComponent } from './ai-assistant-review-diff.component';
 
+export interface AiFieldEdit {
+  name: string;
+  value: string;
+}
+
+const isTextField = (field: AiChangeField): boolean => {
+  return field.kind === AiChangeValueKind.text;
+};
+
 /** The right hand pane of a review: what one change does, field by field. */
 @Component({
   selector: 'app-ai-assistant-review-detail',
@@ -28,11 +45,14 @@ import { AiAssistantReviewDiffComponent } from './ai-assistant-review-diff.compo
   imports: [
     RouterLink,
     BadgeComponent,
+    ButtonComponent,
+    ButtonLinkComponent,
+    CalloutComponent,
+    EmptyStateComponent,
     LucideCheck,
     LucideExternalLink,
     LucideMessageSquare,
     LucidePencil,
-    LucideTriangleAlert,
     AiAssistantReviewDiffComponent,
   ],
   template: `
@@ -49,13 +69,15 @@ import { AiAssistantReviewDiffComponent } from './ai-assistant-review-diff.compo
           </h2>
           @if (route(); as route) {
             <a
+              app-button-link
+              color="primary"
+              class="h-7 min-h-0 shrink-0 gap-1 px-2 text-xs"
               [routerLink]="route"
-              class="text-primary flex shrink-0 items-center gap-1 text-xs hover:underline"
               i18n-title="Tooltip on the link that opens the changed entity"
               title="Open in a new view">
-              <span i18n="Link that opens the entity a change targets"
-                >Open</span
-              >
+              <span i18n="Link that opens the entity a change targets">
+                Open
+              </span>
               <svg lucideExternalLink class="h-3 w-3"></svg>
             </a>
           }
@@ -65,63 +87,71 @@ import { AiAssistantReviewDiffComponent } from './ai-assistant-review-diff.compo
 
       <div class="flex shrink-0 items-center gap-1.5">
         @if (canRevise()) {
-          <button
-            type="button"
-            class="border-border hover:bg-hover inline-flex h-[30px] items-center gap-1.5 rounded-md border px-2.5 text-xs transition-colors"
-            (click)="edited.emit(change().id)">
-            <svg lucidePencil class="h-3.5 w-3.5"></svg>
-            <span i18n="Button that edits the value a change proposes">
-              Edit
-            </span>
-          </button>
-          <button
-            type="button"
-            class="border-border hover:bg-hover inline-flex h-[30px] items-center gap-1.5 rounded-md border px-2.5 text-xs transition-colors"
+          @if (editableField(); as name) {
+            <app-button
+              variant="outlined"
+              color="neutral"
+              class="h-8 px-2.5 text-xs"
+              (click)="editStarted.emit(name)">
+              <svg lucidePencil class="h-3.5 w-3.5"></svg>
+              <span i18n="Button that edits the value a change proposes">
+                Edit
+              </span>
+            </app-button>
+          }
+          <app-button
+            variant="outlined"
+            color="neutral"
+            class="h-8 px-2.5 text-xs"
             (click)="revised.emit(change().id)">
             <svg lucideMessageSquare class="h-3.5 w-3.5"></svg>
             <span i18n="Button that asks the assistant to rework one change">
               Ask to revise
             </span>
-          </button>
+          </app-button>
         }
         @if (isPending() && isSelectable()) {
-          <button
-            type="button"
-            class="border-primary/50 bg-primary/12 text-primary hover:bg-primary/20 inline-flex h-[30px] items-center gap-1.5 rounded-md border px-3 text-xs font-medium transition-colors"
+          <app-button
+            variant="outlined"
+            color="primary"
+            class="h-8 px-3 text-xs font-medium"
             [disabled]="isApplying()"
             (click)="applied.emit(change().id)">
             <svg lucideCheck class="h-3.5 w-3.5" strokeWidth="2.2"></svg>
             <span i18n="Button that applies only the change being viewed">
               Apply this
             </span>
-          </button>
+          </app-button>
         }
       </div>
     </div>
 
     @if (message(); as message) {
-      <div
-        class="border-warn/45 bg-warn/10 mx-4 mt-3 flex items-start gap-2 rounded-md border px-3 py-2.5">
-        <svg
-          lucideTriangleAlert
-          class="text-warn mt-0.5 h-[15px] w-[15px] shrink-0"></svg>
-        <div class="min-w-0">
-          <p class="text-warn m-0 text-xs font-medium">{{ messageTitle() }}</p>
-          <p class="text-muted m-0 mt-0.5 text-xs break-words">{{ message }}</p>
-        </div>
-      </div>
+      <app-callout
+        color="warn"
+        role="alert"
+        class="mx-4 mt-3"
+        [icon]="alertIcon"
+        [title]="messageTitle()">
+        <p class="text-muted m-0 mt-0.5 text-xs break-words">{{ message }}</p>
+      </app-callout>
     }
 
     <div class="custom-scroll flex-1 overflow-auto px-4 pt-3.5 pb-5">
       <div class="flex flex-col gap-3">
         @for (field of change().fields; track field.name) {
-          <app-ai-assistant-review-diff [field]="field" [mode]="mode()" />
+          <app-ai-assistant-review-diff
+            [field]="field"
+            [mode]="mode()"
+            [canEdit]="canRevise() && isPending() && isText(field)"
+            [isEditing]="editingField() === field.name"
+            [isSaving]="isSaving()"
+            [error]="editingField() === field.name ? editError() : null"
+            (editStarted)="editStarted.emit($event)"
+            (editCancelled)="editCancelled.emit()"
+            (saved)="saved.emit({ name: field.name, value: $event })" />
         } @empty {
-          <p
-            class="text-muted m-0 text-sm"
-            i18n="Shown when a proposed change carries no field values">
-            This change has no field values to compare.
-          </p>
+          <app-empty-state compact [title]="noFieldsLabel" />
         }
       </div>
     </div>
@@ -133,11 +163,16 @@ export class AiAssistantReviewDetailComponent {
   readonly isPending = input(false);
   readonly isApplying = input(false);
   readonly canRevise = input(true);
+  readonly editingField = input<string | null>(null);
+  readonly editError = input<string | null>(null);
+  readonly isSaving = input(false);
   readonly workspace = input<string | null>(null);
 
   readonly applied = output<number>();
-  readonly edited = output<number>();
   readonly revised = output<number>();
+  readonly editStarted = output<string>();
+  readonly editCancelled = output();
+  readonly saved = output<AiFieldEdit>();
 
   protected readonly action = computed(() => changeAction(this.change()));
   protected readonly tone = computed<BadgeColor>(() =>
@@ -148,6 +183,22 @@ export class AiAssistantReviewDetailComponent {
   });
 
   protected readonly isSelectable = computed(() => isValid(this.change()));
+
+  /** Only prose can be rewritten here; a status or an assignee needs the entity behind it. */
+  protected readonly editableField = computed(() => {
+    if (!this.isPending()) {
+      return null;
+    }
+
+    const field = this.change().fields.find(isTextField);
+
+    return field?.name ?? null;
+  });
+
+  protected readonly isText = isTextField;
+  protected readonly alertIcon = LucideTriangleAlert;
+
+  protected readonly noFieldsLabel = $localize`:Shown when a proposed change carries no field values:This change has no field values to compare.`;
 
   protected readonly target = computed(() => {
     return changeSummary(this.change()).target ?? this.change().summary;

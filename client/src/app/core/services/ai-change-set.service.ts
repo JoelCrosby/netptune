@@ -4,7 +4,11 @@ import {
   AiChangeSetStatus,
   AiProposedChange,
 } from '@core/models/ai-conversation';
-import { AiApiService, AiChangeSetAction } from '@core/services/ai-api.service';
+import {
+  AiApiService,
+  AiChangeFieldEdit,
+  AiChangeSetAction,
+} from '@core/services/ai-api.service';
 import { WorkspaceRefreshService } from '@core/services/workspace-refresh.service';
 import {
   landedChanges,
@@ -19,6 +23,7 @@ export class AiChangeSetService {
   readonly changeSet = signal<AiChangeSet | null>(null);
   readonly excludedChangeIds = signal<Set<number>>(new Set());
   readonly isApplying = signal(false);
+  readonly isEditing = signal(false);
 
   set(changeSet: AiChangeSet | null) {
     this.changeSet.set(changeSet);
@@ -48,6 +53,35 @@ export class AiChangeSetService {
 
       return next;
     });
+  }
+
+  /**
+   * The proposal and the values that will be applied are two halves of one record on the
+   * server, so an edit comes back as the whole change set rather than a patched change.
+   */
+  async updateChange(
+    changeId: number,
+    fields: AiChangeFieldEdit[]
+  ): Promise<string | null> {
+    const changeSet = this.changeSet();
+
+    if (!changeSet || this.isEditing()) {
+      return null;
+    }
+
+    this.isEditing.set(true);
+
+    try {
+      const result = await this.api.updateChange(changeSet.id, changeId, fields);
+
+      if (result.changeSet) {
+        this.changeSet.set(result.changeSet);
+      }
+
+      return result.error;
+    } finally {
+      this.isEditing.set(false);
+    }
   }
 
   async apply() {

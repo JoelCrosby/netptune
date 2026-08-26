@@ -83,6 +83,8 @@ public static class AiEndpoints
 
         group.MapPost("/change-sets/{changeSetId:guid}/discard", HandleDiscardChangeSet);
 
+        group.MapPatch("/change-sets/{changeSetId:guid}/changes/{changeId:long}", HandleUpdateChange);
+
         group
             .MapPost("/change-sets/{changeSetId:guid}/apply", HandleApplyChangeSet)
             .RequireRateLimiting(RateLimiterConfiguration.AiPolicyName);
@@ -265,6 +267,24 @@ public static class AiEndpoints
         var result = await mediator.Send(new GetAiConversationChangeSetsQuery(conversationId), cancellationToken);
 
         return Results.Ok(result);
+    }
+
+    private static async Task<IResult> HandleUpdateChange(
+        Guid changeSetId,
+        long changeId,
+        UpdateAiProposedChangeRequest request,
+        IMediator mediator,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateAiProposedChangeCommand(changeSetId, changeId, request);
+        var result = await mediator.Send(command, cancellationToken);
+
+        if (result.IsNotFound)
+        {
+            return Results.NotFound(result);
+        }
+
+        return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
     }
 
     private static async Task<IResult> HandleDiscardChangeSet(

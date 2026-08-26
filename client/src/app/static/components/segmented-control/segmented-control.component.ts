@@ -3,6 +3,7 @@ import { Component, input, model } from '@angular/core';
 export interface SegmentedOption<T extends string = string> {
   value: T;
   label: string;
+  count?: number;
 }
 
 @Component({
@@ -25,6 +26,9 @@ export interface SegmentedOption<T extends string = string> {
         [attr.aria-pressed]="option.value === value()"
         (click)="value.set(option.value)">
         {{ option.label }}
+        @if (option.count !== undefined) {
+          <span class="ml-1.5 opacity-70">{{ option.count }}</span>
+        }
       </button>
     }
   `,

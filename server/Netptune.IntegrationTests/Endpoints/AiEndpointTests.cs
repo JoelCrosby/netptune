@@ -589,6 +589,148 @@ public sealed class AiEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
+    [Fact]
+    public async Task UpdateChange_ShouldRewriteWhatIsProposedAndWhatWillBeApplied()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedEditableChangeSet();
+
+        try
+        {
+            var response = await client.PatchAsJsonAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/changes/{seed.ChangeId}",
+                new { fields = new[] { new { name = "name", value = "Corrected by the reviewer" } } },
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var reread = await client.GetFromJsonAsync<ClientResponse<AiChangeSetViewModel>>(
+                $"api/ai/change-sets/{seed.ChangeSetId}",
+                TestContext.Current.CancellationToken);
+
+            var change = reread.Payload!.Changes.Single();
+
+            change.Fields.Single().After.Should().Be("Corrected by the reviewer");
+            change.Fields.Single().Before.Should().Be(
+                "Old name",
+                "the reviewer is correcting the proposal, not what the entity says today");
+
+            var payload = await ReadChangePayload(seed.ChangeId);
+
+            payload.RootElement.GetProperty("name").GetString().Should().Be(
+                "Corrected by the reviewer",
+                "an edit the applier never sees would apply a value nobody reviewed");
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task UpdateChange_ShouldRefuseAFieldTheProposalDoesNotCarry()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedEditableChangeSet();
+
+        try
+        {
+            var response = await client.PatchAsJsonAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/changes/{seed.ChangeId}",
+                new { fields = new[] { new { name = "priority", value = "High" } } },
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task UpdateChange_ShouldReturnNotFound_WhenTheChangeIsNotInTheChangeSet()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedEditableChangeSet();
+
+        try
+        {
+            var response = await client.PatchAsJsonAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/changes/{seed.ChangeId + 10_000}",
+                new { fields = new[] { new { name = "name", value = "Corrected by the reviewer" } } },
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    [Fact]
+    public async Task UpdateChange_ShouldRefuse_WhenTheChangeSetHasAlreadyBeenDecided()
+    {
+        var client = Fixture.CreateNetptuneClient();
+        var seed = await SeedEditableChangeSet();
+
+        try
+        {
+            await client.PostAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/discard",
+                null,
+                TestContext.Current.CancellationToken);
+
+            var response = await client.PatchAsJsonAsync(
+                $"api/ai/change-sets/{seed.ChangeSetId}/changes/{seed.ChangeId}",
+                new { fields = new[] { new { name = "name", value = "Too late" } } },
+                TestContext.Current.CancellationToken);
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+        finally
+        {
+            await RemoveSeed(seed.ConversationId);
+        }
+    }
+
+    private sealed record EditableChangeSetSeed(Guid ConversationId, Guid ChangeSetId, long ChangeId);
+
+    private async Task<EditableChangeSetSeed> SeedEditableChangeSet()
+    {
+        var proposal = new AiProposedChangeSeed
+        {
+            ToolName = "propose_update_task",
+            EntityType = "task",
+            Summary = "Update name on “Old name”",
+            Payload = JsonDocument.Parse("""{"taskId":1,"name":"Assistant name"}"""),
+            Fields = JsonDocument.Parse(
+                """[{"name":"name","before":"Old name","after":"Assistant name","kind":0}]"""),
+        };
+
+        var seed = await SeedPendingChangeSet(proposal);
+
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var change = await context.AiProposedChanges
+            .Where(item => item.ChangeSetId == seed.ChangeSetId)
+            .FirstAsync(TestContext.Current.CancellationToken);
+
+        return new EditableChangeSetSeed(seed.ConversationId, seed.ChangeSetId, change.Id);
+    }
+
+    private async Task<JsonDocument> ReadChangePayload(long changeId)
+    {
+        using var scope = Fixture.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var change = await context.AiProposedChanges
+            .AsNoTracking()
+            .FirstAsync(item => item.Id == changeId, TestContext.Current.CancellationToken);
+
+        return change.Payload;
+    }
+
     private sealed record PendingChangeSetSeed(Guid ConversationId, Guid ChangeSetId);
 
     private sealed record AiProposedChangeSeed
@@ -600,6 +742,8 @@ public sealed class AiEndpointTests
         public required string Summary { get; init; }
 
         public required JsonDocument Payload { get; init; }
+
+        public JsonDocument? Fields { get; init; }
     }
 
     private async Task<PendingChangeSetSeed> SeedPendingChangeSet(AiProposedChangeSeed? proposal = null)
@@ -659,6 +803,7 @@ public sealed class AiEndpointTests
             EntityType = proposal?.EntityType ?? "sprint",
             Summary = proposal?.Summary ?? "Update name on sprint “Sprint 4”",
             Payload = proposal?.Payload ?? JsonDocument.Parse("{}"),
+            Fields = proposal?.Fields ?? JsonDocument.Parse("[]"),
         };
 
         await context.AiChangeSets.AddAsync(changeSet, TestContext.Current.CancellationToken);
