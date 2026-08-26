@@ -50,7 +50,7 @@ const INLINE_ROW_LIMIT = 3;
               Proposed changes
             </h3>
             <span
-              class="bg-foreground/9 text-muted flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px] tabular-nums">
+              class="bg-foreground/9 text-muted flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1.5 text-[11px] tabular-nums">
               {{ total() }}
             </span>
             <span class="flex-1"></span>
@@ -67,7 +67,7 @@ const INLINE_ROW_LIMIT = 3;
             <div class="flex flex-col">
               @for (row of digest(); track row.key) {
                 <div
-                  class="border-border/55 flex items-center gap-[9px] border-b px-3 py-[9px] last:border-b-0">
+                  class="border-border/55 flex items-center gap-2.25 border-b px-3 py-2.25 last:border-b-0">
                   <app-selection-checkbox
                     [checked]="row.isIncluded"
                     [label]="row.label"
@@ -96,12 +96,12 @@ const INLINE_ROW_LIMIT = 3;
           } @else {
             @for (group of inlineGroups(); track group.key) {
               <div
-                class="text-muted/40 px-3 pt-[9px] pb-1 text-[11px] tracking-[.04em] uppercase">
+                class="text-muted/40 px-3 pt-2.25 pb-1 text-[11px] tracking-[.04em] uppercase">
                 {{ group.heading }}
               </div>
 
               @for (row of group.rows; track row.change.id) {
-                <div class="flex items-start gap-[9px] px-3 pt-[7px] pb-[9px]">
+                <div class="flex items-start gap-2.25 px-3 pt-1.75 pb-2.25">
                   <app-selection-checkbox
                     class="mt-0.5"
                     [checked]="row.isIncluded"
@@ -115,14 +115,14 @@ const INLINE_ROW_LIMIT = 3;
                     {{ row.letter }}
                   </span>
 
-                  <span class="flex min-w-0 flex-1 flex-col gap-[3px]">
+                  <span class="flex min-w-0 flex-1 flex-col gap-0.75">
                     @for (field of row.fields; track field.key) {
                       @if (field.isProse) {
                         <span class="text-[13px]">{{ field.label }}</span>
 
                         @for (line of field.lines; track $index) {
                           <span
-                            class="font-avatar truncate text-[11.5px] leading-[1.5]"
+                            class="font-avatar truncate text-[11.5px] leading-normal"
                             [class]="
                               line.isAdded ? 'text-foreground/75' : 'text-muted'
                             ">
@@ -134,7 +134,7 @@ const INLINE_ROW_LIMIT = 3;
                         }
                       } @else {
                         <span
-                          class="flex min-w-0 items-baseline gap-[7px] text-[13px]">
+                          class="flex min-w-0 items-baseline gap-1.75 text-[13px]">
                           <span class="shrink-0">{{ field.label }}</span>
 
                           @if (field.swap; as swap) {
@@ -179,7 +179,7 @@ const INLINE_ROW_LIMIT = 3;
           @if (blockedCount() > 0) {
             <button
               type="button"
-              class="border-border/55 hover:bg-card-hover flex w-full items-center gap-[9px] border-t px-3 py-[9px] text-left transition-colors"
+              class="border-border/55 hover:bg-card-hover flex w-full items-center gap-2.25 border-t px-3 py-2.25 text-left transition-colors"
               (click)="reviewBlocked()">
               <span class="h-4 w-4 shrink-0"></span>
               <span
