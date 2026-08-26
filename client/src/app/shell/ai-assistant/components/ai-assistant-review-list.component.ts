@@ -23,7 +23,7 @@ interface AiReviewRow {
   change: AiProposedChange;
   letter: AiChangeLetter;
   title: string;
-  detail: string;
+  detail: string | null;
   isSelectable: boolean;
   isIncluded: boolean;
   isSelected: boolean;
@@ -38,6 +38,23 @@ interface AiReviewGroup {
   isOpen: boolean;
   rows: AiReviewRow[];
 }
+
+const rowLabels = (
+  change: AiProposedChange,
+  groupTarget: string | null
+): Pick<AiReviewRow, 'title' | 'detail'> => {
+  const summary = changeSummary(change);
+
+  if (summary.target === null) {
+    return { title: change.summary, detail: entityLabel(change.entityType) };
+  }
+
+  if (summary.target !== groupTarget) {
+    return { title: summary.target, detail: summary.detail };
+  }
+
+  return { title: summary.detail || summary.target, detail: null };
+};
 
 @Component({
   selector: 'app-ai-assistant-review-list',
@@ -136,9 +153,11 @@ interface AiReviewGroup {
                     {{ row.title }}
                   </span>
                 </span>
-                <span class="text-muted truncate pl-5.5 text-[13px]">
-                  {{ row.detail }}
-                </span>
+                @if (row.detail; as detail) {
+                  <span class="text-muted truncate pl-5.5 text-[13px]">
+                    {{ detail }}
+                  </span>
+                }
               </span>
 
               @if (row.isBlocked) {
@@ -183,17 +202,15 @@ export class AiAssistantReviewListComponent {
     const selectedId = this.selectedChangeId();
 
     return this.groups().map((group) => {
+      const groupTarget = changeSummary(group.changes[0]).target;
+
       const rows = group.changes.map((change) => {
         const isSelectable = isValid(change);
-        const summary = changeSummary(change);
 
         return {
           change,
           letter: changeLetter(change),
-          title: summary.target ?? change.summary,
-          detail: summary.target
-            ? summary.detail
-            : entityLabel(change.entityType),
+          ...rowLabels(change, groupTarget),
           isSelectable,
           isIncluded: isSelectable && !excluded.has(change.id),
           isSelected: change.id === selectedId,
@@ -204,7 +221,7 @@ export class AiAssistantReviewListComponent {
       return {
         key: group.key,
         entity: group.label,
-        title: changeSummary(group.changes[0]).target ?? group.label,
+        title: groupTarget ?? group.label,
         count: rows.length,
         isOpen: !collapsed.has(group.key),
         rows,
