@@ -39,7 +39,7 @@ public class EventMessageProcessorTests
         message.Subject.Returns(MessageKeys.Subjects.Activity);
         message.Metadata.Returns(new NatsJSMsgMetadata(
             new NatsJSSequencePair(1, 1),
-            (ulong) deliveryAttempt,
+            (ulong)deliveryAttempt,
             0,
             DateTimeOffset.UtcNow,
             MessageKeys.Queue,
@@ -104,7 +104,7 @@ public class EventMessageProcessorTests
     {
         var delivery = Substitute.For<INatsJSMsg<EventMessage>>();
 
-        delivery.Data.Returns((EventMessage?) null);
+        delivery.Data.Returns((EventMessage?)null);
         delivery.Subject.Returns(MessageKeys.Subjects.Activity);
 
         await Processor.Process(delivery, (_, _) => ValueTask.CompletedTask, TestContext.Current.CancellationToken);

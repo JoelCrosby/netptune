@@ -2,7 +2,6 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events;
 using Netptune.Core.Events.Relations;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Relationships;

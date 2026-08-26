@@ -24,7 +24,7 @@ public static class StringExtensions
             return new List<string>();
         }
 
-        var separators = new[] {"\r\n", "\r", "\n"};
+        var separators = new[] { "\r\n", "\r", "\n" };
         var options = removeEmptyLines ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None;
 
         return str.Split(separators, options);

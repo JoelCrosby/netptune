@@ -1,6 +1,5 @@
 using Mediator;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;

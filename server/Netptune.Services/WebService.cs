@@ -89,7 +89,7 @@ public class WebService : IWebService
 
         metaInfo.HasData = matchCount > 0;
 
-        return new ()
+        return new()
         {
             Success = true,
             Meta = metaInfo,

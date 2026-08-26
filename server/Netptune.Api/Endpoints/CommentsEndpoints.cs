@@ -2,6 +2,8 @@ using Mediator;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
+using Netptune.Api.Configuration;
+using Netptune.Api.Requests;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -10,8 +12,6 @@ using Netptune.Core.ViewModels.Comments;
 using Netptune.Handlers.Comments.Commands;
 using Netptune.Handlers.Comments.Queries;
 using Netptune.Handlers.Tasks.Queries;
-using Netptune.Api.Configuration;
-using Netptune.Api.Requests;
 
 namespace Netptune.Api.Endpoints;
 

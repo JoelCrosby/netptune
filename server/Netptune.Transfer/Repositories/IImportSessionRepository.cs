@@ -1,7 +1,7 @@
-using Netptune.Transfer.Entities;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
+using Netptune.Transfer.Entities;
 using Netptune.Transfer.ViewModels;
 
 namespace Netptune.Transfer.Repositories;

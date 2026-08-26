@@ -1,7 +1,8 @@
 using System.Text.Json;
 
-using Microsoft.AspNetCore.Mvc;
 using Mediator;
+
+using Microsoft.AspNetCore.Mvc;
 
 using Netptune.Core.Preferences;
 using Netptune.Core.Responses.Common;

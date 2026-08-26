@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Enums;
+namespace Netptune.Core.Enums;
 
 public enum BoardType
 {

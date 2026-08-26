@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using Netptune.Core.Authorization;
 using Netptune.Core.Authentication;
+using Netptune.Core.Authorization;
 using Netptune.Core.UnitOfWork;
 
 namespace Netptune.Identity.Authentication;

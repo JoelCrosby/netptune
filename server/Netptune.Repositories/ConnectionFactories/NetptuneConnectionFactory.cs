@@ -1,4 +1,4 @@
-﻿using Netptune.Repositories.Common;
+using Netptune.Repositories.Common;
 
 namespace Netptune.Repositories.ConnectionFactories;
 

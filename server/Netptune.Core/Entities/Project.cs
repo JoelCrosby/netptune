@@ -18,7 +18,7 @@ public record Project : WorkspaceEntity<int>
 
     public string? RepositoryUrl { get; set; }
 
-    public string Key { get; set; }= null!;
+    public string Key { get; set; } = null!;
 
     public ProjectMeta? MetaInfo { get; set; }
 
@@ -52,7 +52,7 @@ public record Project : WorkspaceEntity<int>
         var defaultBoard = ProjectBoards.FirstOrDefault(board => board.BoardType == BoardType.Default);
         var identifier = defaultBoard?.Identifier;
 
-        return new ()
+        return new()
         {
             Id = Id,
             Key = Key,

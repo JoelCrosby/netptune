@@ -2,8 +2,8 @@ using AutoFixture;
 
 using FluentAssertions;
 
-using Netptune.Core.Requests;
 using Netptune.Core.Models.Search;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;

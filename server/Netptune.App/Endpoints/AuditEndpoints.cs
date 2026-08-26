@@ -1,12 +1,11 @@
 using Mediator;
 
+using Netptune.App.Utility;
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Audit;
 using Netptune.Core.Services;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Audit.Queries;
-
-using Netptune.App.Utility;
 
 namespace Netptune.App.Endpoints;
 

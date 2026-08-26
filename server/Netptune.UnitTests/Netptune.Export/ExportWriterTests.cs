@@ -1,4 +1,3 @@
-using Netptune.Transfer.Enums;
 using System.Text;
 using System.Text.Json;
 
@@ -6,14 +5,15 @@ using ClosedXML.Excel;
 
 using FluentAssertions;
 
-using Netptune.Transfer.Services;
+using Netptune.Core.Constants;
+using Netptune.Export;
 using Netptune.Transfer;
 using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Records;
-using Netptune.Export;
+using Netptune.Transfer.Services;
 
 using Xunit;
-using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Export;
 

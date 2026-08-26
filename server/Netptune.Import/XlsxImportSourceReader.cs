@@ -1,12 +1,12 @@
-using Netptune.Transfer.Enums;
 using System.Collections.Frozen;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
 using ClosedXML.Excel;
 
-using Netptune.Transfer.Services;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Services;
 
 namespace Netptune.Import;
 

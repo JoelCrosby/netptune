@@ -1,4 +1,4 @@
-﻿using System.Security.Authentication;
+using System.Security.Authentication;
 using System.Security.Claims;
 
 using FluentAssertions;
@@ -37,7 +37,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new [] { new Claim(ClaimTypes.NameIdentifier, "userId") }),
         }));
@@ -55,14 +55,14 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(Array.Empty<Claim>()),
         }));
 
-       var act = () => Service.GetCurrentUser().ThrowsAsync<AuthenticationException>();
+        var act = () => Service.GetCurrentUser().ThrowsAsync<AuthenticationException>();
 
-       act.Should().Throw<AuthenticationException>();
+        act.Should().Throw<AuthenticationException>();
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new [] { new Claim(ClaimTypes.NameIdentifier, "userId") }),
         }));
@@ -89,7 +89,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(Array.Empty<Claim>()),
         }));
@@ -106,7 +106,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new [] { new Claim(ClaimTypes.Email, "user@email.com") }),
         }));
@@ -123,7 +123,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(Array.Empty<Claim>()),
         }));
@@ -140,7 +140,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new [] { new Claim(ClaimTypes.Name, "username") }),
         }));
@@ -157,7 +157,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new [] { new Claim(ClaimTypes.Name, "username") }),
             new ClaimsIdentity(new [] { new Claim("urn:github:name", "github-username") }),
@@ -175,7 +175,7 @@ public class IdentityServiceTests
 
         UserCache.Get(Arg.Any<string>()).Returns(user);
 
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(Array.Empty<Claim>()),
         }));
@@ -188,7 +188,7 @@ public class IdentityServiceTests
     [Fact]
     public void GetPictureUrl_ShouldReturnCorrectly_WhenClaimAvailable()
     {
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new [] { new Claim("Provider-Picture-Url", "picture") }),
         }));
@@ -201,7 +201,7 @@ public class IdentityServiceTests
     [Fact]
     public void GetPictureUrl_ShouldReturnNull_WhenClaimNotAvailable()
     {
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(Array.Empty<Claim>()),
         }));
@@ -214,7 +214,7 @@ public class IdentityServiceTests
     [Fact]
     public void GetUserName_ShouldReturnGivenPlusFamilyName_WhenGivenNameClaimAvailable()
     {
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new []
             {
@@ -231,7 +231,7 @@ public class IdentityServiceTests
     [Fact]
     public void GetProviderKey_ShouldReturnCorrectly_WhenClaimAvailable()
     {
-        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new []
+        HttpContextAccessor.HttpContext?.User.Returns(new ClaimsPrincipal(new[]
         {
             new ClaimsIdentity(new [] { new Claim(ClaimTypes.NameIdentifier, "provider-key-123") }),
         }));

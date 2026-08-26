@@ -5,10 +5,9 @@ using FluentAssertions;
 using Mediator;
 
 using Netptune.Ai.Tools;
-using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.ViewModels.RelationTypes;
 using Netptune.Core.ViewModels.Relations;
+using Netptune.Core.ViewModels.RelationTypes;
 using Netptune.Handlers.RelationTypes.Queries;
 
 using NSubstitute;

@@ -1,7 +1,6 @@
 using FluentAssertions;
 
 using Netptune.Core.Constants;
-using Netptune.Core.Enums;
 using Netptune.Query.Model;
 using Netptune.Query.Tasks;
 using Netptune.Query.Validation;

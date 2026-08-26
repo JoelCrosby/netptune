@@ -29,20 +29,21 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
         using var connection = ConnectionFactory.StartConnection();
 
         var results = await connection.QueryAsync<NotificationViewModel>(new CommandDefinition(
-            SqlScripts.GetUserNotifications, new {
-            userId,
-            workspaceId,
-            search = ToSearchParam(search),
-            actorId = ToActorParam(actorId),
-            skip = pagination.Skip,
-            take = pagination.PageSize,
-            taskType = EntityType.Task,
-            projectType = EntityType.Project,
-            boardType = EntityType.Board,
-            boardGroupType = EntityType.BoardGroup,
-            statusType = EntityType.Status,
-            sprintType = EntityType.Sprint,
-        }, cancellationToken: cancellationToken));
+            SqlScripts.GetUserNotifications, new
+            {
+                userId,
+                workspaceId,
+                search = ToSearchParam(search),
+                actorId = ToActorParam(actorId),
+                skip = pagination.Skip,
+                take = pagination.PageSize,
+                taskType = EntityType.Task,
+                projectType = EntityType.Project,
+                boardType = EntityType.Board,
+                boardGroupType = EntityType.BoardGroup,
+                statusType = EntityType.Status,
+                sprintType = EntityType.Sprint,
+            }, cancellationToken: cancellationToken));
 
         var notifications = results.AsList();
 
@@ -63,17 +64,18 @@ public class NotificationRepository(DataContext context, IDbConnectionFactory co
         using var connection = ConnectionFactory.StartConnection();
 
         return await connection.ExecuteScalarAsync<int>(new CommandDefinition(
-            SqlScripts.GetUserNotificationsCount, new {
-            userId,
-            workspaceId,
-            search = ToSearchParam(search),
-            actorId = ToActorParam(actorId),
-            taskType = EntityType.Task,
-            projectType = EntityType.Project,
-            boardType = EntityType.Board,
-            boardGroupType = EntityType.BoardGroup,
-            statusType = EntityType.Status,
-        }, cancellationToken: cancellationToken));
+            SqlScripts.GetUserNotificationsCount, new
+            {
+                userId,
+                workspaceId,
+                search = ToSearchParam(search),
+                actorId = ToActorParam(actorId),
+                taskType = EntityType.Task,
+                projectType = EntityType.Project,
+                boardType = EntityType.Board,
+                boardGroupType = EntityType.BoardGroup,
+                statusType = EntityType.Status,
+            }, cancellationToken: cancellationToken));
     }
 
     private static string? ToSearchParam(string? search)

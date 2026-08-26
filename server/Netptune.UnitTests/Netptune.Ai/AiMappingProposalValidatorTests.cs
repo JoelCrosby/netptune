@@ -1,12 +1,12 @@
-using Netptune.Transfer.Enums;
 using FluentAssertions;
 
 using Netptune.Ai.Execution;
+using Netptune.Core.Constants;
 using Netptune.Transfer;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
 
 using Xunit;
-using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Ai;
 

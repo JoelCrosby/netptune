@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.ViewModels.Tags;
+namespace Netptune.Core.ViewModels.Tags;
 
 public class TagViewModel
 {

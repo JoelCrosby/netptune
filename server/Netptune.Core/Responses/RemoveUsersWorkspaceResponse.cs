@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Responses;
+namespace Netptune.Core.Responses;
 
 public class RemoveUsersWorkspaceResponse
 {

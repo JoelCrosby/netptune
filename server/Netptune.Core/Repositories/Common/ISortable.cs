@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Repositories.Common;
+namespace Netptune.Core.Repositories.Common;
 
 public interface ISortable
 {

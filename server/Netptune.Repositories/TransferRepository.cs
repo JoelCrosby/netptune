@@ -1,11 +1,10 @@
-using Netptune.Transfer.Repositories;
 using Dapper;
 
 using Netptune.Core.Repositories.Common;
-using Netptune.Transfer;
-using Netptune.Repositories.Sql;
-
 using Netptune.Repositories.RowMaps;
+using Netptune.Repositories.Sql;
+using Netptune.Transfer;
+using Netptune.Transfer.Repositories;
 
 namespace Netptune.Repositories;
 

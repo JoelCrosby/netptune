@@ -1,5 +1,5 @@
-using Netptune.Transfer.Enums;
 using Netptune.Transfer;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
 
 namespace Netptune.Import.Vendors;

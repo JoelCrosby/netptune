@@ -5,7 +5,7 @@ namespace Netptune.Core.Extensions;
 
 public static class CsvHelperExtensions
 {
-    private static readonly TypeConverterOptions ConverterOptions = new ()
+    private static readonly TypeConverterOptions ConverterOptions = new()
     {
         Formats = new[]
         {

@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Netptune.Core.Constants;
 using Netptune.Core.Encoding;
 using Netptune.Core.Entities;
-using Netptune.Core.Enums;
 using Netptune.Core.Repositories;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.UnitOfWork;

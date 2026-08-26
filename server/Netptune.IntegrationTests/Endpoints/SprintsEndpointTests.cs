@@ -1,13 +1,16 @@
 using System.Net;
 using System.Net.Http.Json;
+
 using FluentAssertions;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Projects;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.TestData;
+
 using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;

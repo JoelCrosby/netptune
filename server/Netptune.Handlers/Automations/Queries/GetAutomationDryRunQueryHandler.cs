@@ -170,7 +170,7 @@ public sealed class GetAutomationDryRunQueryHandler
             RelationOperation = relation?.Operation,
             RelationTypeId = relation?.RelationTypeId,
             RelatedTaskId = relation?.RelatedTaskId,
-            DelayMinutes = deletion is null ? null : (int) deletion.Delay.TotalMinutes,
+            DelayMinutes = deletion is null ? null : (int)deletion.Delay.TotalMinutes,
         };
     }
 

@@ -14,16 +14,16 @@ using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Boards;
 using Netptune.Core.ViewModels.Comments;
+using Netptune.Core.ViewModels.Projects;
+using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Relations;
 using Netptune.Core.ViewModels.RelationTypes;
-using Netptune.Core.ViewModels.Tags;
-using Netptune.Core.ViewModels.Workspace;
-using Netptune.Core.ViewModels.ProjectTasks;
-using Netptune.Core.ViewModels.Projects;
 using Netptune.Core.ViewModels.ServiceAccounts;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.Statuses;
+using Netptune.Core.ViewModels.Tags;
 using Netptune.Core.ViewModels.Users;
+using Netptune.Core.ViewModels.Workspace;
 
 using StackExchange.Redis;
 
@@ -884,7 +884,7 @@ public sealed class ApiV1EndpointTests
         var archived = await archivedResponse.Content
             .ReadFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(TestContext.Current.CancellationToken);
 
-        archived!.Payload!.Items.Should().Contain(item => item.Id == task.Id);
+        archived.Payload!.Items.Should().Contain(item => item.Id == task.Id);
 
         var restoreResponse = await client.PostAsJsonAsync("api/v1/tasks/restore", new
         {
@@ -1025,7 +1025,7 @@ public sealed class ApiV1EndpointTests
 
         groups.Should().NotBeNullOrEmpty();
 
-        return groups![0];
+        return groups[0];
     }
 
     private async Task<HttpClient> CreateClient()

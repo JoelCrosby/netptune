@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Cache;
+using Netptune.Core.Constants;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
@@ -19,7 +20,6 @@ using Netptune.Transfer.Repositories;
 using Netptune.Transfer.Services;
 
 using Xunit;
-using Netptune.Core.Constants;
 
 namespace Netptune.IntegrationTests.Endpoints;
 

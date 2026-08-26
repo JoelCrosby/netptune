@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.HttpOverrides;
 
+using Netptune.Api.Configuration;
+using Netptune.Api.Endpoints;
+using Netptune.Api.Middleware;
 using Netptune.Automation.Actions;
 using Netptune.Cache;
 using Netptune.Core.Extensions;
@@ -8,9 +11,7 @@ using Netptune.Events;
 using Netptune.Handlers;
 using Netptune.Identity.Authentication;
 using Netptune.Identity.Authorization;
-using Netptune.Api.Configuration;
-using Netptune.Api.Endpoints;
-using Netptune.Api.Middleware;
+using Netptune.Query;
 using Netptune.Repositories.Configuration;
 using Netptune.Search;
 using Netptune.ServiceDefaults;
@@ -18,7 +19,6 @@ using Netptune.ServiceDefaults.Middleware;
 using Netptune.Services.Configuration;
 
 using Scalar.AspNetCore;
-using Netptune.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

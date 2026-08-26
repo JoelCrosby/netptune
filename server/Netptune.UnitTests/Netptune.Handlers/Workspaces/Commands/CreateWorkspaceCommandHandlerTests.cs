@@ -2,8 +2,11 @@ using AutoFixture;
 
 using FluentAssertions;
 
-using Netptune.Core.Entities;
+using Microsoft.Extensions.Options;
+
 using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
+using Netptune.Core.Models.Options;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -11,8 +14,6 @@ using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
 using Netptune.Handlers.Workspaces.Commands;
-using Netptune.Core.Models.Options;
-using Microsoft.Extensions.Options;
 
 using NSubstitute;
 

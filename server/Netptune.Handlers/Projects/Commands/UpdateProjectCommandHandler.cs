@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;

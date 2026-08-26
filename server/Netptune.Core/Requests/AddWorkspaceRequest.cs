@@ -12,7 +12,7 @@ public record AddWorkspaceRequest
     public string? Description { get; set; }
 
     [Required]
-    public string Slug { get; set; }= null!;
+    public string Slug { get; set; } = null!;
 
     [Required]
     public WorkspaceMeta MetaInfo { get; set; } = null!;

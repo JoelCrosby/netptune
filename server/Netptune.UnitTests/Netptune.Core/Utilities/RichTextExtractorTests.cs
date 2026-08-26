@@ -123,7 +123,7 @@ public sealed class RichTextExtractorTests
         var text = RichTextExtractor.ToPlainText(description);
 
         text.Should().NotBeNull();
-        text!.Length.Should().BeLessThanOrEqualTo(10_000);
+        text.Length.Should().BeLessThanOrEqualTo(10_000);
         text.Should().EndWith(word);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Netptune.Core.UnitOfWork;
+using Netptune.Core.UnitOfWork;
 
 using NSubstitute;
 

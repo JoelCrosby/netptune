@@ -1,7 +1,6 @@
 using Mediator;
 
 using Netptune.Core.Exceptions;
-using Netptune.Core.Models.Roadmap;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services.Reporting;

@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Netptune.Core.Authorization;
-using Netptune.Core.Enums;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Repositories.Common;
 using Netptune.Core.Services;

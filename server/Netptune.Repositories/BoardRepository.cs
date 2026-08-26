@@ -126,36 +126,36 @@ public class BoardRepository : WorkspaceEntityRepository<DataContext, Board, int
                 OFFSET @skip
                 LIMIT @pageSize
             ", new
-            {
-                slug,
-                skip = pagination.Skip,
-                pageSize = pagination.PageSize,
-            }, cancellationToken: cancellationToken));
+        {
+            slug,
+            skip = pagination.Skip,
+            pageSize = pagination.PageSize,
+        }, cancellationToken: cancellationToken));
 
         var rows = results.Read<BoardViewModelRowMap>();
 
         static BoardMeta GetMetaInfo(BoardViewModelRowMap board)
         {
             return !string.IsNullOrEmpty(board.Meta_Info)
-                ? JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info) ?? new ()
-                : new ();
+                ? JsonSerializer.Deserialize<BoardMeta>(board.Meta_Info) ?? new()
+                : new();
         }
 
         return rows.Select(board => new BoardViewModel
-            {
-                Id = board.Id,
-                Name = board.Name,
-                Identifier = board.Identifier,
-                ProjectId = board.Project_Id,
-                ProjectName = board.Project_Name,
-                BoardType = board.Board_Type,
-                CreatedAt = board.Created_At,
-                UpdatedAt = board.Updated_At,
-                MetaInfo = GetMetaInfo(board),
-                OwnerUsername = $"{board.Firstname} {board.Lastname}",
-                TaskCount = board.Task_Count,
-                LastUpdated = board.Last_Updated ?? board.Created_At,
-            })
+        {
+            Id = board.Id,
+            Name = board.Name,
+            Identifier = board.Identifier,
+            ProjectId = board.Project_Id,
+            ProjectName = board.Project_Name,
+            BoardType = board.Board_Type,
+            CreatedAt = board.Created_At,
+            UpdatedAt = board.Updated_At,
+            MetaInfo = GetMetaInfo(board),
+            OwnerUsername = $"{board.Firstname} {board.Lastname}",
+            TaskCount = board.Task_Count,
+            LastUpdated = board.Last_Updated ?? board.Created_At,
+        })
             .Aggregate(new List<BoardsViewModel>(), (prev, board) =>
             {
                 var last = prev.Count > 0 ? prev[^1] : null;

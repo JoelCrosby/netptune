@@ -1,12 +1,12 @@
-using Netptune.Transfer.Enums;
 using FluentAssertions;
 
-using Netptune.Transfer;
-using Netptune.Transfer.Mapping;
+using Netptune.Core.Constants;
 using Netptune.Import;
+using Netptune.Transfer;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Mapping;
 
 using Xunit;
-using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Import;
 

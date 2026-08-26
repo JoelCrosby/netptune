@@ -18,7 +18,8 @@ public record BoardGroupsFilter
     {
         return new BoardGroupsFilter
         {
-            Tags = [], Users = [],
+            Tags = [],
+            Users = [],
         };
     }
 }

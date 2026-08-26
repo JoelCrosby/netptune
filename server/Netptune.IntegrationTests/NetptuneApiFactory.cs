@@ -1,6 +1,8 @@
 using System.Net;
+
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -8,18 +10,21 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Netptune.Core.Authorization;
+
+using Netptune.Api.Configuration;
 using Netptune.App.Utility;
+using Netptune.Core.Authorization;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Ai;
-using Netptune.Api.Configuration;
+using Netptune.Identity.Authorization.Requirements;
 using Netptune.IntegrationTests;
 using Netptune.IntegrationTests.TestServices;
-using Netptune.Identity.Authorization.Requirements;
 using Netptune.TestData;
+
 using Testcontainers.Nats;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
+
 using Xunit;
 
 using ExternalAuthenticationSchemes = Netptune.Identity.Authentication.AuthenticationSchemes;
@@ -189,7 +194,7 @@ public sealed class NetptuneFixture : IAsyncLifetime
             ? WebApplicationFactory.CreateDefaultClient(new TestExceptionHttpHandler())
             : WebApplicationFactory.CreateClient(options);
 
-        client.DefaultRequestHeaders.Authorization = new ("TestScheme");
+        client.DefaultRequestHeaders.Authorization = new("TestScheme");
         client.DefaultRequestHeaders.Add("workspace", "netptune");
 
         return client;
@@ -242,7 +247,7 @@ internal class TestExceptionHttpHandler : DelegatingHandler
 
 internal class InternalServerErrorException : Exception
 {
-    private InternalServerErrorException(string message) : base (message)
+    private InternalServerErrorException(string message) : base(message)
     {
     }
 

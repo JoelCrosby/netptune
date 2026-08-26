@@ -1,4 +1,4 @@
-﻿using Netptune.Core.Responses;
+using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;

@@ -2,8 +2,8 @@ using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Identity;
 
-using Netptune.Core.BaseEntities;
 using Netptune.Core.Authorization;
+using Netptune.Core.BaseEntities;
 using Netptune.Core.Relationships;
 using Netptune.Core.ViewModels.Users;
 

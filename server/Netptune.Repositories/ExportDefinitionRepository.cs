@@ -1,10 +1,10 @@
-using Netptune.Transfer.Repositories;
-using Netptune.Transfer.Entities;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
+using Netptune.Transfer.Entities;
+using Netptune.Transfer.Repositories;
 
 namespace Netptune.Repositories;
 

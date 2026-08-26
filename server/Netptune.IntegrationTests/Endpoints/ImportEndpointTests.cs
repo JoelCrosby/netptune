@@ -1,18 +1,18 @@
-using Netptune.Transfer.Enums;
 using System.Net;
 using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Netptune.Core.Constants;
 using Netptune.Core.Extensions;
-using Netptune.Transfer.Services;
 using Netptune.Core.Responses.Common;
 using Netptune.Transfer;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Services;
 using Netptune.Transfer.ViewModels;
 
 using Xunit;
-using Netptune.Core.Constants;
 
 namespace Netptune.IntegrationTests.Endpoints;
 

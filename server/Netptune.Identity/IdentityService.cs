@@ -75,7 +75,7 @@ public class IdentityService : IIdentityService
     {
         var context = Context.HttpContext;
 
-        if  (context is null) return null;
+        if (context is null) return null;
 
         var claimWorkspace = context.User.Claims.FirstOrDefault(claim => claim.Type == "workspace")?.Value;
 

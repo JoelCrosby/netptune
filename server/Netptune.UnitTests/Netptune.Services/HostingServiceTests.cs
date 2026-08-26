@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 
 using FluentAssertions;
 

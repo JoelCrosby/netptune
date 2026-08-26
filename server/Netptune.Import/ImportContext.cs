@@ -1,8 +1,8 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Transfer.Services;
-using Netptune.Transfer.Mapping;
 using Netptune.Core.UnitOfWork;
+using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Services;
 
 namespace Netptune.Import;
 

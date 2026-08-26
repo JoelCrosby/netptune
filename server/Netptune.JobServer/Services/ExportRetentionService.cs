@@ -1,11 +1,11 @@
-using Netptune.Transfer.Repositories;
-using Netptune.Transfer.Enums;
-using Netptune.Transfer.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Notifications;
 using Netptune.Core.UnitOfWork;
+using Netptune.Transfer.Entities;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Repositories;
 
 namespace Netptune.JobServer.Services;
 

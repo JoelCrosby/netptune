@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Netptune.Core.Entities;
 using Netptune.Entities.EntityMaps.BaseMaps;
 

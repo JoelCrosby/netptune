@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.Extensions.Options;
 
 using Netptune.Core.Authorization;
+using Netptune.Identity.Authentication;
 using Netptune.Identity.Authorization;
 using Netptune.Identity.Authorization.Requirements;
-using Netptune.Identity.Authentication;
 
 using Xunit;
 

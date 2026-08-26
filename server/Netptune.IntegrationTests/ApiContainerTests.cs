@@ -81,7 +81,7 @@ public sealed class ApiContainerTests
         }
     }
 
-    private static string? TypeNameFromResolutionFailure(string message)
+    private static string TypeNameFromResolutionFailure(string message)
     {
         const string prefix = "Unable to resolve service for type '";
 

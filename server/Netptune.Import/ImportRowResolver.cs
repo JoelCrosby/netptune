@@ -1,10 +1,8 @@
-using Netptune.Transfer.Enums;
-
+using Netptune.Core.Constants;
 using Netptune.Core.Enums;
 using Netptune.Core.Utilities;
-using Netptune.Transfer;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
-using Netptune.Core.Constants;
 
 namespace Netptune.Import;
 

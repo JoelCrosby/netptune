@@ -1,5 +1,3 @@
-using Dapper;
-
 using FluentAssertions;
 
 using Netptune.Core.Constants;

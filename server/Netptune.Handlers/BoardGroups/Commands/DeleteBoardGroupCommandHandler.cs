@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Enums;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
@@ -57,7 +58,7 @@ public sealed class DeleteBoardGroupCommandHandler : IRequestHandler<DeleteBoard
             return;
         }
 
-        var baseSortOrder = fallback!.MaxSortOrder + 1;
+        var baseSortOrder = fallback.MaxSortOrder + 1;
 
         await UnitOfWork.ProjectTasksInGroups.MovePlacementsToGroup(groupId, fallback.Id, baseSortOrder, cancellationToken);
     }

@@ -1,4 +1,5 @@
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Tags;

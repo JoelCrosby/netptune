@@ -1,10 +1,13 @@
 using System.Net;
 using System.Net.Http.Json;
+
 using FluentAssertions;
+
 using Netptune.Core.Requests;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Boards;
+
 using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
@@ -38,7 +41,7 @@ public sealed class BoardsEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-     [Fact]
+    [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
         var board = await CreateBoard();

@@ -2,11 +2,11 @@ using Mediator;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
+using Netptune.Api.Requests;
 using Netptune.Core.Authorization;
 using Netptune.Core.Models.Reporting;
 using Netptune.Core.Responses.Common;
 using Netptune.Handlers.Reporting.Queries;
-using Netptune.Api.Requests;
 
 namespace Netptune.Api.Endpoints;
 

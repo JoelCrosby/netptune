@@ -6,8 +6,8 @@ using Netptune.Core.Entities;
 using Netptune.Core.Models.Search;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.Services.Activity;
+using Netptune.Core.Services.ProjectTasks;
 using Netptune.Core.UnitOfWork;
 using Netptune.Handlers.Tasks.Commands;
 

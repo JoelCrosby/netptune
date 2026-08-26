@@ -17,7 +17,7 @@ public class BuildInfo
         return CachedBuildInfo;
     }
 
-    private static  BuildInfoViewModel CreateBuildInfoModel()
+    private static BuildInfoViewModel CreateBuildInfoModel()
     {
         var version = $"1.0.0+LOCAL+REF+{DateTime.UtcNow:yyyyMMdd}.0+LOCAL_BUILD";
         var infoVerAttr = GetInfoVerAttr();

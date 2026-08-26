@@ -1,9 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
-using Microsoft.EntityFrameworkCore;
 
 namespace Netptune.Repositories;
 

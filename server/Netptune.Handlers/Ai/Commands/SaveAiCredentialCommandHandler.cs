@@ -1,7 +1,7 @@
 using Mediator;
 
-using Netptune.Core.Enums;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Models.Ai;
 using Netptune.Core.Requests.Ai;
 using Netptune.Core.Responses.Common;

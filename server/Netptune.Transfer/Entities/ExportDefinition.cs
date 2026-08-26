@@ -1,7 +1,7 @@
-using Netptune.Transfer.Enums;
 using System.Text.Json;
 
 using Netptune.Core.BaseEntities;
+using Netptune.Transfer.Enums;
 
 namespace Netptune.Transfer.Entities;
 

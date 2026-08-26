@@ -1,8 +1,8 @@
-using Netptune.Transfer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Netptune.Entities.EntityMaps.BaseMaps;
+using Netptune.Transfer.Entities;
 
 namespace Netptune.Entities.EntityMaps;
 

@@ -1,7 +1,7 @@
 using Mediator;
 
-using Netptune.Core.Authorization;
 using Netptune.Core.Authentication;
+using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Requests.ServiceAccounts;
 using Netptune.Core.Responses.Common;

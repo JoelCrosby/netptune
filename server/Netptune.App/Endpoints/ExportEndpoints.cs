@@ -1,4 +1,3 @@
-using Netptune.Transfer.Enums;
 using Mediator;
 
 using Microsoft.AspNetCore.Authorization;
@@ -6,11 +5,12 @@ using Microsoft.AspNetCore.Authorization;
 using Netptune.App.Configuration;
 using Netptune.App.Services;
 using Netptune.Core.Authorization;
-using Netptune.Transfer.Definitions;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Handlers.Transfer.Commands;
 using Netptune.Handlers.Transfer.Queries;
+using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Enums;
 
 namespace Netptune.App.Endpoints;
 

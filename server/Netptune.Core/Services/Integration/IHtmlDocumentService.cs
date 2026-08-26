@@ -1,4 +1,4 @@
-﻿using AngleSharp.Dom;
+using AngleSharp.Dom;
 
 namespace Netptune.Core.Services.Integration;
 

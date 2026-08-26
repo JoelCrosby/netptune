@@ -42,7 +42,7 @@ public static class ApiRateLimiter
         }
 
         var connectingIp = context.Request.Headers["CF-Connecting-IP"].FirstOrDefault();
-        var forwardedFor =  context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+        var forwardedFor = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
         var forwardedKey = connectingIp ?? forwardedFor;
 
         return $"ip:{forwardedKey ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown"}";

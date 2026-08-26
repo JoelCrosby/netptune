@@ -5,7 +5,6 @@ using FluentAssertions;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events.Relations;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;
@@ -463,7 +462,7 @@ public class CreateTaskCommandHandlerTests
 
         RelationLinker.Plan(Arg.Any<TaskRelationPlanRequest>(), TestContext.Current.CancellationToken).Returns(plan);
         RelationLinker.Apply(plan, Arg.Any<int>(), TestContext.Current.CancellationToken)
-            .Returns(links.ConvertAll(link => new LinkedTaskRelation(
+            .Returns(links.ConvertAll(_ => new LinkedTaskRelation(
                 new ProjectTaskRelation { WorkspaceId = 1, RelationTypeId = relationType.Id },
                 relationType.Category)));
 

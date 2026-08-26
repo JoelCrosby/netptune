@@ -1,25 +1,26 @@
-using Netptune.Transfer.Enums;
 using System.Net;
 using System.Net.Http.Json;
-
 using System.Text.Json;
+
+using FluentAssertions;
+
 using Microsoft.Extensions.DependencyInjection;
+
+using Netptune.Core.Constants;
+using Netptune.Core.Relationships;
+using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;
-using Netptune.Transfer.Entities;
-using Netptune.Transfer.Repositories;
-using FluentAssertions;
-
-using Netptune.Core.Relationships;
-using Netptune.Core.Responses.Common;
-using Netptune.Transfer.Services;
 using Netptune.Transfer;
 using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Entities;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Repositories;
+using Netptune.Transfer.Services;
 using Netptune.Transfer.ViewModels;
 
 using Xunit;
-using Netptune.Core.Constants;
 
 namespace Netptune.IntegrationTests.Endpoints;
 
@@ -379,12 +380,12 @@ public sealed class ExportEndpointTests
 
         save.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var saved = await save.Content.ReadFromJsonAsync<ClientResponse<Transfer.ViewModels.ExportDefinitionViewModel>>();
+        var saved = await save.Content.ReadFromJsonAsync<ClientResponse<ExportDefinitionViewModel>>();
         var id = saved.Payload!.Id;
 
         id.Should().BeGreaterThan(0);
 
-        var list = await Client.GetFromJsonAsync<List<Transfer.ViewModels.ExportDefinitionViewModel>>("api/export/definitions");
+        var list = await Client.GetFromJsonAsync<List<ExportDefinitionViewModel>>("api/export/definitions");
 
         list.Should().ContainSingle(definition => definition.Id == id);
 
@@ -392,7 +393,7 @@ public sealed class ExportEndpointTests
 
         delete.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var listAfterDelete = await Client.GetFromJsonAsync<List<Transfer.ViewModels.ExportDefinitionViewModel>>("api/export/definitions");
+        var listAfterDelete = await Client.GetFromJsonAsync<List<ExportDefinitionViewModel>>("api/export/definitions");
 
         listAfterDelete.Should().NotContain(definition => definition.Id == id);
     }

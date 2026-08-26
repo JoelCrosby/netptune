@@ -58,7 +58,7 @@ public sealed class CanonicalEventConsumerService : BackgroundService
             },
             stoppingToken);
 
-        Logger.LogInformation("[Event] canonical consumer {Consumer} bound to {Subject}",DurableName,  MessageKeys.Subjects.Canonical);
+        Logger.LogInformation("[Event] canonical consumer {Consumer} bound to {Subject}", DurableName, MessageKeys.Subjects.Canonical);
 
         await foreach (var message in consumer.ConsumeAsync<EventMessage>(cancellationToken: stoppingToken))
         {

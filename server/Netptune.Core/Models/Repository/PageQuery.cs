@@ -1,4 +1,4 @@
-﻿using Netptune.Core.Repositories.Common;
+using Netptune.Core.Repositories.Common;
 
 namespace Netptune.Core.Models.Repository;
 

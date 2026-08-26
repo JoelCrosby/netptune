@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Ordering;
+namespace Netptune.Core.Ordering;
 
 public static class OrderingUtils
 {

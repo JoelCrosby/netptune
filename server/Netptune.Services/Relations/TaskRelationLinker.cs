@@ -1,6 +1,5 @@
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
-using Netptune.Core.Events;
 using Netptune.Core.Events.Relations;
 using Netptune.Core.Relations;
 using Netptune.Core.Relationships;
@@ -42,7 +41,7 @@ public sealed class TaskRelationLinker : ITaskRelationLinker
 
         foreach (var link in request.Links)
         {
-            var relatedSystemId = link.RelatedSystemId?.Trim() ?? string.Empty;
+            var relatedSystemId = link.RelatedSystemId.Trim();
 
             if (relatedSystemId.Length == 0)
             {
@@ -239,7 +238,7 @@ public sealed class TaskRelationLinker : ITaskRelationLinker
             return null;
         }
 
-        var reachableTaskIds = await UnitOfWork.ProjectTaskRelations.GetReachableTaskIds(relationType.Id,targetIds, cancellationToken);
+        var reachableTaskIds = await UnitOfWork.ProjectTaskRelations.GetReachableTaskIds(relationType.Id, targetIds, cancellationToken);
         var closesTheLoop = reachableTaskIds.Any(sourceIds.Contains);
 
         if (closesTheLoop)

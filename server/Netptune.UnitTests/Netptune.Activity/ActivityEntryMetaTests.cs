@@ -148,15 +148,15 @@ public class ActivityEntryMetaTests
         string? oldValue,
         string? newValue,
         List<string>? recipientUserIds = null) => new()
-    {
-        Field = field,
-        OldValue = oldValue,
-        NewValue = newValue,
-        OccurredAt = DateTime.UtcNow,
-        RecipientUserIds = recipientUserIds,
-    };
+        {
+            Field = field,
+            OldValue = oldValue,
+            NewValue = newValue,
+            OccurredAt = DateTime.UtcNow,
+            RecipientUserIds = recipientUserIds,
+        };
 
-    private static ActivityEvent Truncated(string? oldValue, string? newValue) => new ()
+    private static ActivityEvent Truncated(string? oldValue, string? newValue) => new()
     {
         Field = TaskChangeField.Description,
         OldValue = ActivityValue.Truncate(oldValue),

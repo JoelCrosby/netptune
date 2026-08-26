@@ -1,4 +1,4 @@
-﻿using Netptune.Core.Meta;
+using Netptune.Core.Meta;
 using Netptune.Core.Storage;
 
 namespace Netptune.Core.ViewModels.Workspace;

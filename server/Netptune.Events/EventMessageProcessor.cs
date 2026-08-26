@@ -32,7 +32,7 @@ public sealed class EventMessageProcessor
     {
         var payload = message.Data;
 
-        var deliveryAttempt = (int) (message.Metadata?.NumDelivered ?? 1);
+        var deliveryAttempt = (int)(message.Metadata?.NumDelivered ?? 1);
 
         if (payload is null)
         {

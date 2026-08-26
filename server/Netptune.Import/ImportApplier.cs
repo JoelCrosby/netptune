@@ -1,6 +1,3 @@
-using Netptune.Transfer.Repositories;
-using Netptune.Transfer.Enums;
-using Netptune.Transfer.Entities;
 using System.Text.Json;
 
 using Netptune.Core.Encoding;
@@ -11,9 +8,12 @@ using Netptune.Core.Events.Tasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
-using Netptune.Transfer.Services;
-using Netptune.Transfer.Mapping;
 using Netptune.Core.UnitOfWork;
+using Netptune.Transfer.Entities;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Repositories;
+using Netptune.Transfer.Services;
 
 namespace Netptune.Import;
 
@@ -163,7 +163,7 @@ public sealed class ImportApplier : IImportApplier
             ? Math.Min(request.EstimatedRowCount.Value, request.MaxRows)
             : request.MaxRows;
 
-        return (int) Math.Clamp(processed * 95L / total, 1, 95);
+        return (int)Math.Clamp(processed * 95L / total, 1, 95);
     }
 
     private async Task ApplyBatch(

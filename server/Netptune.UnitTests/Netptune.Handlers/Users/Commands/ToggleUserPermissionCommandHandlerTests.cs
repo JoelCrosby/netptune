@@ -38,7 +38,10 @@ public class ToggleUserPermissionCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -61,7 +64,10 @@ public class ToggleUserPermissionCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [permission],
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [permission],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -112,7 +118,10 @@ public class ToggleUserPermissionCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -133,7 +142,10 @@ public class ToggleUserPermissionCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);
@@ -154,7 +166,10 @@ public class ToggleUserPermissionCommandHandlerTests
         var workspace = AutoFixtures.Workspace;
         var userPermissions = new UserPermissions
         {
-            UserId = userId, WorkspaceKey = workspaceKey, Role = WorkspaceRole.Member, Permissions = [],
+            UserId = userId,
+            WorkspaceKey = workspaceKey,
+            Role = WorkspaceRole.Member,
+            Permissions = [],
         };
 
         Identity.GetWorkspaceKey().Returns(workspaceKey);

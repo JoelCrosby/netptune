@@ -1,5 +1,5 @@
-using Netptune.Transfer.Repositories;
 using Netptune.Core.Enums;
+using Netptune.Transfer.Repositories;
 
 namespace Netptune.Repositories.RowMaps;
 

@@ -1,4 +1,4 @@
-﻿using AngleSharp.Html.Parser;
+using AngleSharp.Html.Parser;
 
 using FluentAssertions;
 
@@ -16,7 +16,7 @@ public class WebServiceTests
     private readonly WebService Service;
 
     private readonly IHtmlDocumentService DocumentService = Substitute.For<IHtmlDocumentService>();
-    private readonly HtmlParser Parser = new (new ()
+    private readonly HtmlParser Parser = new(new()
     {
         IsKeepingSourceReferences = true,
     });

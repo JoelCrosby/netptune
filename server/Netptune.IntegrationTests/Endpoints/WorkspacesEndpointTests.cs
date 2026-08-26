@@ -76,7 +76,7 @@ public sealed class WorkspacesEndpointTests
             Name = "create test workspace",
             Description = "create test workspace description",
             Slug = "create-test-workspace",
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = NamedColors.FallbackColor,
             },
@@ -99,7 +99,7 @@ public sealed class WorkspacesEndpointTests
         {
             Description = "create test workspace description",
             Slug = "create-test-workspace",
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = NamedColors.FallbackColor,
             },
@@ -121,7 +121,7 @@ public sealed class WorkspacesEndpointTests
             Name = "Arch Linux",
             Description = "Arch Linux test workspace",
             Slug = slug,
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = NamedColors.FallbackColor,
             },
@@ -159,7 +159,7 @@ public sealed class WorkspacesEndpointTests
         {
             Name = "test workspace",
             Description = "create test workspace description",
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = NamedColors.FallbackColor,
             },
@@ -177,7 +177,7 @@ public sealed class WorkspacesEndpointTests
         {
             Slug = "not-a-workspace-key",
             Name = "test workspace",
-            MetaInfo = new () { Color = NamedColors.FallbackColor },
+            MetaInfo = new() { Color = NamedColors.FallbackColor },
         };
 
         var response = await Client.PutAsJsonAsync("api/workspaces", request);

@@ -1,14 +1,14 @@
-using Netptune.Transfer.Enums;
 using System.Text;
 
 using ClosedXML.Excel;
 
 using FluentAssertions;
 
-using Netptune.Transfer.Services;
-using Netptune.Transfer;
-using Netptune.Transfer.Mapping;
 using Netptune.Import;
+using Netptune.Transfer;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Services;
 
 using Xunit;
 

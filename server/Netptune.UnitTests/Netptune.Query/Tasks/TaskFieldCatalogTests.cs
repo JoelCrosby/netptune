@@ -3,7 +3,6 @@ using System.Reflection;
 using FluentAssertions;
 
 using Netptune.Core.Constants;
-using Netptune.Core.Enums;
 using Netptune.Query.Schema;
 using Netptune.Query.Tasks;
 using Netptune.Transfer;

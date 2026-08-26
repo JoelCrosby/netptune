@@ -10,8 +10,8 @@ using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
-using Netptune.Core.ViewModels.Sprints;
 using Netptune.Core.ViewModels.ProjectTasks;
+using Netptune.Core.ViewModels.Sprints;
 using Netptune.Handlers.Sprints.Commands;
 using Netptune.Handlers.Sprints.Queries;
 

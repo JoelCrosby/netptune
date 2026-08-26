@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.BaseEntities;
+namespace Netptune.Core.BaseEntities;
 
 public abstract record KeyedEntity<TValue> : IKeyedEntity<TValue>
 {

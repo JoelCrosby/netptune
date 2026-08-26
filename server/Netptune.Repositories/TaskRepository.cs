@@ -9,7 +9,6 @@ using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Search;
-using Netptune.Query.Tasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Repositories;
 using Netptune.Core.Repositories.Common;
@@ -19,10 +18,11 @@ using Netptune.Core.ViewModels.Flags;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Core.ViewModels.Users;
 using Netptune.Entities.Contexts;
+using Netptune.Query.Compilation;
+using Netptune.Query.Tasks;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.RowMaps;
 using Netptune.Repositories.Sql;
-using Netptune.Query.Compilation;
 
 namespace Netptune.Repositories;
 

@@ -3,14 +3,15 @@ using System.Net.Http.Json;
 
 using FluentAssertions;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Storage;
 using Netptune.Core.ViewModels.Files;
 using Netptune.Core.ViewModels.ProjectTasks;
 using Netptune.Entities.Contexts;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 
 using Xunit;
 
@@ -34,7 +35,7 @@ public sealed class StorageEndpointTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new ("api/storage/profile-picture", UriKind.RelativeOrAbsolute),
+            RequestUri = new("api/storage/profile-picture", UriKind.RelativeOrAbsolute),
             Content = new MultipartFormDataContent
             {
                 { new StreamContent(Stream.Null), "file", "picture.png" },
@@ -55,7 +56,7 @@ public sealed class StorageEndpointTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new ("api/storage/media", UriKind.RelativeOrAbsolute),
+            RequestUri = new("api/storage/media", UriKind.RelativeOrAbsolute),
             Content = new MultipartFormDataContent
             {
                 { new ByteArrayContent([1, 2, 3]), "file", "media.jpg" },

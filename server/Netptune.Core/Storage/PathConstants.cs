@@ -1,4 +1,4 @@
-﻿namespace Netptune.Core.Storage;
+namespace Netptune.Core.Storage;
 
 public static class PathConstants
 {

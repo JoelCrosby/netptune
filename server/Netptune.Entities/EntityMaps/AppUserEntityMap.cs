@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Authorization;
+using Netptune.Core.Entities;
 
 namespace Netptune.Entities.EntityMaps;
 

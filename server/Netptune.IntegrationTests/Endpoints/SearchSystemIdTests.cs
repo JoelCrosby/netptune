@@ -53,7 +53,7 @@ public sealed class SearchSystemIdTests
         var response = await Client.GetFromJsonAsync<ClientResponse<PagedResponse<TaskViewModel>>>(
             $"api/tasks?search={Uri.EscapeDataString(task.SystemId)}");
 
-        response!.Payload!.Items.Should().Contain(item => item.Id == task.Id);
+        response.Payload!.Items.Should().Contain(item => item.Id == task.Id);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public sealed class SearchSystemIdTests
         var response = await Client.GetFromJsonAsync<ClientResponse<BoardView>>(
             $"api/boards/view/neovim?term={Uri.EscapeDataString(task.SystemId)}");
 
-        var tasks = response!.Payload!.Groups.SelectMany(group => group.Tasks);
+        var tasks = response.Payload!.Groups.SelectMany(group => group.Tasks);
 
         tasks.Should().Contain(item => item.Id == task.Id);
     }

@@ -2,11 +2,11 @@ using System.Reflection;
 
 using FluentAssertions;
 
+using Netptune.Core.Constants;
 using Netptune.Transfer;
 using Netptune.Transfer.Catalog;
 
 using Xunit;
-using Netptune.Core.Constants;
 
 namespace Netptune.UnitTests.Netptune.Core.Transfer;
 

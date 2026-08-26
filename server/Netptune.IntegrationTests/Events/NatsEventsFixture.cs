@@ -16,7 +16,7 @@ public sealed class NatsEventsFixture : IAsyncLifetime
 
     public ValueTask InitializeAsync()
     {
-        return new (Container.StartAsync());
+        return new(Container.StartAsync());
     }
 
     public async ValueTask DisposeAsync()

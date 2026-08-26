@@ -2,10 +2,6 @@ using System.Linq.Expressions;
 
 using Microsoft.EntityFrameworkCore;
 
-using Npgsql;
-
-using NpgsqlTypes;
-
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Models.Activity;
@@ -14,6 +10,10 @@ using Netptune.Core.Repositories.Common;
 using Netptune.Entities.Contexts;
 using Netptune.Repositories.Common;
 using Netptune.Repositories.Sql;
+
+using Npgsql;
+
+using NpgsqlTypes;
 
 namespace Netptune.Repositories;
 

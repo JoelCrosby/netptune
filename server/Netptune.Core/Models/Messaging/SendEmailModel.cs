@@ -29,7 +29,7 @@ public class SendTo
 {
     public string Address { get; init; } = null!;
 
-    public string DisplayName { get; init; }  = null!;
+    public string DisplayName { get; init; } = null!;
 }
 
 public class SendMultipleEmailModel : IEventMessage

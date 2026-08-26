@@ -52,6 +52,6 @@ public sealed class UrlEgressBlockedException : Exception
     {
         if (response.IsSuccessStatusCode) return;
 
-        Throw($"The supplied url returned a non-success status code ({(int) response.StatusCode}).");
+        Throw($"The supplied url returned a non-success status code ({(int)response.StatusCode}).");
     }
 }

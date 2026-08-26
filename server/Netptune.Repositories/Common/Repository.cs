@@ -30,7 +30,7 @@ public abstract class Repository<TContext, TEntity, TId> : ReadOnlyRepository, I
 
         if (entityType is null)
         {
-            throw new ($"could not find EntityType for type {typeof(TEntity).FullName}");
+            throw new($"could not find EntityType for type {typeof(TEntity).FullName}");
         }
 
         TableName = entityType.GetTableName()!;

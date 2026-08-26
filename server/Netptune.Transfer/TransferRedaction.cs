@@ -1,4 +1,3 @@
-using Netptune.Transfer.Entities;
 using System.Collections.Frozen;
 
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
@@ -6,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 using Netptune.Core.Entities;
 using Netptune.Core.Relationships;
+using Netptune.Transfer.Entities;
 
 namespace Netptune.Transfer;
 

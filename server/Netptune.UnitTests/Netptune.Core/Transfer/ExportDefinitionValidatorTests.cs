@@ -1,8 +1,8 @@
-using Netptune.Transfer.Enums;
 using FluentAssertions;
 
 using Netptune.Transfer;
 using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Enums;
 
 using Xunit;
 

@@ -2,9 +2,9 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Netptune.Core.Events;
 using Netptune.Core.Requests;
 using Netptune.Core.Services;
-using Netptune.Core.Events;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Comments;
 using Netptune.Handlers.Comments.Commands;

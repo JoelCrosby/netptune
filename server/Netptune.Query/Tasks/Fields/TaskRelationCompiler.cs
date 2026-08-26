@@ -1,6 +1,5 @@
 using Netptune.Query.Compilation;
 using Netptune.Query.Model;
-using Netptune.Query.Tasks;
 
 namespace Netptune.Query.Tasks.Fields;
 

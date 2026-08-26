@@ -2,15 +2,15 @@ using System.Net;
 
 using Amazon;
 using Amazon.S3;
-using Amazon.S3.Transfer;
 using Amazon.S3.Model;
+using Amazon.S3.Transfer;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using Netptune.Core.Extensions;
 using Netptune.Core.Responses;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Extensions;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Common;
 using Netptune.Core.Storage;

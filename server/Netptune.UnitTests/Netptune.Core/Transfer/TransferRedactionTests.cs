@@ -3,8 +3,8 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 using Netptune.Core.Entities;
-using Netptune.Transfer;
 using Netptune.Entities.Contexts;
+using Netptune.Transfer;
 
 using Xunit;
 

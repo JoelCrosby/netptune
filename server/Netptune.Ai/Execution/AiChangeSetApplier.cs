@@ -430,7 +430,7 @@ public sealed class AiChangeSetApplier : IAiChangeSetApplier
             return new AiAppliedChangeResult
             {
                 ChangeId = change.Id,
-            EntityType = change.EntityType,
+                EntityType = change.EntityType,
                 Status = AiChangeApplyStatus.Failed,
                 Error = exception.Message,
             };

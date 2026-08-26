@@ -7,8 +7,8 @@ using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.ProjectTasks;
-using Netptune.Core.ViewModels.RelationTypes;
 using Netptune.Core.ViewModels.Relations;
+using Netptune.Core.ViewModels.RelationTypes;
 using Netptune.Core.ViewModels.Usage;
 
 using Xunit;
@@ -273,7 +273,7 @@ public sealed class TaskRelationsEndpointTests
             Relations = relations,
         });
 
-        return (await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>())!;
+        return (await response.Content.ReadFromJsonAsync<ClientResponse<TaskViewModel>>());
     }
 
     [Fact]

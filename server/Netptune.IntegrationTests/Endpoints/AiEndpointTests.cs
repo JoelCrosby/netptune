@@ -7,7 +7,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.App.Services;
 using Netptune.Core.Authorization;
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
@@ -384,8 +383,8 @@ public sealed class AiEndpointTests
         const string eventPrefix = "event: ";
         const string dataPrefix = "data: ";
 
-        var name = (string?) null;
-        var data = (string?) null;
+        var name = (string?)null;
+        var data = (string?)null;
 
         while (!cancellationToken.IsCancellationRequested)
         {

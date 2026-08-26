@@ -1,9 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
+
 using FluentAssertions;
+
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.ViewModels.Projects;
+
 using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
@@ -87,7 +90,7 @@ public sealed class ProjectsEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-     [Fact]
+    [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
         var project = await CreateProject();
@@ -132,7 +135,7 @@ public sealed class ProjectsEndpointTests
         {
             Name = "new name",
             Description = "project description",
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = "blue",
             },
@@ -155,7 +158,7 @@ public sealed class ProjectsEndpointTests
         var request = new AddProjectRequest
         {
             Description = "project description",
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = "blue",
             },
@@ -198,7 +201,7 @@ public sealed class ProjectsEndpointTests
         {
             Name = $"Delete target {Guid.NewGuid():N}",
             Description = "Project created so the delete test owns its subject.",
-            MetaInfo = new ()
+            MetaInfo = new()
             {
                 Color = "blue",
             },

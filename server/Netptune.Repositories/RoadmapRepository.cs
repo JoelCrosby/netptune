@@ -258,8 +258,8 @@ public sealed class RoadmapRepository(IDbConnectionFactory connectionFactory) : 
             return [];
         }
 
-        var hierarchyCategory = (int) RelationCategory.Hierarchy;
-        var dependencyCategory = (int) RelationCategory.Dependency;
+        var hierarchyCategory = (int)RelationCategory.Hierarchy;
+        var dependencyCategory = (int)RelationCategory.Dependency;
         var categories = new[] { hierarchyCategory, dependencyCategory };
 
         var command = new CommandDefinition(

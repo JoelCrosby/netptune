@@ -1,4 +1,3 @@
-using Netptune.Core.Enums;
 using Netptune.Query.Model;
 using Netptune.Query.Schema;
 

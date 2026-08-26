@@ -7,7 +7,7 @@ public readonly struct ClientResponse
     private readonly ResponseType ResponseType;
 
     // ReSharper disable once UnusedMember.Global
-    public ClientResponse(bool isSuccess, string? message, ResponseType responseType =  ResponseType.Default)
+    public ClientResponse(bool isSuccess, string? message, ResponseType responseType = ResponseType.Default)
     {
         IsSuccess = isSuccess;
         Message = message;
@@ -18,7 +18,7 @@ public readonly struct ClientResponse
 
     public bool IsForbidden => ResponseType == ResponseType.Forbidden;
 
-    public static readonly ClientResponse Success = new ()
+    public static readonly ClientResponse Success = new()
     {
         IsSuccess = true,
     };
@@ -28,7 +28,7 @@ public readonly struct ClientResponse
         return new(false, message);
     }
 
-    public static readonly ClientResponse NotFound = new(false, null,  ResponseType.NotFound);
+    public static readonly ClientResponse NotFound = new(false, null, ResponseType.NotFound);
 
     public static readonly ClientResponse Forbidden = new(false, null, ResponseType.Forbidden);
 }
@@ -76,9 +76,9 @@ public readonly struct ClientResponse<TPayload>
         return new(false, payload, message);
     }
 
-    public static readonly ClientResponse<TPayload> NotFound = new (false, default, null, ResponseType.NotFound);
+    public static readonly ClientResponse<TPayload> NotFound = new(false, default, null, ResponseType.NotFound);
 
     public static readonly ClientResponse<TPayload> Forbidden = new(false, default, null, ResponseType.Forbidden);
 
-    public static implicit operator ClientResponse<TPayload>(TPayload payload) => new (isSuccess: true, payload: payload, message: null);
+    public static implicit operator ClientResponse<TPayload>(TPayload payload) => new(isSuccess: true, payload: payload, message: null);
 }

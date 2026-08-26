@@ -1,6 +1,5 @@
 using Mediator;
 
-using Netptune.Core.Entities;
 using Netptune.Core.Models.ProjectTasks;
 using Netptune.Core.Relationships;
 using Netptune.Core.Requests;

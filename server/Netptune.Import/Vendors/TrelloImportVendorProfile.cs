@@ -1,10 +1,10 @@
-using Netptune.Transfer.Enums;
-using Netptune.Transfer.Services;
+using Netptune.Core.Constants;
 using Netptune.Transfer;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Services;
 
 using static Netptune.Import.Vendors.VendorMappingBuilder;
-using Netptune.Core.Constants;
 
 namespace Netptune.Import.Vendors;
 

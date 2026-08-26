@@ -1,5 +1,7 @@
 using Flurl;
+
 using Mediator;
+
 using Netptune.Core.Entities;
 using Netptune.Core.Enums;
 using Netptune.Core.Events.Users;
@@ -108,7 +110,7 @@ public sealed class InviteUsersToWorkspaceCommandHandler : IRequestHandler<Invit
 
         await UnitOfWork.WorkspaceInvites.AddRangeAsync(newInvites, cancellationToken);
 
-        return [..existing, ..newInvites];
+        return [.. existing, .. newInvites];
     }
 
     private Task SendUserInviteEmails(List<WorkspaceInvite> invites, Workspace workspace)

@@ -1,4 +1,3 @@
-using Netptune.Query.Compilation;
 using Netptune.Query.Model;
 
 namespace Netptune.Query.Compilation.Fields;

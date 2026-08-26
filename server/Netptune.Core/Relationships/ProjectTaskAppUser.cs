@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 using Netptune.Core.BaseEntities;
 using Netptune.Core.Entities;
@@ -42,7 +42,7 @@ public record ProjectTaskAppUser : KeyedEntity<int>
 
         foreach (var selected in selectedIdSet)
         {
-            yield return new ()
+            yield return new()
             {
                 UserId = selected,
                 ProjectTaskId = taskId,

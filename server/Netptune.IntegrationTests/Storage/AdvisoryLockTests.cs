@@ -25,13 +25,13 @@ public class AdvisoryLockTests(AdvisoryLockFixture fixture) : IClassFixture<Advi
 
         contender.Should().BeNull();
 
-        await first!.DisposeAsync();
+        await first.DisposeAsync();
 
         var afterRelease = await advisoryLock.TryAcquire(Key, CancellationToken);
 
         afterRelease.Should().NotBeNull();
 
-        await afterRelease!.DisposeAsync();
+        await afterRelease.DisposeAsync();
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class AdvisoryLockTests(AdvisoryLockFixture fixture) : IClassFixture<Advi
         first.Should().NotBeNull();
         second.Should().NotBeNull();
 
-        await first!.DisposeAsync();
-        await second!.DisposeAsync();
+        await first.DisposeAsync();
+        await second.DisposeAsync();
     }
 }

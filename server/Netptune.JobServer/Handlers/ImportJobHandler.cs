@@ -1,6 +1,3 @@
-using Netptune.Transfer.Repositories;
-using Netptune.Transfer.Enums;
-using Netptune.Transfer.Entities;
 using System.Text.Json;
 
 using Mediator;
@@ -10,13 +7,16 @@ using Microsoft.Extensions.Options;
 using Netptune.Core.Encoding;
 using Netptune.Core.Enums;
 using Netptune.Core.Events;
-using Netptune.Transfer.Messages;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Notifications;
-using Netptune.Transfer.Services;
-using Netptune.Transfer;
-using Netptune.Transfer.Mapping;
 using Netptune.Core.UnitOfWork;
+using Netptune.Transfer;
+using Netptune.Transfer.Entities;
+using Netptune.Transfer.Enums;
+using Netptune.Transfer.Mapping;
+using Netptune.Transfer.Messages;
+using Netptune.Transfer.Repositories;
+using Netptune.Transfer.Services;
 
 namespace Netptune.JobServer.Handlers;
 

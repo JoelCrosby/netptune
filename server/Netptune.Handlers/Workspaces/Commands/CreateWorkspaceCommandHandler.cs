@@ -1,14 +1,16 @@
 using Mediator;
+
+using Microsoft.Extensions.Options;
+
 using Netptune.Core.Enums;
+using Netptune.Core.Models.Options;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Core.Services.Activity;
 using Netptune.Core.UnitOfWork;
 using Netptune.Core.ViewModels.Workspace;
-using Netptune.Core.Models.Options;
 using Netptune.Services.Workspaces;
-using Microsoft.Extensions.Options;
 
 namespace Netptune.Handlers.Workspaces.Commands;
 

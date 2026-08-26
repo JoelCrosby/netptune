@@ -1,14 +1,14 @@
-using Netptune.Transfer.Enums;
 using System.Globalization;
 using System.Text;
 
 using CsvHelper;
 using CsvHelper.Configuration;
 
-using Netptune.Transfer.Services;
 using Netptune.Transfer;
 using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Enums;
 using Netptune.Transfer.Records;
+using Netptune.Transfer.Services;
 
 namespace Netptune.Export.Writers;
 

@@ -22,7 +22,7 @@ public sealed class RemoveCommentReactionCommandHandler : IRequestHandler<Remove
 
     public async ValueTask<ClientResponse<CommentViewModel>> Handle(RemoveCommentReactionCommand request, CancellationToken cancellationToken)
     {
-        var value = request.Value?.Trim();
+        var value = request.Value.Trim();
 
         if (string.IsNullOrEmpty(value))
         {

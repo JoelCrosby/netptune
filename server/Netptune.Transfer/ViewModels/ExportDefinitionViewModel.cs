@@ -1,5 +1,5 @@
-using Netptune.Transfer.Enums;
 using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Enums;
 
 namespace Netptune.Transfer.ViewModels;
 

@@ -141,7 +141,7 @@ public static class BrandingEndpoints
     {
         if (!request.HasFormContentType)
         {
-            return new (Results.BadRequest("Multipart form data is required."), false);
+            return new(Results.BadRequest("Multipart form data is required."), false);
         }
 
         var form = await request.ReadFormAsync(cancellationToken);
@@ -149,7 +149,7 @@ public static class BrandingEndpoints
 
         if (file is null)
         {
-            return new (Results.BadRequest("A file is required."), false);
+            return new(Results.BadRequest("A file is required."), false);
         }
 
         await using var stream = file.OpenReadStream();
@@ -168,15 +168,15 @@ public static class BrandingEndpoints
 
         if (result.IsNotFound)
         {
-            return new (Results.NotFound(result), false);
+            return new(Results.NotFound(result), false);
         }
 
         if (!result.IsSuccess)
         {
-            return new (Results.BadRequest(result), false);
+            return new(Results.BadRequest(result), false);
         }
 
-        return new (Results.Ok(result), true);
+        return new(Results.Ok(result), true);
     }
 
     private static async Task<BrandingOutcome> Remove(
@@ -189,10 +189,10 @@ public static class BrandingEndpoints
 
         if (result.IsNotFound)
         {
-            return new (Results.NotFound(), false);
+            return new(Results.NotFound(), false);
         }
 
-        return new (Results.NoContent(), true);
+        return new(Results.NoContent(), true);
     }
 
     private static async Task<IResult> BroadcastBoardChange(BrandingOutcome outcome, IBoardEventService boardEvents, HttpContext http)

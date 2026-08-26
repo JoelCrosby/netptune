@@ -2,6 +2,7 @@ using Mediator;
 
 using Microsoft.AspNetCore.Http.HttpResults;
 
+using Netptune.Api.Configuration;
 using Netptune.Core.Authorization;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
@@ -9,7 +10,6 @@ using Netptune.Core.Services.Realtime;
 using Netptune.Core.ViewModels.Sprints;
 using Netptune.Handlers.Sprints.Commands;
 using Netptune.Handlers.Sprints.Queries;
-using Netptune.Api.Configuration;
 
 namespace Netptune.Api.Endpoints;
 

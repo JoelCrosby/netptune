@@ -6,11 +6,11 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Netptune.Transfer.Services;
 using Netptune.Transfer;
 using Netptune.Transfer.Archive;
 using Netptune.Transfer.Catalog;
 using Netptune.Transfer.Definitions;
+using Netptune.Transfer.Services;
 
 using Xunit;
 

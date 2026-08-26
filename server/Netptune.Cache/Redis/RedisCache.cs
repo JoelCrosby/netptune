@@ -43,7 +43,7 @@ public class RedisCache : ICacheProvider
             return false;
         }
 
-        if (GetString(key) is {} result)
+        if (GetString(key) is { } result)
         {
             value = result;
             return true;
@@ -69,7 +69,7 @@ public class RedisCache : ICacheProvider
             return false;
         }
 
-        value = JsonSerializer.Deserialize<TValue>(((string) result)!);
+        value = JsonSerializer.Deserialize<TValue>(((string)result)!);
         return true;
     }
 
@@ -87,7 +87,7 @@ public class RedisCache : ICacheProvider
             return (false, default);
         }
 
-        var value = JsonSerializer.Deserialize<TValue>(((string) result)!);
+        var value = JsonSerializer.Deserialize<TValue>(((string)result)!);
         return (true, value);
     }
 

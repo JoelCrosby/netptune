@@ -66,7 +66,7 @@ public static class FieldValueParser
             return true;
         }
 
-        if (!Enum.TryParse(enumType, trimmed, true, out var named) || named is null)
+        if (!Enum.TryParse(enumType, trimmed, true, out var named))
         {
             return false;
         }

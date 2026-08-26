@@ -1,11 +1,14 @@
 using System.Net;
 using System.Net.Http.Json;
+
 using FluentAssertions;
+
+using Netptune.Core.Enums;
 using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
-using Netptune.Core.Enums;
 using Netptune.Core.ViewModels.Tags;
 using Netptune.Core.ViewModels.Usage;
+
 using Xunit;
 
 namespace Netptune.IntegrationTests.Endpoints;
@@ -51,7 +54,7 @@ public sealed class TagsEndpointTests
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-     [Fact]
+    [Fact]
     public async Task Update_ShouldReturnCorrectly_WhenInputValid()
     {
         var request = new UpdateTagRequest
@@ -107,7 +110,7 @@ public sealed class TagsEndpointTests
     [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenInputNotValid()
     {
-        var response = await Client.PostAsJsonAsync("api/tags", new {});
+        var response = await Client.PostAsJsonAsync("api/tags", new { });
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -189,10 +192,10 @@ public sealed class TagsEndpointTests
 
         attached.StatusCode.Should().Be(HttpStatusCode.OK, await attached.Content.ReadAsStringAsync());
 
-        var response = await Client.SendAsync(new ()
+        var response = await Client.SendAsync(new()
         {
             Method = HttpMethod.Delete,
-            RequestUri = new ("api/tags/task", UriKind.RelativeOrAbsolute),
+            RequestUri = new("api/tags/task", UriKind.RelativeOrAbsolute),
             Content = JsonContent.Create(request),
         });
 
@@ -208,13 +211,13 @@ public sealed class TagsEndpointTests
     {
         var request = new DeleteTagsRequest
         {
-            Tags = new () { "Python4", "Java6" },
+            Tags = new() { "Python4", "Java6" },
         };
 
-        var response = await Client.SendAsync(new ()
+        var response = await Client.SendAsync(new()
         {
             Method = HttpMethod.Delete,
-            RequestUri = new ("api/tags", UriKind.RelativeOrAbsolute),
+            RequestUri = new("api/tags", UriKind.RelativeOrAbsolute),
             Content = JsonContent.Create(request),
         });
 
@@ -234,10 +237,10 @@ public sealed class TagsEndpointTests
             SystemId = "non-existing-systemId",
         };
 
-        var response = await Client.SendAsync(new ()
+        var response = await Client.SendAsync(new()
         {
             Method = HttpMethod.Delete,
-            RequestUri = new ("api/tags/task", UriKind.RelativeOrAbsolute),
+            RequestUri = new("api/tags/task", UriKind.RelativeOrAbsolute),
             Content = JsonContent.Create(request),
         });
 

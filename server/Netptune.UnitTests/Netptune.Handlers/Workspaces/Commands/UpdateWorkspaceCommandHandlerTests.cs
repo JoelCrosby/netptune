@@ -4,8 +4,8 @@ using FluentAssertions;
 
 using Netptune.Core.Authorization;
 using Netptune.Core.Cache;
-using Netptune.Core.Requests;
 using Netptune.Core.Events;
+using Netptune.Core.Requests;
 using Netptune.Core.Services;
 using Netptune.Core.Storage;
 using Netptune.Core.UnitOfWork;

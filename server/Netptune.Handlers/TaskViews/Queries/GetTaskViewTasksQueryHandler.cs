@@ -4,7 +4,6 @@ using Mediator;
 
 using Netptune.Core.Encoding;
 using Netptune.Core.Repositories;
-using Netptune.Core.Requests;
 using Netptune.Core.Responses.Common;
 using Netptune.Core.Services;
 using Netptune.Query.Views;

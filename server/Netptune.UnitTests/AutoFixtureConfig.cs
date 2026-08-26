@@ -1,4 +1,4 @@
-﻿using AutoFixture.Dsl;
+using AutoFixture.Dsl;
 
 using Netptune.Core.BaseEntities;
 

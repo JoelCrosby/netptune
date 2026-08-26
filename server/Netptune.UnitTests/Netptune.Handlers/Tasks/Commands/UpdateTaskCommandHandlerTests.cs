@@ -2,8 +2,8 @@ using AutoFixture;
 
 using FluentAssertions;
 
-using Netptune.Core.Enums;
 using Netptune.Core.Entities;
+using Netptune.Core.Enums;
 using Netptune.Core.Events.Tasks;
 using Netptune.Core.Models.Activity;
 using Netptune.Core.Models.ProjectTasks;

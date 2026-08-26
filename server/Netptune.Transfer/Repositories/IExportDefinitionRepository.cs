@@ -1,5 +1,5 @@
-using Netptune.Transfer.Entities;
 using Netptune.Core.Repositories.Common;
+using Netptune.Transfer.Entities;
 
 namespace Netptune.Transfer.Repositories;
 
