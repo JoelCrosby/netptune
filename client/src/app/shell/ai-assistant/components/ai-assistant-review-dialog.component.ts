@@ -79,35 +79,36 @@ const isTextField = (field: AiChangeField): boolean => {
   ],
   template: `
     <header
-      class="border-border bg-card-header flex items-center gap-4 border-b py-2 pr-3 pl-2">
+      class="border-border bg-card-header flex items-center gap-4 border-b py-3 pr-4 pl-2.5">
       <button
         app-icon-button
-        class="h-9 w-9"
+        class="h-10 w-10"
         type="button"
         i18n-aria-label="Accessible label for the button that closes the review"
         aria-label="Close review"
         (click)="close()">
-        <svg lucideX class="h-[18px] w-[18px]"></svg>
+        <svg lucideX class="h-5 w-5"></svg>
       </button>
 
       <div class="flex min-w-0 items-baseline gap-2.5">
-        <h1 class="font-overpass m-0 text-base font-medium whitespace-nowrap">
+        <h1 class="font-overpass m-0 text-[22px] font-medium whitespace-nowrap">
           {{ title() }}
         </h1>
-        <span class="text-muted truncate text-xs">{{
+        <span class="text-muted truncate text-[15px]">{{
           conversationTitle()
         }}</span>
       </div>
     </header>
 
-    <div class="border-border flex items-center gap-3 border-b px-3 py-2">
+    <div class="border-border flex items-center gap-3 border-b px-4 py-2.5">
       <app-filter-input
-        class="min-w-[220px]"
+        class="min-w-[360px]"
         [value]="query()"
         (valueChange)="query.set($event)"
         [placeholder]="filterPlaceholder" />
 
       <app-segmented-control
+        variant="chips"
         [options]="filters()"
         [value]="filter()"
         (valueChange)="filter.set($event)"
@@ -116,6 +117,7 @@ const isTextField = (field: AiChangeField): boolean => {
       <span class="flex-1"></span>
 
       <app-segmented-control
+        variant="outlined"
         [options]="modes()"
         [value]="mode()"
         (valueChange)="setMode($event)"
@@ -128,15 +130,15 @@ const isTextField = (field: AiChangeField): boolean => {
         [title]="emptyTitle"
         [description]="emptyDescription" />
     } @else {
-      <main class="grid min-h-0 flex-1 grid-cols-[360px_minmax(0,1fr)]">
+      <main class="grid min-h-0 flex-1 grid-cols-[540px_minmax(0,1fr)]">
         <div class="border-border bg-card flex min-h-0 flex-col border-r">
           <div
-            class="border-border flex items-center justify-between gap-2 border-b px-3 py-2">
-            <span class="text-muted text-xs">{{ listSummary() }}</span>
+            class="border-border flex items-center justify-between gap-2 border-b px-4 py-2.5">
+            <span class="text-muted text-sm">{{ listSummary() }}</span>
             @if (isPending() && selectableCount() > 1) {
               <app-button
                 color="neutral"
-                class="-my-1 h-7 px-2 text-xs"
+                class="-my-1 h-8 px-2.5 text-sm"
                 (click)="toggleAll()">
                 @if (isEveryChangeSelected()) {
                   <span i18n="Button that clears every selected change">
@@ -164,7 +166,7 @@ const isTextField = (field: AiChangeField): boolean => {
           </div>
 
           <div
-            class="border-border text-muted flex items-center gap-3 border-t px-3 py-2 text-[11px]">
+            class="border-border text-muted flex items-center gap-4 border-t px-4 py-2.5 text-[13px]">
             <span class="flex items-center gap-1.5">
               <span
                 class="font-avatar text-change-added font-bold"
@@ -226,11 +228,12 @@ const isTextField = (field: AiChangeField): boolean => {
     }
 
     <footer
-      class="border-border bg-card-header flex items-center gap-4 border-t px-3.5 py-2">
+      class="border-border bg-card-header flex items-center gap-4 border-t px-4 py-3">
       @if (isPending()) {
-        <div class="text-muted flex items-center gap-3.5 text-[11px]">
+        <div class="text-muted flex items-center gap-4 text-[13px]">
           <span class="flex items-center gap-1.5">
             <app-keyboard-key
+              class="min-w-6 px-2 py-1 text-[13px]"
               i18n="
                 Keyboard key that moves down the review list. Leave the letter
                 as-is
@@ -238,6 +241,7 @@ const isTextField = (field: AiChangeField): boolean => {
               j
             </app-keyboard-key>
             <app-keyboard-key
+              class="min-w-6 px-2 py-1 text-[13px]"
               i18n="
                 Keyboard key that moves up the review list. Leave the letter
                 as-is
@@ -250,6 +254,7 @@ const isTextField = (field: AiChangeField): boolean => {
           </span>
           <span class="flex items-center gap-1.5">
             <app-keyboard-key
+              class="min-w-6 px-2 py-1 text-[13px]"
               i18n="Name of the space bar. Translate it to its local name">
               space
             </app-keyboard-key>
@@ -257,6 +262,7 @@ const isTextField = (field: AiChangeField): boolean => {
           </span>
           <span class="flex items-center gap-1.5">
             <app-keyboard-key
+              class="min-w-6 px-2 py-1 text-[13px]"
               i18n="
                 Keyboard key that edits the selected change. Leave the letter
                 as-is
@@ -267,6 +273,7 @@ const isTextField = (field: AiChangeField): boolean => {
           </span>
           <span class="flex items-center gap-1.5">
             <app-keyboard-key
+              class="min-w-6 px-2 py-1 text-[13px]"
               i18n="Symbol for the return key. Leave the symbol as-is">
               &#9166;
             </app-keyboard-key>
@@ -278,17 +285,22 @@ const isTextField = (field: AiChangeField): boolean => {
       }
 
       <span class="flex-1"></span>
-      <p class="text-muted m-0 text-xs">{{ status() }}</p>
+      <p class="text-muted m-0 text-sm">{{ status() }}</p>
 
       <div class="flex items-center gap-2">
         @if (isPending()) {
-          <button app-stroked-button type="button" (click)="discard()">
+          <button
+            app-stroked-button
+            class="h-12"
+            type="button"
+            (click)="discard()">
             <span i18n="Button that discards the proposed changes"
               >Discard</span
             >
           </button>
           <button
             app-flat-button
+            class="h-12"
             type="button"
             [disabled]="assistant.isApplying() || selectedCount() === 0"
             (click)="apply()">
@@ -299,6 +311,7 @@ const isTextField = (field: AiChangeField): boolean => {
           @if (failedCount() > 0 && !isReadOnly) {
             <button
               app-stroked-button
+              class="h-12"
               type="button"
               [disabled]="assistant.isApplying()"
               (click)="retryFailed()">
@@ -311,6 +324,7 @@ const isTextField = (field: AiChangeField): boolean => {
           @if (canUndo()) {
             <button
               app-stroked-button
+              class="h-12"
               type="button"
               [disabled]="assistant.isApplying()"
               (click)="undo()">
@@ -319,7 +333,11 @@ const isTextField = (field: AiChangeField): boolean => {
               >
             </button>
           }
-          <button app-stroked-button type="button" (click)="close()">
+          <button
+            app-stroked-button
+            class="h-12"
+            type="button"
+            (click)="close()">
             <span i18n="Button that closes the proposed changes dialog"
               >Close</span
             >

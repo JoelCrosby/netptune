@@ -56,44 +56,44 @@ const isTextField = (field: AiChangeField): boolean => {
     AiAssistantReviewDiffComponent,
   ],
   template: `
-    <div class="border-border flex items-start gap-3 border-b px-4 pt-3.5 pb-3">
-      <div class="flex min-w-0 flex-1 flex-col gap-1.5">
+    <div class="border-border flex items-start gap-3 border-b px-5 pt-4 pb-3.5">
+      <div class="flex min-w-0 flex-1 flex-col gap-2">
         <div class="flex min-w-0 items-center gap-2">
           <app-badge [color]="tone()">{{ action() }}</app-badge>
-          <span class="text-muted shrink-0 text-[11px] tracking-wide uppercase">
+          <span class="text-muted shrink-0 text-[13px] tracking-wide uppercase">
             {{ entity() }}
           </span>
           <h2
-            class="font-overpass m-0 min-w-0 truncate text-[15px] font-medium">
+            class="font-overpass m-0 min-w-0 truncate text-[20px] font-medium">
             {{ target() }}
           </h2>
           @if (route(); as route) {
             <a
               app-button-link
               color="primary"
-              class="h-7 min-h-0 shrink-0 gap-1 px-2 text-xs"
+              class="h-8 min-h-0 shrink-0 gap-1.5 px-2.5 text-sm"
               [routerLink]="route"
               i18n-title="Tooltip on the link that opens the changed entity"
               title="Open in a new view">
               <span i18n="Link that opens the entity a change targets">
                 Open
               </span>
-              <svg lucideExternalLink class="h-3 w-3"></svg>
+              <svg lucideExternalLink class="h-3.5 w-3.5"></svg>
             </a>
           }
         </div>
-        <p class="text-muted m-0 text-xs">{{ summary() }}</p>
+        <p class="text-muted m-0 text-sm">{{ summary() }}</p>
       </div>
 
-      <div class="flex shrink-0 items-center gap-1.5">
+      <div class="flex shrink-0 items-center gap-2">
         @if (canRevise()) {
           @if (editableField(); as name) {
             <app-button
               variant="outlined"
               color="neutral"
-              class="h-8 px-2.5 text-xs"
+              class="h-10 px-3.5 text-sm"
               (click)="editStarted.emit(name)">
-              <svg lucidePencil class="h-3.5 w-3.5"></svg>
+              <svg lucidePencil class="h-4 w-4"></svg>
               <span i18n="Button that edits the value a change proposes">
                 Edit
               </span>
@@ -102,9 +102,9 @@ const isTextField = (field: AiChangeField): boolean => {
           <app-button
             variant="outlined"
             color="neutral"
-            class="h-8 px-2.5 text-xs"
+            class="h-10 px-3.5 text-sm"
             (click)="revised.emit(change().id)">
-            <svg lucideMessageSquare class="h-3.5 w-3.5"></svg>
+            <svg lucideMessageSquare class="h-4 w-4"></svg>
             <span i18n="Button that asks the assistant to rework one change">
               Ask to revise
             </span>
@@ -114,10 +114,10 @@ const isTextField = (field: AiChangeField): boolean => {
           <app-button
             variant="outlined"
             color="primary"
-            class="h-8 px-3 text-xs font-medium"
+            class="h-10 px-4 text-sm font-medium"
             [disabled]="isApplying()"
             (click)="applied.emit(change().id)">
-            <svg lucideCheck class="h-3.5 w-3.5" strokeWidth="2.2"></svg>
+            <svg lucideCheck class="h-4 w-4" strokeWidth="2.2"></svg>
             <span i18n="Button that applies only the change being viewed">
               Apply this
             </span>
@@ -133,12 +133,12 @@ const isTextField = (field: AiChangeField): boolean => {
         class="mx-4 mt-3"
         [icon]="alertIcon"
         [title]="messageTitle()">
-        <p class="text-muted m-0 mt-0.5 text-xs break-words">{{ message }}</p>
+        <p class="text-muted m-0 mt-0.5 text-sm break-words">{{ message }}</p>
       </app-callout>
     }
 
-    <div class="custom-scroll flex-1 overflow-auto px-4 pt-3.5 pb-5">
-      <div class="flex flex-col gap-3">
+    <div class="custom-scroll flex-1 overflow-auto px-5 pt-4 pb-6">
+      <div class="flex flex-col gap-4">
         @for (field of change().fields; track field.name) {
           <app-ai-assistant-review-diff
             [field]="field"

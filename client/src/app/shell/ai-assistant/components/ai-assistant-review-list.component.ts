@@ -56,20 +56,20 @@ interface AiReviewGroup {
       <div>
         <button
           type="button"
-          class="border-border/60 bg-card hover:bg-card-hover flex w-full items-center gap-1.5 border-t px-2 py-1.5 text-left text-xs transition-colors"
+          class="border-border/60 bg-card hover:bg-card-hover flex w-full items-center gap-2 border-t px-3 py-2.5 text-left text-[15px] transition-colors"
           [attr.aria-expanded]="group.isOpen"
           (click)="groupToggled.emit(group.key)">
           <svg
             lucideChevronDown
             class="text-muted h-3.5 w-3.5 shrink-0 transition-transform"
             [class.-rotate-90]="!group.isOpen"></svg>
-          <span class="text-muted shrink-0 text-[11px] tracking-wide uppercase">
+          <span class="text-muted shrink-0 text-xs tracking-wide uppercase">
             {{ group.entity }}
           </span>
           <span class="min-w-0 truncate font-medium">{{ group.title }}</span>
           <span class="flex-1"></span>
           <span
-            class="bg-foreground/8 text-muted flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px]">
+            class="bg-foreground/8 text-muted flex h-5 min-w-5 items-center justify-center rounded-full px-2 text-[13px]">
             {{ group.count }}
           </span>
         </button>
@@ -77,7 +77,7 @@ interface AiReviewGroup {
         @if (group.isOpen) {
           @for (row of group.rows; track row.change.id) {
             <div
-              class="hover:bg-hover flex cursor-pointer items-start gap-2 border-l-2 py-1.5 pr-3 pl-2.5 transition-colors"
+              class="hover:bg-hover flex cursor-pointer items-start gap-2.5 border-l-2 py-3 pr-4 pl-3 transition-colors"
               [class.border-primary]="row.isSelected"
               [class.bg-primary-selected]="row.isSelected"
               [class.border-transparent]="!row.isSelected"
@@ -96,33 +96,33 @@ interface AiReviewGroup {
                 </span>
               } @else {
                 <span
-                  class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center">
+                  class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
                   @if (row.change.undoneAt) {
-                    <svg lucideUndo2 class="text-muted h-4 w-4"></svg>
+                    <svg lucideUndo2 class="text-muted h-5 w-5"></svg>
                   } @else {
                     @switch (row.change.applyStatus) {
                       @case (applyStatus.applied) {
                         <svg
                           lucideCircleCheck
-                          class="text-change-added h-4 w-4"></svg>
+                          class="text-change-added h-5 w-5"></svg>
                       }
                       @case (applyStatus.failed) {
                         <svg
                           lucideTriangleAlert
-                          class="text-change-removed h-4 w-4"></svg>
+                          class="text-change-removed h-5 w-5"></svg>
                       }
                       @default {
-                        <svg lucideMinus class="text-muted h-4 w-4"></svg>
+                        <svg lucideMinus class="text-muted h-5 w-5"></svg>
                       }
                     }
                   }
                 </span>
               }
 
-              <span class="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span class="flex min-w-0 flex-1 flex-col gap-1">
                 <span class="flex min-w-0 items-baseline gap-1.5">
                   <span
-                    class="font-avatar shrink-0 text-xs font-bold"
+                    class="font-avatar shrink-0 text-sm font-bold"
                     [class.text-change-added]="row.letter === 'A'"
                     [class.text-change-modified]="row.letter === 'M'"
                     [class.text-change-removed]="row.letter === 'D'"
@@ -130,12 +130,12 @@ interface AiReviewGroup {
                     {{ row.letter }}
                   </span>
                   <span
-                    class="min-w-0 truncate text-[13px]"
+                    class="min-w-0 truncate text-[15px]"
                     [title]="row.title">
                     {{ row.title }}
                   </span>
                 </span>
-                <span class="text-muted truncate pl-[18px] text-[11px]">
+                <span class="text-muted truncate pl-[22px] text-[13px]">
                   {{ row.detail }}
                 </span>
               </span>
@@ -143,7 +143,7 @@ interface AiReviewGroup {
               @if (row.isBlocked) {
                 <svg
                   lucideTriangleAlert
-                  class="text-change-removed mt-0.5 h-[15px] w-[15px] shrink-0"
+                  class="text-change-removed mt-0.5 h-[17px] w-[17px] shrink-0"
                   i18n-aria-label="
                     Accessible label on the marker shown beside a change that
                     cannot be applied

@@ -14,7 +14,7 @@ import { FormControlInputDirective } from '../form-control/form-control.directiv
   ],
   template: `
     <app-form-control-field density="compact" class="gap-1.5 px-2.5">
-      <svg lucideSearch class="text-muted h-3.5 w-3.5 shrink-0"></svg>
+      <svg lucideSearch class="text-muted h-4 w-4 shrink-0"></svg>
 
       <input
         appFormInput
@@ -32,7 +32,7 @@ import { FormControlInputDirective } from '../form-control/form-control.directiv
           i18n-aria-label="Accessible label for the button that clears a filter"
           aria-label="Clear filter"
           (click)="value.set('')">
-          <svg lucideX class="h-3.5 w-3.5" aria-hidden="true"></svg>
+          <svg lucideX class="h-4 w-4" aria-hidden="true"></svg>
         </button>
       }
     </app-form-control-field>

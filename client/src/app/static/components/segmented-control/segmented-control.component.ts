@@ -1,4 +1,6 @@
-import { Component, input, model } from '@angular/core';
+import { Component, computed, input, model } from '@angular/core';
+import { cva } from 'class-variance-authority';
+import { cn } from '../button/button.variants';
 
 export interface SegmentedOption<T extends string = string> {
   value: T;
@@ -6,10 +8,75 @@ export interface SegmentedOption<T extends string = string> {
   count?: number;
 }
 
+/**
+ * `pill` reads as one switch, `outlined` as a switch that has to hold its own against a busy
+ * toolbar, and `chips` as separate filters that happen to be mutually exclusive.
+ *
+ * The outlined radii are concentric on purpose: the 2px inset means the inner corner has to be
+ * 2px tighter than the outer one, or the selected segment bulges out of the box around it.
+ */
+export type SegmentedVariant = 'pill' | 'outlined' | 'chips';
+
+const groupVariants = cva('', {
+  variants: {
+    variant: {
+      pill: 'bg-hover inline-flex rounded-full p-0.5 text-xs',
+      outlined:
+        'border-border bg-card flex items-center gap-0.5 rounded border p-0.5 text-sm',
+      chips: 'flex items-center gap-1.5 text-sm',
+    },
+  },
+  defaultVariants: {
+    variant: 'pill',
+  },
+});
+
+const optionVariants = cva(
+  'focus-visible:ring-primary cursor-pointer transition-colors outline-none focus-visible:ring-2',
+  {
+    variants: {
+      variant: {
+        pill: 'rounded-full px-3 py-1.5',
+        outlined: 'hover:bg-hover rounded-md px-3 py-1.5',
+        chips:
+          'border-border hover:bg-hover inline-flex h-9 items-center rounded-full border px-3.5',
+      },
+      selected: {
+        true: '',
+        false: '',
+      },
+    },
+    compoundVariants: [
+      {
+        variant: 'pill',
+        selected: true,
+        class: 'bg-card text-foreground shadow-sm',
+      },
+      {
+        variant: 'pill',
+        selected: false,
+        class: 'text-muted hover:text-foreground',
+      },
+      {
+        variant: 'outlined',
+        selected: true,
+        class: 'bg-primary-selected text-foreground',
+      },
+      { variant: 'outlined', selected: false, class: 'text-muted' },
+      { variant: 'chips', selected: true, class: 'border-primary bg-hover' },
+      { variant: 'chips', selected: false, class: 'text-muted' },
+    ],
+    defaultVariants: {
+      variant: 'pill',
+      selected: false,
+    },
+  }
+);
+
 @Component({
   selector: 'app-segmented-control',
   host: {
-    class: 'bg-hover inline-flex rounded-full p-0.5 text-xs',
+    '[class]': 'hostClass()',
     role: 'group',
     '[attr.aria-label]': 'ariaLabel()',
   },
@@ -17,12 +84,7 @@ export interface SegmentedOption<T extends string = string> {
     @for (option of options(); track option.value) {
       <button
         type="button"
-        class="rounded-full px-3 py-1.5 transition-colors"
-        [class]="
-          option.value === value()
-            ? 'bg-card text-foreground shadow-sm'
-            : 'text-muted hover:text-foreground'
-        "
+        [class]="optionClass(option.value === value())"
         [attr.aria-pressed]="option.value === value()"
         (click)="value.set(option.value)">
         {{ option.label }}
@@ -36,6 +98,16 @@ export interface SegmentedOption<T extends string = string> {
 export class SegmentedControlComponent<T extends string = string> {
   readonly options = input.required<SegmentedOption<T>[]>();
   readonly ariaLabel = input<string | null>(null);
+  readonly variant = input<SegmentedVariant>('pill');
+  readonly class = input('');
 
   readonly value = model.required<T>();
+
+  protected readonly hostClass = computed(() => {
+    return cn(groupVariants({ variant: this.variant() }), this.class());
+  });
+
+  protected optionClass(selected: boolean): string {
+    return optionVariants({ variant: this.variant(), selected });
+  }
 }
