@@ -39,7 +39,6 @@ interface AiReviewGroup {
   rows: AiReviewRow[];
 }
 
-/** The left hand list of a review: one collapsible section per entity, one row per change. */
 @Component({
   selector: 'app-ai-assistant-review-list',
   host: { class: 'block' },
@@ -77,7 +76,7 @@ interface AiReviewGroup {
         @if (group.isOpen) {
           @for (row of group.rows; track row.change.id) {
             <div
-              class="hover:bg-hover flex cursor-pointer items-start gap-2.5 border-l-2 py-3 pr-4 pl-3 transition-colors"
+              class="hover:bg-hover bg-background flex cursor-pointer items-start gap-2.5 border-l-2 py-3 pr-4 pl-3 transition-colors"
               [class.border-primary]="row.isSelected"
               [class.bg-primary-selected]="row.isSelected"
               [class.border-transparent]="!row.isSelected"
@@ -135,7 +134,7 @@ interface AiReviewGroup {
                     {{ row.title }}
                   </span>
                 </span>
-                <span class="text-muted truncate pl-[22px] text-[13px]">
+                <span class="text-muted truncate pl-5.5 text-[13px]">
                   {{ row.detail }}
                 </span>
               </span>
@@ -143,7 +142,7 @@ interface AiReviewGroup {
               @if (row.isBlocked) {
                 <svg
                   lucideTriangleAlert
-                  class="text-change-removed mt-0.5 h-[17px] w-[17px] shrink-0"
+                  class="text-change-removed mt-0.5 h-4.25 w-4.25 shrink-0"
                   i18n-aria-label="
                     Accessible label on the marker shown beside a change that
                     cannot be applied
